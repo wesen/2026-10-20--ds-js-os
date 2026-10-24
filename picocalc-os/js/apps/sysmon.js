@@ -1,4 +1,5 @@
-// The system monitor: every world and what it costs, the handles the kernel has given out, and the
+// The system monitor: every world and what it costs (cpu% is its share of the time since the last sample,
+// cpu ms its total since boot; the graph is the whole lane), the handles the kernel has given out, and the
 // buses. It reads the kernel's tables through the sys.read claim, twice a second while in front.
 const TABS = ["Worlds", "Handles", "Buses"];
 const STATE_COLOR = { idle: "ink", busy: "accent", waiting: "blue", restarting: "warn", stopped: "accent" };
@@ -13,25 +14,46 @@ function sample(s) {
     s.i2c.push(bi[0]); s.spi.push(bi[1]);
     for (const a of [s.lane, s.i2c, s.spi]) while (a.length > HISTORY) a.shift();
   }
+  if (s.focused) {
+    s.worlds = sys.worlds(); s.handles = sys.handles();
+    // each world's share of the time since the last sample: its cpu ms over the wall ms in between
+    const dt = s.last ? st.t_ms - s.last.t_ms : 0;
+    for (const w of s.worlds) {
+      const was = s.cpu[w.name];
+      w.pct = dt > 0 && was !== undefined && w.cpu_ms >= was ? (w.cpu_ms - was) / dt : null;
+      s.cpu[w.name] = w.cpu_ms;
+    }
+  }
   s.last = st;
-  if (s.focused) { s.worlds = sys.worlds(); s.handles = sys.handles(); }
 }
 
 const pct = (v) => Math.round(100 * (v || 0)) + "%";
 const kb = (v) => (v >= 100 ? Math.round(v) : v.toFixed(1));
+// at most five characters, so a counter that runs for days still fits its column
+function short(v) {
+  if (v < 1000) return Number.isInteger(v) ? String(v) : v.toFixed(v < 99.95 ? 1 : 0);
+  if (v < 9999.5) return String(Math.round(v));
+  for (const [d, u] of [[1e3, "k"], [1e6, "M"], [1e9, "G"]]) {
+    const x = v / d;
+    if (x < 999.5) return (x < 99.95 ? x.toFixed(1) : String(Math.round(x))) + u;
+  }
+  return "many";
+}
+const share = (v) => (v == null ? "·" : v < 0.0995 ? (100 * v).toFixed(1) : Math.round(100 * v) + "");
 
 function worldsTab(s) {
   const rows = s.worlds.map((w) => ({
-    cells: [w.name, { s: w.state, color: STATE_COLOR[w.state] }, String(w.turns), w.cpu_ms.toFixed(1), kb(w.mem_kb), w.restarts ? String(w.restarts) : "·"],
+    cells: [w.name, { s: w.state, color: STATE_COLOR[w.state] }, short(w.turns), share(w.pct), short(w.cpu_ms), kb(w.mem_kb), w.restarts ? String(w.restarts) : "·"],
   }));
   const w = s.worlds[s.sel] || {};
   return [
     ui.spark(s.lane, { h: 26, max: Math.max(0.1, ...s.lane), points: HISTORY, label: `lane busy · peak ${pct(Math.max(0, ...s.lane))}`, right: pct(s.lane[s.lane.length - 1]), color: "accent" }),
     ui.gap(2),
-    ui.table([{ label: "world", w: 86 }, { label: "state", w: 70 }, { label: "turns", align: "right" }, { label: "cpu ms", align: "right" },
-      { label: "KB", align: "right", w: 38 }, { label: "rst", align: "right", w: 26 }], rows, { sel: s.sel, font: "s", lead: 3 }),
+    ui.table([{ label: "world", w: 72 }, { label: "state", w: 62 }, { label: "turns", align: "right" }, { label: "cpu%", align: "right", w: 36 },
+      { label: "cpu ms", align: "right" }, { label: "KB", align: "right", w: 32 }, { label: "rst", align: "right", w: 22 }], rows, { sel: s.sel, font: "s", lead: 3 }),
     ui.sep({ h: 5 }),
     ui.kv([
+      ["cpu", w.pct == null ? `${(w.cpu_ms || 0).toFixed(1)} ms since boot` : `${share(w.pct)}% now, ${(w.cpu_ms || 0).toFixed(1)} ms since boot`],
       ["mailbox / peak", `${w.mbox} / ${w.mbox_peak}`],
       ["budget, limit", `${w.budget_ms} ms, ${w.limit_kb} KB`],
       ["claims", (w.claims || []).join(" ") || "none"],
@@ -65,7 +87,7 @@ function busesTab(s) {
 
 app("sysmon")
   .title("System")
-  .state({ tab: 0, sel: 0, focused: false, worlds: [], handles: [], lane: [], i2c: [], spi: [], last: null })
+  .state({ tab: 0, sel: 0, focused: false, worlds: [], handles: [], lane: [], i2c: [], spi: [], last: null, cpu: {} })
   .onStart(sample)
   .on("focus", (s) => { s.focused = true; sample(s); })
   .on("blur", (s) => { s.focused = false; })

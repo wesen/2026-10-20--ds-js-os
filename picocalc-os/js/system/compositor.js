@@ -275,8 +275,10 @@ function drawTable(fb, n, x, y, w, h) {
   const cell = (s, i, cx, ty, c) => {
     s = String(s ?? "");
     const tw = len(s) * fw(f);
-    const tx = cols[i].align === "right" ? cx + ws[i] - 4 - tw : cx + 4;
-    fb.text(tx, ty, s, f, c, ws[i] - 6);
+    // a right-aligned value wider than its column starts at the column's left edge and is cut, never drawn
+    // over the column before it
+    const tx = cols[i].align === "right" ? Math.max(cx + 2, cx + ws[i] - 4 - tw) : cx + 4;
+    fb.text(tx, ty, s, f, c, cx + ws[i] - 2 - tx);
   };
   if (n.head !== false) {
     let cx = x;
