@@ -1,4 +1,4 @@
-// The kernel: one lane of execution on a virtual clock. Worlds take turns; a turn is one message
+// The kernel: one lane of execution, on a virtual clock (the host) or the port's real one (the device). Worlds take turns; a turn is one message
 // handled to completion (or, for an async handler, until its promise settles, in several segments).
 // What a segment does to the outside (messages, channel posts, bus transfers, replies) is collected
 // and applied when it ends, at the virtual time it ends, so a turn that crashes has no effects.
@@ -7,6 +7,9 @@
 // handles are dropped, and it is restarted after a backoff (100 ms, doubling, at most 2 s). Five
 // crashes within ten seconds and it stays stopped. Every crash is also written to the UART as a fault
 // frame, for a host-side fault handler to pick up.
+//
+// On the virtual clock a segment costs what the device profile says it would; on the real clock
+// (K.realtime) it costs what it took, and the port's main loop calls kernel_run_until(port_clock()).
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,6 +60,7 @@ void schedule_fn(vtime_t t, void (*fn)(void *, int), void *arg, int a) { event_t
 static int restarts_of(world_t *W) { return W->restarts > 0 ? W->restarts - 1 : 0; }   // restarts counts boots
 vtime_t kernel_now(void) {
   if (frozen_now >= 0) return frozen_now;
+  if (K.realtime) return port_clock();
   if (!K.cur) return apply_at >= 0 ? apply_at : K.vnow;
   return K.vnow + PROFILE.turn_base_us + (vtime_t)(vm_steps(K.cur) * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
 }
@@ -359,6 +363,7 @@ static void finish_turn(world_t *W) {
 }
 
 static void run_segment(world_t *W, bool is_settle) {
+  if (K.realtime) K.vnow = port_clock();   // it starts now, which may be later than when it was due
   K.cur = W; K.seg_cost = 0; K.segments++;
   int rc = 0;
   const char *budget_kind = "turn";
@@ -409,7 +414,8 @@ static void run_segment(world_t *W, bool is_settle) {
     } else free(f);
   }
   int64_t steps = vm_steps(W);
-  vtime_t cost = PROFILE.turn_base_us + (vtime_t)(steps * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
+  vtime_t cost = K.realtime ? port_clock() - K.vnow
+                            : PROFILE.turn_base_us + (vtime_t)(steps * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
   char why[300] = "";
   if (W->oom) snprintf(why, sizeof why, "ran out of memory (its limit is %zu KB)", W->mem_limit / 1024);
   else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld virtual ms", budget_kind, (long long)(budget / 1000));
@@ -493,6 +499,14 @@ void kernel_run_until(vtime_t until) {
   if (K.vnow < until) K.vnow = until;
 }
 
+// When kernel_run_until next has something to do: the time the lane is free if a world is runnable, else
+// the earliest event, else VT_INF. The real-time loop sleeps until then (or until a bus finishes).
+vtime_t kernel_next_wake(void) {
+  bool is_settle;
+  if (pick(&is_settle)) return K.vnow > K.lane_free ? K.vnow : K.lane_free;
+  return heap_n ? heap[0]->t : VT_INF;
+}
+
 // ---- boot ----------------------------------------------------------------------------------------------------------
 void kernel_init(const char *js_root, const char *uart_path) {
   snprintf(K.js_root, sizeof K.js_root, "%s", js_root);
@@ -501,7 +515,7 @@ void kernel_init(const char *js_root, const char *uart_path) {
   K.uart = uart_path ? fopen(uart_path, "w") : NULL;
   char p[512];
   snprintf(p, sizeof p, "%s/prelude.js", js_root);
-  K.prelude = read_file(p, &K.prelude_len);
+  K.prelude = port_read_file(p, &K.prelude_len);
   if (!K.prelude) { fprintf(stderr, "cannot read %s\n", p); exit(1); }
   vm_calibrate();
 }
@@ -510,7 +524,7 @@ static uint64_t hash(const char *s) { uint64_t h = 1469598103934665603ull; while
 
 int kernel_boot(const char *manifest) {
   size_t n;
-  char *txt = read_file(manifest, &n);
+  char *txt = port_read_file(manifest, &n);
   if (!txt) { fprintf(stderr, "cannot read %s\n", manifest); return -1; }
   JSRuntime *rt = JS_NewRuntime();
   JSContext *ctx = JS_NewContext(rt);
@@ -542,7 +556,7 @@ int kernel_boot(const char *manifest) {
     JS_FreeValue(ctx, o);
     char path[512];
     snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
-    W->source = read_file(path, NULL);
+    W->source = port_read_file(path, NULL);
     if (!W->source) { fprintf(stderr, "cannot read %s\n", path); return -1; }
     snprintf(W->kind, sizeof W->kind, "world");
     snprintf(W->title, sizeof W->title, "%s", W->name);

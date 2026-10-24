@@ -1,6 +1,8 @@
-QuickJS 2026-06-04 (bellard/quickjs), with two changes for picocalc-os:
+QuickJS 2026-06-04 (bellard/quickjs), with three changes for picocalc-os:
 
 1. quickjs.c: JS_INTERRUPT_COUNTER_INIT is 1000 instead of 10000, so a world's turn budget is
    checked about every 1.3 virtual ms on the device profile instead of every 13 ms.
 2. quickjs.c / quickjs.h: JS_GetInterruptCounter() and JS_GetInterruptCounterInit(), so the nucleus
    can count how many interrupt-counter steps (loop back-edges and calls) a turn took.
+3. quickjs.c: getTimezoneOffset() takes the gmtime/localtime/mktime path (the _WIN32 one) when
+   ESP_PLATFORM is defined, because ESP-IDF's newlib struct tm has no tm_gmtoff.

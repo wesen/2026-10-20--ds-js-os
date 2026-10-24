@@ -49873,7 +49873,7 @@ static int getTimezoneOffset(int64_t time)
         }
     }
     ti = time;
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(ESP_PLATFORM)   /* picocalc-os: newlib's struct tm has no tm_gmtoff */
     {
         struct tm *tm;
         time_t gm_ti, loc_ti;

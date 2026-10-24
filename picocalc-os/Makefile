@@ -23,7 +23,7 @@ endif
 
 QJS_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
 OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c \
-           sim/st7365p.c sim/stm32kbd.c sim/board.c host/main_host.c
+           sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/main_host.c
 QJS_OBJ := $(addprefix $(BUILD)/qjs/,$(QJS_SRC:.c=.o))
 OS_OBJ  := $(addprefix $(BUILD)/,$(OS_SRC:.c=.o))
 BIN     := $(BUILD)/picocalc-host

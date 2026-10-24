@@ -2,45 +2,44 @@
 // handler that counts the work a turn does and stops it at its budget. The host functions here are
 // the only way out of a world: __k(op, ...) for things that finish now, __ka(op, ...) for things that
 // finish later and return a promise. The prelude (js/prelude.js) wraps them in the API worlds use.
-#include <malloc.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "nucleus.h"
 
-// ---- the allocator: per-world accounting and limit ----------------------------------------------------
+// ---- the allocator: per-world accounting and limit (the blocks come from the port's world heap) ----------
 static size_t host_limit(world_t *W) { return (size_t)((double)W->mem_limit * PROFILE.mem_scale); }
 
 static void *w_malloc(JSMallocState *s, size_t size) {
   world_t *W = s->opaque;
   if (W->mem_used + size > host_limit(W)) { W->oom = true; return NULL; }
-  void *p = malloc(size);
+  void *p = port_heap_malloc(size);
   if (!p) return NULL;
-  size_t u = malloc_usable_size(p) + 8;
+  size_t u = port_heap_usable(p) + 8;
   W->mem_used += u; s->malloc_size += u; s->malloc_count++;
   return p;
 }
 static void w_free(JSMallocState *s, void *p) {
   if (!p) return;
   world_t *W = s->opaque;
-  size_t u = malloc_usable_size(p) + 8;
+  size_t u = port_heap_usable(p) + 8;
   W->mem_used -= u; s->malloc_size -= u; s->malloc_count--;
-  free(p);
+  port_heap_free(p);
 }
 static void *w_realloc(JSMallocState *s, void *p, size_t size) {
   world_t *W = s->opaque;
   if (!p) return size ? w_malloc(s, size) : NULL;
-  size_t old = malloc_usable_size(p) + 8;
+  size_t old = port_heap_usable(p) + 8;
   if (!size) { w_free(s, p); return NULL; }
   if (W->mem_used - old + size > host_limit(W)) { W->oom = true; return NULL; }
-  void *q = realloc(p, size);
+  void *q = port_heap_realloc(p, size);
   if (!q) return NULL;
-  size_t u = malloc_usable_size(q) + 8;
+  size_t u = port_heap_usable(q) + 8;
   W->mem_used = W->mem_used - old + u; s->malloc_size = s->malloc_size - old + u;
   return q;
 }
-static size_t w_usable(const void *p) { return malloc_usable_size((void *)p); }
+static size_t w_usable(const void *p) { return port_heap_usable(p); }
 static const JSMallocFunctions MF = { w_malloc, w_free, w_realloc, w_usable };
 
 // ---- work counting ------------------------------------------------------------------------------------------
@@ -49,7 +48,7 @@ static int on_interrupt(JSRuntime *rt, void *opaque) {
   world_t *W = opaque;
   W->interrupts++;
   if (W->oom) return 1;
-  if (W->interrupts - W->seg_interrupts0 > W->budget_interrupts) { W->overrun = true; return 1; }
+  if (K.realtime ? port_clock() > W->seg_deadline : W->interrupts - W->seg_interrupts0 > W->budget_interrupts) { W->overrun = true; return 1; }
   return 0;
 }
 
@@ -57,6 +56,7 @@ void vm_begin_segment(world_t *W, vtime_t budget_us) {
   W->seg_interrupts0 = W->interrupts;
   W->seg_counter0 = W->ctx ? JS_GetInterruptCounter(W->ctx) : JS_GetInterruptCounterInit();
   W->budget_interrupts = (int64_t)((double)budget_us * 1000.0 / (PROFILE.ns_per_step * JS_GetInterruptCounterInit())) + 1;
+  W->seg_deadline = K.realtime ? port_clock() + budget_us : VT_INF;
   W->overrun = false;
 }
 
@@ -613,7 +613,7 @@ int vm_create(world_t *W) {
   W->oom = false; W->interrupts = 0; W->mem_used = 0;
   W->rt = JS_NewRuntime2(&MF, W);
   if (!W->rt) { snprintf(W->last_error, sizeof W->last_error, "could not make a runtime within %zu KB", W->mem_limit / 1024); return -1; }
-  JS_SetMaxStackSize(W->rt, 192 * 1024);
+  JS_SetMaxStackSize(W->rt, port_js_stack());
   JS_SetInterruptHandler(W->rt, on_interrupt, W);
   JS_SetHostPromiseRejectionTracker(W->rt, on_rejection, W);
   W->ctx = JS_NewContext(W->rt);
@@ -725,13 +725,15 @@ char *vm_render(world_t *W) {
 // "js bench" runs this 100,000-iteration loop in 133 ms on the device (esp32-s3-m5/0101-esp32-p4-native-quickjs).
 // fib(20), measured there at 31 ms, is counted too, as a check on the model.
 static int count_interrupt(JSRuntime *rt, void *o) { (void)rt; (*(int64_t *)o)++; return 0; }
-static int64_t count_steps(const char *src) {
+static int64_t count_steps(const char *src, double *real_ms) {
   JSRuntime *rt = JS_NewRuntime();
   JSContext *ctx = JS_NewContext(rt);
   int64_t n = 0;
   JS_SetInterruptHandler(rt, count_interrupt, &n);
   int c0 = JS_GetInterruptCounter(ctx);
+  vtime_t t0 = K.realtime ? port_clock() : 0;
   JSValue r = JS_Eval(ctx, src, strlen(src), "calibrate.js", JS_EVAL_TYPE_GLOBAL);
+  *real_ms = K.realtime ? (port_clock() - t0) / 1000.0 : 0;
   int64_t steps = n * JS_GetInterruptCounterInit() + c0 - JS_GetInterruptCounter(ctx);
   JS_FreeValue(ctx, r);
   JS_FreeContext(ctx);
@@ -740,10 +742,13 @@ static int64_t count_steps(const char *src) {
 }
 double vm_fib20_ms;
 void vm_calibrate(void) {
-  int64_t loop = count_steps("(()=>{let s=0; for(let i=0;i<100000;i++) s+=i; return s;})()");
-  int64_t fib = count_steps("(()=>{function fib(n){return n<2?n:fib(n-1)+fib(n-2)} return fib(20);})()");
+  double loop_ms, fib_ms;
+  int64_t loop = count_steps("(()=>{let s=0; for(let i=0;i<100000;i++) s+=i; return s;})()", &loop_ms);
+  int64_t fib = count_steps("(()=>{function fib(n){return n<2?n:fib(n-1)+fib(n-2)} return fib(20);})()", &fib_ms);
   if (loop > 0) PROFILE.ns_per_step = 133e6 / (double)loop;
   vm_fib20_ms = fib * PROFILE.ns_per_step / 1e6;
   if (K.verbose) fprintf(stderr, "calibration: the 100k loop is %lld steps, so a step is %.0f virtual ns; fib(20) is %lld steps = %.1f virtual ms (31 ms on the device)\n",
                          (long long)loop, PROFILE.ns_per_step, (long long)fib, vm_fib20_ms);
+  if (K.realtime) klog("calibration on the real clock: the 100k loop took %.1f ms (the model says 133), fib(20) %.1f ms (the model says %.1f)",
+                       loop_ms, fib_ms, vm_fib20_ms);
 }

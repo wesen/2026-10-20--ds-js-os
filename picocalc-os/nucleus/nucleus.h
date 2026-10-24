@@ -2,8 +2,9 @@
 // virtual clock and event queue, mailboxes and channels, the hardware handles that JS drivers hold,
 // and the pixel primitives. Everything else (drivers, compositor, apps) is JavaScript.
 //
-// The host build runs on Linux against simulated hardware (sim/). An ESP32-P4 build would replace
-// sim/ and hw.c's bus back ends with ESP-IDF drivers and run the same kernel loop in a FreeRTOS task.
+// What differs between targets is behind the port API at the end of this file. The host build (host/,
+// sim/) runs on Linux against simulated hardware on a virtual clock; the ESP32-P4 build (port/esp32p4/)
+// drives the real buses with ESP-IDF and runs the same kernel loop in a FreeRTOS task on the real clock.
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
@@ -96,6 +97,7 @@ typedef struct world {
   char *trace;              // the stack of the last error
   uint64_t turns, msgs;
   vtime_t cpu_us, turn_started;
+  vtime_t seg_deadline;     // real-time mode: the segment is stopped when the clock passes this
   uint64_t seed;
   JSValue fn_dispatch, fn_render;
   JSValue unhandled[8], unhandled_why[8]; int n_unhandled;
@@ -178,6 +180,7 @@ typedef struct {
   uint64_t turns, segments, published, delivered, crashes;
   vtime_t lane_busy;
   bool verbose, quiet, trace;
+  bool realtime;            // the port's real clock (port_clock) instead of the virtual one
   char *prelude; size_t prelude_len;
   char js_root[256];
   FILE *uart;               // the console UART: kernel log and fault frames for the host
@@ -188,6 +191,7 @@ extern kernel_t K;
 void kernel_init(const char *js_root, const char *uart_path);
 int kernel_boot(const char *manifest_path);
 void kernel_run_until(vtime_t t);
+vtime_t kernel_next_wake(void);
 void kernel_shutdown(void);
 event_t *new_event(int type, vtime_t t);
 void schedule(event_t *e);
@@ -227,6 +231,7 @@ const char *vm_exception(JSContext *ctx, char *buf, size_t n);
 void vm_calibrate(void);
 
 // hw.c
+handle_t *handle_find(int id);
 handle_t *handle_new(int type, world_t *holder, const char *claim);
 handle_t *handle_use(world_t *W, int id, int type, int right, char *err, size_t n);
 handle_t *handle_child(world_t *W, handle_t *h, int rights);
@@ -236,6 +241,9 @@ void handles_drop_world(world_t *W);
 bool world_holds(world_t *W, int id);
 int dmabuf_alloc(int w, int h);
 dmabuf_t *handle_buf(handle_t *h);
+void dmabuf_unref(int i);
+vtime_t bus_start(int bus, vtime_t at);
+void bus_finish(int bus, vtime_t start, vtime_t end, uint64_t bytes, bool error);
 void hw_i2c(world_t *W, handle_t *h, const uint8_t *wr, int nwr, int nrd, vtime_t gap, int promise);
 void hw_spi_cmd(world_t *W, handle_t *h, int cmd, const uint8_t *data, int n, int promise);
 void hw_spi_pixels(world_t *W, handle_t *h, handle_t *fb, int x, int y, int w, int hh, int promise);
@@ -254,7 +262,7 @@ int gfx_commit(dmabuf_t *b, int *rects, int max_rects);
 uint16_t gfx_color(const char *s);
 const char *gfx_font_names(void);
 
-// sim/
+// sim/ (the host's board)
 void sim_init(void);
 void st7365p_reset(void);
 void st7365p_cmd(uint8_t cmd, vtime_t t);
@@ -267,7 +275,7 @@ void stm32_key(uint8_t code, int state);
 void stm32_battery(int pct, bool charging);
 int stm32_backlight(void);
 
-// png.c
+// png.c (host only)
 int png_write_rgb(const char *path, const uint8_t *rgb, int w, int h);
 
 // util.c
@@ -277,3 +285,20 @@ typedef struct { char *s; size_t n, cap; } sbuf_t;
 void sb_add(sbuf_t *b, const char *s);
 void sb_printf(sbuf_t *b, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 void sb_json_str(sbuf_t *b, const char *s);
+
+// ---- the port: what a build target provides (host/ + sim/ on Linux, port/esp32p4/ on the device) ---------------
+vtime_t port_clock(void);                 // real time, microseconds since boot; used when K.realtime
+void *port_heap_malloc(size_t n);         // world heaps
+void *port_heap_realloc(void *p, size_t n);
+void port_heap_free(void *p);
+size_t port_heap_usable(const void *p);
+void *port_big_calloc(size_t n);          // framebuffers
+void port_big_free(void *p);
+size_t port_js_stack(void);               // the JS stack limit of a world's runtime
+char *port_read_file(const char *path, size_t *len);   // a malloc'ed, NUL-terminated copy, or NULL
+const char *port_board_name(void);
+// the bus back ends: each starts the transfer a deferred effect describes, at the time the segment that issued
+// it ended, and settles d->promise once with kernel_settle_at(). They own d->bytes (free it or take it).
+void bus_run_i2c(deferred_t *d, vtime_t at);
+void bus_run_spi_cmd(deferred_t *d, vtime_t at);
+void bus_run_spi_pixels(deferred_t *d, vtime_t at);
