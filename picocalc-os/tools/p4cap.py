@@ -4,7 +4,8 @@
 #   tools/p4cap.py [-p PORT] [-s SECONDS] [--no-reset] [-c "AT_SECONDS COMMAND"]... [--shot-dir DIR]
 # With --shot-dir, every "#SHOT w h" ... "#END crc runs" block the console's shot command prints is decoded
 # (base64 of little-endian (count, rgb565) pairs) and written there as shot-N.png at scale 2.
-import argparse, base64, os, struct, sys, time, zlib
+import argparse, base64, os, re, struct, sys, time, zlib
+B64 = re.compile(r"^[A-Za-z0-9+/]+=*$")
 import serial
 
 ap = argparse.ArgumentParser()
@@ -63,7 +64,8 @@ if a.shot_dir:
             if k.startswith("#END"):
                 crc = int(k.split()[1], 16)
                 break
-            data += base64.b64decode(k.strip())
+            if B64.match(k.strip()):   # log lines from other tasks can land between a shot's lines
+                data += base64.b64decode(k.strip())
         px = []
         for off in range(0, len(data) - 3, 4):
             c, v = struct.unpack_from("<HH", data, off)

@@ -90,26 +90,45 @@ static void b64_line(const uint8_t *p, int n) {
   out[k] = 0;
   printf("%s\n", out);
 }
+// The kernel task only copies the framebuffer (a millisecond); this task encodes and prints it, which takes
+// seconds at 115200 baud and would otherwise stop every world, the keyboard's polling included.
+static struct { uint16_t *px; int w, h; volatile bool busy; TaskHandle_t task; } snap;
+
+static void shot_task(void *arg) {
+  for (;;) {
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    const uint16_t *px = snap.px;
+    size_t n = (size_t)snap.w * snap.h;
+    printf("#SHOT %d %d\n", snap.w, snap.h);
+    uint8_t line[57]; int ln = 0;   // 57 bytes = 76 base64 characters
+    size_t runs = 0;
+    for (size_t i = 0; i < n;) {
+      uint16_t v = px[i];
+      size_t j = i + 1;
+      while (j < n && px[j] == v && j - i < 65535) j++;
+      uint16_t c = (uint16_t)(j - i);
+      uint8_t rec[4] = { (uint8_t)c, (uint8_t)(c >> 8), (uint8_t)v, (uint8_t)(v >> 8) };
+      for (int k = 0; k < 4; k++) { line[ln++] = rec[k]; if (ln == 57) { b64_line(line, ln); ln = 0; } }
+      runs++; i = j;
+    }
+    if (ln) b64_line(line, ln);
+    printf("#END %08lx %u\n", (unsigned long)crc32(0, (const uint8_t *)px, n * 2), (unsigned)runs);
+    fflush(stdout);
+    snap.busy = false;
+  }
+}
+
 static void shot(void) {
   dmabuf_t *b = NULL;
   for (int i = 0; i < MAX_BUFS; i++) if (K.bufs[i].live) { b = &K.bufs[i]; break; }
   if (!b) { printf("#SHOT none\n"); return; }
-  size_t n = (size_t)b->w * b->h;
-  printf("#SHOT %d %d\n", b->w, b->h);
-  uint8_t line[57]; int ln = 0;   // 57 bytes = 76 base64 characters
-  size_t runs = 0;
-  for (size_t i = 0; i < n;) {
-    uint16_t v = b->front[i];
-    size_t j = i + 1;
-    while (j < n && b->front[j] == v && j - i < 65535) j++;
-    uint16_t c = (uint16_t)(j - i);
-    uint8_t rec[4] = { (uint8_t)c, (uint8_t)(c >> 8), (uint8_t)v, (uint8_t)(v >> 8) };
-    for (int k = 0; k < 4; k++) { line[ln++] = rec[k]; if (ln == 57) { b64_line(line, ln); ln = 0; } }
-    runs++; i = j;
-  }
-  if (ln) b64_line(line, ln);
-  printf("#END %08lx %u\n", (unsigned long)crc32(0, (const uint8_t *)b->front, n * 2), (unsigned)runs);
-  fflush(stdout);
+  if (snap.busy) { printf("a shot is still being sent\n"); return; }
+  size_t bytes = (size_t)b->w * b->h * 2;
+  if (!snap.px || (size_t)snap.w * snap.h * 2 < bytes) { heap_caps_free(snap.px); snap.px = heap_caps_malloc(bytes, MALLOC_CAP_SPIRAM); }
+  if (!snap.px) { printf("no memory for a shot\n"); return; }
+  memcpy(snap.px, b->front, bytes);
+  snap.w = b->w; snap.h = b->h; snap.busy = true;
+  xTaskNotifyGive(snap.task);
 }
 
 static void heap_report(void) {
@@ -208,6 +227,7 @@ void app_main(void) {
 
   bus_p4_init();
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);
+  xTaskCreatePinnedToCore(shot_task, "shot", 4096, NULL, 2, &snap.task, 0);
   // QuickJS recurses on the C stack: the kernel task gets 80 KB of internal RAM (port_js_stack is 56 KB of it)
   xTaskCreatePinnedToCore(kernel_task, "kernel", 80 * 1024, NULL, 5, NULL, 1);
 }

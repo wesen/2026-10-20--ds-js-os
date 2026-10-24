@@ -419,7 +419,7 @@ static void run_segment(world_t *W, bool is_settle) {
                             : PROFILE.turn_base_us + (vtime_t)(steps * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
   char why[300] = "";
   if (W->oom) snprintf(why, sizeof why, "ran out of memory (its limit is %zu KB)", W->mem_limit / 1024);
-  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld virtual ms", budget_kind, (long long)(budget / 1000));
+  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld %sms", budget_kind, (long long)(budget / 1000), K.realtime ? "" : "virtual ");
   else if (rc < 0) snprintf(why, sizeof why, "%s", W->last_error);
   else if (W->turn_failed) snprintf(why, sizeof why, "%s", W->turn_error ? W->turn_error : "its turn failed");
   W->cpu_us += cost;
