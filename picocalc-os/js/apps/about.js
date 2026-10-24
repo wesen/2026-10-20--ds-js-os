@@ -13,7 +13,7 @@ app("about")
       ui.text("A JavaScript system on an ESP32-P4: every driver, the compositor and every app is a world with its own QuickJS heap.", { wrap: true, font: "s", color: "muted" }),
       ui.sep(),
       ui.kv([
-        ["board", "ESP32-P4 in a PicoCalc (simulated)"],
+        ["board", st.board],
         ["panel", "ST7365P 320 x 320, SPI2 at 40 MHz"],
         ["keyboard", "STM32 at I2C 0x1F, 10 kHz"],
         ["engine", "QuickJS, one VM per world"],
