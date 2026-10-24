@@ -370,6 +370,7 @@ static void run_segment(world_t *W, bool is_settle) {
   vtime_t budget = W->budget_us;
   bool booting = W->boot_ready;
   if (booting) {
+    if (K.trace) klog("starting %s (%s)", W->name, W->file);
     W->boot_ready = false;
     budget_kind = "start";
     budget = MS(600);
@@ -512,7 +513,7 @@ void kernel_init(const char *js_root, const char *uart_path) {
   snprintf(K.js_root, sizeof K.js_root, "%s", js_root);
   K.buses[BUS_I2C0].name = "i2c0";
   K.buses[BUS_SPI2].name = "spi2";
-  K.uart = uart_path ? fopen(uart_path, "w") : NULL;
+  if (uart_path) K.uart = fopen(uart_path, "w");   // else whatever the port set (the device: stdout)
   char p[512];
   snprintf(p, sizeof p, "%s/prelude.js", js_root);
   K.prelude = port_read_file(p, &K.prelude_len);
@@ -533,7 +534,7 @@ int kernel_boot(const char *manifest) {
   if (JS_IsException(v)) { char b[512]; fprintf(stderr, "%s: %s\n", manifest, vm_exception(ctx, b, sizeof b)); return -1; }
   JSValue ws = JS_GetPropertyStr(ctx, v, "worlds");
   JSValue lv = JS_GetPropertyStr(ctx, ws, "length");
-  int count = 0; JS_ToInt32(ctx, &count, lv); JS_FreeValue(ctx, lv);
+  int32_t count = 0; JS_ToInt32(ctx, &count, lv); JS_FreeValue(ctx, lv);
   for (int i = 0; i < count && K.n_worlds < MAX_WORLDS; i++) {
     JSValue o = JS_GetPropertyUint32(ctx, ws, (uint32_t)i);
     world_t *W = calloc(1, sizeof(*W));
@@ -547,7 +548,7 @@ int kernel_boot(const char *manifest) {
     f = JS_GetPropertyStr(ctx, o, "mem_kb"); W->mem_limit = JS_IsUndefined(f) ? 1024 * 1024 : (JS_ToFloat64(ctx, &d, f), (size_t)(d * 1024)); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "priority"); W->prio = JS_IsUndefined(f) ? -1 : (JS_ToFloat64(ctx, &d, f), (int)d); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "claims");
-    JSValue cl = JS_GetPropertyStr(ctx, f, "length"); int nc = 0; JS_ToInt32(ctx, &nc, cl); JS_FreeValue(ctx, cl);
+    JSValue cl = JS_GetPropertyStr(ctx, f, "length"); int32_t nc = 0; JS_ToInt32(ctx, &nc, cl); JS_FreeValue(ctx, cl);
     for (int k = 0; k < nc && k < MAX_LIST; k++) {
       JSValue e = JS_GetPropertyUint32(ctx, f, (uint32_t)k);
       s = JS_ToCString(ctx, e); snprintf(W->claims[W->n_claims++], NAME_LEN, "%s", s ? s : ""); JS_FreeCString(ctx, s); JS_FreeValue(ctx, e);

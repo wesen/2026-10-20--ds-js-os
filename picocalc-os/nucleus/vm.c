@@ -138,9 +138,9 @@ static char *sarg(JSContext *ctx, JSValueConst *argv, int argc, int i) {   // a 
 static int int_list(JSContext *ctx, JSValueConst v, int *out, int max) {
   if (!JS_IsArray(ctx, v)) return 0;
   JSValue lv = JS_GetPropertyStr(ctx, v, "length");
-  int n = 0; JS_ToInt32(ctx, &n, lv); JS_FreeValue(ctx, lv);
+  int32_t n = 0; JS_ToInt32(ctx, &n, lv); JS_FreeValue(ctx, lv);
   if (n > max) n = max;
-  for (int i = 0; i < n; i++) { JSValue e = JS_GetPropertyUint32(ctx, v, (uint32_t)i); int x = 0; JS_ToInt32(ctx, &x, e); out[i] = x; JS_FreeValue(ctx, e); }
+  for (int i = 0; i < n; i++) { JSValue e = JS_GetPropertyUint32(ctx, v, (uint32_t)i); int32_t x = 0; JS_ToInt32(ctx, &x, e); out[i] = x; JS_FreeValue(ctx, e); }
   return n;
 }
 static uint16_t color_arg(JSContext *ctx, JSValueConst *argv, int argc, int i) {
@@ -588,7 +588,7 @@ static int read_meta(world_t *W, JSValue meta) {
   for (int l = 0; l < 2; l++) {
     JSValue a = JS_GetPropertyStr(ctx, meta, lists[l].key);
     JSValue lv = JS_GetPropertyStr(ctx, a, "length");
-    int n = 0; JS_ToInt32(ctx, &n, lv);
+    int32_t n = 0; JS_ToInt32(ctx, &n, lv);
     *lists[l].n = 0;
     for (int i = 0; i < n && i < MAX_LIST; i++) {
       JSValue e = JS_GetPropertyUint32(ctx, a, (uint32_t)i);

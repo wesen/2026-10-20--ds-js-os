@@ -1,0 +1,26 @@
+# picocalc-os on the ESP32-P4-WIFI6 (chip revision v1.3, 32 MB flash, 32 MB PSRAM), ESP-IDF v5.4.2.
+CONFIG_IDF_TARGET="esp32p4"
+
+# Console: the board's CH343 USB-UART bridge on UART0 (GPIO37 TX, GPIO38 RX).
+CONFIG_ESP_CONSOLE_UART_DEFAULT=y
+CONFIG_ESP_CONSOLE_SECONDARY_NONE=y
+
+CONFIG_ESPTOOLPY_FLASHMODE_DIO=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
+CONFIG_ESPTOOLPY_FLASHSIZE_32MB=y
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# PSRAM: world heaps and framebuffers live there.
+CONFIG_IDF_EXPERIMENTAL_FEATURES=y
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_HEX=y
+CONFIG_SPIRAM_SPEED_200M=y
+CONFIG_SPIRAM_USE_MALLOC=y
+
+# A 1 ms tick: the keyboard's 2 ms register gap and the kernel's idle waits are in milliseconds.
+CONFIG_FREERTOS_HZ=1000
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+# The kernel task runs on core 1 and may keep it busy through boot; it is not stuck when it does.
+CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1=n
+CONFIG_ESP_SYSTEM_USE_EH_FRAME=y

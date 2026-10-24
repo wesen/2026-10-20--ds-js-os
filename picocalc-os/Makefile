@@ -35,7 +35,7 @@ $(BIN): $(QJS_OBJ) $(OS_OBJ)
 
 $(BUILD)/qjs/%.o: $(QJS)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -w -c -o $@ $<
+	$(CC) $(CFLAGS) -w -fwrapv -fno-strict-aliasing -c -o $@ $<   # as upstream; see port/esp32p4/main/CMakeLists.txt
 
 $(BUILD)/%.o: %.c nucleus/nucleus.h nucleus/font_data.h
 	@mkdir -p $(dir $@)
