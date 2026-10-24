@@ -1,0 +1,8 @@
+picocalc-os/build/
+picocalc-os/build32/
+picocalc-os/build-san/
+picocalc-os/build32-san/
+picocalc-os/out/uart.log
+picocalc-os/port/esp32p4/build/
+picocalc-os/port/esp32p4/sdkconfig
+picocalc-os/port/esp32p4/sdkconfig.old
