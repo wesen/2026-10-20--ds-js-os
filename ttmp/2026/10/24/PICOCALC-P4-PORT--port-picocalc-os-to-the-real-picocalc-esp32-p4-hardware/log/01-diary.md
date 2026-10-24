@@ -379,3 +379,26 @@ per-world CPU use visible.
 
 ### Technical details
 - Measurements are in design doc section 15.3.
+
+## Step 5: Delivery
+
+The updated guide (now with section 15: status, departures, device measurements) and this diary were
+uploaded as one bundle under a new name, so the first upload and any annotations on it are untouched.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Deliver the guide to reMarkable; keep the ticket current.
+**Inferred user intent:** A readable record of the port on the tablet.
+
+### Evidence and commits
+- `OK: uploaded PICOCALC-P4-PORT guide and diary - implemented.pdf -> /ai/2026/10/24/PICOCALC-P4-PORT`
+  (the first upload, `PICOCALC-P4-PORT picocalc-os on ESP32-P4 guide.pdf`, is in the same folder).
+- `docmgr doctor --ticket PICOCALC-P4-PORT --stale-after 30`: all checks passed.
+- Code: f136c3b, a9ff900, 64263b2, 4158c36, cf9f1e7, 91971f4, 9c992a4. Docs: 16077a9, bacdcc0.
+
+### Noteworthy decisions or failures
+- None in this step.
+
+### Remaining requirements and next action
+- Task 9vj0: a person presses keys on the real keyboard with the Keys app open (letter `k` on the home
+  screen) and checks that `events` counts up.
