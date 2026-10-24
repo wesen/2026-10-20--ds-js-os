@@ -1,8 +1,8 @@
-# PicoCalc OS: host build
+# PicoCalc OS
 
-A JavaScript operating system for a PicoCalc whose RP2040 has been replaced by an ESP32-P4, built here
-for Linux against a simulated board, so it can run, be scripted and have its screen captured without
-the hardware.
+A JavaScript operating system for a PicoCalc whose RP2040 has been replaced by an ESP32-P4. It runs on
+the device (`port/esp32p4/`, see "On the device") and on Linux against a simulated board, so it can run,
+be scripted and have its screen captured without the hardware.
 
 Every driver, the compositor and every app is a *world*: its own QuickJS runtime, heap limit and turn
 budget. A small C nucleus runs them on a virtual clock, delivers their messages, hands out hardware as
@@ -17,7 +17,7 @@ make shots                # run scripts/*.txt; captures go to out/
 ./build/picocalc-host -   # read commands from stdin (handy for an agent driving it)
 ```
 
-Needs gcc, zlib and nothing else. `make M32=1` builds a 32-bit binary, so worlds use the memory they
+The host build needs gcc, zlib and nothing else. `make M32=1` builds a 32-bit binary, so worlds use the memory they
 would on the ESP32-P4. `make SAN=1` builds with AddressSanitizer and UBSan. The three builds produce
 identical pixels from the same script.
 
@@ -44,10 +44,13 @@ Options: `-j DIR` (JS root, default `js`), `-m FILE` (manifest), `-o DIR` (captu
 
 ```
 nucleus/            the C core (about 2,100 lines): kernel.c (lane, clock, messages, supervision), vm.c (one QuickJS
-                    runtime per world, host calls, work counting), hw.c (handles, buses), gfx.c (fill, text, diff)
-sim/                the board: st7365p.c (the panel controller and its memory), stm32kbd.c (keyboard, backlight,
-                    battery at I2C 0x1F, after clockworkpi's firmware), board.c
-host/main_host.c    the script runner and PNG capture
+                    runtime per world, host calls, work counting), hw.c (handles, bus accounting), gfx.c (fill,
+                    text, diff); nucleus.h ends with the port API each target implements
+sim/                the simulated board: st7365p.c (the panel controller and its memory), stm32kbd.c (keyboard,
+                    backlight, battery at I2C 0x1F, after clockworkpi's firmware), bus_sim.c (timed transfers)
+host/               main_host.c (the script runner and PNG capture), port_host.c (the host's port)
+port/esp32p4/       the device build (ESP-IDF 5.4.2): port_p4.c, bus_p4.c (bus worker tasks), main_p4.c
+                    (kernel task, console), bundle_js.cmake (js/ into the firmware)
 js/prelude.js       the API every world is written against (evaluated in each world first)
 js/system.json      the manifest: which worlds run, their claims, budgets and heap limits
 js/drivers/         keyboard.js, power.js, display.js
@@ -55,7 +58,8 @@ js/system/          compositor.js, sandbox.js, flaky.js
 js/apps/            launcher, sysmon, repl, snake, faults, keys, about
 scripts/            the scripts behind the captures
 tools/gen_font.py   makes nucleus/font_data.h from Terminus Font
-third_party/        QuickJS 2026-06-04 (MIT, two small patches: see PATCHES), font licence (OFL)
+tools/p4cap.py      resets the device, sends console lines, decodes shots to PNG
+third_party/        QuickJS 2026-06-04 (MIT, three small patches: see PATCHES), font licence (OFL)
 ```
 
 ### The virtual clock
@@ -148,17 +152,52 @@ world and `Date` reads the virtual clock, so a script replays exactly.
 - **One lane means one hog at a time.** While the sandbox spins for its 200 ms budget nothing else runs;
   with priorities, the screen at least shows "evaluating…" before it starts.
 
-## From here to the device
+## On the device
 
-The nucleus is written against the board through `hw.c` and `sim/`. On the ESP32-P4, `run_i2c` and the
-SPI functions call ESP-IDF's `i2c_master` and `spi_master` drivers (with DMA from PSRAM framebuffers),
-the kernel loop runs in a FreeRTOS task with the real clock in place of the virtual one (budgets still
-enforced by the step counter), world heaps come from PSRAM, and the UART fault frames go out on the
-CH343 console. The JavaScript does not change.
+`port/esp32p4/` builds the same nucleus, QuickJS and `js/` tree for a PicoCalc whose Pico has been
+replaced by a Waveshare ESP32-P4-WIFI6 on a same-position adapter (keyboard I2C on GPIO50/49; LCD SCK 3,
+MOSI 2, CS 7, DC 24, RST 25; console on the board's CH343, UART0).
 
-Not done here: a second lane for the P4's second core, capability checks on channel subscriptions (any
-world can `need` the `keys` channel), storage, Wi-Fi, and backlight levels between off and on in
-captures.
+```
+cd port/esp32p4
+source ~/esp/esp-idf-5.4.2/export.sh
+idf.py build
+idf.py -p /dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00 flash
+cd ../.. && python3 tools/p4cap.py -s 20 -c "5 stats" -c "6 shot" --shot-dir /tmp/shots
+```
+
+What differs from the host, all of it behind the port API at the end of `nucleus/nucleus.h`:
+
+- **The clock is real.** A segment costs what it took; budgets are wall-clock deadlines checked in the
+  interrupt handler; the kernel task (core 1) sleeps until the next event or a finished transfer.
+- **Buses run on worker tasks** (core 0), one per bus, so a bus keeps its order and a register read stays
+  one transaction. The panel gets 40 MHz from the SPLL clock source; pixels are byte-swapped into two
+  32 KiB internal DMA buffers. A framebuffer is pinned while its pixels are in flight.
+- **World heaps and framebuffers are in PSRAM**, 8-aligned for QuickJS's arena allocator.
+- **The js/ tree is compiled into the firmware** (`port/esp32p4/main/bundle_js.cmake`).
+
+The UART is a console as well as the log: `stats`, `worlds`, `handles`, `heap`, `key NAME`, `type TEXT`,
+`crash WORLD`, `restart WORLD`, `bench`, `trace on|off`, and `shot`, which sends the compositor's
+framebuffer for `tools/p4cap.py` to turn into a PNG.
+
+Measured on the device (QuickJS at -O2): the 100k-iteration loop takes 115 ms in the calibration runtime and
+124 ms in the sandbox world (the model says 133; at -Og it is 135, which is what the model was calibrated
+on); fib(20) 29 ms. The 13 worlds start in about 0.8 s, the first frame is on the glass about 1.4 s after
+the kernel starts. The keyboard polls 49.5 times a second and keeps I2C 26–28% busy, as the simulator
+said. The lane is about 8% busy on the home screen, 18–23% with the System app open.
+
+What the device found that the simulator could not:
+
+- QuickJS needs `-fno-strict-aliasing` at -O2 on 32-bit RISC-V (GCC 14): without it, NaN-boxed values
+  were miscompiled and the compositor's first paint crashed every boot.
+- ESP-IDF's heap returns 4-aligned blocks; QuickJS's arenas assume 8.
+- `int32_t` is `long` on RISC-V newlib, so `JS_ToInt32` wants an `int32_t *`, not an `int *`.
+- Counters that never get large in a script do on a device that runs for an hour: the System app's
+  turns column overflowed into the next one.
+
+Not done: a second lane for the P4's second core, capability checks on channel subscriptions (any world
+can `need` the `keys` channel), storage, Wi-Fi, updating the JS without reflashing, and backlight levels
+between off and on in captures.
 
 ## Licences
 
