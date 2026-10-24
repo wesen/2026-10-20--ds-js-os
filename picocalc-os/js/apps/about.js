@@ -1,4 +1,4 @@
-// About: the device this build pretends to be, and the kernel's counters.
+// About: the device this build runs on (or pretends to be), and the kernel's counters.
 app("about")
   .title("About")
   .state({ focused: false, st: null, worlds: [] })
@@ -17,7 +17,7 @@ app("about")
         ["panel", "ST7365P 320 x 320, SPI2 at 40 MHz"],
         ["keyboard", "STM32 at I2C 0x1F, 10 kHz"],
         ["engine", "QuickJS, one VM per world"],
-        ["clock", `virtual; one step = ${Math.round(st.step_ns)} ns`],
+        ["clock", st.clock === "real" ? "real; budgets in wall time" : `virtual; one step = ${Math.round(st.step_ns)} ns`],
         ["calibrated on", "100k-iteration loop = 133 ms"],
       ], { keyW: 92, lead: 2 }),
       ui.sep(),

@@ -612,8 +612,8 @@ char *kernel_stats_json(void) {
   int nh = 0;
   for (int i = 0; i < MAX_HANDLES; i++) nh += K.handles[i].live;
   sb_add(&b, "{\"board\":"); sb_json_str(&b, port_board_name());
-  sb_printf(&b, ",\"t_ms\":%.3f,\"lane_busy_ms\":%.3f,\"turns\":%llu,\"segments\":%llu,\"published\":%llu,\"delivered\":%llu,\"crashes\":%llu,\"handles\":%d,\"step_ns\":%.1f,\"buses\":%s}",
-            kernel_now() / 1000.0, K.lane_busy / 1000.0, (unsigned long long)K.turns, (unsigned long long)K.segments,
+  sb_printf(&b, ",\"clock\":\"%s\",\"t_ms\":%.3f,\"lane_busy_ms\":%.3f,\"turns\":%llu,\"segments\":%llu,\"published\":%llu,\"delivered\":%llu,\"crashes\":%llu,\"handles\":%d,\"step_ns\":%.1f,\"buses\":%s}",
+            K.realtime ? "real" : "virtual", kernel_now() / 1000.0, K.lane_busy / 1000.0, (unsigned long long)K.turns, (unsigned long long)K.segments,
             (unsigned long long)K.published, (unsigned long long)K.delivered, (unsigned long long)K.crashes, nh, PROFILE.ns_per_step, buses);
   free(buses);
   return b.s;
