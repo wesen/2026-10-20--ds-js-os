@@ -1,0 +1,17 @@
+{
+  "worlds": [
+    { "name": "keyboard",   "file": "drivers/keyboard.js",  "claims": ["i2c0:0x1f"],             "budget_ms": 20,  "mem_kb": 320 },
+    { "name": "power",      "file": "drivers/power.js",     "claims": ["i2c0:0x1f"],             "budget_ms": 20,  "mem_kb": 320 },
+    { "name": "display",    "file": "drivers/display.js",   "claims": ["spi2"],                  "budget_ms": 30,  "mem_kb": 320 },
+    { "name": "compositor", "file": "system/compositor.js", "claims": ["dma"],                   "budget_ms": 80,  "mem_kb": 768 },
+    { "name": "launcher",   "file": "apps/launcher.js",     "claims": ["sys.read"],                                "mem_kb": 384 },
+    { "name": "sysmon",     "file": "apps/sysmon.js",       "claims": ["sys.read"],                                "mem_kb": 512 },
+    { "name": "repl",       "file": "apps/repl.js",                                                                "mem_kb": 384 },
+    { "name": "sandbox",    "file": "system/sandbox.js",                                         "budget_ms": 200, "mem_kb": 512, "priority": 0 },
+    { "name": "snake",      "file": "apps/snake.js",                                                               "mem_kb": 320 },
+    { "name": "faults",     "file": "apps/faults.js",       "claims": ["sys.admin", "sys.read"],                   "mem_kb": 384 },
+    { "name": "flaky",      "file": "system/flaky.js",                                                             "mem_kb": 256 },
+    { "name": "keys",       "file": "apps/keys.js",                                                                "mem_kb": 320 },
+    { "name": "about",      "file": "apps/about.js",        "claims": ["sys.read"],                                "mem_kb": 320 }
+  ]
+}

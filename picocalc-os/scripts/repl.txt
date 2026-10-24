@@ -1,0 +1,27 @@
+# The REPL: code runs in the sandbox world, which has its own heap, budget and no claims.
+wait 1200
+key r
+wait 300
+type [1, 2, 3].map(x => x * x)
+key enter
+wait 300
+type let n = 0; for (let i = 0; i < 1e5; i++) n += i; n
+key enter
+wait 400
+type hw.i2c("i2c0:0x1f")
+key enter
+wait 300
+type ({ t: now(), id: self, d: new Date().toISOString() })
+key enter
+wait 300
+capture 10-repl.png
+type for (;;) {}
+key enter
+wait 120
+capture 11-repl-loop.png
+wait 1500
+type "still here"
+key enter
+wait 300
+capture 12-repl-after.png
+stats

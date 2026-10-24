@@ -1,0 +1,4 @@
+wait 1200
+capture boot.png
+stats
+panel

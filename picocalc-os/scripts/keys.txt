@@ -1,0 +1,15 @@
+# Keys and About: the keyboard driver's raw events, then the kernel's counters.
+wait 1200
+key k
+wait 300
+type Hi!
+key up
+key enter 500
+key f5
+wait 1100
+capture 40-keys.png
+key f1
+wait 200
+key a
+wait 1200
+capture 41-about.png

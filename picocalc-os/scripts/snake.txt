@@ -1,0 +1,14 @@
+# Snake: open it, steer a little, then let the autopilot play.
+wait 1200
+key s
+wait 500
+key down
+wait 400
+key right
+wait 300
+key p
+wait 9000
+capture 20-snake.png
+wait 20000
+capture 21-snake-later.png
+stats

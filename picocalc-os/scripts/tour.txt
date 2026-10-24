@@ -1,0 +1,29 @@
+# A tour of the home screen and the system monitor.
+wait 1200
+capture 01-home.png
+key right
+wait 150
+capture 02-home-repl.png
+key m
+wait 1200
+capture 03-sysmon.png
+key down
+key down
+key down
+wait 600
+capture 04-sysmon-sel.png
+key tab
+wait 600
+capture 05-sysmon-handles.png
+key tab
+wait 1200
+capture 06-sysmon-buses.png
+key f1
+wait 300
+key power
+wait 300
+capture 07-screen-off.png
+panel
+key power
+wait 300
+capture 08-screen-on.png
