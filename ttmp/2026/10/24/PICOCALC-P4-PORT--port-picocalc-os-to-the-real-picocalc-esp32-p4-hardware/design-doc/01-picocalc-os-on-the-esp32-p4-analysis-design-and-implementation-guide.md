@@ -13,29 +13,37 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/kernel.c
-      Note: The lane, the clock, messages and supervision; gains the real-time clock mode
+    - Path: picocalc-os/js/system/compositor.js
+      Note: The largest world; owns the framebuffer and drives the display driver
     - Path: picocalc-os/nucleus/hw.c
       Note: Handles and bus accounting; its bus back ends move behind the port seam
-    - Path: picocalc-os/nucleus/vm.c
-      Note: One QuickJS runtime per world; allocator, budget and stack limit become port-dependent
+    - Path: picocalc-os/nucleus/kernel.c
+      Note: The lane, the clock, messages and supervision; gains the real-time clock mode
     - Path: picocalc-os/nucleus/nucleus.h
       Note: The nucleus contract, including the new port API
+    - Path: picocalc-os/nucleus/vm.c
+      Note: One QuickJS runtime per world; allocator, budget and stack limit become port-dependent
     - Path: picocalc-os/sim/st7365p.c
       Note: Simulated panel; the behaviour the device back end must reproduce on real glass
     - Path: picocalc-os/sim/stm32kbd.c
       Note: Simulated STM32 southbridge; defines the I2C register contract the JS drivers rely on
-    - Path: picocalc-os/js/system/compositor.js
-      Note: The largest world; owns the framebuffer and drives the display driver
+    - Path: repo://picocalc-os/port/esp32p4/main/bus_p4.c
+      Note: I2C and SPI worker tasks, buffer pinning
+    - Path: repo://picocalc-os/port/esp32p4/main/main_p4.c
+      Note: Kernel task real-time loop and serial console
+    - Path: repo://picocalc-os/port/esp32p4/main/port_p4.c
+      Note: Real clock, aligned PSRAM heaps, JS bundle lookup
+    - Path: repo://picocalc-os/tools/p4cap.py
+      Note: Reset, console commands and shot decoding from the host
 ExternalSources:
     - /home/manuel/code/wesen/go-go-golems/esp32-s3-m5/0099-esp32-p4-picocalc-display-keyboard
     - /home/manuel/code/wesen/go-go-golems/esp32-s3-m5/0101-esp32-p4-native-quickjs
     - /home/manuel/code/wesen/go-go-golems/go-go-parc/Projects/2026/06/01/ARTICLE - ESP32-P4-WIFI6 as PicoCalc MCU - Deep Technical Dive.md
     - /home/manuel/code/wesen/go-go-golems/go-go-parc/Projects/2026/06/25/ARTICLE - PicoCalc Keyboard Reset and I2C Recovery - ESP32-P4 Host Investigation.md
-Summary: "How picocalc-os works, what in it is simulation-only, and how to run the same nucleus and the same JavaScript on a PicoCalc whose RP2040 was replaced by a Waveshare ESP32-P4-WIFI6."
+Summary: How picocalc-os works, what in it is simulation-only, and how the same nucleus and the same JavaScript run on a PicoCalc whose RP2040 was replaced by a Waveshare ESP32-P4-WIFI6 (implemented; section 15 has the results).
 LastUpdated: 2026-10-24T03:40:34.130287221-04:00
-WhatFor: "Onboarding an engineer to picocalc-os and to the ESP32-P4 port; the reference for the port seam."
-WhenToUse: "Read before changing the nucleus, the bus back ends, the ESP-IDF project, or before debugging the device build."
+WhatFor: Onboarding an engineer to picocalc-os and to the ESP32-P4 port; the reference for the port seam.
+WhenToUse: Read before changing the nucleus, the bus back ends, the ESP-IDF project, or before debugging the device build.
 ---
 
 # picocalc-os on the ESP32-P4: analysis, design and implementation guide
@@ -468,7 +476,7 @@ compositor and display die mid-transfer, the buffer outlives them until the DMA 
 
 | What | Where | Why |
 |---|---|---|
-| World heaps (13 × 256–768 KB limits) | PSRAM, `heap_caps_malloc(n, MALLOC_CAP_SPIRAM \| MALLOC_CAP_8BIT)` | They do not fit in about 580 KB of internal RAM |
+| World heaps (13 × 256–768 KB limits) | PSRAM, `heap_caps_aligned_alloc(8, n, MALLOC_CAP_SPIRAM \| MALLOC_CAP_8BIT)` (8-aligned: see 15.2) | They do not fit in about 580 KB of internal RAM |
 | Framebuffer back + front (2 × 200 KB) | PSRAM | Same |
 | SPI bounce buffers (2 × 32 KiB) | Internal, `MALLOC_CAP_DMA` | GPSPI DMA reads internal memory without cache-coherency work |
 | Kernel task stack (64 KB) | Internal | Speed. QuickJS's stack limit is set to 48 KB below the top |
@@ -503,7 +511,7 @@ posted to the kernel task and executed there, between `kernel_run_until` calls, 
 | `bench` | Re-runs the calibration loops on the real clock |
 
 Every kernel log line keeps its `[   1234.567]` prefix, and fault frames keep their `#OCT1 ` prefix, so
-a host program can tell them apart. `tools/p4ctl.py` on the host resets the board via DTR/RTS, collects
+a host program can tell them apart. `tools/p4cap.py` on the host resets the board via DTR/RTS, collects
 the boot log, sends commands, and decodes `shot` output into a PNG with the same 2x scale as the host
 captures. Section 9 uses it.
 
@@ -667,7 +675,7 @@ The host decodes it, checks the CRC, converts RGB565 to RGB888, and writes a PNG
 | P1 | ESP-IDF project `port/esp32p4/`: CMake listing the nucleus and QuickJS sources, JS bundle generator, `sdkconfig.defaults` (UART console, 32 MB flash, PSRAM 200 MHz hex, FreeRTOS 1 kHz, 4 MB app partition), PSRAM allocator, kernel task, real clock | **G2:** the firmware builds, boots, logs calibration and "booting 13 worlds" |
 | P2 | I2C worker and back end | **G3:** keyboard and power drivers run without I2C errors; `stats` shows I2C transfers; battery percentage published |
 | P3 | SPI worker, D/C, RST, bounce buffers, buffer pinning | **G4:** the home screen appears on the glass; `shot` decodes to a picture matching `out/01-home.png` in layout |
-| P4 | Console (`stats`, `key`, `type`, `shot`, `crash`, `restart`, `heap`, `bench`) and `tools/p4ctl.py` | **G5:** a scripted tour (open System, REPL evaluates `1+2`, Faults crashes `flaky`, keyboard killed and restarted) works over serial |
+| P4 | Console (`stats`, `key`, `type`, `shot`, `crash`, `restart`, `heap`, `bench`) and `tools/p4cap.py` | **G5:** a scripted tour (open System, REPL evaluates `1+2`, Faults crashes `flaky`, keyboard killed and restarted) works over serial |
 | P5 | Measurements: calibration on the real clock, lane busy %, per-world cpu, flush ms, I2C share; budget adjustments if needed | **G6:** numbers recorded in the diary against the simulator's predictions |
 
 ## 10. Test strategy
@@ -675,7 +683,7 @@ The host decodes it, checks the CRC, converts RGB565 to RGB888, and writes a PNG
 - **Host regression (G1).** `make clean && make shots && git status --short out/`. Any changed PNG
   fails the refactor. Also `make M32=1 shots` and `make SAN=1 shots` (AddressSanitizer catches lifetime
   mistakes introduced by moving code).
-- **Device boot.** Capture with `tools/p4ctl.py boot`: reset by RTS with DTR deasserted, then read for
+- **Device boot.** Capture with `tools/p4cap.py`: reset by RTS with DTR deasserted, then read for
   N seconds. Expect ESP-IDF v5.4.2, chip revision v1.3, 32 MB PSRAM, the calibration line,
   "booting 13 worlds", and no `#OCT1` fault frames in the first 3 s.
 - **Device buses.** `stats` after 10 s: the I2C transfer count grows about 100 per second
@@ -768,3 +776,61 @@ See section 6.1 for the declarations. Their contracts:
 - go-go-parc, "ESP32-P4-WIFI6 as PicoCalc MCU – Deep Technical Dive": chip revision v1.3, console on
   CH343/UART0, one owner per serial port, reset-and-capture with pyserial.
 - go-go-parc, "PicoCalc Keyboard Reset and I2C Recovery": never touch register 0x08; quiet-bus recovery.
+
+## 15. Implementation status and findings (2026-10-24)
+
+The port is implemented and runs on the device. This section records what was built, where it departs
+from the plan above, and what the device measured.
+
+### 15.1 Status by phase
+
+| Phase | Gate | Result | Commits |
+|---|---|---|---|
+| P0 port seam | G1 host shots unchanged | passed (64-bit; the 32-bit build needs gcc-multilib, absent on the dev machine) | f136c3b, a9ff900 |
+| P1 ESP-IDF project | G2 boots, calibrates, 13 worlds | passed | 64263b2 |
+| P2 I2C worker | G3 keyboard and power drivers on the STM32 | passed: battery `{"pct":100,"charging":true}`, 0 I2C errors, 49.5 polls/s | 64263b2 |
+| P3 SPI worker | G4 home screen on the glass | passed: the user saw the first frame on the glass (before the -O2 fix); after it, `shot` matches `out/01-home.png` in layout | 64263b2 |
+| P4 console | G5 scripted tour | passed: REPL `1+2` → 3, sandbox loop stopped at 200 ms, flaky contained, display killed mid-flush and re-initialised | 64263b2, cf9f1e7 |
+| P5 measurements | G6 numbers vs model | recorded below; no budget changes needed | — |
+
+Physical key presses on the real keyboard are the only gate that needs a person. The driver path is
+the same one that already reads the battery register correctly.
+
+### 15.2 Departures from the design
+
+- **World heaps are 8-aligned** (`heap_caps_aligned_alloc`, with realloc implemented as allocate + copy +
+  free). QuickJS 2026-06-04 has its own arena allocator whose headers are `aligned(JS_MALLOC_ALIGN = 8)`.
+  ESP-IDF's heap returns 4-aligned blocks: a probe showed `malloc(24) -> 0x48000a94`. glibc always
+  returns 16-aligned blocks, so the host could not show this.
+- **QuickJS is compiled with `-fwrapv -fno-strict-aliasing`** on both builds. At `-O2`, GCC 14.2 for
+  RISC-V miscompiled QuickJS's 32-bit NaN-boxed values. The compositor's first paint crashed with a
+  load access fault in `string_getc` (a JS string pointer read back as `0x9017be00`) on every boot.
+  Both `-Og` and `-O2 -fno-strict-aliasing` run clean. The violating QuickJS code has not been
+  identified.
+- **`int32_t` locals for `JS_ToInt32`.** On RISC-V newlib, `int32_t` is `long`, so the nucleus' `int *`
+  arguments were type errors there.
+- **`shot` is encoded on its own task.** The kernel task copies the framebuffer, and a low-priority task
+  encodes and prints it. Done on the kernel task, each shot stopped every world for about 2.5 s, and
+  the keyboard fell from 49 to 33 polls/s during a tour.
+- **The System app gained a cpu% column, and the compositor clamps right-aligned table cells.** Both
+  came from a user report on the device: the turns counter grew past what short simulator scripts
+  produce and painted over the next column.
+- **`sys.stats()` gained `board` and `clock`**, so About describes the device truthfully.
+
+### 15.3 Measured on the device vs the model
+
+| Quantity | Model / simulator | Device |
+|---|---|---|
+| 100k-iteration loop | 133 ms (calibrated on 0101's build) | 115 ms at -O2 (calibration runtime), 124 ms in the sandbox world (PSRAM heap), 135 ms at -Og |
+| fib(20) | 29.1 ms | 29.0 ms at -O2, 31.5 ms at -Og |
+| world start | — | about 55 ms each; 13 worlds in about 0.8 s |
+| first frame on glass | — | about 1.4 s after the kernel starts |
+| keyboard poll rate | 50/s | 49.5/s idle, 48–49/s while typing, evaluating or sending shots |
+| I2C occupancy | "about a third" | 26–28% |
+| SPI efficiency | 40 MHz + 12 µs/chunk | 468,834 bytes in 120 ms of bus time (93.8 ms on the wire, about 78%) |
+| lane busy | — | about 8% on the home screen, 18–23% with System open |
+| compositor CPU | — | about 13 ms per turn on average, 8% of wall time with System open (its 500 ms refresh) |
+| memory | — | 2,582 KB of JS heap across 13 worlds; 30.5 MB PSRAM and 193 KB internal free after boot |
+
+The model was calibrated against an `-Og` build of QuickJS. At `-O2` the device is about 13% faster
+than the simulator predicts. No world came near its budget in normal use.
