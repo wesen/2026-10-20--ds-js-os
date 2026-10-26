@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "quickjs.h"
+#include <stdio.h>
 
 typedef int64_t vtime_t;                      // virtual microseconds since boot
 #define MS(x) ((vtime_t)((x) * 1000))
@@ -53,14 +53,11 @@ enum { W_IDLE, W_BUSY, W_RESTARTING, W_STOPPED };
 #define MAX_LIST 16
 #define NAME_LEN 32
 
-typedef struct { int id; JSValue resolve, reject; } pending_t;
-
 typedef struct world {
   int id;
   char name[NAME_LEN], kind[12], file[96], title[NAME_LEN];
   char *source;
-  JSRuntime *rt;
-  JSContext *ctx;
+  struct vmw *vm;           // the engine binding's state for this world (vm.c, vm_mqjs.c); NULL when not running
   int status;
   int prio;                 // the lane takes runnable worlds by priority, then by arrival
   bool boot_ready; vtime_t boot_t; uint64_t boot_seq;
@@ -80,7 +77,6 @@ typedef struct world {
   bool turn_async, turn_done, turn_failed, turn_rejected;
   char *turn_result, *turn_error;
   int reply_hs[MAX_MSG_HANDLES], reply_nh;
-  pending_t *pend; int n_pend, cap_pend;
   // limits, from the manifest
   char claims[MAX_LIST][NAME_LEN]; int n_claims;
   size_t mem_limit;         // device bytes
@@ -99,8 +95,6 @@ typedef struct world {
   vtime_t cpu_us, turn_started;
   vtime_t seg_deadline;     // real-time mode: the segment is stopped when the clock passes this
   uint64_t seed;
-  JSValue fn_dispatch, fn_render;
-  JSValue unhandled[8], unhandled_why[8]; int n_unhandled;
 } world_t;
 
 // ---- events ---------------------------------------------------------------------------------------------
@@ -218,7 +212,15 @@ bool world_needs(world_t *W, const char *ch);
 bool world_provides(world_t *W, const char *ch);
 bool world_claims(world_t *W, const char *claim);
 
-// vm.c
+// the engine binding: vm.c (QuickJS) or vm_mqjs.c (MicroQuickJS); one is linked into a build
+typedef struct {                // one entry of system.json's "worlds", as the binding's JSON parser read it
+  char name[NAME_LEN], file[96];
+  bool has_budget, has_mem, has_prio;
+  double budget_ms, mem_kb, priority;
+  char claims[MAX_LIST][NAME_LEN]; int n_claims;
+} manifest_world_t;
+int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(void *arg, const manifest_world_t *w), void *arg);
+const char *vm_engine_name(void);
 int vm_create(world_t *W);
 void vm_dispose(world_t *W);
 void vm_begin_segment(world_t *W, vtime_t budget_us);
@@ -226,8 +228,6 @@ int64_t vm_steps(world_t *W);
 int vm_dispatch(world_t *W, msg_t *m);
 int vm_settle(world_t *W, settle_t *s);
 char *vm_render(world_t *W);
-int vm_new_promise(world_t *W, JSValue *promise);
-const char *vm_exception(JSContext *ctx, char *buf, size_t n);
 void vm_calibrate(void);
 
 // hw.c

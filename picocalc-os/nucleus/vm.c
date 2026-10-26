@@ -7,6 +7,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "nucleus.h"
+#include "quickjs.h"
+
+// What this binding keeps per world, behind world_t's opaque vm pointer.
+typedef struct { int id; JSValue resolve, reject; } pending_t;
+struct vmw {
+  JSRuntime *rt;
+  JSContext *ctx;
+  pending_t *pend; int n_pend, cap_pend;   // the world's promises the kernel will settle
+  JSValue fn_dispatch, fn_render;
+  JSValue unhandled[8], unhandled_why[8]; int n_unhandled;
+};
+const char *vm_engine_name(void) { return "QuickJS " CONFIG_VERSION; }
 
 // ---- the allocator: per-world accounting and limit (the blocks come from the port's world heap) ----------
 static size_t host_limit(world_t *W) { return (size_t)((double)W->mem_limit * PROFILE.mem_scale); }
@@ -54,20 +66,20 @@ static int on_interrupt(JSRuntime *rt, void *opaque) {
 
 void vm_begin_segment(world_t *W, vtime_t budget_us) {
   W->seg_interrupts0 = W->interrupts;
-  W->seg_counter0 = W->ctx ? JS_GetInterruptCounter(W->ctx) : JS_GetInterruptCounterInit();
+  W->seg_counter0 = W->vm && W->vm->ctx ? JS_GetInterruptCounter(W->vm->ctx) : JS_GetInterruptCounterInit();
   W->budget_interrupts = (int64_t)((double)budget_us * 1000.0 / (PROFILE.ns_per_step * JS_GetInterruptCounterInit())) + 1;
   W->seg_deadline = K.realtime ? port_clock() + budget_us : VT_INF;
   W->overrun = false;
 }
 
 int64_t vm_steps(world_t *W) {
-  if (!W->ctx) return 0;
-  return (W->interrupts - W->seg_interrupts0) * JS_GetInterruptCounterInit() + W->seg_counter0 - JS_GetInterruptCounter(W->ctx);
+  if (!W->vm || !W->vm->ctx) return 0;
+  return (W->interrupts - W->seg_interrupts0) * JS_GetInterruptCounterInit() + W->seg_counter0 - JS_GetInterruptCounter(W->vm->ctx);
 }
 
 // ---- errors --------------------------------------------------------------------------------------------------
 // The exception as "message (file:line)", with the stack after a newline.
-const char *vm_exception(JSContext *ctx, char *buf, size_t n) {
+static const char *vm_exception(JSContext *ctx, char *buf, size_t n) {
   JSValue e = JS_GetException(ctx);
   const char *msg = NULL, *stack = NULL;
   JSValue sv = JS_UNDEFINED;
@@ -109,7 +121,7 @@ const char *vm_exception(JSContext *ctx, char *buf, size_t n) {
 
 static void set_error(world_t *W) {
   char b[2048];
-  vm_exception(W->ctx, b, sizeof b);
+  vm_exception(W->vm->ctx, b, sizeof b);
   char *nl = strchr(b, '\n');
   free(W->trace);
   W->trace = nl ? xstrdup(nl + 1) : NULL;
@@ -466,13 +478,13 @@ static JSValue host_k(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 }
 
 // ---- async operations: each returns a promise the kernel settles later -----------------------------------------
-int vm_new_promise(world_t *W, JSValue *out) {
+static int vm_new_promise(world_t *W, JSValue *out) {
   JSValue f[2];
-  JSValue p = JS_NewPromiseCapability(W->ctx, f);
+  JSValue p = JS_NewPromiseCapability(W->vm->ctx, f);
   if (JS_IsException(p)) return -1;
-  if (W->n_pend == W->cap_pend) { W->cap_pend = W->cap_pend ? W->cap_pend * 2 : 16; W->pend = realloc(W->pend, sizeof(pending_t) * W->cap_pend); }
+  if (W->vm->n_pend == W->vm->cap_pend) { W->vm->cap_pend = W->vm->cap_pend ? W->vm->cap_pend * 2 : 16; W->vm->pend = realloc(W->vm->pend, sizeof(pending_t) * W->vm->cap_pend); }
   int id = ++K.next_promise;
-  W->pend[W->n_pend++] = (pending_t){ id, f[0], f[1] };
+  W->vm->pend[W->vm->n_pend++] = (pending_t){ id, f[0], f[1] };
   *out = p;
   return id;
 }
@@ -549,39 +561,39 @@ ex:
 static void on_rejection(JSContext *ctx, JSValueConst promise, JSValueConst reason, JS_BOOL handled, void *opaque) {
   world_t *W = opaque;
   if (!handled) {
-    if (W->n_unhandled < 8) { W->unhandled[W->n_unhandled] = JS_DupValue(ctx, promise); W->unhandled_why[W->n_unhandled++] = JS_DupValue(ctx, reason); }
+    if (W->vm->n_unhandled < 8) { W->vm->unhandled[W->vm->n_unhandled] = JS_DupValue(ctx, promise); W->vm->unhandled_why[W->vm->n_unhandled++] = JS_DupValue(ctx, reason); }
     return;
   }
-  for (int i = 0; i < W->n_unhandled; i++)
-    if (JS_VALUE_GET_PTR(W->unhandled[i]) == JS_VALUE_GET_PTR(promise)) {
-      JS_FreeValue(ctx, W->unhandled[i]); JS_FreeValue(ctx, W->unhandled_why[i]);
-      W->unhandled[i] = W->unhandled[--W->n_unhandled]; W->unhandled_why[i] = W->unhandled_why[W->n_unhandled];
+  for (int i = 0; i < W->vm->n_unhandled; i++)
+    if (JS_VALUE_GET_PTR(W->vm->unhandled[i]) == JS_VALUE_GET_PTR(promise)) {
+      JS_FreeValue(ctx, W->vm->unhandled[i]); JS_FreeValue(ctx, W->vm->unhandled_why[i]);
+      W->vm->unhandled[i] = W->vm->unhandled[--W->vm->n_unhandled]; W->vm->unhandled_why[i] = W->vm->unhandled_why[W->vm->n_unhandled];
       return;
     }
 }
 static void drop_unhandled(world_t *W, bool report) {
-  for (int i = 0; i < W->n_unhandled; i++) {
+  for (int i = 0; i < W->vm->n_unhandled; i++) {
     if (report) {
-      const char *m = JS_ToCString(W->ctx, W->unhandled_why[i]);
+      const char *m = JS_ToCString(W->vm->ctx, W->vm->unhandled_why[i]);
       klog("%s: a promise was rejected and nothing handled it: %s", W->name, m ? m : "?");
-      JS_FreeCString(W->ctx, m);
+      JS_FreeCString(W->vm->ctx, m);
     }
-    JS_FreeValue(W->ctx, W->unhandled[i]); JS_FreeValue(W->ctx, W->unhandled_why[i]);
+    JS_FreeValue(W->vm->ctx, W->vm->unhandled[i]); JS_FreeValue(W->vm->ctx, W->vm->unhandled_why[i]);
   }
-  W->n_unhandled = 0;
+  W->vm->n_unhandled = 0;
 }
 
 static int run_jobs(world_t *W) {
   for (;;) {
     JSContext *c;
-    int r = JS_ExecutePendingJob(W->rt, &c);
+    int r = JS_ExecutePendingJob(W->vm->rt, &c);
     if (r == 0) { drop_unhandled(W, true); return 0; }
     if (r < 0) { set_error(W); return -1; }
   }
 }
 
 static int read_meta(world_t *W, JSValue meta) {
-  JSContext *ctx = W->ctx;
+  JSContext *ctx = W->vm->ctx;
   struct { const char *key; char (*dst)[NAME_LEN]; int *n; } lists[] = {
     { "needs", W->needs, &W->n_needs }, { "provides", W->provides, &W->n_provides },
   };
@@ -611,20 +623,21 @@ static int read_meta(world_t *W, JSValue meta) {
 
 int vm_create(world_t *W) {
   W->oom = false; W->interrupts = 0; W->mem_used = 0;
-  W->rt = JS_NewRuntime2(&MF, W);
-  if (!W->rt) { snprintf(W->last_error, sizeof W->last_error, "could not make a runtime within %zu KB", W->mem_limit / 1024); return -1; }
-  JS_SetMaxStackSize(W->rt, port_js_stack());
-  JS_SetInterruptHandler(W->rt, on_interrupt, W);
-  JS_SetHostPromiseRejectionTracker(W->rt, on_rejection, W);
-  W->ctx = JS_NewContext(W->rt);
-  if (!W->ctx) { snprintf(W->last_error, sizeof W->last_error, "could not make a context within %zu KB", W->mem_limit / 1024); JS_FreeRuntime(W->rt); W->rt = NULL; return -1; }
-  JS_SetContextOpaque(W->ctx, W);
+  W->vm = calloc(1, sizeof(*W->vm));
+  W->vm->rt = JS_NewRuntime2(&MF, W);
+  if (!W->vm->rt) { snprintf(W->last_error, sizeof W->last_error, "could not make a runtime within %zu KB", W->mem_limit / 1024); return -1; }
+  JS_SetMaxStackSize(W->vm->rt, port_js_stack());
+  JS_SetInterruptHandler(W->vm->rt, on_interrupt, W);
+  JS_SetHostPromiseRejectionTracker(W->vm->rt, on_rejection, W);
+  W->vm->ctx = JS_NewContext(W->vm->rt);
+  if (!W->vm->ctx) { snprintf(W->last_error, sizeof W->last_error, "could not make a context within %zu KB", W->mem_limit / 1024); JS_FreeRuntime(W->vm->rt); W->vm->rt = NULL; return -1; }
+  JS_SetContextOpaque(W->vm->ctx, W);
   vm_begin_segment(W, MS(600));   // booting may take longer than a turn
-  JSContext *ctx = W->ctx;
+  JSContext *ctx = W->vm->ctx;
   JSValue g = JS_GetGlobalObject(ctx);
   JS_SetPropertyStr(ctx, g, "__k", JS_NewCFunction(ctx, host_k, "__k", 1));
   JS_SetPropertyStr(ctx, g, "__ka", JS_NewCFunction(ctx, host_ka, "__ka", 1));
-  W->fn_dispatch = JS_UNDEFINED; W->fn_render = JS_UNDEFINED;
+  W->vm->fn_dispatch = JS_UNDEFINED; W->vm->fn_render = JS_UNDEFINED;
   int rc = 0;
   JSValue r = JS_Eval(ctx, K.prelude, K.prelude_len, "prelude.js", JS_EVAL_TYPE_GLOBAL);
   if (JS_IsException(r)) { set_error(W); rc = -1; }
@@ -642,8 +655,8 @@ int vm_create(world_t *W) {
     JS_FreeValue(ctx, meta); JS_FreeValue(ctx, init);
   }
   if (!rc) {
-    W->fn_dispatch = JS_GetPropertyStr(ctx, g, "__dispatch");
-    W->fn_render = JS_GetPropertyStr(ctx, g, "__render");
+    W->vm->fn_dispatch = JS_GetPropertyStr(ctx, g, "__dispatch");
+    W->vm->fn_render = JS_GetPropertyStr(ctx, g, "__render");
     rc = run_jobs(W);
   }
   JS_FreeValue(ctx, g);
@@ -652,20 +665,23 @@ int vm_create(world_t *W) {
 }
 
 void vm_dispose(world_t *W) {
-  if (!W->rt) return;
-  JSContext *ctx = W->ctx;
+  if (!W->vm) return;
+  if (!W->vm->rt) { free(W->vm); W->vm = NULL; return; }
+  JSContext *ctx = W->vm->ctx;
   drop_unhandled(W, false);
-  for (int i = 0; i < W->n_pend; i++) { JS_FreeValue(ctx, W->pend[i].resolve); JS_FreeValue(ctx, W->pend[i].reject); }
-  W->n_pend = 0;
-  JS_FreeValue(ctx, W->fn_dispatch); JS_FreeValue(ctx, W->fn_render);
-  W->fn_dispatch = W->fn_render = JS_UNDEFINED;
+  for (int i = 0; i < W->vm->n_pend; i++) { JS_FreeValue(ctx, W->vm->pend[i].resolve); JS_FreeValue(ctx, W->vm->pend[i].reject); }
+  W->vm->n_pend = 0;
+  JS_FreeValue(ctx, W->vm->fn_dispatch); JS_FreeValue(ctx, W->vm->fn_render);
+  W->vm->fn_dispatch = W->vm->fn_render = JS_UNDEFINED;
   JS_FreeContext(ctx);
-  JS_FreeRuntime(W->rt);
-  W->rt = NULL; W->ctx = NULL;
+  JS_FreeRuntime(W->vm->rt);
+  free(W->vm->pend);
+  free(W->vm);
+  W->vm = NULL;
 }
 
 int vm_dispatch(world_t *W, msg_t *m) {
-  JSContext *ctx = W->ctx;
+  JSContext *ctx = W->vm->ctx;
   world_t *F = m->from >= 0 ? world_by_id(m->from) : NULL;
   if (m->json) charge_json(strlen(m->json));
   JSValue a[5];
@@ -674,7 +690,7 @@ int vm_dispatch(world_t *W, msg_t *m) {
   a[2] = m->json ? JS_NewString(ctx, m->json) : JS_NULL;
   a[3] = F ? JS_NewString(ctx, F->name) : JS_NULL;
   a[4] = JS_NewBool(ctx, m->ask != 0);
-  JSValue r = JS_Call(ctx, W->fn_dispatch, JS_UNDEFINED, 5, (JSValueConst *)a);
+  JSValue r = JS_Call(ctx, W->vm->fn_dispatch, JS_UNDEFINED, 5, (JSValueConst *)a);
   for (int i = 0; i < 5; i++) JS_FreeValue(ctx, a[i]);
   if (JS_IsException(r)) { set_error(W); return -1; }
   if (!W->turn_async && !W->turn_rejected && !W->turn_done) {
@@ -688,12 +704,12 @@ int vm_dispatch(world_t *W, msg_t *m) {
 }
 
 int vm_settle(world_t *W, settle_t *s) {
-  JSContext *ctx = W->ctx;
+  JSContext *ctx = W->vm->ctx;
   int k = -1;
-  for (int i = 0; i < W->n_pend; i++) if (W->pend[i].id == s->promise) { k = i; break; }
+  for (int i = 0; i < W->vm->n_pend; i++) if (W->vm->pend[i].id == s->promise) { k = i; break; }
   if (k < 0) return 0;
-  pending_t p = W->pend[k];
-  W->pend[k] = W->pend[--W->n_pend];
+  pending_t p = W->vm->pend[k];
+  W->vm->pend[k] = W->vm->pend[--W->vm->n_pend];
   JSValue v;
   if (s->ok) v = s->json ? JS_ParseJSON(ctx, s->json, strlen(s->json), "<kernel>") : JS_UNDEFINED;
   else {
@@ -712,13 +728,52 @@ int vm_settle(world_t *W, settle_t *s) {
 }
 
 char *vm_render(world_t *W) {
-  JSContext *ctx = W->ctx;
-  JSValue r = JS_Call(ctx, W->fn_render, JS_UNDEFINED, 0, NULL);
+  JSContext *ctx = W->vm->ctx;
+  JSValue r = JS_Call(ctx, W->vm->fn_render, JS_UNDEFINED, 0, NULL);
   if (JS_IsException(r)) { set_error(W); W->turn_failed = true; free(W->turn_error); W->turn_error = xstrdup(W->last_error); return NULL; }
   char *out = NULL;
   if (JS_IsString(r)) { size_t n; const char *s = JS_ToCStringLen(ctx, &n, r); out = xstrdup(s); JS_FreeCString(ctx, s); charge_json(n); }
   JS_FreeValue(ctx, r);
   return out;
+}
+
+// ---- the manifest ---------------------------------------------------------------------------------------------
+int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(void *arg, const manifest_world_t *w), void *arg) {
+  JSRuntime *rt = JS_NewRuntime();
+  JSContext *ctx = JS_NewContext(rt);
+  JSValue v = JS_ParseJSON(ctx, json, n, path);
+  int rc = 0;
+  if (JS_IsException(v)) {
+    char b[512]; fprintf(stderr, "%s: %s\n", path, vm_exception(ctx, b, sizeof b));
+    JS_FreeContext(ctx); JS_FreeRuntime(rt);
+    return -1;
+  }
+  JSValue ws = JS_GetPropertyStr(ctx, v, "worlds");
+  JSValue lv = JS_GetPropertyStr(ctx, ws, "length");
+  int32_t count = 0; JS_ToInt32(ctx, &count, lv); JS_FreeValue(ctx, lv);
+  for (int i = 0; !rc && i < count; i++) {
+    JSValue o = JS_GetPropertyUint32(ctx, ws, (uint32_t)i);
+    manifest_world_t mw = { 0 };
+    JSValue f;
+    const char *s;
+    f = JS_GetPropertyStr(ctx, o, "name"); s = JS_ToCString(ctx, f); snprintf(mw.name, sizeof mw.name, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "file"); s = JS_ToCString(ctx, f); snprintf(mw.file, sizeof mw.file, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "budget_ms"); if ((mw.has_budget = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.budget_ms, f); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "mem_kb"); if ((mw.has_mem = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.mem_kb, f); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "priority"); if ((mw.has_prio = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.priority, f); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "claims");
+    JSValue cl = JS_GetPropertyStr(ctx, f, "length"); int32_t nc = 0; JS_ToInt32(ctx, &nc, cl); JS_FreeValue(ctx, cl);
+    for (int k = 0; k < nc && k < MAX_LIST; k++) {
+      JSValue e = JS_GetPropertyUint32(ctx, f, (uint32_t)k);
+      s = JS_ToCString(ctx, e); snprintf(mw.claims[mw.n_claims++], NAME_LEN, "%s", s ? s : ""); JS_FreeCString(ctx, s); JS_FreeValue(ctx, e);
+    }
+    JS_FreeValue(ctx, f);
+    JS_FreeValue(ctx, o);
+    if (add(arg, &mw)) rc = -1;
+  }
+  JS_FreeValue(ctx, ws); JS_FreeValue(ctx, v);
+  JS_FreeContext(ctx); JS_FreeRuntime(rt);
+  return rc;
 }
 
 // The virtual cost of one interrupt-counter step, from a measurement on the ESP32-P4: the 0101 firmware's

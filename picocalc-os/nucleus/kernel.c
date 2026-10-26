@@ -97,7 +97,7 @@ static bool in_list(char (*l)[NAME_LEN], int n, const char *s) { for (int i = 0;
 bool world_needs(world_t *W, const char *ch) { return in_list(W->needs, W->n_needs, ch); }
 bool world_provides(world_t *W, const char *ch) { return in_list(W->provides, W->n_provides, ch); }
 bool world_claims(world_t *W, const char *c) { return in_list(W->claims, W->n_claims, c); }
-static bool alive(world_t *W) { return W->status == W_IDLE && W->ctx; }
+static bool alive(world_t *W) { return W->status == W_IDLE && W->vm; }
 
 msg_t *new_msg(int kind, const char *type, const char *json, int from) {
   msg_t *m = calloc(1, sizeof(*m));
@@ -402,7 +402,7 @@ static void run_segment(world_t *W, bool is_settle) {
     }
   }
   // render what the world shows, as part of its segment
-  if (rc == 0 && !booting && W->ctx && W->has_screen && !W->oom && !W->overrun) {
+  if (rc == 0 && !booting && W->vm && W->has_screen && !W->oom && !W->overrun) {
     char *f = vm_render(W);
     if (f && (!W->frame || strcmp(f, W->frame))) {
       free(W->frame); W->frame = f;
@@ -523,52 +523,38 @@ void kernel_init(const char *js_root, const char *uart_path) {
 
 static uint64_t hash(const char *s) { uint64_t h = 1469598103934665603ull; while (*s) { h ^= (unsigned char)*s++; h *= 1099511628211ull; } return h; }
 
+// One world of the manifest, as the engine binding parsed it.
+static int add_world(void *arg, const manifest_world_t *mw) {
+  (void)arg;
+  if (K.n_worlds >= MAX_WORLDS) return 0;
+  world_t *W = calloc(1, sizeof(*W));
+  W->id = K.n_worlds;
+  snprintf(W->name, sizeof W->name, "%s", mw->name);
+  snprintf(W->file, sizeof W->file, "%s", mw->file);
+  W->budget_us = mw->has_budget ? (vtime_t)(mw->budget_ms * 1000) : MS(50);
+  W->mem_limit = mw->has_mem ? (size_t)(mw->mem_kb * 1024) : 1024 * 1024;
+  W->prio = mw->has_prio ? (int)mw->priority : -1;
+  for (int k = 0; k < mw->n_claims && k < MAX_LIST; k++) snprintf(W->claims[W->n_claims++], NAME_LEN, "%s", mw->claims[k]);
+  char path[512];
+  snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
+  W->source = port_read_file(path, NULL);
+  if (!W->source) { fprintf(stderr, "cannot read %s\n", path); free(W); return -1; }
+  snprintf(W->kind, sizeof W->kind, "world");
+  snprintf(W->title, sizeof W->title, "%s", W->name);
+  W->seed = hash(W->name);
+  W->status = W_RESTARTING;
+  W->boot_ready = true; W->boot_t = 0; W->boot_seq = ++K.seq;
+  K.worlds[K.n_worlds++] = W;
+  return 0;
+}
+
 int kernel_boot(const char *manifest) {
   size_t n;
   char *txt = port_read_file(manifest, &n);
   if (!txt) { fprintf(stderr, "cannot read %s\n", manifest); return -1; }
-  JSRuntime *rt = JS_NewRuntime();
-  JSContext *ctx = JS_NewContext(rt);
-  JSValue v = JS_ParseJSON(ctx, txt, n, manifest);
+  int rc = vm_read_manifest(txt, n, manifest, add_world, NULL);
   free(txt);
-  if (JS_IsException(v)) { char b[512]; fprintf(stderr, "%s: %s\n", manifest, vm_exception(ctx, b, sizeof b)); return -1; }
-  JSValue ws = JS_GetPropertyStr(ctx, v, "worlds");
-  JSValue lv = JS_GetPropertyStr(ctx, ws, "length");
-  int32_t count = 0; JS_ToInt32(ctx, &count, lv); JS_FreeValue(ctx, lv);
-  for (int i = 0; i < count && K.n_worlds < MAX_WORLDS; i++) {
-    JSValue o = JS_GetPropertyUint32(ctx, ws, (uint32_t)i);
-    world_t *W = calloc(1, sizeof(*W));
-    W->id = K.n_worlds;
-    JSValue f;
-    const char *s;
-    f = JS_GetPropertyStr(ctx, o, "name"); s = JS_ToCString(ctx, f); snprintf(W->name, sizeof W->name, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
-    f = JS_GetPropertyStr(ctx, o, "file"); s = JS_ToCString(ctx, f); snprintf(W->file, sizeof W->file, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
-    double d = 0;
-    f = JS_GetPropertyStr(ctx, o, "budget_ms"); W->budget_us = JS_IsUndefined(f) ? MS(50) : (JS_ToFloat64(ctx, &d, f), (vtime_t)(d * 1000)); JS_FreeValue(ctx, f);
-    f = JS_GetPropertyStr(ctx, o, "mem_kb"); W->mem_limit = JS_IsUndefined(f) ? 1024 * 1024 : (JS_ToFloat64(ctx, &d, f), (size_t)(d * 1024)); JS_FreeValue(ctx, f);
-    f = JS_GetPropertyStr(ctx, o, "priority"); W->prio = JS_IsUndefined(f) ? -1 : (JS_ToFloat64(ctx, &d, f), (int)d); JS_FreeValue(ctx, f);
-    f = JS_GetPropertyStr(ctx, o, "claims");
-    JSValue cl = JS_GetPropertyStr(ctx, f, "length"); int32_t nc = 0; JS_ToInt32(ctx, &nc, cl); JS_FreeValue(ctx, cl);
-    for (int k = 0; k < nc && k < MAX_LIST; k++) {
-      JSValue e = JS_GetPropertyUint32(ctx, f, (uint32_t)k);
-      s = JS_ToCString(ctx, e); snprintf(W->claims[W->n_claims++], NAME_LEN, "%s", s ? s : ""); JS_FreeCString(ctx, s); JS_FreeValue(ctx, e);
-    }
-    JS_FreeValue(ctx, f);
-    JS_FreeValue(ctx, o);
-    char path[512];
-    snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
-    W->source = port_read_file(path, NULL);
-    if (!W->source) { fprintf(stderr, "cannot read %s\n", path); return -1; }
-    snprintf(W->kind, sizeof W->kind, "world");
-    snprintf(W->title, sizeof W->title, "%s", W->name);
-    W->seed = hash(W->name);
-    W->status = W_RESTARTING;
-    W->boot_ready = true; W->boot_t = 0; W->boot_seq = ++K.seq;
-    W->fn_dispatch = W->fn_render = JS_UNDEFINED;
-    K.worlds[K.n_worlds++] = W;
-  }
-  JS_FreeValue(ctx, ws); JS_FreeValue(ctx, v);
-  JS_FreeContext(ctx); JS_FreeRuntime(rt);
+  if (rc) return -1;
   klog("booting %d worlds from %s", K.n_worlds, manifest);
   return 0;
 }
