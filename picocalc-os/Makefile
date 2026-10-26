@@ -37,7 +37,7 @@ $(BUILD)/qjs/%.o: $(QJS)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -w -fwrapv -fno-strict-aliasing -c -o $@ $<   # as upstream; see port/esp32p4/main/CMakeLists.txt
 
-$(BUILD)/%.o: %.c nucleus/nucleus.h nucleus/font_data.h
+$(BUILD)/%.o: %.c nucleus/nucleus.h nucleus/font_data.h sim/picocalc.h host/board.h
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c -o $@ $<
 

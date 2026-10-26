@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../nucleus/nucleus.h"
+#include "picocalc.h"
 
 static vtime_t wire_us(double bits, int hz) { return (vtime_t)(bits * 1e6 / (hz > 0 ? hz : 1) + 0.5); }
 

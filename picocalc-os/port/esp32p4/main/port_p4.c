@@ -36,6 +36,7 @@ void port_big_free(void *p) { heap_caps_free(p); }
 // the kernel task has an 80 KB stack; runtimes are made a few KB below its top, and C frames below a
 // JS call (host calls, printf) need room past the limit
 size_t port_js_stack(void) { return 56 * 1024; }
+const char *const *port_bus_names(void) { static const char *const b[] = { "i2c0", "spi2", NULL }; return b; }
 const char *port_board_name(void) { return "ESP32-P4 in a PicoCalc"; }
 
 struct js_file { const char *path; const unsigned char *data; size_t len; };

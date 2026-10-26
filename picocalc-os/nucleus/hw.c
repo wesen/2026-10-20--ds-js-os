@@ -36,7 +36,10 @@ static bool revoked(handle_t *h) {
   return false;
 }
 
-static const char *type_name(int t) { return t == H_I2C ? "i2c" : t == H_SPI ? "spi" : "dma"; }
+static const char *type_name(int t) {
+  static const char *names[] = { "i2c", "spi", "dma", "epd", "adc", "gpio" };
+  return t >= 0 && t <= H_GPIO ? names[t] : "?";
+}
 
 handle_t *handle_use(world_t *W, int id, int type, int right, char *err, size_t n) {
   handle_t *h = handle_find(id);
@@ -96,6 +99,11 @@ int dmabuf_alloc(int w, int h) {
   return -1;
 }
 dmabuf_t *handle_buf(handle_t *h) { return h && h->buf >= 0 && K.bufs[h->buf].live ? &K.bufs[h->buf] : NULL; }
+
+int bus_index(const char *name) {
+  for (int i = 0; i < K.n_buses; i++) if (!strcmp(K.buses[i].name, name)) return i;
+  return -1;
+}
 
 // ---- buses: accounting. The transfers themselves are the port's (bus_run_*: sim/bus_sim.c on the host). -----
 vtime_t bus_start(int bus, vtime_t at) {
@@ -160,7 +168,7 @@ char *hw_handles_json(void) {
 char *hw_buses_json(void) {
   sbuf_t b = { 0 };
   sb_add(&b, "[");
-  for (int i = 0; i < N_BUSES; i++) {
+  for (int i = 0; i < K.n_buses; i++) {
     bus_t *u = &K.buses[i];
     sb_printf(&b, "%s{\"name\":\"%s\",\"busy_ms\":%.3f,\"bytes\":%llu,\"transfers\":%llu,\"errors\":%llu}", i ? "," : "",
               u->name, u->busy_us / 1000.0, (unsigned long long)u->bytes, (unsigned long long)u->transfers, (unsigned long long)u->errors);

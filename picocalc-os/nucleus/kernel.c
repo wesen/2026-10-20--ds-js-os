@@ -511,8 +511,7 @@ vtime_t kernel_next_wake(void) {
 // ---- boot ----------------------------------------------------------------------------------------------------------
 void kernel_init(const char *js_root, const char *uart_path) {
   snprintf(K.js_root, sizeof K.js_root, "%s", js_root);
-  K.buses[BUS_I2C0].name = "i2c0";
-  K.buses[BUS_SPI2].name = "spi2";
+  for (const char *const *b = port_bus_names(); *b && K.n_buses < MAX_BUSES; b++) K.buses[K.n_buses++].name = *b;
   if (uart_path) K.uart = fopen(uart_path, "w");   // else whatever the port set (the device: stdout)
   char p[512];
   snprintf(p, sizeof p, "%s/prelude.js", js_root);
@@ -615,7 +614,7 @@ void kernel_stats_print(void) {
     printf("  %-11s %-8s %-10s %7llu %9.2f %8.1f %6zu %4d  %s\n", W->name, W->kind, state_name(W), (unsigned long long)W->turns, W->cpu_us / 1000.0,
            W->mem_used / PROFILE.mem_scale / 1024.0, W->mem_limit / 1024, restarts_of(W), W->last_error);
   }
-  for (int i = 0; i < N_BUSES; i++)
+  for (int i = 0; i < K.n_buses; i++)
     printf("  bus %-5s busy %8.2f ms, %llu transfers, %llu bytes, %llu errors\n", K.buses[i].name, K.buses[i].busy_us / 1000.0,
            (unsigned long long)K.buses[i].transfers, (unsigned long long)K.buses[i].bytes, (unsigned long long)K.buses[i].errors);
 }

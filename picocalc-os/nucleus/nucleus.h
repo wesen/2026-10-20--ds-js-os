@@ -109,14 +109,14 @@ typedef struct event {
 } event_t;
 
 // ---- handles: hardware a world holds ---------------------------------------------------------------------
-enum { H_I2C, H_SPI, H_DMA };
+enum { H_I2C, H_SPI, H_DMA, H_EPD, H_ADC, H_GPIO };
 enum { R_READ = 1, R_WRITE = 2, R_GRANT = 4 };
 typedef struct {
   int id, type, rights, parent, minter;
   uint64_t holders;         // bit per world id
   bool live, revoked;
   char claim[NAME_LEN];
-  int bus, addr, hz;        // H_I2C / H_SPI
+  int bus, addr, hz;        // H_I2C / H_SPI / H_EPD (bus); H_ADC (addr = unit, hz = channel); H_GPIO (addr = pin)
   int buf;                  // H_DMA: index into the buffer table (shared by a handle and its children)
 } handle_t;
 #define MAX_HANDLES 128
@@ -135,7 +135,8 @@ typedef struct {            // a bus: transfers on it are serialised
   vtime_t busy_us;
   uint64_t bytes, transfers, errors;
 } bus_t;
-enum { BUS_I2C0, BUS_SPI2, N_BUSES };
+#define MAX_BUSES 4
+enum { BUS_I2C0, BUS_SPI2 };   // the PicoCalc's buses, in the order its ports name them (port_bus_names)
 
 // ---- deferred effects: what a segment did, applied when it ends -------------------------------------------
 typedef struct deferred {
@@ -168,7 +169,7 @@ typedef struct {
   deferred_t *defer_head, *defer_tail;
   handle_t handles[MAX_HANDLES]; int n_handles;
   dmabuf_t bufs[MAX_BUFS];
-  bus_t buses[N_BUSES];
+  bus_t buses[MAX_BUSES]; int n_buses;
   ask_t asks[MAX_ASKS]; int next_ask;
   int next_promise;
   uint64_t turns, segments, published, delivered, crashes;
@@ -242,6 +243,7 @@ bool world_holds(world_t *W, int id);
 int dmabuf_alloc(int w, int h);
 dmabuf_t *handle_buf(handle_t *h);
 void dmabuf_unref(int i);
+int bus_index(const char *name);   // -1 if this board has no such bus
 vtime_t bus_start(int bus, vtime_t at);
 void bus_finish(int bus, vtime_t start, vtime_t end, uint64_t bytes, bool error);
 void hw_i2c(world_t *W, handle_t *h, const uint8_t *wr, int nwr, int nrd, vtime_t gap, int promise);
@@ -261,19 +263,6 @@ int gfx_text_len(const char *s);
 int gfx_commit(dmabuf_t *b, int *rects, int max_rects);
 uint16_t gfx_color(const char *s);
 const char *gfx_font_names(void);
-
-// sim/ (the host's board)
-void sim_init(void);
-void st7365p_reset(void);
-void st7365p_cmd(uint8_t cmd, vtime_t t);
-void st7365p_data(const uint8_t *d, int n, vtime_t t);
-int st7365p_capture_png(const char *path, int scale);
-void st7365p_report(void);
-void stm32_init(void);
-int stm32_i2c(const uint8_t *wr, int nwr, uint8_t *rd, int nrd);
-void stm32_key(uint8_t code, int state);
-void stm32_battery(int pct, bool charging);
-int stm32_backlight(void);
 
 // png.c (host only)
 int png_write_rgb(const char *path, const uint8_t *rgb, int w, int h);
@@ -297,6 +286,7 @@ void port_big_free(void *p);
 size_t port_js_stack(void);               // the JS stack limit of a world's runtime
 char *port_read_file(const char *path, size_t *len);   // a malloc'ed, NUL-terminated copy, or NULL
 const char *port_board_name(void);
+const char *const *port_bus_names(void);   // the board's buses, NULL-terminated; their order gives their indices
 // the bus back ends: each starts the transfer a deferred effect describes, at the time the segment that issued
 // it ended, and settles d->promise once with kernel_settle_at(). They own d->bytes (free it or take it).
 void bus_run_i2c(deferred_t *d, vtime_t at);

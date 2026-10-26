@@ -3,7 +3,7 @@
 // two-byte read; a write sets bit 7 of the register number. It serves the key FIFO, the screen and
 // keyboard backlights and the battery level.
 #include <string.h>
-#include "../nucleus/nucleus.h"
+#include "picocalc.h"
 
 enum { REG_VER = 0x01, REG_CFG = 0x02, REG_INT = 0x03, REG_KEY = 0x04, REG_BKL = 0x05, REG_DEB = 0x06,
        REG_FRQ = 0x07, REG_RST = 0x08, REG_FIF = 0x09, REG_BK2 = 0x0A, REG_BAT = 0x0B, REG_OFF = 0x0E };
