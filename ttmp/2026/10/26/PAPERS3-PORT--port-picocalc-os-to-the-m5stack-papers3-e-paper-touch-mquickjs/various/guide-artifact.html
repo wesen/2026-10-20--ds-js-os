@@ -1,0 +1,1649 @@
+<title>PaperS3 Port Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column the width of a paper page, a contents rail beside it on wide screens,
+   and a strip of phase chips under the heading that shows how far the port has got. */
+:root {
+  --paper: #eceeea;        /* e-ink white: a faint green-gray, never pure */
+  --sheet: #f6f7f4;
+  --ink: #1a1d1b;
+  --ink-2: #4d534f;
+  --ink-3: #868c87;
+  --rule: #cfd3cd;
+  --accent: #2f5d8a;       /* the cobalt of a pen mark on the page */
+  --done: #2f6e4a; --active: #9a6a12; --blocked: #a33a2c; --todo: #868c87;
+  --code-bg: #e2e5df;
+  --display: "Literata", "Charis SIL", Georgia, serif;
+  --body: "Literata", "Charis SIL", Georgia, serif;
+  --label: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #161917; --sheet: #1d211f; --ink: #e3e6e1; --ink-2: #b2b8b2; --ink-3: #7d847e; --rule: #333a36;
+  --accent: #8db6e0; --done: #7cc59a; --active: #e0b45a; --blocked: #ec8a7c; --todo: #7d847e; --code-bg: #232825; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #161917; --sheet: #1d211f; --ink: #e3e6e1; --ink-2: #b2b8b2; --ink-3: #7d847e; --rule: #333a36;
+  --accent: #8db6e0; --done: #7cc59a; --active: #e0b45a; --blocked: #ec8a7c; --todo: #7d847e; --code-bg: #232825; color-scheme: dark }
+
+body { background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; }
+header.top { grid-column: 1 / -1; padding-block: 48px 8px; border-bottom: 4px solid var(--ink); display: grid; gap: 14px; }
+.eyebrow { font: 600 12px/1 var(--label); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+h1 { font: 800 clamp(30px, 5vw, 46px)/1.08 var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { color: var(--ink-2); max-width: 64ch; margin: 0; }
+.strip { list-style: none; margin: 6px 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ph { display: grid; gap: 2px; padding: 8px 12px 9px; border: 1px solid var(--rule); background: var(--sheet); min-width: 0; border-top: 3px solid var(--todo); }
+.ph.done { border-top-color: var(--done); } .ph.active { border-top-color: var(--active); } .ph.blocked { border-top-color: var(--blocked); }
+.ph-name { font: 600 13px/1.2 var(--label); letter-spacing: .04em; }
+.ph-state { font: 500 12px/1.2 var(--label); color: var(--ink-3); max-width: 22ch; overflow-wrap: anywhere; }
+.ph.done .ph-state { color: var(--done); } .ph.active .ph-state { color: var(--active); } .ph.blocked .ph-state { color: var(--blocked); }
+.meta { font: 500 12px/1 var(--label); color: var(--ink-3); letter-spacing: .04em; }
+
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; max-height: calc(100vh - 32px); overflow: auto; padding-top: 28px; font: 500 14px/1.35 var(--label); }
+nav.toc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+nav.toc ul ul { padding-left: 12px; margin-top: 6px; gap: 4px; font-size: 13px; }
+nav.toc a { color: var(--ink-2); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); }
+nav.toc ul ul a { color: var(--ink-3); }
+
+main { min-width: 0; padding-top: 12px; }
+main > * { max-width: 72ch; }
+main h2 { font: 800 26px/1.2 var(--display); margin: 52px 0 12px; padding-top: 14px; border-top: 1px solid var(--rule); text-wrap: balance; }
+main h3 { font: 600 19px/1.3 var(--display); margin: 32px 0 8px; text-wrap: balance; }
+main p, main li { color: var(--ink); }
+main em { color: var(--ink-2); }
+main a { color: var(--accent); }
+main code { font: 400 .84em/1.4 var(--mono); background: var(--code-bg); padding: 1px 4px; overflow-wrap: anywhere; }
+main pre { max-width: none; background: var(--sheet); border: 1px solid var(--rule); border-left: 3px solid var(--ink); padding: 14px 16px; overflow-x: auto; font: 400 13px/1.45 var(--mono); }
+main pre code { background: none; padding: 0; font: inherit; overflow-wrap: normal; }
+.tbl { max-width: none; overflow-x: auto; margin: 16px 0; }
+main table { border-collapse: collapse; font: 400 14.5px/1.4 var(--body); min-width: 100%; }
+main th { font: 600 12px/1.2 var(--label); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); text-align: left; padding: 8px 12px 6px 0; border-bottom: 2px solid var(--ink); }
+main td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+main td code { font-size: .8em; }
+main hr { border: 0; border-top: 1px solid var(--rule); }
+@media (max-width: 860px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  nav.toc { position: static; max-height: none; padding-top: 18px; border-bottom: 1px solid var(--rule); padding-bottom: 18px; }
+  header.top { padding-top: 28px; }
+}
+@media (prefers-reduced-motion: no-preference) { nav.toc a { transition: color .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">Ticket PAPERS3-PORT · design guide</span>
+    <h1>picocalc-os on the M5Stack PaperS3</h1>
+    <p class="lede">Porting a JavaScript OS of supervised worlds to an e-paper tablet: MicroQuickJS worlds, gray framebuffers, a refresh planner, GT911 touch and a paper-first compositor.</p>
+    <ul class="strip" aria-label="Phase progress"><li class="ph done"><span class="ph-name">Guide</span><span class="ph-state">written</span></li><li class="ph todo"><span class="ph-name">P0</span><span class="ph-state">not started</span></li><li class="ph todo"><span class="ph-name">P1</span><span class="ph-state">not started</span></li><li class="ph todo"><span class="ph-name">P2</span><span class="ph-state">not started</span></li><li class="ph todo"><span class="ph-name">P3</span><span class="ph-state">not started</span></li><li class="ph blocked"><span class="ph-name">P4</span><span class="ph-state">blocked on device access</span></li><li class="ph todo"><span class="ph-name">P5</span><span class="ph-state">not started</span></li></ul>
+    <span class="meta">Guide last updated 2026-10-26 19:33</span>
+  </header>
+  <nav class="toc" aria-label="Contents"><ul>
+<li><a href="#1-executive-summary" id="toc-1-executive-summary">1.
+Executive summary</a></li>
+<li><a href="#2-problem-statement-and-scope"
+id="toc-2-problem-statement-and-scope">2. Problem statement and
+scope</a></li>
+<li><a href="#3-orientation-what-picocalc-os-is"
+id="toc-3-orientation-what-picocalc-os-is">3. Orientation: what
+picocalc-os is</a></li>
+<li><a
+href="#4-current-state-analysis-what-assumes-the-picocalc-or-quickjs"
+id="toc-4-current-state-analysis-what-assumes-the-picocalc-or-quickjs">4.
+Current-state analysis: what assumes the PicoCalc or QuickJS</a></li>
+<li><a href="#5-gap-analysis" id="toc-5-gap-analysis">5. Gap
+analysis</a></li>
+<li><a href="#6-proposed-architecture"
+id="toc-6-proposed-architecture">6. Proposed architecture</a></li>
+<li><a href="#7-decision-records" id="toc-7-decision-records">7.
+Decision records</a></li>
+<li><a href="#8-key-flows-in-pseudocode"
+id="toc-8-key-flows-in-pseudocode">8. Key flows in pseudocode</a></li>
+<li><a href="#9-implementation-phases"
+id="toc-9-implementation-phases">9. Implementation phases</a></li>
+<li><a href="#10-test-strategy" id="toc-10-test-strategy">10. Test
+strategy</a></li>
+<li><a href="#11-risks-and-open-questions"
+id="toc-11-risks-and-open-questions">11. Risks and open
+questions</a></li>
+<li><a href="#12-deferred-work" id="toc-12-deferred-work">12. Deferred
+work</a></li>
+<li><a href="#13-api-reference" id="toc-13-api-reference">13. API
+reference</a></li>
+<li><a href="#14-references" id="toc-14-references">14.
+References</a></li>
+<li><a href="#15-implementation-status-and-findings"
+id="toc-15-implementation-status-and-findings">15. Implementation status
+and findings</a></li>
+</ul>
+</nav>
+  <main>
+<p><em>Ticket PAPERS3-PORT. Written for an engineer who has not seen
+picocalc-os, MicroQuickJS or the PaperS3 before. Section 3 explains what
+the system is; sections 4–5 say what has to change and why; section 6 is
+the design; sections 7–13 are decisions, flows, the plan, tests, risks
+and the API reference. Section 15 records what was built and measured,
+and is updated as the work goes on.</em></p>
+<h2 id="1-executive-summary">1. Executive summary</h2>
+<p>picocalc-os is a small operating system written mostly in JavaScript.
+A C <em>nucleus</em> runs many isolated JavaScript programs, called
+<em>worlds</em>, one at a time on a single <em>lane</em>. Each world has
+its own heap limit and time budget. Worlds talk only by messages, hold
+hardware only through checked <em>handles</em>, and are restarted by the
+nucleus when they crash. Drivers, the compositor and apps are all
+worlds. It already runs on Linux against a simulated PicoCalc and on a
+real PicoCalc with an ESP32-P4.</p>
+<p>This ticket ports it to the <strong>M5Stack PaperS3</strong>: an
+ESP32-S3 with 8 MB of PSRAM, a 4.7" 960×540 16-gray e-paper panel driven
+directly over a parallel bus, a GT911 capacitive touch screen, a BM8563
+real-time clock, a battery ADC and <strong>no keyboard</strong>. The
+port changes four things at once:</p>
+<ol type="1">
+<li><strong>The JavaScript engine.</strong> Worlds move from QuickJS to
+<strong>MicroQuickJS</strong> (mquickjs). Each world gets one fixed
+memory arena, so the per-world heap limit comes free. Contexts are
+created in about 0.6 ms, and earlier PaperS3 work (PULP OS,
+<code>esp32-s3-m5/0114</code>) already runs it there. The price is the
+dialect: mquickjs is strict ES5, with no <code>let</code>, no arrow
+functions, no classes, no template strings, no Promise and no async. The
+nucleus therefore gets an <strong>engine seam</strong>, and the PaperS3
+build gets its own ES5 prelude, which implements the turn-and-promise
+model in plain JavaScript.</li>
+<li><strong>Pixels.</strong> Framebuffers become 8-bit gray. The panel
+shows 16 levels, and its refresh modes trade gray depth for speed. The
+<code>gfx</code> primitives learn proportional, anti-aliased fonts made
+from open TTFs.</li>
+<li><strong>The screen pipeline.</strong> An e-paper refresh is slow and
+leaves ghosts, so the display driver becomes a <strong>refresh
+planner</strong>. It merges damaged rectangles, chooses a waveform mode
+for each update, counts partial updates, and schedules a clean full
+refresh before ghosting builds up. The waveforms themselves stay in C
+(M5GFX <code>Panel_EPD</code>).</li>
+<li><strong>Input.</strong> A JavaScript GT911 driver polls the touch
+controller over I2C and publishes touch points. The compositor turns
+them into taps, long presses and swipes, and delivers them to the ui
+node under the finger. The keyboard-first UI becomes a touch-first,
+paper-style UI. An on-screen keyboard is drawn for the REPL.</li>
+</ol>
+<p>The PicoCalc build stays as it is and keeps its byte-identical
+screenshot gate. The PaperS3 gets a host build
+(<code>make BOARD=papers3</code>) with a simulated panel, touch
+controller, RTC and battery, so the whole system can be run, scripted
+and captured without the device. The device port lives in
+<code>port/esp32s3-papers3/</code>.</p>
+<h2 id="2-problem-statement-and-scope">2. Problem statement and
+scope</h2>
+<p><strong>In scope</strong></p>
+<ul>
+<li>An engine seam in the nucleus: <code>kernel.c</code>,
+<code>hw.c</code>, <code>gfx.c</code> and <code>util.c</code> stop
+depending on QuickJS types, and the QuickJS binding (<code>vm.c</code>)
+and a new mquickjs binding (<code>vm_mqjs.c</code>) implement one
+interface.</li>
+<li>MicroQuickJS vendored with the same kind of small patches QuickJS
+got: an interrupt-counter getter, a finer counter, and a stdlib that
+exposes the nucleus's host calls.</li>
+<li>An ES5 prelude (<code>js-papers3/prelude.js</code>) that offers the
+same world API as the PicoCalc prelude. Async handlers return thenables
+instead of using <code>async</code>/<code>await</code>.</li>
+<li>8-bit gray framebuffers; proportional anti-aliased fonts;
+<code>gfx.measure</code> and <code>gfx.wrap</code> in C.</li>
+<li>An EPD handle type and <code>epd.update(fb, rect, mode)</code>. A
+JavaScript display driver with a refresh planner.</li>
+<li>A GT911 touch driver, a BM8563 clock driver and a battery/charge
+power driver, all JavaScript worlds over I2C and ADC/GPIO handles.</li>
+<li>A touch compositor (layout for 540×960 portrait, hit regions,
+gestures, chrome, crash banners) and the paper apps: launcher, system
+monitor, REPL with on-screen keyboard and sandbox, faults, touch
+inspector, about, and a sketch pad that exercises the fastest
+waveform.</li>
+<li>A host simulator of the PaperS3 (EPD glass with modes and ghosting,
+GT911, BM8563, battery) and script commands <code>tap</code>,
+<code>hold</code>, <code>swipe</code>, <code>drag</code>,
+<code>capture</code>.</li>
+<li>The ESP-IDF project for the ESP32-S3: kernel task, I2C and EPD
+worker tasks, PSRAM arenas, the embedded JavaScript tree, and a
+USB-Serial-JTAG console with <code>shot</code>. Plus a host client that
+respects this board's serial quirks.</li>
+</ul>
+<p><strong>Out of scope (deferred, see §12):</strong> Wi-Fi, SD card
+storage, deep sleep, the IMU and the buzzer, installing apps without
+reflashing, and bytecode precompilation of worlds.</p>
+<h2 id="3-orientation-what-picocalc-os-is">3. Orientation: what
+picocalc-os is</h2>
+<h3 id="31-the-big-picture">3.1 The big picture</h3>
+<pre><code>            ┌──────────────────────────── worlds (JavaScript, one engine context each) ─────────────────────────────┐
+            │  drivers:  touch.js   display.js   clock.js   power.js                                                 │
+            │  services: compositor.js   sandbox.js   flaky.js                                                        │
+            │  apps:     launcher  system  repl  faults  touch  about  sketch                                         │
+            └───────▲───────────────────────▲────────────────────────▲───────────────────────────▲──────────────────┘
+                    │ __k / __ka host calls │ messages, channels     │ handles (i2c, epd, adc,    │ frames (ui trees)
+                    │                       │                        │ gpio, framebuffers)        │
+            ┌───────┴───────────────────────┴────────────────────────┴───────────────────────────┴──────────────────┐
+            │ nucleus (C): kernel.c lane + clock + supervision · vm_*.c engine binding · hw.c handles · gfx.c pixels  │
+            └───────▲───────────────────────────────────────────────────────────────────────────────────▲───────────┘
+                    │ port API (nucleus.h, end)                                                         │
+       ┌────────────┴─────────────┐                                                       ┌─────────────┴──────────────┐
+       │ host: sim/papers3/*.c    │  virtual clock, simulated GT911/BM8563/EPD/battery     │ device: port/esp32s3-papers3│
+       │ host/main_host.c scripts │                                                       │ real clock, worker tasks    │
+       └──────────────────────────┘                                                       └─────────────────────────────┘</code></pre>
+<p><strong>Nucleus.</strong> The nucleus is about 2,100 lines of C. It
+owns the engine contexts, a clock and event queue, mailboxes and
+channels, the hardware handles, and pixel primitives. Everything with
+policy in it is JavaScript.</p>
+<p><strong>Worlds.</strong> A world is one JavaScript file plus the
+prelude, run in its own engine context. The manifest
+(<code>system.json</code>) says which worlds exist and gives each one
+its <em>claims</em> (what hardware or privileges it may ask for), a turn
+<em>budget</em> in milliseconds and a heap limit in KB. A world is
+declared with a builder:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// PicoCalc dialect (QuickJS, ES2020)                        // PaperS3 dialect (mquickjs, ES5)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">app</span>(<span class="st">&quot;snake&quot;</span>)<span class="op">.</span><span class="fu">title</span>(<span class="st">&quot;Snake&quot;</span>)<span class="op">.</span><span class="fu">state</span>({ <span class="dt">score</span><span class="op">:</span> <span class="dv">0</span> })             <span class="fu">app</span>(<span class="st">&quot;snake&quot;</span>)<span class="op">.</span><span class="fu">title</span>(<span class="st">&quot;Snake&quot;</span>)<span class="op">.</span><span class="fu">state</span>({ <span class="dt">score</span><span class="op">:</span> <span class="dv">0</span> })</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">on</span>(<span class="st">&quot;key&quot;</span><span class="op">,</span> (s<span class="op">,</span> k) <span class="kw">=&gt;</span> { <span class="op">...</span> })                               <span class="op">.</span><span class="fu">on</span>(<span class="st">&quot;tap&quot;</span><span class="op">,</span> <span class="kw">function</span> (s<span class="op">,</span> t) { <span class="op">...</span> })</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">every</span>(<span class="dv">110</span><span class="op">,</span> (s) <span class="kw">=&gt;</span> { <span class="op">...</span> })                                 <span class="op">.</span><span class="fu">every</span>(<span class="dv">110</span><span class="op">,</span> <span class="kw">function</span> (s) { <span class="op">...</span> })</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">screen</span>((s) <span class="kw">=&gt;</span> ui<span class="op">.</span><span class="fu">col</span>(ui<span class="op">.</span><span class="fu">text</span>(<span class="vs">`score </span><span class="sc">${</span>s<span class="op">.</span><span class="at">score</span><span class="sc">}</span><span class="vs">`</span>)))<span class="op">;</span>        <span class="op">.</span><span class="fu">screen</span>(<span class="kw">function</span> (s) { <span class="cf">return</span> ui<span class="op">.</span><span class="fu">col</span>(ui<span class="op">.</span><span class="fu">text</span>(<span class="st">&quot;score &quot;</span> <span class="op">+</span> s<span class="op">.</span><span class="at">score</span>))<span class="op">;</span> })<span class="op">;</span></span></code></pre></div>
+<p><strong>The lane, turns and segments.</strong> There is one lane of
+execution. A world runs when it has a message and the lane is free. The
+lane takes runnable worlds by priority (drivers 3, services 2, apps 1,
+the sandbox 0), then in arrival order (<code>kernel.c:pick</code>). A
+<strong>turn</strong> is one message handled to completion. If the
+handler returns a promise, the turn lasts until that promise settles.
+Each stretch of execution inside a turn is a <strong>segment</strong>.
+While a world is in a turn it receives no new messages; only settlements
+of its own promises run as further segments.</p>
+<p><strong>Deferred effects.</strong> Messages, channel posts, replies
+and bus transfers that a segment issues are collected and applied when
+the segment ends (<code>kernel.c:defer</code>,
+<code>apply_deferred</code>). A segment that crashes is discarded with
+all its effects.</p>
+<p><strong>Supervision.</strong> A world that throws, overruns its
+budget or runs out of heap is torn down. Its handles are dropped, and it
+is restarted after 100 ms, with the delay doubling up to 2 s. After five
+crashes in ten seconds it stays stopped until a world with
+<code>sys.admin</code> restarts it. Every change is published on
+<code>worlds.status</code>, and every crash is written as a
+<code>#OCT1 {json}</code> line to the console UART.</p>
+<p><strong>Handles.</strong> A world asks for hardware by claim, for
+example <code>hw.i2c("i2c0:0x1f")</code>, and gets a handle only if the
+manifest grants that claim. A handle is an id the kernel checks on every
+use. It can be narrowed to fewer rights (<code>fb.narrow("r")</code>),
+sent inside a message, and revoked by the world that narrowed it
+(<code>hw.c</code>).</p>
+<p><strong>The screen pipeline.</strong> Apps never draw. An app's
+<code>screen(state)</code> returns a tree of plain ui objects. After
+every turn in which the tree changed, the nucleus publishes it on the
+<code>frames</code> channel (<code>kernel.c:run_segment</code>). The
+compositor then:</p>
+<ol type="1">
+<li>lays out the focused app's tree with its own chrome into the back
+buffer;</li>
+<li>calls <code>fb.commit()</code>, which diffs the back buffer against
+the front buffer and returns the changed rectangles
+(<code>gfx.c:gfx_commit</code>);</li>
+<li>asks the display driver to send those rectangles to the panel.</li>
+</ol>
+<p><strong>Two clocks.</strong> On the host, time is <em>virtual</em>. A
+segment costs a fixed entry cost, plus its JavaScript work counted
+exactly by the engine's interrupt counter, plus the cost of its host
+calls. Bus transfers take the time their bits take on the wire. A script
+therefore replays identically, and the screenshots are a byte-exact
+regression oracle. On the device the clock is real: a segment costs what
+it took, and budgets are wall-clock deadlines
+(<code>vm.c:on_interrupt</code>).</p>
+<h3 id="32-the-source-tree-today">3.2 The source tree today</h3>
+<pre><code>picocalc-os/
+  nucleus/   kernel.c (635) vm.c (754, QuickJS) hw.c (170) gfx.c (159) util.c png.c nucleus.h font_data.h
+  sim/       st7365p.c stm32kbd.c bus_sim.c board.c          the simulated PicoCalc
+  host/      main_host.c (scripts, capture) port_host.c
+  port/esp32p4/main/  port_p4.c bus_p4.c main_p4.c          the ESP32-P4 device build
+  js/        prelude.js system.json drivers/ system/ apps/   the PicoCalc&#39;s worlds (ES2020)
+  third_party/quickjs  tools/gen_font.py tools/p4cap.py scripts/*.txt out/*.png</code></pre>
+<p>The port API at the end of <code>nucleus/nucleus.h</code> is the line
+between portable and board code: <code>port_clock</code>,
+<code>port_heap_*</code>, <code>port_big_*</code>,
+<code>port_js_stack</code>, <code>port_read_file</code>,
+<code>port_board_name</code>, and the bus back ends
+<code>bus_run_i2c</code>, <code>bus_run_spi_cmd</code>,
+<code>bus_run_spi_pixels</code>.</p>
+<h3 id="33-the-papers3">3.3 The PaperS3</h3>
+<p>Facts from the earlier PaperS3 projects in
+<code>~/code/wesen/go-go-golems/esp32-s3-m5</code> (paths relative to
+it):</p>
+<table>
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>What it is</th>
+<th>Where it is wired</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SoC</td>
+<td>ESP32-S3R8, 2× Xtensa LX7 at 240 MHz, 512 KB SRAM</td>
+<td></td>
+<td>vendor spec
+(<code>ttmp/2026/07/14/ESP-50-*/sources/web/01-*.md</code>)</td>
+</tr>
+<tr class="even">
+<td>Memory</td>
+<td>8 MB octal PSRAM (<code>CONFIG_SPIRAM_MODE_OCT</code>), 16 MB
+flash</td>
+<td></td>
+<td>every PaperS3 sdkconfig</td>
+</tr>
+<tr class="odd">
+<td>Panel</td>
+<td>ED047TC1, 4.7", 960×540 physical, 16 grays, no controller chip</td>
+<td>8-bit parallel via LCD_CAM: D0..7 = G6,14,7,12,9,11,8,10; XSTL 13,
+XLE 15, SPV 17, CKV 18, XCL 16, XOE 45, PWR 46, SYSPWR 44</td>
+<td><code>M5GFX.cpp:1972-2003</code> in 0114's managed M5GFX</td>
+</tr>
+<tr class="even">
+<td>Touch</td>
+<td>GT911, 2 points, raw range 540×960</td>
+<td>I2C1 SDA 41, SCL 42, 400 kHz, address 0x5D or 0x14, INT 48
+(unused)</td>
+<td><code>M5GFX.cpp:2010-2026</code></td>
+</tr>
+<tr class="odd">
+<td>RTC</td>
+<td>BM8563</td>
+<td>same I2C1, address 0x51</td>
+<td>vendor spec</td>
+</tr>
+<tr class="even">
+<td>IMU</td>
+<td>BMI270</td>
+<td>I2C1, 0x68</td>
+<td>vendor spec</td>
+</tr>
+<tr class="odd">
+<td>Battery</td>
+<td>1800 mAh, LGS4056H charger</td>
+<td>ADC1 ch2 on G3 (÷2 divider), charge status G4 (0 = charging), USB
+detect G5</td>
+<td><code>0109*/main/hal/hal.cpp:86-133</code></td>
+</tr>
+<tr class="even">
+<td>Buzzer</td>
+<td>passive</td>
+<td>G21 (LEDC)</td>
+<td><code>0109*/main/hal/hal.cpp:389</code></td>
+</tr>
+<tr class="odd">
+<td>microSD</td>
+<td>SPI</td>
+<td>CS 47, SCK 39, MOSI 38, MISO 40</td>
+<td>vendor spec</td>
+</tr>
+<tr class="even">
+<td>Button</td>
+<td>one side button, handled by the PMS150G power latch, not readable by
+apps</td>
+<td></td>
+<td><code>components/s3paper_m5</code></td>
+</tr>
+<tr class="odd">
+<td>USB</td>
+<td>native USB-Serial/JTAG, <code>303a:1001</code></td>
+<td><code>/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_D0:CF:13:16:17:DC-if00</code></td>
+<td>0114 README</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Refresh modes.</strong> M5GFX exposes four waveform modes.
+All the timings recorded on this board measure the software side, not
+ink physics (<code>ESP-50/reference/03:337,362-368</code>):</p>
+<table>
+<thead>
+<tr class="header">
+<th><code>epd_mode_t</code></th>
+<th>Grays</th>
+<th>Use</th>
+<th>Recorded software time per update (0112 soak, avg)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>epd_quality</code></td>
+<td>16</td>
+<td>clean full screens, images</td>
+<td>8.9 ms (+ about 243 ms panel work for a clean full, ESP-51 log)</td>
+</tr>
+<tr class="even">
+<td><code>epd_text</code></td>
+<td>16 (anti-aliased text)</td>
+<td>text pages</td>
+<td>40.0 ms</td>
+</tr>
+<tr class="odd">
+<td><code>epd_fast</code></td>
+<td>thresholded to black/white</td>
+<td>text regions, small updates</td>
+<td>4.5 ms</td>
+</tr>
+<tr class="even">
+<td><code>epd_fastest</code></td>
+<td>black/white, more ghosting</td>
+<td>ink, pen strokes</td>
+<td>2.8 ms</td>
+</tr>
+</tbody>
+</table>
+<p>The panel itself takes roughly a second to settle after a quality
+refresh. Fast modes leave <em>ghosts</em>, faint traces of earlier
+content. A periodic clean full refresh clears them. PULP OS ran a clean
+full every 16–64 partial updates
+(<code>components/s3paper_core/include/s3paper/refresh_planner.h:22-53</code>).
+The panel's optical quality was never qualified, and the investigation
+is paused. Blacks look weak in every mode
+(<code>ESP-50/design-doc/02 §5.2, §8.2</code>). This port does not
+reopen that work.</p>
+<p><strong>The serial console has two traps</strong> (0114 README:22-37,
+ESP-55 reference/01:540-580):</p>
+<ol type="1">
+<li>On this host's kernel (6.8, <code>cdc_acm</code>), merely
+<em>opening</em> <code>/dev/ttyACM0</code> asserts DTR and RTS. The
+resulting edges can latch the ESP32-S3 into ROM download mode, and the
+app then looks dead. The fingerprint is
+<code>rst:0x15 (USB_UART_CHIP_RESET), boot:0x0 (DOWNLOAD)</code>. The
+fix is a client that opens the port once, goes through DTR=RTS=0, pulses
+RTS for reset, and then keeps the descriptor open
+(<code>ttmp/2026/08/17/ESP-55-*/scripts/04-papers3-console-hold.py</code>).</li>
+<li>USB-Serial-JTAG drops output when no reader is attached, and the
+device re-enumerates on every reset. The device also has a known flaky
+connection: it dropped off USB mid-flash in ESP-57.</li>
+</ol>
+<h3 id="34-microquickjs">3.4 MicroQuickJS</h3>
+<p>MicroQuickJS (<code>bellard/mquickjs</code>, vendored at
+<code>esp32-s3-m5/imports/esp32-mqjs-repl/.../components/mquickjs</code>)
+is Fabrice Bellard's small JavaScript engine for microcontrollers. Five
+properties matter here:</p>
+<ul>
+<li><strong>One fixed arena per context.</strong>
+<code>JS_NewContext(mem, size, &amp;stdlib)</code> takes a caller-owned
+block. The engine never calls <code>malloc</code>, and running out of
+the arena throws <code>InternalError: out of memory</code>, which leaves
+the context usable. That is exactly a world's heap limit.</li>
+<li><strong>A compacting garbage collector.</strong> Values move. C code
+may keep a <code>JSValue</code> across an allocating call only through
+<code>JS_PushGCRef</code>/<code>JS_AddGCRef</code>. There is no
+<code>JS_FreeValue</code>, and no reference counting to get wrong.</li>
+<li><strong>A compiled-in standard library.</strong> The global object,
+its classes and its C functions are described in a C table
+(<code>mqjs_stdlib.c</code>). A <em>host</em> tool
+(<code>mquickjs_build.c</code>) turns that table into a ROM header.
+Exposing a C function means adding it to that table and regenerating the
+header, which is specific to the word size (<code>-m32</code> for the
+device).</li>
+<li><strong>Calling convention.</strong> Calls go through a value stack:
+<code>JS_StackCheck</code>, <code>JS_PushArg</code> for the arguments in
+reverse order, then the function, then <code>this</code>, then
+<code>JS_Call(ctx, argc)</code>.</li>
+<li><strong>The dialect.</strong> Probed on the host for this ticket
+(scratch build of the vendored copy) and on the device in 0113
+(<code>ESP-50/design-doc/05:93-104</code>):</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Works</th>
+<th>Fails</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>var</code>, closures, prototypes, <code>new</code>,
+<code>instanceof</code>, <code>arguments</code></td>
+<td><code>let</code>, <code>const</code>, <code>=&gt;</code>,
+<code>class</code>, template strings, spread, rest, destructuring,
+default parameters (SyntaxError)</td>
+</tr>
+<tr class="even">
+<td><code>for…in</code>, <code>for…of</code> over arrays,
+<code>switch</code>, labeled loops, try/catch/finally</td>
+<td><code>??</code>, <code>?.</code>, shorthand and computed keys,
+getters in literals (parse, but silently are plain functions)</td>
+</tr>
+<tr class="odd">
+<td>JSON.parse/stringify (no replacer or reviver; both are ignored)</td>
+<td>Promise, async/await, generators, Map, Set, WeakMap</td>
+</tr>
+<tr class="even">
+<td>Array: map, filter, reduce, some, every, indexOf, slice, splice,
+sort, push, unshift, join, isArray</td>
+<td>Array.from, find, findIndex, includes, flat</td>
+</tr>
+<tr class="odd">
+<td>String: split, indexOf, slice, substring, charCodeAt, replace
+(string and /g), trim, toUpperCase</td>
+<td>padStart, repeat, startsWith, endsWith</td>
+</tr>
+<tr class="even">
+<td>Object.keys, create, defineProperty, getPrototypeOf; Function
+bind/call/apply</td>
+<td>Object.assign, Object.entries, Object.freeze</td>
+</tr>
+<tr class="odd">
+<td>Math (incl. random, assignable), RegExp, typed arrays, indirect
+<code>(0, eval)(src)</code></td>
+<td><code>new Date(...)</code> (only <code>Date.now()</code>), direct
+<code>eval</code></td>
+</tr>
+<tr class="even">
+<td>errors with <code>name</code>/<code>message</code></td>
+<td><code>e.stack</code> is an empty string (the engine prints a
+backtrace through its log function instead)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>writing to an array hole (<code>a = []; a[10] = 1</code>) throws;
+assigning an undeclared global throws</td>
+</tr>
+</tbody>
+</table>
+<p>For this OS the missing Promise matters most. Async turns,
+<code>ask()</code>, <code>sleep()</code> and every bus transfer are
+promise-shaped in the PicoCalc build. §6.3 shows how an ES5 prelude
+keeps that shape.</p>
+<h2
+id="4-current-state-analysis-what-assumes-the-picocalc-or-quickjs">4.
+Current-state analysis: what assumes the PicoCalc or QuickJS</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Assumption</th>
+<th>Where</th>
+<th>Why it breaks on the PaperS3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>JSRuntime *</code>, <code>JSContext *</code>,
+<code>JSValue</code> fields in <code>world_t</code>,
+<code>quickjs.h</code> included by every nucleus file</td>
+<td><code>nucleus.h:12,56-108</code></td>
+<td>mquickjs has different, incompatible types under the same names</td>
+</tr>
+<tr class="even">
+<td>The manifest is parsed with <code>JS_ParseJSON</code></td>
+<td><code>kernel.c:kernel_boot</code></td>
+<td>engine-specific</td>
+</tr>
+<tr class="odd">
+<td>Host calls, promises (<code>JS_NewPromiseCapability</code>), job
+queue (<code>JS_ExecutePendingJob</code>), rejection tracker</td>
+<td><code>vm.c</code> throughout</td>
+<td>mquickjs has no promises or job queue</td>
+</tr>
+<tr class="even">
+<td>Interrupt-counter getters (patched QuickJS)</td>
+<td><code>vm.c:56-66</code>,
+<code>third_party/quickjs/PATCHES</code></td>
+<td>need an equivalent patch in mquickjs</td>
+</tr>
+<tr class="odd">
+<td>RGB565 <code>uint16_t</code> framebuffers, RGB blending,
+<code>0x0821</code> sentinel</td>
+<td><code>nucleus.h:dmabuf_t</code>, <code>gfx.c</code>,
+<code>hw.c:dmabuf_alloc</code></td>
+<td>the panel is 16-level gray; 2 bytes per pixel doubles PSRAM
+traffic</td>
+</tr>
+<tr class="even">
+<td>Monospace bitmap fonts (<code>font_def_t {name,w,h,data}</code>),
+text width = n × cell width, and the compositor computes widths in JS
+the same way</td>
+<td><code>font_data.h</code>, <code>gfx.c:gfx_text</code>,
+<code>compositor.js:len*fw</code></td>
+<td>at 235 dpi, an 8×16 cell is 1.7 mm tall; readable paper text wants
+proportional anti-aliased faces</td>
+</tr>
+<tr class="odd">
+<td><code>hw.i2c</code> accepts only <code>i2c0:*</code>;
+<code>hw.spi</code> only <code>spi2</code>; buses <code>BUS_I2C0</code>,
+<code>BUS_SPI2</code></td>
+<td><code>vm.c:op_hw_i2c/op_hw_spi</code>,
+<code>nucleus.h:bus_t</code></td>
+<td>the PaperS3 has I2C1 (touch, RTC, IMU), an EPD bus, an ADC and
+GPIOs</td>
+</tr>
+<tr class="even">
+<td>A keyboard on the STM32 at I2C 0x1F; <code>keys</code> channel; F1
+is home</td>
+<td><code>js/drivers/keyboard.js</code>, <code>compositor.js</code></td>
+<td>there is no keyboard; input is touch</td>
+</tr>
+<tr class="odd">
+<td>320×320 screen, status bar 22 px, hint bar 18 px, focus by keys</td>
+<td><code>compositor.js:1-5</code></td>
+<td>540×960 portrait, finger-sized targets (≥ 72 px), no focus ring</td>
+</tr>
+<tr class="even">
+<td>A flush is <code>CASET/RASET/RAMWR</code> + pixels over SPI at 40
+MHz, taking milliseconds</td>
+<td><code>js/drivers/display.js</code></td>
+<td>an e-paper update takes hundreds of milliseconds and the mode
+matters</td>
+</tr>
+<tr class="odd">
+<td><code>Date</code> is a virtual subclass with
+<code>new Date()</code></td>
+<td><code>js/prelude.js:16-25</code></td>
+<td>mquickjs has only <code>Date.now()</code>; the RTC gives real time
+on the device</td>
+</tr>
+</tbody>
+</table>
+<p>What carries over unchanged: the event queue, lane, turns, deferred
+effects, supervision, asks and timeouts, channels, the handle table and
+its rights, <code>gfx_commit</code>'s band diff, the host's script
+runner, the console protocol (<code>#OCT1</code>, <code>#SHOT</code>),
+and the device port's architecture (a kernel task plus bus worker tasks
+feeding one queue).</p>
+<h2 id="5-gap-analysis">5. Gap analysis</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Need</th>
+<th>Gap</th>
+<th>Closed by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Run worlds on mquickjs</td>
+<td>no engine seam; no mquickjs binding</td>
+<td>§6.1, §6.2 (phase 0, 1)</td>
+</tr>
+<tr class="even">
+<td>Async turns without Promise</td>
+<td>no promise machinery in ES5</td>
+<td>§6.3 prelude thenables (phase 1)</td>
+</tr>
+<tr class="odd">
+<td>Gray pixels, readable text</td>
+<td>RGB565 and monospace only</td>
+<td>§6.4 (phase 2)</td>
+</tr>
+<tr class="even">
+<td>E-paper refresh and ghost control</td>
+<td>no EPD handle or policy</td>
+<td>§6.5 (phase 2–3)</td>
+</tr>
+<tr class="odd">
+<td>Touch input</td>
+<td>no touch driver, gestures or hit testing</td>
+<td>§6.6, §6.8 (phase 3)</td>
+</tr>
+<tr class="even">
+<td>Wall-clock time</td>
+<td>no RTC driver</td>
+<td>§6.7 (phase 3)</td>
+</tr>
+<tr class="odd">
+<td>Battery</td>
+<td>no ADC/GPIO handles</td>
+<td>§6.7 (phase 3)</td>
+</tr>
+<tr class="even">
+<td>Paper UI</td>
+<td>PicoCalc compositor and apps are keyboard/320 px</td>
+<td>§6.8, §6.9 (phase 3)</td>
+</tr>
+<tr class="odd">
+<td>Simulate the board</td>
+<td>sim is PicoCalc-only</td>
+<td>§6.10 (phase 2–3)</td>
+</tr>
+<tr class="even">
+<td>Device</td>
+<td>no ESP32-S3 port</td>
+<td>§6.11 (phase 4)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-proposed-architecture">6. Proposed architecture</h2>
+<h3 id="61-boards-and-the-engine-seam">6.1 Boards and the engine
+seam</h3>
+<p>A <strong>board</strong> is a build configuration made of four
+things:</p>
+<ul>
+<li>an engine binding (<code>vm.c</code> for QuickJS,
+<code>vm_mqjs.c</code> for mquickjs);</li>
+<li>a pixel format (RGB565 or gray8);</li>
+<li>a JavaScript tree (<code>js/</code>, <code>js-papers3/</code>);</li>
+<li>a simulator (host) or port (device).</li>
+</ul>
+<pre><code>                 BOARD=picocalc (default)                    BOARD=papers3
+engine           nucleus/vm.c + third_party/quickjs          nucleus/vm_mqjs.c + third_party/mquickjs
+pixels           RGB565 (NUCLEUS_GRAY8 undefined)             gray8 (-DNUCLEUS_GRAY8)
+fonts            nucleus/font_data.h (Terminus cells)         nucleus/font_paper.h (Charis, Liberation, DejaVu Mono)
+js tree          js/ (ES2020)                                 js-papers3/ (ES5)
+host sim         sim/{st7365p,stm32kbd,bus_sim,board}.c       sim/papers3/{epd,gt911,bm8563,bus,board}.c
+device port      port/esp32p4/                                port/esp32s3-papers3/
+host binary      build/picocalc-host                          build-papers3/papers3-host</code></pre>
+<p>The nucleus stops including <code>quickjs.h</code>.
+<code>world_t</code> loses its engine fields (<code>rt</code>,
+<code>ctx</code>, <code>fn_dispatch</code>, <code>fn_render</code>,
+<code>pend</code>, <code>unhandled</code>) and gains one opaque pointer,
+<code>struct vmw *vm</code>. Each binding defines
+<code>struct vmw</code> privately. <code>kernel.c</code> checks
+<code>W-&gt;vm</code> where it used to check <code>W-&gt;ctx</code>. The
+manifest is parsed by the binding (<code>vm_read_manifest</code>),
+because each engine has its own JSON parser. Everything else in
+<code>kernel.c</code> and <code>hw.c</code> is already
+engine-neutral.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// nucleus.h — the engine interface each binding implements (vm.c, vm_mqjs.c)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> vmw<span class="op">;</span>                                    <span class="co">// the binding&#39;s per-world state</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>     vm_create<span class="op">(</span>world_t <span class="op">*</span>W<span class="op">);</span>                 <span class="co">// a context, the prelude, the world&#39;s file, __init → meta</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>    vm_dispose<span class="op">(</span>world_t <span class="op">*</span>W<span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>    vm_begin_segment<span class="op">(</span>world_t <span class="op">*</span>W<span class="op">,</span> vtime_t budget_us<span class="op">);</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int64_t</span> vm_steps<span class="op">(</span>world_t <span class="op">*</span>W<span class="op">);</span>                  <span class="co">// interrupt-counter steps since vm_begin_segment</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>     vm_dispatch<span class="op">(</span>world_t <span class="op">*</span>W<span class="op">,</span> msg_t <span class="op">*</span>m<span class="op">);</span>     <span class="co">// 0, or -1 with W-&gt;last_error set</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>     vm_settle<span class="op">(</span>world_t <span class="op">*</span>W<span class="op">,</span> settle_t <span class="op">*</span>s<span class="op">);</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span>   <span class="op">*</span>vm_render<span class="op">(</span>world_t <span class="op">*</span>W<span class="op">);</span>                 <span class="co">// the frame JSON, malloc&#39;ed, or NULL</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>    vm_calibrate<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>     vm_read_manifest<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>json<span class="op">,</span> <span class="dt">size_t</span> n<span class="op">,</span> <span class="dt">void</span> <span class="op">(*</span>world<span class="op">)(</span><span class="dt">void</span> <span class="op">*</span>arg<span class="op">,</span> <span class="dt">const</span> manifest_world_t <span class="op">*</span>w<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>arg<span class="op">);</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>vm_engine_name<span class="op">(</span><span class="dt">void</span><span class="op">);</span>              <span class="co">// &quot;quickjs 2026-06-04&quot;, &quot;mquickjs 84d793e0&quot;</span></span></code></pre></div>
+<p>The PicoCalc gate stays. After the seam,
+<code>make &amp;&amp; make shots</code> must still produce
+byte-identical <code>out/*.png</code>.</p>
+<h3 id="62-the-mquickjs-binding-nucleusvm_mqjsc">6.2 The mquickjs
+binding (<code>nucleus/vm_mqjs.c</code>)</h3>
+<p><strong>Arenas.</strong> <code>vm_create</code> allocates the world's
+arena with <code>port_heap_malloc(mem_limit × mem_scale)</code> and
+calls <code>JS_NewContext(arena, size, &amp;js_stdlib)</code>. On the
+host (64-bit <code>JSValue</code>) <code>mem_scale</code> is measured,
+as it was for QuickJS. <code>mem_used</code> comes from the engine's own
+memory statistics after each segment. Out of memory is the exception
+<code>InternalError: out of memory</code>, which the binding maps to
+<code>W-&gt;oom</code> and the existing "ran out of memory" crash. There
+is no allocator hook to account through: the arena <em>is</em> the
+limit.</p>
+<p><strong>Host calls.</strong> The stdlib table
+(<code>third_party/mquickjs/paper_stdlib.c</code>) is the stock
+<code>mqjs_stdlib.c</code> global object minus <code>load</code>,
+<code>setTimeout</code>, <code>clearTimeout</code> and <code>gc</code>,
+plus two C functions: <code>__k(op, ...)</code> for operations that
+finish now and <code>__ka(op, ...)</code> for operations that finish
+later. Unlike QuickJS, <code>__ka</code> does not return a promise. It
+returns a <strong>promise id</strong>, an integer. The prelude maps that
+id to a thenable and resolves it when the kernel later calls
+<code>__settle(id, ok, json)</code> (§6.3). The C side keeps no JS
+function references at all, so the moving GC never surprises it.</p>
+<pre><code>C → JS entry points (globals defined by the prelude, looked up by name each call)
+  __init()                      → meta object   (needs, provides, every, start, screen, kind, title)
+  __dispatch(kind, type, json, from, isAsk) → reply JSON string or undefined; calls __k(&quot;turn.async&quot;) for async turns
+  __settle(id, ok, json)        → resolves or rejects the thenable for promise id, then drains callbacks
+  __render()                    → frame JSON string or null
+JS → C  (C functions in the stdlib table)
+  __k(op, ...)                  synchronous ops: now, send, publish, log, turn.*, hw.*, h.*, gfx.*, epd.info, adc.read, gpio.get, sys.*
+  __ka(op, ...)                 → promise id: sleep, ask, i2c, epd.update</code></pre>
+<p><strong>Budgets and step counting.</strong> Patch the engine the way
+QuickJS was patched. Set <code>JS_INTERRUPT_COUNTER_INIT</code> to 1000,
+and add <code>JS_GetInterruptCounter(ctx)</code> and
+<code>JS_GetInterruptCounterInit()</code>. The interrupt handler is the
+same function as in <code>vm.c</code>: it counts calls, enforces the
+virtual budget on the host and the wall-clock deadline on the device,
+and stops the world on overrun (the engine throws
+<code>InternalError: interrupted</code>).</p>
+<p><strong>Errors.</strong> <code>e.stack</code> is empty in mquickjs,
+but the engine prints a backtrace when it prints an error value. The
+binding sets <code>JS_SetLogFunc</code> to write into a per-call buffer,
+and calls <code>JS_PrintValueF(ctx, exc, JS_DUMP_LONG)</code> to get
+<code>TypeError: … at f (file:line)</code>. That string becomes
+<code>last_error</code> and the fault frame's <code>detail</code>, so
+<code>#OCT1</code> frames look the same on both engines.</p>
+<p><strong>Calibration.</strong> The step-cost model needs a measurement
+of mquickjs on the ESP32-S3. Until the device run (phase 5) the papers3
+profile carries an estimate, and the About app says so.</p>
+<h3 id="63-the-es5-prelude-and-thenables">6.3 The ES5 prelude and
+thenables</h3>
+<p>The prelude (<code>js-papers3/prelude.js</code>) defines the same
+globals as the PicoCalc prelude: <code>app</code>, <code>driver</code>,
+<code>service</code>, <code>send</code>, <code>ask</code>,
+<code>publish</code>, <code>sleep</code>, <code>now</code>,
+<code>log</code>, <code>hw</code>, <code>dma</code>, <code>gfx</code>,
+<code>sys</code> and <code>ui</code>. All of it is written in ES5.
+Asynchrony becomes a small <strong>Task</strong>, a thenable with
+<code>then</code>, <code>catch</code> and <code>Task.all</code>. It is
+about 80 lines and implements just the parts of Promises/A+ the OS
+uses:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// js-papers3/prelude.js (sketch)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> pending <span class="op">=</span> {}<span class="op">;</span>                 <span class="co">// promise id → Task; an object, not an array (no holes)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> queue <span class="op">=</span> []<span class="op">;</span>                   <span class="co">// callbacks to run before the segment ends (the &quot;microtask&quot; queue)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">Task</span>() { <span class="kw">this</span><span class="op">.</span><span class="at">state</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> <span class="kw">this</span><span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="kw">undefined</span><span class="op">;</span> <span class="kw">this</span><span class="op">.</span><span class="at">cbs</span> <span class="op">=</span> []<span class="op">;</span> }</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>Task<span class="op">.</span><span class="at">prototype</span><span class="op">.</span><span class="at">then</span> <span class="op">=</span> <span class="kw">function</span> (ok<span class="op">,</span> bad) { <span class="kw">var</span> t <span class="op">=</span> <span class="kw">new</span> <span class="fu">Task</span>()<span class="op">;</span> <span class="kw">this</span><span class="op">.</span><span class="at">cbs</span><span class="op">.</span><span class="fu">push</span>([ok<span class="op">,</span> bad<span class="op">,</span> t])<span class="op">;</span> <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">state</span>) <span class="fu">schedule</span>(<span class="kw">this</span>)<span class="op">;</span> <span class="cf">return</span> t<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>Task<span class="op">.</span><span class="at">prototype</span><span class="op">.</span><span class="at">catch</span> <span class="op">=</span> <span class="kw">function</span> (bad) { <span class="cf">return</span> <span class="kw">this</span><span class="op">.</span><span class="fu">then</span>(<span class="kw">null</span><span class="op">,</span> bad)<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">settle</span>(t<span class="op">,</span> state<span class="op">,</span> v) {</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (t<span class="op">.</span><span class="at">state</span>) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (state <span class="op">===</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> v <span class="op">&amp;&amp;</span> <span class="kw">typeof</span> v<span class="op">.</span><span class="at">then</span> <span class="op">===</span> <span class="st">&quot;function&quot;</span>) { v<span class="op">.</span><span class="fu">then</span>(<span class="kw">function</span> (x) { <span class="fu">settle</span>(t<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> x)<span class="op">;</span> }<span class="op">,</span> <span class="kw">function</span> (e) { <span class="fu">settle</span>(t<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> e)<span class="op">;</span> })<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  t<span class="op">.</span><span class="at">state</span> <span class="op">=</span> state<span class="op">;</span> t<span class="op">.</span><span class="at">value</span> <span class="op">=</span> v<span class="op">;</span> <span class="fu">schedule</span>(t)<span class="op">;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">drain</span>() { <span class="cf">while</span> (queue<span class="op">.</span><span class="at">length</span>) { <span class="kw">var</span> t <span class="op">=</span> queue<span class="op">.</span><span class="fu">shift</span>()<span class="op">;</span> <span class="fu">run</span>(t)<span class="op">;</span> } }   <span class="co">// run every callback of every settled task</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>g<span class="op">.</span><span class="at">__settle</span> <span class="op">=</span> <span class="kw">function</span> (id<span class="op">,</span> ok<span class="op">,</span> json) { <span class="kw">var</span> t <span class="op">=</span> pending[id]<span class="op">;</span> <span class="kw">delete</span> pending[id]<span class="op">;</span> <span class="cf">if</span> (t) <span class="fu">settle</span>(t<span class="op">,</span> ok <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> <span class="dv">2</span><span class="op">,</span> ok <span class="op">?</span> <span class="fu">decode</span>(json) <span class="op">:</span> <span class="kw">new</span> <span class="bu">Error</span>(json))<span class="op">;</span> <span class="fu">drain</span>()<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kernelTask</span>(id) { <span class="kw">var</span> t <span class="op">=</span> <span class="kw">new</span> <span class="fu">Task</span>()<span class="op">;</span> pending[id] <span class="op">=</span> t<span class="op">;</span> <span class="cf">return</span> t<span class="op">;</span> }</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>g<span class="op">.</span><span class="at">sleep</span> <span class="op">=</span> <span class="kw">function</span> (ms) { <span class="cf">return</span> <span class="fu">kernelTask</span>(<span class="fu">ka</span>(<span class="st">&quot;sleep&quot;</span><span class="op">,</span> ms))<span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>g<span class="op">.</span><span class="at">ask</span> <span class="op">=</span> <span class="kw">function</span> (to<span class="op">,</span> type<span class="op">,</span> payload<span class="op">,</span> opts) { <span class="kw">var</span> e <span class="op">=</span> <span class="fu">enc</span>(payload)<span class="op">;</span> <span class="cf">return</span> <span class="fu">kernelTask</span>(<span class="fu">ka</span>(<span class="st">&quot;ask&quot;</span><span class="op">,</span> to<span class="op">,</span> type<span class="op">,</span> e[<span class="dv">0</span>]<span class="op">,</span> e[<span class="dv">1</span>]<span class="op">,</span> (opts <span class="op">&amp;&amp;</span> opts<span class="op">.</span><span class="at">timeout</span>) <span class="op">||</span> <span class="dv">2000</span>))<span class="op">;</span> }<span class="op">;</span></span></code></pre></div>
+<p><code>__dispatch</code> calls the handler. If the result is a
+thenable, it marks the turn async (<code>k("turn.async")</code>) and
+attaches <code>turn.done</code> / <code>turn.fail</code> to it, exactly
+as the PicoCalc prelude does with a promise. It then calls
+<code>drain()</code> before returning, so callbacks that are already
+ready run in the same segment. That matches QuickJS, where
+<code>run_jobs</code> drains the job queue at the end of every segment.
+An unhandled rejection (a Task that failed with no <code>bad</code>
+callback by the end of the drain) is logged, as
+<code>vm.c:drop_unhandled</code> does.</p>
+<p>What changes for world authors is syntax only:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// PicoCalc                                         // PaperS3</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">on</span>(<span class="st">&quot;flush&quot;</span><span class="op">,</span> <span class="kw">async</span> (s<span class="op">,</span> { rects }) <span class="kw">=&gt;</span> {             <span class="op">.</span><span class="fu">on</span>(<span class="st">&quot;update&quot;</span><span class="op">,</span> <span class="kw">function</span> (s<span class="op">,</span> m) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> s<span class="op">.</span><span class="at">epd</span><span class="op">.</span><span class="fu">update</span>(s<span class="op">.</span><span class="at">fb</span><span class="op">,</span> r<span class="op">,</span> <span class="st">&quot;fast&quot;</span>)<span class="op">;</span>                <span class="cf">return</span> s<span class="op">.</span><span class="at">epd</span><span class="op">.</span><span class="fu">update</span>(s<span class="op">.</span><span class="at">fb</span><span class="op">,</span> m<span class="op">.</span><span class="at">rect</span><span class="op">,</span> m<span class="op">.</span><span class="at">mode</span>)<span class="op">.</span><span class="fu">then</span>(<span class="kw">function</span> (r) {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  s<span class="op">.</span><span class="at">updates</span><span class="op">++;</span>                                          s<span class="op">.</span><span class="at">updates</span><span class="op">++;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">ms</span><span class="op">:</span> <span class="fu">now</span>() <span class="op">-</span> t0 }<span class="op">;</span>                            <span class="cf">return</span> { <span class="dt">ms</span><span class="op">:</span> <span class="fu">now</span>() <span class="op">-</span> t0 }<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>})                                                    })<span class="op">;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                                                    })</span></code></pre></div>
+<p>Sequential awaits become <code>.then</code> chains. The prelude also
+provides <code>seq(list, fn)</code> (run async steps one after another)
+because driver start-up sequences need it. It also provides small
+helpers the dialect lacks: <code>assign</code>, <code>pad2</code>,
+<code>repeat</code>, <code>startsWith</code>,
+<code>clockText(ms)</code>.</p>
+<p><strong>Handles in messages.</strong> JSON in mquickjs ignores
+replacers and revivers, so the prelude's <code>enc</code> and
+<code>decode</code> walk the value themselves. They collect
+<code>{ $h: id }</code> markers for the kernel and turn them back into
+<code>Handle</code> objects.</p>
+<h3 id="64-gray-pixels-and-proportional-fonts">6.4 Gray pixels and
+proportional fonts</h3>
+<p>With <code>-DNUCLEUS_GRAY8</code>, <code>pixel_t</code> is
+<code>uint8_t</code>, where 0 is black and 255 is white. The
+changes:</p>
+<ul>
+<li><code>gfx_color("#rrggbb")</code> returns the luminance
+<code>(299r + 587g + 114b)/1000</code>. Named grays are the compositor's
+business.</li>
+<li><code>blend()</code> works on one channel.</li>
+<li><code>dmabuf_t</code> keeps <code>back</code> and
+<code>front</code>, now <code>pixel_t *</code>. Framebuffers are 518 KB
+each for 540×960, and both live in PSRAM.</li>
+<li>The "never drawn" sentinel becomes <code>0x01</code>.</li>
+<li><code>gfx_commit</code> is unchanged apart from the element size. It
+still reports 16-row bands, merged.</li>
+</ul>
+<p>Fonts get one optional field:
+<code>font_def_t { name, w, h, data, adv, asc }</code>, where
+<code>adv</code> is NULL for monospace and otherwise a per-glyph advance
+table. A new generator, <code>tools/gen_paper_font.py</code>, rasterizes
+TTFs with PIL into the same 4-bit alpha cells, with real anti-aliasing
+(levels 0..15). It writes <code>nucleus/font_paper.h</code>. The faces
+are Charis SIL (OFL) for body text, Liberation Sans Bold (OFL) for
+titles and numerals, and DejaVu Sans Mono for tables and the REPL:</p>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>face</th>
+<th>px</th>
+<th>use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>s</code></td>
+<td>Charis SIL</td>
+<td>20</td>
+<td>captions, secondary text</td>
+</tr>
+<tr class="even">
+<td><code>m</code></td>
+<td>Charis SIL</td>
+<td>26</td>
+<td>body text, list rows</td>
+</tr>
+<tr class="odd">
+<td><code>mb</code></td>
+<td>Charis SIL Bold</td>
+<td>26</td>
+<td>emphasis, buttons</td>
+</tr>
+<tr class="even">
+<td><code>l</code></td>
+<td>Liberation Sans Bold</td>
+<td>36</td>
+<td>titles</td>
+</tr>
+<tr class="odd">
+<td><code>xl</code></td>
+<td>Liberation Sans Bold</td>
+<td>64</td>
+<td>hero numerals (clock, battery)</td>
+</tr>
+<tr class="even">
+<td><code>mono</code></td>
+<td>DejaVu Sans Mono</td>
+<td>20</td>
+<td>tables, REPL, logs</td>
+</tr>
+</tbody>
+</table>
+<p>Because text is proportional, the compositor must not compute widths
+in JS. Two synchronous host calls do the measuring in C:</p>
+<pre><code>gfx.measure(text, font)            → width in pixels
+gfx.wrap(text, font, maxWidth)     → [line, line, …]   (word wrap, long words broken)</code></pre>
+<h3
+id="65-the-e-paper-display-the-epd-handle-and-the-refresh-planner">6.5
+The e-paper display: the EPD handle and the refresh planner</h3>
+<p>The waveform engine is C, because its timing is microseconds on a
+parallel bus. The <em>policy</em> is JavaScript, in the display driver
+world. They meet at one handle type:</p>
+<pre><code>hw.epd(&quot;epd0&quot;)                               → handle (claim &quot;epd0&quot;); one per panel
+epd.info()                                   → { w: 540, h: 960, modes: [&quot;quality&quot;,&quot;text&quot;,&quot;fast&quot;,&quot;fastest&quot;] }
+epd.update(fb, x, y, w, h, mode)             → Task; settles when the panel has taken the update
+                                               (the bus &quot;epd0&quot; is busy meanwhile; updates are serialised)</code></pre>
+<p>On the device, <code>epd.update</code> becomes a request to the EPD
+worker task. The worker waits for <code>displayBusy()</code> to clear
+(bounded to 5 s, as PULP does), sets the mode, pushes the rectangle's
+gray rows from the framebuffer's front buffer (pinned while in flight),
+calls <code>endWrite()</code>, waits again, and posts the result. On the
+host, the simulated panel applies the mode's effect to its
+<em>glass</em> and the bus is busy for the mode's modelled duration
+(§6.10).</p>
+<p>The <strong>display driver</strong>
+(<code>js-papers3/drivers/display.js</code>) is the refresh planner. The
+compositor asks it to <code>present</code> a list of damaged rectangles
+together with an <em>intent</em>:</p>
+<ul>
+<li><code>"page"</code>: a new screen. The app changed, or a dialog
+opened or closed.</li>
+<li><code>"text"</code>: content changed inside a screen.</li>
+<li><code>"ink"</code>: pen strokes or a pressed-button highlight;
+latency matters most.</li>
+</ul>
+<p>The planner turns that into <code>epd.update</code> calls:</p>
+<pre><code>present(rects, intent):
+  if intent == &quot;page&quot; or partials ≥ MAX_PARTIALS or partialArea ≥ MAX_AREA or now − lastClean ≥ MAX_AGE:
+      update(full screen, &quot;quality&quot;); partials = 0; partialArea = 0; lastClean = now      // clean full: clears ghosts
+  else:
+      rects = merge(rects, distance = 16 px); align x to 8 px                              // fewer, bigger updates
+      mode  = intent == &quot;ink&quot; ? &quot;fastest&quot; : intent == &quot;text&quot; ? (anyGray(rects) ? &quot;text&quot; : &quot;fast&quot;)
+      for r in rects: update(r, mode); partials += 1; partialArea += area(r)</code></pre>
+<p>The constants start at PULP's values
+(<code>refresh_planner.h:22-53</code>): 16-pixel merges, 8-pixel x
+alignment, a clean full after 32 partials or 16 screens' worth of
+partial area or 15 minutes. They live in the driver's state and are
+shown in the System app. A world with the <code>display.policy</code>
+claim can change them, as PULP's <code>paper.refreshTurns(n)</code>
+did.</p>
+<h3 id="66-touch-the-gt911-driver">6.6 Touch: the GT911 driver</h3>
+<p><code>js-papers3/drivers/touch.js</code> is a driver world with the
+claim <code>i2c1:0x5d</code>. The GT911 uses 16-bit big-endian register
+addresses, so a register read is one write-then-read transaction:
+<code>dev.transfer([0x81, 0x4e], 1)</code>. Every 20 ms the driver does
+the following:</p>
+<pre><code>status = read(0x814E)                               // bit 7: buffer ready; bits 0..3: number of points
+if status &amp; 0x80:
+    n = status &amp; 0x0F
+    if n: pts = read(0x814F, 8·n)                   // per point: id, xL, xH, yL, yH, sizeL, sizeH, _
+    write(0x814E, 0)                                // hand the buffer back to the controller
+    for each id that is new / moved / gone → publish(&quot;touch&quot;, { id, x, y, phase: &quot;down&quot; | &quot;move&quot; | &quot;up&quot;, t })</code></pre>
+<p>Raw coordinates are mapped to the 540×960 portrait screen with a
+transform from the driver's constants. On the host the simulated GT911
+reports screen coordinates directly. On the device the transform is
+checked in phase 4 with the Touch app, by tapping the four corners. The
+driver publishes <em>points</em>, not gestures, so the Touch app can
+show raw data the way the PicoCalc's Keys app shows raw key events.</p>
+<h3 id="67-clock-and-power-drivers">6.7 Clock and power drivers</h3>
+<ul>
+<li><strong>Clock</strong> (<code>drivers/clock.js</code>, claim
+<code>i2c1:0x51</code>). On start it reads the BM8563 time registers
+0x02–0x08 (BCD seconds through years) and publishes
+<code>{ epochMs }</code> on the <code>time</code> channel. It reads them
+again every 60 s so drift is corrected. The prelude's
+<code>wallClock()</code> adds the virtual or real milliseconds since
+that reading. On the host the simulated RTC starts at 2026-10-22 09:41
+UTC, which is the PicoCalc prelude's boot time, so captures stay
+deterministic. The same I2C bus is shared with the touch driver, and the
+kernel serialises the two, just as the PicoCalc kernel serialised the
+keyboard and power drivers on one STM32.</li>
+<li><strong>Power</strong> (<code>drivers/power.js</code>, claims
+<code>adc1:2</code> and <code>gpio:4</code>). Every 10 s it calls
+<code>bat.read()</code>, which returns millivolts at the pin; the
+battery is twice that. It converts the voltage to a percentage with a
+LiPo curve, reads the charge pin (<code>chg.get()</code>: 0 means
+charging), and publishes <code>{ pct, mv, charging }</code> on
+<code>power</code>. These are two new handle types, <code>H_ADC</code>
+and <code>H_GPIO</code>, both synchronous: the port reads the pin
+now.</li>
+</ul>
+<h3 id="68-the-paper-compositor">6.8 The paper compositor</h3>
+<p>The compositor (<code>js-papers3/system/compositor.js</code>) keeps
+its role. It owns the framebuffer, lays out the focused app's ui tree,
+commits and asks the display driver to present. What changes is the
+layout vocabulary, the chrome, the input path and the refresh
+intents.</p>
+<p><strong>Screen.</strong> 540×960 portrait, white paper, ink black,
+with grays at 25/50/75%. The layout follows PULP's "Swiss" style: a 40
+px margin, a title in Liberation Sans Bold, a 4 px rule under it, and
+the body below. A 96 px footer holds the navigation chips
+<strong>Home</strong> and <strong>Back</strong> (the app's own
+<code>back</code> message), the clock and the battery.</p>
+<pre><code>┌──────────────────────────────── 540 ────────────────────────────────┐
+│  System                                              09:41  ▮▮▮ 82%  │  40 px margin, title &quot;l&quot;
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │  4 px rule
+│                                                                      │
+│  body: the app&#39;s ui tree, laid out at 460 px wide                    │
+│                                                                      │
+│                                                                      │
+│ ──────────────────────────────────────────────────────────────────── │
+│   ( Home )   ( Back )                         3 of 15 worlds · 0 ✕   │  96 px footer
+└──────────────────────────────────────────────────────────────────────┘</code></pre>
+<p><strong>Ui nodes.</strong> The same set as the PicoCalc
+(<code>col</code>, <code>row</code>, <code>box</code>,
+<code>text</code>, <code>gap</code>, <code>sep</code>, <code>bar</code>,
+<code>spark</code>, <code>list</code>, <code>table</code>,
+<code>lines</code>, <code>grid</code>, <code>kv</code>,
+<code>canvas</code>, <code>input</code>), plus three new ones:</p>
+<ul>
+<li><code>button(label, {msg, arg, primary})</code>: an inverted chip
+when primary.</li>
+<li><code>keyboard({msg})</code>: an on-screen QWERTY keyboard with
+48×56 keys, a shift row and a symbols row.</li>
+<li><code>ink(w, h, strokes, {msg})</code>: a drawing surface that
+receives drags.</li>
+</ul>
+<p>Any node with <code>{ tap: "msg", arg: … }</code> is tappable.</p>
+<p><strong>Hit regions.</strong> While drawing, the compositor records a
+region <code>[x, y, w, h, msg, arg]</code> for every tappable node. A
+tap is delivered to the focused app as
+<code>send(app, msg, { arg, x, y })</code>. A list row reports its index
+and a keyboard key its character. Regions are rebuilt on every paint, so
+they always match the pixels.</p>
+<p><strong>Gestures.</strong> The compositor needs <code>touch</code>
+and recognises gestures with PULP's constants
+(<code>s3paper_core/include/s3paper/input.h:83-91</code>):</p>
+<ul>
+<li>tap: up within 300 ms, moved less than 16 px;</li>
+<li>hold: down for 600 ms;</li>
+<li>swipe: moved more than 64 px with an off-axis ratio under ½;</li>
+<li>drag: moves over an <code>ink</code> node, forwarded as they
+happen.</li>
+</ul>
+<p>A swipe up from the bottom edge goes home. Other swipes go to the app
+as <code>swipe</code> with a direction, which lists use for paging.</p>
+<p><strong>Intents.</strong> A focus change or a crash banner presents
+with <code>"page"</code>. A frame from the focused app presents with
+<code>"text"</code>. The pressed highlight on a button, and ink strokes,
+present with <code>"ink"</code>. The compositor never fills and then
+erases a highlight: on e-paper that is a visible flash.</p>
+<h3 id="69-the-apps">6.9 The apps</h3>
+<table>
+<thead>
+<tr class="header">
+<th>world</th>
+<th>kind</th>
+<th>claims</th>
+<th>what it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>launcher</code></td>
+<td>app</td>
+<td><code>sys.read</code></td>
+<td>tiles for every app; worlds running and crashes since boot</td>
+</tr>
+<tr class="even">
+<td><code>system</code></td>
+<td>app</td>
+<td><code>sys.read</code></td>
+<td>tabs: Worlds (state, turns, cpu%, mem/limit), Handles, Buses (i2c1,
+epd0 busy%), Display (planner counters)</td>
+</tr>
+<tr class="odd">
+<td><code>repl</code></td>
+<td>app</td>
+<td></td>
+<td>output lines, an input line and the on-screen keyboard; evaluates in
+<code>sandbox</code></td>
+</tr>
+<tr class="even">
+<td><code>sandbox</code></td>
+<td>service</td>
+<td></td>
+<td><code>(0, eval)(code)</code> with a 200 ms budget and 128 KB
+arena</td>
+</tr>
+<tr class="odd">
+<td><code>faults</code></td>
+<td>app</td>
+<td><code>sys.admin</code>, <code>sys.read</code></td>
+<td>buttons that make worlds loop, throw, run out of memory; restart
+stopped worlds</td>
+</tr>
+<tr class="even">
+<td><code>flaky</code></td>
+<td>service</td>
+<td></td>
+<td>crashes on purpose when asked</td>
+</tr>
+<tr class="odd">
+<td><code>touch</code></td>
+<td>app</td>
+<td></td>
+<td>raw touch points and the recognised gesture, with a trail drawn in
+<code>ink</code> mode</td>
+</tr>
+<tr class="even">
+<td><code>sketch</code></td>
+<td>app</td>
+<td></td>
+<td>an ink surface: strokes with the fastest waveform, "clean" button
+forces a quality refresh</td>
+</tr>
+<tr class="odd">
+<td><code>about</code></td>
+<td>app</td>
+<td><code>sys.read</code></td>
+<td>board, engine, clock (real or virtual), calibration, refresh
+counters, licences</td>
+</tr>
+</tbody>
+</table>
+<h3 id="610-the-papers3-simulator-host">6.10 The PaperS3 simulator
+(host)</h3>
+<p><code>sim/papers3/</code> models the board closely enough that the
+JavaScript drivers talk to it register by register, as they will to the
+real chips:</p>
+<ul>
+<li><strong><code>gt911.c</code></strong>: the register file (product id
+<code>"911"</code> at 0x8140, config, status 0x814E, points from
+0x814F), the buffer-ready protocol, and two touch points. Scripts drive
+it with <code>tap X Y</code>, <code>hold X Y MS</code>,
+<code>swipe X0 Y0 X1 Y1 [MS]</code> and
+<code>drag X0 Y0 X1 Y1 [MS]</code>. Points are sampled at the
+controller's 10 ms report rate.</li>
+<li><strong><code>bm8563.c</code></strong>: BCD time registers advancing
+with the virtual clock.</li>
+<li><strong><code>epd.c</code></strong>: the panel. It keeps the
+<em>glass</em>, which is what the panel shows, and a <em>ghost</em> map.
+<ul>
+<li><code>quality</code> copies the 16 gray levels exactly and clears
+ghosts.</li>
+<li><code>text</code> copies them and adds a little ghost.</li>
+<li><code>fast</code> thresholds to black and white (as M5GFX does for
+anti-aliased text in fast modes) and leaves a ghost of the previous
+pixel.</li>
+<li><code>fastest</code> does the same with a stronger ghost.</li>
+<li>Ghosts render as a faint blend toward the previous value, and a
+clean full removes them.</li>
+<li>Each mode keeps the EPD bus busy for a modelled duration: quality
+450 ms, text 300 ms, fast 120 ms, fastest 60 ms. These are placeholders
+until phase 5 measures the real panel.</li>
+<li><code>capture</code> writes the glass as a PNG, with an optional
+<code>ghosts</code> flag that makes ghosts visible.</li>
+</ul></li>
+<li><strong><code>board.c</code></strong>: the battery voltage and
+charge pin, set by the script commands
+<code>battery PCT [charging]</code>.</li>
+</ul>
+<p>The host runner (<code>host/main_host.c</code>) is shared. The board
+supplies its input commands through a small table, so <code>key</code>
+exists on the PicoCalc and <code>tap</code> on the PaperS3.</p>
+<h3 id="611-the-device-port-portesp32s3-papers3">6.11 The device port
+(<code>port/esp32s3-papers3/</code>)</h3>
+<p>It has the same shape as the P4 port, with the PaperS3's
+peripherals:</p>
+<pre><code>core 1: kernel task (prio 5)   kernel_run_until(port_clock()), sleeps until the next event or a queue item
+core 0: i2c1 worker (prio 6)   GT911 + BM8563 transactions via i2c_master (400 kHz), one at a time, in order
+core 0: epd worker (prio 4)    M5GFX: wait busy → setEpdMode → startWrite → pushImage rows → endWrite → wait busy
+core 0: console task (prio 3)  USB-Serial-JTAG lines → kernel queue; shot task encodes the framebuffer</code></pre>
+<ul>
+<li><strong>Memory.</strong> World arenas and framebuffers go in PSRAM
+(<code>heap_caps_aligned_alloc(8, …, SPIRAM)</code>). The kernel task
+stack is in internal RAM. mquickjs recurses less than QuickJS, but the
+stack stays generous (32 KB) until it has been measured.</li>
+<li><strong>ESP-IDF.</strong> v5.3.4, the version PULP builds with.
+M5Unified 0.2.18 and M5GFX 0.2.25 are pinned through the component
+manager, exactly as <code>components/s3paper_m5/idf_component.yml</code>
+pins them. <code>COMPONENTS</code> must list <code>esp_psram</code>, or
+PSRAM silently disappears (0113 lesson).</li>
+<li><strong>The JS tree</strong> is compiled into the firmware by the
+same <code>bundle_js.cmake</code>, pointed at
+<code>js-papers3/</code>.</li>
+<li><strong>The stdlib header</strong> is generated at build time by
+running the host generator with <code>-m32</code>.</li>
+<li><strong>Console.</strong> USB-Serial-JTAG, the same commands as the
+P4 (<code>stats</code>, <code>worlds</code>, <code>handles</code>,
+<code>heap</code>, <code>crash</code>, <code>restart</code>,
+<code>bench</code>, <code>trace</code>, <code>shot</code>), with
+<code>tap X Y</code>, <code>swipe …</code> and <code>refresh</code>
+replacing <code>key</code> and <code>type</code>.
+<code>tools/s3cap.py</code> is a hold-open client in the style of ESP-55
+<code>04-*.py</code>: it opens the port once, resets through DTR=RTS=0 →
+RTS pulse, sends commands at times, and decodes
+<code>#SHOT w h g8</code> blocks (run-length gray) to PNG.</li>
+</ul>
+<h2 id="7-decision-records">7. Decision records</h2>
+<h3 id="decision-71-one-nucleus-with-an-engine-seam-not-a-fork">Decision
+7.1: one nucleus with an engine seam, not a fork</h3>
+<ul>
+<li><strong>Context:</strong> The PaperS3 needs a different engine,
+pixel format, input and UI. The kernel's semantics (lane, turns,
+supervision, handles) are exactly what should be shared.</li>
+<li><strong>Options considered:</strong> (a) copy picocalc-os into
+papers3-os and edit freely; (b) one nucleus with board and engine seams;
+(c) make QuickJS and mquickjs look identical through a big shim.</li>
+<li><strong>Decision:</strong> (b).</li>
+<li><strong>Rationale:</strong> About 85% of the nucleus has no engine
+dependency once <code>world_t</code> drops its JS fields. The PicoCalc
+screenshots are a byte-exact oracle for the refactor. A fork would let
+the two kernels drift, so a fix found on one board (like the P4's
+message-for-a-dead-driver race) would have to be found twice.</li>
+<li><strong>Consequences:</strong> <code>vm.c</code> and
+<code>vm_mqjs.c</code> must keep the same contract. Two JS trees exist,
+because the dialects differ.</li>
+<li><strong>Status:</strong> accepted.</li>
+</ul>
+<h3 id="decision-72-microquickjs-on-the-papers3">Decision 7.2:
+MicroQuickJS on the PaperS3</h3>
+<ul>
+<li><strong>Context:</strong> The user suggested mquickjs. QuickJS would
+also fit the S3's 8 MB of PSRAM.</li>
+<li><strong>Options considered:</strong> (a) QuickJS, the same as the
+P4, with all existing JS reused; (b) mquickjs.</li>
+<li><strong>Decision:</strong> (b).</li>
+<li><strong>Rationale:</strong>
+<ul>
+<li>Fixed arenas give hard, exact per-world memory limits with no
+allocator accounting.</li>
+<li>Contexts are created in 0.6 ms (measured in 0113), so restarts are
+nearly free.</li>
+<li>The compacting GC means no fragmentation across long uptimes.</li>
+<li>The engine is proven on this board by PULP OS.</li>
+<li>The UI has to be rewritten for touch and paper anyway, so the
+dialect's cost falls mostly on code that is new regardless.</li>
+</ul></li>
+<li><strong>Consequences:</strong>
+<ul>
+<li>ES5 JavaScript and thenables instead of async/await.</li>
+<li>The prelude carries the promise machinery.</li>
+<li>The stdlib header must be regenerated per word size.</li>
+<li>Step costs must be calibrated again.</li>
+<li>The REPL accepts only ES5, and the About app says so.</li>
+</ul></li>
+<li><strong>Status:</strong> accepted.</li>
+</ul>
+<h3 id="decision-73-promises-in-the-prelude-not-in-c">Decision 7.3:
+promises in the prelude, not in C</h3>
+<ul>
+<li><strong>Context:</strong> mquickjs has no Promise. The kernel's
+async ops (<code>sleep</code>, <code>ask</code>, bus transfers) and
+async turns are promise-shaped.</li>
+<li><strong>Options considered:</strong> (a) callbacks registered with
+the kernel (C keeps JS functions alive with GC refs); (b) C returns ids
+and the prelude keeps the callbacks; (c) port a full Promise
+implementation into the engine.</li>
+<li><strong>Decision:</strong> (b).</li>
+<li><strong>Rationale:</strong> No JS value crosses a moving GC in C's
+hands. The turn rules (a turn ends when its thenable settles) carry over
+unchanged. Crash semantics stay simple: a dead world's
+<code>pending</code> table dies with its arena.</li>
+<li><strong>Consequences:</strong> The prelude is about 80 lines longer.
+<code>__settle</code> must drain callbacks before the segment ends.</li>
+<li><strong>Status:</strong> accepted.</li>
+</ul>
+<h3 id="decision-74-gray8-framebuffers">Decision 7.4: gray8
+framebuffers</h3>
+<ul>
+<li><strong>Context:</strong> The panel shows 16 grays. PULP pushed
+RGB565 rows to M5GFX.</li>
+<li><strong>Options considered:</strong> RGB565 (no gfx changes); 4-bit
+packed (smallest); 8-bit gray.</li>
+<li><strong>Decision:</strong> 8-bit gray, behind
+<code>NUCLEUS_GRAY8</code>.</li>
+<li><strong>Rationale:</strong> Gray8 is half the PSRAM of RGB565: 1 MB
+for both buffers instead of 2 MB. One byte per pixel keeps
+<code>gfx</code> simple: no nibble packing in the fill and blend loops.
+The 16 levels the panel shows are the top four bits.</li>
+<li><strong>Consequences:</strong> The EPD worker converts rows (gray8 →
+the format M5GFX takes) while pushing.</li>
+<li><strong>Status:</strong> accepted.</li>
+</ul>
+<h3
+id="decision-75-refresh-policy-in-the-javascript-display-driver">Decision
+7.5: refresh policy in the JavaScript display driver</h3>
+<ul>
+<li><strong>Context:</strong> E-paper updates are slow and ghost, and
+the right mode depends on what changed.</li>
+<li><strong>Options considered:</strong> (a) policy in C next to the
+waveforms (PULP's RefreshPlanner); (b) policy in the JS display driver;
+(c) in the compositor.</li>
+<li><strong>Decision:</strong> (b).</li>
+<li><strong>Rationale:</strong> This OS's principle is that drivers are
+JavaScript and the nucleus has mechanism only. The display driver is the
+one world that sees every update, so it is the natural owner of the
+partial count and ghost budget. A crash there is supervised like any
+other.</li>
+<li><strong>Consequences:</strong> The EPD handle API is small: info and
+update. The compositor passes intents, not modes.</li>
+<li><strong>Status:</strong> accepted.</li>
+</ul>
+<h3 id="decision-76-portrait-540960">Decision 7.6: portrait 540×960</h3>
+<ul>
+<li><strong>Context:</strong> M5GFX's memory is 960×540, and PULP used
+portrait.</li>
+<li><strong>Decision:</strong> Portrait, with the layout reading
+<code>W</code> and <code>H</code> from the framebuffer so landscape is
+one constant.</li>
+<li><strong>Rationale:</strong> The device is held like a book. A 460 px
+column of proportional text is comfortable, and tables fit with DejaVu
+Sans Mono at about 38 columns.</li>
+<li><strong>Status:</strong> accepted.</li>
+</ul>
+<h3 id="decision-77-m5gfx-for-the-waveforms">Decision 7.7: M5GFX for the
+waveforms</h3>
+<ul>
+<li><strong>Context:</strong> The options are M5GFX
+<code>Panel_EPD</code> (PULP, 0112), EPD_Painter (0107, 2 bpp) and
+epdiy.</li>
+<li><strong>Decision:</strong> M5GFX 0.2.25 via the component
+manager.</li>
+<li><strong>Rationale:</strong> It is the only driver this repository
+has run in a full OS on this board. It supports all four modes and 16
+grays. The optical-quality questions are the same for every driver and
+are out of scope.</li>
+<li><strong>Consequences:</strong> The EPD worker is C++.
+<code>M5.begin()</code> also brings up M5Unified's power and touch
+objects; the port must not use M5's touch, because the JS driver owns
+I2C1.</li>
+<li><strong>Status:</strong> accepted; revisit if M5Unified's I2C
+ownership conflicts with the i2c1 worker.</li>
+</ul>
+<h2 id="8-key-flows-in-pseudocode">8. Key flows in pseudocode</h2>
+<h3 id="81-a-tap-end-to-end">8.1 A tap, end to end</h3>
+<pre><code>GT911 (sim or chip) has a point at (270, 500)
+touch driver, every 20 ms:   dev.transfer([0x81,0x4E],1)           → i2c1 worker or sim → settle
+                             .then(status) → read points → write 0x814E=0 → publish(&quot;touch&quot;, {id:0,x:270,y:500,phase:&quot;down&quot;})
+… 80 ms later:               publish(&quot;touch&quot;, {id:0, phase:&quot;up&quot;})
+compositor on &quot;touch&quot;:       gesture = recognise(track)            → tap at (270, 500)
+                             r = hitTest(regions, 270, 500)        → [&quot;open&quot;, &quot;repl&quot;]
+                             send(focus, r.msg, {arg: r.arg, x, y})   (or handle it itself: footer chips)
+launcher on &quot;open&quot;:          send(&quot;compositor&quot;, &quot;open&quot;, {app: &quot;repl&quot;})
+compositor on &quot;open&quot;:        focus = &quot;repl&quot;; paint; rects = fb.commit(); ask(&quot;display&quot;, &quot;present&quot;, {rects, intent: &quot;page&quot;})
+display driver:              clean full → epd.update(fb, 0,0,540,960, &quot;quality&quot;)
+EPD worker / sim:            the glass shows the REPL</code></pre>
+<h3 id="82-an-async-turn-on-mquickjs">8.2 An async turn on mquickjs</h3>
+<pre><code>kernel: run_segment(display, msg &quot;present&quot;)
+  vm_dispatch → JS __dispatch(0, &quot;present&quot;, json, &quot;compositor&quot;, true)
+     handler returns Task T (epd.update(...).then(...))
+     prelude: k(&quot;turn.async&quot;); T.then(done → k(&quot;turn.done&quot;, json), err → k(&quot;turn.fail&quot;, text)); drain()
+  segment ends; the deferred epd.update starts on bus epd0
+… EPD finishes → kernel_settle_at(display, epoch, id, ok)
+kernel: run_segment(display, settle id)
+  vm_settle → JS __settle(id, 1, &quot;{...}&quot;) → T resolves → drain() runs the .then → k(&quot;turn.done&quot;, json)
+  kernel: finish_turn → the compositor&#39;s ask settles</code></pre>
+<h3 id="83-the-refresh-planners-ghost-budget">8.3 The refresh planner's
+ghost budget</h3>
+<pre><code>state: partials, partialArea, lastClean
+on present({rects, intent}):
+   full = intent == &quot;page&quot; || partials &gt;= 32 || partialArea &gt;= 16·W·H || now() - lastClean &gt;= 15 min
+   if full: return epd.update(fb, 0, 0, W, H, &quot;quality&quot;).then(reset counters)
+   rects = mergeClose(alignX(rects, 8), 16)
+   mode = modeFor(intent, rects)
+   return seq(rects, function (r) { return epd.update(fb, r[0], r[1], r[2], r[3], mode); }).then(count them)</code></pre>
+<h2 id="9-implementation-phases">9. Implementation phases</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>What</th>
+<th>Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>P0</td>
+<td>Engine seam: <code>world_t</code> engine-free,
+<code>vm_read_manifest</code>, <code>struct vmw</code>; Makefile
+<code>BOARD</code></td>
+<td>PicoCalc <code>make shots</code> byte-identical;
+<code>make M32=1</code>, <code>SAN=1</code> build</td>
+</tr>
+<tr class="even">
+<td>P1</td>
+<td>mquickjs vendored + patches + <code>paper_stdlib.c</code>;
+<code>vm_mqjs.c</code>; ES5 prelude with Task; a minimal papers3
+manifest of test worlds</td>
+<td>host runs worlds that send, ask, sleep, crash, overrun and OOM;
+supervision log matches expectations</td>
+</tr>
+<tr class="odd">
+<td>P2</td>
+<td>gray8 <code>gfx</code>, <code>font_paper.h</code> generator,
+<code>gfx.measure/wrap</code>; <code>sim/papers3</code> EPD + bus; EPD
+handle; display driver with planner</td>
+<td>a capture of a test screen; planner counters behave (full after N
+partials)</td>
+</tr>
+<tr class="even">
+<td>P3</td>
+<td>GT911, BM8563, battery sims; touch, clock, power drivers; paper
+compositor; apps</td>
+<td>scripted tour (tap, swipe, REPL typing, faults, sketch) with
+captures in <code>out-papers3/</code></td>
+</tr>
+<tr class="odd">
+<td>P4</td>
+<td><code>port/esp32s3-papers3</code>: build, flash, console,
+<code>tools/s3cap.py</code> shots</td>
+<td>boots on the device; shot of the launcher; taps work; clock and
+battery read</td>
+</tr>
+<tr class="even">
+<td>P5</td>
+<td>Measure: calibration, refresh timings, memory per world, lane load;
+tune budgets</td>
+<td>numbers in §15</td>
+</tr>
+</tbody>
+</table>
+<h2 id="10-test-strategy">10. Test strategy</h2>
+<ul>
+<li><strong>Regression oracle (PicoCalc).</strong>
+<code>make &amp;&amp; make shots</code>, then <code>git status</code>
+must show no changed PNG. Run after every nucleus change, in normal,
+<code>M32=1</code> and <code>SAN=1</code> builds.</li>
+<li><strong>PaperS3 host scripts</strong>
+(<code>scripts-papers3/*.txt</code>): boot, tour, REPL, faults, sketch,
+refresh. Each writes captures to <code>out-papers3/</code>. The PNGs are
+committed, and the same script must reproduce them byte for byte. That
+is the PaperS3's own oracle.</li>
+<li><strong>Engine conformance.</strong> A test manifest
+(<code>js-papers3/test/</code>) checks the prelude's contract, mirroring
+the PicoCalc's behaviour:
+<ul>
+<li>ask/reply with a handle in it, ask timeout, and ask to a stopped
+world;</li>
+<li>sleep ordering;</li>
+<li>async turn with a rejection;</li>
+<li>unhandled rejection log;</li>
+<li>budget overrun, arena OOM, restart backoff, five crashes →
+stopped.</li>
+</ul></li>
+<li><strong>Sanitizers.</strong>
+<code>make BOARD=papers3 SAN=1 shots</code>.</li>
+<li><strong>Device.</strong> The console tour through
+<code>tools/s3cap.py</code>:
+<ul>
+<li>shots compared visually with the host captures;</li>
+<li><code>stats</code> and <code>worlds</code> read back;</li>
+<li>taps in the four corners to fix the touch transform;</li>
+<li>the planner's clean-full cadence observed on the glass.</li>
+</ul></li>
+</ul>
+<h2 id="11-risks-and-open-questions">11. Risks and open questions</h2>
+<ul>
+<li><strong>mquickjs speed on the S3.</strong> It has not been measured
+for this workload (13+ worlds, a 540×960 layout in JS). If the
+compositor's paint is too slow, more layout moves into C, for example
+<code>gfx.wrap</code> and a C table renderer.</li>
+<li><strong>Arena sizing.</strong> Transient memory during eval is about
+10× retained (ESP-55). The compositor's arena must hold a full ui tree,
+its JSON and the layout. Start with 256 KB and measure.</li>
+<li><strong>M5Unified and I2C1.</strong> <code>M5.begin()</code> may
+claim I2C1 for its own touch and RTC objects. The port may need to start
+only M5GFX's panel, or configure M5Unified to leave I2C alone.</li>
+<li><strong>Touch transform.</strong> The GT911's raw orientation
+relative to the portrait viewport is unverified (M5GFX applies
+<code>offset_rotation=1</code>).</li>
+<li><strong>Ghosting model.</strong> The simulator's ghosts are
+qualitative. Real ghosting depends on the waveform and temperature.</li>
+<li><strong>Serial.</strong> Download-mode latching, the flaky USB and
+lost early output (§3.3). Flashing can fail; the port must be workable
+from host captures until the device is reachable.</li>
+<li><strong>Licences.</strong> Charis SIL and Liberation are under the
+OFL, and DejaVu under the Bitstream Vera licence; both go into
+<code>third_party/fonts/</code>.</li>
+</ul>
+<h2 id="12-deferred-work">12. Deferred work</h2>
+<p>Wi-Fi and a web console; SD card storage and loading worlds from it;
+deep sleep with RTC wake; bytecode-compiled worlds (PULP's
+<code>pulpjsc</code>); the IMU (auto-rotation); the buzzer; a second
+lane for the second core.</p>
+<h2 id="13-api-reference">13. API reference</h2>
+<h3 id="131-world-api-es5-prelude">13.1 World API (ES5 prelude)</h3>
+<pre><code>app(name) | driver(name) | service(name) → builder
+  .title(t) .state(obj) .needs(ch...) .provides(ch...) .onStart(fn) .on(type, fn) .every(ms, fn) .screen(fn) .hints(s|fn)
+  handler fn(state, payload, info) → value | Task | undefined
+send(to, type, payload)             publish(ch, payload)          ask(to, type, payload, {timeout}) → Task
+sleep(ms) → Task                    now() → ms since boot          wallClock() → ms since epoch (RTC)
+log(...)  show(v)  errText(e)       seq(list, fn) → Task           Task.all(list) → Task    Task.resolve(v)
+hw.i2c(&quot;i2c1:0x5d&quot;, hz) → Handle    hw.epd(&quot;epd0&quot;) → Handle        hw.adc(&quot;adc1:2&quot;) → Handle   hw.gpio(&quot;gpio:4&quot;) → Handle
+dma.alloc(w, h) → Handle            gfx.fonts()  gfx.measure(s, font)  gfx.wrap(s, font, w)
+Handle: .transfer(bytes, nread, gapMs) → Task   .read16(reg, n) → Task   .write16(reg, bytes) → Task      (i2c)
+        .update(fb, x, y, w, h, mode) → Task    .info()                                                  (epd)
+        .read() → mV  (adc)   .get() → 0|1  (gpio)
+        .fill .rect .line .text .commit .invalidate  (framebuffer)   .narrow(r) .revoke() .release()
+sys.worlds() sys.handles() sys.stats() sys.fault(name) sys.restart(name)
+ui.col row box text title gap sep bar spark list table lines grid kv canvas input button keyboard ink</code></pre>
+<h3 id="132-port-api-additions">13.2 Port API additions</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>port_board_name<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> bus_run_i2c<span class="op">(</span>deferred_t <span class="op">*</span>d<span class="op">,</span> vtime_t at<span class="op">);</span>           <span class="co">// now for bus i2c1 too (h-&gt;bus)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> bus_run_epd<span class="op">(</span>deferred_t <span class="op">*</span>d<span class="op">,</span> vtime_t at<span class="op">);</span>           <span class="co">// an EPD update; settles when the panel has it</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  port_adc_read_mv<span class="op">(</span><span class="dt">int</span> unit<span class="op">,</span> <span class="dt">int</span> channel<span class="op">);</span>          <span class="co">// H_ADC</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  port_gpio_get<span class="op">(</span><span class="dt">int</span> pin<span class="op">);</span>                           <span class="co">// H_GPIO</span></span></code></pre></div>
+<h3 id="133-files-to-read-in-order">13.3 Files to read, in order</h3>
+<ol type="1">
+<li><code>picocalc-os/README.md</code>: what the OS is and how it was
+measured.</li>
+<li><code>nucleus/nucleus.h</code>: every type and the port API.</li>
+<li><code>nucleus/kernel.c</code>: <code>pick</code>,
+<code>run_segment</code>, <code>crash_at</code>,
+<code>kernel_run_until</code>.</li>
+<li><code>nucleus/vm.c</code>, then <code>nucleus/vm_mqjs.c</code>: the
+two engine bindings side by side.</li>
+<li><code>js/prelude.js</code>, then <code>js-papers3/prelude.js</code>:
+the same API in two dialects.</li>
+<li><code>js-papers3/system/compositor.js</code> and
+<code>drivers/display.js</code>: layout, hit regions, the planner.</li>
+<li><code>sim/papers3/epd.c</code>, <code>gt911.c</code>: what the
+drivers talk to on the host.</li>
+<li><code>port/esp32s3-papers3/main/*.c</code>: the device.</li>
+</ol>
+<h2 id="14-references">14. References</h2>
+<ul>
+<li>picocalc-os and its P4 port:
+<code>ttmp/2026/10/24/PICOCALC-P4-PORT--*/design-doc/01-*.md</code>
+(this repository).</li>
+<li>PULP OS: <code>esp32-s3-m5/0114-papers3-pulp-os/README.md</code>;
+onboarding guide
+<code>esp32-s3-m5/ttmp/2026/07/16/ESP-53-*/design-doc/02-pulp-os-system-onboarding-guide-*.md</code>.</li>
+<li>mquickjs spike results:
+<code>esp32-s3-m5/ttmp/2026/07/14/ESP-50-*/design-doc/05-microquickjs-spike-results-and-proceed-decision.md</code>.</li>
+<li>E-paper qualification:
+<code>esp32-s3-m5/ttmp/2026/07/14/ESP-50-*/design-doc/02-papers3-e-paper-qualification-deep-dive.md</code>.</li>
+<li>M5GFX board config:
+<code>esp32-s3-m5/0114-papers3-pulp-os/managed_components/m5stack__m5gfx/src/M5GFX.cpp:1920-2030</code>.</li>
+<li>M5 backend transaction:
+<code>esp32-s3-m5/components/s3paper_m5/src/m5_backend.cpp:20-30,306-470</code>.</li>
+<li>Serial discipline:
+<code>esp32-s3-m5/ttmp/2026/08/17/ESP-55-*/scripts/04-papers3-console-hold.py</code>.</li>
+<li>GT911 register map: Goodix GT911 programming guide (0x8140 product
+id, 0x814E status, 0x814F points).</li>
+<li>BM8563 datasheet (NXP PCF8563-compatible register map, 0x02–0x08 BCD
+time).</li>
+</ul>
+<h2 id="15-implementation-status-and-findings">15. Implementation status
+and findings</h2>
+<p><em>Updated as the work proceeds.</em></p>
+<table>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Status</th>
+<th>Commit</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Guide</td>
+<td>written</td>
+<td></td>
+<td>this document</td>
+</tr>
+<tr class="even">
+<td>P0</td>
+<td>not started</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>P1</td>
+<td>not started</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>P2</td>
+<td>not started</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>P3</td>
+<td>not started</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>P4</td>
+<td>blocked on device access</td>
+<td></td>
+<td><code>cdc_acm</code> not loaded and <code>/dev/bus/usb</code> not
+writable; needs <code>sudo modprobe cdc_acm</code></td>
+</tr>
+<tr class="odd">
+<td>P5</td>
+<td>not started</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</main>
+</div>
+<script>
+  // wide tables scroll inside their own box instead of widening the page
+  document.querySelectorAll("main table").forEach(function (t) {
+    var d = document.createElement("div"); d.className = "tbl"; t.parentNode.insertBefore(d, t); d.appendChild(t);
+  });
+</script>

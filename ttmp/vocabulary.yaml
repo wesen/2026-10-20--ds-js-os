@@ -17,6 +17,14 @@ topics:
       description: Porting software to new targets
     - slug: os
       description: Operating system design
+    - slug: papers3
+      description: M5Stack PaperS3 (ESP32-S3, e-paper) target
+    - slug: esp32-s3
+      description: ESP32-S3 target work
+    - slug: mquickjs
+      description: Micro QuickJS (mquickjs) engine
+    - slug: epaper
+      description: E-paper displays and refresh management
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes

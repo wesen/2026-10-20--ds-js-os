@@ -1,0 +1,93 @@
+<title>PaperS3 Port Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column the width of a paper page, a contents rail beside it on wide screens,
+   and a strip of phase chips under the heading that shows how far the port has got. */
+:root {
+  --paper: #eceeea;        /* e-ink white: a faint green-gray, never pure */
+  --sheet: #f6f7f4;
+  --ink: #1a1d1b;
+  --ink-2: #4d534f;
+  --ink-3: #868c87;
+  --rule: #cfd3cd;
+  --accent: #2f5d8a;       /* the cobalt of a pen mark on the page */
+  --done: #2f6e4a; --active: #9a6a12; --blocked: #a33a2c; --todo: #868c87;
+  --code-bg: #e2e5df;
+  --display: "Literata", "Charis SIL", Georgia, serif;
+  --body: "Literata", "Charis SIL", Georgia, serif;
+  --label: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #161917; --sheet: #1d211f; --ink: #e3e6e1; --ink-2: #b2b8b2; --ink-3: #7d847e; --rule: #333a36;
+  --accent: #8db6e0; --done: #7cc59a; --active: #e0b45a; --blocked: #ec8a7c; --todo: #7d847e; --code-bg: #232825; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #161917; --sheet: #1d211f; --ink: #e3e6e1; --ink-2: #b2b8b2; --ink-3: #7d847e; --rule: #333a36;
+  --accent: #8db6e0; --done: #7cc59a; --active: #e0b45a; --blocked: #ec8a7c; --todo: #7d847e; --code-bg: #232825; color-scheme: dark }
+
+body { background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; }
+header.top { grid-column: 1 / -1; padding-block: 48px 8px; border-bottom: 4px solid var(--ink); display: grid; gap: 14px; }
+.eyebrow { font: 600 12px/1 var(--label); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+h1 { font: 800 clamp(30px, 5vw, 46px)/1.08 var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { color: var(--ink-2); max-width: 64ch; margin: 0; }
+.strip { list-style: none; margin: 6px 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ph { display: grid; gap: 2px; padding: 8px 12px 9px; border: 1px solid var(--rule); background: var(--sheet); min-width: 0; border-top: 3px solid var(--todo); }
+.ph.done { border-top-color: var(--done); } .ph.active { border-top-color: var(--active); } .ph.blocked { border-top-color: var(--blocked); }
+.ph-name { font: 600 13px/1.2 var(--label); letter-spacing: .04em; }
+.ph-state { font: 500 12px/1.2 var(--label); color: var(--ink-3); max-width: 22ch; overflow-wrap: anywhere; }
+.ph.done .ph-state { color: var(--done); } .ph.active .ph-state { color: var(--active); } .ph.blocked .ph-state { color: var(--blocked); }
+.meta { font: 500 12px/1 var(--label); color: var(--ink-3); letter-spacing: .04em; }
+
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; max-height: calc(100vh - 32px); overflow: auto; padding-top: 28px; font: 500 14px/1.35 var(--label); }
+nav.toc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+nav.toc ul ul { padding-left: 12px; margin-top: 6px; gap: 4px; font-size: 13px; }
+nav.toc a { color: var(--ink-2); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); }
+nav.toc ul ul a { color: var(--ink-3); }
+
+main { min-width: 0; padding-top: 12px; }
+main > * { max-width: 72ch; }
+main h2 { font: 800 26px/1.2 var(--display); margin: 52px 0 12px; padding-top: 14px; border-top: 1px solid var(--rule); text-wrap: balance; }
+main h3 { font: 600 19px/1.3 var(--display); margin: 32px 0 8px; text-wrap: balance; }
+main p, main li { color: var(--ink); }
+main em { color: var(--ink-2); }
+main a { color: var(--accent); }
+main code { font: 400 .84em/1.4 var(--mono); background: var(--code-bg); padding: 1px 4px; overflow-wrap: anywhere; }
+main pre { max-width: none; background: var(--sheet); border: 1px solid var(--rule); border-left: 3px solid var(--ink); padding: 14px 16px; overflow-x: auto; font: 400 13px/1.45 var(--mono); }
+main pre code { background: none; padding: 0; font: inherit; overflow-wrap: normal; }
+.tbl { max-width: none; overflow-x: auto; margin: 16px 0; }
+main table { border-collapse: collapse; font: 400 14.5px/1.4 var(--body); min-width: 100%; }
+main th { font: 600 12px/1.2 var(--label); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); text-align: left; padding: 8px 12px 6px 0; border-bottom: 2px solid var(--ink); }
+main td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+main td code { font-size: .8em; }
+main hr { border: 0; border-top: 1px solid var(--rule); }
+@media (max-width: 860px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  nav.toc { position: static; max-height: none; padding-top: 18px; border-bottom: 1px solid var(--rule); padding-bottom: 18px; }
+  header.top { padding-top: 28px; }
+}
+@media (prefers-reduced-motion: no-preference) { nav.toc a { transition: color .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">Ticket PAPERS3-PORT · design guide</span>
+    <h1>picocalc-os on the M5Stack PaperS3</h1>
+    <p class="lede">Porting a JavaScript OS of supervised worlds to an e-paper tablet: MicroQuickJS worlds, gray framebuffers, a refresh planner, GT911 touch and a paper-first compositor.</p>
+    <ul class="strip" aria-label="Phase progress">{{STRIP}}</ul>
+    <span class="meta">Guide last updated {{UPDATED}}</span>
+  </header>
+  <nav class="toc" aria-label="Contents">{{TOC}}</nav>
+  <main>{{CONTENT}}</main>
+</div>
+<script>
+  // wide tables scroll inside their own box instead of widening the page
+  document.querySelectorAll("main table").forEach(function (t) {
+    var d = document.createElement("div"); d.className = "tbl"; t.parentNode.insertBefore(d, t); d.appendChild(t);
+  });
+</script>
