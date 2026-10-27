@@ -10,8 +10,12 @@ idf_component_register(
         "${OS}/nucleus/kernel.c" "${OS}/nucleus/vm_mqjs.c" "${OS}/nucleus/hw.c" "${OS}/nucleus/gfx.c" "${OS}/nucleus/util.c"
         "${ENG}/mquickjs.c" "${ENG}/dtoa.c" "${ENG}/libm.c" "${ENG}/cutils.c"
     INCLUDE_DIRS "." "${OS}/nucleus" "${ENG}"
-    PRIV_REQUIRES driver esp_driver_gpio esp_driver_usb_serial_jtag esp_adc esp_psram esp_timer heap vfs
+    PRIV_REQUIRES driver esp_driver_gpio esp_driver_uart esp_driver_usb_serial_jtag esp_adc esp_psram esp_timer heap vfs
 )
+# -DS3_QEMU=1: a build for Espressif's QEMU (see sdkconfig.qemu)
+if(S3_QEMU)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE S3_QEMU)
+endif()
 
 # MicroQuickJS's standard library: ROM tables generated on the host for a 32-bit target
 find_program(HOST_CC NAMES gcc cc REQUIRED)

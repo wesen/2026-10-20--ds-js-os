@@ -1,0 +1,16 @@
+# Overlay for running the firmware in Espressif's QEMU (machine esp32s3), which has no USB Serial/JTAG, I2C,
+# LCD_CAM or ADC: the console moves to UART0, and the S3_QEMU build stubs the panel, the I2C bus and the battery.
+#   idf.py -B build-qemu -DS3_QEMU=1 -DSDKCONFIG=build-qemu/sdkconfig -DSDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.qemu" build
+CONFIG_ESP_CONSOLE_UART_DEFAULT=y
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=n
+CONFIG_ESP_CONSOLE_SECONDARY_NONE=y
+# This QEMU (esp_develop 9.0.0) models no PSRAM on the S3, so the QEMU build has none: the arenas come from
+# internal RAM, and it boots the engine conformance manifest (js/test/qemu.json: the test worlds in 184 KB of arenas) instead of
+# the system, whose framebuffer alone is 518 KB
+CONFIG_SPIRAM=n
+# QEMU runs are for finding faults: canaries on every heap block, and a watchpoint at the end of each task's stack
+CONFIG_HEAP_POISONING_COMPREHENSIVE=y
+CONFIG_FREERTOS_WATCHPOINT_END_OF_STACK=y
+# In this QEMU only core 0 sees RTC fast memory (core 1 reads zeros), so it must not be heap: the kernel task on
+# core 1 walking or using a block there fails. On the chip both cores reach it.
+CONFIG_ESP_SYSTEM_ALLOW_RTC_FAST_MEM_AS_HEAP=n

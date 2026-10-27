@@ -51,6 +51,9 @@ static void i2c_worker(void *arg) {
     vtime_t t0 = port_clock();
     uint8_t rd[64] = { 0 };
     bool ok;
+#ifdef S3_QEMU   // no I2C controller under QEMU: every device answers zeros (no touch; the clock at its reset value)
+    ok = true; vTaskDelay(1);
+#else
     if (r.nread && r.gap_us <= 0) ok = lgfx::i2c::transactionWriteRead(1, r.addr, r.bytes, (uint8_t)r.nbytes, rd, (size_t)r.nread, (uint32_t)r.hz).has_value();
     else {
       ok = !r.nbytes || lgfx::i2c::transactionWrite(1, r.addr, r.bytes, (uint8_t)r.nbytes, (uint32_t)r.hz).has_value();
@@ -59,6 +62,7 @@ static void i2c_worker(void *arg) {
         ok = lgfx::i2c::transactionRead(1, r.addr, rd, (uint8_t)r.nread, (uint32_t)r.hz).has_value();
       }
     }
+#endif
     char json[200];
     if (!ok) snprintf(json, sizeof json, "\"no answer from 0x%02x on i2c1\"", r.addr);
     else {
@@ -124,8 +128,14 @@ static void epd_worker(void *arg) {
   for (;;) {
     xQueueReceive(q_epd, &r, portMAX_DELAY);
     vtime_t t0 = port_clock();
+#ifdef S3_QEMU   // no panel under QEMU: be busy as long as the simulator's panel is (sim/papers3/epd.c)
+    static const int busy_ms[EPD_MODES] = { 450, 300, 120, 60 };
+    vTaskDelay(pdMS_TO_TICKS(busy_ms[r.mode]));
+    bool ok = true;
+#else
     bool ok = wait_idle();
-    if (ok) {
+#endif
+    if (ok && panel) {
       panel->setEpdMode(MODES[r.mode]);
       panel->startWrite();
       for (int j = 0; j < r.ht; j++)
@@ -172,7 +182,11 @@ extern "C" void bus_s3_done(const kmsg_t *m) {
 extern "C" void bus_s3_init(void) {
   q_i2c = xQueueCreate(64, sizeof(req_t));
   q_epd = xQueueCreate(16, sizeof(req_t));
+#ifdef S3_QEMU
+  s3_kq = xQueueCreate(24, sizeof(kmsg_t));   // internal RAM is all there is under QEMU, and the test worlds use no bus
+#else
   s3_kq = xQueueCreate(64 + 16 + 32, sizeof(kmsg_t));
+#endif
 
   // keep the power latch on (M5GFX's autodetect does this for the PaperS3; we do not call it)
   gpio_config_t out = {};
@@ -180,6 +194,9 @@ extern "C" void bus_s3_init(void) {
   gpio_config(&out);
   gpio_set_level((gpio_num_t)PIN_PWROFF, 0);
 
+#ifdef S3_QEMU
+  ESP_LOGW(TAG, "QEMU build: no panel, the i2c devices answer zeros");
+#else
   if (!lgfx::i2c::init(1, PIN_I2C1_SDA, PIN_I2C1_SCL).has_value()) ESP_LOGE(TAG, "i2c1 did not start");
 
   panel = new PaperPanel();
@@ -187,6 +204,7 @@ extern "C" void bus_s3_init(void) {
   for (int rot = 0; rot < 4 && panel->width() != 540; rot++) panel->setRotation(rot);   // portrait: 540 x 960
   panel->setAutoDisplay(false);
   ESP_LOGI(TAG, "epd0: %d x %d (rotation %d); i2c1 sda=%d scl=%d", (int)panel->width(), (int)panel->height(), panel->getRotation(), PIN_I2C1_SDA, PIN_I2C1_SCL);
+#endif
 
   xTaskCreatePinnedToCore(i2c_worker, "bus_i2c1", 4096, NULL, 6, NULL, 0);
   xTaskCreatePinnedToCore(epd_worker, "bus_epd0", 6144, NULL, 4, NULL, 0);

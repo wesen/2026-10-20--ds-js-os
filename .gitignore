@@ -9,6 +9,7 @@ picocalc-os/port/esp32p4/sdkconfig.old
 picocalc-os/build-papers3*/
 picocalc-os/out-papers3/uart.log
 picocalc-os/port/esp32s3-papers3/build/
+picocalc-os/port/esp32s3-papers3/build-qemu/
 picocalc-os/port/esp32s3-papers3/sdkconfig
 picocalc-os/port/esp32s3-papers3/sdkconfig.old
 picocalc-os/port/esp32s3-papers3/managed_components/

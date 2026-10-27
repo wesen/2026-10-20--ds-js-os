@@ -19,7 +19,11 @@ vtime_t port_clock(void) {
 }
 
 // A world's arena is one block; MicroQuickJS wants it word-aligned and never reallocates it.
+#ifdef S3_QEMU
+#define PSRAM MALLOC_CAP_8BIT   // no PSRAM under QEMU (sdkconfig.qemu)
+#else
 #define PSRAM (MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT)
+#endif
 void *port_heap_malloc(size_t n) { return heap_caps_aligned_alloc(8, n, PSRAM); }
 void *port_heap_realloc(void *p, size_t n) { return heap_caps_realloc(p, n, PSRAM); }
 void port_heap_free(void *p) { heap_caps_free(p); }
@@ -52,6 +56,9 @@ static adc_oneshot_unit_handle_t adc1;
 static adc_cali_handle_t cali;
 
 void port_s3_init(void) {
+#ifdef S3_QEMU
+  return;
+#endif
   adc_oneshot_unit_init_cfg_t u = { .unit_id = ADC_UNIT_1 };
   if (adc_oneshot_new_unit(&u, &adc1) == ESP_OK) {
     adc_oneshot_chan_cfg_t c = { .atten = ADC_ATTEN_DB_12, .bitwidth = ADC_BITWIDTH_DEFAULT };
@@ -64,6 +71,9 @@ void port_s3_init(void) {
 }
 
 int port_adc_read_mv(int unit, int channel) {
+#ifdef S3_QEMU
+  return unit == 1 && channel == BAT_ADC_CHANNEL ? 1950 : 0;   // no ADC under QEMU: a half-full cell behind the 1:2 divider
+#endif
   if (unit != 1 || !adc1) return 0;
   int raw = 0, mv = 0;
   if (adc_oneshot_read(adc1, channel, &raw) != ESP_OK) return 0;

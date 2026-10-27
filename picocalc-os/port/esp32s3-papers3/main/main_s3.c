@@ -19,6 +19,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "driver/uart.h"
+#include "driver/uart_vfs.h"
 #include "driver/usb_serial_jtag.h"
 #include "esp_chip_info.h"
 #include "esp_heap_caps.h"
@@ -103,10 +105,15 @@ static void shot(void) {
   xTaskNotifyGive(snap.task);
 }
 
+static TaskHandle_t kernel_th;
+
 static void heap_report(void) {
-  printf("heap: internal %u free (largest %u), psram %u free (largest %u)\n",
+  if (!heap_caps_check_integrity_all(true)) { printf("heap: CORRUPT (see above); not walking it\n"); return; }
+  printf("heap: internal %u free (largest %u), psram %u free (largest %u)",
          (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL), (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),
          (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM), (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
+  if (kernel_th) printf("; the kernel task's stack has %u bytes never used", (unsigned)uxTaskGetStackHighWaterMark(kernel_th));
+  printf("\n");
 }
 
 void console_exec(char *line) {
@@ -162,11 +169,37 @@ void console_exec(char *line) {
 }
 
 // ---- tasks ----------------------------------------------------------------------------------------------------------
+#ifdef S3_QEMU
+#define MANIFEST "js/test/qemu.json"   // the engine's conformance worlds in smaller arenas: the system does not fit without PSRAM
+#else
+#define MANIFEST "js/system.json"
+#endif
+
+// The console is the native USB Serial/JTAG; under QEMU, which has none, it is UART0.
+static void console_init(void) {
+#ifdef S3_QEMU
+  ESP_ERROR_CHECK(uart_driver_install(UART_NUM_0, 1024, 4096, 0, NULL, 0));
+  uart_vfs_dev_use_driver(UART_NUM_0);
+#else
+  usb_serial_jtag_driver_config_t uc = { .tx_buffer_size = 4096, .rx_buffer_size = 1024 };
+  ESP_ERROR_CHECK(usb_serial_jtag_driver_install(&uc));
+  usb_serial_jtag_vfs_use_driver();
+#endif
+}
+
+static int console_getc(uint8_t *c) {
+#ifdef S3_QEMU
+  return uart_read_bytes(UART_NUM_0, c, 1, portMAX_DELAY);
+#else
+  return usb_serial_jtag_read_bytes(c, 1, portMAX_DELAY);
+#endif
+}
+
 static void console_task(void *arg) {
   char line[256]; int n = 0;
   for (;;) {
     uint8_t c;
-    if (usb_serial_jtag_read_bytes(&c, 1, portMAX_DELAY) != 1) continue;
+    if (console_getc(&c) != 1) continue;
     if (c == '\r' || c == '\n') {
       if (!n) continue;
       line[n] = 0; n = 0;
@@ -178,10 +211,13 @@ static void console_task(void *arg) {
 
 static void kernel_task(void *arg) {
   K.realtime = true;
+#ifdef S3_QEMU
+  K.trace = true;
+#endif
   K.uart = stdout;            // the kernel log and the #OCT1 fault frames go to the console
   port_clock();               // starts the clock
   kernel_init("js", NULL);    // the prelude, and the calibration loops
-  if (kernel_boot("js/system.json")) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
+  if (kernel_boot(MANIFEST)) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
   for (;;) {
     kmsg_t m;
     while (xQueueReceive(s3_kq, &m, 0) == pdTRUE) {
@@ -189,6 +225,9 @@ static void kernel_task(void *arg) {
       else bus_s3_done(&m);
     }
     kernel_run_until(port_clock());
+#ifdef S3_QEMU   // a fault-finding run: stop at the first step after which the heap is damaged (K.trace names the turns)
+    if (!heap_caps_check_integrity_all(true)) { printf("heap damaged at %.3f ms; the trace above shows the turns that ran\n", port_clock() / 1000.0); abort(); }
+#endif
     vtime_t wait = kernel_next_wake() - port_clock();
     if (wait <= 0) continue;
     if (wait > MS(50)) wait = MS(50);
@@ -202,14 +241,17 @@ static void kernel_task(void *arg) {
 void app_main(void) {
   esp_chip_info_t chip;
   esp_chip_info(&chip);
+#if CONFIG_SPIRAM
+  unsigned psram_kb = (unsigned)(esp_psram_get_size() / 1024);
+#else
+  unsigned psram_kb = 0;
+#endif
   ESP_LOGI(TAG, "picocalc-os on %s rev %d.%d, %d cores, %u KB PSRAM", CONFIG_IDF_TARGET, chip.revision / 100, chip.revision % 100,
-           chip.cores, (unsigned)(esp_psram_get_size() / 1024));
+           chip.cores, psram_kb);
   heap_report();
 
-  // the console: the USB Serial/JTAG driver, so input can be read and output does not spin on the ROM routines
-  usb_serial_jtag_driver_config_t uc = { .tx_buffer_size = 4096, .rx_buffer_size = 1024 };
-  ESP_ERROR_CHECK(usb_serial_jtag_driver_install(&uc));
-  usb_serial_jtag_vfs_use_driver();
+  // the console's driver, so input can be read and output does not spin on the ROM routines
+  console_init();
   setvbuf(stdout, NULL, _IOLBF, 0);
 
   port_s3_init();
@@ -217,5 +259,9 @@ void app_main(void) {
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);
   xTaskCreatePinnedToCore(shot_task, "shot", 4096, NULL, 2, &snap.task, 0);
   // MicroQuickJS keeps its stacks in the arenas; the kernel task's own stack is for C (JSON, the gfx calls)
-  xTaskCreatePinnedToCore(kernel_task, "kernel", 32 * 1024, NULL, 5, NULL, 1);
+#ifdef S3_QEMU
+  xTaskCreatePinnedToCore(kernel_task, "kernel", 12 * 1024, NULL, 5, &kernel_th, 1);   // the test worlds use under 5 KB of it
+#else
+  xTaskCreatePinnedToCore(kernel_task, "kernel", 32 * 1024, NULL, 5, &kernel_th, 1);
+#endif
 }

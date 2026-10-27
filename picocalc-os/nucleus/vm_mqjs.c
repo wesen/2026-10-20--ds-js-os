@@ -742,7 +742,8 @@ static int get_num(JSContext *ctx, JSValue *o, const char *key, double *d) {
 
 int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(void *arg, const manifest_world_t *w), void *arg) {
   size_t size = 64 * 1024 + n * 16;
-  uint8_t *mem = malloc(size);
+  uint8_t *mem = port_heap_malloc(size);   // a temporary arena, from the worlds' allocator (PSRAM on the device)
+  if (!mem) { fprintf(stderr, "%s: no memory to read the manifest (%u KB)\n", path, (unsigned)(size / 1024)); return -1; }
   JSContext *ctx = JS_NewContext(mem, size, &js_stdlib);
   JS_SetLogFunc(ctx, log_write);
   char *txt = malloc(n + 1); memcpy(txt, json, n); txt[n] = 0;   // the parser wants a terminating NUL
@@ -774,15 +775,17 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
   }
   JS_PopGCRef(ctx, &w_ref); JS_PopGCRef(ctx, &root_ref);
   JS_FreeContext(ctx);
-  free(mem);
+  port_heap_free(mem);
   return rc;
 }
 
 // ---- calibration: the same loops as vm.c, counted in steps -----------------------------------------------------
 static int count_interrupt(JSContext *ctx, void *o) { (void)ctx; (*(int64_t *)o)++; return 0; }
 static int64_t count_steps(const char *src, double *real_ms) {
-  size_t size = 256 * 1024;
-  uint8_t *mem = malloc(size);
+  size_t size = 64 * 1024;
+  uint8_t *mem = port_heap_malloc(size);
+  *real_ms = 0;
+  if (!mem) return 0;   // no calibration: the profile's estimate stands
   JSContext *ctx = JS_NewContext(mem, size, &js_stdlib);
   int64_t n = 0;
   JS_SetContextOpaque(ctx, &n);
@@ -793,7 +796,7 @@ static int64_t count_steps(const char *src, double *real_ms) {
   *real_ms = K.realtime ? (port_clock() - t0) / 1000.0 : 0;
   int64_t steps = n * JS_GetInterruptCounterInit() + c0 - JS_GetInterruptCounter(ctx);
   JS_FreeContext(ctx);
-  free(mem);
+  port_heap_free(mem);
   return steps;
 }
 double vm_fib20_ms;
