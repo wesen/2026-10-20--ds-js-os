@@ -256,11 +256,11 @@ static void kernel_task(void *arg) {
 #ifdef S3_QEMU   // a fault-finding run: stop at the first step after which the heap is damaged (K.trace names the turns)
     if (!heap_caps_check_integrity_all(true)) { printf("heap damaged at %.3f ms; the trace above shows the turns that ran\n", port_clock() / 1000.0); abort(); }
 #endif
-    vtime_t wait = kernel_next_wake() - port_clock();
-    if (wait <= 0) continue;
-    if (wait > MS(50)) wait = MS(50);
+    // block until the next thing is due, or until another task (a bus worker, the console) posts to s3_kq
+    vtime_t next = kernel_next_wake(), wait = next == VT_INF ? 0 : next - port_clock();
+    if (next != VT_INF && wait <= 0) continue;
     vtime_t t_block = port_clock();
-    BaseType_t got = xQueueReceive(s3_kq, &m, pdMS_TO_TICKS((wait + 999) / 1000));
+    BaseType_t got = xQueueReceive(s3_kq, &m, next == VT_INF ? portMAX_DELAY : pdMS_TO_TICKS((wait + 999) / 1000));
     prof.blocked_us += port_clock() - t_block; prof.wakeups++;
     if (got == pdTRUE) {
       if (m.line) { console_exec(m.line); free(m.line); }

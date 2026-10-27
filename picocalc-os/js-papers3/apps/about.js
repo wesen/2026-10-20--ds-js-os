@@ -8,9 +8,10 @@ app("about")
   .title("About")
   .state({})
   .onStart(gather)
-  .on("focus", gather)
+  .on("focus", function (s) { timers.start(0); return gather(s); })
+  .on("blur", function () { timers.stop(0); })
   .on("back", function () {})
-  .every(5000, gather)
+  .every(5000, gather, { paused: true })   // timer 0: only while on screen
   .screen(function (s) {
     var up = Math.floor(s.t / 1000);
     return ui.col({ gap: 14 },

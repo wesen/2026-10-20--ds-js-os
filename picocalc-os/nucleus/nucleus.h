@@ -77,6 +77,7 @@ typedef struct world {
   char needs[MAX_LIST][NAME_LEN]; int n_needs;
   char provides[MAX_LIST][NAME_LEN]; int n_provides;
   int every_ms[MAX_LIST]; int n_every; bool tick_queued[MAX_LIST];
+  bool timer_off[MAX_LIST]; int timer_gen[MAX_LIST];   // a stopped timer; a timer's ticks carry its generation
   bool has_start, has_screen;
   char *frame;              // last frame it published
   // the turn in progress
@@ -113,7 +114,7 @@ typedef struct world {
 enum { E_DELIVER, E_TICK, E_SETTLE, E_RESTART, E_FN };
 typedef struct event {
   vtime_t t; uint64_t seq;
-  int type, w, epoch, a;
+  int type, w, epoch, a, b;
   msg_t *msg;
   settle_t *settle;
   void (*fn)(void *arg, int a);
@@ -188,6 +189,7 @@ typedef struct {
   vtime_t lane_busy;
   bool verbose, quiet, trace;
   bool realtime;            // the port's real clock (port_clock) instead of the virtual one
+  int front;                // the world on screen, as the compositor says (sys.front), +1; 0: render every world
   char *prelude; size_t prelude_len;
   char js_root[256];
   FILE *uart;               // the console UART: kernel log and fault frames for the host
@@ -217,6 +219,7 @@ void kernel_publish(world_t *from, const char *ch, const char *json, const int *
 int kernel_ask(world_t *from, world_t *to, const char *type, const char *json, const int *hs, int nh, int promise, vtime_t timeout);
 void crash(world_t *W, const char *why);
 int kernel_restart_world(world_t *W);
+void kernel_timer_set(world_t *W, int i, bool on);   // stop or restart a world's i-th declared timer
 void kernel_fault(world_t *W, const char *why);
 char *kernel_worlds_json(void);
 char *kernel_stats_json(void);

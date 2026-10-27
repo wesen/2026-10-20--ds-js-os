@@ -14,7 +14,8 @@ app("faults")
   .title("Faults")
   .state({ worlds: [], last: "" })
   .onStart(refresh)
-  .on("focus", refresh)
+  .on("focus", function (s) { timers.start(0); refresh(s); })
+  .on("blur", function () { timers.stop(0); })
   .on("act", function (s, m) {
     var a = ACTS[m.arg];
     s.last = a.label + "…";
@@ -26,7 +27,7 @@ app("faults")
     if (w && w.state === "stopped") { sys.restart(w.name); s.last = "restarting " + w.name; }
   })
   .on("back", function () {})
-  .every(500, refresh)
+  .every(500, refresh, { paused: true })   // timer 0: only while on screen
   .screen(function (s) {
     return ui.col({ gap: 14 },
       ACTS.map(function (a, i) { return ui.button(a.label, { msg: "act", arg: i, h: 64 }); }),

@@ -329,13 +329,21 @@ int kernel_restart_world(world_t *W) {
 }
 
 // ---- booting a world (a segment on the lane) ------------------------------------------------------------------
-static void start_timers(world_t *W, vtime_t at) {
-  for (int i = 0; i < W->n_every; i++) {
-    if (W->every_ms[i] <= 0) continue;
-    event_t *e = new_event(E_TICK, at + MS(W->every_ms[i]));
-    e->w = W->id; e->epoch = W->epoch; e->a = i;
-    schedule(e);
-  }
+static void start_timer(world_t *W, int i, vtime_t at) {
+  if (W->every_ms[i] <= 0 || W->timer_off[i]) return;
+  event_t *e = new_event(E_TICK, at + MS(W->every_ms[i]));
+  e->w = W->id; e->epoch = W->epoch; e->a = i; e->b = W->timer_gen[i];
+  schedule(e);
+}
+static void start_timers(world_t *W, vtime_t at) { for (int i = 0; i < W->n_every; i++) start_timer(W, i, at); }
+
+// Stopping a timer drops the ticks already scheduled (their generation is old); starting it again ticks one
+// period from now. A world that is not running only records the setting, for when it starts.
+void kernel_timer_set(world_t *W, int i, bool on) {
+  if (i < 0 || i >= W->n_every || W->timer_off[i] == !on) return;
+  W->timer_off[i] = !on;
+  W->timer_gen[i]++;
+  if (on && W->status == W_IDLE && W->vm) start_timer(W, i, K.vnow);
 }
 
 static int boot_world(world_t *W) {
@@ -422,7 +430,9 @@ static void run_segment(world_t *W, bool is_settle) {
   vtime_t t_render = K.realtime ? port_clock() : 0;
   if (K.realtime) W->prof_engine_us += t_render - K.vnow;
   // render what the world shows, as part of its segment
-  if (rc == 0 && !booting && W->vm && W->has_screen && !W->oom && !W->overrun) {
+  // (only the world on screen, once the compositor names one, and any world that has not shown a frame yet)
+  bool shown = !K.front || K.front == W->id + 1 || !W->frame;
+  if (rc == 0 && !booting && W->vm && W->has_screen && shown && !W->oom && !W->overrun) {
     char *f = vm_render(W);
     if (f && (!W->frame || strcmp(f, W->frame))) {
       free(W->frame); W->frame = f;
@@ -479,7 +489,7 @@ static void handle_event(event_t *e) {
       break;
     }
     case E_TICK:
-      if (!W || W->epoch != e->epoch || W->status != W_IDLE) break;
+      if (!W || W->epoch != e->epoch || W->status != W_IDLE || W->timer_off[e->a] || e->b != W->timer_gen[e->a]) break;
       if (!W->tick_queued[e->a]) {
         msg_t *m = new_msg(M_TICK, "tick", NULL, -1);
         m->timer = e->a; m->t = e->t; m->seq = ++K.seq;
@@ -488,7 +498,7 @@ static void handle_event(event_t *e) {
         W->mbox_len++;
         W->tick_queued[e->a] = true;
       }
-      { event_t *n = new_event(E_TICK, e->t + MS(W->every_ms[e->a])); n->w = e->w; n->epoch = e->epoch; n->a = e->a; schedule(n); }
+      { event_t *n = new_event(E_TICK, e->t + MS(W->every_ms[e->a])); n->w = e->w; n->epoch = e->epoch; n->a = e->a; n->b = e->b; schedule(n); }
       break;
     case E_SETTLE:
       if (W && W->epoch == e->epoch && W->status == W_IDLE) {

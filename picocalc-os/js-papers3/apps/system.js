@@ -64,7 +64,8 @@ app("system")
   .title("System")
   .state({ tab: 0, first: 0, pick: null, worlds: [], stats: null, cpu: {}, lane: 0, history: [], last: null, display: null })
   .onStart(sample)
-  .on("focus", sample)
+  .on("focus", function (s) { timers.start(0); sample(s); })
+  .on("blur", function () { timers.stop(0); })
   .on("tab", function (s, m) { s.tab = m.arg; s.first = 0; sample(s); if (s.tab === 3) return refreshDisplay(s); })
   .on("pick", function (s, m) { s.pick = s.pick === m.arg ? null : m.arg; })
   .on("swipe", function (s, m) {
@@ -74,7 +75,7 @@ app("system")
   })
   .on("clean", function () { send("compositor", "clean"); })
   .on("back", function (s) { s.tab = 0; s.first = 0; })
-  .every(1000, function (s) { sample(s); if (s.tab === 3) return refreshDisplay(s); })
+  .every(1000, function (s) { sample(s); if (s.tab === 3) return refreshDisplay(s); }, { paused: true })   // timer 0: only while on screen
   .screen(function (s) {
     var body = !s.stats ? ui.text("…") : s.tab === 0 ? worldsTab(s) : s.tab === 1 ? handlesTab(s) : s.tab === 2 ? busesTab(s) : displayTab(s);
     return ui.col({ gap: 20, page: s.tab }, ui.tabs(TABS, s.tab), body);

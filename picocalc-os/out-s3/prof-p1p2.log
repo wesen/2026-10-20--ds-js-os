@@ -1,0 +1,30 @@
+I (322) esp_image: segment 4: paddr=001909d4 vaddr=403762d8 sizeI (825) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (825) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (1046) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (1046) main_task: Returned from app_main()
+[   503.868] calibration on the real clock: the 100k loop took 415.5 ms (the model says 250), fib(20) 84.7 ms (the model says 68.4)
+[   514.134] booting 14 worlds from js/system.json
+[  3563.612] touch: touch controller GT911
+#OK prof
+prof over 10.0 s: the kernel task woke 1028 times (102.4/s) and was blocked 83% of the time; worlds ran 1523 ms (15.2%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  touch        1004   100.1    1487.3     1466.4        9.5      11.4    1.48         68   27
+  launcher        2     0.2      35.4       28.7        6.6       0.0   17.70        191    1
+#OK prof
+#OK tap
+#OK prof
+prof over 10.0 s: the kernel task woke 916 times (91.3/s) and was blocked 69% of the time; worlds ran 2872 ms (28.6%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  touch         918    91.5    1583.0     1558.1       12.2      12.7    1.72         68   25
+  display        20     2.0      74.8       74.2        0.3       0.3    3.74        248    1
+  compositor     30     3.0    1014.5     1013.8        0.3       0.5   33.82       1548    0
+  system         10     1.0     199.1      133.9       65.0       0.2   19.91        370    3
+#OK prof
+#OK tap
+[ 34474.003] flaky crashed: killed from the console
+#OCT1 {"ev":"fault","t":34474.003,"world":"flaky","file":"system/flaky.js","handling":"","why":"killed from the console","crashes":1,"mem_kb":30,"limit_kb":48}
+#OK crash
+#OK shot
+#OK shot

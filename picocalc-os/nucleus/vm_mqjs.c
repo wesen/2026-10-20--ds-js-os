@@ -470,6 +470,25 @@ static JSValue op_sys_admin(JSContext *ctx, world_t *W, int argc, JSValue *argv,
   return JS_TRUE;
 }
 static JSValue op_sys_fault(JSContext *ctx, world_t *W, int argc, JSValue *argv) { return op_sys_admin(ctx, W, argc, argv, false); }
+// timers.start(i) / timers.stop(i): the world's own declared timers
+static JSValue op_timer_set(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  int i = iarg(ctx, argv, argc, 0, -1);
+  if (i < 0 || i >= W->n_every) return fail(ctx, "%s has no timer %d", W->name, i);
+  kernel_timer_set(W, i, argc > 1 && argv[1] == JS_TRUE);   // the prelude passes a boolean
+  return JS_UNDEFINED;
+}
+// sys.front(name): the compositor (the world that takes the "frames") says which world is on screen; only that one
+// is rendered after its turns
+static JSValue op_sys_front(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  if (!world_needs(W, "frames")) return fail(ctx, "only the world that takes the frames says which world is in front");
+  char *name = sarg(ctx, argv, argc, 0);
+  world_t *T = name ? world_by_name(name) : NULL;
+  free(name);
+  if (!T) return fail(ctx, "no such world");
+  if (K.front != T->id + 1) { free(T->frame); T->frame = NULL; }   // its next turn publishes a frame, even an unchanged one
+  K.front = T->id + 1;
+  return JS_UNDEFINED;
+}
 static JSValue op_sys_restart(JSContext *ctx, world_t *W, int argc, JSValue *argv) { return op_sys_admin(ctx, W, argc, argv, true); }
 
 // the wall clock: what Date.now() reads; the clock driver sets it from the RTC (claim "sys.clock")
@@ -491,7 +510,7 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
   { "adc.read", op_adc_read }, { "gpio.get", op_gpio_get }, { "epd.info", op_epd_info },
   { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats },
-  { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart },
+  { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart }, { "sys.front", op_sys_front }, { "timer.set", op_timer_set },
 };
 
 JSValue js_nucleus_k(JSContext *ctx, JSValue *this_val, int argc, JSValue *argv) {
@@ -631,6 +650,8 @@ static int read_meta(world_t *W, JSValue *meta) {
     int len = 0; JS_ToInt32(ctx, &len, JS_GetPropertyStr(ctx, ev, "length"));
     for (int i = 0; i < len && i < MAX_LIST; i++) { int x = 0; JS_ToInt32(ctx, &x, JS_GetPropertyUint32(ctx, ev, (uint32_t)i)); W->every_ms[W->n_every++] = x; }
   }
+  JSValue pz = JS_GetPropertyStr(ctx, *meta, "paused");   // timers declared { paused: true } start stopped
+  for (int i = 0; i < W->n_every; i++) W->timer_off[i] = JS_IsPtr(pz) && JS_GetPropertyUint32(ctx, pz, (uint32_t)i) == JS_TRUE;
   W->has_start = JS_GetPropertyStr(ctx, *meta, "start") == JS_TRUE;
   W->has_screen = JS_GetPropertyStr(ctx, *meta, "screen") == JS_TRUE;
   JSCStringBuf cb;

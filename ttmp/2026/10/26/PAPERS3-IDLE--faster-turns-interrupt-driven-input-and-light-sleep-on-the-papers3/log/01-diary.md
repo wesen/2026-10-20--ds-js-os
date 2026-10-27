@@ -278,3 +278,127 @@ prof over 10.0 s: the kernel task woke 974 times (97.1/s) and was blocked 74% of
 
 - The host profile run takes about 30 s under callgrind. The difference method cancels boot, but the
   host's idle is not identical to the device's, because virtual timing differs.
+
+## Step 3: P1 and P2, no work when nothing happens
+
+Off-screen apps no longer tick or render. The compositor no longer polls. Its page-refresh hold, its
+banners and its clock are one-shot sleeps. Timers can be stopped and started, and the kernel task no
+longer caps its sleep at 50 ms. On the device, the idle home screen went from 23.2% to 15.2% of the
+lane, and all of what remains is the touch poll, which P3 removes. Ten host captures changed at
+first. After one design correction, made because the captures showed it was needed, six changed, all
+in counts and timings. They now refresh more cleanly than before.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** P1 and P2 of the guide.
+**Inferred user intent:** Stop the needless idle work the P0 profile found.
+**Commit (code):** see the commit after this entry: "timers that stop, rendering only what is on screen"
+
+### What I did
+
+- Kernel (`nucleus/kernel.c`, `nucleus.h`):
+  - `timer_off[]` and `timer_gen[]` per world, plus a `b` field on events that carries a tick's
+    generation;
+  - `start_timer`, and `kernel_timer_set(W, i, on)`: stopping bumps the generation, so scheduled ticks
+    die; starting schedules a tick one period from now;
+  - `E_TICK` drops stopped or stale ticks;
+  - `K.front` (0 means render everyone, as the PicoCalc does);
+  - `run_segment` renders only the front world, or a world with no frame yet.
+- Binding (`vm_mqjs.c`):
+  - `read_meta` reads `paused`;
+  - `timer.set` op;
+  - `sys.front` op, allowed only to the world that needs `frames`, i.e. the compositor. It also clears
+    the new front world's last frame, so its next turn republishes.
+- Prelude:
+  - `.every(ms, fn, { paused: true })`;
+  - `timers.start(i)` and `timers.stop(i)`;
+  - `sys.front(name)`;
+  - `__init` returns `paused`.
+- Compositor:
+  - `holdPage` (a detached `sleep(500)` with an identity check), `showBanner` (a sleep until expiry),
+    `armClock` (a sleep to just after the next minute, re-armed on `time`), `updateClock`;
+  - removed `.every(100)` and `.every(1000)`;
+  - `focus()` calls `sys.front` and always waits for the app's fresh frame;
+  - `onStart` names the launcher as front and sends it `focus`.
+- Apps: launcher, system, faults and about declare their timer `paused`, start it on `focus` and stop
+  it on `blur`.
+- Power driver: samples every 60 s instead of every 10 s.
+- `main_s3.c`: the kernel task blocks until `kernel_next_wake()`, or forever (`portMAX_DELAY`) when
+  nothing is scheduled.
+
+### Why
+
+- P0 showed 25% of the idle lane in off-screen apps' timers and renders, and 12% in compositor ticks.
+- The guide's open question about detached sleeps resolved itself. `__dispatch` makes a turn
+  asynchronous only when the handler returns a thenable. A sleep the handler drops settles later in a
+  segment of its own. `E_SETTLE` accepts it whenever the world is `W_IDLE`, which also covers worlds
+  waiting in an async turn: "waiting" is derived from `in_turn`.
+
+### What worked
+
+- Device, idle home screen, 10 s (`out-s3/prof-p1p2.log`):
+  `worlds ran 1523 ms (15.2%)`; touch 1004 segments, 1487 ms; launcher 2 segments; compositor,
+  system, faults and about 0 segments (before: 125, 10, 20 and 2).
+- System app open: compositor 30 segments, 1014 ms. That is 34 ms per paint of the System table, once
+  a second: a P5 target.
+- Banners: `crash flaky` shows the crash banner, then "flaky is running again", and both expire on
+  their own (`out-s3/p1p2/shot-1.png`, `shot-2.png`). The launcher counts the crash while on screen.
+- Host:
+  - PicoCalc `make shots` unchanged;
+  - PaperS3 deterministic across two runs;
+  - conformance manifest: 11 pong lines as before;
+  - `SAN=1`: 0 reports, identical captures.
+- The tour script's panel busy time went from 6150 to 5550 ms. `03-system` shows the compositor at
+  22 turns where it had 105.
+
+### What didn't work
+
+- First pass: 10 captures changed, and `33-touches.png` had lost a faint Z in the stroke pad.
+  - That Z was an e-paper ghost. Before, the compositor presented the Touches app's cached frame,
+    rendered in the background while the Sketch strokes were still among its last six, then
+    corrected it with a partial update.
+  - With rendering limited to the front world, cached frames become stale. The old shortcut ("if
+    we have a tree, page-refresh at once") would now present stale frames as a rule.
+  - Fix: `focus()` always holds the page refresh for the fresh frame, and `sys.front` clears the
+    world's last frame so its focus turn republishes.
+  - After that, 20, 22, 23 and 33 were byte-identical to before again. 03, 05, 06, 07, 21 and 25
+    differ only in counts, timings, and the absence of an old ghost under the System list.
+- `JS_ToBool` does not exist in mquickjs (`implicit declaration`, then a link error). The prelude
+  passes a boolean, so the op compares with `JS_TRUE`.
+- `sys.front` was first restricted to the world that *provides* `frames`, but no world does: the
+  kernel publishes frames for the apps, and the compositor *needs* them. Changed to `world_needs`.
+
+### What I learned
+
+- Rendering only what is on screen and presenting cached frames do not mix. Whoever stops background
+  rendering must make the foreground's first frame fresh.
+
+### What was tricky to build
+
+- Stopping a timer whose next tick is already in the event heap. The kernel does not search the heap.
+  Each tick carries the timer's generation, and stale ones are dropped when they fire. Restarting
+  starts a new chain.
+
+### What warrants a second pair of eyes
+
+- `armClock` takes `Date.now() % 60000`. If the RTC jumps backwards by more than the remaining
+  interval, the next wake is at most a minute late. The `time` re-arm covers clock-driver updates.
+- An `M_TICK` already in the mailbox when its timer stops is still delivered once.
+
+### What should be done in the future
+
+- P3: the touch poll is now the whole idle load (14.9% of the lane, 100 segments/s).
+
+### Code review instructions
+
+- `kernel.c`: `start_timer`, `kernel_timer_set`, `E_TICK`, the render condition in `run_segment`.
+  `vm_mqjs.c`: `op_timer_set`, `op_sys_front`, `read_meta`. `compositor.js`: `focus`, `holdPage`,
+  `showBanner`, `armClock`.
+- Validate: `make shots && git status --short out` (empty); `make BOARD=papers3 shots` reproduces the
+  committed `out-papers3`; on the device, `s3cap.py --no-reset -c "2 prof reset" -c "12 prof"`.
+
+### Technical details
+
+- Changed captures in this commit: `out-papers3/03-system.png`, `05-system-buses.png`,
+  `06-system-display.png`, `07-about.png`, `21-faults-throw.png`, `25-display-back.png`.

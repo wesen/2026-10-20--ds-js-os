@@ -205,7 +205,10 @@
     fault: function (name) { return k("sys.fault", name); },
     restart: function (name) { return k("sys.restart", name); },
     setClock: function (epochMs) { return k("clock.set", epochMs); },
+    front: function (name) { return k("sys.front", name); },
   };
+  // the world's own timers, by the order they were declared: timers.stop(0) / timers.start(0)
+  g.timers = { start: function (i) { k("timer.set", i, true); }, stop: function (i) { k("timer.set", i, false); } };
 
   // ---- messages ------------------------------------------------------------------------------------
   g.send = function (to, type, payload) { var e = enc(payload); k("send", to, type, e[0], e[1]); };
@@ -224,7 +227,7 @@
     needs: function () { for (var i = 0; i < arguments.length; i++) def.needs.push(arguments[i]); return B; },
     provides: function () { for (var i = 0; i < arguments.length; i++) def.provides.push(arguments[i]); return B; },
     on: function (type, fn) { def.on[type] = fn; return B; },
-    every: function (ms, fn) { def.every.push({ ms: ms, fn: fn }); return B; },
+    every: function (ms, fn, opts) { def.every.push({ ms: ms, fn: fn, paused: !!(opts && opts.paused) }); return B; },
     onStart: function (fn) { def.start = fn; return B; },
     screen: function (fn) { def.screen = fn; return B; },
     hints: function (h) { def.hints = h; return B; },
@@ -236,7 +239,8 @@
     S = JSON.parse(JSON.stringify(def.initial || {}));
     if (def.name && def.name !== g.self) log("declares itself \"" + def.name + "\" but the manifest calls it \"" + g.self + "\"");
     return { kind: def.kind, title: def.title || g.self, needs: def.needs, provides: def.provides,
-             every: def.every.map(function (e) { return e.ms; }), start: !!def.start, screen: !!def.screen };
+             every: def.every.map(function (e) { return e.ms; }), paused: def.every.map(function (e) { return e.paused; }),
+             start: !!def.start, screen: !!def.screen };
   };
 
   function errText(e) {

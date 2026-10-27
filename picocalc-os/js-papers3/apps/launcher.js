@@ -25,11 +25,12 @@ app("launcher")
   .title("PaperS3")
   .state({ worlds: 0, running: 0, crashes: 0, about: 0 })
   .onStart(count)
-  .on("focus", count)
+  .on("focus", function (s) { timers.start(0); count(s); })
+  .on("blur", function () { timers.stop(0); })
   .on("open", function (s, m) { s.about = m.arg; send("compositor", "open", { app: APPS[m.arg].app }); })
   .on("hold", function (s, m) { if (m.msg === "open") s.about = m.arg; })
   .on("back", function () {})
-  .every(5000, count)
+  .every(5000, count, { paused: true })   // timer 0: only while on screen
   .screen(function (s) {
     return ui.col({ gap: 20 },
       ui.text("Apps", { font: "l" }),

@@ -365,16 +365,44 @@ function dirty(s, intent) {
   send(self, "draw");
 }
 
-// A new app comes forward with one clean refresh. If it has not shown anything yet (a world publishes its
-// first frame after its first turn), that refresh waits for its frame, up to half a second: presenting a
-// placeholder first would leave the placeholder's ghost under the app.
+// A new app comes forward with one clean refresh, which waits for the app's frame, up to half a second: only the
+// world on screen is rendered, so what the compositor last saw of this app may be old, and presenting it first
+// would leave its ghost under the fresh frame. The app's "focus" turn renders it (sys.front makes the kernel
+// publish that frame even if it did not change).
 function focus(s, app) {
   if (app === s.focus) return;
   send(s.focus, "blur");
   s.focus = app;
+  sys.front(app);   // the kernel renders only the world on screen
   send(app, "focus");
-  if (s.apps[app] && s.apps[app].tree) dirty(s, "page");
-  else s.waitFrame = { app: app, until: now() + 500 };
+  holdPage(s, app);
+}
+// The wait is a sleep that outlives the turn which started it: no timer polls for it.
+function holdPage(s, app) {
+  var w = s.waitFrame = { app: app, until: now() + 500 };
+  sleep(500).then(function () { if (s.waitFrame === w) { s.waitFrame = null; dirty(s, "page"); } });
+}
+
+// A banner stays until it is tapped or its time is up.
+function showBanner(s, b) {
+  s.banner = b;
+  sleep(b.until - now()).then(function () { if (s.banner === b) { s.banner = null; dirty(s, "text"); } });
+}
+
+// The title bar's clock changes once a minute, so the compositor wakes just after each minute turns. The clock
+// driver setting the time moves Date.now(), so a "time" message re-arms it (the older sleep then finds its token
+// stale and does nothing).
+function armClock(s) {
+  var token = ++s.clockArm;
+  sleep(60000 - Date.now() % 60000 + 20).then(function () {
+    if (token !== s.clockArm) return;
+    updateClock(s);
+    armClock(s);
+  });
+}
+function updateClock(s) {
+  var c = clockText();
+  if (c !== s.clock) { s.clock = c; dirty(s, "quick"); }
 }
 
 function attach(s) {
@@ -437,11 +465,14 @@ service("compositor")
   .needs("frames", "touch", "power", "time", "worlds.status")
   .provides("gestures")
   .state({ focus: "launcher", apps: {}, battery: null, banner: null, queued: false, intent: null, waitFrame: null, clean: false, frames: 0, presents: 0, pixels: 0,
-           clock: "", crashed: {}, presentError: "", finger: null, gestures: 0, lastGesture: "", lastTap: null })
+           clock: "", clockArm: 0, crashed: {}, presentError: "", finger: null, gestures: 0, lastGesture: "", lastTap: null })
   .onStart(function (s) {
     F = gfx.fonts();
     s.fb = dma.alloc(W, H);
     attach(s);
+    sys.front(s.focus);
+    send(s.focus, "focus");
+    armClock(s);
   })
   .on("draw", function (s) {
     s.queued = false;
@@ -473,26 +504,20 @@ service("compositor")
   .on("open", function (s, m) { focus(s, m.app); })
   .on("clean", function (s) { s.clean = true; dirty(s, "page"); })
   .on("power", function (s, p) { s.battery = p; dirty(s, "quick"); })
-  .on("time", function (s) { s.clock = ""; })
+  .on("time", function (s) { updateClock(s); armClock(s); })
   .on("worlds.status", function (s, st) {
     if (st.state === "crashed") {
       s.crashed[st.world] = true;
       delete s.apps[st.world];
-      s.banner = { text: st.world + " crashed: " + st.why, sub: "restarting in " + st.in_ms + " ms · tap to dismiss", dark: true, until: now() + 4000 };
+      showBanner(s, { text: st.world + " crashed: " + st.why, sub: "restarting in " + st.in_ms + " ms · tap to dismiss", dark: true, until: now() + 4000 });
     } else if (st.state === "stopped") {
       s.crashed[st.world] = true;
       delete s.apps[st.world];
-      s.banner = { text: st.world + " stopped after " + st.crashes + " crashes in 10 s: " + st.why, sub: "a world with sys.admin can restart it", dark: true, until: now() + 6000 };
+      showBanner(s, { text: st.world + " stopped after " + st.crashes + " crashes in 10 s: " + st.why, sub: "a world with sys.admin can restart it", dark: true, until: now() + 6000 });
     } else if (st.state === "running") {
-      s.banner = { text: st.world + " is running again (restart " + st.restarts + ")", until: now() + 2000 };
+      showBanner(s, { text: st.world + " is running again (restart " + st.restarts + ")", until: now() + 2000 });
       if (st.world === "display") attach(s);   // a fresh panel driver: give it the framebuffer and send every pixel
     }
     dirty(s, "text");
   })
-  .on("where", function (s) { return { focus: s.focus, regions: regions.length, gestures: s.gestures, lastGesture: s.lastGesture, lastTap: s.lastTap }; })
-  .every(1000, function (s) {
-    var c = clockText();
-    if (c !== s.clock) { s.clock = c; dirty(s, "quick"); }
-    if (s.banner && now() > s.banner.until) { s.banner = null; dirty(s, "text"); }
-  })
-  .every(100, function (s) { if (s.waitFrame && now() > s.waitFrame.until) { s.waitFrame = null; dirty(s, "page"); } });
+  .on("where", function (s) { return { focus: s.focus, regions: regions.length, gestures: s.gestures, lastGesture: s.lastGesture, lastTap: s.lastTap }; });
