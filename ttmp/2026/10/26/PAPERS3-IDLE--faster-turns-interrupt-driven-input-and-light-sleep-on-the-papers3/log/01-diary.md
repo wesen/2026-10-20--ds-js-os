@@ -532,3 +532,16 @@ ran out. The host captures showed it at once.
 
 - Re-baselined captures: `03-system`, `04-system-handles` (the `gpio:48` handle), `05-system-buses`,
   `07-about`, `30/31/32-sketch-*` (finer strokes), `33-touches` (168 points).
+
+## Step 5: A two-minute window for real touches (milestone)
+
+A 120 s capture with the Touches app on screen got no real touches; nobody touched the panel during
+the window. The interrupt path with real fingers therefore remains unverified. The window did give a
+longer idle measurement (`out-s3/touch-test/console.log`):
+
+```
+prof over 113.0 s: the kernel task woke 21 times (0.2/s) and was blocked 100% of the time; worlds ran 227 ms (0.2%)
+  clock 4 segments, power 2, display 6, compositor 13 (the minute clock redraws and their panel updates)
+```
+
+- **Next:** repeat with someone at the panel (Touches app: corners, a drag), then P4.

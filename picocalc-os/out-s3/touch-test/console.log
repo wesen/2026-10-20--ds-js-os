@@ -1,0 +1,10 @@
+#OK tap
+#OK prof
+#OK shot
+prof over 113.0 s: the kernel task woke 21 times (0.2/s) and was blocked 100% of the time; worlds ran 227 ms (0.2%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  clock           4     0.0       9.1        8.9        0.1       0.1    2.27        108    0
+  power           2     0.0       3.8        3.7        0.0       0.0    1.88         63    0
+  display         6     0.1      17.2       16.9        0.1       0.1    2.86        150    0
+  compositor     13     0.1     196.6      196.2        0.2       0.2   15.13        197    0
+#OK prof
