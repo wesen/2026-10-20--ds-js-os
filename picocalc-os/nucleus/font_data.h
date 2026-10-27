@@ -2069,7 +2069,7 @@ static const uint8_t font_xl_data[32256] = {
   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 };
-typedef struct { const char *name; int w, h; const uint8_t *data; } font_def_t;
+typedef struct { const char *name; int w, h; const uint8_t *data; const uint8_t *adv; int pad; } font_def_t;   // adv NULL: monospace
 static const font_def_t font_table[] = {
   { "s", 6, 12, font_s_data },
   { "m", 8, 16, font_m_data },

@@ -8,6 +8,12 @@
 #include <string.h>
 #include "nucleus.h"
 
+#ifdef NUCLEUS_GRAY8
+#define NEVER_DRAWN 0x01
+#else
+#define NEVER_DRAWN 0x0821
+#endif
+
 handle_t *handle_find(int id) {
   for (int i = 0; i < MAX_HANDLES; i++) if (K.handles[i].live && K.handles[i].id == id) return &K.handles[i];
   return NULL;
@@ -89,11 +95,11 @@ int dmabuf_alloc(int w, int h) {
     dmabuf_t *b = &K.bufs[i];
     if (b->live) continue;
     b->live = true; b->refs = 1; b->w = w; b->h = h;
-    b->bytes = (size_t)w * h * 2;
-    b->back = port_big_calloc((size_t)w * h * 2);
-    b->front = port_big_calloc((size_t)w * h * 2);
+    b->bytes = (size_t)w * h * sizeof(pixel_t);
+    b->back = port_big_calloc(b->bytes);
+    b->front = port_big_calloc(b->bytes);
     if (!b->back || !b->front) { port_big_free(b->back); port_big_free(b->front); memset(b, 0, sizeof(*b)); return -1; }
-    for (size_t k = 0; k < (size_t)w * h; k++) b->front[k] = 0x0821;   // differs from anything drawn: the first commit sends everything
+    for (size_t k = 0; k < (size_t)w * h; k++) b->front[k] = NEVER_DRAWN;   // differs from anything drawn: the first commit sends everything
     return i;
   }
   return -1;

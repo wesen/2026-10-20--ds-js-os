@@ -11,6 +11,13 @@
 #include <stdint.h>
 #include <stdio.h>
 
+// A framebuffer pixel: RGB565 on the PicoCalc; 8-bit gray (0 black, 255 white) with NUCLEUS_GRAY8 (the PaperS3).
+#ifdef NUCLEUS_GRAY8
+typedef uint8_t pixel_t;
+#else
+typedef uint16_t pixel_t;
+#endif
+
 typedef int64_t vtime_t;                      // virtual microseconds since boot
 #define MS(x) ((vtime_t)((x) * 1000))
 #define VT_INF INT64_MAX
@@ -121,10 +128,10 @@ typedef struct {
 } handle_t;
 #define MAX_HANDLES 128
 
-typedef struct {            // a DMA-capable RGB565 framebuffer: drawn into back, sent from front
+typedef struct {            // a DMA-capable framebuffer of pixel_t: drawn into back, sent from front
   bool live; int refs;
   int w, h;
-  uint16_t *back, *front;
+  pixel_t *back, *front;
   size_t bytes;
 } dmabuf_t;
 #define MAX_BUFS 16
@@ -253,15 +260,18 @@ char *hw_handles_json(void);
 char *hw_buses_json(void);
 
 // gfx.c
-void gfx_fill(dmabuf_t *b, int x, int y, int w, int h, uint16_t c);
-void gfx_rect(dmabuf_t *b, int x, int y, int w, int h, uint16_t c);
-int gfx_text(dmabuf_t *b, int x, int y, const char *s, int font, uint16_t fg, int max_w);
-void gfx_line(dmabuf_t *b, int x0, int y0, int x1, int y1, uint16_t c);
+void gfx_fill(dmabuf_t *b, int x, int y, int w, int h, pixel_t c);
+void gfx_rect(dmabuf_t *b, int x, int y, int w, int h, pixel_t c);
+int gfx_text(dmabuf_t *b, int x, int y, const char *s, int font, pixel_t fg, int max_w);
+void gfx_line(dmabuf_t *b, int x0, int y0, int x1, int y1, pixel_t c);
+int gfx_measure(const char *s, int font);                    // width in pixels
+char *gfx_wrap_json(const char *s, int font, int max_w);     // ["line", ...] word-wrapped to max_w, malloc'ed
+char *gfx_fonts_json(void);                                  // {name: [w, h], ...}
 int gfx_font_index(const char *name);
 void gfx_font_size(int font, int *w, int *h);
 int gfx_text_len(const char *s);
 int gfx_commit(dmabuf_t *b, int *rects, int max_rects);
-uint16_t gfx_color(const char *s);
+pixel_t gfx_color(const char *s);
 const char *gfx_font_names(void);
 
 // png.c (host only)

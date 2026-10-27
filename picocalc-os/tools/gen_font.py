@@ -142,7 +142,7 @@ def main(out):
         for i in range(0, len(blob), 32):
             lines.append("  " + ",".join(str(b) for b in blob[i:i + 32]) + ",")
         lines.append("};")
-    lines.append("typedef struct { const char *name; int w, h; const uint8_t *data; } font_def_t;")
+    lines.append("typedef struct { const char *name; int w, h; const uint8_t *data; const uint8_t *adv; int pad; } font_def_t;   // adv NULL: monospace")
     lines.append("static const font_def_t font_table[] = {")
     for name, src, cw, ch in FONTS:
         lines.append(f'  {{ "{name}", {cw}, {ch}, font_{name}_data }},')

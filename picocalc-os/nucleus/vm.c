@@ -155,9 +155,9 @@ static int int_list(JSContext *ctx, JSValueConst v, int *out, int max) {
   for (int i = 0; i < n; i++) { JSValue e = JS_GetPropertyUint32(ctx, v, (uint32_t)i); int32_t x = 0; JS_ToInt32(ctx, &x, e); out[i] = x; JS_FreeValue(ctx, e); }
   return n;
 }
-static uint16_t color_arg(JSContext *ctx, JSValueConst *argv, int argc, int i) {
-  if (i < argc && JS_IsString(argv[i])) { const char *s = JS_ToCString(ctx, argv[i]); uint16_t c = gfx_color(s); JS_FreeCString(ctx, s); return c; }
-  return (uint16_t)iarg(ctx, argv, argc, i, 0);
+static pixel_t color_arg(JSContext *ctx, JSValueConst *argv, int argc, int i) {
+  if (i < argc && JS_IsString(argv[i])) { const char *s = JS_ToCString(ctx, argv[i]); pixel_t c = gfx_color(s); JS_FreeCString(ctx, s); return c; }
+  return (pixel_t)iarg(ctx, argv, argc, i, 0);
 }
 static JSValue fail(JSContext *ctx, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 static JSValue fail(JSContext *ctx, const char *fmt, ...) {
@@ -396,7 +396,7 @@ static JSValue op_gfx_commit(JSContext *ctx, world_t *W, int argc, JSValueConst 
 }
 static JSValue op_gfx_invalidate(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {   // the panel lost its picture: send everything next time
   dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
-  for (size_t i = 0; i < (size_t)b->w * b->h; i++) b->front[i] = (uint16_t)~b->back[i];
+  for (size_t i = 0; i < (size_t)b->w * b->h; i++) b->front[i] = (pixel_t)~b->back[i];
   return JS_UNDEFINED;
 }
 static JSValue op_gfx_fonts(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
