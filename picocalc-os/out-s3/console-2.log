@@ -1,0 +1,39 @@
+t = 61881.9 ms, lane busy 16629.7 ms (26.9%), 3823 turns, 79 published, 87 delivered, 0 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  touch       driver   idle          2884   8701.78     33.9     64    0  
+  clock       driver   idle             2    212.48     31.9     48    0  
+  power       driver   idle             7    210.27     31.4     48    0  
+  display     driver   idle             5    229.69     34.0     64    0  
+  compositor  service  idle           723   1858.02     82.9    448    0  
+  launcher    app      idle            12    426.79     36.9     96    0  
+  system      app      idle            60   1495.45     45.9    160    0  
+  repl        app      idle             0    194.59     34.1    128    0  
+  sandbox     service  idle             0    182.07     31.1    128    0  
+  faults      app      idle           118   2160.10     37.2     96    0  
+  flaky       service  idle             0    184.77     30.1     48    0  
+  touches     app      idle             0    188.22     32.0     96    0  
+  sketch      app      idle             0    185.00     31.7    192    0  
+  about       app      idle            12    400.51     32.7     96    0  
+  bus i2c1  busy  2195.10 ms, 2886 transfers, 14443 bytes, 0 errors
+  bus epd0  busy   460.52 ms, 3 transfers, 910424 bytes, 0 errors
+#OK stats
+t = 72922.0 ms, lane busy 19185.1 ms (26.3%), 4544 turns, 92 published, 102 delivered, 0 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  touch       driver   idle          3430  10300.22     33.9     64    0  
+  clock       driver   idle             2    212.48     31.9     48    0  
+  power       driver   idle             8    211.57     31.4     48    0  
+  display     driver   idle             6    235.76     34.0     64    0  
+  compositor  service  idle           858   2123.14     82.9    448    0  
+  launcher    app      idle            15    487.24     37.0     96    0  
+  system      app      idle            71   1722.56     47.9    160    0  
+  repl        app      idle             0    194.59     34.1    128    0  
+  sandbox     service  idle             0    182.07     31.1    128    0  
+  faults      app      idle           140   2521.19     37.2     96    0  
+  flaky       service  idle             0    184.77     30.1     48    0  
+  touches     app      idle             0    188.22     32.0     96    0  
+  sketch      app      idle             0    185.00     31.7    192    0  
+  about       app      idle            14    436.31     35.1     96    0  
+  bus i2c1  busy  2607.13 ms, 3432 transfers, 17173 bytes, 0 errors
+  bus epd0  busy   462.33 ms, 4 transfers, 910832 bytes, 0 errors
+#OK stats
+#OK send

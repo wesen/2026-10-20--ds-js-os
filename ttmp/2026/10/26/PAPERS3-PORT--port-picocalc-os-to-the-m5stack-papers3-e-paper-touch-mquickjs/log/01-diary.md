@@ -805,3 +805,98 @@ and push", `main` was pushed: `ea2cb9a..eda77af main -> main`.
   - reMarkable `OK: uploaded PAPERS3-PORT guide and diary after P4 build.pdf -> /ai/2026/10/26/PAPERS3-PORT`,
     a new name, with the first upload left untouched.
 - **Still blocked:** flashing. There is no `/dev/ttyACM*` until `sudo modprobe cdc_acm`.
+
+## Step 8: First run on the PaperS3
+
+Once `cdc_acm` was loaded, the firmware went onto the board. It booted all 14 worlds with no crash and
+read the GT911, the BM8563 clock and the battery. Its framebuffer reads back as the same home screen
+the simulator draws. The first flash attempt knocked the board off USB. A flash script modelled on the
+esp32-s3-m5 projects' USB-JTAG script worked on the next try.
+
+### Prompt Context
+
+**User prompt (verbatim):** "k push, what's next? can we run it on the device ?" then "it's loaded now"
+**Assistant interpretation:** Flash the firmware and bring it up on the real board.
+**Inferred user intent:** See the OS on the tablet.
+
+### What I did
+
+- `idf.py -p /dev/serial/by-id/...D0:CF:13:16:17:DC-if00 flash` failed in esptool's reset:
+  `fcntl.ioctl(self.fd, TIOCMBIC, TIOCM_DTR_str)` → `OSError: [Errno 5] Input/output error`.
+- The kernel log shows `usb 3-1: USB disconnect, device number 6`, then devices 7 and 8 enumerating
+  within a second. A retry with `--before no_reset` failed with
+  `Could not configure port: (5, 'Input/output error')`. Then came
+  `usb 3-1: USB disconnect, device number 8` at 23:47:05, and the board was gone from `lsusb`.
+- After about 2 minutes it came back (23:48:55). A background loop was watching
+  `/dev/serial/by-id`.
+- `port/esp32s3-papers3/flash.sh` is modelled on
+  `esp32-s3-m5/imports/esp32-mqjs-repl/mqjs-repl/tools/flash_device_usb_jtag.sh`:
+  - `esptool --before usb_reset --after no_reset write_flash @flash_args`;
+  - then `--before no_reset --after watchdog_reset read_mac` to boot the app.
+  - Result: `Chip is ESP32-S3 (QFN56) (revision v0.2)`, `Embedded PSRAM 8MB (AP_3v3)`, three images
+    written with `Hash of data verified`.
+- `tools/s3cap.py --no-reset` with `heap`, `stats` and `shot`, then `tap 269 442` to open Touches.
+  The captures and logs are in `out-s3/`.
+
+### Why
+
+- The second esptool call's watchdog reset boots the app without a DTR/RTS sequence. ESP-55 found that
+  sequence can latch this board into the ROM downloader.
+
+### What worked
+
+- Boot:
+  - `epd0: 540 x 960 (rotation 0)`;
+  - `booting 14 worlds from js/system.json`, then `touch: touch controller GT911`;
+  - `stats` at 12 s: 0 crashes; i2c1 431 transfers with 0 errors.
+- `heap`: internal 121855 free, PSRAM 4254264 free (largest 4194304). The kernel task's stack has
+  28628 of 32768 bytes never used.
+- Live sizes on the device:
+  - drivers 31–34 KB;
+  - compositor 66.6 KB after boot, 82.9 KB later;
+  - system 47.5 KB.
+- `out-s3/01-home.png` is the device's framebuffer:
+  - the home screen, with Charis and Liberation fonts;
+  - battery `+97%` (charging), read from the ADC and charge pin;
+  - clock `04:21`, read from the BM8563.
+- `out-s3/02-touches.png`: the injected tap reached the Touches app as `down #0 at 269, 442` /
+  `up #0 at 269, 442`, and as the gesture `tap at 269, 442 in 80 ms`.
+
+### What didn't work
+
+- `idf.py flash` on this host, as above. Use `flash.sh`.
+- Not verified yet, because only the user can see the glass:
+  - whether the panel shows the framebuffer correctly (orientation, grays);
+  - where real touches land (the corner test).
+
+### What I learned
+
+- Real speed: the 100k loop takes 415.5 ms against the model's 250 ms, and fib(20) 84.6 ms against
+  68.4 ms.
+- The idle lane is 23% busy, mostly the 20 ms touch poll at about 2.9 ms a turn. That became ticket
+  PAPERS3-IDLE.
+- M5GFX's `display()` returns before the waveform ends. The EPD worker's `{ms}` (1.8 ms for a clock
+  update) is therefore not the panel's time.
+
+### What was tricky to build
+
+- Nothing new; the difficulty was the host's USB behaviour, not the code.
+
+### What warrants a second pair of eyes
+
+- `PROFILE` for `BOARD_PAPERS3` still carries the estimate `loop_ms = 250`. The measured 415 ms should
+  replace it, together with the other P5 calibration figures.
+
+### What should be done in the future
+
+- The user's panel and touch check.
+- P5 calibration, now covered by PAPERS3-IDLE P0 and P5.
+
+### Code review instructions
+
+- `port/esp32s3-papers3/flash.sh`, then `./flash.sh && python3 ../../tools/s3cap.py --no-reset -c "2 stats"`.
+
+### Technical details
+
+- The serial number is stable (`D0:CF:13:16:17:DC`), but the ttyACM number moves (`ttyACM0` →
+  `ttyACM1`), so always use the by-id path.

@@ -1,0 +1,33 @@
+I (322) esp_image: segment 4: paddr=001902c0 vaddr=40376c28 sizeI (825) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (825) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (1046) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (1046) main_task: Returned from app_main()
+[   503.803] calibration on the real clock: the 100k loop took 415.5 ms (the model says 250), fib(20) 84.6 ms (the model says 68.4)
+[   514.143] booting 14 worlds from js/system.json
+[  3491.537] touch: touch controller GT911
+unknown command I (try help)
+#OK I
+heap: internal 121855 free (largest 31744), psram 4254264 free (largest 4194304); the kernel task's stack has 28628 bytes never used
+#OK heap
+t = 12442.0 ms, lane busy 5538.1 ms (44.5%), 590 turns, 19 published, 26 delivered, 0 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  touch       driver   idle           430   1538.94     33.9     64    0  
+  clock       driver   idle             1    207.85     31.9     48    0  
+  power       driver   idle             2    203.74     31.4     48    0  
+  display     driver   idle             5    229.69     34.0     64    0  
+  compositor  service  idle           117    924.81     66.6    448    0  
+  launcher    app      idle             3    256.98     35.7     96    0  
+  system      app      idle            11    481.94     47.5    160    0  
+  repl        app      idle             0    194.59     34.1    128    0  
+  sandbox     service  idle             0    182.07     31.1    128    0  
+  faults      app      idle            19    532.69     37.2     96    0  
+  flaky       service  idle             0    184.77     30.1     48    0  
+  touches     app      idle             0    188.22     32.0     96    0  
+  sketch      app      idle             0    185.00     31.7    192    0  
+  about       app      idle             2    226.83     31.7     96    0  
+  bus i2c1  busy   372.93 ms, 431 transfers, 2163 bytes, 0 errors
+  bus epd0  busy   460.52 ms, 3 transfers, 910424 bytes, 0 errors
+#OK stats
+#OK shot
