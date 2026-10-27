@@ -38,6 +38,9 @@ void port_big_free(void *p) { heap_caps_free(p); }
 size_t port_js_stack(void) { return 56 * 1024; }
 const char *const *port_bus_names(void) { static const char *const b[] = { "i2c0", "spi2", NULL }; return b; }
 const char *port_board_name(void) { return "ESP32-P4 in a PicoCalc"; }
+int port_gpio_watch(int pin, int mode, int handle_id) { (void)pin; (void)mode; (void)handle_id; return -1; }   // no pin interrupts here
+void port_gpio_arm(int pin, int mode) { (void)pin; (void)mode; }
+void port_gpio_unwatch(int pin) { (void)pin; }
 
 struct js_file { const char *path; const unsigned char *data; size_t len; };
 extern const struct js_file js_bundle[];

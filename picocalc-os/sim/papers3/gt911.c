@@ -66,6 +66,14 @@ static uint8_t reg_byte(uint16_t r) {
   return 0;
 }
 
+// INT (GPIO48 on the PaperS3) is held low while a report waits for the host
+bool gt911_int(vtime_t t) { maybe_report(t); return G.status & 0x80; }
+// whether reports can still come without a new finger event: a finger is down, or a lift is still to be reported
+bool gt911_active(void) {
+  for (int i = 0; i < MAX_POINTS; i++) if (G.finger[i].down) return true;
+  return G.lifted;
+}
+
 int gt911_i2c(const uint8_t *wr, int nwr, uint8_t *rd, int nrd, vtime_t t) {
   maybe_report(t);
   if (nwr >= 2) {

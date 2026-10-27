@@ -81,3 +81,38 @@ int port_adc_read_mv(int unit, int channel) {
   return raw * 3300 / 4095;
 }
 int port_gpio_get(int pin) { return gpio_get_level(pin); }
+
+// ---- pin interrupts ---------------------------------------------------------------------------------------------
+// The handler masks its pin and posts the handle to the kernel task, which delivers an "irq" message; the kernel
+// re-arms the pin when the world's turn for it ends. The GPIO ISR service is not in IRAM (flags 0), so the
+// handler may call ordinary driver functions.
+static int irq_handle[GPIO_NUM_MAX];
+static void gpio_isr(void *arg) {
+  int pin = (int)(intptr_t)arg;
+  gpio_intr_disable(pin);
+  kmsg_t m = { 0 };
+  m.irq = irq_handle[pin];
+  BaseType_t woken = pdFALSE;
+  xQueueSendFromISR(s3_kq, &m, &woken);
+  if (woken) portYIELD_FROM_ISR();
+}
+
+int port_gpio_watch(int pin, int mode, int handle_id) {
+  static const gpio_int_type_t TYPE[] = { GPIO_INTR_DISABLE, GPIO_INTR_LOW_LEVEL, GPIO_INTR_HIGH_LEVEL, GPIO_INTR_NEGEDGE, GPIO_INTR_POSEDGE };
+  static bool service;
+  if (pin < 0 || pin >= GPIO_NUM_MAX || mode <= IRQ_NONE || mode > IRQ_RISING) return -1;
+  if (!service) {
+    esp_err_t e = gpio_install_isr_service(0);
+    if (e != ESP_OK && e != ESP_ERR_INVALID_STATE) return -1;   // INVALID_STATE: someone installed it already
+    service = true;
+  }
+  gpio_config_t c = { .pin_bit_mask = 1ULL << pin, .mode = GPIO_MODE_INPUT, .intr_type = TYPE[mode],
+                      .pull_up_en = mode == IRQ_LOW || mode == IRQ_FALLING, .pull_down_en = mode == IRQ_HIGH || mode == IRQ_RISING };
+  if (gpio_config(&c) != ESP_OK) return -1;
+  irq_handle[pin] = handle_id;
+  if (gpio_isr_handler_add(pin, gpio_isr, (void *)(intptr_t)pin) != ESP_OK) return -1;
+  gpio_intr_enable(pin);
+  return 0;
+}
+void port_gpio_arm(int pin, int mode) { (void)mode; gpio_intr_enable(pin); }
+void port_gpio_unwatch(int pin) { gpio_intr_disable(pin); gpio_isr_handler_remove(pin); irq_handle[pin] = 0; }

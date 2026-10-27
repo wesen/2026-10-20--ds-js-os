@@ -27,11 +27,42 @@ int port_adc_read_mv(int unit, int channel) {
   int mv = 3300 + B.pct * 9 + (B.charging ? 60 : 0);
   return mv / 2;
 }
-int port_gpio_get(int pin) { return pin == 4 ? !B.charging : 0; }   // the charger pulls it low while charging
+int port_gpio_get(int pin) {
+  if (pin == PIN_TOUCH_INT) return !gt911_int(K.vnow);
+  return pin == 4 ? !B.charging : 0;   // the charger pulls it low while charging
+}
 char *port_epd_info(void) { return xstrdup("{\"w\":540,\"h\":960,\"grays\":16,\"modes\":[\"quality\",\"text\",\"fast\",\"fastest\"]}"); }
 
+// ---- the touch controller's interrupt line (GPIO48) ---------------------------------------------------------
+// The GT911 makes reports on its own schedule (at a finger event, then every 10 ms while one is down) and holds
+// INT low while one waits. A watched pin that is armed turns that into kernel_irq; the kernel masks it (here:
+// armed = false) until the world's turn ends and port_gpio_arm runs. All on the virtual clock.
+static struct { int handle; bool armed, ticking; } T;
+static void int_check(void) {
+  if (T.handle && T.armed && gt911_int(K.vnow)) { T.armed = false; kernel_irq(T.handle, K.vnow); }
+}
+static void touch_tick(void *arg, int a) {
+  (void)arg; (void)a;
+  int_check();
+  if (gt911_active()) schedule_fn(K.vnow + MS(10), touch_tick, NULL, 0);
+  else T.ticking = false;
+}
+int port_gpio_watch(int pin, int mode, int handle_id) {
+  if (pin != PIN_TOUCH_INT || (mode != IRQ_LOW && mode != IRQ_FALLING)) return -1;   // only the touch line interrupts here
+  T.handle = handle_id; T.armed = true;
+  int_check();
+  return 0;
+}
+void port_gpio_arm(int pin, int mode) { (void)mode; if (pin == PIN_TOUCH_INT && T.handle) { T.armed = true; int_check(); } }
+void port_gpio_unwatch(int pin) { if (pin == PIN_TOUCH_INT) T.handle = 0; }
+
 // ---- fingers ----------------------------------------------------------------------------------------------
-static void finger(void *arg, int a) { (void)arg; gt911_finger(0, a >> 30 & 1, a & 0x7fff, a >> 15 & 0x7fff, K.vnow); }
+static void finger(void *arg, int a) {
+  (void)arg;
+  gt911_finger(0, a >> 30 & 1, a & 0x7fff, a >> 15 & 0x7fff, K.vnow);
+  int_check();
+  if (!T.ticking && gt911_active()) { T.ticking = true; schedule_fn(K.vnow + MS(10), touch_tick, NULL, 0); }
+}
 static void at(vtime_t t, bool down, int x, int y) {
   if (x < 0) x = 0;
   if (y < 0) y = 0;

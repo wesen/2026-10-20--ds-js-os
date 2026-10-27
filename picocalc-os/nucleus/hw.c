@@ -82,8 +82,23 @@ void dmabuf_unref(int i) {
 void handle_release(handle_t *h, world_t *W) {
   h->holders &= ~bit(W);
   if (h->holders) return;
+  hw_gpio_unwatch(h);
   dmabuf_unref(h->buf);
   h->live = false;
+}
+
+// A gpio handle's pin as an interrupt source: its interrupts become "irq" messages to the handle's minter
+// (kernel_irq), one at a time.
+int hw_gpio_watch(handle_t *h, int mode) {
+  hw_gpio_unwatch(h);
+  if (port_gpio_watch(h->addr, mode, h->id)) return -1;
+  h->irq_mode = mode; h->irq_pending = false;
+  return 0;
+}
+void hw_gpio_unwatch(handle_t *h) {
+  if (!h->irq_mode) return;
+  port_gpio_unwatch(h->addr);
+  h->irq_mode = IRQ_NONE; h->irq_pending = false;
 }
 
 void handles_drop_world(world_t *W) {

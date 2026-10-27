@@ -10,6 +10,9 @@ void gt911_init(void);
 int gt911_i2c(const uint8_t *wr, int nwr, uint8_t *rd, int nrd, vtime_t t);
 void gt911_finger(int id, bool down, int x, int y, vtime_t t);   // a finger's state from now on
 int gt911_reports(void);
+#define PIN_TOUCH_INT 48                  // the GT911's INT line
+bool gt911_int(vtime_t t);                // INT is active (low): a report waits
+bool gt911_active(void);                  // a finger is down or a lift is unreported
 
 // bm8563.c: the real-time clock on i2c1 at 0x51
 void bm8563_init(double epoch_ms);

@@ -1,6 +1,6 @@
 {
   "worlds": [
-    { "name": "touch",      "file": "drivers/touch.js",     "claims": ["i2c1:0x5d"],               "budget_ms": 20,  "mem_kb": 64 },
+    { "name": "touch",      "file": "drivers/touch.js",     "claims": ["i2c1:0x5d", "gpio:48"],    "budget_ms": 20,  "mem_kb": 64 },
     { "name": "clock",      "file": "drivers/clock.js",     "claims": ["i2c1:0x51", "sys.clock"],  "budget_ms": 20,  "mem_kb": 48 },
     { "name": "power",      "file": "drivers/power.js",     "claims": ["adc1:2", "gpio:4"],        "budget_ms": 20,  "mem_kb": 48 },
     { "name": "display",    "file": "drivers/display.js",   "claims": ["epd0"],                    "budget_ms": 40,  "mem_kb": 64 },

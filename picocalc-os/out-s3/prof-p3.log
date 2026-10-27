@@ -1,0 +1,19 @@
+I (321) esp_image: segment 4: paddr=001911e0 vaddr=40375ab8 sizeI (825) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (825) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (1046) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (1046) main_task: Returned from app_main()
+[   503.911] calibration on the real clock: the 100k loop took 415.5 ms (the model says 250), fib(20) 84.7 ms (the model says 68.4)
+[   514.154] booting 14 worlds from js/system.json
+[  3561.756] touch: touch controller GT911
+I (4615) gpio: GPIO[48]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:4 
+unknown command I (try help)
+#OK I
+[{"id":1,"type":"i2c","claim":"i2c1:0x5d","rights":"rwg","parent":0,"revoked":false,"holders":["touch"],"addr":93,"hz":400000},{"id":2,"type":"gpio","claim":"gpio:48","rights":"rwg","parent":0,"revoked":false,"holders":["touch"]},{"id":3,"type":"i2c","claim":"i2c1:0x51","rights":"rwg","parent":0,"revoked":false,"holders":["clock"],"addr":81,"hz":400000},{"id":4,"type":"adc","claim":"adc1:2","rights":"rwg","parent":0,"revoked":false,"holders":["power"]},{"id":5,"type":"gpio","claim":"gpio:4","rights":"rwg","parent":0,"revoked":false,"holders":["power"]},{"id":6,"type":"epd","claim":"epd0","rights":"rwg","parent":0,"revoked":false,"holders":["display"]},{"id":7,"type":"dma","claim":"dma","rights":"rwg","parent":0,"revoked":false,"holders":["compositor"],"w":540,"h":960,"kb":1012},{"id":8,"type":"dma","claim":"dma","rights":"r","parent":7,"revoked":false,"holders":["display","compositor"],"w":540,"h":960,"kb":1012}]
+#OK handles
+#OK prof
+prof over 10.0 s: the kernel task woke 5 times (0.5/s) and was blocked 100% of the time; worlds ran 35 ms (0.4%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  launcher        2     0.2      35.1       28.3        6.7       0.1   17.54        191    1
+#OK prof

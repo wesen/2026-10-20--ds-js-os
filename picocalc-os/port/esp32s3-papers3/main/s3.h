@@ -12,9 +12,11 @@
 #define PIN_CHARGE 4         // the charger's status: low while charging
 #define BAT_ADC_CHANNEL 2    // ADC1 channel 2 = GPIO3, behind a 1:2 divider
 
-// A finished bus transfer, or (line != NULL) a console command, for the kernel task.
+// For the kernel task: a finished bus transfer, a console command (line != NULL) or a watched pin that fired
+// (irq != 0: the handle, from the GPIO interrupt).
 typedef struct {
   char *line;
+  int irq;
   int bus, w, epoch, promise, ok, buf;
   vtime_t t0, t1;
   uint32_t bytes;

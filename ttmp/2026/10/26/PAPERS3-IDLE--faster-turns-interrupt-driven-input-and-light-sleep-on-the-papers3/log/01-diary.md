@@ -402,3 +402,133 @@ in counts and timings. They now refresh more cleanly than before.
 
 - Changed captures in this commit: `out-papers3/03-system.png`, `05-system-buses.png`,
   `06-system-display.png`, `07-about.png`, `21-faults-throw.png`, `25-display-back.png`.
+
+## Step 4: P3, touch on the GT911's interrupt line
+
+A pin interrupt is now a message. The kernel delivers `irq` to the world that holds the pin's handle,
+masks the pin until that turn ends, and re-arms it then. The device port has an ISR that posts to
+the kernel task's queue. The simulator's GT911 model got an INT line and its own 10 ms report
+schedule. The touch driver reads only when INT says there is something to read. On the PaperS3, the
+idle home screen now costs 0.4% of the lane, and the kernel task wakes 0.5 times a second instead of
+97. A bug in the first version re-ran the driver's `onStart` on every interrupt until the handle table
+ran out. The host captures showed it at once.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 ("if possible to interrupt driven (does the language allow for that?)").
+**Assistant interpretation:** P3 of the guide, the interrupt path end to end.
+**Inferred user intent:** Input that costs nothing until someone touches the screen.
+**Commit (code):** see the commit after this entry: "touch on the GT911's interrupt line"
+
+### What I did
+
+- `nucleus.h`:
+  - `M_IRQ`, and `msg_t.irq` (the handle);
+  - `handle_t.irq_mode` / `irq_pending`, and `IRQ_LOW/HIGH/FALLING/RISING`;
+  - `world_t.turn_irq`;
+  - `kernel_irq`, `hw_gpio_watch`/`unwatch`;
+  - port API `port_gpio_watch/arm/unwatch`.
+- `kernel.c`:
+  - `kernel_irq` delivers `irq {pin, t}` to the handle's minter, at most one at a time;
+  - `run_segment` records `turn_irq`;
+  - `finish_turn` re-arms the pin.
+- `hw.c`: `hw_gpio_watch/unwatch`. `handle_release` unwatches, so a crash or restart drops the
+  interrupt with the world's handles.
+- `vm_mqjs.c`:
+  - `gpio.watch` / `gpio.unwatch` ops;
+  - `vm_dispatch` passes `M_IRQ` to JS as an ordinary message (see "What didn't work").
+- Prelude: `Handle.prototype.watch(mode)` / `unwatch()`.
+- Device (`port_s3.c`, `s3.h`, `main_s3.c`):
+  - the GPIO ISR service with `flags 0` (not IRAM);
+  - `gpio_isr` masks the pin and posts `kmsg_t { irq }` to `s3_kq`;
+  - `port_gpio_watch` configures the pin (pull-up for low and falling) and adds the handler;
+  - `port_gpio_arm` calls `gpio_intr_enable`;
+  - the kernel task's `kmsg_handle` calls `kernel_irq`.
+- Simulator (`sim/papers3/gt911.c`, `board.c`, `papers3.h`):
+  - `gt911_int(t)`: INT is low while a report waits;
+  - `gt911_active()`: a finger is down or a lift is unreported;
+  - a finger event or a 10 ms tick (`schedule_fn`, only while active) checks INT and calls
+    `kernel_irq` when armed;
+  - `port_gpio_get(48)` reads the line.
+- PicoCalc sim and P4 port: `port_gpio_watch` returns -1; the others are no-ops.
+- `drivers/touch.js`:
+  - `watch("low")` on `gpio:48`, with `.on("irq")` reading status plus five points in one 41-byte
+    transfer;
+  - a 40 ms lift check while a finger is down;
+  - a paused 20 ms poll used only if `watch` throws;
+  - stats report the mode.
+- `system.json`: touch claims `gpio:48`.
+
+### Why
+
+- Decisions 7.1 and 7.2 of the guide: a message, level-triggered with masking. M5GFX treats the
+  PaperS3's GT911 INT as "low while a report waits", which makes level the right mode.
+- The 40 ms lift check guards against the GT911 pulsing INT instead of holding it. A missed final
+  report would otherwise leave a finger "down" for good. It runs only while a finger is down.
+
+### What worked
+
+- Device (`out-s3/prof-p3.log`):
+  - boot log `gpio: GPIO[48]| InputEn: 1| ... Pullup: 1| ... Intr:4` (low level);
+  - `handles` lists `{"id":2,"type":"gpio","claim":"gpio:48",...,"holders":["touch"]}`;
+  - idle, 10 s:
+    `prof over 10.0 s: the kernel task woke 5 times (0.5/s) and was blocked 100% of the time; worlds ran 35 ms (0.4%)`.
+    Only the launcher's 5 s timer ran; touch had 0 segments.
+- Host tour: 93 I2C transfers, against 842 for P2 and 581 before it. Touch turns in the System
+  capture fell from 332 to 81. Total turns at the About screen fell from 829 to 243.
+- Gates:
+  - PicoCalc `make shots` unchanged;
+  - PaperS3 deterministic over two runs;
+  - conformance 11 lines;
+  - `SAN=1` clean with identical captures;
+  - S3 and P4 firmware build.
+
+### What didn't work
+
+- First host run: `touch crashed handling irq: Error: out of handles (native)`, with the stack at
+  `hw.gpio` in `touch.js`'s `onStart`. The uart log showed `touch: touch controller GT911` every
+  10 ms.
+  - Cause: `__dispatch` picks `def.on[type]` for kind 0, a timer for kind 1, and otherwise
+    `def.start`. `M_IRQ` is 3, so every interrupt re-ran `onStart`, which made new handles until
+    `MAX_HANDLES` (128) ran out.
+  - Fix: `vm_dispatch` passes `M_IRQ` as `M_ON`. To the world, an interrupt is a message of type
+    `irq`.
+
+### What I learned
+
+- The simulated controller now reports every 10 ms while a finger is down, as the real one does. Its
+  reports are read promptly instead of at the next 20 ms poll. The ink script's reports went from 66
+  to 140, and Touches records 168 points instead of 97, so strokes are sampled twice as finely.
+
+### What was tricky to build
+
+- Keeping the simulator idle. The GT911 model's 10 ms tick chain must stop when no finger is down and
+  no lift is unreported (`gt911_active`). Otherwise the virtual clock would carry an event every
+  10 ms forever.
+
+### What warrants a second pair of eyes
+
+- `gpio_isr` builds a `kmsg_t` (about 240 bytes) on the interrupt stack and calls
+  `gpio_intr_disable`, a flash function. Both are fine because the ISR service is not IRAM-only and
+  the firmware never writes flash at run time. Revisit if either changes.
+- What a real GT911 does with INT (held or pulsed) is unverified until fingers touch the panel. The
+  lift check covers the pulsed case.
+
+### What should be done in the future
+
+- A real touch test on the device (Touches app, corners, a drag), then P4 (light sleep), which can
+  now pay off: the kernel task is blocked 100% of the time.
+- The charger pin (GPIO4) could also be watched instead of sampled.
+
+### Code review instructions
+
+- `kernel.c`: `kernel_irq`, `finish_turn`, `run_segment` (`turn_irq`). `hw.c`: `hw_gpio_watch`,
+  `handle_release`. `port_s3.c`: `gpio_isr`, `port_gpio_watch`. `sim/papers3/board.c`: `int_check`,
+  `touch_tick`, `finger`. `drivers/touch.js`.
+- Validate: `make BOARD=papers3 shots` reproduces `out-papers3`; on the device,
+  `s3cap.py --no-reset -c "2 prof reset" -c "12 prof"` should show no touch segments while idle.
+
+### Technical details
+
+- Re-baselined captures: `03-system`, `04-system-handles` (the `gpio:48` handle), `05-system-buses`,
+  `07-about`, `30/31/32-sketch-*` (finer strokes), `33-touches` (168 points).

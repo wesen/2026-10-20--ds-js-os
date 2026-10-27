@@ -153,6 +153,9 @@
   // adc, gpio
   Handle.prototype.sample = function () { return k("adc.read", this.id); };
   Handle.prototype.get = function () { return k("gpio.get", this.id); };
+  // interrupts from the pin arrive as "irq" messages { pin, t }; "low" | "high" | "falling" | "rising"
+  Handle.prototype.watch = function (mode) { k("gpio.watch", this.id, mode || "low"); };
+  Handle.prototype.unwatch = function () { k("gpio.unwatch", this.id); };
   // framebuffer
   Handle.prototype.fill = function (x, y, w, h, c) { k("gfx.fill", this.id, x, y, w, h, c); };
   Handle.prototype.rect = function (x, y, w, h, c) { k("gfx.rect", this.id, x, y, w, h, c); };

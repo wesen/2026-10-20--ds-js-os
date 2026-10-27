@@ -39,7 +39,7 @@ typedef struct {
 extern profile_t PROFILE;
 
 // ---- messages -------------------------------------------------------------------------------------------
-enum { M_ON, M_TICK, M_START };
+enum { M_ON, M_TICK, M_START, M_IRQ };
 #define MAX_MSG_HANDLES 8
 typedef struct msg {
   struct msg *next;
@@ -49,6 +49,7 @@ typedef struct msg {
   int from;                 // world id, or -1 for the kernel
   int ask;                  // ask id, or 0
   int timer;                // M_TICK: which timer
+  int irq;                  // M_IRQ: the handle whose pin fired
   int hs[MAX_MSG_HANDLES], nh;  // handles the receiver is given on delivery
   vtime_t t;                // when it was sent
   uint64_t seq;
@@ -83,6 +84,7 @@ typedef struct world {
   // the turn in progress
   bool in_turn;
   int turn_ask;             // the ask this turn answers, 0 if none
+  int turn_irq;             // the handle whose interrupt this turn handles, 0 if none
   char turn_type[NAME_LEN];
   bool turn_async, turn_done, turn_failed, turn_rejected;
   char *turn_result, *turn_error;
@@ -131,7 +133,10 @@ typedef struct {
   char claim[NAME_LEN];
   int bus, addr, hz;        // H_I2C / H_SPI / H_EPD (bus); H_ADC (addr = unit, hz = channel); H_GPIO (addr = pin)
   int buf;                  // H_DMA: index into the buffer table (shared by a handle and its children)
+  int irq_mode;             // H_GPIO: watched for interrupts (IRQ_*), 0 if not
+  bool irq_pending;         // H_GPIO: an "irq" message is out; the pin is re-armed when its turn ends
 } handle_t;
+enum { IRQ_NONE, IRQ_LOW, IRQ_HIGH, IRQ_FALLING, IRQ_RISING };
 #define MAX_HANDLES 128
 
 typedef struct {            // a DMA-capable framebuffer of pixel_t: drawn into back, sent from front
@@ -220,6 +225,7 @@ int kernel_ask(world_t *from, world_t *to, const char *type, const char *json, c
 void crash(world_t *W, const char *why);
 int kernel_restart_world(world_t *W);
 void kernel_timer_set(world_t *W, int i, bool on);   // stop or restart a world's i-th declared timer
+void kernel_irq(int handle_id, vtime_t t);           // a watched pin fired: called on the kernel's thread, never in the ISR
 void kernel_fault(world_t *W, const char *why);
 char *kernel_worlds_json(void);
 char *kernel_stats_json(void);
@@ -254,6 +260,8 @@ handle_t *handle_child(world_t *W, handle_t *h, int rights);
 void handle_grant(handle_t *h, world_t *to);
 void handle_release(handle_t *h, world_t *W);
 void handles_drop_world(world_t *W);
+int hw_gpio_watch(handle_t *h, int mode);   // nonzero if this board's pin cannot interrupt
+void hw_gpio_unwatch(handle_t *h);
 bool world_holds(world_t *W, int id);
 int dmabuf_alloc(int w, int h);
 dmabuf_t *handle_buf(handle_t *h);
@@ -314,6 +322,11 @@ void bus_run_epd(deferred_t *d, vtime_t at);    // an e-paper update: rect (x, y
 char *port_epd_info(void);                      // the panel as JSON: {"w", "h", "modes"}, malloc'ed
 int port_adc_read_mv(int unit, int channel);    // H_ADC: millivolts at the pin
 int port_gpio_get(int pin);                     // H_GPIO: the pin's level
+// H_GPIO interrupts: watch a pin (the port masks it when it fires and calls kernel_irq from the kernel's thread);
+// arm it again after the world's turn for it; unwatch. port_gpio_watch returns nonzero if the pin cannot interrupt.
+int port_gpio_watch(int pin, int mode, int handle_id);
+void port_gpio_arm(int pin, int mode);
+void port_gpio_unwatch(int pin);
 
 // e-paper waveform modes (hw.c): "quality" (16 grays, clean), "text", "fast" (black/white), "fastest"
 enum { EPD_QUALITY, EPD_TEXT, EPD_FAST, EPD_FASTEST, EPD_MODES };

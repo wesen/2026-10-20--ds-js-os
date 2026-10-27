@@ -250,7 +250,7 @@ static void publish_status(world_t *W, const char *state, const char *why, vtime
 
 // ---- supervision --------------------------------------------------------------------------------------------
 static void clear_turn(world_t *W) {
-  W->in_turn = false; W->turn_ask = 0; W->turn_async = W->turn_done = W->turn_failed = W->turn_rejected = false;
+  W->in_turn = false; W->turn_ask = 0; W->turn_irq = 0; W->turn_async = W->turn_done = W->turn_failed = W->turn_rejected = false;
   free(W->turn_result); free(W->turn_error); W->turn_result = W->turn_error = NULL; W->reply_nh = 0;
 }
 
@@ -337,6 +337,22 @@ static void start_timer(world_t *W, int i, vtime_t at) {
 }
 static void start_timers(world_t *W, vtime_t at) { for (int i = 0; i < W->n_every; i++) start_timer(W, i, at); }
 
+// A watched pin fired. The world that holds its handle gets an "irq" message; the port keeps the pin masked
+// until that turn ends (finish_turn re-arms it), so one interrupt at a time is outstanding and a line that
+// stays active cannot flood the mailbox.
+void kernel_irq(int handle_id, vtime_t t) {
+  handle_t *h = handle_find(handle_id);
+  if (!h || !h->irq_mode || h->irq_pending) return;
+  world_t *W = world_by_id(h->minter);
+  if (!W || !alive(W)) return;   // a world on its way down: its handles are dropped, which unwatches the pin
+  h->irq_pending = true;
+  char json[64];
+  snprintf(json, sizeof json, "{\"pin\":%d,\"t\":%.3f}", h->addr, t / 1000.0);
+  msg_t *m = new_msg(M_IRQ, "irq", json, -1);
+  m->irq = h->id;
+  defer_deliver(W, m);
+}
+
 // Stopping a timer drops the ticks already scheduled (their generation is old); starting it again ticks one
 // period from now. A world that is not running only records the setting, for when it starts.
 void kernel_timer_set(world_t *W, int i, bool on) {
@@ -384,6 +400,8 @@ static void finish_turn(world_t *W) {
     if (W->turn_rejected) settle_ask(W->turn_ask, 0, W->turn_error, NULL, 0);
     else settle_ask(W->turn_ask, 1, W->turn_result, W->reply_hs, W->reply_nh);
   }
+  handle_t *h = W->turn_irq ? handle_find(W->turn_irq) : NULL;
+  if (h && h->irq_mode) { h->irq_pending = false; port_gpio_arm(h->addr, h->irq_mode); }   // the next interrupt may come
   W->turns++; K.turns++;
   clear_turn(W);
 }
@@ -418,6 +436,7 @@ static void run_segment(world_t *W, bool is_settle) {
       W->in_turn = true; W->turn_ask = m->ask; W->msgs++;
       W->turn_started = K.vnow;
       if (m->kind == M_TICK) { W->tick_queued[m->timer] = false; snprintf(W->turn_type, sizeof W->turn_type, "every %d ms", W->every_ms[m->timer]); }
+      else if (m->kind == M_IRQ) { W->turn_irq = m->irq; snprintf(W->turn_type, sizeof W->turn_type, "irq"); }
       else snprintf(W->turn_type, sizeof W->turn_type, "%s", m->type);
       if (K.trace) {
         world_t *F = m->from >= 0 ? world_by_id(m->from) : NULL;

@@ -237,6 +237,12 @@ static void console_task(void *arg) {
   }
 }
 
+static void kmsg_handle(kmsg_t *m) {
+  if (m->line) { console_exec(m->line); free(m->line); }
+  else if (m->irq) kernel_irq(m->irq, port_clock());
+  else bus_s3_done(m);
+}
+
 static void kernel_task(void *arg) {
   K.realtime = true;
 #ifdef S3_QEMU
@@ -248,10 +254,7 @@ static void kernel_task(void *arg) {
   if (kernel_boot(MANIFEST)) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
   for (;;) {
     kmsg_t m;
-    while (xQueueReceive(s3_kq, &m, 0) == pdTRUE) {
-      if (m.line) { console_exec(m.line); free(m.line); }
-      else bus_s3_done(&m);
-    }
+    while (xQueueReceive(s3_kq, &m, 0) == pdTRUE) kmsg_handle(&m);
     kernel_run_until(port_clock());
 #ifdef S3_QEMU   // a fault-finding run: stop at the first step after which the heap is damaged (K.trace names the turns)
     if (!heap_caps_check_integrity_all(true)) { printf("heap damaged at %.3f ms; the trace above shows the turns that ran\n", port_clock() / 1000.0); abort(); }
@@ -262,10 +265,7 @@ static void kernel_task(void *arg) {
     vtime_t t_block = port_clock();
     BaseType_t got = xQueueReceive(s3_kq, &m, next == VT_INF ? portMAX_DELAY : pdMS_TO_TICKS((wait + 999) / 1000));
     prof.blocked_us += port_clock() - t_block; prof.wakeups++;
-    if (got == pdTRUE) {
-      if (m.line) { console_exec(m.line); free(m.line); }
-      else bus_s3_done(&m);
-    }
+    if (got == pdTRUE) kmsg_handle(&m);
   }
 }
 

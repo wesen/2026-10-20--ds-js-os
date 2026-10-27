@@ -365,6 +365,24 @@ static JSValue op_gpio_get(JSContext *ctx, world_t *W, int argc, JSValue *argv) 
   if (!h) return JS_EXCEPTION;
   return JS_NewInt32(ctx, port_gpio_get(h->addr));
 }
+// h.watch(mode): the pin's interrupts arrive as "irq" messages (one at a time: the pin is re-armed when the turn
+// that handled one ends); h.unwatch() stops them
+static JSValue op_gpio_watch(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  handle_t *h = use(ctx, W, iarg(ctx, argv, argc, 0, 0), H_GPIO, R_READ);
+  if (!h) return JS_EXCEPTION;
+  char *m = sarg(ctx, argv, argc, 1);
+  int mode = !m ? 0 : !strcmp(m, "low") ? IRQ_LOW : !strcmp(m, "high") ? IRQ_HIGH : !strcmp(m, "falling") ? IRQ_FALLING : !strcmp(m, "rising") ? IRQ_RISING : 0;
+  free(m);
+  if (!mode) return fail(ctx, "watch takes \"low\", \"high\", \"falling\" or \"rising\"");
+  if (hw_gpio_watch(h, mode)) return fail(ctx, "gpio %d cannot interrupt on this board", h->addr);
+  return JS_UNDEFINED;
+}
+static JSValue op_gpio_unwatch(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  handle_t *h = use(ctx, W, iarg(ctx, argv, argc, 0, 0), H_GPIO, R_READ);
+  if (!h) return JS_EXCEPTION;
+  hw_gpio_unwatch(h);
+  return JS_UNDEFINED;
+}
 static JSValue op_epd_info(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
   if (!use(ctx, W, iarg(ctx, argv, argc, 0, 0), H_EPD, R_READ)) return JS_EXCEPTION;
   return json_value(ctx, port_epd_info());
@@ -508,7 +526,8 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "turn.async", op_turn_async }, { "turn.done", op_turn_done }, { "turn.fail", op_turn_fail }, { "turn.reject", op_turn_reject },
   { "hw.i2c", op_hw_i2c }, { "hw.epd", op_hw_epd }, { "hw.adc", op_hw_adc }, { "hw.gpio", op_hw_gpio }, { "dma.alloc", op_dma_alloc },
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
-  { "adc.read", op_adc_read }, { "gpio.get", op_gpio_get }, { "epd.info", op_epd_info },
+  { "adc.read", op_adc_read }, { "gpio.get", op_gpio_get }, { "gpio.watch", op_gpio_watch }, { "gpio.unwatch", op_gpio_unwatch },
+  { "epd.info", op_epd_info },
   { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats },
   { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart }, { "sys.front", op_sys_front }, { "timer.set", op_timer_set },
 };
@@ -710,7 +729,7 @@ int vm_dispatch(world_t *W, msg_t *m) {
   world_t *F = m->from >= 0 ? world_by_id(m->from) : NULL;
   if (m->json) charge_json(strlen(m->json));
   arg_t a[5] = {
-    { 0, m->kind, NULL },
+    { 0, m->kind == M_IRQ ? M_ON : m->kind, NULL },   // to the world an interrupt is an ordinary message, "irq"
     m->kind == M_TICK ? (arg_t){ 0, m->timer, NULL } : (arg_t){ 1, 0, m->type ? m->type : "" },
     { 1, 0, m->json },
     { 1, 0, F ? F->name : NULL },
