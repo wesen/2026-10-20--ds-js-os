@@ -9,6 +9,7 @@
 //   crash WORLD           kill a world from outside, as a hardware fault would
 //   stats                 print the worlds, the lane and the buses
 //   panel                 print the panel controller's state
+//   send WORLD TYPE [JSON] deliver a message to a world, from outside
 //   print TEXT            echo
 //   quit
 // and the board's own (host/board.h): on the PicoCalc key NAME [HOLD_MS], type TEXT, battery PCT [charging];
@@ -50,6 +51,13 @@ static int run_line(char *line, int lineno) {
     world_t *W = world_by_name(rest);
     if (!W) { fprintf(stderr, "line %d: no world called %s\n", lineno, rest); return -1; }
     schedule_fn(K.vnow, kill_world, W, 0);
+    kernel_run_until(K.vnow);
+  } else if (!strcmp(cmd, "send")) {   // send WORLD TYPE [JSON]: a message from outside, as the console can
+    char to[NAME_LEN] = "", type[NAME_LEN] = ""; int m = 0;
+    sscanf(rest, "%31s %31s %n", to, type, &m);
+    world_t *W = world_by_name(to);
+    if (!W || !type[0]) { fprintf(stderr, "line %d: send WORLD TYPE [JSON]\n", lineno); return -1; }
+    defer_deliver(W, new_msg(M_ON, type, m && rest[m] ? rest + m : NULL, -1));
     kernel_run_until(K.vnow);
   } else if (!strcmp(cmd, "stats")) kernel_stats_print();
   else if (!strcmp(cmd, "panel")) board_report();

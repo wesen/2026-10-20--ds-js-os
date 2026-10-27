@@ -269,7 +269,8 @@ void JS_SetInterruptHandler(JSContext *ctx, JSInterruptHandler *interrupt_handle
 void *JS_GetContextOpaque(JSContext *ctx);
 int JS_GetInterruptCounter(JSContext *ctx);
 int JS_GetInterruptCounterInit(void);
-void JS_GetMemoryUsage(JSContext *ctx, size_t *heap, size_t *stack);
+unsigned JS_GetOutOfMemoryCount(JSContext *ctx);
+void JS_GetMemoryUsage(JSContext *ctx, size_t *heap, size_t *stack, size_t *live, unsigned *gcs);
 void JS_SetRandomSeed(JSContext *ctx, uint64_t seed);
 JSValue JS_GetGlobalObject(JSContext *ctx);
 JSValue JS_Throw(JSContext *ctx, JSValue obj);

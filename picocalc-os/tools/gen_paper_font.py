@@ -21,7 +21,7 @@ LIB_B = f"{TT}/liberation/LiberationSans-Bold.ttf"
 MONO = f"{TT}/dejavu/DejaVuSansMono.ttf"
 FALLBACK = f"{TT}/dejavu/DejaVuSans.ttf"
 
-EXTRA = "▸▾◂•…←→↑↓▲▼✓✕°·█▒░─│┌┐└┘├┤┬┴┼⏎⌫äöüÄÖÜßéèàçñ–—‘’“”×÷±≤≥µ⇧"
+EXTRA = "›‹▸▾◂•…←→↑↓▲▼✓✕°·█▒░─│┌┐└┘├┤┬┴┼⏎⌫äöüÄÖÜßéèàçñ–—‘’“”×÷±≤≥µ⇧"
 CHARS = [chr(c) for c in range(32, 127)] + list(dict.fromkeys(EXTRA))
 
 # name, face, pixel size

@@ -5,7 +5,10 @@ copied from ~/code/others/mquickjs, with these changes for picocalc-os:
    about ten times as often (as in third_party/quickjs).
 2. mquickjs.c / mquickjs.h: JS_GetContextOpaque() (upstream has only the setter), JS_GetInterruptCounter(), JS_GetInterruptCounterInit() (the nucleus counts
    the steps a turn took, as with QuickJS) and JS_GetMemoryUsage() (heap and stack bytes in use in the
-   context's arena, garbage included until the next collection).
+   context's arena, garbage included; and the heap left live by the last collection, which JS_GC2 now
+   records, with a count of collections), and JS_GetOutOfMemoryCount() (out-of-memory errors are
+   catchable here; the nucleus treats a world that hit its limit as out of memory, caught or not, as it does
+   with QuickJS).
 3. mqjs_stdlib.c: a CONFIG_NUCLEUS variant of the global object: no print/console/performance/gc/load/
    setTimeout/clearTimeout; instead the two host calls __k and __ka (nucleus/vm_mqjs.c).
    nucleus_stdlib.c is the generator's entry point for that variant.

@@ -1,0 +1,22 @@
+# Faults: buttons at x 270, y 168 (loop), 246 (exhaust), 324 (throw), 402 (kill display).
+wait 2500
+tap 111 442
+wait 1500
+capture 20-faults.png 1
+tap 270 324
+wait 800
+capture 21-faults-throw.png 1
+wait 4000
+wait 300
+tap 270 168
+wait 1500
+capture 22-faults-loop.png 1
+tap 270 246
+wait 1500
+capture 23-faults-exhaust.png 1
+tap 270 402
+wait 600
+capture 24-display-killed.png 1
+wait 3000
+capture 25-display-back.png 1
+stats

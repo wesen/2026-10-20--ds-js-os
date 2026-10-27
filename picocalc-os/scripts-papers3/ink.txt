@@ -1,0 +1,24 @@
+# Sketch and Touches: strokes in the fastest waveform, then a clean refresh; raw touch points.
+wait 2500
+tap 427 276
+wait 1500
+swipe 100 250 420 300 400
+swipe 420 300 140 520 400
+swipe 140 520 400 680 400
+wait 800
+capture 30-sketch-ink.png 1
+capture 31-sketch-ghosts.png 1 clean
+tap 389 788
+wait 1500
+capture 32-sketch-clean.png 1
+panel
+tap 105 908
+wait 1500
+tap 269 442
+wait 1500
+tap 60 200
+tap 480 200
+tap 60 820
+swipe 270 700 270 300 300
+wait 1500
+capture 33-touches.png 1

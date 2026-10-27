@@ -1,0 +1,27 @@
+# A tour of the PaperS3 build: home, the system monitor's tabs, about.
+# Tiles: System (111,276) REPL (269,276) Sketch (427,276) / Faults (111,442) Touches (269,442) About (427,442).
+# Footer chips: Home (105,908), Back (251,908). System tabs at y 164: Worlds 95, Handles 211, Buses 328, Display 445.
+wait 3000
+capture 01-home.png 1
+hold 427 276 700
+wait 800
+capture 02-home-hold.png 1
+tap 111 276
+wait 2500
+capture 03-system.png 1
+tap 211 164
+wait 1500
+capture 04-system-handles.png 1
+tap 328 164
+wait 1500
+capture 05-system-buses.png 1
+tap 445 164
+wait 2000
+capture 06-system-display.png 1
+tap 105 908
+wait 1500
+tap 427 442
+wait 2000
+capture 07-about.png 1
+stats
+panel

@@ -1,0 +1,25 @@
+# The REPL: lines typed (through the console's "type"), run with the on-screen keyboard's return key at (428,808).
+wait 2500
+tap 269 276
+wait 1500
+capture 10-repl.png 1
+send repl type {"text":"[1,2,3].map(function (x) { return x * x })"}
+tap 428 808
+wait 1500
+send repl type {"text":"var s = 0; for (var i = 0; i < 100000; i++) s += i; s"}
+tap 428 808
+wait 2000
+send repl type {"text":"let x = 1"}
+tap 428 808
+wait 1500
+capture 11-repl-results.png 1
+send repl type {"text":"for (;;) {}"}
+tap 428 808
+wait 1200
+capture 12-repl-loop.png 1
+wait 4000
+capture 13-repl-after.png 1
+tap 40 600
+tap 85 664
+wait 1500
+capture 14-repl-keys.png 1

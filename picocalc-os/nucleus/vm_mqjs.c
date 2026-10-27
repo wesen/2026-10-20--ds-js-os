@@ -18,6 +18,7 @@ struct vmw {
   JSContext *ctx;
   uint8_t *arena;
   size_t size;
+  unsigned ooms;            // out-of-memory errors seen: one more after a segment means it hit its limit
 };
 extern const JSSTDLibraryDef js_stdlib;   // mqjs_stdlib.h, generated from third_party/mquickjs/nucleus_stdlib.c
 
@@ -85,10 +86,14 @@ int64_t vm_steps(world_t *W) {
   return (W->interrupts - W->seg_interrupts0) * JS_GetInterruptCounterInit() + W->seg_counter0 - JS_GetInterruptCounter(W->vm->ctx);
 }
 
+// What a world uses: the heap the last collection left live (the collector only runs when the arena is full,
+// so the heap's end is mostly garbage), plus its stack. Running out of the arena is still exact.
 static void note_memory(world_t *W) {
-  size_t heap, stack;
-  JS_GetMemoryUsage(W->vm->ctx, &heap, &stack);
-  W->mem_used = heap + stack;
+  size_t heap, stack, live; unsigned gcs;
+  JS_GetMemoryUsage(W->vm->ctx, &heap, &stack, &live, &gcs);
+  W->mem_used = (gcs ? live : heap) + stack;
+  unsigned ooms = JS_GetOutOfMemoryCount(W->vm->ctx);
+  if (ooms != W->vm->ooms) { W->vm->ooms = ooms; W->oom = true; }   // even if the world caught the error
 }
 
 // ---- arguments: copied out at once (a string's bytes can move at the next allocation) -------------------------
@@ -665,6 +670,7 @@ int vm_create(world_t *W) {
     W->oom = true;
     snprintf(W->last_error, sizeof W->last_error, "ran out of memory while starting (its limit is %zu KB)", W->mem_limit / 1024);
   }
+  if (!rc) JS_GC(ctx);   // what starting left live, so the first figure means something
   note_memory(W);
   return rc;
 }

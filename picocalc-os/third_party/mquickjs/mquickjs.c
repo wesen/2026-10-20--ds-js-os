@@ -220,6 +220,9 @@ struct JSContext {
     uint8_t string_pos_cache_counter; /* used for string_pos_cache[] update */
     uint16_t class_count; /* number of classes including user classes */
     int16_t interrupt_counter;
+    uint32_t gc_live; /* picocalc-os: heap bytes in use after the last collection */
+    uint32_t gc_count; /* picocalc-os: collections so far */
+    uint32_t oom_count; /* picocalc-os: times the arena ran out, caught or not */
     BOOL current_exception_is_uncatchable : 8;
     struct JSParseState *parse_state; /* != NULL during JS_Eval() */
     int unique_strings_len;
@@ -942,6 +945,7 @@ JSValue JS_ThrowOutOfMemory(JSContext *ctx)
     JSValue val;
     if (ctx->in_out_of_memory)
         return JS_Throw(ctx, JS_NULL);
+    ctx->oom_count++;
     ctx->in_out_of_memory = TRUE;
     ctx->min_free_size = JS_MIN_CRITICAL_FREE_SIZE;
     val = JS_ThrowInternalError(ctx, "out of memory");
@@ -3677,10 +3681,13 @@ void JS_SetContextOpaque(JSContext *ctx, void *opaque)
 void *JS_GetContextOpaque(JSContext *ctx) { return ctx->opaque; }
 int JS_GetInterruptCounter(JSContext *ctx) { return ctx->interrupt_counter; }
 int JS_GetInterruptCounterInit(void) { return JS_INTERRUPT_COUNTER_INIT; }
-void JS_GetMemoryUsage(JSContext *ctx, size_t *heap, size_t *stack)
+unsigned JS_GetOutOfMemoryCount(JSContext *ctx) { return ctx->oom_count; }
+void JS_GetMemoryUsage(JSContext *ctx, size_t *heap, size_t *stack, size_t *live, unsigned *gcs)
 {
     *heap = ctx->heap_free - ctx->heap_base;
     *stack = ctx->stack_top - (uint8_t *)ctx->sp;
+    *live = ctx->gc_live;
+    *gcs = ctx->gc_count;
 }
 
 void JS_SetInterruptHandler(JSContext *ctx, JSInterruptHandler *interrupt_handler)
@@ -12453,6 +12460,8 @@ static void JS_GC2(JSContext *ctx, BOOL keep_atoms)
 #endif
     gc_mark_all(ctx, keep_atoms);
     gc_compact_heap(ctx);
+    ctx->gc_live = ctx->heap_free - ctx->heap_base;
+    ctx->gc_count++;
 #ifdef DUMP_GC
     js_printf(ctx, "AFTER: heap size=%u/%u stack_size=%u\n",
            (uint32_t)(ctx->heap_free - ctx->heap_base),

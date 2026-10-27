@@ -1,0 +1,18 @@
+{
+  "worlds": [
+    { "name": "touch",      "file": "drivers/touch.js",     "claims": ["i2c1:0x5d"],               "budget_ms": 20,  "mem_kb": 64 },
+    { "name": "clock",      "file": "drivers/clock.js",     "claims": ["i2c1:0x51", "sys.clock"],  "budget_ms": 20,  "mem_kb": 48 },
+    { "name": "power",      "file": "drivers/power.js",     "claims": ["adc1:2", "gpio:4"],        "budget_ms": 20,  "mem_kb": 48 },
+    { "name": "display",    "file": "drivers/display.js",   "claims": ["epd0"],                    "budget_ms": 40,  "mem_kb": 64 },
+    { "name": "compositor", "file": "system/compositor.js", "claims": ["dma"],                     "budget_ms": 400, "mem_kb": 448 },
+    { "name": "launcher",   "file": "apps/launcher.js",     "claims": ["sys.read"],                                  "mem_kb": 96 },
+    { "name": "system",     "file": "apps/system.js",       "claims": ["sys.read"],                "budget_ms": 80,  "mem_kb": 160 },
+    { "name": "repl",       "file": "apps/repl.js",                                                                  "mem_kb": 128 },
+    { "name": "sandbox",    "file": "system/sandbox.js",                                           "budget_ms": 400, "mem_kb": 128, "priority": 0 },
+    { "name": "faults",     "file": "apps/faults.js",       "claims": ["sys.admin", "sys.read"],                     "mem_kb": 96 },
+    { "name": "flaky",      "file": "system/flaky.js",                                                               "mem_kb": 48 },
+    { "name": "touches",    "file": "apps/touches.js",                                                               "mem_kb": 96 },
+    { "name": "sketch",     "file": "apps/sketch.js",                                              "budget_ms": 80,  "mem_kb": 192 },
+    { "name": "about",      "file": "apps/about.js",        "claims": ["sys.read"],                                  "mem_kb": 96 }
+  ]
+}
