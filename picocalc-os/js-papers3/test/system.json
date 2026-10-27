@@ -1,0 +1,9 @@
+{
+  "worlds": [
+    { "name": "ping",  "file": "test/ping.js",  "mem_kb": 64 },
+    { "name": "pong",  "file": "test/pong.js",  "mem_kb": 64 },
+    { "name": "hog",   "file": "test/hog.js",   "mem_kb": 48, "budget_ms": 30 },
+    { "name": "glut",  "file": "test/glut.js",  "mem_kb": 48 },
+    { "name": "mute",  "file": "test/mute.js",  "mem_kb": 48 }
+  ]
+}

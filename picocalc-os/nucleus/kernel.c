@@ -19,6 +19,22 @@
 kernel_t K;
 static vtime_t apply_at = -1;   // while a segment's effects are applied: the time it ended
 static vtime_t frozen_now = -1; // while a crash is handled: the time it happened
+#ifdef BOARD_PAPERS3
+// The PaperS3: an ESP32-S3 at 240 MHz with octal PSRAM, worlds on MicroQuickJS, 8-bit gray framebuffers.
+// Estimates until the device has measured them (design doc, phase 5).
+profile_t PROFILE = {
+  .name = "esp32s3-papers3",
+  .ns_per_step = 2500,          // replaced by vm_calibrate()
+  .turn_base_us = 60,
+  .fill_ns_per_px = 2.0,        // 8-bit stores into PSRAM
+  .text_ns_per_px = 6.0,        // read, blend, write
+  .diff_ns_per_px = 0.8,        // byte compares, a word at a time
+  .json_ns_per_byte = 40,
+  .spi_chunk_us = 0,
+  .mem_scale = sizeof(void *) == 8 ? 1.7 : 1.0,   // estimate: 64-bit JSValues on the host
+  .loop_ms = 250,               // estimate: the 100k loop on mquickjs at 240 MHz
+};
+#else
 profile_t PROFILE = {
   .name = "esp32p4-picocalc",
   .ns_per_step = 1330,          // replaced by vm_calibrate()
@@ -29,7 +45,9 @@ profile_t PROFILE = {
   .json_ns_per_byte = 25,
   .spi_chunk_us = 12,
   .mem_scale = sizeof(void *) == 8 ? 1.17 : 1.0,   // measured: a world takes about 17% more host memory on 64-bit (see README)
+  .loop_ms = 133,               // measured (esp32-s3-m5/0101); vm.c uses it as a constant
 };
+#endif
 
 // ---- the event queue: a binary heap ordered by (time, sequence) -------------------------------------------
 static event_t **heap; static int heap_n, heap_cap;

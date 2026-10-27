@@ -1,0 +1,14 @@
+MicroQuickJS (bellard/mquickjs) at 84d793e "more compatible Object.defineProperty (#46)", MIT (LICENSE),
+copied from ~/code/others/mquickjs, with these changes for picocalc-os:
+
+1. mquickjs.c: JS_INTERRUPT_COUNTER_INIT is 1000 instead of 10000, so a world's turn budget is checked
+   about ten times as often (as in third_party/quickjs).
+2. mquickjs.c / mquickjs.h: JS_GetContextOpaque() (upstream has only the setter), JS_GetInterruptCounter(), JS_GetInterruptCounterInit() (the nucleus counts
+   the steps a turn took, as with QuickJS) and JS_GetMemoryUsage() (heap and stack bytes in use in the
+   context's arena, garbage included until the next collection).
+3. mqjs_stdlib.c: a CONFIG_NUCLEUS variant of the global object: no print/console/performance/gc/load/
+   setTimeout/clearTimeout; instead the two host calls __k and __ka (nucleus/vm_mqjs.c).
+   nucleus_stdlib.c is the generator's entry point for that variant.
+
+mquickjs_atom.h and mqjs_stdlib.h are generated at build time (word size specific: -m32 for the device)
+and are not in this directory.

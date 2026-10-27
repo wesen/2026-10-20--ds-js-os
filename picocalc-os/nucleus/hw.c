@@ -106,6 +106,12 @@ int dmabuf_alloc(int w, int h) {
 }
 dmabuf_t *handle_buf(handle_t *h) { return h && h->buf >= 0 && K.bufs[h->buf].live ? &K.bufs[h->buf] : NULL; }
 
+const char *const epd_mode_names[EPD_MODES] = { "quality", "text", "fast", "fastest" };
+int epd_mode_index(const char *name) {
+  for (int i = 0; i < EPD_MODES; i++) if (!strcmp(epd_mode_names[i], name)) return i;
+  return -1;
+}
+
 int bus_index(const char *name) {
   for (int i = 0; i < K.n_buses; i++) if (!strcmp(K.buses[i].name, name)) return i;
   return -1;

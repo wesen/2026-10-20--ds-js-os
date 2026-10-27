@@ -10,6 +10,8 @@
 const char *board_commands_help = "key NAME [HOLD_MS] | type TEXT | battery PCT [charging] | panel";
 
 void board_init(void) { srand(1); st7365p_reset(); stm32_init(); }
+const char *const *port_bus_names(void) { static const char *const b[] = { "i2c0", "spi2", NULL }; return b; }
+const char *port_board_name(void) { return "ESP32-P4 in a PicoCalc (simulated)"; }
 
 static const struct { const char *name; int code; } KEYS[] = {
   { "enter", 0x0A }, { "return", 0x0A }, { "bs", 0x08 }, { "backspace", 0x08 }, { "tab", 0x09 }, { "esc", 0xB1 },

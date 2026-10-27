@@ -21,6 +21,7 @@ typedef uint16_t pixel_t;
 typedef int64_t vtime_t;                      // virtual microseconds since boot
 #define MS(x) ((vtime_t)((x) * 1000))
 #define VT_INF INT64_MAX
+#define WALL_BOOT_MS 1792662060000.0   // what the wall clock reads at boot until an RTC says otherwise: 2026-10-22 09:41 UTC
 
 // ---- the device profile: what things cost on the virtual clock ---------------------------------------
 typedef struct {
@@ -33,6 +34,7 @@ typedef struct {
   double json_ns_per_byte;  // encoding or decoding a message payload
   vtime_t spi_chunk_us;     // per-DMA-chunk overhead on SPI
   double mem_scale;         // host bytes per device byte (64-bit pointers make worlds bigger)
+  double loop_ms;           // what the 100k-iteration calibration loop takes on the device (vm_calibrate)
 } profile_t;
 extern profile_t PROFILE;
 
@@ -302,3 +304,12 @@ const char *const *port_bus_names(void);   // the board's buses, NULL-terminated
 void bus_run_i2c(deferred_t *d, vtime_t at);
 void bus_run_spi_cmd(deferred_t *d, vtime_t at);
 void bus_run_spi_pixels(deferred_t *d, vtime_t at);
+void bus_run_epd(deferred_t *d, vtime_t at);    // an e-paper update: rect (x, y, wd, ht) of buffer d->fb, waveform mode d->op
+char *port_epd_info(void);                      // the panel as JSON: {"w", "h", "modes"}, malloc'ed
+int port_adc_read_mv(int unit, int channel);    // H_ADC: millivolts at the pin
+int port_gpio_get(int pin);                     // H_GPIO: the pin's level
+
+// e-paper waveform modes (hw.c): "quality" (16 grays, clean), "text", "fast" (black/white), "fastest"
+enum { EPD_QUALITY, EPD_TEXT, EPD_FAST, EPD_FASTEST, EPD_MODES };
+extern const char *const epd_mode_names[EPD_MODES];
+int epd_mode_index(const char *name);

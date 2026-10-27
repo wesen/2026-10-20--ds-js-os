@@ -1,4 +1,4 @@
-// The host's port: the C library's allocator and files, and the simulated board's name. The host runs on
+// The host's port: the C library's allocator and files (the board's name and buses are in its sim/board.c). The host runs on
 // the virtual clock, so port_clock is only there for completeness.
 #include <malloc.h>
 #include <stdlib.h>
@@ -18,5 +18,3 @@ void *port_big_calloc(size_t n) { return calloc(1, n); }
 void port_big_free(void *p) { free(p); }
 size_t port_js_stack(void) { return 192 * 1024; }
 char *port_read_file(const char *path, size_t *len) { return read_file(path, len); }
-const char *const *port_bus_names(void) { static const char *const b[] = { "i2c0", "spi2", NULL }; return b; }
-const char *port_board_name(void) { return "ESP32-P4 in a PicoCalc (simulated)"; }
