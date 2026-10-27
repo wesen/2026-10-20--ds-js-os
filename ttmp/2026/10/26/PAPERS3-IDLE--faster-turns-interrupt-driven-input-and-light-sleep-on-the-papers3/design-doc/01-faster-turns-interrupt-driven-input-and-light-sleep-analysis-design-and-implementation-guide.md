@@ -819,11 +819,11 @@ Each phase ends with a commit, a diary entry, and the device measurements behind
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
-| Guide | written | | this document |
-| P0 | not started | | |
-| P1 | not started | | |
-| P2 | not started | | |
-| P3 | not started | | |
+| Guide | written | a58dc65 | this document; reMarkable `/ai/2026/10/27/PAPERS3-IDLE` |
+| P0 | done | f4f6d2d | `prof` console command; baseline: idle lane 23%, 62% of it the touch poll, 25% off-screen app timers |
+| P1 | done | 6ce54c4 | compositor waits are one-shot sleeps; minute-aligned clock; power every 60 s; no 50 ms kernel cap |
+| P2 | done | 6ce54c4 | `timers.stop/start`, `{ paused: true }`; `sys.front` renders only the world on screen (the check is `world_needs(W, "frames")`); focus always waits for the fresh frame. Idle lane 15.2% |
+| P3 | done | a33628d, 50c673a | GPIO interrupts as `irq` messages; touch on GT911 INT (GPIO48) with a 40 ms lift check; verified with real touches. Idle lane 0.4%, kernel task 0.2–0.5 wakeups/s |
 | P4 | not started | | |
 | P5 | not started | | |
 | P6 | not started | | |
