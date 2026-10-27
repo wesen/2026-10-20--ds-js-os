@@ -789,3 +789,19 @@ out as a firmware bug. Commit `d925eb4`.
 - QEMU binary: `~/.espressif/tools/qemu-xtensa/esp_develop_9.0.0_20240606/qemu/bin/qemu-system-xtensa`.
 - Heap at `app_main` under QEMU: 331808 bytes free, largest block 270324, in regions `3FCA0720`
   (291 KiB), `3FCE9710` (21 KiB) and `3FCF0000` (32 KiB).
+
+## Step 7: Pushed, and the updated guide delivered (milestone)
+
+The repository had no remote when Step 2 checked (`git remote -v` printed nothing). By now it has one:
+`origin git@github.com:wesen/2026-10-20--ds-js-os.git`, which `main` tracks. Following the user's "commit
+and push", `main` was pushed: `ea2cb9a..eda77af main -> main`.
+
+- **Validation before the push:**
+  - PicoCalc `make shots` and PaperS3 `make BOARD=papers3 shots`: byte-identical;
+  - `make BOARD=papers3 SAN=1 shots`: no reports, captures identical;
+  - device `idf.py build` and `./qemu.sh`: clean.
+- **Delivered:**
+  - guide artifact v5 (https://claude.ai/artifact/XAQDfRBhT24JDpy1s24rLv);
+  - reMarkable `OK: uploaded PAPERS3-PORT guide and diary after P4 build.pdf -> /ai/2026/10/26/PAPERS3-PORT`,
+    a new name, with the first upload left untouched.
+- **Still blocked:** flashing. There is no `/dev/ttyACM*` until `sudo modprobe cdc_acm`.
