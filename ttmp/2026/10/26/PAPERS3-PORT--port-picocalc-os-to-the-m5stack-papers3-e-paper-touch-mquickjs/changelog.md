@@ -16,3 +16,13 @@ P0 seams (engine, board, pixel_t/proportional fonts) with PicoCalc shots byte-id
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/js-papers3/prelude.js — the ES5 world API with Tasks
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/nucleus/vm_mqjs.c — the MicroQuickJS binding
+
+## 2026-10-26
+
+P2/P3 done (7f96c33): display driver with refresh planner, paper compositor, touch/clock/power drivers, seven apps, 22 deterministic captures. P4 (78bba9a): ESP32-S3 firmware builds with IDF 5.3.4 (1.6 MB); not flashed, cdc_acm missing on the host. Guide artifact v3 shows simulator captures.
+
+### Related Files
+
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/js-papers3/drivers/display.js — refresh planner
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/js-papers3/system/compositor.js — paper compositor
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/port/esp32s3-papers3/main/bus_s3.cpp — device bus workers (i2c1, epd0 via M5GFX)

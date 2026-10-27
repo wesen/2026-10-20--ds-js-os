@@ -940,7 +940,7 @@ int  port_gpio_get(int pin);                           // H_GPIO
 | Guide | done | aeceab5 | this document; reMarkable `/ai/2026/10/26/PAPERS3-PORT` |
 | P0 | done | d2bb7f5, db0a452, 016f9a1 | engine, board and pixel seams; PicoCalc shots byte-identical (normal and SAN); P4 port builds |
 | P1 | done | 4e67f09 | mquickjs binding, ES5 prelude with Task, conformance manifest passes (also under SAN) |
-| P2 | in progress | 4e67f09 | gray8 gfx, paper fonts, EPD sim and handle done; display driver next |
-| P3 | not started | | |
-| P4 | blocked on device access | | `cdc_acm` not loaded and `/dev/bus/usb` not writable; needs `sudo modprobe cdc_acm` |
+| P2 | done | 4e67f09, 7f96c33 | gray8 gfx, paper fonts, EPD simulator; display driver with the refresh planner (one update per present over the union of the damage; clean after 32 partials, 16 screens or 15 min) |
+| P3 | done | 7f96c33 | paper compositor (chrome, hit regions, gestures, ink forwarding), touch/clock/power drivers, seven apps; 22 deterministic captures in `out-papers3/`, SAN clean |
+| P4 | in progress (device blocked) | 78bba9a | ESP32-S3 firmware builds with IDF 5.3.4 (1.6 MB, 74% of the app partition free); not yet flashed: `cdc_acm` is not loaded on the host, needs `sudo modprobe cdc_acm` |
 | P5 | not started | | |

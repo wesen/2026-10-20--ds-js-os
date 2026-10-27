@@ -66,6 +66,14 @@ main th { font: 600 12px/1.2 var(--label); letter-spacing: .08em; text-transform
 main td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
 main td code { font-size: .8em; }
 main hr { border: 0; border-top: 1px solid var(--rule); }
+.shots { grid-column: 1 / -1; padding-block: 20px 4px; border-bottom: 1px solid var(--rule); }
+.shots h2 { font: 600 12px/1 var(--label); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 12px; }
+.shots p { font: 400 14px/1.45 var(--body); color: var(--ink-2); margin: 0 0 14px; max-width: 72ch; }
+.shots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 14px; }
+.shots figure { margin: 0; display: grid; gap: 6px; align-content: start; }
+.shots img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: #eceeea; }
+.shots a:hover img, .shots a:focus-visible img { border-color: var(--accent); }
+.shots figcaption { font: 500 12px/1.3 var(--label); color: var(--ink-2); }
 @media (max-width: 860px) {
   .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
   nav.toc { position: static; max-height: none; padding-top: 18px; border-bottom: 1px solid var(--rule); padding-bottom: 18px; }
@@ -79,9 +87,14 @@ main hr { border: 0; border-top: 1px solid var(--rule); }
     <span class="eyebrow">Ticket PAPERS3-PORT · design guide</span>
     <h1>picocalc-os on the M5Stack PaperS3</h1>
     <p class="lede">Porting a JavaScript OS of supervised worlds to an e-paper tablet: MicroQuickJS worlds, gray framebuffers, a refresh planner, GT911 touch and a paper-first compositor.</p>
-    <ul class="strip" aria-label="Phase progress"><li class="ph done"><span class="ph-name">Guide</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P0</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P1</span><span class="ph-state">done</span></li><li class="ph active"><span class="ph-name">P2</span><span class="ph-state">in progress</span></li><li class="ph todo"><span class="ph-name">P3</span><span class="ph-state">not started</span></li><li class="ph blocked"><span class="ph-name">P4</span><span class="ph-state">blocked on device access</span></li><li class="ph todo"><span class="ph-name">P5</span><span class="ph-state">not started</span></li></ul>
+    <ul class="strip" aria-label="Phase progress"><li class="ph done"><span class="ph-name">Guide</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P0</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P1</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P2</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P3</span><span class="ph-state">done</span></li><li class="ph blocked"><span class="ph-name">P4</span><span class="ph-state">in progress (device blocked)</span></li><li class="ph todo"><span class="ph-name">P5</span><span class="ph-state">not started</span></li></ul>
     <span class="meta">Guide last updated 2026-10-26 19:33</span>
   </header>
+  <section class="shots" aria-label="Simulator captures">
+    <h2>On the simulated PaperS3</h2>
+    <p>Captures from the host build, 540 × 960 with 16 grays and the e-paper ghost model. Scripted taps drive them, and two runs produce identical bytes. Tap a screen for full size.</p>
+    <div class="shots-grid"><figure><a href="shots/01-home.png"><img src="shots/01-home.png" width="540" height="960" loading="lazy" alt="Home: the launcher"></a><figcaption>Home: the launcher</figcaption></figure><figure><a href="shots/03-system.png"><img src="shots/03-system.png" width="540" height="960" loading="lazy" alt="System: worlds, turns, memory"></a><figcaption>System: worlds, turns, memory</figcaption></figure><figure><a href="shots/06-system-display.png"><img src="shots/06-system-display.png" width="540" height="960" loading="lazy" alt="System: the refresh planner"></a><figcaption>System: the refresh planner</figcaption></figure><figure><a href="shots/11-repl-results.png"><img src="shots/11-repl-results.png" width="540" height="960" loading="lazy" alt="REPL with the on-screen keyboard"></a><figcaption>REPL with the on-screen keyboard</figcaption></figure><figure><a href="shots/21-faults-throw.png"><img src="shots/21-faults-throw.png" width="540" height="960" loading="lazy" alt="A world crashes and restarts"></a><figcaption>A world crashes and restarts</figcaption></figure><figure><a href="shots/23-faults-exhaust.png"><img src="shots/23-faults-exhaust.png" width="540" height="960" loading="lazy" alt="The sandbox runs out of memory"></a><figcaption>The sandbox runs out of memory</figcaption></figure><figure><a href="shots/30-sketch-ink.png"><img src="shots/30-sketch-ink.png" width="540" height="960" loading="lazy" alt="Sketch: ink in the fastest waveform"></a><figcaption>Sketch: ink in the fastest waveform</figcaption></figure><figure><a href="shots/33-touches.png"><img src="shots/33-touches.png" width="540" height="960" loading="lazy" alt="Touches: raw GT911 points"></a><figcaption>Touches: raw GT911 points</figcaption></figure></div>
+  </section>
   <nav class="toc" aria-label="Contents"><ul>
 <li><a href="#1-executive-summary" id="toc-1-executive-summary">1.
 Executive summary</a></li>
@@ -1617,23 +1630,27 @@ and SAN); P4 port builds</td>
 </tr>
 <tr class="even">
 <td>P2</td>
-<td>in progress</td>
-<td>4e67f09</td>
-<td>gray8 gfx, paper fonts, EPD sim and handle done; display driver
-next</td>
+<td>done</td>
+<td>4e67f09, 7f96c33</td>
+<td>gray8 gfx, paper fonts, EPD simulator; display driver with the
+refresh planner (one update per present over the union of the damage;
+clean after 32 partials, 16 screens or 15 min)</td>
 </tr>
 <tr class="odd">
 <td>P3</td>
-<td>not started</td>
-<td></td>
-<td></td>
+<td>done</td>
+<td>7f96c33</td>
+<td>paper compositor (chrome, hit regions, gestures, ink forwarding),
+touch/clock/power drivers, seven apps; 22 deterministic captures in
+<code>out-papers3/</code>, SAN clean</td>
 </tr>
 <tr class="even">
 <td>P4</td>
-<td>blocked on device access</td>
-<td></td>
-<td><code>cdc_acm</code> not loaded and <code>/dev/bus/usb</code> not
-writable; needs <code>sudo modprobe cdc_acm</code></td>
+<td>in progress (device blocked)</td>
+<td>78bba9a</td>
+<td>ESP32-S3 firmware builds with IDF 5.3.4 (1.6 MB, 74% of the app
+partition free); not yet flashed: <code>cdc_acm</code> is not loaded on
+the host, needs <code>sudo modprobe cdc_acm</code></td>
 </tr>
 <tr class="odd">
 <td>P5</td>

@@ -13,7 +13,11 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/port/esp32s3-papers3/main/main_s3.c
+      Note: device entry, kernel task, USB console and shot
+    - Path: repo://picocalc-os/tools/s3cap.py
+      Note: host client for the device console and screenshots
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-10-26T19:33:08.640538803-04:00

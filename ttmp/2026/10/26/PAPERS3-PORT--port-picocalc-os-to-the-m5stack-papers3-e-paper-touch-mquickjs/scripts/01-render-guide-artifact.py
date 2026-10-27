@@ -4,10 +4,12 @@
     python3 scripts/01-render-guide-artifact.py OUT.html
 
 Reads ../design-doc/01-*.md, drops the YAML front matter, converts the body with pandoc (GFM), and wraps it
-in a styled page: a progress strip built from the phase table in section 15, a table of contents, and the
-guide itself. Rerun after every update to the guide, then republish the same OUT.html.
+in a styled page: a progress strip built from the phase table in section 15, a few of the simulator's
+captures (picocalc-os/out-papers3, published beside the page as shots/NAME.png), a table of contents, and the
+guide itself. Rerun after every update to the guide, then republish the same OUT.html with the files map
+this prints.
 """
-import html, pathlib, re, subprocess, sys
+import html, json, pathlib, re, subprocess, sys
 
 here = pathlib.Path(__file__).resolve().parent
 doc = next((here.parent / "design-doc").glob("01-*.md"))
@@ -35,13 +37,24 @@ strip = "".join(
     f'<li class="ph {state(p[1])}"><span class="ph-name">{html.escape(p[0])}</span>'
     f'<span class="ph-state">{html.escape(p[1])}</span></li>' for p in phases)
 
+# the screens worth seeing, in the order of the tour (make BOARD=papers3 shots regenerates them)
+SHOTS = [("01-home", "Home: the launcher"), ("03-system", "System: worlds, turns, memory"),
+         ("06-system-display", "System: the refresh planner"), ("11-repl-results", "REPL with the on-screen keyboard"),
+         ("21-faults-throw", "A world crashes and restarts"), ("23-faults-exhaust", "The sandbox runs out of memory"),
+         ("30-sketch-ink", "Sketch: ink in the fastest waveform"), ("33-touches", "Touches: raw GT911 points")]
+shots_dir = here.parents[5] / "picocalc-os" / "out-papers3"
+gallery = "".join(
+    f'<figure><a href="shots/{n}.png"><img src="shots/{n}.png" width="540" height="960" loading="lazy" '
+    f'alt="{html.escape(c)}"></a><figcaption>{html.escape(c)}</figcaption></figure>' for n, c in SHOTS)
+
 frag = subprocess.run(["pandoc", "-f", "gfm", "-t", "html5", "--toc", "--toc-depth=2", "-s",
                        "--template", str(here / "01-guide-template.html")],
                       input=body_md, capture_output=True, text=True, check=True).stdout
 toc, content = frag.split("<!--SPLIT-->", 1)
 updated = re.search(r"^LastUpdated: (\S+)", text, re.M)
 page = (here / "01-guide-shell.html").read_text()
-page = page.replace("{{STRIP}}", strip).replace("{{TOC}}", toc).replace("{{CONTENT}}", content)
+page = page.replace("{{STRIP}}", strip).replace("{{GALLERY}}", gallery).replace("{{TOC}}", toc).replace("{{CONTENT}}", content)
 page = page.replace("{{UPDATED}}", html.escape(updated.group(1)[:16].replace("T", " ") if updated else ""))
 out.write_text(page)
 print(f"wrote {out} ({len(page)} bytes, {len(phases)} phases)")
+print(json.dumps({f"shots/{n}.png": str(shots_dir / f"{n}.png") for n, _ in SHOTS}))

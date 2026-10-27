@@ -386,3 +386,263 @@ run after one link bug. Commit `4e67f09`.
 
 - mquickjs `JS_Call` usage: `JS_StackCheck(ctx, n+2); push arg[n-1] … arg[0]; push func; push this; JS_Call(ctx, n)`.
 - Font cells (w×h, pad): s 31×25, m 41×33, mb 41×33, l 53×45, xl 93×79, mono 15×25, monos 12×21; `font_paper.h` 2.4 MB of C text.
+
+## Step 4: The PaperS3's worlds: drivers, refresh planner, paper compositor, apps (phases 2–3)
+
+This step wrote the whole `js-papers3` tree in ES5 and made it work against the simulated board. That is
+14 worlds:
+
+- drivers: touch (GT911), clock (BM8563), power (ADC and charge pin), display (the refresh planner);
+- system: compositor, sandbox, flaky;
+- apps: launcher, system, repl, faults, touches, sketch, about.
+
+Scripted tours in `scripts-papers3/` produce 22 captures in `out-papers3/`. Two consecutive runs are
+byte-identical, and the SAN build matches pixel for pixel with no reports. Looking at the captures
+found five real problems, all fixed before the commit: placeholder ghosts, a missing glyph, misleading
+memory figures, a caught OOM that did not count, and a panel backlog. Commit `7f96c33`.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 ("Adapt UI to the paper stuff (see for example pulp os which is an earlier iteration)").
+**Assistant interpretation:** A touch-first, paper-style UI for the same OS, after PULP OS's design language.
+**Inferred user intent:** The OS should feel native on an e-paper tablet, not like a ported calculator screen.
+**Commit (code):** 7f96c33 — "picocalc-os: the PaperS3's worlds: touch, clock, power and display drivers, paper compositor, apps"
+
+### What I did
+
+- Drivers, each a world talking to its chip register by register:
+  - `touch.js`: GT911 status, points, buffer handback, down/move/up publication.
+  - `clock.js`: BM8563 BCD → epoch via the civil-days algorithm, then `sys.setClock`.
+  - `power.js`: LiPo curve.
+  - `display.js`: the planner; page, text, quick and ink intents; clean full after 32 partials, 16
+    screens of area or 15 minutes.
+- `compositor.js`:
+  - Layout and drawing for 540×960, with text through `gfx.measure`/`gfx.wrap`.
+  - Hit regions recorded while drawing. Gestures (tap < 300 ms and < 16 px, hold ≥ 600 ms, swipe
+    ≥ 64 px with an off-axis ratio under ½).
+  - Ink drags forwarded live.
+  - Chrome: title in Liberation Sans Bold, a 4 px rule, Home/Back chips, hints. Crash banners in
+    white-on-black.
+  - New nodes: `button`, `tabs`, `keyboard`, `ink`.
+- Apps:
+  - System has tabs (Worlds, Handles, Buses, Display) and swipe paging.
+  - The REPL has an on-screen QWERTY keyboard (lower, upper, two symbol layers).
+  - Faults has four ways to break a world plus restart-from-the-list.
+  - Touches draws a scaled trail. Sketch draws strokes with the fastest waveform and has a Clean button.
+- The host runner gained `send WORLD TYPE JSON` (used for REPL text). `tools/contact_sheet.py` reviews
+  many captures at once.
+
+### Why
+
+- Points from the driver, gestures in the compositor. The compositor is the only world that knows the
+  hit regions, and the raw-points path stays inspectable (the Touches app), as the PicoCalc's Keys app
+  did for keys.
+- One waveform pass per present, over the union of the damage (see below).
+
+### What worked
+
+- First boot of all 14 worlds: no crash, 2.7% lane load.
+- Final tour stats (16.3 s virtual):
+  - the panel busy 6.3 s, 4 quality and 15 text updates, 782 ghosted pixels;
+  - the faults run produced exactly 4 crashes (flaky throws, the sandbox loops, the sandbox runs out
+    of memory, the display is killed), each with a banner and a restart.
+- Determinism: `md5sum out-papers3/*.png` was the same across two `make BOARD=papers3 shots` runs. The
+  SAN build over all four scripts: 0 reports, every PNG identical.
+
+### What didn't work
+
+Problems the captures showed, and their fixes:
+
+1. **Placeholder ghost.**
+   - Seen: a faint "starting repl…" under the REPL, and "PaperS3" behind its title. A world without
+     `onStart` publishes no frame until its first message, so the clean "page" refresh showed the
+     placeholder and the real frame came as a ghosting partial.
+   - Fix: `focus()` holds the page refresh until the app's frame arrives, for at most 500 ms
+     (`waitFrame`).
+2. **Missing glyph.** `›` was not in the font set and rendered as `?`. Added `›‹` to `EXTRA`.
+3. **Memory figures.**
+   - Seen: "touches 94/96 KB" with nothing to do. mquickjs collects only when the arena fills, so
+     `heap_free − heap_base` is mostly garbage.
+   - Fix: patched the engine to record the live size after each compaction (`gc_live`, `gc_count`).
+     The binding reports that and collects once after boot. Baseline worlds are now about 30 KB,
+     the compositor 62–80 KB.
+4. **Caught OOM.**
+   - Seen: "Exhaust the sandbox's arena" did not crash the sandbox. mquickjs's out-of-memory error is
+     catchable, and the sandbox wraps eval in try/catch. On QuickJS the allocator flags OOM regardless.
+   - Fix: patched `JS_ThrowOutOfMemory` to count (`JS_GetOutOfMemoryCount`). The binding marks the
+     world OOM when the count moved. The sandbox then crashed with
+     `ran out of memory (its limit is 128 KB)`.
+5. **Panel backlog.**
+   - Seen: tab taps took effect one or two screens late. The planner sent each damaged rectangle as its
+     own update, and the worlds table changes in about five places a second at 300 ms each.
+   - Fix: one update per present, the union widened to 8 px. The tour's panel busy time went from
+     13.8 s to 6.3 s.
+6. **Tab-switch ghosts.** Fixed with a `page` token on a frame's root: a change of token gets a
+   clean refresh.
+7. **The 100k-loop demo** ran past the sandbox's 200 ms budget: the papers3 estimate is 250 ms
+   (`loop_ms`). The sandbox budget is now 400 ms.
+8. **Scripting.** A Faults tap landed on the crash banner left by the previous button and dismissed it
+   (correct behaviour); the script now waits for the banner to expire.
+
+### What I learned
+
+- On e-paper the cost model is per update, not per pixel. That inverts the PicoCalc's dirty-rectangle
+  instinct of sending as little as possible.
+- The ghost model makes the simulator honest about e-paper habits that a fast LCD forgives: presenting
+  a placeholder, partial tab switches. Those show up in host captures before the device is involved.
+
+### What was tricky to build
+
+- The on-screen keyboard's hit regions. Rows of different key widths (shift, backspace, space,
+  return) are centred, and every key records a region with a structured arg (`{ch}` or `{key}`), so
+  the REPL's handler never deals in coordinates.
+- Ink forwarding. A drag starting inside the ink node's last drawn rectangle (`inkArea`) is streamed
+  to the app with clamped local coordinates, and never becomes a tap or swipe.
+
+### What warrants a second pair of eyes
+
+- `fast` mode thresholds at 128. The muted gray (#555) becomes black, and faint/line grays (#999,
+  #bbb) disappear. The "quick" intent is only used for the clock and battery, which are black.
+- The compositor's arena (448 KB) is far above its measured live size (80 KB). Transient memory during
+  paint is unmeasured, so it was left generous until the device measures.
+
+### What should be done in the future
+
+- Phase 4/5 on the device: the touch orientation (`MAP` in `touch.js`), real waveform timings, and
+  arena and budget tuning.
+
+### Code review instructions
+
+- Read `js-papers3/system/compositor.js` (`paint`, `gesture`, `tap`, `focus`) and
+  `js-papers3/drivers/display.js` (`present`).
+- Validate: `make BOARD=papers3 shots` reproduces the committed `out-papers3/*.png` byte for byte, and
+  `out-papers3/contact-sheet.png` shows them all.
+
+### Technical details
+
+- Tap coordinates used by the scripts:
+  - tiles: System (111,276), REPL (269,276), Sketch (427,276), Faults (111,442), Touches (269,442),
+    About (427,442);
+  - chips: Home (105,908), Back (251,908);
+  - REPL return key (428,808).
+- Live arena use at the end of the tour: drivers 31–36 KB, compositor 74 KB, system 50 KB.
+
+## Step 5: The ESP32-S3 firmware (phase 4): builds, device still unreachable
+
+This step wrote `port/esp32s3-papers3`, the ESP-IDF project that runs the same nucleus and the same
+`js-papers3` tree on the PaperS3, and `tools/s3cap.py` to talk to it. It builds with IDF 5.3.4 after one
+API rename: 1.6 MB of firmware, 74% of the 6 MB app partition free. It has not run yet. The board
+enumerates on USB (`303a:1001`), but this host has no `cdc_acm` driver loaded, so there is no
+`/dev/ttyACM0`, and loading it needs sudo. Commit `78bba9a`.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 ("Device is attached. There might be an issue with flashing where it disappears from usb and all that, in that case, try to do your best without the device and then wait fro me to come back from running errands").
+**Assistant interpretation:** Get the firmware as far as possible without the device and leave a precise list of what flashing needs.
+**Inferred user intent:** Come back to firmware that is ready to flash, plus one command to unblock it.
+**Commit (code):** 78bba9a — "picocalc-os: ESP32-S3 port for the M5Stack PaperS3 (builds; not yet run on the device)"
+
+### What I did
+
+- `main/CMakeLists.txt`:
+  - compiles the nucleus with `vm_mqjs.c`, `BOARD_PAPERS3`, `NUCLEUS_GRAY8` and `font_paper.h`;
+  - generates mquickjs's ROM stdlib on the host;
+  - bundles `js-papers3` with the P4 port's `bundle_js.cmake`.
+- `port_s3.c`: PSRAM arenas (`heap_caps_malloc(..., MALLOC_CAP_SPIRAM)`), the battery ADC (oneshot,
+  channel 2 on GPIO3, curve-fit calibration, ×2 divider), gpio reads.
+- `bus_s3.cpp`, one FreeRTOS worker per bus. Results queue back to the kernel task (`s3_kq`), which
+  settles the promise.
+  - `i2c1` uses M5GFX's `lgfx::i2c` (port 1, SDA 41, SCL 42), so M5GFX and the OS do not fight over
+    ESP-IDF's old and new I2C drivers.
+  - `epd0` is an `LGFX_Device` with `Bus_EPD` + `Panel_EPD`, configured as M5GFX configures the PaperS3:
+    data pins 6, 14, 7, 12, 9, 11, 8, 10; pwr 46; spv 17; ckv 18; sph 13; oe 45; le 15; cl 16;
+    960×540 memory, `offset_rotation` 3. There is no touch driver and no autodetect. The rotation is
+    picked at runtime so that `width() == 540`.
+  - The worker does: wait idle → `setEpdMode` → `pushImage` the rectangle's gray rows from the pinned
+    front buffer → `display(x,y,w,h)` → wait idle. It reports `{ms}`, as the simulator does.
+- `main_s3.c`:
+  - The kernel task is pinned to core 1 with a 32 KB stack. Boot logs the chip, PSRAM and heap.
+  - The console runs on USB Serial/JTAG, with these commands: `stats`, `worlds`, `handles`, `heap`,
+    `tap X Y`, `hold X Y MS`, `swipe ...` (injected on the `touch` topic, as the simulator does),
+    `send`, `clean`, `crash`, `restart`, `shot`, `bench`, `trace`, `help`.
+  - `shot` prints `#SHOT 540 960 g8`, base64 3-byte RLE records (count lo, count hi, gray), and
+    `#END crc32 runs`.
+- `sdkconfig.defaults`: S3, 16 MB flash, octal PSRAM at 80 MHz, console on USB Serial/JTAG, 1 kHz tick,
+  -O2, idle-task WDT off on core 1 (the kernel task can be busy for a whole turn).
+- `tools/s3cap.py`:
+  - opens the port once, then resets into the app through the held descriptor (RTS pulse with DTR
+    low);
+  - reopens the port if it re-enumerates;
+  - sends timed `-c "SECONDS CMD"` lines and decodes `#SHOT` blocks to PNG with a CRC check.
+
+### Why
+
+- M5GFX for the panel (decision 7.7): the ED047TC1's waveform tables and the parallel bus timing are
+  the hard part of this board, and M5GFX already gets them right on this exact board.
+- M5GFX's I2C for the I2C bus: one implementation on the wire. IDF 5.3 refuses to link the legacy and
+  the new `i2c_master` driver together.
+- The stdlib generator is built for the host and asked for 32-bit tables (`-m32` is the generator's
+  own flag, not gcc's), so the build needs no 32-bit libc on the host.
+
+### What worked
+
+- `idf.py set-target esp32s3 && idf.py build` with IDF 5.3.4 after the fix below:
+  `picocalc-os-papers3.bin binary size 0x18d410 bytes. Smallest app partition is 0x600000 bytes. 0x472bf0 bytes (74%) free.`
+- No compiler warnings in our sources (upstream mquickjs is built with `-w`, as on the host).
+
+### What didn't work
+
+- The first build failed in `main_s3.c`:
+  `error: implicit declaration of function 'esp_vfs_usb_serial_jtag_use_driver'; did you mean 'esp_vfs_dev_usb_serial_jtag_register'?`
+  In 5.3 the call lives in the driver component: `usb_serial_jtag_vfs_use_driver()` from
+  `driver/usb_serial_jtag_vfs.h`. The old name survives only as a deprecated declaration in
+  `esp_vfs_dev.h`.
+- Device access (unchanged since Step 2):
+  - `ls /dev/ttyACM*` matches nothing;
+  - `lsmod` shows `cdc_ether` but no `cdc_acm`;
+  - `sudo -n modprobe cdc_acm` asks for a password;
+  - `/dev/bus/usb/003/006` is `root:root 0664`, so esptool's USB-JTAG path and OpenOCD cannot open
+    it either.
+- Nothing is flashed.
+
+### What I learned
+
+- In IDF 5.3, the USB Serial/JTAG VFS and driver calls moved to `esp_driver_usb_serial_jtag` with new
+  names. The PRIV_REQUIRES name `esp_driver_usb_serial_jtag` is valid in 5.3.
+
+### What was tricky to build
+
+- Keeping the framebuffer valid during a slow update. A world can release its framebuffer handle while
+  a 300 ms waveform pass still reads it. `bus_run_epd` takes a reference on the buffer (`b->refs++`),
+  and the kernel task drops it when the worker's result arrives (`dmabuf_unref` in `bus_s3_done`), so
+  the pixels outlive every handle.
+
+### What warrants a second pair of eyes
+
+- `pushImage(..., (const lgfx::grayscale_t *)...)` assumes M5GFX reads our 8-bit gray (0 black … 255
+  white) as its `grayscale_t`. If the panel shows inverted or banded grays, this is the first place to
+  look.
+- The rotation loop picks the first rotation with `width() == 540`. That is either portrait or
+  upside-down portrait. The touch `MAP` in `touch.js` must agree; the Touches app will show it.
+- The I2C worker uses `vTaskDelay` for the gap between a write and a read (GT911 needs none). With a
+  1 kHz tick that is at least 1 ms.
+
+### What should be done in the future
+
+- Once `cdc_acm` is loaded:
+  - `idf.py -p /dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_D0:CF:13:16:17:DC-if00 flash`;
+  - `python3 tools/s3cap.py -s 30 -c "8 stats" -c "10 shot" --shot-dir out-s3`;
+  - check the touch orientation with the Touches app;
+  - then phase 5 (timings, arena sizes, `loop_ms`/`mem_scale` calibration from `bench`).
+
+### Code review instructions
+
+- Read `port/esp32s3-papers3/main/bus_s3.cpp` (`epd_worker`, `bus_run_epd`, `bus_s3_done`) and
+  `main_s3.c` (`kernel_task`, `console_task`, `cmd_shot`).
+- Validate:
+  `cd picocalc-os/port/esp32s3-papers3 && . ~/esp/esp-idf-5.3.4/export.sh && idf.py set-target esp32s3 && idf.py build`.
+
+### Technical details
+
+- Unblock the device: `sudo modprobe cdc_acm`. After that the port is
+  `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_D0:CF:13:16:17:DC-if00`.
