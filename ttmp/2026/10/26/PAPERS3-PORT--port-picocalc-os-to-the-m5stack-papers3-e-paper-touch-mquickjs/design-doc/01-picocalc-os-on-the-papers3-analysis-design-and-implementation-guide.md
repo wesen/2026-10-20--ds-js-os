@@ -937,10 +937,10 @@ int  port_gpio_get(int pin);                           // H_GPIO
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
-| Guide | written | | this document |
-| P0 | not started | | |
-| P1 | not started | | |
-| P2 | not started | | |
+| Guide | done | aeceab5 | this document; reMarkable `/ai/2026/10/26/PAPERS3-PORT` |
+| P0 | done | d2bb7f5, db0a452, 016f9a1 | engine, board and pixel seams; PicoCalc shots byte-identical (normal and SAN); P4 port builds |
+| P1 | done | 4e67f09 | mquickjs binding, ES5 prelude with Task, conformance manifest passes (also under SAN) |
+| P2 | in progress | 4e67f09 | gray8 gfx, paper fonts, EPD sim and handle done; display driver next |
 | P3 | not started | | |
 | P4 | blocked on device access | | `cdc_acm` not loaded and `/dev/bus/usb` not writable; needs `sudo modprobe cdc_acm` |
 | P5 | not started | | |

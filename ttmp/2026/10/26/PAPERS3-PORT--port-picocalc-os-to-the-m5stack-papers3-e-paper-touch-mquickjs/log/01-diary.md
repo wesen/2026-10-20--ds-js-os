@@ -162,3 +162,227 @@ evidence trail the P4 port had. The user wants to follow progress remotely while
 - mquickjs vendored copy: `esp32-s3-m5/imports/esp32-mqjs-repl/mqjs-repl/components/mquickjs` (upstream
   `bellard/mquickjs` at about `84d793e0`).
 - PaperS3 serial id: `usb-Espressif_USB_JTAG_serial_debug_unit_D0:CF:13:16:17:DC-if00`.
+
+## Step 2: The seams: engine, board, pixels (phase 0)
+
+This step made the nucleus able to host a second engine and a second board without changing what the
+PicoCalc build does. There were four commits, each gated by `make && make shots` leaving every
+`out/*.png` byte-identical:
+
+- `d2bb7f5`, the engine seam: `world_t` holds an opaque `struct vmw *`, and the manifest is parsed by
+  the binding.
+- `db0a452`, the board seam: buses are named by the port, and script commands, captures and the panel
+  report go to the host board.
+- `016f9a1`, pixels and fonts: `pixel_t`, plus proportional fonts with advance tables in `gfx.c`.
+- A later move put the board name and buses into `sim/board.c`.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement phase 0 of the guide.
+**Inferred user intent:** The port should not fork or regress the PicoCalc OS.
+**Commit (code):** d2bb7f5, db0a452, 016f9a1 (and the board-fact move inside 4e67f09)
+
+### What I did
+
+- `nucleus/nucleus.h`:
+  - Dropped `#include "quickjs.h"`, `pending_t`, and the `rt`/`ctx`/`pend`/`fn_*`/`unhandled` fields.
+  - Added `struct vmw *vm`, `manifest_world_t`, `vm_read_manifest`, `vm_engine_name`.
+  - Added `pixel_t` (RGB565, or `uint8_t` with `NUCLEUS_GRAY8`), `MAX_BUSES` with `n_buses`, and
+    `port_bus_names()`.
+  - Added handle types `H_EPD`, `H_ADC`, `H_GPIO`.
+- `nucleus/vm.c`: the QuickJS state moved into `struct vmw`. It now parses the manifest; the code moved
+  from `kernel.c:kernel_boot`, with an early return on a JSON error.
+- `nucleus/kernel.c`: `alive()` and the render check test `W->vm`. `kernel_boot` calls
+  `vm_read_manifest` with an `add_world` callback that sets the same defaults (budget 50 ms, 1 MB,
+  priority −1) in the same order, so `K.seq` numbering is unchanged.
+- `host/main_host.c` is generic now. `key`, `type`, `battery` and `panel` moved to `sim/board.c` behind
+  `host/board.h` (`board_init`, `board_command`, `board_capture`, `board_report`).
+- `nucleus/gfx.c`:
+  - Pixels are `pixel_t`, with gray blending under `NUCLEUS_GRAY8`.
+  - `font_def_t` gained `adv` and `pad`. NULL means monospace, so the PicoCalc's initializers are
+    unchanged. `tools/gen_font.py` emits the new typedef.
+  - New: `gfx_measure`, `gfx_wrap_json`, `gfx_fonts_json`.
+- Checked the P4 device build: `idf.py build` in `port/esp32p4` (ESP-IDF 5.4.2) completed with exit
+  code 0 after the engine seam.
+
+### Why
+
+- The manifest parse lives in the binding because each engine has its own JSON parser. Writing a
+  C JSON parser would be a third.
+- Buses are named by the board so that the PicoCalc's System app still lists exactly `i2c0` and
+  `spi2`. A fixed enum of all buses would have changed its Buses tab and therefore the PNGs.
+
+### What worked
+
+- The screenshot gate caught nothing because nothing changed. It ran after each commit. The `SAN=1`
+  build was byte-identical with no sanitizer reports.
+
+### What didn't work
+
+- `make M32=1`: `/usr/include/stdlib.h:26:10: fatal error: bits/libc-header-start.h: No such file or
+  directory`. This machine has no 32-bit libc headers (gcc-multilib is not installed). That is an
+  environment gap, not a regression. The M32 gate is deferred.
+- My first scripted edit of `main_host.c` failed (`ValueError: substring not found`). The key branch
+  starts with `else if`, not `} else if`. I rewrote the file whole instead.
+- Text truncation regression, caught in review before running: my first `gfx_text` used `room = -1`
+  to mean "do not cut". When `max_w` is narrower than one glyph, room goes negative and the text was
+  drawn uncut. The old code drew just the ellipsis in that case. Fixed with an explicit `cut` flag.
+
+### What I learned
+
+- The PicoCalc build's object-file paths changed (`build/qjs/` → `build/eng/`); that is harmless, it
+  just rebuilds.
+
+### What was tricky to build
+
+- Keeping monospace `gfx_text` exactly equivalent. The old code drew `fit = max_w/cw − 1` characters
+  and then an ellipsis. The new code draws while `x + advance ≤ max_w − advance(…)`, which is the same
+  count for constant advances. Spaces are skipped as glyph index 0, as before.
+
+### What warrants a second pair of eyes
+
+- `vm_dispose` now frees the pending-promise array, where it used to keep it across restarts. It is
+  reallocated on demand. Behaviour is the same and the shots are identical.
+
+### What should be done in the future
+
+- Install gcc-multilib (or use a container) to restore the `M32=1` gate.
+
+### Code review instructions
+
+- `git show d2bb7f5 db0a452 016f9a1`.
+- Validate: `cd picocalc-os && make && make shots && git status --short out` should print nothing.
+  Also run `make SAN=1`.
+
+### Technical details
+
+- Bus order contract: `port_bus_names()` returns `{"i2c0","spi2"}` on the PicoCalc (host and P4), so
+  `BUS_I2C0 = 0` and `BUS_SPI2 = 1` still hold. The PaperS3 returns `{"i2c1","epd0"}`.
+
+## Step 3: MicroQuickJS under the nucleus (phase 1, with the PaperS3 simulator)
+
+This step brought up the second engine and the simulated PaperS3 hardware. Upstream mquickjs at
+`84d793e` is vendored in `third_party/mquickjs` with four documented patches.
+
+- `nucleus/vm_mqjs.c` implements the engine interface.
+- `js-papers3/prelude.js` implements the world API in ES5, with an 80-line Task.
+- `sim/papers3/` models the GT911, the BM8563 and the e-paper glass.
+
+A conformance manifest (`js-papers3/test/`) produced exactly the expected supervision log on the first
+run after one link bug. Commit `4e67f09`.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Phase 1 of the guide (and the simulator half of phase 2).
+**Inferred user intent:** Worlds that behave the same on the new engine.
+**Commit (code):** 4e67f09 — "picocalc-os: MicroQuickJS engine binding, ES5 prelude with Tasks, PaperS3 simulator"
+
+### What I did
+
+- Vendored from `~/code/others/mquickjs` (git `84d793e`).
+- Patches, recorded in `third_party/mquickjs/PATCHES`:
+  - `JS_INTERRUPT_COUNTER_INIT` 10000 → 1000;
+  - `JS_GetContextOpaque`, `JS_GetInterruptCounter`, `JS_GetInterruptCounterInit`, `JS_GetMemoryUsage`;
+  - a `CONFIG_NUCLEUS` hook in `mqjs_stdlib.c` that replaces print/console/performance/gc/load/timers
+    with `__k` and `__ka`, plus the generator entry `nucleus_stdlib.c`.
+- Makefile `BOARD=papers3`:
+  - It builds `$(GEN)/stdlib-gen` with the host compiler and writes `mqjs_stdlib.h` and
+    `mquickjs_atom.h` into the build directory (with `-m32` when `M32=1`).
+  - It compiles with `-DBOARD_PAPERS3 -DNUCLEUS_GRAY8 -DNUCLEUS_FONT_HEADER='"font_paper.h"'`.
+- `vm_mqjs.c`:
+  - One arena per world (`mem_limit × mem_scale`).
+  - Interrupt handler and step counting identical to `vm.c`.
+  - The engine log is captured to format errors.
+  - `call_global` pushes args last-first, then the function and `this`.
+  - Structured results go to JS as JSON (`JS_Parse(…, JS_EVAL_JSON)`).
+  - Host ops for i2c on any named bus, epd, adc, gpio, `gfx.measure`/`gfx.wrap`, `clock.set`
+    (`sys.clock` claim, feeds `Date.now`) and `err.where`.
+- `tools/gen_paper_font.py` writes `nucleus/font_paper.h`:
+  - Charis SIL 20/26/26-bold, Liberation Sans Bold 36/64, DejaVu Sans Mono 20/16.
+  - 4-bit alpha, per-glyph advances, DejaVu Sans fallback for missing symbols.
+  - Cells sized to the set's ink.
+- `sim/papers3`: `gt911.c`, `bm8563.c`, `epd.c` (glass, ghosts, per-mode busy times), `bus.c`, and
+  `board.c` (tap, hold, swipe, battery, ADC/GPIO).
+
+### Why
+
+- C never holds a JS value (decision 7.3, and the moving GC). Even `handle_info` comes back as JSON.
+  It costs a parse, but it removes every `JSGCRef` subtlety from the op table.
+- `err.where` exists because `e.stack` is empty in JS while the engine keeps the backtrace internally
+  (`JS_PrintValueF(…, JS_DUMP_LONG)` prints it).
+
+### What worked
+
+- Conformance run (`papers3-host -j js-papers3 -m js-papers3/test/system.json -v -t 3000`):
+
+```
+[    33.194] hog crashed handling start: ran past its turn budget of 30 virtual ms
+[    34.746] glut crashed handling start: ran out of memory (its limit is 48 KB)
+[    35.429] pong: ping replied {pong: 42, asked: 1}
+[    40.765] pong: sleep order 10,20,30
+[    60.891] pong: slow replied late by 25
+[    61.121] pong: no handler: ping has no handler for "nothing"
+[    66.497] ping crashed handling bad: bad on purpose
+[    66.597] pong: bad rejected: ping crashed: bad on purpose
+[   116.818] pong: timeout: no reply from mute within 50 ms
+[   165.993] glut: glut started again with 0 items
+[   167.096] pong: all [{pong: 2, asked: 1}, undefined, 7]
+[   173.952] pong: seq 30,20,10
+[   173.991] pong: Date.now true, clock 09:41, engine MicroQuickJS 84d793e0
+[   174.082] pong: a task failed and nothing handled it: nobody listens
+[  1663.682] hog crashed 5 times in ten seconds; it stays stopped
+```
+
+- After `err.where`, the messages carry locations: `bad on purpose (test/ping.js:6:79)`.
+- `make BOARD=papers3 SAN=1` with the same manifest produced no ASan or UBSan report.
+- Calibration counts the same 200,001 steps for the 100k loop as QuickJS does.
+
+### What didn't work
+
+- First run: `timeout: the monitored command dumped core`. gdb showed `op_seed (… W=0x5582f7d0 …)`, a
+  pointer truncated to 32 bits. Upstream mquickjs has `JS_SetContextOpaque` but no getter. I added
+  one, but `vm_mqjs.o` had been compiled against an implicit `int JS_GetContextOpaque()` (warning:
+  `implicit declaration of function ‘JS_GetContextOpaque’`), and the Makefile did not list
+  `mquickjs.h` as a dependency, so the object was not rebuilt. Fixed the dependency list.
+- The stdlib generator prints `Too many properties, consider increasing ATOM_ALIGN` three times on
+  the 64-bit host. It caps a property hash table at `64/JSW` buckets (8 on the host, 16 with `-m32`).
+  That is a speed cap, not a correctness problem, and stderr is discarded in the Makefile rule.
+
+### What I learned
+
+- Upstream API details:
+  - `JS_Eval` always runs its result, so JSON goes through `JS_Parse` with `JS_EVAL_JSON` directly.
+  - The interrupt exception is uncatchable (`current_exception_is_uncatchable = TRUE` at
+    `mquickjs.c:5062`), so `try { for(;;); } catch {}` cannot dodge a budget.
+- An OOM'd world restarts with a fresh arena: global state (`big`) is gone, as in QuickJS.
+
+### What was tricky to build
+
+- Argument pushing under a moving GC. `call_global` creates each string just before pushing it, so
+  every earlier value is already on the engine's stack, which the collector updates. The function is
+  looked up after the arguments are pushed.
+- `read_list` re-reads the array from the rooted `meta` on every iteration, because converting an
+  element could in principle move it.
+
+### What warrants a second pair of eyes
+
+- `mem_scale` 1.7 for 64-bit `JSValue`s is an estimate. The device run must measure it (phase 5).
+- `JS_ToCStringLen` returns a pointer into a movable string. Every caller copies it before the next
+  allocation; please check that no allocation sits between those two lines.
+
+### What should be done in the future
+
+- Phase 2/3: the paper compositor, drivers and apps.
+
+### Code review instructions
+
+- Start at `nucleus/vm_mqjs.c` (`call_global`, `vm_create`, `js_nucleus_ka`), then
+  `js-papers3/prelude.js` (Task, `__settle`, `__dispatch`).
+- Validate: `make BOARD=papers3 && ./build-papers3/papers3-host -j js-papers3 -m js-papers3/test/system.json -v -t 3000`.
+
+### Technical details
+
+- mquickjs `JS_Call` usage: `JS_StackCheck(ctx, n+2); push arg[n-1] … arg[0]; push func; push this; JS_Call(ctx, n)`.
+- Font cells (w×h, pad): s 31×25, m 41×33, mb 41×33, l 53×45, xl 93×79, mono 15×25, monos 12×21; `font_paper.h` 2.4 MB of C text.

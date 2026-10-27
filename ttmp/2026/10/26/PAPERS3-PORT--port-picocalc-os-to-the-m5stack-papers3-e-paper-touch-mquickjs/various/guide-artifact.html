@@ -79,7 +79,7 @@ main hr { border: 0; border-top: 1px solid var(--rule); }
     <span class="eyebrow">Ticket PAPERS3-PORT · design guide</span>
     <h1>picocalc-os on the M5Stack PaperS3</h1>
     <p class="lede">Porting a JavaScript OS of supervised worlds to an e-paper tablet: MicroQuickJS worlds, gray framebuffers, a refresh planner, GT911 touch and a paper-first compositor.</p>
-    <ul class="strip" aria-label="Phase progress"><li class="ph done"><span class="ph-name">Guide</span><span class="ph-state">written</span></li><li class="ph todo"><span class="ph-name">P0</span><span class="ph-state">not started</span></li><li class="ph todo"><span class="ph-name">P1</span><span class="ph-state">not started</span></li><li class="ph todo"><span class="ph-name">P2</span><span class="ph-state">not started</span></li><li class="ph todo"><span class="ph-name">P3</span><span class="ph-state">not started</span></li><li class="ph blocked"><span class="ph-name">P4</span><span class="ph-state">blocked on device access</span></li><li class="ph todo"><span class="ph-name">P5</span><span class="ph-state">not started</span></li></ul>
+    <ul class="strip" aria-label="Phase progress"><li class="ph done"><span class="ph-name">Guide</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P0</span><span class="ph-state">done</span></li><li class="ph done"><span class="ph-name">P1</span><span class="ph-state">done</span></li><li class="ph active"><span class="ph-name">P2</span><span class="ph-state">in progress</span></li><li class="ph todo"><span class="ph-name">P3</span><span class="ph-state">not started</span></li><li class="ph blocked"><span class="ph-name">P4</span><span class="ph-state">blocked on device access</span></li><li class="ph todo"><span class="ph-name">P5</span><span class="ph-state">not started</span></li></ul>
     <span class="meta">Guide last updated 2026-10-26 19:33</span>
   </header>
   <nav class="toc" aria-label="Contents"><ul>
@@ -1596,27 +1596,31 @@ and findings</h2>
 <tbody>
 <tr class="odd">
 <td>Guide</td>
-<td>written</td>
-<td></td>
-<td>this document</td>
+<td>done</td>
+<td>aeceab5</td>
+<td>this document; reMarkable
+<code>/ai/2026/10/26/PAPERS3-PORT</code></td>
 </tr>
 <tr class="even">
 <td>P0</td>
-<td>not started</td>
-<td></td>
-<td></td>
+<td>done</td>
+<td>d2bb7f5, db0a452, 016f9a1</td>
+<td>engine, board and pixel seams; PicoCalc shots byte-identical (normal
+and SAN); P4 port builds</td>
 </tr>
 <tr class="odd">
 <td>P1</td>
-<td>not started</td>
-<td></td>
-<td></td>
+<td>done</td>
+<td>4e67f09</td>
+<td>mquickjs binding, ES5 prelude with Task, conformance manifest passes
+(also under SAN)</td>
 </tr>
 <tr class="even">
 <td>P2</td>
-<td>not started</td>
-<td></td>
-<td></td>
+<td>in progress</td>
+<td>4e67f09</td>
+<td>gray8 gfx, paper fonts, EPD sim and handle done; display driver
+next</td>
 </tr>
 <tr class="odd">
 <td>P3</td>
