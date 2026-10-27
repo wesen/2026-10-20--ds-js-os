@@ -545,3 +545,86 @@ prof over 113.0 s: the kernel task woke 21 times (0.2/s) and was blocked 100% of
 ```
 
 - **Next:** repeat with someone at the panel (Touches app: corners, a drag), then P4.
+
+## Step 6: Real touches on the interrupt line
+
+Someone at the panel touched the Touches app. Every touch arrived through the GT911's interrupt line,
+the coordinates match the screen with no transform, and the driver used no CPU outside the touches.
+Two apparent problems in the screenshots were not input bugs. The "missing" lift was the newest event
+hidden below the event list, and the absent gestures came from touches inside the app's ink pad, which
+by design never become gestures. The list now keeps the newest seven events.
+
+### Prompt Context
+
+**User prompt (verbatim):** "ok", then "good" (after touching the panel), then "y was good i touched that smaller screen i think"
+**Assistant interpretation:** The user touched the Touches app during the capture window; they touched the corners of the drawn pad, not of the screen.
+**Inferred user intent:** Confirm that real touch input works with the interrupt-driven driver.
+**Commit (code):** see the commit after this entry: "touches: keep the newest seven events"
+
+### What I did
+
+- A 100 s capture window (`out-s3/touch-test-2/`) with the Touches app cleared (`send touches back`),
+  screenshots at 30, 60 and 95 s, and a `prof` at the end.
+- A 10 s idle `prof` afterwards, to rule out a stuck finger keeping the 40 ms lift check alive.
+- Read the compositor's `gesture()`: a touch that starts inside `inkArea` is forwarded as ink and
+  returns before gesture recognition.
+- `apps/touches.js`: keep 7 events (the lines that fit) instead of 8. Re-baselined `33-touches.png`,
+  which now ends with `up #0 at 270, 300` where the old one hid it.
+
+### Why
+
+- The screenshots ended with `down #0 at 255, 376` and showed "gesture -". Either could have been a
+  missed lift report or a wrong transform; both had to be ruled out before calling the interrupt path
+  good.
+
+### What worked
+
+- Over 94 s with touches (`prof`):
+  - touch: 1084 segments, 2516 ms, 2.32 ms/segment, 136 steps/segment, 47 collections;
+  - Touches app: 74 segments (render 298.6 ms);
+  - compositor: 120 segments, 14.8 ms each (ink forwarding and paints);
+  - lane 5.2% over the whole window, which includes idle stretches.
+- Idle afterwards: `the kernel task woke 1 times (0.1/s) ... worlds ran 0 ms (0.0%)`. No stuck finger.
+- Mapping. Measured from the scaled pad:
+  - dots at about (65–486, 202–466): the drawn box (x 40–500, y 176–476) with about 20 px inset;
+  - a hold near the box's centre (`255, 376`);
+  - a left-to-right drag at y ≈ 345.
+
+  The user confirmed that y was right. `MAP` stays the identity.
+
+### What didn't work
+
+- My first reading of the screenshots: corners squeezed into a band, and a missing `up`. Both were
+  artefacts:
+  - the user had touched the pad's corners;
+  - the eighth event did not fit in the list.
+
+### What I learned
+
+- The Touches app is a poor orientation test on its own. Its pad swallows gestures, and its corners
+  are not the screen's. A home-screen tile tap is the unambiguous check.
+- Real touches cost more than idle polls did per segment: 2.32 ms against 1.46 ms. The 41-byte read is
+  decoded and the five points are sliced. There are far fewer of them, and none while nobody touches.
+
+### What was tricky to build
+
+- Nothing new. The diagnosis needed the compositor's ink rule and the app's line budget.
+
+### What warrants a second pair of eyes
+
+- Whether the GT911 holds INT or pulses it is still not settled. Either way works: the lift check
+  covers pulses, and no stuck finger was seen.
+
+### What should be done in the future
+
+- P4: light sleep. The kernel task is blocked 100% of the time when idle.
+
+### Code review instructions
+
+- `js-papers3/apps/touches.js` (the event limit). Validate with `make BOARD=papers3 shots`, which
+  reproduces `out-papers3/33-touches.png`.
+
+### Technical details
+
+- Touch window commands:
+  `s3cap.py --no-reset -s 100 -c "1 send touches back" -c "2 prof reset" -c "30 shot" -c "60 shot" -c "95 shot" -c "96 prof"`.

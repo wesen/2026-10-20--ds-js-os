@@ -7,7 +7,7 @@ app("touches")
   .on("touch", function (s, t) {
     s.n++;
     s.events.push(t.phase + " #" + t.id + " at " + t.x + ", " + t.y);
-    if (s.events.length > 8) s.events.shift();
+    if (s.events.length > 7) s.events.shift();   // the newest seven: as many lines as the panel has room for
     if (t.phase === "down") { s.strokes.push([]); if (s.strokes.length > 6) s.strokes.shift(); }
     var st = s.strokes[s.strokes.length - 1];
     if (st && st.length < 200) st.push([Math.round(t.x * 460 / 540), Math.round(t.y * 300 / 960)]);
