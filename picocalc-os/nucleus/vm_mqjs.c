@@ -92,6 +92,7 @@ static void note_memory(world_t *W) {
   size_t heap, stack, live; unsigned gcs;
   JS_GetMemoryUsage(W->vm->ctx, &heap, &stack, &live, &gcs);
   W->mem_used = (gcs ? live : heap) + stack;
+  W->gcs = gcs;
   unsigned ooms = JS_GetOutOfMemoryCount(W->vm->ctx);
   if (ooms != W->vm->ooms) { W->vm->ooms = ooms; W->oom = true; }   // even if the world caught the error
 }

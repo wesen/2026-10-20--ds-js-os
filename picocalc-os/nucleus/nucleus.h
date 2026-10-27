@@ -102,6 +102,9 @@ typedef struct world {
   char *trace;              // the stack of the last error
   uint64_t turns, msgs;
   vtime_t cpu_us, turn_started;
+  vtime_t prof_engine_us, prof_render_us;   // real-time mode: the parts of cpu_us spent in the engine and rendering
+  uint64_t prof_segments, prof_steps;
+  unsigned gcs;             // garbage collections in the current instance (engines that count them)
   vtime_t seg_deadline;     // real-time mode: the segment is stopped when the clock passes this
   uint64_t seed;
 } world_t;

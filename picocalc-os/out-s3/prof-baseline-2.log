@@ -1,0 +1,23 @@
+I (321) esp_image: segment 4: paddr=001907ac vaddr=40376ae8 sizeI (824) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (824) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (825) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (825) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (1045) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (1045) main_task: Returned from app_main()
+[   503.926] calibration on the real clock: the 100k loop took 415.5 ms (the model says 250), fib(20) 84.7 ms (the model says 68.4)
+[   513.941] booting 14 worlds from js/system.json
+[  3466.425] touch: touch controller GT911
+unknown command I (try help)
+#OK I
+#OK prof
+prof over 10.0 s: the kernel task woke 974 times (97.1/s) and was blocked 74% of the time; worlds ran 2328 ms (23.2%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  touch         996    99.3    1450.7     1420.3       15.3      15.1    1.46         68   26
+  power           1     0.1       2.3        2.2        0.0       0.0    2.28         82    0
+  display         2     0.2       6.7        6.6        0.0       0.0    3.35        150    0
+  compositor    125    12.5     290.1      286.3        1.7       2.1    2.32        155    0
+  launcher        2     0.2      35.4       28.7        6.7       0.0   17.70        191    1
+  system         10     1.0     199.4      140.4       58.9       0.2   19.94        370    3
+  faults         20     2.0     308.9      236.7       71.8       0.3   15.44        298   10
+  about           2     0.2      34.8       28.2        6.6       0.0   17.41        186    1
+#OK prof

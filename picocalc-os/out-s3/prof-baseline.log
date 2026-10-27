@@ -1,0 +1,35 @@
+I (320) esp_image: segment 4: paddr=0019073c vaddr=40376ae8 sizeI (823) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (823) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (824) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (824) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (1044) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (1044) main_task: Returned from app_main()
+[   503.826] calibration on the real clock: the 100k loop took 415.5 ms (the model says 250), fib(20) 84.6 ms (the model says 68.4)
+[   513.774] booting 14 worlds from js/system.json
+[  3462.232] touch: touch controller GT911
+#OK prof
+prof over 10.0 s: the kernel task woke 1093 times (108.9/s) and was blocked 75% of the time; worlds ran 2302 ms (22.9%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg
+  touch         996    99.3    1469.7     1440.1       14.9      14.7    1.48
+  power           1     0.1       1.4        1.4        0.0       0.0    1.39
+  display         2     0.2       6.7        6.7        0.0       0.0    3.37
+  compositor    124    12.4     241.0      238.5        1.2       1.3    1.94
+  launcher        2     0.2      35.7       28.9        6.7       0.0   17.86
+  system         10     1.0     202.7      145.6       56.9       0.2   20.27
+  faults         20     2.0     310.3      239.1       70.8       0.4   15.52
+  about           2     0.2      34.9       28.4        6.5       0.0   17.46
+#OK prof
+#OK tap
+#OK prof
+prof over 10.0 s: the kernel task woke 966 times (96.3/s) and was blocked 62% of the time; worlds ran 3531 ms (35.2%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg
+  touch         908    90.5    1500.2     1471.5       13.9      14.8    1.65
+  power           1     0.1       1.6        1.5        0.0       0.0    1.57
+  display        20     2.0      84.7       84.1        0.3       0.3    4.24
+  compositor    162    16.1    1237.1     1233.0        2.0       2.2    7.64
+  launcher        2     0.2      37.2       30.5        6.6       0.0   18.61
+  system         10     1.0     203.8      145.9       57.7       0.2   20.38
+  faults         20     2.0     432.4      342.3       89.7       0.4   21.62
+  about           2     0.2      33.5       22.5       11.0       0.0   16.76
+#OK prof
+#OK tap

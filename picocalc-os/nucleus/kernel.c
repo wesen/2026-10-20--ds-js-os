@@ -419,6 +419,8 @@ static void run_segment(world_t *W, bool is_settle) {
       free_msg(m);
     }
   }
+  vtime_t t_render = K.realtime ? port_clock() : 0;
+  if (K.realtime) W->prof_engine_us += t_render - K.vnow;
   // render what the world shows, as part of its segment
   if (rc == 0 && !booting && W->vm && W->has_screen && !W->oom && !W->overrun) {
     char *f = vm_render(W);
@@ -432,7 +434,10 @@ static void run_segment(world_t *W, bool is_settle) {
       free(b.s);
     } else free(f);
   }
+  if (K.realtime) W->prof_render_us += port_clock() - t_render;
+  W->prof_segments++;
   int64_t steps = vm_steps(W);
+  W->prof_steps += steps;
   vtime_t cost = K.realtime ? port_clock() - K.vnow
                             : PROFILE.turn_base_us + (vtime_t)(steps * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
   char why[300] = "";

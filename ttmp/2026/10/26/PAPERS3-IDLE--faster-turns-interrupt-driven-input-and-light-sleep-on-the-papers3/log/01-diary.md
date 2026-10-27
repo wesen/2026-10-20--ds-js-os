@@ -162,3 +162,119 @@ world model, not around it.
 - Device port: `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_D0:CF:13:16:17:DC-if00`.
   Flash with `picocalc-os/port/esp32s3-papers3/flash.sh`; `idf.py flash` knocks the board off USB on
   this host.
+
+## Step 2: P0, the profiler and the baseline
+
+Added a cheap profiler to the device build and took a baseline on the PaperS3. A `callgrind` profile
+of the host build attributed the cost inside a segment. The answer is clear: most idle work is
+needless rather than slow. Touch polling and apps that nobody sees account for seven eighths of the
+idle lane. The cost inside a segment is spread across the engine's allocation, collection, string
+interning, concatenation and JSON, with no single hot spot.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** P0 of the guide: measure before changing anything.
+**Inferred user intent:** Changes justified by numbers.
+**Commit (code):** see the commit after this entry: "picocalc-os: prof"
+
+### What I did
+
+- `nucleus.h` and `kernel.c`. Per world, in real-time mode only, so host captures cannot change:
+  - `prof_engine_us`: from segment start to before rendering;
+  - `prof_render_us`: `vm_render`, its JSON and the frame comparison;
+  - `prof_segments` and `prof_steps`.
+  - Plus `W->gcs`, set in `vm_mqjs.c` `note_memory` from `JS_GetMemoryUsage`.
+- `main_s3.c`:
+  - kernel task wakeups and time blocked in `xQueueReceive`;
+  - `prof` prints a window since boot or the last `prof reset`, per world: segments, segments/s,
+    cpu, engine, render, other, ms/segment, steps/segment and collections.
+- Device runs, logged in `picocalc-os/out-s3/prof-baseline.log` and `prof-baseline-2.log`:
+  `./flash.sh`, then `s3cap.py --no-reset -c "8 prof reset" -c "18 prof"`. A second window was taken
+  with the System app open.
+- Host attribution:
+  - `valgrind --tool=callgrind` of `papers3-host` with scripts `wait 1000` and `wait 11000`;
+  - self-cost difference with `scripts/01-callgrind-idle-diff.py`, result in
+    `various/callgrind-idle-10s.txt`.
+
+### Why
+
+- Decision 7.4 of the guide: six plausible causes for the per-segment cost, none measured.
+
+### What worked
+
+Baseline, idle home screen, 10 s:
+
+```
+prof over 10.0 s: the kernel task woke 974 times (97.1/s) and was blocked 74% of the time; worlds ran 2328 ms (23.2%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  touch         996    99.3    1450.7     1420.3       15.3      15.1    1.46         68   26
+  power           1     0.1       2.3        2.2        0.0       0.0    2.28         82    0
+  display         2     0.2       6.7        6.6        0.0       0.0    3.35        150    0
+  compositor    125    12.5     290.1      286.3        1.7       2.1    2.32        155    0
+  launcher        2     0.2      35.4       28.7        6.7       0.0   17.70        191    1
+  system         10     1.0     199.4      140.4       58.9       0.2   19.94        370    3
+  faults         20     2.0     308.9      236.7       71.8       0.3   15.44        298   10
+  about           2     0.2      34.8       28.2        6.6       0.0   17.41        186    1
+```
+
+- With the System app open: compositor 1237 ms in 10 s (7.6 ms/segment, painting the System app every
+  second). The lane is 35% busy.
+- Where the idle lane goes:
+  - touch: 62%;
+  - the four off-screen apps' timers: 25%;
+  - compositor: 12%.
+- Host callgrind, 10 s of idle = 116.5 M instructions. Self costs:
+  - `JS_Call` (interpreter) 14.5%;
+  - GC functions (`gc_thread_block`, `gc_mark_flush`, `gc_compact_heap`, `gc_mark`, `gc_mark_all`)
+    together about 11%, plus `get_mblock_size` 3.5%;
+  - `js_string_compare` 8.8% (889,001 calls, from unique-string interning);
+  - `string_buffer_concat_str` 8.6%;
+  - `gfx.c:glyph` 4.8%;
+  - JSON parse functions about 5%;
+  - libc `printf` for kernel JSON about 4%.
+- Inclusive: `op_sys_worlds` (39 calls) accounts for about 45 M instructions, about 39% of idle.
+  Faults (every 500 ms) and System (every 1 s) ask the kernel for the whole world list as JSON and
+  parse it, even when off screen.
+
+### What didn't work
+
+- `callgrind_annotate` output parsing. The first diff picked up the auto-annotation call lines
+  (`=> ...`) and summed inclusive costs into a "1324 M" total, larger than the program. Fixed by
+  parsing only the table under the `file:function` header (`--auto=no`).
+
+### What I learned
+
+- Steps are a poor measure of work in this engine. `POLL_INTERRUPT` decrements only on calls, `goto`
+  and conditional branches. A touch segment has 68 steps, yet 1.42 ms of engine time: allocation,
+  interning, JSON and collection dominate, not interpretation.
+- The touch world collects garbage every ~38 segments (26 collections in 996 segments). Each poll
+  allocates Task objects, closures and the decoded result.
+
+### What was tricky to build
+
+- Keeping the profiler out of the deterministic host path. The kernel adds to `prof_engine_us` and
+  `prof_render_us` only when `K.realtime` is set. `prof_segments` and `prof_steps` are plain counters
+  that change no output. The host captures stayed byte-identical.
+
+### What warrants a second pair of eyes
+
+- `prof_engine_us` includes everything from segment start to rendering: the engine, the binding's C,
+  and `boot_world` for start segments. "Other" is the remainder of the segment's cost (the frame
+  publish).
+
+### What should be done in the future
+
+- P1–P3 remove most of this work. P5's per-segment work should target allocation in
+  `__dispatch`/`__settle`, interning, and JSON on settles, in that order.
+
+### Code review instructions
+
+- `kernel.c` `run_segment` (`t_render`, the `prof_*` lines), `main_s3.c` `prof_reset` and `prof_print`.
+- Validate: `make BOARD=papers3 shots && git status --short out-papers3` (empty); on the device,
+  `s3cap.py --no-reset -c "2 prof reset" -c "12 prof"`.
+
+### Technical details
+
+- The host profile run takes about 30 s under callgrind. The difference method cancels boot, but the
+  host's idle is not identical to the device's, because virtual timing differs.

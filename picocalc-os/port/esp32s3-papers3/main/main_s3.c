@@ -116,6 +116,33 @@ static void heap_report(void) {
   printf("\n");
 }
 
+// ---- prof: where the time goes over a window, from boot or from the last "prof reset" ----------------------------
+static struct { vtime_t t0, blocked_us; uint64_t wakeups; vtime_t cpu0[MAX_WORLDS]; unsigned gcs0[MAX_WORLDS]; } prof;
+
+static void prof_reset(void) {
+  prof.t0 = port_clock(); prof.blocked_us = 0; prof.wakeups = 0;
+  for (int i = 0; i < K.n_worlds; i++) {
+    world_t *W = K.worlds[i];
+    W->prof_engine_us = W->prof_render_us = 0; W->prof_segments = W->prof_steps = 0;
+    prof.cpu0[i] = W->cpu_us; prof.gcs0[i] = W->gcs;
+  }
+}
+
+static void prof_print(void) {
+  double secs = (port_clock() - prof.t0) / 1e6, lane = 0;
+  for (int i = 0; i < K.n_worlds; i++) lane += K.worlds[i]->cpu_us - prof.cpu0[i];
+  printf("prof over %.1f s: the kernel task woke %llu times (%.1f/s) and was blocked %.0f%% of the time; worlds ran %.0f ms (%.1f%%)\n",
+         secs, (unsigned long long)prof.wakeups, prof.wakeups / secs, prof.blocked_us / 1e4 / secs, lane / 1000.0, lane / 1e4 / secs);
+  printf("  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs\n");
+  for (int i = 0; i < K.n_worlds; i++) {
+    world_t *W = K.worlds[i];
+    if (!W->prof_segments) continue;
+    double cpu = (W->cpu_us - prof.cpu0[i]) / 1000.0, eng = W->prof_engine_us / 1000.0, ren = W->prof_render_us / 1000.0;
+    printf("  %-11s %5llu %7.1f %9.1f %10.1f %10.1f %9.1f %7.2f %10.0f %4d\n", W->name, (unsigned long long)W->prof_segments, W->prof_segments / secs,
+           cpu, eng, ren, cpu - eng - ren, cpu / W->prof_segments, (double)W->prof_steps / W->prof_segments, (int)(W->gcs - prof.gcs0[i]));
+  }
+}
+
 void console_exec(char *line) {
   char *p = line;
   while (isspace((unsigned char)*p)) p++;
@@ -132,6 +159,7 @@ void console_exec(char *line) {
     char *j = !strcmp(cmd, "worlds") ? kernel_worlds_json() : hw_handles_json();
     printf("%s\n", j); free(j);
   } else if (!strcmp(cmd, "heap")) heap_report();
+  else if (!strcmp(cmd, "prof")) { if (!strcmp(rest, "reset")) prof_reset(); else prof_print(); }
   else if (!strcmp(cmd, "tap") || !strcmp(cmd, "hold")) {
     int x = 0, y = 0, ms = 80;
     sscanf(rest, "%d %d %d", &x, &y, &ms);
@@ -162,7 +190,7 @@ void console_exec(char *line) {
   } else if (!strcmp(cmd, "shot")) shot();
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap prof [reset] | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
@@ -231,7 +259,10 @@ static void kernel_task(void *arg) {
     vtime_t wait = kernel_next_wake() - port_clock();
     if (wait <= 0) continue;
     if (wait > MS(50)) wait = MS(50);
-    if (xQueueReceive(s3_kq, &m, pdMS_TO_TICKS((wait + 999) / 1000)) == pdTRUE) {
+    vtime_t t_block = port_clock();
+    BaseType_t got = xQueueReceive(s3_kq, &m, pdMS_TO_TICKS((wait + 999) / 1000));
+    prof.blocked_us += port_clock() - t_block; prof.wakeups++;
+    if (got == pdTRUE) {
       if (m.line) { console_exec(m.line); free(m.line); }
       else bus_s3_done(&m);
     }
