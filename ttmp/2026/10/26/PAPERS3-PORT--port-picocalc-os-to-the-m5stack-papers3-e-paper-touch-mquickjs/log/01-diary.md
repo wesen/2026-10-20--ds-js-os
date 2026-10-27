@@ -646,3 +646,146 @@ enumerates on USB (`303a:1001`), but this host has no `cdc_acm` driver loaded, s
 
 - Unblock the device: `sudo modprobe cdc_acm`. After that the port is
   `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_D0:CF:13:16:17:DC-if00`.
+
+## Step 6: The firmware in QEMU while the device is unreachable
+
+With the board still unreachable, I ran the firmware itself in Espressif's QEMU (esp_develop 9.0.0, machine
+`esp32s3`). It was the closest thing to the device available: the real kernel, binding and mquickjs on a
+32-bit Xtensa core with FreeRTOS and a real clock. After two QEMU limits were worked around, the engine's
+conformance worlds run clean and behave as on the host.
+
+On the way it found a genuine bug: the binding's temporary contexts used unchecked `malloc`s. It also
+found a QEMU-only fault that looked like heap corruption, and it took several experiments to rule that
+out as a firmware bug. Commit `d925eb4`.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 ("try to do your best without the device and then wait fro me to come back").
+**Assistant interpretation:** Use the waiting time to catch, before the first flash, the faults that only show on the target.
+**Inferred user intent:** The first flash should find hardware problems, not engine or port bugs.
+**Commit (code):** d925eb4 — "picocalc-os: run the PaperS3 firmware in QEMU; fix unchecked temporary contexts in the mquickjs binding"
+
+### What I did
+
+- `sdkconfig.qemu` overlay plus an `S3_QEMU` define (`idf.py -B build-qemu -DS3_QEMU=1 ...`):
+  - console on UART0;
+  - no PSRAM, and no RTC fast memory as heap;
+  - comprehensive heap poisoning;
+  - panel stub busy for the simulator's durations (450/300/120/60 ms);
+  - I2C devices answer zeros, and the battery reads 1950 mV at the ADC;
+  - boots `js/test/qemu.json` (the conformance worlds in 36–40 KB arenas) instead of the system;
+  - checks heap integrity after every `kernel_run_until` and traces turns.
+- `qemu.sh`:
+  - builds and merges a 16 MB image;
+  - starts QEMU on a Unix socket with `wait=on`, and bridges it to a pty with socat, so `s3cap.py` holds
+    the port before boot and no output is lost;
+  - forwards `-c "T CMD"` arguments.
+- `heap` console command: an integrity check before walking, and the kernel task's stack high-water
+  mark.
+- `nucleus/vm_mqjs.c`: the temporary contexts (manifest reader, calibration) come from
+  `port_heap_malloc` and are checked; the calibration uses 64 KB.
+
+### Why
+
+- `make M32=1` cannot build on this host (no 32-bit libc), so until now nothing had run mquickjs with
+  32-bit pointers.
+- QEMU also exercises the parts the host replaces: the FreeRTOS tasks and queues, the real-time kernel
+  loop (`K.realtime`), the console, and the per-bus workers' result path.
+
+### What worked
+
+- `./qemu.sh 34 -c "28 stats"`: pong's whole conformance sequence runs. In order:
+  - `ping replied {pong: 42, asked: 1}`, `sleep order 10,20,30`, `slow replied late by 25`;
+  - `no handler`, then `bad rejected: ping crashed: bad on purpose`;
+  - `timeout: no reply from mute within 50 ms`, `all [{pong: 2, asked: 1}, undefined, 7]`,
+    `seq 30,20,10`;
+  - `Date.now true, clock 09:41, engine MicroQuickJS 84d793e0`;
+  - `a task failed and nothing handled it`, then `five ticks`.
+
+  Hog overruns its 30 ms turn budget. Supervision stops a world after five crashes in ten seconds.
+- `stats` on Xtensa reads ping 30.7 KB, pong 33.4 KB, glut 30.2 KB, mute 30.1 KB. The host's figures
+  divided by `mem_scale` 1.7 are 29–33 KB.
+- The kernel task's stack had 7108 of 12288 bytes never used, so about 5 KB is in use.
+- Host gates after the binding change: PicoCalc `make shots` and PaperS3 `make BOARD=papers3 shots`
+  are both byte-identical. The device build (`idf.py build`) still configures octal PSRAM, the USB
+  console and the RTC heap.
+
+### What didn't work
+
+1. **Octal PSRAM.** `E (335) octal_psram: PSRAM chip is not connected, or wrong PSRAM line mode`.
+   Quad mode with `-m 2M/4M/8M` fails too:
+   `E (195) quad_psram: PSRAM ID read error: 0x00000000`. Anything above 4M is refused with
+   `RAM size larger than 4 MB not supported`. This QEMU does not model S3 PSRAM, so the QEMU build has
+   none.
+2. **Calibration crash.** `Guru Meditation Error: Core 1 panic'ed (StoreProhibited)` with
+   `JS_NewContext2 (mquickjs.c:3558) ← count_steps (vm_mqjs.c:786) ← vm_calibrate ← kernel_init`.
+   `count_steps` did `malloc(256 KB)` without checking it. Internal RAM had no such block, and
+   `JS_NewContext` memsets the start of the arena. The manifest reader had the same pattern. Fixed;
+   on the device these would have gone to PSRAM through `SPIRAM_USE_MALLOC`, which hid the bug.
+3. **The heap walk fault that was not corruption.**
+   - Seen: `heap` faulted with `LoadProhibited` in `tlsf_walk_pool ← multi_heap_get_info_impl ←
+     heap_caps_get_largest_free_block`, then in `tlsf_check` once integrity checks were on.
+     Poisoning reported no bad canary.
+   - Checkpoints showed the heap intact through all of `app_main` on core 0, and failing at the first
+     check in the kernel task on core 1, before any JS ran.
+   - With the kernel task on core 0, the checks stayed clean for the whole run.
+   - A peek task printed the same words from both cores. `0x3FCF0000` read the same from both, but
+     at `0x600FE000` (RTC fast memory, the last registered heap) core 0 read `3fca0e98 00001e6c ...`
+     and core 1 read zeros.
+   - The faulting registers held the end of the previous region (A15 = `0x3fcf7ffc`), so the walk
+     had moved on to the RTC heap.
+   - Conclusion: QEMU models RTC fast memory as core 0 only, as on the original ESP32. The S3's
+     cores both reach it. `CONFIG_ESP_SYSTEM_ALLOW_RTC_FAST_MEM_AS_HEAP=n` in `sdkconfig.qemu` only.
+4. **Internal RAM is tight.** The conformance manifest's 272 KB of arenas did not fit beside the port.
+   The smaller `qemu.json` (36/40/36/36/35 KB) plus a 12 KB kernel stack and a 24-slot result queue
+   (QEMU only) let every world run, though not all at once. 34 KB is below the floor: the prelude alone
+   does not fit.
+5. **Two smaller setup snags.** QEMU's `-serial pty` drops output until a reader opens the pty, which
+   lost the boot log; fixed with the socket and socat. A Unix socket path in the scratchpad was 115
+   bytes, over the 108 limit; `qemu.sh` uses a fresh `/tmp` directory.
+6. **Glut's out-of-memory path did not run.** It only exhausts its arena when `now() < 100` ms, and
+   QEMU starts it at about 450 ms. The device's Faults app ("Exhaust the sandbox's arena") covers that
+   path.
+
+### What I learned
+
+- A heap fault that poisoning does not flag, and that shows up on one core only, is worth testing for
+  memory visibility before hunting a writer. Comparing one word read from each core settled it in one
+  run.
+- `SPIRAM_USE_MALLOC` can hide missing NULL checks. A big `malloc` that always succeeds on the device
+  fails as soon as the same code runs with less memory.
+- QEMU's timing is not the chip's: "the 100k loop took 110–129 ms" against a modelled 250 ms says
+  nothing about the S3. `loop_ms` calibration needs the device.
+
+### What was tricky to build
+
+- Getting all the output. QEMU must not start before someone reads its serial port, and the reader
+  must hold the port for the whole run without modem ioctls. The `wait=on` socket, the socat pty and
+  `s3cap.py --no-reset` give that in one script.
+
+### What warrants a second pair of eyes
+
+- `S3_QEMU` blocks in the port. Each is small and commented, but it is a second configuration to keep
+  compiling. `qemu.sh` rebuilds it from scratch whenever a defaults file changes.
+- The per-step integrity check costs time on every kernel loop. It is compiled only into the QEMU
+  variant.
+
+### What should be done in the future
+
+- On the device: the start budget (600 ms) and the turn budgets need the real speed. QEMU's
+  "ran past its start budget" crashes are emulation slowness.
+- Keep `qemu.sh` in the routine before each flash.
+
+### Code review instructions
+
+- Read `port/esp32s3-papers3/qemu.sh`, `sdkconfig.qemu`, the `S3_QEMU` blocks in `main_s3.c`,
+  `bus_s3.cpp` and `port_s3.c`, and `nucleus/vm_mqjs.c` (`vm_read_manifest`, `count_steps`).
+- Validate:
+  `cd picocalc-os/port/esp32s3-papers3 && . ~/esp/esp-idf-5.3.4/export.sh && ./qemu.sh 34 -c "28 stats"`.
+  Expect pong's lines as above, and a `stats` table with ping, pong and glut idle.
+
+### Technical details
+
+- QEMU binary: `~/.espressif/tools/qemu-xtensa/esp_develop_9.0.0_20240606/qemu/bin/qemu-system-xtensa`.
+- Heap at `app_main` under QEMU: 331808 bytes free, largest block 270324, in regions `3FCA0720`
+  (291 KiB), `3FCE9710` (21 KiB) and `3FCF0000` (32 KiB).

@@ -24,7 +24,7 @@ RelatedFiles:
       Note: The PicoCalc compositor that the paper compositor replaces
 ExternalSources: []
 Summary: "How picocalc-os (a JavaScript OS of supervised worlds) is ported to the M5Stack PaperS3: an engine seam so worlds run on MicroQuickJS, gray framebuffers and proportional fonts, an e-paper display driver with a refresh planner, a GT911 touch driver and a touch-first compositor, a host simulator for the board, and the ESP-IDF port."
-LastUpdated: 2026-10-26T19:33:08.721292407-04:00
+LastUpdated: 2026-10-26T21:10:00-04:00
 WhatFor: "Onboarding and implementation reference for the PaperS3 port."
 WhenToUse: "Before changing the nucleus seams, the paper JS tree, the PaperS3 simulator or the ESP32-S3 port."
 ---
@@ -660,7 +660,7 @@ It has the same shape as the P4 port, with the PaperS3's peripherals:
 
 ```
 core 1: kernel task (prio 5)   kernel_run_until(port_clock()), sleeps until the next event or a queue item
-core 0: i2c1 worker (prio 6)   GT911 + BM8563 transactions via i2c_master (400 kHz), one at a time, in order
+core 0: i2c1 worker (prio 6)   GT911 + BM8563 transactions via M5GFX's lgfx::i2c (400 kHz), one at a time, in order
 core 0: epd worker (prio 4)    M5GFX: wait busy → setEpdMode → startWrite → pushImage rows → endWrite → wait busy
 core 0: console task (prio 3)  USB-Serial-JTAG lines → kernel queue; shot task encodes the framebuffer
 ```
@@ -668,9 +668,12 @@ core 0: console task (prio 3)  USB-Serial-JTAG lines → kernel queue; shot task
 - **Memory.** World arenas and framebuffers go in PSRAM (`heap_caps_aligned_alloc(8, …, SPIRAM)`).
   The kernel task stack is in internal RAM. mquickjs recurses less than QuickJS, but the stack stays
   generous (32 KB) until it has been measured.
-- **ESP-IDF.** v5.3.4, the version PULP builds with. M5Unified 0.2.18 and M5GFX 0.2.25 are pinned
-  through the component manager, exactly as `components/s3paper_m5/idf_component.yml` pins them.
-  `COMPONENTS` must list `esp_psram`, or PSRAM silently disappears (0113 lesson).
+- **ESP-IDF.** v5.3.4, the version PULP builds with. M5GFX 0.2.25 is pinned through the component
+  manager, as `components/s3paper_m5/idf_component.yml` pins it. M5Unified is not used: the port
+  configures M5GFX's `Bus_EPD`/`Panel_EPD` itself (the pins and panel geometry M5GFX's autodetect uses
+  for the PaperS3), without M5GFX's touch driver, and talks I2C through `lgfx::i2c`. The OS's own
+  drivers then own the GT911 and the BM8563, and the firmware has one I2C implementation on the wire.
+  `PRIV_REQUIRES` must list `esp_psram`, or PSRAM silently disappears (0113 lesson).
 - **The JS tree** is compiled into the firmware by the same `bundle_js.cmake`, pointed at
   `js-papers3/`.
 - **The stdlib header** is generated at build time by running the host generator with `-m32`.
@@ -679,6 +682,17 @@ core 0: console task (prio 3)  USB-Serial-JTAG lines → kernel queue; shot task
   `key` and `type`. `tools/s3cap.py` is a hold-open client in the style of ESP-55 `04-*.py`: it opens
   the port once, resets through DTR=RTS=0 → RTS pulse, sends commands at times, and decodes
   `#SHOT w h g8` blocks (run-length gray) to PNG.
+- **QEMU.** `./qemu.sh` builds an `S3_QEMU` variant (`sdkconfig.qemu`) for Espressif's QEMU
+  (machine `esp32s3`), boots it with the console bridged to a pty, and drives it with `s3cap.py`. That
+  QEMU has no USB Serial/JTAG, I2C, LCD_CAM, ADC or S3 PSRAM, so the variant:
+  - puts the console on UART0;
+  - stubs the panel (busy as long as the simulator's), the I2C devices (zeros) and the battery;
+  - turns on heap poisoning and checks heap integrity after every kernel step;
+  - boots the engine's conformance worlds in internal RAM (`js-papers3/test/qemu.json`).
+
+  It runs the real kernel, binding and engine on Xtensa (32-bit pointers) with a real clock and
+  FreeRTOS. One QEMU limit to know: only core 0 sees RTC fast memory, so that memory is not heap in
+  this variant.
 
 ## 7. Decision records
 
@@ -846,6 +860,10 @@ on present({rects, intent}):
   - unhandled rejection log;
   - budget overrun, arena OOM, restart backoff, five crashes → stopped.
 - **Sanitizers.** `make BOARD=papers3 SAN=1 shots`.
+- **QEMU** (`port/esp32s3-papers3/qemu.sh`). The conformance worlds in the device firmware on emulated
+  Xtensa. Run it before a flash when the binding, kernel or port changes. It catches 32-bit and
+  FreeRTOS problems the 64-bit host cannot see. It found the unchecked temporary-context allocation
+  (§15).
 - **Device.** The console tour through `tools/s3cap.py`:
   - shots compared visually with the host captures;
   - `stats` and `worlds` read back;
@@ -859,8 +877,8 @@ on present({rects, intent}):
   `gfx.wrap` and a C table renderer.
 - **Arena sizing.** Transient memory during eval is about 10× retained (ESP-55). The compositor's
   arena must hold a full ui tree, its JSON and the layout. Start with 256 KB and measure.
-- **M5Unified and I2C1.** `M5.begin()` may claim I2C1 for its own touch and RTC objects. The port
-  may need to start only M5GFX's panel, or configure M5Unified to leave I2C alone.
+- **M5Unified and I2C1.** *Resolved:* the port does not use M5Unified. It configures M5GFX's panel
+  by hand and uses `lgfx::i2c`, so nothing else claims I2C1 (§6.11).
 - **Touch transform.** The GT911's raw orientation relative to the portrait viewport is unverified
   (M5GFX applies `offset_rotation=1`).
 - **Ghosting model.** The simulator's ghosts are qualitative. Real ghosting depends on the waveform
@@ -942,5 +960,29 @@ int  port_gpio_get(int pin);                           // H_GPIO
 | P1 | done | 4e67f09 | mquickjs binding, ES5 prelude with Task, conformance manifest passes (also under SAN) |
 | P2 | done | 4e67f09, 7f96c33 | gray8 gfx, paper fonts, EPD simulator; display driver with the refresh planner (one update per present over the union of the damage; clean after 32 partials, 16 screens or 15 min) |
 | P3 | done | 7f96c33 | paper compositor (chrome, hit regions, gestures, ink forwarding), touch/clock/power drivers, seven apps; 22 deterministic captures in `out-papers3/`, SAN clean |
-| P4 | in progress (device blocked) | 78bba9a | ESP32-S3 firmware builds with IDF 5.3.4 (1.6 MB, 74% of the app partition free); not yet flashed: `cdc_acm` is not loaded on the host, needs `sudo modprobe cdc_acm` |
+| P4 | in progress (device blocked) | 78bba9a, d925eb4 | firmware builds with IDF 5.3.4 (1.6 MB, 74% of the app partition free); its conformance worlds run clean in QEMU; not yet flashed: `cdc_acm` is not loaded on the host, needs `sudo modprobe cdc_acm` |
 | P5 | not started | | |
+
+Findings so far, newest first:
+
+- **32-bit world sizes** (QEMU, Xtensa):
+  - ping 30.7 KB, pong 33.4 KB, glut 30.2 KB, mute 30.1 KB live after start;
+  - the host's 64-bit figures divided by `mem_scale` 1.7 are 29–33 KB, so the estimate holds within
+    about 3%.
+- **Kernel task stack.** About 5 KB used by the conformance worlds. The compositor's paint still
+  needs measuring on the device before the 32 KB stack shrinks.
+- **Unchecked temporary contexts** (fixed in d925eb4):
+  - `vm_read_manifest` and the calibration made their contexts with a bare `malloc`, 256 KB for the
+    calibration, and `JS_NewContext` wrote through NULL when it failed;
+  - they now use the arena allocator, which is PSRAM on the device, and check the result;
+  - the calibration now uses 64 KB.
+- **IDF 5.3 rename.** The USB Serial/JTAG VFS call is `usb_serial_jtag_vfs_use_driver()` from
+  `driver/usb_serial_jtag_vfs.h`.
+- **E-paper cost model** (P2). A waveform pass costs the same whatever its size, so the planner sends
+  one update per present over the union of the damage. Per-rectangle updates made the panel fall
+  seconds behind.
+- **mquickjs memory** (P3):
+  - the arena fills with garbage before a collection, so live size is read after compaction (an
+    engine patch);
+  - mquickjs's out-of-memory error is catchable, so the binding counts out-of-memory throws, and a
+    world that swallowed one still crashes as out of memory.

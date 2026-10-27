@@ -9,3 +9,4 @@
 - [ ] P4: port/esp32s3-papers3 builds; flash; console + tools/s3cap.py shots on device <!-- t:6fl0 -->
 - [ ] P5: device measurements (calibration, refresh timings, memory); tune budgets <!-- t:98t4 -->
 - [ ] Device access: needs sudo modprobe cdc_acm (USB device not writable, no ttyACM) <!-- t:bzw6 -->
+- [x] QEMU: firmware conformance worlds clean on emulated Xtensa (port/esp32s3-papers3/qemu.sh) <!-- t:s45n -->
