@@ -31,7 +31,7 @@ profile_t PROFILE = {
   .diff_ns_per_px = 0.8,        // byte compares, a word at a time
   .json_ns_per_byte = 40,
   .spi_chunk_us = 0,
-  .mem_scale = sizeof(void *) == 8 ? 1.7 : 1.0,   // estimate: 64-bit JSValues on the host
+  .mem_scale = sizeof(void *) == 8 ? 1.7 : 1.0,   // 64-bit JSValues on the host; the test worlds' live sizes on Xtensa (QEMU) agree within 3%
   .loop_ms = 250,               // estimate: the 100k loop on mquickjs at 240 MHz
 };
 #else

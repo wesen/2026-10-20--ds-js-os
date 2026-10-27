@@ -1243,8 +1243,10 @@ running the host generator with <code>-m32</code>.</p></li>
 the P4 (<code>stats</code>, <code>worlds</code>, <code>handles</code>,
 <code>heap</code>, <code>crash</code>, <code>restart</code>,
 <code>bench</code>, <code>trace</code>, <code>shot</code>), with
-<code>tap X Y</code>, <code>swipe …</code> and <code>refresh</code>
-replacing <code>key</code> and <code>type</code>.
+<code>tap X Y</code>, <code>hold X Y MS</code>, <code>swipe …</code>,
+<code>send W T JSON</code> and <code>clean</code> (a clean full refresh)
+replacing <code>key</code> and <code>type</code>. Injected touches are
+published on the <code>touch</code> topic, as the simulator's are.
 <code>tools/s3cap.py</code> is a hold-open client in the style of ESP-55
 <code>04-*.py</code>: it opens the port once, resets through DTR=RTS=0 →
 RTS pulse, sends commands at times, and decodes

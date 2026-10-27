@@ -678,8 +678,9 @@ core 0: console task (prio 3)  USB-Serial-JTAG lines → kernel queue; shot task
   `js-papers3/`.
 - **The stdlib header** is generated at build time by running the host generator with `-m32`.
 - **Console.** USB-Serial-JTAG, the same commands as the P4 (`stats`, `worlds`, `handles`, `heap`,
-  `crash`, `restart`, `bench`, `trace`, `shot`), with `tap X Y`, `swipe …` and `refresh` replacing
-  `key` and `type`. `tools/s3cap.py` is a hold-open client in the style of ESP-55 `04-*.py`: it opens
+  `crash`, `restart`, `bench`, `trace`, `shot`), with `tap X Y`, `hold X Y MS`, `swipe …`, `send W T JSON`
+  and `clean` (a clean full refresh) replacing `key` and `type`. Injected touches are published on the
+  `touch` topic, as the simulator's are. `tools/s3cap.py` is a hold-open client in the style of ESP-55 `04-*.py`: it opens
   the port once, resets through DTR=RTS=0 → RTS pulse, sends commands at times, and decodes
   `#SHOT w h g8` blocks (run-length gray) to PNG.
 - **QEMU.** `./qemu.sh` builds an `S3_QEMU` variant (`sdkconfig.qemu`) for Espressif's QEMU
