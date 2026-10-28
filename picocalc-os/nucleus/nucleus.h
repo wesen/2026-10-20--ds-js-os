@@ -243,6 +243,10 @@ typedef struct {                // one entry of system.json's "worlds", as the b
 } manifest_world_t;
 int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(void *arg, const manifest_world_t *w), void *arg);
 const char *vm_engine_name(void);
+// time in each host operation (MicroQuickJS binding, real-time mode only): for the device's prof command
+typedef struct { const char *name; uint64_t us; uint32_t n; } op_prof_t;
+int vm_op_prof(const op_prof_t **out);
+void vm_op_prof_reset(void);
 int vm_create(world_t *W);
 void vm_dispose(world_t *W);
 void vm_begin_segment(world_t *W, vtime_t budget_us);

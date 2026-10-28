@@ -36,10 +36,15 @@ static bool clip(dmabuf_t *b, int *x, int *y, int *w, int *h) {
 
 void gfx_fill(dmabuf_t *b, int x, int y, int w, int h, pixel_t c) {
   if (!clip(b, &x, &y, &w, &h)) return;
+#ifdef NUCLEUS_GRAY8   // a byte per pixel: rows are memsets, and full-width rows are one
+  if (w == b->w) memset(b->back + (size_t)y * b->w, c, (size_t)w * h);
+  else for (int j = 0; j < h; j++) memset(b->back + (size_t)(y + j) * b->w + x, c, (size_t)w);
+#else
   for (int j = 0; j < h; j++) {
     pixel_t *p = b->back + (size_t)(y + j) * b->w + x;
     for (int i = 0; i < w; i++) p[i] = c;
   }
+#endif
   charge((double)w * h * PROFILE.fill_ns_per_px);
 }
 
@@ -90,7 +95,7 @@ static inline pixel_t blend(pixel_t bg, pixel_t fg, int a) {   // a in 0..15
   if (a == 0) return bg;
   if (a == 15) return fg;
 #ifdef NUCLEUS_GRAY8
-  return (pixel_t)((bg * (15 - a) + fg * a) / 15);
+  return (pixel_t)(((bg * (15 - a) + fg * a) * 2185) >> 15);   // exactly / 15 for every value up to 255 * 15
 #else
   int r = ((bg >> 11) * (15 - a) + (fg >> 11) * a) / 15;
   int g = (((bg >> 5) & 63) * (15 - a) + ((fg >> 5) & 63) * a) / 15;
@@ -99,20 +104,42 @@ static inline pixel_t blend(pixel_t bg, pixel_t fg, int a) {   // a in 0..15
 #endif
 }
 
+static inline int alpha(const uint8_t *g, int k) { return (k & 1) ? (g[k >> 1] & 15) : (g[k >> 1] >> 4); }
+
+// The part of a glyph's cell that has ink, found the first time the glyph is drawn: cells are sized to the
+// font's largest glyph, so most of a cell is empty, and drawing visits only this box.
+typedef struct { uint8_t x0, y0, x1, y1, known; } ink_t;   // [x0, x1) x [y0, y1); x0 == x1 when there is none
+static ink_t ink_boxes[FONT_COUNT][FONT_GLYPHS];
+static const ink_t *ink_box(int f, int gi, const uint8_t *g) {
+  ink_t *k = &ink_boxes[f][gi];
+  if (k->known) return k;
+  const font_def_t *F = &font_table[f];
+  int x0 = F->w, y0 = F->h, x1 = 0, y1 = 0;
+  for (int j = 0; j < F->h; j++)
+    for (int i = 0; i < F->w; i++)
+      if (alpha(g, j * F->w + i)) { if (i < x0) x0 = i; if (i >= x1) x1 = i + 1; if (j < y0) y0 = j; y1 = j + 1; }
+  if (x1 == 0) x0 = y0 = 0;
+  k->x0 = (uint8_t)x0; k->y0 = (uint8_t)y0; k->x1 = (uint8_t)x1; k->y1 = (uint8_t)y1; k->known = 1;
+  return k;
+}
+
 // A glyph's cell is w x h alpha values; a proportional font's cell starts F->pad pixels left of the pen.
 static void glyph(dmabuf_t *b, int x, int y, int f, int gi, pixel_t fg) {
   const font_def_t *F = &font_table[f];
   const uint8_t *g = F->data + (size_t)gi * ((F->w * F->h + 1) / 2);
+  const ink_t *ik = ink_box(f, gi, g);
   x -= F->pad;
-  for (int j = 0; j < F->h; j++) {
-    int py = y + j;
-    if (py < 0 || py >= b->h) continue;
-    for (int i = 0; i < F->w; i++) {
-      int px = x + i;
-      if (px < 0 || px >= b->w) continue;
-      int k = j * F->w + i;
-      int a = (k & 1) ? (g[k >> 1] & 15) : (g[k >> 1] >> 4);
-      if (a) { pixel_t *p = b->back + (size_t)py * b->w + px; *p = blend(*p, fg, a); }
+  int i0 = ik->x0, i1 = ik->x1, j0 = ik->y0, j1 = ik->y1;   // the ink, clipped to the buffer
+  if (x + i0 < 0) i0 = -x;
+  if (x + i1 > b->w) i1 = b->w - x;
+  if (y + j0 < 0) j0 = -y;
+  if (y + j1 > b->h) j1 = b->h - y;
+  for (int j = j0; j < j1; j++) {
+    pixel_t *row = b->back + (size_t)(y + j) * b->w;
+    int k = j * F->w;
+    for (int i = i0; i < i1; i++) {
+      int a = alpha(g, k + i);
+      if (a) row[x + i] = blend(row[x + i], fg, a);
     }
   }
   charge((double)F->w * F->h * PROFILE.text_ns_per_px);
@@ -196,15 +223,25 @@ char *gfx_fonts_json(void) {
 
 // Compare what was drawn (back) with what the panel shows (front), copy the changes to front, and
 // return the changed areas as rectangles (x, y, w, h), at most one per 16-row band before merging.
+// equal(a, b, n): n bytes, a word at a time when both are word-aligned (rows and bands of the framebuffers are)
+static bool equal(const void *a, const void *b, size_t n) {
+  if (((uintptr_t)a | (uintptr_t)b | n) & 3) return !memcmp(a, b, n);
+  const uint32_t *p = a, *q = b;
+  for (size_t i = 0, m = n / 4; i < m; i++) if (p[i] != q[i]) return false;
+  return true;
+}
+
 int gfx_commit(dmabuf_t *b, int *rects, int max_rects) {
   enum { BAND = 16 };
   int n = 0;
   for (int y0 = 0; y0 < b->h; y0 += BAND) {
     int y1 = y0 + BAND < b->h ? y0 + BAND : b->h;
+    size_t row = (size_t)b->w * sizeof(pixel_t);
+    if (equal(b->back + (size_t)y0 * b->w, b->front + (size_t)y0 * b->w, row * (y1 - y0))) continue;   // the whole band at once
     int minx = b->w, maxx = -1, miny = b->h, maxy = -1;
     for (int y = y0; y < y1; y++) {
       const pixel_t *bp = b->back + (size_t)y * b->w, *fp = b->front + (size_t)y * b->w;
-      if (!memcmp(bp, fp, (size_t)b->w * sizeof(pixel_t))) continue;
+      if (equal(bp, fp, row)) continue;
       int l = 0, r = b->w - 1;
       while (bp[l] == fp[l]) l++;
       while (bp[r] == fp[r]) r--;

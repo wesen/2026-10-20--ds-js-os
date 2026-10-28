@@ -130,6 +130,7 @@ static void prof_reset(void) {
     W->prof_engine_us = W->prof_render_us = 0; W->prof_segments = W->prof_steps = 0;
     prof.cpu0[i] = W->cpu_us; prof.gcs0[i] = W->gcs;
   }
+  vm_op_prof_reset();
 }
 
 static void prof_print(void) {
@@ -145,6 +146,14 @@ static void prof_print(void) {
     printf("  %-11s %5llu %7.1f %9.1f %10.1f %10.1f %9.1f %7.2f %10.0f %4d\n", W->name, (unsigned long long)W->prof_segments, W->prof_segments / secs,
            cpu, eng, ren, cpu - eng - ren, cpu / W->prof_segments, (double)W->prof_steps / W->prof_segments, (int)(W->gcs - prof.gcs0[i]));
   }
+  // host operations, most time first (inside "engine ms" above; the rest of engine time is the interpreter and GC)
+  const op_prof_t *ops;
+  int n = vm_op_prof(&ops), order[96], m = 0;
+  for (int i = 0; i < n && m < 96; i++) if (ops[i].n) order[m++] = i;
+  for (int i = 1; i < m; i++) for (int j = i; j > 0 && ops[order[j]].us > ops[order[j - 1]].us; j--) { int x = order[j]; order[j] = order[j - 1]; order[j - 1] = x; }
+  printf("  host op          calls   total ms   us/call\n");
+  for (int i = 0; i < m; i++)
+    printf("  %-15s %6lu %10.1f %9.1f\n", ops[order[i]].name, (unsigned long)ops[order[i]].n, ops[order[i]].us / 1000.0, (double)ops[order[i]].us / ops[order[i]].n);
 }
 
 void console_exec(char *line) {

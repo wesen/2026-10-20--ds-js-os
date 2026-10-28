@@ -532,17 +532,35 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart }, { "sys.front", op_sys_front }, { "timer.set", op_timer_set },
 };
 
+#define N_SYNC_OPS (sizeof SYNC_OPS / sizeof SYNC_OPS[0])
+static const char *ASYNC_OPS[] = { "sleep", "ask", "i2c", "epd.update" };
+#define N_ASYNC_OPS (sizeof ASYNC_OPS / sizeof ASYNC_OPS[0])
+
+// Time spent in each host operation, from the call into C (name lookup included) to its return. Real-time mode
+// only, like the kernel's prof counters, so host captures cannot change.
+static op_prof_t op_prof[N_SYNC_OPS + N_ASYNC_OPS];
+int vm_op_prof(const op_prof_t **out) {
+  for (size_t i = 0; i < N_SYNC_OPS + N_ASYNC_OPS; i++) op_prof[i].name = i < N_SYNC_OPS ? SYNC_OPS[i].name : ASYNC_OPS[i - N_SYNC_OPS];
+  *out = op_prof;
+  return (int)(N_SYNC_OPS + N_ASYNC_OPS);
+}
+void vm_op_prof_reset(void) { memset(op_prof, 0, sizeof op_prof); }
+static void op_prof_add(size_t i, vtime_t t0) { if (K.realtime) { op_prof[i].us += port_clock() - t0; op_prof[i].n++; } }
+
 JSValue js_nucleus_k(JSContext *ctx, JSValue *this_val, int argc, JSValue *argv) {
   (void)this_val;
   argc &= ~FRAME_CF_CTOR;
   world_t *W = WORLD;
   if (argc < 1) return fail(ctx, "__k needs an operation");
+  vtime_t t0 = K.realtime ? port_clock() : 0;
   char *op = sarg(ctx, argv, argc, 0);
-  for (size_t i = 0; op && i < sizeof SYNC_OPS / sizeof SYNC_OPS[0]; i++)
+  for (size_t i = 0; op && i < N_SYNC_OPS; i++)
     if (!strcmp(op, SYNC_OPS[i].name)) {
       free(op);
       K.seg_cost += 1;   // a host call costs about a microsecond
-      return SYNC_OPS[i].fn(ctx, W, argc - 1, argv + 1);
+      JSValue r = SYNC_OPS[i].fn(ctx, W, argc - 1, argv + 1);
+      op_prof_add(i, t0);
+      return r;
     }
   JSValue r = fail(ctx, "no such kernel operation: %s", op ? op : "?");
   free(op);
@@ -557,6 +575,7 @@ JSValue js_nucleus_ka(JSContext *ctx, JSValue *this_val, int argc, JSValue *argv
   argc &= ~FRAME_CF_CTOR;
   world_t *W = WORLD;
   if (argc < 1) return fail(ctx, "__ka needs an operation");
+  vtime_t t0 = K.realtime ? port_clock() : 0;
   char *op = sarg(ctx, argv, argc, 0);
   argc--; argv++;
   K.seg_cost += 1;
@@ -605,6 +624,7 @@ JSValue js_nucleus_ka(JSContext *ctx, JSValue *this_val, int argc, JSValue *argv
     }
     free(mode);
   } else r = fail(ctx, "no such kernel operation: %s", op);
+  for (size_t i = 0; op && i < N_ASYNC_OPS; i++) if (!strcmp(op, ASYNC_OPS[i])) op_prof_add(N_SYNC_OPS + i, t0);
   free(op);
   return r;
 }

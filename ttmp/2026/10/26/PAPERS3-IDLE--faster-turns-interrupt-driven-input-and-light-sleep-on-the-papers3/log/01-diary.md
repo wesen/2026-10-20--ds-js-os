@@ -870,3 +870,119 @@ reconnected the moment the cable went back in.
 - Host USB log: `journalctl -k | grep "usb 3-6"`.
 - Logs: `out-s3/p4/usb-det.log` (GPIO5 = 0), `power-in.log`, `boot.log`, `battery.log` (test 2),
   `battery-2.log` (test 3).
+
+## Step 9: P5 begins: where a System-app repaint goes, and faster glyphs
+
+P5 is about making turns cheaper. The first target is the System app, which repaints once a second while
+it is on screen. The profiler could not say what a compositor segment spends its time on, because time in
+host calls counts as "engine". It now times every host operation, and the answer is clear. A repaint of
+the System app costs the compositor 109 ms:
+
+- 29 ms drawing text;
+- 22 ms comparing the back and front framebuffers;
+- 16 ms filling;
+- about 37 ms in the interpreter and the collector.
+
+Faster glyph drawing cut the text cost almost in half, to 94 ms per repaint. Fill and commit did not
+move: they are bound by PSRAM bandwidth, not by their loops.
+
+### Prompt Context
+
+**User prompt (verbatim):** "what's next?", then "ok, commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)"
+**Assistant interpretation:** Start P5 with the System app's repaint, the first item of the plan given in answer to "what's next?".
+**Inferred user intent:** Faster, cheaper turns, measured on the device, with commits and this diary kept up to date.
+
+### What I did
+
+- `nucleus/vm_mqjs.c`:
+  - `op_prof[]`, one entry per sync op (`SYNC_OPS`) and per async op (`sleep`, `ask`, `i2c`,
+    `epd.update`);
+  - `js_nucleus_k` and `js_nucleus_ka` add the time from entry, including the name lookup, to return;
+  - real-time mode only, as with the other prof counters;
+  - exported as `vm_op_prof` and `vm_op_prof_reset` (`nucleus.h`, `op_prof_t`).
+- `main_s3.c`: `prof reset` clears the op times; `prof` lists the ops by total time.
+- `nucleus/gfx.c`:
+  - `gfx_fill` with 8-bit gray: `memset` per row, or one `memset` for full-width fills;
+  - `blend` with 8-bit gray: `(v * 2185) >> 15` instead of `v / 15`, checked equal for every v in
+    0..3825;
+  - `glyph`:
+    - a per-glyph ink box (`ink_boxes[FONT_COUNT][FONT_GLYPHS]`), computed the first time the glyph is
+      drawn;
+    - clipping done once per glyph instead of per pixel, and a row pointer.
+  - `gfx_commit`: `equal()` compares words when both pointers and the length are word-aligned. It
+    compares a whole 16-row band first, then row by row only in a band that differs.
+- Measurement window: `s3cap.py --no-reset -s 32 -c "8 tap 111 276" -c "12 prof reset" -c "28 prof" -c "30 tap 104 907"`
+  (System in front for 16 s). Logs: `out-s3/p5/system-baseline.log`, then `system-gfx.log`.
+
+### Why
+
+- The `prof` table from P0 put the System app's cost in the compositor, at about 34 ms per segment, but
+  could not split it further. Host ops were the obvious unknown: the drawing primitives, the
+  framebuffer diff, and the kernel queries.
+- The glyph loop visited every pixel of a cell with two bounds checks and a nibble decode. Cells are
+  sized to the font's largest glyph (31×25 for `s`), so most of each visit found nothing.
+
+### What worked
+
+- Baseline, System in front, 16 s (14 repaints):
+
+  | world / op | before | after |
+  |---|---|---|
+  | compositor cpu | 1531.3 ms | 1315.2 ms |
+  | `gfx.text` | 1232 calls, 406.8 ms (330 µs each) | 223.2 ms (181 µs each) |
+  | `gfx.commit` | 14 calls, 21.8 ms each | 19.2 ms each |
+  | `gfx.fill` | 482 calls, 231.2 ms | 236.6 ms |
+  | `gfx.measure` | 1176 calls, 40 µs each | 36.5 µs each |
+  | `sys.worlds` (System app) | 10.2 ms each | 10.5 ms each |
+  | `sys.stats` | 2.5 ms each | 2.5 ms each |
+
+- Per repaint, the compositor went from 109 ms to 94 ms.
+- Host gates:
+  - `make shots` (PicoCalc) and `make BOARD=papers3 shots`: `git status --short out out-papers3` is empty;
+  - `make BOARD=papers3 SAN=1 shots`: no sanitizer report, and the captures are identical.
+
+### What didn't work
+
+- `memset` did not make fills faster on the device (491.9 µs per call against 479.6). The full-screen
+  clear at the start of every paint writes 518 KB of PSRAM, which takes about 16 ms either way. That is
+  roughly 32 MB/s: each cache line is read in before it is written, then written back.
+- The word compare took commit only from 21.8 to 19.2 ms. Reading 2 × 518 KB is the cost.
+
+### What I learned
+
+- On this board, a full repaint is bound by PSRAM bandwidth. The clear, the redraw and the commit each
+  touch the whole 518 KB framebuffer, and no inner-loop work changes that. The next gain has to come
+  from touching less of it: repaint only what changed, and compare only rows that were drawn.
+- `sys.worlds` costs 10 ms a call: the kernel's JSON for 14 worlds, and the app parsing it. That is the
+  System app's own largest cost.
+
+### What was tricky to build
+
+- Keeping the glyph change pixel-exact. Only pixels with alpha 0 are skipped, as before, and the blend
+  formula is exact over its whole input range. The captures confirm it: none changed.
+
+### What warrants a second pair of eyes
+
+- `ink_boxes` costs 5 bytes × FONT_COUNT × FONT_GLYPHS: 5.4 KB of internal RAM on the PaperS3. Glyph
+  cells must stay under 256 pixels on each side for the `uint8_t` fields; the largest today is 93×79.
+- The op timer includes the op-name lookup (`sarg` plus a linear `strcmp` over 45 names), which is part
+  of the real cost of a call.
+
+### What should be done in the future
+
+- Retained painting in the compositor: redraw only the nodes whose content changed, and let the
+  framebuffer record which rows were drawn so that commit compares only those.
+- A cheaper `sys.worlds` for the System app.
+
+### Code review instructions
+
+- `nucleus/gfx.c` (`gfx_fill`, `blend`, `ink_box`, `glyph`, `equal`, `gfx_commit`); `nucleus/vm_mqjs.c`
+  (`op_prof`, `js_nucleus_k`, `js_nucleus_ka`); `main_s3.c` `prof_print`.
+- Validate:
+  - `make shots && make BOARD=papers3 shots && git status --short out out-papers3` (empty);
+  - on the device, the window above.
+
+### Technical details
+
+- Per repaint after this step: commit 19 ms, fill 17 ms (one full-screen clear plus 33 small fills),
+  text 16 ms (88 calls), measure 3 ms, about 37 ms in the interpreter and the collector.
