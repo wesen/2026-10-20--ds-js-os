@@ -1,0 +1,77 @@
+llup: 1| Pulldown: 0| Intr:0 
+I (823) pm: Frequency switching config: CPU_MAX: 240, APB_MAX: 80, APB_MIN: 40, Light sleep: ENABLED
+I (824) sleep: Code start at 0x42000020, total 340568, data start at 0x3c000000, total 33554432 Bytes
+I (824) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (825) pm: external power out (GPIO4)
+I (825) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (826) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (1049) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (1050) main_task: Returned from app_main()
+[   504.195] calibration on the real clock: the 100k loop took 415.7 ms (the model says 250), fib(20) 84.7 ms (the model says 68.4)
+[   514.774] booting 14 worlds from js/system.json
+[  3616.581] touch: touch controller GT911
+E (4673) gpio: gpio_install_isr_service(502): GPIO isr service already installed
+I (4673) gpio: GPIO[48]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:4 
+up 63.7 s; the last reset: power-on (1)
+#OK boot
+Time since bootup: 64747740 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         114480         3366669         6  %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+power_in        NO_LIGHT_SLEEP  0      1         1              14356254        23 %
+i2c             APB_FREQ_MAX    0      0         62             77233           1  %
+epd             NO_LIGHT_SLEEP  0      0         7              7683712         12 %
+epd             CPU_FREQ_MAX    0      0         7              7683712         12 %
+kernel          CPU_FREQ_MAX    0      0         233            4568599         8  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         3              14093410        22 %
+rtos1           CPU_FREQ_MAX    0      1         14904          13820535        22 %
+rtos0           CPU_FREQ_MAX    0      0         236111         20159979        32 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        24540523    37%
+APB_MIN   40 M        10063406    15%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        30144755    46%
+
+Sleep stats:
+light_sleep_counts:18  light_sleep_reject_counts:0
+#OK pm
+prof over 66.5 s: the kernel task woke 92 times (1.4/s) and was blocked 92% of the time; worlds ran 4516 ms (6.8%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  touch         124     1.9     506.0      502.0        2.1       1.9    4.08        141   10
+  clock           5     0.1     219.0      218.8        0.1       0.1   43.79         99    7
+  power           3     0.0     211.6      211.5        0.0       0.1   70.54         80    7
+  display        17     0.3     260.7      260.1        0.3       0.3   15.33        194    5
+  compositor     39     0.6    1149.9     1148.7        0.6       0.6   29.48        475    2
+  launcher       16     0.2     465.4      403.3       61.7       0.3   29.09        173    9
+  system          2     0.0     258.4      249.0        9.3       0.0  129.21        200    2
+  repl            1     0.0     201.8      201.8        0.0       0.0  201.78         31    2
+  sandbox         1     0.0     189.0      189.0        0.0       0.0  189.03         25    2
+  faults          2     0.0     225.1      218.7        6.4       0.0  112.55        166    3
+  flaky           1     0.0     195.6      195.6        0.0       0.0  195.62         24    7
+  touches         9     0.1     220.4      211.5        8.7       0.2   24.48        113    3
+  sketch          1     0.0     192.5      192.5        0.0       0.0  192.50         31    2
+  about           2     0.0     220.9      215.4        5.4       0.0  110.44        108    3
+#OK prof
+t = 66487.3 ms, lane busy 4516.1 ms (6.8%), 105 turns, 20 published, 84 delivered, 0 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  touch       driver   idle            39    506.00     38.8     64    0  
+  clock       driver   idle             2    218.97     33.1     48    0  
+  power       driver   idle             2    211.62     32.6     48    0  
+  display     driver   idle             9    260.66     35.1     64    0  
+  compositor  service  idle            27   1149.87     68.6    448    0  
+  launcher    app      idle            15    465.36     37.0     96    0  
+  system      app      idle             1    258.41     40.0    160    0  
+  repl        app      idle             0    201.78     35.2    128    0  
+  sandbox     service  idle             0    189.03     32.3    128    0  
+  faults      app      idle             1    225.09     35.1     96    0  
+  flaky       service  idle             0    195.62     31.3     48    0  
+  touches     app      idle             8    220.35     33.2     96    0  
+  sketch      app      idle             0    192.50     32.9    192    0  
+  about       app      idle             1    220.87     33.2     96    0  
+  bus i2c1  busy   100.49 ms, 62 transfers, 1843 bytes, 0 errors
+  bus epd0  busy  7686.77 ms, 7 transfers, 2007032 bytes, 0 errors
+#OK stats

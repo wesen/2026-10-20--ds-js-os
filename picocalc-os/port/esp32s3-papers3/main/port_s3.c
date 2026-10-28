@@ -102,6 +102,28 @@ static void gpio_isr(void *arg) {
 // ---- power management ---------------------------------------------------------------------------------------------
 static esp_pm_lock_handle_t pm_locks[PM_LOCKS][2];
 
+#if CONFIG_PM_ENABLE
+// External power keeps the chip out of light sleep. Light sleep turns the USB pads off, so a host that is plugged
+// in while the chip sleeps cannot enumerate it, and IDF's own lock (CONFIG_USJ_NO_AUTO_LS_ON_CONNECTION) only
+// starts once the host sends frames, i.e. after enumeration. The signal is the charger's status pin (GPIO4, low
+// while charging): the board's USB-detect line (GPIO5 in M5's demo) reads 0 with USB in on this unit. Once a host
+// has enumerated the chip, IDF's lock holds it awake even after charging ends. The pin's interrupt watches for the
+// other level each time; while it is high the low level is also a wake source, so plugging in wakes the chip.
+#define PIN_POWER_IN PIN_CHARGE
+static esp_pm_lock_handle_t power_lock;
+static void power_in_isr(void *arg) {
+  (void)arg;
+  if (gpio_get_level(PIN_POWER_IN) == 0) {
+    esp_pm_lock_acquire(power_lock);
+    gpio_wakeup_disable(PIN_POWER_IN);
+    gpio_set_intr_type(PIN_POWER_IN, GPIO_INTR_HIGH_LEVEL);
+  } else {
+    esp_pm_lock_release(power_lock);
+    gpio_wakeup_enable(PIN_POWER_IN, GPIO_INTR_LOW_LEVEL);   // also sets the interrupt type to the low level
+  }
+}
+#endif
+
 void s3_pm_init(void) {
 #if CONFIG_PM_ENABLE
   esp_pm_config_t pm = { .max_freq_mhz = 240, .min_freq_mhz = 40, .light_sleep_enable = true };
@@ -111,6 +133,19 @@ void s3_pm_init(void) {
   esp_pm_lock_create(ESP_PM_NO_LIGHT_SLEEP, 0, "epd", &pm_locks[PM_EPD][1]);
   esp_pm_lock_create(ESP_PM_APB_FREQ_MAX, 0, "i2c", &pm_locks[PM_I2C][0]);
   esp_sleep_enable_gpio_wakeup();   // watched pins wake the chip (port_gpio_watch)
+
+  esp_pm_lock_create(ESP_PM_NO_LIGHT_SLEEP, 0, "power_in", &power_lock);
+  gpio_config_t c = { .pin_bit_mask = 1ULL << PIN_POWER_IN, .mode = GPIO_MODE_INPUT, .pull_up_en = GPIO_PULLUP_ENABLE };
+  esp_err_t e = gpio_install_isr_service(0);
+  if (gpio_config(&c) != ESP_OK || (e != ESP_OK && e != ESP_ERR_INVALID_STATE) ||
+      gpio_isr_handler_add(PIN_POWER_IN, power_in_isr, NULL) != ESP_OK) {
+    ESP_LOGE("pm", "no external-power detection: the chip stays awake");
+    esp_pm_lock_acquire(power_lock);
+    return;
+  }
+  ESP_LOGI("pm", "external power %s (GPIO%d)", gpio_get_level(PIN_POWER_IN) ? "out" : "in", PIN_POWER_IN);
+  power_in_isr(NULL);   // take the lock (or arm the wakeup) for the level now
+  gpio_intr_enable(PIN_POWER_IN);
 #endif
 }
 void s3_pm_hold(int which) { for (int i = 0; i < 2; i++) if (pm_locks[which][i]) esp_pm_lock_acquire(pm_locks[which][i]); }

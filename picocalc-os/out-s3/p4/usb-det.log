@@ -1,0 +1,70 @@
+I (320) esp_image: segment 4: paddr=0019321c vaddr=40374b88 sizeI (766) esp_psram: SPI SRAM memory test OK
+I (774) cpu_start: Pro cpu start user code
+I (774) cpu_start: cpu freq: 240000000 Hz
+I (775) app_init: Application information:
+I (775) app_init: Project name:     picocalc-os-papers3
+I (775) app_init: App version:      56496ac-dirty
+I (775) app_init: Compile time:     Oct 28 2026 16:43:06
+I (775) app_init: ELF file SHA256:  5a012a92e...
+I (775) app_init: ESP-IDF:          v5.3.4
+I (775) efuse_init: Min chip rev:     v0.0
+I (776) efuse_init: Max chip rev:     v0.99 
+I (776) efuse_init: Chip rev:         v0.2
+I (776) heap_init: Initializing. RAM available for dynamic allocation:
+I (776) heap_init: At 3FCA5C60 len 00043AB0 (270 KiB): RAM
+I (776) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (776) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (777) heap_init: At 600FE030 len 00001FB8 (7 KiB): RTCRAM
+I (777) esp_psram: Adding pool of 8192K of PSRAM memory to heap allocator
+I (778) spi_flash: detected chip: generic
+I (778) spi_flash: flash io: dio
+I (778) sleep: Configure to isolate all GPIO pins in sleep state
+I (779) sleep: Enable automatic switching of GPIO sleep configuration
+I (780) main_task: Started on CPU0
+I (781) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (782) main_task: Calling app_main()
+I (782) picocalc-os: picocalc-os on esp32s3 rev 0.2, 2 cores, 8192 KB PSRAM
+heap: internal 313223 free (largest 217088), psram 8385916 free (largest 8257536)
+I (783) pm: Frequency switching config: CPU_MAX: 240, APB_MAX: 80, APB_MIN: 40, Light sleep: ENABLED
+I (783) sleep: Code start at 0x42000020, total 340468, data start at 0x3c000000, total 33554432 Bytes
+I (784) gpio: GPIO[5]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (785) pm: USB out (GPIO5)
+I (785) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (786) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (786) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (787) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (1007) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (1008) main_task: Returned from app_main()
+[   504.226] calibration on the real clock: the 100k loop took 415.7 ms (the model says 250), fib(20) 84.8 ms (the model says 68.4)
+[   514.400] booting 14 worlds from js/system.json
+gpio 5: 0
+#OK gpio
+gpio 4: 0
+#OK gpio
+Time since bootup: 2833185 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         0              0               0  %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+usb_in          NO_LIGHT_SLEEP  0      0         0              0               0  %
+i2c             APB_FREQ_MAX    0      0         0              0               0  %
+epd             NO_LIGHT_SLEEP  0      0         0              0               0  %
+epd             CPU_FREQ_MAX    0      0         0              0               0  %
+kernel          CPU_FREQ_MAX    0      1         10             2087578         74 %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         1              2830744         100%
+rtos1           CPU_FREQ_MAX    0      1         229            2615360         93 %
+rtos0           CPU_FREQ_MAX    0      0         2761           206540          8  %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        0           0 %
+APB_MIN   40 M        50298       1 %
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        2783568     98%
+
+Sleep stats:
+light_sleep_counts:0  light_sleep_reject_counts:0
+#OK pm
+[  3600.051] touch: touch controller GT911
+E (4614) gpio: gpio_install_isr_service(502): GPIO isr service already installed
+I (4615) gpio: GPIO[48]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:4 

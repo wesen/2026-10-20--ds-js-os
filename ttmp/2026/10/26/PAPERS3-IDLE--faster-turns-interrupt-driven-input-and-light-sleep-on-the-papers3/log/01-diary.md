@@ -768,3 +768,103 @@ the FreeRTOS tick cannot be suppressed, so each core takes about 1000 ticks a se
   250 ms). One panel update a second, which keeps the EPD lock held about half the time.
 - `heap` after P4: `internal 87543 free (largest 31744), psram 3733896 free`; the kernel task's stack has
   28616 bytes never used.
+
+## Step 8: On battery: USB re-enumeration and the power latch
+
+The first two unplug tests found two bugs in P4. Both are fixed, and the third test shows light sleep
+working on battery: 18 sleeps and 24.5 s asleep in the 53 s between unplug and replug. The board then
+reconnected the moment the cable went back in.
+
+### Prompt Context
+
+**User prompt (verbatim):** "I did, i m ucked about with it a bit", "sorry, i unplugged, then pressed power, then plugged back in. what should i do?", "ok", "plugged"
+**Assistant interpretation:** The user ran the unplug tests on the bench and reported back after each.
+**Inferred user intent:** See the idle board actually sleep on battery and come back on USB.
+
+### What I did
+
+- Test 1 (P4 as committed): after replug the host logged `device descriptor read/64, error -71`, `Device not
+  responding to setup address`, then `unable to enumerate USB device`.
+- Fix 1, `port_s3.c`: a `power_in` `NO_LIGHT_SLEEP` lock, held while external power is present.
+  - The signal is the charger status pin, GPIO4, which is low while charging. The pin's interrupt watches
+    for the opposite level each time.
+  - While the pin is high, its low level is a light-sleep wake source, so plugging in wakes the chip.
+  - First tried GPIO5, the USB-detect line in M5's PaperS3 demo (`hal.cpp`: `PIN_USB_DET GPIO_NUM_5 // 1:
+    USB-IN`). It read 0 with USB in on this unit (new console command `gpio N`).
+  - `s3_pm_init` moved after `port_s3_init`, which configures GPIO4 with its pull-up.
+- Test 2: it re-enumerated at once on replug, but uptime was 31.7 s: the board had switched off on
+  battery and booted from USB power.
+- Fix 2, `bus_s3.cpp`: `gpio_sleep_sel_dis` for the power latch (GPIO44) and the panel's 15 pins.
+  - `CONFIG_PM_SLP_DISABLE_GPIO` isolates every pin in light sleep. Setting it to `n` in
+    `sdkconfig.defaults` had no effect: `CONFIG_ESP_SLEEP_GPIO_RESET_WORKAROUND` (default y on the S3)
+    selects it.
+  - That workaround exists because input pins can reset the S3 on an ESD pulse during light sleep, so it
+    stays on and only these output pins are exempt.
+- New console command `boot`: uptime and `esp_reset_reason()`.
+- Test 3 (`out-s3/p4/battery-2.log`): unplugged at 17:15:49, replugged at 17:16:42; re-enumerated at once.
+
+### Why
+
+- Light sleep turns the USB Serial/JTAG pads off. IDF's `CONFIG_USJ_NO_AUTO_LS_ON_CONNECTION` lock is
+  driven by SOF frames, which a host only sends after enumeration. A host plugged into a sleeping board
+  sees the pull-up blink on each wake, but the chip is asleep again within 3 ms, so enumeration never
+  completes.
+- `s3.h` already said it: GPIO44 is "the power latch's off pulse: held low, or the board turns itself off".
+  Isolated in sleep, it floats.
+
+### What worked
+
+- Test 3, `pm` (64.7 s since boot, about 11 of them on USB):
+  - `SLEEP 40 M 24540523 37%`, `light_sleep_counts:18 light_sleep_reject_counts:0`;
+  - the kernel held full speed 8% of the time;
+  - the EPD locks 12% (boot refreshes and taps);
+  - `power_in` count 1: it was taken again on replug.
+- `./qemu.sh` still boots the conformance worlds (PM is off there; `boot` and `gpio` work).
+
+### What didn't work
+
+- GPIO5 as USB detect (see above).
+- `CONFIG_PM_SLP_DISABLE_GPIO=n` in `sdkconfig.defaults` was overridden by a `select`.
+
+### What I learned
+
+- `pm` locks with profiling answer the questions a current meter would raise, short of the current itself.
+  They show who keeps the chip awake and how long it sleeps.
+- `gpio_wakeup_enable` already exempts its pin from sleep isolation (`gpio_hal_sleep_sel_dis`), so the
+  touch and charger wake pins did not need it.
+
+### What was tricky to build
+
+- Telling the failures apart without a console on battery. Each test left only cumulative statistics
+  since boot. The time since boot, compared with the host's USB log, told "was asleep and could not
+  enumerate" (test 1) from "switched off" (test 2).
+
+### What warrants a second pair of eyes
+
+- Test 3's `boot` said `power-on` with an uptime that puts the boot at the unplug (17:15:49). That is
+  either the user pressing the power button after unplugging, or a power dip on the switch from USB to
+  battery. Pending the user's answer.
+- With a full battery the charger stops and GPIO4 goes high even with USB in. A sleeping board then does
+  not wake when plugged in; the power button is the fallback. A board that a host has already enumerated
+  stays awake through IDF's lock.
+
+### What should be done in the future
+
+- An untouched idle window of several minutes on battery, for the sleep fraction at rest.
+- A current measurement, if a USB meter is at hand.
+
+### Code review instructions
+
+- `port_s3.c`: `power_in_isr` and `s3_pm_init`.
+- `bus_s3.cpp`: `KEEP[]`.
+- `main_s3.c`: the `boot` and `gpio` commands.
+- Validate:
+  1. flash, then `s3cap.py --no-reset -s 5 -c "1 boot" -c "2 pm"`: `power_in` is active on USB;
+  2. unplug for a minute, replug: the board re-enumerates;
+  3. `boot` shows the uptime, and `pm` shows `light_sleep_counts` > 0.
+
+### Technical details
+
+- Host USB log: `journalctl -k | grep "usb 3-6"`.
+- Logs: `out-s3/p4/usb-det.log` (GPIO5 = 0), `power-in.log`, `boot.log`, `battery.log` (test 2),
+  `battery-2.log` (test 3).

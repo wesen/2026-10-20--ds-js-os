@@ -26,6 +26,9 @@
 #include "esp_heap_caps.h"
 #include "esp_log.h"
 #include "esp_pm.h"
+#include "esp_timer.h"
+#include "esp_system.h"
+#include "driver/gpio.h"
 #include "esp_psram.h"
 #include "driver/usb_serial_jtag_vfs.h"
 #include "freertos/task.h"
@@ -160,6 +163,13 @@ void console_exec(char *line) {
     char *j = !strcmp(cmd, "worlds") ? kernel_worlds_json() : hw_handles_json();
     printf("%s\n", j); free(j);
   } else if (!strcmp(cmd, "heap")) heap_report();
+  else if (!strcmp(cmd, "boot")) {
+    static const char *WHY[] = { "unknown", "power-on", "external pin", "software", "panic", "interrupt watchdog",
+                                 "task watchdog", "other watchdog", "deep sleep", "brownout", "SDIO" };
+    esp_reset_reason_t r = esp_reset_reason();
+    printf("up %.1f s; the last reset: %s (%d)\n", esp_timer_get_time() / 1e6, r < sizeof WHY / sizeof *WHY ? WHY[r] : "?", r);
+  }
+  else if (!strcmp(cmd, "gpio")) { int pin = atoi(rest); printf("gpio %d: %d\n", pin, gpio_get_level(pin)); }
   else if (!strcmp(cmd, "prof")) { if (!strcmp(rest, "reset")) prof_reset(); else prof_print(); }
 #if CONFIG_PM_ENABLE
   else if (!strcmp(cmd, "pm")) esp_pm_dump_locks(stdout);   // the locks, and (CONFIG_PM_PROFILING) time in each mode
@@ -194,7 +204,7 @@ void console_exec(char *line) {
   } else if (!strcmp(cmd, "shot")) shot();
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap prof [reset] pm | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap prof [reset] pm gpio N boot | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
@@ -291,8 +301,8 @@ void app_main(void) {
   console_init();
   setvbuf(stdout, NULL, _IOLBF, 0);
 
-  s3_pm_init();
   port_s3_init();
+  s3_pm_init();   // after port_s3_init, which configures the charger pin it watches
   bus_s3_init();
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);
   xTaskCreatePinnedToCore(shot_task, "shot", 4096, NULL, 2, &snap.task, 0);

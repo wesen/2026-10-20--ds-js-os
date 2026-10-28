@@ -31,3 +31,5 @@ CONFIG_FREERTOS_USE_TICKLESS_IDLE=y
 CONFIG_FREERTOS_IDLE_TIME_BEFORE_SLEEP=3
 CONFIG_USJ_NO_AUTO_LS_ON_CONNECTION=y
 CONFIG_PM_PROFILING=y
+# Light sleep isolates every pin (CONFIG_PM_SLP_DISABLE_GPIO, forced on by the S3's GPIO reset workaround); the
+# power latch and the panel's pins are exempted in bus_s3.cpp (gpio_sleep_sel_dis).

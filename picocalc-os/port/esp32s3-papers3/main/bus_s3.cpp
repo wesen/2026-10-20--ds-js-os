@@ -209,6 +209,11 @@ extern "C" void bus_s3_init(void) {
   panel->init();
   for (int rot = 0; rot < 4 && panel->width() != 540; rot++) panel->setRotation(rot);   // portrait: 540 x 960
   panel->setAutoDisplay(false);
+  // Light sleep isolates every pin unless told otherwise (CONFIG_PM_SLP_DISABLE_GPIO, which the S3's GPIO reset
+  // workaround forces on). Isolated, the power latch floats and the board switches itself off on battery, and the
+  // panel's power and control lines float; these keep their levels instead.
+  static const int KEEP[] = { PIN_PWROFF, 46, 45, 17, 18, 13, 15, 16, 6, 14, 7, 12, 9, 11, 8, 10 };
+  for (size_t i = 0; i < sizeof KEEP / sizeof *KEEP; i++) gpio_sleep_sel_dis((gpio_num_t)KEEP[i]);
   ESP_LOGI(TAG, "epd0: %d x %d (rotation %d); i2c1 sda=%d scl=%d", (int)panel->width(), (int)panel->height(), panel->getRotation(), PIN_I2C1_SDA, PIN_I2C1_SCL);
 #endif
 
