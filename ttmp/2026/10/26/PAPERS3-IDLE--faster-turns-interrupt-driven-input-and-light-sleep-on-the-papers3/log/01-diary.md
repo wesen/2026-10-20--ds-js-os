@@ -628,3 +628,143 @@ by design never become gestures. The list now keeps the newest seven events.
 
 - Touch window commands:
   `s3cap.py --no-reset -s 100 -c "1 send touches back" -c "2 prof reset" -c "30 shot" -c "60 shot" -c "95 shot" -c "96 prof"`.
+
+## Step 7: P4 and P6, power management and real panel times
+
+The firmware now runs under ESP-IDF power management. The CPU drops to 40 MHz when no lock is held, and
+light sleep is allowed whenever every task waits. The kernel task holds a CPU lock only while worlds run.
+The EPD worker holds full speed and no sleep for one whole panel update. The I2C worker holds the APB
+clock during a transfer. The touch line is also a light-sleep wake source. The EPD worker now waits for
+the waveform to finish (`waitDisplay`), so `stats` and `bus epd0` report the panel's real time (about
+915 ms per full refresh) instead of the time to queue the update. That was P6.
+
+What could not be measured here is light sleep itself. While a host holds the USB console open, the
+USB-serial driver keeps a `NO_LIGHT_SLEEP` lock (95–97% of the time in every dump). With sleep blocked,
+the FreeRTOS tick cannot be suppressed, so each core takes about 1000 ticks a second and climbs back to
+240 MHz for each. On battery this lock goes away.
+
+### Prompt Context
+
+**User prompt (verbatim):** "continue", then "try again" (after the first flash attempt dropped the board off USB)
+**Assistant interpretation:** Go on with P4 (light sleep), and retry the flash now that the board is back.
+**Inferred user intent:** Make the idle device use as little power as the hardware allows, and verify it on the device.
+
+### What I did
+
+- `sdkconfig.defaults`: `CONFIG_PM_ENABLE`, `CONFIG_FREERTOS_USE_TICKLESS_IDLE` (sleep after 3 idle ticks),
+  `CONFIG_USJ_NO_AUTO_LS_ON_CONNECTION` (stay awake while a host is on the console, so the console survives),
+  `CONFIG_PM_PROFILING` (time in each mode for `pm`). `sdkconfig.qemu` turns PM off.
+- `port_s3.c`:
+  - `s3_pm_init` configures 240/40 MHz with light sleep and creates the locks:
+    - kernel: `CPU_FREQ_MAX`;
+    - epd: `CPU_FREQ_MAX` and `NO_LIGHT_SLEEP`;
+    - i2c: `APB_FREQ_MAX`.
+
+    It then calls `esp_sleep_enable_gpio_wakeup()`.
+  - `s3_pm_hold/release`.
+  - `port_gpio_watch` adds `gpio_wakeup_enable` at the pin's active level; `port_gpio_unwatch` removes it.
+- `main_s3.c`:
+  - the kernel loop holds `PM_KERNEL` from the moment it wakes until just before it blocks;
+  - the `pm` console command (`esp_pm_dump_locks`);
+  - `s3_pm_init()` first in `app_main`.
+- `bus_s3.cpp`: the I2C worker holds `PM_I2C` around a transfer. The EPD worker holds `PM_EPD` from the
+  push to `waitDisplay()`, which replaces the old `wait_idle()` after `display()`.
+- `CMakeLists.txt`: `esp_pm`.
+- The first flash failed (`Could not configure port: (5, 'Input/output error')`) and the board left USB.
+  After the power button it came back. `flash.sh` then wrote all three images and booted the app.
+
+### Why
+
+- After P3 the kernel task was blocked 99–100% of the time, but the chip still ran at 240 MHz throughout.
+  The idle work is gone, so the remaining cost is the clock and the chip staying awake.
+- The EPD waveform is timed by the CPU in M5GFX's own task (`Panel_EPD::task_update`, which scans every
+  line per frame through the i80 bus). A frequency change or sleep in the middle of it would distort the
+  waveform, hence one lock for the whole update. Waiting in the worker is what makes that lock exact. It
+  also gives real panel times (P6).
+
+### What worked
+
+- Boot, panel, touch and I2C are unchanged under PM. Tapping the System tile opened it, and the screenshot is correct.
+- `stats` (after one boot and one tap): `bus epd0 busy 8722.87 ms, 8 transfers`. That is about 1.1 s per
+  update, against a few ms before, when only the queueing was timed.
+- Home screen, 37 s idle: `the kernel task woke 13 times (0.4/s) and was blocked 99% of the time; worlds ran 223 ms (0.6%)`.
+- `pm` difference over 40 s of idle on the Home screen:
+
+  | lock / mode | time | share | count |
+  |---|---|---|---|
+  | kernel CPU_FREQ_MAX | 0.33 s | 0.8% | 25 |
+  | epd (both) | 0.62 s | 1.6% | 2 (the minute clock) |
+  | i80_bus_lcd (M5GFX) | 0.35 s | 0.9% | 11880 |
+  | usb_serial_jtag NO_LIGHT_SLEEP | 33.6 s | 84% | (the host's console) |
+  | rtos1 CPU_FREQ_MAX | 11.8 s | 29.5% | 32660 (816/s) |
+  | rtos0 CPU_FREQ_MAX | 4.9 s | 12.3% | 55726 (1393/s) |
+  | mode CPU_MAX | 9.9 s | 24.8% | |
+
+- Host gates: `make shots` and `make BOARD=papers3 shots` leave `out/` and `out-papers3/` unchanged.
+  `./qemu.sh 30` builds without PM, boots the conformance worlds as before, and answers `pm` with
+  "unknown command".
+
+### What didn't work
+
+- With USB connected, light sleep happened only 3–5 times in about 220 s. Those were most likely at boot,
+  before the host opened the port. The `rtos0/rtos1` counts are the 1 kHz tick: with sleep blocked, tickless
+  idle has nothing to skip to. Each tick takes the core to 240 MHz for about 360 µs, which costs more than
+  all the worlds together. This is a property of the measurement setup, not of the firmware, but it means
+  the battery case is still unmeasured.
+- The first `prof reset` of the run was lost because the console was not yet attached. That profile
+  covered boot instead, which explains the 200 ms first segments in `out-s3/p4/console.log`.
+
+### What I learned
+
+- `pm` (`esp_pm_dump_locks`) with profiling is the best idle instrument here. It shows who holds the chip
+  awake, not just whether the kernel task is blocked.
+- M5GFX's EPD task blocks on its queue between updates (`xQueueReceive(..., portMAX_DELAY)` when nothing
+  remains). It is not a source of idle wakeups.
+- `waitDisplay()` polls with `vTaskDelay(1)`. The EPD worker therefore wakes once per tick during an
+  update, which is harmless because the update holds the CPU anyway.
+
+### What was tricky to build
+
+- The lock boundaries. The kernel loop has two places where it goes back without blocking (a due timer,
+  or more messages). The lock must be released before the blocking `xQueueReceive` on every path, or the
+  chip never sleeps. A forgotten release would show in `pm` as `kernel` near 100%, and it shows 0.8%.
+- The QEMU build: PM must be off (QEMU does not model light sleep), and the `pm` command is compiled out
+  with it.
+
+### What warrants a second pair of eyes
+
+- `gpio_wakeup_enable` sets the pin's interrupt type to the wake level. For a level watch (`IRQ_LOW`, the
+  touch line) that is the same type. For an edge watch it would turn the interrupt into a level one. No
+  edge watch exists yet. When one does, `port_gpio_watch` should only enable the wakeup just before sleep,
+  or the ISR should handle the level.
+- If the GT911 held INT low while a finger rests (rather than pulsing it), light sleep would wake again and
+  again during a long press. That costs power only during touches.
+
+### What should be done in the future
+
+- Measure on battery:
+  1. unplug USB on the Home screen and wait a few minutes;
+  2. plug it back in and read `pm` (cumulative): `SLEEP` time and `light_sleep_counts` should then dominate.
+
+  A USB power meter between charger and device would give the current directly.
+- P5: faster turns. The System app's repaint is about 34 ms (250 ms render over 38 segments in the idle
+  window, as it repaints once a second while in front).
+
+### Code review instructions
+
+- `port/esp32s3-papers3/main/port_s3.c` (`s3_pm_init`, the wakeup lines in `port_gpio_watch/unwatch`).
+- `main_s3.c`, `kernel_task`: hold and release.
+- `bus_s3.cpp`: the hold around each I2C transfer and EPD update.
+- Validate:
+  - `./flash.sh`, then `s3cap.py --no-reset -s 44 -c "2 pm" -c "42 pm"` on the Home screen. Compare the dumps:
+    `kernel` and `epd` stay at a few percent.
+  - `./qemu.sh 30` boots.
+
+### Technical details
+
+- Captures: `out-s3/p4/console.log` (boot, tap System, `pm`), `idle.log` (System in front: it repaints
+  every second, so EPD 49%), `idle-home.log`, `idle-delta.log`.
+- System app in front (38 s): display 62 segments, compositor 102 (31.97 ms each), system 38 (render
+  250 ms). One panel update a second, which keeps the EPD lock held about half the time.
+- `heap` after P4: `internal 87543 free (largest 31744), psram 3733896 free`; the kernel task's stack has
+  28616 bytes never used.

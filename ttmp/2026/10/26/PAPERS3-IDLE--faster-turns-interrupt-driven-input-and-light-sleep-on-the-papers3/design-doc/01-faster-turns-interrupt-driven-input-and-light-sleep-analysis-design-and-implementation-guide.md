@@ -824,6 +824,6 @@ Each phase ends with a commit, a diary entry, and the device measurements behind
 | P1 | done | 6ce54c4 | compositor waits are one-shot sleeps; minute-aligned clock; power every 60 s; no 50 ms kernel cap |
 | P2 | done | 6ce54c4 | `timers.stop/start`, `{ paused: true }`; `sys.front` renders only the world on screen (the check is `world_needs(W, "frames")`); focus always waits for the fresh frame. Idle lane 15.2% |
 | P3 | done | a33628d, 50c673a | GPIO interrupts as `irq` messages; touch on GT911 INT (GPIO48) with a 40 ms lift check; verified with real touches. Idle lane 0.4%, kernel task 0.2–0.5 wakeups/s |
-| P4 | not started | | |
+| P4 | done (battery measurement pending) | bed309e | PM on: 240/40 MHz, light sleep, tickless idle; locks for kernel (CPU), EPD update (CPU + no sleep), I2C (APB); touch INT wakes. Idle on USB: kernel 0.8%, EPD 1.6%; the USB console blocks light sleep, so the battery case is still to be measured |
 | P5 | not started | | |
-| P6 | not started | | |
+| P6 | done | bed309e | the EPD worker waits for `waitDisplay()`; `bus epd0` reports about 0.9–1.1 s per update |
