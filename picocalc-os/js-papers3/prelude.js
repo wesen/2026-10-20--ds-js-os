@@ -163,6 +163,7 @@
   Handle.prototype.text = function (x, y, s, font, c, maxw) { return k("gfx.text", this.id, x, y, String(s), font || "m", c, maxw || 0); };
   Handle.prototype.commit = function () { return k("gfx.commit", this.id); };
   Handle.prototype.invalidate = function () { k("gfx.invalidate", this.id); };
+  Handle.prototype.hash = function () { return k("gfx.hash", this.id); };
   function wrap(info) { return info ? known[info.id] || new Handle(info) : null; }
 
   // JSON in this engine takes no replacer or reviver, so handles are found and restored by walking the value.

@@ -77,19 +77,90 @@ function textAt(fb, x, y, w, s, f, c, align) {
   fb.text(tx, y, s, f, c, w - (tx - x));
 }
 
-function draw(fb, n, x, y, w, h) {
+// ---- retained painting ------------------------------------------------------------------------------------
+// The back buffer still holds the last paint, so a paint redraws only what changed. draw() is given the node
+// drawn in the same box last time (o). If the two are equal, the pixels are already right and only the node's
+// regions are recorded again. A container whose own look is unchanged and whose children keep their boxes
+// recurses into them, and a table redraws only its changed rows. Anything else is cleared to the background
+// behind it and drawn afresh. Each drawn node remembers its box (_b), the regions it made (_r), the box its
+// pixels can reach (_e: wider than _b for a list's scroll bar or an ink pad's border) and its ink area (_ink).
+// A full paint (o == null everywhere) draws exactly what it always did; "paintcheck" compares the two.
+function same(a, b, skip) {   // equal as data, ignoring the recorded _ fields (and the key `skip`)
+  if (a === b) return true;
+  if (typeof a !== "object" || typeof b !== "object" || !a || !b || Array.isArray(a) !== Array.isArray(b)) return false;
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) if (!same(a[i], b[i])) return false;
+    return true;
+  }
+  var n = 0, k;
+  for (k in a) { if (k.charAt(0) === "_" || k === skip) continue; n++; if (!same(a[k], b[k])) return false; }
+  for (k in b) if (k.charAt(0) !== "_" && k !== skip) n--;
+  return n === 0;
+}
+function sameBox(a, b) { return !a ? !b : !!b && a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3]; }
+function keep(n, o) {
+  for (var i = 0; i < o._r.length; i++) regions.push(o._r[i]);
+  n._b = o._b; n._r = o._r; n._e = o._e;
+  if (o._ink) inkArea = n._ink = o._ink;
+}
+function reach(n, x, y, w, h) {
+  if (n.t === "list") return [x, y, w + 12, h];             // the scroll bar, 8 px right of the rows
+  if (n.t === "ink") return [x - 1, y - 1, w + 2, h + 2];   // the pad's border
+  return [x, y, w, h];
+}
+function finish(n, x, y, w, h, r0) {
+  var e = reach(n, x, y, w, h);
+  (n.kids || []).forEach(function (k) {
+    if (!k._e) return;
+    var x1 = Math.max(e[0] + e[2], k._e[0] + k._e[2]), y1 = Math.max(e[1] + e[3], k._e[1] + k._e[3]);
+    e[0] = Math.min(e[0], k._e[0]); e[1] = Math.min(e[1], k._e[1]); e[2] = x1 - e[0]; e[3] = y1 - e[1];
+  });
+  n._b = [x, y, w, h]; n._r = regions.slice(r0); n._e = e;
+  if (n.t === "ink") n._ink = inkArea;
+}
+// a changed container or table whose own look is the same: redraw inside it (false: its layout moved)
+function redraw(fb, n, o, x, y, w, h, bg) {
+  if (n.t === "table") return drawTable(fb, n, x, y, w, h, o, bg);
+  if (n.t === "row") {
+    var ws = rowWidths(n, w), gap = n.gap == null ? 16 : n.gap, cx = x, boxes = [];
+    if (o.kids.length !== n.kids.length) return false;
+    for (var i = 0; i < n.kids.length; i++) { boxes.push([cx, y, ws[i], h]); if (!sameBox(o.kids[i]._b, boxes[i])) return false; cx += ws[i] + gap; }
+    n.kids.forEach(function (k, i) { draw(fb, k, boxes[i][0], y, boxes[i][2], h, o.kids[i], bg); });
+    return true;
+  }
+  var p = n.t === "box" ? (n.pad == null ? 16 : n.pad) : n.pad || 0;
+  if (n.border && p < 2) return false;   // its children's boxes cover its border
+  return stack(fb, n.kids, x + p, y + p, w - 2 * p, h - 2 * p, n.gap == null ? (n.t === "box" ? 8 : 0) : n.gap, o.kids, n.bg ? color(n.bg) : bg);
+}
+
+function draw(fb, n, x, y, w, h, o, bg) {
+  var r0 = regions.length;
+  if (o) {
+    if (same(n, o)) return keep(n, o);
+    if (n.tap) region(x, y, w, h, n.tap, n.arg);
+    if (n.t === o.t && (n.t === "col" || n.t === "box" || n.t === "row" || n.t === "table") && same(n, o, n.t === "table" ? "rows" : "kids") &&
+        redraw(fb, n, o, x, y, w, h, bg)) return finish(n, x, y, w, h, r0);
+    regions.length = r0;
+    fb.fill(o._e[0], o._e[1], o._e[2], o._e[3], bg);
+  }
+  fresh(fb, n, x, y, w, h, bg);
+  finish(n, x, y, w, h, r0);
+}
+
+function fresh(fb, n, x, y, w, h, bg) {
   if (n.tap) region(x, y, w, h, n.tap, n.arg);
   switch (n.t) {
     case "col": case "box": {
       var p = n.t === "box" ? (n.pad == null ? 16 : n.pad) : n.pad || 0;
       if (n.bg) fb.fill(x, y, w, h, color(n.bg));
       if (n.border) { fb.rect(x, y, w, h, color(n.border)); if (n.thick) fb.rect(x + 1, y + 1, w - 2, h - 2, color(n.border)); }
-      stack(fb, n.kids, x + p, y + p, w - 2 * p, h - 2 * p, n.gap == null ? (n.t === "box" ? 8 : 0) : n.gap);
+      stack(fb, n.kids, x + p, y + p, w - 2 * p, h - 2 * p, n.gap == null ? (n.t === "box" ? 8 : 0) : n.gap, null, n.bg ? color(n.bg) : bg);
       break;
     }
     case "row": {
       var ws = rowWidths(n, w), gap = n.gap == null ? 16 : n.gap, cx = x;
-      n.kids.forEach(function (k, i) { draw(fb, k, cx, y, ws[i], h); cx += ws[i] + gap; });
+      n.kids.forEach(function (k, i) { draw(fb, k, cx, y, ws[i], h, null, bg); cx += ws[i] + gap; });
       break;
     }
     case "text": {
@@ -152,22 +223,30 @@ function draw(fb, n, x, y, w, h) {
     case "grid": drawGrid(fb, n, x, y, w); break;
     case "list": drawList(fb, n, x, y, w, h); break;
     case "lines": drawLines(fb, n, x, y, w, h); break;
-    case "table": drawTable(fb, n, x, y, w, h); break;
+    case "table": drawTable(fb, n, x, y, w, h, null, bg); break;
     default: break;
   }
 }
 
-function stack(fb, kids, x, y, w, h, gap) {
+// Lays out kids top to bottom and draws them. With the kids drawn here last time (okids), it first checks that
+// every kid keeps its box, and returns false if not: the caller then clears the whole stack and draws it afresh.
+function stack(fb, kids, x, y, w, h, gap, okids, bg) {
   var ms = kids.map(function (k) { return measure(k, w); });
   var fixed = ms.reduce(function (a, m) { return a + m.h; }, 0) + gap * Math.max(0, kids.length - 1);
-  var grows = ms.reduce(function (a, m) { return a + m.grow; }, 0), extra = Math.max(0, h - fixed), cy = y;
+  var grows = ms.reduce(function (a, m) { return a + m.grow; }, 0), extra = Math.max(0, h - fixed), cy = y, boxes = [];
   kids.forEach(function (k, i) {
     var kh = ms[i].h;
     if (grows && ms[i].grow) kh += Math.floor(extra * ms[i].grow / grows);
     kh = Math.min(kh, y + h - cy);
-    if (kh > 0) draw(fb, k, x, cy, w, kh);
+    boxes.push(kh > 0 ? [x, cy, w, kh] : null);
     cy += kh + gap;
   });
+  if (okids) {
+    if (okids.length !== kids.length) return false;
+    for (var i = 0; i < kids.length; i++) if (!sameBox(okids[i]._b, boxes[i])) return false;
+  }
+  kids.forEach(function (k, i) { if (boxes[i]) draw(fb, k, x, boxes[i][1], w, boxes[i][3], okids ? okids[i] : null, bg); });
+  return true;
 }
 
 // a small drawing: ["fill"|"rect"|"line"|"text"|"disc", ...] in a box at (ox, oy); ink overrides "ink"-coloured ops
@@ -251,7 +330,9 @@ function drawLines(fb, n, x, y, w, h) {
   rows.slice(from, from + vis).forEach(function (r, i) { fb.text(x + 4 + r.indent, y + i * rh, r.s, f, color(r.color)); });
 }
 
-function drawTable(fb, n, x, y, w, h) {
+// With the same table drawn here last time (o, equal but for its rows), only the rows that changed are cleared
+// and drawn again; false if the shown range moved.
+function drawTable(fb, n, x, y, w, h, o, bg) {
   var f = n.font || "mono", cols = n.cols, rh = rowH(n);
   var fixed = cols.reduce(function (a, c) { return a + (c.w || 0); }, 0), flex = cols.filter(function (c) { return !c.w; }).length || 1;
   var ws = cols.map(function (c) { return c.w || Math.floor((w - fixed) / flex); }), cy = y;
@@ -261,14 +342,24 @@ function drawTable(fb, n, x, y, w, h) {
     fb.text(tx, ty, s, f, c, cx + ws[i] - 2 - tx);
   }
   if (n.head !== false) {
-    var hx = x;
-    cols.forEach(function (c, i) { cell(c.label, i, hx, cy, C.muted); hx += ws[i]; });
-    fb.fill(x, cy + fh("s") + 6, w, 2, C.ink);
+    if (!o) {
+      var hx = x;
+      cols.forEach(function (c, i) { cell(c.label, i, hx, cy, C.muted); hx += ws[i]; });
+      fb.fill(x, cy + fh("s") + 6, w, 2, C.ink);
+    }
     cy += fh("s") + 12;
   }
   var vis = Math.max(1, Math.floor((y + h - cy) / rh)), first = Math.max(0, Math.min(n.first || 0, n.rows.length - vis));
-  n.rows.slice(first, first + vis).forEach(function (row, j) {
-    var i = first + j, sel = i === n.sel, ry = cy + j * rh, cx = x, cells = Array.isArray(row) ? row : row.cells;
+  if (o && first !== Math.max(0, Math.min(o.first || 0, o.rows.length - vis))) return false;
+  for (var j = 0; j < vis; j++) {
+    var i = first + j, row = n.rows[i], old = o ? o.rows[i] : undefined, ry = cy + j * rh;
+    if (o) {
+      if (row === undefined && old === undefined) break;
+      if (row !== undefined && old !== undefined && same(row, old)) { if (n.tap) region(x, ry, w, rh, n.tap, i); continue; }
+      fb.fill(x, ry, w, rh, bg);
+    }
+    if (row === undefined) continue;
+    var sel = i === n.sel, cx = x, cells = Array.isArray(row) ? row : row.cells;
     if (sel) fb.fill(x, ry, w, rh, C.ink);
     else fb.fill(x, ry + rh - 1, w, 1, C.soft);
     cells.forEach(function (v, k) {
@@ -277,7 +368,8 @@ function drawTable(fb, n, x, y, w, h) {
       cx += ws[k];
     });
     if (n.tap) region(x, ry, w, rh, n.tap, i);
-  });
+  }
+  return true;
 }
 
 // the on-screen keyboard: four rows of 48 x 64 keys; taps send {ch} or {key} to the app as n.msg ("key")
@@ -320,21 +412,37 @@ function chip(fb, x, y, w, label, msg, arg) {
   region(x, y, w, 60, msg, arg);
 }
 
-function paint(s) {
-  var fb = s.fb, app = s.apps[s.focus];
-  regions = [];
-  inkArea = null;
-  fb.fill(0, 0, W, H, C.paper);
-  // title, clock and battery, and the thick rule under them
+// What the previous paint drew: the app on screen, its tree (with the recorded boxes), and keys for the title
+// bar and the footer. A paint is retained (redraws only what changed) unless the app on screen changed, a
+// banner is or was up, the app has no tree, or the present is a new page.
+var last = null;
+
+function topKey(s, app) { return (app ? app.title : s.focus) + "|" + clockText() + "|" + (s.battery ? (s.battery.charging ? "+" : "") + s.battery.pct : ""); }
+function paintTop(fb, s, app) {   // title, clock and battery, above y = TOP - 8
   fb.text(M, 44, app ? app.title : s.focus, "l", C.ink, W - 2 * M - 170);
   var clock = clockText(), cw = tw(clock, "mb");
   fb.text(W - M - cw, 50, clock, "mb", C.ink);
   var bx = W - M - cw - 58;
   batteryGlyph(fb, bx, 56, s.battery);
   if (s.battery) { var pct = (s.battery.charging ? "+" : "") + s.battery.pct + "%"; fb.text(bx - 10 - tw(pct, "s"), 54, pct, "s", C.muted); }
-  fb.fill(M, TOP - 8, W - 2 * M, 4, C.ink);
+}
+
+function paint(s, full) {
+  var fb = s.fb, app = s.apps[s.focus], tree = app && app.tree;
+  var top = topKey(s, app), hint = (app && app.hints) || "", foot = s.focus + "|" + hint;
+  var retained = !full && !!last && last.focus === s.focus && !!tree && !!last.tree && !s.banner && !last.banner;
+  regions = [];
+  inkArea = null;
+  if (!retained) {
+    fb.fill(0, 0, W, H, C.paper);
+    paintTop(fb, s, app);
+    fb.fill(M, TOP - 8, W - 2 * M, 4, C.ink);   // the thick rule under the title
+  } else if (top !== last.top) {
+    fb.fill(0, 0, W, TOP - 8, C.paper);
+    paintTop(fb, s, app);
+  }
   // the app
-  if (app && app.tree) draw(fb, app.tree, M, BODY_Y, W - 2 * M, BODY_H);
+  if (tree) draw(fb, tree, M, BODY_Y, W - 2 * M, BODY_H, retained ? last.tree : null, C.paper);
   else {
     var msg = s.crashed[s.focus] ? s.focus + " is not running" : "starting " + s.focus + "…";
     textAt(fb, M, BODY_Y + BODY_H / 2 - 20, W - 2 * M, msg, "m", C.muted, "center");
@@ -349,11 +457,20 @@ function paint(s) {
     region(M - 8, BODY_Y - 8, W - 2 * M + 16, bh, "dismiss");
   }
   // the footer: Home and Back, and the app's hint
-  fb.fill(M, H - FOOT, W - 2 * M, 2, C.ink);
-  var fy = H - FOOT + 22;
-  if (s.focus !== "launcher") { chip(fb, M, fy, 130, "Home", "home"); chip(fb, M + 146, fy, 130, "Back", "back"); }
-  var hint = (app && app.hints) || "", hx = s.focus !== "launcher" ? M + 296 : M;
-  gfx.wrap(hint, "s", W - M - hx).slice(0, 3).forEach(function (l, i) { fb.text(hx, fy - 6 + i * (fh("s") - 2), l, "s", C.muted); });
+  var fy = H - FOOT + 22, chips = s.focus !== "launcher";
+  if (retained && foot === last.foot) {
+    if (chips) { region(M, fy, 130, 60, "home"); region(M + 146, fy, 130, 60, "back"); }
+  } else {
+    if (retained) fb.fill(0, H - FOOT, W, FOOT, C.paper);
+    fb.fill(M, H - FOOT, W - 2 * M, 2, C.ink);
+    if (chips) { chip(fb, M, fy, 130, "Home", "home"); chip(fb, M + 146, fy, 130, "Back", "back"); }
+    var hx = chips ? M + 296 : M;
+    gfx.wrap(hint, "s", W - M - hx).slice(0, 3).forEach(function (l, i) { fb.text(hx, fy - 6 + i * (fh("s") - 2), l, "s", C.muted); });
+  }
+  last = { focus: s.focus, tree: tree, top: top, foot: foot, banner: !!s.banner };
+  s.paints++;
+  if (retained) s.retained++;
+  return retained;
 }
 
 // the strongest change since the last present decides how it is presented
@@ -465,7 +582,8 @@ service("compositor")
   .needs("frames", "touch", "power", "time", "worlds.status")
   .provides("gestures")
   .state({ focus: "launcher", apps: {}, battery: null, banner: null, queued: false, intent: null, waitFrame: null, clean: false, frames: 0, presents: 0, pixels: 0,
-           clock: "", clockArm: 0, crashed: {}, presentError: "", finger: null, gestures: 0, lastGesture: "", lastTap: null })
+           clock: "", clockArm: 0, crashed: {}, presentError: "", finger: null, gestures: 0, lastGesture: "", lastTap: null,
+           paints: 0, retained: 0, check: false, checks: 0, checkFails: 0 })
   .onStart(function (s) {
     F = gfx.fonts();
     s.fb = dma.alloc(W, H);
@@ -479,7 +597,12 @@ service("compositor")
     if (s.waitFrame) return;   // the focused app's first frame is on its way
     var intent = s.intent || "text";
     s.intent = null;
-    paint(s);
+    if (paint(s, intent === "page") && s.check) {   // paintcheck: a retained paint must equal a full one
+      var h = s.fb.hash();
+      paint(s, true);
+      s.checks++;
+      if (s.fb.hash() !== h) { s.checkFails++; log("paint check: the retained paint of " + s.focus + " differs from a full paint"); }
+    }
     var rects = s.fb.commit();
     if (!rects.length && intent !== "page") return;
     s.presents++;
@@ -520,4 +643,9 @@ service("compositor")
     }
     dirty(s, "text");
   })
-  .on("where", function (s) { return { focus: s.focus, regions: regions.length, gestures: s.gestures, lastGesture: s.lastGesture, lastTap: s.lastTap }; });
+  .on("paintcheck", function (s, m) {   // host tests: {} turns it on, {report: true} logs the counts
+    if (m && m.report) log("paint check: " + s.checks + " retained paints checked, " + s.checkFails + " differed; " + s.retained + " of " + s.paints + " paints retained");
+    else s.check = !(m && m.on === false);
+    return { checks: s.checks, failures: s.checkFails };
+  })
+  .on("where", function (s) { return { focus: s.focus, regions: regions.length, gestures: s.gestures, lastGesture: s.lastGesture, lastTap: s.lastTap, paints: s.paints, retained: s.retained, checks: s.checks, checkFails: s.checkFails }; });

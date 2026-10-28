@@ -115,6 +115,7 @@ int dmabuf_alloc(int w, int h) {
     b->front = port_big_calloc(b->bytes);
     if (!b->back || !b->front) { port_big_free(b->back); port_big_free(b->front); memset(b, 0, sizeof(*b)); return -1; }
     for (size_t k = 0; k < (size_t)w * h; k++) b->front[k] = NEVER_DRAWN;   // differs from anything drawn: the first commit sends everything
+    b->dirty_y0 = 0; b->dirty_y1 = h;
     return i;
   }
   return -1;

@@ -445,8 +445,12 @@ static JSValue op_gfx_commit(JSContext *ctx, world_t *W, int argc, JSValue *argv
 }
 static JSValue op_gfx_invalidate(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
   dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
-  for (size_t i = 0; i < (size_t)b->w * b->h; i++) b->front[i] = (pixel_t)~b->back[i];
+  gfx_invalidate(b);
   return JS_UNDEFINED;
+}
+static JSValue op_gfx_hash(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
+  return JS_NewFloat64(ctx, gfx_hash(b));
 }
 static JSValue op_gfx_fonts(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
   (void)W; (void)argc; (void)argv;
@@ -519,7 +523,7 @@ static JSValue op_clock_set(JSContext *ctx, world_t *W, int argc, JSValue *argv)
 
 static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "gfx.text", op_gfx_text }, { "gfx.fill", op_gfx_fill }, { "gfx.rect", op_gfx_rect }, { "gfx.line", op_gfx_line },
-  { "gfx.commit", op_gfx_commit }, { "gfx.fonts", op_gfx_fonts }, { "gfx.invalidate", op_gfx_invalidate },
+  { "gfx.commit", op_gfx_commit }, { "gfx.fonts", op_gfx_fonts }, { "gfx.invalidate", op_gfx_invalidate }, { "gfx.hash", op_gfx_hash },
   { "gfx.measure", op_gfx_measure }, { "gfx.wrap", op_gfx_wrap },
   { "now", op_now }, { "send", op_send }, { "publish", op_publish }, { "log", op_log }, { "self", op_self }, { "seed", op_seed },
   { "engine", op_engine }, { "err.where", op_err_where }, { "clock.set", op_clock_set },

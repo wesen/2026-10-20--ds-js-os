@@ -396,7 +396,7 @@ static JSValue op_gfx_commit(JSContext *ctx, world_t *W, int argc, JSValueConst 
 }
 static JSValue op_gfx_invalidate(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {   // the panel lost its picture: send everything next time
   dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
-  for (size_t i = 0; i < (size_t)b->w * b->h; i++) b->front[i] = (pixel_t)~b->back[i];
+  gfx_invalidate(b);
   return JS_UNDEFINED;
 }
 static JSValue op_gfx_fonts(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {

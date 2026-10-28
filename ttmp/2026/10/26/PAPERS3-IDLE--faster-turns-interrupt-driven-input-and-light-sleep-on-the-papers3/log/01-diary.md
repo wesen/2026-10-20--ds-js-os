@@ -1083,3 +1083,137 @@ the device settled it. A 32 KB instruction cache with 64-byte data lines took a 
   - `system-cache-I16_D64.log`;
   - `system-cache-I32_D32.log`;
   - `cache-final.log` (the kept setting, with the idle window and `pm`).
+
+## Step 11: Retained painting
+
+The compositor used to repaint the whole 540×960 screen for every change: clear it, draw every node, then
+compare all 518 KB with the front buffer. It now redraws only the nodes whose content changed, and the
+framebuffer records which rows were written, so commit compares only those rows. On the device, a
+System-app repaint went from 58 ms to 33 ms and the screen's lane load from 7.1% to 5.0%.
+
+The rule was that a retained paint must produce exactly the pixels of a full paint. A host-only check
+mode verifies it: after each retained paint it hashes the framebuffer, paints in full and compares. All
+four tours and a stress script ran 119 checked retained paints with no difference.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 9.
+**Assistant interpretation:** Continue P5, with the next item from Step 10's list.
+**Inferred user intent:** Faster turns, measured on the device, without changing what the screen shows.
+
+### What I did
+
+- C (`nucleus/gfx.c`, `nucleus.h`, `hw.c`, `vm.c`, `vm_mqjs.c`):
+  - `dmabuf_t.dirty_y0/dirty_y1`. `touch()` widens the range in `gfx_fill`, `gfx_line` and `glyph`.
+  - `gfx_commit` starts at the first dirty band, stops at the last, and resets the range.
+  - `gfx_invalidate` (shared by both bindings) and allocation mark every row dirty.
+  - `gfx_hash` (FNV-1a over back) and the `gfx.hash` op; the prelude gained `Handle.prototype.hash`.
+- `js-papers3/system/compositor.js`:
+  - `draw(fb, n, x, y, w, h, o, bg)` takes the node drawn in the same box last time:
+    - `same(n, o)`: `keep`, i.e. replay its regions (and its ink area);
+    - the same container or table, equal but for `kids`/`rows`: `redraw`;
+    - otherwise clear `o._e` to `bg` and draw `fresh`.
+  - Recorded on each node: `_b`, the box; `_r`, the regions; `_e`, the box plus a list's scroll bar or an
+    ink pad's border, plus its children's `_e`; `_ink`.
+  - `stack` and `row` compare every kid's box before drawing anything, and return false if one moved.
+    The caller then clears the whole container and draws it fresh.
+  - `drawTable(…, o, bg)`: the header is kept, and each changed row is cleared to `bg` and redrawn. It
+    returns false if the shown range moved.
+  - `paint(s, full)`:
+    - the title bar (`topKey`: title, clock, battery) and the footer (`focus|hint`) are repainted only
+      when their key changes;
+    - the chip regions are always re-registered, after the body's, so `hit()` order is unchanged;
+    - a full paint happens for a new focus, a banner (or the paint after one), an app without a tree,
+      and `page` presents.
+  - `paintcheck`: `{}` turns on the check, `{report: true}` logs the counts. `where` reports paints,
+    retained paints and checks.
+- Ticket scripts: `scripts/02-paintcheck.sh` runs every tour plus `scripts/02-paintcheck-stress.txt` (a
+  check-only script) with the check on.
+
+### Why
+
+- Step 10 left a repaint at 58 ms: about 11 ms of full clear, 14 ms of full diff and 12 ms of text, each
+  covering the whole screen. In the System app only a few cells, the graph and the lane percentage change
+  each second.
+- Clearing a changed node's box to the background behind it reproduces what a full paint has there:
+  paper, or the nearest ancestor's `bg`, before the node draws.
+
+### What worked
+
+- Paint check (`02-paintcheck.sh`):
+  - faults 3, ink 23, repl 12 and tour 7 retained paints, all equal to a full paint;
+  - the stress script: 74 of 74 equal. It covers System for 12 s, picking a row (the error line appears
+    and goes, which moves the layout), all four tabs, swipes, a crash banner, the Touches pad, Sketch
+    strokes and a clock-minute update on Home.
+- Device, System in front for 16 s (`out-s3/p5/system-retained.log`):
+
+  | | Step 10 | now |
+  |---|---|---|
+  | compositor | 816 ms | 462 ms |
+  | `gfx.text` calls | 1232 | 238 |
+  | `gfx.fill` | 153 ms | 30 ms |
+  | `gfx.commit` per call | 13.9 ms | 6.6 ms |
+  | lane | 7.1% | 5.0% |
+
+  Idle on Home: `worlds ran 42 ms (0.5%)` over 8 s. The device's System and Sketch screenshots
+  (`out-s3/p5/retained/`, `retained-sketch/`) are correct.
+- Captures:
+  - PicoCalc: byte-identical;
+  - PaperS3: deterministic over two runs and identical under `SAN=1`, with no sanitizer report.
+  - Five changed, all through timing (see below).
+
+### What didn't work
+
+- The gate could not stay byte-identical. The simulator charges virtual time per glyph and per pixel
+  filled, so drawing less makes the compositor's turns cheaper:
+  - `03-system`: the turns and cpu columns (plus 1 KB in two worlds' arenas from the larger prelude);
+  - `30/31/32-sketch-*`: the third stroke now ends at about (402, 681) instead of (395, 677). The
+    script's swipe ends at (400, 680): the compositor handles ink events sooner;
+  - `33-touches`: 171 points recorded instead of 168, for the same reason.
+- That is why the correctness argument rests on the paint check, not on the captures.
+
+### What I learned
+
+- A retained painter needs a correctness oracle independent of its own logic. Comparing each retained
+  paint with a full paint in the same run is cheap on the host and leaves nothing to inspect by eye.
+- After this step the compositor's cost is mostly interpreter time: 1905 steps per segment, and about
+  20 ms of each 33 ms repaint is not in host calls. Next come layout (`measure` runs again at every
+  level of `stack`) and the comparisons.
+
+### What was tricky to build
+
+- Pixels outside a node's box: a list's scroll bar (8 px right of the rows) and an ink pad's 1 px
+  border. Clearing only the box would leave the old ones. `_e` records how far a node's pixels reach,
+  including its children's.
+- Order of regions. `hit()` takes the last region drawn, so kept nodes replay their regions in tree
+  order, and the footer's chips are registered after the body even when the footer is not redrawn.
+- A container with a border and padding below 2 px: its children's boxes cover the border, so clearing
+  a child would erase it. Such containers always redraw whole.
+
+### What warrants a second pair of eyes
+
+- Glyph ink left of the pen. A proportional glyph's cell starts `pad` px left of the pen, so a glyph
+  could ink outside its node's box, and a retained clear would not remove it. The checks found no case,
+  but `_e` does not account for it.
+- `same()` walks whole subtrees each paint. For large trees (a long REPL history) its cost should be
+  watched in `prof`.
+
+### What should be done in the future
+
+- Measure the compositor's interpreter time by function (`measure`/`stack`, `same`, `draw`).
+- The System app's `sys.worlds`: 7.9 ms per call.
+
+### Code review instructions
+
+- `js-papers3/system/compositor.js`: the "retained painting" block (`same`, `keep`, `reach`, `finish`,
+  `redraw`, `draw`, `fresh`), `stack`, `drawTable`, `paint`, and the `draw` handler.
+- `nucleus/gfx.c`: `touch`, `gfx_commit`'s loop bounds, `gfx_invalidate`, `gfx_hash`.
+- Validate:
+  - `make shots` (PicoCalc unchanged); `make BOARD=papers3 shots` (deterministic);
+  - `sh ../ttmp/.../scripts/02-paintcheck.sh` (every line "0 differed");
+  - on the device, the Step 9 window.
+
+### Technical details
+
+- The check's extra full paints are counted in `paints`, so "74 of 166 paints retained" means 74
+  retained, 74 check paints and 18 full paints.

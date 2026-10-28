@@ -1,0 +1,55 @@
+wait 50
+send compositor paintcheck {}
+wait 3000
+tap 111 276
+wait 12000
+tap 270 420
+wait 3000
+tap 270 420
+wait 3000
+tap 270 600
+wait 2500
+tap 270 600
+wait 2000
+swipe 400 600 100 600 300
+wait 2000
+swipe 100 600 400 600 300
+wait 2000
+tap 211 164
+wait 3000
+tap 328 164
+wait 3000
+tap 445 164
+wait 4000
+tap 95 164
+wait 5000
+send flaky boom {}
+wait 6000
+tap 105 908
+wait 2000
+tap 269 442
+wait 1500
+tap 60 200
+wait 500
+tap 480 820
+wait 500
+swipe 100 300 400 400 300
+wait 1500
+tap 251 908
+wait 1500
+tap 105 908
+wait 1500
+tap 427 276
+wait 1500
+swipe 100 250 420 300 400
+wait 1000
+swipe 420 300 140 520 400
+wait 1000
+tap 251 908
+wait 1000
+tap 389 788
+wait 2000
+tap 105 908
+wait 61000
+send compositor paintcheck {"report":true}
+wait 100

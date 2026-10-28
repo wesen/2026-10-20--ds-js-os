@@ -26,6 +26,12 @@ pixel_t gfx_color(const char *s) {
 #endif
 }
 
+// Every write to back widens the framebuffer's dirty rows; commit compares only those.
+static inline void touch(dmabuf_t *b, int y, int h) {
+  if (y < b->dirty_y0) b->dirty_y0 = y;
+  if (y + h > b->dirty_y1) b->dirty_y1 = y + h;
+}
+
 static bool clip(dmabuf_t *b, int *x, int *y, int *w, int *h) {
   if (*x < 0) { *w += *x; *x = 0; }
   if (*y < 0) { *h += *y; *y = 0; }
@@ -36,6 +42,7 @@ static bool clip(dmabuf_t *b, int *x, int *y, int *w, int *h) {
 
 void gfx_fill(dmabuf_t *b, int x, int y, int w, int h, pixel_t c) {
   if (!clip(b, &x, &y, &w, &h)) return;
+  touch(b, y, h);
 #ifdef NUCLEUS_GRAY8   // a byte per pixel: rows are memsets, and full-width rows are one
   if (w == b->w) memset(b->back + (size_t)y * b->w, c, (size_t)w * h);
   else for (int j = 0; j < h; j++) memset(b->back + (size_t)(y + j) * b->w + x, c, (size_t)w);
@@ -54,6 +61,10 @@ void gfx_rect(dmabuf_t *b, int x, int y, int w, int h, pixel_t c) {
 }
 
 void gfx_line(dmabuf_t *b, int x0, int y0, int x1, int y1, pixel_t c) {
+  int ty0 = y0 < y1 ? y0 : y1, ty1 = (y0 < y1 ? y1 : y0) + 1;
+  if (ty0 < 0) ty0 = 0;
+  if (ty1 > b->h) ty1 = b->h;
+  if (ty1 > ty0) touch(b, ty0, ty1 - ty0);
   int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1, dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1, e = dx + dy, n = 0;
   for (;;) {
     if (x0 >= 0 && y0 >= 0 && x0 < b->w && y0 < b->h) b->back[(size_t)y0 * b->w + x0] = c;
@@ -134,6 +145,7 @@ static void glyph(dmabuf_t *b, int x, int y, int f, int gi, pixel_t fg) {
   if (x + i1 > b->w) i1 = b->w - x;
   if (y + j0 < 0) j0 = -y;
   if (y + j1 > b->h) j1 = b->h - y;
+  if (j1 > j0 && i1 > i0) touch(b, y + j0, j1 - j0);
   for (int j = j0; j < j1; j++) {
     pixel_t *row = b->back + (size_t)(y + j) * b->w;
     int k = j * F->w;
@@ -234,7 +246,7 @@ static bool equal(const void *a, const void *b, size_t n) {
 int gfx_commit(dmabuf_t *b, int *rects, int max_rects) {
   enum { BAND = 16 };
   int n = 0;
-  for (int y0 = 0; y0 < b->h; y0 += BAND) {
+  for (int y0 = b->dirty_y0 / BAND * BAND; y0 < b->dirty_y1; y0 += BAND) {   // rows outside equal front already
     int y1 = y0 + BAND < b->h ? y0 + BAND : b->h;
     size_t row = (size_t)b->w * sizeof(pixel_t);
     if (equal(b->back + (size_t)y0 * b->w, b->front + (size_t)y0 * b->w, row * (y1 - y0))) continue;   // the whole band at once
@@ -272,6 +284,19 @@ int gfx_commit(dmabuf_t *b, int *rects, int max_rects) {
     for (int y = p[1]; y < p[1] + p[3]; y++)
       memcpy(b->front + (size_t)y * b->w + p[0], b->back + (size_t)y * b->w + p[0], (size_t)p[2] * sizeof(pixel_t));
   }
+  b->dirty_y0 = b->h; b->dirty_y1 = 0;   // back equals front now
   charge((double)b->w * b->h * PROFILE.diff_ns_per_px);
   return n;
+}
+
+void gfx_invalidate(dmabuf_t *b) {
+  for (size_t i = 0; i < (size_t)b->w * b->h; i++) b->front[i] = (pixel_t)~b->back[i];
+  b->dirty_y0 = 0; b->dirty_y1 = b->h;
+}
+
+uint32_t gfx_hash(const dmabuf_t *b) {   // FNV-1a
+  uint32_t h = 2166136261u;
+  const uint8_t *p = (const uint8_t *)b->back;
+  for (size_t i = 0; i < b->bytes; i++) h = (h ^ p[i]) * 16777619u;
+  return h;
 }

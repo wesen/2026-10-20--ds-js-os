@@ -144,6 +144,7 @@ typedef struct {            // a DMA-capable framebuffer of pixel_t: drawn into 
   int w, h;
   pixel_t *back, *front;
   size_t bytes;
+  int dirty_y0, dirty_y1;   // rows of back written since the last commit; every other row equals front
 } dmabuf_t;
 #define MAX_BUFS 16
 
@@ -291,6 +292,8 @@ int gfx_font_index(const char *name);
 void gfx_font_size(int font, int *w, int *h);
 int gfx_text_len(const char *s);
 int gfx_commit(dmabuf_t *b, int *rects, int max_rects);
+void gfx_invalidate(dmabuf_t *b);   // the panel lost its picture: the next commit sends everything
+uint32_t gfx_hash(const dmabuf_t *b);   // of the back buffer (the compositor's paint check)
 pixel_t gfx_color(const char *s);
 const char *gfx_font_names(void);
 
