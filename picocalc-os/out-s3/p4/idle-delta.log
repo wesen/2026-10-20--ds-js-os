@@ -1,0 +1,46 @@
+Time since bootup: 241321906 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         1664820        48782498        21 %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+i2c             APB_FREQ_MAX    0      0         7              5353            1  %
+epd             NO_LIGHT_SLEEP  0      0         86             93234599        39 %
+epd             CPU_FREQ_MAX    0      0         86             93234798        39 %
+kernel          CPU_FREQ_MAX    0      0         895            15700394        7  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         105            232425310       97 %
+rtos1           CPU_FREQ_MAX    0      1         133543         126786074       53 %
+rtos0           CPU_FREQ_MAX    0      0         3286830        74980232        32 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        8794163     3 %
+APB_MIN   40 M        90405906    37%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        142122971   58%
+
+Sleep stats:
+light_sleep_counts:5  light_sleep_reject_counts:0
+#OK pm
+Time since bootup: 281342721 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         1676700        49130938        18 %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+i2c             APB_FREQ_MAX    0      0         7              5353            1  %
+epd             NO_LIGHT_SLEEP  0      0         88             93859505        34 %
+epd             CPU_FREQ_MAX    0      0         88             93859708        34 %
+kernel          CPU_FREQ_MAX    0      0         920            16029013        6  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         108            265980643       95 %
+rtos1           CPU_FREQ_MAX    0      1         166203         138611088       50 %
+rtos0           CPU_FREQ_MAX    0      0         3342556        79900820        29 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        15258624    5 %
+APB_MIN   40 M        114030155   40%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        152055113   54%
+
+Sleep stats:
+light_sleep_counts:7  light_sleep_reject_counts:0
+#OK pm

@@ -31,6 +31,13 @@ void bus_s3_init(void);
 void bus_s3_done(const kmsg_t *m);    // the kernel task's side of a finished transfer
 void console_exec(char *line);        // main_s3.c, on the kernel task
 void port_s3_init(void);
+// Power management: with nothing held the chip scales its clock down and light-sleeps between events. Held while
+// work runs: PM_KERNEL (worlds at full speed), PM_EPD (a whole panel update: full speed, no sleep), PM_I2C (a
+// transfer: a steady peripheral clock). No-ops when CONFIG_PM_ENABLE is off (the QEMU build).
+enum { PM_KERNEL, PM_EPD, PM_I2C, PM_LOCKS };
+void s3_pm_init(void);
+void s3_pm_hold(int which);
+void s3_pm_release(int which);
 #ifdef __cplusplus
 }
 #endif

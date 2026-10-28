@@ -1,0 +1,55 @@
+#OK prof
+Time since bootup: 128056915 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         830799         24324751        19 %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+i2c             APB_FREQ_MAX    0      0         5              4088            1  %
+epd             NO_LIGHT_SLEEP  0      1         43             46654568        37 %
+epd             CPU_FREQ_MAX    0      1         43             46654671        37 %
+kernel          CPU_FREQ_MAX    0      0         451            9442765         8  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         64             123002941       97 %
+rtos1           CPU_FREQ_MAX    0      1         71488          66767666        53 %
+rtos0           CPU_FREQ_MAX    0      0         1627444        38220386        30 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        4990682     3 %
+APB_MIN   40 M        48864127    38%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        74203269    57%
+
+Sleep stats:
+light_sleep_counts:3  light_sleep_reject_counts:0
+#OK pm
+prof over 38.0 s: the kernel task woke 123 times (3.2/s) and was blocked 88% of the time; worlds ran 4376 ms (11.5%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  display        62     1.6     218.6      216.5        1.0       1.1    3.53        228    4
+  compositor    102     2.7    3260.6     3257.6        1.5       1.5   31.97       1641    3
+  system         38     1.0     896.8      645.7      250.4       0.8   23.60        371   11
+#OK prof
+Time since bootup: 166080177 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         1451324        42518544        26 %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+i2c             APB_FREQ_MAX    0      0         5              4088            1  %
+epd             NO_LIGHT_SLEEP  0      1         74             81157091        49 %
+epd             CPU_FREQ_MAX    0      1         74             81157266        49 %
+kernel          CPU_FREQ_MAX    0      0         751            13857289        9  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         87             161003140       97 %
+rtos1           CPU_FREQ_MAX    0      1         74606          102357673       62 %
+rtos0           CPU_FREQ_MAX    0      0         2818311        59334553        36 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        4990682     3 %
+APB_MIN   40 M        48864127    29%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        112226505   67%
+
+Sleep stats:
+light_sleep_counts:3  light_sleep_reject_counts:0
+#OK pm
+heap: internal 87543 free (largest 31744), psram 3733896 free (largest 3670016); the kernel task's stack has 28616 bytes never used
+#OK heap

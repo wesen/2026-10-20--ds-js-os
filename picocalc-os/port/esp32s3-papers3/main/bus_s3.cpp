@@ -49,6 +49,7 @@ static void i2c_worker(void *arg) {
   for (;;) {
     xQueueReceive(q_i2c, &r, portMAX_DELAY);
     vtime_t t0 = port_clock();
+    s3_pm_hold(PM_I2C);   // the I2C clock is derived from APB
     uint8_t rd[64] = { 0 };
     bool ok;
 #ifdef S3_QEMU   // no I2C controller under QEMU: every device answers zeros (no touch; the clock at its reset value)
@@ -63,6 +64,7 @@ static void i2c_worker(void *arg) {
       }
     }
 #endif
+    s3_pm_release(PM_I2C);
     char json[200];
     if (!ok) snprintf(json, sizeof json, "\"no answer from 0x%02x on i2c1\"", r.addr);
     else {
@@ -135,6 +137,7 @@ static void epd_worker(void *arg) {
 #else
     bool ok = wait_idle();
 #endif
+    s3_pm_hold(PM_EPD);   // the waveform is timed by the CPU: full speed and no sleep until it ends
     if (ok && panel) {
       panel->setEpdMode(MODES[r.mode]);
       panel->startWrite();
@@ -142,8 +145,11 @@ static void epd_worker(void *arg) {
         panel->pushImage(r.x, r.y + j, r.wd, 1, (const lgfx::grayscale_t *)(r.px + (size_t)(r.y + j) * r.stride + r.x));
       panel->endWrite();
       panel->display(r.x, r.y, r.wd, r.ht);
-      ok = wait_idle();
+      // display() only queues the update for M5GFX's own task; waitDisplay() returns when the waveform is done,
+      // so the time reported is the panel's
+      panel->waitDisplay();
     }
+    s3_pm_release(PM_EPD);
     char json[64];
     if (ok) snprintf(json, sizeof json, "{\"ms\":%.1f}", (port_clock() - t0) / 1000.0);
     else snprintf(json, sizeof json, "\"the panel stayed busy for 5 s\"");

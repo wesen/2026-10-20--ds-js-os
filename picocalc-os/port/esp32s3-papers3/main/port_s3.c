@@ -8,6 +8,8 @@
 #include "esp_adc/adc_oneshot.h"
 #include "esp_heap_caps.h"
 #include "esp_log.h"
+#include "esp_pm.h"
+#include "esp_sleep.h"
 #include "esp_timer.h"
 #include "s3.h"
 
@@ -97,6 +99,23 @@ static void gpio_isr(void *arg) {
   if (woken) portYIELD_FROM_ISR();
 }
 
+// ---- power management ---------------------------------------------------------------------------------------------
+static esp_pm_lock_handle_t pm_locks[PM_LOCKS][2];
+
+void s3_pm_init(void) {
+#if CONFIG_PM_ENABLE
+  esp_pm_config_t pm = { .max_freq_mhz = 240, .min_freq_mhz = 40, .light_sleep_enable = true };
+  if (esp_pm_configure(&pm) != ESP_OK) { ESP_LOGE("pm", "power management did not start"); return; }
+  esp_pm_lock_create(ESP_PM_CPU_FREQ_MAX, 0, "kernel", &pm_locks[PM_KERNEL][0]);
+  esp_pm_lock_create(ESP_PM_CPU_FREQ_MAX, 0, "epd", &pm_locks[PM_EPD][0]);
+  esp_pm_lock_create(ESP_PM_NO_LIGHT_SLEEP, 0, "epd", &pm_locks[PM_EPD][1]);
+  esp_pm_lock_create(ESP_PM_APB_FREQ_MAX, 0, "i2c", &pm_locks[PM_I2C][0]);
+  esp_sleep_enable_gpio_wakeup();   // watched pins wake the chip (port_gpio_watch)
+#endif
+}
+void s3_pm_hold(int which) { for (int i = 0; i < 2; i++) if (pm_locks[which][i]) esp_pm_lock_acquire(pm_locks[which][i]); }
+void s3_pm_release(int which) { for (int i = 0; i < 2; i++) if (pm_locks[which][i]) esp_pm_lock_release(pm_locks[which][i]); }
+
 int port_gpio_watch(int pin, int mode, int handle_id) {
   static const gpio_int_type_t TYPE[] = { GPIO_INTR_DISABLE, GPIO_INTR_LOW_LEVEL, GPIO_INTR_HIGH_LEVEL, GPIO_INTR_NEGEDGE, GPIO_INTR_POSEDGE };
   static bool service;
@@ -112,7 +131,18 @@ int port_gpio_watch(int pin, int mode, int handle_id) {
   irq_handle[pin] = handle_id;
   if (gpio_isr_handler_add(pin, gpio_isr, (void *)(intptr_t)pin) != ESP_OK) return -1;
   gpio_intr_enable(pin);
+#if CONFIG_PM_ENABLE
+  // light sleep wakes on a level: the active one (an edge's resting level is the other)
+  gpio_wakeup_enable(pin, mode == IRQ_LOW || mode == IRQ_FALLING ? GPIO_INTR_LOW_LEVEL : GPIO_INTR_HIGH_LEVEL);
+#endif
   return 0;
 }
 void port_gpio_arm(int pin, int mode) { (void)mode; gpio_intr_enable(pin); }
-void port_gpio_unwatch(int pin) { gpio_intr_disable(pin); gpio_isr_handler_remove(pin); irq_handle[pin] = 0; }
+void port_gpio_unwatch(int pin) {
+  gpio_intr_disable(pin);
+  gpio_isr_handler_remove(pin);
+#if CONFIG_PM_ENABLE
+  gpio_wakeup_disable(pin);
+#endif
+  irq_handle[pin] = 0;
+}

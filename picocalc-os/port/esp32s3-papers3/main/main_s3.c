@@ -25,6 +25,7 @@
 #include "esp_chip_info.h"
 #include "esp_heap_caps.h"
 #include "esp_log.h"
+#include "esp_pm.h"
 #include "esp_psram.h"
 #include "driver/usb_serial_jtag_vfs.h"
 #include "freertos/task.h"
@@ -160,6 +161,9 @@ void console_exec(char *line) {
     printf("%s\n", j); free(j);
   } else if (!strcmp(cmd, "heap")) heap_report();
   else if (!strcmp(cmd, "prof")) { if (!strcmp(rest, "reset")) prof_reset(); else prof_print(); }
+#if CONFIG_PM_ENABLE
+  else if (!strcmp(cmd, "pm")) esp_pm_dump_locks(stdout);   // the locks, and (CONFIG_PM_PROFILING) time in each mode
+#endif
   else if (!strcmp(cmd, "tap") || !strcmp(cmd, "hold")) {
     int x = 0, y = 0, ms = 80;
     sscanf(rest, "%d %d %d", &x, &y, &ms);
@@ -190,7 +194,7 @@ void console_exec(char *line) {
   } else if (!strcmp(cmd, "shot")) shot();
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap prof [reset] | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap prof [reset] pm | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
@@ -254,6 +258,7 @@ static void kernel_task(void *arg) {
   if (kernel_boot(MANIFEST)) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
   for (;;) {
     kmsg_t m;
+    s3_pm_hold(PM_KERNEL);   // worlds run at full speed; between wakes nothing is held and the chip may sleep
     while (xQueueReceive(s3_kq, &m, 0) == pdTRUE) kmsg_handle(&m);
     kernel_run_until(port_clock());
 #ifdef S3_QEMU   // a fault-finding run: stop at the first step after which the heap is damaged (K.trace names the turns)
@@ -261,7 +266,8 @@ static void kernel_task(void *arg) {
 #endif
     // block until the next thing is due, or until another task (a bus worker, the console) posts to s3_kq
     vtime_t next = kernel_next_wake(), wait = next == VT_INF ? 0 : next - port_clock();
-    if (next != VT_INF && wait <= 0) continue;
+    if (next != VT_INF && wait <= 0) { s3_pm_release(PM_KERNEL); continue; }
+    s3_pm_release(PM_KERNEL);
     vtime_t t_block = port_clock();
     BaseType_t got = xQueueReceive(s3_kq, &m, next == VT_INF ? portMAX_DELAY : pdMS_TO_TICKS((wait + 999) / 1000));
     prof.blocked_us += port_clock() - t_block; prof.wakeups++;
@@ -285,6 +291,7 @@ void app_main(void) {
   console_init();
   setvbuf(stdout, NULL, _IOLBF, 0);
 
+  s3_pm_init();
   port_s3_init();
   bus_s3_init();
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);

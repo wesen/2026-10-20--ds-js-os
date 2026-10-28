@@ -1,0 +1,54 @@
+#OK tap
+ prof
+Time since bootup: 185089276 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         1658880        48608203        27 %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+i2c             APB_FREQ_MAX    0      0         6              4718            1  %
+epd             NO_LIGHT_SLEEP  0      0         85             92930433        51 %
+epd             CPU_FREQ_MAX    0      0         85             92930629        51 %
+kernel          CPU_FREQ_MAX    0      0         869            15393417        9  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         103            179816922       98 %
+rtos1           CPU_FREQ_MAX    0      1         81554          115464696       63 %
+rtos0           CPU_FREQ_MAX    0      0         3223388        67223696        37 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        5170931     2 %
+APB_MIN   40 M        53057577    28%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        126861723   68%
+
+Sleep stats:
+light_sleep_counts:4  light_sleep_reject_counts:0
+#OK pm
+prof over 37.0 s: the kernel task woke 13 times (0.4/s) and was blocked 99% of the time; worlds ran 223 ms (0.6%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  display         2     0.1      10.4       10.4        0.0       0.0    5.22        150    1
+  compositor      4     0.1      84.1       84.0        0.1       0.0   21.04        350    0
+  launcher        7     0.2     128.7       84.4       44.1       0.1   18.38        191    4
+#OK prof
+Time since bootup: 222102374 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         1664820        48782498        22 %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+i2c             APB_FREQ_MAX    0      0         6              4718            1  %
+epd             NO_LIGHT_SLEEP  0      0         86             93234599        42 %
+epd             CPU_FREQ_MAX    0      0         86             93234798        42 %
+kernel          CPU_FREQ_MAX    0      0         886            15619201        8  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         104            213206778       96 %
+rtos1           CPU_FREQ_MAX    0      1         114427         124114875       56 %
+rtos0           CPU_FREQ_MAX    0      1         3267966        71951988        33 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        8794163     3 %
+APB_MIN   40 M        76875408    34%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        136433834   61%
+
+Sleep stats:
+light_sleep_counts:5  light_sleep_reject_counts:0
+#OK pm
