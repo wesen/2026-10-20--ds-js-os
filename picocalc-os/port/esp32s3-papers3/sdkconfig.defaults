@@ -33,3 +33,11 @@ CONFIG_USJ_NO_AUTO_LS_ON_CONNECTION=y
 CONFIG_PM_PROFILING=y
 # Light sleep isolates every pin (CONFIG_PM_SLP_DISABLE_GPIO, forced on by the S3's GPIO reset workaround); the
 # power latch and the panel's pins are exempted in bus_s3.cpp (gpio_sleep_sel_dis).
+
+# Caches (PAPERS3-IDLE P5): code runs from flash, and worlds' arenas and the framebuffers live in PSRAM. A 32 KB
+# instruction cache and 64-byte data lines took a System-app repaint from 94 to 58 ms; a 64 KB data cache added
+# nothing and would cost 32 KB more internal RAM (diary step 10).
+CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB=y
+CONFIG_ESP32S3_INSTRUCTION_CACHE_LINE_32B=y
+CONFIG_ESP32S3_DATA_CACHE_32KB=y
+CONFIG_ESP32S3_DATA_CACHE_LINE_64B=y

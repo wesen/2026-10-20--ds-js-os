@@ -986,3 +986,100 @@ move: they are bound by PSRAM bandwidth, not by their loops.
 
 - Per repaint after this step: commit 19 ms, fill 17 ms (one full-screen clear plus 33 small fills),
   text 16 ms (88 calls), measure 3 ms, about 37 ms in the interpreter and the collector.
+
+## Step 10: The caches
+
+The new op timings showed host calls that do almost nothing costing tens of microseconds: `now` 73 µs,
+`gfx.measure` 36 µs. That pointed at the caches, not at the code. The firmware ran with ESP-IDF's
+defaults: a 16 KB instruction cache in front of flash, where all code runs, and a 32 KB data cache with
+32-byte lines in front of PSRAM, where the arenas and framebuffers live. Four configurations measured on
+the device settled it. A 32 KB instruction cache with 64-byte data lines took a System-app repaint from
+94 ms to 58 ms, and the System screen's lane load from 11.2% to 7.1%. A 64 KB data cache added nothing.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 9.
+**Assistant interpretation:** Continue P5; the cache item in the guide's P5 list.
+**Inferred user intent:** Faster turns, measured on the device.
+
+### What I did
+
+- Read the build's cache, flash and PSRAM settings:
+  - `CONFIG_ESP32S3_INSTRUCTION_CACHE_16KB`, line 32 B;
+  - `CONFIG_ESP32S3_DATA_CACHE_32KB`, line 32 B;
+  - flash `dio` at 80 MHz; octal PSRAM at 80 MHz.
+- Flash chip: `esptool.py flash_id` gives `Manufacturer: 46`, `Device: 4018`, 16 MB. M5's PaperS3 demo
+  (`M5PaperS3-UserDemo/sdkconfig`) also runs DIO with the default caches.
+- Built and flashed four cache configurations. Each ran the same window as Step 9 (System in front for
+  16 s, about 14 repaints), plus `heap` and the boot calibration.
+- Kept I 32 KB / D 32 KB with 64 B lines in `sdkconfig.defaults`.
+- `sdkconfig.qemu` keeps the default caches.
+
+### Why
+
+- The interpreter, the binding and the drawing code together are much larger than 16 KB, and a turn
+  alternates between them, so each host call refetched its path from flash. The framebuffer passes
+  stream PSRAM, where a longer line means fewer transactions.
+
+### What worked
+
+| I-cache / D-cache (line) | compositor, 16 s | System app | lane | commit | text per call | internal free |
+|---|---|---|---|---|---|---|
+| 16 KB / 32 KB (32 B), before | 1315 ms | 379 ms | 11.2% | 19.2 ms | 181 µs | 87.5 KB |
+| 16 KB / 64 KB (64 B) | 1081 ms | 354 ms | 9.6% | 14.3 ms | 174 µs | 49.9 KB |
+| 32 KB / 32 KB (64 B), kept | 816 ms | 262 ms | 7.1% | 13.9 ms | 140 µs | 66.4 KB |
+| 32 KB / 64 KB (64 B) | 845 ms | 245 ms | 7.2% | 14.0 ms | 134 µs | 34.3 KB |
+
+- With the kept setting:
+  - per-call overhead fell (`gfx.measure` 36.5 → 26.6 µs, `sys.worlds` 10.5 → 7.7 ms);
+  - display driver 102 → 66 ms per 16 s;
+  - idle on Home: `the kernel task woke 7 times (0.5/s) ... worlds ran 45 ms (0.3%)`;
+  - the screenshot (`out-s3/p5/shot-1.png`) is correct.
+- The 100k-loop calibration hardly moved, from 415.7 to 408.8 ms. A tight loop already fits in 16 KB.
+- QEMU (`./qemu.sh 26`): after `sdkconfig.qemu` restored the default caches, the same `stats` table as
+  before.
+
+### What didn't work
+
+- The first QEMU run with the new caches had 16 KB less internal RAM (307 KB against 323 KB free at
+  boot), which is the only memory its arenas can use. Hence the QEMU override.
+
+### What I learned
+
+- On this chip, the instruction cache decides how much a host call costs, and the data-cache line size
+  decides how fast the framebuffer passes are. The calibration loop measures neither, so it is a poor
+  predictor of the OS's real speed.
+- Each P5 change should be measured on the device: none of this is visible on the host or in QEMU.
+
+### What was tricky to build
+
+- Nothing in code. Each configuration needs `rm sdkconfig` before the build, because a generated
+  sdkconfig overrides `sdkconfig.defaults`.
+
+### What warrants a second pair of eyes
+
+- Internal RAM free after boot is now 66 KB (largest block 31.7 KB). The workload's own internal
+  allocations are made at boot (task stacks, queues, M5GFX's DMA line buffers), but a new driver that
+  needs internal DMA memory should check this figure.
+- QIO flash would speed instruction-cache misses further. It is untried: M5's own firmware uses DIO, and
+  whether the board wires the flash's two extra data lines is unverified.
+
+### What should be done in the future
+
+- Retained painting in the compositor. Per repaint, the full clear (about 11 ms) and the full diff
+  (14 ms) remain, plus about 25 ms in the interpreter.
+- A cheaper `sys.worlds` (7.7 ms per call).
+
+### Code review instructions
+
+- `port/esp32s3-papers3/sdkconfig.defaults` (the cache block), `sdkconfig.qemu`.
+- Validate: `rm sdkconfig && idf.py build && ./flash.sh`, then the Step 9 window. Expect the compositor
+  near 820 ms per 16 s with System in front.
+
+### Technical details
+
+- Logs:
+  - `out-s3/p5/system-cache.log` (32/64);
+  - `system-cache-I16_D64.log`;
+  - `system-cache-I32_D32.log`;
+  - `cache-final.log` (the kept setting, with the idle window and `pm`).

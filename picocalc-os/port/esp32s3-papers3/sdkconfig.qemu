@@ -16,3 +16,6 @@ CONFIG_FREERTOS_WATCHPOINT_END_OF_STACK=y
 CONFIG_ESP_SYSTEM_ALLOW_RTC_FAST_MEM_AS_HEAP=n
 # no power management under QEMU (it does not model light sleep)
 CONFIG_PM_ENABLE=n
+# the default caches: QEMU has no PSRAM, so the conformance worlds' arenas share internal RAM with the caches
+CONFIG_ESP32S3_INSTRUCTION_CACHE_16KB=y
+CONFIG_ESP32S3_DATA_CACHE_LINE_32B=y
