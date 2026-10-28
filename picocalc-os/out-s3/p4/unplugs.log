@@ -1,0 +1,26 @@
+up 330.8 s; the last reset: power-on (1)
+#OK boot
+Time since bootup: 331817634 us
+Lock stats:
+Name            Type            Arg    Active    Total_count    Time(us)        Time(%) 
+i80_bus_lcd     NO_LIGHT_SLEEP  0      0         227880         6703819         3  %
+I2C_1           NO_LIGHT_SLEEP  0      0         0              0               0  %
+power_in        NO_LIGHT_SLEEP  0      1         3              267610428       81 %
+i2c             APB_FREQ_MAX    0      0         115            139107          1  %
+epd             NO_LIGHT_SLEEP  0      0         19             14462806        5  %
+epd             CPU_FREQ_MAX    0      0         19             14462806        5  %
+kernel          CPU_FREQ_MAX    0      0         508            6996780         3  %
+usb_serial_jtag NO_LIGHT_SLEEP  0      1         16             266867414       81 %
+rtos1           CPU_FREQ_MAX    0      1         264735         64483156        20 %
+rtos0           CPU_FREQ_MAX    0      0         706241         58954943        18 %
+
+Mode stats:
+Mode      CPU_freq    Time(us)    Time(%)   
+SLEEP     40 M        28933588    8 %
+APB_MIN   40 M        190201547   57%
+APB_MAX   80 M        0           0 %
+CPU_MAX   240M        112683453   33%
+
+Sleep stats:
+light_sleep_counts:24  light_sleep_reject_counts:0
+#OK pm

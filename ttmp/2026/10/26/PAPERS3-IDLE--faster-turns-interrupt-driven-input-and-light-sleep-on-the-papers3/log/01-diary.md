@@ -843,7 +843,9 @@ reconnected the moment the cable went back in.
 
 - Test 3's `boot` said `power-on` with an uptime that puts the boot at the unplug (17:15:49). That is
   either the user pressing the power button after unplugging, or a power dip on the switch from USB to
-  battery. Pending the user's answer.
+  battery. The user's answer: "it either was power dip or i accidentally pressed th ebutton, i tried
+  unplugging a few times and it didn't reboot". Confirmed afterwards (`out-s3/p4/unplugs.log`): `up 330.8 s`
+  through two more unplug and replug cycles, `power_in` taken 3 times, `light_sleep_counts:24`.
 - With a full battery the charger stops and GPIO4 goes high even with USB in. A sleeping board then does
   not wake when plugged in; the power button is the fallback. A board that a host has already enumerated
   stays awake through IDF's lock.
