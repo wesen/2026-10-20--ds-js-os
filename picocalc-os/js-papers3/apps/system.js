@@ -6,7 +6,7 @@ var ROWS = 14;
 function compact(n) { return n < 10000 ? String(n) : n < 1e6 ? Math.round(n / 1000) + "k" : (n / 1e6).toFixed(1) + "M"; }
 
 function sample(s) {
-  var st = sys.stats(), ws = sys.worlds(), dt = st.t_ms - (s.last ? s.last.t : 0), prev = {};
+  var st = sys.stats(), ws = sys.worlds(["name", "state", "turns", "cpu_ms", "mem_kb", "limit_kb", "last_error"]), dt = st.t_ms - (s.last ? s.last.t : 0), prev = {};
   (s.last ? s.last.ws : []).forEach(function (w) { prev[w.name] = w.cpu_ms; });
   s.cpu = {};
   ws.forEach(function (w) { s.cpu[w.name] = dt > 0 ? Math.round(100 * (w.cpu_ms - (prev[w.name] || 0)) / dt) : 0; });

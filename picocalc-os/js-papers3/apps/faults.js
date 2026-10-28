@@ -8,7 +8,7 @@ var ACTS = [
   { label: "Kill the display driver", run: function () { sys.fault("display"); return Task.resolve("killed"); } },
 ];
 
-function refresh(s) { s.worlds = sys.worlds().map(function (w) { return { name: w.name, state: w.state, restarts: w.restarts, err: w.last_error }; }); }
+function refresh(s) { s.worlds = sys.worlds(["name", "state", "restarts", "last_error"]).map(function (w) { return { name: w.name, state: w.state, restarts: w.restarts, err: w.last_error }; }); }
 
 app("faults")
   .title("Faults")

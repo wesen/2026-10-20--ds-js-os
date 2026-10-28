@@ -1,7 +1,7 @@
 // About: the board, the engine, the clock and its calibration, and what the panel has done.
 function gather(s) {
   var st = sys.stats();
-  s.board = st.board; s.clock = st.clock; s.step = st.step_ns; s.t = st.t_ms; s.worlds = sys.worlds().length; s.crashes = st.crashes;
+  s.board = st.board; s.clock = st.clock; s.step = st.step_ns; s.t = st.t_ms; s.worlds = sys.worlds(["state"]).length; s.crashes = st.crashes;
   s.turns = st.turns;
 }
 app("about")

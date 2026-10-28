@@ -623,21 +623,45 @@ static const char *state_name(world_t *W) {
   return "idle";
 }
 
-char *kernel_worlds_json(void) {
+char *kernel_worlds_json(void) { return kernel_worlds_json_fields(NULL); }
+
+// fields: a comma-separated list of the keys wanted ("name,state"), or NULL / "" for all of them
+static bool wants(const char *fields, const char *key) {
+  if (!fields || !*fields) return true;
+  size_t n = strlen(key);
+  for (const char *p = fields; (p = strstr(p, key)); p += n)
+    if ((p == fields || p[-1] == ',') && (p[n] == ',' || !p[n])) return true;
+  return false;
+}
+char *kernel_worlds_json_fields(const char *fields) {
   sbuf_t b = { 0 };
   sb_add(&b, "[");
   for (int i = 0; i < K.n_worlds; i++) {
     world_t *W = K.worlds[i];
-    sb_add(&b, i ? ",{\"name\":" : "{\"name\":"); sb_json_str(&b, W->name);
-    sb_add(&b, ",\"kind\":"); sb_json_str(&b, W->kind);
-    sb_add(&b, ",\"title\":"); sb_json_str(&b, W->title);
-    sb_printf(&b, ",\"state\":\"%s\",\"turns\":%llu,\"msgs\":%llu,\"cpu_ms\":%.3f,\"mem_kb\":%.1f,\"limit_kb\":%zu,\"mbox\":%d,\"mbox_peak\":%d,\"restarts\":%d,\"budget_ms\":%lld",
-              state_name(W), (unsigned long long)W->turns, (unsigned long long)W->msgs, W->cpu_us / 1000.0, W->mem_used / PROFILE.mem_scale / 1024.0,
-              W->mem_limit / 1024, W->mbox_len, W->mbox_peak, restarts_of(W), (long long)(W->budget_us / 1000));
-    sb_add(&b, ",\"last_error\":"); sb_json_str(&b, W->last_error);
-    sb_add(&b, ",\"claims\":[");
-    for (int k = 0; k < W->n_claims; k++) { if (k) sb_add(&b, ","); sb_json_str(&b, W->claims[k]); }
-    sb_add(&b, "]}");
+    const char *sep = "{";
+    sb_add(&b, i ? "," : "");
+#define FIELD(key) (wants(fields, key) && (sb_add(&b, sep), sep = ",", sb_add(&b, "\"" key "\":"), 1))
+    if (FIELD("name")) sb_json_str(&b, W->name);
+    if (FIELD("kind")) sb_json_str(&b, W->kind);
+    if (FIELD("title")) sb_json_str(&b, W->title);
+    if (FIELD("state")) sb_printf(&b, "\"%s\"", state_name(W));
+    if (FIELD("turns")) sb_printf(&b, "%llu", (unsigned long long)W->turns);
+    if (FIELD("msgs")) sb_printf(&b, "%llu", (unsigned long long)W->msgs);
+    if (FIELD("cpu_ms")) sb_printf(&b, "%.3f", W->cpu_us / 1000.0);
+    if (FIELD("mem_kb")) sb_printf(&b, "%.1f", W->mem_used / PROFILE.mem_scale / 1024.0);
+    if (FIELD("limit_kb")) sb_printf(&b, "%zu", W->mem_limit / 1024);
+    if (FIELD("mbox")) sb_printf(&b, "%d", W->mbox_len);
+    if (FIELD("mbox_peak")) sb_printf(&b, "%d", W->mbox_peak);
+    if (FIELD("restarts")) sb_printf(&b, "%d", restarts_of(W));
+    if (FIELD("budget_ms")) sb_printf(&b, "%lld", (long long)(W->budget_us / 1000));
+    if (FIELD("last_error")) sb_json_str(&b, W->last_error);
+    if (FIELD("claims")) {
+      sb_add(&b, "[");
+      for (int k = 0; k < W->n_claims; k++) { if (k) sb_add(&b, ","); sb_json_str(&b, W->claims[k]); }
+      sb_add(&b, "]");
+    }
+#undef FIELD
+    sb_add(&b, *sep == '{' ? "{}" : "}");
   }
   sb_add(&b, "]");
   return b.s;

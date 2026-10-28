@@ -1,0 +1,65 @@
+I (320) esp_image: segment 3: paddr=00193f98 vaddr=3fc9c468 sizeI (640) esp_psram: SPI SRAM memory test OK
+I (649) cpu_start: Pro cpu start user code
+I (649) cpu_start: cpu freq: 240000000 Hz
+I (649) app_init: Application information:
+I (649) app_init: Project name:     picocalc-os-papers3
+I (649) app_init: App version:      58f23ac-dirty
+I (649) app_init: Compile time:     Oct 28 2026 18:28:58
+I (650) app_init: ELF file SHA256:  87b6d128f...
+I (650) app_init: ESP-IDF:          v5.3.4
+I (650) efuse_init: Min chip rev:     v0.0
+I (650) efuse_init: Max chip rev:     v0.99 
+I (650) efuse_init: Chip rev:         v0.2
+I (650) heap_init: Initializing. RAM available for dynamic allocation:
+I (651) heap_init: At 3FCAB688 len 0003E088 (248 KiB): RAM
+I (651) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (651) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (651) heap_init: At 600FE030 len 00001FB8 (7 KiB): RTCRAM
+I (651) esp_psram: Adding pool of 8192K of PSRAM memory to heap allocator
+I (652) spi_flash: detected chip: generic
+I (652) spi_flash: flash io: dio
+I (653) sleep: Configure to isolate all GPIO pins in sleep state
+I (653) sleep: Enable automatic switching of GPIO sleep configuration
+I (654) main_task: Started on CPU0
+I (655) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (655) main_task: Calling app_main()
+I (656) picocalc-os: picocalc-os on esp32s3 rev 0.2, 2 cores, 8192 KB PSRAM
+heap: internal 290975 free (largest 196608), psram 8385916 free (largest 8257536)
+I (657) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (657) pm: Frequency switching config: CPU_MAX: 240, APB_MAX: 80, APB_MIN: 40, Light sleep: ENABLED
+I (658) sleep: Code start at 0x42000020, total 343920, data start at 0x3c000000, total 33554432 Bytes
+I (658) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (659) pm: external power in (GPIO4)
+I (659) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (659) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (660) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (867) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (868) main_task: Returned from app_main()
+[   495.682] calibration on the real clock: the 100k loop took 408.8 ms (the model says 250), fib(20) 83.6 ms (the model says 68.4)
+[   505.430] booting 14 worlds from js/system.json
+[  3034.779] touch: touch controller GT911
+E (3907) gpio: gpio_install_isr_service(502): GPIO isr service already installed
+I (3908) gpio: GPIO[48]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:4 
+#OK tap
+#OK prof
+prof over 16.0 s: the kernel task woke 55 times (3.4/s) and was blocked 95% of the time; worlds ran 725 ms (4.5%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  display        28     1.7      69.9       69.3        0.3       0.3    2.50        228    2
+  compositor     44     2.7     435.0      434.3        0.3       0.3    9.89       1906    1
+  system         16     1.0     220.4      167.4       52.7       0.3   13.78        373    4
+  host op          calls   total ms   us/call
+  sys.worlds          16       87.2    5452.0
+  gfx.commit          14       69.1    4938.9
+  gfx.text           238       35.6     149.7
+  sys.stats           16       32.1    2003.5
+  gfx.fill           289       29.4     101.7
+  gfx.measure        224        6.7      30.0
+  ask                 14        3.6     258.5
+  turn.done           28        2.7      97.4
+  send                14        1.9     133.3
+  gfx.rect            14        1.6     116.6
+  epd.update          14        1.5     104.9
+  turn.async          28        0.8      29.3
+  now                 14        0.6      44.7
+#OK prof
+#OK tap

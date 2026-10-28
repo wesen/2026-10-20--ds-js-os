@@ -26,10 +26,14 @@ pixel_t gfx_color(const char *s) {
 #endif
 }
 
-// Every write to back widens the framebuffer's dirty rows; commit compares only those.
+// Every write to back marks its 16-row bands dirty; commit compares only those. Band 63 stands for every band
+// from 63 on, so a buffer of more than 1024 rows is compared in full from there.
+enum { BAND = 16 };
 static inline void touch(dmabuf_t *b, int y, int h) {
-  if (y < b->dirty_y0) b->dirty_y0 = y;
-  if (y + h > b->dirty_y1) b->dirty_y1 = y + h;
+  int b0 = y / BAND, b1 = (y + h - 1) / BAND;
+  if (b0 > 63) b0 = 63;
+  if (b1 > 63) b1 = 63;
+  b->dirty |= (b1 - b0 == 63 ? ~0ull : ((1ull << (b1 - b0 + 1)) - 1)) << b0;
 }
 
 static bool clip(dmabuf_t *b, int *x, int *y, int *w, int *h) {
@@ -244,9 +248,10 @@ static bool equal(const void *a, const void *b, size_t n) {
 }
 
 int gfx_commit(dmabuf_t *b, int *rects, int max_rects) {
-  enum { BAND = 16 };
   int n = 0;
-  for (int y0 = b->dirty_y0 / BAND * BAND; y0 < b->dirty_y1; y0 += BAND) {   // rows outside equal front already
+  for (int y0 = 0; y0 < b->h; y0 += BAND) {
+    int band = y0 / BAND;
+    if (!(b->dirty >> (band > 63 ? 63 : band) & 1)) continue;   // equal to front already
     int y1 = y0 + BAND < b->h ? y0 + BAND : b->h;
     size_t row = (size_t)b->w * sizeof(pixel_t);
     if (equal(b->back + (size_t)y0 * b->w, b->front + (size_t)y0 * b->w, row * (y1 - y0))) continue;   // the whole band at once
@@ -284,14 +289,14 @@ int gfx_commit(dmabuf_t *b, int *rects, int max_rects) {
     for (int y = p[1]; y < p[1] + p[3]; y++)
       memcpy(b->front + (size_t)y * b->w + p[0], b->back + (size_t)y * b->w + p[0], (size_t)p[2] * sizeof(pixel_t));
   }
-  b->dirty_y0 = b->h; b->dirty_y1 = 0;   // back equals front now
+  b->dirty = 0;   // back equals front now
   charge((double)b->w * b->h * PROFILE.diff_ns_per_px);
   return n;
 }
 
 void gfx_invalidate(dmabuf_t *b) {
   for (size_t i = 0; i < (size_t)b->w * b->h; i++) b->front[i] = (pixel_t)~b->back[i];
-  b->dirty_y0 = 0; b->dirty_y1 = b->h;
+  b->dirty = ~0ull;
 }
 
 uint32_t gfx_hash(const dmabuf_t *b) {   // FNV-1a

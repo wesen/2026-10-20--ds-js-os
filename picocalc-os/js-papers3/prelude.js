@@ -203,7 +203,7 @@
     wrap: function (s, font, w) { return k("gfx.wrap", String(s), font || "m", w); },
   };
   g.sys = {
-    worlds: function () { return k("sys.worlds"); },
+    worlds: function (fields) { return k("sys.worlds", fields ? fields.join(",") : ""); },   // fields: the keys wanted, or all
     handles: function () { return k("sys.handles"); },
     stats: function () { return k("sys.stats"); },
     fault: function (name) { return k("sys.fault", name); },

@@ -15,7 +15,7 @@ var APPS = [
 ];
 
 function count(s) {
-  var ws = sys.worlds();
+  var ws = sys.worlds(["state"]);
   s.worlds = ws.length;
   s.running = ws.filter(function (w) { return w.state !== "stopped" && w.state !== "restarting"; }).length;
   s.crashes = sys.stats().crashes;

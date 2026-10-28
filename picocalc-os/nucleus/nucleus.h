@@ -144,7 +144,8 @@ typedef struct {            // a DMA-capable framebuffer of pixel_t: drawn into 
   int w, h;
   pixel_t *back, *front;
   size_t bytes;
-  int dirty_y0, dirty_y1;   // rows of back written since the last commit; every other row equals front
+  uint64_t dirty;           // 16-row bands of back written since the last commit (bit i: rows 16i..16i+15);
+                            // every other band equals front. Buffers taller than 64 bands keep the last bit set.
 } dmabuf_t;
 #define MAX_BUFS 16
 
@@ -229,6 +230,7 @@ void kernel_timer_set(world_t *W, int i, bool on);   // stop or restart a world'
 void kernel_irq(int handle_id, vtime_t t);           // a watched pin fired: called on the kernel's thread, never in the ISR
 void kernel_fault(world_t *W, const char *why);
 char *kernel_worlds_json(void);
+char *kernel_worlds_json_fields(const char *fields);   // only these keys ("name,state"); NULL or "": all
 char *kernel_stats_json(void);
 void kernel_stats_print(void);
 bool world_needs(world_t *W, const char *ch);

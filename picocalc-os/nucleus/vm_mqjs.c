@@ -457,15 +457,20 @@ static JSValue op_gfx_fonts(JSContext *ctx, world_t *W, int argc, JSValue *argv)
   return json_value(ctx, gfx_fonts_json());
 }
 
-static JSValue op_sys_json(JSContext *ctx, world_t *W, const char *what) {
+static JSValue op_sys_json(JSContext *ctx, world_t *W, const char *what, const char *fields) {
   if (!world_claims(W, "sys.read")) return fail(ctx, "%s has no claim on sys.read", W->name);
-  char *j = !strcmp(what, "worlds") ? kernel_worlds_json() : !strcmp(what, "handles") ? hw_handles_json() : kernel_stats_json();
+  char *j = !strcmp(what, "worlds") ? kernel_worlds_json_fields(fields) : !strcmp(what, "handles") ? hw_handles_json() : kernel_stats_json();
   charge_json(strlen(j));
   return json_value(ctx, j);
 }
-static JSValue op_sys_worlds(JSContext *ctx, world_t *W, int argc, JSValue *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "worlds"); }
-static JSValue op_sys_handles(JSContext *ctx, world_t *W, int argc, JSValue *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "handles"); }
-static JSValue op_sys_stats(JSContext *ctx, world_t *W, int argc, JSValue *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "stats"); }
+static JSValue op_sys_worlds(JSContext *ctx, world_t *W, int argc, JSValue *argv) {   // (fields): "name,state", or all
+  char *fields = argc > 0 ? sarg(ctx, argv, argc, 0) : NULL;
+  JSValue r = op_sys_json(ctx, W, "worlds", fields);
+  free(fields);
+  return r;
+}
+static JSValue op_sys_handles(JSContext *ctx, world_t *W, int argc, JSValue *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "handles", NULL); }
+static JSValue op_sys_stats(JSContext *ctx, world_t *W, int argc, JSValue *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "stats", NULL); }
 
 static void run_fault(deferred_t *d, vtime_t at) {
   (void)at;

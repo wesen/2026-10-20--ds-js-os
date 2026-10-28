@@ -1217,3 +1217,94 @@ four tours and a stress script ran 119 checked retained paints with no differenc
 
 - The check's extra full paints are counted in `paints`, so "74 of 166 paints retained" means 74
   retained, 74 check paints and 18 full paints.
+
+## Step 12: Dirty bands and shorter world lists
+
+Two smaller changes, both from a timing experiment on the device. A System repaint's 33 ms split into
+19 ms in `paint`, 9 ms in commit, and 4.3 ms decoding the app's frame JSON. Commit was comparing more
+rows than were drawn: a single min..max row range from the graph near the top to a table row near the
+bottom spans most of the screen. Framebuffers now keep a bitmask of 16-row bands instead. And
+`sys.worlds` returned every field of every world, where each app needs a few, so it now takes a field
+list. With System in front the lane is now 4.5%.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 9.
+**Assistant interpretation:** Continue P5 with the items Step 11 left.
+**Inferred user intent:** Faster turns, measured on the device.
+
+### What I did
+
+- Experiment, not committed. `now()` stamps around `paint`, `commit` and the frame decode, with averages
+  logged every 14 paints. Device result:
+  `PT paints 14 retained 11 paint 19.23 commit 9.33 frames 4.32 (18)`. The files were restored from
+  copies afterwards.
+- `dmabuf_t.dirty` is a `uint64_t` of 16-row bands. Bit 63 also covers the rows beyond 1024.
+  - `touch()` sets a band range;
+  - `gfx_commit` skips clean bands, then clears the mask;
+  - allocation and `gfx_invalidate` set every bit.
+- `kernel_worlds_json_fields(fields)`:
+  - `fields` is a comma-separated key list, NULL or "" meaning all;
+  - the keys come out in the old order, so the full output is unchanged;
+  - `kernel_worlds_json()` calls it with NULL.
+- `sys.worlds(fields)` in the prelude and the `sys.worlds` op. Callers ask for what they use:
+  - System: name, state, turns, cpu_ms, mem_kb, limit_kb, last_error;
+  - Faults: name, state, restarts, last_error;
+  - the launcher and About: state, which they count.
+
+### Why
+
+- Commit cost is proportional to the rows compared. Bands match the granularity commit already used.
+- `sys.worlds` cost 7.9 ms a call after Step 11, the System app's largest item: about 4 KB of JSON
+  formatted with `printf` and parsed back into 14 objects of 15 fields each, most never read.
+
+### What worked
+
+- Device, System in front for 16 s (`out-s3/p5/system-bands.log`):
+
+  | | Step 11 | now |
+  |---|---|---|
+  | `gfx.commit` per call | 6.6 ms | 4.9 ms |
+  | `sys.worlds` per call | 7.9 ms | 5.5 ms |
+  | compositor | 462 ms | 435 ms |
+  | System app | 270 ms | 220 ms |
+  | lane | 5.0% | 4.5% |
+
+- Band mask alone: every capture on both boards byte-identical.
+- The paint check is unchanged: 119 retained paints, 0 differed.
+- With the field lists, PicoCalc is unchanged (its binding asks for all fields). On the PaperS3,
+  `03-system.png` changed only in the KB column: launcher 38 → 36 KB, system 39 → 40 KB.
+
+### What didn't work
+
+- Nothing failed. The gains are smaller than in Steps 10 and 11: what remains is mostly interpreter
+  time.
+
+### What I learned
+
+- After Steps 9–12 a System repaint costs the compositor about 31 ms, against 109 ms at the start of
+  P5. Most of what is left runs in the interpreter: the compositor's layout and comparisons (about
+  14 ms), decoding the frame (about 4 ms), and the app's own render and sampling.
+
+### What was tricky to build
+
+- `FIELD()` keeps the separator logic in one place. The output is byte-identical to the old function
+  when every field is asked for; the PicoCalc captures check that through its System app.
+
+### What warrants a second pair of eyes
+
+- `wants()` matches whole keys between commas, so "state" does not match "states".
+
+### What should be done in the future
+
+- World start-up. Every world's first segment costs about 200 ms on the device, mostly compiling the
+  prelude, so boot takes about 3 s and every crash restart pays the same. mquickjs can precompile
+  bytecode (`JS_PrepareBytecode`, `JS_LoadBytecode`).
+
+### Code review instructions
+
+- `nucleus/gfx.c` (`touch`, the band loop in `gfx_commit`); `nucleus/kernel.c`
+  (`kernel_worlds_json_fields`, `wants`); `nucleus/vm_mqjs.c` (`op_sys_worlds`); `js-papers3/prelude.js`;
+  the four apps.
+- Validate: `make shots` (unchanged), `make BOARD=papers3 shots`, `02-paintcheck.sh`, then the device
+  window from Step 9.
