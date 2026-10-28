@@ -13,5 +13,12 @@ copied from ~/code/others/mquickjs, with these changes for picocalc-os:
    setTimeout/clearTimeout; instead the two host calls __k and __ka (nucleus/vm_mqjs.c).
    nucleus_stdlib.c is the generator's entry point for that variant.
 
+4. mquickjs.c, JS_GC2: the unique-string table keeps entries that point outside the heap. A string of a loaded
+   bytecode image that is not in the image's own atom table (the prelude's property names, for one) is put
+   into the context's RAM table the first time it is interned; the collector does not mark strings outside
+   the heap, so it used to drop that entry, and the same name interned later became a second, different
+   atom (a property set under one could not be read under the other). nucleus/vm_mqjs.c loads the compiled
+   prelude this way, one image per context.
+
 mquickjs_atom.h and mqjs_stdlib.h are generated at build time (word size specific: -m32 for the device)
 and are not in this directory.

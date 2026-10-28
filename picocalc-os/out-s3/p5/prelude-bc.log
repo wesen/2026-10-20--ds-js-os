@@ -1,0 +1,115 @@
+I (320) esp_image: segment 3: paddr=001943c0 vaddr=3fc9c328 sizeI (640) esp_psram: SPI SRAM memory test OK
+I (649) cpu_start: Pro cpu start user code
+I (649) cpu_start: cpu freq: 240000000 Hz
+I (649) app_init: Application information:
+I (649) app_init: Project name:     picocalc-os-papers3
+I (649) app_init: App version:      e39d113-dirty
+I (649) app_init: Compile time:     Oct 28 2026 18:33:16
+I (650) app_init: ELF file SHA256:  ae0ca0528...
+I (650) app_init: ESP-IDF:          v5.3.4
+I (650) efuse_init: Min chip rev:     v0.0
+I (650) efuse_init: Max chip rev:     v0.99 
+I (650) efuse_init: Chip rev:         v0.2
+I (650) heap_init: Initializing. RAM available for dynamic allocation:
+I (651) heap_init: At 3FCAB698 len 0003E078 (248 KiB): RAM
+I (651) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (651) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (651) heap_init: At 600FE030 len 00001FB8 (7 KiB): RTCRAM
+I (651) esp_psram: Adding pool of 8192K of PSRAM memory to heap allocator
+I (652) spi_flash: detected chip: generic
+I (652) spi_flash: flash io: dio
+I (653) sleep: Configure to isolate all GPIO pins in sleep state
+I (653) sleep: Enable automatic switching of GPIO sleep configuration
+I (654) main_task: Started on CPU0
+I (655) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (655) main_task: Calling app_main()
+I (656) picocalc-os: picocalc-os on esp32s3 rev 0.2, 2 cores, 8192 KB PSRAM
+heap: internal 290959 free (largest 196608), psram 8385916 free (largest 8257536)
+I (657) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (657) pm: Frequency switching config: CPU_MAX: 240, APB_MAX: 80, APB_MIN: 40, Light sleep: ENABLED
+I (658) sleep: Code start at 0x42000020, total 344984, data start at 0x3c000000, total 33554432 Bytes
+I (658) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (659) pm: external power in (GPIO4)
+I (659) gpio: GPIO[44]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (659) gpio: GPIO[41]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (660) gpio: GPIO[42]| InputEn: 1| OutputEn: 1| OpenDrain: 1| Pullup: 1| Pulldown: 0| Intr:0 
+I (867) bus: epd0: 540 x 960 (rotation 0); i2c1 sda=41 scl=42
+I (868) main_task: Returned from app_main()
+[   495.710] calibration on the real clock: the 100k loop took 408.9 ms (the model says 250), fib(20) 83.5 ms (the model says 68.4)
+[   505.529] booting 14 worlds from js/system.json
+[  1169.052] touch: touch controller GT911
+E (2041) gpio: gpio_install_isr_service(502): GPIO isr service already installed
+I (2042) gpio: GPIO[48]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:4 
+t = 1344.3 ms, lane busy 843.8 ms (62.8%), 13 turns, 6 published, 10 delivered, 0 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  touch       driver   idle             1    169.64     12.6     64    0  
+  clock       driver   idle             1     21.77     10.1     48    0  
+  power       driver   idle             1     18.02      9.6     48    0  
+  display     driver   waiting          2     28.62     12.2     64    0  
+  compositor  service  waiting          3    378.97     52.3    448    0  
+  launcher    app      idle             2     39.63     13.0     96    0  
+  system      app      idle             1     56.94     17.1    160    0  
+  repl        app      idle             0     22.29     12.3    128    0  
+  sandbox     service  idle             0     14.14      9.3    128    0  
+  faults      app      idle             1     29.22     12.2     96    0  
+  flaky       service  idle             0      9.80      8.3     48    0  
+  touches     app      idle             0     15.43     10.2     96    0  
+  sketch      app      idle             0     15.13      9.9    192    0  
+  about       app      idle             1     24.25     10.2     96    0  
+  bus i2c1  busy     2.43 ms, 3 transfers, 23 bytes, 0 errors
+  bus epd0  busy     0.00 ms, 0 transfers, 0 bytes, 0 errors
+#OK stats
+#OK prof
+[  5666.323] about crashed: restarted by an administrator
+#OCT1 {"ev":"fault","t":5666.323,"world":"about","file":"apps/about.js","handling":"","why":"restarted by an administrator","crashes":1,"mem_kb":10,"limit_kb":96}
+#OK restart
+[  7675.374] system crashed: restarted by an administrator
+#OCT1 {"ev":"fault","t":7675.374,"world":"system","file":"apps/system.js","handling":"","why":"restarted by an administrator","crashes":1,"mem_kb":17,"limit_kb":160}
+#OK restart
+[  9685.181] faults crashed: restarted by an administrator
+#OCT1 {"ev":"fault","t":9685.181,"world":"faults","file":"apps/faults.js","handling":"","why":"restarted by an administrator","crashes":1,"mem_kb":12,"limit_kb":96}
+#OK restart
+[ 11642.637] touch crashed: restarted by an administrator
+#OCT1 {"ev":"fault","t":11642.637,"world":"touch","file":"drivers/touch.js","handling":"","why":"restarted by an administrator","crashes":1,"mem_kb":12,"limit_kb":64}
+#OK restart
+[ 11775.630] touch: touch controller GT911
+I (12647) gpio: GPIO[48]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:4 
+prof over 9.0 s: the kernel task woke 36 times (4.0/s) and was blocked 94% of the time; worlds ran 503 ms (5.6%)
+  world        segs  segs/s    cpu ms  engine ms  render ms  other ms  ms/seg  steps/seg  gcs
+  touch           4     0.4      33.8       33.7        0.0       0.0    8.44         82    0
+  display        13     1.4      26.5       26.4        0.1       0.1    2.04        158    0
+  compositor     31     3.4     331.5      331.1        0.1       0.2   10.69        513    0
+  launcher        2     0.2      12.5        7.4        5.2       0.0    6.27        194    0
+  system          2     0.2      50.7       47.4        3.2       0.0   25.33        202    0
+  faults          2     0.2      27.0       23.9        3.1       0.0   13.52        170    0
+  about           2     0.2      21.5       19.2        2.2       0.0   10.73        110    0
+  host op          calls   total ms   us/call
+  gfx.commit           6       78.0   13004.0
+  gfx.fill           276       74.3     269.1
+  gfx.text           104       49.1     472.5
+  gfx.rect           116       18.3     157.7
+  sys.worlds           5        9.9    1973.2
+  gfx.wrap            24        9.0     373.9
+  sys.stats            4        6.9    1712.8
+  gfx.measure         78        3.4      43.5
+  gfx.line            72        2.9      40.8
+  ask                  6        1.5     251.5
+  turn.done           15        1.4      94.2
+  hw.i2c               1        1.0     973.0
+  log                  1        0.8     782.0
+  gpio.watch           1        0.8     775.0
+  send                 6        0.7     120.3
+  epd.update           6        0.6     104.3
+  now                 22        0.6      25.9
+  i2c                  2        0.5     238.0
+  turn.async          13        0.4      30.6
+  hw.gpio              1        0.4     393.0
+  sleep                8        0.3      43.0
+  seed                 4        0.3      78.2
+  self                 4        0.1      28.0
+  engine               4        0.1      16.0
+#OK prof
+heap: internal 65387 free (largest 31744), psram 3828852 free (largest 3670016); the kernel task's stack has 28040 bytes never used
+#OK heap
+#OK tap
+#OK tap

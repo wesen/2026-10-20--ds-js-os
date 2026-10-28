@@ -19,6 +19,7 @@ struct vmw {
   uint8_t *arena;
   size_t size;
   unsigned ooms;            // out-of-memory errors seen: one more after a segment means it hit its limit
+  uint8_t *prelude;         // this world's relocated copy of the compiled prelude (lives as long as the context)
 };
 extern const JSSTDLibraryDef js_stdlib;   // mqjs_stdlib.h, generated from third_party/mquickjs/nucleus_stdlib.c
 
@@ -710,10 +711,61 @@ static int read_meta(world_t *W, JSValue *meta) {
   return 0;
 }
 
+// ---- the prelude, compiled once ----------------------------------------------------------------------------
+// Every world runs the same prelude, and parsing it was most of a world's start (about 140 ms on the PaperS3).
+// The binding compiles it once, before the first world starts, into a bytecode image. Each world then copies
+// the image, relocates the copy (which also swaps its copies of names the stdlib has for the stdlib's own) and
+// runs it. One image cannot serve several contexts: a context that interns one of the image's string constants
+// marks that string unique in place, and the next context would see a "unique" string in none of its tables.
+// mquickjs requires the load to come before a context interns any string of its own, so it is the first thing
+// a new world does. If compiling fails, worlds parse the source as before.
+static uint8_t *prelude_bc;   // header + code, as JS_PrepareBytecode left them (not relocated)
+static uint32_t prelude_bc_len;
+static bool prelude_tried;
+
+static void compile_prelude(void) {
+  prelude_tried = true;
+  size_t size = 128 * 1024;   // scratch, freed below (the 64-bit host needs between 48 and 64 KB)
+  uint8_t *mem = port_heap_malloc(size);
+  if (!mem) return;
+  JSContext *ctx = JS_NewContext2(mem, size, &js_stdlib, 1);   // compile mode: parse only, then keep the code
+  if (ctx) {
+    JSValue f = JS_Parse(ctx, K.prelude, K.prelude_len, "prelude.js", 0);
+    if (!JS_IsException(f)) {
+      JSBytecodeHeader hdr;
+      const uint8_t *data;
+      uint32_t len;
+      JS_PrepareBytecode(ctx, &hdr, &data, &len, f);   // the code is the arena's used part, data .. data + len
+      if ((prelude_bc = port_heap_malloc(sizeof hdr + len))) {
+        memcpy(prelude_bc, &hdr, sizeof hdr);
+        memcpy(prelude_bc + sizeof hdr, data, len);
+        prelude_bc_len = sizeof hdr + len;
+      }
+    }
+    JS_FreeContext(ctx);
+  }
+  port_heap_free(mem);
+  if (!prelude_bc) klog("the prelude did not compile to bytecode; every world parses it");
+}
+
+static int run_prelude(world_t *W) {
+  JSContext *ctx = W->vm->ctx;
+  if (!prelude_bc) return eval_file(W, K.prelude, K.prelude_len, "prelude.js");
+  uint8_t *bc = W->vm->prelude = port_heap_malloc(prelude_bc_len);
+  if (!bc) { snprintf(W->last_error, sizeof W->last_error, "no memory for the prelude's code"); return -1; }
+  memcpy(bc, prelude_bc, prelude_bc_len);
+  if (JS_RelocateBytecode(ctx, bc, prelude_bc_len)) { snprintf(W->last_error, sizeof W->last_error, "the prelude's code did not relocate"); return -1; }
+  JSValue r = JS_LoadBytecode(ctx, bc);
+  if (!JS_IsException(r)) r = JS_Run(ctx, r);
+  if (JS_IsException(r)) { set_error(W); return -1; }
+  return 0;
+}
+
 // ---- lifecycle ----------------------------------------------------------------------------------------------
 static size_t arena_size(world_t *W) { return (size_t)((double)W->mem_limit * PROFILE.mem_scale); }
 
 int vm_create(world_t *W) {
+  if (!prelude_tried) compile_prelude();
   W->oom = false; W->interrupts = 0; W->mem_used = 0;
   W->vm = calloc(1, sizeof(*W->vm));
   W->vm->size = arena_size(W);
@@ -726,7 +778,7 @@ int vm_create(world_t *W) {
   JS_SetLogFunc(ctx, log_write);
   JS_SetRandomSeed(ctx, W->seed);
   vm_begin_segment(W, MS(600));   // booting may take longer than a turn
-  int rc = eval_file(W, K.prelude, K.prelude_len, "prelude.js");
+  int rc = run_prelude(W);
   if (!rc) rc = eval_file(W, W->source, strlen(W->source), W->file);
   if (!rc) {
     JSGCRef meta_ref;
@@ -749,6 +801,7 @@ void vm_dispose(world_t *W) {
   if (!W->vm) return;
   if (W->vm->ctx) JS_FreeContext(W->vm->ctx);
   port_heap_free(W->vm->arena);
+  port_heap_free(W->vm->prelude);
   free(W->vm);
   W->vm = NULL;
 }

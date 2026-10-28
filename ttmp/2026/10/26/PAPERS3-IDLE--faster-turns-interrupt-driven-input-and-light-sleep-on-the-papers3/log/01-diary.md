@@ -1308,3 +1308,140 @@ list. With System in front the lane is now 4.5%.
   the four apps.
 - Validate: `make shots` (unchanged), `make BOARD=papers3 shots`, `02-paintcheck.sh`, then the device
   window from Step 9.
+
+## Step 13: The prelude compiled once (and an engine bug it exposed)
+
+Every world used to parse the 341-line prelude when it started, which took 143 ms on the device: most of
+a world's start, about 2 s of every boot, and the bulk of every crash restart. The binding now compiles
+the prelude once to a bytecode image, and each world loads a copy instead of parsing. A world's restart
+went from about 150–180 ms to 10–25 ms, and its live arena use dropped by about 23 KB on the device,
+because the prelude's code no longer lives inside the arena.
+
+It took two wrong turns to get there. One image shared by all worlds broke every world after the first.
+Copies per world then broke property names as soon as the collector ran. The second problem is an
+mquickjs bug, now patched (`PATCHES` item 4).
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 9.
+**Assistant interpretation:** Continue P5, with world start-up from Step 12's list.
+**Inferred user intent:** Faster turns and starts, measured on the device.
+
+### What I did
+
+- Timing experiment, not committed: `vm_create` logged the time of each start phase. Device result:
+
+  ```text
+  BOOT touch prelude 143.3 file 20.8 init 1.3 gc 6.0 ms
+  BOOT compositor prelude 132.8 file 254.5 init 1.8 gc 14.0 ms
+  BOOT launcher prelude 142.6 file 10.5 init 1.0 gc 7.3 ms
+  ```
+
+- `nucleus/vm_mqjs.c`:
+  - `compile_prelude()` runs once, before the first world's context. In a 128 KB scratch arena:
+    `JS_NewContext2(..., 1)` (compile mode), `JS_Parse` the prelude, `JS_PrepareBytecode`, then copy the
+    header and code into `prelude_bc`. The image is not relocated.
+  - `run_prelude(W)`, the first thing a new world does:
+    1. copy the image into `W->vm->prelude`;
+    2. `JS_RelocateBytecode` with the world's own context;
+    3. `JS_LoadBytecode`, then `JS_Run`.
+  - `vm_dispose` frees the copy. If compiling fails, worlds parse the source as before.
+- `third_party/mquickjs/mquickjs.c`, `JS_GC2`: the sweep of the unique-string table keeps entries that
+  point outside `[heap_base, stack_top)`. Recorded as item 4 in `PATCHES`.
+
+### Why
+
+- The timing table: the prelude is 75–95% of every world's start except the compositor's.
+- The engine copies nothing when it loads bytecode. The image's functions are used in place, which is
+  also why arena use drops.
+
+### What worked
+
+- Device:
+  - `prof` over four restarts (`out-s3/p5/prelude-bc.log`): about 10–25 ms per world (about, faults,
+    launcher, touch);
+  - boot: `stats` at 1.34 s on the kernel clock reads `lane busy 843.8 ms` with every world up. Before,
+    the start segments alone were about 3.5 s;
+  - arena use (System screenshot `out-s3/p5/prelude-bc/shot-1.png`): drivers 10–13 KB (31–36 before),
+    compositor 52 KB, apps 10–17 KB;
+  - free PSRAM 3.83 MB against 4.25 MB: 14 image copies of about 30 KB each, while the arenas keep their
+    configured sizes.
+- Host:
+  - conformance: 11 pong lines, with error locations in the world files (`test/ping.js:6:79`);
+  - PicoCalc captures unchanged;
+  - PaperS3 deterministic, and identical under `SAN=1` with no reports. Only `03-system.png` changed,
+    in its KB column: every world about 22 KB lower;
+  - `02-paintcheck.sh`: 0 differed.
+- QEMU: compiles (with no PSRAM, so the 128 KB scratch matters) and runs the conformance sequence as in
+  recent runs.
+
+### What didn't work
+
+1. **One image for all worlds.** The first world was fine; every later one failed:
+   `pong crashed: ReferenceError: variable 'service' is not defined (test/pong.js:2:1)`.
+   - Comparing the image with a copy taken after relocation:
+     `DBG w2: image 44112 bytes, 3 differ from the relocated copy (first at 12928)`.
+   - The changed word was the header of the string "driver": `2603…` became `3603…`, which is bit 4,
+     `is_unique`. The first world had interned the image's own string and marked it unique in place.
+     The next world then saw a "unique" string that was in none of its tables.
+   - Fix: one copy per world, relocated by that world's context, from an unrelocated master. A
+     relocated master cannot be copied, because relocation adds an offset to every pointer, including
+     ones already swapped for stdlib atoms.
+2. **Per-world copies broke property names after the first collection.**
+   - The home screen stayed at "starting launcher…": the compositor's `frames` handler compared
+     `f.app` with `s.focus`, and `f.app` was undefined.
+   - Probe inside a handler:
+     `keys: app; k0 === 'app': true; m['app']: launcher; ... fresh parse in handler .app: undefined`.
+   - A temporary dump of the image's atom table: 223 entries, sorted, all unique, but no "app" or
+     "driver".
+   - Cause, in the engine:
+     - such a name is interned into the context's RAM table as the image string itself;
+     - that table holds weak references, and the collector does not mark strings outside the heap
+       (`gc_mb_is_marked` reads the object's own mark bit), so the end-of-start collection dropped the
+       entry;
+     - the same name interned later became a second atom, and a property set under one could not be read
+       under the other.
+   - Fix: the sweep keeps entries outside the heap.
+3. The first build used `TRUE`, which the binding does not define.
+4. A first 512 KB compile scratch failed under QEMU, which has no PSRAM, and fell back to parsing.
+   Probing on the 64-bit host: 64 KB works, 48 KB does not. The scratch is now 128 KB.
+
+### What I learned
+
+- mquickjs's bytecode path is built for one image per context (`mqjs -b`), and even there an image
+  string can enter the RAM atom table. The collector bug would also hit upstream's single-context use as
+  soon as a collection runs between interning such a name and using it again.
+- Comparing an image byte for byte before and after use found the shared-image bug in one run. A
+  probe that reads the same key three ways (`.app`, `['app']`, a key comparison) found the second.
+
+### What was tricky to build
+
+- Relocation needs a normal context: it swaps the image's copies of stdlib names for the stdlib's own
+  atoms, which only a context with the stdlib's ROM table can do. Each world uses its own context,
+  before anything is interned, as `JS_LoadBytecode` requires.
+
+### What warrants a second pair of eyes
+
+- The engine patch: an out-of-heap pointer in the RAM table now lives as long as the context. That is
+  safe because each world's image copy is freed only in `vm_dispose`, after `JS_FreeContext`.
+- Arena limits (`mem_kb`) were sized when the prelude's code was inside the arena. They could come down
+  by about 20 KB each, which would more than return the PSRAM the copies take.
+
+### What should be done in the future
+
+- Lower the manifest's `mem_kb` limits to match the new live sizes, keeping room for transient use.
+- The compositor's own file still takes 254 ms to parse at boot.
+
+### Code review instructions
+
+- `nucleus/vm_mqjs.c`: `compile_prelude`, `run_prelude`, `vm_create`, `vm_dispose`.
+- `third_party/mquickjs/mquickjs.c`: the unique-string sweep in `JS_GC2`; `PATCHES` item 4.
+- Validate:
+  - `make BOARD=papers3 && ./build-papers3/papers3-host -j js-papers3 -m js-papers3/test/system.json -v -t 3000`
+    (11 pong lines);
+  - `make shots`, `make BOARD=papers3 shots`, `make BOARD=papers3 SAN=1 shots`, `02-paintcheck.sh`;
+  - on the device: `s3cap.py --no-reset -c "5 prof reset" -c "6 restart about" -c "14 prof"`.
+
+### Technical details
+
+- Image size: 44,112 bytes on the 64-bit host, about 30 KB on the device.

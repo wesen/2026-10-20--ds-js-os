@@ -12145,7 +12145,11 @@ static void gc_mark_all(JSContext *ctx, BOOL keep_atoms)
 
         j = 0;
         for(i = 0; i < arr->size; i++) {
-            if (gc_mb_is_marked(arr->arr[i])) {
+            /* picocalc-os: a string outside the heap (in a loaded bytecode image) is never collected, so its
+               entry stays; the GC does not mark such strings */
+            uint8_t *sp1 = JS_VALUE_TO_PTR(arr->arr[i]);
+            if (gc_mb_is_marked(arr->arr[i]) ||
+                (JS_IsPtr(arr->arr[i]) && (sp1 < ctx->heap_base || sp1 >= ctx->stack_top))) {
                 arr->arr[j++] = arr->arr[i];
             }
         }
