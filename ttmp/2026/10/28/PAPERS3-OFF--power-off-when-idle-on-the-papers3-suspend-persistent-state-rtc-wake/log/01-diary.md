@@ -728,3 +728,133 @@ protocol ran and the power-off was refused, as it must be while charging.
 
 - Device console: `send standby config {"idleMin":1,"wakeEveryMin":2}`, `send standby now`,
   `store standby` (shows the boot log).
+
+## Step 6: P5, resume without a flash
+
+This step made the resume look like a resume. The compositor saves the framebuffer's `front` once the
+asleep screen is on the glass. At the next boot it adopts that picture, so the first commit sends only
+what differs from the glass and the first present is a partial `text` update. M5GFX no longer refreshes
+the panel white at init. On the device I ran the real resume over USB: the RTC power-cycled the board,
+the boot adopted the 96 KB picture saved in 373 ms, and no clean refresh happened.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+
+**Assistant interpretation:** Implement phase P5 of the guide, commit it, and record it here.
+
+**Inferred user intent:** No full-screen flash when the tablet comes back.
+
+**Commit (code):** a6cea8c — "picocalc-os: resume without a flash (PAPERS3-OFF P5)"
+
+### What I did
+
+- `nucleus/hw.c`:
+  - `dmabuf_persist` run-length encodes `front` (`"PF1"`, the pixel size, width, height, then runs of a
+    pixel and a u16 length) into the kernel's store record `k/frame`. Above 400 KB it removes the record
+    instead.
+  - `dmabuf_adopt` loads the record, removes it, checks the header and the total length, copies it into
+    `front`, and sets every band dirty.
+- `nucleus/vm_mqjs.c`: `gfx.persist` (a deferred effect that logs the size, and on the device the time)
+  and `gfx.adopt` (synchronous). Both are allowed only to the world that needs `frames`.
+  `js-papers3/prelude.js`: `Handle.persist` and `Handle.adopt`.
+- `js-papers3/system/compositor.js`:
+  - `fb.adopt()` at start, after `attach` (whose `invalidate` would otherwise overwrite `front`);
+  - while `s.adopted`, the first draw turns intent `"page"` into `"text"`;
+  - `"suspend"` calls `fb.persist()` after the present settles;
+  - `"resume"` calls `fb.adopt()` to remove the record.
+- `js-papers3/drivers/display.js`: `"suspend"` stores `{partials, partialArea}`; at start a stored record
+  restores them and sets `lastClean = now()`, so there is no "first frame" clean refresh; `"resume"`
+  removes the record; every clean refresh is logged as `clean refresh: <why>`.
+- `port/esp32s3-papers3/main/bus_s3.cpp`: `setAutoDisplay(false)` before `panel->init()`.
+- `js-papers3/system/standby.js`: `"now"` takes `{thenRtc: seconds}`, which arms the RTC and stays asleep
+  if the power-off is refused.
+- Ticket script `scripts/05-resume.sh` with `05-resume.expected` and `05-captures/`. Guide sections 9.2
+  and 9.5 (measured) updated.
+
+### Why
+
+- Saving `front` rather than re-rendering the asleep screen at boot: `front` is what the panel was sent,
+  so "glass equals `front`" holds by construction. A re-render depends on every app producing the same
+  tree after a cold boot.
+- Run-length encoding: the asleep REPL screen is 518,400 bytes raw and 67 KB encoded. That is small
+  enough for one NVS blob and a write of a few hundred milliseconds.
+- `thenRtc`: the board cannot switch off on USB, but P3 showed that the RTC power-cycles it. Using that
+  in a test option exercises the same boot path as a button press after a real power-off, without the
+  user.
+
+### What worked
+
+- Host, `scripts/05-resume.sh`:
+
+  ```text
+  panel: ... quality 3 (1555200 px) text 3 (417568 px) ...; 0 pixels carry a ghost     <- asleep, board off
+  the board is on (button)
+  panel: ... quality 3 (1555200 px) text 4 (813152 px) ...; 6580 pixels carry a ghost  <- after the resume
+  saved the panel's picture: 67391 bytes
+  compositor: the panel's picture from before the power-off is adopted
+  ```
+
+  No quality refresh at resume; one `text` update. The capture `05-captures/51-resumed.png` shows the
+  REPL with its chips back and the "asleep" text fading as a modelled ghost.
+- Sanitizer build: no reports on `05-resume.txt`.
+- Device over USB (`send compositor open {"app":"about"}`, then `send standby now {"thenRtc":20}`):
+
+  ```text
+  [ 11208.588] display: clean refresh: new page                  <- the asleep screen
+  [ 12937.789] saved the panel's picture: 96023 bytes in 373.3 ms
+  [ 12960.321] the board stayed on: external power (charging)
+  [ 12962.736] standby: staying asleep until the RTC power-cycles the board
+  ... power-on reset ...
+  [  1272.598] clock: started by rtc (control 2: 0x5)
+  [  1584.413] compositor: the panel's picture from before the power-off is adopted
+  [  1627.175] standby: started by rtc, resuming from a suspend at 04:30
+  ```
+
+  That boot logged no `clean refresh`; earlier boots in the same log each logged
+  `clean refresh: new page`. The device's framebuffer screenshots show About asleep at 04:30 and resumed
+  at 04:31 with Home and Back.
+- All earlier ticket scripts and both capture gates are unchanged.
+
+### What didn't work
+
+- Nothing failed in this step. The only correction was ordering: `fb.adopt()` must come after `attach()`
+  at start, because `attach` calls `fb.invalidate()`, which sets `front` to the complement of `back`.
+
+### What I learned
+
+- Only one of the two boot flashes was M5GFX's. With auto-display off before `init()`, an ordinary boot
+  (no saved picture) now flashes once, for the display driver's first frame.
+- The display driver's union of rectangles makes the resume update tall (title bar to footer). It does
+  not flash or ghost unchanged pixels, but a waveform pass over 730 rows takes as long as a full one.
+
+### What was tricky to build
+
+- Keeping the "used once" rule in every path. Boot adopts and removes. A refused power-off resumes and
+  removes (through `adopt`, whose copy into `front` is harmless because `front` already holds that
+  picture). The display driver's ghost record follows the same rule. A boot after a crash finds neither
+  record and does the normal clean refresh.
+
+### What warrants a second pair of eyes
+
+- The glass itself on the device: I can see the framebuffer, not the panel. Whether the M5GFX change
+  really leaves the old picture through a cold boot, and whether a partial `text` update over an
+  unknown prior state looks right, needs the user's eyes (P6).
+- `FRAME_MAX` (400 KB) against NVS's free space: two worlds' records plus a 96 KB frame fit the 1 MB
+  partition easily. A busy picture near the limit doubles NVS's need for free pages while it rewrites.
+
+### What should be done in the future
+
+- P6, with the user on battery: a real power-off, the button resume, the RTC wake, and an overnight check.
+
+### Code review instructions
+
+- `dmabuf_persist` and `dmabuf_adopt` in `nucleus/hw.c`; `gfx.persist` and `gfx.adopt` in
+  `nucleus/vm_mqjs.c`; in `compositor.js`, `onStart`, `"draw"`, `"suspend"` and `"resume"`; the start-up
+  of `display.js`; the panel init in `bus_s3.cpp`.
+- Validate: `scripts/01-store.sh` to `scripts/05-resume.sh`; both `make shots` gates (unchanged).
+
+### Technical details
+
+- Device test of the resume on USB: `send standby now {"thenRtc":20}`, then read the board again with
+  `tools/s3cap.py --no-reset` after about 30 s.

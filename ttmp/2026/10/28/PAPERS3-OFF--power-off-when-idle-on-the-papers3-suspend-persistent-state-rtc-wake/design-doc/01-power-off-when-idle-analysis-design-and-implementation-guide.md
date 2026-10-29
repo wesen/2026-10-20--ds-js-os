@@ -637,7 +637,9 @@ bool dmabuf_adopt(dmabuf_t *b);    // port_store_get("k", "frame"); if it decode
                                    // dirty := ~0 (the next commit compares everything); then erase the record
 ```
 
-`dmabuf_adopt` erases the record whether or not it decoded. The rule is "a saved picture is used at most once, by the first boot after it was written".
+`dmabuf_adopt` erases the record whether or not it decoded. The rule is "a saved picture is used at most once, by the first boot after it was written". When a power-off is refused and the system resumes without a boot, the compositor's `"resume"` handler calls `fb.adopt()` as well. `front` already holds that picture, so the call only takes the record out of the store, and a later boot that follows a crash cannot use it.
+
+As implemented in P5 the operations are `gfx.persist` and `gfx.adopt` in `nucleus/vm_mqjs.c`. `dmabuf_persist` and `dmabuf_adopt` are in `nucleus/hw.c`. The records measured 67 KB on the host for the REPL screen; on the device, 96 KB for the About screen, written to NVS in 373 ms.
 
 ### 9.3 M5GFX without the init clear
 
@@ -670,7 +672,24 @@ if (g) { s.partials = g.partials; s.partialArea = g.partialArea; s.lastClean = n
 
 The ghost counters are saved on `"suspend"` and erased once read, for the same reason as the picture.
 
-### 9.5 What can still go wrong
+### 9.5 What the resume looks like, measured
+
+On the host (`scripts/05-resume.sh`) the panel's counters before and after the resume show no new
+`quality` refresh and one new `text` update. The display driver presents the union of the changed rectangles.
+The title bar and the footer both changed, so that union spans about 730 rows. Only the pixels that changed
+(6,580 of them) move and carry a ghost; the rest are driven to the level they already have.
+
+On the device the resume was tested over USB with a test option of the standby service: `send standby now
+{"thenRtc": 20}` arms the RTC for 20 s and, when the power-off is refused, leaves the system asleep. The RTC
+then power-cycles the board, and the board boots exactly as after a real power-off. The boot adopted the picture
+and logged no clean refresh. The display driver now logs `clean refresh: <why>` for each one, and before this
+change every boot logged at least one.
+
+The asleep screen itself is presented with a clean refresh (one flash as the board goes to sleep). A `text`
+update left the Home and Back chips as ghosts under the asleep footer, and that picture stays on the glass
+for hours.
+
+### 9.6 What can still go wrong
 
 - **The panel loses part of its picture while off.** E-paper is bistable but not perfect; after days, mid-grays drift slightly. The partial update leaves those pixels alone, so the drift shows until the next clean refresh, which the age rule triggers within 15 minutes. The device phase should look at a board left off overnight.
 - **The user long-presses the power button while the board is on.** If that cuts power without a suspend, no record is written, and the next boot flashes. Correct.

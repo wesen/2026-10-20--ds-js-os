@@ -1,0 +1,13 @@
+the board is off
+panel: 540x960 e-paper, busy 2370.0 ms in all; quality 3 (1555200 px) text 3 (417568 px) fast 1 (408 px) fastest 0 (0 px); 0 pixels carry a ghost
+the board is on (button)
+panel: 540x960 e-paper, busy 2670.0 ms in all; quality 3 (1555200 px) text 4 (813152 px) fast 1 (408 px) fastest 0 (0 px); 6580 pixels carry a ghost
+--- uart
+display: clean refresh: new page
+standby: started by button
+display: clean refresh: new page
+standby: suspending: idle 60 s
+display: clean refresh: new page
+saved the panel's picture: 67391 bytes
+compositor: the panel's picture from before the power-off is adopted
+standby: started by button, resuming from a suspend at 09:42

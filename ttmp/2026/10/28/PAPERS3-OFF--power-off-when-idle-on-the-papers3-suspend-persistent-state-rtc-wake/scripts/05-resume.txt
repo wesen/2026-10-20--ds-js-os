@@ -1,0 +1,24 @@
+# P5: resume without a flash. The REPL on screen, idle for a minute: the asleep screen (one clean refresh), saved.
+# After the power button the first present is a partial "text" update of what changed (the title bar's clock
+# and battery, the footer), not a clean refresh. Then a resume after a boot with no saved picture (the record
+# is used once) flashes as before.
+battery 80
+wait 3000
+send compositor open {"app":"repl"}
+wait 1500
+send repl type {"text":"6*7"}
+send repl key {"arg":{"key":"enter"}}
+wait 1500
+send standby config {"idleMin":1}
+wait 62000
+panel
+capture 50-asleep.png
+power
+wait 4000
+panel
+capture 51-resumed.png
+capture 52-resumed-clean.png 2 clean
+send compositor paintcheck {}
+tap 270 500
+wait 2000
+send compositor paintcheck {"report":true}
