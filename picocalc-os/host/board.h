@@ -11,6 +11,7 @@ extern const char *board_commands_help;
 vtime_t board_now(void);
 void board_off(void);                  // the kernel halted: the parts that lose power reset (call before kernel_reset)
 void board_pass(vtime_t us);           // time passes while the board is off
-vtime_t board_next_wake(void);         // the board time at which something switches it on, or VT_INF
+vtime_t board_next_wake(void);         // the board time at which something power-cycles it (on or off), or VT_INF
+vtime_t board_take_wake(void);         // when that happened since the last call (it may happen during a run), or VT_INF
 void board_wake(const char *why);      // it is switched on ("button", "rtc"); the runner boots the kernel next
 void host_store_dir(const char *dir);   // host/port_host.c: keep the persistent store in files under dir (-s)

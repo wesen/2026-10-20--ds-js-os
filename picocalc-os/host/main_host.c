@@ -45,19 +45,32 @@ static void check_halted(void) {
   kernel_reset();
   off = true;
 }
-// us of the board's time: the kernel runs while the board is on; while it is off, until something switches it on
+// us of the board's time: the kernel runs while the board is on; while it is off, until something switches it on.
+// The board's wake source (the PaperS3's RTC interrupt) power-cycles it even while it runs; a world can arm it
+// during the run, so a running board advances in slices and looks for it after each.
+#define SLICE MS(50)
 static void pass(vtime_t us) {
   vtime_t end = board_now() + us;
   for (;;) {
-    if (!off) {
-      kernel_run_until(K.vnow + (end - board_now()));
-      check_halted();
-      if (!off) return;
+    if (off) {
+      vtime_t wake = board_next_wake();
+      if (wake > end) { board_pass(end - board_now()); return; }
+      board_pass(wake - board_now());
+      board_take_wake();
+      power_on("rtc");
+      continue;
     }
-    vtime_t wake = board_next_wake();
-    if (wake > end) { board_pass(end - board_now()); return; }
-    board_pass(wake - board_now());
-    power_on("rtc");
+    vtime_t stop = end - board_now() > SLICE ? board_now() + SLICE : end;
+    kernel_run_until(K.vnow + (stop - board_now()));
+    check_halted();
+    if (off) continue;
+    if (board_take_wake() < VT_INF) {
+      printf("[%9.1f ms] the RTC's interrupt power-cycles the board\n", board_now() / 1000.0);
+      board_off(); kernel_reset();
+      power_on("rtc");
+      continue;
+    }
+    if (board_now() >= end) return;
   }
 }
 

@@ -1,6 +1,7 @@
 {
   "worlds": [
-    { "name": "off",  "file": "test/off.js",  "claims": ["sys.power"], "mem_kb": 48 },
-    { "name": "keep", "file": "test/keep.js", "mem_kb": 64 }
+    { "name": "clock", "file": "drivers/clock.js", "claims": ["i2c1:0x51", "sys.clock"], "mem_kb": 48 },
+    { "name": "off",   "file": "test/off.js",      "claims": ["sys.power"], "mem_kb": 48 },
+    { "name": "keep",  "file": "test/keep.js",     "mem_kb": 64 }
   ]
 }

@@ -51,7 +51,9 @@ void board_off(void) {
   memset(&T, 0, sizeof T);
 }
 void board_pass(vtime_t us) { sim_base_us += us; }
-vtime_t board_next_wake(void) { return VT_INF; }
+// the BM8563's INT going active power-cycles the board, off or on
+vtime_t board_next_wake(void) { return bm8563_next_int(board_now()); }
+vtime_t board_take_wake(void) { return bm8563_take_edge(board_now()); }
 void board_wake(const char *why) { (void)why; }
 
 // ---- the touch controller's interrupt line (GPIO48) ---------------------------------------------------------

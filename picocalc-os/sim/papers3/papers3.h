@@ -18,7 +18,10 @@ extern vtime_t sim_base_us;   // board.c: the board's time at the last boot (boa
 
 // bm8563.c: the real-time clock on i2c1 at 0x51
 void bm8563_init(double epoch_ms);
-int bm8563_i2c(const uint8_t *wr, int nwr, uint8_t *rd, int nrd, vtime_t t);
+int bm8563_i2c(const uint8_t *wr, int nwr, uint8_t *rd, int nrd, vtime_t t);   // t: the kernel's virtual time
+bool bm8563_int(vtime_t board_t);         // INT is active: the timer ran out with TIE set
+vtime_t bm8563_next_int(vtime_t board_t); // the board time INT next becomes active (an edge), or VT_INF
+vtime_t bm8563_take_edge(vtime_t board_t);   // when INT went active since the last call, or VT_INF
 
 // epd.c: the ED047TC1 panel behind M5GFX's waveform engine
 void epd_init(void);

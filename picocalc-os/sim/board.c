@@ -15,6 +15,7 @@ vtime_t board_now(void) { return K.vnow; }
 void board_off(void) {}
 void board_pass(vtime_t us) { (void)us; }
 vtime_t board_next_wake(void) { return VT_INF; }
+vtime_t board_take_wake(void) { return VT_INF; }
 void board_wake(const char *why) { (void)why; }
 const char *const *port_bus_names(void) { static const char *const b[] = { "i2c0", "spi2", NULL }; return b; }
 const char *port_board_name(void) { return "ESP32-P4 in a PicoCalc (simulated)"; }
