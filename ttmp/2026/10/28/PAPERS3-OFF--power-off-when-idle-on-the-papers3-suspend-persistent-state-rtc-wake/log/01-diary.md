@@ -155,3 +155,139 @@ evidence-backed, host-tested way as the earlier tickets.
 - Partition plan: `store, data, nvs, 0x610000, 1M` after the 6 MB factory app (16 MB flash).
 - RTC timer: `0x0E = 0x82` (1 Hz) or `0x83` (1/60 Hz), `0x0F` count, `0x01 |= TIE`, TF bit 2, AF bit 3.
 - M5Unified's PaperS3 power-off: GPIO44 high and low, 50 ms each, five times, then `esp_deep_sleep_start()`.
+
+## Step 2: P1, the persistent store
+
+This step gave every world a persistent record. A world reads it with `store.get` and writes it with
+`store.set`. The write reaches the store only when the segment ends cleanly. The kernel side is two
+host operations in the MicroQuickJS binding. The device keeps the records in NVS in a new 1 MB
+partition; the host keeps them in memory, or in files with `-s DIR`. REPL, Sketch and System save on
+a `"suspend"` message, which nothing sends yet (that is P4), and restore at start.
+
+On the host, the test script shows the three properties the design asks for:
+
+- a value survives a restart;
+- a segment that throws after `store.set` writes nothing;
+- a write over the quota is refused and leaves the record as it was.
+
+On the device, the System app's tab and the REPL's record survived a reboot.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+
+**Assistant interpretation:** Implement phase P1 of the guide, commit it, and record it here.
+
+**Inferred user intent:** A store the later phases can rely on for suspend and resume.
+
+**Commit (code):** 379d27d — "picocalc-os: a persistent store, one JSON record per world (PAPERS3-OFF P1)"
+
+### What I did
+
+- `nucleus/vm_mqjs.c`:
+  - `op_store_load` returns the record as a string, or `null`;
+  - `op_store_save` checks the quota and defers `run_store_save`. If a write of the same world is already
+    in the segment's deferred list, it replaces that write's text instead of adding another;
+  - world names longer than 15 characters (NVS's key limit) have no store;
+  - the manifest's `store_kb` is parsed.
+- `nucleus/nucleus.h`:
+  - `port_store_get` and `port_store_set`;
+  - `world_t.store_limit`;
+  - `manifest_world_t.has_store` and `store_kb`.
+- `nucleus/kernel.c`: the default quota is 16 KB.
+- `js-papers3/prelude.js`: `store.get/set/remove/all`. The record is loaded on first use, and values are
+  copied in and out through JSON. If the quota check throws, the in-memory record is put back as it was.
+- `host/port_host.c`: records in a list, or files under `-s DIR` (`host/main_host.c`, `host/board.h`).
+- Device:
+  - `partitions.csv`: `store, data, nvs, 0x610000, 1M`;
+  - `main/port_s3.c`: `s3_store_init` (erases the partition when NVS reports an unusable format),
+    `port_store_get`, `port_store_set` (`nvs_set_blob` + `nvs_commit`);
+  - `main/CMakeLists.txt`: the `nvs_flash` requirement;
+  - `main/main_s3.c`: console commands `reboot` and `store WORLD`.
+- Apps: REPL (`hist`, the last 40 output lines, the line being edited), Sketch (`strokes`, quota 32 KB in
+  `system.json`), System (`tab`).
+- Test world `js-papers3/test/keep.js` with manifest `js-papers3/test/store.json` (quota 1 KB). Ticket
+  script `scripts/01-store.sh` runs `01-store.txt` and diffs the kernel log against `01-store.expected`.
+
+### Why
+
+- The prelude keeps a parsed copy and sends the whole record on each `set`. The C side needs no JSON
+  parser for this, and coalescing in C makes a loop of `set` calls cost one flash write.
+- Copying values in and out means a world that changes an object after `store.set` does not change what
+  `store.get` returns. Without the copy, the record in memory and the record in flash could differ.
+- A separate partition: the store's size and its wear do not touch IDF's own `nvs`.
+
+### What worked
+
+- Host run of `01-store.txt` (excerpt of `01-store.expected`):
+
+  ```text
+  [   300.206] keep: start: {"a":{"x":1},"b":[1,2,3]}
+  [ 11200.121] keep crashed handling put-throw: Error: thrown after store.set (test/keep.js:8:74)
+  [ 11300.327] keep: start: {"a":{"x":1},"b":[1,2,3]}           <- "c" was never written
+  [ 22202.417] keep: many: {"a":{"x":1},"b":[1,2,3],"n":99}
+  [ 22207.552] keep: big: keep's store would be 2 KB; its limit is 1 KB
+  [ 22207.575] keep: after big: {"a":{"x":1},"b":[1,2,3],"n":99}
+  [ 22400.205] keep: start: {"a":{"x":1},"n":99}                 <- the remove of "b" persisted
+  ```
+
+- The sanitizer build (`make BOARD=papers3 SAN=1`) ran the same script with no reports.
+- Device (`tools/s3cap.py`, log in the scratchpad as `store/dev1.log`):
+
+  ```text
+  I (29) boot:  3 store            WiFi data        01 02 00610000 00100000
+  I (922) store: 2 of 32256 entries used
+  store system: {"tab":2} (9 bytes)                  <- after "send system tab" and "send system suspend"
+  ... reboot ...
+  I (878) store: 12 of 32256 entries used
+  store system: {"tab":2} (9 bytes)                  <- read back after the reboot
+  ```
+
+### What didn't work
+
+- My first host script crashed `keep` three times within ten seconds. The kernel then stopped the world
+  instead of restarting it, and the later messages vanished. That is the kernel's crash-loop rule, not a
+  store bug. The final script spaces the crashes eleven seconds apart.
+- The first device build ran with the wrong ESP-IDF. `. ~/esp/esp-idf/export.sh` activates IDF 5.1, while
+  the project was configured with 5.3.4: "'.../idf5.1_py3.13_env/bin/python' is currently active in the
+  environment while the project was configured with '.../idf5.3_py3.13_env/bin/python'". The right one is
+  `. ~/esp/esp-idf-5.3.4/export.sh`.
+- `send repl type 1+2` on the device console did not put text on the REPL's line. The console's `send`
+  takes a JSON payload and the REPL's `type` handler expects `{text}`. The store test did not depend on it.
+
+### What I learned
+
+- An empty NVS partition already uses 2 entries; the store's two namespaces account for them.
+- The capture gate changed in two images, `03-system.png` and `07-about.png`, and only in live counters:
+  turn counts went up by one for the apps that now have `onStart`, and arena kilobytes changed slightly.
+  I checked the changed regions side by side and re-baselined the two captures.
+
+### What was tricky to build
+
+- Coalescing has to work without a pointer from the world to its pending deferred write. The deferred
+  list is freed by `discard_deferred` when a segment faults, so a stored pointer would dangle. Searching
+  `K.defer_head` for `run_store_save` with the same world id avoids that. The list holds only one
+  segment's effects, so the search is short.
+
+### What warrants a second pair of eyes
+
+- `run_store_save` writes on the kernel task at segment end. A large record (Sketch: up to about 15 KB)
+  blocks the lane for the NVS write. That is fine at suspend; a world that saves on every touch would
+  make the lane stutter. Nothing enforces "save rarely".
+
+### What should be done in the future
+
+- P2: the power-off operation and the simulated power cycle.
+
+### Code review instructions
+
+- Start with `op_store_save` and `run_store_save` in `nucleus/vm_mqjs.c`, then the `store` block in
+  `js-papers3/prelude.js`, then `port_store_*` in `host/port_host.c` and `port/esp32s3-papers3/main/port_s3.c`.
+- Validate: `ttmp/2026/10/28/PAPERS3-OFF--*/scripts/01-store.sh`; `make BOARD=papers3 shots` (only
+  `03-system.png` and `07-about.png` differ from the parent commit, in counters).
+
+### Technical details
+
+- NVS: `nvs_flash_init_partition("store")`, `nvs_open_from_partition("store", "w"|"k", NVS_READWRITE, &h)`.
+  Blobs via `nvs_get_blob(h, key, NULL, &n)` (size) and then the data; `nvs_erase_key` for an empty record.
+- The record `{}` is stored as a removal (length 0).

@@ -335,7 +335,7 @@ app("repl")
 
 | Operation | Kind | Effect |
 |---|---|---|
-| `store.load` | sync | Returns the world's record as JSON text, or `null`. Reads through a kernel-side cache so a world restart does not touch flash again. |
+| `store.load` | sync | Returns the world's record as JSON text, or `null`. It reads the port each time; the prelude calls it once per world instance, and an NVS read of a small blob takes well under a millisecond, so a cache is not worth its code. |
 | `store.save(json)` | sync call, deferred effect | Checks the quota, then defers a write of the world's record. Coalesces with a pending write of the same world in the same segment. |
 
 The kernel calls a small port API, which both ports implement:

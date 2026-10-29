@@ -1,7 +1,7 @@
 # Tasks
 
 ## TODO
-- [ ] P1: persistent store (store.load/save, NVS partition, host store, repl/sketch save) <!-- t:5m0n -->
+- [x] P1: persistent store (store.load/save, NVS partition, host store, repl/sketch save) <!-- t:5m0n -->
 - [ ] P2: power-off op (sys.power, GPIO44 pulses) and the simulated power cycle (kernel_reset, power, wait while off) <!-- t:h0ix -->
 - [ ] P3: RTC wake in the clock driver (wake reason, flags, timer) and the simulated BM8563 timer <!-- t:ogba -->
 - [ ] P4: standby service, activity channel, suspend protocol, asleep screen <!-- t:eg4v -->

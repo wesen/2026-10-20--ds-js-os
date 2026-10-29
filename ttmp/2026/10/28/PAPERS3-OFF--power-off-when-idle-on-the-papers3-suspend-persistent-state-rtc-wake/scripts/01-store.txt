@@ -1,0 +1,18 @@
+# the persistent store: values survive a restart, a segment that throws writes nothing, writes past the quota
+# are refused and leave the record as it was, removes persist
+wait 100
+send keep put {"k":"a","v":{"x":1}}
+send keep put {"k":"b","v":[1,2,3]}
+send keep mutate
+wait 100
+crash keep
+wait 11000
+send keep put-throw {"k":"c","v":3}
+wait 11000
+send keep show
+send keep many {"n":100}
+send keep big {"n":2000}
+send keep remove {"k":"b"}
+wait 100
+crash keep
+wait 1000
