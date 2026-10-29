@@ -583,3 +583,148 @@ disarm it. It also makes the resume path testable on USB, which P5 will use.
 
 - BM8563 timer: `0x0E` = TE (bit 7) | TD (bits 1–0: 2 = 1 Hz, 3 = 1/60 Hz); `0x0F` = count; `0x01` bit 0
   TIE, bit 2 TF, bit 3 AF. The value read after the device's RTC wake was `0x05` = TF | TIE.
+
+## Step 5: P4, the standby service and the suspend protocol
+
+This step put the pieces together into the behaviour the ticket is about. A new world, `standby`,
+switches the board off after a configurable time without a touch on battery. Before that, it lets every
+world save and has the compositor draw an asleep screen. On the host, the whole cycle runs on the real
+system manifest: the REPL with an evaluated line, a minute of idleness, the asleep screen, the board
+off, the power button, the REPL back with its lines. Two more paths run too: a refused power-off on USB,
+and an RTC wake that updates the asleep screen and goes back off 20 s later. On the device over USB the
+protocol ran and the power-off was refused, as it must be while charging.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+
+**Assistant interpretation:** Implement phase P4 of the guide, commit it, and record it here.
+
+**Inferred user intent:** The tablet switches itself off when unused and comes back where it was.
+
+**Commit (code):** fbe594d — "picocalc-os: the standby service and the suspend protocol (PAPERS3-OFF P4)"
+
+### What I did
+
+- `js-papers3/system/standby.js` (new; claims `sys.power` and `sys.read`, 64 KB):
+  - `arm()` sleeps until `last + limit`. When it wakes, `check()` either suspends or arms again. The
+    limit is `idleMin` minutes, or 20 s after an RTC start until the screen is touched. Nothing arms while
+    charging, while the power state is unknown, or with `idleMin` 0.
+  - `suspend()`:
+    1. asks each other world `"suspend"` in turn (1 s timeout; refusals ignored);
+    2. asks the compositor `"suspend"` (5 s);
+    3. asks the clock `"alarm"` if `wakeEveryMin` is set and the battery is above 5 %;
+    4. stores `suspended` and calls `sys.powerOff()`;
+    5. if the board stays on, sends `"disarm"` to the clock and `"resume"` to every world.
+  - At start: reads the config and the `suspended` record (and removes it); asks the clock for the wake
+    reason and the power driver for its state; appends `{at, wake, resumed}` to a ten-entry boot log in
+    its store; logs "started by ..." with the time of the suspend it resumes from.
+  - Handlers: `"activity"`, `"power"`, `"config"` (`{idleMin, wakeEveryMin}`, persisted), `"now"`,
+    `"stats"`.
+- `js-papers3/system/compositor.js`:
+  - the draw is factored into `render(s, intent)`, which returns the present's Task;
+  - `"suspend"` sets `asleep` and `suspended`, stores `focus`, and renders with intent `"page"`;
+  - `"resume"` undoes that and removes `focus`;
+  - asleep chrome: the clock shows the suspend time, "asleep · " before the battery level, no Home/Back,
+    and the footer reads "Asleep since 09:42. The power button wakes it.";
+  - `activity` is published on a touch-down at most every 5 s;
+  - at start the saved `focus` is read once, removed, and the first present waits for that app's frame
+    (`holdPage`).
+- `js-papers3/drivers/power.js`: a `"state"` handler.
+- `system.json`: the `standby` world. Faults loses `sys.power`; its "Power off now" button sends
+  `"now"` to standby.
+- Ticket script `scripts/04-standby.sh` with `04-standby.expected` and the captures in
+  `scripts/04-captures/`.
+
+### Why
+
+- Sleeping to the deadline instead of a periodic check: my first version had `.every(5000, check)`,
+  which would wake the chip from light sleep every five seconds and undo PAPERS3-IDLE. Now an idle board
+  wakes standby once per idle period.
+- The asleep screen uses a clean refresh. The first version presented it with `text`. The capture
+  (scratchpad `standby/sheet1.png`) showed the footer's Home and Back chips as ghosts under the asleep
+  text, which would stay on the glass for hours. One flash when the board goes to sleep is the
+  better trade.
+- The saved focus and the `suspended` record are removed when read. A later crash-restart of the
+  compositor, or a boot after a crash, then does not act on an old suspend.
+
+### What worked
+
+- Host, `scripts/04-standby.sh` (expected output, excerpt):
+
+  ```text
+  standby: started by button
+  standby: suspending: idle 60 s
+  switching the board off
+  booting 15 worlds from js-papers3/system.json
+  standby: started by button, resuming from a suspend at 09:42
+  standby: suspending: asked
+  the board stayed on: still powered after the off pulses (USB?)
+  standby: suspending: idle 60 s
+  standby: started by rtc, resuming from a suspend at 09:43
+  standby: suspending: after an RTC wake, idle 20 s
+  ```
+
+  The captures show the REPL before (`40-before.png`), asleep (`41-asleep.png`), resumed with `6*7` →
+  `42` (`42-resumed.png`), back after the refusal (`43-refused.png`), and the asleep screen updated by the
+  RTC wake from 09:43 to 09:46 (`45-rtc-asleep.png`).
+- The sanitizer build ran the same script, including four `kernel_reset`s of the full system with its
+  framebuffer and granted handles, with no reports.
+- Device, over USB (`tools/s3cap.py`, Sketch on screen, `send standby now`):
+
+  ```text
+  [ 11127.744] standby: suspending: asked
+  [ 12563.676] switching the board off
+  [ 12564.385] the board stayed on: external power (charging)
+  [ 12566.124] standby: the board stayed on: external power (charging)
+  store compositor: none (0 bytes)          <- "resume" removed the saved focus
+  ```
+
+  The suspend took 1.4 s, most of it the clean refresh of the asleep screen.
+
+### What didn't work
+
+- My screenshot 1.6 s after `send standby now` already showed the resumed Sketch screen. While
+  charging, the refusal comes immediately after the asleep present, so the asleep screen is on the glass
+  for about a second. I did not see it on the device; the host captures cover it.
+
+### What I learned
+
+- The capture gate changed in 14 images, and each change came from the extra world: "15 of 15 worlds",
+  `standby` in the Faults list (with a shorter scroll thumb), and timing-dependent pixels in Sketch and
+  Touches. I compared each changed region with the old capture before re-baselining.
+- The device's RTC is not set: standby's boot log recorded `at: 943935961042` (late 1999), and the
+  title bar showed 04:26. Nothing in the system sets the RTC from a real time source. Outside this
+  ticket.
+
+### What was tricky to build
+
+- Ordering inside the compositor's `"suspend"`. A draw may be queued, or an app's first frame may be
+  awaited (`waitFrame`), when the suspend arrives. The handler clears `waitFrame`, sets `suspended` so
+  that a queued `"draw"` returns at once, and renders itself. It replies only when the present has
+  settled.
+
+### What warrants a second pair of eyes
+
+- `others()` asks the worlds in manifest order. The sandbox runs user code at priority 0 and can be busy
+  for up to 400 ms; the 1 s timeout covers it. A world that is restarting at that moment refuses, and
+  its state is lost for this suspend.
+- The RTC-wake path suspends after 20 s even if an app is in the middle of something the user started
+  before the board went off. Nothing can be in progress after a cold boot, so this should be safe.
+
+### What should be done in the future
+
+- P5: adopt the saved picture at resume so the first present changes only what differs, and keep the
+  display driver's ghost counters across the power cycle.
+
+### Code review instructions
+
+- `js-papers3/system/standby.js` in full; in `compositor.js`, `render`, `"suspend"`, `"resume"`, the
+  asleep parts of `paintTop` and `paint`, and the start-up focus.
+- Validate: `scripts/01-store.sh` to `scripts/04-standby.sh`; `make BOARD=papers3 shots` (14 captures
+  differ from the parent, all from the extra world).
+
+### Technical details
+
+- Device console: `send standby config {"idleMin":1,"wakeEveryMin":2}`, `send standby now`,
+  `store standby` (shows the boot log).

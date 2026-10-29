@@ -1,0 +1,35 @@
+# P4: standby on the full system. The REPL is on screen with a line evaluated; a minute without touch on battery
+# suspends: the REPL saves, the compositor draws the asleep screen, the board goes off. The power button boots it
+# into the REPL with its lines. On USB with the cell full the power-off fails and the system resumes. With
+# wakeEveryMin the RTC starts the board, which goes back off 20 s later.
+battery 80
+wait 3000
+send compositor open {"app":"repl"}
+wait 1500
+send repl type {"text":"6*7"}
+send repl key {"arg":{"key":"enter"}}
+wait 1500
+send standby config {"idleMin":1}
+capture 40-before.png
+wait 61000
+capture 41-asleep.png
+wait 5000
+power
+wait 4000
+capture 42-resumed.png
+battery 100 usb
+send standby now
+wait 6000
+capture 43-refused.png
+battery 80
+send standby config {"idleMin":1,"wakeEveryMin":3}
+wait 65000
+capture 44-asleep-again.png
+wait 180000
+print the RTC started it: it goes back off after 20 s without a touch
+wait 30000
+capture 45-rtc-asleep.png
+power
+wait 4000
+send standby config {"idleMin":0,"wakeEveryMin":0}
+wait 1000

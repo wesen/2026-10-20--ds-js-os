@@ -1,0 +1,26 @@
+the board is off
+the board is on (button)
+the board is off
+the board is on (rtc)
+the RTC started it: it goes back off after 20 s without a touch
+the board is off
+the board is on (button)
+--- uart
+booting 15 worlds from js-papers3/system.json
+standby: started by button
+standby: suspending: idle 60 s
+switching the board off
+booting 15 worlds from js-papers3/system.json
+standby: started by button, resuming from a suspend at 09:42
+standby: suspending: asked
+switching the board off
+the board stayed on: still powered after the off pulses (USB?)
+standby: the board stayed on: still powered after the off pulses (USB?)
+standby: suspending: idle 60 s
+switching the board off
+booting 15 worlds from js-papers3/system.json
+standby: started by rtc, resuming from a suspend at 09:43
+standby: suspending: after an RTC wake, idle 20 s
+switching the board off
+booting 15 worlds from js-papers3/system.json
+standby: started by button, resuming from a suspend at 09:46
