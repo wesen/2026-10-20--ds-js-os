@@ -1,0 +1,23 @@
+# P2: the power-off operation and the simulated power cycle
+wait 100
+send keep put {"k":"a","v":1}
+send keep rude
+wait 100
+send off off
+wait 1000
+send keep show
+power
+wait 300
+send keep show
+battery 80 charging
+send off off
+wait 100
+battery 100 usb
+send off off
+wait 100
+battery 80
+send off off
+wait 5000
+power
+wait 300
+power

@@ -291,3 +291,154 @@ On the device, the System app's tab and the REPL's record survived a reboot.
 - NVS: `nvs_flash_init_partition("store")`, `nvs_open_from_partition("store", "w"|"k", NVS_READWRITE, &h)`.
   Blobs via `nvs_get_blob(h, key, NULL, &n)` (size) and then the data; `nvs_erase_key` for an empty record.
 - The record `{}` is stored as a removal (length 0).
+
+## Step 3: P2, power-off and the simulated power cycle
+
+This step added the operation that switches the board off, and a host simulator that can live through it.
+`sys.powerOff()` is an asynchronous operation with the claim `sys.power`. Its effect runs after the
+segment's other effects, so the segment's store writes reach the store first. On the device it pulses
+GPIO44 as M5Unified does. If the board is still running afterwards, or the charger said external power
+before the pulses, the promise settles with `{ off: false, why }`.
+
+On the host the simulated board halts the kernel. The runner then frees everything with a new
+`kernel_reset()` and lets the board's own time pass. The `power` script command boots the kernel again
+from scratch, as a cold boot would. The store, the glass and the RTC belong to the board and stay.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+
+**Assistant interpretation:** Implement phase P2 of the guide, commit it, and record it here.
+
+**Inferred user intent:** The power path, testable end to end without unplugging anything.
+
+**Commit (code):** dec7a4e — "picocalc-os: sys.powerOff and a simulated power cycle (PAPERS3-OFF P2)"
+
+### What I did
+
+- `nucleus/vm_mqjs.c`:
+  - async operation `poweroff` with claim `sys.power`, deferred to `run_poweroff`;
+  - `run_poweroff` calls `port_power_off`, and if that returns nonzero settles the promise with
+    `{"off":false,"why":...}`;
+  - `vm_reset()` puts the wall clock back to `WALL_BOOT_MS` and clears the operation profile.
+- `nucleus/nucleus.h`: `K.halted`, `kernel_reset`, `vm_reset`, `port_power_off`.
+- `nucleus/kernel.c`:
+  - `kernel_run_until` returns at once while `K.halted`;
+  - `kernel_reset()` discards deferred effects, frees the events (with their messages and settles), every
+    world (VM, mailbox, settles, source, frame, trace, turn texts) and the framebuffers, then clears `K`.
+    It keeps the console log, the verbosity flags and the JS root.
+- `nucleus/vm.c` (the PicoCalc's QuickJS binding): an empty `vm_reset`. The linker needs it, because
+  `kernel.c` is shared between the two boards.
+- `sim/papers3/board.c`:
+  - `port_power_off` refuses while `battery N charging` or `battery N usb` (USB in, cell full); otherwise
+    it sets `K.halted`;
+  - board time is `sim_base_us + K.vnow`;
+  - `board_off` (advances the base, resets the GT911 and the touch interrupt state), `board_pass`,
+    `board_next_wake` (`VT_INF` until P3), `board_wake`.
+  - `sim/papers3/bm8563.c` runs on board time; `sim/board.c` (the PicoCalc) has stubs.
+- `host/main_host.c`:
+  - `pass(us)` runs the kernel while the board is on and lets time pass while it is off (booting on an
+    RTC wake once P3 provides one);
+  - `check_halted()` after every command;
+  - the `power` command;
+  - while off, only `wait`, `run`, `capture`, `print`, `quit`, `power`, `panel` and `battery` act; the
+    rest print "the board is off: X does nothing";
+  - the runner's own timestamps use board time.
+- Device (`port/esp32s3-papers3/main/port_s3.c`): `port_power_off`. It refuses if GPIO4 is low; otherwise
+  it pulses GPIO44 high/low five times, 50 ms each, waits a second, and returns "still powered after the
+  off pulses (USB?)". QEMU returns "no power latch under QEMU". `main_s3.c`: `boot` names reset reasons
+  11 to 15 (USB, JTAG, efuse, power glitch, CPU lockup).
+- Faults app: a fifth button, "Power off now", and the claim `sys.power` in `system.json`, for the
+  battery tests in P6.
+- Tests: `js-papers3/test/off.js` (counts its boots in the store), the manifest `test/power.json`, and
+  `keep.js`'s `rude` handler (a world without the claim). Ticket script `scripts/02-power.sh`.
+
+### Why
+
+- `kernel_reset` plus a fresh `kernel_init` and `kernel_boot` in the same process, rather than
+  re-executing the runner: a script can go through several power cycles, and captures and the console
+  log continue in one run.
+- A board time separate from `K.vnow`: the real BM8563 keeps counting while the board is off. The
+  kernel's clock starts again from 0 at a cold boot, as the device's uptime does.
+- `battery N usb`: GPIO4 high with USB in (cell full) is the case where only trying the latch tells. The
+  simulator must be able to reach the "still powered" path, because the standby service has to recover
+  from it.
+
+### What worked
+
+- `scripts/02-power.sh` (excerpt of the expected output, timestamps removed):
+
+  ```text
+  the board is off                       <- send off off, on battery
+  the board is off: send does nothing
+  the board is on (button)               <- power
+  ...
+  keep: rude: keep has no claim on sys.power
+  off: boot 2
+  keep: start: {"a":1}                   <- the store survived the power cycle
+  the board stayed on: external power (charging)
+  off: stayed on: external power (charging)
+  the board stayed on: still powered after the off pulses (USB?)
+  off: stayed on: still powered after the off pulses (USB?)
+  ```
+
+- The sanitizer build ran the script through three boots and two resets with no reports, including no
+  leaks at exit.
+- Device, on USB (`tools/s3cap.py`, `send faults act {"arg":4}`):
+
+  ```text
+  gpio 4: 0
+  [  8166.875] switching the board off
+  [  8167.470] the board stayed on: external power (charging)
+  ```
+
+- Capture gates: the PicoCalc's `make shots` is unchanged. In the PaperS3's, the six Faults captures
+  changed (the new button) and `03-system.png` changed (counters). I looked at `20-faults.png` and
+  re-baselined.
+
+### What didn't work
+
+- The first PicoCalc build failed to link:
+  `kernel.c:649: undefined reference to 'vm_reset'`. The QuickJS binding needed the empty function.
+- I first generated `02-power.expected` from inside `picocalc-os/` with a path relative to the
+  repository root, so the runner printed `cannot open ttmp/.../02-power.txt` and the expected file was
+  wrong. Absolute paths fixed it.
+- The expected files compared timestamps, so adding a handler to `keep.js` moved `01-store`'s lines by
+  1 µs (more source to parse) and broke its test. Both scripts now strip the `[ t ]` prefix before the
+  diff. Order and content are what these tests check.
+
+### What I learned
+
+- Nothing in the kernel needed a "resume" concept: a cold boot with a store is enough.
+- Only `vm_mqjs.c`'s wall-clock offset needed resetting among the binding's statics. The compiled
+  prelude cache can stay because the prelude text is the same.
+
+### What was tricky to build
+
+- The interleaving of halting and time in `pass()`. `kernel_run_until` returns early with `K.vnow` at
+  the moment of the halt. `board_off()` must fold that into the board's base before `kernel_reset()`
+  sets `K.vnow` to 0. Otherwise the remaining wait would be computed from a clock that jumped back.
+
+### What warrants a second pair of eyes
+
+- `kernel_reset` against the full system (14 worlds, framebuffers, handles granted between worlds) is
+  first exercised in P4. The test manifest has only two worlds and no framebuffer.
+- On the device the pulse sequence has not run on battery yet (P6).
+
+### What should be done in the future
+
+- P3: the wake reason and the RTC timer in the clock driver, and the simulated BM8563's timer and INT.
+
+### Code review instructions
+
+- `run_poweroff` and the `poweroff` branch in `nucleus/vm_mqjs.c`; `kernel_reset` in `nucleus/kernel.c`;
+  `pass`, `power_on` and `check_halted` in `host/main_host.c`; the power section of `sim/papers3/board.c`;
+  `port_power_off` in `port_s3.c`.
+- Validate: `scripts/01-store.sh`, `scripts/02-power.sh`, `make shots`, and `make BOARD=papers3 shots`
+  (Faults and System captures differ from the parent).
+
+### Technical details
+
+- Host runner, after a halt: `board_off()` (`sim_base_us += K.vnow`, `gt911_init()`), then
+  `kernel_reset()`, then `off = true`. On `power`: `board_wake("button")`, `kernel_init(js_root, NULL)`
+  (keeps the open console log), `kernel_boot(manifest_path)`.

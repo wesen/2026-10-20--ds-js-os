@@ -1,16 +1,16 @@
-[     0.000] booting 1 worlds from js-papers3/test/store.json
-[     0.202] keep: start: {}
-[   100.163] keep: put a: {"a":{"x":1}}
-[   100.346] keep: put b: {"a":{"x":1},"b":[1,2,3]}
-[   100.458] keep: mutated a copy: {"a":{"x":1},"b":[1,2,3]}
-[   200.000] keep crashed: killed from the host
-[   300.206] keep: start: {"a":{"x":1},"b":[1,2,3]}
-[ 11200.121] keep crashed handling put-throw: Error: thrown after store.set (test/keep.js:8:74)
-[ 11300.327] keep: start: {"a":{"x":1},"b":[1,2,3]}
-[ 22200.092] keep: show: {"a":{"x":1},"b":[1,2,3]}
-[ 22202.417] keep: many: {"a":{"x":1},"b":[1,2,3],"n":99}
-[ 22207.552] keep: big: keep's store would be 2 KB; its limit is 1 KB
-[ 22207.575] keep: after big: {"a":{"x":1},"b":[1,2,3],"n":99}
-[ 22207.715] keep: remove b: {"a":{"x":1},"n":99}
-[ 22300.000] keep crashed: killed from the host
-[ 22400.205] keep: start: {"a":{"x":1},"n":99}
+booting 1 worlds from js-papers3/test/store.json
+keep: start: {}
+keep: put a: {"a":{"x":1}}
+keep: put b: {"a":{"x":1},"b":[1,2,3]}
+keep: mutated a copy: {"a":{"x":1},"b":[1,2,3]}
+keep crashed: killed from the host
+keep: start: {"a":{"x":1},"b":[1,2,3]}
+keep crashed handling put-throw: Error: thrown after store.set (test/keep.js:8:74)
+keep: start: {"a":{"x":1},"b":[1,2,3]}
+keep: show: {"a":{"x":1},"b":[1,2,3]}
+keep: many: {"a":{"x":1},"b":[1,2,3],"n":99}
+keep: big: keep's store would be 2 KB; its limit is 1 KB
+keep: after big: {"a":{"x":1},"b":[1,2,3],"n":99}
+keep: remove b: {"a":{"x":1},"n":99}
+keep crashed: killed from the host
+keep: start: {"a":{"x":1},"n":99}
