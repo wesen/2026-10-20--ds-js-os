@@ -417,19 +417,24 @@ function chip(fb, x, y, w, label, msg, arg) {
 // banner is or was up, the app has no tree, or the present is a new page.
 var last = null;
 
-function topKey(s, app) { return (app ? app.title : s.focus) + "|" + clockText() + "|" + (s.battery ? (s.battery.charging ? "+" : "") + s.battery.pct : ""); }
+// Asleep (standby suspended the system and the board is about to go off), the clock shows when that happened
+// and stays so on the glass; "asleep" stands before the battery level and the footer says how to wake it.
+function clockShown(s) { return s.asleep ? s.asleep.since : clockText(); }
+function topKey(s, app) { return (app ? app.title : s.focus) + "|" + clockShown(s) + "|" + (s.asleep ? "z" : "") + (s.battery ? (s.battery.charging ? "+" : "") + s.battery.pct : ""); }
 function paintTop(fb, s, app) {   // title, clock and battery, above y = TOP - 8
   fb.text(M, 44, app ? app.title : s.focus, "l", C.ink, W - 2 * M - 170);
-  var clock = clockText(), cw = tw(clock, "mb");
+  var clock = clockShown(s), cw = tw(clock, "mb");
   fb.text(W - M - cw, 50, clock, "mb", C.ink);
   var bx = W - M - cw - 58;
   batteryGlyph(fb, bx, 56, s.battery);
-  if (s.battery) { var pct = (s.battery.charging ? "+" : "") + s.battery.pct + "%"; fb.text(bx - 10 - tw(pct, "s"), 54, pct, "s", C.muted); }
+  var pct = (s.asleep ? "asleep · " : "") + (s.battery ? (s.battery.charging ? "+" : "") + s.battery.pct + "%" : "");
+  if (pct) fb.text(bx - 10 - tw(pct, "s"), 54, pct, "s", C.muted);
 }
 
 function paint(s, full) {
   var fb = s.fb, app = s.apps[s.focus], tree = app && app.tree;
-  var top = topKey(s, app), hint = (app && app.hints) || "", foot = s.focus + "|" + hint;
+  var hint = s.asleep ? "Asleep since " + s.asleep.since + ". The power button wakes it." : (app && app.hints) || "";
+  var top = topKey(s, app), foot = s.focus + "|" + hint + "|" + !!s.asleep;
   var retained = !full && !!last && last.focus === s.focus && !!tree && !!last.tree && !s.banner && !last.banner;
   regions = [];
   inkArea = null;
@@ -457,7 +462,7 @@ function paint(s, full) {
     region(M - 8, BODY_Y - 8, W - 2 * M + 16, bh, "dismiss");
   }
   // the footer: Home and Back, and the app's hint
-  var fy = H - FOOT + 22, chips = s.focus !== "launcher";
+  var fy = H - FOOT + 22, chips = s.focus !== "launcher" && !s.asleep;
   if (retained && foot === last.foot) {
     if (chips) { region(M, fy, 130, 60, "home"); region(M + 146, fy, 130, 60, "back"); }
   } else {
@@ -578,40 +583,48 @@ function gesture(s, t) {
   else if (kind === "left" || kind === "right" || kind === "up" || kind === "down") send(s.focus, "swipe", { dir: kind });
 }
 
+// Paint, commit and present: a Task that settles when the panel shows it, or null if nothing changed.
+function render(s, intent) {
+  if (paint(s, intent === "page") && s.check) {   // paintcheck: a retained paint must equal a full one
+    var h = s.fb.hash();
+    paint(s, true);
+    s.checks++;
+    if (s.fb.hash() !== h) { s.checkFails++; log("paint check: the retained paint of " + s.focus + " differs from a full paint"); }
+  }
+  var rects = s.fb.commit();
+  if (!rects.length && intent !== "page") return null;
+  s.presents++;
+  s.pixels += rects.reduce(function (a, r) { return a + r[2] * r[3]; }, 0);
+  return ask("display", "present", { rects: rects, intent: intent, clean: !!s.clean }, { timeout: 5000 }).then(function (r) {
+    s.clean = false;
+    if (r.skipped) s.fb.invalidate();   // the panel did not get these pixels: send everything next time
+    s.presentError = "";
+  }, function (e) { s.presentError = e.message; s.fb.invalidate(); });
+}
+
 service("compositor")
   .needs("frames", "touch", "power", "time", "worlds.status")
-  .provides("gestures")
+  .provides("gestures", "activity")
   .state({ focus: "launcher", apps: {}, battery: null, banner: null, queued: false, intent: null, waitFrame: null, clean: false, frames: 0, presents: 0, pixels: 0,
            clock: "", clockArm: 0, crashed: {}, presentError: "", finger: null, gestures: 0, lastGesture: "", lastTap: null,
-           paints: 0, retained: 0, check: false, checks: 0, checkFails: 0 })
+           paints: 0, retained: 0, check: false, checks: 0, checkFails: 0, asleep: null, suspended: false, activityAt: -1e9 })
   .onStart(function (s) {
     F = gfx.fonts();
     s.fb = dma.alloc(W, H);
     attach(s);
-    sys.front(s.focus);
+    var saved = store.get("focus");   // the app on screen when standby suspended the system; used once
+    if (saved) { store.remove("focus"); s.focus = saved; }
+    try { sys.front(s.focus); } catch (e) { s.focus = "launcher"; sys.front(s.focus); }
     send(s.focus, "focus");
+    if (saved) holdPage(s, s.focus);   // the first present waits for the app's frame
     armClock(s);
   })
   .on("draw", function (s) {
     s.queued = false;
-    if (s.waitFrame) return;   // the focused app's first frame is on its way
+    if (s.waitFrame || s.suspended) return;   // the focused app's first frame is on its way; or the board is going off
     var intent = s.intent || "text";
     s.intent = null;
-    if (paint(s, intent === "page") && s.check) {   // paintcheck: a retained paint must equal a full one
-      var h = s.fb.hash();
-      paint(s, true);
-      s.checks++;
-      if (s.fb.hash() !== h) { s.checkFails++; log("paint check: the retained paint of " + s.focus + " differs from a full paint"); }
-    }
-    var rects = s.fb.commit();
-    if (!rects.length && intent !== "page") return;
-    s.presents++;
-    s.pixels += rects.reduce(function (a, r) { return a + r[2] * r[3]; }, 0);
-    return ask("display", "present", { rects: rects, intent: intent, clean: !!s.clean }, { timeout: 5000 }).then(function (r) {
-      s.clean = false;
-      if (r.skipped) s.fb.invalidate();   // the panel did not get these pixels: send everything next time
-      s.presentError = "";
-    }, function (e) { s.presentError = e.message; s.fb.invalidate(); });
+    return render(s, intent);
   })
   // A frame's root may carry `refresh` (the intent for its changes, e.g. "ink") and `page` (a token: when it
   // changes, as when an app switches tabs, the frame is a new page and gets a clean refresh).
@@ -623,7 +636,28 @@ service("compositor")
     if (s.waitFrame && s.waitFrame.app === f.app) { s.waitFrame = null; dirty(s, "page"); }
     else if (f.app === s.focus) dirty(s, newPage ? "page" : (tree && tree.refresh) || "text");
   })
-  .on("touch", function (s, t) { if (t.id === 0) gesture(s, t); })
+  .on("touch", function (s, t) {
+    if (t.phase === "down" && now() - s.activityAt >= 5000) { s.activityAt = now(); publish("activity", {}); }   // for standby
+    if (t.id === 0) gesture(s, t);
+  })
+  // standby: the system is about to be switched off. Draw the asleep screen in a clean refresh, wait until the
+  // panel shows it, and draw nothing more; the app on screen is kept for the next boot.
+  .on("suspend", function (s) {
+    s.asleep = { since: clockText() };
+    s.suspended = true;
+    s.banner = null;
+    s.waitFrame = null;
+    store.set("focus", s.focus);
+    s.intent = null;   // one clean refresh: the asleep screen stays on the glass for hours, without ghosts
+    return Task.resolve(render(s, "page")).then(function () { return { focus: s.focus }; });
+  })
+  .on("resume", function (s) {   // the board stayed on
+    if (!s.suspended) return;
+    s.asleep = null;
+    s.suspended = false;
+    store.remove("focus");
+    dirty(s, "text");
+  })
   .on("open", function (s, m) { focus(s, m.app); })
   .on("clean", function (s) { s.clean = true; dirty(s, "page"); })
   .on("power", function (s, p) { s.battery = p; dirty(s, "quick"); })

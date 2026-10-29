@@ -26,4 +26,5 @@ driver("power")
   .provides("power")
   .state({ pct: -1, mv: 0, charging: false, samples: 0 })
   .onStart(function (s) { s.bat = hw.adc("adc1:2"); s.chg = hw.gpio("gpio:4"); sample(s); })
-  .every(60000, sample);   // a cell drains slowly; once a minute keeps the idle tablet asleep
+  .every(60000, sample)   // a cell drains slowly; once a minute keeps the idle tablet asleep
+  .on("state", function (s) { return { pct: s.pct, mv: s.mv, charging: s.charging }; });
