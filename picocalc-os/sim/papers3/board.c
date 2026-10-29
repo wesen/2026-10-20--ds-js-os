@@ -5,7 +5,7 @@
 //   tap X Y                     a finger down and up 80 ms later
 //   hold X Y MS                 a finger held down
 //   swipe X0 Y0 X1 Y1 [MS]      a finger moved from one point to another (default 250 ms), then lifted
-//   battery PCT [charging]      what the battery and the charger report
+//   battery PCT [charging|usb]  what the battery and the charger report; "usb": external power, the cell full
 //   capture FILE [SCALE [clean]]  the glass; "clean" leaves the ghosts out
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,9 +13,10 @@
 #include "papers3.h"
 #include "../../host/board.h"
 
-const char *board_commands_help = "tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | battery PCT [charging]";
+const char *board_commands_help = "tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | battery PCT [charging|usb]";
 
-static struct { int pct; bool charging; } B = { 82, false };
+static struct { int pct; bool charging, usb; } B = { 82, false, false };
+vtime_t sim_base_us;   // the board's time when the kernel last booted: board time = sim_base_us + K.vnow
 
 void board_init(void) { srand(1); gt911_init(); bm8563_init(WALL_BOOT_MS); epd_init(); }
 const char *const *port_bus_names(void) { static const char *const b[] = { "i2c1", "epd0", NULL }; return b; }
@@ -33,11 +34,30 @@ int port_gpio_get(int pin) {
 }
 char *port_epd_info(void) { return xstrdup("{\"w\":540,\"h\":960,\"grays\":16,\"modes\":[\"quality\",\"text\",\"fast\",\"fastest\"]}"); }
 
+// ---- power ---------------------------------------------------------------------------------------------------
+// The power latch: on battery the off pulses cut the supply; with USB in, the latch is bypassed and the board
+// stays on (the charger's pin says so while it charges; with the cell full only trying tells).
+int port_power_off(char *why, size_t n) {
+  if (B.charging) { snprintf(why, n, "external power (charging)"); return -1; }
+  if (B.usb) { snprintf(why, n, "still powered after the off pulses (USB?)"); return -1; }
+  K.halted = true;
+  return 0;
+}
+vtime_t board_now(void) { return sim_base_us + K.vnow; }
+static struct { int handle; bool armed, ticking; } T;
+void board_off(void) {
+  sim_base_us += K.vnow;   // the kernel's clock starts again from 0 at the next boot
+  gt911_init();            // unpowered: no fingers, no reports waiting
+  memset(&T, 0, sizeof T);
+}
+void board_pass(vtime_t us) { sim_base_us += us; }
+vtime_t board_next_wake(void) { return VT_INF; }
+void board_wake(const char *why) { (void)why; }
+
 // ---- the touch controller's interrupt line (GPIO48) ---------------------------------------------------------
 // The GT911 makes reports on its own schedule (at a finger event, then every 10 ms while one is down) and holds
 // INT low while one waits. A watched pin that is armed turns that into kernel_irq; the kernel masks it (here:
 // armed = false) until the world's turn ends and port_gpio_arm runs. All on the virtual clock.
-static struct { int handle; bool armed, ticking; } T;
 static void int_check(void) {
   if (T.handle && T.armed && gt911_int(K.vnow)) { T.armed = false; kernel_irq(T.handle, K.vnow); }
 }
@@ -89,6 +109,7 @@ int board_command(const char *cmd, char *rest, int lineno) {
   } else if (!strcmp(cmd, "battery")) {
     B.pct = atoi(rest);
     B.charging = strstr(rest, "charging") != NULL;
+    B.usb = B.charging || strstr(rest, "usb") != NULL;
   } else return 0;
   return 1;
 }

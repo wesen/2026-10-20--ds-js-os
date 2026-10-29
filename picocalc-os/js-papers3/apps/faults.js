@@ -1,11 +1,12 @@
 // Faults: crash worlds on purpose and watch supervision contain them. Each button sends something that makes
 // a world fail in one way; the list shows every world's state, and a stopped one can be restarted from here
-// (this app holds sys.admin).
+// (this app holds sys.admin). The last button switches the board off (sys.power); on USB it stays on and says why.
 var ACTS = [
   { label: "Loop forever in the sandbox", run: function () { return ask("sandbox", "eval", { code: "for (;;) {}" }, { timeout: 3000 }); } },
   { label: "Exhaust the sandbox's arena", run: function () { return ask("sandbox", "eval", { code: "var a = []; for (;;) a.push('x' + a.length)" }, { timeout: 3000 }); } },
   { label: "Throw in flaky", run: function () { return ask("flaky", "boom", {}); } },
   { label: "Kill the display driver", run: function () { sys.fault("display"); return Task.resolve("killed"); } },
+  { label: "Power off now", run: function () { return sys.powerOff().then(function (r) { return "stayed on: " + r.why; }); } },
 ];
 
 function refresh(s) { s.worlds = sys.worlds(["name", "state", "restarts", "last_error"]).map(function (w) { return { name: w.name, state: w.state, restarts: w.restarts, err: w.last_error }; }); }

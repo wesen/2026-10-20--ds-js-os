@@ -796,6 +796,8 @@ static int64_t count_steps(const char *src, double *real_ms) {
   return steps;
 }
 double vm_fib20_ms;
+void vm_reset(void) {}   // the PicoCalc cannot switch itself off, so kernel_reset never runs there
+
 void vm_calibrate(void) {
   double loop_ms, fib_ms;
   int64_t loop = count_steps("(()=>{let s=0; for(let i=0;i<100000;i++) s+=i; return s;})()", &loop_ms);

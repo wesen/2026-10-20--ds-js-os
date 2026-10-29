@@ -14,6 +14,8 @@ int gt911_reports(void);
 bool gt911_int(vtime_t t);                // INT is active (low): a report waits
 bool gt911_active(void);                  // a finger is down or a lift is unreported
 
+extern vtime_t sim_base_us;   // board.c: the board's time at the last boot (board time = sim_base_us + K.vnow)
+
 // bm8563.c: the real-time clock on i2c1 at 0x51
 void bm8563_init(double epoch_ms);
 int bm8563_i2c(const uint8_t *wr, int nwr, uint8_t *rd, int nrd, vtime_t t);

@@ -126,6 +126,31 @@ int port_store_set(const char *ns, const char *key, const void *data, size_t len
   return e == ESP_OK ? 0 : -1;
 }
 
+// ---- power-off ---------------------------------------------------------------------------------------------------
+// GPIO44 holds the power latch while low (bus_s3_init); M5Unified switches the PaperS3 off with five high-low
+// pulses of 50 ms each. On battery the supply goes during the pulses. With USB in, the latch is bypassed and the
+// chip runs on: then this returns and the world that asked is told why. While the charger charges (GPIO4 low),
+// external power is certain and the pulses are not tried.
+int port_power_off(char *why, size_t n) {
+#ifdef S3_QEMU
+  snprintf(why, n, "no power latch under QEMU");
+  return -1;
+#else
+  if (gpio_get_level(PIN_CHARGE) == 0) { snprintf(why, n, "external power (charging)"); return -1; }
+  ESP_LOGI("power", "off");
+  fflush(stdout);
+  vTaskDelay(pdMS_TO_TICKS(20));   // the console's last line out
+  for (int i = 0; i < 5; i++) {
+    gpio_set_level(PIN_PWROFF, 1); vTaskDelay(pdMS_TO_TICKS(50));
+    gpio_set_level(PIN_PWROFF, 0); vTaskDelay(pdMS_TO_TICKS(50));
+  }
+  vTaskDelay(pdMS_TO_TICKS(1000));
+  gpio_set_level(PIN_PWROFF, 0);
+  snprintf(why, n, "still powered after the off pulses (USB?)");
+  return -1;
+#endif
+}
+
 // ---- pin interrupts ---------------------------------------------------------------------------------------------
 // The handler masks its pin and posts the handle to the kernel task, which delivers an "irq" message; the kernel
 // re-arms the pin when the world's turn for it ends. The GPIO ISR service is not in IRAM (flags 0), so the

@@ -10,6 +10,12 @@
 const char *board_commands_help = "key NAME [HOLD_MS] | type TEXT | battery PCT [charging] | panel";
 
 void board_init(void) { srand(1); st7365p_reset(); stm32_init(); }
+// the PicoCalc cannot switch itself off: its time is the kernel's
+vtime_t board_now(void) { return K.vnow; }
+void board_off(void) {}
+void board_pass(vtime_t us) { (void)us; }
+vtime_t board_next_wake(void) { return VT_INF; }
+void board_wake(const char *why) { (void)why; }
 const char *const *port_bus_names(void) { static const char *const b[] = { "i2c0", "spi2", NULL }; return b; }
 const char *port_board_name(void) { return "ESP32-P4 in a PicoCalc (simulated)"; }
 int port_gpio_watch(int pin, int mode, int handle_id) { (void)pin; (void)mode; (void)handle_id; return -1; }   // no pin interrupts here

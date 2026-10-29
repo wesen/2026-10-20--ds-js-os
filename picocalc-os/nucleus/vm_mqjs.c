@@ -527,6 +527,18 @@ static JSValue op_clock_set(JSContext *ctx, world_t *W, int argc, JSValue *argv)
   return JS_UNDEFINED;
 }
 
+// The power: switch the board off. The promise settles only if the board is still running afterwards (external
+// power keeps it on), with { off: false, why }; the world then carries on.
+static void run_poweroff(deferred_t *d, vtime_t at) {
+  char why[120] = "";
+  klog("switching the board off");
+  if (port_power_off(why, sizeof why) == 0) return;   // off (the host's board: halted until it is woken)
+  klog("the board stayed on: %s", why);
+  sbuf_t b = { 0 };
+  sb_add(&b, "{\"off\":false,\"why\":"); sb_json_str(&b, why); sb_add(&b, "}");
+  kernel_settle_at(d->w, d->epoch, d->promise, 1, b.s, at);
+}
+
 // The persistent store: one record per world, a JSON object the prelude keeps (store.get / store.set). The
 // record is read now and written when the segment ends, so a segment that faults never reaches flash; several
 // writes in one segment become one. NVS names are at most 15 characters, so a longer world name has no store.
@@ -583,7 +595,7 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
 };
 
 #define N_SYNC_OPS (sizeof SYNC_OPS / sizeof SYNC_OPS[0])
-static const char *ASYNC_OPS[] = { "sleep", "ask", "i2c", "epd.update" };
+static const char *ASYNC_OPS[] = { "sleep", "ask", "i2c", "epd.update", "poweroff" };
 #define N_ASYNC_OPS (sizeof ASYNC_OPS / sizeof ASYNC_OPS[0])
 
 // Time spent in each host operation, from the call into C (name lookup included) to its return. Real-time mode
@@ -673,6 +685,14 @@ JSValue js_nucleus_ka(JSContext *ctx, JSValue *this_val, int argc, JSValue *argv
       r = JS_NewInt32(ctx, id);
     }
     free(mode);
+  } else if (!strcmp(op, "poweroff")) {   // sys.powerOff(): after the segment's other effects (its store writes)
+    if (!world_claims(W, "sys.power")) r = fail(ctx, "%s has no claim on sys.power", W->name);
+    else {
+      deferred_t *d = calloc(1, sizeof(*d));
+      d->run = run_poweroff; d->w = W->id; d->epoch = W->epoch; d->promise = id;
+      defer(d);
+      r = JS_NewInt32(ctx, id);
+    }
   } else r = fail(ctx, "no such kernel operation: %s", op);
   for (size_t i = 0; op && i < N_ASYNC_OPS; i++) if (!strcmp(op, ASYNC_OPS[i])) op_prof_add(N_SYNC_OPS + i, t0);
   free(op);
@@ -975,6 +995,8 @@ void vm_calibrate(void) {
   if (K.realtime) klog("calibration on the real clock: the 100k loop took %.1f ms (the model says %.0f), fib(20) %.1f ms (the model says %.1f)",
                        loop_ms, (double)PROFILE.loop_ms, fib_ms, vm_fib20_ms);
 }
+
+void vm_reset(void) { wall_offset_ms = WALL_BOOT_MS; vm_op_prof_reset(); }   // the compiled prelude stays: the same text
 
 // Date.now(): the wall clock (the RTC's time once the clock driver has read it)
 JSValue js_date_now(JSContext *ctx, JSValue *this_val, int argc, JSValue *argv) {

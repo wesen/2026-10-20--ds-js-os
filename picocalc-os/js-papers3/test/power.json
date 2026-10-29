@@ -1,0 +1,6 @@
+{
+  "worlds": [
+    { "name": "off",  "file": "test/off.js",  "claims": ["sys.power"], "mem_kb": 48 },
+    { "name": "keep", "file": "test/keep.js", "mem_kb": 64 }
+  ]
+}

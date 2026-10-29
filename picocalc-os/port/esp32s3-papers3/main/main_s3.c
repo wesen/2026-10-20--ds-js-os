@@ -174,7 +174,8 @@ void console_exec(char *line) {
   } else if (!strcmp(cmd, "heap")) heap_report();
   else if (!strcmp(cmd, "boot")) {
     static const char *WHY[] = { "unknown", "power-on", "external pin", "software", "panic", "interrupt watchdog",
-                                 "task watchdog", "other watchdog", "deep sleep", "brownout", "SDIO" };
+                                 "task watchdog", "other watchdog", "deep sleep", "brownout", "SDIO", "USB", "JTAG", "efuse",
+                                 "power glitch", "CPU lockup" };
     esp_reset_reason_t r = esp_reset_reason();
     printf("up %.1f s; the last reset: %s (%d)\n", esp_timer_get_time() / 1e6, r < sizeof WHY / sizeof *WHY ? WHY[r] : "?", r);
   }

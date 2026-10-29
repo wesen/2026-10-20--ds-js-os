@@ -197,6 +197,7 @@ typedef struct {
   vtime_t lane_busy;
   bool verbose, quiet, trace;
   bool realtime;            // the port's real clock (port_clock) instead of the virtual one
+  bool halted;              // the board switched itself off (port_power_off): kernel_run_until does nothing more
   int front;                // the world on screen, as the compositor says (sys.front), +1; 0: render every world
   char *prelude; size_t prelude_len;
   char js_root[256];
@@ -210,6 +211,7 @@ int kernel_boot(const char *manifest_path);
 void kernel_run_until(vtime_t t);
 vtime_t kernel_next_wake(void);
 void kernel_shutdown(void);
+void kernel_reset(void);    // after a power-off on the host: every world, event, handle and buffer goes; K is as new
 event_t *new_event(int type, vtime_t t);
 void schedule(event_t *e);
 void schedule_fn(vtime_t t, void (*fn)(void *, int), void *arg, int a);
@@ -259,6 +261,7 @@ int vm_dispatch(world_t *W, msg_t *m);
 int vm_settle(world_t *W, settle_t *s);
 char *vm_render(world_t *W);
 void vm_calibrate(void);
+void vm_reset(void);        // the binding's own state, for kernel_reset (the wall clock goes back to WALL_BOOT_MS)
 
 // hw.c
 handle_t *handle_find(int id);
@@ -342,6 +345,9 @@ void port_gpio_unwatch(int pin);
 // returns 0 on success. Names are at most 15 characters (NVS's limit on the device).
 char *port_store_get(const char *ns, const char *key, size_t *len);
 int port_store_set(const char *ns, const char *key, const void *data, size_t len);
+// Switch the board off (operation "poweroff", claim sys.power). The device does not return if the power went; the
+// host sets K.halted and returns 0. Nonzero, with why filled in: the board is still running (external power).
+int port_power_off(char *why, size_t n);
 
 // e-paper waveform modes (hw.c): "quality" (16 grays, clean), "text", "fast" (black/white), "fastest"
 enum { EPD_QUALITY, EPD_TEXT, EPD_FAST, EPD_FASTEST, EPD_MODES };

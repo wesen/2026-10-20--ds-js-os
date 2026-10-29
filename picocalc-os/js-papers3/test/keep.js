@@ -11,4 +11,5 @@ service("keep")
   })
   .on("remove", function (s, m) { store.remove(m.k); show("remove " + m.k); })
   .on("show", function () { show("show"); })
+  .on("rude", function () { try { sys.powerOff(); } catch (e) { log("rude: " + e.message); } })
   .on("mutate", function (s) { var v = store.get("a"); v.x = 99; show("mutated a copy"); });

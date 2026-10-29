@@ -1,5 +1,6 @@
 // A model of the BM8563 real-time clock (PCF8563 registers): 0x02..0x08 hold seconds, minutes, hours, day,
-// weekday, month and year in BCD. It runs on the virtual clock from the time it was set to.
+// weekday, month and year in BCD. It runs on the board's time (sim_base_us + the kernel's virtual clock), which
+// goes on while the board is off, from the time it was set to.
 #include <time.h>
 #include "papers3.h"
 
@@ -11,6 +12,7 @@ static uint8_t bcd(int v) { return (uint8_t)((v / 10) << 4 | v % 10); }
 static int unbcd(uint8_t v) { return (v >> 4) * 10 + (v & 15); }
 
 int bm8563_i2c(const uint8_t *wr, int nwr, uint8_t *rd, int nrd, vtime_t t) {
+  t += sim_base_us;
   time_t now = (time_t)((R.epoch_ms + (t - R.at) / 1000.0) / 1000.0);
   struct tm tm;
   gmtime_r(&now, &tm);

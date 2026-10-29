@@ -210,6 +210,9 @@
     restart: function (name) { return k("sys.restart", name); },
     setClock: function (epochMs) { return k("clock.set", epochMs); },
     front: function (name) { return k("sys.front", name); },
+    // claim sys.power: switch the board off after this segment's other effects; settles with { off: false, why }
+    // only if the board is still running (external power)
+    powerOff: function () { return kernelTask(ka("poweroff")); },
   };
   // the world's own timers, by the order they were declared: timers.stop(0) / timers.start(0)
   g.timers = { start: function (i) { k("timer.set", i, true); }, stop: function (i) { k("timer.set", i, false); } };

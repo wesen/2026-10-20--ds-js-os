@@ -9,7 +9,7 @@
     { "name": "system",     "file": "apps/system.js",       "claims": ["sys.read"],                "budget_ms": 80,  "mem_kb": 160 },
     { "name": "repl",       "file": "apps/repl.js",                                                                  "mem_kb": 128 },
     { "name": "sandbox",    "file": "system/sandbox.js",                                           "budget_ms": 400, "mem_kb": 128, "priority": 0 },
-    { "name": "faults",     "file": "apps/faults.js",       "claims": ["sys.admin", "sys.read"],                     "mem_kb": 96 },
+    { "name": "faults",     "file": "apps/faults.js",       "claims": ["sys.admin", "sys.read", "sys.power"],        "mem_kb": 96 },
     { "name": "flaky",      "file": "system/flaky.js",                                                               "mem_kb": 48 },
     { "name": "touches",    "file": "apps/touches.js",                                                               "mem_kb": 96 },
     { "name": "sketch",     "file": "apps/sketch.js",                                              "budget_ms": 80,  "mem_kb": 192, "store_kb": 32 },

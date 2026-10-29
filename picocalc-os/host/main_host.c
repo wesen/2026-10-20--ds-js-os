@@ -11,6 +11,7 @@
 //   panel                 print the panel controller's state
 //   send WORLD TYPE [JSON] deliver a message to a world, from outside
 //   print TEXT            echo
+//   power                 press the power button: a board that switched itself off boots again
 //   quit
 // and the board's own (host/board.h): on the PicoCalc key NAME [HOLD_MS], type TEXT, battery PCT [charging];
 // on the PaperS3 tap X Y, hold X Y MS, swipe X0 Y0 X1 Y1 [MS], type TEXT, battery PCT [charging].
@@ -23,6 +24,42 @@
 #include "board.h"
 
 static char out_dir[256] = "out";
+static const char *js_root, *manifest_path;
+
+// ---- power: a board that switches itself off (sys.powerOff) halts the kernel; the runner then resets it and lets
+// the board's time pass until the power button (the "power" command) or the board (its RTC) switches it on again,
+// and boots the kernel from scratch, as the device cold-boots. The glass, the clock and the store are the board's
+// and stay.
+static bool off;
+static void power_on(const char *why) {
+  board_wake(why);
+  kernel_init(js_root, NULL);   // the console log stays open
+  if (kernel_boot(manifest_path)) exit(1);
+  off = false;
+  printf("[%9.1f ms] the board is on (%s)\n", board_now() / 1000.0, why);
+}
+static void check_halted(void) {
+  if (!K.halted || off) return;
+  printf("[%9.1f ms] the board is off\n", board_now() / 1000.0);
+  board_off();
+  kernel_reset();
+  off = true;
+}
+// us of the board's time: the kernel runs while the board is on; while it is off, until something switches it on
+static void pass(vtime_t us) {
+  vtime_t end = board_now() + us;
+  for (;;) {
+    if (!off) {
+      kernel_run_until(K.vnow + (end - board_now()));
+      check_halted();
+      if (!off) return;
+    }
+    vtime_t wake = board_next_wake();
+    if (wake > end) { board_pass(end - board_now()); return; }
+    board_pass(wake - board_now());
+    power_on("rtc");
+  }
+}
 
 static void kill_world(void *arg, int a) { (void)a; world_t *W = arg; kernel_fault(W, "killed from the host"); }
 
@@ -37,7 +74,15 @@ static int run_line(char *line, int lineno) {
   sscanf(p, "%31s%n", cmd, &n);
   char *rest = p + n;
   while (isspace((unsigned char)*rest)) rest++;
-  if (!strcmp(cmd, "wait") || !strcmp(cmd, "run")) kernel_run_until(K.vnow + MS(atof(rest)));
+  static const char *const WHILE_OFF[] = { "wait", "run", "capture", "print", "quit", "power", "panel", "battery", NULL };
+  bool allowed = !off;
+  for (int i = 0; !allowed && WHILE_OFF[i]; i++) allowed = !strcmp(cmd, WHILE_OFF[i]);
+  if (!allowed) { printf("[%9.1f ms] the board is off: %s does nothing\n", board_now() / 1000.0, cmd); return 0; }
+  if (!strcmp(cmd, "wait") || !strcmp(cmd, "run")) pass(MS(atof(rest)));
+  else if (!strcmp(cmd, "power")) {
+    if (off) { power_on("button"); kernel_run_until(K.vnow); }
+    else printf("[%9.1f ms] the board is on: the power button does nothing here\n", board_now() / 1000.0);
+  }
   else if (!strcmp(cmd, "capture")) {
     static int shot = 0;
     char file[200] = "", opts[64] = ""; int scale = 2;
@@ -46,7 +91,7 @@ static int run_line(char *line, int lineno) {
     char path[512];
     snprintf(path, sizeof path, "%s/%s", out_dir, file);
     if (board_capture(path, scale, opts)) { fprintf(stderr, "cannot write %s\n", path); return -1; }
-    printf("[%9.1f ms] captured %s\n", K.vnow / 1000.0, path);
+    printf("[%9.1f ms] captured %s\n", board_now() / 1000.0, path);
   } else if (!strcmp(cmd, "crash")) {
     world_t *W = world_by_name(rest);
     if (!W) { fprintf(stderr, "line %d: no world called %s\n", lineno, rest); return -1; }
@@ -61,13 +106,14 @@ static int run_line(char *line, int lineno) {
     kernel_run_until(K.vnow);
   } else if (!strcmp(cmd, "stats")) kernel_stats_print();
   else if (!strcmp(cmd, "panel")) board_report();
-  else if (!strcmp(cmd, "print")) printf("[%9.1f ms] %s\n", K.vnow / 1000.0, rest);
+  else if (!strcmp(cmd, "print")) printf("[%9.1f ms] %s\n", board_now() / 1000.0, rest);
   else if (!strcmp(cmd, "quit")) return 1;
   else {
     int r = board_command(cmd, rest, lineno);
     if (r < 0) return -1;
     if (r == 0) { fprintf(stderr, "line %d: unknown command %s (this board also has: %s)\n", lineno, cmd, board_commands_help); return -1; }
   }
+  check_halted();   // the command's run may have switched the board off
   fflush(stdout);
   return 0;
 }
@@ -93,6 +139,7 @@ int main(int argc, char **argv) {
   char mpath[512], upath[512];
   if (!manifest) { snprintf(mpath, sizeof mpath, "%s/system.json", js); manifest = mpath; }
   if (!uart) { snprintf(upath, sizeof upath, "%s/uart.log", out_dir); uart = upath; }
+  js_root = js; manifest_path = manifest;
   board_init();
   kernel_init(js, uart);
   if (kernel_boot(manifest)) return 1;
@@ -108,7 +155,7 @@ int main(int argc, char **argv) {
       if (r > 0) break;
     }
     if (f != stdin) fclose(f);
-  } else kernel_run_until(MS(run_ms ? run_ms : 2000));
+  } else pass(MS(run_ms ? run_ms : 2000));
   kernel_shutdown();
   return rc;
 }

@@ -541,6 +541,7 @@ static void handle_event(event_t *e) {
 
 void kernel_run_until(vtime_t until) {
   for (;;) {
+    if (K.halted) return;   // the board is off: its time passes outside the kernel (host/main_host.c)
     bool is_settle;
     world_t *R = pick(&is_settle);
     vtime_t t_lane = K.vnow > K.lane_free ? K.vnow : K.lane_free;
@@ -614,6 +615,38 @@ int kernel_boot(const char *manifest) {
 void kernel_shutdown(void) {
   for (int i = 0; i < K.n_worlds; i++) vm_dispose(K.worlds[i]);
   if (K.uart) fclose(K.uart);
+}
+
+// The host's power-off: what a cold boot would find, so kernel_init and kernel_boot can run again in this process.
+// The console log, the verbosity and the JS root stay; the board (its glass, clock and store) is the board's.
+void kernel_reset(void) {
+  discard_deferred();
+  for (int i = 0; i < heap_n; i++) {
+    event_t *e = heap[i];
+    free_msg(e->msg);
+    if (e->settle) { free(e->settle->json); free(e->settle); }
+    free(e);
+  }
+  heap_n = 0;
+  for (int i = 0; i < K.n_worlds; i++) {
+    world_t *W = K.worlds[i];
+    vm_dispose(W);
+    for (msg_t *m = W->mbox; m; ) { msg_t *n = m->next; free_msg(m); m = n; }
+    for (settle_t *st = W->settles; st; ) { settle_t *n = st->next; free(st->json); free(st); st = n; }
+    free(W->source); free(W->frame); free(W->trace); free(W->turn_result); free(W->turn_error);
+    free(W);
+  }
+  for (int i = 0; i < MAX_BUFS; i++) if (K.bufs[i].live) { port_big_free(K.bufs[i].back); port_big_free(K.bufs[i].front); }
+  free(K.prelude);
+  FILE *uart = K.uart;
+  bool verbose = K.verbose, quiet = K.quiet, trace = K.trace, realtime = K.realtime;
+  char root[sizeof K.js_root];
+  memcpy(root, K.js_root, sizeof root);
+  memset(&K, 0, sizeof K);
+  K.uart = uart; K.verbose = verbose; K.quiet = quiet; K.trace = trace; K.realtime = realtime;
+  memcpy(K.js_root, root, sizeof root);
+  apply_at = -1; frozen_now = -1;
+  vm_reset();
 }
 
 // ---- reports ---------------------------------------------------------------------------------------------------
