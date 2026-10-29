@@ -92,6 +92,7 @@ typedef struct world {
   // limits, from the manifest
   char claims[MAX_LIST][NAME_LEN]; int n_claims;
   size_t mem_limit;         // device bytes
+  size_t store_limit;       // bytes of its persistent record (the JSON text)
   vtime_t budget_us;        // per segment
   // accounting
   size_t mem_used;          // host bytes, from the allocator
@@ -240,8 +241,8 @@ bool world_claims(world_t *W, const char *claim);
 // the engine binding: vm.c (QuickJS) or vm_mqjs.c (MicroQuickJS); one is linked into a build
 typedef struct {                // one entry of system.json's "worlds", as the binding's JSON parser read it
   char name[NAME_LEN], file[96];
-  bool has_budget, has_mem, has_prio;
-  double budget_ms, mem_kb, priority;
+  bool has_budget, has_mem, has_prio, has_store;
+  double budget_ms, mem_kb, priority, store_kb;
   char claims[MAX_LIST][NAME_LEN]; int n_claims;
 } manifest_world_t;
 int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(void *arg, const manifest_world_t *w), void *arg);
@@ -336,6 +337,11 @@ int port_gpio_get(int pin);                     // H_GPIO: the pin's level
 int port_gpio_watch(int pin, int mode, int handle_id);
 void port_gpio_arm(int pin, int mode);
 void port_gpio_unwatch(int pin);
+// The persistent store: named records in a namespace ("w": one per world, by name; "k": the kernel's own). A record
+// is bytes. get returns a malloc'ed, NUL-terminated copy (len set) or NULL; set replaces it, len 0 removes it, and
+// returns 0 on success. Names are at most 15 characters (NVS's limit on the device).
+char *port_store_get(const char *ns, const char *key, size_t *len);
+int port_store_set(const char *ns, const char *key, const void *data, size_t len);
 
 // e-paper waveform modes (hw.c): "quality" (16 grays, clean), "text", "fast" (black/white), "fastest"
 enum { EPD_QUALITY, EPD_TEXT, EPD_FAST, EPD_FASTEST, EPD_MODES };

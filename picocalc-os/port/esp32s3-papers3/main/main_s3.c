@@ -178,6 +178,13 @@ void console_exec(char *line) {
     esp_reset_reason_t r = esp_reset_reason();
     printf("up %.1f s; the last reset: %s (%d)\n", esp_timer_get_time() / 1e6, r < sizeof WHY / sizeof *WHY ? WHY[r] : "?", r);
   }
+  else if (!strcmp(cmd, "reboot")) { fflush(stdout); esp_restart(); }
+  else if (!strcmp(cmd, "store")) {   // store WORLD: the world's persistent record
+    size_t len = 0;
+    char *r = port_store_get("w", rest, &len);
+    printf("store %s: %s (%u bytes)\n", rest, r ? r : "none", (unsigned)len);
+    free(r);
+  }
   else if (!strcmp(cmd, "gpio")) { int pin = atoi(rest); printf("gpio %d: %d\n", pin, gpio_get_level(pin)); }
   else if (!strcmp(cmd, "prof")) { if (!strcmp(rest, "reset")) prof_reset(); else prof_print(); }
 #if CONFIG_PM_ENABLE
@@ -213,7 +220,7 @@ void console_exec(char *line) {
   } else if (!strcmp(cmd, "shot")) shot();
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap prof [reset] pm gpio N boot | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap prof [reset] pm gpio N boot reboot store W | tap X Y | hold X Y MS | swipe X0 Y0 X1 Y1 [MS] | send W T [JSON] | clean | crash W | restart W | shot | bench | trace on|off\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
@@ -312,6 +319,7 @@ void app_main(void) {
 
   port_s3_init();
   s3_pm_init();   // after port_s3_init, which configures the charger pin it watches
+  s3_store_init();
   bus_s3_init();
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);
   xTaskCreatePinnedToCore(shot_task, "shot", 4096, NULL, 2, &snap.task, 0);

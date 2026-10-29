@@ -19,6 +19,11 @@ app("repl")
   .title("REPL")
   .state({ line: "", hist: [], hi: -1, busy: false, layout: "lower", shift: false,
            out: [{ s: "JavaScript (ES5) in the sandbox world: 128 KB arena, 400 ms per turn, no claims.", color: "muted" }] })
+  .onStart(function (s) {   // what it showed before the board went off (or before a restart, once it had suspended)
+    var kept = store.get("repl");
+    if (kept) { s.hist = kept.hist; s.out = kept.out; s.line = kept.line; }
+  })
+  .on("suspend", function (s) { store.set("repl", { hist: s.hist.slice(-20), out: s.out.slice(-40), line: s.line }); })
   .on("key", function (s, m) {
     if (s.busy) return;
     var k = m.arg;

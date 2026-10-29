@@ -36,6 +36,7 @@ void port_s3_init(void);
 // transfer: a steady peripheral clock). No-ops when CONFIG_PM_ENABLE is off (the QEMU build).
 enum { PM_KERNEL, PM_EPD, PM_I2C, PM_LOCKS };
 void s3_pm_init(void);
+void s3_store_init(void);   // the persistent store (NVS partition "store")
 void s3_pm_hold(int which);
 void s3_pm_release(int which);
 #ifdef __cplusplus

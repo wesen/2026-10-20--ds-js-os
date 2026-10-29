@@ -6,3 +6,4 @@ int board_command(const char *cmd, char *rest, int lineno);   // 1 done, 0 not a
 int board_capture(const char *path, int scale, const char *opts);   // the panel as a PNG
 void board_report(void);                                       // the "panel" command
 extern const char *board_commands_help;
+void host_store_dir(const char *dir);   // host/port_host.c: keep the persistent store in files under dir (-s)

@@ -1,0 +1,5 @@
+{
+  "worlds": [
+    { "name": "keep", "file": "test/keep.js", "mem_kb": 64, "store_kb": 1 }
+  ]
+}

@@ -585,6 +585,7 @@ static int add_world(void *arg, const manifest_world_t *mw) {
   W->budget_us = mw->has_budget ? (vtime_t)(mw->budget_ms * 1000) : MS(50);
   W->mem_limit = mw->has_mem ? (size_t)(mw->mem_kb * 1024) : 1024 * 1024;
   W->prio = mw->has_prio ? (int)mw->priority : -1;
+  W->store_limit = mw->has_store ? (size_t)(mw->store_kb * 1024) : 16 * 1024;
   for (int k = 0; k < mw->n_claims && k < MAX_LIST; k++) snprintf(W->claims[W->n_claims++], NAME_LEN, "%s", mw->claims[k]);
   char path[512];
   snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);

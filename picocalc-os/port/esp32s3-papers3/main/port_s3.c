@@ -11,6 +11,8 @@
 #include "esp_pm.h"
 #include "esp_sleep.h"
 #include "esp_timer.h"
+#include "nvs.h"
+#include "nvs_flash.h"
 #include "s3.h"
 
 static int64_t t_boot = -1;
@@ -83,6 +85,46 @@ int port_adc_read_mv(int unit, int channel) {
   return raw * 3300 / 4095;
 }
 int port_gpio_get(int pin) { return gpio_get_level(pin); }
+
+// ---- the persistent store ---------------------------------------------------------------------------------------
+// NVS in its own partition ("store", partitions.csv), one NVS namespace per store namespace. NVS writes a record
+// whole or not at all, even if the power goes in the middle. Without the partition (an older partition table)
+// every record reads as absent and writes fail: the system runs, it only forgets.
+static nvs_handle_t store_w, store_k;
+void s3_store_init(void) {
+  esp_err_t e = nvs_flash_init_partition("store");
+  if (e == ESP_ERR_NVS_NO_FREE_PAGES || e == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    ESP_LOGW("store", "the store's format is unusable (%s): erasing it", esp_err_to_name(e));
+    nvs_flash_erase_partition("store");
+    e = nvs_flash_init_partition("store");
+  }
+  if (e == ESP_OK) e = nvs_open_from_partition("store", "w", NVS_READWRITE, &store_w);
+  if (e == ESP_OK) e = nvs_open_from_partition("store", "k", NVS_READWRITE, &store_k);
+  if (e != ESP_OK) { ESP_LOGE("store", "no persistent store: %s", esp_err_to_name(e)); store_w = store_k = 0; return; }
+  nvs_stats_t st;
+  if (nvs_get_stats("store", &st) == ESP_OK) ESP_LOGI("store", "%u of %u entries used", (unsigned)st.used_entries, (unsigned)st.total_entries);
+}
+static nvs_handle_t store_ns(const char *ns) { return !strcmp(ns, "w") ? store_w : !strcmp(ns, "k") ? store_k : 0; }
+char *port_store_get(const char *ns, const char *key, size_t *len) {
+  nvs_handle_t h = store_ns(ns);
+  size_t n = 0;
+  if (!h || nvs_get_blob(h, key, NULL, &n) != ESP_OK) return NULL;
+  char *b = malloc(n + 1);
+  if (!b) return NULL;
+  if (nvs_get_blob(h, key, b, &n) != ESP_OK) { free(b); return NULL; }
+  b[n] = 0;
+  if (len) *len = n;
+  return b;
+}
+int port_store_set(const char *ns, const char *key, const void *data, size_t len) {
+  nvs_handle_t h = store_ns(ns);
+  if (!h) return -1;
+  esp_err_t e = len ? nvs_set_blob(h, key, data, len) : nvs_erase_key(h, key);
+  if (e == ESP_ERR_NVS_NOT_FOUND) e = ESP_OK;   // removing what is not there
+  if (e == ESP_OK) e = nvs_commit(h);
+  if (e != ESP_OK) ESP_LOGE("store", "%s/%s: %s", ns, key, esp_err_to_name(e));
+  return e == ESP_OK ? 0 : -1;
+}
 
 // ---- pin interrupts ---------------------------------------------------------------------------------------------
 // The handler masks its pin and posts the handle to the kernel task, which delivers an "irq" message; the kernel

@@ -527,12 +527,52 @@ static JSValue op_clock_set(JSContext *ctx, world_t *W, int argc, JSValue *argv)
   return JS_UNDEFINED;
 }
 
+// The persistent store: one record per world, a JSON object the prelude keeps (store.get / store.set). The
+// record is read now and written when the segment ends, so a segment that faults never reaches flash; several
+// writes in one segment become one. NVS names are at most 15 characters, so a longer world name has no store.
+#define STORE_NAME_MAX 15
+static JSValue op_store_load(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  (void)argc; (void)argv;
+  size_t n = 0;
+  char *j = strlen(W->name) <= STORE_NAME_MAX ? port_store_get("w", W->name, &n) : NULL;
+  if (!j) return JS_NULL;
+  charge_json(n);
+  JSValue r = JS_NewStringLen(ctx, j, n);
+  free(j);
+  return r;
+}
+static void run_store_save(deferred_t *d, vtime_t at) {
+  (void)at;
+  world_t *T = world_by_id(d->w);
+  bool empty = !strcmp(d->json, "{}");
+  if (T && port_store_set("w", T->name, d->json, empty ? 0 : strlen(d->json))) klog("%s: the store did not take its record", T->name);
+  free(d->json);
+}
+static JSValue op_store_save(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  if (strlen(W->name) > STORE_NAME_MAX) return fail(ctx, "%s has no store: its name is longer than %d characters", W->name, STORE_NAME_MAX);
+  char *json = sarg(ctx, argv, argc, 0);
+  if (!json) return fail(ctx, "store.save needs the record");
+  size_t n = strlen(json);
+  if (n > W->store_limit) {
+    free(json);
+    return fail(ctx, "%s's store would be %zu KB; its limit is %zu KB", W->name, (n + 1023) / 1024, W->store_limit / 1024);
+  }
+  charge_json(n);
+  for (deferred_t *d = K.defer_head; d; d = d->next)   // a write of this segment already waits: it takes the newer record
+    if (d->run == run_store_save && d->w == W->id) { free(d->json); d->json = json; return JS_UNDEFINED; }
+  deferred_t *d = calloc(1, sizeof(*d));
+  d->run = run_store_save; d->w = W->id; d->json = json;
+  defer(d);
+  return JS_UNDEFINED;
+}
+
 static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "gfx.text", op_gfx_text }, { "gfx.fill", op_gfx_fill }, { "gfx.rect", op_gfx_rect }, { "gfx.line", op_gfx_line },
   { "gfx.commit", op_gfx_commit }, { "gfx.fonts", op_gfx_fonts }, { "gfx.invalidate", op_gfx_invalidate }, { "gfx.hash", op_gfx_hash },
   { "gfx.measure", op_gfx_measure }, { "gfx.wrap", op_gfx_wrap },
   { "now", op_now }, { "send", op_send }, { "publish", op_publish }, { "log", op_log }, { "self", op_self }, { "seed", op_seed },
   { "engine", op_engine }, { "err.where", op_err_where }, { "clock.set", op_clock_set },
+  { "store.load", op_store_load }, { "store.save", op_store_save },
   { "turn.async", op_turn_async }, { "turn.done", op_turn_done }, { "turn.fail", op_turn_fail }, { "turn.reject", op_turn_reject },
   { "hw.i2c", op_hw_i2c }, { "hw.epd", op_hw_epd }, { "hw.adc", op_hw_adc }, { "hw.gpio", op_hw_gpio }, { "dma.alloc", op_dma_alloc },
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
@@ -886,6 +926,7 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
     mw.has_budget = get_num(ctx, w, "budget_ms", &mw.budget_ms);
     mw.has_mem = get_num(ctx, w, "mem_kb", &mw.mem_kb);
     mw.has_prio = get_num(ctx, w, "priority", &mw.priority);
+    mw.has_store = get_num(ctx, w, "store_kb", &mw.store_kb);
     int nc = 0;
     JS_ToInt32(ctx, &nc, JS_GetPropertyStr(ctx, JS_GetPropertyStr(ctx, *w, "claims"), "length"));
     for (int k = 0; k < nc && k < MAX_LIST; k++) {

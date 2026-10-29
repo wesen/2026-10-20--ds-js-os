@@ -1,7 +1,7 @@
 // The host build: boots the system against a simulated board (sim/ for the PicoCalc, sim/papers3/ for the
 // PaperS3) and runs a script that works its inputs, waits on the virtual clock and captures the panel as PNG.
 //
-//   picocalc-host [-j js] [-m manifest] [-o out] [-v] [-t ms] [script | -]
+//   picocalc-host [-j js] [-m manifest] [-o out] [-s store] [-v] [-t ms] [script | -]
 //
 // Script commands (one per line, # starts a comment):
 //   wait MS               run the system for MS virtual milliseconds
@@ -80,11 +80,12 @@ int main(int argc, char **argv) {
     else if (!strcmp(argv[i], "-m") && i + 1 < argc) manifest = argv[++i];
     else if (!strcmp(argv[i], "-o") && i + 1 < argc) snprintf(out_dir, sizeof out_dir, "%s", argv[++i]);
     else if (!strcmp(argv[i], "-u") && i + 1 < argc) uart = argv[++i];
+    else if (!strcmp(argv[i], "-s") && i + 1 < argc) host_store_dir(argv[++i]);   // the persistent store in files
     else if (!strcmp(argv[i], "-t") && i + 1 < argc) run_ms = atof(argv[++i]);
     else if (!strcmp(argv[i], "-v")) K.verbose = true;
     else if (!strcmp(argv[i], "-vv")) K.verbose = K.trace = true;
     else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
+      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-s store_dir] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
       return 0;
     } else script = argv[i];
   }

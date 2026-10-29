@@ -1,9 +1,12 @@
 // Sketch: draw with a finger. The compositor forwards drags over the ink area as they happen; each stroke is
 // presented in the fastest waveform ("ink"), which is quick but ghosts, and Clean redraws in full quality.
 var MAXPTS = 1500;
+function count(strokes) { return strokes.reduce(function (a, st) { return a + st.length; }, 0); }
 app("sketch")
   .title("Sketch")
   .state({ strokes: [], points: 0 })
+  .onStart(function (s) { var kept = store.get("strokes"); if (kept) { s.strokes = kept; s.points = count(kept); } })
+  .on("suspend", function (s) { store.set("strokes", s.strokes); })
   .on("ink", function (s, p) {
     if (p.phase === "down") { s.strokes.push([]); }
     var st = s.strokes[s.strokes.length - 1];
@@ -13,7 +16,7 @@ app("sketch")
   })
   .on("clear", function (s) { s.strokes = []; s.points = 0; })
   .on("clean", function () { send("compositor", "clean"); })
-  .on("back", function (s) { s.strokes.pop(); s.points = s.strokes.reduce(function (a, st) { return a + st.length; }, 0); })
+  .on("back", function (s) { s.strokes.pop(); s.points = count(s.strokes); })
   .screen(function (s) {
     return ui.col({ gap: 16, refresh: "ink" },
       ui.ink(460, 600, s.strokes, { msg: "ink" }),

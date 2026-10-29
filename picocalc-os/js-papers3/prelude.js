@@ -214,6 +214,31 @@
   // the world's own timers, by the order they were declared: timers.stop(0) / timers.start(0)
   g.timers = { start: function (i) { k("timer.set", i, true); }, stop: function (i) { k("timer.set", i, false); } };
 
+  // ---- the persistent store: the world's own record, a JSON object that outlives restarts and power-off ------
+  // It is read on first use; set and remove write the whole record when the segment ends (a segment that throws
+  // writes nothing). Values are copied in and out, as through JSON.
+  var rec = null;
+  function copy(v) { return v === undefined ? undefined : JSON.parse(JSON.stringify(v)); }
+  function record() {
+    if (rec) return rec;
+    var t = k("store.load");
+    try { rec = t ? JSON.parse(t) : {}; } catch (e) { log("store: the record is not JSON; starting empty"); rec = {}; }
+    if (!rec || typeof rec !== "object" || Array.isArray(rec)) rec = {};
+    return rec;
+  }
+  function put(key, value) {
+    var r = record(), had = r.hasOwnProperty(key), old = r[key];
+    if (value === undefined) delete r[key]; else r[key] = copy(value);
+    try { k("store.save", JSON.stringify(r)); }
+    catch (e) { if (had) r[key] = old; else delete r[key]; throw e; }   // over the quota: the record stays as it was
+  }
+  g.store = {
+    get: function (key) { var r = record(); return r.hasOwnProperty(key) ? copy(r[key]) : undefined; },
+    set: function (key, value) { put(String(key), value); },
+    remove: function (key) { put(String(key), undefined); },
+    all: function () { return copy(record()); },
+  };
+
   // ---- messages ------------------------------------------------------------------------------------
   g.send = function (to, type, payload) { var e = enc(payload); k("send", to, type, e[0], e[1]); };
   g.publish = function (ch, payload) { var e = enc(payload); k("publish", ch, e[0], e[1]); };

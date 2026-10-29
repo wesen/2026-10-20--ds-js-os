@@ -12,7 +12,7 @@
     { "name": "faults",     "file": "apps/faults.js",       "claims": ["sys.admin", "sys.read"],                     "mem_kb": 96 },
     { "name": "flaky",      "file": "system/flaky.js",                                                               "mem_kb": 48 },
     { "name": "touches",    "file": "apps/touches.js",                                                               "mem_kb": 96 },
-    { "name": "sketch",     "file": "apps/sketch.js",                                              "budget_ms": 80,  "mem_kb": 192 },
+    { "name": "sketch",     "file": "apps/sketch.js",                                              "budget_ms": 80,  "mem_kb": 192, "store_kb": 32 },
     { "name": "about",      "file": "apps/about.js",        "claims": ["sys.read"],                                  "mem_kb": 96 }
   ]
 }
