@@ -29,6 +29,8 @@ topics:
       description: Speed and CPU cost of the OS and its worlds
     - slug: power
       description: Power use, idle and sleep
+    - slug: persistence
+      description: Persistent state across restarts and power cycles
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes
