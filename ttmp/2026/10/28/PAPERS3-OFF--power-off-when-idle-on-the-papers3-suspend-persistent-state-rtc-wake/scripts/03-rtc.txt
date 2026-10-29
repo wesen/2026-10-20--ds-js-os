@@ -1,0 +1,19 @@
+# P3: the RTC switches the board on. Armed for 2 minutes, the board goes off and comes back by itself; the
+# clock driver reports the wake reason and clears the flags, so a later power-off stays off until the button.
+wait 2000
+send off off {"inMin":2}
+wait 60000
+print a minute later: still off
+wait 70000
+print the RTC switched it on
+send off off
+wait 600000
+print ten minutes later: still off (the timer was stopped at boot)
+power
+wait 2000
+# on USB the board stays on, and an armed timer power-cycles it when it runs out (as the device does)
+battery 100 usb
+send off off {"inSec":20}
+wait 25000
+print the timer ran out while the board was on
+wait 2000

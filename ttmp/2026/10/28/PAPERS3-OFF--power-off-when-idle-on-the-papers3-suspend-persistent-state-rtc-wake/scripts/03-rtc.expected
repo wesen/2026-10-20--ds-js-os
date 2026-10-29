@@ -1,0 +1,32 @@
+the board is off
+a minute later: still off
+the board is on (rtc)
+the RTC switched it on
+the board is off
+ten minutes later: still off (the timer was stopped at boot)
+the board is on (button)
+the RTC's interrupt power-cycles the board
+the board is on (rtc)
+the timer ran out while the board was on
+--- uart
+booting 3 worlds from js-papers3/test/power.json
+clock: started by button
+keep: start: {}
+off: boot 1, started by button at 09:41
+switching the board off
+booting 3 worlds from js-papers3/test/power.json
+clock: started by rtc (control 2: 0x5)
+keep: start: {}
+off: boot 2, started by rtc at 09:43
+switching the board off
+booting 3 worlds from js-papers3/test/power.json
+clock: started by button
+keep: start: {}
+off: boot 3, started by button at 09:53
+switching the board off
+the board stayed on: still powered after the off pulses (USB?)
+off: stayed on: still powered after the off pulses (USB?)
+booting 3 worlds from js-papers3/test/power.json
+clock: started by rtc (control 2: 0x5)
+keep: start: {}
+off: boot 4, started by rtc at 09:53

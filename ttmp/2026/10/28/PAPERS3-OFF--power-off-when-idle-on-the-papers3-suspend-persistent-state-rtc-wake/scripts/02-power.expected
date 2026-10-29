@@ -5,15 +5,17 @@ the board is off
 the board is on (button)
 the board is on: the power button does nothing here
 --- uart
-booting 2 worlds from js-papers3/test/power.json
-off: boot 1
+booting 3 worlds from js-papers3/test/power.json
+clock: started by button
 keep: start: {}
+off: boot 1, started by button at 09:41
 keep: put a: {"a":1}
 keep: rude: keep has no claim on sys.power
 switching the board off
-booting 2 worlds from js-papers3/test/power.json
-off: boot 2
+booting 3 worlds from js-papers3/test/power.json
+clock: started by button
 keep: start: {"a":1}
+off: boot 2, started by button at 09:41
 keep: show: {"a":1}
 switching the board off
 the board stayed on: external power (charging)
@@ -22,6 +24,7 @@ switching the board off
 the board stayed on: still powered after the off pulses (USB?)
 off: stayed on: still powered after the off pulses (USB?)
 switching the board off
-booting 2 worlds from js-papers3/test/power.json
-off: boot 3
+booting 3 worlds from js-papers3/test/power.json
+clock: started by button
 keep: start: {"a":1}
+off: boot 3, started by button at 09:41

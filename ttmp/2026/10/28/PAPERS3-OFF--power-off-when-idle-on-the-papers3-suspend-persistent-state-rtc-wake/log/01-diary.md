@@ -442,3 +442,144 @@ from scratch, as a cold boot would. The store, the glass and the RTC belong to t
 - Host runner, after a halt: `board_off()` (`sim_base_us += K.vnow`, `gt911_init()`), then
   `kernel_reset()`, then `off = true`. On `power`: `board_wake("button")`, `kernel_init(js_root, NULL)`
   (keeps the open console log), `kernel_boot(manifest_path)`.
+
+## Step 4: P3, RTC wake, and the interrupt that power-cycles a running board
+
+This step taught the clock driver to say why the board started and to arm the BM8563's countdown timer.
+The simulated BM8563 got the timer, its flag and its interrupt. The device test turned up a fact the
+design had not expected. When the timer's interrupt goes active, the board power-cycles even while it is
+running on USB. That makes a failed power-off with an armed timer dangerous; the standby service must
+disarm it. It also makes the resume path testable on USB, which P5 will use.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+
+**Assistant interpretation:** Implement phase P3 of the guide, commit it, and record it here.
+
+**Inferred user intent:** A board that can wake itself, with the wake reason visible to the system.
+
+**Commit (code):** 855f0d2 — "picocalc-os: RTC wake in the clock driver and the simulated BM8563 (PAPERS3-OFF P3)"
+
+### What I did
+
+- `js-papers3/drivers/clock.js`:
+  - `wakeReason()` at start: read 0x01; TF means "rtc", AF means "alarm", otherwise "button"; log
+    "started by ..." with the register value when a flag was set; write 0x01 = 0 and 0x0E = 0;
+  - `"wake"` returns `{ reason }`;
+  - `"alarm"` takes `{ inSec }` or `{ inMin }`: 1 Hz (`0x82`) up to 255 s, else 1/60 Hz (`0x83`); then
+    0x0F = count and 0x01 = TIE;
+  - `"disarm"` writes 0x01 = 0 and 0x0E = 0;
+  - `"stats"` gains `wake` and `armed`.
+- `sim/papers3/bm8563.c`, rewritten around a register file:
+  - control/status 2 (flags can only be cleared), the alarm registers (kept, never fire), timer control
+    and count;
+  - a countdown on board time that sets TF when it runs out and reloads when TF is cleared;
+  - `bm8563_int`, `bm8563_next_int` (the next edge) and `bm8563_take_edge` (an edge latched during a
+    run).
+- `sim/papers3/board.c`: `board_next_wake` and `board_take_wake` from the RTC. `sim/board.c`: a stub.
+- `host/main_host.c`, `pass()`:
+  - while on, the kernel runs in 50 ms slices of board time; after each slice a latched RTC edge
+    power-cycles the board ("the RTC's interrupt power-cycles the board", then `power_on("rtc")`);
+  - while off, time jumps to the next edge and the board boots.
+- `js-papers3/test/off.js` asks the clock why it started and logs the wall clock; `{inSec|inMin}` arms the
+  timer first and deliberately leaves it armed if the board stays on. `test/power.json` gains the clock
+  driver.
+- Ticket script `scripts/03-rtc.sh`. `02-power.expected` was regenerated, because the manifest now has a
+  clock.
+- Guide: section 2.3 (the measured power-cycle), section 8.3 (disarm after a failed power-off),
+  section 10.2 (seconds, and the first-tick behaviour of minutes), section 10.3 (edges and slices).
+
+### Why
+
+- Seconds as well as minutes: the device test showed that a one-minute timer fires within seconds,
+  because the 1/60 Hz source ticks on the chip's own minute boundary. Tests need precise times, and
+  short real-world wakes need them too.
+- Slices in `pass()`: `send off off {"inSec":20}` arms the timer during the following `wait`. A
+  `board_next_wake()` computed before the wait sees no timer, and after the run TF is already set, so
+  there is no edge left to find. Latching the edge in the model and checking it every 50 ms catches it
+  within 50 ms of when it happened.
+
+### What worked
+
+- Host, `scripts/03-rtc.sh` (runner output):
+
+  ```text
+  [   2001.0 ms] the board is off
+  [  62000.0 ms] a minute later: still off
+  [ 122000.5 ms] the board is on (rtc)
+  [ 132000.0 ms] the board is off
+  [ 732000.0 ms] ten minutes later: still off (the timer was stopped at boot)
+  [ 732000.0 ms] the board is on (button)
+  [ 754050.0 ms] the RTC's interrupt power-cycles the board        <- on USB, timer left armed
+  [ 754050.0 ms] the board is on (rtc)
+  ```
+
+  with the kernel log saying `off: boot 2, started by rtc at 09:43` (two minutes after 09:41) and
+  `clock: started by rtc (control 2: 0x5)`.
+- Device, on USB, arming 15 s at t = 9 s (`tools/s3cap.py -c "9 send clock alarm {\"inSec\":15}"`), then
+  reading the board again without a reset:
+
+  ```text
+  up 19.5 s; the last reset: USB (11)          <- before the timer ran out
+  ...
+  [  1204.718] clock: started by rtc (control 2: 0x5)
+  up 28.9 s; the last reset: power-on (1)      <- the board power-cycled at about 24 s
+  ```
+
+- Capture gates: the PicoCalc's is unchanged. In the PaperS3's, `03-system.png` and
+  `05-system-buses.png` changed: the clock's two extra I2C writes at boot appear in the bus counters.
+  Re-baselined.
+
+### What didn't work
+
+- The first device run armed the timer with `{"inMin":1}` and sent `reboot` 67 s later. No output came
+  after the `send`, and the `reboot` never answered. Reading the board again showed
+  `clock: started by rtc (control 2: 0x5)` and `the last reset: power-on (1)` with an uptime that put the
+  restart a few seconds after arming. The timer had fired almost at once (the first-tick behaviour
+  above) and power-cycled the board. The console reader lost that boot's output, so the `reboot`
+  command went nowhere.
+- The first simulator version computed the wake time once per `wait`. It missed the timer armed during
+  the wait, and the test's last section printed no power cycle. That led to the slices and the latched
+  edge.
+- `off.js` first armed only on `m.inMin`, so `{"inSec":20}` did nothing; it now passes the request through.
+
+### What I learned
+
+- The PaperS3's RTC interrupt does more than "switch the board on". On USB it causes a power-on reset
+  of a running chip. Whatever circuit the interrupt drives, it reacts to the interrupt going active, and
+  USB power does not mask it.
+- `esp_reset_reason()` does distinguish this power-on reset from the console's USB reset (11) and from
+  `esp_restart` (3), but not from a button start. The RTC's flags remain the only way to name the
+  source.
+
+### What was tricky to build
+
+- The RTC model's notion of an edge. INT stays active until TF is cleared, and the real board reacted
+  once, not continuously. The model therefore reports only transitions to active, latched with the time
+  they happened. Enabling TIE while TF is already set also counts as a transition.
+
+### What warrants a second pair of eyes
+
+- The slices change how `kernel_run_until` is called during `wait`: many short calls instead of one long
+  one. The capture gates are unchanged apart from counters, which is the evidence that scheduling is
+  unaffected. A reviewer should still read `kernel_run_until`'s final `K.vnow = until` with slices in
+  mind.
+- Whether the power button pressed on a running board also power-cycles it is still unknown (guide
+  section 12).
+
+### What should be done in the future
+
+- P4: the standby service, the activity channel, the suspend protocol (including `"disarm"` after a
+  refused power-off) and the asleep screen.
+
+### Code review instructions
+
+- `js-papers3/drivers/clock.js` (`wakeReason`, `"alarm"`, `"disarm"`), `sim/papers3/bm8563.c`,
+  `pass()` in `host/main_host.c`.
+- Validate: `scripts/01-store.sh`, `scripts/02-power.sh`, `scripts/03-rtc.sh`, both `make shots` gates.
+
+### Technical details
+
+- BM8563 timer: `0x0E` = TE (bit 7) | TD (bits 1–0: 2 = 1 Hz, 3 = 1/60 Hz); `0x0F` = count; `0x01` bit 0
+  TIE, bit 2 TF, bit 3 AF. The value read after the device's RTC wake was `0x05` = TF | TIE.

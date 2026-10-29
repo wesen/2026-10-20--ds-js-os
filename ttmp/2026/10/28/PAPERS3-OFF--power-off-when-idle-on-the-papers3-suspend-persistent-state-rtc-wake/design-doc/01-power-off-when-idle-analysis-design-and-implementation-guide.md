@@ -96,6 +96,7 @@ These facts set the limits of the design.
 - The firmware learns about external power from GPIO4, which is low only while the cell charges. Once the cell is full the pin goes high although USB is still present. So GPIO4 high does not prove that the board is on battery. The only reliable test is to try: pulse the latch, wait, and see whether the chip is still running.
 - After power-off, a press of the power button cold-boots the chip. There is no RAM to resume from. Everything that must survive has to be in flash or on the glass.
 - The RTC keeps running while the board is off. Its timer or alarm can switch the board on, and the clock driver can read, after boot, which of its flags caused the start.
+- The RTC's interrupt power-cycles the board even while it runs on USB. Measured during P3: 15 s after arming a 15 s timer, the chip came back with reset reason "power-on" and the clock read `control 2 = 0x05` (TF and TIE). Two consequences follow. A timer left armed after a failed power-off restarts the board when it runs out, so the standby service must disarm it. And the whole resume path can be tested on USB, by arming the timer and letting it power-cycle the board.
 - Touch cannot wake a board that is off: the GT911 is not powered.
 - `esp_reset_reason()` reports a power-on reset for every cold boot, whether the button or the RTC started it. The RTC's flags are the only way to tell the two apart.
 
@@ -111,7 +112,7 @@ The BM8563 is register-compatible with the NXP PCF8563. The clock driver (`js-pa
 | 0x0E | Timer control | bit 7 TE (timer enable), bits 1–0 source: 0b10 = 1 Hz, 0b11 = 1/60 Hz |
 | 0x0F | Timer count | counts down from this value at the selected rate |
 
-M5Unified's `RTC8563_Class` programs a wake in seconds as follows. For up to 255 seconds it sets `0x0E = 0x82` (enabled, 1 Hz) and `0x0F = seconds`. For longer it sets `0x0E = 0x83` (enabled, 1/60 Hz) and `0x0F = minutes`, up to 255 minutes. In both cases it sets TIE in 0x01 and clears TF. When the counter reaches zero the chip sets TF and drives INT low, which switches the board on. `disableIRQ()` writes 0x80 into all four alarm registers, 0 into 0x0E and 0 into 0x01.
+M5Unified's `RTC8563_Class` programs a wake in seconds as follows (the clock driver does the same). For up to 255 seconds it sets `0x0E = 0x82` (enabled, 1 Hz) and `0x0F = seconds`. For longer it sets `0x0E = 0x83` (enabled, 1/60 Hz) and `0x0F = minutes`, up to 255 minutes. In both cases it sets TIE in 0x01 and clears TF. When the counter reaches zero the chip sets TF and drives INT low, which switches the board on. `disableIRQ()` writes 0x80 into all four alarm registers, 0 into 0x0E and 0 into 0x01.
 
 The INT output stays low until software clears the flag. That has a consequence the design must respect: if the firmware boots because of the timer and never clears TF, INT keeps holding the power circuit on, and the next power-off will not work. The clock driver must clear the flags at boot.
 
@@ -560,6 +561,7 @@ suspend(s):
   store.set("suspended", { at: wallClock() })
   r = sys.powerOff()                          # never returns if the board went off
   # still here: external power
+  ask("clock", "disarm")                      # an armed timer would power-cycle the running board
   s.refused = r.why; s.suspending = false; s.last = now()
   for each world: send(w, "resume", {})       # undo: the compositor redraws the normal screen
 ```
@@ -709,14 +711,17 @@ On a first boot from the factory the flags are 0 and the reason is "button", whi
 
 255 minutes is the timer's limit at 1/60 Hz. A longer interval would use the minute/hour alarm registers; the standby service does not need one.
 
+As implemented in P3, the request is `{ inSec }` or `{ inMin }`. Up to 255 seconds the timer counts seconds (`0x0E = 0x82`); beyond that, minutes. The first tick of the 1/60 Hz source comes at the chip's next internal minute boundary, not a full minute after arming. On the device, a one-minute timer fired within seconds. A wake "in N minutes" therefore comes after N − 1 to N minutes. A `"disarm"` request clears the flags and stops the timer; the standby service sends it when a power-off fails.
+
 ### 10.3 The simulated BM8563
 
-`sim/papers3/bm8563.c` models the time registers only. It gains registers 0x01, 0x0E and 0x0F, the countdown on the board's absolute time, and an `int` output:
+`sim/papers3/bm8563.c` modelled the time registers only. P3 gave it registers 0x01, 0x0E and 0x0F, the countdown on the board's absolute time, and an `int` output. Because INT power-cycles a running board as well, the host runner treats the moment INT goes active (an edge) as a power cycle whether the board is on or off. It advances a running board in 50 ms slices, so a timer armed during a `wait` is caught within 50 ms:
 
 ```c
 // sim/papers3/papers3.h (new)
-bool bm8563_int(vtime_t sim_us);           // INT is active: the timer ran out with TIE set (or the alarm with AIE)
-vtime_t bm8563_next_int(vtime_t sim_us);   // when INT will become active, or VT_INF
+bool bm8563_int(vtime_t board_t);           // INT is active: the timer ran out with TIE set
+vtime_t bm8563_next_int(vtime_t board_t);   // the board time INT next becomes active (an edge), or VT_INF
+vtime_t bm8563_take_edge(vtime_t board_t);  // when INT went active since the last call, or VT_INF
 ```
 
 The host's `wait` uses `bm8563_next_int` to find the moment the board would switch on while it is off.
@@ -779,7 +784,7 @@ The board cannot switch off on USB, so these steps need the user to unplug it an
 - Is one rising edge on GPIO44 enough, or is the five-pulse train needed? The design uses M5Unified's sequence.
 - Does the power button do anything while the board is on? If a short press cuts power directly, the suspend protocol cannot run first and the next boot flashes (correct, but worth knowing).
 - How long does an NVS write of a 50–100 KB picture take on this flash? If it is more than a second, the asleep screen appears and the board goes off a second later, which is acceptable; it should be measured.
-- Does the BM8563's INT also hold the board on while it is asserted? If so, a wake whose flags are not cleared makes the next power-off fail; the clock driver clears them at start for that reason.
+- Does the BM8563's INT also hold the board on while it is asserted? If so, a wake whose flags are not cleared makes the next power-off fail; the clock driver clears them at start for that reason. (Answered in part during P3: INT going active power-cycles even a running board.)
 
 ## 13. File reference
 
