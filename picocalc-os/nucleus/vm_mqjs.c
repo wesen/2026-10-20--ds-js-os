@@ -449,6 +449,30 @@ static JSValue op_gfx_invalidate(JSContext *ctx, world_t *W, int argc, JSValue *
   gfx_invalidate(b);
   return JS_UNDEFINED;
 }
+// fb.persist() / fb.adopt(): the panel's picture across a power-off (hw.c), for the world that takes the frames.
+// persist saves front when the segment ends; adopt loads the saved picture into front now.
+static void run_persist(deferred_t *d, vtime_t at) {
+  (void)at;
+  dmabuf_t *b = handle_buf(handle_find(d->fb));
+  vtime_t t0 = K.realtime ? port_clock() : 0;
+  int n = b ? dmabuf_persist(b) : -1;
+  if (n < 0) klog("the panel's picture was not saved");
+  else if (K.realtime) klog("saved the panel's picture: %d bytes in %.1f ms", n, (port_clock() - t0) / 1000.0);
+  else klog("saved the panel's picture: %d bytes", n);
+}
+static JSValue op_gfx_persist(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  if (!world_needs(W, "frames")) return fail(ctx, "only the world that takes the frames saves the panel's picture");
+  dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
+  deferred_t *d = calloc(1, sizeof(*d));
+  d->run = run_persist; d->w = W->id; d->fb = iarg(ctx, argv, argc, 0, 0);
+  defer(d);
+  return JS_UNDEFINED;
+}
+static JSValue op_gfx_adopt(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
+  if (!world_needs(W, "frames")) return fail(ctx, "only the world that takes the frames adopts the panel's picture");
+  dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
+  return dmabuf_adopt(b) ? JS_TRUE : JS_FALSE;
+}
 static JSValue op_gfx_hash(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
   dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
   return JS_NewFloat64(ctx, gfx_hash(b));
@@ -581,6 +605,7 @@ static JSValue op_store_save(JSContext *ctx, world_t *W, int argc, JSValue *argv
 static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "gfx.text", op_gfx_text }, { "gfx.fill", op_gfx_fill }, { "gfx.rect", op_gfx_rect }, { "gfx.line", op_gfx_line },
   { "gfx.commit", op_gfx_commit }, { "gfx.fonts", op_gfx_fonts }, { "gfx.invalidate", op_gfx_invalidate }, { "gfx.hash", op_gfx_hash },
+  { "gfx.persist", op_gfx_persist }, { "gfx.adopt", op_gfx_adopt },
   { "gfx.measure", op_gfx_measure }, { "gfx.wrap", op_gfx_wrap },
   { "now", op_now }, { "send", op_send }, { "publish", op_publish }, { "log", op_log }, { "self", op_self }, { "seed", op_seed },
   { "engine", op_engine }, { "err.where", op_err_where }, { "clock.set", op_clock_set },

@@ -38,7 +38,13 @@ driver("display")
     var info = s.epd.info();
     s.w = info.w; s.h = info.h;
     s.ready = true;
+    // Back from a power-off: the glass shows the asleep screen, which the compositor adopts, so the first frame
+    // needs no clean refresh; the ghosts counted before the power-off are still there. Used once.
+    var g = store.get("ghosts");
+    if (g) { s.partials = g.partials; s.partialArea = g.partialArea; s.lastClean = now(); store.remove("ghosts"); }
   })
+  .on("suspend", function (s) { store.set("ghosts", { partials: s.partials, partialArea: s.partialArea }); })
+  .on("resume", function () { store.remove("ghosts"); })
   .on("attach", function (s, m) {
     if (s.fb && s.fb !== m.fb) s.fb.release();
     s.fb = m.fb;
@@ -54,6 +60,7 @@ driver("display")
     else if (t - s.lastClean >= p.maxAgeMs) why = s.lastClean < 0 ? "first frame" : "age";
     if (why) {
       s.why = why; s.cleans++;
+      log("clean refresh: " + why);
       s.partials = 0; s.partialArea = 0; s.lastClean = t;
       return update(s, 0, 0, s.w, s.h, "quality").then(function (ms) { return { mode: "quality", why: why, ms: ms }; });
     }

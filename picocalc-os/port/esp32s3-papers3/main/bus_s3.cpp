@@ -206,9 +206,12 @@ extern "C" void bus_s3_init(void) {
   if (!lgfx::i2c::init(1, PIN_I2C1_SDA, PIN_I2C1_SCL).has_value()) ESP_LOGE(TAG, "i2c1 did not start");
 
   panel = new PaperPanel();
+  // Auto-display off before init: init's clear() then fills M5GFX's buffer white without refreshing the panel, so
+  // the glass keeps its picture through a boot (the compositor may adopt it after a power-off; otherwise the
+  // display driver's first-frame clean refresh replaces it). Every update pushes its rows before display().
+  panel->setAutoDisplay(false);
   panel->init();
   for (int rot = 0; rot < 4 && panel->width() != 540; rot++) panel->setRotation(rot);   // portrait: 540 x 960
-  panel->setAutoDisplay(false);
   // Light sleep isolates every pin unless told otherwise (CONFIG_PM_SLP_DISABLE_GPIO, which the S3's GPIO reset
   // workaround forces on). Isolated, the power latch floats and the board switches itself off on battery, and the
   // panel's power and control lines float; these keep their levels instead.

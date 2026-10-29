@@ -607,11 +607,16 @@ service("compositor")
   .provides("gestures", "activity")
   .state({ focus: "launcher", apps: {}, battery: null, banner: null, queued: false, intent: null, waitFrame: null, clean: false, frames: 0, presents: 0, pixels: 0,
            clock: "", clockArm: 0, crashed: {}, presentError: "", finger: null, gestures: 0, lastGesture: "", lastTap: null,
-           paints: 0, retained: 0, check: false, checks: 0, checkFails: 0, asleep: null, suspended: false, activityAt: -1e9 })
+           paints: 0, retained: 0, check: false, checks: 0, checkFails: 0, asleep: null, suspended: false, activityAt: -1e9,
+           adopted: false })
   .onStart(function (s) {
     F = gfx.fonts();
     s.fb = dma.alloc(W, H);
     attach(s);
+    // After a suspend the glass still shows the asleep screen, saved by fb.persist. Adopted into front, the first
+    // commit sends only what differs from it, and the first present is a partial one instead of a clean refresh.
+    s.adopted = s.fb.adopt();
+    if (s.adopted) log("the panel's picture from before the power-off is adopted");
     var saved = store.get("focus");   // the app on screen when standby suspended the system; used once
     if (saved) { store.remove("focus"); s.focus = saved; }
     try { sys.front(s.focus); } catch (e) { s.focus = "launcher"; sys.front(s.focus); }
@@ -624,6 +629,7 @@ service("compositor")
     if (s.waitFrame || s.suspended) return;   // the focused app's first frame is on its way; or the board is going off
     var intent = s.intent || "text";
     s.intent = null;
+    if (s.adopted) { s.adopted = false; if (intent === "page") intent = "text"; }   // the glass holds the adopted picture
     return render(s, intent);
   })
   // A frame's root may carry `refresh` (the intent for its changes, e.g. "ink") and `page` (a token: when it
@@ -649,13 +655,15 @@ service("compositor")
     s.waitFrame = null;
     store.set("focus", s.focus);
     s.intent = null;   // one clean refresh: the asleep screen stays on the glass for hours, without ghosts
-    return Task.resolve(render(s, "page")).then(function () { return { focus: s.focus }; });
+    // once the panel shows it, the picture is saved for the next boot (fb.persist: when this segment ends)
+    return Task.resolve(render(s, "page")).then(function () { s.fb.persist(); return { focus: s.focus }; });
   })
   .on("resume", function (s) {   // the board stayed on
     if (!s.suspended) return;
     s.asleep = null;
     s.suspended = false;
     store.remove("focus");
+    s.fb.adopt();   // takes the saved picture back out of the store (front already holds it): no later boot uses it
     dirty(s, "text");
   })
   .on("open", function (s, m) { focus(s, m.app); })

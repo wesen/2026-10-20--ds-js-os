@@ -164,6 +164,8 @@
   Handle.prototype.commit = function () { return k("gfx.commit", this.id); };
   Handle.prototype.invalidate = function () { k("gfx.invalidate", this.id); };
   Handle.prototype.hash = function () { return k("gfx.hash", this.id); };
+  Handle.prototype.persist = function () { k("gfx.persist", this.id); };        // save front when the segment ends
+  Handle.prototype.adopt = function () { return k("gfx.adopt", this.id); };     // front := the saved picture, once
   function wrap(info) { return info ? known[info.id] || new Handle(info) : null; }
 
   // JSON in this engine takes no replacer or reviver, so handles are found and restored by walking the value.

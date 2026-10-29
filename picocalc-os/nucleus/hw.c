@@ -122,6 +122,50 @@ int dmabuf_alloc(int w, int h) {
 }
 dmabuf_t *handle_buf(handle_t *h) { return h && h->buf >= 0 && K.bufs[h->buf].live ? &K.bufs[h->buf] : NULL; }
 
+// The panel's picture across a power-off: the front buffer (what the panel was last sent) run-length encoded in
+// the kernel's store record "frame". The compositor saves it once the asleep screen is on the glass and adopts it
+// at the next boot, so the first commit sends only what differs from the glass. A saved picture is used at most
+// once: adopting it removes it, so a later boot that did not follow a suspend never trusts a stale one.
+//   "PF1", sizeof(pixel_t), width u16, height u16, then runs: a pixel (sizeof(pixel_t) bytes), a length u16
+#define FRAME_MAX (400 * 1024)
+int dmabuf_persist(dmabuf_t *b) {
+  size_t n = (size_t)b->w * b->h, cap = FRAME_MAX, k = 8;
+  uint8_t *o = malloc(cap);
+  if (!o) return -1;
+  memcpy(o, "PF1", 3); o[3] = sizeof(pixel_t);
+  o[4] = b->w & 255; o[5] = b->w >> 8; o[6] = b->h & 255; o[7] = b->h >> 8;
+  for (size_t i = 0; i < n; ) {
+    size_t j = i + 1;
+    while (j < n && j - i < 65535 && b->front[j] == b->front[i]) j++;
+    if (k + sizeof(pixel_t) + 2 > cap) { free(o); port_store_set("k", "frame", NULL, 0); return -1; }   // too busy a picture
+    memcpy(o + k, &b->front[i], sizeof(pixel_t)); k += sizeof(pixel_t);
+    o[k++] = (j - i) & 255; o[k++] = (uint8_t)((j - i) >> 8);
+    i = j;
+  }
+  int rc = port_store_set("k", "frame", o, k);
+  free(o);
+  return rc ? -1 : (int)k;
+}
+bool dmabuf_adopt(dmabuf_t *b) {
+  size_t len = 0, n = (size_t)b->w * b->h, at = 0, k = 8;
+  uint8_t *r = (uint8_t *)port_store_get("k", "frame", &len);
+  if (!r) return false;
+  port_store_set("k", "frame", NULL, 0);   // used once, whatever it holds
+  bool ok = len >= 8 && !memcmp(r, "PF1", 3) && r[3] == sizeof(pixel_t) && (r[4] | r[5] << 8) == b->w && (r[6] | r[7] << 8) == b->h;
+  pixel_t *front = ok ? malloc(n * sizeof(pixel_t)) : NULL;
+  while (front && k + sizeof(pixel_t) + 2 <= len && at < n) {
+    pixel_t v;
+    memcpy(&v, r + k, sizeof(pixel_t)); k += sizeof(pixel_t);
+    size_t run = r[k] | (size_t)r[k + 1] << 8; k += 2;
+    if (!run || at + run > n) break;
+    for (size_t i = 0; i < run; i++) front[at++] = v;
+  }
+  ok = front && at == n;
+  if (ok) { memcpy(b->front, front, n * sizeof(pixel_t)); b->dirty = ~0ull; }   // the next commit compares every band
+  free(front); free(r);
+  return ok;
+}
+
 const char *const epd_mode_names[EPD_MODES] = { "quality", "text", "fast", "fastest" };
 int epd_mode_index(const char *name) {
   for (int i = 0; i < EPD_MODES; i++) if (!strcmp(epd_mode_names[i], name)) return i;

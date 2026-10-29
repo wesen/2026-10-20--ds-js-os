@@ -26,7 +26,11 @@ function resumeAll(s) {
   arm(s);
 }
 
-function suspend(s, why) {
+// opts.thenRtc (seconds), for tests on USB, where the board cannot switch off: arm the RTC for that long and, if
+// the board stays on, stay asleep anyway; the RTC's interrupt then power-cycles the board, which boots as if it had
+// been off.
+function suspend(s, why, opts) {
+  opts = opts || {};
   if (s.suspending) return;
   s.suspending = true;
   s.suspends++;
@@ -34,7 +38,10 @@ function suspend(s, why) {
   var names = others();
   return seq(names, function (n) { return ask(n, "suspend", {}, { timeout: 1000 }).then(noop, noop); })
     .then(function () { return ask("compositor", "suspend", {}, { timeout: 5000 }); })
-    .then(function () { return s.wakeEveryMin > 0 && (!s.power || s.power.pct > 5) ? ask("clock", "alarm", { inMin: s.wakeEveryMin }) : null; })
+    .then(function () {
+      if (opts.thenRtc) return ask("clock", "alarm", { inSec: opts.thenRtc });
+      return s.wakeEveryMin > 0 && (!s.power || s.power.pct > 5) ? ask("clock", "alarm", { inMin: s.wakeEveryMin }) : null;
+    })
     .then(function () {
       store.set("suspended", { at: wallClock(), why: why });
       return sys.powerOff();   // settles only if the board stayed on
@@ -42,9 +49,10 @@ function suspend(s, why) {
     .then(function (r) {
       s.refused = r.why;
       log("the board stayed on: " + r.why);
+      if (opts.thenRtc) { log("staying asleep until the RTC power-cycles the board"); return "asleep"; }
       return ask("clock", "disarm", {}).then(noop, noop);
     })
-    .then(function () { resumeAll(s); }, function (e) { log("suspend failed: " + e.message); resumeAll(s); });
+    .then(function (r) { if (r !== "asleep") resumeAll(s); }, function (e) { log("suspend failed: " + e.message); resumeAll(s); });
 }
 
 // No timer polls for idleness: standby sleeps until the moment the board would have been idle long enough, and
@@ -94,7 +102,7 @@ service("standby")
     arm(s);
     return { idleMin: s.idleMin, wakeEveryMin: s.wakeEveryMin };
   })
-  .on("now", function (s) { return suspend(s, "asked"); })
+  .on("now", function (s, m) { return suspend(s, "asked", m); })
   .on("stats", function (s) {
     return { idleMin: s.idleMin, wakeEveryMin: s.wakeEveryMin, idleMs: now() - s.last, wake: s.wake, suspends: s.suspends, refused: s.refused,
              charging: s.power ? s.power.charging : null, boots: store.get("boots") || [] };

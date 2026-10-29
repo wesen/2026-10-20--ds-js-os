@@ -276,6 +276,8 @@ void hw_gpio_unwatch(handle_t *h);
 bool world_holds(world_t *W, int id);
 int dmabuf_alloc(int w, int h);
 dmabuf_t *handle_buf(handle_t *h);
+int dmabuf_persist(dmabuf_t *b);   // front -> the kernel's store record "frame": its size, or -1 (too busy, no store)
+bool dmabuf_adopt(dmabuf_t *b);    // the saved record -> front, once (it is removed); false if there was none
 void dmabuf_unref(int i);
 int bus_index(const char *name);   // -1 if this board has no such bus
 vtime_t bus_start(int bus, vtime_t at);
