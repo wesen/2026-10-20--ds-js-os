@@ -2,15 +2,22 @@
 # compiled into a table (js_bundle.c) so the device reads the same files the host does.
 set(OS ${CMAKE_CURRENT_LIST_DIR}/../../..)
 set(QJS ${OS}/third_party/quickjs)
+# IDF expands component requirements in an early CMake process that does not see arbitrary
+# project cache options. Declare SDK requirements unconditionally; unused code is discarded.
+# Only the separate optional/agent_wifi component downloads ESP-Hosted / Wi-Fi Remote.
+set(AGENT_REQUIRES nvs_flash esp_http_client esp_netif esp_event esp_wifi mbedtls)
 
 idf_component_register(
     SRCS
-        "main_p4.c" "port_p4.c" "bus_p4.c"
+        "main_p4.c" "port_p4.c" "bus_p4.c" "agent_p4.c" "store_p4.c"
         "${OS}/nucleus/kernel.c" "${OS}/nucleus/vm.c" "${OS}/nucleus/hw.c" "${OS}/nucleus/gfx.c" "${OS}/nucleus/util.c"
         "${QJS}/quickjs.c" "${QJS}/libregexp.c" "${QJS}/libunicode.c" "${QJS}/cutils.c" "${QJS}/dtoa.c"
     INCLUDE_DIRS "." "${OS}/nucleus" "${QJS}"
-    PRIV_REQUIRES driver esp_driver_gpio esp_driver_i2c esp_driver_spi esp_driver_uart esp_psram esp_timer heap
+    PRIV_REQUIRES driver esp_driver_gpio esp_driver_i2c esp_driver_spi esp_driver_uart esp_psram esp_timer heap ${AGENT_REQUIRES}
 )
+if(PICOCALC_AGENT_WIFI)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_AGENT_WIFI=1)
+endif()
 
 file(READ ${QJS}/VERSION QJS_VERSION)
 string(STRIP "${QJS_VERSION}" QJS_VERSION)

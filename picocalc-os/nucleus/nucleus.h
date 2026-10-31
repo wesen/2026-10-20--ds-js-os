@@ -347,6 +347,20 @@ void port_gpio_unwatch(int pin);
 // returns 0 on success. Names are at most 15 characters (NVS's limit on the device).
 char *port_store_get(const char *ns, const char *key, size_t *len);
 int port_store_set(const char *ns, const char *key, const void *data, size_t len);
+// A deliberately narrow model transport: one bounded JSON POST to a port-configured HTTPS endpoint.
+// Credentials never enter a world. All entry points run on the kernel thread and return promptly;
+// workers may use their own queues/locks but must never access K or a JS engine. start copies body.
+// poll returns 0 while pending, 1 on completion (transferring the malloc'ed body), -1 if unavailable.
+// cancel must be safe during an in-flight request; a backend may remain busy until its worker exits.
+#define AGENT_NET_REQUEST_MAX 49152
+#define AGENT_NET_RESPONSE_MAX 65536
+#define AGENT_NET_TIMEOUT_MS 45000
+typedef struct { int status; char *body; char error[160]; } agent_net_result_t;
+bool port_agent_configured(void);
+const char *port_agent_mode(void);
+int port_agent_start(int ticket, const char *body, size_t len, char *error, size_t error_size);
+int port_agent_poll(int ticket, agent_net_result_t *result);
+void port_agent_cancel(int ticket);
 // Switch the board off (operation "poweroff", claim sys.power). The device does not return if the power went; the
 // host sets K.halted and returns 0. Nonzero, with why filled in: the board is still running (external power).
 int port_power_off(char *why, size_t n);

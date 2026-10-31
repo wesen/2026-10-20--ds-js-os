@@ -6,6 +6,8 @@
 #   make shots            run every script in scripts/ (scripts-papers3/ for the PaperS3) and write the captures
 BOARD   ?= picocalc
 CC      ?= gcc
+NODE    ?= node
+PYTHON  ?= python3
 CFLAGS  ?= -O2 -g
 CFLAGS  += -Wall -Wno-unused-parameter -Wno-format-truncation -std=gnu11 -D_GNU_SOURCE
 LDLIBS  := -lm -lz -lpthread
@@ -20,6 +22,14 @@ ifeq ($(M32),1)
   BUILD_SUFFIX := 32$(BUILD_SUFFIX)
 endif
 
+# Explicitly opt in to real HTTPS. The default simulator remains offline and deterministic.
+# A separate build directory prevents reusing objects compiled without libcurl support.
+ifeq ($(AGENT_LIVE),1)
+  CFLAGS += -DAGENT_LIVE
+  LDLIBS += -lcurl
+  BUILD_SUFFIX := $(BUILD_SUFFIX)-agent
+endif
+
 ifeq ($(BOARD),papers3)
   BUILD   := build-papers3$(BUILD_SUFFIX)
   ENG     := third_party/mquickjs
@@ -28,7 +38,7 @@ ifeq ($(BOARD),papers3)
   CFLAGS  += -I$(GEN) -I$(ENG) -DBOARD_PAPERS3 -DNUCLEUS_GRAY8 -DNUCLEUS_FONT_HEADER='"font_paper.h"' -DMQJS_VERSION=\"$(shell cat $(ENG)/VERSION)\"
   OS_SRC  := nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c \
              sim/papers3/board.c sim/papers3/bus.c sim/papers3/epd.c sim/papers3/gt911.c sim/papers3/bm8563.c \
-             host/port_host.c host/main_host.c
+             host/port_host.c host/agent_host.c host/main_host.c
   HDRS    := nucleus/nucleus.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
   BIN     := $(BUILD)/papers3-host
   SCRIPTS := scripts-papers3
@@ -40,7 +50,7 @@ else
   ENG_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
   CFLAGS  += -I$(ENG) -DCONFIG_VERSION=\"2026-06-04\"
   OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c \
-             sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/main_host.c
+             sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/main_host.c
   HDRS    := nucleus/nucleus.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
   SCRIPTS := scripts
@@ -75,7 +85,23 @@ shots: $(BIN)
 	@mkdir -p $(OUT)
 	@for s in $(SCRIPTS)/*.txt; do echo "== $$s"; ./$(BIN) -j $(JSROOT) -o $(OUT) $$s || exit 1; done
 
-clean:
-	rm -rf build build32 build-san build32-san build-papers3*
+# These tests make no provider API calls. The normal suite uses deterministic local fixtures.
+test-agent: $(BIN)
+	@test "$(BOARD)" = picocalc || { echo "The agent currently targets the PicoCalc QuickJS build"; exit 1; }
+	$(NODE) tests/agent.test.mjs
+	$(NODE) tests/chat-ui.test.mjs
+	$(NODE) tests/compositor-auth.test.mjs
+	$(PYTHON) tests/agent-integration.py --binary $(BIN)
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_agent_native.py
 
-.PHONY: all shots clean
+# Requires libcurl development headers, OpenSSL CLI, and permission to bind a localhost test socket.
+# All TLS requests stay on loopback, with an explicitly trusted test certificate and a dummy token.
+test-agent-live: $(BIN)
+	@test "$(BOARD)" = picocalc || { echo "The agent currently targets the PicoCalc QuickJS build"; exit 1; }
+	$(MAKE) AGENT_LIVE=1 all
+	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_TEST_LIVE_BINARY=$(if $(filter 1,$(AGENT_LIVE)),$(BUILD),$(BUILD)-agent)/picocalc-host $(PYTHON) tests/test_agent_native.py --live
+
+clean:
+	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*
+
+.PHONY: all shots clean test-agent test-agent-live

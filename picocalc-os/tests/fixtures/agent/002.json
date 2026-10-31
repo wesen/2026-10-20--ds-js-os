@@ -1,0 +1,1 @@
+{"id":"resp_answer","status":"completed","output":[{"type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"6 * 7 = 42.\n\nI checked this with the local calculator tool.","annotations":[]}]}]}
