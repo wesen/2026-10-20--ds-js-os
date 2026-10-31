@@ -1,0 +1,1 @@
+{"id":"resp_read","status":"completed","output":[{"type":"function_call","status":"completed","call_id":"call_read","name":"read_note","arguments":"{\"name\":\"next\"}"}]}

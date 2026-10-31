@@ -3,6 +3,8 @@
 // the only way out of a world: __k(op, ...) for things that finish now, __ka(op, ...) for things that
 // finish later and return a promise. The prelude (js/prelude.js) wraps them in the API worlds use.
 #include <stdarg.h>
+#include <limits.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +19,8 @@ struct vmw {
   pending_t *pend; int n_pend, cap_pend;   // the world's promises the kernel will settle
   JSValue fn_dispatch, fn_render;
   JSValue unhandled[8], unhandled_why[8]; int n_unhandled;
+  bool store_pending;
+  char store_error[160];
 };
 const char *vm_engine_name(void) { return "QuickJS " CONFIG_VERSION; }
 
@@ -449,6 +453,202 @@ static JSValue op_sys_admin(JSContext *ctx, world_t *W, int argc, JSValueConst *
 static JSValue op_sys_fault(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { return op_sys_admin(ctx, W, argc, argv, false); }
 static JSValue op_sys_restart(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { return op_sys_admin(ctx, W, argc, argv, true); }
 
+// One private persistent JSON record per world. Writes are effects: a segment that faults saves
+// nothing. store.status() reports the outcome on the next turn, including an NVS/filesystem failure.
+static JSValue op_store_load(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  (void)argc; (void)argv;
+  size_t n = 0;
+  char *j = strlen(W->name) <= 15 ? port_store_get("w", W->name, &n) : NULL;
+  if (!j) return JS_NULL;
+  if (n > W->store_limit) {
+    snprintf(W->vm->store_error, sizeof W->vm->store_error, "saved record exceeds the world's store quota");
+    free(j); return JS_NULL;
+  }
+  charge_json(n);
+  JSValue r = JS_NewStringLen(ctx, j, n);
+  free(j); return r;
+}
+static void run_store_save(deferred_t *d, vtime_t at) {
+  (void)at;
+  world_t *W = world_by_id(d->w);
+  if (W && W->vm && W->epoch == d->epoch) {
+    bool empty = !strcmp(d->json, "{}");
+    int rc = port_store_set("w", W->name, d->json, empty ? 0 : strlen(d->json));
+    W->vm->store_pending = false;
+    snprintf(W->vm->store_error, sizeof W->vm->store_error, "%s", rc ? "persistent storage write failed" : "");
+    if (rc) klog("%s: persistent storage write failed", W->name);
+  }
+  free(d->json);
+}
+static JSValue op_store_save(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  if (strlen(W->name) > 15) return fail(ctx, "a persistent world's name is at most 15 characters");
+  char *json = sarg(ctx, argv, argc, 0);
+  if (!json) return fail(ctx, "store.save needs a JSON record");
+  size_t n = strlen(json);
+  if (n > W->store_limit) { free(json); return fail(ctx, "store quota exceeded (%zu bytes)", W->store_limit); }
+  charge_json(n);
+  W->vm->store_error[0] = 0;
+  W->vm->store_pending = true;
+  for (deferred_t *d = K.defer_head; d; d = d->next)
+    if (d->run == run_store_save && d->w == W->id) { free(d->json); d->json = json; return JS_UNDEFINED; }
+  deferred_t *d = calloc(1, sizeof *d);
+  if (!d) { free(json); W->vm->store_pending = false; return JS_ThrowOutOfMemory(ctx); }
+  d->run = run_store_save; d->w = W->id; d->epoch = W->epoch; d->json = json;
+  defer(d); return JS_UNDEFINED;
+}
+static JSValue op_store_status(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  (void)argc; (void)argv;
+  JSValue r = JS_NewObject(ctx);
+  JS_SetPropertyStr(ctx, r, "pending", JS_NewBool(ctx, W->vm->store_pending));
+  JS_SetPropertyStr(ctx, r, "error", JS_NewString(ctx, W->vm->store_error));
+  return r;
+}
+
+// Bounded native HTTPS, with ownership independent of the JS object. Starting/cancelling is deferred
+// like a bus transfer. A rebooted world cannot poll an old request, and disposal cancels its worker.
+static struct {
+  int ticket, owner, epoch;
+  bool active, started, complete, cancelling;
+  vtime_t since;
+  agent_net_result_t result;
+} agent_request;
+static int agent_next_ticket;
+static bool agent_utf8_valid(const unsigned char *s, size_t n) {
+  // Reject malformed input instead of letting the engine replace bytes inside a JSON string.
+  for (size_t i = 0; i < n; ) {
+    unsigned a = s[i++];
+    if (a < 0x80) continue;
+    unsigned need, low = 0x80, high = 0xbf;
+    if (a >= 0xc2 && a <= 0xdf) need = 1;
+    else if (a >= 0xe0 && a <= 0xef) { need = 2; if (a == 0xe0) low = 0xa0; if (a == 0xed) high = 0x9f; }
+    else if (a >= 0xf0 && a <= 0xf4) { need = 3; if (a == 0xf0) low = 0x90; if (a == 0xf4) high = 0x8f; }
+    else return false;
+    if (n - i < need || s[i] < low || s[i] > high) return false;
+    i++;
+    while (--need) { if (s[i] < 0x80 || s[i] > 0xbf) return false; i++; }
+  }
+  return true;
+}
+static vtime_t agent_clock(void) {
+  // Fixture latency is virtual; a real HTTPS deadline follows wall time even in the host simulator.
+  return !strcmp(port_agent_mode(), "fixture") ? kernel_now() : port_clock();
+}
+
+static void agent_clear(void) {
+  free(agent_request.result.body);
+  memset(&agent_request, 0, sizeof agent_request);
+}
+static void agent_drop(world_t *W) {
+  if (!agent_request.active || agent_request.owner != W->id) return;
+  if (agent_request.started) port_agent_cancel(agent_request.ticket);
+  agent_clear();
+}
+static bool agent_owned(JSContext *ctx, world_t *W, int ticket) {
+  if (!world_claims(W, "net.agent")) { fail(ctx, "%s has no claim on net.agent", W->name); return false; }
+  if (!agent_request.active || agent_request.ticket != ticket || agent_request.owner != W->id || agent_request.epoch != W->epoch) {
+    fail(ctx, "agent request is not owned by this world or has already finished"); return false;
+  }
+  return true;
+}
+static int agent_ticket(JSContext *ctx, int argc, JSValueConst *argv) {
+  double n = 0;
+  if (!argc || !JS_IsNumber(argv[0]) || JS_ToFloat64(ctx, &n, argv[0]) || !isfinite(n) || n < 1 || n > INT_MAX || n != (int)n) {
+    fail(ctx, "agent ticket must be a positive integer"); return 0;
+  }
+  return (int)n;
+}
+static void run_agent_start(deferred_t *d, vtime_t at) {
+  if (agent_request.active && agent_request.ticket == d->op && agent_request.epoch == d->epoch) {
+    agent_request.since = agent_clock();
+    int rc = port_agent_start(d->op, d->json, strlen(d->json), agent_request.result.error, sizeof agent_request.result.error);
+    if (rc) {
+      if (!agent_request.result.error[0]) snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent transport could not start");
+      agent_request.complete = true;
+    } else agent_request.started = true;
+  }
+  free(d->json);
+}
+static void run_agent_cancel(deferred_t *d, vtime_t at) {
+  (void)at;
+  if (agent_request.active && agent_request.ticket == d->op && agent_request.epoch == d->epoch) {
+    if (agent_request.started) port_agent_cancel(d->op);
+    agent_clear();
+  }
+}
+static JSValue op_agent_status(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  (void)argc; (void)argv;
+  if (!world_claims(W, "net.agent")) return fail(ctx, "%s has no claim on net.agent", W->name);
+  JSValue r = JS_NewObject(ctx);
+  JS_SetPropertyStr(ctx, r, "configured", JS_NewBool(ctx, port_agent_configured()));
+  JS_SetPropertyStr(ctx, r, "mode", JS_NewString(ctx, port_agent_mode()));
+  return r;
+}
+static JSValue op_agent_start(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  if (!world_claims(W, "net.agent")) return fail(ctx, "%s has no claim on net.agent", W->name);
+  if (agent_request.active) return fail(ctx, "agent transport is busy");
+  if (!port_agent_configured()) return fail(ctx, "agent transport is not configured");
+  if (agent_next_ticket == INT_MAX) return fail(ctx, "agent request counter exhausted; reboot required");
+  if (!argc || !JS_IsString(argv[0])) return fail(ctx, "agentNet.start needs JSON text");
+  size_t n;
+  const char *body = JS_ToCStringLen(ctx, &n, argv[0]);
+  if (!body) return JS_EXCEPTION;
+  if (!n || n > AGENT_NET_REQUEST_MAX || memchr(body, 0, n)) {
+    JS_FreeCString(ctx, body); return fail(ctx, "agent request must contain 1..%d UTF-8 bytes of JSON", AGENT_NET_REQUEST_MAX);
+  }
+  deferred_t *d = calloc(1, sizeof *d);
+  char *copy = malloc(n + 1);
+  if (!d || !copy) { free(d); free(copy); JS_FreeCString(ctx, body); return JS_ThrowOutOfMemory(ctx); }
+  memcpy(copy, body, n + 1); JS_FreeCString(ctx, body);
+  agent_request.active = true;
+  agent_request.ticket = ++agent_next_ticket;
+  agent_request.owner = W->id; agent_request.epoch = W->epoch;
+  d->run = run_agent_start; d->w = W->id; d->epoch = W->epoch; d->op = agent_request.ticket; d->json = copy;
+  charge_json(n); defer(d);
+  return JS_NewInt32(ctx, agent_request.ticket);
+}
+static JSValue op_agent_poll(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  int ticket = agent_ticket(ctx, argc, argv);
+  if (!ticket) return JS_EXCEPTION;
+  if (!agent_owned(ctx, W, ticket)) return JS_EXCEPTION;
+  if (agent_request.cancelling || (!agent_request.started && !agent_request.complete)) return JS_NULL;
+  if (!agent_request.complete) {
+    if (agent_clock() - agent_request.since >= MS(AGENT_NET_TIMEOUT_MS)) {
+      port_agent_cancel(ticket);
+      snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent request timed out after %d ms", AGENT_NET_TIMEOUT_MS);
+      agent_request.complete = true;
+    } else {
+      int rc = port_agent_poll(ticket, &agent_request.result);
+      if (!rc) return JS_NULL;
+      agent_request.complete = true;
+      if (rc < 0 && !agent_request.result.error[0]) snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent transport lost the request");
+    }
+  }
+  size_t n = agent_request.result.body ? strnlen(agent_request.result.body, AGENT_NET_RESPONSE_MAX + 1) : 0;
+  if (n > AGENT_NET_RESPONSE_MAX) {
+    free(agent_request.result.body); agent_request.result.body = NULL; n = 0;
+    snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent response exceeds %d bytes", AGENT_NET_RESPONSE_MAX);
+  } else if (n && !agent_utf8_valid((const unsigned char *)agent_request.result.body, n)) {
+    free(agent_request.result.body); agent_request.result.body = NULL; n = 0;
+    snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent response is not valid UTF-8");
+  }
+  JSValue r = JS_NewObject(ctx);
+  JS_SetPropertyStr(ctx, r, "status", JS_NewInt32(ctx, agent_request.result.status));
+  JS_SetPropertyStr(ctx, r, "body", JS_NewStringLen(ctx, agent_request.result.body ? agent_request.result.body : "", n));
+  JS_SetPropertyStr(ctx, r, "error", JS_NewString(ctx, agent_request.result.error));
+  charge_json(n); agent_clear(); return r;
+}
+static JSValue op_agent_cancel(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  int ticket = agent_ticket(ctx, argc, argv);
+  if (!ticket) return JS_EXCEPTION;
+  if (!agent_owned(ctx, W, ticket)) return JS_EXCEPTION;
+  if (agent_request.cancelling) return JS_FALSE;
+  deferred_t *d = calloc(1, sizeof *d);
+  if (!d) return JS_ThrowOutOfMemory(ctx);
+  agent_request.cancelling = true;
+  d->run = run_agent_cancel; d->w = W->id; d->epoch = W->epoch; d->op = ticket;
+  defer(d); return JS_TRUE;
+}
+
 static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "gfx.text", op_gfx_text }, { "gfx.fill", op_gfx_fill }, { "gfx.rect", op_gfx_rect }, { "gfx.line", op_gfx_line },
   { "gfx.commit", op_gfx_commit }, { "gfx.fonts", op_gfx_fonts }, { "gfx.invalidate", op_gfx_invalidate },
@@ -458,6 +658,8 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
   { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats },
   { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart },
+  { "store.load", op_store_load }, { "store.save", op_store_save }, { "store.status", op_store_status },
+  { "agent.status", op_agent_status }, { "agent.start", op_agent_start }, { "agent.poll", op_agent_poll }, { "agent.cancel", op_agent_cancel },
 };
 
 static JSValue host_k(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -665,6 +867,7 @@ int vm_create(world_t *W) {
 }
 
 void vm_dispose(world_t *W) {
+  agent_drop(W);
   if (!W->vm) return;
   if (!W->vm->rt) { free(W->vm); W->vm = NULL; return; }
   JSContext *ctx = W->vm->ctx;
@@ -761,6 +964,7 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
     f = JS_GetPropertyStr(ctx, o, "budget_ms"); if ((mw.has_budget = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.budget_ms, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "mem_kb"); if ((mw.has_mem = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.mem_kb, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "priority"); if ((mw.has_prio = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.priority, f); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "store_kb"); if ((mw.has_store = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.store_kb, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "claims");
     JSValue cl = JS_GetPropertyStr(ctx, f, "length"); int32_t nc = 0; JS_ToInt32(ctx, &nc, cl); JS_FreeValue(ctx, cl);
     for (int k = 0; k < nc && k < MAX_LIST; k++) {
@@ -796,7 +1000,10 @@ static int64_t count_steps(const char *src, double *real_ms) {
   return steps;
 }
 double vm_fib20_ms;
-void vm_reset(void) {}   // the PicoCalc cannot switch itself off, so kernel_reset never runs there
+void vm_reset(void) {
+  if (agent_request.active && agent_request.started) port_agent_cancel(agent_request.ticket);
+  agent_clear();   // tickets are deliberately not reused across an in-process cold boot
+}
 
 void vm_calibrate(void) {
   double loop_ms, fib_ms;

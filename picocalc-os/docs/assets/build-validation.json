@@ -1,0 +1,105 @@
+{
+  "verified_at_utc": "2026-10-31T01:08:35+00:00",
+  "status": "All three cross-builds passed; no device flash or live API request performed.",
+  "toolchain": {
+    "esp_idf": "v5.4.2",
+    "esp_idf_commit": "f5c3654a1c2d2a01f7f67def7a0dc48e691f63c0",
+    "riscv_gcc": "14.2.0_20241119",
+    "quickjs": "2026-06-04"
+  },
+  "network_components": {
+    "espressif/esp_hosted": "1.4.2",
+    "espressif/esp_wifi_remote": "0.14.0",
+    "espressif/eppp_link": "1.1.6",
+    "espressif/esp_serial_slave_link": "1.1.2",
+    "lock_file": "port/esp32p4/dependencies.agent.lock",
+    "lock_sha256": "a410d342174a20784751189a3318a0ea002681bc5e4206e23b2b1f535673164d"
+  },
+  "builds": {
+    "p4_wifi": {
+      "status": "passed",
+      "target": "esp32p4",
+      "command": "idf.py -B <artifact-dir>/build-agent -D PICOCALC_AGENT_WIFI=ON -D SDKCONFIG=<artifact-dir>/sdkconfig.agent -D 'SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.agent-wifi' build size",
+      "binary": "picocalc-os-p4.bin",
+      "binary_bytes": 2207776,
+      "binary_hex_bytes": "0x21b020",
+      "binary_sha256": "1ac5dc0e66d55b3d514809ab7dc42d34242f4a5e896cef7ada93ff70617d431f",
+      "smallest_application_partition_bytes": 4194304,
+      "application_partition_free_bytes": 1986528,
+      "log_excerpt": [
+        "picocalc-os-p4.bin binary size 0x21b020 bytes. Smallest app partition is 0x400000 bytes. 0x1e4fe0 bytes (47%) free.",
+        "Project build complete. To flash, run:"
+      ],
+      "source_snapshot": {
+        "sha256": "1fa33502405e7d6a5dc177ec395172cf10a52e47cb7f1f9d05d4bfbe88662d5d",
+        "file_count": 51,
+        "method": "Sorted relative paths, NUL, complete file bytes, NUL; C/H/JS/JSON/CMake/TXT files in nucleus, js, QuickJS, and P4 main."
+      },
+      "linked_memory": {
+        "diram_static_bytes": 157857,
+        "diram_linker_capacity_bytes": 576464,
+        "meaning": "Static linked use only; excludes runtime heap allocations, task stacks, networking buffers and PSRAM allocations."
+      },
+      "warnings": [
+        "Existing nucleus/font_data.h font_def_t initializers omit adv (five warnings on full build).",
+        "ESP-IDF bundled mbedTLS CMake minimum-version deprecation notice."
+      ]
+    },
+    "p4_offline": {
+      "status": "passed",
+      "target": "esp32p4",
+      "command": "idf.py -B <artifact-dir>/build-offline -D SDKCONFIG=<artifact-dir>/sdkconfig.offline build",
+      "binary": "picocalc-os-p4.bin",
+      "binary_bytes": 1465312,
+      "binary_hex_bytes": "0x165be0",
+      "binary_sha256": "37b25faf4d8e3d1f0186c3807233f344e55b70b2bac3d3656ff0b663f46844b6",
+      "smallest_application_partition_bytes": 4194304,
+      "application_partition_free_bytes": 2728992,
+      "log_excerpt": [
+        "picocalc-os-p4.bin binary size 0x165be0 bytes. Smallest app partition is 0x400000 bytes. 0x29a420 bytes (65%) free.",
+        "Project build complete. To flash, run:"
+      ],
+      "source_snapshot": {
+        "sha256": "1fa33502405e7d6a5dc177ec395172cf10a52e47cb7f1f9d05d4bfbe88662d5d",
+        "file_count": 51,
+        "method": "Sorted relative paths, NUL, complete file bytes, NUL; C/H/JS/JSON/CMake/TXT files in nucleus, js, QuickJS, and P4 main."
+      },
+      "scope": "Clean source snapshot without managed_components; default offline build. Incremental rebuild includes the same frozen final JS and native sources as the Wi-Fi build.",
+      "external_component_resolution": "No managed network components or dependency downloads."
+    },
+    "c6_companion": {
+      "status": "passed",
+      "target": "esp32c6",
+      "command": "idf.py -B <artifact-dir>/build-c6 -D IDF_TARGET=esp32c6 -D 'SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.defaults.esp32c6;sdkconfig.c6-agent' build",
+      "binary": "network_adapter.bin",
+      "binary_bytes": 851424,
+      "binary_hex_bytes": "0xcfde0",
+      "binary_sha256": "118bf135795f8401bc3a8cae20367c9c5c0f513a48988016a7e247bf9472e7f6",
+      "smallest_application_partition_bytes": 1572864,
+      "application_partition_free_bytes": 721440,
+      "log_excerpt": [
+        "network_adapter.bin binary size 0xcfde0 bytes. Smallest app partition is 0x180000 bytes. 0xb0220 bytes (46%) free.",
+        "Project build complete. To flash, run:"
+      ],
+      "source": "Copy of pinned espressif/esp_hosted 1.4.2 slave directory; main/coprocessor_fw_version.txt is 1.4.2.",
+      "settings": {
+        "transport": "SDIO",
+        "streaming_mode": false,
+        "bus_speed_mhz": 20,
+        "reset_gpio": -1,
+        "bluetooth": false
+      },
+      "warnings": [
+        "Upstream slave Kconfig defines disabled ESP32 Bluetooth UART integer ranges using unavailable BTDM_CTRL_HCI_UART_NO and BTDM_CTRL_HCI_UART_BAUDRATE symbols; build completed."
+      ]
+    }
+  },
+  "unverified": [
+    "Physical P4/C6 boot and compatibility with the user's actual board and factory C6 firmware",
+    "Wi-Fi, native SNTP, verified TLS and a real provider response on device",
+    "Cancellation latency during DNS/connect and resource reclamation on physical hardware",
+    "LCD/keyboard latency, runtime heap and stack high-water marks, repeated requests",
+    "Power-loss persistence, NVS garbage-collection latency, battery life and thermal behavior"
+  ],
+  "artifacts": "Generated binaries and full build logs are workspace validation outputs, not committed release firmware. Commands use <artifact-dir> in place of the local validation directory; run from the respective P4 project or copied C6 slave directory."
+}

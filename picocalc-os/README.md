@@ -21,6 +21,31 @@ The host build needs gcc, zlib and nothing else. `make M32=1` builds a 32-bit bi
 would on the ESP32-P4. `make SAN=1` builds with AddressSanitizer and UBSan. The three builds produce
 identical pixels from the same script.
 
+## Agent
+
+Open **Agent** with `c` on the launcher. A separate JavaScript service runs an OpenAI Responses
+tool loop while the chat app keeps editing, scrolling, cancel and approval keys responsive. Local
+tools cover bounded arithmetic, device status, and persistent notes; a note write requires F4/F5
+approval. Native workers handle certificate-verified HTTPS and keep credentials out of JS.
+
+The default host build stays offline. Run the deterministic demonstration and tests with:
+
+```bash
+PICOCALC_AGENT_FIXTURES=tests/fixtures/agent ./build/picocalc-host -s out/agent-store scripts-agent/tour.txt
+make test-agent
+make test-agent-live  # optional libcurl + local TLS tests; no provider API call
+```
+
+`make AGENT_LIVE=1` builds `build-agent/picocalc-host`. Live use needs `PICOCALC_AGENT_URL`,
+`PICOCALC_AGENT_TOKEN`, and the runner's `-r` pacing flag. The P4 has an optional ESP-Hosted C6
+Wi-Fi build and an interactive credential provisioning helper. See the
+[implementation guide and report](docs/picocalc-agent-implementation.md) for the architecture,
+exact setup commands, quotas, tests, and remaining physical-device acceptance checks, or the
+[P4 build notes](port/esp32p4/README.md) for the short build path.
+
+This is an API client with an on-device JS agent. It does not synchronize chatgpt.com chats.
+This version displays complete responses; token streaming and web browsing are future work.
+
 ## Scripts
 
 A script is a list of commands, one per line; `#` starts a comment.
@@ -195,9 +220,10 @@ What the device found that the simulator could not:
 - Counters that never get large in a script do on a device that runs for an hour: the System app's
   turns column overflowed into the next one.
 
-Not done: a second lane for the P4's second core, capability checks on channel subscriptions (any world
-can `need` the `keys` channel), storage, Wi-Fi, updating the JS without reflashing, and backlight levels
-between off and on in captures.
+Remaining: a second JS lane for the P4's second core, capability checks on channel subscriptions (any
+world can `need` the `keys` channel), updating the JS without reflashing, and backlight levels between
+off and on in captures. The agent adds a bounded per-world store and optional Wi-Fi/HTTPS; its
+physical-device acceptance is still required even though host/TLS tests and firmware builds pass.
 
 ## Licences
 

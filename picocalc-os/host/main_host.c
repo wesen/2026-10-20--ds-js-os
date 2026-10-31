@@ -20,11 +20,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #include "../nucleus/nucleus.h"
 #include "board.h"
 
 static char out_dir[256] = "out";
 static const char *js_root, *manifest_path;
+static bool realtime_pacing;
+static void pace_until(vtime_t deadline) {
+  vtime_t left = deadline - port_clock();
+  while (left > 0) {
+    struct timespec delay = { .tv_sec = left / 1000000, .tv_nsec = (left % 1000000) * 1000 };
+    nanosleep(&delay, NULL);
+    left = deadline - port_clock();
+  }
+}
 
 // ---- power: a board that switches itself off (sys.powerOff) halts the kernel; the runner then resets it and lets
 // the board's time pass until the power button (the "power" command) or the board (its RTC) switches it on again,
@@ -50,11 +60,11 @@ static void check_halted(void) {
 // during the run, so a running board advances in slices and looks for it after each.
 #define SLICE MS(50)
 static void pass(vtime_t us) {
-  vtime_t end = board_now() + us;
+  vtime_t start = board_now(), wall = port_clock(), end = start + us;
   for (;;) {
     if (off) {
       vtime_t wake = board_next_wake();
-      if (wake > end) { board_pass(end - board_now()); return; }
+      if (wake > end) { board_pass(end - board_now()); if (realtime_pacing) pace_until(wall + us); return; }
       board_pass(wake - board_now());
       board_take_wake();
       power_on("rtc");
@@ -62,6 +72,7 @@ static void pass(vtime_t us) {
     }
     vtime_t stop = end - board_now() > SLICE ? board_now() + SLICE : end;
     kernel_run_until(K.vnow + (stop - board_now()));
+    if (realtime_pacing) pace_until(wall + (board_now() - start));
     check_halted();
     if (off) continue;
     if (board_take_wake() < VT_INF) {
@@ -140,11 +151,12 @@ int main(int argc, char **argv) {
     else if (!strcmp(argv[i], "-o") && i + 1 < argc) snprintf(out_dir, sizeof out_dir, "%s", argv[++i]);
     else if (!strcmp(argv[i], "-u") && i + 1 < argc) uart = argv[++i];
     else if (!strcmp(argv[i], "-s") && i + 1 < argc) host_store_dir(argv[++i]);   // the persistent store in files
+    else if (!strcmp(argv[i], "-r")) realtime_pacing = true;  // pace waits when a real HTTPS worker is running
     else if (!strcmp(argv[i], "-t") && i + 1 < argc) run_ms = atof(argv[++i]);
     else if (!strcmp(argv[i], "-v")) K.verbose = true;
     else if (!strcmp(argv[i], "-vv")) K.verbose = K.trace = true;
     else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-s store_dir] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
+      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-s store_dir] [-r] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
       return 0;
     } else script = argv[i];
   }

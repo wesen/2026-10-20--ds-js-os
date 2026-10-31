@@ -388,21 +388,27 @@ service("compositor")
       s.flushError = "";
     } catch (e) { s.flushError = e.message; s.fb.invalidate(); }
   })
-  .on("frames", (s, f) => {
+  .on("frames", (s, f, msg) => {
+    // A world may publish its own frame only. Otherwise another world could cover an approval
+    // prompt with misleading text while the real focused app still receives the user's keys.
+    if (!f || f.app !== msg.from) return;
     s.frames++;
     s.apps[f.app] = { title: f.title, tree: f.frame.tree, hints: f.frame.hints };
     delete s.crashed[f.app];
     if (f.app === s.focus) dirty(s);
   })
-  .on("keys", (s, e) => {
+  .on("keys", (s, e, msg) => {
+    // Channel subscriptions are not capabilities yet; authenticate the physical keyboard path.
+    if (msg.from !== "keyboard") return;
     if (e.state === "up") return;
     if (e.key === "f1") return focus(s, "launcher");
     if (e.key === "power") { if (e.state === "down") send("power", "screen", {}); return; }
     send(s.focus, "key", e);
   })
   .on("open", (s, { app }) => focus(s, app))
-  .on("power", (s, p) => { s.battery = p; dirty(s); })
-  .on("worlds.status", (s, st) => {
+  .on("power", (s, p, msg) => { if (msg.from === "power") { s.battery = p; dirty(s); } })
+  .on("worlds.status", (s, st, msg) => {
+    if (msg.from !== null) return;   // native kernel messages have no sending world
     if (st.state === "crashed") {
       s.crashed[st.world] = true;
       delete s.apps[st.world];
