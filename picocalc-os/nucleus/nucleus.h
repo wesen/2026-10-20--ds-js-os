@@ -309,7 +309,8 @@ void vm_reset(void);        // the binding's own state, for kernel_reset (the wa
 
 // ---- native worlds (native.c): a binary instead of JavaScript ----------------------------------------------------
 // A world's engine is the manifest's "engine": "js" (the binding above), "wasm" (a WebAssembly module) or "native"
-// (machine code for this board: a Linux process on the host). The kernel calls an engine through eng_*, which
+// (machine code for this board: a Linux process on the host; on the P4, in a build with PICOCALC_NATIVE_ELF, an ELF
+// module of the firmware's own manifest, a trusted driver). The kernel calls an engine through eng_*, which
 // picks the binding or native.c; native.c delivers events to the port's backend for the engine and carries out the
 // binary's system calls with the same checks and deferred effects as the binding's operations.
 enum { ENG_JS, ENG_WASM, ENG_NATIVE, ENG_COUNT };

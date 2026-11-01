@@ -193,6 +193,10 @@ static void kernel_task(void *arg) {
   port_clock();               // starts the clock
   kernel_init("js", NULL);    // the prelude, and the calibration loops
   if (kernel_boot("js/system.json")) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
+#if PICOCALC_NATIVE_ELF
+  // the machine-code worlds this firmware was built with (optional/native_elf): only from here, never from storage
+  if (kernel_boot("js/system.elf.json")) ESP_LOGE(TAG, "the ELF manifest did not load");
+#endif
   for (;;) {
     kmsg_t m;
     while (xQueueReceive(p4_kq, &m, 0) == pdTRUE) {

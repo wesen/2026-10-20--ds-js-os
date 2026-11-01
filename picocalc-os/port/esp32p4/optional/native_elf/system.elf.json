@@ -1,0 +1,7 @@
+{
+  "worlds": [
+    { "name": "nat-echo",   "file": "natives/echo.elf",    "engine": "native", "claims": ["i2c0:0x1f"], "budget_ms": 20, "mem_kb": 64 },
+    { "name": "nat-bench",  "file": "natives/bench.elf",   "engine": "native",                          "budget_ms": 50, "mem_kb": 64 },
+    { "name": "nat-import", "file": "natives/wimport.elf", "engine": "native",                          "budget_ms": 20, "mem_kb": 64 }
+  ]
+}

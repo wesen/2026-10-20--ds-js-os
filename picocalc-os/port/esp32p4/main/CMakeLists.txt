@@ -51,6 +51,32 @@ set_source_files_properties(${WAMR_SRCS} PROPERTIES
 if(PICOCALC_AGENT_WIFI)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_AGENT_WIFI=1)
 endif()
+# Machine-code native worlds (optional/native_elf): the modules its manifest names, built from natives/ with
+# sdk/nw_elf.c as position-independent shared objects, then bundled with js/ under the names the manifest uses.
+set(BUNDLE_EXTRA "")
+set(BUNDLE_EXTRA_DEPS "")
+if(PICOCALC_NATIVE_ELF)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_NATIVE_ELF=1)
+    set(ELF_DIR ${OS}/port/esp32p4/optional/native_elf)
+    set(ELF_FLAGS -march=rv32imafc_zicsr_zifencei -mabi=ilp32f -Os -fPIC -shared -nostartfiles -nostdlib -e app_main
+        -ffunction-sections -fdata-sections -Wl,--gc-sections -fvisibility=hidden -Wl,--strip-all
+        -Wl,-z,max-page-size=16 -Wno-attributes -I${OS}/sdk)   # 16: no 4 KB of padding between code and data, which the loader would allocate
+    string(REPLACE "-elf-gcc" "-elf-strip" ELF_STRIP ${CMAKE_C_COMPILER})
+    list(APPEND BUNDLE_EXTRA "system.elf.json=${ELF_DIR}/system.elf.json")
+    list(APPEND BUNDLE_EXTRA_DEPS ${ELF_DIR}/system.elf.json)
+    foreach(m echo bench wimport)   # wimport links to a function no module is given (-Wno-attributes: its WebAssembly import attribute)
+        set(out ${CMAKE_CURRENT_BINARY_DIR}/natives/${m}.elf)
+        add_custom_command(
+            OUTPUT ${out}
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/natives
+            COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o ${out} ${OS}/natives/${m}.c ${OS}/sdk/nw_elf.c
+            COMMAND ${ELF_STRIP} --strip-unneeded --remove-section=.comment --remove-section=.riscv.attributes ${out}
+            DEPENDS ${OS}/natives/${m}.c ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_json.h
+            VERBATIM)
+        list(APPEND BUNDLE_EXTRA "natives/${m}.elf=${out}")
+        list(APPEND BUNDLE_EXTRA_DEPS ${out})
+    endforeach()
+endif()
 
 file(READ ${QJS}/VERSION QJS_VERSION)
 string(STRIP "${QJS_VERSION}" QJS_VERSION)
@@ -69,7 +95,7 @@ file(GLOB_RECURSE JS_FILES CONFIGURE_DEPENDS ${OS}/js/*.js ${OS}/js/*.json ${OS}
 set(BUNDLE ${CMAKE_CURRENT_BINARY_DIR}/js_bundle.c)
 add_custom_command(
     OUTPUT ${BUNDLE}
-    COMMAND ${CMAKE_COMMAND} -DJS_ROOT=${OS}/js -DOUT=${BUNDLE} -P ${CMAKE_CURRENT_LIST_DIR}/bundle_js.cmake
-    DEPENDS ${JS_FILES} ${CMAKE_CURRENT_LIST_DIR}/bundle_js.cmake
+    COMMAND ${CMAKE_COMMAND} -DJS_ROOT=${OS}/js "-DEXTRA=${BUNDLE_EXTRA}" -DOUT=${BUNDLE} -P ${CMAKE_CURRENT_LIST_DIR}/bundle_js.cmake
+    DEPENDS ${JS_FILES} ${BUNDLE_EXTRA_DEPS} ${CMAKE_CURRENT_LIST_DIR}/bundle_js.cmake
     VERBATIM)
 target_sources(${COMPONENT_LIB} PRIVATE ${BUNDLE})

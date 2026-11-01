@@ -780,14 +780,16 @@ static int add_world(void *arg, const manifest_world_t *mw) {
   return 0;
 }
 
+// May run more than once: each manifest adds its worlds (the P4 boots its machine-code worlds from a second one).
 int kernel_boot(const char *manifest) {
   size_t n;
+  int before = K.n_worlds;
   char *txt = port_read_file(manifest, &n);
   if (!txt) { fprintf(stderr, "cannot read %s\n", manifest); return -1; }
   int rc = vm_read_manifest(txt, n, manifest, add_world, NULL);
   free(txt);
   if (rc) return -1;
-  klog("booting %d worlds from %s", K.n_worlds, manifest);
+  klog("booting %d worlds from %s", K.n_worlds - before, manifest);
   return 0;
 }
 

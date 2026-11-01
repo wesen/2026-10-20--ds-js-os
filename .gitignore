@@ -17,6 +17,9 @@ picocalc-os/port/esp32p4/managed_components/
 picocalc-os/port/esp32p4/build-agent/
 picocalc-os/port/esp32p4/sdkconfig.agent
 picocalc-os/port/esp32p4/sdkconfig.agent.old
+picocalc-os/port/esp32p4/build-elf/
+picocalc-os/port/esp32p4/sdkconfig.agent-elf
+picocalc-os/port/esp32p4/sdkconfig.agent-elf.old
 picocalc-os/build-papers3*/
 picocalc-os/out-papers3/uart.log
 picocalc-os/port/esp32s3-papers3/build/

@@ -2,12 +2,15 @@
 // case; results are logged as "TEST <label> <result>" lines, as the JavaScript test worlds do.
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "nw.h"
 #include "nw_json.h"
 
 static int ticks, tick_timer = -1, sleep_token, ask_token, i2c_token;
 static char buf[4096];
+static void *held[16];   // the "alloc" ask's blocks
+static int n_held, held_kb;
 
 static void report(const char *label, int r) {
   char err[200] = "";
@@ -102,6 +105,14 @@ int nw_on_event(const nw_event *e) {
   } else if (!strcmp(t, "i2c-other")) {
     report("i2c-other", nw_i2c_open("i2c0:0x50", 10000));
     report("i2c-forged", nw_i2c(12345, (const unsigned char *)"\0", 1, 1, 0));
+  } else if (!strcmp(t, "alloc")) {   // {"kb": N}: hold N KB more, or let go of everything with 0; what is held
+    double kb = 0;
+    nw_json_num(e->json, "kb", &kb);
+    void *p = NULL;
+    if (kb <= 0) { while (n_held) free(held[--n_held]); held_kb = 0; }
+    else if (n_held < 16 && (p = malloc((size_t)kb * 1024))) { memset(p, 1, (size_t)kb * 1024); held[n_held++] = p; held_kb += (int)kb; }
+    snprintf(buf, sizeof buf, "{\"ok\":%s,\"held_kb\":%d}", kb <= 0 || p ? "true" : "false", held_kb);
+    nw_reply(buf);
   } else if (!strcmp(t, "segv")) {   // address 0 is ordinary memory in WebAssembly: this faults only as a process
     volatile int *volatile nowhere = 0;
     *nowhere = 1;

@@ -1,0 +1,4 @@
+# Trusted machine-code drivers (PICOCALC-NATIVE N5): Espressif's ELF loader, pinned.
+dependencies:
+  idf: ">=5.4.2,<5.5"
+  espressif/elf_loader: "==2.0.0"
