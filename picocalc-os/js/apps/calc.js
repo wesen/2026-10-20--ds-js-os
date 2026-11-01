@@ -7,7 +7,7 @@
 // detached promise chains (sleep, then work), never as a handler's returned promise: that would hold the turn open
 // and keep keys from arriving.
 const CALC_HIST = 100, CALC_FUNCS = 16, CALC_DEPTH = 32, CALC_PARAMS = 4, CALC_GRAPHS = 4;
-const CALC_FUEL = 200000;   // closure nodes one line may evaluate in loops and calls; calibrated on the P4
+const CALC_FUEL = 30000;   // closure nodes one line may evaluate in loops and calls: about 120 ms on the P4
 const PLOT_W = 306, PLOT_H = 230, PLOT_COLORS = ["accent", "blue", "ok", "warn"];
 const PLOT_VIEW = { x0: -10, x1: 10, y0: -7.5, y1: 7.5 };
 
@@ -63,12 +63,17 @@ function calcGcd(a, b) {
   while (b) [a, b] = [b, a % b];
   return a;
 }
+// Trial division up to 2^32: on the P4 (doubles in software) a pass of the loop costs about 8 us, as much as one
+// and a half nodes, and the largest primes take about 90 ms.
 function calcIsPrime(n) {
-  if (!calcInt(n) || n > 1e10) return NaN;
+  if (!calcInt(n) || n > 4294967296) return NaN;
   if (n < 2) return 0;
   if (n < 4) return 1;
   if (n % 2 === 0 || n % 3 === 0) return 0;
-  for (let i = 5; i * i <= n; i += 6) if (n % i === 0 || n % (i + 2) === 0) return 0;
+  for (let i = 5, k = 0, r = Math.floor(Math.sqrt(n)); i <= r; i += 6) {
+    if (n % i === 0 || n % (i + 2) === 0) return 0;
+    if (++k === 200) { k = 0; calcBurn(300); }
+  }
   return 1;
 }
 function calcRound(x, d) {
@@ -238,11 +243,22 @@ function calcParse(line, isFunc) {
 // ---- compiling a tree into closures ----------------------------------------------------------------------------
 // ctx = { s, scope }: scope maps bound names to cells; s holds vars, funcs, ans and the angle mode, read when the
 // closure runs, so a compiled function follows later assignments. The result carries its node count in .size.
-let calcDepth = 0, calcFuel = CALC_FUEL;
+let calcDepth = 0, calcFuel = CALC_FUEL, calcTick = 0, calcT0 = -1;
 const calcCache = new Map();   // "params|source" -> { body, cells } of user functions
+const calcByName = new Map();   // name -> { def, u }, so that a call does not build the key while def is the same
 // Loops (calculus, sums) and user-function calls burn fuel by the nodes they evaluate; a step that runs out stops.
-function calcBurn(n) { if ((calcFuel -= n) < 0) throw new Error("too much work for one step"); }
-function calcFresh(fuel) { calcDepth = 0; calcFuel = fuel || CALC_FUEL; }
+// Every thousand units the clock is read too: fuel does not see the garbage collector, and a step that has run for
+// CALC_MS stops as well, so that it ends well inside the world's turn, with room for drawing the result.
+const CALC_MS = 120;   // the world's budget is 200 ms (js/system.json)
+function calcBurn(n) {
+  if ((calcFuel -= n) < 0) throw new Error("too much work for one step");
+  if ((calcTick += n) < 1000) return;
+  calcTick = 0;
+  const t = now();
+  if (calcT0 < 0) calcT0 = t;
+  else if (t - calcT0 > CALC_MS) throw new Error("too much work for one step");
+}
+function calcFresh(fuel) { calcDepth = 0; calcFuel = fuel || CALC_FUEL; calcTick = 0; calcT0 = -1; }
 
 function calcCompile(tree, ctx) {
   let size = 0;
@@ -316,6 +332,8 @@ function calcCompile(tree, ctx) {
 function calcUserFn(s, name) {
   const def = s.funcs[name];
   if (!def) throw new Error("unknown function " + name);
+  const hit = calcByName.get(name);
+  if (hit && hit.def === def) return hit.u;
   const key = def.ps.join(",") + "|" + def.src;
   let u = calcCache.get(key);
   if (!u) {
@@ -325,16 +343,17 @@ function calcUserFn(s, name) {
     u = { body, cells };
     calcCache.set(key, u);
   }
+  calcByName.set(name, { def, u });
   return u;
 }
 function calcCallUser(s, name, vals) {
   if (calcDepth >= CALC_DEPTH) throw new Error("too deep: does " + name + " call itself?");
-  const u = calcUserFn(s, name);
+  const u = calcUserFn(s, name), cs = u.cells, old = [];
   calcBurn(u.body.size);
-  const old = u.cells.map((c) => c.v);
+  for (let i = 0; i < cs.length; i++) { old.push(cs[i].v); cs[i].v = vals[i]; }
   calcDepth++;
-  try { u.cells.forEach((c, i) => { c.v = vals[i]; }); return u.body(); }
-  finally { calcDepth--; u.cells.forEach((c, i) => { c.v = old[i]; }); }
+  try { return u.body(); }
+  finally { calcDepth--; for (let i = 0; i < cs.length; i++) cs[i].v = old[i]; }
 }
 
 // ---- calculus and solving ------------------------------------------------------------------------------------
@@ -366,6 +385,7 @@ function calcInteg(f, [a, b]) {
   if (a === b) return 0;
   const parts = [[a, b, ...calcGK(f, a, b)]];
   for (let n = 1; n < CALC_PARTS; n++) {
+    calcBurn(parts.length);   // the integrator's own work
     let total = 0, err = 0, worst = 0;
     parts.forEach((p, i) => { total += p[2]; err += p[3]; if (p[3] > parts[worst][3]) worst = i; });
     if (!Number.isFinite(total)) throw new Error("the integral does not converge here");
@@ -521,7 +541,7 @@ const calcEntryText = (s, h) => (h.ok && typeof h.v === "number" ? (h.name ? h.n
 // Curves are { src, on } in s.graphs: a function of x, polar(r) or param(x, y) in t. Every curve that is on is
 // sampled at PLOT_W steps: the columns for a function, values of t for the others.
 const PLOT_TINT = ["#f6c9ca", "#c9d6ef", "#c5e0cf", "#f2ddb5"];   // shaded areas, in the curves' colours
-const CALC_CELL_FUEL = 20000;   // one plot column or table cell
+const CALC_CELL_FUEL = 5000;   // one plot column or table cell: about 25 ms on the P4
 let plotFns = [];   // compiled curves, parallel to s.plot.curves (functions do not belong in the state)
 
 const plotX = (v, c) => v.x0 + c * (v.x1 - v.x0) / (PLOT_W - 1);
@@ -557,11 +577,11 @@ function plotReset(s) {
     let fn = null, err = "";
     try { fn = plotCompile(s, g.src); } catch (e) { err = e.message; }
     plotFns.push(fn);
-    curves.push({ slot, src: g.src, kind: fn ? fn.kind : plotKind(g.src), xs: [], ys: [], err });
+    curves.push({ slot, src: g.src, kind: fn ? fn.kind : plotKind(g.src), xs: [], ys: [], ops: [], err });
   });
   const size = plotFns.reduce((n, f) => n + (f ? f.size : 0), 0) || 1;
   const max = Math.max(8, Math.min(PLOT_W, Math.floor(3000 / size)));
-  s.plot = { curves, col: 0, max, slice: Math.min(max, 32), grid: plotGrid(s.view), ops: [], ms: 0, t0: now(), slices: 0, worst: 0 };
+  s.plot = { curves, col: 0, built: 1, max, slice: Math.min(max, 32), grid: plotGrid(s.view), ops: [], ms: 0, t0: now(), slices: 0, worst: 0 };
   if (s.trace && s.trace.k >= curves.length) s.trace.k = 0;
   if (s.trace && !curves.length) s.trace = null;
 }
@@ -627,20 +647,21 @@ function plotJoin(polys, seg, run) {
   return r;
 }
 // Polylines for one function's samples: broken at missing values and where it jumps across the whole view.
-function plotPolys(v, ys, upto) {
+// From column from-1 on, so that a later call continues where an earlier one stopped.
+function plotPolys(v, ys, upto, from = 1) {
   const polys = [];
   let run = null;
-  for (let c = 1; c < upto; c++) {
+  for (let c = from; c < upto; c++) {
     const a = ys[c - 1], b = ys[c];
     const ok = a != null && b != null && !((a > v.y1 && b < v.y0) || (a < v.y0 && b > v.y1));
     run = plotJoin(polys, ok ? plotClip(c - 1, plotPy(v, a), c, plotPy(v, b)) : null, run);
   }
   return polys;
 }
-function plotParamPolys(v, xs, ys, upto) {
+function plotParamPolys(v, xs, ys, upto, from = 1) {
   const polys = [];
   let run = null;
-  for (let c = 1; c < upto; c++) {
+  for (let c = from; c < upto; c++) {
     const ok = xs[c - 1] != null && ys[c - 1] != null && xs[c] != null && ys[c] != null;
     run = plotJoin(polys, ok ? plotClipRect(plotPx(v, xs[c - 1]), plotPy(v, ys[c - 1]), plotPx(v, xs[c]), plotPy(v, ys[c])) : null, run);
   }
@@ -683,12 +704,24 @@ function plotShadeOps(s) {
   }
   return ops;
 }
+// The curves' polylines for the columns sampled since the last call (on the P4, redrawing four whole curves takes
+// over 100 ms); then the whole picture.
 function plotBuild(s) {
-  const p = s.plot, v = s.view, ops = p.grid.concat(plotShadeOps(s));
-  p.curves.forEach((cv) => {
-    const polys = cv.kind === "fx" ? plotPolys(v, cv.ys, p.col) : plotParamPolys(v, cv.xs, cv.ys, p.col);
-    for (const poly of polys) ops.push(["poly", poly, PLOT_COLORS[cv.slot]]);
-  });
+  const p = s.plot, v = s.view;
+  if (p.col > p.built) {
+    for (const cv of p.curves) {
+      const polys = cv.kind === "fx" ? plotPolys(v, cv.ys, p.col, p.built) : plotParamPolys(v, cv.xs, cv.ys, p.col, p.built);
+      for (const poly of polys) cv.ops.push(["poly", poly, PLOT_COLORS[cv.slot]]);
+    }
+    p.built = p.col;
+  }
+  plotCompose(s);
+}
+// Grid, shading, curves, mark and legend, in that order; the analysis keys change only the shading and the mark.
+function plotCompose(s) {
+  const p = s.plot, v = s.view;
+  let ops = p.grid.concat(plotShadeOps(s));
+  for (const cv of p.curves) ops = ops.concat(cv.ops);
   if (s.mark) { const c = plotCol(v, s.mark.x); ops.push(["line", c, 0, c, PLOT_H - 1, "faint"]); }
   const legend = p.curves.map((cv) => (cv.slot + 1) + " " + cv.src + (cv.err ? "  (" + cv.err + ")" : ""));
   if (legend.length) ops.push(["fill", 1, 1, Math.min(PLOT_W - 2, 8 + 6 * Math.max(...legend.map((l) => l.length))), 4 + 13 * legend.length, "#ffffff"]);
@@ -807,7 +840,7 @@ function plotAnalyze(s, key) {
     } else return false;
     if (x !== null) t.c = plotCol(v, x);
   } catch (e) { s.note = e.message; }
-  plotBuild(s);
+  plotCompose(s);
   return true;
 }
 
@@ -1029,7 +1062,7 @@ const HELP_REF = [
   ["gcd", "gcd(a, b)", "The greatest common divisor of two whole numbers.", "gcd(84, 36)", "12"],
   ["lcm", "lcm(a, b)", "The least common multiple of two whole numbers.", "lcm(4, 6)", "12"],
   ["mod", "mod(a, b)", "The remainder of a / b with the sign of b; a % b keeps the sign of a.", "mod(-7, 3)", "2"],
-  ["isprime", "isprime(n)", "1 if the whole number n is a prime, 0 if not; up to 10^10.", "isprime(97)", "1"],
+  ["isprime", "isprime(n)", "1 if the whole number n is a prime, 0 if not; n up to 2^32.", "isprime(97)", "1"],
   ["sum", "sum(a, b, ...)", "The sum of its arguments.", "sum(1, 2, 3, 4)", "10"],
   ["mean", "mean(a, b, ...)", "The arithmetic mean of its arguments.", "mean(2, 4, 9)", "5"],
   ["median", "median(a, b, ...)", "The middle value; of an even count, the mean of the two in the middle.", "median(3, 1, 4, 1, 5)", "3"],
@@ -1121,7 +1154,7 @@ const HELP_TOPICS = [
     "| f(x) = x^2 - 2", "| g(x, y) = sqrt(x^2 + y^2)", "| f(3) + g(3, 4)",
     "A function takes up to 4 arguments; you can keep 16 of them. Its expression uses the variables as they are when it runs.",
     "A function can call itself, with if() to stop:",
-    "| fib(n) = if(n < 2, n, fib(n - 1) + fib(n - 2))", "| fib(15)",
+    "| fib(n) = if(n < 2, n, fib(n - 1) + fib(n - 2))", "| fib(13)",
     "It may go 32 calls deep.",
     "F3 lists your variables and functions: Enter puts one into the line, Del removes it. F6 on one of your names shows its value or definition.",
     "Built-in names cannot be redefined. Short names like c, g, h, k and R are yours to use: the physical constants have longer names, c0, g0, hP, kB, R0.",

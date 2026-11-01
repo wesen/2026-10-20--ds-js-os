@@ -250,7 +250,7 @@ test("sci: more functions, statistics, constants", () => {
   const cases = {
     "sec(0)": "= 1", "cot(pi/4)": "= 1", "csc(pi/2)": "= 1", "acot(1)": "= 0.785398163397", "asinh(sinh(2))": "= 2",
     "atanh(0.5)": "= 0.549306144334", "log(8, 2)": "= 3", "root(-8, 3)": "= -2", "root(16, 4)": "= 2", "gamma(5)": "= 24",
-    "gamma(0.5)^2": "= 3.14159265359", "round(2.345, 2)": "= 2.35", "frac(-2.5)": "= -0.5", "isprime(97)": "= 1",
+    "gamma(0.5)^2": "= 3.14159265359", "round(2.345, 2)": "= 2.35", "frac(-2.5)": "= -0.5", "isprime(97)": "= 1", "isprime(4294967291)": "= 1", "isprime(4292870399)": "= 0",
     "isprime(91)": "= 0", "sum(1, 2, 3)": "= 6", "mean(2, 4, 9)": "= 5", "median(3, 1, 2)": "= 2", "median(1, 2, 3, 4)": "= 2.5",
     "var(2, 4, 4, 4, 5, 5, 7, 9)": "= 4.57142857143", "sd(2, 4, 4, 4, 5, 5, 7, 9)": "= 2.1380899353", "randint(3, 3)": "= 3",
     "c0": "= 299792458", "NA": "= 6.02214076e23", "hbar / hP * tau": "= 1", "0o17": "= 15",
@@ -462,7 +462,7 @@ test("help: every built-in name has one entry, in one group, whose example gives
 test("help: the guides' examples run in order, and every row fits the screen", () => {
   const topics = setup().fn("HELP_TOPICS").filter((t) => t.text);
   assert.deepEqual(plain(topics.map((t) => t.id)), ["start", "keys", "numbers", "names", "calculus", "graphing", "modes"]);
-  const want = { "fib(15)": "= 610", "integ(1/sqrt(x), x, 0, 1)": "= 1.99999999988", "solve(cos(x) - x, x, 0, 1)": "= 0.739085133215",
+  const want = { "fib(13)": "= 233", "integ(1/sqrt(x), x, 0, 1)": "= 1.99999999988", "solve(cos(x) - x, x, 0, 1)": "= 0.739085133215",
     "integ(deriv(t^3, t, x), x, 0, 2)": "= 8", "prod(1 + 1/k, k, 1, 9)": "= 10", "area(3)": "= 7.06858347058", "1/2pi": "= 1.57079632679" };
   let seen = 0;
   for (const t of topics) {
