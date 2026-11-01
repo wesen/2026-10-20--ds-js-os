@@ -199,3 +199,76 @@ shows on the launcher (PICOCALC-APPUI)"
 ### Technical details
 
 - Wire compatibility: the two new numbers follow `NW_CALL_TIMER`; modules built before use none of them.
+
+## Step 3: Phase 2, the fourteen apps declare their icons
+
+Each of the fourteen apps now declares its letter, description and icon after its title, with the values the
+launcher's `APPS` table had, copied verbatim, so that Phase 3 can delete the table and the home screen stays the same
+pixel for pixel. `sysmon` moved after `loader` in `js/system.json`, which makes manifest order equal to the
+launcher's hand-made order. The launcher itself was not touched yet.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Phase 2 of the guide.
+**Inferred user intent:** Apps, not the launcher, own their presentation.
+**Commit (code):** 4e17af2 — "picocalc-os: every app declares its launcher icon, description and letter
+(PICOCALC-APPUI)"
+
+### What I did
+
+- A Node script inserted `.key(...)`, `.about(...)`, `.icon([...])` after `.title(...)` in `js/apps/{chat, files,
+  editor, calc, agenda, settings, logs, loader, sysmon, repl, snake, faults, keys, about}.js`, the icon wrapped at
+  about 118 columns.
+- `js/system.json`: the `sysmon` line moved after `loader`.
+- The fake builders in `tests/{chat-ui, calc, agenda, editor, sysapps}.test.mjs` accept `key`, `about`, `icon`.
+
+### Why
+
+- Copying the table's values exactly keeps Phase 3 testable by screenshots: if the new launcher is right, the home
+  screen captures do not change by a byte.
+
+### What worked
+
+- After the builder fix: test-apps 10 + 27 + 9 + 12, chat-ui 13, test-sys 17 + 6, test-native 31, test-fs 9,
+  test-clock 4, all passing.
+- `make shots`: only `03-sysmon`, `04-sysmon-sel`, `06-sysmon-buses` and `41-about` changed, and only in heap numbers.
+  The worlds' order on the System screen is unchanged in the rows captured (keyboard … chat come before the move).
+  The total on the About screen went from 5499 KB to 5584 KB of JavaScript heap (22 worlds), about 6 KB per app for
+  the icon literals and their bytecode.
+
+### What didn't work
+
+- `make test-apps` first failed in every test with `TypeError: app(...).title(...).key is not a function`: the
+  test files run the apps against fake builders that only had the old methods.
+- I tried releasing the icon from the prelude once `__init()` had returned it (`def.icon = undefined`; the kernel
+  keeps its own copy). The total went to 5601 KB, not down: the figure is the allocator's live bytes and moves by a
+  few KB between runs for unrelated reasons, and the icon's bytecode stays anyway. I reverted it.
+
+### What I learned
+
+- A world's heap figure (`mem_used`, `nucleus/vm.c:36`) counts live blocks with their allocator overhead; the rows
+  of worlds whose code did not change moved by up to 7 KB between the two runs, so single-world differences under
+  about 10 KB are not evidence of anything.
+
+### What was tricky to build
+
+- Nothing; the risk was in keeping the strings identical, which the unchanged launcher screenshots in Phase 3 check.
+
+### What warrants a second pair of eyes
+
+- The descriptions are now in the apps; they still describe what the old table said, including Settings' "the
+  agent's provider".
+
+### What should be done in the future
+
+- Phase 3: the launcher from `sys.worlds`.
+
+### Code review instructions
+
+- `git show 4e17af2 --stat`, then any one app: `git show 4e17af2 -- picocalc-os/js/apps/calc.js`.
+
+### Technical details
+
+- The letters: chat c, files d, editor e, calc x, agenda t, settings g, logs l, loader u, sysmon m, repl r, snake s,
+  faults f, keys k, about a.

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """System services through the real host binary: guarded channels (keys, frames), the kernel log ring (sys.log), and
 the simulated network and time zone that Settings uses. Uses the scenario harness of test_fs_native.py."""
+import json
 import os
 from pathlib import Path
 import shutil
@@ -139,6 +140,33 @@ class CompositorRestartTests(unittest.TestCase):
             self.assertIn("compositor <- frames from calc", after)
             self.assertIn("compositor <- power from power", after)
             self.assertEqual((root / "out/before.png").read_bytes(), (root / "out/after.png").read_bytes())
+
+
+class LauncherTests(unittest.TestCase):
+    """The whole system with one more app: it is on the launcher by what it declares, and its screen cannot be drawn."""
+
+    def test_a_declared_app_opens_by_its_letter_and_a_broken_screen_does_not_stop_the_compositor(self):
+        with tempfile.TemporaryDirectory(prefix="appui-test-", dir=OS / "build") as d:
+            root = Path(d)
+            shutil.copytree(OS / "js", root / "js")
+            shutil.copytree(OS / "fs-seed", root / "fs")
+            manifest = json.loads((root / "js/system.json").read_text())
+            manifest["worlds"].append({"name": "broken", "file": "apps/broken.js", "mem_kb": 320})
+            (root / "js/system.json").write_text(json.dumps(manifest))
+            (root / "js/apps/broken.js").write_text(
+                'app("broken").title("Broken").key("b").about("Its screen cannot be drawn.")\n'
+                '  .icon([["rect", 2, 2, 36, 26], ["text", 14, 8, "B", "m", "accent"]])\n'
+                '  .screen(() => ({ t: "grid", items: null }));\n')
+            script = "wait 1500\nkey b\nwait 800\ncapture broken.png\nkey f1\nwait 400\nkey x\nwait 1500\ncapture calc.png\n"
+            done = subprocess.run([str(BINARY), "-j", str(root / "js"), "-o", str(root / "out"), "-f", str(root / "fs"), "-vv", "-"],
+                                  input=script, text=True, capture_output=True, cwd=OS, timeout=60)
+            log = (root / "out/uart.log").read_text() + done.stderr
+            self.assertEqual(done.returncode, 0, log)
+            self.assertNotIn("compositor crashed", log)
+            opened = log.index("broken <- focus from compositor")
+            self.assertIn("compositor <- frames from broken", log[opened:])
+            self.assertIn("calc <- focus from compositor", log[opened:])
+            self.assertIn("compositor <- frames from calc", log[opened:])
 
 
 

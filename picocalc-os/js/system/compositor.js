@@ -193,6 +193,7 @@ function draw(fb, n, x, y, w, h) {
         fb.rect(cx, cy, cw, ch, sel ? color(it.color, C.accent) : C.line);
         const ink = sel ? C.accentInk : color(it.color, C.ink);
         if (it.key) fb.text(cx + 5, cy + 3, it.key, "s", sel ? C.accentInk : C.faint);
+        if (it.mark) for (let i = 0; i < 8; i++) fb.fill(cx + cw - 8 + i, cy + i, 8 - i, 1, sel ? C.accentInk : C.accent);   // from storage
         if (it.ops) {   // a small drawing, in a 40 x 30 box centred above the label
           const ox = cx + ((cw - 40) >> 1), oy = cy + 8;
           for (const [kind, a, b, c, d, e] of it.ops) {
@@ -200,7 +201,7 @@ function draw(fb, n, x, y, w, h) {
             if (kind === "fill") fb.fill(ox + a, oy + b, c, d, col);
             else if (kind === "rect") fb.rect(ox + a, oy + b, c, d, col);
             else if (kind === "line") fb.line(ox + a, oy + b, ox + c, oy + d, col);
-            else if (kind === "text") fb.text(ox + a, oy + b, c, d || "m", col);
+            else if (kind === "text") fb.text(ox + a, oy + b, c, d || "m", col, 40 - a);
           }
         } else {
           const ig = it.icon || "?", iw = len(ig) * fw("xl");
@@ -349,8 +350,15 @@ function paint(s) {
     fb.text(bx - 4 - pct.length * fw("s"), 5, pct, "s", C.barMuted);
   }
   // the app
-  if (app && app.tree) draw(fb, app.tree, 8, TOP + 6, W - 16, BODY - 10);
-  else {
+  if (app && app.tree) {
+    try { draw(fb, app.tree, 8, TOP + 6, W - 16, BODY - 10); }
+    catch (e) {   // a malformed tree costs its own app the screen, not every app the compositor
+      fb.fill(0, TOP, W, BODY, C.paper);
+      fb.text(12, TOP + 12, `${app.title}'s screen could not be drawn`, "m", C.ink, W - 24);
+      wrapText(String(e && e.message), Math.floor((W - 24) / fw("s"))).slice(0, 4)
+        .forEach((l, i) => fb.text(12, TOP + 36 + i * (fh("s") + 2), l, "s", C.muted));
+    }
+  } else {
     const msg = s.crashed[s.focus] ? `${s.focus} is not running` : `starting ${s.focus}…`;
     fb.text((W - msg.length * fw("m")) >> 1, TOP + BODY / 2 - 8, msg, "m", C.muted);
   }

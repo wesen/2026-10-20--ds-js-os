@@ -199,27 +199,115 @@ test("logs: filters, colours, and a view that holds still while scrolled back", 
 });
 
 // ---- the launcher ----------------------------------------------------------------------------------------------
-test("launcher: more than twelve apps scroll by rows, and a letter still opens any of them", () => {
-  const sent = [];
+// The worlds as sys.worlds("name,kind,title,state,user,icon,about,key") reports them: drivers and services, the
+// launcher itself, and the fourteen apps in manifest order with the letters they declare.
+const APPS = [["chat", "Agent", "c"], ["files", "Files", "d"], ["editor", "Editor", "e"], ["calc", "Calc", "x"],
+  ["agenda", "Agenda", "t"], ["settings", "Settings", "g"], ["logs", "Logs", "l"], ["loader", "Loader", "u"],
+  ["sysmon", "System", "m"], ["repl", "REPL", "r"], ["snake", "Snake", "s"], ["faults", "Faults", "f"], ["keys", "Keys", "k"],
+  ["about", "About", "a"]];
+const systemWorlds = () => [
+  { name: "keyboard", kind: "driver", title: "keyboard", state: "idle", user: false, icon: null, about: "", key: "" },
+  { name: "compositor", kind: "service", title: "compositor", state: "idle", user: false, icon: null, about: "", key: "" },
+  { name: "launcher", kind: "app", title: "PicoCalc", state: "idle", user: false, icon: null, about: "", key: "" },
+  ...APPS.map(([name, title, key]) => ({ name, kind: "app", title, state: "idle", user: false, key,
+                                         icon: [["rect", 2, 2, 36, 26]], about: title + " does things." })),
+];
+function launcher(worlds = systemWorlds()) {
+  const sent = [], asked = [];
   const h = load("launcher.js", {
+    self: "launcher",
     send: (to, type, payload) => sent.push(plain({ to, type, payload })),
-    sys: { worlds: () => [], stats: () => ({ crashes: 0 }) },
+    sys: {
+      worlds: (fields) => {   // like the kernel: only the fields asked for
+        asked.push(fields);
+        return worlds.map((w) => Object.fromEntries(fields.split(",").map((f) => [f, plain(w[f])])));
+      },
+      stats: () => ({ crashes: 0 }),
+    },
   });
+  h.def.start(h.s);
   const grid = () => JSON.parse(h.screen()).kids[1];
+  const about = () => JSON.parse(h.screen()).kids[2].s;
+  return { ...h, sent, asked, worlds, grid, about, poll: () => h.def.every[0](h.s) };
+}
+
+test("launcher: the apps are the worlds of kind app in manifest order; more than twelve scroll by rows", () => {
+  const h = launcher();
   const more = () => JSON.parse(h.screen()).kids[0].kids[1].s;
-  assert.equal(grid().items.length, 12);
+  assert.equal(h.s.apps.length, 14);
+  assert.deepEqual(h.grid().items.map((i) => i.label), APPS.slice(0, 12).map((a) => a[1]));
+  assert.deepEqual(h.grid().items[0], { label: "Agent", key: "c", ops: [["rect", 2, 2, 36, 26]] });
+  assert.equal(h.about(), "Agent does things.");
   assert.match(more(), /▼/);
   h.key("down"); h.key("down"); h.key("down");
   assert.deepEqual([h.s.sel, h.s.top], [12, 1]);
-  assert.equal(grid().items[grid().sel].label, "Keys");
+  assert.equal(h.grid().items[h.grid().sel].label, "Keys");
   assert.match(more(), /▲/);
   h.key("up"); h.key("up"); h.key("up");
   assert.deepEqual([h.s.sel, h.s.top], [0, 0]);
   h.key("a", "a");
-  assert.deepEqual(sent.at(-1), { to: "compositor", type: "open", payload: { app: "about" } });
+  assert.deepEqual(h.sent.at(-1), { to: "compositor", type: "open", payload: { app: "about" } });
   assert.equal(h.s.top, 1);
   h.key("l", "l");
-  assert.deepEqual(sent.at(-1).payload, { app: "logs" });
+  assert.deepEqual(h.sent.at(-1).payload, { app: "logs" });
+  h.key("z", "z");
+  assert.equal(h.sent.length, 2);
+  // a poll reads the icons again only when apps came or went
+  h.asked.length = 0;
+  h.poll();
+  assert.deepEqual(h.asked, ["name,kind,state,user"]);
+  h.def.handlers.focus(h.s);
+  assert.equal(h.asked.at(-1), "name,kind,title,state,user,icon,about,key");
+});
+
+test("launcher: an app from storage is marked, has no letter and says where it is from; stopped, it is not shown", () => {
+  const ws = systemWorlds();
+  ws.push({ name: "u-dial", kind: "app", title: "u-dial", state: "idle", user: true, key: "e",
+            icon: [["rect", 4, 4, 32, 22]], about: "A native app in C." },
+          { name: "u-old", kind: "app", title: "u-old", state: "stopped", user: true, key: "", icon: null, about: "" },
+          { name: "u-helper", kind: "service", title: "u-helper", state: "idle", user: true, key: "", icon: null, about: "" });
+  const h = launcher(ws);
+  assert.deepEqual(h.s.apps.map((a) => a.app).slice(-2), ["about", "u-dial"]);
+  h.key("left");
+  assert.equal(h.s.sel, 14);
+  assert.deepEqual(h.grid().items[h.grid().sel], { label: "u-dial", key: "", ops: [["rect", 4, 4, 32, 22]], mark: true });
+  assert.equal(h.about(), "From storage: A native app in C.");
+  // it stops: the selection moves to the last app still shown
+  ws.at(-3).state = "stopped";
+  h.poll();
+  assert.equal(h.s.apps.length, 14);
+  assert.equal(h.s.apps[h.s.sel].app, "about");
+  h.key("e", "e");
+  assert.deepEqual(h.sent.at(-1).payload, { app: "editor" });   // the "e" it declared is the editor's
+});
+
+test("launcher: icons are sanitised, a broken one becomes a letter, and the first app to claim a letter keeps it", () => {
+  const ws = systemWorlds();
+  const calc = ws.find((w) => w.name === "calc"), keys = ws.find((w) => w.name === "keys"), repl = ws.find((w) => w.name === "repl");
+  calc.icon = [["fill", -5, 10, 100, 100, "#00ff00"], ["line", 0, 0, 99, 31, "magenta"], ["text", 2, 6, ">", "xl"],
+               ["text", 1, 1, "WIDE", "m"], ["text", 1, 1, "A", "huge", "accent"], ["poly", [0, 0, 1, 1]], ["rect", "1", 2, 3, 4],
+               ["fill", 1, 2, 3], "rect", ...Array.from({ length: 40 }, (_, i) => ["fill", i, 0, 1, 1])];
+  keys.icon = { not: "an array" };
+  repl.icon = [["circle", 1, 2, 3]];
+  ws.find((w) => w.name === "snake").key = "c";   // chat came first
+  const h = launcher(ws);
+  const tile = (name) => h.s.apps.find((a) => a.app === name);
+  assert.deepEqual(plain(tile("calc").ops.slice(0, 4)),
+    [["fill", 0, 10, 40, 20, "#00ff00"], ["line", 0, 0, 40, 30], ["text", 2, 6, ">", "xl"], ["text", 1, 1, "A", "m", "accent"]]);
+  assert.equal(tile("calc").ops.length, 32);
+  assert.deepEqual([tile("keys").ops, tile("keys").icon], [undefined, "K"]);
+  assert.deepEqual([tile("repl").ops, tile("repl").icon], [undefined, "R"]);
+  assert.equal(tile("snake").key, "");
+  h.key("c", "c");
+  assert.deepEqual(h.sent.at(-1).payload, { app: "chat" });
+});
+
+test("launcher: with no apps it shows an empty grid and ignores keys", () => {
+  const h = launcher(systemWorlds().filter((w) => w.kind !== "app" || w.name === "launcher"));
+  assert.deepEqual(h.grid().items, []);
+  assert.equal(h.about(), "No apps are running.");
+  h.key("right"); h.key("enter");
+  assert.equal(h.sent.length, 0);
 });
 
 // ---- the loader ------------------------------------------------------------------------------------------------
