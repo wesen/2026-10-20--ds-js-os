@@ -311,7 +311,7 @@ test("launcher: with no apps it shows an empty grid and ignores keys", () => {
 });
 
 // ---- the loader ------------------------------------------------------------------------------------------------
-function loader({ files = {}, worlds = [] } = {}) {
+function loader({ files = {}, worlds = [], kinds = {} } = {}) {
   const fs = new Map(Object.entries(files)), spawned = [], stopped = [], sent = [], asks = [], handles = [];
   let t = 0;
   const child = (path, rights) => { const h = { path, rights, revoked: 0, released: 0, revoke() { h.revoked++; }, release() { h.released++; } }; handles.push(h); return h; };
@@ -326,7 +326,7 @@ function loader({ files = {}, worlds = [] } = {}) {
     hw: { fs: (claim) => { assert.equal(claim, "fs:/apps"); return dir; } },
     sys: {
       worlds: () => worlds,
-      spawn: (name, source) => { spawned.push([name, source]); const w = worlds.find((x) => x.name === "u-" + name); if (w) w.state = "idle"; else worlds.push({ name: "u-" + name, user: true, state: "idle", last_error: "" }); return { world: "u-" + name }; },
+      spawn: (name, source) => { spawned.push([name, source]); const w = worlds.find((x) => x.name === "u-" + name); if (w) w.state = "idle"; else worlds.push({ name: "u-" + name, kind: kinds[name] || "app", user: true, state: "idle", last_error: "" }); return { world: "u-" + name }; },
       stop: (world) => { stopped.push(world); const w = worlds.find((x) => x.name === world); w.state = "stopped"; w.last_error = "stopped by loader"; return true; },
     },
     send: (to, type, payload) => sent.push(plain({ to, type, payload })),
@@ -388,6 +388,16 @@ test("loader: a WebAssembly app is started through a read-only handle to its fil
   await h.key("f3");
   assert.equal(h.asks.length, 0);
   assert.match(h.s.note, /cannot be edited/);
+});
+
+test("loader: a WebAssembly module comes forward when started only if it declared itself an app", async () => {
+  const h = loader({ files: { "batt.wasm": "\0asm", "dial.wasm": "\0asm" }, kinds: { batt: "driver" } });
+  await h.def.start(h.s);
+  await h.key("enter");   // batt.wasm, a driver
+  assert.equal(h.s.note, "Started u-batt.");
+  assert.equal(h.sent.filter((m) => m.type === "open").length, 0);
+  await h.key("down"); await h.key("enter");   // dial.wasm, an app
+  assert.deepEqual(h.sent.at(-1), { to: "compositor", type: "open", payload: { app: "u-dial" } });
 });
 
 test("loader: apps named in autostart.txt start at boot, without being opened", async () => {

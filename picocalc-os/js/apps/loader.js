@@ -32,7 +32,7 @@ async function ldRefresh(s) {
   ldWorlds(s);
 }
 function ldWorlds(s) {
-  try { s.worlds = Object.fromEntries(sys.worlds().filter((w) => w.user).map((w) => [w.name, { state: w.state, error: w.last_error }])); }
+  try { s.worlds = Object.fromEntries(sys.worlds().filter((w) => w.user).map((w) => [w.name, { state: w.state, error: w.last_error, kind: w.kind }])); }
   catch (e) { s.worlds = {}; }
 }
 const ldWorld = (s, name) => s.worlds["u-" + name] || null;
@@ -53,9 +53,11 @@ async function ldStart(s, app, open) {
     catch (e) { s.note = e.message; return false; }
   }
   s.note = "Started u-" + name + ".";
-  if (open) send("compositor", "open", { app: "u-" + name });
+  if (open && app.ext === "js") send("compositor", "open", { app: "u-" + name });
   await sleep(300);
   ldWorlds(s);
+  // a WebAssembly module may be a driver or a service: it comes forward once it has said that it is an app
+  if (open && app.ext === "wasm" && (ldWorld(s, name) || {}).kind === "app") send("compositor", "open", { app: "u-" + name });
   return true;
 }
 
@@ -108,7 +110,7 @@ async function ldKey(s, k) {
       if (!once || !a) return;
       const w = ldWorld(s, a.name);
       if (ldRunning(w)) return send("compositor", "open", { app: "u-" + a.name });
-      return ldStart(s, a, a.ext === "js");
+      return ldStart(s, a, true);
     }
     case "f2":
       if (!once || !a || !ldWorld(s, a.name)) return;

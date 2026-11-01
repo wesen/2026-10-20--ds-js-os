@@ -78,7 +78,7 @@ static int gauge(void) {
   add(",[\"text\",%d,%d,\"0\",\"s\",\"muted\"]", CX - R + 14, CY - 14);
   add(",[\"text\",%d,%d,\"50\",\"s\",\"muted\"]", CX - 6, CY - R + 14);
   add(",[\"text\",%d,%d,\"100\",\"s\",\"muted\"]", CX + R - 32, CY - 14);
-  at(level, R - 18, &x, &y);
+  at(level, R - 30, &x, &y);   // its tip below the "50"
   add(",[\"line\",%d,%d,%d,%d,\"ink\"],[\"line\",%d,%d,%d,%d,\"ink\"]", CX, CY, x, y, CX + 1, CY, x + 1, y);
   add(",[\"fill\",%d,%d,9,9,\"ink\"]]}", CX - 4, CY - 4);
   return clen < (int)sizeof canvas;
