@@ -533,7 +533,9 @@ Not yet explained:
 - **JavaScript is slower with Wi-Fi up.** `bench` in a running Wi-Fi build: 100k-loop 1,601 ms and
   `fib(20)` 277 ms, against 114 ms and 43 ms at boot of the same build and 113 ms / 29 ms on the offline build.
   The UI stays responsive, but turn budgets assume the offline speed.
-- **Where 320 KB of internal RAM goes at boot** on the Wi-Fi build (472 KB → 149 KB before Wi-Fi connects).
+- **Internal RAM at boot.** 472 KB free in `app_main`, 149 KB once the worlds run. Most of that is the OS
+  itself: the offline build already had 193 KB free at runtime (PICOCALC-P4-PORT report), so Wi-Fi and
+  ESP-Hosted cost about 45 KB.
 - Once, after a flash, the keyboard controller NACKed every I2C transfer (2,155 errors in 45 s) until the
   device was power-cycled by hand. It did not recur.
 
@@ -554,7 +556,7 @@ Not yet explained:
 - History without tool calls (section 5) keeps the session small, but the model still sometimes doubts its
   earlier tool use (one follow-up in three). Keeping compact tool-call/tool-result pairs in history would
   remove the doubt at the cost of bytes and of the import's simpler policy.
-- The JavaScript slowdown with Wi-Fi up and the 320 KB of internal RAM used at boot (section 9) both need a
+- The JavaScript slowdown with Wi-Fi up and the internal RAM used at boot (section 9) both need a
   profile: per-task stack high-water marks (`uxTaskGetStackHighWaterMark`), `heap_caps_print_heap_info`, and
   the kernel task's core and priority against ESP-Hosted's tasks.
 - Should the agent show DeepSeek's `reasoning` text, perhaps folded? It costs response bytes and screen
