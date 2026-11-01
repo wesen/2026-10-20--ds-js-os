@@ -592,3 +592,137 @@ examples and escape probes (PICOCALC-NATIVE N3)"
   each starts with one 64 KB page (16 KB stack first, then data), no declared maximum.
 - WAMR's objects on the host (x86-64, -O2): 225 KB of text (`size -t build/wamr/**/*.o`); picocalc-host's text is
   1.46 MB in all.
+
+## Step 6: WebAssembly apps from storage, and WebAssembly on the P4 (N4)
+
+WebAssembly modules now start from files as well as from the manifest: the Loader hands the kernel a read handle
+to `apps/name.wasm`, and the kernel reads the bytes itself and starts `u-name`. On the P4, WAMR builds with
+ESP-IDF's platform layer, and the device runs modules from its FAT partition. Getting there cost one reboot loop:
+WAMR's ESP-IDF layer asserts when it runs outside a pthread, and I had put the first test module in
+`autostart.txt`. Every escape probe behaves on the device as on the host. A long detour established that a 2.7× swing
+in the device's JavaScript speed is a property of memory placement on the P4, not of WAMR.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 5. Mid-step the user asked "what are we doing right now?" and later wrote "i
+was mucking about with the device, btw. my bad, in case you saw something weird at the start, i tried to launch
+ech.wasm or something".
+**Assistant interpretation:** Continue N4: WebAssembly on the device, bundling or loading modules, calibration,
+apps from storage.
+**Inferred user intent:** The binaries that are the P4's only isolated option, running on the real hardware.
+**Commit (code):** 9d66b95 — "picocalc-os: WebAssembly apps from storage through the Loader, and a benchmark
+module (PICOCALC-NATIVE N4)"; 7ba759e — "picocalc-os: WebAssembly worlds on the ESP32-P4 (PICOCALC-NATIVE N4)"
+
+### What I did
+
+- Storage: `FS_LOAD` in `nucleus/fs.c` (any bytes, up to `USER_BINARY_MAX` 256 KB); `fs_job_t.done`, a callback
+  both ports call instead of settling; `__ka("sys.spawn", name, handle)` (`ka_spawn` in `vm.c`) and
+  `kernel_spawn_loaded` in `kernel.c` (`\0asm` → WebAssembly, UTF-8 text → JavaScript, anything else refused);
+  `kernel_spawn(name, bytes, len, engine, …)` tears down the old instance before switching engines; the prelude's
+  `sys.spawn` takes a `Handle` and returns a promise; the Loader lists `*.wasm` and starts them through a handle.
+- Tests: `WasmAppTests` in `tests/test_loader_native.py` (a module from storage runs without claims, switches to
+  JavaScript and back; ELF bytes, a file over 256 KB, a directory, a missing file, a bad name, a released handle and
+  the missing claim are refused); a Loader unit test in `tests/sysapps.test.mjs`.
+- `native_wasm.c`: WAMR allocates through `port_heap_malloc` (`Alloc_With_Allocator`); a real-clock overrun check
+  after each event; `mem_used` in host bytes; the trace logs each event's instruction count.
+- `natives/bench.c`: an xorshift loop (12.5 instructions per iteration, counted on the host with `-vv`).
+- P4: WAMR sources, defines and include directories in `port/esp32p4/main/CMakeLists.txt`
+  (`BUILD_TARGET_RISCV32_ILP32F`, `invokeNative_riscv.S`, components `lwip` and `pthread`); the forced include of
+  `p4_compat.h` limited to C; `port_native_backend(ENG_WASM)`; `bundle_js.cmake` also takes `*.wasm`.
+- WAMR patches 0002 (linear memory in PSRAM) and 0003 (`os_self_thread` from the FreeRTOS task handle).
+- Console `put PATH [BASE64]` in `fs_p4.c` and `tools/p4put.py`; copied `echo.wasm`, `bench.wasm`,
+  `battery.wasm` (as `batt.wasm`), four copies of `wprobe.wasm` (`wp-oob`, `wp-spin`, `wp-badptr`, `wp-stack`) and
+  `wimport.wasm` into `apps/` (about 2.5 KB/s).
+- Device runs through `apps/autostart.txt`, with the capture itself truncating it 8 s after boot.
+
+### Why
+
+- Bytes never pass through JavaScript: no binary type in the fs API, and a world cannot alter a module between
+  reading and starting it.
+- The engine comes from the content, not the extension, so a renamed ELF is still refused.
+- `put` on the console rather than a world: it needs physical access, as flashing does.
+
+### What worked
+
+- Host: `test-native` 25 OK, `test-sys` (13 with the new class) OK, `test-fs`, `test-apps` OK; shots unchanged
+  except `out/41-about.png` (JS heap total 5490 → 5502 KB, the longer prelude).
+- Device (`build-agent`, 2.50 MB, 38 % of the app partition free): `u-echo` loads, inits, starts and ticks;
+  `u-batt: battery: open failed: u-batt has no claim on i2c0:0x1f`; `u-wp-oob` and `u-wp-badptr` `it trapped: out
+  of bounds memory access`; `u-wp-stack` `it trapped: wasm operand stack overflow`; `u-wp-spin` `ran past its turn
+  budget of 50 ms`; `u-wimport crashed: it imports the function wasi_snapshot_preview1.path_open, which picocalc-os
+  does not provide`; each probe stays stopped after five crashes; 22 system worlds idle, 0 restarts; no reboot.
+- `BENCH loop n=1000 us=900`, `n=4000 us=3499`, `n=16000 us=13884` (and 901/3499/13883 in a second boot):
+  0.866 µs per 12.5 instructions, 69 ns per instruction; `PROFILE.wasm_ns_per_op` 40 → 70.
+
+### What didn't work
+
+- `fatal error: esp_pthread.h: No such file or directory` (WAMR's platform header): `pthread` added to
+  PRIV_REQUIRES.
+- `p4_compat.h:8: Error: unrecognized opcode 'size_t malloc_usable_size(void*ptr)'` on `invokeNative_riscv.S`: the
+  forced include reached the assembler; now `$<$<COMPILE_LANGUAGE:C>:-include;…>`.
+- First module load on the device: `assert failed: pthread_self pthread.c:583 (false && "Failed to find current
+  thread ID!")`, then `Rebooting...`. With `echo` in `autostart.txt` this repeated on every boot (a reboot loop). I
+  broke it by sending `put apps/autostart.txt` (which truncates) every 250 ms from a script; the console answered
+  1.2 s after reset, before the Loader's autostart at about 3.9 s. Fix: patch 0003.
+- The first test loop in zsh (`set -- $pair`) did not split words; rewritten with `while read`.
+- A first host run of the new loader tests: an 800 KB ELF failed the size check before the content check, and
+  `w` lacked `sys.read`; both were test mistakes.
+
+### What I learned
+
+- The P4's JavaScript speed depends on placement, by up to 9×. Boot calibration and `bench` (the 100k loop and
+  fib(20); model 133 ms and 29.1 ms):
+
+  | Firmware | loop, fib at ~16 s |
+  |---|---|
+  | before N3 (8ffc032), 5 boots | 113 ms, 30.5 ms |
+  | N4, no module loaded | 118 ms, 30.7 ms |
+  | N4, after any module load (even one refused at the import check) | 319 ms, 85 ms |
+  | N4 + debug commands with a 16 KB static buffer, 5 boots, no module | 320 ms, 85 ms |
+  | the same without Wi-Fi (plain `build`) | 124 ms, 277 ms |
+  | an older capture from an earlier ticket (`net1.log`) | 117 ms, 277 ms |
+
+  A register-only loop (4M iterations, 44.6 ms; 1M with interrupts off, 11.1 ms) and 64K random PSRAM reads
+  (33 ms) are the same in fast and slow images: no task takes the CPU, and PSRAM itself is not slower. Starting the
+  runtime alone (`wasminit`) and one float operation (`fputest`) changed nothing. The L2 cache, shared by flash code
+  and PSRAM data, is 128 KB (`CONFIG_CACHE_L2_CACHE_128KB`); the likely cause is conflicts between QuickJS's hot code
+  and data, which move with the image and with where a new heap lands. That was so before this ticket; I left it
+  as an open question.
+- With the instruction budget at 70 ns, a loop of volatile stores ran 82 ms for a 50 ms budget (144 ms at
+  40 ns): memory instructions cost more than the benchmark's average, and the real-clock check acts only when the
+  event returns.
+
+### What was tricky to build
+
+- The reboot loop: anything in `autostart.txt` runs before I can type, so a crash there repeats forever. Since
+  then every device run truncates `autostart.txt` itself a few seconds after boot, and new code is started that way
+  only.
+- Telling WAMR from placement: the decisive data were a slow image with no module loaded and a fast image with
+  WAMR linked in. One measurement before and after was misleading.
+
+### What warrants a second pair of eyes
+
+- `kernel_spawn` switching engines on a live slot: teardown happens with the old engine, then the source, length,
+  engine and file change.
+- The probe apps (`wp-*.wasm`, `wimport.wasm`) and the test modules stay in the device's `apps/`; `autostart.txt`
+  is empty.
+
+### What should be done in the future
+
+- The JavaScript placement sensitivity on the P4 (its own ticket): FreeRTOS run-time stats, the L2 cache size,
+  where QuickJS's heap and stack land.
+- A real-clock check inside long WebAssembly turns (WAMR's terminate from a timer) if 1.6× overruns matter.
+- N5.
+
+### Code review instructions
+
+- `nucleus/vm.c` `ka_spawn`, `nucleus/kernel.c` `kernel_spawn` / `kernel_spawn_loaded`, `nucleus/fs.c` `do_load`,
+  `js/apps/loader.js` `ldStart`; `port/esp32p4/main/CMakeLists.txt`; `third_party/wamr/patches/0002*`, `0003*`.
+- `make test-native test-sys`; on the device: `tools/p4put.py build/natives/echo.wasm apps/echo.wasm`, then start
+  it from the Loader.
+
+### Technical details
+
+- Device memory with 30 worlds (3 modules running, 5 stopped): internal 88 KB free, PSRAM 26.35 MB free (27.27 MB
+  before the modules).
+- Console `put`: at most 768 decoded bytes per line; `tools/p4put.py` sends 680.
