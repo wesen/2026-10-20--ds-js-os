@@ -11,12 +11,24 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/js/system/agent.js
+      Note: agent service, dialect translation, tool loop
+    - Path: repo://picocalc-os/nucleus/vm.c
+      Note: agent.* and store.* operations
+    - Path: repo://picocalc-os/port/esp32p4/main/agent_p4.c
+      Note: P4 HTTPS transport, Wi-Fi, net console
+    - Path: repo://picocalc-os/port/esp32p4/main/bus_p4.c
+      Note: console key injection
+    - Path: repo://picocalc-os/port/esp32p4/sdkconfig.agent-wifi
+      Note: ESP-Hosted mode and PSRAM placement
+    - Path: repo://picocalc-os/tools/provision_agent.py
+      Note: provisioning from local sources
 ExternalSources: []
-Summary: "How the imported PicoCalc agent works end to end (worlds, native HTTPS, ESP-Hosted Wi-Fi, NVS), what the first hardware run found, and the design for talking to an OpenAI-compatible Chat Completions provider (lunaroute, deepseek-4.1-flash)."
+Summary: How the imported PicoCalc agent works end to end (worlds, native HTTPS, ESP-Hosted Wi-Fi, NVS), what the first hardware run found, and the design for talking to an OpenAI-compatible Chat Completions provider (lunaroute, deepseek-4.1-flash).
 LastUpdated: 2026-10-31T22:00:00-04:00
-WhatFor: "Onboarding an intern to the agent feature, and the plan the PICOCALC-AGENT implementation follows."
-WhenToUse: "Before changing js/system/agent.js, js/apps/chat.js, the agentNet/store bindings, or the ESP32-P4 network port."
+WhatFor: Onboarding an intern to the agent feature, and the plan the PICOCALC-AGENT implementation follows.
+WhenToUse: Before changing js/system/agent.js, js/apps/chat.js, the agentNet/store bindings, or the ESP32-P4 network port.
 ---
 
 # The PicoCalc agent: analysis, design and implementation guide
@@ -464,9 +476,9 @@ python3 tools/p4cap.py --no-reset -s 40 -c "2 key c" -c "4 type What is 17*23?" 
 running. Its `shot` decoding needs a quiet console: if Wi-Fi logs interleave with the base64 lines, take
 the shot again.
 
-## 9. What the first hardware run found
+## 9. What the hardware runs found
 
-These were found on 2026-10-31 with the unmodified import, and fixed in `87941fe`. Each is a small lesson
+The first three were found on 2026-10-31 with the unmodified import, and fixed in `87941fe`. Each is a small lesson
 about the system.
 
 1. **A second `net connect` crashed the board.** `assert failed: netif_add ... (netif already added)` from
@@ -485,12 +497,44 @@ about the system.
    keyboard controller's status register counts them and its FIFO register returns them first, so the
    keyboard driver reads and publishes them exactly like typed keys.
 
-Two other observations, not yet explained:
+The runs with the Chat Completions code (A5) found three more, fixed in `4a9657b`:
 
-- The boot calibration on the Wi-Fi build measured `fib(20)` at 277 ms against 29 ms on the offline build
-  (the 100k-loop figure is unchanged). It runs while ESP-Hosted is bringing up SDIO; `bench` at runtime will
-  tell whether it is real.
-- Once, after a flash, the keyboard controller NACKed every I2C transfer (2,000+ errors in 45 s) until the
+4. **The model apologised for a save it had made.** History keeps only the user's text and the visible answer
+   (the import's policy, section 5). After an approved, confirmed `save_note`, the next question showed the
+   model its own "note saved" with no tool call before it, and the instructions say "never claim a tool
+   succeeded before its result confirms success": it concluded it had lied. Each finished answer now records
+   its tool outcomes (`"save_note: saved"`), and the device states them in brackets at the start of the next
+   user message. The first attempt put the note inside the assistant's message; the model then called it "a
+   fake saved line" it had written. In three live follow-ups afterwards, two were clean and one still added a
+   needless correction.
+5. **The display driver died on `spi2: ESP_ERR_NO_MEM`.** Internal RAM on the Wi-Fi build: 472 KB free in
+   `app_main`, 149 KB four seconds later (worlds booted, ESP-Hosted up), then 138 KB with a 31 KB largest
+   block after the first TLS sessions. An SPI device re-add needs internal memory and failed; the supervisor
+   restarted the display world (green banner "display is running again"). mbedTLS, Wi-Fi/lwIP buffers and
+   mallocs above 4 KB now go to PSRAM (`sdkconfig.agent-wifi`): after requests the largest block stays at
+   65-69 KB, free at ~150 KB.
+6. **Trailing blank lines** in model text showed on screen; the translator trims them.
+
+Measured on the final firmware (`4a9657b`), device on the home Wi-Fi:
+
+| Question | Requests | Result |
+|---|---|---|
+| "What is 1234*5678? Use the calculator." | 2 | `calculate`, "1234 * 5678 = 7,006,652" |
+| "Save a note called shop with the text milk and eggs." | 2 + F4 | approval panel, "save_note: saved", answer |
+| reboot, `/notes` | 0 | history and note restored from `agentstore` |
+| "What is in my shop note?" | 2 | `read_note`, "milk and eggs" |
+| "What is the square root of 1764? Use the calculator." | 2 | `calculate`, "42" |
+
+A request takes 1-3 s at lunaroute (measured from the laptop: 2.4 s for a tool call, 1.0 s for the
+continuation). Captures are in the ticket's `captures/` directory.
+
+Not yet explained:
+
+- **JavaScript is slower with Wi-Fi up.** `bench` in a running Wi-Fi build: 100k-loop 1,601 ms and
+  `fib(20)` 277 ms, against 114 ms and 43 ms at boot of the same build and 113 ms / 29 ms on the offline build.
+  The UI stays responsive, but turn budgets assume the offline speed.
+- **Where 320 KB of internal RAM goes at boot** on the Wi-Fi build (472 KB → 149 KB before Wi-Fi connects).
+- Once, after a flash, the keyboard controller NACKed every I2C transfer (2,155 errors in 45 s) until the
   device was power-cycled by hand. It did not recur.
 
 ## 10. Implementation plan
@@ -498,15 +542,21 @@ Two other observations, not yet explained:
 | Phase | Work | Validation |
 |---|---|---|
 | A0 | Import the zip unchanged; run its tests; flash it; find and fix the hardware problems | done: `11fa24c`, `87941fe` |
-| A1 | Native `api`/`model`: `port_agent_api()`, `port_agent_model()` on host and P4, `agent.status` returns them, `net model` console command | `test_agent_native.py` additions |
-| A2 | `agent.js`: Chat Completions request builder and response translator; model precedence; `/api` shown in `/help` | `agent.test.mjs` chat cases; fixtures `tests/fixtures/agent-chat/` built from the measured responses; host shots |
-| A3 | `provision_agent.py`: `--model`, `--pi-provider`, `--wifi-from-nm`, a quiet first line | dry run against the device |
-| A4 | Host live run against lunaroute with `make AGENT_LIVE=1` | screenshot of a real answer with a tool call |
-| A5 | Device run: provision, ask a calculation, a note save with F4 approval, a reboot that restores the session | P4 screenshots and console log in the ticket |
-| A6 | Write-up: diary, this guide's measured section, reMarkable upload | — |
+| A1 | Native `api`/`model`: `port_agent_api()`, `port_agent_model()` on host and P4, `agent.status` returns them, `net model` console command | done `19afacf`: `test_status_reports_api_and_model` |
+| A2 | `agent.js`: Chat Completions request builder and response translator; model precedence; dialect shown in `/help` | done `19afacf`: 5 node tests, the integration tour through `tests/fixtures/agent-chat/` |
+| A3 | `provision_agent.py`: `--model`, `--pi-provider`, `--wifi-from-nm`, no reset on open | done `e11ca7c`: provisioned the device |
+| A4 | Host live run against lunaroute with `make AGENT_LIVE=1` | done `e11ca7c`: `scripts-agent/live.txt`, captures `host-live-*` |
+| A5 | Device run: a calculation, a note save with F4 approval, a reboot that restores the session | done `4a9657b` (plus the fixes in §9 items 4-6), captures `p4-*` |
+| A6 | Write-up: diary, this guide's measured section, reMarkable upload | done |
 
 ## 11. Open questions
 
+- History without tool calls (section 5) keeps the session small, but the model still sometimes doubts its
+  earlier tool use (one follow-up in three). Keeping compact tool-call/tool-result pairs in history would
+  remove the doubt at the cost of bytes and of the import's simpler policy.
+- The JavaScript slowdown with Wi-Fi up and the 320 KB of internal RAM used at boot (section 9) both need a
+  profile: per-task stack high-water marks (`uxTaskGetStackHighWaterMark`), `heap_caps_print_heap_info`, and
+  the kernel task's core and priority against ESP-Hosted's tasks.
 - Should the agent show DeepSeek's `reasoning` text, perhaps folded? It costs response bytes and screen
   space; currently dropped.
 - The approval check lets only the keyboard world press F4. The console's injected keys now pass through

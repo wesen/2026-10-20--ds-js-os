@@ -306,3 +306,243 @@ contract, safety properties, build and test commands, the hardware findings and 
 ### Technical details
 
 - Diagrams are ASCII so the reMarkable PDF renders them.
+
+## Step 4: Chat Completions in the agent (A1, A2)
+
+The agent now talks to either dialect. The native side reports which one the configured endpoint speaks and
+the model provisioned with it; `agent.js` keeps its run as Responses items and translates at the edge. The
+request side maps items to messages, and the response side turns `choices[0]` back into the `{status, output}`
+the existing validation reads. Every check the import's author wrote (whole-batch validation, call-id rules,
+tool limits, approval) runs unchanged for both dialects.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+
+**Assistant interpretation:** Implement guide phases A1 and A2 and their tests.
+
+**Inferred user intent:** The on-device agent works with the provider the user has.
+
+**Commit (code):** 19afacf — "picocalc-os: the agent speaks Chat Completions too (PICOCALC-AGENT A1, A2)"
+
+### What I did
+
+- `nucleus/nucleus.h`, `nucleus/vm.c`: `port_agent_api()`, `port_agent_model()`; `agent.status` returns
+  `api` and `model`.
+- `host/agent_host.c`: `PICOCALC_AGENT_API` (for fixtures), else the URL suffix; `PICOCALC_AGENT_MODEL`.
+- `port/esp32p4/main/agent_p4.c`: NVS key `model`, `model_ok()`, `cfg_api`/`cfg_model` cached by
+  `refresh_configured()` on the kernel task, `net model ID`, `net status` prints `api=` and `model=`.
+- `js/system/agent.js`: `transport()`, `CHAT_TOOLS`, `chatMessages()`, `chatBody()`, `chatOutput()`,
+  `MODEL_RE` (allows `/`), the `chosen` flag in the session record, `/model default`.
+- Tests: `test_status_reports_api_and_model`; five node tests built on the measured lunaroute shapes; six
+  fixtures in `tests/fixtures/agent-chat/` and a second integration tour through them.
+- Regenerated the PicoCalc `out/` captures (Agent tile, 15 worlds) and committed them with this step.
+
+### Why
+
+- Only C knows the endpoint (JS deliberately never sees it), so C must report the dialect.
+- Translating at the edge keeps one validated policy instead of two diverging agents.
+- A provisioned model must win over the model an old session remembered, or re-provisioning would not take
+  effect; a model the user picked must win over both.
+
+### What worked
+
+- `make test-agent`: node 26 + 13 + 4 pass; integration: both tours, reboot, cancel and large-reply PASS;
+  native "Ran 23 tests ... OK (skipped=7)". PAPERS3-OFF 01–05 PASS. `make shots` clean.
+
+### What didn't work
+
+- Nothing failed in this step.
+
+### What I learned
+
+- vLLM's tool-call ids (`chatcmpl-tool-<hex>`) pass the import's call-id pattern `^[A-Za-z0-9_-]{1,128}$`.
+- `reasoning_effort` is accepted by lunaroute; the reasoning text arrives in `message.reasoning`.
+
+### What was tricky to build
+
+- An assistant message's text and its tool calls are one Chat message but several Responses items. The
+  builder keeps an "open" assistant message that following `function_call` items attach to, and closes it at
+  any user or tool message. Empty `tool_calls` arrays are removed because some servers reject them.
+
+### What warrants a second pair of eyes
+
+- `chatOutput()` treats any `finish_reason` other than `stop`/`tool_calls` as incomplete, including a
+  missing one. Providers that omit it would always fail.
+- The session's `chosen` flag: an old record without it loses a model chosen before this change.
+
+### What should be done in the future
+
+- Nothing specific to this step.
+
+### Code review instructions
+
+- `git show 19afacf -- picocalc-os/js/system/agent.js`, then `tests/agent.test.mjs` (the last five tests).
+- Validate: `cd picocalc-os && make -j8 && make test-agent`.
+
+### Technical details
+
+- Chat request: `{model, messages, tools: [{type:"function", function:{name, description, parameters}}],
+  parallel_tool_calls:false, stream:false, max_tokens:2048, reasoning_effort?}`.
+
+## Step 5: Provisioning from local sources, and the live host run (A3, A4)
+
+`provision_agent.py` can now take the Wi-Fi passphrase from NetworkManager and the endpoint and key from
+`~/.pi/agent/models.json`, so no secret is typed, passed on a command line or committed. It also no longer
+resets the board when it opens the port. With the libcurl host build and `-r` pacing, the agent answered a
+calculation and saved an approved note against the real `deepseek-4.1-flash` from the laptop.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 ("We can load credentials ... either hardcode them or somehow pass them over").
+
+**Assistant interpretation:** Pass the credentials over at provisioning time; never hardcode them.
+
+**Inferred user intent:** Easy setup without leaking keys into the repository.
+
+**Commit (code):** e11ca7c — "picocalc-os: provision_agent.py reads secrets from local sources; a live host script (PICOCALC-AGENT A3, A4)"
+
+### What I did
+
+- `tools/provision_agent.py`: `--wifi-from-nm`, `--pi-provider`, `--model`, `--skip-wifi`, scrubbed replies,
+  open with DTR/RTS asserted, a leading newline and input drain.
+- `scripts-agent/live.txt`; a scratch wrapper put the key into the child's environment only.
+- `make AGENT_LIVE=1` (libcurl 8.5.0), then `build-agent/picocalc-host -r -s STORE scripts-agent/live.txt`.
+- On the device: `provision_agent.py --skip-wifi --pi-provider lunaroute --model deepseek-4.1-flash`.
+
+### Why
+
+- The auto-reset finding (Step 2) belonged in the tool, not in a note.
+
+### What worked
+
+- Device: three settings acknowledged on the first try, then
+  `net: configured=yes wifi=up clock=set api=chat model=deepseek-4.1-flash`.
+- Host live: "1234 * 5678 = 7,006,652" via `calculate`; the note request went `list_notes`, `save_note`,
+  approval, F4, "save_note: saved". 41 s wall time for the script (its waits dominate).
+
+### What didn't work
+
+- Nothing failed.
+
+### What I learned
+
+- The CH343 auto-reset circuit pulls EN low only for RTS asserted with DTR released; pyserial's default open
+  (both asserted) is safe, clearing DTR first is not.
+
+### What was tricky to build
+
+- Keeping secrets out of every output: the tool prints only `net:` lines, with secret values replaced.
+
+### What warrants a second pair of eyes
+
+- `--pi-provider` maps `api: openai-completions` to `/chat/completions` and anything else to `/responses`.
+
+### What should be done in the future
+
+- None.
+
+### Code review instructions
+
+- `git show e11ca7c`; run `python3 tools/provision_agent.py --help`.
+
+### Technical details
+
+- Captures: `captures/host-live-01..03`.
+
+## Step 6: The device runs, a false apology, and memory (A5)
+
+On the PicoCalc the agent did everything in the plan: a calculation through the local tool, a note save with
+the approval panel and F4, a cold reboot that restored the conversation and the note, and a question that
+read the note back. Two problems turned up. Neither was in the transport.
+
+The first was the model. After the reboot it read the note correctly and then apologised for having
+"said the note was saved without actually calling the save tool". The save had happened, been approved and
+been confirmed. The import keeps only text in history, and the instructions forbid claiming a tool succeeded
+without a result, so the model saw its own claim with nothing behind it. The second was memory: the display
+driver died on `spi2: ESP_ERR_NO_MEM` and was restarted by the supervisor.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+
+**Assistant interpretation:** Run the planned device scenario; fix what it shows.
+
+**Inferred user intent:** An agent that behaves correctly on the real device, not only in tests.
+
+**Commit (code):** 4a9657b — "picocalc-os: findings from the device runs (PICOCALC-AGENT A5)"
+
+### What I did
+
+- Device runs with `tools/p4cap.py --no-reset` and console keys (captures `p4-02` to `p4-08`).
+- `agent.js`: `toolEntry()` records each tool outcome in `s.runTools`; `finish()` stores it as `tools` on the
+  assistant history entry; `withToolNotes()` adds `[PicoCalc: for your previous answer the device ran these
+  tools and confirmed the results: ...]` to the next user message; instructions explain it; `chatOutput()`
+  trims text; `validHistory()` accepts the optional `tools` (≤ 400 bytes).
+- `sdkconfig.agent-wifi`: `CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC=y`, `CONFIG_SPIRAM_TRY_ALLOCATE_WIFI_LWIP=y`,
+  `CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=4096`.
+- Heap measurements with the console's `heap` command at fixed times after boot and around requests.
+
+### Why
+
+- A tool record that the device states is true by construction, and costs a few bytes per exchange.
+- The PSRAM settings are the standard ones for a PSRAM board with Wi-Fi and TLS; the board has 29 MB free.
+
+### What worked
+
+- Device: every planned step (guide §9 table). Final firmware `4a9657b`: "The square root of 1764 is 42"
+  via `calculate`; heap after the request 148,963 free, largest 65,536.
+- After the history fix, live follow-ups: 2 of 3 clean.
+- Heap: before the PSRAM settings, 138,611 free / 31,744 largest after requests; after, 151,143 / 69,632.
+
+### What didn't work
+
+- First version of the tool note, inside the assistant message: the device's answer to "Did you save todo?"
+  said "my previous reply showed a fake "saved" line before any tool result had come back".
+- Second version, same place but before the instructions change: "my earlier confirmation was premature".
+- Third version (next user message, instructions explain it): one of three live runs still said "I said
+  "Done" before seeing the tool result", although its first answer came after the result.
+- Display crash: `[118555.982] display crashed handling flush: spi2: ESP_ERR_NO_MEM (drivers/display.js:38:22)`.
+- `p4cap.py` raises `NameError: name 'crc' is not defined` when the capture window ends inside a shot.
+- My first device script pressed Enter while `type` was still scheduling characters, splitting the prompt.
+
+### What I learned
+
+- Anything inside an assistant message reads to the model as its own words; facts about what happened have to
+  come from the user side of the conversation.
+- On the Wi-Fi build, about 320 KB of the 472 KB internal RAM is gone 4 s after boot, before Wi-Fi connects;
+  the first TLS sessions then fragment the rest. Moving mbedTLS to PSRAM fixed the fragmentation, not the boot
+  use.
+- `bench` while Wi-Fi is up: 100k loop 1,601 ms, fib(20) 277 ms, against 114 / 43 ms at boot of the same
+  build. JS is markedly slower with the radio active. Not investigated.
+
+### What was tricky to build
+
+- Telling the model about tools without contradicting the history policy: the note must be visible to the
+  model, invisible on screen, survive a reboot, and fit the record quota.
+
+### What warrants a second pair of eyes
+
+- `CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=4096` moves every malloc above 4 KB, including kernel message buffers,
+  to PSRAM. Anything that passes a plain-malloc buffer to DMA would now break; the bus workers use explicit
+  `MALLOC_CAP_DMA` buffers, and the runs showed no problem.
+- The remaining hedge rate. A different design (compact tool pairs in history) is in guide §11.
+
+### What should be done in the future
+
+- Profile the boot internal-RAM use and the Wi-Fi JS slowdown (guide §11).
+- Fix `p4cap.py`'s incomplete-shot path.
+
+### Code review instructions
+
+- `git show 4a9657b`; `withToolNotes()` and `finish()` in `agent.js`; the test "chat endpoint: tool call,
+  local result, continuation, answer".
+- Device: flash (guide §8), then ask a save, approve with F4, ask about the note.
+
+### Technical details
+
+- Device timeline (one boot, final firmware): `heap` in `app_main` 472,439 / 352,256; at 20 s 148,963 /
+  65,536 after one request.
+- Captures: `p4-02-calculated`, `p4-03-approval`, `p4-04-saved`, `p4-05-after-reboot-notes`,
+  `p4-06-false-apology-before-fix`, `p4-07-display-restart-no-mem`, `p4-08-final-4a9657b`,
+  `host-live-04-followup-after-fix`.
