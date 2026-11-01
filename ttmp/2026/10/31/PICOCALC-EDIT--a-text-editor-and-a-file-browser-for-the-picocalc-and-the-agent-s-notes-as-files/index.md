@@ -1,7 +1,7 @@
 ---
 Title: A text editor and a file browser for the PicoCalc, and the agent's notes as files
 Ticket: PICOCALC-EDIT
-Status: active
+Status: complete
 Topics:
     - picocalc
     - editor
@@ -13,7 +13,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-10-31T23:08:33.757015251-04:00
+LastUpdated: 2026-10-31T23:41:36.875589801-04:00
 WhatFor: ""
 WhenToUse: ""
 ---

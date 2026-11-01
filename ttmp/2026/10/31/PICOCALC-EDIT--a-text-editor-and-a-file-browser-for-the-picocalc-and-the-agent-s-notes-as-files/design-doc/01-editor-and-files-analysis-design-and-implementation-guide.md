@@ -10,12 +10,20 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/js/apps/editor.js
+      Note: the editor
+    - Path: repo://picocalc-os/js/apps/files.js
+      Note: the file browser
+    - Path: repo://picocalc-os/js/system/agent.js
+      Note: notes as files
+    - Path: repo://picocalc-os/js/system/compositor.js
+      Note: textarea node
 ExternalSources: []
-Summary: "A text editor and a file browser for picocalc-os, built on PICOCALC-FS's file handles: how screens, keys and the compositor work, the textarea node, the editor's text model, the open-a-file protocol with revocation, and moving the agent's notes into files."
+Summary: 'A text editor and a file browser for picocalc-os, built on PICOCALC-FS''s file handles: how screens, keys and the compositor work, the textarea node, the editor''s text model, the open-a-file protocol with revocation, and moving the agent''s notes into files.'
 LastUpdated: 2026-10-31T23:30:00-04:00
-WhatFor: "Onboarding to the editor and the file browser, and the plan PICOCALC-EDIT follows."
-WhenToUse: "Before changing js/apps/editor.js, js/apps/files.js, the compositor's textarea node, or the agent's note tools."
+WhatFor: Onboarding to the editor and the file browser, and the plan PICOCALC-EDIT follows.
+WhenToUse: Before changing js/apps/editor.js, js/apps/files.js, the compositor's textarea node, or the agent's note tools.
 ---
 
 # Editor and Files: analysis, design and implementation guide
@@ -273,3 +281,58 @@ ask("editor", "open", { file: Handle, name: "notes/todo.txt" })  -> { ok: true }
 | `picocalc-os/js/system/agent.js` | note tools on files, migration |
 | `picocalc-os/tests/editor.test.mjs`, `tests/agent.test.mjs` | unit tests |
 | `picocalc-os/scripts/files.txt` | host script and captures |
+| `picocalc-os/port/esp32p4/main/fs_p4.c` | the `fs` worker's core and priority (section 11) |
+
+## 11. As built and measured
+
+The plan above was followed; this section records where the code differs from it and what the device measured.
+Commits: `23fc2f7` (E1–E3), `42693d7` (E4), `8238911` (E5).
+
+### Differences from the plan
+
+| Topic | Planned | Built |
+|---|---|---|
+| Note names | `^[A-Za-z0-9][A-Za-z0-9 _.-]{0,31}$`, no trailing space | any name Files accepts: up to 64 characters, not ending in a space or a dot, because FAT drops a trailing dot (`a.` and `a` are one file on the device and two on the host). `nucleus/fs.c` refuses the trailing dot too |
+| Tool arguments | unchanged (4,096 bytes) | 16,384 bytes (`AGENT_LIMIT.argumentBytes`); a 4,096-character note does not fit in 4,096 bytes |
+| Approval review | unchanged | the chat holds 4,200 review rows; the agent refuses a note whose escaped review copy exceeds 12,000 characters before asking |
+| Session record | notes removed | version 2; `notes` keeps only notes not yet moved, so a failed migration retries at the next start; a file of the same name wins |
+| `save_note` approval | "Save note" | "Save" or "Replace", from a `stat` before the approval |
+| Editor save | write, then clear `dirty` | explicit `saving` state: a second F2 waits, edits during the write keep the buffer dirty, Esc during the write leaves once it lands |
+| Host `fs.info` | the host disk (statvfs) | the P4 partition's size (11,956 KB) less the root's files in 4 KB clusters, so captures are reproducible |
+| P4 `fs` worker | core 0 | core 1 at priority 4, below the kernel (5) |
+
+### The `fs` worker and flash writes
+
+While ESP-IDF erases or writes flash it turns the flash cache off and parks the other CPU for the operation. With
+the worker on core 0, a save could freeze a kernel turn running on core 1; on the device the compositor once
+overran its 80 ms budget this way. On core 1 below the kernel, the worker runs only while the kernel task is
+blocked between turns:
+
+```text
+core 1:  kernel turn | idle -> fs worker: erase (scheduler off) | kernel turn (starts late, runs whole) | ...
+core 0:  bus workers, Wi-Fi, console, shot .......... parked during the erase ..........................
+```
+
+A flash operation can delay the next turn by one erase; it can no longer stretch a turn. Flash auto-suspend
+would avoid the parking altogether but depends on the module's flash part and stays off.
+
+### Measurements on the device (ESP32-P4, Wi-Fi up)
+
+| What | Result |
+|---|---|
+| A save of a 54–66 byte file (temp file, sync, unlink, rename) | 520–611 ms (six saves) |
+| The agent's `save_note` write | 333 ms |
+| Mount after the first boot | 3 ms (PICOCALC-FS) |
+| Lane load during editing | 10–17% |
+| Turn-budget overruns in six saves with screenshots, after the fix | 0 |
+| Notes moved from the old session record at first boot | 3 (`bike`, `shop`, `todo`) |
+
+### Tests
+
+| Suite | Result |
+|---|---|
+| `node tests/editor.test.mjs` | 10 pass |
+| `node tests/agent.test.mjs` | 30 pass |
+| `make test-agent` (unit, chat UI, compositor auth, integration with migration, native) | pass |
+| `make test-fs` | 9 pass (two more bad paths: `dot.`, `space `) |
+| `make shots` | captures `out/50-…` to `59-…` for Files and the editor |

@@ -31,6 +31,12 @@ topics:
       description: Power use, idle and sleep
     - slug: persistence
       description: Persistent state across restarts and power cycles
+    - slug: editor
+      description: Text editing on the device
+    - slug: filesystem
+      description: Files, file handles and storage
+    - slug: ui
+      description: Screens, layout and input
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes
