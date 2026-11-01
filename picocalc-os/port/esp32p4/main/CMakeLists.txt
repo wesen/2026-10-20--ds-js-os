@@ -43,7 +43,7 @@ idf_component_register(
         ${WAMR_SRCS}
     INCLUDE_DIRS "." "${OS}/nucleus" "${QJS}"
     PRIV_INCLUDE_DIRS "${WAMR}/iwasm/include"
-    PRIV_REQUIRES driver esp_driver_gpio esp_driver_i2c esp_driver_spi esp_driver_uart esp_psram esp_timer heap fatfs wear_levelling vfs lwip pthread ${AGENT_REQUIRES}
+    PRIV_REQUIRES driver esp_driver_gpio esp_driver_i2c esp_driver_spi esp_driver_uart esp_psram esp_timer esp_mm heap fatfs wear_levelling vfs lwip pthread ${AGENT_REQUIRES}
 )
 set_source_files_properties(${OS}/nucleus/native_wasm.c PROPERTIES COMPILE_DEFINITIONS "NUCLEUS_WASM=1")
 set_source_files_properties(${WAMR_SRCS} PROPERTIES

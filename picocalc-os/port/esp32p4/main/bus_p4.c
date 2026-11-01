@@ -11,6 +11,7 @@
 #include "driver/spi_master.h"
 #include "esp_heap_caps.h"
 #include "esp_log.h"
+#include "esp_private/esp_cache_private.h"
 #include "esp_rom_sys.h"
 #include "freertos/task.h"
 #include "p4.h"
@@ -140,18 +141,25 @@ void bus_run_i2c(deferred_t *d, vtime_t at) {
 }
 
 // ---- spi2: the ST7365P panel. D/C low for a command byte, high for its parameters and for pixels -------------
+// spi_master sends a DMA transaction from the caller's buffer only if its address and its length are multiples of
+// the cache line; otherwise it copies it into a fresh DMA-capable block of internal SRAM, as large as the transaction.
+// The last chunk of almost every rectangle has an odd length, so that was a copy of up to 32 KB per flush, which
+// fails (ESP_ERR_NO_MEM, the display driver crashes) whenever internal SRAM has no block that large (PICOCALC-SPEED).
+// So nothing here asks for a copy larger than one line: up to 4 bytes go inline (SPI_TRANS_USE_TXDATA), the bounce
+// buffers are aligned, and a rectangle's last chunk is sent as its aligned part and a tail shorter than a line.
 static spi_device_handle_t spi_dev;
 static int spi_hz;
-enum { CHUNK = 32768 };
-static uint8_t *bounce[2];      // internal, DMA-capable: pixels are byte-swapped into these and sent from them
-static uint8_t *small;          // commands and their parameters
+enum { CHUNK = 32768 };         // a multiple of any cache line
+static uint8_t *bounce[2];      // internal, DMA-capable, aligned: pixels are byte-swapped into these and sent from them
+static uint8_t *small;          // parameters longer than 4 bytes (the init sequence's)
+static size_t dma_align = 4;    // what spi_master checks for internal memory
 
 static esp_err_t spi_ensure(int hz) {
   if (spi_dev && hz == spi_hz) return ESP_OK;
   if (spi_dev) { spi_bus_remove_device(spi_dev); spi_dev = NULL; }
   spi_device_interface_config_t cfg = {
     .clock_source = SPI_CLK_SRC_SPLL,   // the default (XTAL) source rejects clocks above 20 MHz on these GPIO-matrix pins
-    .clock_speed_hz = hz, .mode = 0, .spics_io_num = PIN_LCD_CS, .queue_size = 2,
+    .clock_speed_hz = hz, .mode = 0, .spics_io_num = PIN_LCD_CS, .queue_size = 4,   // two chunks, each with a tail
   };
   esp_err_t err = spi_bus_add_device(SPI2_HOST, &cfg, &spi_dev);
   if (err) return err;
@@ -164,18 +172,24 @@ static esp_err_t spi_ensure(int hz) {
 
 static esp_err_t spi_send(const uint8_t *p, int n) {
   spi_transaction_t t = { .length = (size_t)n * 8, .tx_buffer = p };
+  if (n <= 4) { t.flags = SPI_TRANS_USE_TXDATA; t.tx_buffer = NULL; memcpy(t.tx_data, p, (size_t)n); }   // no DMA buffer
   return spi_device_polling_transmit(spi_dev, &t);
 }
 
 static esp_err_t spi_pixels(const req_t *r, uint32_t *sent) {
   size_t total = (size_t)r->wd * r->ht * 2, off = 0;
-  spi_transaction_t t[2];
+  spi_transaction_t t[2][2];   // per bounce buffer: its aligned part, and a tail when it holds the last chunk
+  int n_t[2] = { 0, 0 };       // transactions queued from each buffer and not yet collected
   int cur = 0, inflight = 0;
   esp_err_t err = ESP_OK;
   int row = 0, col = 0;   // where in the rectangle the next pixel comes from
   gpio_set_level(PIN_LCD_DC, 1);
   while (off < total && !err) {
-    if (inflight == 2) { spi_transaction_t *done; err = spi_device_get_trans_result(spi_dev, &done, portMAX_DELAY); inflight--; if (err) break; }
+    // results come back in queue order, and the other buffer's transactions were queued after this one's: collect
+    // until only those are left, then this buffer may be refilled
+    while (!err && inflight > n_t[cur ^ 1]) { spi_transaction_t *done; err = spi_device_get_trans_result(spi_dev, &done, portMAX_DELAY); inflight--; }
+    if (err) break;
+    n_t[cur] = 0;
     size_t m = total - off < CHUNK ? total - off : CHUNK;
     uint8_t *b = bounce[cur];
     for (size_t k = 0; k < m; k += 2) {
@@ -183,10 +197,14 @@ static esp_err_t spi_pixels(const req_t *r, uint32_t *sent) {
       b[k] = (uint8_t)(v >> 8); b[k + 1] = (uint8_t)v;   // the panel takes RGB565 big-endian
       if (++col == r->wd) { col = 0; row++; }
     }
-    t[cur] = (spi_transaction_t){ .length = m * 8, .tx_buffer = b };
-    err = spi_device_queue_trans(spi_dev, &t[cur], portMAX_DELAY);
-    if (err) break;
-    inflight++; off += m; cur ^= 1;
+    size_t head = m & ~(dma_align - 1), part[2] = { head, m - head };
+    for (int i = 0; i < 2 && !err; i++) {
+      if (!part[i]) continue;
+      t[cur][n_t[cur]] = (spi_transaction_t){ .length = part[i] * 8, .tx_buffer = b + (i ? head : 0) };
+      err = spi_device_queue_trans(spi_dev, &t[cur][n_t[cur]], portMAX_DELAY);
+      if (!err) { n_t[cur]++; inflight++; }
+    }
+    off += m; cur ^= 1;
   }
   while (inflight > 0) { spi_transaction_t *done; spi_device_get_trans_result(spi_dev, &done, portMAX_DELAY); inflight--; }
   *sent = (uint32_t)off;
@@ -267,8 +285,10 @@ void bus_p4_init(void) {
   spi_bus_config_t sb = { .mosi_io_num = PIN_LCD_MOSI, .miso_io_num = -1, .sclk_io_num = PIN_LCD_SCK,
                           .quadwp_io_num = -1, .quadhd_io_num = -1, .max_transfer_sz = CHUNK };
   ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &sb, SPI_DMA_CH_AUTO));
-  for (int i = 0; i < 2; i++) bounce[i] = heap_caps_malloc(CHUNK, MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
-  small = heap_caps_malloc(64, MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
+  esp_cache_get_alignment(MALLOC_CAP_DMA, &dma_align);   // as spi_master does for internal memory
+  if (dma_align < 4) dma_align = 4;
+  for (int i = 0; i < 2; i++) bounce[i] = heap_caps_aligned_alloc(dma_align, CHUNK, MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
+  small = heap_caps_aligned_alloc(dma_align, 64, MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
   if (!bounce[0] || !bounce[1] || !small) ESP_LOGE(TAG, "no internal DMA memory for the SPI bounce buffers");
 
   i2c_master_bus_config_t ib = { .clk_source = I2C_CLK_SRC_DEFAULT, .i2c_port = I2C_NUM_0, .scl_io_num = PIN_KBD_SCL,
