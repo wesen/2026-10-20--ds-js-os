@@ -73,6 +73,9 @@ test("functions, constants, ans and degree mode", () => {
   h.key("f4");
   assert.equal(value(h, "sin(30)"), "= 0.5");
   assert.equal(value(h, "asin(1)"), "= 90");
+  h.key("f4");                                    // gradians: a right angle is 100
+  assert.equal(value(h, "sin(100)"), "= 1");
+  assert.equal(value(h, "acos(0)"), "= 100");
   h.key("f4");
   assert.equal(value(h, "sin(pi/6)"), "= 0.5");
 });
@@ -155,12 +158,12 @@ test("state is saved 3 seconds after a change and on blur, and restored", async 
   value(h, "r = 3"); value(h, "f(x) = r x"); h.key("f4");
   assert.equal(h.stored.calc, null);
   await h.advance(3000);
-  assert.equal(h.stored.calc.vars.r, 3); assert.equal(h.stored.calc.deg, true);
+  assert.equal(h.stored.calc.vars.r, 3); assert.equal(h.stored.calc.angle, "deg");
   value(h, "f(2)");
   h.def.handlers.blur(h.s);
   assert.equal(h.stored.calc.hist.length, 3);
   const again = setup(h.stored.calc);
-  assert.equal(again.s.deg, true); assert.equal(value(again, "f(2)"), "= 6"); assert.equal(again.s.hist.length, 4);
+  assert.equal(again.s.angle, "deg"); assert.equal(value(again, "f(2)"), "= 6"); assert.equal(again.s.hist.length, 4);
   const broken = setup({ ...h.stored.calc, funcs: { f: { p: "x", src: "x +" } } });
   assert.match(broken.s.note, /Dropped f/);
 });
@@ -231,4 +234,103 @@ test("keys from anyone but the compositor are ignored", () => {
   const h = setup();
   h.def.handlers.key(h.s, { key: "1", ch: "1", state: "down" }, { from: "sandbox" });
   assert.equal(h.s.line, "");
+});
+
+// ---- PICOCALC-SCI: the scientific engine ---------------------------------------------------------------------
+test("sci: more functions, statistics, constants", () => {
+  const h = setup();
+  const cases = {
+    "sec(0)": "= 1", "cot(pi/4)": "= 1", "csc(pi/2)": "= 1", "acot(1)": "= 0.785398163397", "asinh(sinh(2))": "= 2",
+    "atanh(0.5)": "= 0.549306144334", "log(8, 2)": "= 3", "root(-8, 3)": "= -2", "root(16, 4)": "= 2", "gamma(5)": "= 24",
+    "gamma(0.5)^2": "= 3.14159265359", "round(2.345, 2)": "= 2.35", "frac(-2.5)": "= -0.5", "isprime(97)": "= 1",
+    "isprime(91)": "= 0", "sum(1, 2, 3)": "= 6", "mean(2, 4, 9)": "= 5", "median(3, 1, 2)": "= 2", "median(1, 2, 3, 4)": "= 2.5",
+    "var(2, 4, 4, 4, 5, 5, 7, 9)": "= 4.57142857143", "sd(2, 4, 4, 4, 5, 5, 7, 9)": "= 2.1380899353", "randint(3, 3)": "= 3",
+    "c0": "= 299792458", "NA": "= 6.02214076e23", "hbar / hP * tau": "= 1", "0o17": "= 15",
+  };
+  for (const [line, want] of Object.entries(cases)) assert.equal(value(h, line), want, line);
+  const r = h.run("rand()");
+  assert.equal(r.ok, true); assert.ok(h.s.ans >= 0 && h.s.ans < 1);
+  assert.match(h.run("me = 2").r, /me is built in/);
+});
+
+test("sci: comparisons, if, recursion and the work limit", () => {
+  const h = setup();
+  const cases = { "3 > 2": "= 1", "2 == 2": "= 1", "1 != 1": "= 0", "1 + 1 < 3": "= 1", "2 <= 1": "= 0", "if(2 > 1, 10, 20)": "= 10",
+    "if(0, 1/0, 5)": "= 5" };
+    for (const [line, want] of Object.entries(cases)) assert.equal(value(h, line), want, line);
+  assert.equal(value(h, "fact2(n) = if(n < 2, 1, n fact2(n - 1))"), "fact2(n) defined");
+  assert.equal(value(h, "fact2(10)"), "= 3628800");
+  value(h, "fib(n) = if(n < 2, n, fib(n - 1) + fib(n - 2))");
+  assert.equal(value(h, "fib(15)"), "= 610");
+  assert.match(h.run("fib(30)").r, /too much work/);
+  assert.match(h.run("fact2(40)").r, /too deep/);
+});
+
+test("sci: functions of several variables", () => {
+  const h = setup();
+  assert.equal(value(h, "f(x, y) = x^2 + y^2"), "f(x, y) defined");
+  assert.equal(value(h, "f(3, 4)"), "= 25");
+  assert.equal(value(h, "g(a, b, c) = a b + c"), "g(a, b, c) defined");
+  assert.equal(value(h, "g(2, 3, f(1, 1))"), "= 8");
+  assert.match(h.run("f(1)").r, /f takes 2 arguments/);
+  assert.match(h.run("k(x, x) = 1").r, /its own name/);
+  assert.match(h.run("k(a, b, c, d, e2) = 1").r, /at most 4/);
+  h.key("f3");
+  assert.deepEqual(plain(h.def.screen(h.s)).kids[1].items.map((i) => i.label), ["f(x, y)", "g(a, b, c)"]);
+});
+
+test("sci: calculus and solving", () => {
+  const h = setup();
+  const cases = {
+    "deriv(x^3, x, 2)": "= 12", "deriv(sin(x), x, 0)": "= 1", "integ(x^2, x, 0, 3)": "= 9", "integ(sin(x), x, 0, pi)": "= 2",
+    "integ(1/x, x, 1, e)": "= 1", "integ(x, x, 2, 2)": "= 0", "integ(x, x, 1, 0)": "= -0.5",
+    "solve(x^2 - 2, x, 1)": "= 1.41421356237", "solve(cos(x) - x, x, 0, 1)": "= 0.739085133215", "solve(x^3 - 8, x, 100)": "= 2",
+    "sigma(k^2, k, 1, 10)": "= 385", "prod(k, k, 1, 5)": "= 120", "sigma(k, k, 5, 1)": "= 0",
+    "integ(integ(x y, y, 0, 1), x, 0, 1)": "= 0.25",
+  };
+  for (const [line, want] of Object.entries(cases)) assert.equal(value(h, line), want, line);
+  value(h, "F(x) = integ(t^2, t, 0, x)");
+  assert.equal(value(h, "F(3)"), "= 9");
+  assert.equal(value(h, "deriv(F(x), x, 2)"), "= 4");
+  const errors = {
+    "solve(x^2 + 1, x, 0)": /no solution found near 0/, "solve(tan(x), x, 1, 2)": /a pole/, "solve(x, x, 1, 2)": /no sign change/,
+    "sigma(k, k, 1, 20000)": /at most 10000 terms/, "sigma(k, k, 0.5, 3)": /whole numbers/, "integ(x^2, pi, 0, 1)": /pi cannot be the name integ varies/,
+    "deriv(x^2, 2, 1)": /the name it varies/, "integ(x, x, 0)": /integ takes 4 arguments/,
+    "sigma(sigma(k j, k, 1, 1000), j, 1, 1000)": /too much work/, "polar(1)": /draws a curve/,
+  };
+  for (const [line, re] of Object.entries(errors)) assert.match(h.run(line).r, re, line);
+});
+
+test("sci: display formats and integer bases, applied to the whole history", () => {
+  const h = setup(), show = (fmt, v) => { h.s.fmt = fmt; return h.fn("calcShow")(h.s, v); };
+  const n = (mode, digits = 4, base = 10) => ({ mode, digits, base });
+  assert.equal(show(n("fix", 2), 1234.5678), "1234.57");
+  assert.equal(show(n("fix", 2), 0.000123), "0.00");
+  assert.equal(show(n("sci"), 1234.5678), "1.235e3");
+  assert.equal(show(n("sci"), 0.000123), "1.230e-4");
+  assert.equal(show(n("eng"), 1234.5678), "1.235e3");
+  assert.equal(show(n("eng"), 0.000123), "123.0e-6");
+  assert.equal(show(n("eng"), 999999), "1.000e6");
+  assert.equal(show(n("frac"), 0.75), "3/4");
+  assert.equal(show(n("frac"), -1 / 3), "-1/3");
+  assert.equal(show(n("frac"), Math.PI), "3.14159265359");
+  assert.equal(show(n("norm", 4, 16), 255), "0xFF");
+  assert.equal(show(n("norm", 4, 16), -10), "-0xA");
+  assert.equal(show(n("norm", 4, 2), 5), "0b101");
+  assert.equal(show(n("norm", 4, 8), 8), "0o10");
+  assert.equal(show(n("norm", 4, 16), 2.5), "2.5");
+  h.s.fmt = n("norm", 10, 10);
+  value(h, "0.75"); value(h, "w = 0.5");
+  h.s.fmt = n("frac", 10, 10);
+  const right = plain(h.def.screen(h.s)).kids[0].items.map((i) => i.right);
+  assert.deepEqual(right.slice(-2), ["= 3/4", "w = 1/2"]);
+});
+
+test("sci: a version 1 record is migrated", () => {
+  const h = setup({ v: 1, hist: [{ e: "1+1", r: "= 2", ok: true, v: 2 }], vars: { r: 2 }, funcs: { f: { p: "x", src: "x^2 + r" } },
+    graph: ["sin(x)"], view: { x0: -1, x1: 1, y0: -1, y1: 1 }, deg: true, ans: 2 });
+  assert.equal(h.s.angle, "deg");
+  assert.equal(value(h, "f(3)"), "= 11");
+  assert.deepEqual(plain(h.s.funcs.f), { ps: ["x"], src: "x^2 + r" });
+  assert.equal(value(h, "sin(90)"), "= 1");
 });
