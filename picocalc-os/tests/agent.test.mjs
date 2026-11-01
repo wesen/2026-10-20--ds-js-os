@@ -303,8 +303,14 @@ test('chat endpoint: tool call, local result, continuation, answer', () => {
   h.result(chatReply({ content: '17 x 23 = 391' }));
   assert.equal(h.state.phase, 'done'); assert.equal(h.state.history.at(-1).content, '17 x 23 = 391');
   h.send('submit', { text: 'And doubled?' });
+  // The earlier answer reaches the model with the tools it relied on; the screen shows only the answer.
   assert.deepEqual(h.requests[2].parsed.messages.slice(1), [{ role: 'user', content: 'What is 17*23?' },
-    { role: 'assistant', content: '17 x 23 = 391' }, { role: 'user', content: 'And doubled?' }]);
+    { role: 'assistant', content: '17 x 23 = 391' },
+    { role: 'user', content: '[PicoCalc: for your previous answer the device ran these tools and confirmed the results: calculate: done]\n\nAnd doubled?' }]);
+  assert.ok(h.state.entries.every(e => !e.text.includes('[PicoCalc')));
+  const re = harness(h.session(), CHAT);
+  assert.equal(re.state.history[1].tools, 'calculate: done');
+  assert.ok(re.state.entries.every(e => !e.text.includes('[PicoCalc')));
 });
 
 test('chat endpoint: text with calls is one assistant message; reasoning is not sent back', () => {
