@@ -1,0 +1,14 @@
+wait 1500
+key x
+wait 800
+capture 01-calc-before.png
+key f1
+wait 400
+crash compositor
+wait 1500
+key x
+wait 1500
+capture 02-calc-after-compositor-restart.png
+key f1
+wait 2500
+capture 03-launcher-after.png
