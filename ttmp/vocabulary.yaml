@@ -37,6 +37,8 @@ topics:
       description: Files, file handles and storage
     - slug: ui
       description: Screens, layout and input
+    - slug: calculator
+      description: Calculation and graphing
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes

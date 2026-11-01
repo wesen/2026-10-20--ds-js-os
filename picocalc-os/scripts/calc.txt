@@ -1,0 +1,60 @@
+# The calculator: expressions, variables, a function, history recall, the names view, and plots.
+wait 1200
+key x
+wait 400
+type 2pi * 3
+key enter
+type r = 2.5
+key enter
+type pi r^2
+key enter
+type f(x) = x^2/4 - 2
+key enter
+type f(3)
+key enter
+type sqrt(-1)
+key enter
+wait 200
+capture 60-calc.png
+key esc
+key up
+key up
+key up
+wait 200
+capture 61-calc-history.png
+key esc
+key f3
+wait 200
+capture 62-calc-names.png
+key esc
+type sin(x)
+key f2
+wait 800
+capture 63-plot.png
+key esc
+type f
+key f2
+wait 300
+type 
+key esc
+type tan(x)
+key f2
+wait 1000
+capture 64-plot-three.png
+key enter
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+wait 200
+capture 65-plot-trace.png
+key esc
+key +
+wait 800
+capture 66-plot-zoom.png

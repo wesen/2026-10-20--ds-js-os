@@ -6,6 +6,9 @@ const APPS = [
     ops: [["fill", 2, 3, 14, 4], ["rect", 2, 6, 36, 22], ["fill", 2, 6, 36, 3]] },
   { app: "editor", key: "e", label: "Editor", about: "Plain text and Markdown, with find, soft wrap and a preview.",
     ops: [["rect", 8, 0, 24, 30], ["fill", 12, 6, 16, 2], ["fill", 12, 12, 16, 2], ["fill", 12, 18, 9, 2], ["fill", 23, 16, 2, 7, "accent"]] },
+  { app: "calc", key: "x", label: "Calc", about: "Expressions, variables and functions with a history; F2 plots functions of x.",
+    ops: [["rect", 8, 0, 24, 30], ["fill", 11, 3, 18, 7], ["fill", 11, 13, 4, 3], ["fill", 18, 13, 4, 3], ["fill", 25, 13, 4, 3],
+          ["fill", 11, 19, 4, 3], ["fill", 18, 19, 4, 3], ["fill", 25, 19, 4, 8, "accent"], ["fill", 11, 25, 11, 3]] },
   { app: "sysmon", key: "m", label: "System", about: "Every world, its memory, its turns and the buses, live.",
     ops: [["fill", 4, 18, 7, 12], ["fill", 13, 8, 7, 22], ["fill", 22, 13, 7, 17], ["fill", 31, 2, 7, 28]] },
   { app: "repl", key: "r", label: "REPL", about: "JavaScript, evaluated in a sandbox world with its own heap and budget.",
@@ -19,7 +22,7 @@ const APPS = [
   { app: "about", key: "a", label: "About", about: "The device profile, the clock calibration and the kernel's counters.",
     ops: [["rect", 6, 0, 28, 30], ["fill", 19, 6, 3, 3], ["fill", 19, 12, 3, 12]] },
 ];
-const COLS = 3;
+const COLS = 4;   // four narrower cells keep ten to twelve apps in three rows
 
 app("launcher")
   .title("PicoCalc")

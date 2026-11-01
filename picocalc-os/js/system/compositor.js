@@ -153,6 +153,10 @@ function draw(fb, n, x, y, w, h) {
         else if (kind === "rect") fb.rect(ox + a, y + b, c, d, color(e));
         else if (kind === "line") fb.line(ox + a, y + b, ox + c, y + d, color(e));
         else if (kind === "text") fb.text(ox + a, y + b, c, d || "m", color(e), f || 0);
+        else if (kind === "poly") {   // ["poly", [x0, y0, x1, y1, ...], color]: a polyline, one call per segment
+          const col = color(b);
+          for (let i = 2; i + 1 < a.length; i += 2) fb.line(ox + a[i - 2], y + a[i - 1], ox + a[i], y + a[i + 1], col);
+        }
       }
       if (n.border) fb.rect(ox - 1, y - 1, n.w + 2, n.h + 2, color(n.border));
       break;

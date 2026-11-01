@@ -86,6 +86,11 @@ shots: $(BIN)
 	@for s in $(SCRIPTS)/*.txt; do echo "== $$s"; rm -rf $(BUILD)/fs && cp -r fs-seed $(BUILD)/fs && \
 	  ./$(BIN) -j $(JSROOT) -o $(OUT) -f $(BUILD)/fs $$s || exit 1; done
 
+# The editor's and the calculator's logic in Node, each app in a VM with fakes for the kernel (no binary needed).
+test-apps:
+	$(NODE) tests/editor.test.mjs
+	$(NODE) tests/calc.test.mjs
+
 # Files through the host binary: claims, paths, rights, narrowing, passing and revoking handles (no device needed).
 test-fs: $(BIN)
 	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_fs_native.py
@@ -109,4 +114,4 @@ test-agent-live: $(BIN)
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*
 
-.PHONY: all shots clean test-agent test-agent-live test-fs
+.PHONY: all shots clean test-agent test-agent-live test-fs test-apps
