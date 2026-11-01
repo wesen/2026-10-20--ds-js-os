@@ -160,8 +160,9 @@ void console_exec(char *line) {
   }
   else if (!strcmp(cmd, "tz")) p4_tz_console(rest);
   else if (!strcmp(cmd, "bench")) vm_calibrate();
+  else if (!strcmp(cmd, "cachestat")) p4_cachestat(rest);
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | cachestat loop|fib [default|internal|psram] / start / show | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);

@@ -38,5 +38,6 @@ void p4_store_init(void);             // never erases failed/old NVS automatical
 bool p4_config_available(void);
 void p4_tz_apply(void);               // the saved time zone (NVS "settings"/"tz") into TZ; UTC without one
 void p4_tz_console(const char *arg);  // console: tz [POSIX TZ]
+void p4_cachestat(const char *args);   // perf_p4.c: the cache counters around a benchmark or a window
 void p4_agent_init(void);             // creates the native worker; never touches K from that worker
 void p4_agent_console(const char *args); // secret values are accepted but never echoed
