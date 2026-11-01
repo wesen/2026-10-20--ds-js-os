@@ -1,0 +1,9 @@
+menu "PicoCalc agent"
+    config PICOCALC_AGENT_ENDPOINT
+        string "Default Responses HTTPS endpoint (no credentials)"
+        default "https://api.openai.com/v1/responses"
+        help
+            Used until an endpoint is provisioned with the serial net endpoint command.
+            Wi-Fi networking is included only with CMake PICOCALC_AGENT_WIFI=ON.
+            API keys and Wi-Fi passwords belong in NVS, never in this configuration.
+endmenu

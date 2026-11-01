@@ -81,6 +81,51 @@
     restart: (name) => k("sys.restart", name),
   };
 
+  // A fixed-endpoint native transport, available only with the net.agent manifest claim. A request
+  // never holds a JS turn open: start returns a ticket, poll consumes its eventual result, cancel
+  // invalidates it. TCP, TLS, credentials and blocking I/O stay outside the JavaScript lane.
+  g.agentNet = {
+    status: () => k("agent.status"),
+    start: (body) => k("agent.start", typeof body === "string" ? body : JSON.stringify(body)),
+    poll: (ticket) => k("agent.poll", ticket),
+    cancel: (ticket) => k("agent.cancel", ticket),
+  };
+
+  // Private, quota-bound JSON per world. set/remove stage a write at the end of this segment.
+  // On a later turn status reports whether that write reached storage; an I/O failure is observable.
+  let record = null, recordError = "";
+  const copyStored = (v) => v === undefined ? undefined : JSON.parse(JSON.stringify(v));
+  const owns = (o, key) => Object.prototype.hasOwnProperty.call(o, key);
+  function loadRecord() {
+    if (record) return record;
+    record = Object.create(null);
+    const text = k("store.load");
+    if (text) {
+      try {
+        const saved = JSON.parse(text);
+        if (!saved || typeof saved !== "object" || Array.isArray(saved)) throw new Error("expected an object");
+        for (const key of Object.keys(saved)) record[key] = saved[key];
+      } catch (e) { recordError = "saved record is invalid JSON; starting empty"; }
+    }
+    return record;
+  }
+  function putStored(key, value) {
+    const r = loadRecord();
+    key = String(key);
+    const had = owns(r, key), old = r[key];
+    const saved = copyStored(value);
+    if (saved === undefined) delete r[key]; else r[key] = saved;
+    try { k("store.save", JSON.stringify(r)); recordError = ""; }
+    catch (e) { if (had) r[key] = old; else delete r[key]; throw e; }
+  }
+  g.store = {
+    get: (key, fallback) => { const r = loadRecord(); return owns(r, String(key)) ? copyStored(r[String(key)]) : copyStored(fallback); },
+    set: (key, value) => putStored(key, value),
+    remove: (key) => putStored(key, undefined),
+    all: () => copyStored(loadRecord()),
+    status: () => { const s = k("store.status"); if (recordError) s.error = recordError; return s; },
+  };
+
   // ---- messages ------------------------------------------------------------------------------------
   g.send = (to, type, payload) => { const [j, hs] = enc(payload); k("send", to, type, j, hs); };
   g.publish = (ch, payload) => { const [j, hs] = enc(payload); k("publish", ch, j, hs); };

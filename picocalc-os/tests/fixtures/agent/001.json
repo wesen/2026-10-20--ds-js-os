@@ -1,0 +1,1 @@
+{"id":"resp_calc","status":"completed","output":[{"type":"function_call","status":"completed","call_id":"call_calc","name":"calculate","arguments":"{\"expression\":\"6*7\"}"}]}

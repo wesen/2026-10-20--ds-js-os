@@ -1,0 +1,14 @@
+# Apply to a COPY of managed_components/espressif__esp_hosted/slave (version 1.4.2),
+# after its sdkconfig.defaults and sdkconfig.defaults.esp32c6. Never use for the P4 build.
+CONFIG_IDF_TARGET="esp32c6"
+CONFIG_ESP_SDIO_HOST_INTERFACE=y
+# Match the P4's conservative packet receive mode and 20 MHz bus.
+CONFIG_ESP_SDIO_STREAMING_MODE=n
+CONFIG_ESP_SDIO_DEFAULT_SPEED=y
+# The Waveshare base board uses C6 CHIP_PU, driven by P4 GPIO54.
+CONFIG_ESP_SDIO_GPIO_RESET=-1
+# This application uses Wi-Fi only.
+CONFIG_BT_ENABLED=n
+# The upstream slave DEBUG log includes the station password; keep it compiled out.
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+CONFIG_LOG_MAXIMUM_EQUALS_DEFAULT=y

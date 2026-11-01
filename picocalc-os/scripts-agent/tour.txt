@@ -1,0 +1,22 @@
+# Deterministic UI + tool-loop demonstration. These are recorded test replies, not live inference.
+# PICOCALC_AGENT_FIXTURES=tests/fixtures/agent ./build/picocalc-host -s /tmp/agent-store scripts-agent/tour.txt
+wait 1600
+key c
+wait 400
+capture agent-01-ready.png
+type What is 6*7?
+key enter
+wait 1600
+capture agent-02-calculated.png
+type Save a note called next with text study groups.
+key enter
+wait 800
+capture agent-03-approval.png
+key f4
+wait 1400
+capture agent-04-saved.png
+type What is in my next note?
+key enter
+wait 1600
+capture agent-05-read.png
+stats

@@ -1,0 +1,6 @@
+# Exact versions from Waveshare's IDF < 6.0 compatibility range (0.14.*, 1.4.*).
+# Both component manifests require ESP-IDF >=5.3; this project targets 5.4.2.
+dependencies:
+  idf: ">=5.4.2,<5.5"
+  espressif/esp_wifi_remote: "==0.14.0"
+  espressif/esp_hosted: "==1.4.2"

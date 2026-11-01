@@ -27,3 +27,7 @@ extern QueueHandle_t p4_kq;
 void bus_p4_init(void);
 void bus_p4_done(const kmsg_t *m);    // the kernel task's side of a finished transfer
 void console_exec(char *line);        // main_p4.c, on the kernel task
+void p4_store_init(void);             // never erases failed/old NVS automatically
+bool p4_config_available(void);
+void p4_agent_init(void);             // creates the native worker; never touches K from that worker
+void p4_agent_console(const char *args); // secret values are accepted but never echoed

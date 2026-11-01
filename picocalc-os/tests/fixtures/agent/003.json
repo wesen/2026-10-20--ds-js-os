@@ -1,0 +1,1 @@
+{"id":"resp_save","status":"completed","output":[{"type":"function_call","status":"completed","call_id":"call_save","name":"save_note","arguments":"{\"name\":\"next\",\"text\":\"study groups\"}"}]}

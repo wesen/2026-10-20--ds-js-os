@@ -1,6 +1,7 @@
 // The host's port: the C library's allocator and files (the board's name and buses are in its sim/board.c). The host runs on
 // the virtual clock, so port_clock is only there for completeness.
 #include <errno.h>
+#include <fcntl.h>
 #include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,10 +33,10 @@ static char store_dir[256];
 
 void host_store_dir(const char *dir) {
   snprintf(store_dir, sizeof store_dir, "%s", dir);
-  mkdir(dir, 0755);
+  mkdir(dir, 0700);
   char p[300];
-  snprintf(p, sizeof p, "%s/w", dir); mkdir(p, 0755);
-  snprintf(p, sizeof p, "%s/k", dir); mkdir(p, 0755);
+  snprintf(p, sizeof p, "%s/w", dir); mkdir(p, 0700);
+  snprintf(p, sizeof p, "%s/k", dir); mkdir(p, 0700);
 }
 
 static rec_t **rec_find(const char *ns, const char *key) {
@@ -54,6 +55,7 @@ char *port_store_get(const char *ns, const char *key, size_t *len) {
   rec_t *r = *rec_find(ns, key);
   if (!r) return NULL;
   char *b = malloc(r->len + 1);
+  if (!b) return NULL;
   memcpy(b, r->data, r->len); b[r->len] = 0;
   if (len) *len = r->len;
   return b;
@@ -65,15 +67,33 @@ int port_store_set(const char *ns, const char *key, const void *data, size_t len
     char p[300];
     snprintf(p, sizeof p, "%s/%s/%s", store_dir, ns, key);
     if (!len) return unlink(p) && errno != ENOENT ? -1 : 0;
-    FILE *f = fopen(p, "wb");
-    if (!f) return -1;
-    int ok = fwrite(data, 1, len, f) == len;
-    return fclose(f) || !ok ? -1 : 0;
+    char tmp[320];
+    snprintf(tmp, sizeof tmp, "%s/.%s.XXXXXX", store_dir, key);
+    int fd = mkstemp(tmp);
+    if (fd < 0) return -1;
+    FILE *f = fdopen(fd, "wb");
+    if (!f) { close(fd); unlink(tmp); return -1; }
+    bool ok = fwrite(data, 1, len, f) == len;
+    if (fflush(f) || fsync(fd)) ok = false;
+    if (fclose(f)) ok = false;
+    if (ok && rename(tmp, p) == 0) {
+      char dir[300]; snprintf(dir, sizeof dir, "%s/%s", store_dir, ns);
+      int dfd = open(dir, O_RDONLY | O_DIRECTORY);
+      if (dfd < 0) return -1;
+      int rc = fsync(dfd); close(dfd); return rc ? -1 : 0;
+    }
+    unlink(tmp); return -1;
   }
   rec_t **at = rec_find(ns, key), *r = *at;
   if (!len) { if (r) { *at = r->next; free(r->data); free(r); } return 0; }
-  if (!r) { r = calloc(1, sizeof *r); snprintf(r->ns, sizeof r->ns, "%s", ns); snprintf(r->key, sizeof r->key, "%s", key); *at = r; }
-  free(r->data);
-  r->data = malloc(len); memcpy(r->data, data, len); r->len = len;
+  char *copy = malloc(len);
+  if (!copy) return -1;
+  memcpy(copy, data, len);
+  if (!r) {
+    r = calloc(1, sizeof *r);
+    if (!r) { free(copy); return -1; }
+    snprintf(r->ns, sizeof r->ns, "%s", ns); snprintf(r->key, sizeof r->key, "%s", key); *at = r;
+  }
+  free(r->data); r->data = copy; r->len = len;
   return 0;
 }

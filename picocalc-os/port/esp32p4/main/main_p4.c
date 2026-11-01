@@ -140,11 +140,14 @@ static void heap_report(void) {
 void console_exec(char *line) {
   char *p = line;
   while (isspace((unsigned char)*p)) p++;
-  char *e = p + strlen(p);
-  while (e > p && isspace((unsigned char)e[-1])) *--e = 0;
   if (!*p) return;
   char cmd[32] = ""; int n = 0;
   sscanf(p, "%31s%n", cmd, &n);
+  // Provisioning values are exact bytes; SSIDs and passphrases may end in spaces.
+  if (strcmp(cmd, "net")) {
+    char *e = p + strlen(p);
+    while (e > p && isspace((unsigned char)e[-1])) *--e = 0;
+  }
   char *rest = p + n;
   while (isspace((unsigned char)*rest)) rest++;
   vtime_t now = port_clock();
@@ -167,26 +170,32 @@ void console_exec(char *line) {
     else if (cmd[0] == 'c') kernel_fault(W, "killed from the console");
     else kernel_restart_world(W);
   } else if (!strcmp(cmd, "shot")) shot();
+  else if (!strcmp(cmd, "net")) p4_agent_console(rest);
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
 }
 
 // ---- tasks ----------------------------------------------------------------------------------------------------------
+static void console_wipe(char *p, size_t n) { volatile char *q = p; while (n--) *q++ = 0; }
 static void console_task(void *arg) {
-  char line[256]; int n = 0;
+  char line[1024]; int n = 0; bool overflow = false;
   for (;;) {
     uint8_t c;
     if (uart_read_bytes(UART_NUM_0, &c, 1, portMAX_DELAY) != 1) continue;
     if (c == '\r' || c == '\n') {
+      if (overflow) { console_wipe(line, sizeof line); n = 0; overflow = false; printf("console: line too long; discarded\n"); continue; }
       if (!n) continue;
       line[n] = 0; n = 0;
       kmsg_t m = { .line = strdup(line) };
-      xQueueSend(p4_kq, &m, portMAX_DELAY);
-    } else if (n < (int)sizeof line - 1) line[n++] = (char)c;
+      console_wipe(line, sizeof line);
+      if (m.line) xQueueSend(p4_kq, &m, portMAX_DELAY);
+    } else if (c == 0) overflow = true;
+    else if (n < (int)sizeof line - 1 && !overflow) line[n++] = (char)c;
+    else overflow = true;
   }
 }
 
@@ -199,7 +208,7 @@ static void kernel_task(void *arg) {
   for (;;) {
     kmsg_t m;
     while (xQueueReceive(p4_kq, &m, 0) == pdTRUE) {
-      if (m.line) { console_exec(m.line); free(m.line); }
+      if (m.line) { size_t n = strlen(m.line); console_exec(m.line); console_wipe(m.line, n); free(m.line); }
       else bus_p4_done(&m);
     }
     kernel_run_until(port_clock());
@@ -207,7 +216,7 @@ static void kernel_task(void *arg) {
     if (wait <= 0) continue;
     if (wait > MS(50)) wait = MS(50);
     if (xQueueReceive(p4_kq, &m, pdMS_TO_TICKS((wait + 999) / 1000)) == pdTRUE) {
-      if (m.line) { console_exec(m.line); free(m.line); }
+      if (m.line) { size_t n = strlen(m.line); console_exec(m.line); console_wipe(m.line, n); free(m.line); }
       else bus_p4_done(&m);
     }
   }
@@ -225,6 +234,8 @@ void app_main(void) {
   uart_vfs_dev_use_driver(UART_NUM_0);
   setvbuf(stdout, NULL, _IOLBF, 0);
 
+  p4_store_init();
+  p4_agent_init();
   bus_p4_init();
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);
   xTaskCreatePinnedToCore(shot_task, "shot", 4096, NULL, 2, &snap.task, 0);

@@ -1,5 +1,7 @@
 // The launcher: the home screen. It lists the apps and asks the compositor to bring one forward.
 const APPS = [
+  { app: "chat", key: "c", label: "Agent", about: "Ask, read, and act with a focused assistant. Your phone can stay put.",
+    ops: [["rect", 2, 2, 36, 22], ["line", 9, 24, 9, 30], ["line", 9, 30, 17, 24], ["fill", 8, 9, 24, 2], ["fill", 8, 15, 17, 2]] },
   { app: "sysmon", key: "m", label: "System", about: "Every world, its memory, its turns and the buses, live.",
     ops: [["fill", 4, 18, 7, 12], ["fill", 13, 8, 7, 22], ["fill", 22, 13, 7, 17], ["fill", 31, 2, 7, 28]] },
   { app: "repl", key: "r", label: "REPL", about: "JavaScript, evaluated in a sandbox world with its own heap and budget.",
@@ -37,10 +39,8 @@ app("launcher")
     const a = APPS[s.sel];
     return ui.col({ gap: 6 },
       ui.text("Apps", { font: "l" }),
-      ui.gap(2),
-      ui.grid(APPS.map((x) => ({ label: x.label, ops: x.ops, key: x.key })), s.sel, { cols: COLS, cell: 66, gap: 8 }),
-      ui.gap(4),
-      ui.text(a.about, { wrap: true, font: "m", color: "ink" }),
+      ui.grid(APPS.map((x) => ({ label: x.label, ops: x.ops, key: x.key })), s.sel, { cols: COLS, cell: 58, gap: 5 }),
+      ui.text(a.about, { wrap: true, font: "s", color: "ink" }),
       ui.gap(0),
       ui.text(`${s.running} of ${s.worlds} worlds running · ${s.crashes} crashes since boot`, { font: "s", color: "muted" }),
     );
