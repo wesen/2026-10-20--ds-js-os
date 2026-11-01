@@ -53,8 +53,13 @@ function lgKey(s, k) {
   }
 }
 
+// Only what can be on screen goes into the frame. The view ends s.scroll rows above the bottom and every line is at
+// least one row, so the last s.scroll + LG_WINDOW lines hold it. Sending all of them (up to 400) made each frame tens
+// of kilobytes that the compositor parsed and word-wrapped on every draw, past its budget (PICOCALC-SPEED).
+const LG_WINDOW = 32;   // more than the rows the screen has for them
 function lgScreen(s) {
-  const items = lgShown(s).map((l) => l.lost
+  const shown = lgShown(s), recent = shown.slice(Math.max(0, shown.length - s.scroll - LG_WINDOW));
+  const items = recent.map((l) => l.lost
     ? { s: `… ${l.lost} line${l.lost === 1 ? " is" : "s are"} gone`, color: "blue" }
     : { s: lgStamp(l) + " " + l.s, color: LG_PROBLEM.test(l.s) ? "accent" : LG_ESP.test(l.s) ? "muted" : "ink" });
   const where = s.scroll ? "held, End follows" : "following";

@@ -165,11 +165,15 @@ test("logs: reads what is new, page by page, and marks lines the ring overwrote"
   h.tick();                                          // in the background it does not read
   assert.equal(h.s.after, 152);
   h.def.handlers.focus(h.s);
+  assert.deepEqual(h.s.lines.filter((l) => l.lost).map((l) => l.lost), [44]);
+  assert.equal(h.s.after, 452);
+  assert.ok(h.s.lines.length <= 400);
+  assert.equal(h.shown().length, 32, "the frame holds what can be on screen, not every line");
+  assert.equal(h.shown().at(-1), "4.5s away 299");
+  h.key("home");                                     // all the way back: the marker is in the frame again
   const shown = h.shown();
   assert.equal(shown.filter((x) => x.startsWith("…")).length, 1);
   assert.ok(shown.includes("… 44 lines are gone"), shown.find((x) => x.startsWith("…")));
-  assert.equal(h.s.after, 452);
-  assert.ok(h.s.lines.length <= 400);
 });
 
 test("logs: filters, colours, and a view that holds still while scrolled back", () => {
