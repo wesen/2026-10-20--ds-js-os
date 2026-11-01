@@ -49,6 +49,11 @@ messages and channels, supervision (crash and restart), and the screen pipeline.
 parts. Section 6 shows the failure with evidence. Sections 7 to 11 are the design and the implementation plan.
 Section 12 is the test plan, and sections 13 and 14 are API and file references.
 
+> [!note] Status
+> Implemented as designed in commit 0da00ca (sections 9.1 to 9.5, without deviations). Validated on the
+> host (section 12's tests, the repro of section 6.2 now gives the same capture before and after the restart) and
+> on the device (a compositor killed from the console comes back with Calc and the battery level). See the diary.
+
 > [!summary]
 > - A world's state is lost when it restarts, by design. The compositor's state is a copy of other worlds' state
 >   (their frames, the battery level), which it received as messages. After a restart it has nothing.

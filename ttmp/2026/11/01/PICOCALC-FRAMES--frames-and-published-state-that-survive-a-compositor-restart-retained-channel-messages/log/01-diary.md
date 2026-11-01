@@ -9,9 +9,13 @@ Topics:
 DocType: log
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/nucleus/kernel.c
+      Note: retained posts and replay
+    - Path: repo://picocalc-os/tests/test_sys_native.py
+      Note: the tests
 ExternalSources: []
-Summary: "Chronological record of diagnosing and fixing apps that stay blank after the compositor restarts."
+Summary: Chronological record of diagnosing and fixing apps that stay blank after the compositor restarts.
 LastUpdated: 2026-11-01T16:13:43.999733092-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -151,3 +155,130 @@ reasoning written down so a newcomer can follow and review it.
   `various/03-host-calc-before.png` and `various/03-host-calc-after-compositor-restart.png` (the host repro),
   `scripts/01-repro-compositor-restart.txt` (the repro script). The ELF firmware's boot and benchmark captures
   are in PICOCALC-SPEED's `various/`.
+
+## Step 2: Retained posts in the kernel, the APIs, the tests, and the device
+
+I implemented the design of the guide: the kernel keeps a world's retained posts (and its frame, which it already
+kept) and replays them to a world when it starts, for each channel it needs. The JavaScript `publish` takes
+`{ retain: true }`, native worlds get `nw_publish_retained`, and the power drivers and the PaperS3 clock retain
+their posts. The host repro now produces a capture after the compositor restart that is byte-identical to the one
+before it, every host suite passes, and on the device a compositor killed from the console comes back with Calc, its
+title and the battery level.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement the retained-post design, test it on the host and the device, commit.
+**Inferred user intent:** No more blank apps after a compositor restart.
+**Commit (code):** 0da00ca — "picocalc-os: retained channel posts, so a restarted compositor gets every frame and the
+battery level back (PICOCALC-FRAMES)"
+
+### What I did
+
+- `nucleus/nucleus.h`: `RETAIN_MAX 4096`; in `world_t`, `char *retained[MAX_LIST]` (indexed like `provides[]`) and
+  `retained_bytes`; `kernel_retain()` declared.
+- `nucleus/kernel.c`: `provided()`, `kernel_retain()`, `drop_retained()`, `frame_message()` (now also used by the
+  live frame post in `run_segment()`), `replay_retained()`; hooks in `run_segment()` (after a successful boot, next
+  to `start_timers()`, before `K.cur = NULL`), `teardown()` and `kernel_reset()`.
+- `nucleus/vm.c` and `nucleus/vm_mqjs.c` `op_publish`: a fourth argument `retain`; "a retained post cannot carry
+  handles"; `kernel_retain()` before `kernel_publish()`.
+- `nucleus/native.c` `NW_PUBLISH`: bit 0 of `c->i[0]` means retain. `sdk/nw_calls.inc`, `sdk/nw.h`:
+  `nw_publish_retained()` (the same call with `a = 1`, so modules built before keep working).
+- `js/prelude.js`, `js-papers3/prelude.js`: `publish(ch, payload, opts)`.
+- `js/drivers/power.js` (both posts), `js-papers3/drivers/power.js`, `js-papers3/drivers/clock.js`: `{ retain: true }`.
+- `natives/echo.c`: a `retain` message. Tests: `RetainTests` (five cases) and `CompositorRestartTests` in
+  `tests/test_sys_native.py`; `test_a_retained_post_reaches_a_listener_that_starts_later` in
+  `tests/test_native_worlds.py` (process and WebAssembly).
+- README: the world API and the screen section.
+- Device: `idf.py -B build-agent ... build`, `tools/p4cap.py --no-reset -s 1 -c "0.2 hold"`, `idf.py ... -p
+  /dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00 flash`; then a capture with a reset: `bench` at 20 s
+  and 60 s, `crash compositor` at 64 s, `key f1`, `type x`, `shot`, `stats`; then a second capture switching between
+  Logs, Calc and Files with shots and `stats`.
+
+### Why
+
+- Replay is queued during the booting world's segment so it is part of that segment's deferred effects (section 9.6
+  of the guide); placing it after `start_timers()` in the success branch means a failed start replays nothing.
+- `retained[]` is indexed by the channel's position in `provides[]`: no search structure, no copies of names, and a
+  world can only post on channels it provides.
+
+### What worked
+
+- Host repro: `cmp 01-calc-before.png 02-calc-after-compositor-restart.png` → identical (before the change the
+  second showed "starting calc…").
+- `python3 -m unittest tests.test_sys_native.RetainTests tests.test_sys_native.CompositorRestartTests -v`: 6 OK.
+- Suites: test-native 27 OK (25 before, plus the retain case for both engines), test-sys 17 + 6 OK, test-fs 9 OK,
+  test-clock 4 OK, test-agent 23 OK (7 skipped) plus the Node suites, test-apps 12 pass.
+- `make shots`: seven PicoCalc captures changed, all in counters only (compared crops: compositor heap 370 → 366 KB,
+  agent 314 → 311 KB, all worlds 5502 → 5499 KB, a REPL timestamp 16035.549 → 16035.55). The prelude grew by a few
+  steps and bytes. `make BOARD=papers3` and its shots: no change.
+- Device, agent firmware (no ELF modules):
+
+  ```
+  [ 61840.819] compositor crashed: killed from the console
+  compositor  service  idle  196  614.21  334.2  768  1  killed from the console
+  calc        app      idle    2  324.83  634.1 1024  0
+  ```
+
+  and the screenshot: "Calc" with its history, battery "100%". Calc took 2 turns (start, focus) and its render on
+  focus equals its kept frame, so the frame on screen can only have come from the replay. Switching Logs → Calc →
+  Files → Logs → Calc: no crash, no `ran past`, each app on screen.
+
+### What didn't work
+
+- My first frames test expected an `n=0` frame from an app without `onStart`:
+
+  ```
+  AssertionError: 0 != 1 : ... [   500.050] app: TEST app turn
+  [   500.128] viewer: TEST frame app The App n=1 from app
+  [   800.000] viewer crashed: killed from the host
+  [   900.131] viewer: TEST frame app The App n=1 from app
+  ```
+
+  A world without `onStart` takes no start turn, and the kernel renders only after turns (`!booting`), so it shows
+  nothing until its first message. The replay itself was right (n=1 twice, one app turn). I gave the test app an
+  empty `onStart`.
+
+### What I learned
+
+- An app with a screen but no start handler has no frame until it gets a message. All system apps have timers or
+  `onStart`, so this does not show on the device, but it is worth knowing when writing an app.
+- On this firmware image the boot calibration is the pathological 1600 ms loop while the system later runs at
+  118 ms; recorded in PICOCALC-SPEED.
+
+### What was tricky to build
+
+- Ordering against the start message. `boot_world()` puts `start` at the head of the mailbox with the boot time; the
+  replayed posts are `E_DELIVER` events applied at `K.lane_free`, after it. The compositor therefore allocates its
+  framebuffer and attaches the display before it handles the replayed frames, and a live frame published later still
+  overwrites the replayed one because it arrives later.
+- `kernel_retain()` runs before `kernel_publish()` in the bindings, so a post that is too big is refused as a whole
+  (nothing delivered, nothing kept) instead of delivered but not kept.
+
+### What warrants a second pair of eyes
+
+- `replay_retained()` builds a frame post for every world with a frame (20 on the PicoCalc), a few kilobytes each,
+  all delivered to the restarting compositor at once. Its mailbox peak on the device was 22 before this change; the
+  compositor handles each in a short turn.
+- The 4096-byte bound is per world and counts only retained posts; frames are bounded by what the kernel already
+  kept.
+
+### What should be done in the future
+
+- Native frames (`nw_frame`) should store into `W->frame` so they are retained like JavaScript frames.
+
+### Code review instructions
+
+- `git show 0da00ca -- picocalc-os/nucleus/kernel.c` first, then `vm.c`, `native.c`, the tests.
+- `cd picocalc-os && make && PICOCALC_TEST_BINARY=build/picocalc-host python3 -m unittest
+  tests.test_sys_native.RetainTests tests.test_sys_native.CompositorRestartTests -v`
+- The repro: `./build/picocalc-host -j js -o out -f fs ../ttmp/2026/11/01/PICOCALC-FRAMES*/scripts/01-repro-compositor-restart.txt`.
+
+### Technical details
+
+- Device evidence: `various/04-device-agent-firmware-compositor-crash.log`,
+  `various/05-device-calc-after-compositor-crash-fixed.png`, `various/06-device-switching-logs-calc-files.log`,
+  `various/07-device-{logs,calc,files}.png`.
+- Contract: `publish(ch, payload, { retain: true })` throws "a retained post cannot carry handles" or "a world's
+  retained posts are at most 4096 bytes"; `nw_publish_retained()` returns -1 with the same reasons through
+  `nw_error()`.

@@ -1,7 +1,7 @@
 ---
 Title: 'Frames and published state that survive a compositor restart: retained channel messages'
 Ticket: PICOCALC-FRAMES
-Status: active
+Status: complete
 Topics:
     - picocalc
     - ui
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-01T16:11:28.804098642-05:00
+LastUpdated: 2026-11-01T16:30:46.874593157-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
