@@ -1171,6 +1171,7 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
     const char *s;
     f = JS_GetPropertyStr(ctx, o, "name"); s = JS_ToCString(ctx, f); snprintf(mw.name, sizeof mw.name, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "file"); s = JS_ToCString(ctx, f); snprintf(mw.file, sizeof mw.file, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "engine"); if (!JS_IsUndefined(f)) { s = JS_ToCString(ctx, f); snprintf(mw.engine, sizeof mw.engine, "%s", s ? s : "?"); JS_FreeCString(ctx, s); } JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "budget_ms"); if ((mw.has_budget = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.budget_ms, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "mem_kb"); if ((mw.has_mem = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.mem_kb, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "priority"); if ((mw.has_prio = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.priority, f); JS_FreeValue(ctx, f);

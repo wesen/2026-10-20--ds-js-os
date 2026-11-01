@@ -969,6 +969,7 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
     manifest_world_t mw = { 0 };
     if (!get_str(ctx, w, "name", mw.name, sizeof mw.name)) snprintf(mw.name, sizeof mw.name, "?");
     if (!get_str(ctx, w, "file", mw.file, sizeof mw.file)) snprintf(mw.file, sizeof mw.file, "?");
+    get_str(ctx, w, "engine", mw.engine, sizeof mw.engine);
     mw.has_budget = get_num(ctx, w, "budget_ms", &mw.budget_ms);
     mw.has_mem = get_num(ctx, w, "mem_kb", &mw.mem_kb);
     mw.has_prio = get_num(ctx, w, "priority", &mw.priority);

@@ -36,10 +36,10 @@ ifeq ($(BOARD),papers3)
   ENG_SRC := mquickjs.c dtoa.c libm.c cutils.c
   GEN     := $(BUILD)/gen
   CFLAGS  += -I$(GEN) -I$(ENG) -DBOARD_PAPERS3 -DNUCLEUS_GRAY8 -DNUCLEUS_FONT_HEADER='"font_paper.h"' -DMQJS_VERSION=\"$(shell cat $(ENG)/VERSION)\"
-  OS_SRC  := nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c \
+  OS_SRC  := nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c \
              sim/papers3/board.c sim/papers3/bus.c sim/papers3/epd.c sim/papers3/gt911.c sim/papers3/bm8563.c \
-             host/port_host.c host/agent_host.c host/main_host.c
-  HDRS    := nucleus/nucleus.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
+             host/port_host.c host/agent_host.c host/main_host.c host/native_proc.c
+  HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
   BIN     := $(BUILD)/papers3-host
   SCRIPTS := scripts-papers3
   JSROOT  := js-papers3
@@ -49,9 +49,9 @@ else
   ENG     := third_party/quickjs
   ENG_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
   CFLAGS  += -I$(ENG) -DCONFIG_VERSION=\"2026-06-04\"
-  OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c \
-             sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/net_host.c host/main_host.c
-  HDRS    := nucleus/nucleus.h nucleus/font_data.h sim/picocalc.h host/board.h
+  OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c \
+             sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/net_host.c host/main_host.c host/native_proc.c
+  HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
   SCRIPTS := scripts
   JSROOT  := js

@@ -80,7 +80,7 @@ vtime_t kernel_now(void) {
   if (frozen_now >= 0) return frozen_now;
   if (K.realtime) return port_clock();
   if (!K.cur) return apply_at >= 0 ? apply_at : K.vnow;
-  return K.vnow + PROFILE.turn_base_us + (vtime_t)(vm_steps(K.cur) * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
+  return K.vnow + PROFILE.turn_base_us + (vtime_t)(eng_steps(K.cur) * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
 }
 void klog(const char *fmt, ...) {
   char b[1024];
@@ -199,7 +199,7 @@ static bool channels_allowed(world_t *W) {
   }
   return true;
 }
-static bool alive(world_t *W) { return W->status == W_IDLE && W->vm; }
+static bool alive(world_t *W) { return W->status == W_IDLE && eng_running(W); }
 
 msg_t *new_msg(int kind, const char *type, const char *json, int from) {
   msg_t *m = calloc(1, sizeof(*m));
@@ -348,7 +348,7 @@ static void fail_mailbox(world_t *W, const char *why) {
 // frame and ticks go, and a new epoch makes stale timers and replies miss it.
 static void teardown(world_t *W, const char *why) {
   if (W->in_turn && W->turn_ask) settle_ask(W->turn_ask, 0, why, NULL, 0);
-  vm_dispose(W);
+  eng_dispose(W);
   handles_drop_world(W);
   while (W->settles) { settle_t *s = W->settles; W->settles = s->next; free(s->json); free(s); }
   W->settles_tail = NULL;
@@ -443,6 +443,8 @@ int kernel_spawn(const char *name, const char *source, vtime_t at, char *why, si
   }
   free(W->source);
   W->source = xstrdup(source);
+  W->source_len = strlen(source);
+  W->engine = ENG_JS;
   if (W->status == W_IDLE) { teardown(W, "it was started again"); W->status = W_RESTARTING; }
   if (W->status == W_STOPPED) W->status = W_RESTARTING;
   if (!W->boot_ready) { W->boot_ready = true; W->boot_t = at; W->boot_seq = ++K.seq; }   // a pending restart's event is now stale
@@ -499,11 +501,11 @@ void kernel_timer_set(world_t *W, int i, bool on) {
   if (i < 0 || i >= W->n_every || W->timer_off[i] == !on) return;
   W->timer_off[i] = !on;
   W->timer_gen[i]++;
-  if (on && W->status == W_IDLE && W->vm) start_timer(W, i, K.vnow);
+  if (on && W->status == W_IDLE && eng_running(W)) start_timer(W, i, K.vnow);
 }
 
 static int boot_world(world_t *W) {
-  int rc = vm_create(W);
+  int rc = eng_create(W);
   if (rc) return rc;
   if (!channels_allowed(W)) return -1;
   if (W->user) snprintf(W->title, sizeof W->title, "%s", W->name);   // no app from storage may call itself "Settings"
@@ -563,12 +565,12 @@ static void run_segment(world_t *W, bool is_settle) {
     rc = boot_world(W);
     if (rc == 0 && W->restarts++ > 0) publish_status(W, "running", NULL, 0);
   } else {
-    vm_begin_segment(W, budget);
+    eng_begin_segment(W, budget);
     if (is_settle) {
       settle_t *s = W->settles;
       W->settles = s->next;
       if (!W->settles) W->settles_tail = NULL;
-      rc = vm_settle(W, s);
+      rc = eng_settle(W, s);
       free(s->json); free(s);
     } else {
       msg_t *m = W->mbox;
@@ -587,7 +589,7 @@ static void run_segment(world_t *W, bool is_settle) {
         klog("%s <- %s%s from %s %.120s", W->name, W->turn_type, m->ask ? " (ask)" : "", F ? F->name : "kernel",
              typed ? "[key]" : m->json ? m->json : "");
       }
-      rc = vm_dispatch(W, m);
+      rc = eng_dispatch(W, m);
       free_msg(m);
     }
   }
@@ -596,8 +598,8 @@ static void run_segment(world_t *W, bool is_settle) {
   // render what the world shows, as part of its segment
   // (only the world on screen, once the compositor names one, and any world that has not shown a frame yet)
   bool shown = !K.front || K.front == W->id + 1 || !W->frame;
-  if (rc == 0 && !booting && W->vm && W->has_screen && shown && !W->oom && !W->overrun) {
-    char *f = vm_render(W);
+  if (rc == 0 && !booting && eng_running(W) && W->has_screen && shown && !W->oom && !W->overrun) {
+    char *f = eng_render(W);
     if (f && (!W->frame || strcmp(f, W->frame))) {
       free(W->frame); W->frame = f;
       sbuf_t b = { 0 };
@@ -610,13 +612,13 @@ static void run_segment(world_t *W, bool is_settle) {
   }
   if (K.realtime) W->prof_render_us += port_clock() - t_render;
   W->prof_segments++;
-  int64_t steps = vm_steps(W);
+  int64_t steps = eng_steps(W);
   W->prof_steps += steps;
   vtime_t cost = K.realtime ? port_clock() - K.vnow
                             : PROFILE.turn_base_us + (vtime_t)(steps * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
   char why[300] = "";
   if (W->oom) snprintf(why, sizeof why, "ran out of memory (its limit is %zu KB)", W->mem_limit / 1024);
-  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld %sms", budget_kind, (long long)(budget / 1000), K.realtime ? "" : "virtual ");
+  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld %sms", budget_kind, (long long)(budget / 1000), K.realtime || W->nat ? "" : "virtual ");   // a process runs in real time
   else if (rc < 0) snprintf(why, sizeof why, "%s", W->last_error);
   else if (W->turn_failed) snprintf(why, sizeof why, "%s", W->turn_error ? W->turn_error : "its turn failed");
   W->cpu_us += cost;
@@ -734,9 +736,11 @@ static int add_world(void *arg, const manifest_world_t *mw) {
   W->prio = mw->has_prio ? (int)mw->priority : -1;
   W->store_limit = mw->has_store ? (size_t)(mw->store_kb * 1024) : 16 * 1024;
   for (int k = 0; k < mw->n_claims && k < MAX_LIST; k++) snprintf(W->claims[W->n_claims++], NAME_LEN, "%s", mw->claims[k]);
+  W->engine = mw->engine[0] ? engine_index(mw->engine) : ENG_JS;
+  if (W->engine < 0) { fprintf(stderr, "%s: there is no engine \"%s\" (js, wasm, native)\n", W->name, mw->engine); free(W); return -1; }
   char path[512];
   snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
-  W->source = port_read_file(path, NULL);
+  W->source = port_read_file(path, &W->source_len);   // JavaScript text, or a binary's bytes
   if (!W->source) { fprintf(stderr, "cannot read %s\n", path); free(W); return -1; }
   snprintf(W->kind, sizeof W->kind, "world");
   snprintf(W->title, sizeof W->title, "%s", W->name);
@@ -759,7 +763,7 @@ int kernel_boot(const char *manifest) {
 }
 
 void kernel_shutdown(void) {
-  for (int i = 0; i < K.n_worlds; i++) vm_dispose(K.worlds[i]);
+  for (int i = 0; i < K.n_worlds; i++) eng_dispose(K.worlds[i]);
   if (K.uart) fclose(K.uart);
 }
 
@@ -776,7 +780,7 @@ void kernel_reset(void) {
   heap_n = 0;
   for (int i = 0; i < K.n_worlds; i++) {
     world_t *W = K.worlds[i];
-    vm_dispose(W);
+    eng_dispose(W);
     for (msg_t *m = W->mbox; m; ) { msg_t *n = m->next; free_msg(m); m = n; }
     for (settle_t *st = W->settles; st; ) { settle_t *n = st->next; free(st->json); free(st); st = n; }
     free(W->source); free(W->frame); free(W->trace); free(W->turn_result); free(W->turn_error);
@@ -823,6 +827,7 @@ char *kernel_worlds_json_fields(const char *fields) {
 #define FIELD(key) (wants(fields, key) && (sb_add(&b, sep), sep = ",", sb_add(&b, "\"" key "\":"), 1))
     if (FIELD("name")) sb_json_str(&b, W->name);
     if (FIELD("kind")) sb_json_str(&b, W->kind);
+    if (FIELD("engine")) sb_json_str(&b, engine_name(W->engine));
     if (FIELD("title")) sb_json_str(&b, W->title);
     if (FIELD("state")) sb_printf(&b, "\"%s\"", state_name(W));
     if (FIELD("turns")) sb_printf(&b, "%llu", (unsigned long long)W->turns);

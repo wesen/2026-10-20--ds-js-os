@@ -66,8 +66,11 @@ enum { W_IDLE, W_BUSY, W_RESTARTING, W_STOPPED };
 typedef struct world {
   int id;
   char name[NAME_LEN], kind[12], file[96], title[NAME_LEN];
-  char *source;
+  char *source;             // the program: JavaScript text, or a binary's bytes (source_len of them, NUL after)
+  size_t source_len;
+  int engine;               // ENG_JS, ENG_WASM or ENG_NATIVE (the manifest's "engine")
   struct vmw *vm;           // the engine binding's state for this world (vm.c, vm_mqjs.c); NULL when not running
+  struct native *nat;       // a native world's state (native.c); NULL when not running or not native
   int status;
   int prio;                 // the lane takes runnable worlds by priority, then by arrival
   bool boot_ready; vtime_t boot_t; uint64_t boot_seq;
@@ -276,7 +279,7 @@ bool world_claims(world_t *W, const char *claim);
 
 // the engine binding: vm.c (QuickJS) or vm_mqjs.c (MicroQuickJS); one is linked into a build
 typedef struct {                // one entry of system.json's "worlds", as the binding's JSON parser read it
-  char name[NAME_LEN], file[96];
+  char name[NAME_LEN], file[96], engine[12];
   bool has_budget, has_mem, has_prio, has_store;
   double budget_ms, mem_kb, priority, store_kb;
   char claims[MAX_LIST][NAME_LEN]; int n_claims;
@@ -296,6 +299,69 @@ int vm_settle(world_t *W, settle_t *s);
 char *vm_render(world_t *W);
 void vm_calibrate(void);
 void vm_reset(void);        // the binding's own state, for kernel_reset (the wall clock goes back to WALL_BOOT_MS)
+
+// ---- native worlds (native.c): a binary instead of JavaScript ----------------------------------------------------
+// A world's engine is the manifest's "engine": "js" (the binding above), "wasm" (a WebAssembly module) or "native"
+// (machine code for this board: a Linux process on the host). The kernel calls an engine through eng_*, which
+// picks the binding or native.c; native.c delivers events to the port's backend for the engine and carries out the
+// binary's system calls with the same checks and deferred effects as the binding's operations.
+enum { ENG_JS, ENG_WASM, ENG_NATIVE, ENG_COUNT };
+const char *engine_name(int engine);
+int engine_index(const char *name);   // -1 if there is no such engine
+enum { NW_MESSAGE, NW_TICK, NW_START, NW_IRQ, NW_SETTLE, NW_INIT };   // event kinds (the first four are msg_t kinds)
+enum { NW_DONE = 0, NW_LATER = 1 };   // what an event handler returns: the turn is over, or it answers later
+// System calls, numbered for the wire (sdk/nw_wire.h, the WebAssembly imports): see nat_syscall
+enum {
+  NW_LOG = 1, NW_NOW, NW_SELF, NW_SEND, NW_PUBLISH, NW_REPLY, NW_REJECT, NW_NEED, NW_PROVIDE, NW_EVERY, NW_KIND,
+  NW_ASK, NW_SLEEP, NW_I2C_OPEN, NW_I2C, NW_RELEASE, NW_STORE_LOAD, NW_STORE_SAVE, NW_TIMER, NW_CALLS
+};
+typedef struct {                // one event for a binary
+  int kind;
+  const char *type, *json, *from;   // NUL-terminated; json is "null" when there is no payload
+  size_t type_len, json_len, from_len;
+  int ask, timer, token, ok;
+} nw_event_t;
+typedef struct {                // one system call from a binary: the strings are its bytes, not NUL-terminated
+  int op;
+  int32_t i[3];
+  int64_t v;
+  const char *s[3];
+  size_t n[3];
+} nw_call_t;
+#define NW_STR_MAX 65536        // the longest string a system call takes or returns (a file, a record, a payload)
+#define NW_OUT_MAX 16384        // what a call can return (a store record is read in full up to store_kb)
+typedef struct native_backend {
+  const char *name;                                  // "proc", "wasm", "elf"
+  int (*load)(world_t *W, char *why, size_t n);      // make the instance from W->source / source_len
+  int (*event)(world_t *W, const nw_event_t *e);     // run one event; NW_DONE, NW_LATER, or -1 (W->last_error set)
+  void (*unload)(world_t *W);                        // destroy the instance
+} native_backend_t;
+typedef struct native {
+  const native_backend_t *be;
+  void *inst;                   // the backend's instance
+  bool in_init;                 // its init is running: declarations are allowed
+  vtime_t budget_us;            // this segment's budget
+  char err[200];                // why its last system call failed
+} native_t;
+const native_backend_t *port_native_backend(int engine);   // NULL: this board cannot run that engine
+int nat_create(world_t *W);
+void nat_dispose(world_t *W);
+void nat_begin_segment(world_t *W, vtime_t budget_us);
+int nat_dispatch(world_t *W, msg_t *m);
+int nat_settle(world_t *W, settle_t *s);
+// A binary's system call, for the world running now: the result (>= 0), or a negative number with W->nat->err set.
+// A call that returns text writes at most out_n - 1 bytes and a NUL to out and returns their number.
+int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n);
+
+// The kernel calls a world's engine through these.
+static inline int eng_create(world_t *W) { return W->engine == ENG_JS ? vm_create(W) : nat_create(W); }
+static inline void eng_dispose(world_t *W) { if (W->engine == ENG_JS) vm_dispose(W); else nat_dispose(W); }
+static inline void eng_begin_segment(world_t *W, vtime_t b) { if (W->engine == ENG_JS) vm_begin_segment(W, b); else nat_begin_segment(W, b); }
+static inline int64_t eng_steps(world_t *W) { return W->engine == ENG_JS ? vm_steps(W) : 0; }   // a native backend adds its cost to K.seg_cost
+static inline int eng_dispatch(world_t *W, msg_t *m) { return W->engine == ENG_JS ? vm_dispatch(W, m) : nat_dispatch(W, m); }
+static inline int eng_settle(world_t *W, settle_t *s) { return W->engine == ENG_JS ? vm_settle(W, s) : nat_settle(W, s); }
+static inline char *eng_render(world_t *W) { return W->engine == ENG_JS ? vm_render(W) : NULL; }
+static inline bool eng_running(world_t *W) { return W->vm || W->nat; }
 
 // hw.c
 handle_t *handle_find(int id);
