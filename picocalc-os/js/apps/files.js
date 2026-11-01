@@ -2,7 +2,7 @@
 // one file at a time. To open a file it narrows its root handle to that file, offers the narrowed handle to the
 // editor with an "open" ask, and, once the editor has taken it, revokes the handle it gave the editor before, so a
 // file handle never outlives the user's choice.
-const FI_NAME = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,63}$/;
+const FI_NAME = /^[A-Za-z0-9](?:[A-Za-z0-9 _.-]{0,62}[A-Za-z0-9_-])?$/;   // FAT drops a trailing space or dot
 
 const fiJoin = (s, name) => (s.path ? s.path + "/" + name : name);
 const fiSize = (n) => n < 1024 ? n + " B" : n < 1048576 ? (n / 1024).toFixed(1) + " KB"
@@ -37,7 +37,7 @@ async function fiOpen(s, path) {
 async function fiPromptDone(s) {
   const p = s.prompt, name = p.value.trim();
   s.prompt = null;
-  if (!FI_NAME.test(name)) { s.note = "Names: letters, digits, space . _ - (64 at most), not starting with a dot."; return; }
+  if (!FI_NAME.test(name)) { s.note = "Names: letters, digits, space . _ - (64 at most), not ending in a space or dot."; return; }
   try {
     if (p.kind === "file") { await fiOpen(s, fiJoin(s, name)); await fiLoad(s, name); return; }
     if (p.kind === "dir") await s.root.mkdir(fiJoin(s, name));

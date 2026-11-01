@@ -27,7 +27,7 @@ bool fs_path_ok(const char *p) {
   for (const char *c = p;; c++) {
     if (*c == '/' || !*c) {
       size_t len = (size_t)(c - seg);
-      if (n && (!len || seg[0] == '.' || seg[len - 1] == ' ')) return false;   // empty, ".", "..", hidden, trailing space
+      if (n && (!len || seg[0] == '.' || seg[len - 1] == ' ' || seg[len - 1] == '.')) return false;   // empty, ".", "..", hidden; FAT drops a trailing space or dot
       if (!*c) break;
       seg = c + 1;
     } else if (!name_char((unsigned char)*c)) return false;

@@ -1,7 +1,7 @@
 // A small, distraction-free terminal for the agent service. The app never waits for a network
 // promise: it remains a separate world while agent owns the conversation and tool policy.
 const CHAT_COLS = 49, CHAT_ROWS = 15, CHAT_PROMPT_LIMIT = 2048, CHAT_VIEW_LIMIT = 12288, CHAT_MAX_ROWS = 1024;
-const CHAT_APPROVAL_MAX_ROWS = 2048;
+const CHAT_APPROVAL_MAX_ROWS = 4200;
 const CHAT_PHASES = ["idle", "requesting", "tools", "approval", "done", "cancelled", "error"];
 const CHAT_BUSY = ["requesting", "tools", "approval"];
 const CHAT_LABELS = { user: "YOU", assistant: "ASSISTANT", tool: "TOOL", system: "SYSTEM" };
@@ -65,7 +65,7 @@ function chatWrap(text, color, maxRows = CHAT_MAX_ROWS, requireComplete = false)
 
 function chatRows(entries, error, approval) {
   if (approval) {
-    // Review the complete proposal independently of the transcript cache. The service's 1536-char
+    // Review the complete proposal independently of the transcript cache. The service's 4096-char
     // note limit fits here even when every character is a newline. Never cut an approvable action.
     return [{ s: "APPROVAL REQUIRED", color: "accent" }, { s: "Tool: " + approval.name, color: "blue" }]
       .concat(chatWrap(approval.summary, "ink", CHAT_APPROVAL_MAX_ROWS - 3, true),

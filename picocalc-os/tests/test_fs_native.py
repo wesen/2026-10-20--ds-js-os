@@ -93,10 +93,10 @@ class FsTests(unittest.TestCase):
     def test_paths_are_checked_before_io(self):
         _, log = self.steps("""
           const d = hw.fs('fs:/');
-          for (const p of ['../x', '/etc/passwd', 'a//b', '.hidden', 'a/./b', 'a/../b', 'trailing/'])
+          for (const p of ['../x', '/etc/passwd', 'a//b', '.hidden', 'a/./b', 'a/../b', 'trailing/', 'dot.', 'space '])
             await out('bad ' + p, () => d.read(p));
         """)
-        for p in ['../x', '/etc/passwd', 'a//b', '.hidden', 'a/./b', 'a/../b', 'trailing/']:
+        for p in ['../x', '/etc/passwd', 'a//b', '.hidden', 'a/./b', 'a/../b', 'trailing/', 'dot.', 'space ']:
             self.assertIn(f"TEST bad {p} err not a valid path", log)
 
     def test_claims(self):

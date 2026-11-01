@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run real QuickJS, kernel, compositor and persistent store through recorded API replies."""
+"""Run real QuickJS, kernel, compositor, persistent store and files through recorded API replies."""
 import argparse
 import json
 import os
@@ -10,13 +10,16 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def run(binary, work, name, script, fixture=None, store=None, env_extra=None):
+def run(binary, work, name, script, fixture=None, store=None, env_extra=None, files=None):
     out = work / name
     out.mkdir()
     cmd = [str(binary), '-o', str(out)]
     if store:
         store.mkdir(exist_ok=True)
         cmd += ['-s', str(store)]
+    if files:
+        files.mkdir(exist_ok=True)
+        cmd += ['-f', str(files)]
     cmd += ['-']
     env = dict(os.environ)
     env.pop('PICOCALC_AGENT_FIXTURES', None)
@@ -44,31 +47,45 @@ def main():
         temporary = tempfile.TemporaryDirectory(prefix='picocalc-agent-')
         work = Path(temporary.name)
     fixture = ROOT / 'tests/fixtures/agent'
-    state = work / 'store'
-    out, log, stats = run(binary, work, 'tour', (ROOT / 'scripts-agent/tour.txt').read_text(), fixture, state)
+    state, files = work / 'store', work / 'files'
+    out, log, stats = run(binary, work, 'tour', (ROOT / 'scripts-agent/tour.txt').read_text(), fixture, state, files=files)
     record = json.loads((state / 'w/agent').read_text())['session']
-    assert record['notes'] == [{'name': 'next', 'text': 'study groups'}], record
+    assert (files / 'notes/next').read_text() == 'study groups'
+    assert record['notes'] == [] and record['version'] == 2, record
     assert len(record['history']) == 6 and record['pending'] is False, record
     assert 'rational numbers' in record['history'][-1]['content']
     assert len(list(out.glob('agent-*.png'))) == 5
     assert len((state / 'w/agent').read_bytes()) <= 16384
-    print('PASS: QuickJS chat -> native transport -> calculator -> answer -> approval -> durable note -> read')
+    print('PASS: QuickJS chat -> native transport -> calculator -> answer -> approval -> note file -> read')
 
     # The same tour against a Chat Completions endpoint (the replies are the vLLM shape lunaroute returns).
-    chat_state = work / 'chat-store'
+    chat_state, chat_files = work / 'chat-store', work / 'chat-files'
     chat_env = {'PICOCALC_AGENT_API': 'chat', 'PICOCALC_AGENT_MODEL': 'deepseek-4.1-flash'}
     out, log, _ = run(binary, work, 'chat-tour', (ROOT / 'scripts-agent/tour.txt').read_text(),
-                      ROOT / 'tests/fixtures/agent-chat', chat_state, chat_env)
+                      ROOT / 'tests/fixtures/agent-chat', chat_state, chat_env, chat_files)
     record = json.loads((chat_state / 'w/agent').read_text())['session']
-    assert record['notes'] == [{'name': 'next', 'text': 'study groups'}], record
+    assert (chat_files / 'notes/next').read_text() == 'study groups'
+    assert record['notes'] == [], record
     assert len(record['history']) == 6 and record['model'] == 'deepseek-4.1-flash' and record['chosen'] is False, record
     assert 'rational numbers' in record['history'][-1]['content']
     print('PASS: the same tour through a Chat Completions endpoint')
 
     before = (state / 'w/agent').read_bytes()
-    run(binary, work, 'reboot', 'wait 1800\nkey c\nwait 300\ncapture reboot.png\nstats\n', None, state)
+    run(binary, work, 'reboot', 'wait 1800\nkey c\nwait 300\ncapture reboot.png\nstats\n', None, state, files=files)
     assert (state / 'w/agent').read_bytes() == before
-    print('PASS: a cold process restores session/notes without starting a network request')
+    assert (files / 'notes/next').read_text() == 'study groups'
+    print('PASS: a cold process restores the session and keeps the notes without starting a network request')
+
+    # A record from before notes were files: its notes move into notes/ at start, and the record forgets them.
+    old_state, old_files = work / 'old-store', work / 'old-files'
+    (old_state / 'w').mkdir(parents=True)
+    (old_state / 'w/agent').write_text(json.dumps({'session': {'version': 1, 'model': 'gpt-6-luna', 'effort': 'low',
+        'history': [], 'notes': [{'name': 'groups', 'text': 'a set with an operation'}], 'pending': False, 'prompt': ''}}))
+    run(binary, work, 'migrate', 'wait 1800\nkey c\nwait 300\ncapture migrated.png\nstats\n', None, old_state, files=old_files)
+    record = json.loads((old_state / 'w/agent').read_text())['session']
+    assert (old_files / 'notes/groups').read_text() == 'a set with an operation'
+    assert record['version'] == 2 and record['notes'] == [], record
+    print('PASS: notes from an old session record move into files once')
 
     slow = work / 'slow-fixture'
     slow.mkdir()

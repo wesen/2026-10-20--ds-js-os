@@ -9,8 +9,31 @@ const message = text => ({ type: 'message', role: 'assistant', status: 'complete
 const call = (name, args, id = 'call_1') => ({ type: 'function_call', status: 'completed', call_id: id, name, arguments: JSON.stringify(args) });
 const completed = (...output) => ({ status: 200, body: JSON.stringify({ id: 'resp_test', status: 'completed', output }) });
 
-function harness(saved = null, status = { configured: true, mode: 'fixture' }) {
-  const def = { handlers: {} }, sent = [], requests = [], cancelled = [], pending = new Map();
+// Settle every promise that is ready: file operations resolve in a later segment, here a later macrotask.
+const settle = () => new Promise(resolve => setImmediate(resolve));
+
+// The notes folder: a Map from name to text behind the handle the agent gets from hw.fs('fs:/notes'). While held,
+// operations queue until release(), as a slow flash write would; fail makes writes throw.
+function notesDir(files = new Map()) {
+  const d = { files, held: null, fail: '' };
+  const op = fn => new Promise((resolve, reject) => {
+    const run = () => { try { resolve(fn()); } catch (e) { reject(e); } };
+    if (d.held) d.held.push(run); else run();
+  });
+  const need = name => { if (!files.has(name)) throw new Error('no file notes/' + name); return files.get(name); };
+  d.handle = {
+    list: () => op(() => [...files.keys()].sort().map(name => ({ name, dir: false, size: Buffer.byteLength(files.get(name)) }))),
+    stat: name => op(() => ({ dir: false, size: Buffer.byteLength(need(name)) })),
+    read: name => op(() => need(name)),
+    write: (name, text) => op(() => { if (d.fail) throw new Error(d.fail); files.set(name, text); return { bytes: Buffer.byteLength(text) }; }),
+  };
+  d.hold = () => { d.held = []; };
+  d.release = () => { const q = d.held || []; d.held = null; q.forEach(run => run()); };
+  return d;
+}
+
+function harness(saved = null, status = { configured: true, mode: 'fixture' }, notes = new Map()) {
+  const def = { handlers: {} }, sent = [], requests = [], cancelled = [], pending = new Map(), dir = notesDir(notes);
   let clock = 0, serial = 0, session = copy(saved), storageStatus = { pending: false, error: '' };
   const builder = { state(s) { def.initial = s; return this; }, onStart(fn) { def.start = fn; return this; },
     on(name, fn) { def.handlers[name] = fn; return this; }, every(ms, fn) { def.tick = fn; return this; } };
@@ -18,6 +41,7 @@ function harness(saved = null, status = { configured: true, mode: 'fixture' }) {
     send: (to, type, payload) => sent.push({ to, type, payload: copy(payload) }), now: () => clock,
     store: { get: () => copy(session), set: (key, value) => { session = copy(value); }, status: () => copy(storageStatus) },
     sys: { worlds: () => [{ name: 'agent', state: 'idle', mem_kb: 300 }], stats: () => ({ crashes: 0 }) },
+    hw: { fs: claim => { if (claim !== 'fs:/notes') throw new Error('agent has no claim on ' + claim); return dir.handle; } },
     agentNet: { status: () => copy(status),
       start: body => { const id = ++serial; requests.push({ id, body, parsed: JSON.parse(body) }); pending.set(id, null); return id; },
       poll: id => { const result = pending.get(id); if (result) pending.delete(id); return result || null; },
@@ -29,7 +53,7 @@ function harness(saved = null, status = { configured: true, mode: 'fixture' }) {
   function send(type, payload = {}, from = 'chat') { return def.handlers['agent.' + type](state, payload, { from }); }
   function tick(n = 1) { for (let i = 0; i < n; i++) { clock += 100; def.tick(state); } }
   function result(value, id = state.ticket) { pending.set(id, value); tick(); }
-  return { state, requests, sent, cancelled, ctx, send, tick, result, session: () => copy(session),
+  return { state, requests, sent, cancelled, ctx, send, tick, result, session: () => copy(session), settle, dir, notes,
     storage: value => { storageStatus = value; }, jump: ms => { clock += ms; def.tick(state); },
     elapse: ms => { clock += ms; },
     // VM state disappears on supervised restart; the native ticket counter does not.
@@ -76,130 +100,152 @@ test('tool loop preserves all response output including opaque reasoning', () =>
   h.result(completed(message('42.'))); assert.equal(h.state.phase, 'done');
 });
 
-test('note write waits for authenticated matching approval and persistence acknowledgement', () => {
+test('note write waits for authenticated matching approval and for the file write', async () => {
   const h = harness(); h.send('submit', { text: 'Remember apples' });
-  h.result(completed(call('save_note', { name: 'shopping', text: 'apples' }))); h.tick();
-  assert.equal(h.state.phase, 'approval'); assert.equal(h.session().notes.length, 0);
+  h.result(completed(call('save_note', { name: 'shopping', text: 'apples' }))); h.tick(); await h.settle();
+  assert.equal(h.state.phase, 'approval'); assert.match(h.state.approval.summary, /^Save note 'shopping':\napples$/);
+  assert.equal(h.notes.size, 0);
   const id = h.state.approval.id;
   h.send('approve', { id, allow: true }, 'flaky');
   h.send('approve', { id: 'stale', allow: true });
-  assert.equal(h.state.notes.length, 0);
-  h.storage({ pending: true, error: '' }); h.send('approve', { id, allow: true });
-  assert.equal(h.state.notes[0].text, 'apples');
-  h.tick(2); assert.equal(h.requests.length, 1);
-  h.storage({ pending: false, error: '' }); h.tick();
-  assert.equal(h.requests.length, 2);
+  assert.equal(h.state.phase, 'approval');
+  h.dir.hold(); h.send('approve', { id, allow: true }); await h.settle();
+  assert.equal(h.notes.size, 0);
+  h.tick(2); assert.equal(h.requests.length, 1);   // the run waits for the write
+  h.dir.release(); await h.settle();
+  assert.equal(h.notes.get('shopping'), 'apples');
+  h.tick(); assert.equal(h.requests.length, 2);
   const output = h.requests[1].parsed.input.at(-1);
   assert.deepEqual(JSON.parse(output.output), { ok: true, saved: true });
+  assert.equal(h.session().notes.length, 0);   // notes are files, not part of the session record
 });
 
-test('denied writes return a tool error and never modify notes', () => {
+test('save_note over an existing file asks to replace it', async () => {
+  const h = harness(null, undefined, new Map([['n', 'old']])); h.send('submit', { text: 'Save' });
+  h.result(completed(call('save_note', { name: 'n', text: 'new' }))); h.tick(); await h.settle();
+  assert.match(h.state.approval.summary, /^Replace note 'n'/);
+  h.send('approve', { id: h.state.approval.id, allow: true }); await h.settle();
+  assert.equal(h.notes.get('n'), 'new');
+});
+
+test('denied writes return a tool error and never modify notes', async () => {
   const h = harness(); h.send('submit', { text: 'Save' });
-  h.result(completed(call('save_note', { name: 'n', text: 'text' }))); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: 'text' }))); h.tick(); await h.settle();
   h.send('approve', { id: h.state.approval.id, allow: false }); h.tick();
-  assert.equal(h.state.notes.length, 0);
+  assert.equal(h.notes.size, 0);
   assert.match(h.requests[1].parsed.input.at(-1).output, /denied/);
 });
 
-test('approval escapes Unicode, controls and literal backslashes without changing the saved note', () => {
+test('approval escapes Unicode, controls and literal backslashes without changing the saved note', async () => {
   const h = harness();
   const original = 'literal \\u{201c}\n\u201cquote\u201d\tNUL:\u0000 emoji:\ud83e\uddee';
   h.send('submit', { text: 'Save unicode' });
-  h.result(completed(call('save_note', { name: 'Unicode', text: original }))); h.tick();
+  h.result(completed(call('save_note', { name: 'Unicode', text: original }))); h.tick(); await h.settle();
   const summary = h.state.approval.summary;
   assert.match(summary, /Escaped text:/);
   assert.ok(summary.includes('literal \\\\u{201c}'));
   assert.ok(summary.includes('\\u{201c}quote\\u{201d}\\u{9}NUL:\\u{0} emoji:\\u{1f9ee}'));
   assert.equal(/[^\x20-\x7e\n]/.test(summary), false);
-  h.send('approve', { id: h.state.approval.id, allow: true }); h.tick();
-  assert.equal(h.state.notes[0].text, original);
+  h.send('approve', { id: h.state.approval.id, allow: true }); await h.settle();
+  assert.equal(h.notes.get('Unicode'), original);
   const plain = vm.runInContext('approvalSummaryText("plain text\\nnext line")', h.ctx);
   assert.equal(plain, 'plain text\nnext line');
 });
 
-test('an approval delivered after expiry cannot write before the next timer tick', () => {
+test('a note too long to review is refused before approval', async () => {
   const h = harness(); h.send('submit', { text: 'Save' });
-  h.result(completed(call('save_note', { name: 'n', text: 'expired' }))); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: '\u00e9'.repeat(4000) }))); h.tick(2);
+  assert.equal(h.state.approval, null);
+  assert.match(h.requests[1].parsed.input.at(-1).output, /too long to show for approval/);
+});
+
+test('an approval delivered after expiry cannot write before the next timer tick', async () => {
+  const h = harness(); h.send('submit', { text: 'Save' });
+  h.result(completed(call('save_note', { name: 'n', text: 'expired' }))); h.tick(); await h.settle();
   const id = h.state.approval.id;
   h.elapse(120001); // Advance the clock without allowing tick() to invalidate the approval first.
-  h.send('approve', { id, allow: true });
-  assert.equal(h.state.notes.length, 0); assert.equal(h.session().notes.length, 0);
+  h.send('approve', { id, allow: true }); await h.settle();
+  assert.equal(h.notes.size, 0);
   assert.equal(h.state.approval, null); h.tick();
   assert.match(h.requests[1].parsed.input.at(-1).output, /approval expired/);
 });
 
-test('a delayed approval also checks the enclosing run deadline at receipt', () => {
+test('a delayed approval also checks the enclosing run deadline at receipt', async () => {
   const h = harness(); h.send('submit', { text: 'Save' });
-  h.result(completed(call('save_note', { name: 'n', text: 'late' }))); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: 'late' }))); h.tick(); await h.settle();
   const id = h.state.approval.id;
-  h.elapse(180001); h.send('approve', { id, allow: true });
+  h.elapse(180001); h.send('approve', { id, allow: true }); await h.settle();
   assert.equal(h.state.phase, 'error'); assert.match(h.state.error, /deadline/);
-  assert.equal(h.state.notes.length, 0); assert.equal(h.session().notes.length, 0);
+  assert.equal(h.notes.size, 0);
   h.tick(); assert.equal(h.requests.length, 1);
 });
 
-test('reusing a provider call ID after cancellation cannot reuse the old approval', () => {
+test('reusing a provider call ID after cancellation cannot reuse the old approval', async () => {
   const h = harness(); h.send('submit', { text: 'First note' });
-  h.result(completed(call('save_note', { name: 'n', text: 'first' }, 'same_call'))); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: 'first' }, 'same_call'))); h.tick(); await h.settle();
   const old = h.state.approval.id;
   h.send('cancel'); h.send('submit', { text: 'Second note' });
-  h.result(completed(call('save_note', { name: 'n', text: 'second' }, 'same_call'))); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: 'second' }, 'same_call'))); h.tick(); await h.settle();
   const current = h.state.approval.id;
   assert.notEqual(current, old);
-  h.send('approve', { id: old, allow: true });
-  assert.equal(h.state.phase, 'approval'); assert.equal(h.state.notes.length, 0);
-  h.send('approve', { id: current, allow: true }); h.tick();
-  assert.equal(h.state.notes[0].text, 'second');
+  h.send('approve', { id: old, allow: true }); await h.settle();
+  assert.equal(h.state.phase, 'approval'); assert.equal(h.notes.size, 0);
+  h.send('approve', { id: current, allow: true }); await h.settle();
+  assert.equal(h.notes.get('n'), 'second');
 });
 
-test('native request tickets distinguish approvals when a supervised restart resets run numbers', () => {
+test('native request tickets distinguish approvals when a supervised restart resets run numbers', async () => {
   const h = harness(); h.send('submit', { text: 'First note' });
-  h.result(completed(call('save_note', { name: 'n', text: 'first' }, 'same_call'))); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: 'first' }, 'same_call'))); h.tick(); await h.settle();
   const old = h.state.approval.id, oldRun = h.state.run;
   h.restart();
   assert.equal(h.state.phase, 'cancelled'); assert.equal(h.state.approval, null);
   h.send('submit', { text: 'Second note' });
-  h.result(completed(call('save_note', { name: 'n', text: 'second' }, 'same_call'))); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: 'second' }, 'same_call'))); h.tick(); await h.settle();
   assert.equal(h.state.run, oldRun); // The JS counter alone would collide here.
   const current = h.state.approval.id;
   assert.notEqual(current, old);
-  h.send('approve', { id: old, allow: true }); assert.equal(h.state.notes.length, 0);
+  h.send('approve', { id: old, allow: true }); await h.settle(); assert.equal(h.notes.size, 0);
   assert.equal(h.state.approval.id, current);
-  h.send('approve', { id: current, allow: true }); h.tick();
-  assert.equal(h.state.notes[0].text, 'second');
+  h.send('approve', { id: current, allow: true }); await h.settle();
+  assert.equal(h.notes.get('n'), 'second');
 });
 
-test('F3 retries the exact failed continuation without repeating an approved write', () => {
+test('F3 retries the exact failed continuation without repeating an approved write', async () => {
   const h = harness(); h.send('submit', { text: 'Save' });
-  h.result(completed(call('save_note', { name: 'n', text: 'one' }))); h.tick();
-  h.send('approve', { id: h.state.approval.id, allow: true }); h.tick();
+  h.result(completed(call('save_note', { name: 'n', text: 'one' }))); h.tick(); await h.settle();
+  h.send('approve', { id: h.state.approval.id, allow: true }); await h.settle(); h.tick();
   const continuation = h.requests[1].body;
+  h.notes.set('n', 'edited by the user since');
   h.result({ status: 502, body: '{"error":{"code":"upstream_error"}}' });
   assert.equal(h.state.phase, 'error');
   h.send('retry'); assert.equal(h.requests[2].body, continuation);
-  assert.equal(h.state.notes.length, 1); assert.equal(h.state.approval, null);
+  await h.settle();
+  assert.equal(h.notes.get('n'), 'edited by the user since'); assert.equal(h.state.approval, null);
   h.result(completed(message('Saved.'))); assert.equal(h.state.phase, 'done');
 });
 
-test('cancellation and a new run ignore stale HTTP results and old approvals', () => {
+test('cancellation and a new run ignore stale HTTP results and old approvals', async () => {
   const h = harness(); h.send('submit', { text: 'One' }); const old = h.state.ticket;
   h.send('cancel'); assert.equal(h.state.phase, 'cancelled'); assert.ok(h.cancelled.includes(old));
   h.send('submit', { text: 'Two' });
-  h.result(completed(call('save_note', { name: 'old', text: 'bad' })), old);
+  h.result(completed(call('save_note', { name: 'old', text: 'bad' })), old); await h.settle();
   assert.equal(h.state.phase, 'requesting'); assert.equal(h.state.approval, null);
   h.result(completed(message('New answer'))); assert.equal(h.state.phase, 'done');
-  assert.equal(h.state.notes.length, 0);
+  assert.equal(h.notes.size, 0);
 });
 
-test('cancel while a write acknowledgement is pending never restarts the agent loop', () => {
+test('cancel while a write is in flight never restarts the agent loop; the write itself completes', async () => {
   const h = harness(); h.send('submit', { text: 'Save' });
-  h.result(completed(call('save_note', { name: 'n', text: 'text' }))); h.tick();
-  h.storage({ pending: true, error: '' }); h.send('approve', { id: h.state.approval.id, allow: true });
-  h.send('cancel'); h.storage({ pending: false, error: '' }); h.tick(3);
+  h.result(completed(call('save_note', { name: 'n', text: 'text' }))); h.tick(); await h.settle();
+  h.dir.hold(); h.send('approve', { id: h.state.approval.id, allow: true }); await h.settle();
+  h.send('cancel'); h.dir.release(); await h.settle(); h.tick(3);
   assert.equal(h.state.phase, 'cancelled'); assert.equal(h.requests.length, 1);
+  assert.equal(h.notes.get('n'), 'text');
+  assert.ok(!h.state.entries.some(e => e.text === 'save_note: saved'));   // the cancelled run reports nothing late
 });
 
-test('incomplete or malformed provider batches execute no tools', () => {
+test('incomplete or malformed provider batches execute no tools', async () => {
   const bads = [
     { status: 'incomplete', output: [call('save_note', { name: 'x', text: 'x' })] },
     { status: 'completed', output: [call('calculate', { expression: '1' }), call('calculate', { expression: '2' })] },
@@ -207,27 +253,61 @@ test('incomplete or malformed provider batches execute no tools', () => {
   ];
   for (const bad of bads) {
     const h = harness(); h.send('submit', { text: 'Test' });
-    h.result({ status: 200, body: JSON.stringify(bad) }); h.tick(3);
+    h.result({ status: 200, body: JSON.stringify(bad) }); h.tick(3); await h.settle();
     assert.equal(h.state.phase, 'error'); assert.equal(h.state.approval, null);
-    assert.equal(h.requests.length, 1); assert.equal(h.state.notes.length, 0);
+    assert.equal(h.requests.length, 1); assert.equal(h.notes.size, 0);
   }
 });
 
-test('tool schemas reject extra keys, unknown tools and non-finite arithmetic locally', () => {
-  for (const tool of [call('calculate', { expression: '3', code: 'x' }), call('shell', { command: 'rm' }), call('calculate', { expression: '1/0' })]) {
-    const h = harness(); h.send('submit', { text: 'Test' }); h.result(completed(tool)); h.tick(2);
+test('tool schemas reject extra keys, unknown tools, bad note names and non-finite arithmetic locally', async () => {
+  for (const tool of [call('calculate', { expression: '3', code: 'x' }), call('shell', { command: 'rm' }), call('calculate', { expression: '1/0' }),
+    call('save_note', { name: 'dot.', text: 'x' }), call('save_note', { name: 'x'.repeat(65), text: 'x' }), call('read_note', { name: '../secrets' })]) {
+    const h = harness(); h.send('submit', { text: 'Test' }); h.result(completed(tool)); h.tick(2); await h.settle();
     const r = JSON.parse(h.requests[1].parsed.input.at(-1).output);
-    assert.equal(r.ok, false); assert.equal(h.state.notes.length, 0);
+    assert.equal(r.ok, false); assert.equal(h.notes.size, 0);
   }
 });
 
-test('persistent write failure is returned to the model as failure', () => {
+test('a failed file write is returned to the model as failure', async () => {
   const h = harness(); h.send('submit', { text: 'Save' });
-  h.result(completed(call('save_note', { name: 'n', text: 'x' }))); h.tick();
-  h.send('approve', { id: h.state.approval.id, allow: true });
-  h.storage({ pending: false, error: 'disk full' }); h.tick();
-  assert.equal(h.state.notes.length, 0);
-  assert.equal(JSON.parse(h.requests[1].parsed.input.at(-1).output).ok, false);
+  h.result(completed(call('save_note', { name: 'n', text: 'x' }))); h.tick(); await h.settle();
+  h.dir.fail = 'cannot write notes/n (No space left on device)';
+  h.send('approve', { id: h.state.approval.id, allow: true }); await h.settle(); h.tick();
+  assert.equal(h.notes.size, 0);
+  const r = JSON.parse(h.requests[1].parsed.input.at(-1).output);
+  assert.equal(r.ok, false); assert.match(r.error, /No space left/);
+  assert.ok(h.state.entries.some(e => e.text === 'save_note: failed'));
+});
+
+test('list_notes and read_note see the files, clip long ones and skip names the tools cannot use', async () => {
+  const files = new Map([['a', 'alpha'], ['long.md', 'x'.repeat(7000)], ['name with trailing dot.', 'z']]);
+  const h = harness(null, undefined, files); h.send('submit', { text: 'Notes?' });
+  h.result(completed(call('list_notes', {}, 'c1'))); h.tick(); await h.settle(); h.tick();
+  assert.deepEqual(JSON.parse(h.requests[1].parsed.input.at(-1).output), { ok: true, names: ['a', 'long.md'], more: false });
+  h.result(completed(call('read_note', { name: 'long.md' }, 'c2'))); h.tick(); await h.settle(); h.tick();
+  const long = JSON.parse(h.requests[2].parsed.input.at(-1).output);
+  assert.equal(long.clipped, true); assert.ok(Buffer.byteLength(long.text) <= 6000);
+  h.result(completed(call('read_note', { name: 'gone' }, 'c3'))); h.tick(); await h.settle(); h.tick();
+  assert.deepEqual(JSON.parse(h.requests[3].parsed.input.at(-1).output), { ok: false, error: 'Note not found' });
+  h.result(completed(message('Done.')));
+  h.send('submit', { text: '/notes' }); await h.settle();
+  assert.equal(h.state.entries.at(-1).text, 'Notes: a, long.md');
+});
+
+test('notes in an old session record move into files once; a file of the same name wins', async () => {
+  const old = { version: 1, model: 'gpt-6-luna', effort: 'low', history: [], pending: false, prompt: '',
+    notes: [{ name: 'shopping', text: 'apples' }, { name: 'kept', text: 'from the record' }, { name: 'trailing.', text: 't' }] };
+  const failing = harness(old, undefined, new Map());
+  failing.dir.fail = 'cannot write'; await failing.settle();
+  assert.match(failing.state.entries.at(-1).text, /could not be moved into files/);
+  assert.equal(failing.session().notes.length, 3);   // the record keeps them until a move succeeds
+  const h = harness(old, undefined, new Map([['kept', 'from the file']])); await h.settle();
+  assert.equal(h.notes.get('shopping'), 'apples'); assert.equal(h.notes.get('kept'), 'from the file');
+  assert.equal(h.notes.get('trailing'), 't');
+  assert.match(h.state.entries.at(-1).text, /Moved 3 notes .*1 already had a file/);
+  assert.equal(h.session().version, 2); assert.deepEqual(h.session().notes, []);
+  const again = harness(h.session(), undefined, h.notes); await again.settle();
+  assert.ok(!again.state.entries.some(e => /Moved/.test(e.text)));
 });
 
 test('untrusted senders cannot start, cancel or clear a session', () => {
@@ -245,12 +325,12 @@ test('time and iteration limits stop work without automatic paid retries', () =>
   assert.match(loop.state.error, /6 model/);
 });
 
-test('reboot restores text and notes but does not replay an interrupted action', () => {
+test('reboot restores text but does not replay an interrupted action', async () => {
   const h = harness(); h.send('submit', { text: 'Save' });
-  h.result(completed(call('save_note', { name: 'n', text: 'text' }))); h.tick();
-  const re = harness(h.session());
+  h.result(completed(call('save_note', { name: 'n', text: 'text' }))); h.tick(); await h.settle();
+  const re = harness(h.session(), undefined, h.notes); await re.settle();
   assert.equal(re.requests.length, 0); assert.equal(re.state.phase, 'cancelled'); assert.equal(re.state.approval, null);
-  assert.equal(re.state.notes.length, 0);
+  assert.equal(re.notes.size, 0);
 });
 
 test('model and effort are configurable without putting credentials in JS state', () => {
@@ -313,12 +393,12 @@ test('chat endpoint: tool call, local result, continuation, answer', () => {
   assert.ok(re.state.entries.every(e => !e.text.includes('[PicoCalc')));
 });
 
-test('chat endpoint: text with calls is one assistant message; reasoning is not sent back', () => {
+test('chat endpoint: text with calls is one assistant message; reasoning is not sent back', async () => {
   const h = harness(null, CHAT);
   h.send('submit', { text: 'List my notes and compute 2+2' });
   h.result(chatReply({ content: 'Checking.', reasoning: 'long private thoughts',
     tool_calls: [chatCall('list_notes', {}, 'c1'), chatCall('calculate', { expression: '2+2' }, 'c2')] }));
-  h.tick(3);
+  h.tick(); await h.settle(); h.tick(2);
   const m = h.requests[1].parsed.messages;
   assert.equal(m[2].content, 'Checking.'); assert.deepEqual(m[2].tool_calls.map(t => t.id), ['c1', 'c2']);
   assert.deepEqual(m.slice(3).map(x => [x.role, x.tool_call_id]), [['tool', 'c1'], ['tool', 'c2']]);

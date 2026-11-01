@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <sys/statvfs.h>
+#include <ftw.h>
 #include <time.h>
 #include <unistd.h>
 #include "../nucleus/nucleus.h"
@@ -114,9 +114,18 @@ void port_fs_submit(fs_job_t *j, vtime_t at) {
   j->json = NULL;
   fs_job_free(j);
 }
+// The host reports a volume the size of the P4's FAT partition, less what the root holds in 4 KB clusters, so
+// the numbers are the device's and a capture does not change with the free space of the disk the tests run on.
+#define HOST_FS_TOTAL (11956ull * 1024)
+static uint64_t used_bytes;
+static int add_used(const char *p, const struct stat *st, int kind, struct FTW *f) {
+  (void)p; (void)f;
+  used_bytes += kind == FTW_F ? ((uint64_t)st->st_size + 4095) / 4096 * 4096 : 4096;
+  return 0;
+}
 int port_fs_info(uint64_t *total, uint64_t *free_bytes) {
-  struct statvfs v;
-  if (!fs_root[0] || statvfs(fs_root, &v)) return -1;
-  *total = (uint64_t)v.f_blocks * v.f_frsize; *free_bytes = (uint64_t)v.f_bavail * v.f_frsize;
+  used_bytes = 0;
+  if (!fs_root[0] || nftw(fs_root, add_used, 16, FTW_PHYS)) return -1;
+  *total = HOST_FS_TOTAL; *free_bytes = used_bytes < HOST_FS_TOTAL ? HOST_FS_TOTAL - used_bytes : 0;
   return 0;
 }
