@@ -62,13 +62,19 @@ if a.shot_dir:
         if not l.startswith("#SHOT ") or l.startswith("#SHOT none"):
             continue
         w, h = map(int, l.split()[1:3])
-        data = bytearray()
+        # Log lines from other tasks can land between a shot's lines, or in the middle of one, splitting it in two.
+        # Each half is still base64 text, so the fragments are joined and decoded once; the CRC checks the result.
+        text, crc = [], None
         for k in lines[i + 1:]:
             if k.startswith("#END"):
                 crc = int(k.split()[1], 16)
                 break
-            if B64.match(k.strip()):   # log lines from other tasks can land between a shot's lines
-                data += base64.b64decode(k.strip())
+            if B64.match(k.strip()):
+                text.append(k.strip())
+        try:
+            data = base64.b64decode("".join(text))
+        except ValueError:
+            data = b""
         px = []
         for off in range(0, len(data) - 3, 4):
             c, v = struct.unpack_from("<HH", data, off)

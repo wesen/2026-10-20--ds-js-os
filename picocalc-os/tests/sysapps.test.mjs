@@ -38,8 +38,9 @@ function settings() {
   const station = { mode: "simulated", wifi: "off", state: "Wi-Fi not set up", ssid: "", ip: "", rssi: 0, clock: true,
                     provider: "api.example.org", api: "chat", model: "m1", key: true };
   let pending = 0, zone = "UTC0";
+  const t = { t: 0 };
   const app = load("settings.js", {
-    now: () => 0, sleep: () => Promise.resolve(),
+    now: () => t.t, sleep: () => Promise.resolve(),
     clock: { set: () => true, zone: () => zone, setZone: (tz) => { calls.zone.push(tz); zone = tz; return { zone: tz, saved: true }; } },
     net: {
       info: () => ({ ...station }),
@@ -49,7 +50,7 @@ function settings() {
     },
   });
   app.def.handlers.focus(app.s);
-  return { ...app, calls, station, tick: () => app.def.every[0](app.s) };
+  return { ...app, calls, station, clock: t, tick: () => app.def.every[0](app.s) };
 }
 
 test("settings: the menu shows the station, the zone and the provider", () => {
@@ -109,8 +110,10 @@ test("settings: leaving the password field clears it; an open network joins at o
   assert.deepEqual([h.s.pw, h.s.page], ["", "wifi"]);
   h.key("down"); h.key("enter");
   assert.deepEqual(h.calls.join, [["cafe-guest", ""]]);
+  h.clock.t = 25000; h.tick();
+  assert.equal(h.s.note, "Still trying cafe-guest…");   // the P4 retries for up to a minute
   Object.assign(h.station, { wifi: "failed", state: "Wi-Fi gave up: network not found (reason 201)" });
-  h.tick();
+  h.clock.t = 60000; h.tick();
   assert.equal(h.s.note, "Could not join cafe-guest: Wi-Fi gave up: network not found (reason 201)");
 });
 

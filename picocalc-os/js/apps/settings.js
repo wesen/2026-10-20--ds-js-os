@@ -26,7 +26,8 @@ const ST_ZONES = [
   ["Sao Paulo, Buenos Aires", "<-03>3"],
 ];
 const ST_MENU = ["wifi", "zone", "provider"];
-const ST_SCAN_MS = 12000, ST_JOIN_MS = 20000;
+// a join is followed until the station is up or gives up; the P4 tries six times, each up to about ten seconds
+const ST_SCAN_MS = 12000, ST_SLOW_MS = 20000, ST_JOIN_MS = 90000;
 const ST_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const ST_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -57,7 +58,8 @@ function stInfo(s) {
   if (!j || !s.info || s.info.ssid !== j.ssid) return;
   if (s.info.wifi === "up") { s.note = "Connected to " + j.ssid + "."; s.joining = null; }
   else if (s.info.wifi === "failed") { s.note = "Could not join " + j.ssid + ": " + s.info.state; s.joining = null; }
-  else if (now() - j.at > ST_JOIN_MS) { s.note = "Still trying " + j.ssid + "…"; s.joining = null; }
+  else if (now() - j.at > ST_JOIN_MS) { s.note = "No answer from " + j.ssid + "."; s.joining = null; }
+  else if (now() - j.at > ST_SLOW_MS && !j.slow) { j.slow = true; s.note = "Still trying " + j.ssid + "…"; }
 }
 
 // The scan runs on the port's network worker; this chain polls for its result and never holds a turn open.
@@ -168,7 +170,7 @@ function stScreen(s) {
                                                color: i && i.ssid === n.ssid && up ? "accent" : "" }));
     return ui.col({ gap: 6 }, top, ui.sep(),
       nets.length ? ui.list(nets, s.sel, { font: "s", lead: 6, grow: 1 })
-        : ui.text(s.scanning ? "Looking for networks…" : "F2 looks for networks.", { font: "s", color: "muted", grow: 1 }),
+        : ui.col({ grow: 1 }, ui.text(s.scanning ? "Looking for networks…" : "F2 looks for networks.", { font: "s", color: "muted" })),
       status);
   }
   if (s.page === "zone") {
