@@ -43,6 +43,10 @@ topics:
       description: Todo lists, agendas and reminders
     - slug: clock
       description: Wall-clock time, time zones and SNTP
+    - slug: settings
+      description: Device settings and configuration
+    - slug: security
+      description: Capabilities, secrets and isolation
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes
