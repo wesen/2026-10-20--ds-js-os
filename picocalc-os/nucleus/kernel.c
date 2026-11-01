@@ -424,7 +424,7 @@ int kernel_restart_world(world_t *W) {
 // A spawned world is named u-<name> and gets no claims; spawning the same name again keeps its slot (world ids are
 // referenced by handles, asks and timers, so a slot never changes hands) and boots the new source.
 static uint64_t hash(const char *s);
-int kernel_spawn(const char *name, const char *source, vtime_t at, char *why, size_t n) {
+int kernel_spawn(const char *name, const char *source, size_t len, int engine, vtime_t at, char *why, size_t n) {
   char wname[NAME_LEN];
   snprintf(wname, sizeof wname, "u-%s", name);
   world_t *W = world_by_name(wname);
@@ -434,7 +434,6 @@ int kernel_spawn(const char *name, const char *source, vtime_t at, char *why, si
     W = calloc(1, sizeof(*W));
     W->id = K.n_worlds;
     snprintf(W->name, sizeof W->name, "%s", wname);
-    snprintf(W->file, sizeof W->file, "apps/%s.js", name);
     snprintf(W->kind, sizeof W->kind, "world");
     snprintf(W->title, sizeof W->title, "%s", wname);
     W->budget_us = MS(50); W->mem_limit = 384 * 1024; W->store_limit = 8 * 1024; W->prio = -1;
@@ -443,18 +442,46 @@ int kernel_spawn(const char *name, const char *source, vtime_t at, char *why, si
     W->status = W_STOPPED;
     K.worlds[K.n_worlds++] = W;
   }
+  if (W->status == W_IDLE) { teardown(W, "it was started again"); W->status = W_RESTARTING; }   // with its old engine
   free(W->source);
-  W->source = xstrdup(source);
-  W->source_len = strlen(source);
-  W->engine = ENG_JS;
-  if (W->status == W_IDLE) { teardown(W, "it was started again"); W->status = W_RESTARTING; }
+  W->source = malloc(len + 1);
+  memcpy(W->source, source, len);
+  W->source[len] = 0;
+  W->source_len = len;
+  W->engine = engine;
+  snprintf(W->file, sizeof W->file, "apps/%s.%s", name, engine == ENG_WASM ? "wasm" : "js");
   if (W->status == W_STOPPED) W->status = W_RESTARTING;
   if (!W->boot_ready) { W->boot_ready = true; W->boot_t = at; W->boot_seq = ++K.seq; }   // a pending restart's event is now stale
   W->epoch++;
   W->n_crash_times = 0;
   W->last_error[0] = 0;
-  klog("starting %s from storage (%zu bytes)", wname, strlen(source));
+  klog("starting %s from storage (%zu bytes%s)", wname, len, engine == ENG_WASM ? ", WebAssembly" : "");
   return 0;
+}
+
+// The end of sys.spawn(name, handle): the file's bytes have been read (fs.c, FS_LOAD) without passing through any
+// world. A module that starts with \0asm is WebAssembly; anything else must be JavaScript text. Machine code is
+// never started from storage: on the P4 it would run unisolated, and on the host only the manifest names it.
+void kernel_spawn_loaded(fs_job_t *j, vtime_t at) {
+  char why[200] = "";
+  if (j->ok) {
+    bool wasm = j->len >= 4 && !memcmp(j->data, "\0asm", 4);
+    if (!wasm && (j->len > USER_SOURCE_MAX || memchr(j->data, 0, j->len) || !utf8_valid((const unsigned char *)j->data, j->len)))
+      snprintf(why, sizeof why, "%s is neither JavaScript (UTF-8 text, at most %d KB) nor WebAssembly", j->path, USER_SOURCE_MAX / 1024);
+    else if (kernel_spawn(j->name, j->data, j->len, wasm ? ENG_WASM : ENG_JS, at, why, sizeof why)) {}
+    else {
+      char r[96];
+      snprintf(r, sizeof r, "{\"world\":\"u-%s\",\"engine\":\"%s\"}", j->name, wasm ? "wasm" : "js");
+      kernel_settle_at(j->w, j->epoch, j->promise, 1, xstrdup(r), at);
+      return;
+    }
+    sbuf_t b = { 0 };
+    sb_json_str(&b, why);
+    kernel_settle_at(j->w, j->epoch, j->promise, 0, b.s, at);
+    return;
+  }
+  kernel_settle_at(j->w, j->epoch, j->promise, 0, j->json, at);   // why the file could not be read
+  j->json = NULL;
 }
 
 void kernel_stop_world(world_t *W, const char *by) {

@@ -9,7 +9,8 @@
 //       wasi_snapshot_preview1.proc_exit   exit() and abort(): the world crashes
 //     WAMR checks each pointer and length the module passes to nw.call against its memory before the call is made;
 //   - time: the interpreter counts the instructions the module executes and stops it when the turn budget, converted
-//     with PROFILE.wasm_ns_per_op, is spent.
+//     with PROFILE.wasm_ns_per_op, is spent. On the real clock (the device) a turn that took longer than its budget
+//     anyway (slow system calls, a model that is off) is an overrun when it returns, as for JavaScript.
 // The module is built with sdk/nw_wasm.c, which provides the nw_* functions over the imports and exports what the
 // kernel calls: nw_wasm_init, nw_wasm_buffer (room for an event's strings, which the kernel copies in) and
 // nw_wasm_event. A C runtime's _initialize (constructors) runs before nw_wasm_init.
@@ -130,7 +131,7 @@ static const char *kind_name(wasm_import_export_kind_t k) {
 static void mem_used(world_t *W, wasm_t *m) {
   wasm_memory_inst_t mem = wasm_runtime_get_default_memory(m->inst);
   uint64_t pages = mem ? wasm_memory_get_cur_page_count(mem) : 0;
-  W->mem_used = (size_t)(pages * (mem ? wasm_memory_get_bytes_per_page(mem) : PAGE)) + STACK_BYTES;
+  W->mem_used = (size_t)((double)(pages * (mem ? wasm_memory_get_bytes_per_page(mem) : PAGE) + STACK_BYTES) * PROFILE.mem_scale);   // as host bytes, like the other engines
 }
 
 static int wasm_load(world_t *W, char *why, size_t n) {
@@ -185,6 +186,7 @@ static int wasm_event(world_t *W, const nw_event_t *e) {
   double limit_d = (double)W->nat->budget_us * 1000.0 / PROFILE.wasm_ns_per_op;
   int limit = limit_d > INT_MAX ? INT_MAX : limit_d < 1 ? 1 : (int)limit_d;
   wasm_runtime_set_instruction_count_limit(m->env, limit);   // what is left carries over from one call to the next
+  vtime_t deadline = K.realtime ? port_clock() + W->nat->budget_us : VT_INF;
   bool ok;
   uint32_t argv[7];
   if (e->kind == NW_INIT) {
@@ -212,8 +214,9 @@ static int wasm_event(world_t *W, const nw_event_t *e) {
       ok = wasm_runtime_call_wasm(m->env, m->event, 7, argv);
     }
   }
-  int left = wasm_runtime_get_instruction_count_limit(m->env);
-  K.seg_cost += (vtime_t)((double)(limit - (left > 0 ? left : 0)) * PROFILE.wasm_ns_per_op / 1000.0);   // ignored on the real clock
+  int left = wasm_runtime_get_instruction_count_limit(m->env), used = limit - (left > 0 ? left : 0);
+  K.seg_cost += (vtime_t)((double)used * PROFILE.wasm_ns_per_op / 1000.0);   // ignored on the real clock
+  if (K.trace) klog("%s: %d WebAssembly instructions (event %d%s%s)", W->name, used, e->kind, e->type[0] ? ", " : "", e->type);
   if (!ok) {
     const char *x = wasm_runtime_get_exception(m->inst);
     if (x && !strncmp(x, "Exception: ", 11)) x += 11;
@@ -224,6 +227,7 @@ static int wasm_event(world_t *W, const nw_event_t *e) {
     return -1;
   }
   mem_used(W, m);
+  if (K.realtime && port_clock() > deadline) { W->overrun = true; return -1; }
   int r = (int)argv[0];
   if (r != NW_DONE && r != NW_LATER) { snprintf(W->last_error, sizeof W->last_error, "it broke the native protocol (an end of %d)", r); return -1; }
   return r;

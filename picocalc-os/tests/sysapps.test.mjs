@@ -282,6 +282,21 @@ test("loader: F4 writes a new app from the template under a free name, F3 hands 
   assert.deepEqual([h.handles[0].revoked, h.handles[0].released], [1, 1], "the earlier file is taken back");
 });
 
+test("loader: a WebAssembly app is started through a read-only handle to its file, released after; F3 does not edit it", async () => {
+  const h = loader({ files: { "echo.wasm": "\0asm", "hello.js": "app('hello')", "autostart.txt": "echo\n" } });
+  await h.def.start(h.s);
+  const rows = () => JSON.parse(h.screen()).kids[0].items.map((i) => i.label);
+  assert.deepEqual(rows(), ["echo.wasm", "hello.js"]);
+  assert.equal(h.spawned.length, 1, "autostart finds echo.wasm by its name");
+  const [name, file] = h.spawned[0];
+  assert.equal(name, "echo");
+  assert.deepEqual([file.path, file.rights, file.released], ["echo.wasm", "r", 1]);
+  assert.equal(h.sent.filter((m) => m.type === "open").length, 0, "a module has no screen to open");
+  await h.key("f3");
+  assert.equal(h.asks.length, 0);
+  assert.match(h.s.note, /cannot be edited/);
+});
+
 test("loader: apps named in autostart.txt start at boot, without being opened", async () => {
   const h = loader({ files: { "a.js": "app('a')", "b.js": "app('b')", "autostart.txt": "# at boot\na\n\nmissing\nNot-valid\nb\n" } });
   await h.def.start(h.s);

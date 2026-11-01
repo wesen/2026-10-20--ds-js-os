@@ -133,13 +133,15 @@ typedef struct event {
 #define FS_PATH_MAX 96            // a path, with its terminator
 #define FS_FILE_MAX 65536         // the largest file a world reads or writes, in bytes
 #define FS_LIST_MAX 256           // entries a list returns
-enum { FS_LIST, FS_STAT, FS_READ, FS_WRITE, FS_APPEND, FS_MKDIR, FS_REMOVE, FS_RENAME, FS_INFO };
+enum { FS_LIST, FS_STAT, FS_READ, FS_WRITE, FS_APPEND, FS_MKDIR, FS_REMOVE, FS_RENAME, FS_INFO, FS_LOAD };
 typedef struct fs_job {          // one file operation, carried out after the segment that asked for it ends
   int op;
   char path[FS_PATH_MAX], path2[FS_PATH_MAX];
-  char *data; size_t len;         // FS_WRITE / FS_APPEND: the text
+  char *data; size_t len;         // FS_WRITE / FS_APPEND: the text; FS_LOAD: the bytes read (up to USER_BINARY_MAX)
   int w, epoch, promise;          // whose promise the result settles
   int ok; char *json;             // the result: a JSON value, or (ok 0) an error message as a JSON string
+  void (*done)(struct fs_job *j, vtime_t at);   // if set, the port calls it with the result instead of settling
+  char name[NAME_LEN];            // FS_LOAD for sys.spawn: the app's name
 } fs_job_t;
 bool fs_path_ok(const char *p);   // relative, no empty/./.. segment, no leading dot, safe characters, fits
 bool fs_join(char *out, const char *base, const char *rel);   // base "/" rel into out[FS_PATH_MAX]; false if too long
@@ -270,9 +272,13 @@ char *kernel_stats_json(void);
 void kernel_stats_print(void);
 bool world_needs(world_t *W, const char *ch);
 bool world_provides(world_t *W, const char *ch);
-// Apps from storage (sys.spawn, sys.stop; vm.c checks the claim and the name). Both run as deferred effects.
+// Apps from storage (sys.spawn, sys.stop; vm.c checks the claim and the name). Both run as deferred effects. An app
+// is JavaScript text or, read from a file through a handle, a WebAssembly module (never machine code).
 #define USER_SOURCE_MAX 65536
-int kernel_spawn(const char *name, const char *source, vtime_t at, char *why, size_t n);
+#define USER_BINARY_MAX (256 * 1024)
+int kernel_spawn(const char *name, const char *source, size_t len, int engine, vtime_t at, char *why, size_t n);
+struct fs_job;
+void kernel_spawn_loaded(struct fs_job *j, vtime_t at);   // the end of sys.spawn(name, handle)'s file job
 void kernel_stop_world(world_t *W, const char *by);
 const char *channel_claim(const char *ch);      // the claim a guarded channel takes ("keys": "keys.raw"), or NULL
 bool world_may_use(world_t *W, const char *ch);  // W has that claim, or the channel is open

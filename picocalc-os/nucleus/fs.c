@@ -147,6 +147,23 @@ static void do_read(fs_job_t *j, const char *f) {
   j->ok = 1; j->json = b.s;
 }
 
+// An app's bytes for sys.spawn: any content (JavaScript or WebAssembly; the kernel decides), up to USER_BINARY_MAX
+static void do_load(fs_job_t *j, const char *f) {
+  struct stat st;
+  if (stat(f, &st)) { error(j, "no file %s", shown(j->path)); return; }
+  if (S_ISDIR(st.st_mode)) { error(j, "%s is a directory", shown(j->path)); return; }
+  if (st.st_size > USER_BINARY_MAX) { error(j, "%s is larger than %d KB", j->path, USER_BINARY_MAX / 1024); return; }
+  FILE *fp = fopen(f, "rb");
+  if (!fp) { error(j, "cannot open %s", j->path); return; }
+  j->data = malloc((size_t)st.st_size + 1);
+  size_t n = j->data ? fread(j->data, 1, (size_t)st.st_size, fp) : 0;
+  fclose(fp);
+  if (!j->data || n != (size_t)st.st_size) { free(j->data); j->data = NULL; error(j, "cannot read %s", j->path); return; }
+  j->data[n] = 0;
+  j->len = n;
+  j->ok = 1;
+}
+
 static bool write_all(const char *f, const char *mode, const char *data, size_t len) {
   FILE *fp = fopen(f, mode);
   if (!fp) return false;
@@ -198,6 +215,7 @@ void fs_execute(fs_job_t *j) {
   switch (j->op) {
   case FS_LIST: do_list(j, f); break;
   case FS_READ: do_read(j, f); break;
+  case FS_LOAD: do_load(j, f); break;
   case FS_WRITE: do_write(j, f, false); break;
   case FS_APPEND: do_write(j, f, true); break;
   case FS_STAT:

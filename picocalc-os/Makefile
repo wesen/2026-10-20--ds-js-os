@@ -192,7 +192,7 @@ endif
 WASM_FLAGS := --target=wasm32-wasi $(WASM_SYS) -O2 -Wall -Isdk
 WASM_LINK  := -mexec-model=reactor -Wl,--stack-first -Wl,-z,stack-size=16384 -Wl,--strip-all
 WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_calls.inc sdk/nw_wasm.c
-WASMS      := $(BUILD)/natives/echo.wasm $(BUILD)/natives/battery.wasm $(BUILD)/natives/wprobe.wasm $(BUILD)/natives/wimport.wasm
+WASMS      := $(addprefix $(BUILD)/natives/,echo.wasm battery.wasm wprobe.wasm wimport.wasm bench.wasm)
 wasm: $(WASMS)
 
 $(BUILD)/natives/%.wasm: natives/%.c $(WASM_SDK)

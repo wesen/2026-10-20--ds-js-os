@@ -45,8 +45,8 @@ static void fs_worker(void *arg) {
   }
 }
 void p4_fs_done(fs_job_t *j) {   // the kernel task
-  kernel_settle_at(j->w, j->epoch, j->promise, j->ok, j->json, port_clock());
-  j->json = NULL;
+  if (j->done) j->done(j, port_clock());
+  else { kernel_settle_at(j->w, j->epoch, j->promise, j->ok, j->json, port_clock()); j->json = NULL; }
   fs_job_free(j);
 }
 

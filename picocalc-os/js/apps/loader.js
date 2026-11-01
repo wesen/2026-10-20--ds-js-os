@@ -1,7 +1,8 @@
-// Loader: apps stored as files in apps/ on the device, run as worlds named u-<name> with no claims. It reads a file
-// with its own handle and passes the text to sys.spawn; the kernel opens nothing for it. An app from storage can
-// show a screen, get keys while it is in front, keep a small store and talk to other worlds, and nothing more.
-const LD_FILE = /^([a-z0-9-]{1,12})\.js$/;
+// Loader: apps stored as files in apps/ on the device, run as worlds named u-<name> with no claims. A JavaScript app
+// is read with the Loader's own handle and its text passed to sys.spawn; for a WebAssembly app (name.wasm) the
+// Loader passes a read-only handle to the file and the kernel reads the bytes. An app from storage can show a screen
+// (JavaScript), get keys while it is in front, keep a small store and talk to other worlds, and nothing more.
+const LD_FILE = /^([a-z0-9-]{1,12})\.(js|wasm)$/;
 const LD_AUTOSTART = "autostart.txt";
 const LD_TEMPLATE = `// An app from storage. It runs as the world u-hello, with no claims: it can show a screen, keep a small store,
 // and get keys while it is in front. It cannot read files, use the network, or hear keys meant for other apps.
@@ -23,8 +24,8 @@ async function ldRefresh(s) {
   if (!s.dir) return;
   try {
     const files = await s.dir.list();
-    s.apps = files.filter((f) => !f.dir && LD_FILE.test(f.name)).map((f) => ({ name: LD_FILE.exec(f.name)[1], size: f.size }))
-      .sort((a, b) => (a.name < b.name ? -1 : 1));
+    s.apps = files.filter((f) => !f.dir && LD_FILE.test(f.name)).map((f) => ({ name: LD_FILE.exec(f.name)[1], ext: LD_FILE.exec(f.name)[2], size: f.size }))
+      .sort((a, b) => (a.name + "." + a.ext < b.name + "." + b.ext ? -1 : 1));
     s.error = "";
   } catch (e) { s.apps = []; s.error = e.message; }
   if (s.sel >= s.apps.length) s.sel = Math.max(0, s.apps.length - 1);
@@ -37,12 +38,20 @@ function ldWorlds(s) {
 const ldWorld = (s, name) => s.worlds["u-" + name] || null;
 const ldRunning = (w) => !!w && w.state !== "stopped" && w.state !== "restarting";
 
-async function ldStart(s, name, open) {
-  let source;
-  try { source = await s.dir.read(name + ".js"); }
-  catch (e) { s.note = e.message; return false; }
-  try { sys.spawn(name, source); }
-  catch (e) { s.note = e.message; return false; }
+async function ldStart(s, app, open) {
+  const name = app.name;
+  if (app.ext === "wasm") {
+    const h = s.dir.at(name + ".wasm", "r");
+    try { await sys.spawn(name, h); }
+    catch (e) { s.note = e.message; return false; }
+    finally { h.release(); }
+  } else {
+    let source;
+    try { source = await s.dir.read(name + ".js"); }
+    catch (e) { s.note = e.message; return false; }
+    try { sys.spawn(name, source); }
+    catch (e) { s.note = e.message; return false; }
+  }
   s.note = "Started u-" + name + ".";
   if (open) send("compositor", "open", { app: "u-" + name });
   await sleep(300);
@@ -79,7 +88,10 @@ async function ldAutostart(s) {
   try { text = await s.dir.read(LD_AUTOSTART); } catch (e) { return; }   // no list: nothing to start
   const names = text.split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#"));
   const started = [];
-  for (const name of names) if (/^[a-z0-9-]{1,12}$/.test(name) && await ldStart(s, name, false)) started.push(name);
+  for (const name of names) {   // a name: its .js file if there is one, else its .wasm file
+    const app = s.apps.find((a) => a.name === name);
+    if (app && await ldStart(s, app, false)) started.push(name);
+  }
   s.note = started.length ? "Started at boot: " + started.join(", ") : "";
   s.noteAt = now();
 }
@@ -96,16 +108,19 @@ async function ldKey(s, k) {
       if (!once || !a) return;
       const w = ldWorld(s, a.name);
       if (ldRunning(w)) return send("compositor", "open", { app: "u-" + a.name });
-      return ldStart(s, a.name, true);
+      return ldStart(s, a, a.ext === "js");
     }
     case "f2":
       if (!once || !a || !ldWorld(s, a.name)) return;
       try { sys.stop("u-" + a.name); s.note = "Stopped u-" + a.name + "."; } catch (e) { s.note = e.message; }
       await sleep(100); ldWorlds(s);
       return;
-    case "f3": if (once && a) return ldEdit(s, a.name); return;
+    case "f3":
+      if (once && a && a.ext !== "js") { s.note = "A WebAssembly app is built elsewhere; it cannot be edited here."; return; }
+      if (once && a) return ldEdit(s, a.name);
+      return;
     case "f4": if (once) return ldNew(s); return;
-    case "f5": if (once && a) return ldStart(s, a.name, false); return;
+    case "f5": if (once && a) return ldStart(s, a, false); return;
   }
 }
 
@@ -118,7 +133,7 @@ function ldState(s, a) {
 }
 
 function ldScreen(s) {
-  const items = s.apps.map((a) => { const st = ldState(s, a); return { label: a.name + ".js", detail: (a.size / 1024).toFixed(1) + " KB", right: st.text, rightColor: st.color }; });
+  const items = s.apps.map((a) => { const st = ldState(s, a); return { label: a.name + "." + a.ext, detail: (a.size / 1024).toFixed(1) + " KB", right: st.text, rightColor: st.color }; });
   const running = s.apps.filter((a) => ldState(s, a).text === "running").length;
   const sel = s.apps[s.sel], w = sel && ldWorld(s, sel.name);
   const why = w && w.error && !w.error.startsWith("stopped by") ? "u-" + sel.name + ": " + w.error : "";

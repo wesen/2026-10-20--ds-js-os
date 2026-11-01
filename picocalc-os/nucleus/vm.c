@@ -619,7 +619,8 @@ static JSValue op_sys_admin(JSContext *ctx, world_t *W, int argc, JSValueConst *
   return JS_TRUE;
 }
 static JSValue op_sys_fault(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { return op_sys_admin(ctx, W, argc, argv, false); }
-// Apps from storage (claim sys.spawn). The caller passes the source it read; the kernel opens no file for it.
+// Apps from storage (claim sys.spawn). With text, the caller passes the source it read; with a file handle, the
+// kernel reads the file the handle names (ka_spawn).
 static bool app_name_ok(const char *s) {
   size_t n = s ? strlen(s) : 0;
   if (!n || n > 12) return false;
@@ -628,7 +629,7 @@ static bool app_name_ok(const char *s) {
 }
 static void run_spawn(deferred_t *d, vtime_t at) {
   char why[160];
-  if (kernel_spawn(d->json, (const char *)d->bytes, at, why, sizeof why)) klog("cannot start u-%s: %s", d->json, why);
+  if (kernel_spawn(d->json, (const char *)d->bytes, strlen((const char *)d->bytes), ENG_JS, at, why, sizeof why)) klog("cannot start u-%s: %s", d->json, why);
   free(d->json); free(d->bytes);
 }
 static JSValue op_sys_spawn(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
@@ -652,6 +653,35 @@ static JSValue op_sys_spawn(JSContext *ctx, world_t *W, int argc, JSValueConst *
   }
   free(name); free(src);
   return r;
+}
+// __ka("sys.spawn", name, handle): an app from a file the caller holds a handle to, JavaScript or WebAssembly by its
+// first bytes. The kernel reads the bytes itself after the segment (fs.c, FS_LOAD), so a binary never passes through
+// JavaScript, and kernel_spawn_loaded starts u-<name> and settles the promise with { world, engine }.
+static JSValue ka_spawn(JSContext *ctx, world_t *W, int argc, JSValueConst *argv, JSValue *p) {
+  if (!world_claims(W, "sys.spawn")) return fail(ctx, "%s has no claim on sys.spawn", W->name);
+  char *name = sarg(ctx, argv, argc, 0);
+  char wname[NAME_LEN];
+  snprintf(wname, sizeof wname, "u-%s", name ? name : "");
+  world_t *T = name ? world_by_name(wname) : NULL;
+  const char *why = !app_name_ok(name) ? "an app's name is 1 to 12 characters: a-z, 0-9 and -"
+                  : T && !T->user ? "that name belongs to a system world"
+                  : !T && K.n_worlds >= MAX_WORLDS ? "no room for another world" : NULL;
+  if (why) { free(name); return fail(ctx, "%s", why); }
+  handle_t *h = use(ctx, W, iarg(ctx, argv, argc, 1, 0), H_FS, R_READ);
+  if (!h) { free(name); return JS_EXCEPTION; }
+  if (!h->file) { free(name); return fail(ctx, "an app is started from a file handle, not a directory"); }
+  int id = vm_new_promise(W, p);
+  if (id < 0) { free(name); return JS_EXCEPTION; }
+  fs_job_t *j = calloc(1, sizeof *j);
+  j->op = FS_LOAD;
+  j->done = kernel_spawn_loaded;
+  snprintf(j->path, sizeof j->path, "%s", h->path);
+  snprintf(j->name, sizeof j->name, "%s", name);
+  free(name);
+  deferred_t *d = calloc(1, sizeof *d);
+  d->run = run_fs; d->w = W->id; d->epoch = W->epoch; d->promise = id; d->job = j;
+  defer(d);
+  return *p;
 }
 static void run_stop(deferred_t *d, vtime_t at) {
   (void)at;
@@ -959,6 +989,8 @@ static JSValue host_ka(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
   } else if (!strcmp(op, "fs")) {
     r = ka_fs(ctx, W, argc, argv, &p);
     if (!JS_IsException(r)) r = p;
+  } else if (!strcmp(op, "sys.spawn")) {
+    r = ka_spawn(ctx, W, argc, argv, &p);
   } else r = fail(ctx, "no such kernel operation: %s", op);
   JS_FreeCString(ctx, op);
   return r;

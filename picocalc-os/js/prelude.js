@@ -100,8 +100,9 @@
     fault: (name) => k("sys.fault", name),
     restart: (name) => k("sys.restart", name),
     log: (after) => k("sys.log", after || 0),   // claim sys.log: { first, next, lines: [{ n, t, wall, s }] }
-    // claim sys.spawn: run source as the world u-<name> with no claims (again: restart it with this source); stop it
-    spawn: (name, source) => k("sys.spawn", name, source),
+    // claim sys.spawn: run source as the world u-<name> with no claims (again: restart it with this source); stop it.
+    // Given a file handle instead, the kernel reads the file (JavaScript or WebAssembly) and the result is a promise.
+    spawn: (name, source) => (source instanceof Handle ? ka("sys.spawn", name, source.id) : k("sys.spawn", name, source)),
     stop: (world) => k("sys.stop", world),
   };
 

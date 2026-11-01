@@ -129,8 +129,8 @@ int64_t port_wall_ms(void) { return wall_unset ? -1 : wall_base + kernel_now() /
 void port_fs_submit(fs_job_t *j, vtime_t at) {
   fs_execute(j);
   size_t bytes = j->len + (j->json ? strlen(j->json) : 0);
-  kernel_settle_at(j->w, j->epoch, j->promise, j->ok, j->json, at + MS(2) + (vtime_t)bytes);
-  j->json = NULL;
+  if (j->done) j->done(j, at + MS(2) + (vtime_t)bytes);
+  else { kernel_settle_at(j->w, j->epoch, j->promise, j->ok, j->json, at + MS(2) + (vtime_t)bytes); j->json = NULL; }
   fs_job_free(j);
 }
 // The host reports a volume the size of the P4's FAT partition, less what the root holds in 4 KB clusters, so
