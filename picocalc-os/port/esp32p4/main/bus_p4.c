@@ -78,10 +78,22 @@ static bool inj_pop(uint8_t *state, uint8_t *code) {
   return any;
 }
 
+// A reset of the P4 alone in the middle of a keyboard transaction leaves the STM32 not acknowledging its address
+// until the whole PicoCalc is power-cycled (seen after flashing and after console resets). bus_p4_hold() stops the
+// worker between transactions, so a reboot or a flash that follows cannot interrupt one.
+static volatile bool i2c_hold, i2c_active;
+bool bus_p4_hold(int timeout_ms) {
+  i2c_hold = true;
+  for (int t = 0; i2c_active && t < timeout_ms; t++) vTaskDelay(pdMS_TO_TICKS(1));
+  return !i2c_active;
+}
+
 static void i2c_worker(void *arg) {
   req_t r;
   for (;;) {
     xQueueReceive(q_i2c, &r, portMAX_DELAY);
+    if (i2c_hold) { vTaskSuspend(NULL); }   // held for a reboot or a flash: no transaction starts any more
+    i2c_active = true;
     vtime_t t0 = port_clock();
     i2c_master_dev_handle_t dev = i2c_dev(r.addr, r.hz);
     esp_err_t err = dev ? ESP_OK : ESP_ERR_NO_MEM;
@@ -109,6 +121,7 @@ static void i2c_worker(void *arg) {
       for (int i = 0; i < nread; i++) k += snprintf(json + k, sizeof json - k, "%s%d", i ? "," : "", rd[i]);
       snprintf(json + k, sizeof json - k, "]");
     }
+    i2c_active = false;
     post(BUS_I2C0, &r, !err, json, t0, (uint32_t)(nbytes + nread + 2));
   }
 }

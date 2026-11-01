@@ -181,6 +181,15 @@ static void do_write(fs_job_t *j, const char *f, bool append) {
   char r[32]; snprintf(r, sizeof r, "{\"bytes\":%zu}", j->len); result(j, 1, r);
 }
 
+static bool dir_empty(const char *f) {
+  DIR *d = opendir(f);
+  if (!d) return false;
+  struct dirent *de; bool empty = true;
+  while (empty && (de = readdir(d))) if (strcmp(de->d_name, ".") && strcmp(de->d_name, "..")) empty = false;
+  closedir(d);
+  return empty;
+}
+
 void fs_execute(fs_job_t *j) {
   char f[FS_PATH_MAX + 64], g[FS_PATH_MAX + 64];
   struct stat st;
@@ -203,7 +212,8 @@ void fs_execute(fs_job_t *j) {
   case FS_REMOVE:
     if (!*j->path) error(j, "the root cannot be removed");
     else if (stat(f, &st)) error(j, "no file %s", j->path);
-    else if (S_ISDIR(st.st_mode) ? rmdir(f) : unlink(f)) error(j, errno == ENOTEMPTY || errno == EEXIST ? "%s is not empty" : "cannot remove %s", j->path);
+    else if (S_ISDIR(st.st_mode) && !dir_empty(f)) error(j, "%s is not empty", j->path);   // FAT does not say ENOTEMPTY
+    else if (S_ISDIR(st.st_mode) ? rmdir(f) : unlink(f)) error(j, "cannot remove %s (%s)", j->path, strerror(errno));
     else result(j, 1, "true");
     break;
   case FS_RENAME:

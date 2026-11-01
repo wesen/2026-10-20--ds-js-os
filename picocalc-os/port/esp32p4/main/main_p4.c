@@ -23,6 +23,7 @@
 #include "esp_heap_caps.h"
 #include "esp_log.h"
 #include "esp_psram.h"
+#include "esp_system.h"
 #include "freertos/task.h"
 #include "p4.h"
 
@@ -151,9 +152,15 @@ void console_exec(char *line) {
     else kernel_restart_world(W);
   } else if (!strcmp(cmd, "shot")) shot();
   else if (!strcmp(cmd, "net")) p4_agent_console(rest);
+  else if (!strcmp(cmd, "ls") || !strcmp(cmd, "cat") || !strcmp(cmd, "df")) p4_fs_console(cmd, rest);
+  else if (!strcmp(cmd, "hold")) printf("i2c0 %s; reboot or flash now\n", bus_p4_hold(100) ? "held between transactions" : "still busy");
+  else if (!strcmp(cmd, "reboot")) {
+    printf("i2c0 %s; rebooting\n", bus_p4_hold(100) ? "held" : "still busy");
+    fflush(stdout); vTaskDelay(pdMS_TO_TICKS(20)); esp_restart();
+  }
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help | ls [PATH] | cat PATH | df | hold | reboot\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
@@ -189,6 +196,7 @@ static void kernel_task(void *arg) {
     kmsg_t m;
     while (xQueueReceive(p4_kq, &m, 0) == pdTRUE) {
       if (m.line) { size_t n = strlen(m.line); console_exec(m.line); console_wipe(m.line, n); free(m.line); }
+      else if (m.fs) p4_fs_done(m.fs);
       else bus_p4_done(&m);
     }
     kernel_run_until(port_clock());
@@ -197,6 +205,7 @@ static void kernel_task(void *arg) {
     if (wait > MS(50)) wait = MS(50);
     if (xQueueReceive(p4_kq, &m, pdMS_TO_TICKS((wait + 999) / 1000)) == pdTRUE) {
       if (m.line) { size_t n = strlen(m.line); console_exec(m.line); console_wipe(m.line, n); free(m.line); }
+      else if (m.fs) p4_fs_done(m.fs);
       else bus_p4_done(&m);
     }
   }
@@ -215,6 +224,7 @@ void app_main(void) {
   setvbuf(stdout, NULL, _IOLBF, 0);
 
   p4_store_init();
+  p4_fs_init();
   p4_agent_init();
   bus_p4_init();
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);

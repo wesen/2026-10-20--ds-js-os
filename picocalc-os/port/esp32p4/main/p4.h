@@ -14,9 +14,10 @@
 #define PIN_LCD_DC 24
 #define PIN_LCD_RST 25
 
-// A finished bus transfer, or (line != NULL) a console command, for the kernel task.
+// A finished bus transfer, a console command (line != NULL) or a finished file job (fs != NULL), for the kernel task.
 typedef struct {
   char *line;
+  fs_job_t *fs;
   int bus, w, epoch, promise, ok, buf;
   vtime_t t0, t1;
   uint32_t bytes;
@@ -26,8 +27,12 @@ extern QueueHandle_t p4_kq;
 
 void bus_p4_init(void);
 void bus_p4_done(const kmsg_t *m);    // the kernel task's side of a finished transfer
-void bus_p4_inject_key(int state, int code);   // a console key event (state 1 down, 2 hold, 3 up), read as if typed
+void bus_p4_inject_key(int state, int code);
+bool bus_p4_hold(int timeout_ms);     // stop keyboard-bus transactions (before a reboot or a flash); true when idle   // a console key event (state 1 down, 2 hold, 3 up), read as if typed
 void console_exec(char *line);        // main_p4.c, on the kernel task
+void p4_fs_init(void);                // mounts the files partition at /files, starts the fs worker
+void p4_fs_done(fs_job_t *j);         // the kernel task's side of a finished file job
+void p4_fs_console(const char *cmd, const char *arg);   // ls [PATH], cat PATH, df
 void p4_store_init(void);             // never erases failed/old NVS automatically
 bool p4_config_available(void);
 void p4_agent_init(void);             // creates the native worker; never touches K from that worker

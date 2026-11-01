@@ -18,6 +18,9 @@ a = ap.parse_args()
 ser = serial.Serial(a.port, 115200, timeout=0.05)
 ser.reset_input_buffer()
 if not a.no_reset:
+    # Hold the keyboard bus first: a reset in the middle of an I2C transaction leaves the PicoCalc's STM32 not
+    # answering until the whole device is power-cycled. Firmware without "hold" just answers "unknown command".
+    ser.write(b"\nhold\n"); time.sleep(0.3)
     ser.dtr = False   # IO0 high: boot the app, not the ROM downloader
     ser.rts = True    # EN low: hold the chip in reset
     time.sleep(0.12)

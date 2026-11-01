@@ -24,3 +24,7 @@ CONFIG_COMPILER_OPTIMIZATION_PERF=y
 # The kernel task runs on core 1 and may keep it busy through boot; it is not stuck when it does.
 CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1=n
 CONFIG_ESP_SYSTEM_USE_EH_FRAME=y
+
+# Files: long names on the FAT partition (otherwise 8.3), kept on the heap.
+CONFIG_FATFS_LFN_HEAP=y
+CONFIG_FATFS_MAX_LFN=255

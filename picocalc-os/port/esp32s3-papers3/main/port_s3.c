@@ -248,3 +248,13 @@ void port_gpio_unwatch(int pin) {
 #endif
   irq_handle[pin] = 0;
 }
+
+// Files are not wired on the PaperS3 yet (PICOCALC-FS covers the PicoCalc): no root, and a job fails.
+const char *port_fs_root(void) { return NULL; }
+int port_fs_info(uint64_t *total, uint64_t *free_bytes) { (void)total; (void)free_bytes; return -1; }
+void port_fs_submit(fs_job_t *j, vtime_t at) {
+  fs_execute(j);   // reports "this device has no filesystem"
+  kernel_settle_at(j->w, j->epoch, j->promise, j->ok, j->json, at);
+  j->json = NULL;
+  fs_job_free(j);
+}

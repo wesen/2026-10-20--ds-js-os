@@ -7,7 +7,7 @@ set(GEN ${CMAKE_CURRENT_BINARY_DIR}/gen)
 idf_component_register(
     SRCS
         "main_s3.c" "port_s3.c" "bus_s3.cpp"
-        "${OS}/nucleus/kernel.c" "${OS}/nucleus/vm_mqjs.c" "${OS}/nucleus/hw.c" "${OS}/nucleus/gfx.c" "${OS}/nucleus/util.c"
+        "${OS}/nucleus/kernel.c" "${OS}/nucleus/vm_mqjs.c" "${OS}/nucleus/hw.c" "${OS}/nucleus/gfx.c" "${OS}/nucleus/util.c" "${OS}/nucleus/fs.c"
         "${ENG}/mquickjs.c" "${ENG}/dtoa.c" "${ENG}/libm.c" "${ENG}/cutils.c"
     INCLUDE_DIRS "." "${OS}/nucleus" "${ENG}"
     PRIV_REQUIRES driver esp_driver_gpio esp_driver_uart esp_driver_usb_serial_jtag esp_adc esp_psram esp_pm esp_timer heap nvs_flash vfs
