@@ -148,3 +148,7 @@ int port_fs_info(uint64_t *total, uint64_t *free_bytes) {
   *total = HOST_FS_TOTAL; *free_bytes = used_bytes < HOST_FS_TOTAL ? HOST_FS_TOTAL - used_bytes : 0;
   return 0;
 }
+
+// One thread runs the kernel and everything that logs on the host, so the log ring needs no lock.
+void port_log_lock(void) { }
+void port_log_unlock(void) { }

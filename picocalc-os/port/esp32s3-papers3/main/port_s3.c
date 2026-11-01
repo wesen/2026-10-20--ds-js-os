@@ -252,6 +252,12 @@ void port_gpio_unwatch(int pin) {
 // Files are not wired on the PaperS3 yet (PICOCALC-FS covers the PicoCalc): no root, and a job fails.
 const char *port_fs_root(void) { return NULL; }
 int64_t port_wall_ms(void) { return -1; }   // the BM8563 real-time clock is not read yet
+
+// The log ring's lock (kernel.c). Only the kernel logs into the ring on this board, but a critical section costs
+// nothing and stays right if the ESP-IDF log is added as on the P4.
+static portMUX_TYPE log_mux = portMUX_INITIALIZER_UNLOCKED;
+void port_log_lock(void) { portENTER_CRITICAL(&log_mux); }
+void port_log_unlock(void) { portEXIT_CRITICAL(&log_mux); }
 int port_fs_info(uint64_t *total, uint64_t *free_bytes) { (void)total; (void)free_bytes; return -1; }
 void port_fs_submit(fs_job_t *j, vtime_t at) {
   fs_execute(j);   // reports "this device has no filesystem"

@@ -87,6 +87,68 @@ void klog(const char *fmt, ...) {
   va_list ap; va_start(ap, fmt); vsnprintf(b, sizeof b, fmt, ap); va_end(ap);
   if (K.uart) fprintf(K.uart, "[%10.3f] %s\n", kernel_now() / 1000.0, b);
   if (K.verbose) fprintf(stderr, "[%10.3f] %s\n", kernel_now() / 1000.0, b);
+  kernel_log_add(kernel_now(), b);
+}
+
+// The log ring: the last LOG_LINES lines, numbered from 1, so a reader asks for the lines after the last one it has
+// and sees from the oldest number still here whether it missed some. The port's own log (ESP-IDF's on the device)
+// adds lines from other tasks, so every access holds the port's log lock, and only for a copy.
+#define LOG_LINES 256
+#define LOG_TEXT 120
+#define LOG_PAGE 64
+typedef struct { uint32_t n; int64_t t_us, wall_ms; char s[LOG_TEXT]; } log_line_t;
+static log_line_t *ring;
+static uint32_t ring_next = 1;
+
+void kernel_log_init(void) { if (!ring) ring = calloc(LOG_LINES, sizeof *ring); }
+void kernel_log_add(vtime_t t_us, const char *text) {
+  if (!ring || !text) return;
+  char s[LOG_TEXT];
+  size_t n = 0;
+  const char *p = text;
+  for (; *p && n < sizeof s - 1; p++) {
+    if (*p == '\033' && p[1] == '[') {   // a colour code: ESC [ ... letter
+      for (p += 2; *p && !((*p >= 'A' && *p <= 'Z') || (*p >= 'a' && *p <= 'z')); p++) { }
+      if (!*p) break;
+      continue;
+    }
+    s[n++] = *p == '\n' || *p == '\r' || *p == '\t' ? ' ' : *p;
+  }
+  if (((unsigned char)*p & 0xc0) == 0x80) {   // cut in the middle of a character: drop its first bytes too
+    while (n > 0 && ((unsigned char)s[n - 1] & 0xc0) == 0x80) n--;
+    if (n > 0) n--;
+  }
+  while (n > 0 && s[n - 1] == ' ') n--;
+  s[n] = 0;
+  if (!n) return;
+  int64_t wall = port_wall_ms();
+  port_log_lock();
+  log_line_t *l = &ring[ring_next % LOG_LINES];
+  l->n = ring_next++; l->t_us = t_us; l->wall_ms = wall;
+  memcpy(l->s, s, n + 1);
+  port_log_unlock();
+}
+
+char *kernel_log_json(uint32_t after) {
+  log_line_t *copy = malloc(sizeof(log_line_t) * LOG_PAGE);
+  int got = 0;
+  uint32_t first, next;
+  port_log_lock();
+  next = ring_next;
+  first = next > LOG_LINES ? next - LOG_LINES : 1;
+  for (uint32_t n = after + 1 > first ? after + 1 : first; ring && copy && n < next && got < LOG_PAGE; n++) copy[got++] = ring[n % LOG_LINES];
+  port_log_unlock();
+  sbuf_t b = { 0 };
+  sb_printf(&b, "{\"first\":%u,\"next\":%u,\"lines\":[", (unsigned)first, (unsigned)next);
+  for (int i = 0; i < got; i++) {
+    sb_printf(&b, "%s{\"n\":%u,\"t\":%lld,\"wall\":%lld,\"s\":", i ? "," : "", (unsigned)copy[i].n,
+              (long long)(copy[i].t_us / 1000), (long long)copy[i].wall_ms);
+    sb_json_str(&b, copy[i].s);
+    sb_add(&b, "}");
+  }
+  sb_add(&b, "]}");
+  free(copy);
+  return b.s;
 }
 
 // A fault frame on the UART: one line, "#OCT1 " and a JSON object. A host-side handler reads these
@@ -592,6 +654,7 @@ void kernel_init(const char *js_root, const char *uart_path) {
   snprintf(K.js_root, sizeof K.js_root, "%s", js_root);
   for (const char *const *b = port_bus_names(); *b && K.n_buses < MAX_BUSES; b++) K.buses[K.n_buses++].name = *b;
   if (uart_path) K.uart = fopen(uart_path, "w");   // else whatever the port set (the device: stdout)
+  kernel_log_init();
   char p[512];
   snprintf(p, sizeof p, "%s/prelude.js", js_root);
   K.prelude = port_read_file(p, &K.prelude_len);

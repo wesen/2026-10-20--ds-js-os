@@ -33,6 +33,7 @@ void console_exec(char *line);        // main_p4.c, on the kernel task
 void p4_fs_init(void);                // mounts the files partition at /files, starts the fs worker
 void p4_fs_done(fs_job_t *j);         // the kernel task's side of a finished file job
 void p4_fs_console(const char *cmd, const char *arg);   // ls [PATH], cat PATH, df
+void p4_log_init(void);               // ESP-IDF's log lines into the kernel's log ring too
 void p4_store_init(void);             // never erases failed/old NVS automatically
 bool p4_config_available(void);
 void p4_tz_apply(void);               // the saved time zone (NVS "settings"/"tz") into TZ; UTC without one

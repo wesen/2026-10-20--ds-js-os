@@ -98,6 +98,7 @@
     stats: () => k("sys.stats"),
     fault: (name) => k("sys.fault", name),
     restart: (name) => k("sys.restart", name),
+    log: (after) => k("sys.log", after || 0),   // claim sys.log: { first, next, lines: [{ n, t, wall, s }] }
   };
 
   // A fixed-endpoint native transport, available only with the net.agent manifest claim. A request

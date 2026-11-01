@@ -361,6 +361,13 @@ const char *port_board_name(void);
 // The wall clock: milliseconds since 1970 in UTC, or -1 while the port does not know the time (the P4 before SNTP
 // has set it). The time zone is the C library's TZ variable, which QuickJS's Date reads for local time.
 int64_t port_wall_ms(void);
+// The log ring (kernel.c): klog adds every line it prints; the port adds its own log's lines, from any task, under
+// port_log_lock (a critical section on the ESP32 boards, nothing on the host). sys.log reads it as JSON.
+void port_log_lock(void);
+void port_log_unlock(void);
+void kernel_log_init(void);   // kernel_init calls it; a port that logs before the kernel starts may call it first
+void kernel_log_add(vtime_t t_us, const char *text);
+char *kernel_log_json(uint32_t after);   // {"first", "next", "lines": [{"n", "t", "wall", "s"}]}, at most 64 lines
 const char *const *port_bus_names(void);   // the board's buses, NULL-terminated; their order gives their indices
 // the bus back ends: each starts the transfer a deferred effect describes, at the time the segment that issued
 // it ended, and settles d->promise once with kernel_settle_at(). They own d->bytes (free it or take it).

@@ -224,6 +224,7 @@ void app_main(void) {
   uart_vfs_dev_use_driver(UART_NUM_0);
   setvbuf(stdout, NULL, _IOLBF, 0);
 
+  p4_log_init();
   p4_store_init();
   p4_tz_apply();
   p4_fs_init();

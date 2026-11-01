@@ -1,9 +1,12 @@
 // The ESP32-P4 port: the real clock, world heaps and framebuffers in PSRAM, and the JS tree compiled into the
 // firmware (js_bundle.c, made by bundle_js.cmake from the same js/ directory the host reads).
+#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
 #include "esp_heap_caps.h"
+#include "esp_log.h"
 #include "esp_timer.h"
 #include "p4.h"
 
@@ -65,4 +68,26 @@ char *port_read_file(const char *path, size_t *len) {
     return b;
   }
   return NULL;
+}
+
+// The log ring's lock: ESP-IDF logs from the Wi-Fi, event and file tasks as well as the kernel's. A critical section
+// also keeps the kernel task from preempting a lower-priority task on its core that holds the lock.
+static portMUX_TYPE log_mux = portMUX_INITIALIZER_UNLOCKED;
+void port_log_lock(void) { portENTER_CRITICAL(&log_mux); }
+void port_log_unlock(void) { portEXIT_CRITICAL(&log_mux); }
+
+// ESP-IDF's log goes to the console as before, and each line into the ring as well, for the Logs app.
+static vprintf_like_t esp_out;
+static int log_hook(const char *fmt, va_list ap) {
+  char b[160];
+  va_list copy;
+  va_copy(copy, ap);
+  vsnprintf(b, sizeof b, fmt, copy);
+  va_end(copy);
+  kernel_log_add(t_boot < 0 ? 0 : esp_timer_get_time() - t_boot, b);
+  return esp_out(fmt, ap);
+}
+void p4_log_init(void) {
+  kernel_log_init();
+  esp_out = esp_log_set_vprintf(log_hook);
 }

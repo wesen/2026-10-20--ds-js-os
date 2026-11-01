@@ -531,6 +531,15 @@ static JSValue op_sys_json(JSContext *ctx, world_t *W, const char *what) {
   charge_json(strlen(j));
   return json_value(ctx, j);
 }
+// The kernel's log, for the Logs app (claim sys.log): what worlds print can be private, so sys.read is not enough.
+static JSValue op_sys_log(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  if (!world_claims(W, "sys.log")) return fail(ctx, "%s has no claim on sys.log", W->name);
+  double after = darg(ctx, argv, argc, 0, 0);
+  char *j = kernel_log_json(after > 0 && after < 4e9 ? (uint32_t)after : 0);
+  charge_json(strlen(j));
+  JSValue r = json_value(ctx, j);
+  return r;
+}
 static JSValue op_sys_worlds(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "worlds"); }
 static JSValue op_sys_handles(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "handles"); }
 static JSValue op_sys_stats(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "stats"); }
@@ -751,7 +760,7 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "turn.async", op_turn_async }, { "turn.done", op_turn_done }, { "turn.fail", op_turn_fail }, { "turn.reject", op_turn_reject },
   { "hw.i2c", op_hw_i2c }, { "hw.spi", op_hw_spi }, { "dma.alloc", op_dma_alloc },
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
-  { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats },
+  { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats }, { "sys.log", op_sys_log },
   { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart },
   { "hw.fs", op_hw_fs }, { "fs.at", op_fs_at },
   { "store.load", op_store_load }, { "store.save", op_store_save }, { "store.status", op_store_status },
