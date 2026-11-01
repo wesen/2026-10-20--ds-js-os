@@ -97,6 +97,7 @@ typedef struct world {
   // accounting
   size_t mem_used;          // host bytes, from the allocator
   bool oom, overrun;
+  bool user;                 // spawned from storage (sys.spawn): named u-<name>, no claims, its title is its name
   int64_t interrupts;       // interrupt-handler calls since the runtime was made
   int64_t seg_interrupts0; int seg_counter0;
   int64_t budget_interrupts;
@@ -265,6 +266,10 @@ char *kernel_stats_json(void);
 void kernel_stats_print(void);
 bool world_needs(world_t *W, const char *ch);
 bool world_provides(world_t *W, const char *ch);
+// Apps from storage (sys.spawn, sys.stop; vm.c checks the claim and the name). Both run as deferred effects.
+#define USER_SOURCE_MAX 65536
+int kernel_spawn(const char *name, const char *source, vtime_t at, char *why, size_t n);
+void kernel_stop_world(world_t *W, const char *by);
 const char *channel_claim(const char *ch);      // the claim a guarded channel takes ("keys": "keys.raw"), or NULL
 bool world_may_use(world_t *W, const char *ch);  // W has that claim, or the channel is open
 bool world_claims(world_t *W, const char *claim);

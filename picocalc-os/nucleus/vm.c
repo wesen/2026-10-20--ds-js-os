@@ -619,6 +619,57 @@ static JSValue op_sys_admin(JSContext *ctx, world_t *W, int argc, JSValueConst *
   return JS_TRUE;
 }
 static JSValue op_sys_fault(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { return op_sys_admin(ctx, W, argc, argv, false); }
+// Apps from storage (claim sys.spawn). The caller passes the source it read; the kernel opens no file for it.
+static bool app_name_ok(const char *s) {
+  size_t n = s ? strlen(s) : 0;
+  if (!n || n > 12) return false;
+  for (const char *p = s; *p; p++) if (!((*p >= 'a' && *p <= 'z') || (*p >= '0' && *p <= '9') || *p == '-')) return false;
+  return true;
+}
+static void run_spawn(deferred_t *d, vtime_t at) {
+  char why[160];
+  if (kernel_spawn(d->json, (const char *)d->bytes, at, why, sizeof why)) klog("cannot start u-%s: %s", d->json, why);
+  free(d->json); free(d->bytes);
+}
+static JSValue op_sys_spawn(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  if (!world_claims(W, "sys.spawn")) return fail(ctx, "%s has no claim on sys.spawn", W->name);
+  char *name = sarg(ctx, argv, argc, 0), *src = sarg(ctx, argv, argc, 1);
+  JSValue r;
+  char wname[NAME_LEN];
+  snprintf(wname, sizeof wname, "u-%s", name ? name : "");
+  world_t *T = name ? world_by_name(wname) : NULL;
+  if (!app_name_ok(name)) r = fail(ctx, "an app's name is 1 to 12 characters: a-z, 0-9 and -");
+  else if (!src || !*src) r = fail(ctx, "an app needs its source");
+  else if (strlen(src) > USER_SOURCE_MAX) r = fail(ctx, "an app's source is at most %d KB", USER_SOURCE_MAX / 1024);
+  else if (T && !T->user) r = fail(ctx, "%s is a system world", wname);
+  else if (!T && K.n_worlds >= MAX_WORLDS) r = fail(ctx, "no room for another world (%d at most)", MAX_WORLDS);
+  else {
+    deferred_t *d = calloc(1, sizeof(*d));
+    d->run = run_spawn; d->json = name; d->bytes = (uint8_t *)src; name = src = NULL;
+    defer(d);
+    r = JS_NewObject(ctx);
+    JS_SetPropertyStr(ctx, r, "world", JS_NewString(ctx, wname));
+  }
+  free(name); free(src);
+  return r;
+}
+static void run_stop(deferred_t *d, vtime_t at) {
+  (void)at;
+  world_t *T = world_by_id(d->w);
+  if (T) kernel_stop_world(T, d->json);
+  free(d->json);
+}
+static JSValue op_sys_stop(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  if (!world_claims(W, "sys.spawn")) return fail(ctx, "%s has no claim on sys.spawn", W->name);
+  char *name = sarg(ctx, argv, argc, 0);
+  world_t *T = name ? world_by_name(name) : NULL;
+  free(name);
+  if (!T || !T->user) return fail(ctx, "only an app from storage can be stopped this way");
+  deferred_t *d = calloc(1, sizeof(*d));
+  d->run = run_stop; d->w = T->id; d->json = xstrdup(W->name);
+  defer(d);
+  return JS_TRUE;
+}
 static JSValue op_sys_restart(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { return op_sys_admin(ctx, W, argc, argv, true); }
 
 // One private persistent JSON record per world. Writes are effects: a segment that faults saves
@@ -810,7 +861,7 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "turn.async", op_turn_async }, { "turn.done", op_turn_done }, { "turn.fail", op_turn_fail }, { "turn.reject", op_turn_reject },
   { "hw.i2c", op_hw_i2c }, { "hw.spi", op_hw_spi }, { "dma.alloc", op_dma_alloc },
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
-  { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats }, { "sys.log", op_sys_log },
+  { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats }, { "sys.log", op_sys_log }, { "sys.spawn", op_sys_spawn }, { "sys.stop", op_sys_stop },
   { "net.info", op_net_info }, { "net.scan", op_net_scan }, { "net.scanresult", op_net_scan_result }, { "net.join", op_net_join },
   { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart },
   { "hw.fs", op_hw_fs }, { "fs.at", op_fs_at },

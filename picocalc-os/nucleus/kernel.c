@@ -344,6 +344,20 @@ static void fail_mailbox(world_t *W, const char *why) {
   W->mbox = W->mbox_tail = NULL; W->mbox_len = 0;
 }
 
+// What a world leaves when its VM goes: the ask it was answering fails with why, its handles, pending replies, turn,
+// frame and ticks go, and a new epoch makes stale timers and replies miss it.
+static void teardown(world_t *W, const char *why) {
+  if (W->in_turn && W->turn_ask) settle_ask(W->turn_ask, 0, why, NULL, 0);
+  vm_dispose(W);
+  handles_drop_world(W);
+  while (W->settles) { settle_t *s = W->settles; W->settles = s->next; free(s->json); free(s); }
+  W->settles_tail = NULL;
+  clear_turn(W);
+  free(W->frame); W->frame = NULL;
+  for (int i = 0; i < MAX_LIST; i++) W->tick_queued[i] = false;
+  W->epoch++;
+}
+
 static void crash_at(world_t *W, const char *why);
 void crash(world_t *W, const char *why) {
   if (W->status != W_IDLE) return;
@@ -371,15 +385,7 @@ static void crash_at(world_t *W, const char *why) {
   free(W->trace); W->trace = NULL;
   char t[300];
   snprintf(t, sizeof t, "%s crashed: %s", W->name, first);
-  if (W->in_turn && W->turn_ask) settle_ask(W->turn_ask, 0, t, NULL, 0);
-  vm_dispose(W);
-  handles_drop_world(W);
-  while (W->settles) { settle_t *s = W->settles; W->settles = s->next; free(s->json); free(s); }
-  W->settles_tail = NULL;
-  clear_turn(W);
-  free(W->frame); W->frame = NULL;
-  for (int i = 0; i < MAX_LIST; i++) W->tick_queued[i] = false;
-  W->epoch++;
+  teardown(W, t);
   if (recent >= 5) {
     W->status = W_STOPPED;
     char s[160]; snprintf(s, sizeof s, "%s is stopped", W->name);
@@ -410,6 +416,56 @@ int kernel_restart_world(world_t *W) {
     W->boot_ready = true; W->boot_t = K.vnow; W->boot_seq = ++K.seq;
   }
   return 0;
+}
+
+// ---- apps from storage ----------------------------------------------------------------------------------------
+// A spawned world is named u-<name> and gets no claims; spawning the same name again keeps its slot (world ids are
+// referenced by handles, asks and timers, so a slot never changes hands) and boots the new source.
+static uint64_t hash(const char *s);
+int kernel_spawn(const char *name, const char *source, vtime_t at, char *why, size_t n) {
+  char wname[NAME_LEN];
+  snprintf(wname, sizeof wname, "u-%s", name);
+  world_t *W = world_by_name(wname);
+  if (W && !W->user) { snprintf(why, n, "%s is a system world", wname); return -1; }
+  if (!W) {
+    if (K.n_worlds >= MAX_WORLDS) { snprintf(why, n, "no room for another world (%d at most)", MAX_WORLDS); return -1; }
+    W = calloc(1, sizeof(*W));
+    W->id = K.n_worlds;
+    snprintf(W->name, sizeof W->name, "%s", wname);
+    snprintf(W->file, sizeof W->file, "apps/%s.js", name);
+    snprintf(W->kind, sizeof W->kind, "world");
+    snprintf(W->title, sizeof W->title, "%s", wname);
+    W->budget_us = MS(50); W->mem_limit = 384 * 1024; W->store_limit = 8 * 1024; W->prio = -1;
+    W->user = true;
+    W->seed = hash(wname);
+    W->status = W_STOPPED;
+    K.worlds[K.n_worlds++] = W;
+  }
+  free(W->source);
+  W->source = xstrdup(source);
+  if (W->status == W_IDLE) { teardown(W, "it was started again"); W->status = W_RESTARTING; }
+  if (W->status == W_STOPPED) W->status = W_RESTARTING;
+  if (!W->boot_ready) { W->boot_ready = true; W->boot_t = at; W->boot_seq = ++K.seq; }   // a pending restart's event is now stale
+  W->epoch++;
+  W->n_crash_times = 0;
+  W->last_error[0] = 0;
+  klog("starting %s from storage (%zu bytes)", wname, strlen(source));
+  return 0;
+}
+
+void kernel_stop_world(world_t *W, const char *by) {
+  if (W->status == W_STOPPED) return;
+  char t[160];
+  snprintf(t, sizeof t, "%s was stopped by %s", W->name, by);
+  if (W->status == W_IDLE) teardown(W, t);
+  else W->epoch++;   // a restart that was due is cancelled
+  W->boot_ready = false;
+  W->status = W_STOPPED;
+  W->n_crash_times = 0;
+  snprintf(W->last_error, sizeof W->last_error, "stopped by %s", by);
+  fail_mailbox(W, t);
+  klog("%s", t);
+  publish_status(W, "stopped", W->last_error, 0);
 }
 
 // ---- booting a world (a segment on the lane) ------------------------------------------------------------------
@@ -450,6 +506,7 @@ static int boot_world(world_t *W) {
   int rc = vm_create(W);
   if (rc) return rc;
   if (!channels_allowed(W)) return -1;
+  if (W->user) snprintf(W->title, sizeof W->title, "%s", W->name);   // no app from storage may call itself "Settings"
   if (W->prio < 0) W->prio = !strcmp(W->kind, "driver") ? 3 : !strcmp(W->kind, "service") ? 2 : 1;
   W->status = W_IDLE;
   if (W->has_start) {
@@ -778,6 +835,8 @@ char *kernel_worlds_json_fields(const char *fields) {
     if (FIELD("restarts")) sb_printf(&b, "%d", restarts_of(W));
     if (FIELD("budget_ms")) sb_printf(&b, "%lld", (long long)(W->budget_us / 1000));
     if (FIELD("last_error")) sb_json_str(&b, W->last_error);
+    if (FIELD("user")) sb_add(&b, W->user ? "true" : "false");
+    if (FIELD("file")) sb_json_str(&b, W->file);
     if (FIELD("claims")) {
       sb_add(&b, "[");
       for (int k = 0; k < W->n_claims; k++) { if (k) sb_add(&b, ","); sb_json_str(&b, W->claims[k]); }

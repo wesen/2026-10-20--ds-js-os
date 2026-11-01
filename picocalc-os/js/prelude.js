@@ -100,6 +100,9 @@
     fault: (name) => k("sys.fault", name),
     restart: (name) => k("sys.restart", name),
     log: (after) => k("sys.log", after || 0),   // claim sys.log: { first, next, lines: [{ n, t, wall, s }] }
+    // claim sys.spawn: run source as the world u-<name> with no claims (again: restart it with this source); stop it
+    spawn: (name, source) => k("sys.spawn", name, source),
+    stop: (world) => k("sys.stop", world),
   };
 
   // A fixed-endpoint native transport, available only with the net.agent manifest claim. A request
@@ -185,7 +188,7 @@
   let S = {};
   g.__init = () => {
     S = JSON.parse(JSON.stringify(def.initial || {}));
-    if (def.name && def.name !== g.self) log(`declares itself "${def.name}" but the manifest calls it "${g.self}"`);
+    if (def.name && def.name !== g.self && "u-" + def.name !== g.self) log(`declares itself "${def.name}" but the manifest calls it "${g.self}"`);
     return { kind: def.kind, title: def.title || g.self, needs: def.needs, provides: def.provides, every: def.every.map((e) => e.ms), start: !!def.start, screen: !!def.screen };
   };
 

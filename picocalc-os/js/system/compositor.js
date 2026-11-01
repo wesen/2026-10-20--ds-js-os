@@ -457,6 +457,7 @@ service("compositor")
     } else if (st.state === "stopped") {
       s.crashed[st.world] = true;
       delete s.apps[st.world];
+      if (!st.crashes) { dirty(s); return; }   // stopped on purpose (an app from storage, by the loader): no alarm
       s.banner = { text: `${st.world} stopped after ${st.crashes} crashes in 10 s: ${st.why}`, sub: "a world with sys.admin can restart it", color: C.accent, until: now() + 5000 };
     } else if (st.state === "running") {
       s.banner = { text: `${st.world} is running again (restart ${st.restarts})`, color: C.ok, until: now() + 1500 };
