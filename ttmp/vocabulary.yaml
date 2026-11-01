@@ -47,6 +47,8 @@ topics:
       description: Device settings and configuration
     - slug: security
       description: Capabilities, secrets and isolation
+    - slug: native
+      description: 'Native worlds: binaries (WebAssembly, machine code) as picocalc-os worlds'
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes

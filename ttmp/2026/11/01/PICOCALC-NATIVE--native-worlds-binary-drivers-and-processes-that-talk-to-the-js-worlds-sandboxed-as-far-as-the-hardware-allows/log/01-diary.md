@@ -726,3 +726,244 @@ module (PICOCALC-NATIVE N4)"; 7ba759e — "picocalc-os: WebAssembly worlds on th
 - Device memory with 30 worlds (3 modules running, 5 stopped): internal 88 KB free, PSRAM 26.35 MB free (27.27 MB
   before the modules).
 - Console `put`: at most 768 decoded bytes per line; `tools/p4put.py` sends 680.
+
+## Step 7: Machine code on the P4 through elf_loader (N5)
+
+A build option, `PICOCALC_NATIVE_ELF`, now runs native worlds as machine code on the P4. The worlds are ELF
+modules written in C, linked with `sdk/nw_elf.c` as position-independent shared objects. Espressif's
+`elf_loader` 2.0.0 copies each one into PSRAM, relocates it and calls it. The modules are named by a second
+manifest that is compiled into the firmware, and they never come from storage. They are trusted drivers, not
+isolated ones. The backend can account for them: what they may link to, their memory, and their time measured
+after each turn. It cannot confine them, and a deliberate store to address 0 confirmed that on the device with a
+panic and a clean reboot.
+
+Every system call works on the device, including a read of the keyboard controller through the world's I2C
+claim. The same loop runs 26 times faster than in WAMR. While tightening the backend I also found the sharpest
+case yet of the P4's layout sensitivity. Moving one 16 KB buffer out of internal `.bss` made the kernel's
+JavaScript calibration loop take 1604 ms instead of 113 ms, and moving it back restored 113 ms. The buffer stays
+where it was.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 5.
+**Assistant interpretation:** N5: build Espressif's `elf_loader` into the P4 firmware and run native worlds as
+machine code, validated on the device; commit and record it here.
+**Inferred user intent:** The "legit compiled C++ or stuff" half of the ticket on real hardware, with an honest
+statement of what isolates it (nothing) and what the kernel still controls.
+**Commit (code):** bb55c32 — "picocalc-os: machine-code native worlds on the ESP32-P4 through elf_loader
+(PICOCALC-NATIVE N5)"
+
+### What I did
+
+- Read `elf_loader` 2.0.0 (`managed_components/espressif__elf_loader`):
+  - `esp_elf_relocate` validates the image and copies its `PT_LOAD` segments into one `esp_elf_malloc(size, true)`
+    block. On the P4 with `ELF_LOADER_LOAD_PSRAM` that block is PSRAM.
+  - It applies only `R_RISCV_32`, `R_RISCV_RELATIVE` and `R_RISCV_JUMP_SLOT`, writes the D-cache back
+    (`Cache_WriteBack_All`), and sets `entry`.
+  - `esp_elf_request` calls `entry(argc, argv)` and ignores the result.
+  - Undefined symbols go to a global resolver, `elf_set_symbol_resolver` in `private/elf_symbol.h`.
+- Checked the P4's PMP in ESP-IDF 5.4.2 (`esp_hw_support/port/esp32p4/cpu_region_protect.c`):
+  - With `CONFIG_SPIRAM_XIP_FROM_PSRAM` off (ours), no PMP entry covers `SOC_EXTRAM`, so machine mode may execute
+    PSRAM.
+  - `CONFIG_ESP_SYSTEM_PMP_IDRAM_SPLIT=y` makes internal RAM non-executable, which is why only PSRAM works.
+- `sdk/nw_elf.h`: the ABI.
+  - Two tables of function pointers: `nw_elf_kernel {abi, call, error}` and `nw_elf_module {abi, init, event}`.
+  - Only primitive types cross, because the header is included by both `nucleus.h` and `nw.h`, whose event types
+    and enums clash.
+- `sdk/nw_elf.c`:
+  - `app_main(2, argv)` keeps `argv[0]` (the kernel's table) and fills `argv[1]` (the module's).
+  - `call()` goes through the kernel table; `#include "nw_calls.inc"`.
+- `port/esp32p4/optional/native_elf/native_elf_p4.c` (`elf_load`, `elf_event`, `elf_unload`):
+  - Checks the header: `\177ELF`, ELFCLASS32, `EM_RISCV` 243, float ABI single.
+  - Resolves symbols with `resolve()` over `SYMS[]`: 22 C library functions, `m_malloc`/`m_calloc`/`m_realloc`/
+    `m_free`, and 30 libgcc helpers (`HELPERS`).
+  - Remembers the first missing name for the error message.
+  - Calls the entry, then checks the module table.
+  - Runs events on the kernel task, with a static `now` (the running world) for system calls and allocations.
+  - `K.seg_cost += took`; after each event, `took > budget` is an overrun.
+- `main/CMakeLists.txt`, when `PICOCALC_NATIVE_ELF` is set:
+  - Defines it, and compiles `natives/{echo,bench,wimport}.c` with `sdk/nw_elf.c` using `${CMAKE_C_COMPILER}`:
+    `-march=rv32imafc_zicsr_zifencei -mabi=ilp32f -Os -fPIC -shared -nostartfiles -nostdlib -e app_main
+    -ffunction-sections -fdata-sections -Wl,--gc-sections -fvisibility=hidden -Wl,--strip-all
+    -Wl,-z,max-page-size=16 -Wno-attributes`, then strips the result.
+  - Passes the modules and `system.elf.json` to `bundle_js.cmake` as `EXTRA` `name=path` entries.
+- `main_p4.c` boots `js/system.elf.json` after `js/system.json`. `kernel_boot` may now run more than once and logs
+  the number of worlds each call added.
+- `port_p4.c`: `ENG_NATIVE` maps to `elf_backend()`.
+- Top-level `CMakeLists.txt`: one dependency lock per configuration (`dependencies.agent-elf.lock` and
+  `dependencies.elf.lock`). The earlier reconfigure had rewritten `dependencies.agent.lock`, so I restored it with
+  `git checkout`.
+- `.gitignore`: `build-elf/` and `sdkconfig.agent-elf`.
+- `natives/echo.c`: an `alloc` ask (`{"kb": N}` holds N KB more, 0 lets go of everything), for the allocator.
+- Device: before each flash I held the bus (`tools/p4cap.py --no-reset -s 1 -c "0.2 hold"` →
+  `i2c0 held between transactions`). Then I flashed with `idf.py -B build-elf -D PICOCALC_AGENT_WIFI=ON -D
+  PICOCALC_NATIVE_ELF=ON -D SDKCONFIG=sdkconfig.agent-elf -D
+  'SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.agent-wifi' -p /dev/ttyACM0 flash`. `/dev/ttyACM0` stayed
+  every time.
+- Asks were sent through the REPL: the capture typed `r` at the launcher, then lines such as
+  `ask("nat-echo","ping",7).then(r=>log("PING",JSON.stringify(r)))` followed by `key enter`. The sandbox's `log`
+  lines reach the console.
+
+### Why
+
+- Machine code only from the firmware. `kernel_spawn_loaded` already refuses ELF bytes from storage (N4), and the
+  ELF manifest is a separate file compiled into the image, so no world can name a module at run time.
+- A second manifest rather than a filter key in `js/system.json`: the host and the P4 share `js/`, and the host
+  has no ELF backend. `system.elf.json` lives with the optional component and is bundled only by builds that
+  include it.
+- A curated resolver rather than the loader's default tables. The defaults also offer `lwip_*` sockets,
+  `pthread_create` and `printf`. The curated list is the same contract as `nw.h` plus a C library subset, and a
+  module that wants more fails at load, by name, before any of its code runs. It is a contract, not a wall:
+  machine code can jump anywhere.
+- An allocator in the backend: the firmware's `malloc` would neither charge the world nor stop at `mem_kb`, nor
+  free a crashed module's memory.
+- Soft-float helpers from the firmware: libgcc.a is not position-independent.
+  `riscv32-esp-elf-gcc ... bench.c sdk/nw_elf.c -lgcc` fails:
+  `libgcc.a(divdf3.o): relocation R_RISCV_HI20 against 'a local symbol' can not be used when making a shared
+  object; recompile with -fPIC`. On the P4 these helpers are ROM functions (`nm`: `4fc00868 A __adddf3`).
+- C++ in modules: only without the standard library's out-of-line parts. `battery.cc` needs
+  `std::__cxx11::basic_string` (7 `JUMP_SLOT`s to `_ZNSt7__cxx11…`) and `std::__throw_logic_error`, which no
+  module is given, so I did not build it. Nothing runs `.init_array`, so global constructors would not run either.
+- A post-hoc budget check is the only one possible. The module runs on the kernel task and cannot be preempted
+  and resumed safely; a FreeRTOS task per module would not make a hang killable either.
+
+### What worked
+
+- The first device boot ran both modules:
+  - `nat-echo: TEST kind ok`, `provide ok`, `every ok`, `init done`, `start self=nat-echo clock=running`,
+    `ticks 3 timer=0`.
+  - `nat-bench: BENCH loop n=1000 us=36`, `n=4000 us=135`, `n=16000 us=535` (WAMR on the same board, N4:
+    900 / 3,499 / 13,884 µs, so 26× faster).
+- Asks through the REPL:
+  - `PING {"pong":7,"from":"sandbox","ask":1}`.
+  - `I2C {"n":2,"reg":11,"value":100}`, after `TEST i2c-open ok` and `TEST i2c ok`: register 0x0B of the
+    keyboard controller, read through the world's `i2c0:0x1f` claim, shared with the JavaScript keyboard and power
+    drivers.
+  - `LATER slept` (an `nw_sleep` settle), `REFUSE echo refuses`, `STORE {"v":42}` (save, then load).
+  - `LOOP {"n":1000000,"us":33467,...}`.
+  - The 3,000,000-iteration loop: `nat-bench crashed handling loop: ran past its turn budget of 50 ms`; the sandbox
+    got `LOOP nat-bench crashed: ran past its turn budget of 50 ms`, and the world restarted and ran its start
+    loops again.
+- `nat-import` (`wimport.c`, which calls `path_open`): `nat-import crashed: it links to path_open, which
+  picocalc-os does not give a module`, five times, then `crashed 5 times in ten seconds; it stays stopped`.
+- Allocator:
+  - `alloc {kb:16}` → `{"ok":true,"held_kb":16}`, and `stats` showed nat-echo at 26.6 KB (10.6 KB of code and data
+    plus 16).
+  - `alloc {kb:64}` → `{"ok":false,"held_kb":16}`.
+  - After `crash nat-echo` the restarted world showed 10.6 KB again, so its blocks were freed.
+- Fault, deliberately triggered: `sleep(4000).then(()=>ask("nat-echo","segv",0))`, then `hold` 1.5 s later so the
+  reset would not cut an I2C transaction. The result was `Guru Meditation Error: Core 1 panic'ed (Store access
+  fault)`, `MEPC 0x4862350a` (the module's code, in PSRAM), `MCAUSE 0x00000007`, `MTVAL 0x00000000`, then
+  `Rebooting...` and `rst:0xc (SW_CPU_RESET)`. All worlds came back, and the keyboard driver had 864 turns in the
+  next `stats`.
+- Memory per module (`stats`): nat-echo 10.6 KB, nat-bench 2.7 KB. Load plus init costs about 7 ms of the world's
+  CPU time once the loader's INFO logs are silenced; with them, 17 ms.
+- Host:
+  - `make test-native` 25 OK.
+  - `test-clock` 4, `test-sys` 11 + 6, `test-fs` 9, `test-agent` 23 (7 skipped), `test-apps` 12 (node).
+  - `make shots`: no tracked image changed.
+- Image size: 2,652,592 bytes with the option, 2,612,896 without (same tree, `build-agent`), so 39 KB.
+  `libnative_elf.a` is 3.1 KB of flash; `libespressif__elf_loader.a` is 5.4 KB.
+- `dependencies.agent.lock` stayed unmodified through a `build-agent` rebuild after the lock split.
+
+### What didn't work
+
+- `-lgcc` in the module link: the `R_RISCV_HI20 ... recompile with -fPIC` errors quoted above, then `collect2:
+  fatal error: ld terminated with signal 11 [Segmentation fault], core dumped`.
+- The first build put 4 KB between the code and data segments (`I (4357) ELF: Too much padding before
+  segment[2], padding: 4098`), and the loader allocates the gap. `-Wl,-z,max-page-size=16` made the segments
+  contiguous (`readelf -l`: data at 0x1400 right after 0x13fa of code), and nat-echo went from 13.5 KB to 9.5 KB.
+- `esp_log_level_set("ELF", ESP_LOG_WARN)` placed after `esp_elf_init` still let `ELF loader version: 2.0.0` through
+  once. I moved it before.
+- The large slowdown, in the step's last image:
+  - I had moved the backend's 16 KB result buffer (`static char text[NW_OUT_MAX]`) to a lazily allocated PSRAM
+    block, to save internal RAM.
+  - That image's boot calibration printed `the 100k loop took 1602.5 ms (the model says 133), fib(20) 31.4 ms`,
+    and 1604.1 and 1604.3 on two more reboots.
+  - The four boots before it, with the static buffer, printed 113.1 to 113.5 ms and 30.8 ms.
+  - With the static buffer restored and nothing else changed, two reboots printed 113.3 ms and 30.8 ms.
+  - The calibration runs in `kernel_init`, before any world or module exists.
+  - I kept the static buffer and wrote the measurement into a comment beside it.
+
+### What I learned
+
+- `elf_loader` on the P4 needs nothing beyond its defaults. PSRAM is executable because our PMP layout leaves it
+  uncovered; with `SPIRAM_XIP_FROM_PSRAM` on, ESP-IDF would cover PSRAM with PMP entries and this would need
+  rechecking.
+- The soft-float routines a P4 build calls are in mask ROM (`A` symbols at `0x4fc0xxxx`), so they do not depend on
+  flash or cache placement.
+- The layout sensitivity found in N4 is not limited to code placement. Here 16 KB less of internal `.bss` (with a
+  few bytes of code) changes one JavaScript loop 14× and leaves fib(20) alone. The two differ in that the loop's
+  sum passes 2³¹ after about 65k iterations, so the rest of its additions are floats. The mechanism is still
+  unknown.
+- Machine code is 26× faster than WAMR's interpreter on this loop (535 vs 13,884 µs), and about 33.5 ns per
+  xorshift iteration from PSRAM.
+
+### What was tricky to build
+
+- Bundling build outputs. The bundle is generated in `main`, and a custom command in another component's
+  directory cannot feed its `DEPENDS`. So the modules are built in `main/CMakeLists.txt` and passed to
+  `bundle_js.cmake` as `EXTRA` entries. The list goes through `add_custom_command` as one quoted
+  `"-DEXTRA=${BUNDLE_EXTRA}"` argument with `VERBATIM`, which keeps its semicolons, and the generated table had
+  `{ "natives/echo.elf", f25, 5936 }`.
+- The resolver is global and is installed once, at the first load. `missing` is cleared for each load and keeps
+  the first unresolved name, because the loader logs every miss (`E (4360) ELF: Can't find common path_open`) but
+  returns only an error code.
+- `now` must be set around three calls: the entry (`app_main`, which may allocate), each event, and every kernel
+  call, which reads it. `m_free` charges `now`'s world, and a module frees only during its own turns.
+- Two manifests: `kernel_boot` is called twice, so its log line counts `K.n_worlds - before`. The host calls it
+  once, so the host's output is unchanged.
+
+### What warrants a second pair of eyes
+
+- The trust boundary, stated in `native_elf_p4.c`'s header. A module can read and write kernel memory, call any
+  address, and stall the kernel with a loop. The resolver list and the allocator are accounting, not protection.
+  Is "firmware manifest only" enough as a policy, given that `system.elf.json` is part of the build?
+- `m_realloc` always copies, and it fails rather than shrinking in place when the limit is reached. That is fine
+  for drivers but could surprise a module that reallocates near its limit.
+- `K.seg_cost += took` adds real microseconds. The P4 is always on the real clock, but if a virtual-clock port ever
+  gains this backend, the cost model needs a decision.
+- The layout effect: the comment in `k_call` records why the buffer is static. A later change that moves internal
+  RAM by a similar amount could bring the 1604 ms back.
+
+### What should be done in the future
+
+- Open a ticket for the P4's layout sensitivity: two signatures so far (N4: loop and fib both ~2.7× after the first
+  module load; N5: the float-heavy loop 14× from a 16 KB `.bss` change). A first experiment would put the
+  calibration loop under a cycle counter and compare cache miss counters between the two images.
+- `CONFIG_ELF_LOADER_LIBC_SYMBOLS` and `CONFIG_ELF_LOADER_ESPIDF_SYMBOLS` are unused once our resolver is
+  installed. Turning them off could save some of the 39 KB.
+- C++ modules would need a small runtime: `std::string` out of line, a throw that aborts. Until then, document C
+  and freestanding C++.
+- The guide's as-built chapter for N3–N5.
+
+### Code review instructions
+
+- Start with `picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c` (header comment, `resolve`,
+  `m_malloc`, `elf_load`, `elf_event`), then `picocalc-os/sdk/nw_elf.h` and `picocalc-os/sdk/nw_elf.c`.
+- Build wiring: `picocalc-os/port/esp32p4/main/CMakeLists.txt` (the `PICOCALC_NATIVE_ELF` block),
+  `main/bundle_js.cmake`, `main/main_p4.c` (`kernel_task`), `main/port_p4.c` (`port_native_backend`).
+- Host check: `make test-native test-sys test-fs test-clock test-agent test-apps shots`.
+- Device check: the build and flash command above, then `tools/p4cap.py -s 48 -c '12 type r' -c '14 type
+  ask("nat-echo","ping",7).then(r=>log("PING",JSON.stringify(r)))' -c '21 key enter' -c '45 stats'`.
+
+### Technical details
+
+- Module sizes (stripped files): `echo.elf` 5,940 bytes, `bench.elf` 3,080, `wimport.elf` 1,544. A module's
+  dynamic relocations are only `R_RISCV_JUMP_SLOT`, against `strlen`, `strcmp`, `snprintf`, `memset`, `memcpy`,
+  `memcmp` and the double helpers.
+- Symbols given to modules:
+  - `memcpy memmove memset memcmp strlen strcmp strncmp strchr strrchr strstr strcpy strncpy strtol strtoul strtod
+    atoi snprintf vsnprintf`;
+  - `malloc calloc realloc free` (charged);
+  - `__adddf3 __subdf3 __muldf3 __divdf3 __negdf2 __eqdf2 __nedf2 __ltdf2 __ledf2 __gtdf2 __gedf2 __unorddf2
+    __floatsidf __floatunsidf __floatdidf __floatundidf __fixdfsi __fixunsdfsi __fixdfdi __fixunsdfdi
+    __extendsfdf2 __truncdfsf2 __fixsfdi __fixunssfdi __floatdisf __floatundisf __divdi3 __udivdi3 __moddi3
+    __umoddi3`.
+- Allocation header: 16 bytes (`next`, `prev`, `size`, `pad`). The limit is `segment_size + heap + n <=
+  mem_limit`.
+- Device evidence (scratchpad captures): `elf-boot1.log`, `elf-asks1.log`, `elf-fault1.log`, `elf-final.log`,
+  `elf-reboot{1,2}.log` (1604 ms), `ab-static{1,2}.log` (113 ms). The committed code (static buffer, `alloc`, log
+  level set before `esp_elf_init`) is the image of `elf-fault1.log` and `ab-static*.log`; `elf-asks1.log` ran it
+  without `alloc`; `elf-final.log` ran the PSRAM-buffer variant, where ping, store and the I2C read also passed.
+- The device was left running this build (static buffer), with the three ELF worlds in its manifest.

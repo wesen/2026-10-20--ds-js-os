@@ -24,17 +24,31 @@ RelatedFiles:
       Note: a C++ driver example
     - Path: repo://picocalc-os/nucleus/native.c
       Note: 'the kernel side of native worlds: events, system calls, strict payloads'
+    - Path: repo://picocalc-os/nucleus/native_wasm.c
+      Note: 'the WebAssembly backend (WAMR): one import, limits, instruction budget'
+    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+      Note: WAMR on the P4; builds and bundles ELF modules
+    - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
+      Note: 'the ELF backend on the P4: resolver, allocator, events, trust boundary'
     - Path: repo://picocalc-os/sdk/nw.h
       Note: the C/C++ API a native world programs against
+    - Path: repo://picocalc-os/sdk/nw_elf.c
+      Note: module runtime for ELF modules
+    - Path: repo://picocalc-os/sdk/nw_elf.h
+      Note: ABI between the kernel and an ELF module
     - Path: repo://picocalc-os/sdk/nw_proc.c
       Note: the process runtime linked into host binaries
+    - Path: repo://picocalc-os/sdk/nw_wasm.c
+      Note: module runtime for WebAssembly
     - Path: repo://picocalc-os/sdk/nw_wire.h
       Note: frames between the kernel and a process
     - Path: repo://picocalc-os/tests/test_native_worlds.py
       Note: 12 tests of native worlds and the sandbox
+    - Path: repo://picocalc-os/third_party/wamr/patches/0003-esp-idf-self-thread-in-any-task.patch
+      Note: the fix for the pthread_self reboot loop
 ExternalSources: []
 Summary: 'How to add native worlds to picocalc-os: binaries (WebAssembly modules, or machine code compiled from C/C++) that take turns, hold claims and handles, and exchange messages with the JavaScript worlds, isolated as far as each board''s hardware allows: as Linux processes under seccomp on the host, as WebAssembly on the ESP32-P4, and as supervised machine code for trusted drivers.'
-LastUpdated: 2026-11-01T09:40:00-04:00
+LastUpdated: 2026-11-01T14:00:00-04:00
 WhatFor: A new intern who implements or reviews native worlds.
 WhenToUse: Before touching nucleus/native.c, a native backend, the SDK in sdk/, or anything that decides what a binary may do.
 ---
@@ -752,8 +766,9 @@ main():
 
 ## 8. The WebAssembly backend (`nucleus/native_wasm.c`)
 
-**Status: designed; building WAMR needs the user's approval** (the session's permission policy treats compiling and
-running downloaded code as external code).
+**Status: built in N3 and N4.** What follows is the design; section 16.2 describes where the built backend
+differs (one import instead of one per call, event strings in room the module gives, a patch for the instruction
+count).
 
 - **Runtime.** WAMR 2.4.5 (Bytecode Alliance, Apache-2.0 with LLVM exception), fast interpreter, no AOT, no WASI,
   no libc-builtin, `WASM_ENABLE_INSTRUCTION_METERING=1`, bulk memory on, threads and SIMD off. Vendored as a subset
@@ -774,13 +789,16 @@ running downloaded code as external code).
 
 ## 9. Bundling binaries on the P4
 
-The P4 reads `js/` from a table compiled into the firmware (`bundle_js.cmake` → `js_bundle.c`, text only).
+**Status: built.** `bundle_js.cmake` takes `*.wasm` from `js/` and, in an ELF build, the modules and their
+manifest as `EXTRA` entries (16.4). The P4 reads `js/` from a table compiled into the firmware (`bundle_js.cmake` →
+`js_bundle.c`).
 Binaries (`*.wasm`, P4 `*.elf`) are added as byte arrays with their length; `port_read_file` returns them with
 `len`. Apps from storage are read from the FAT partition through a handle (3.9).
 
 ## 10. Machine code on the P4: trusted drivers
 
-**Status: designed; needs Espressif's `elf_loader` (approval as for WAMR) and device work.**
+**Status: built in N5, as an opt-in build (`PICOCALC_NATIVE_ELF`); see 16.4.** The function table, PSRAM, the
+check after each event and the manifest-only rule are as designed below; events run on the kernel task.
 
 - Build with the ESP-IDF RISC-V toolchain as a relocatable ELF against `sdk/nw.h`, with `nw_*` calls going through a
   **table of function pointers** the kernel passes at start (the module links against nothing in the firmware).
@@ -809,9 +827,9 @@ Binaries (`*.wasm`, P4 `*.elf`) are added as byte arrays with their length; `por
 |---|---|---|
 | N1 | engines in the kernel (`eng_*`), the manifest's `engine`, `native.c` with the system calls, `"engine"` in `sys.worlds` | JS tests and shots unchanged |
 | N2 | the host process backend: fork, memfd, rlimits, seccomp; the wire protocol; the SDK (`nw.h`, `nw_json.h`, `nw_proc.c`); example modules in C and C++ | `make test-native`: messages, claims, I2C, store, sandbox, budget, memory, C++ |
-| N3 | WebAssembly on the host: WAMR vendored, `native_wasm.c`, `nw_wasm.c`, modules built with clang and wasm-ld | the same tests on `.wasm` (needs approval) |
-| N4 | WebAssembly on the P4: build, bundle, calibration, a device run; native apps from storage through the Loader | device measurements (needs approval) |
-| N5 | machine code on the P4 for trusted drivers | device run (needs approval) |
+| N3 | WebAssembly on the host: WAMR vendored, `native_wasm.c`, `nw_wasm.c`, modules built with clang and wasm-ld | the same tests on `.wasm` (done, 16.2) |
+| N4 | WebAssembly on the P4: build, bundle, calibration, a device run; native apps from storage through the Loader | device measurements (done, 16.3) |
+| N5 | machine code on the P4 for trusted drivers | device run (done, 16.4) |
 
 ## 13. Files
 
@@ -820,14 +838,18 @@ Binaries (`*.wasm`, P4 `*.elf`) are added as byte arrays with their length; `por
 - `picocalc-os/nucleus/kernel.c` — `eng_*` calls, the manifest's engine, bytes with length
 - `picocalc-os/nucleus/vm.c`, `vm_mqjs.c` — the manifest parser reads `"engine"`
 - `picocalc-os/host/native_proc.c`, `host/port_host.c` — the process backend; `port_native_backend`
-- `picocalc-os/port/esp32p4/main/port_p4.c` — `port_native_backend` (none until N4)
+- `picocalc-os/port/esp32p4/main/port_p4.c` — `port_native_backend` (WebAssembly; machine code in an ELF build)
+- `picocalc-os/nucleus/native_wasm.c`, `third_party/wamr/` (and its `patches/`), `tools/vendor-wamr.sh`,
+  `tools/wasm-toolchain.sh` — WebAssembly
+- `picocalc-os/port/esp32p4/optional/native_elf/` (`native_elf_p4.c`, `system.elf.json`), `sdk/nw_elf.h`,
+  `sdk/nw_elf.c` — machine code on the P4
 - `picocalc-os/sdk/nw.h`, `nw_json.h`, `nw_wire.h`, `nw_proc.c`, `nw_wasm.c`
 - `picocalc-os/natives/` — example and test modules
 - `picocalc-os/tests/test_native_worlds.py`, `Makefile` (`natives`, `test-native`)
 
 ## 14. Open questions
 
-- WAMR and `elf_loader` are third-party code; building them needs the user's approval.
+- (Closed in N3–N5.) WAMR and `elf_loader` were approved, built and run.
 - Passing handles in messages to and from native worlds (`hs`/`nh`) is designed but not in the first set of calls.
 - A native world could have a screen by returning a frame tree as JSON (as `__render` does); not in this ticket.
 - (Closed in N2.) `execveat` is allowed only on descriptor 4, the memfd, which the exec closes; a binary cannot
@@ -884,4 +906,237 @@ The binaries are 0.8 MB (C) and 1.0 MB (C++) with static glibc and libstdc++.
 ### 15.4 What remains
 
 N3 (WebAssembly on the host through WAMR), N4 (WebAssembly on the P4) and N5 (trusted machine code on the P4 through
-`elf_loader`) each need third-party code built and run, which waits for the user's approval.
+`elf_loader`) were built after the user approved building and running the third-party code: see section 16.
+
+---
+
+## 16. As built: N3, N4 and N5
+
+All three remaining engines are built and have run on the hardware they target. This chapter describes what was
+built where it differs from sections 8 to 10, how the three native engines compare, and what the measurements say.
+Read it after section 3, which defines the native interface all three implement. The day-by-day record, with every
+failure, is the ticket diary (`log/01-diary.md`, steps 5 to 7).
+
+### 16.1 Three engines behind one interface
+
+A native world is the same thing to the kernel whatever runs it. `nucleus/native.c` delivers events and carries out
+system calls (`nat_syscall`) with the same checks for all of them, and a backend (`native_backend_t`: `load`,
+`event`, `unload`) only translates. The module's source is the same as well. `natives/echo.c` is built three ways
+and passes the same asks in each, because `sdk/nw_calls.inc` gives every runtime the same `nw_*` functions over a
+`call()` that each runtime defines differently. What differs is how the module reaches `call()`, and what stops it
+from reaching anything else.
+
+| | process (host) | WebAssembly (host and P4) | machine code (P4) |
+|---|---|---|---|
+| backend | `host/native_proc.c` | `nucleus/native_wasm.c` | `port/esp32p4/optional/native_elf/native_elf_p4.c` |
+| module runtime | `sdk/nw_proc.c` | `sdk/nw_wasm.c` | `sdk/nw_elf.c` |
+| built with | `gcc -static` | clang 18, `wasm32-wasi`, reactor | `riscv32-esp-elf-gcc -fPIC -shared` |
+| `call()` is | a frame on a socket | the import `nw.call` | a pointer in the kernel's table |
+| its memory is protected by | the MMU (a separate process) | the interpreter's bounds checks | nothing |
+| what it may call is limited by | a seccomp filter | its imports, checked before it runs | a symbol list, checked when it loads |
+| its turn budget is | real time; the process is killed | an instruction count | real time, checked after the turn |
+| a bad memory access | kills the process; the world crashes | traps; the world crashes | panics the board, which reboots |
+| may come from storage | no (host only) | yes, through `sys.spawn` | never |
+
+The last row is a policy that follows from the rows above it. A WebAssembly module can do nothing the kernel did not
+give it, so the Loader may start one from a file. Machine code can do anything the firmware can, so only the
+firmware may name it.
+
+```mermaid
+sequenceDiagram
+    participant K as kernel (native.c)
+    participant B as backend
+    participant M as module
+    K->>B: event(W, nw_event_t)
+    Note over B: process: write an EVENT frame<br/>wasm: copy strings into the module, set the instruction limit<br/>elf: set now = W, note the time
+    B->>M: nw_on_event(&e)
+    M->>B: call(op, a, b, c, s0..s2, out)
+    Note over B: process: CALL frame; wasm: WAMR checks each pointer pair; elf: direct
+    B->>K: nat_syscall(W, nw_call_t, text)
+    K-->>B: result, text
+    B-->>M: result (text copied into out, what fits)
+    M-->>B: NW_DONE or NW_LATER
+    Note over B: cost to K.seg_cost; an overrun if the budget is spent
+    B-->>K: NW_DONE, NW_LATER or -1
+```
+
+### 16.2 WebAssembly on the host (N3)
+
+The design in section 8 proposed one import per system call and a module heap the kernel would allocate from. The
+built backend is simpler in both places.
+
+- **One import.** `nw.call(op, a, b, c, s0, n0, s1, n1, s2, n2, out, out_n)` carries the wire's CALL frame as
+  arguments, with the WAMR signature `"(iiiI*~*~*~*~)I"`. Each `*~` is a pointer and a length, and WAMR checks that
+  the whole range lies inside the module's memory before the native function runs. A module that passes a bad
+  pointer gets an exception, and the kernel never sees the address. `nw.error(buf, n)` returns why the last call
+  failed.
+- **No other imports.** `wasm_load` walks the module's imports before instantiating it and refuses any that is not
+  one of these: `it imports the function wasi_snapshot_preview1.path_open, which picocalc-os does not provide`.
+  wasi-libc's stdio links `fd_write`, `fd_seek`, `fd_close`, `fd_read` and `fd_fdstat_get` even for `snprintf`, so
+  those exist and fail with EBADF. `proc_exit` exists and ends the world.
+- **Event strings.** Before each event the kernel calls the module's `nw_wasm_buffer(total)` export, which returns
+  room in the module's own heap, and copies the type, payload and sender there. No second heap is needed.
+- **The budget is instructions.** `wasm_runtime_set_instruction_count_limit(env, budget_us × 1000 /
+  PROFILE.wasm_ns_per_op)`. The fast interpreter did not write the remaining count back, so the kernel could not
+  charge what a turn used. Patch `third_party/wamr/patches/0001-instruction-count.patch` fixes that and adds
+  `wasm_runtime_get_instruction_count_limit`.
+- **Memory.** `max_memory_pages = mem_kb / 64`. A module whose initial memory is already larger is refused.
+
+On the host, a JavaScript world's ask of the echo service costs 16.7 µs (wall time, averaged over 5,000 asks) when
+the service is JavaScript, 31.6 µs when it is WebAssembly, and 49.9 µs when it is a process. Loading `echo.wasm`,
+including the runtime's first start, takes 1.4 ms. Its `ping` takes 2,520 instructions and its init 6,237.
+
+### 16.3 WebAssembly on the P4, and apps from storage (N4)
+
+WAMR builds on the P4 from the same vendored files with its ESP-IDF platform layer (`port/esp32p4/main/
+CMakeLists.txt`). Two patches were needed:
+
+- `0002-esp-idf-linear-memory-in-psram.patch`: module memory comes from PSRAM, not internal RAM.
+- `0003-esp-idf-self-thread-in-any-task.patch`: WAMR's `os_self_thread()` called `pthread_self()`, which asserts on
+  a FreeRTOS task that pthread did not create. The kernel's task is one, so the first module load rebooted the
+  board. The patch returns the FreeRTOS task handle.
+
+A module from storage is started by the Loader. It opens `apps/name.wasm` for reading and calls `sys.spawn(name,
+handle)`. The kernel then reads the bytes itself (`FS_LOAD`, up to 256 KB) and picks the engine from the content
+(`kernel_spawn_loaded`): `\0asm` starts WebAssembly, UTF-8 text starts JavaScript, and anything else (ELF included)
+is refused. JavaScript never holds the module's bytes, so no world can alter a module between check and use.
+
+Measured on the device: `natives/bench.c` runs 69 ns per WebAssembly instruction (`PROFILE.wasm_ns_per_op` = 70).
+Starting eight modules (three running, five stopped after their probes) took PSRAM free from 27.27 MB to 26.35 MB.
+The probes run on the device (out-of-bounds load, bad pointer, stack overflow, busy loop, a refused import) stopped
+as on the host, and none rebooted it.
+
+### 16.4 Machine code on the P4 (N5)
+
+Section 10 asked for a function table instead of linking against the firmware, for PSRAM, for a time check after
+each event, and for a manifest-only rule. All four are built. The details below are what an intern needs in order to
+add a module or review the backend.
+
+**The ABI** (`sdk/nw_elf.h`) is two tables:
+
+```c
+typedef struct nw_elf_kernel {      // the kernel's, passed in
+  int abi;                          // NW_ELF_ABI
+  int64_t (*call)(int op, int a, int b, int64_t c, const char *s0, size_t n0, const char *s1, size_t n1,
+                  const char *s2, size_t n2, char *out, size_t out_n);
+  int (*error)(char *buf, size_t n);
+} nw_elf_kernel;
+typedef struct nw_elf_module {      // the module's, filled in by its entry
+  int abi;
+  void (*init)(void);
+  int (*event)(int kind, int second, int timer, int token, const char *type, const char *json, int json_len, const char *from);
+} nw_elf_module;
+```
+
+`elf_loader` calls the module's entry, `app_main(argc, argv)`, once after relocation. The backend passes `argc` = 2
+with the two tables in `argv`, and `sdk/nw_elf.c`'s `app_main` keeps the first and fills in the second. Only
+primitive types cross, because `nucleus.h` and `nw.h` both define event structures and the enum `NW_MESSAGE...`, and
+one header cannot include both.
+
+**Building a module.** `main/CMakeLists.txt` compiles each module named in its list with the firmware's compiler:
+
+```text
+riscv32-esp-elf-gcc -march=rv32imafc_zicsr_zifencei -mabi=ilp32f -Os -fPIC -shared -nostartfiles -nostdlib
+    -e app_main -ffunction-sections -fdata-sections -Wl,--gc-sections -fvisibility=hidden -Wl,--strip-all
+    -Wl,-z,max-page-size=16 -Isdk -o echo.elf natives/echo.c sdk/nw_elf.c
+```
+
+`-z max-page-size=16` matters. Without it the linker aligns the data segment to 4 KB, and the loader allocates the
+gap: nat-echo took 13.5 KB instead of 9.5 KB. The result is a shared object whose only dynamic relocations are
+`R_RISCV_JUMP_SLOT`s to the functions it calls. The loader supports exactly `R_RISCV_32`, `R_RISCV_RELATIVE` and
+`R_RISCV_JUMP_SLOT`. `bundle_js.cmake` adds the modules and `optional/native_elf/system.elf.json` to the firmware's
+file table as `EXTRA` entries, and `main_p4.c` boots that second manifest after `js/system.json`.
+
+**What a module may link to.** The backend installs its own resolver (`resolve()` over `SYMS[]`). It gives 22 C
+library functions (`memcpy` to `vsnprintf`), an allocator, and libgcc's soft-float and 64-bit division helpers, which
+a position-independent module cannot link statically (libgcc.a is not built with `-fPIC`). On the P4 those helpers
+are in mask ROM. A module that calls anything else is refused when it loads, by name: `nat-import crashed: it links
+to path_open, which picocalc-os does not give a module`. This is a contract, not a wall. Machine code can compute any
+address and jump to it, and the list's purpose is to keep honest modules inside the same API as WebAssembly ones.
+
+**Memory.** `malloc`, `calloc`, `realloc` and `free` resolve to the backend's own functions. Each block has a
+16-byte header that links it into the world's list. The world is charged for it, a request that would take the
+world past `mem_kb` (code and data included) returns NULL, and `elf_unload` frees whatever is left. On the device a
+16 KB allocation moved nat-echo from 10.6 to 26.6 KB, a further 64 KB was refused, and a restart brought it back to
+10.6 KB.
+
+**Time.** An event runs on the kernel's task until it returns. The backend measures it with `port_clock()`, and a
+turn longer than the world's budget is an overrun, as for JavaScript on the real clock: `nat-bench crashed handling
+loop: ran past its turn budget of 50 ms`. A module that never returns stalls the kernel. Running each module on a
+FreeRTOS task of its own would not help, because a task that holds the heap lock cannot be deleted safely.
+
+**Faults.** The module runs in machine mode with the firmware, and with our configuration no PMP entry covers PSRAM
+(`CONFIG_SPIRAM_XIP_FROM_PSRAM` is off), which is why its code can execute there. Internal RAM is readable and
+writable from it. A store to an address with nothing behind it is an access fault, and ESP-IDF panics:
+
+```text
+Guru Meditation Error: Core  1 panic'ed (Store access fault). Exception was unhandled.
+MEPC    : 0x4862350a  ...  MCAUSE  : 0x00000007  MTVAL   : 0x00000000
+Rebooting...
+rst:0xc (SW_CPU_RESET),boot:0x30f (SPI_FAST_FLASH_BOOT)
+```
+
+`MEPC` is in the module's PSRAM segment. The board came back by itself. Before triggering it, the test held the
+keyboard bus (`hold`) so that the reset could not cut an I2C transaction. A store to a valid address, such as the
+kernel's own data, would not fault at all. This is why the policy is "firmware only", and why the build option is
+off by default.
+
+**Enabling it.** See `port/esp32p4/README.md`: `-D PICOCALC_NATIVE_ELF=ON` in its own build directory
+(`build-elf`) with its own config (`sdkconfig.agent-elf`) and its own dependency lock
+(`dependencies.agent-elf.lock`). It adds 39 KB to the image (2,652,592 bytes against 2,612,896 for the same tree
+without it).
+
+### 16.5 Measured on the device
+
+The same `natives/bench.c` xorshift loop, 16,000 iterations, on the ESP32-P4 at 360 MHz:
+
+| Engine | Time | Per iteration |
+|---|---|---|
+| WebAssembly (WAMR fast interpreter) | 13,884 µs | 868 ns (12.5 instructions at 69 ns) |
+| machine code (ELF in PSRAM) | 535 µs | 33 ns |
+
+| ELF module | File | In memory | Load and init (world CPU time) |
+|---|---|---|---|
+| `echo.elf` (every system call) | 5,940 bytes | 10.6 KB | about 7 ms |
+| `bench.elf` | 3,080 bytes | 2.7 KB | about 5 ms |
+
+### 16.6 The P4's layout sensitivity (open)
+
+The P4's JavaScript speed depends on where code and data sit in memory, more than any change in this ticket. The
+kernel's boot calibration (`vm_calibrate`: a 100,000-iteration loop and fib(20)) is the measurement.
+
+| Image | 100k loop | fib(20) |
+|---|---|---|
+| before this ticket | 113 ms | 30.5 ms |
+| N4, after any WebAssembly module load | 319 ms | 85 ms |
+| N4, with a 16 KB static debug buffer, no module | 320 ms | 85 ms |
+| N5 (as committed: 16 KB static result buffer in the ELF backend) | 113 ms | 30.8 ms |
+| N5 with that buffer allocated in PSRAM instead, nothing else changed | 1,604 ms | 31.4 ms |
+
+The last two rows differ only in 16 KB of internal `.bss`, and the calibration runs before any world or module
+exists. In the 1,604 ms case only the loop is slower. Its sum passes 2³¹ after about 65,000 iterations, so the rest
+of its additions are floating point, while fib(20) stays in integers. Two things are ruled out. A register-only
+C loop and random PSRAM reads run at the same speed in fast and slow images (N4). The soft-float routines are in
+ROM, so they cannot be what moved. The 128 KB L2 cache is shared by flash code and PSRAM data, and conflicts in it
+remain the leading suspect. It deserves its own ticket. Until then, a change that moves internal RAM by kilobytes
+should be checked against the boot calibration line.
+
+### 16.7 Validation
+
+- Host: `make test-native` (25 tests, process and WebAssembly, including the sandbox probes), also under the
+  AddressSanitizer/UBSan build; `test-sys`, `test-fs`, `test-clock`, `test-agent`, `test-apps`; `make shots`
+  unchanged.
+- Device, WebAssembly (N4): modules from storage, every probe stopped without a reboot, the benchmark.
+- Device, machine code (N5): every system call including an I2C read through a claim (keyboard controller register
+  0x0B: 100), sleep and settle, reject, the store; the allocator and its limit; an overrun and its restart; a
+  refused module; one deliberate fault and the reboot after it.
+
+### 16.8 What remains
+
+- The layout sensitivity (16.6).
+- C++ modules for the ELF engine need a small runtime (out-of-line `std::string`, a throw that aborts), and nothing
+  runs their static constructors. Today a module is C, or C++ that uses neither.
+- `CONFIG_ELF_LOADER_LIBC_SYMBOLS` and `CONFIG_ELF_LOADER_ESPIDF_SYMBOLS` are unused once our resolver is installed.
+  Turning them off may recover part of the 39 KB.
+- Handles in messages to and from native worlds (14) are still not passed.
+- A full hardware sandbox for machine code (U-mode, PMP, an `ecall` handler; section 10) is still out of scope.
