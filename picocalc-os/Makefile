@@ -123,7 +123,25 @@ test-agent-live: $(BIN)
 	$(MAKE) AGENT_LIVE=1 all
 	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_TEST_LIVE_BINARY=$(if $(filter 1,$(AGENT_LIVE)),$(BUILD),$(BUILD)-agent)/picocalc-host $(PYTHON) tests/test_agent_native.py --live
 
+# Native worlds (PICOCALC-NATIVE): the example binaries, each linked statically with the process runtime, and the tests
+# that run them under the host's sandbox (a process with a seccomp filter; x86-64 only, so not with M32=1).
+NW_SDK  := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_proc.c
+NATIVES := $(BUILD)/natives/echo $(BUILD)/natives/probe $(BUILD)/natives/battery
+natives: $(NATIVES)
+
+$(BUILD)/natives/%: natives/%.c $(NW_SDK)
+	@mkdir -p $(dir $@)
+	$(CC) -O2 -Wall -static -Isdk -o $@ $< sdk/nw_proc.c
+
+$(BUILD)/natives/%: natives/%.cc $(NW_SDK)
+	@mkdir -p $(dir $@)
+	$(CC) -O2 -Wall -Isdk -c -o $@-rt.o sdk/nw_proc.c
+	$(CXX) -O2 -Wall -static -Isdk -o $@ $< $@-rt.o
+
+test-native: $(BIN) natives
+	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_NATIVES=$(BUILD)/natives $(PYTHON) tests/test_native_worlds.py
+
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*
 
-.PHONY: all shots clean test-agent test-agent-live test-fs test-apps test-clock test-sys
+.PHONY: all shots clean test-agent test-agent-live test-fs test-apps test-clock test-sys test-native natives
