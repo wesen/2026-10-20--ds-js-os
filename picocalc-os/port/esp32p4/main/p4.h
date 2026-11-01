@@ -35,5 +35,7 @@ void p4_fs_done(fs_job_t *j);         // the kernel task's side of a finished fi
 void p4_fs_console(const char *cmd, const char *arg);   // ls [PATH], cat PATH, df
 void p4_store_init(void);             // never erases failed/old NVS automatically
 bool p4_config_available(void);
+void p4_tz_apply(void);               // the saved time zone (NVS "settings"/"tz") into TZ; UTC without one
+void p4_tz_console(const char *arg);  // console: tz [POSIX TZ]
 void p4_agent_init(void);             // creates the native worker; never touches K from that worker
 void p4_agent_console(const char *args); // secret values are accepted but never echoed

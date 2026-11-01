@@ -356,6 +356,9 @@ void port_big_free(void *p);
 size_t port_js_stack(void);               // the JS stack limit of a world's runtime
 char *port_read_file(const char *path, size_t *len);   // a malloc'ed, NUL-terminated copy, or NULL
 const char *port_board_name(void);
+// The wall clock: milliseconds since 1970 in UTC, or -1 while the port does not know the time (the P4 before SNTP
+// has set it). The time zone is the C library's TZ variable, which QuickJS's Date reads for local time.
+int64_t port_wall_ms(void);
 const char *const *port_bus_names(void);   // the board's buses, NULL-terminated; their order gives their indices
 // the bus back ends: each starts the transfer a deferred effect describes, at the time the segment that issued
 // it ended, and settles d->promise once with kernel_settle_at(). They own d->bytes (free it or take it).

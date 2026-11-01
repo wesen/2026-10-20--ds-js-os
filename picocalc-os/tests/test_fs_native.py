@@ -35,9 +35,9 @@ class Scenario:
         (self.js / (name + ".js")).write_text(source)
         self.worlds.append(dict(name=name, file=name + ".js", claims=list(claims), mem_kb=512, budget_ms=100))
 
-    def run(self, script="wait 1500\n"):
+    def run(self, script="wait 1500\n", extra=()):
         (self.js / "system.json").write_text(json.dumps(dict(worlds=self.worlds)))
-        args = [str(BINARY), "-j", str(self.js), "-o", str(self.root / "out"), "-f", str(self.fs), "-"]
+        args = [str(BINARY), "-j", str(self.js), "-o", str(self.root / "out"), "-f", str(self.fs), *extra, "-"]
         done = subprocess.run(args, input=script, text=True, capture_output=True, cwd=OS, timeout=20)
         log = (self.root / "out/uart.log").read_text() + done.stderr
         if done.returncode:

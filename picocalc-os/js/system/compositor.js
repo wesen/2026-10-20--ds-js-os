@@ -322,7 +322,8 @@ function drawTable(fb, n, x, y, w, h) {
 
 // ---- the screen -----------------------------------------------------------------------------------------
 const pad2 = (v) => String(v).padStart(2, "0");
-const clockText = () => { const d = new Date(); return pad2(d.getUTCHours()) + ":" + pad2(d.getUTCMinutes()); };
+// local time once the wall clock is known (SNTP on the P4), in the device's zone; "--:--" until then
+const clockText = () => { if (!clock.set()) return "--:--"; const d = new Date(); return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); };
 
 function batteryGlyph(fb, x, y, p) {   // a 22 x 10 battery outline, filled to the level
   fb.rect(x, y, 20, 10, C.barInk);
@@ -367,6 +368,16 @@ function paint(s) {
   fb.text(8, H - BOTTOM + 4, s.focus === "launcher" ? hints : "F1 home  " + hints, "s", C.muted, W - 16);
 }
 
+// Notifications from any world: a banner prefixed with the sender's name, so no world can speak for another or
+// for the system. Crash banners come first; at most NOTE_QUEUE wait, one per world, each shown for NOTE_MS.
+const NOTE_MS = 8000, NOTE_QUEUE = 4;
+function nextNote(s) {
+  if (s.banner || !s.notes.length) return;
+  const n = s.notes.shift();
+  s.banner = { text: n.text, sub: n.sub, color: C.ink, until: now() + NOTE_MS, note: n };
+  dirty(s);
+}
+
 function dirty(s) {
   if (s.queued) return;
   s.queued = true;
@@ -389,7 +400,7 @@ function attach(s) {
 
 service("compositor")
   .needs("frames", "keys", "power", "worlds.status")
-  .state({ focus: "launcher", apps: {}, battery: null, banner: null, queued: false, frames: 0, flushes: 0, pixels: 0, clock: "", crashed: {}, flushError: "" })
+  .state({ focus: "launcher", apps: {}, battery: null, banner: null, notes: [], queued: false, frames: 0, flushes: 0, pixels: 0, clock: "", crashed: {}, flushError: "" })
   .onStart((s) => {
     F = gfx.fonts();
     s.fb = dma.alloc(W, H);
@@ -427,8 +438,15 @@ service("compositor")
   })
   .on("open", (s, { app }) => focus(s, app))
   .on("power", (s, p, msg) => { if (msg.from === "power") { s.battery = p; dirty(s); } })
+  .on("notify", (s, p, msg) => {
+    if (!msg.from || !p || typeof p.text !== "string" || !p.text.trim()) return;
+    if (s.notes.length >= NOTE_QUEUE || s.notes.some((n) => n.from === msg.from)) return;
+    s.notes.push({ from: msg.from, text: msg.from + ": " + p.text.trim().slice(0, 120), sub: typeof p.sub === "string" ? p.sub.slice(0, 120) : "" });
+    nextNote(s);
+  })
   .on("worlds.status", (s, st, msg) => {
     if (msg.from !== null) return;   // native kernel messages have no sending world
+    if (s.banner && s.banner.note) { s.notes.unshift(s.banner.note); s.banner = null; }   // a crash interrupts a notification
     if (st.state === "crashed") {
       s.crashed[st.world] = true;
       delete s.apps[st.world];
@@ -447,4 +465,5 @@ service("compositor")
     const c = clockText();
     if (c !== s.clock) { s.clock = c; dirty(s); }
     if (s.banner && now() > s.banner.until) { s.banner = null; dirty(s); }
+    nextNote(s);
   });

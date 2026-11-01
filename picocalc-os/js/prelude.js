@@ -15,13 +15,18 @@
     seed ^= seed << 5; seed >>>= 0;
     return seed / 4294967296;
   };
-  const BOOT = Date.UTC(2026, 9, 22, 9, 41, 0);   // the wall clock reads this at boot
+  // Date reads the wall clock (on the P4, SNTP time once Wi-Fi is up). While the time is unknown it shows a made-up
+  // time, BOOT plus the time since boot, so formatting keeps working; a world that must not act on a wrong date
+  // checks clock.set(). Local time follows the C library's TZ (clock.zone()). Durations belong to now().
+  const BOOT = Date.UTC(2026, 9, 22, 9, 41, 0);
   const RealDate = Date;
+  const stamp = () => { const t = k("clock.wall"); return t == null ? BOOT + k("now") : t; };
   class VDate extends RealDate {
-    constructor(...a) { if (a.length) super(...a); else super(BOOT + k("now")); }
-    static now() { return BOOT + k("now"); }
+    constructor(...a) { if (a.length) super(...a); else super(stamp()); }
+    static now() { return stamp(); }
   }
   g.Date = VDate;
+  g.clock = { wall: () => k("clock.wall"), set: () => k("clock.wall") != null, zone: () => k("clock.zone") };
   g.now = () => k("now");                  // virtual milliseconds since boot
   g.self = k("self");
   g.log = (...a) => k("log", a.map((x) => (typeof x === "string" ? x : show(x))).join(" "));

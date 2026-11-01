@@ -39,6 +39,10 @@ topics:
       description: Screens, layout and input
     - slug: calculator
       description: Calculation and graphing
+    - slug: agenda
+      description: Todo lists, agendas and reminders
+    - slug: clock
+      description: Wall-clock time, time zones and SNTP
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes

@@ -2,6 +2,7 @@
 // firmware (js_bundle.c, made by bundle_js.cmake from the same js/ directory the host reads).
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include "esp_heap_caps.h"
 #include "esp_timer.h"
 #include "p4.h"
@@ -38,6 +39,14 @@ void port_big_free(void *p) { heap_caps_free(p); }
 size_t port_js_stack(void) { return 56 * 1024; }
 const char *const *port_bus_names(void) { static const char *const b[] = { "i2c0", "spi2", NULL }; return b; }
 const char *port_board_name(void) { return "ESP32-P4 in a PicoCalc"; }
+
+// The system time is set by SNTP once Wi-Fi is up (agent_p4.c); before that it counts from 1970.
+int64_t port_wall_ms(void) {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  if (tv.tv_sec < 1735689600) return -1;   // before 2025-01-01: not set yet
+  return (int64_t)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 int port_gpio_watch(int pin, int mode, int handle_id) { (void)pin; (void)mode; (void)handle_id; return -1; }   // no pin interrupts here
 void port_gpio_arm(int pin, int mode) { (void)pin; (void)mode; }
 void port_gpio_unwatch(int pin) { (void)pin; }

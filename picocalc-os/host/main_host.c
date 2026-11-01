@@ -143,7 +143,7 @@ static int run_line(char *line, int lineno) {
 }
 
 int main(int argc, char **argv) {
-  const char *js = "js", *manifest = NULL, *script = NULL, *uart = NULL;
+  const char *js = "js", *manifest = NULL, *script = NULL, *uart = NULL, *wall = NULL, *zone = "UTC0";
   double run_ms = 0;
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-j") && i + 1 < argc) js = argv[++i];
@@ -152,15 +152,20 @@ int main(int argc, char **argv) {
     else if (!strcmp(argv[i], "-u") && i + 1 < argc) uart = argv[++i];
     else if (!strcmp(argv[i], "-s") && i + 1 < argc) host_store_dir(argv[++i]);   // the persistent store in files
     else if (!strcmp(argv[i], "-f") && i + 1 < argc) host_fs_root(argv[++i]);     // the filesystem's root directory
+    else if (!strcmp(argv[i], "-w") && i + 1 < argc) wall = argv[++i];   // the wall clock's start: ISO local time, now, unset
+    else if (!strcmp(argv[i], "-z") && i + 1 < argc) zone = argv[++i];   // the time zone, POSIX TZ (default UTC0)
     else if (!strcmp(argv[i], "-r")) realtime_pacing = true;  // pace waits when a real HTTPS worker is running
     else if (!strcmp(argv[i], "-t") && i + 1 < argc) run_ms = atof(argv[++i]);
     else if (!strcmp(argv[i], "-v")) K.verbose = true;
     else if (!strcmp(argv[i], "-vv")) K.verbose = K.trace = true;
     else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-s store_dir] [-f fs_dir] [-r] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
+      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-s store_dir] [-f fs_dir] [-w start|now|unset] [-z TZ] [-r] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
       return 0;
     } else script = argv[i];
   }
+  // the zone is the host's TZ only when asked: screenshots must not depend on where the tests run
+  setenv("TZ", zone, 1); tzset();
+  if (wall && host_wall(wall)) { fprintf(stderr, "-w %s: expected YYYY-MM-DDTHH:MM[:SS], now or unset\n", wall); return 2; }
   mkdir(out_dir, 0755);
   if (!port_fs_root()) { char d[300]; snprintf(d, sizeof d, "%s/fs", out_dir); host_fs_root(d); }
   char mpath[512], upath[512];

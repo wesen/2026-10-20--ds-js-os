@@ -91,6 +91,10 @@ test-apps:
 	$(NODE) tests/editor.test.mjs
 	$(NODE) tests/calc.test.mjs
 
+# The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
+test-clock: $(BIN)
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_clock_native.py
+
 # Files through the host binary: claims, paths, rights, narrowing, passing and revoking handles (no device needed).
 test-fs: $(BIN)
 	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_fs_native.py
@@ -114,4 +118,4 @@ test-agent-live: $(BIN)
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*
 
-.PHONY: all shots clean test-agent test-agent-live test-fs test-apps
+.PHONY: all shots clean test-agent test-agent-live test-fs test-apps test-clock

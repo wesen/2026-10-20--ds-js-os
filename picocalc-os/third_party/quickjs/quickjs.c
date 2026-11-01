@@ -49873,7 +49873,21 @@ static int getTimezoneOffset(int64_t time)
         }
     }
     ti = time;
-#if defined(_WIN32) || defined(ESP_PLATFORM)   /* picocalc-os: newlib's struct tm has no tm_gmtoff */
+#if defined(ESP_PLATFORM)
+    {
+        /* picocalc-os: newlib's struct tm has no tm_gmtoff. Local minus UTC from the broken-down fields: the
+           mktime(gmtime()) - mktime(localtime()) way below reads the UTC fields as local time with tm_isdst = 0
+           and is an hour off while daylight saving time is in effect (PICOCALC-AGENDA, scripts/tzoff.c). */
+        struct tm g, l;
+        int days;
+        if (!gmtime_r(&ti, &g) || !localtime_r(&ti, &l))
+            return 0;
+        days = l.tm_yday - g.tm_yday;
+        if (l.tm_year != g.tm_year)
+            days = l.tm_year > g.tm_year ? 1 : -1;
+        res = -((days * 24 + l.tm_hour - g.tm_hour) * 60 + l.tm_min - g.tm_min);
+    }
+#elif defined(_WIN32)
     {
         struct tm *tm;
         time_t gm_ti, loc_ti;

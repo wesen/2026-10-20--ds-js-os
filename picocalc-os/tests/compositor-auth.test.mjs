@@ -59,3 +59,21 @@ test("only the power driver may alter the trusted battery display", () => {
   def.handlers.power(state, { pct: 82 }, { from: "power" });
   assert.equal(state.battery.pct, 82); assert.equal(sent.at(-1).type, "draw");
 });
+
+test("a notification names its sender, waits behind a crash banner, and is limited per world", () => {
+  const { def, state } = setup();
+  state.notes = [];
+  def.handlers.notify(state, { text: "dentist at 14:30", sub: "in 15 minutes" }, { from: "agenda" });
+  assert.equal(state.banner.text, "agenda: dentist at 14:30"); assert.equal(state.banner.sub, "in 15 minutes");
+  def.handlers.notify(state, { text: "forged" }, { from: null });
+  def.handlers.notify(state, { text: "" }, { from: "flaky" });
+  assert.equal(state.notes.length, 0);
+  def.handlers.notify(state, { text: "second" }, { from: "flaky" });
+  def.handlers.notify(state, { text: "third" }, { from: "flaky" });   // one waiting per world
+  assert.deepEqual(state.notes.map((n) => n.text), ["flaky: second"]);
+  def.handlers["worlds.status"](state, { world: "chat", state: "crashed", why: "test", in_ms: 100 }, { from: null });
+  assert.match(state.banner.text, /chat crashed/);
+  assert.deepEqual(state.notes.map((n) => n.text), ["agenda: dentist at 14:30", "flaky: second"]);
+  for (const w of ["a", "b", "c", "d"]) def.handlers.notify(state, { text: "x" }, { from: w });
+  assert.equal(state.notes.length, 4);
+});

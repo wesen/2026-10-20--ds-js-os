@@ -106,6 +106,25 @@ void host_fs_root(const char *dir) {
   mkdir(fs_root, 0755);
 }
 const char *port_fs_root(void) { return fs_root[0] ? fs_root : NULL; }
+
+// The wall clock: a start time plus virtual time. By default the start is the prelude's old fixed boot time, so
+// screenshots stay the same from run to run; -w sets another start, "now", or "unset" (an unknown time).
+static int64_t wall_base = 1792662060000LL;   // Date.UTC(2026, 9, 22, 9, 41)
+static bool wall_unset;
+int host_wall(const char *spec) {
+  struct tm tm = { 0 };
+  int sec = 0;
+  if (!strcmp(spec, "unset")) { wall_unset = true; return 0; }
+  wall_unset = false;
+  if (!strcmp(spec, "now")) { struct timespec ts; clock_gettime(CLOCK_REALTIME, &ts); wall_base = (int64_t)ts.tv_sec * 1000 + ts.tv_nsec / 1000000; return 0; }
+  if (sscanf(spec, "%d-%d-%dT%d:%d:%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &sec) < 5) return -1;
+  tm.tm_year -= 1900; tm.tm_mon -= 1; tm.tm_sec = sec; tm.tm_isdst = -1;   // local time in the zone TZ names
+  time_t t = mktime(&tm);
+  if (t == (time_t)-1) return -1;
+  wall_base = (int64_t)t * 1000;
+  return 0;
+}
+int64_t port_wall_ms(void) { return wall_unset ? -1 : wall_base + kernel_now() / 1000; }
 // The job runs now; its promise settles after a modelled cost (2 ms, plus 1 us a byte), so scripts stay repeatable.
 void port_fs_submit(fs_job_t *j, vtime_t at) {
   fs_execute(j);

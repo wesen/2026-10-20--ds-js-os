@@ -15,4 +15,5 @@ vtime_t board_next_wake(void);         // the board time at which something powe
 vtime_t board_take_wake(void);         // when that happened since the last call (it may happen during a run), or VT_INF
 void board_wake(const char *why);      // it is switched on ("button", "rtc"); the runner boots the kernel next
 void host_store_dir(const char *dir);   // host/port_host.c: keep the persistent store in files under dir (-s)
+int host_wall(const char *spec);       // host/port_host.c: the wall clock's start (-w); 0 on success
 void host_fs_root(const char *dir);     // host/port_host.c: the filesystem's root directory (-f; default OUT_DIR/fs)

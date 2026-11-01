@@ -158,9 +158,10 @@ void console_exec(char *line) {
     printf("i2c0 %s; rebooting\n", bus_p4_hold(100) ? "held" : "still busy");
     fflush(stdout); vTaskDelay(pdMS_TO_TICKS(20)); esp_restart();
   }
+  else if (!strcmp(cmd, "tz")) p4_tz_console(rest);
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help | ls [PATH] | cat PATH | df | hold | reboot\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help | ls [PATH] | cat PATH | df | hold | reboot | tz [POSIX TZ]\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
@@ -224,6 +225,7 @@ void app_main(void) {
   setvbuf(stdout, NULL, _IOLBF, 0);
 
   p4_store_init();
+  p4_tz_apply();
   p4_fs_init();
   p4_agent_init();
   bus_p4_init();
