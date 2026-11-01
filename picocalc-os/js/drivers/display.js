@@ -20,11 +20,16 @@ driver("display")
     await sleep(50);
     s.ready = true;
   })
-  .on("attach", (s, { fb }) => {
+  // only the compositor hands over a framebuffer and asks for flushes; anyone else could detach the panel
+  .on("attach", (s, p, msg) => {
+    if (msg.from !== "compositor" || !p || !p.fb) return;
+    const fb = p.fb;
     if (s.fb && s.fb !== fb) s.fb.release();
     s.fb = fb;
   })
-  .on("flush", async (s, { rects }) => {
+  .on("flush", async (s, p, msg) => {
+    if (msg.from !== "compositor" || !p || !Array.isArray(p.rects)) return { px: 0, skipped: true };
+    const rects = p.rects;
     // after a restart, flushes queued for the old instance can arrive before the compositor re-attaches
     if (!s.fb || !s.ready) return { px: 0, skipped: true };
     const t0 = now();

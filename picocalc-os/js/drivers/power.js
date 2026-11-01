@@ -41,8 +41,11 @@ driver("power")
     await sample(s);
   })
   .every(5000, sample)
-  .on("backlight", (s, { level }) => setBacklight(s, Math.max(0, Math.min(255, level | 0))))
-  .on("screen", async (s, { on }) => {
+  // the screen is the compositor's to switch: it handles the power key; no other world may darken the panel
+  .on("backlight", (s, p, msg) => { if (msg.from === "compositor") return setBacklight(s, Math.max(0, Math.min(255, (p && p.level) | 0))); })
+  .on("screen", async (s, p, msg) => {
+    if (msg.from !== "compositor") return { screen: s.screen };
+    const on = p && p.on;
     s.screen = on === undefined ? !s.screen : !!on;
     if (!s.screen) s.saved = s.backlight || s.saved;
     await setBacklight(s, s.screen ? s.saved || 32 : 0);

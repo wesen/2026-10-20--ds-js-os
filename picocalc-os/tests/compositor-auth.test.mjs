@@ -77,3 +77,47 @@ test("a notification names its sender, waits behind a crash banner, and is limit
   for (const w of ["a", "b", "c", "d"]) def.handlers.notify(state, { text: "x" }, { from: w });
   assert.equal(state.notes.length, 4);
 });
+
+test("apps loaded from storage cannot bring an app to the front, and only the compositor asks itself to draw", () => {
+  const { def, state, sent } = setup();
+  for (const from of ["u-hello", "u-launcher", null]) def.handlers.open(state, { app: "u-hello" }, { from });
+  assert.equal(state.focus, "chat");
+  def.handlers.open(state, { app: "settings" }, { from: "launcher" });
+  assert.equal(state.focus, "settings");
+  assert.deepEqual(sent.filter((m) => m.type === "blur" || m.type === "focus").map((m) => [m.to, m.type]), [["chat", "blur"], ["settings", "focus"]]);
+  def.handlers.open(state, { app: "u-hello" }, { from: "loader" });
+  assert.equal(state.focus, "u-hello");
+  def.handlers.open(state, { app: 7 }, { from: "loader" });
+  assert.equal(state.focus, "u-hello");
+  state.queued = true;
+  def.handlers.draw(state, null, { from: "u-hello" });
+  assert.equal(state.queued, true, "a draw from another world is ignored");
+});
+
+// The drivers' requests, with the drivers' own callbacks and no hardware.
+function driver(file) {
+  const def = { handlers: {} };
+  const builder = {
+    provides() { return this; }, needs() { return this; }, state(s) { def.state = s; return this; }, onStart() { return this; },
+    on(name, fn) { def.handlers[name] = fn; return this; }, every() { return this; },
+  };
+  vm.runInNewContext(readFileSync(new URL("../js/drivers/" + file, import.meta.url), "utf8"),
+    { driver: () => builder, sleep: async () => {}, now: () => 0, hw: {}, publish: () => {} });
+  return { def, state: JSON.parse(JSON.stringify(def.state)) };
+}
+
+test("only the compositor may switch the screen, set the backlight, attach a framebuffer or flush", async () => {
+  const p = driver("power.js");
+  p.state.screen = true; p.state.backlight = 64;
+  assert.deepEqual(JSON.parse(JSON.stringify(await p.def.handlers.screen(p.state, {}, { from: "u-hello" }))), { screen: true });
+  assert.equal(await p.def.handlers.backlight(p.state, { level: 0 }, { from: "u-hello" }), undefined);
+  assert.equal(p.state.screen, true);
+  const d = driver("display.js");
+  const fb = { released: 0, release() { this.released++; } };
+  d.def.handlers.attach(d.state, { fb }, { from: "compositor" });
+  assert.equal(d.state.fb, fb);
+  d.def.handlers.attach(d.state, {}, { from: "u-hello" });
+  d.def.handlers.attach(d.state, { fb: { release() {} } }, { from: "settings" });
+  assert.equal(d.state.fb, fb); assert.equal(fb.released, 0);
+  assert.deepEqual(JSON.parse(JSON.stringify(await d.def.handlers.flush(d.state, { rects: [[0, 0, 320, 320]] }, { from: "u-hello" }))), { px: 0, skipped: true });
+});

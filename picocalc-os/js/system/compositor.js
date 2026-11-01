@@ -406,7 +406,8 @@ service("compositor")
     s.fb = dma.alloc(W, H);
     attach(s);
   })
-  .on("draw", async (s) => {
+  .on("draw", async (s, _, msg) => {
+    if (!msg || msg.from !== self) return;   // its own reminder to paint; from anyone else, a way to keep it busy
     s.queued = false;
     paint(s);
     const rects = s.fb.commit();
@@ -436,7 +437,9 @@ service("compositor")
     if (e.key === "power") { if (e.state === "down") send("power", "screen", {}); return; }
     send(s.focus, "key", e);
   })
-  .on("open", (s, { app }) => focus(s, app))
+  // Apps loaded from storage (worlds named u-...) may not bring anything to the front: one that could would take the
+  // keys typed into another app, a password in Settings for one. The user opens them from the launcher or the loader.
+  .on("open", (s, p, msg) => { if (msg.from && !msg.from.startsWith("u-") && p && typeof p.app === "string") focus(s, p.app); })
   .on("power", (s, p, msg) => { if (msg.from === "power") { s.battery = p; dirty(s); } })
   .on("notify", (s, p, msg) => {
     if (!msg.from || !p || typeof p.text !== "string" || !p.text.trim()) return;
