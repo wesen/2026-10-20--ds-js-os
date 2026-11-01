@@ -1,7 +1,13 @@
 // Files on the ESP32-P4: a FAT filesystem with wear levelling in the "files" flash partition, mounted at /files.
-// nucleus/fs.c does the work with POSIX calls through ESP-IDF's VFS. A job runs on the "fs" worker task, so a
-// flash erase (tens of milliseconds) never stalls the kernel task; the finished job comes back through p4_kq and
-// the kernel task settles the world's promise. The console's ls, cat and df read directly, for debugging.
+// nucleus/fs.c does the work with POSIX calls through ESP-IDF's VFS. A job runs on the "fs" worker task; the
+// finished job comes back through p4_kq and the kernel task settles the world's promise. The console's ls, cat and
+// df read directly, for debugging.
+//
+// Where the worker runs matters. While ESP-IDF erases or writes flash, it parks the other CPU too (the flash cache
+// is off), for the whole operation: tens of milliseconds per 4 KB sector. With the worker on core 0, a save could
+// freeze a turn in progress on core 1 and push it past its budget (the compositor overran 80 ms once, PICOCALC-EDIT
+// step 5). On the kernel's core at a lower priority, the worker runs only while the kernel task is blocked between
+// turns: a flash operation can delay the next turn, but it can no longer stretch one.
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +36,10 @@ static void fs_worker(void *arg) {
   for (;;) {
     fs_job_t *j;
     xQueueReceive(q_fs, &j, portMAX_DELAY);
+    int64_t t0 = esp_timer_get_time();
     fs_execute(j);
+    int64_t ms = (esp_timer_get_time() - t0) / 1000;
+    if (ms >= 20) ESP_LOGI(TAG, "op %d on %s took %lld ms", j->op, j->path, ms);
     kmsg_t m = { .fs = j };
     xQueueSend(p4_kq, &m, portMAX_DELAY);
   }
@@ -52,7 +61,7 @@ void p4_fs_init(void) {
   port_fs_info(&total, &free_bytes);
   ESP_LOGI(TAG, "%s: %llu KB, %llu KB free (mounted in %lld ms)", ROOT, total / 1024, free_bytes / 1024, (esp_timer_get_time() - t0) / 1000);
   q_fs = xQueueCreate(16, sizeof(fs_job_t *));
-  xTaskCreatePinnedToCore(fs_worker, "fs", 8192, NULL, 4, NULL, 0);
+  xTaskCreatePinnedToCore(fs_worker, "fs", 8192, NULL, 4, NULL, 1);   // below the kernel (5), on its core: see above
 }
 
 // ---- console: ls [PATH], cat PATH, df -------------------------------------------------------------------------------

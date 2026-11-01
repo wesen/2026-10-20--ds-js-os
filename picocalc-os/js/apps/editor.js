@@ -205,16 +205,23 @@ function edRestore(s) {
   edScroll(s);
 }
 
+// A save is a file promise that settles some segments later (on the device, after the flash write). Keys keep
+// arriving meanwhile: edits made during it keep the buffer dirty, and Esc waits for the write and then leaves.
 async function edSave(s) {
   if (!s.file) { s.note = "No file to save to."; return; }
+  if (s.saving) { s.note = "Saving..."; return; }
   const text = edText(s);
   if (text.length > ED_FILE_MAX) { s.note = "Too large to save: a file holds at most 64 KB."; return; }
+  s.saving = true; s.note = "Saving...";
   try {
     const r = await s.file.write(text);
-    s.dirty = false; s.escArmed = false; s.saved = text;
+    s.saved = text; s.dirty = edText(s) !== text;
+    if (!s.dirty) s.escArmed = false;
     s.note = "Saved " + r.bytes + " bytes.";
     edRemember(s);
+    if (s.leaveAfterSave && !s.dirty) send("compositor", "open", { app: "files" });
   } catch (e) { s.note = "Not saved: " + e.message; }
+  s.saving = false; s.leaveAfterSave = false;
 }
 
 function edKey(s, k) {
@@ -243,6 +250,7 @@ function edKey(s, k) {
     case "f6": if (once) { s.mode = "preview"; s.ptop = 0; } return;
     case "esc":
       if (!once) return;
+      if (s.saving) { s.leaveAfterSave = true; s.note = "Saving; back to Files once it is written."; return; }
       if (s.dirty && !s.escArmed) { s.escArmed = true; s.note = "Unsaved changes. F2 saves; Esc again discards them."; return; }
       if (s.dirty) { edLoad(s, s.name, s.saved); s.note = "Changes discarded."; }
       edRemember(s);
@@ -277,7 +285,7 @@ function edStatus(s) {
 
 app("editor")
   .title("Editor")
-  .state({ name: "", lines: [""], wraps: [1], row: 0, col: 0, top: 0, goal: -1, dirty: false, escArmed: false,
+  .state({ name: "", lines: [""], wraps: [1], row: 0, col: 0, top: 0, goal: -1, dirty: false, escArmed: false, saving: false, leaveAfterSave: false,
            find: null, mode: "edit", ptop: 0, note: "", file: null, saved: "" })
   .on("open", async (s, m) => {
     // a refused file is released at once; an accepted one replaces (and releases) the one held before

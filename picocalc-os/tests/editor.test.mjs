@@ -10,7 +10,11 @@ const plain = (x) => JSON.parse(JSON.stringify(x));   // values made in the VM h
 function fakeFile(text = null, path = "notes/a.md") {
   const f = { path, text, writes: 0, released: 0, release: () => { f.released++; },
     read: async () => { if (f.text === null) throw new Error("no file " + path); return f.text; },
-    write: async (t) => { f.text = t; f.writes++; return { bytes: Buffer.byteLength(t) }; } };
+    write: (t) => new Promise((resolve) => {
+      const done = () => { f.text = t; f.writes++; resolve({ bytes: Buffer.byteLength(t) }); };
+      if (f.held) f.held.push(done); else done();
+    }),
+    hold() { f.held = []; }, finish() { const q = f.held || []; f.held = null; q.forEach((d) => d()); } };
   return f;
 }
 
@@ -119,6 +123,22 @@ test("esc with unsaved changes warns, then discards; open is refused while dirty
   assert.equal(h.s.lines[0], "keep"); assert.equal(h.s.dirty, false);
   assert.deepEqual(plain(h.sent.at(-1)), { to: "compositor", type: "open", payload: { app: "files" } });
   assert.deepEqual(await h.open(fakeFile("other", "o.txt")), { ok: true });
+});
+
+test("a save in flight: edits keep the buffer dirty, Esc waits for the write and then leaves", async () => {
+  const h = setup(), f = fakeFile("a", "s.txt");
+  await h.open(f);
+  h.key("end"); h.type("b");
+  f.hold(); const saving = h.key("f2");
+  assert.equal(h.s.saving, true); assert.match(h.s.note, /Saving/);
+  h.key("f2"); assert.equal(f.held.length, 1);   // a second F2 starts no second write
+  h.type("c"); h.key("esc");
+  assert.equal(h.sent.length, 0); assert.equal(h.s.lines[0], "abc");
+  f.finish(); await saving;
+  assert.equal(f.text, "ab"); assert.equal(h.s.dirty, true); assert.equal(h.sent.length, 0);   // "c" is not saved yet
+  f.hold(); const again = h.key("f2"); h.key("esc"); f.finish(); await again;
+  assert.equal(f.text, "abc"); assert.equal(h.s.dirty, false);
+  assert.deepEqual(plain(h.sent.at(-1)), { to: "compositor", type: "open", payload: { app: "files" } });
 });
 
 test("the cursor position is remembered per file", async () => {
