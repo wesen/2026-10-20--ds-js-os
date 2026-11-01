@@ -17,6 +17,11 @@ CONFIG_SPIRAM=y
 CONFIG_SPIRAM_MODE_HEX=y
 CONFIG_SPIRAM_SPEED_200M=y
 CONFIG_SPIRAM_USE_MALLOC=y
+# LP SRAM (32 KB of "RTC fast memory") stays out of the heap. ESP-IDF adds it as internal memory, so small blocks land
+# there once the main SRAM runs short, and on the P4 a read or write there takes about 1 us against 14 ns in internal
+# SRAM or cached PSRAM: a QuickJS runtime with a few hot blocks there ran 2.8x to 14x slower, depending on which
+# blocks (PICOCALC-SPEED).
+CONFIG_ESP_SYSTEM_ALLOW_RTC_FAST_MEM_AS_HEAP=n
 
 # A 1 ms tick: the keyboard's 2 ms register gap and the kernel's idle waits are in milliseconds.
 CONFIG_FREERTOS_HZ=1000
