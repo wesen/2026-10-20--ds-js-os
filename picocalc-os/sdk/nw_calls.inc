@@ -12,6 +12,7 @@ int64_t nw_now(void) { return call(NW_CALL_NOW, 0, 0, 0, NONE, NONE, NONE, NULL,
 int nw_self(char *buf, int n) { return (int)call(NW_CALL_SELF, 0, 0, 0, NONE, NONE, NONE, buf, n); }
 int nw_send(const char *to, const char *type, const char *json) { return (int)call(NW_CALL_SEND, 0, 0, 0, S(to), S(type), S(json), NULL, 0); }
 int nw_publish(const char *ch, const char *json) { return (int)call(NW_CALL_PUBLISH, 0, 0, 0, S(ch), S(json), NONE, NULL, 0); }
+int nw_publish_retained(const char *ch, const char *json) { return (int)call(NW_CALL_PUBLISH, 1, 0, 0, S(ch), S(json), NONE, NULL, 0); }
 int nw_reply(const char *json) { return (int)call(NW_CALL_REPLY, 0, 0, 0, S(json), NONE, NONE, NULL, 0); }
 int nw_reject(const char *why) { return (int)call(NW_CALL_REJECT, 0, 0, 0, S(why), NONE, NONE, NULL, 0); }
 int nw_ask(const char *to, const char *type, const char *json, int timeout_ms) {

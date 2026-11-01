@@ -25,7 +25,7 @@ function read(s) {
     s.reads++;
     s.ms = ms;
     sys.setClock(ms);
-    publish("time", { ms: ms, lowVoltage: !!s.lowVoltage });
+    publish("time", { ms: ms, lowVoltage: !!s.lowVoltage }, { retain: true });
   }).then(null, function (e) { s.errors++; log("rtc: " + e.message); });
 }
 

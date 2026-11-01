@@ -133,7 +133,8 @@ display driver a read-only view of it; the Handles tab of the System app shows t
 
 Apps never draw. An app's `screen(state)` returns a tree of ui nodes (`col`, `row`, `text`, `list`,
 `table`, `lines`, `grid`, `kv`, `bar`, `spark`, `canvas`, `input`, `box`); after each of its turns, if
-the tree changed, it is published on the `frames` channel. The compositor lays out the focused app's
+the tree changed, it is published on the `frames` channel. The kernel keeps each app's last frame as its retained
+post, so a compositor that restarts gets every app's screen back at once. The compositor lays out the focused app's
 tree with the status and hint bars into the back buffer, the nucleus compares it with the front buffer
 and returns the changed rectangles, and the compositor asks the display driver to send them: `CASET`,
 `RASET`, `RAMWR` and the pixels, queued together so they run back to back on SPI2. The display driver
@@ -157,7 +158,8 @@ app("snake")                         // or driver(...), service(...)
 ```
 
 Inside a world: `send(to, type, payload)`, `ask(to, type, payload, {timeout})`, `publish(channel,
-payload)`, `sleep(ms)`, `now()`, `log(...)`, `hw.i2c/spi`, `dma.alloc`, `sys.worlds/handles/stats`,
+payload, {retain})` (with `retain`, the post is state: the kernel keeps the latest for worlds that start later;
+no handles, 4 KB per world), `sleep(ms)`, `now()`, `log(...)`, `hw.i2c/spi`, `dma.alloc`, `sys.worlds/handles/stats`,
 `sys.fault/restart`; handles have `read(reg, n, gapMs)`, `transfer(bytes, nread, gapMs)`, `write`,
 `cmd`, `pixels`, `fill`, `text`, `commit`, `narrow`, `revoke`, `release`. `Math.random` is seeded per
 world and `Date` reads the virtual clock, so a script replays exactly.

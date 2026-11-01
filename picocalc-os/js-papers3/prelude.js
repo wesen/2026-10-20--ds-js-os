@@ -246,7 +246,8 @@
 
   // ---- messages ------------------------------------------------------------------------------------
   g.send = function (to, type, payload) { var e = enc(payload); k("send", to, type, e[0], e[1]); };
-  g.publish = function (ch, payload) { var e = enc(payload); k("publish", ch, e[0], e[1]); };
+  // { retain: true }: the post is state, not an event; the kernel keeps the latest for worlds that start later
+  g.publish = function (ch, payload, opts) { var e = enc(payload); k("publish", ch, e[0], e[1], !!(opts && opts.retain)); };
   g.ask = function (to, type, payload, opts) {
     var e = enc(payload);
     return kernelTask(ka("ask", to, type, e[0], e[1], (opts && opts.timeout) || 2000));

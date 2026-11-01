@@ -205,12 +205,17 @@ static JSValue op_send(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
   return r;
 }
 
+// publish(channel, json, handles, retain): as in vm.c
 static JSValue op_publish(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
   int hs[MAX_MSG_HANDLES], nh = int_list(ctx, argv, argc, 2, hs, MAX_MSG_HANDLES);
   char *ch = sarg(ctx, argv, argc, 0), *json = sarg(ctx, argv, argc, 1);
+  bool retain = argc > 3 && argv[3] == JS_TRUE;   // the prelude passes a boolean
+  char why[160];
   JSValue r = JS_UNDEFINED;
   if (!ch || !world_provides(W, ch)) r = fail(ctx, "%s does not provide the channel \"%s\"", W->name, ch ? ch : "");
   else if (!world_may_use(W, ch)) r = fail(ctx, "%s has no claim on %s", W->name, channel_claim(ch));
+  else if (retain && nh) r = fail(ctx, "a retained post cannot carry handles");
+  else if (retain && kernel_retain(W, ch, json, why, sizeof why)) r = fail(ctx, "%s", why);
   else if (check_grants(ctx, W, hs, nh)) { charge_json(json ? strlen(json) : 0); kernel_publish(W, ch, json, hs, nh); }
   else r = JS_EXCEPTION;
   free(ch); free(json);

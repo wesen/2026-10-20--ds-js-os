@@ -62,6 +62,7 @@ typedef struct settle { struct settle *next; int promise; int ok; char *json; vt
 enum { W_IDLE, W_BUSY, W_RESTARTING, W_STOPPED };
 #define MAX_WORLDS 32
 #define MAX_LIST 16
+#define RETAIN_MAX 4096     // bytes of retained posts a world may keep (its frame not counted)
 #define NAME_LEN 32
 
 typedef struct world {
@@ -84,7 +85,9 @@ typedef struct world {
   int every_ms[MAX_LIST]; int n_every; bool tick_queued[MAX_LIST];
   bool timer_off[MAX_LIST]; int timer_gen[MAX_LIST];   // a stopped timer; a timer's ticks carry its generation
   bool has_start, has_screen;
-  char *frame;              // last frame it published
+  char *frame;              // last frame it published, kept: it is also its retained post on "frames"
+  char *retained[MAX_LIST]; // its retained post on provides[i], or NULL; replayed to worlds that start later
+  size_t retained_bytes;    // their total, at most RETAIN_MAX
   // the turn in progress
   bool in_turn;
   int turn_ask;             // the ask this turn answers, 0 if none
@@ -260,6 +263,9 @@ void defer_settle(world_t *W, int promise, int ok, const char *json, vtime_t del
 void kernel_settle_at(int w, int epoch, int promise, int ok, char *json, vtime_t t);
 vtime_t kernel_now(void);
 void kernel_publish(world_t *from, const char *ch, const char *json, const int *hs, int nh);
+// Keep json as W's retained post on ch (a channel W provides), replacing the one before: a world that starts later and
+// needs ch is given it. 0, or -1 with why. The post itself still goes through kernel_publish.
+int kernel_retain(world_t *W, const char *ch, const char *json, char *why, size_t n);
 int kernel_ask(world_t *from, world_t *to, const char *type, const char *json, const int *hs, int nh, int promise, vtime_t timeout);
 void crash(world_t *W, const char *why);
 int kernel_restart_world(world_t *W);

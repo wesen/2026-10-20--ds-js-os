@@ -18,7 +18,7 @@ function sample(s) {
   s.samples++;
   if (pct !== s.pct || charging !== s.charging) {
     s.pct = pct; s.mv = mv; s.charging = charging;
-    publish("power", { pct: pct, mv: mv, charging: charging });
+    publish("power", { pct: pct, mv: mv, charging: charging }, { retain: true });
   }
 }
 

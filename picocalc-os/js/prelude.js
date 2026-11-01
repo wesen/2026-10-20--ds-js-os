@@ -163,7 +163,8 @@
 
   // ---- messages ------------------------------------------------------------------------------------
   g.send = (to, type, payload) => { const [j, hs] = enc(payload); k("send", to, type, j, hs); };
-  g.publish = (ch, payload) => { const [j, hs] = enc(payload); k("publish", ch, j, hs); };
+  // { retain: true }: the post is state, not an event; the kernel keeps the latest for worlds that start later
+  g.publish = (ch, payload, opts) => { const [j, hs] = enc(payload); k("publish", ch, j, hs, !!(opts && opts.retain)); };
   g.ask = (to, type, payload, opts) => {
     const [j, hs] = enc(payload);
     return ka("ask", to, type, j, hs, (opts && opts.timeout) || 2000).then((v) => (v && typeof v === "object" ? reviveTree(v) : v));

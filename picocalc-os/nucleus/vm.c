@@ -248,12 +248,18 @@ static JSValue op_send(JSContext *ctx, world_t *W, int argc, JSValueConst *argv)
   return r;
 }
 
+// publish(channel, json, handles, retain): retain keeps the post for worlds that start later (kernel_retain); a
+// retained post carries no handles, which would otherwise be granted long after they were sent
 static JSValue op_publish(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
   char *ch = sarg(ctx, argv, argc, 0), *json = sarg(ctx, argv, argc, 1);
   int hs[MAX_MSG_HANDLES], nh = argc > 2 ? int_list(ctx, argv[2], hs, MAX_MSG_HANDLES) : 0;
+  bool retain = argc > 3 && JS_ToBool(ctx, argv[3]) > 0;
+  char why[160];
   JSValue r = JS_UNDEFINED;
   if (!ch || !world_provides(W, ch)) r = fail(ctx, "%s does not provide the channel \"%s\"", W->name, ch ? ch : "");
   else if (!world_may_use(W, ch)) r = fail(ctx, "%s has no claim on %s", W->name, channel_claim(ch));
+  else if (retain && nh) r = fail(ctx, "a retained post cannot carry handles");
+  else if (retain && kernel_retain(W, ch, json, why, sizeof why)) r = fail(ctx, "%s", why);
   else if (check_grants(ctx, W, hs, nh)) { charge_json(json ? strlen(json) : 0); kernel_publish(W, ch, json, hs, nh); }
   else r = JS_EXCEPTION;
   free(ch); free(json);

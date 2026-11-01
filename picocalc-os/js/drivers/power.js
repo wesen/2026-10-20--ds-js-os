@@ -14,13 +14,14 @@ function failed(s, e) {
   s.lastError = e.message;
 }
 
+// Posts are state, retained: a compositor that restarts gets the last one at its start, as it does every frame.
 async function sample(s) {
   let v;
   try { [, v] = await readReg(s.dev, REG_BAT); } catch (e) { failed(s, e); return; }
   const pct = v & 0x7f, charging = !!(v & 0x80);
   if (pct !== s.pct || charging !== s.charging) {
     s.pct = pct; s.charging = charging;
-    publish("power", { pct, charging, backlight: s.backlight, screen: s.screen });
+    publish("power", { pct, charging, backlight: s.backlight, screen: s.screen }, { retain: true });
   }
 }
 
@@ -28,7 +29,7 @@ async function setBacklight(s, level) {
   await s.dev.transfer([REG_BKL | 0x80, level], 0);
   const [, v] = await readReg(s.dev, REG_BKL);
   s.backlight = v;
-  publish("power", { pct: s.pct, charging: s.charging, backlight: s.backlight, screen: s.screen });
+  publish("power", { pct: s.pct, charging: s.charging, backlight: s.backlight, screen: s.screen }, { retain: true });
 }
 
 driver("power")

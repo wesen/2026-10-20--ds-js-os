@@ -77,6 +77,8 @@ int nw_on_event(const nw_event *e) {
   } else if (!strcmp(t, "publish")) {
     report("publish", nw_publish("echo.out", e->json));
     report("publish-undeclared", nw_publish("elsewhere", "1"));
+  } else if (!strcmp(t, "retain")) {
+    report("retain", nw_publish_retained("echo.out", e->json));
   } else if (!strcmp(t, "save")) {
     report("save", nw_store_save(e->json));
   } else if (!strcmp(t, "load")) {

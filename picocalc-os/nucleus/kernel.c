@@ -275,6 +275,58 @@ void kernel_publish(world_t *from, const char *ch, const char *json, const int *
   }
 }
 
+// Retained posts. A post is an event unless its publisher says it is state ({ retain: true }): then the kernel keeps
+// the last one per publisher and channel, and a world that starts later and needs the channel is given it (after its
+// start message), so a restarted compositor learns the battery level without waiting for it to change. A world's
+// frame is its retained post on "frames", kept in W->frame. Retained posts go with their publisher (teardown).
+static int provided(world_t *W, const char *ch) { for (int i = 0; i < W->n_provides; i++) if (!strcmp(W->provides[i], ch)) return i; return -1; }
+
+int kernel_retain(world_t *W, const char *ch, const char *json, char *why, size_t n) {
+  int i = provided(W, ch);
+  if (i < 0) { snprintf(why, n, "%s does not provide the channel \"%s\"", W->name, ch); return -1; }
+  size_t len = json ? strlen(json) : 4, old = W->retained[i] ? strlen(W->retained[i]) : 0;
+  if (W->retained_bytes - old + len > RETAIN_MAX) { snprintf(why, n, "a world's retained posts are at most %d bytes", RETAIN_MAX); return -1; }
+  free(W->retained[i]);
+  W->retained[i] = xstrdup(json ? json : "null");
+  W->retained_bytes = W->retained_bytes - old + len;
+  return 0;
+}
+
+static void drop_retained(world_t *W) {
+  for (int i = 0; i < MAX_LIST; i++) { free(W->retained[i]); W->retained[i] = NULL; }
+  W->retained_bytes = 0;
+}
+
+// The post on "frames" for W's frame, as the compositor gets it: the kernel names the app, so no world can show a
+// frame in another's name.
+static char *frame_message(world_t *W) {
+  sbuf_t b = { 0 };
+  sb_add(&b, "{\"app\":"); sb_json_str(&b, W->name);
+  sb_add(&b, ",\"title\":"); sb_json_str(&b, W->title);
+  sb_add(&b, ",\"frame\":"); sb_add(&b, W->frame); sb_add(&b, "}");
+  return b.s;
+}
+
+// What T missed while it was not running: every other world's retained post on each channel T needs, with the
+// checks of a live post. Called in T's start segment, so the posts are its deferred effects: they arrive after its
+// start message and before anything published later, and a start that fails delivers none of them.
+static void replay_retained(world_t *T) {
+  for (int c = 0; c < T->n_needs; c++) {
+    const char *ch = T->needs[c];
+    if (!world_may_use(T, ch)) continue;
+    bool frames = !strcmp(ch, "frames");
+    for (int i = 0; i < K.n_worlds; i++) {
+      world_t *P = K.worlds[i];
+      if (P == T || P->status != W_IDLE) continue;
+      char *own = frames && P->frame ? frame_message(P) : NULL;
+      int k = frames ? -1 : provided(P, ch);
+      const char *json = own ? own : k >= 0 ? P->retained[k] : NULL;
+      if (json) defer_deliver(T, new_msg(M_ON, ch, json, P->id));
+      free(own);
+    }
+  }
+}
+
 static ask_t *find_ask(int id) { ask_t *a = &K.asks[id % MAX_ASKS]; return a->id == id && a->live ? a : NULL; }
 
 static void settle_ask(int id, int ok, const char *json, const int *hs, int nh) {
@@ -356,6 +408,7 @@ static void teardown(world_t *W, const char *why) {
   W->settles_tail = NULL;
   clear_turn(W);
   free(W->frame); W->frame = NULL;
+  drop_retained(W);
   for (int i = 0; i < MAX_LIST; i++) W->tick_queued[i] = false;
   W->epoch++;
 }
@@ -631,12 +684,9 @@ static void run_segment(world_t *W, bool is_settle) {
     char *f = eng_render(W);
     if (f && (!W->frame || strcmp(f, W->frame))) {
       free(W->frame); W->frame = f;
-      sbuf_t b = { 0 };
-      sb_add(&b, "{\"app\":"); sb_json_str(&b, W->name);
-      sb_add(&b, ",\"title\":"); sb_json_str(&b, W->title);
-      sb_add(&b, ",\"frame\":"); sb_add(&b, f); sb_add(&b, "}");
-      kernel_publish(W, "frames", b.s, NULL, 0);
-      free(b.s);
+      char *post = frame_message(W);
+      kernel_publish(W, "frames", post, NULL, 0);
+      free(post);
     } else free(f);
   }
   if (K.realtime) W->prof_render_us += port_clock() - t_render;
@@ -658,7 +708,7 @@ static void run_segment(world_t *W, bool is_settle) {
     }
     crash(W, why);
   } else if (W->in_turn && (W->turn_done || W->turn_rejected)) finish_turn(W);
-  if (rc == 0 && booting && !why[0]) start_timers(W, K.vnow + cost);
+  if (rc == 0 && booting && !why[0]) { start_timers(W, K.vnow + cost); replay_retained(W); }
   K.lane_free = K.vnow + cost;
   K.cur = NULL;
   apply_deferred(K.lane_free);
@@ -815,6 +865,7 @@ void kernel_reset(void) {
     for (msg_t *m = W->mbox; m; ) { msg_t *n = m->next; free_msg(m); m = n; }
     for (settle_t *st = W->settles; st; ) { settle_t *n = st->next; free(st->json); free(st); st = n; }
     free(W->source); free(W->frame); free(W->trace); free(W->turn_result); free(W->turn_error);
+    drop_retained(W);
     free(W);
   }
   for (int i = 0; i < MAX_BUFS; i++) if (K.bufs[i].live) { port_big_free(K.bufs[i].back); port_big_free(K.bufs[i].front); }

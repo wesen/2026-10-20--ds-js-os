@@ -2,11 +2,15 @@
 """System services through the real host binary: guarded channels (keys, frames), the kernel log ring (sys.log), and
 the simulated network and time zone that Settings uses. Uses the scenario harness of test_fs_native.py."""
 import os
+from pathlib import Path
+import shutil
+import subprocess
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from test_fs_native import Scenario, STEPS  # noqa: E402
+from test_fs_native import BINARY, OS, Scenario, STEPS  # noqa: E402
 
 PRESS = """
 service('kb').provides('keys').onStart(async () => {
@@ -58,6 +62,83 @@ class ChannelTests(unittest.TestCase):
         self.s.world("a", "service('a').provides('news').onStart(async () => { await sleep(100); publish('news', 1); });")
         self.s.world("b", "service('b').needs('news').on('news', (s, n) => log('TEST news ' + n));")
         self.assertIn("TEST news 1", self.s.run())
+
+
+# PICOCALC-FRAMES: a post marked { retain: true } is state; the kernel keeps the latest per publisher and channel and
+# gives it to a world that starts later, after its start message. A world's frame is its retained post on "frames".
+HEAR = "service('%s').needs('%s').on('%s', (s, p, m) => log('TEST %s heard ' + JSON.stringify(p) + ' from ' + m.from));"
+LEVEL = """
+service('pub').provides('level')
+  .on('post', (s, p) => publish('level', p.v, p.retain ? { retain: true } : undefined))
+  .on('try', (s, p) => { try { p.big ? publish('level', 'x'.repeat(p.big), { retain: true }) : publish('level', hw.fs('fs:/'), { retain: true }); log('TEST try ok'); }
+                         catch (e) { log('TEST try err ' + e.message); } });
+"""
+
+
+class RetainTests(unittest.TestCase):
+    def setUp(self):
+        self.s = Scenario()
+
+    def tearDown(self):
+        self.s.close()
+
+    def test_a_restarted_viewer_gets_every_frame_without_the_apps_taking_a_turn(self):
+        self.s.world("viewer", "service('viewer').needs('frames').on('frames', (s, f, m) => log('TEST frame ' + f.app + ' ' + f.title + ' ' + f.frame.tree.s + ' from ' + m.from));",
+                     ["frames.read"])
+        self.s.world("app", "app('app').title('The App').state({ n: 0 }).onStart(() => {}).on('poke', (s) => { s.n++; log('TEST app turn'); }).screen((s) => ui.text('n=' + s.n));")
+        log = self.s.run("wait 500\nsend app poke\nwait 300\ncrash viewer\nwait 800\n")
+        self.assertEqual(log.count("TEST frame app The App n=0 from app"), 1, log)   # live, at the start
+        self.assertEqual(log.count("TEST frame app The App n=1 from app"), 2, log)   # live after the poke, then replayed
+        self.assertEqual(log.count("TEST app turn"), 1, log)
+
+    def test_the_latest_retained_post_is_replayed_and_plain_posts_are_not(self):
+        self.s.world("pub", LEVEL)
+        self.s.world("sub", HEAR % ("sub", "level", "level", "sub"))
+        log = self.s.run("wait 300\nsend pub post {\"v\":1,\"retain\":true}\nsend pub post {\"v\":2,\"retain\":true}\n"
+                         "send pub post {\"v\":3}\nwait 300\ncrash sub\nwait 800\n")
+        self.assertEqual(log.count("TEST sub heard 1 from pub"), 1, log)
+        self.assertEqual(log.count("TEST sub heard 2 from pub"), 2, log)   # live, then replayed: the latest retained
+        self.assertEqual(log.count("TEST sub heard 3 from pub"), 1, log)   # not retained: never replayed
+
+    def test_retained_posts_go_with_their_publisher(self):
+        self.s.world("pub", LEVEL)
+        self.s.world("sub", HEAR % ("sub", "level", "level", "sub"))
+        log = self.s.run("wait 300\nsend pub post {\"v\":5,\"retain\":true}\nwait 300\ncrash pub\nwait 800\ncrash sub\nwait 800\n")
+        self.assertEqual(log.count("TEST sub heard 5 from pub"), 1, log)
+
+    def test_a_retained_post_carries_no_handles_and_is_bounded(self):
+        self.s.world("pub", LEVEL, ["fs:/"])
+        self.s.world("sub", HEAR % ("sub", "level", "level", "sub"))
+        log = self.s.run("wait 300\nsend pub try {}\nsend pub try {\"big\":5000}\nsend pub try {\"big\":4000}\nwait 300\n")
+        self.assertIn("TEST try err a retained post cannot carry handles", log)
+        self.assertIn("TEST try err a world's retained posts are at most 4096 bytes", log)
+        self.assertEqual(log.count("TEST try ok"), 1, log)
+        self.assertNotIn("TEST sub heard {", log)
+
+    def test_only_listeners_with_the_claim_get_replays(self):
+        self.s.world("kb", "service('kb').provides('keys').on('press', () => publish('keys', { key: 'a' }, { retain: true }));", ["keys.raw"])
+        self.s.world("ok", HEAR % ("ok", "keys", "keys", "ok"), ["keys.raw"])
+        log = self.s.run("wait 300\nsend kb press\nwait 300\ncrash ok\nwait 800\n")
+        self.assertEqual(log.count('TEST ok heard {"key":"a"} from kb'), 2, log)
+
+
+class CompositorRestartTests(unittest.TestCase):
+    """The whole system, as on the device: after the compositor restarts, Calc and the battery come back."""
+
+    def test_calc_and_the_battery_after_a_compositor_restart(self):
+        with tempfile.TemporaryDirectory(prefix="frames-test-", dir=OS / "build") as d:
+            root = Path(d)
+            shutil.copytree(OS / "fs-seed", root / "fs")
+            script = ("wait 1500\nkey x\nwait 800\ncapture before.png\nkey f1\nwait 400\ncrash compositor\nwait 1500\n"
+                      "key x\nwait 1500\ncapture after.png\n")
+            done = subprocess.run([str(BINARY), "-j", "js", "-o", str(root / "out"), "-f", str(root / "fs"), "-vv", "-"],
+                                  input=script, text=True, capture_output=True, cwd=OS, timeout=60)
+            log = (root / "out/uart.log").read_text() + done.stderr
+            self.assertEqual(done.returncode, 0, log)
+            after = log[log.index("starting compositor", log.index("compositor crashed")):]
+            self.assertIn("compositor <- frames from calc", after)
+            self.assertIn("compositor <- power from power", after)
+            self.assertEqual((root / "out/before.png").read_bytes(), (root / "out/after.png").read_bytes())
 
 
 

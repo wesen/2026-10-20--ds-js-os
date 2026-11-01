@@ -261,8 +261,10 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
       if (!payload_ok(c, 1)) return fail(W, BAD_JSON);
       char *ch = str(c, 0), *json = c->n[1] ? str(c, 1) : NULL;
       int64_t r = 0;
+      char why[160];
       if (!world_provides(W, ch)) r = fail(W, "%s does not provide the channel \"%s\"", W->name, ch);
       else if (!world_may_use(W, ch)) r = fail(W, "%s has no claim on %s", W->name, channel_claim(ch));
+      else if ((c->i[0] & 1) && kernel_retain(W, ch, json, why, sizeof why)) r = fail(W, "%s", why);   // bit 0: retain
       else { charge(c->n[1]); kernel_publish(W, ch, json, NULL, 0); }
       free(ch); free(json);
       return r;

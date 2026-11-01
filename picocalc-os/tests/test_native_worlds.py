@@ -149,6 +149,15 @@ class EngineTests:
         self.assertIn("echo: TEST late-need err channels are declared only while a world starts", log)
         self.assertIn("echo: TEST late-every err timers are declared only while a world starts", log)
 
+    def test_a_retained_post_reaches_a_listener_that_starts_later(self):
+        s = self.scenario()
+        s.native("echo", self.ECHO, engine=self.ENGINE)
+        s.world("listen", "service('listen').needs('echo.out').on('echo.out', (s, p, m) => log('TEST heard ' + JSON.stringify(p) + ' from ' + m.from));")
+        s.world("drv", STEPS % "send('echo', 'retain', { level: 3 });")
+        log = s.run("wait 600\ncrash listen\nwait 900\n")
+        self.assertIn("echo: TEST retain ok", log)
+        self.assertEqual(log.count('TEST heard {"level":3} from echo'), 2, log)   # live, then replayed at the restart
+
     def test_storage(self):
         log = self.echo("""
           await out('empty', () => ask('echo', 'load', null));

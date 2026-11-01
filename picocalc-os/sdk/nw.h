@@ -38,6 +38,9 @@ int nw_self(char *buf, int n);            // the world's name
 // Messages. Payloads are JSON text; "" or NULL sends none.
 int nw_send(const char *to, const char *type, const char *json);
 int nw_publish(const char *channel, const char *json);   // a channel the world provides
+// The same, for state rather than an event (a level, a mode): the kernel keeps the latest, at most 4096 bytes for all
+// of a world's channels, and gives it to worlds that start later and need the channel. It goes when the world stops.
+int nw_publish_retained(const char *channel, const char *json);
 int nw_reply(const char *json);           // answer the ask being handled
 int nw_reject(const char *why);           // fail the ask being handled; the world does not crash
 int nw_ask(const char *to, const char *type, const char *json, int timeout_ms);   // a token
