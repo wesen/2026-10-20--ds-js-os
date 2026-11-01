@@ -17,6 +17,8 @@ const APPS = [
           ["fill", 17, 12, 6, 6, "accent"]] },
   { app: "logs", key: "l", label: "Logs", about: "What the kernel, the worlds and the network have logged, newest at the bottom.",
     ops: [["rect", 4, 1, 32, 28], ["fill", 8, 6, 14, 2], ["fill", 8, 11, 22, 2], ["fill", 8, 16, 18, 2], ["fill", 8, 21, 10, 2, "accent"]] },
+  { app: "loader", key: "u", label: "Loader", about: "Apps stored in apps/ on the device, run as worlds without claims.",
+    ops: [["rect", 4, 4, 32, 24], ["fill", 4, 4, 32, 5], ["fill", 18, 12, 4, 10, "accent"], ["fill", 14, 18, 12, 2, "accent"], ["fill", 16, 20, 8, 2, "accent"]] },
   { app: "sysmon", key: "m", label: "System", about: "Every world, its memory, its turns and the buses, live.",
     ops: [["fill", 4, 18, 7, 12], ["fill", 13, 8, 7, 22], ["fill", 22, 13, 7, 17], ["fill", 31, 2, 7, 28]] },
   { app: "repl", key: "r", label: "REPL", about: "JavaScript, evaluated in a sandbox world with its own heap and budget.",

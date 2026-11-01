@@ -194,7 +194,7 @@ test("logs: filters, colours, and a view that holds still while scrolled back", 
 });
 
 // ---- the launcher ----------------------------------------------------------------------------------------------
-test("launcher: thirteen apps scroll by rows, and a letter still opens any of them", () => {
+test("launcher: more than twelve apps scroll by rows, and a letter still opens any of them", () => {
   const sent = [];
   const h = load("launcher.js", {
     send: (to, type, payload) => sent.push(plain({ to, type, payload })),
@@ -206,7 +206,7 @@ test("launcher: thirteen apps scroll by rows, and a letter still opens any of th
   assert.match(more(), /▼/);
   h.key("down"); h.key("down"); h.key("down");
   assert.deepEqual([h.s.sel, h.s.top], [12, 1]);
-  assert.equal(grid().items[grid().sel].label, "About");
+  assert.equal(grid().items[grid().sel].label, "Keys");
   assert.match(more(), /▲/);
   h.key("up"); h.key("up"); h.key("up");
   assert.deepEqual([h.s.sel, h.s.top], [0, 0]);
@@ -215,4 +215,77 @@ test("launcher: thirteen apps scroll by rows, and a letter still opens any of th
   assert.equal(h.s.top, 1);
   h.key("l", "l");
   assert.deepEqual(sent.at(-1).payload, { app: "logs" });
+});
+
+// ---- the loader ------------------------------------------------------------------------------------------------
+function loader({ files = {}, worlds = [] } = {}) {
+  const fs = new Map(Object.entries(files)), spawned = [], stopped = [], sent = [], asks = [], handles = [];
+  let t = 0;
+  const child = (path, rights) => { const h = { path, rights, revoked: 0, released: 0, revoke() { h.revoked++; }, release() { h.released++; } }; handles.push(h); return h; };
+  const dir = {
+    list: async () => [...fs.keys()].map((name) => ({ name, dir: false, size: fs.get(name).length })),
+    read: async (n) => { if (!fs.has(n)) throw new Error("no file apps/" + n); return fs.get(n); },
+    write: async (n, text) => { fs.set(n, text); return { bytes: text.length }; },
+    at: (path, rights) => child(path, rights),
+  };
+  const app = load("loader.js", {
+    now: () => t, sleep: async () => {},
+    hw: { fs: (claim) => { assert.equal(claim, "fs:/apps"); return dir; } },
+    sys: {
+      worlds: () => worlds,
+      spawn: (name, source) => { spawned.push([name, source]); const w = worlds.find((x) => x.name === "u-" + name); if (w) w.state = "idle"; else worlds.push({ name: "u-" + name, user: true, state: "idle", last_error: "" }); return { world: "u-" + name }; },
+      stop: (world) => { stopped.push(world); const w = worlds.find((x) => x.name === world); w.state = "stopped"; w.last_error = "stopped by loader"; return true; },
+    },
+    send: (to, type, payload) => sent.push(plain({ to, type, payload })),
+    ask: async (to, type, payload) => { asks.push({ to, type, payload }); return { ok: true }; },
+  });
+  return { ...app, fs, spawned, stopped, sent, asks, handles, worlds, at: (ms) => { t = ms; } };
+}
+
+test("loader: lists apps/*.js with their worlds' states, and starts, opens, stops and reloads them", async () => {
+  const h = loader({ files: { "clock.js": "app('clock')", "hello.js": "app('hello')", "notes.txt": "x", "Bad.js": "x", "autostart.txt": "" },
+                     worlds: [{ name: "u-clock", user: true, state: "restarting", last_error: "ReferenceError: x is not defined" }, { name: "launcher", user: false, state: "idle" }] });
+  await h.def.start(h.s);
+  await h.def.handlers.focus(h.s);
+  const rows = () => JSON.parse(h.screen()).kids[0].items.map((i) => [i.label, i.right]);
+  assert.deepEqual(rows(), [["clock.js", "crashed: ReferenceError: x is not defined"], ["hello.js", "not started"]]);
+  assert.match(JSON.parse(h.screen()).kids[1].s, /u-clock: ReferenceError/);
+  await h.key("down"); await h.key("enter");
+  assert.deepEqual(h.spawned, [["hello", "app('hello')"]]);
+  assert.deepEqual(h.sent.at(-1), { to: "compositor", type: "open", payload: { app: "u-hello" } });
+  await h.key("enter");                                  // running: only opened
+  assert.equal(h.spawned.length, 1);
+  assert.deepEqual(h.sent.at(-1).payload, { app: "u-hello" });
+  await h.key("f2");
+  assert.deepEqual(h.stopped, ["u-hello"]);
+  assert.deepEqual(rows()[1], ["hello.js", "stopped"]);
+  h.fs.set("hello.js", "app('hello') // v2");
+  await h.key("f5");
+  assert.deepEqual(h.spawned.at(-1), ["hello", "app('hello') // v2"]);
+  assert.equal(h.s.note, "Started u-hello.");
+  h.at(5000); h.def.every[0](h.s);
+  assert.equal(h.s.note, "", "a note gives way to the list after a few seconds");
+});
+
+test("loader: F4 writes a new app from the template under a free name, F3 hands the editor that file only", async () => {
+  const h = loader({ files: { "hello.js": "app('hello')" } });
+  await h.def.start(h.s);
+  await h.key("f4");
+  const text = h.fs.get("hello2.js");
+  assert.ok(text.includes('app("hello2")') && !text.includes('app("hello")'));
+  assert.equal(h.s.apps[h.s.sel].name, "hello2");
+  await h.key("f3");
+  assert.deepEqual([h.handles[0].path, h.handles[0].rights], ["hello2.js", "rw"]);
+  assert.equal(h.asks[0].payload.name, "apps/hello2.js");
+  assert.deepEqual(h.sent.at(-1), { to: "compositor", type: "open", payload: { app: "editor" } });
+  await h.key("up"); await h.key("f3");
+  assert.deepEqual([h.handles[0].revoked, h.handles[0].released], [1, 1], "the earlier file is taken back");
+});
+
+test("loader: apps named in autostart.txt start at boot, without being opened", async () => {
+  const h = loader({ files: { "a.js": "app('a')", "b.js": "app('b')", "autostart.txt": "# at boot\na\n\nmissing\nNot-valid\nb\n" } });
+  await h.def.start(h.s);
+  assert.deepEqual(h.spawned.map((x) => x[0]), ["a", "b"]);
+  assert.equal(h.sent.filter((m) => m.type === "open").length, 0);
+  assert.equal(h.s.note, "Started at boot: a, b");
 });

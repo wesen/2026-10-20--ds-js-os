@@ -1,0 +1,31 @@
+# The loader: a new app from the template, started and opened; the loader with it running; stopped; then a broken
+# edit, reloaded: it crashes five times in a row and stays stopped, with its error in the list.
+wait 1200
+key u
+wait 600
+capture 95-loader-empty.png
+key f4
+wait 400
+key enter
+wait 1300
+capture 96-loader-hello.png
+key f1
+wait 200
+key u
+wait 600
+capture 97-loader-running.png
+key f2
+wait 600
+capture 98-loader-stopped.png
+key f3
+wait 600
+type oops(
+key f2
+wait 800
+key f1
+wait 200
+key u
+wait 400
+key f5
+wait 7000
+capture 99-loader-crashed.png
