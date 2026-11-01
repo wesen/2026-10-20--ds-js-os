@@ -286,7 +286,7 @@ function plotReset(s) {
   });
   const size = plotFns.reduce((n, f) => n + (f ? f.size : 0), 0) || 1;
   const max = Math.max(8, Math.min(PLOT_W, Math.floor(3000 / size)));
-  s.plot = { curves, col: 0, max, slice: Math.min(max, 32), grid: plotGrid(s.view), ops: [], ms: 0 };
+  s.plot = { curves, col: 0, max, slice: Math.min(max, 32), grid: plotGrid(s.view), ops: [], ms: 0, t0: now(), slices: 0, worst: 0 };
   if (s.trace && s.trace.k >= curves.length) s.trace.k = 0;
 }
 function plotSample(s) {
@@ -306,7 +306,9 @@ function plotSample(s) {
   p.col = end;
   // on the device now() is wall-clock time and the slice follows the real speed; on the host it does not move
   const ms = now() - t0;
-  p.ms = ms;
+  p.ms = ms; p.slices++; p.worst = Math.max(p.worst, ms);
+  if (end === PLOT_W) log("plot of " + p.curves.length + " curve(s), " + plotFns.reduce((n, f) => n + (f ? f.size : 0), 0) + " nodes: " +
+    Math.round(now() - p.t0) + " ms in " + p.slices +  " slices (slowest " + p.worst.toFixed(1) + " ms), slice now " + p.slice + " columns");
   if (ms > 20) p.slice = Math.max(8, Math.floor(p.slice / 2));
   else if (ms < 6) p.slice = Math.min(p.max, Math.ceil(p.slice * 1.5));
   plotBuild(s);

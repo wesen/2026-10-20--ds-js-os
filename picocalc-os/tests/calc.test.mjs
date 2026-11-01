@@ -14,7 +14,7 @@ function setup(saved = null) {
     title() { return this; }, state(v) { def.state = v; return this; }, onStart(fn) { def.start = fn; return this; },
     on(name, fn) { def.handlers[name] = fn; return this; }, screen(fn) { def.screen = fn; return this; }, hints(fn) { def.hints = fn; return this; },
   };
-  const context = vm.createContext({ app: () => builder, Date, Math,
+  const context = vm.createContext({ app: () => builder, Date, Math, log: () => {},
     now: () => { clock += cost; return clock; },
     sleep: (ms) => new Promise((resolve) => timers.push({ at: clock + ms, resolve })),
     store: { get: (k, d) => (stored[k] == null ? d : JSON.parse(JSON.stringify(stored[k]))), set: (k, v) => { stored[k] = JSON.parse(JSON.stringify(v)); } },
