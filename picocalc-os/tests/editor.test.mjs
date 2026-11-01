@@ -21,7 +21,8 @@ function fakeFile(text = null, path = "notes/a.md") {
 function setup() {
   const def = { handlers: {} }, sent = [], stored = {};
   const builder = {
-    title() { return this; }, state(v) { def.state = v; return this; },
+    title() { return this; }, key() { return this; }, about() { return this; }, icon() { return this; },
+    state(v) { def.state = v; return this; },
     on(name, fn) { def.handlers[name] = fn; return this; },
     screen(fn) { def.screen = fn; return this; }, hints(fn) { def.hints = fn; return this; },
   };

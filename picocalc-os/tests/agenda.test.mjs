@@ -22,7 +22,8 @@ async function setup({ text = "", wall = NY(2026, 11, 1, 9, 41), stored = {} } =
     at: () => child(),
   };
   const builder = {
-    title() { return this; }, state(v) { def.state = v; return this; }, onStart(fn) { def.start = fn; return this; },
+    title() { return this; }, key() { return this; }, about() { return this; }, icon() { return this; },
+    state(v) { def.state = v; return this; }, onStart(fn) { def.start = fn; return this; },
     on(name, fn) { def.handlers[name] = fn; return this; }, every(ms, fn) { def.every.push(fn); return this; },
     screen(fn) { def.screen = fn; return this; }, hints(fn) { def.hints = fn; return this; },
   };

@@ -146,6 +146,10 @@ function ldScreen(s) {
 
 app("loader")
   .title("Loader")
+  .key("u")
+  .about("Apps stored in apps/ on the device, run as worlds without claims.")
+  .icon([["rect", 4, 4, 32, 24], ["fill", 4, 4, 32, 5], ["fill", 18, 12, 4, 10, "accent"],
+         ["fill", 14, 18, 12, 2, "accent"], ["fill", 16, 20, 8, 2, "accent"]])
   .state({ apps: [], worlds: {}, sel: 0, note: "", noteAt: 0, error: "", focused: false, given: null })
   .onStart(async (s) => {
     try { s.dir = hw.fs("fs:/apps"); } catch (e) { s.error = e.message; return; }

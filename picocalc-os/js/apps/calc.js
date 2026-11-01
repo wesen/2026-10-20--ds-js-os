@@ -1685,6 +1685,11 @@ function calcHints(s) {
 
 app("calc")
   .title("Calc")
+  .key("x")
+  .about("Scientific, with calculus and a solver; graphs of up to four curves; F6 help.")
+  .icon([["rect", 8, 0, 24, 30], ["fill", 11, 3, 18, 7], ["fill", 11, 13, 4, 3], ["fill", 18, 13, 4, 3],
+         ["fill", 25, 13, 4, 3], ["fill", 11, 19, 4, 3], ["fill", 18, 19, 4, 3], ["fill", 25, 19, 4, 8, "accent"],
+         ["fill", 11, 25, 11, 3]])
   .state({ line: "", cur: 0, sel: -1, hist: [], vars: {}, funcs: {}, ans: 0, angle: "rad", fmt: { mode: "norm", digits: 10, base: 10 },
            note: "", mode: "calc", back: "calc", nsel: 0, csel: 0, clearArmed: false, graphs: [], view: Object.assign({}, PLOT_VIEW),
            tview: null, table: { start: -5, step: 1 }, tab: null, win: null, mark: null, shade: null, plot: null, trace: null, help: null, msel: 0,

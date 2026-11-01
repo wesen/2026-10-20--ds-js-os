@@ -198,6 +198,10 @@ const stHints = (s) => s.page === "password" ? "⏎ join  esc cancel"
 
 app("settings")
   .title("Settings")
+  .key("g")
+  .about("Wi-Fi: its state, nearby networks, joining one. The time zone, and the agent's provider.")
+  .icon([["rect", 12, 7, 16, 16], ["fill", 18, 1, 4, 6], ["fill", 18, 23, 4, 6], ["fill", 6, 13, 6, 4],
+         ["fill", 28, 13, 6, 4], ["fill", 17, 12, 6, 6, "accent"]])
   .state({ page: "menu", sel: 0, info: null, nets: null, scanning: false, joining: null, pick: null, pw: "", note: "", error: "", focused: false })
   .on("focus", (s) => { s.focused = true; stInfo(s); })
   .on("blur", (s) => { s.focused = false; if (s.page === "password") stLeavePassword(s); })

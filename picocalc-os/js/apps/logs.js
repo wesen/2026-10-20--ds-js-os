@@ -71,6 +71,10 @@ function lgScreen(s) {
 
 app("logs")
   .title("Logs")
+  .key("l")
+  .about("What the kernel, the worlds and the network have logged, newest at the bottom.")
+  .icon([["rect", 4, 1, 32, 28], ["fill", 8, 6, 14, 2], ["fill", 8, 11, 22, 2], ["fill", 8, 16, 18, 2],
+         ["fill", 8, 21, 10, 2, "accent"]])
   .state({ lines: [], after: 0, filter: 0, scroll: 0, frozenAt: 0, focused: false, error: "" })
   .on("focus", (s) => { s.focused = true; lgRead(s); })
   .on("blur", (s) => { s.focused = false; })

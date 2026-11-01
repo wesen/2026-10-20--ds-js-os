@@ -2,6 +2,9 @@
 // allocation or a thrown error there comes back as a message here; the REPL itself never runs the code.
 app("repl")
   .title("REPL")
+  .key("r")
+  .about("JavaScript, evaluated in a sandbox world with its own heap and budget.")
+  .icon([["text", 2, 6, ">", "xl"], ["fill", 20, 26, 16, 3]])
   .state({ line: "", cur: 0, hist: [], hi: -1, busy: false, out: [{ s: "JavaScript in the sandbox world: 512 KB heap, 200 ms per turn, no claims.", color: "muted" }] })
   .on("key", async (s, k) => {
     if (s.busy) return;

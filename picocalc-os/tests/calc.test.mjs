@@ -11,7 +11,8 @@ function setup(saved = null) {
   const def = { handlers: {} }, stored = { calc: saved }, timers = [];
   let clock = 0, cost = 0;
   const builder = {
-    title() { return this; }, state(v) { def.state = v; return this; }, onStart(fn) { def.start = fn; return this; },
+    title() { return this; }, key() { return this; }, about() { return this; }, icon() { return this; },
+    state(v) { def.state = v; return this; }, onStart(fn) { def.start = fn; return this; },
     on(name, fn) { def.handlers[name] = fn; return this; }, screen(fn) { def.screen = fn; return this; }, hints(fn) { def.hints = fn; return this; },
   };
   const context = vm.createContext({ app: () => builder, Date, Math, log: () => {},

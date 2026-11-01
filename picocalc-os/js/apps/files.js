@@ -86,6 +86,9 @@ async function fiKey(s, k) {
 
 app("files")
   .title("Files")
+  .key("d")
+  .about("Browse the files on the device. Opening one hands the editor that file and nothing else.")
+  .icon([["fill", 2, 3, 14, 4], ["rect", 2, 6, 36, 22], ["fill", 2, 6, 36, 3]])
   .state({ path: "", items: [], sel: 0, free: -1, more: false, note: "", prompt: null, confirm: null, given: null })
   .onStart(async (s) => {
     try { s.root = hw.fs("fs:/"); } catch (e) { s.note = e.message; return; }

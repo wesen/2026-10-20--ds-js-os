@@ -1,6 +1,9 @@
 // About: the device this build runs on (or pretends to be), and the kernel's counters.
 app("about")
   .title("About")
+  .key("a")
+  .about("The device profile, the clock calibration and the kernel's counters.")
+  .icon([["rect", 6, 0, 28, 30], ["fill", 19, 6, 3, 3], ["fill", 19, 12, 3, 12]])
   .state({ focused: false, st: null, worlds: [] })
   .on("focus", (s) => { s.focused = true; s.st = sys.stats(); s.worlds = sys.worlds(); })
   .on("blur", (s) => { s.focused = false; })

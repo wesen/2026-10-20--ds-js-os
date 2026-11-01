@@ -285,6 +285,10 @@ function edStatus(s) {
 
 app("editor")
   .title("Editor")
+  .key("e")
+  .about("Plain text and Markdown, with find, soft wrap and a preview.")
+  .icon([["rect", 8, 0, 24, 30], ["fill", 12, 6, 16, 2], ["fill", 12, 12, 16, 2], ["fill", 12, 18, 9, 2],
+         ["fill", 23, 16, 2, 7, "accent"]])
   .state({ name: "", lines: [""], wraps: [1], row: 0, col: 0, top: 0, goal: -1, dirty: false, escArmed: false, saving: false, leaveAfterSave: false,
            find: null, mode: "edit", ptop: 0, note: "", file: null, saved: "" })
   .on("open", async (s, m) => {

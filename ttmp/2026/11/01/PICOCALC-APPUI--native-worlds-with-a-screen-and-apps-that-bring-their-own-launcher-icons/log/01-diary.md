@@ -101,3 +101,101 @@ is not a hand-maintained list.
 
 - Limits chosen: icon 1024 bytes, about 160 bytes, key one of a–z/0–9, a native tree plus hints 16 KB, hints 120
   bytes, at most 32 icon operations after sanitising.
+
+## Step 2: Phase 1, the kernel and the native ABI
+
+I added the two system calls and the kernel side of presentation. A native world now calls `nw_screen(tree, hints)`
+and the kernel's existing render step posts its tree after the event, like a JavaScript world's; it declares its
+title, icon, description and letter with `nw_title`, `nw_icon`, `nw_about`, `nw_key`, one system call underneath.
+JavaScript worlds declare the same with `.icon`, `.about`, `.key`, and `sys.worlds(fields)` reports them when they
+are asked for. The echo test native exercises every call and refusal; the native suite went from 27 to 31 tests,
+all passing on both engines.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Phase 1 of the guide.
+**Inferred user intent:** A native app can show a screen.
+**Commit (code):** 374e71d — "picocalc-os: native worlds get a screen (nw_screen) and every app declares what it
+shows on the launcher (PICOCALC-APPUI)"
+
+### What I did
+
+- `nucleus/nucleus.h`: `ICON_MAX` 1024, `ABOUT_MAX` 160; `world_t` gains `char *icon`, `about[160]`, `key[2]`;
+  `NW_SCREEN`, `NW_PRESENT` appended before `NW_CALLS`; `NW_SCREEN_MAX` 16384, `NW_HINTS_MAX` 120; `native_t`
+  gains `char *screen`; `nat_render()`; `eng_render()` calls it for native engines; `kernel_present()` declared.
+- `sdk/nw_wire.h`: `NW_CALL_SCREEN`, `NW_CALL_PRESENT` (the existing `_Static_assert` on `NW_CALL_COUNT == NW_CALLS`
+  keeps the two lists aligned).
+- `nucleus/kernel.c`: `kernel_present()` (title 1–31 bytes of plain text, icon a JSON array up to 1024 bytes,
+  about up to 159 bytes, key one of a–z/0–9); `boot_world()` clears the fields before the engine starts;
+  `kernel_reset()` frees the icon; `kernel_worlds_json_fields()` writes `icon`, `about`, `key` only when the field
+  list names them.
+- `nucleus/native.c`: `text_ok()` (bounded UTF-8, no control characters); `NW_SCREEN` (a strict-JSON object, hints
+  as text, 16 KB in all; stored as `{"tree":…,"hints":"…"}`, `has_screen = true`); `NW_PRESENT` (init only; the icon
+  through `payload_ok`, the others through `text_ok`; then `kernel_present`); `nat_render()`; `nat_dispose()` frees
+  the screen.
+- `nucleus/vm.c`: `read_meta()` passes `icon` (via `JS_JSONStringify`), `about`, `key` to `kernel_present()` and
+  fails the start with its reason; `op_sys_worlds()` takes an optional field list. `js/prelude.js`: the builder's
+  `icon`, `about`, `key`; `__init()` returns them; `sys.worlds(fields)`.
+- `sdk/nw.h`, `sdk/nw_calls.inc`: `nw_screen`, `nw_title`, `nw_icon`, `nw_about`, `nw_key`. New `sdk/nw_ui.h`.
+- `natives/echo.c`: presentation in `nw_init`, messages `screen` and `screen-bad`. Two tests in
+  `tests/test_native_worlds.py` (each runs for the process and the WebAssembly engine).
+
+### Why
+
+- Storing the tree and letting the render step pick it up gives native screens deduplication, retention (PICOCALC-FRAMES)
+  and kernel naming without new code paths.
+- The icon and description are opt-in fields of `sys.worlds` so the System app's frequent polling does not carry them.
+
+### What worked
+
+- `make test-native`: `Ran 31 tests … OK`. The frame the viewer received:
+  `{"app":"echo","title":"Echo","frame":{"tree":{"t":"col","kids":[{"t":"text","s":"hello"}]},"hints":"echo hints"}}`.
+- `sys.worlds('name,kind,title,icon,about,key')` for echo:
+  `{"name":"echo","kind":"service","title":"Echo","icon":[["rect",2,2,36,26],["text",14,8,"E","m","accent"]],"about":"Answers the tests.","key":""}`;
+  the default report has none of the three keys.
+- test-sys 17 + 6, test-fs 9, test-clock 4, test-apps 10 + 27 + 9 + 12: all pass.
+
+### What didn't work
+
+- The first run of the refusal test:
+
+  ```
+  AssertionError: 'echo: TEST screen-big err a screen is at most 16384 bytes' not found in '...
+  [   100.941] echo: TEST screen-big err a screen is a tree of ui nodes, a JSON object
+  ```
+
+  My echo case copied 18 bytes of the 17-byte prefix `{"t":"text","s":"`, so the large tree had a NUL inside and
+  was refused as not JSON before its size was checked. Copying 17 bytes made it the valid, too large tree it was meant
+  to be.
+
+### What I learned
+
+- clangd reported `No member named 'icon' in 'struct world'` right after the header change; the compiler did not.
+  The editor's index was stale; the build is the check.
+
+### What was tricky to build
+
+- The order of checks in `NW_SCREEN`: JSON validity first, then the hints, then the size, so each refusal names the
+  actual problem. The test caught the case where a malformed large tree reported the first.
+- `read_meta()` returned nothing useful before; it now returns -1 with `W->last_error` set, and its caller marks the
+  start failed, so an app with a bad icon crashes at start with the reason ("an icon is a JSON array …").
+
+### What warrants a second pair of eyes
+
+- `kernel_present("icon")` checks only that the value starts with `[` and fits: the value is already strict JSON
+  (JavaScript's `JSON.stringify`, or `payload_ok` for a native world). What the operations draw is checked by the
+  launcher (Phase 3).
+
+### What should be done in the future
+
+- Phase 2: the fourteen apps declare their icons.
+
+### Code review instructions
+
+- `git show 374e71d -- picocalc-os/nucleus/native.c picocalc-os/nucleus/kernel.c`, then `make natives wasm &&
+  make test-native`.
+
+### Technical details
+
+- Wire compatibility: the two new numbers follow `NW_CALL_TIMER`; modules built before use none of them.

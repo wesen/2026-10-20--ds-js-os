@@ -15,6 +15,10 @@ const EXPERIMENTS = [
 
 app("faults")
   .title("Faults")
+  .key("f")
+  .about("Crash things on purpose and watch supervision contain them.")
+  .icon([["line", 20, 1, 2, 29], ["line", 20, 1, 38, 29], ["line", 2, 29, 38, 29], ["fill", 19, 10, 3, 11],
+         ["fill", 19, 24, 3, 3]])
   .needs("worlds.status")
   .state({ sel: 0, busy: false, log: [{ s: "Pick an experiment. Nothing here can take down another world.", color: "muted" }] })
   .on("key", async (s, k) => {

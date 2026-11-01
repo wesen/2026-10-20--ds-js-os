@@ -8,7 +8,8 @@ const source = readFileSync(new URL("../js/apps/chat.js", import.meta.url), "utf
 function setup() {
   const def = { handlers: {} }, sent = [];
   const builder = {
-    title() { return this; }, needs() { return this; },
+    title() { return this; }, key() { return this; }, about() { return this; }, icon() { return this; },
+    needs() { return this; },
     state(value) { def.state = value; return this; },
     onStart(fn) { def.start = fn; return this; },
     on(name, fn) { def.handlers[name] = fn; return this; },

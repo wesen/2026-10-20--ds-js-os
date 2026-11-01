@@ -269,6 +269,11 @@ function agStatus(s) {
 
 app("agenda")
   .title("Agenda")
+  .key("t")
+  .about("Tasks from notes/todo.txt by day, with reminders on the network clock.")
+  .icon([["rect", 4, 2, 32, 28], ["fill", 4, 2, 32, 6], ["fill", 10, 0, 2, 5], ["fill", 28, 0, 2, 5],
+         ["fill", 9, 12, 4, 3], ["fill", 18, 12, 4, 3], ["fill", 27, 12, 4, 3], ["fill", 9, 19, 4, 3],
+         ["fill", 18, 19, 4, 3, "accent"], ["fill", 27, 19, 4, 3]])
   .state({ tasks: [], rows: [], sel: 0, showDone: false, prompt: null, confirm: null, note: "", error: "", fired: {},
            loadedAt: -1e9, given: null, day: "" })
   .onStart(async (s) => {

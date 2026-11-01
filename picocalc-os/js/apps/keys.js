@@ -1,6 +1,9 @@
 // Keys: what the keyboard driver reads from the STM32, event by event, and the driver's own counters.
 app("keys")
   .title("Keys")
+  .key("k")
+  .about("Raw events from the keyboard driver, as it reads them over I2C.")
+  .icon([["rect", 8, 2, 24, 24], ["rect", 10, 4, 20, 20], ["text", 16, 6, "A", "m"]])
   .needs("keys")
   .state({ focused: false, events: [], last: null, stats: null })
   .on("focus", async (s) => { s.focused = true; s.stats = await ask("keyboard", "stats").catch(() => null); })

@@ -196,6 +196,10 @@ function chatKey(s, k) {
 
 app("chat")
   .title("Agent")
+  .key("c")
+  .about("Ask, read, and act with a focused assistant. Your phone can stay put.")
+  .icon([["rect", 2, 2, 36, 22], ["line", 9, 24, 9, 30], ["line", 9, 30, 17, 24], ["fill", 8, 9, 24, 2],
+         ["fill", 8, 15, 17, 2]])
   .needs("worlds.status")
   .state({ line: "", cur: 0, scroll: 0, phase: "idle", model: "", run: 0, error: "", approval: null,
     rows: [], ready: false, note: "" })

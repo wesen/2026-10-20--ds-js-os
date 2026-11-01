@@ -87,6 +87,9 @@ function busesTab(s) {
 
 app("sysmon")
   .title("System")
+  .key("m")
+  .about("Every world, its memory, its turns and the buses, live.")
+  .icon([["fill", 4, 18, 7, 12], ["fill", 13, 8, 7, 22], ["fill", 22, 13, 7, 17], ["fill", 31, 2, 7, 28]])
   .state({ tab: 0, sel: 0, focused: false, worlds: [], handles: [], lane: [], i2c: [], spi: [], last: null, cpu: {} })
   .onStart(sample)
   .on("focus", (s) => { s.focused = true; sample(s); })

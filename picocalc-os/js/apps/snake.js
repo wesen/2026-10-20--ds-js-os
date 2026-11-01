@@ -72,6 +72,9 @@ function autopilot(s) {
 
 app("snake")
   .title("Snake")
+  .key("s")
+  .about("A game on a 22 x 18 grid, ticking on the virtual clock.")
+  .icon([["fill", 2, 20, 26, 6], ["fill", 22, 8, 6, 18], ["fill", 22, 8, 14, 6], ["fill", 4, 6, 6, 6, "accent"]])
   .state({ focused: false, best: 0, auto: false })
   .onStart(reset)
   .on("focus", (s) => { s.focused = true; })
