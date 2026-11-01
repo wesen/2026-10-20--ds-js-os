@@ -327,6 +327,34 @@ static void replay_retained(world_t *T) {
   }
 }
 
+// What a world shows about itself on the launcher, declared while it starts (the JavaScript builder through read_meta,
+// a native world through NW_PRESENT), and cleared when it starts again. The kernel checks shape and size; the launcher
+// checks what an icon draws before it shows one. A storage app's title is set to its world name after its start
+// (boot_world), and the launcher ignores its key.
+static bool plain_text(const char *s) { for (; *s; s++) if ((unsigned char)*s < 0x20 || *s == 0x7f) return false; return true; }
+int kernel_present(world_t *W, const char *field, const char *v, char *why, size_t n) {
+  size_t len = v ? strlen(v) : 0;
+  if (!v) { snprintf(why, n, "%s needs a value", field); return -1; }
+  if (!strcmp(field, "title")) {
+    if (!len || len >= sizeof W->title || !plain_text(v)) { snprintf(why, n, "a title is 1 to %d bytes of text", (int)sizeof W->title - 1); return -1; }
+    snprintf(W->title, sizeof W->title, "%s", v);
+  } else if (!strcmp(field, "icon")) {
+    if (len > ICON_MAX || v[0] != '[') { snprintf(why, n, "an icon is a JSON array of drawing operations, at most %d bytes", ICON_MAX); return -1; }
+    free(W->icon);
+    W->icon = xstrdup(v);
+  } else if (!strcmp(field, "about")) {
+    if (len >= sizeof W->about || !plain_text(v)) { snprintf(why, n, "an app's description is at most %d bytes of text", (int)sizeof W->about - 1); return -1; }
+    snprintf(W->about, sizeof W->about, "%s", v);
+  } else if (!strcmp(field, "key")) {
+    if (len != 1 || !((v[0] >= 'a' && v[0] <= 'z') || (v[0] >= '0' && v[0] <= '9'))) { snprintf(why, n, "a shortcut key is one of a-z and 0-9"); return -1; }
+    snprintf(W->key, sizeof W->key, "%s", v);
+  } else {
+    snprintf(why, n, "a world presents its title, icon, about or key, not \"%s\"", field);
+    return -1;
+  }
+  return 0;
+}
+
 static ask_t *find_ask(int id) { ask_t *a = &K.asks[id % MAX_ASKS]; return a->id == id && a->live ? a : NULL; }
 
 static void settle_ask(int id, int ok, const char *json, const int *hs, int nh) {
@@ -587,6 +615,7 @@ void kernel_timer_set(world_t *W, int i, bool on) {
 }
 
 static int boot_world(world_t *W) {
+  free(W->icon); W->icon = NULL; W->about[0] = W->key[0] = 0;   // declared again by the code that starts now
   int rc = eng_create(W);
   if (rc) return rc;
   if (!channels_allowed(W)) return -1;
@@ -864,7 +893,7 @@ void kernel_reset(void) {
     eng_dispose(W);
     for (msg_t *m = W->mbox; m; ) { msg_t *n = m->next; free_msg(m); m = n; }
     for (settle_t *st = W->settles; st; ) { settle_t *n = st->next; free(st->json); free(st); st = n; }
-    free(W->source); free(W->frame); free(W->trace); free(W->turn_result); free(W->turn_error);
+    free(W->source); free(W->frame); free(W->trace); free(W->turn_result); free(W->turn_error); free(W->icon);
     drop_retained(W);
     free(W);
   }
@@ -924,6 +953,12 @@ char *kernel_worlds_json_fields(const char *fields) {
     if (FIELD("last_error")) sb_json_str(&b, W->last_error);
     if (FIELD("user")) sb_add(&b, W->user ? "true" : "false");
     if (FIELD("file")) sb_json_str(&b, W->file);
+    // what an app shows on the launcher: only when asked for, so the reports that poll stay small
+#define ASKED(key) (fields && *fields && FIELD(key))
+    if (ASKED("icon")) sb_add(&b, W->icon ? W->icon : "null");
+    if (ASKED("about")) sb_json_str(&b, W->about);
+    if (ASKED("key")) sb_json_str(&b, W->key);
+#undef ASKED
     if (FIELD("claims")) {
       sb_add(&b, "[");
       for (int k = 0; k < W->n_claims; k++) { if (k) sb_add(&b, ","); sb_json_str(&b, W->claims[k]); }

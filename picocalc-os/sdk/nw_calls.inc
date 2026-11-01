@@ -22,6 +22,12 @@ int nw_need(const char *ch) { return (int)call(NW_CALL_NEED, 0, 0, 0, S(ch), NON
 int nw_provide(const char *ch) { return (int)call(NW_CALL_PROVIDE, 0, 0, 0, S(ch), NONE, NONE, NULL, 0); }
 int nw_every(int ms) { return (int)call(NW_CALL_EVERY, ms, 0, 0, NONE, NONE, NONE, NULL, 0); }
 int nw_kind(const char *kind) { return (int)call(NW_CALL_KIND, 0, 0, 0, S(kind), NONE, NONE, NULL, 0); }
+int nw_screen(const char *tree, const char *hints) { return (int)call(NW_CALL_SCREEN, 0, 0, 0, S(tree), S(hints), NONE, NULL, 0); }
+static int present(const char *field, const char *value) { return (int)call(NW_CALL_PRESENT, 0, 0, 0, S(field), S(value), NONE, NULL, 0); }
+int nw_title(const char *title) { return present("title", title); }
+int nw_icon(const char *ops_json) { return present("icon", ops_json); }
+int nw_about(const char *text) { return present("about", text); }
+int nw_key(const char *letter) { return present("key", letter); }
 int nw_sleep(int ms) { return (int)call(NW_CALL_SLEEP, ms, 0, 0, NONE, NONE, NONE, NULL, 0); }
 int nw_timer(int index, int on) { return (int)call(NW_CALL_TIMER, index, on, 0, NONE, NONE, NONE, NULL, 0); }
 int nw_store_load(char *buf, int n) { return (int)call(NW_CALL_STORE_LOAD, 0, 0, 0, NONE, NONE, NONE, buf, n); }

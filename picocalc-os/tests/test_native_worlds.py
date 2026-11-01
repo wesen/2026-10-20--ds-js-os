@@ -158,6 +158,36 @@ class EngineTests:
         self.assertIn("echo: TEST retain ok", log)
         self.assertEqual(log.count('TEST heard {"level":3} from echo'), 2, log)   # live, then replayed at the restart
 
+    def test_a_screen_and_what_it_shows_on_the_launcher(self):
+        s = self.scenario()
+        s.native("echo", self.ECHO, engine=self.ENGINE)
+        s.world("viewer", "service('viewer').needs('frames').on('frames', (s, f, m) => log('TEST frame ' + JSON.stringify(f) + ' from ' + m.from));",
+                ["frames.read"])
+        s.world("drv", STEPS % """
+          send('echo', 'screen', { t: 'col', kids: [{ t: 'text', s: 'hello' }] });
+          await sleep(100);
+          await out('shown', () => sys.worlds('name,kind,title,icon,about,key').filter((x) => x.name === 'echo'));
+          await out('default', () => Object.keys(sys.worlds().find((x) => x.name === 'echo')).filter((k) => ['icon', 'about', 'key'].includes(k)));
+        """, ["sys.read"])
+        log = s.run()
+        for line in ("echo: TEST title ok", "echo: TEST icon ok", "echo: TEST about ok", "echo: TEST screen ok",
+                     "echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes",
+                     "echo: TEST key-upper err a shortcut key is one of a-z and 0-9"):
+            self.assertIn(line, log)
+        self.assertIn('TEST frame {"app":"echo","title":"Echo","frame":{"tree":{"t":"col","kids":[{"t":"text","s":"hello"}]},"hints":"echo hints"}} from echo', log)
+        self.assertIn('TEST shown ok [{"name":"echo","kind":"service","title":"Echo","icon":[["rect",2,2,36,26],["text",14,8,"E","m","accent"]],"about":"Answers the tests.","key":""}]', log)
+        self.assertIn("TEST default ok []", log)
+
+    def test_screens_are_json_objects_and_presentation_is_declared_at_start(self):
+        log = self.echo("send('echo', 'screen-bad', null);")
+        for line in ("echo: TEST screen-text err a screen is a tree of ui nodes, a JSON object",
+                     "echo: TEST screen-array err a screen is a tree of ui nodes, a JSON object",
+                     "echo: TEST screen-hints err hints are at most 120 bytes of text",
+                     "echo: TEST screen-big err a screen is at most 16384 bytes",
+                     "echo: TEST present-late err what a world shows on the launcher is declared only while it starts"):
+            self.assertIn(line, log)
+        self.assertNotIn("echo crashed", log)
+
     def test_storage(self):
         log = self.echo("""
           await out('empty', () => ask('echo', 'load', null));

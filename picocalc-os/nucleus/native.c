@@ -55,6 +55,7 @@ int nat_create(world_t *W) {
 void nat_dispose(world_t *W) {
   if (!W->nat) return;
   if (W->nat->inst) W->nat->be->unload(W);
+  free(W->nat->screen);
   free(W->nat);
   W->nat = NULL;
   W->mem_used = 0;
@@ -94,6 +95,10 @@ int nat_settle(world_t *W, settle_t *s) {
   }
   return 0;
 }
+
+// The kernel's render step, after each segment of a world with a screen: the screen nw_screen last set. The kernel
+// compares it with the last one posted and posts it on "frames" only if it changed, as for a JavaScript world.
+char *nat_render(world_t *W) { return W->nat && W->nat->screen ? xstrdup(W->nat->screen) : NULL; }
 
 // ---- system calls ------------------------------------------------------------------------------------------------
 static int64_t fail(world_t *W, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
@@ -221,6 +226,19 @@ static bool nat_json_ok(const char *s, size_t n) {
 // A call's string i, if present, must be such a payload.
 static bool payload_ok(const nw_call_t *c, int i) { return c->n[i] == 0 || nat_json_ok(c->s[i], c->n[i]); }
 #define BAD_JSON "the payload is not strict JSON (UTF-8, at most 64 deep, no \"$h\" keys)"
+// Text shown to the user (a title, a description, hints): at most max bytes of UTF-8, no control characters.
+static bool text_ok(const nw_call_t *c, int i, size_t max) {
+  const unsigned char *p = (const unsigned char *)c->s[i], *e = p + c->n[i];
+  if (c->n[i] > max) return false;
+  while (p < e) {
+    if (*p < 0x20 || *p == 0x7f) return false;
+    if (*p < 0x80) { p++; continue; }
+    int k = utf8_len(p, e);
+    if (!k) return false;
+    p += k;
+  }
+  return true;
+}
 
 static void run_store_save(deferred_t *d, vtime_t at) {
   (void)at;
@@ -389,6 +407,31 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
       d->run = run_store_save; d->w = W->id; d->epoch = W->epoch; d->json = json;
       defer(d);
       return 0;
+    }
+    case NW_SCREEN: {   // nw_screen(tree, hints): what it shows from now on; the kernel posts it after this event
+      if (!c->n[0] || !payload_ok(c, 0) || c->s[0][0] != '{') return fail(W, "a screen is a tree of ui nodes, a JSON object");
+      if (!text_ok(c, 1, NW_HINTS_MAX)) return fail(W, "hints are at most %d bytes of text", NW_HINTS_MAX);
+      if (c->n[0] + c->n[1] > NW_SCREEN_MAX) return fail(W, "a screen is at most %d bytes", NW_SCREEN_MAX);
+      char *tree = str(c, 0), *hints = str(c, 1);
+      sbuf_t b = { 0 };
+      sb_add(&b, "{\"tree\":"); sb_add(&b, tree ? tree : "{}"); sb_add(&b, ",\"hints\":"); sb_json_str(&b, hints ? hints : ""); sb_add(&b, "}");
+      free(tree); free(hints);
+      if (!b.s) return fail(W, "out of memory");
+      free(W->nat->screen);
+      W->nat->screen = b.s;
+      W->has_screen = true;
+      charge(c->n[0]);
+      return 0;
+    }
+    case NW_PRESENT: {   // nw_title, nw_icon, nw_about, nw_key: field, value
+      if (!W->nat->in_init) return fail(W, "what a world shows on the launcher is declared only while it starts");
+      if (!name_ok(c, 0, NAME_LEN)) return fail(W, "a world presents its title, icon, about or key");
+      bool icon = c->n[0] == 4 && !memcmp(c->s[0], "icon", 4);
+      if (icon ? !c->n[1] || !payload_ok(c, 1) : !text_ok(c, 1, ICON_MAX)) return fail(W, icon ? "an icon is a JSON array of drawing operations" : "not text");
+      char *field = str(c, 0), *value = str(c, 1), why[160];
+      int64_t r = kernel_present(W, field, value, why, sizeof why) ? fail(W, "%s", why) : 0;
+      free(field); free(value);
+      return r;
     }
     case NW_TIMER:
       if (c->i[0] < 0 || c->i[0] >= W->n_every) return fail(W, "there is no timer %d", (int)c->i[0]);

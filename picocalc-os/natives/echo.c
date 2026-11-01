@@ -24,6 +24,11 @@ void nw_init(void) {
   report("provide", nw_provide("echo.out"));
   tick_timer = nw_every(50);
   report("every", tick_timer);
+  report("title", nw_title("Echo"));
+  report("icon", nw_icon("[[\"rect\",2,2,36,26],[\"text\",14,8,\"E\",\"m\",\"accent\"]]"));
+  report("about", nw_about("Answers the tests."));
+  report("icon-object", nw_icon("{\"t\":1}"));
+  report("key-upper", nw_key("E"));
   nw_log("TEST init done");
 }
 
@@ -77,6 +82,18 @@ int nw_on_event(const nw_event *e) {
   } else if (!strcmp(t, "publish")) {
     report("publish", nw_publish("echo.out", e->json));
     report("publish-undeclared", nw_publish("elsewhere", "1"));
+  } else if (!strcmp(t, "screen")) {   // the payload is the tree
+    report("screen", nw_screen(e->json, "echo hints"));
+  } else if (!strcmp(t, "screen-bad")) {
+    static char big[17000];
+    memcpy(big, "{\"t\":\"text\",\"s\":\"", 17);   // valid JSON, only too large
+    memset(big + 17, 'x', sizeof big - 20);
+    memcpy(big + sizeof big - 3, "\"}", 3);
+    report("screen-text", nw_screen("not json", ""));
+    report("screen-array", nw_screen("[1]", ""));
+    report("screen-hints", nw_screen("{\"t\":\"gap\"}", "a\nb"));
+    report("screen-big", nw_screen(big, ""));
+    report("present-late", nw_title("Late"));
   } else if (!strcmp(t, "retain")) {
     report("retain", nw_publish_retained("echo.out", e->json));
   } else if (!strcmp(t, "save")) {

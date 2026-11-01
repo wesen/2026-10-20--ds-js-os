@@ -94,7 +94,7 @@
   g.dma = { alloc: (w, h) => wrap(k("dma.alloc", w, h)) };
   g.gfx = { fonts: () => k("gfx.fonts") };
   g.sys = {
-    worlds: () => k("sys.worlds"),
+    worlds: (fields) => k("sys.worlds", fields),   // fields: "name,state,icon,..." (icon, about and key only when named)
     handles: () => k("sys.handles"),
     stats: () => k("sys.stats"),
     fault: (name) => k("sys.fault", name),
@@ -173,9 +173,14 @@
   g.sleep = (ms) => ka("sleep", ms);
 
   // ---- the world's definition --------------------------------------------------------------------------
-  const def = { kind: "world", name: null, title: null, initial: {}, on: {}, every: [], start: null, screen: null, hints: null, needs: [], provides: [] };
+  const def = { kind: "world", name: null, title: null, icon: null, about: null, key: null, initial: {}, on: {}, every: [], start: null, screen: null, hints: null, needs: [], provides: [] };
   const B = {
     title(t) { def.title = t; return B; },
+    // on the launcher: a drawing in a 40 x 30 box ([["rect", x, y, w, h, colour?], ["fill", ...], ["line", x1, y1, x2,
+    // y2, colour?], ["text", x, y, "A", font, colour?]]), one line about the app, and its shortcut letter
+    icon(ops) { def.icon = ops; return B; },
+    about(text) { def.about = String(text); return B; },
+    key(ch) { def.key = String(ch); return B; },
     state(s) { def.initial = s; return B; },
     needs(...c) { def.needs.push(...c); return B; },
     provides(...c) { def.provides.push(...c); return B; },
@@ -191,7 +196,8 @@
   g.__init = () => {
     S = JSON.parse(JSON.stringify(def.initial || {}));
     if (def.name && def.name !== g.self && "u-" + def.name !== g.self) log(`declares itself "${def.name}" but the manifest calls it "${g.self}"`);
-    return { kind: def.kind, title: def.title || g.self, needs: def.needs, provides: def.provides, every: def.every.map((e) => e.ms), start: !!def.start, screen: !!def.screen };
+    return { kind: def.kind, title: def.title || g.self, icon: def.icon, about: def.about, key: def.key, needs: def.needs, provides: def.provides,
+             every: def.every.map((e) => e.ms), start: !!def.start, screen: !!def.screen };
   };
 
   const errText = (e) => {

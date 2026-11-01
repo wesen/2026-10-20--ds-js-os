@@ -596,7 +596,17 @@ static JSValue op_sys_log(JSContext *ctx, world_t *W, int argc, JSValueConst *ar
   JSValue r = json_value(ctx, j);
   return r;
 }
-static JSValue op_sys_worlds(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "worlds"); }
+// sys.worlds(fields): every world, or only the comma-separated fields named ("name,state"); "icon", "about" and "key",
+// what apps show on the launcher, come only when named
+static JSValue op_sys_worlds(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  char *fields = sarg(ctx, argv, argc, 0);
+  if (!fields) return op_sys_json(ctx, W, "worlds");
+  if (!world_claims(W, "sys.read")) { free(fields); return fail(ctx, "%s has no claim on sys.read", W->name); }
+  char *j = kernel_worlds_json_fields(fields);
+  free(fields);
+  charge_json(strlen(j));
+  return json_value(ctx, j);
+}
 static JSValue op_sys_handles(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "handles"); }
 static JSValue op_sys_stats(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return op_sys_json(ctx, W, "stats"); }
 
@@ -1068,6 +1078,21 @@ static int read_meta(world_t *W, JSValue meta) {
   v = JS_GetPropertyStr(ctx, meta, "screen"); W->has_screen = JS_ToBool(ctx, v); JS_FreeValue(ctx, v);
   v = JS_GetPropertyStr(ctx, meta, "kind"); { const char *s = JS_ToCString(ctx, v); snprintf(W->kind, sizeof W->kind, "%s", s ? s : "world"); JS_FreeCString(ctx, s); } JS_FreeValue(ctx, v);
   v = JS_GetPropertyStr(ctx, meta, "title"); { const char *s = JS_ToCString(ctx, v); snprintf(W->title, sizeof W->title, "%s", s ? s : W->name); JS_FreeCString(ctx, s); } JS_FreeValue(ctx, v);
+  // what it shows on the launcher (.icon, .about, .key), checked by the kernel as a native world's is
+  static const char *const SHOWN[] = { "icon", "about", "key" };
+  for (int i = 0; i < 3; i++) {
+    v = JS_GetPropertyStr(ctx, meta, SHOWN[i]);
+    if (!JS_IsUndefined(v) && !JS_IsNull(v)) {
+      JSValue t = i == 0 ? JS_JSONStringify(ctx, v, JS_UNDEFINED, JS_UNDEFINED) : JS_DupValue(ctx, v);
+      const char *s = JS_IsException(t) ? NULL : JS_ToCString(ctx, t);
+      char why[160] = "";
+      int r = s ? kernel_present(W, SHOWN[i], s, why, sizeof why) : -1;
+      if (r) snprintf(W->last_error, sizeof W->last_error, "%s", why[0] ? why : "its icon is not plain data");
+      JS_FreeCString(ctx, s); JS_FreeValue(ctx, t);
+      if (r) { JS_FreeValue(ctx, v); return -1; }
+    }
+    JS_FreeValue(ctx, v);
+  }
   return 0;
 }
 
@@ -1101,7 +1126,7 @@ int vm_create(world_t *W) {
     JSValue init = JS_GetPropertyStr(ctx, g, "__init");
     JSValue meta = JS_Call(ctx, init, JS_UNDEFINED, 0, NULL);
     if (JS_IsException(meta)) { set_error(W); rc = -1; }
-    else read_meta(W, meta);
+    else if (read_meta(W, meta)) rc = -1;   // W->last_error says why
     JS_FreeValue(ctx, meta); JS_FreeValue(ctx, init);
   }
   if (!rc) {

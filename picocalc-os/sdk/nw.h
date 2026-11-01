@@ -45,11 +45,23 @@ int nw_reply(const char *json);           // answer the ask being handled
 int nw_reject(const char *why);           // fail the ask being handled; the world does not crash
 int nw_ask(const char *to, const char *type, const char *json, int timeout_ms);   // a token
 
+// The screen: the tree of ui nodes it shows (a JSON object, as JavaScript's ui.* builds: {"t":"col","kids":[...]}; see
+// sdk/nw_ui.h) and the hint bar's text. At any time; the kernel shows it after the current event if it changed, kept
+// for a compositor that restarts. At most 16 KB with the hints (120 bytes).
+int nw_screen(const char *tree_json, const char *hints);
+
 // Declarations, in nw_init only.
 int nw_need(const char *channel);
 int nw_provide(const char *channel);
 int nw_every(int ms);                     // returns the timer's index
 int nw_kind(const char *kind);            // "driver", "service", "app"
+// What it shows on the launcher (an "app"). An app from storage is always titled by its world name and has no letter.
+int nw_title(const char *title);          // at most 31 bytes
+int nw_icon(const char *ops_json);        // drawing operations in a 40 x 30 box, a JSON array of at most 1024 bytes:
+                                          // ["rect"|"fill", x, y, w, h, colour?], ["line", x1, y1, x2, y2, colour?],
+                                          // ["text", x, y, "A", "s"|"m", colour?]; colour: "accent", "muted", ...
+int nw_about(const char *text);           // one line about it, at most 159 bytes
+int nw_key(const char *letter);           // its shortcut on the launcher: one of a-z, 0-9
 
 // Time, timers and storage.
 int nw_sleep(int ms);                     // a token, settled after ms

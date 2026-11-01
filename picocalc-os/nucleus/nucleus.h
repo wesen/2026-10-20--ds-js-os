@@ -63,11 +63,15 @@ enum { W_IDLE, W_BUSY, W_RESTARTING, W_STOPPED };
 #define MAX_WORLDS 32
 #define MAX_LIST 16
 #define RETAIN_MAX 4096     // bytes of retained posts a world may keep (its frame not counted)
+#define ICON_MAX 1024       // an app's icon: a JSON array of drawing operations (the launcher draws it in 40 x 30)
+#define ABOUT_MAX 160       // an app's one-line description, with its NUL
 #define NAME_LEN 32
 
 typedef struct world {
   int id;
   char name[NAME_LEN], kind[12], file[96], title[NAME_LEN];
+  char *icon;                // what it shows about itself on the launcher, as declared at start (kernel_present)
+  char about[ABOUT_MAX], key[2];
   char *source;             // the program: JavaScript text, or a binary's bytes (source_len of them, NUL after)
   size_t source_len;
   int engine;               // ENG_JS, ENG_WASM or ENG_NATIVE (the manifest's "engine")
@@ -266,6 +270,9 @@ void kernel_publish(world_t *from, const char *ch, const char *json, const int *
 // Keep json as W's retained post on ch (a channel W provides), replacing the one before: a world that starts later and
 // needs ch is given it. 0, or -1 with why. The post itself still goes through kernel_publish.
 int kernel_retain(world_t *W, const char *ch, const char *json, char *why, size_t n);
+// What a world shows about itself, declared while it starts: "title" (text), "icon" (a JSON array of drawing
+// operations), "about" (one line of text) or "key" (its shortcut letter, a-z or 0-9). 0, or -1 with why.
+int kernel_present(world_t *W, const char *field, const char *value, char *why, size_t n);
 int kernel_ask(world_t *from, world_t *to, const char *type, const char *json, const int *hs, int nh, int promise, vtime_t timeout);
 void crash(world_t *W, const char *why);
 int kernel_restart_world(world_t *W);
@@ -327,7 +334,8 @@ enum { NW_DONE = 0, NW_LATER = 1 };   // what an event handler returns: the turn
 // System calls, numbered for the wire (sdk/nw_wire.h, the WebAssembly imports): see nat_syscall
 enum {
   NW_LOG = 1, NW_NOW, NW_SELF, NW_SEND, NW_PUBLISH, NW_REPLY, NW_REJECT, NW_NEED, NW_PROVIDE, NW_EVERY, NW_KIND,
-  NW_ASK, NW_SLEEP, NW_I2C_OPEN, NW_I2C, NW_RELEASE, NW_STORE_LOAD, NW_STORE_SAVE, NW_TIMER, NW_CALLS
+  NW_ASK, NW_SLEEP, NW_I2C_OPEN, NW_I2C, NW_RELEASE, NW_STORE_LOAD, NW_STORE_SAVE, NW_TIMER, NW_SCREEN, NW_PRESENT,
+  NW_CALLS
 };
 typedef struct {                // one event for a binary
   int kind;
@@ -344,6 +352,8 @@ typedef struct {                // one system call from a binary: the strings ar
 } nw_call_t;
 #define NW_STR_MAX 65536        // the longest string a system call takes or returns (a file, a record, a payload)
 #define NW_OUT_MAX 16384        // what a call can return (a store record is read in full up to store_kb)
+#define NW_SCREEN_MAX 16384     // a native world's screen: its tree and hints (a JavaScript world's is not bounded)
+#define NW_HINTS_MAX 120        // the hint bar's text
 typedef struct native_backend {
   const char *name;                                  // "proc", "wasm", "elf"
   int (*load)(world_t *W, char *why, size_t n);      // make the instance from W->source / source_len
@@ -356,6 +366,7 @@ typedef struct native {
   bool in_init;                 // its init is running: declarations are allowed
   vtime_t budget_us;            // this segment's budget
   char err[200];                // why its last system call failed
+  char *screen;                 // its screen as nw_screen last set it: {"tree":...,"hints":"..."}, or NULL
 } native_t;
 const native_backend_t *port_native_backend(int engine);   // NULL: this board cannot run that engine
 const native_backend_t *wasm_backend(void);   // WebAssembly in WAMR (native_wasm.c); NULL when built without it
@@ -367,6 +378,7 @@ int nat_settle(world_t *W, settle_t *s);
 // A binary's system call, for the world running now: the result (>= 0), or a negative number with W->nat->err set.
 // A call that returns text writes at most out_n - 1 bytes and a NUL to out and returns their number.
 int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n);
+char *nat_render(world_t *W);   // a copy of the screen it set, for the kernel's render step; NULL if none
 
 // The kernel calls a world's engine through these.
 static inline int eng_create(world_t *W) { return W->engine == ENG_JS ? vm_create(W) : nat_create(W); }
@@ -375,7 +387,7 @@ static inline void eng_begin_segment(world_t *W, vtime_t b) { if (W->engine == E
 static inline int64_t eng_steps(world_t *W) { return W->engine == ENG_JS ? vm_steps(W) : 0; }   // a native backend adds its cost to K.seg_cost
 static inline int eng_dispatch(world_t *W, msg_t *m) { return W->engine == ENG_JS ? vm_dispatch(W, m) : nat_dispatch(W, m); }
 static inline int eng_settle(world_t *W, settle_t *s) { return W->engine == ENG_JS ? vm_settle(W, s) : nat_settle(W, s); }
-static inline char *eng_render(world_t *W) { return W->engine == ENG_JS ? vm_render(W) : NULL; }
+static inline char *eng_render(world_t *W) { return W->engine == ENG_JS ? vm_render(W) : nat_render(W); }
 static inline bool eng_running(world_t *W) { return W->vm || W->nat; }
 
 // hw.c
