@@ -433,3 +433,162 @@ with the new engine seam was flashed to the PicoCalc's P4: 22 JavaScript worlds 
 
 - The simulated battery register reads `[11, 82]`: register 0x0B, 82 %, not charging (`sim/stm32kbd.c`).
 - Binaries: `echo` 799 KB, `probe` 791 KB, `battery` 997 KB (static glibc, static libstdc++).
+
+## Step 5: WebAssembly worlds on the host through WAMR (N3)
+
+With approval to build and run WAMR and `elf_loader`, I vendored a subset of WAMR 2.4.5, wrote the WebAssembly
+backend (`nucleus/native_wasm.c`) and its SDK runtime (`sdk/nw_wasm.c`), and compiled the same `echo.c` and
+`battery.cc` to `.wasm` with clang 18. All the tests now run for both engines; a WebAssembly probe tries eight
+escapes (out-of-bounds loads, bad pointers and lengths handed to system calls, stack overflow, a trap, exit, a busy
+loop), and each is stopped by a trap, an exit or the instruction budget, while a large allocation and stdio fail
+inside the module. 25 tests pass, also on the sanitizer build; shots of both boards are unchanged.
+
+### Prompt Context
+
+**User prompt (verbatim):** "you may build and run WAMR and you may build and run elf_loader. commit at appropriate
+intervals and keep a detailed diary as you work (using the diary format from the skill) (look up diary format in
+skill, MANDATORY)"
+**Assistant interpretation:** Proceed with N3 (WAMR on the host), N4 (WAMR on the P4) and N5 (`elf_loader` on
+the P4), committing as I go and recording each step in this diary in the investigation format.
+**Inferred user intent:** The remaining engines of the ticket, built and validated, not only designed.
+**Commit (code):** 4dd164e — "picocalc-os: vendor WAMR 2.4.5 (fast interpreter subset) for WebAssembly worlds
+(PICOCALC-NATIVE N3)"; 899358a — "picocalc-os: WebAssembly worlds in WAMR's interpreter, with the C and C++
+examples and escape probes (PICOCALC-NATIVE N3)"
+
+### What I did
+
+- Configured WAMR once with its own CMake (`runtime_lib.cmake`, `WAMR_BUILD_FAST_INTERP=1`,
+  `WAMR_BUILD_INSTRUCTION_METERING=1`, `WAMR_DISABLE_HW_BOUND_CHECK=1`, no AOT/JIT/WASI/libc-builtin) in the
+  scratchpad to read the source list and defines from `compile_commands.json` (35 files), then wrote
+  `tools/vendor-wamr.sh`, which copies that subset (plus the AOT headers that common code includes unconditionally,
+  and the ESP-IDF platform layer for N4) into `third_party/wamr` and applies `third_party/wamr/patches/*.patch`.
+- `patches/0001-instruction-count.patch`: the fast interpreter reads `exec_env->instructions_to_execute` into a
+  local when it starts and never writes it back; the patch writes it back at `return_func` (called from native)
+  and `got_exception`, and adds `wasm_runtime_get_instruction_count_limit`.
+- `nucleus/native_wasm.c` (backend `"wasm"`): `wasm_load` checks `\0asm`, copies the bytes, loads, refuses any
+  import that is not a linked function, instantiates with `max_memory_pages = mem_kb / 64`, refuses a module whose
+  initial memory exceeds `mem_kb`, and looks up `_initialize`, `nw_wasm_init`, `nw_wasm_buffer`,
+  `nw_wasm_event`. `wasm_event` sets the instruction limit from the budget, copies the event's strings into
+  room the module gives (`nw_wasm_buffer`), calls `nw_wasm_event`, charges `used × PROFILE.wasm_ns_per_op` to
+  `K.seg_cost`, and maps exceptions: "instruction limit exceeded" → `W->overrun`; `proc_exit` → "it exited with
+  status N"; others → "it trapped: …"; no room for the event → `W->oom`.
+- Imports: `nw.call` `(iiiI*~*~*~*~)I` (the wire's CALL frame as arguments; WAMR validates each `*~` pair) and
+  `nw.error` `(*~)i`; `wasi_snapshot_preview1` `fd_close`, `fd_fdstat_get`, `fd_write`, `fd_read`, `fd_seek`
+  (each returns EBADF, 8) and `proc_exit`.
+- SDK: the 19 wrappers moved from `nw_proc.c` to `sdk/nw_calls.inc`; `sdk/nw_wasm.c` defines `call()` over the
+  import and exports the three entry points; the `_Static_assert`s on the call numbering moved from
+  `host/native_proc.c` to `nucleus/native.c` so they hold on every board.
+- `PROFILE.wasm_ns_per_op` (P4 40 ns, an estimate until N4 measures it; PaperS3 60 ns); the overrun message says
+  "virtual" for every engine but `native` processes.
+- `tools/wasm-toolchain.sh`: no sudo here, so it `apt-get download`s `lld-18 wasi-libc libc++-18-dev-wasm32
+  libc++abi-18-dev-wasm32 libclang-rt-18-dev-wasm32`, unpacks them into `build/wasm-toolchain`, and makes a
+  resource directory joining clang's headers with the package's `libclang_rt.builtins-wasm32.a`.
+- `Makefile`: WAMR objects in `$(BUILD)/wamr` (not with `M32=1`), `-DNUCLEUS_WASM=1`; `make wasm` builds
+  `echo.wasm`, `battery.wasm`, `wprobe.wasm`, `wimport.wasm` (`-mexec-model=reactor -Wl,--stack-first
+  -Wl,-z,stack-size=16384 -Wl,--strip-all`); `test-native` depends on both.
+- `natives/echo.c` gained `oob` (a store at 0xfffffff0); `natives/wprobe.c` and `natives/wimport.c` are new.
+- `tests/test_native_worlds.py`: `EngineTests` (the shared tests) with `ProcessWorldTests` and `WasmWorldTests`;
+  the WebAssembly class adds the escape probes, modules that cannot run, and twenty asks in a row.
+
+### Why
+
+- One import (`nw.call`) with the wire's arguments instead of 19 imports: the kernel side has one place that
+  validates, and the SDK's wrappers are shared with the process runtime unchanged.
+- The kernel copies event strings into room the module allocates (`nw_wasm_buffer`) rather than using WAMR's
+  app heap: no second heap in the module's memory, and the copy is the same shape as the wire's EVENT frame.
+- WASI stubs that fail rather than refusing every module that uses `snprintf`: wasi-libc's stdio links
+  `fd_write`, `fd_seek` and `fd_close` even when only `snprintf` is called. The same choice as the seccomp filter's
+  "return an error" class.
+- Instruction counting instead of a timer that interrupts the interpreter: deterministic on the host's virtual
+  clock, and on the P4 it needs no second task.
+
+### What worked
+
+- `make test-native`: `Ran 25 tests … OK`, four consecutive runs; the WebAssembly probes log, e.g.
+  `wprobe_badlen crashed handling start: it trapped: out of bounds memory access`,
+  `wprobe_stack crashed handling start: it trapped: wasm operand stack overflow`,
+  `wprobe_spin crashed handling start: ran past its turn budget of 100 virtual ms`,
+  `imports crashed: it imports the function wasi_snapshot_preview1.path_open, which picocalc-os does not provide`.
+- `make SAN=1` and the suite against `build-san/picocalc-host`: 25 OK, no sanitizer reports; `test-sys`,
+  `test-fs`, `test-clock` on the sanitizer build: OK.
+- `test-sys` (15), `test-fs` (9), `test-clock` (4), `test-apps` (fail 0), `test-agent` (fail 0, 23 native tests
+  with 7 skipped as before): OK. `make shots` and `make BOARD=papers3 shots`: no file in `out/` or `out-papers3/`
+  changed.
+
+### What didn't work
+
+- First build: `third_party/wamr/core/iwasm/common/wasm_memory.c:8:10: fatal error: ../aot/aot_runtime.h: No such
+  file or directory`. Common code includes the AOT headers with AOT off; the vendoring script now copies
+  `aot/aot_runtime.h`, `aot_intrinsic.h`, `aot_perf_map.h` and `compilation/aot.h`.
+- First module build: `clang: error: unable to execute command: Executable "wasm-ld-18" doesn't exist!`, then
+  `wasm-ld-18: error: cannot open /usr/lib/llvm-18/lib/clang/18/lib/wasi/libclang_rt.builtins-wasm32.a`. Fixed by
+  the `wasm-ld-18` link and the joined resource directory in `tools/wasm-toolchain.sh`.
+- `clang-18: error: unsupported option '-mexec-model=' for target 'wasm32-wasi'` on the `-c` of the runtime
+  object: compile and link flags split (`WASM_FLAGS`, `WASM_LINK`).
+- `battery.wasm`: `wasm-ld-18: error: …libc++.a(stdlib_new_delete.cpp.o): undefined symbol: __cxa_throw` (and
+  `__cxa_allocate_exception`). Ubuntu's wasm32 libc++ is built with exceptions, its libc++abi without; `nw_wasm.c`
+  defines both, weak, as traps.
+- The alloc probe logged `TEST alloc succeeded` with `mem_kb` 1024. A temporary print showed `pages 1 max 16`:
+  the cap held, and clang had removed the unused `malloc`/`free` pair and folded the null test to true. The probe
+  keeps the pointer in a `volatile`.
+- `/usr/bin/ld: warning: build/wamr/invokeNative_em64.o: missing .note.GNU-stack section implies executable
+  stack`; `readelf -lW build/picocalc-host` showed `GNU_STACK … RWE`. The rule now assembles with
+  `-Wa,--noexecstack`; after removing the stale object, `GNU_STACK … RW`.
+- Sanitizer build: 12 failures, each WebAssembly world `crashed: it trapped: native stack overflow`, and UBSan
+  `store to misaligned address` / `member access within misaligned address` in `wasm_loader.c`,
+  `wasm_runtime.c` and `wasm_runtime_common.h` (36 + 12 × 9 reports). With
+  `ASAN_OPTIONS=detect_stack_use_after_return=0` the overflow went away: WAMR compares the address of a local with
+  the thread's stack bounds, and ASan's fake stacks put locals elsewhere. GCC 13 rejects
+  `-fsanitize-address-use-after-return=never` (`unrecognized command-line option`); `--param
+  asan-use-after-return=0 -fno-sanitize=alignment` on WAMR's objects only (with `SAN=1`) fixed both.
+
+### What I learned
+
+- WAMR's `wasm_runtime_get_import_type` reports `linked` for function imports when natives are registered before
+  the load, so unknown imports can be refused before instantiation.
+- With `--stack-first`, a C shadow-stack overflow would wrap below address 0 and trap; in practice WAMR's own
+  frame stack (16 KB) overflows first ("wasm operand stack overflow").
+- A handler's cost is dominated by the C library: a `ping` that formats one reply with `snprintf` is about 2,520
+  interpreter instructions; `nw_init` with three calls about 6,240.
+
+### What was tricky to build
+
+- The instruction budget across several calls in one event: the limit is set once, `nw_wasm_buffer` runs, and
+  the patched interpreter writes what is left back, so `nw_wasm_event` starts with the remainder and the cost is
+  the limit minus the final remainder. Without the patch the second call would have started with the full limit
+  again and the cost could not be read at all.
+- Pointers from the module: `*~` makes WAMR validate `[p, p + n)` and convert it before the native function runs,
+  and a failure raises an exception in the module, so a bad pointer is a trap of the offending world, not an
+  error the module can ignore. The kernel then writes results through its own buffer and copies what fits.
+
+### What warrants a second pair of eyes
+
+- `third_party/wamr/patches/0001-instruction-count.patch`: the write-back happens only where the interpreter
+  returns to native code or stops on an exception; any other exit path would leave a stale count (the cost would
+  be wrong, the budget still enforced).
+- The WASI stubs: `fd_read` and `fd_write` share a four-argument stub that never touches memory; nothing else
+  from WASI is linked.
+- Memory accounting (`W->mem_used`) counts linear memory and the 16 KB stack, not the interpreter's compiled
+  code or the module's bytes.
+
+### What should be done in the future
+
+- N4: WAMR on the P4 (ESP-IDF platform layer, `invokeNative_riscv.S`), bundling `.wasm` files into the firmware,
+  measuring `wasm_ns_per_op`, a device run; WebAssembly apps from storage through the Loader.
+- N5: trusted machine code on the P4 through `elf_loader`.
+
+### Code review instructions
+
+- Start at `nucleus/native_wasm.c` (`wasm_load`, `wasm_event`, `imp_call`), then `sdk/nw_wasm.c` and
+  `sdk/nw_calls.inc`, then `third_party/wamr/patches/0001-instruction-count.patch`.
+- `tools/wasm-toolchain.sh` (once), `make test-native`; `make SAN=1 && ASAN_OPTIONS=detect_leaks=0 make SAN=1
+  test-native`; `readelf -lW build/picocalc-host | grep GNU_STACK` must say `RW`.
+
+### Technical details
+
+- Host, wall time per JavaScript ask of an echo service (5,000 asks, minus a 10-ask run): JavaScript 16.7 µs,
+  WebAssembly 31.6 µs, process 49.9 µs. Loading `echo.wasm` (including the runtime's first start): 1.4 ms.
+- Module sizes (stripped): `echo.wasm` 32 KB, `battery.wasm` 38 KB, `wprobe.wasm` 29 KB, `wimport.wasm` 10 KB;
+  each starts with one 64 KB page (16 KB stack first, then data), no declared maximum.
+- WAMR's objects on the host (x86-64, -O2): 225 KB of text (`size -t build/wamr/**/*.o`); picocalc-host's text is
+  1.46 MB in all.
