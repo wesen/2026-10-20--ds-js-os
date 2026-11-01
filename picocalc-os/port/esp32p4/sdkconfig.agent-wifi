@@ -15,8 +15,9 @@ CONFIG_ESP_HOSTED_SDIO_PIN_D3=17
 CONFIG_ESP_HOSTED_SDIO_GPIO_RESET_SLAVE=54
 CONFIG_ESP_HOSTED_SDIO_RESET_ACTIVE_HIGH=y
 CONFIG_ESP_HOSTED_SDIO_CLOCK_FREQ_KHZ=20000
-# Conservative startup: factory slave firmware need not implement streaming-mode transport.
-CONFIG_ESP_HOSTED_SDIO_OPTIMIZATION_RX_NONE=y
+# Streaming receive, ESP-Hosted's default. The C6 on the tested board (factory firmware) queues more than one packet
+# per transfer ("Len from slave[1689] exceeds max [1536]" in packet mode, and TLS stalled), so the host must stream.
+CONFIG_ESP_HOSTED_SDIO_OPTIMIZATION_RX_STREAMING_MODE=y
 CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
 CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL=y
 CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=y

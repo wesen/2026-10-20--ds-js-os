@@ -54,6 +54,30 @@ static i2c_master_dev_handle_t i2c_dev(int addr, int hz) {
   return NULL;
 }
 
+// The console's key and type commands queue events here, and the keyboard driver reads them through the STM32's
+// own registers, as if typed: the key status register (0x04) counts them with the chip's own, and a FIFO read
+// (0x09) returns a queued one first, without touching the chip. So they reach the compositor from the keyboard
+// world like any key.
+#define KBD_ADDR 0x1F
+#define KBD_REG_KEY 0x04
+#define KBD_REG_FIF 0x09
+static portMUX_TYPE inj_lock = portMUX_INITIALIZER_UNLOCKED;
+static uint16_t inj[64];
+static int inj_head, inj_n;
+void bus_p4_inject_key(int state, int code) {
+  taskENTER_CRITICAL(&inj_lock);
+  if (inj_n < 64) inj[(inj_head + inj_n++) % 64] = (uint16_t)(state << 8 | (code & 0xff));
+  taskEXIT_CRITICAL(&inj_lock);
+}
+static int inj_count(void) { taskENTER_CRITICAL(&inj_lock); int n = inj_n; taskEXIT_CRITICAL(&inj_lock); return n; }
+static bool inj_pop(uint8_t *state, uint8_t *code) {
+  taskENTER_CRITICAL(&inj_lock);
+  bool any = inj_n > 0;
+  if (any) { uint16_t e = inj[inj_head]; inj_head = (inj_head + 1) % 64; inj_n--; *state = e >> 8; *code = e & 0xff; }
+  taskEXIT_CRITICAL(&inj_lock);
+  return any;
+}
+
 static void i2c_worker(void *arg) {
   req_t r;
   for (;;) {
@@ -62,7 +86,17 @@ static void i2c_worker(void *arg) {
     i2c_master_dev_handle_t dev = i2c_dev(r.addr, r.hz);
     esp_err_t err = dev ? ESP_OK : ESP_ERR_NO_MEM;
     uint8_t rd[16] = { 0 };
+    int nread = r.nread, nbytes = r.nbytes;   // what the world asked for; r's are what is left to do on the wire
+    bool kbd = r.addr == KBD_ADDR && r.nbytes == 1;
+    if (kbd && r.bytes[0] == KBD_REG_FIF && r.nread == 2 && inj_pop(&rd[0], &rd[1])) r.nbytes = r.nread = 0;
     if (!err && r.nbytes) err = i2c_master_transmit(dev, r.bytes, r.nbytes, 50);
+    if (!err && kbd && r.bytes[0] == KBD_REG_KEY && r.nread == 1) {
+      if (r.gap_us >= 1000) vTaskDelay(pdMS_TO_TICKS((r.gap_us + 999) / 1000));
+      err = i2c_master_receive(dev, rd, 1, 50);
+      int n = (rd[0] & 0x1f) + inj_count();
+      rd[0] = (uint8_t)((rd[0] & ~0x1f) | (n > 31 ? 31 : n));
+      r.nread = 0;   // answered
+    }
     if (!err && r.nread) {
       if (r.gap_us >= 1000) vTaskDelay(pdMS_TO_TICKS((r.gap_us + 999) / 1000));
       else if (r.gap_us > 0) esp_rom_delay_us((uint32_t)r.gap_us);
@@ -72,10 +106,10 @@ static void i2c_worker(void *arg) {
     if (err) snprintf(json, sizeof json, "\"i2c0 0x%02x: %s\"", r.addr, esp_err_to_name(err));
     else {
       int k = snprintf(json, sizeof json, "[");
-      for (int i = 0; i < r.nread; i++) k += snprintf(json + k, sizeof json - k, "%s%d", i ? "," : "", rd[i]);
+      for (int i = 0; i < nread; i++) k += snprintf(json + k, sizeof json - k, "%s%d", i ? "," : "", rd[i]);
       snprintf(json + k, sizeof json - k, "]");
     }
-    post(BUS_I2C0, &r, !err, json, t0, (uint32_t)(r.nbytes + r.nread + 2));
+    post(BUS_I2C0, &r, !err, json, t0, (uint32_t)(nbytes + nread + 2));
   }
 }
 

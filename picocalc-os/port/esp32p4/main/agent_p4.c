@@ -156,7 +156,9 @@ static void wifi_apply(void) {
   atomic_store(&reconnect_allowed, false);
   xEventGroupClearBits(events, NET_UP);
   esp_err_t e = wifi_prepare();
-  if (e == ESP_OK && wifi_started) { esp_wifi_stop(); wifi_started = false; }
+  // A running station takes a new configuration by reconnecting. Over ESP-Hosted, stop + start delivered a second
+  // STA_START before the first netif start was undone, and lwIP asserted (netif_add: netif already added).
+  if (e == ESP_OK && wifi_started) esp_wifi_disconnect();
   wifi_config_t wc = { 0 };
   memcpy(wc.sta.ssid, c.ssid, strlen(c.ssid));
   memcpy(wc.sta.password, c.password, strlen(c.password));
@@ -168,8 +170,8 @@ static void wifi_apply(void) {
   atomic_store(&retries, 0);
   if (e == ESP_OK) {
     atomic_store(&reconnect_allowed, true);
-    e = esp_wifi_start();
-    wifi_started = e == ESP_OK;
+    if (wifi_started) e = esp_wifi_connect();
+    else { e = esp_wifi_start(); wifi_started = e == ESP_OK; }
   }
   if (e != ESP_OK) {
     char msg[120]; snprintf(msg, sizeof msg, "Wi-Fi initialization failed: %s", esp_err_to_name(e));

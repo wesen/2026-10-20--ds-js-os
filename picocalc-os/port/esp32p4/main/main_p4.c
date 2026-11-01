@@ -29,7 +29,7 @@
 static const char *TAG = "picocalc-os";
 void vm_calibrate(void);
 
-// ---- keys, as js/drivers/keyboard.js publishes them -------------------------------------------------------------
+// ---- keys, as the keyboard controller reports them ---------------------------------------------------------------
 static const struct { const char *name; int code; } KEYS[] = {
   { "enter", 0x0A }, { "backspace", 0x08 }, { "tab", 0x09 }, { "esc", 0xB1 },
   { "left", 0xB4 }, { "up", 0xB5 }, { "down", 0xB6 }, { "right", 0xB7 }, { "space", 0x20 },
@@ -44,29 +44,9 @@ static int key_code(const char *n) {
   if (!strncmp(n, "0x", 2)) return (int)strtol(n, NULL, 16);
   return -1;
 }
-static const char *key_name(int code) {
-  for (size_t i = 0; i < sizeof KEYS / sizeof KEYS[0]; i++) if (KEYS[i].code == code) return KEYS[i].name;
-  return NULL;
-}
-
-// a = code | state << 8, state 1 down, 2 hold, 3 up
-static void key_event(void *arg, int a) {
-  static const char *STATES[] = { "", "down", "hold", "up" };
-  int code = a & 0xff, state = a >> 8;
-  char ch[2] = { 0 }, key[16];
-  if (code >= 0x20 && code < 0x7f) ch[0] = (char)code;
-  const char *n = key_name(code);
-  if (n && code != ' ' ) snprintf(key, sizeof key, "%s", n);
-  else if (ch[0] && code != ' ') snprintf(key, sizeof key, "%s", ch);
-  else if (code == ' ') snprintf(key, sizeof key, "space");
-  else snprintf(key, sizeof key, "0x%x", code);
-  sbuf_t b = { 0 };
-  sb_printf(&b, "{\"code\":%d,\"key\":", code); sb_json_str(&b, key);
-  sb_add(&b, ",\"ch\":"); sb_json_str(&b, ch);
-  sb_printf(&b, ",\"state\":\"%s\",\"caps\":false,\"injected\":true}", STATES[state & 3]);
-  kernel_publish(NULL, "keys", b.s, NULL, 0);
-  free(b.s);
-}
+// a = code | state << 8, state 1 down, 2 hold, 3 up. The event goes to the keyboard controller's queue in the bus
+// back end, so the keyboard driver reads and publishes it like a key typed on the keyboard.
+static void key_event(void *arg, int a) { bus_p4_inject_key(a >> 8, a & 0xff); }
 static void press(vtime_t at, int code, int hold_ms) {
   schedule_fn(at, key_event, NULL, code | 1 << 8);
   if (hold_ms >= 300) schedule_fn(at + MS(300), key_event, NULL, code | 2 << 8);

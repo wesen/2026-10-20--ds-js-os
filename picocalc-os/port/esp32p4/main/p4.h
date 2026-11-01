@@ -26,6 +26,7 @@ extern QueueHandle_t p4_kq;
 
 void bus_p4_init(void);
 void bus_p4_done(const kmsg_t *m);    // the kernel task's side of a finished transfer
+void bus_p4_inject_key(int state, int code);   // a console key event (state 1 down, 2 hold, 3 up), read as if typed
 void console_exec(char *line);        // main_p4.c, on the kernel task
 void p4_store_init(void);             // never erases failed/old NVS automatically
 bool p4_config_available(void);
