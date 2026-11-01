@@ -1,0 +1,1083 @@
+#OK trace
+[ 83777.948] keyboard <- every 20 ms from kernel 
+[ 83788.868] snake <- every 110 ms from kernel 
+[ 83799.034] keyboard <- every 20 ms from kernel 
+[ 83817.884] keyboard <- every 20 ms from kernel 
+[ 83822.867] agent <- every 100 ms from kernel 
+[ 83837.849] keyboard <- every 20 ms from kernel 
+[ 83856.899] sysmon <- every 500 ms from kernel 
+[ 83861.298] keyboard <- every 20 ms from kernel 
+[ 83877.860] keyboard <- every 20 ms from kernel 
+[ 83897.853] keyboard <- every 20 ms from kernel 
+[ 83898.803] snake <- every 110 ms from kernel 
+[ 83918.951] keyboard <- every 20 ms from kernel 
+[ 83922.878] agent <- every 100 ms from kernel 
+[ 83937.856] keyboard <- every 20 ms from kernel 
+[ 83957.861] keyboard <- every 20 ms from kernel 
+[ 83977.852] keyboard <- every 20 ms from kernel 
+[ 83998.849] keyboard <- every 20 ms from kernel 
+[ 84000.856] compositor <- every 500 ms from kernel 
+[ 84008.890] snake <- every 110 ms from kernel 
+[ 84019.017] keyboard <- every 20 ms from kernel 
+[ 84022.893] agent <- every 100 ms from kernel 
+[ 84037.861] keyboard <- every 20 ms from kernel 
+[ 84039.856] keys <- every 1000 ms from kernel 
+[ 84057.891] keyboard <- every 20 ms from kernel 
+[ 84062.861] logs <- every 500 ms from kernel 
+[ 84079.007] keyboard <- every 20 ms from kernel 
+[ 84097.857] keyboard <- every 20 ms from kernel 
+[ 84102.870] about <- every 1000 ms from kernel 
+[ 84117.864] keyboard <- every 20 ms from kernel 
+[ 84119.136] snake <- every 110 ms from kernel 
+[ 84122.750] agent <- every 100 ms from kernel 
+[ 84138.873] keyboard <- every 20 ms from kernel 
+[ 84157.873] keyboard <- every 20 ms from kernel 
+[ 84178.845] keyboard <- every 20 ms from kernel 
+[ 84198.850] keyboard <- every 20 ms from kernel 
+[ 84218.853] keyboard <- every 20 ms from kernel 
+[ 84222.858] agent <- every 100 ms from kernel 
+[ 84228.850] snake <- every 110 ms from kernel 
+[ 84238.002] keyboard <- every 20 ms from kernel 
+[ 84258.918] keyboard <- every 20 ms from kernel 
+[ 84277.857] keyboard <- every 20 ms from kernel 
+[ 84298.853] keyboard <- every 20 ms from kernel 
+[ 84318.850] keyboard <- every 20 ms from kernel 
+[ 84322.854] agent <- every 100 ms from kernel 
+[ 84337.853] keyboard <- every 20 ms from kernel 
+[ 84338.845] snake <- every 110 ms from kernel 
+[ 84356.941] sysmon <- every 500 ms from kernel 
+[ 84361.169] keyboard <- every 20 ms from kernel 
+[ 84377.865] keyboard <- every 20 ms from kernel 
+[ 84397.849] keyboard <- every 20 ms from kernel 
+[ 84418.850] keyboard <- every 20 ms from kernel 
+[ 84422.862] agent <- every 100 ms from kernel 
+[ 84437.850] keyboard <- every 20 ms from kernel 
+[ 84448.857] snake <- every 110 ms from kernel 
+[ 84458.992] keyboard <- every 20 ms from kernel 
+[ 84477.880] keyboard <- every 20 ms from kernel 
+[ 84493.852] settings <- every 1000 ms from kernel 
+[ 84498.316] keyboard <- every 20 ms from kernel 
+[ 84500.889] compositor <- every 500 ms from kernel 
+[ 84518.901] keyboard <- every 20 ms from kernel 
+[ 84522.882] agent <- every 100 ms from kernel 
+[ 84537.853] keyboard <- every 20 ms from kernel 
+[ 84557.855] keyboard <- every 20 ms from kernel 
+[ 84558.834] snake <- every 110 ms from kernel 
+[ 84562.636] logs <- every 500 ms from kernel 
+[ 84579.048] keyboard <- every 20 ms from kernel 
+[ 84597.878] keyboard <- every 20 ms from kernel 
+[ 84617.856] keyboard <- every 20 ms from kernel 
+[ 84622.871] agent <- every 100 ms from kernel 
+[ 84637.856] keyboard <- every 20 ms from kernel 
+[ 84639.870] loader <- every 1000 ms from kernel 
+[ 84657.964] keyboard <- every 20 ms from kernel 
+[ 84668.871] snake <- every 110 ms from kernel 
+[ 84679.044] keyboard <- every 20 ms from kernel 
+[ 84697.883] keyboard <- every 20 ms from kernel 
+[ 84717.853] keyboard <- every 20 ms from kernel 
+[ 84722.869] agent <- every 100 ms from kernel 
+[ 84737.863] keyboard <- every 20 ms from kernel 
+[ 84758.857] keyboard <- every 20 ms from kernel 
+[ 84778.859] keyboard <- every 20 ms from kernel 
+[ 84779.788] snake <- every 110 ms from kernel 
+[ 84783.458] launcher <- every 2000 ms from kernel 
+[ 84800.967] keyboard <- every 20 ms from kernel 
+[ 84817.882] keyboard <- every 20 ms from kernel 
+[ 84822.854] agent <- every 100 ms from kernel 
+[ 84837.853] keyboard <- every 20 ms from kernel 
+[ 84856.869] sysmon <- every 500 ms from kernel 
+[ 84861.056] keyboard <- every 20 ms from kernel 
+[ 84877.861] keyboard <- every 20 ms from kernel 
+[ 84888.862] snake <- every 110 ms from kernel 
+[ 84899.049] keyboard <- every 20 ms from kernel 
+[ 84917.876] keyboard <- every 20 ms from kernel 
+[ 84922.864] agent <- every 100 ms from kernel 
+[ 84937.849] keyboard <- every 20 ms from kernel 
+[ 84958.849] keyboard <- every 20 ms from kernel 
+[ 84978.849] keyboard <- every 20 ms from kernel 
+[ 84998.849] keyboard <- every 20 ms from kernel 
+[ 84999.757] snake <- every 110 ms from kernel 
+[ 85003.148] compositor <- every 500 ms from kernel 
+[ 85018.894] keyboard <- every 20 ms from kernel 
+[ 85022.882] agent <- every 100 ms from kernel 
+[ 85037.861] keyboard <- every 20 ms from kernel 
+[ 85039.863] keys <- every 1000 ms from kernel 
+[ 85057.883] keyboard <- every 20 ms from kernel 
+[ 85062.877] logs <- every 500 ms from kernel 
+[ 85078.979] keyboard <- every 20 ms from kernel 
+[ 85097.863] keyboard <- every 20 ms from kernel 
+[ 85102.862] about <- every 1000 ms from kernel 
+[ 85108.870] snake <- every 110 ms from kernel 
+[ 85118.015] keyboard <- every 20 ms from kernel 
+[ 85122.899] agent <- every 100 ms from kernel 
+[ 85137.857] keyboard <- every 20 ms from kernel 
+[ 85157.856] keyboard <- every 20 ms from kernel 
+[ 85178.849] keyboard <- every 20 ms from kernel 
+[ 85198.845] keyboard <- every 20 ms from kernel 
+[ 85218.849] keyboard <- every 20 ms from kernel 
+[ 85219.739] snake <- every 110 ms from kernel 
+[ 85223.028] agent <- every 100 ms from kernel 
+[ 85237.868] keyboard <- every 20 ms from kernel 
+[ 85257.864] keyboard <- every 20 ms from kernel 
+[ 85278.856] keyboard <- every 20 ms from kernel 
+[ 85298.857] keyboard <- every 20 ms from kernel 
+[ 85318.856] keyboard <- every 20 ms from kernel 
+[ 85322.862] agent <- every 100 ms from kernel 
+[ 85323.538] power <- every 5000 ms from kernel 
+[ 85328.900] snake <- every 110 ms from kernel 
+[ 85338.939] keyboard <- every 20 ms from kernel 
+[ 85355.894] sysmon <- every 500 ms from kernel 
+[ 85360.005] keyboard <- every 20 ms from kernel 
+[ 85377.857] keyboard <- every 20 ms from kernel 
+[ 85397.851] keyboard <- every 20 ms from kernel 
+[ 85417.849] keyboard <- every 20 ms from kernel 
+[ 85422.865] agent <- every 100 ms from kernel 
+[ 85437.853] keyboard <- every 20 ms from kernel 
+[ 85438.856] snake <- every 110 ms from kernel 
+[ 85458.938] keyboard <- every 20 ms from kernel 
+[ 85477.857] keyboard <- every 20 ms from kernel 
+[ 85493.861] settings <- every 1000 ms from kernel 
+[ 85498.318] keyboard <- every 20 ms from kernel 
+[ 85500.892] compositor <- every 500 ms from kernel 
+[ 85518.901] keyboard <- every 20 ms from kernel 
+[ 85522.875] agent <- every 100 ms from kernel 
+[ 85537.851] keyboard <- every 20 ms from kernel 
+[ 85548.857] snake <- every 110 ms from kernel 
+[ 85559.040] keyboard <- every 20 ms from kernel 
+[ 85562.901] logs <- every 500 ms from kernel 
+[ 85577.953] keyboard <- every 20 ms from kernel 
+[ 85597.856] keyboard <- every 20 ms from kernel 
+[ 85617.853] keyboard <- every 20 ms from kernel 
+[ 85622.860] agent <- every 100 ms from kernel 
+[ 85637.851] keyboard <- every 20 ms from kernel 
+[ 85639.874] loader <- every 1000 ms from kernel 
+[ 85657.952] keyboard <- every 20 ms from kernel 
+[ 85660.080] snake <- every 110 ms from kernel 
+[ 85678.933] keyboard <- every 20 ms from kernel 
+[ 85697.879] keyboard <- every 20 ms from kernel 
+[ 85717.860] keyboard <- every 20 ms from kernel 
+[ 85722.865] agent <- every 100 ms from kernel 
+[ 85737.860] keyboard <- every 20 ms from kernel 
+[ 85758.864] keyboard <- every 20 ms from kernel 
+[ 85768.857] snake <- every 110 ms from kernel 
+[ 85778.002] keyboard <- every 20 ms from kernel 
+[ 85797.884] keyboard <- every 20 ms from kernel 
+[ 85817.853] keyboard <- every 20 ms from kernel 
+[ 85822.875] agent <- every 100 ms from kernel 
+[ 85837.850] keyboard <- every 20 ms from kernel 
+[ 85856.875] sysmon <- every 500 ms from kernel 
+[ 85860.992] keyboard <- every 20 ms from kernel 
+[ 85877.868] keyboard <- every 20 ms from kernel 
+[ 85878.966] snake <- every 110 ms from kernel 
+[ 85898.928] keyboard <- every 20 ms from kernel 
+[ 85917.864] keyboard <- every 20 ms from kernel 
+[ 85922.857] agent <- every 100 ms from kernel 
+[ 85937.845] keyboard <- every 20 ms from kernel 
+[ 85957.852] keyboard <- every 20 ms from kernel 
+[ 85978.852] keyboard <- every 20 ms from kernel 
+[ 85988.855] snake <- every 110 ms from kernel 
+[ 85997.993] keyboard <- every 20 ms from kernel 
+[ 86000.899] compositor <- every 500 ms from kernel 
+[ 86018.895] keyboard <- every 20 ms from kernel 
+[ 86022.869] agent <- every 100 ms from kernel 
+[ 86037.860] keyboard <- every 20 ms from kernel 
+[ 86039.875] keys <- every 1000 ms from kernel 
+[ 86057.884] keyboard <- every 20 ms from kernel 
+[ 86062.873] logs <- every 500 ms from kernel 
+[ 86079.010] keyboard <- every 20 ms from kernel 
+[ 86097.857] keyboard <- every 20 ms from kernel 
+[ 86098.824] snake <- every 110 ms from kernel 
+[ 86102.332] about <- every 1000 ms from kernel 
+[ 86118.878] keyboard <- every 20 ms from kernel 
+[ 86122.904] agent <- every 100 ms from kernel 
+[ 86137.845] keyboard <- every 20 ms from kernel 
+[ 86157.857] keyboard <- every 20 ms from kernel 
+[ 86178.849] keyboard <- every 20 ms from kernel 
+[ 86198.850] keyboard <- every 20 ms from kernel 
+[ 86208.852] snake <- every 110 ms from kernel 
+[ 86217.998] keyboard <- every 20 ms from kernel 
+[ 86222.911] agent <- every 100 ms from kernel 
+[ 86237.846] keyboard <- every 20 ms from kernel 
+[ 86257.856] keyboard <- every 20 ms from kernel 
+[ 86278.846] keyboard <- every 20 ms from kernel 
+[ 86298.852] keyboard <- every 20 ms from kernel 
+[ 86318.853] keyboard <- every 20 ms from kernel 
+[ 86319.755] snake <- every 110 ms from kernel 
+[ 86323.013] agent <- every 100 ms from kernel 
+[ 86338.859] keyboard <- every 20 ms from kernel 
+[ 86356.878] sysmon <- every 500 ms from kernel 
+[ 86360.871] keyboard <- every 20 ms from kernel 
+[ 86377.883] keyboard <- every 20 ms from kernel 
+[ 86397.853] keyboard <- every 20 ms from kernel 
+[ 86418.928] keyboard <- every 20 ms from kernel 
+[ 86422.863] agent <- every 100 ms from kernel 
+[ 86428.856] snake <- every 110 ms from kernel 
+[ 86439.038] keyboard <- every 20 ms from kernel 
+[ 86457.914] keyboard <- every 20 ms from kernel 
+[ 86477.855] keyboard <- every 20 ms from kernel 
+[ 86493.862] settings <- every 1000 ms from kernel 
+[ 86498.600] keyboard <- every 20 ms from kernel 
+[ 86501.883] compositor <- every 500 ms from kernel 
+[ 86518.921] keyboard <- every 20 ms from kernel 
+[ 86522.871] agent <- every 100 ms from kernel 
+[ 86537.849] keyboard <- every 20 ms from kernel 
+[ 86538.889] snake <- every 110 ms from kernel 
+[ 86558.946] keyboard <- every 20 ms from kernel 
+[ 86562.873] logs <- every 500 ms from kernel 
+[ 86578.955] keyboard <- every 20 ms from kernel 
+[ 86597.852] keyboard <- every 20 ms from kernel 
+[ 86618.849] keyboard <- every 20 ms from kernel 
+[ 86622.859] agent <- every 100 ms from kernel 
+[ 86637.861] keyboard <- every 20 ms from kernel 
+[ 86639.874] loader <- every 1000 ms from kernel 
+[ 86648.953] snake <- every 110 ms from kernel 
+[ 86658.032] keyboard <- every 20 ms from kernel 
+[ 86677.875] keyboard <- every 20 ms from kernel 
+[ 86697.853] keyboard <- every 20 ms from kernel 
+[ 86718.902] keyboard <- every 20 ms from kernel 
+[ 86722.864] agent <- every 100 ms from kernel 
+[ 86737.860] keyboard <- every 20 ms from kernel 
+[ 86757.867] keyboard <- every 20 ms from kernel 
+[ 86758.758] snake <- every 110 ms from kernel 
+[ 86778.935] keyboard <- every 20 ms from kernel 
+[ 86780.923] launcher <- every 2000 ms from kernel 
+[ 86798.271] keyboard <- every 20 ms from kernel 
+[ 86818.901] keyboard <- every 20 ms from kernel 
+[ 86822.875] agent <- every 100 ms from kernel 
+[ 86837.861] keyboard <- every 20 ms from kernel 
+[ 86856.872] sysmon <- every 500 ms from kernel 
+[ 86861.086] keyboard <- every 20 ms from kernel 
+[ 86868.915] snake <- every 110 ms from kernel 
+[ 86879.047] keyboard <- every 20 ms from kernel 
+[ 86897.868] keyboard <- every 20 ms from kernel 
+[ 86918.845] keyboard <- every 20 ms from kernel 
+[ 86922.879] agent <- every 100 ms from kernel 
+[ 86937.846] keyboard <- every 20 ms from kernel 
+[ 86958.853] keyboard <- every 20 ms from kernel 
+[ 86978.849] keyboard <- every 20 ms from kernel 
+[ 86979.746] snake <- every 110 ms from kernel 
+[ 86997.916] keyboard <- every 20 ms from kernel 
+[ 87000.885] compositor <- every 500 ms from kernel 
+[ 87017.882] keyboard <- every 20 ms from kernel 
+[ 87022.877] agent <- every 100 ms from kernel 
+[ 87037.856] keyboard <- every 20 ms from kernel 
+[ 87039.873] keys <- every 1000 ms from kernel 
+[ 87057.902] keyboard <- every 20 ms from kernel 
+[ 87062.873] logs <- every 500 ms from kernel 
+[ 87078.993] keyboard <- every 20 ms from kernel 
+[ 87088.869] snake <- every 110 ms from kernel 
+[ 87098.017] keyboard <- every 20 ms from kernel 
+[ 87102.920] about <- every 1000 ms from kernel 
+[ 87117.876] keyboard <- every 20 ms from kernel 
+[ 87122.869] agent <- every 100 ms from kernel 
+[ 87137.886] keyboard <- every 20 ms from kernel 
+[ 87157.849] keyboard <- every 20 ms from kernel 
+[ 87178.851] keyboard <- every 20 ms from kernel 
+[ 87198.845] keyboard <- every 20 ms from kernel 
+[ 87199.765] snake <- every 110 ms from kernel 
+[ 87218.904] keyboard <- every 20 ms from kernel 
+[ 87222.875] agent <- every 100 ms from kernel 
+[ 87237.857] keyboard <- every 20 ms from kernel 
+[ 87258.853] keyboard <- every 20 ms from kernel 
+[ 87278.857] keyboard <- every 20 ms from kernel 
+[ 87298.854] keyboard <- every 20 ms from kernel 
+[ 87308.854] snake <- every 110 ms from kernel 
+[ 87317.991] keyboard <- every 20 ms from kernel 
+[ 87322.882] agent <- every 100 ms from kernel 
+[ 87338.857] keyboard <- every 20 ms from kernel 
+[ 87356.866] sysmon <- every 500 ms from kernel 
+[ 87360.985] keyboard <- every 20 ms from kernel 
+[ 87377.857] keyboard <- every 20 ms from kernel 
+[ 87398.841] keyboard <- every 20 ms from kernel 
+[ 87418.853] keyboard <- every 20 ms from kernel 
+[ 87419.816] snake <- every 110 ms from kernel 
+[ 87423.563] agent <- every 100 ms from kernel 
+[ 87438.877] keyboard <- every 20 ms from kernel 
+[ 87457.868] keyboard <- every 20 ms from kernel 
+[ 87478.857] keyboard <- every 20 ms from kernel 
+[ 87493.856] settings <- every 1000 ms from kernel 
+[ 87498.400] keyboard <- every 20 ms from kernel 
+[ 87500.908] compositor <- every 500 ms from kernel 
+[ 87518.895] keyboard <- every 20 ms from kernel 
+[ 87522.872] agent <- every 100 ms from kernel 
+[ 87528.856] snake <- every 110 ms from kernel 
+[ 87539.052] keyboard <- every 20 ms from kernel 
+[ 87557.884] keyboard <- every 20 ms from kernel 
+[ 87562.858] logs <- every 500 ms from kernel 
+[ 87578.987] keyboard <- every 20 ms from kernel 
+[ 87597.864] keyboard <- every 20 ms from kernel 
+[ 87618.849] keyboard <- every 20 ms from kernel 
+[ 87622.865] agent <- every 100 ms from kernel 
+[ 87637.845] keyboard <- every 20 ms from kernel 
+[ 87638.846] snake <- every 110 ms from kernel 
+[ 87642.399] loader <- every 1000 ms from kernel 
+[ 87658.084] keyboard <- every 20 ms from kernel 
+[ 87677.864] keyboard <- every 20 ms from kernel 
+[ 87697.849] keyboard <- every 20 ms from kernel 
+[ 87717.849] keyboard <- every 20 ms from kernel 
+[ 87722.877] agent <- every 100 ms from kernel 
+[ 87737.853] keyboard <- every 20 ms from kernel 
+[ 87748.861] snake <- every 110 ms from kernel 
+[ 87759.025] keyboard <- every 20 ms from kernel 
+[ 87777.873] keyboard <- every 20 ms from kernel 
+[ 87797.845] keyboard <- every 20 ms from kernel 
+[ 87818.849] keyboard <- every 20 ms from kernel 
+[ 87822.875] agent <- every 100 ms from kernel 
+[ 87837.854] keyboard <- every 20 ms from kernel 
+[ 87856.874] sysmon <- every 500 ms from kernel 
+[ 87861.001] keyboard <- every 20 ms from kernel 
+[ 87862.715] snake <- every 110 ms from kernel 
+[ 87878.929] keyboard <- every 20 ms from kernel 
+[ 87897.863] keyboard <- every 20 ms from kernel 
+[ 87918.849] keyboard <- every 20 ms from kernel 
+[ 87922.864] agent <- every 100 ms from kernel 
+[ 87937.856] keyboard <- every 20 ms from kernel 
+[ 87957.850] keyboard <- every 20 ms from kernel 
+[ 87968.850] snake <- every 110 ms from kernel 
+[ 87977.978] keyboard <- every 20 ms from kernel 
+[ 87997.861] keyboard <- every 20 ms from kernel 
+[ 88000.854] compositor <- every 500 ms from kernel 
+[ 88017.883] keyboard <- every 20 ms from kernel 
+[ 88022.880] agent <- every 100 ms from kernel 
+[ 88037.852] keyboard <- every 20 ms from kernel 
+[ 88039.866] keys <- every 1000 ms from kernel 
+[ 88057.909] keyboard <- every 20 ms from kernel 
+[ 88062.888] logs <- every 500 ms from kernel 
+[ 88078.952] keyboard <- every 20 ms from kernel 
+[ 88080.739] snake <- every 110 ms from kernel 
+[ 88098.929] keyboard <- every 20 ms from kernel 
+[ 88102.873] about <- every 1000 ms from kernel 
+[ 88117.876] keyboard <- every 20 ms from kernel 
+[ 88122.869] agent <- every 100 ms from kernel 
+[ 88137.853] keyboard <- every 20 ms from kernel 
+[ 88157.857] keyboard <- every 20 ms from kernel 
+[ 88178.853] keyboard <- every 20 ms from kernel 
+[ 88188.855] snake <- every 110 ms from kernel 
+[ 88198.000] keyboard <- every 20 ms from kernel 
+[ 88217.865] keyboard <- every 20 ms from kernel 
+[ 88222.871] agent <- every 100 ms from kernel 
+[ 88237.845] keyboard <- every 20 ms from kernel 
+[ 88258.853] keyboard <- every 20 ms from kernel 
+[ 88278.853] keyboard <- every 20 ms from kernel 
+[ 88298.849] keyboard <- every 20 ms from kernel 
+[ 88299.734] snake <- every 110 ms from kernel 
+[ 88317.925] keyboard <- every 20 ms from kernel 
+[ 88322.875] agent <- every 100 ms from kernel 
+[ 88337.860] keyboard <- every 20 ms from kernel 
+[ 88356.871] sysmon <- every 500 ms from kernel 
+[ 88360.845] keyboard <- every 20 ms from kernel 
+[ 88377.871] keyboard <- every 20 ms from kernel 
+[ 88398.853] keyboard <- every 20 ms from kernel 
+[ 88408.866] snake <- every 110 ms from kernel 
+[ 88418.001] keyboard <- every 20 ms from kernel 
+[ 88422.907] agent <- every 100 ms from kernel 
+[ 88438.857] keyboard <- every 20 ms from kernel 
+[ 88458.853] keyboard <- every 20 ms from kernel 
+[ 88478.849] keyboard <- every 20 ms from kernel 
+[ 88493.851] settings <- every 1000 ms from kernel 
+[ 88498.327] keyboard <- every 20 ms from kernel 
+[ 88500.900] compositor <- every 500 ms from kernel 
+[ 88518.891] keyboard <- every 20 ms from kernel 
+[ 88520.327] snake <- every 110 ms from kernel 
+[ 88524.050] agent <- every 100 ms from kernel 
+[ 88538.869] keyboard <- every 20 ms from kernel 
+[ 88557.872] keyboard <- every 20 ms from kernel 
+[ 88562.866] logs <- every 500 ms from kernel 
+[ 88578.980] keyboard <- every 20 ms from kernel 
+[ 88597.860] keyboard <- every 20 ms from kernel 
+[ 88617.851] keyboard <- every 20 ms from kernel 
+[ 88622.858] agent <- every 100 ms from kernel 
+[ 88628.859] snake <- every 110 ms from kernel 
+[ 88637.977] keyboard <- every 20 ms from kernel 
+[ 88639.908] loader <- every 1000 ms from kernel 
+[ 88657.956] keyboard <- every 20 ms from kernel 
+[ 88677.856] keyboard <- every 20 ms from kernel 
+[ 88698.848] keyboard <- every 20 ms from kernel 
+[ 88718.853] keyboard <- every 20 ms from kernel 
+[ 88722.868] agent <- every 100 ms from kernel 
+[ 88737.853] keyboard <- every 20 ms from kernel 
+[ 88738.893] snake <- every 110 ms from kernel 
+[ 88758.956] keyboard <- every 20 ms from kernel 
+[ 88777.875] keyboard <- every 20 ms from kernel 
+[ 88779.859] launcher <- every 2000 ms from kernel 
+[ 88798.144] keyboard <- every 20 ms from kernel 
+[ 88817.864] keyboard <- every 20 ms from kernel 
+[ 88822.856] agent <- every 100 ms from kernel 
+[ 88837.852] keyboard <- every 20 ms from kernel 
+[ 88848.857] snake <- every 110 ms from kernel 
+[ 88857.046] sysmon <- every 500 ms from kernel 
+[ 88861.417] keyboard <- every 20 ms from kernel 
+[ 88877.894] keyboard <- every 20 ms from kernel 
+[ 88897.861] keyboard <- every 20 ms from kernel 
+[ 88918.856] keyboard <- every 20 ms from kernel 
+[ 88922.859] agent <- every 100 ms from kernel 
+[ 88937.863] keyboard <- every 20 ms from kernel 
+[ 88958.860] keyboard <- every 20 ms from kernel 
+[ 88959.814] snake <- every 110 ms from kernel 
+[ 88978.927] keyboard <- every 20 ms from kernel 
+[ 88997.875] keyboard <- every 20 ms from kernel 
+[ 89000.864] compositor <- every 500 ms from kernel 
+[ 89017.887] keyboard <- every 20 ms from kernel 
+[ 89022.871] agent <- every 100 ms from kernel 
+[ 89037.853] keyboard <- every 20 ms from kernel 
+[ 89039.859] keys <- every 1000 ms from kernel 
+[ 89057.892] keyboard <- every 20 ms from kernel 
+[ 89062.868] logs <- every 500 ms from kernel 
+[ 89068.997] snake <- every 110 ms from kernel 
+[ 89079.017] keyboard <- every 20 ms from kernel 
+[ 89097.868] keyboard <- every 20 ms from kernel 
+[ 89102.875] about <- every 1000 ms from kernel 
+[ 89117.864] keyboard <- every 20 ms from kernel 
+[ 89122.870] agent <- every 100 ms from kernel 
+[ 89137.856] keyboard <- every 20 ms from kernel 
+[ 89157.853] keyboard <- every 20 ms from kernel 
+[ 89178.849] keyboard <- every 20 ms from kernel 
+[ 89179.752] snake <- every 110 ms from kernel 
+[ 89198.915] keyboard <- every 20 ms from kernel 
+[ 89217.861] keyboard <- every 20 ms from kernel 
+[ 89222.856] agent <- every 100 ms from kernel 
+[ 89237.853] keyboard <- every 20 ms from kernel 
+[ 89257.849] keyboard <- every 20 ms from kernel 
+[ 89278.845] keyboard <- every 20 ms from kernel 
+[ 89288.855] snake <- every 110 ms from kernel 
+[ 89297.979] keyboard <- every 20 ms from kernel 
+[ 89317.872] keyboard <- every 20 ms from kernel 
+[ 89322.861] agent <- every 100 ms from kernel 
+[ 89337.842] keyboard <- every 20 ms from kernel 
+[ 89356.858] sysmon <- every 500 ms from kernel 
+[ 89360.856] keyboard <- every 20 ms from kernel 
+[ 89378.923] keyboard <- every 20 ms from kernel 
+[ 89397.857] keyboard <- every 20 ms from kernel 
+[ 89398.807] snake <- every 110 ms from kernel 
+[ 89418.943] keyboard <- every 20 ms from kernel 
+[ 89422.872] agent <- every 100 ms from kernel 
+[ 89437.853] keyboard <- every 20 ms from kernel 
+[ 89458.853] keyboard <- every 20 ms from kernel 
+[ 89478.845] keyboard <- every 20 ms from kernel 
+[ 89493.882] settings <- every 1000 ms from kernel 
+[ 89498.625] keyboard <- every 20 ms from kernel 
+[ 89500.719] compositor <- every 500 ms from kernel 
+[ 89508.903] snake <- every 110 ms from kernel 
+[ 89518.029] keyboard <- every 20 ms from kernel 
+[ 89522.894] agent <- every 100 ms from kernel 
+[ 89537.862] keyboard <- every 20 ms from kernel 
+[ 89557.857] keyboard <- every 20 ms from kernel 
+[ 89562.861] logs <- every 500 ms from kernel 
+[ 89578.999] keyboard <- every 20 ms from kernel 
+[ 89597.857] keyboard <- every 20 ms from kernel 
+[ 89618.854] keyboard <- every 20 ms from kernel 
+[ 89619.759] snake <- every 110 ms from kernel 
+[ 89623.180] agent <- every 100 ms from kernel 
+[ 89638.870] keyboard <- every 20 ms from kernel 
+[ 89640.440] loader <- every 1000 ms from kernel 
+[ 89657.962] keyboard <- every 20 ms from kernel 
+[ 89677.864] keyboard <- every 20 ms from kernel 
+[ 89697.882] keyboard <- every 20 ms from kernel 
+[ 89718.852] keyboard <- every 20 ms from kernel 
+[ 89722.885] agent <- every 100 ms from kernel 
+[ 89728.855] snake <- every 110 ms from kernel 
+[ 89739.041] keyboard <- every 20 ms from kernel 
+[ 89757.864] keyboard <- every 20 ms from kernel 
+[ 89778.853] keyboard <- every 20 ms from kernel 
+[ 89797.857] keyboard <- every 20 ms from kernel 
+[ 89818.849] keyboard <- every 20 ms from kernel 
+[ 89822.855] agent <- every 100 ms from kernel 
+[ 89837.852] keyboard <- every 20 ms from kernel 
+[ 89838.850] snake <- every 110 ms from kernel 
+[ 89855.938] sysmon <- every 500 ms from kernel 
+[ 89860.299] keyboard <- every 20 ms from kernel 
+[ 89877.875] keyboard <- every 20 ms from kernel 
+[ 89897.853] keyboard <- every 20 ms from kernel 
+[ 89918.852] keyboard <- every 20 ms from kernel 
+[ 89922.861] agent <- every 100 ms from kernel 
+[ 89937.856] keyboard <- every 20 ms from kernel 
+[ 89948.866] snake <- every 110 ms from kernel 
+[ 89959.005] keyboard <- every 20 ms from kernel 
+[ 89977.876] keyboard <- every 20 ms from kernel 
+[ 89997.853] keyboard <- every 20 ms from kernel 
+[ 90000.864] compositor <- every 500 ms from kernel 
+[ 90017.879] keyboard <- every 20 ms from kernel 
+[ 90022.868] agent <- every 100 ms from kernel 
+[ 90037.849] keyboard <- every 20 ms from kernel 
+[ 90039.866] keys <- every 1000 ms from kernel 
+[ 90057.899] keyboard <- every 20 ms from kernel 
+[ 90059.266] snake <- every 110 ms from kernel 
+[ 90062.913] logs <- every 500 ms from kernel 
+[ 90078.011] keyboard <- every 20 ms from kernel 
+[ 90097.902] keyboard <- every 20 ms from kernel 
+[ 90102.862] about <- every 1000 ms from kernel 
+[ 90117.859] keyboard <- every 20 ms from kernel 
+[ 90122.870] agent <- every 100 ms from kernel 
+[ 90137.849] keyboard <- every 20 ms from kernel 
+[ 90158.860] keyboard <- every 20 ms from kernel 
+[ 90168.866] snake <- every 110 ms from kernel 
+[ 90179.020] keyboard <- every 20 ms from kernel 
+[ 90197.874] keyboard <- every 20 ms from kernel 
+[ 90218.849] keyboard <- every 20 ms from kernel 
+[ 90222.859] agent <- every 100 ms from kernel 
+[ 90237.850] keyboard <- every 20 ms from kernel 
+[ 90258.849] keyboard <- every 20 ms from kernel 
+[ 90278.850] keyboard <- every 20 ms from kernel 
+[ 90279.741] snake <- every 110 ms from kernel 
+[ 90297.930] keyboard <- every 20 ms from kernel 
+[ 90317.862] keyboard <- every 20 ms from kernel 
+[ 90322.853] agent <- every 100 ms from kernel 
+[ 90323.549] power <- every 5000 ms from kernel 
+[ 90337.896] keyboard <- every 20 ms from kernel 
+[ 90356.860] sysmon <- every 500 ms from kernel 
+[ 90360.955] keyboard <- every 20 ms from kernel 
+[ 90377.861] keyboard <- every 20 ms from kernel 
+[ 90388.864] snake <- every 110 ms from kernel 
+[ 90399.039] keyboard <- every 20 ms from kernel 
+[ 90417.876] keyboard <- every 20 ms from kernel 
+[ 90422.874] agent <- every 100 ms from kernel 
+[ 90437.846] keyboard <- every 20 ms from kernel 
+[ 90457.854] keyboard <- every 20 ms from kernel 
+[ 90478.857] keyboard <- every 20 ms from kernel 
+[ 90493.862] settings <- every 1000 ms from kernel 
+[ 90498.350] keyboard <- every 20 ms from kernel 
+[ 90500.333] snake <- every 110 ms from kernel 
+[ 90503.871] compositor <- every 500 ms from kernel 
+[ 90517.884] keyboard <- every 20 ms from kernel 
+[ 90522.887] agent <- every 100 ms from kernel 
+[ 90537.853] keyboard <- every 20 ms from kernel 
+[ 90558.852] keyboard <- every 20 ms from kernel 
+[ 90562.874] logs <- every 500 ms from kernel 
+[ 90577.950] keyboard <- every 20 ms from kernel 
+[ 90597.864] keyboard <- every 20 ms from kernel 
+[ 90608.863] snake <- every 110 ms from kernel 
+[ 90617.984] keyboard <- every 20 ms from kernel 
+[ 90622.885] agent <- every 100 ms from kernel 
+[ 90638.861] keyboard <- every 20 ms from kernel 
+[ 90639.984] loader <- every 1000 ms from kernel 
+[ 90658.966] keyboard <- every 20 ms from kernel 
+[ 90677.860] keyboard <- every 20 ms from kernel 
+[ 90698.857] keyboard <- every 20 ms from kernel 
+[ 90718.860] keyboard <- every 20 ms from kernel 
+[ 90719.771] snake <- every 110 ms from kernel 
+[ 90723.284] agent <- every 100 ms from kernel 
+[ 90738.867] keyboard <- every 20 ms from kernel 
+[ 90757.872] keyboard <- every 20 ms from kernel 
+[ 90777.856] keyboard <- every 20 ms from kernel 
+[ 90779.867] launcher <- every 2000 ms from kernel 
+[ 90798.135] keyboard <- every 20 ms from kernel 
+[ 90817.864] keyboard <- every 20 ms from kernel 
+[ 90822.867] agent <- every 100 ms from kernel 
+[ 90828.865] snake <- every 110 ms from kernel 
+[ 90838.044] keyboard <- every 20 ms from kernel 
+[ 90855.875] sysmon <- every 500 ms from kernel 
+[ 90860.024] keyboard <- every 20 ms from kernel 
+[ 90877.861] keyboard <- every 20 ms from kernel 
+[ 90897.853] keyboard <- every 20 ms from kernel 
+[ 90918.853] keyboard <- every 20 ms from kernel 
+[ 90922.858] agent <- every 100 ms from kernel 
+[ 90937.863] keyboard <- every 20 ms from kernel 
+[ 90938.901] snake <- every 110 ms from kernel 
+[ 90958.939] keyboard <- every 20 ms from kernel 
+[ 90977.870] keyboard <- every 20 ms from kernel 
+[ 90998.859] keyboard <- every 20 ms from kernel 
+[ 91000.867] compositor <- every 500 ms from kernel 
+[ 91017.886] keyboard <- every 20 ms from kernel 
+[ 91022.872] agent <- every 100 ms from kernel 
+[ 91037.864] keyboard <- every 20 ms from kernel 
+[ 91039.863] keys <- every 1000 ms from kernel 
+[ 91048.895] snake <- every 110 ms from kernel 
+[ 91059.030] keyboard <- every 20 ms from kernel 
+[ 91062.896] logs <- every 500 ms from kernel 
+[ 91077.948] keyboard <- every 20 ms from kernel 
+[ 91097.861] keyboard <- every 20 ms from kernel 
+[ 91102.874] about <- every 1000 ms from kernel 
+[ 91117.864] keyboard <- every 20 ms from kernel 
+[ 91122.866] agent <- every 100 ms from kernel 
+[ 91137.855] keyboard <- every 20 ms from kernel 
+[ 91157.856] keyboard <- every 20 ms from kernel 
+[ 91158.787] snake <- every 110 ms from kernel 
+[ 91178.915] keyboard <- every 20 ms from kernel 
+[ 91197.860] keyboard <- every 20 ms from kernel 
+[ 91218.852] keyboard <- every 20 ms from kernel 
+[ 91222.855] agent <- every 100 ms from kernel 
+[ 91237.850] keyboard <- every 20 ms from kernel 
+[ 91258.857] keyboard <- every 20 ms from kernel 
+[ 91268.855] snake <- every 110 ms from kernel 
+[ 91277.986] keyboard <- every 20 ms from kernel 
+[ 91297.868] keyboard <- every 20 ms from kernel 
+[ 91317.856] keyboard <- every 20 ms from kernel 
+[ 91322.855] agent <- every 100 ms from kernel 
+[ 91337.849] keyboard <- every 20 ms from kernel 
+[ 91356.864] sysmon <- every 500 ms from kernel 
+[ 91360.841] keyboard <- every 20 ms from kernel 
+[ 91377.864] keyboard <- every 20 ms from kernel 
+[ 91378.924] snake <- every 110 ms from kernel 
+[ 91398.936] keyboard <- every 20 ms from kernel 
+[ 91410.873] agenda <- every 15000 ms from kernel 
+[ 91419.103] keyboard <- every 20 ms from kernel 
+[ 91422.900] agent <- every 100 ms from kernel 
+[ 91438.856] keyboard <- every 20 ms from kernel 
+[ 91457.847] keyboard <- every 20 ms from kernel 
+[ 91478.849] keyboard <- every 20 ms from kernel 
+[ 91488.859] snake <- every 110 ms from kernel 
+[ 91494.009] settings <- every 1000 ms from kernel 
+[ 91498.431] keyboard <- every 20 ms from kernel 
+[ 91501.880] compositor <- every 500 ms from kernel 
+[ 91518.906] keyboard <- every 20 ms from kernel 
+[ 91522.856] agent <- every 100 ms from kernel 
+[ 91537.858] keyboard <- every 20 ms from kernel 
+[ 91557.867] keyboard <- every 20 ms from kernel 
+[ 91562.862] logs <- every 500 ms from kernel 
+[ 91578.003] keyboard <- every 20 ms from kernel 
+[ 91597.863] keyboard <- every 20 ms from kernel 
+[ 91598.866] snake <- every 110 ms from kernel 
+[ 91618.939] keyboard <- every 20 ms from kernel 
+[ 91622.878] agent <- every 100 ms from kernel 
+[ 91637.857] keyboard <- every 20 ms from kernel 
+[ 91639.871] loader <- every 1000 ms from kernel 
+[ 91657.967] keyboard <- every 20 ms from kernel 
+[ 91677.857] keyboard <- every 20 ms from kernel 
+[ 91698.860] keyboard <- every 20 ms from kernel 
+[ 91708.865] snake <- every 110 ms from kernel 
+[ 91718.003] keyboard <- every 20 ms from kernel 
+[ 91722.899] agent <- every 100 ms from kernel 
+[ 91738.859] keyboard <- every 20 ms from kernel 
+[ 91757.857] keyboard <- every 20 ms from kernel 
+[ 91778.851] keyboard <- every 20 ms from kernel 
+[ 91797.853] keyboard <- every 20 ms from kernel 
+[ 91818.847] keyboard <- every 20 ms from kernel 
+[ 91819.773] snake <- every 110 ms from kernel 
+[ 91823.091] agent <- every 100 ms from kernel 
+[ 91838.871] keyboard <- every 20 ms from kernel 
+[ 91856.883] sysmon <- every 500 ms from kernel 
+[ 91860.819] keyboard <- every 20 ms from kernel 
+[ 91877.865] keyboard <- every 20 ms from kernel 
+[ 91898.856] keyboard <- every 20 ms from kernel 
+[ 91917.853] keyboard <- every 20 ms from kernel 
+[ 91922.851] agent <- every 100 ms from kernel 
+[ 91928.848] snake <- every 110 ms from kernel 
+[ 91939.034] keyboard <- every 20 ms from kernel 
+[ 91957.884] keyboard <- every 20 ms from kernel 
+[ 91977.857] keyboard <- every 20 ms from kernel 
+[ 91998.853] keyboard <- every 20 ms from kernel 
+[ 92000.862] compositor <- every 500 ms from kernel 
+[ 92017.886] keyboard <- every 20 ms from kernel 
+[ 92022.868] agent <- every 100 ms from kernel 
+[ 92037.855] keyboard <- every 20 ms from kernel 
+[ 92038.884] snake <- every 110 ms from kernel 
+[ 92042.472] keys <- every 1000 ms from kernel 
+[ 92058.921] keyboard <- every 20 ms from kernel 
+[ 92062.892] logs <- every 500 ms from kernel 
+[ 92078.936] keyboard <- every 20 ms from kernel 
+[ 92097.852] keyboard <- every 20 ms from kernel 
+[ 92102.870] about <- every 1000 ms from kernel 
+[ 92117.864] keyboard <- every 20 ms from kernel 
+[ 92122.876] agent <- every 100 ms from kernel 
+[ 92137.846] keyboard <- every 20 ms from kernel 
+[ 92148.861] snake <- every 110 ms from kernel 
+[ 92158.018] keyboard <- every 20 ms from kernel 
+[ 92177.869] keyboard <- every 20 ms from kernel 
+[ 92198.845] keyboard <- every 20 ms from kernel 
+[ 92218.845] keyboard <- every 20 ms from kernel 
+[ 92222.859] agent <- every 100 ms from kernel 
+[ 92237.853] keyboard <- every 20 ms from kernel 
+[ 92257.857] keyboard <- every 20 ms from kernel 
+[ 92258.777] snake <- every 110 ms from kernel 
+[ 92277.915] keyboard <- every 20 ms from kernel 
+[ 92297.862] keyboard <- every 20 ms from kernel 
+[ 92318.849] keyboard <- every 20 ms from kernel 
+[ 92322.871] agent <- every 100 ms from kernel 
+[ 92337.846] keyboard <- every 20 ms from kernel 
+[ 92356.858] sysmon <- every 500 ms from kernel 
+[ 92360.869] keyboard <- every 20 ms from kernel 
+[ 92368.915] snake <- every 110 ms from kernel 
+[ 92378.050] keyboard <- every 20 ms from kernel 
+[ 92397.856] keyboard <- every 20 ms from kernel 
+[ 92418.856] keyboard <- every 20 ms from kernel 
+[ 92422.865] agent <- every 100 ms from kernel 
+[ 92437.849] keyboard <- every 20 ms from kernel 
+[ 92457.915] keyboard <- every 20 ms from kernel 
+[ 92477.853] keyboard <- every 20 ms from kernel 
+[ 92478.809] snake <- every 110 ms from kernel 
+[ 92493.928] settings <- every 1000 ms from kernel 
+[ 92498.750] keyboard <- every 20 ms from kernel 
+[ 92500.817] compositor <- every 500 ms from kernel 
+[ 92518.895] keyboard <- every 20 ms from kernel 
+[ 92522.877] agent <- every 100 ms from kernel 
+[ 92537.856] keyboard <- every 20 ms from kernel 
+[ 92558.102] keyboard <- every 20 ms from kernel 
+[ 92562.908] logs <- every 500 ms from kernel 
+[ 92577.930] keyboard <- every 20 ms from kernel 
+[ 92588.864] snake <- every 110 ms from kernel 
+[ 92598.036] keyboard <- every 20 ms from kernel 
+[ 92617.886] keyboard <- every 20 ms from kernel 
+[ 92622.873] agent <- every 100 ms from kernel 
+[ 92637.853] keyboard <- every 20 ms from kernel 
+[ 92639.869] loader <- every 1000 ms from kernel 
+[ 92657.962] keyboard <- every 20 ms from kernel 
+[ 92677.864] keyboard <- every 20 ms from kernel 
+[ 92697.855] keyboard <- every 20 ms from kernel 
+[ 92698.810] snake <- every 110 ms from kernel 
+[ 92718.941] keyboard <- every 20 ms from kernel 
+[ 92722.897] agent <- every 100 ms from kernel 
+[ 92737.860] keyboard <- every 20 ms from kernel 
+[ 92758.914] keyboard <- every 20 ms from kernel 
+[ 92777.864] keyboard <- every 20 ms from kernel 
+[ 92779.864] launcher <- every 2000 ms from kernel 
+[ 92798.145] keyboard <- every 20 ms from kernel 
+[ 92808.862] snake <- every 110 ms from kernel 
+[ 92818.031] keyboard <- every 20 ms from kernel 
+[ 92822.928] agent <- every 100 ms from kernel 
+[ 92838.855] keyboard <- every 20 ms from kernel 
+[ 92856.859] sysmon <- every 500 ms from kernel 
+[ 92860.989] keyboard <- every 20 ms from kernel 
+[ 92877.875] keyboard <- every 20 ms from kernel 
+[ 92897.849] keyboard <- every 20 ms from kernel 
+[ 92918.852] keyboard <- every 20 ms from kernel 
+[ 92919.797] snake <- every 110 ms from kernel 
+[ 92923.610] agent <- every 100 ms from kernel 
+[ 92938.870] keyboard <- every 20 ms from kernel 
+[ 92957.863] keyboard <- every 20 ms from kernel 
+[ 92978.845] keyboard <- every 20 ms from kernel 
+[ 92998.852] keyboard <- every 20 ms from kernel 
+[ 93000.853] compositor <- every 500 ms from kernel 
+[ 93017.886] keyboard <- every 20 ms from kernel 
+[ 93022.862] agent <- every 100 ms from kernel 
+[ 93028.855] snake <- every 110 ms from kernel 
+[ 93039.010] keyboard <- every 20 ms from kernel 
+[ 93040.979] keys <- every 1000 ms from kernel 
+[ 93057.903] keyboard <- every 20 ms from kernel 
+[ 93062.869] logs <- every 500 ms from kernel 
+[ 93078.963] keyboard <- every 20 ms from kernel 
+[ 93097.856] keyboard <- every 20 ms from kernel 
+[ 93102.858] about <- every 1000 ms from kernel 
+[ 93117.861] keyboard <- every 20 ms from kernel 
+[ 93122.868] agent <- every 100 ms from kernel 
+[ 93137.851] keyboard <- every 20 ms from kernel 
+[ 93138.848] snake <- every 110 ms from kernel 
+[ 93158.925] keyboard <- every 20 ms from kernel 
+[ 93177.866] keyboard <- every 20 ms from kernel 
+[ 93197.853] keyboard <- every 20 ms from kernel 
+[ 93218.847] keyboard <- every 20 ms from kernel 
+[ 93222.856] agent <- every 100 ms from kernel 
+[ 93237.856] keyboard <- every 20 ms from kernel 
+[ 93248.856] snake <- every 110 ms from kernel 
+[ 93257.960] keyboard <- every 20 ms from kernel 
+[ 93277.914] keyboard <- every 20 ms from kernel 
+[ 93297.849] keyboard <- every 20 ms from kernel 
+[ 93318.849] keyboard <- every 20 ms from kernel 
+[ 93322.849] agent <- every 100 ms from kernel 
+[ 93337.853] keyboard <- every 20 ms from kernel 
+[ 93356.858] sysmon <- every 500 ms from kernel 
+[ 93360.901] keyboard <- every 20 ms from kernel 
+[ 93362.583] snake <- every 110 ms from kernel 
+[ 93378.938] keyboard <- every 20 ms from kernel 
+[ 93397.868] keyboard <- every 20 ms from kernel 
+[ 93418.851] keyboard <- every 20 ms from kernel 
+[ 93422.876] agent <- every 100 ms from kernel 
+[ 93437.854] keyboard <- every 20 ms from kernel 
+[ 93458.855] keyboard <- every 20 ms from kernel 
+[ 93468.855] snake <- every 110 ms from kernel 
+[ 93477.982] keyboard <- every 20 ms from kernel 
+[ 93493.869] settings <- every 1000 ms from kernel 
+[ 93498.479] keyboard <- every 20 ms from kernel 
+[ 93500.881] compositor <- every 500 ms from kernel 
+[ 93518.894] keyboard <- every 20 ms from kernel 
+[ 93522.871] agent <- every 100 ms from kernel 
+[ 93537.853] keyboard <- every 20 ms from kernel 
+[ 93557.853] keyboard <- every 20 ms from kernel 
+[ 93562.854] logs <- every 500 ms from kernel 
+[ 93579.050] keyboard <- every 20 ms from kernel 
+[ 93581.130] snake <- every 110 ms from kernel 
+[ 93598.937] keyboard <- every 20 ms from kernel 
+[ 93617.868] keyboard <- every 20 ms from kernel 
+[ 93622.872] agent <- every 100 ms from kernel 
+[ 93637.844] keyboard <- every 20 ms from kernel 
+[ 93639.882] loader <- every 1000 ms from kernel 
+[ 93657.965] keyboard <- every 20 ms from kernel 
+[ 93677.863] keyboard <- every 20 ms from kernel 
+[ 93688.872] snake <- every 110 ms from kernel 
+[ 93698.009] keyboard <- every 20 ms from kernel 
+[ 93717.882] keyboard <- every 20 ms from kernel 
+[ 93722.857] agent <- every 100 ms from kernel 
+[ 93737.857] keyboard <- every 20 ms from kernel 
+[ 93757.859] keyboard <- every 20 ms from kernel 
+[ 93778.849] keyboard <- every 20 ms from kernel 
+[ 93797.855] keyboard <- every 20 ms from kernel 
+[ 93798.807] snake <- every 110 ms from kernel 
+[ 93817.952] keyboard <- every 20 ms from kernel 
+[ 93822.886] agent <- every 100 ms from kernel 
+[ 93837.853] keyboard <- every 20 ms from kernel 
+[ 93856.862] sysmon <- every 500 ms from kernel 
+[ 93860.953] keyboard <- every 20 ms from kernel 
+[ 93877.868] keyboard <- every 20 ms from kernel 
+[ 93898.848] keyboard <- every 20 ms from kernel 
+[ 93908.859] snake <- every 110 ms from kernel 
+[ 93919.039] keyboard <- every 20 ms from kernel 
+[ 93922.909] agent <- every 100 ms from kernel 
+[ 93937.859] keyboard <- every 20 ms from kernel 
+[ 93957.857] keyboard <- every 20 ms from kernel 
+[ 93978.856] keyboard <- every 20 ms from kernel 
+[ 93998.849] keyboard <- every 20 ms from kernel 
+[ 94000.856] compositor <- every 500 ms from kernel 
+[ 94017.886] keyboard <- every 20 ms from kernel 
+[ 94019.201] snake <- every 110 ms from kernel 
+[ 94022.808] agent <- every 100 ms from kernel 
+[ 94038.877] keyboard <- every 20 ms from kernel 
+[ 94040.374] keys <- every 1000 ms from kernel 
+[ 94057.884] keyboard <- every 20 ms from kernel 
+[ 94062.866] logs <- every 500 ms from kernel 
+[ 94078.985] keyboard <- every 20 ms from kernel 
+[ 94097.854] keyboard <- every 20 ms from kernel 
+[ 94102.859] about <- every 1000 ms from kernel 
+[ 94117.868] keyboard <- every 20 ms from kernel 
+[ 94122.888] agent <- every 100 ms from kernel 
+[ 94128.856] snake <- every 110 ms from kernel 
+[ 94138.006] keyboard <- every 20 ms from kernel 
+[ 94157.865] keyboard <- every 20 ms from kernel 
+[ 94177.857] keyboard <- every 20 ms from kernel 
+[ 94197.852] keyboard <- every 20 ms from kernel 
+[ 94218.849] keyboard <- every 20 ms from kernel 
+[ 94222.878] agent <- every 100 ms from kernel 
+[ 94237.849] keyboard <- every 20 ms from kernel 
+[ 94238.846] snake <- every 110 ms from kernel 
+[ 94257.922] keyboard <- every 20 ms from kernel 
+[ 94277.868] keyboard <- every 20 ms from kernel 
+[ 94298.857] keyboard <- every 20 ms from kernel 
+[ 94318.849] keyboard <- every 20 ms from kernel 
+[ 94322.859] agent <- every 100 ms from kernel 
+[ 94337.857] keyboard <- every 20 ms from kernel 
+[ 94348.867] snake <- every 110 ms from kernel 
+[ 94355.996] sysmon <- every 500 ms from kernel 
+[ 94360.176] keyboard <- every 20 ms from kernel 
+[ 94377.887] keyboard <- every 20 ms from kernel 
+[ 94397.855] keyboard <- every 20 ms from kernel 
+[ 94418.860] keyboard <- every 20 ms from kernel 
+[ 94422.871] agent <- every 100 ms from kernel 
+[ 94437.845] keyboard <- every 20 ms from kernel 
+[ 94458.856] keyboard <- every 20 ms from kernel 
+[ 94459.840] snake <- every 110 ms from kernel 
+[ 94478.933] keyboard <- every 20 ms from kernel 
+[ 94493.870] settings <- every 1000 ms from kernel 
+[ 94498.422] keyboard <- every 20 ms from kernel 
+[ 94500.878] compositor <- every 500 ms from kernel 
+[ 94518.898] keyboard <- every 20 ms from kernel 
+[ 94522.867] agent <- every 100 ms from kernel 
+[ 94537.857] keyboard <- every 20 ms from kernel 
+[ 94558.856] keyboard <- every 20 ms from kernel 
+[ 94562.860] logs <- every 500 ms from kernel 
+[ 94568.953] snake <- every 110 ms from kernel 
+[ 94579.048] keyboard <- every 20 ms from kernel 
+[ 94597.886] keyboard <- every 20 ms from kernel 
+[ 94617.845] keyboard <- every 20 ms from kernel 
+[ 94622.856] agent <- every 100 ms from kernel 
+[ 94637.859] keyboard <- every 20 ms from kernel 
+[ 94639.868] loader <- every 1000 ms from kernel 
+[ 94657.949] keyboard <- every 20 ms from kernel 
+[ 94677.863] keyboard <- every 20 ms from kernel 
+[ 94678.873] snake <- every 110 ms from kernel 
+[ 94698.937] keyboard <- every 20 ms from kernel 
+[ 94717.875] keyboard <- every 20 ms from kernel 
+[ 94722.864] agent <- every 100 ms from kernel 
+[ 94737.852] keyboard <- every 20 ms from kernel 
+[ 94758.859] keyboard <- every 20 ms from kernel 
+[ 94778.859] keyboard <- every 20 ms from kernel 
+[ 94779.796] launcher <- every 2000 ms from kernel 
+[ 94797.253] snake <- every 110 ms from kernel 
+[ 94801.825] keyboard <- every 20 ms from kernel 
+[ 94818.878] keyboard <- every 20 ms from kernel 
+[ 94822.873] agent <- every 100 ms from kernel 
+[ 94837.846] keyboard <- every 20 ms from kernel 
+[ 94856.861] sysmon <- every 500 ms from kernel 
+[ 94860.943] keyboard <- every 20 ms from kernel 
+[ 94877.864] keyboard <- every 20 ms from kernel 
+[ 94897.854] keyboard <- every 20 ms from kernel 
+[ 94898.782] snake <- every 110 ms from kernel 
+[ 94918.943] keyboard <- every 20 ms from kernel 
+[ 94922.905] agent <- every 100 ms from kernel 
+[ 94937.853] keyboard <- every 20 ms from kernel 
+[ 94957.861] keyboard <- every 20 ms from kernel 
+[ 94978.853] keyboard <- every 20 ms from kernel 
+[ 94998.850] keyboard <- every 20 ms from kernel 
+[ 95000.861] compositor <- every 500 ms from kernel 
+[ 95008.886] snake <- every 110 ms from kernel 
+[ 95018.989] keyboard <- every 20 ms from kernel 
+[ 95022.918] agent <- every 100 ms from kernel 
+[ 95037.854] keyboard <- every 20 ms from kernel 
+[ 95039.871] keys <- every 1000 ms from kernel 
+[ 95057.899] keyboard <- every 20 ms from kernel 
+[ 95062.878] logs <- every 500 ms from kernel 
+[ 95078.991] keyboard <- every 20 ms from kernel 
+[ 95097.857] keyboard <- every 20 ms from kernel 
+[ 95102.877] about <- every 1000 ms from kernel 
+[ 95117.860] keyboard <- every 20 ms from kernel 
+[ 95119.087] snake <- every 110 ms from kernel 
+[ 95122.772] agent <- every 100 ms from kernel 
+[ 95138.869] keyboard <- every 20 ms from kernel 
+[ 95157.868] keyboard <- every 20 ms from kernel 
+[ 95178.846] keyboard <- every 20 ms from kernel 
+[ 95198.848] keyboard <- every 20 ms from kernel 
+[ 95218.853] keyboard <- every 20 ms from kernel 
+[ 95222.857] agent <- every 100 ms from kernel 
+[ 95228.866] snake <- every 110 ms from kernel 
+[ 95237.999] keyboard <- every 20 ms from kernel 
+[ 95257.869] keyboard <- every 20 ms from kernel 
+[ 95277.852] keyboard <- every 20 ms from kernel 
+#OK trace
+#OK key
+#OK type
+[ 97926.490] logs crashed handling focus: ran past its turn budget of 50 ms
+#OCT1 {"ev":"fault","t":97926.490,"world":"logs","file":"apps/logs.js","handling":"focus","why":"ran past its turn budget of 50 ms","crashes":1,"mem_kb":252,"limit_kb":384,"detail":"    at <anonymous> (apps/logs.js:59:88)\n    at map (native)\n    at lgScreen (apps/logs.js:57:31)\n    at <anonymous> (prelude.js:225:28)\n"}
+#SHOT 320 320
+#OK shot
+BABF0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF0TwB4xgEAEXRPAHjGAQARdEHAOMYAgB89wgB4xgC
+AHz3BQDjGAQAfPcKAOMYBwB89wYA4xgCAHz3BwDjGAQARdEHAOMYAgB89+MA4xgUAHz3EADjGAMA
+fPcEAOMYAgB89w0A4xgCAHz3CgDjGAMAfPcHAOMYBABF0QcA4xgCAHz3yQDjGAEAsZwEAOMYAwCx
+nAMA4xgDALGcAwDjGAEAsZwCAOMYAQCxnAUA4xgBAHz3EgDjGAEAfPcPAOMYBAB89wMA4xgCAHz3
+DgDjGAIAfPcJAOMYBAB89wcA4xgEAEXRBwDjGAIAfPcHAOMYBQB89wMA4xgGAHz3AgDjGAYAfPer
+AOMYAgCxnAMA4xgBALGcAwDjGAEAsZwBAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwBAOMYAQCxnAEA
+4xgBALGcBQDjGAEAfPcBAOMYEAB89wEA4xgBAHz3EQDjGAIAfPcDAOMYAgB89wkA4xgCAHz3AwDj
+GAIAfPcIAOMYAgB89wEA4xgCAHz3BwDjGAQARdEHAOMYAgB89wYA4xgCAHz3AwDjGAIAfPcBAOMY
+AgB89wMA4xgCAHz3AQDjGAIAfPexAOMYAQCxnAMA4xgBALGcAgDjGAIAsZwBAOMYAQCxnAIA4xgC
+ALGcAgDjGAEAsZwBAOMYAQCxnAYA4xgBAHz3AQDjGBAAfPcBAOMYAwB89w8A4xgCAHz3AwDjGAYA
+fPcFAOMYAgB89wMA4xgGAHz3AwDjGAIAfPcCAOMYAgB89wcA4xgEAEXRBwDjGAIAfPcGAOMYAgB8
+9wMA4xgCAHz3AQDjGAIAfPcDAOMYAgB89wEA4xgCAHz3sQDjGAEAsZwDAOMYAQCxnAEA4xgBALGc
+AQDjGAEAsZwBAOMYAQCxnAEA4xgBALGcAQDjGAEAsZwEAOMYAQCxnAYA4xgBAHz3AQDjGBAAfPcB
+AOMYAwB89w8A4xgCAHz3AwDjGAIAfPcDAOMYAgB89w4A4xgCAHz3AQDjGAIAfPcDAOMYAgB89wcA
+4xgEAEXRBwDjGAIAfPcGAOMYAgB89wMA4xgCAHz3AQDjGAIAfPcDAOMYAgB89wIA4xgFAHz3rQDj
+GAEAsZwDAOMYAgCxnAIA4xgBALGcAQDjGAIAsZwCAOMYAQCxnAMA4xgBALGcBwDjGAEAfPcBAOMY
+EAB89wEA4xgDAHz3DwDjGAIAfPcDAOMYAgB89wMA4xgCAHz3DgDjGAIAfPcBAOMYBwB89wcA4xgE
+AEXRBwDjGAIAfPcGAOMYAgB89wMA4xgCAHz3AQDjGAIAfPcDAOMYAgB89wYA4xgCAHz3rADjGAEA
+sZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwFAOMYAQB8
+9wEA4xgQAHz3AQDjGAMAfPcPAOMYAgB89wMA4xgCAHz3AwDjGAIAfPcOAOMYAgB89wYA4xgCAHz3
+BwDjGAQARdEHAOMYAgB89wYA4xgCAHz3AwDjGAIAfPcBAOMYAgB89wMA4xgCAHz3BgDjGAIAfPes
+AOMYAQCxnAMA4xgBALGcAwDjGAEAsZwBAOMYAQCxnAMA4xgBALGcAgDjGAEAsZwBAOMYAQCxnAEA
+4xgBALGcBADjGAEAfPcBAOMYEAB89wEA4xgBAHz3EQDjGAIAfPcDAOMYAgB89wMA4xgCAHz3BADj
+GAIAfPcDAOMYAgB89wMA4xgCAHz3BgDjGAIAfPcHAOMYBABF0QcA4xgHAHz3AgDjGAUAfPcDAOMY
+BgB89wEA4xgGAHz3rADjGAMAsZwDAOMYAwCxnAMA4xgDALGcAwDjGAEAsZwCAOMYAQCxnAUA4xgB
+AHz3EgDjGAEAfPcPAOMYBgB89wIA4xgFAHz3BQDjGAIAfPcEAOMYBQB89wcA4xgCAHz3BwDjGAQA
+RdEcAOMYAgB8984A4xgUAHz3PADjGAQARdEcAOMYAgB89x4B4xgEAEXRGADjGAUAfPcfAeMYBABF
+0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF0TwB4xhmC733AQCNeyUBvfcBAI17AwC99wEAjXsJAL33
+AQCNewMAvfcBAI17BwC99wEAjXsWAL33AgCNex8AvfcBAI17FQC99wEAjXvXAL33AQCNewMAvfcB
+AI17CQC99wEAjXsDAL33AQCNex8AvfcBAI17HwC99wEAjXsVAL33AQCNe9cAvfcCAI17AgC99wEA
+jXsCAL33AwCNewMAvfcDAI17AgC99wQAjXsDAL33AgCNewMAvfcEAI17AwC99wQAjXsJAL33AQCN
+ewQAvfcDAI17AwC99wQAjXsCAL33BACNewIAvfcDAI17AwC99wQAjXsHAL33AQCNewMAvfcBAI17
+AgC99wMAjXsDAL33AwCNe9YAvfcBAI17AQC99wEAjXsBAL33AQCNewEAvfcBAI17AwC99wEAjXsD
+AL33AQCNewMAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMA
+vfcBAI17CQC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC9
+9wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewcAvfcBAI17AwC99wEAjXsBAL33
+AQCNewMAvfcBAI17AwC99wEAjXvXAL33AQCNewIAvfcCAI17AQC99wEAjXsDAL33AQCNewMAvfcB
+AI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17AwC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEA
+jXsJAL33AQCNewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCN
+ewEAvfcFAI17AQC99wEAjXsDAL33AQCNewcAvfcBAI17AwC99wEAjXsBAL33BQCNewMAvfcBAI17
+1wC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17AwC99wEAjXsD
+AL33AQCNewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17CQC99wEAjXsDAL33AQCNewMA
+vfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33AQCNewUAvfcBAI17AwC9
+9wEAjXsHAL33AQCNewMAvfcBAI17AQC99wEAjXsHAL33AQCNe9cAvfcBAI17AwC99wEAjXsBAL33
+AQCNewMAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcB
+AI17AQC99wEAjXsDAL33AQCNewkAvfcBAI17AwC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEA
+jXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsFAL33AQCNewMAvfcBAI17BwC99wEAjXsDAL33AQCN
+ewEAvfcBAI17BwC99wEAjXsFAL33AQCNe9EAvfcBAI17AwC99wEAjXsCAL33AwCNewUAvfcCAI17
+AQC99wEAjXsDAL33AQCNewIAvfcDAI17AgC99wEAjXsDAL33AQCNewIAvfcEAI17CAC99wMAjXsD
+AL33AwCNewMAvfcEAI17AgC99wQAjXsCAL33BACNewIAvfcEAI17CAC99wQAjXsCAL33BACNewQA
+vfcCAI17AwC99wEAjXv5AL33AQCNexcAvfcBAI17BQC99wEAjXsXAL33AQCNewYBvfcDAI17FQC9
+9wMAjXsDAL33AwCNexUAvfcDAI17//+991czvfcBAI17TQC99wEAjXvAAL33AgCNewQAvfcCAI17
+FgC99wMAjXsJAL33AgCNewUAvfcBAI17KgC99wIAjXsIAL33AgCNewQAvfcCAI17EQC99wEAjXvB
+AL33AQCNewUAvfcBAI17FQC99wEAjXsDAL33AQCNewkAvfcBAI17LwC99wEAjXsLAL33AQCNewUA
+vfcBAI17zAC99wMAjXsEAL33AQCNewUAvfcBAI17FQC99wEAjXsCAL33AgCNewkAvfcBAI17BAC9
+9wIAjXsDAL33BACNewMAvfcDAI17AwC99wQAjXsUAL33AwCNewMAvfcDAI17BAC99wEAjXsFAL33
+AQCNewQAvfcDAI17AgC99wEAjXsDAL33AQCNewIAvfcCAI17AwC99wQAjXsDAL33BACNe68AvfcB
+AI17AwC99wEAjXsFAL33AQCNewsAvfcBAI17CQC99wEAjXsBAL33AQCNewEAvfcBAI17CQC99wEA
+jXsFAL33AQCNewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsNAL33AQCN
+ewsAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17BQC99wEAjXsDAL33AQCNewMAvfcBAI17
+AQC99wEAjXsDAL33AQCNewMAvfcBAI17AwC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXus
+AL33BACNewMAvfcBAI17BQC99wEAjXsLAL33AQCNewkAvfcCAI17AgC99wEAjXsJAL33AQCNewUA
+vfcBAI17AwC99wEAjXsDAL33AQCNewEAvfcFAI17AgC99wMAjXsKAL33AQCNewsAvfcBAI17AwC9
+9wEAjXsDAL33AQCNewMAvfcBAI17BQC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsBAL33
+AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNe6sAvfcB
+AI17AwC99wEAjXsDAL33AQCNewUAvfcBAI17FQC99wEAjXsDAL33AQCNewkAvfcBAI17BQC99wEA
+jXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsJAL33AQCNexUAvfcBAI17AwC99wEAjXsDAL33AQCN
+ewMAvfcBAI17BQC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsBAL33AQCNewEAvfcBAI17
+AwC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNe6sAvfcBAI17AwC99wEAjXsD
+AL33AQCNewUAvfcBAI17FQC99wEAjXsDAL33AQCNewkAvfcBAI17BQC99wEAjXsDAL33AQCNewMA
+vfcBAI17AQC99wEAjXsJAL33AQCNexUAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17BQC9
+9wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsBAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33
+AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNe6wAvfcEAI17AgC99wMAjXsDAL33AwCNexUAvfcD
+AI17CQC99wMAjXsDAL33AwCNewIAvfcBAI17AwC99wEAjXsCAL33BACNewEAvfcEAI17FgC99wEA
+jXsEAL33AwCNewMAvfcDAI17AwC99wMAjXsDAL33AwCNewMAvfcDAI17AwC99wMAjXsCAL33AQCN
+ewMAvfcBAI17AgC99wQAjXs/Ab33AQCNezwBvfcDAI17pAW990ABud7iBTvvAQCNe2UAO+8FAI17
+AwA77wEAjXsJADvvAQCNeyUAO+8BAI17BQA77wEAjXsiADvvAgCNewQAO+8CAI17DwA77wUAjXsL
+ADvvAQCNewoAO+8CAI17CAA77wIAjXsEADvvAgCNexsAO+8FAI17AgA77wMAjXsLADvvAgCNewMA
+O+8BAI17BAA77wIAjXsFADvvAQCNe1kAO+8BAI17BgA77wIAjXsJADvvAQCNeyQAO+8DAI17BAA7
+7wEAjXsjADvvAQCNewUAO+8BAI17DwA77wEAjXsPADvvAQCNewkAO+8BAI17CwA77wEAjXsFADvv
+AQCNexsAO+8BAI17BQA77wEAjXsDADvvAQCNewkAO+8BAI17CwA77wEAjXsFADvvAQCNe1kAO+8B
+AI17BwA77wEAjXsJADvvBACNewMAO+8DAI17AgA77wQAjXsDADvvAwCNew4AO+8FAI17AwA77wEA
+jXsKADvvBACNewIAO+8DAI17AgA77wEAjXsBADvvAwCNewIAO+8DAI17BAA77wEAjXsFADvvAQCN
+ew8AO+8BAI17BQA77wQAjXsDADvvBACNewgAO+8DAI17AwA77wMAjXsEADvvAQCNewUAO+8BAI17
+BAA77wMAjXsCADvvAQCNewMAO+8BAI17DQA77wEAjXsFADvvAQCNewMAO+8BAI17CAA77wMAjXsD
+ADvvAgCNewUAO+8BAI17BAA77wMAjXsDADvvAwCNewIAO+8BAI17AQA77wMAjXtLADvvBACNewQA
+O+8BAI17CQA77wEAjXsDADvvAQCNewEAO+8BAI17AwA77wEAjXsBADvvAQCNewEAO+8BAI17AQA7
+7wEAjXsBADvvAQCNewMAO+8BAI17DwA77wEAjXsFADvvAQCNewkAO+8BAI17BQA77wEAjXsDADvv
+AQCNewEAO+8CAI17BAA77wEAjXsDADvvAQCNewMAO+8BAI17BQA77wEAjXsPADvvBACNewIAO+8B
+AI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17CQA77wEAjXsDADvvAQCNewMAO+8BAI17AwA77wEA
+jXsFADvvAQCNewMAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17DQA77wQAjXsGADvvAQCN
+ewkAO+8BAI17BQA77wEAjXsFADvvAQCNewUAO+8BAI17AwA77wEAjXsDADvvAQCNewEAO+8CAI17
+TgA77wEAjXsHADvvAQCNewkAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AQA77wEAjXsB
+ADvvAQCNewEAO+8BAI17AQA77wUAjXsPADvvAQCNewUAO+8BAI17CgA77wMAjXsCADvvAQCNewUA
+O+8BAI17BQA77wEAjXsDADvvAQCNewMAO+8BAI17BQA77wEAjXsPADvvAQCNewUAO+8BAI17AwA7
+7wEAjXsBADvvAQCNewMAO+8BAI17CQA77wEAjXsDADvvAQCNewMAO+8BAI17AwA77wEAjXsFADvv
+AQCNewMAO+8BAI17AwA77wEAjXsBADvvAQCNewEAO+8BAI17AQA77wEAjXsNADvvAQCNewgAO+8B
+AI17CgA77wEAjXsFADvvAQCNewUAO+8BAI17BQA77wEAjXsDADvvBQCNewEAO+8BAI17TwA77wEA
+jXsHADvvAQCNewkAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AQA77wEAjXsBADvvAQCN
+ewEAO+8BAI17AQA77wEAjXsTADvvAQCNewMAO+8FAI17CwA77wEAjXsBADvvAQCNewUAO+8BAI17
+BQA77wEAjXsDADvvAQCNewMAO+8BAI17BQA77wEAjXsPADvvAQCNewUAO+8BAI17AwA77wEAjXsB
+ADvvAQCNewMAO+8BAI17CQA77wEAjXsDADvvAQCNewMAO+8BAI17AwA77wEAjXsFADvvAQCNewMA
+O+8BAI17AwA77wEAjXsBADvvAQCNewEAO+8BAI17AQA77wEAjXsNADvvAQCNewcAO+8BAI17CwA7
+7wEAjXsFADvvAQCNewUAO+8BAI17BQA77wEAjXsDADvvAQCNewUAO+8BAI17TwA77wEAjXsHADvv
+AQCNewkAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AQA77wEAjXsBADvvAQCNewEAO+8B
+AI17AQA77wEAjXsTADvvAQCNewQAO+8DAI17DAA77wEAjXsBADvvAQCNewMAO+8BAI17AQA77wEA
+jXsFADvvAQCNewMAO+8BAI17AwA77wEAjXsFADvvAQCNew8AO+8BAI17BQA77wEAjXsDADvvAQCN
+ewEAO+8BAI17AwA77wEAjXsJADvvAQCNewMAO+8BAI17AwA77wEAjXsDADvvAQCNewUAO+8BAI17
+AwA77wEAjXsDADvvAQCNewEAO+8BAI17AQA77wEAjXsBADvvAQCNew0AO+8BAI17BgA77wEAjXsM
+ADvvAQCNewUAO+8BAI17BQA77wEAjXsFADvvAQCNewMAO+8BAI17BQA77wEAjXtPADvvAQCNewYA
+O+8DAI17CAA77wEAjXsDADvvAQCNewIAO+8DAI17AgA77wEAjXsBADvvAQCNewEAO+8BAI17AgA7
+7wQAjXsPADvvAQCNewUAO+8BAI17CQA77wQAjXsDADvvAwCNewIAO+8BAI17BgA77wMAjXsDADvv
+AwCNewMAO+8DAI17DgA77wUAjXsBADvvAQCNewMAO+8BAI17AgA77wQAjXsJADvvAQCNewQAO+8D
+AI17AwA77wMAjXsDADvvAwCNewMAO+8DAI17AwA77wMAjXsOADvvAQCNewUAO+8FAI17CQA77wEA
+jXsEADvvAwCNewMAO+8DAI17BQA77wIAjXsCADvvBACNewEAO+8BAI17RwU77w==
+#END f34d8ad9 1636
+#OK key
+#OK type
+#OK key
+#OK type
+#OK key
+#OK type
+[122882.279] logs crashed handling focus: ran past its turn budget of 50 ms
+#OCT1 {"ev":"fault","t":122882.279,"world":"logs","file":"apps/logs.js","handling":"focus","why":"ran past its turn budget of 50 ms","crashes":1,"mem_kb":252,"limit_kb":384,"detail":"    at lgPad (apps/logs.js:13:40)\n    at lgStamp (apps/logs.js:29:90)\n    at <anonymous> (apps/logs.js:59:19)\n    at map (native)\n    at lgScreen (apps/logs.js:57:31)\n    at <anonymous> (prelude.js:225:28)\n"}
+#OK key
+#OK type
+t = 138284.4 ms, lane busy 17267.6 ms (12.5%), 10999 turns, 74 published, 206 delivered, 2 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle          6728   5434.50    200.8    320    0  
+  power       driver   idle            28     93.56    198.8    320    0  
+  display     driver   idle            38    355.69    200.8    320    0  
+  compositor  service  idle           389   1733.78    374.3    768    0  
+  agent       service  idle          1361    389.12    319.6   1536    0  
+  chat        app      idle             7    120.26    232.9    768    0  
+  launcher    app      idle            83   1270.08    212.6    384    0  
+  sysmon      app      idle           275   1265.73    266.2    512    0  
+  files       app      idle             3    106.43    214.0    384    0  
+  editor      app      idle             0    102.03    245.0    512    0  
+  calc        app      idle             3    337.27    634.1   1024    0  
+  agenda      app      idle            10    155.30    261.9    384    0  
+  settings    app      idle           136    544.00    231.3    384    0  
+  logs        app      idle           273    856.25    209.8    384    2  ran past its turn budget of 50 ms
+  loader      app      idle           137    618.85    233.8    384    0  
+  repl        app      idle             0     64.49    201.1    384    0  
+  sandbox     service  idle             0     61.42    198.2    512    0  
+  snake       app      idle          1232   3199.25    207.4    320    0  
+  faults      app      idle             4     82.22    204.2    384    0  
+  flaky       service  idle             0     59.08    198.2    320    0  
+  keys        app      idle           156    268.76    200.2    320    0  
+  about       app      idle           136    149.49    200.3    320    0  
+  bus i2c0  busy 37045.61 ms, 6776 transfers, 27153 bytes, 0 errors
+  bus spi2  busy   686.94 ms, 802 transfers, 2314893 bytes, 0 errors
+#OK stats
+
+[p4cap] shot 1: /tmp/claude-1000/-home-manuel-code-wesen-2026-10-20--ds-js-os/aa85fe90-6079-4e52-bc93-6a3b6412d511/scratchpad/dev-logsfull/shot-1.png (crc ok)

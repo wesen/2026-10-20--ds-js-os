@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "digest": "95644c0fb50efd2a2468f627f4aaab12682c1d025f8b2ebab876d5ddf30a3a91",
+  "request": {
+    "ticket": "PICOCALC-SPEED",
+    "status": "complete",
+    "intent": "",
+    "entry": "Ticket closed"
+  },
+  "receipt": {
+    "sequence": 1,
+    "operation_id": "close-50cf7d8b99ea7412175cc72e6df5ef4c",
+    "state": "committed",
+    "created_at": "2026-11-01T22:07:58.548441365Z",
+    "changed_paths": [
+      "changelog.md",
+      "index.md"
+    ],
+    "before": {
+      "changelog.md": "2080c964cadb51af139b0eee39b4b2cbd84f8aa034336219484ac6b705cda1e8",
+      "index.md": "88d2db1cfaefbfbdd4b8e76e77689352c32c665ffbdc6112e433c9aded42277f"
+    },
+    "after": {
+      "changelog.md": "c76a4756c9134ea16982a4d370281cc9bf52d655945ebc04b4f599558b2ffc7b",
+      "index.md": "7eb5e032f3cc76d94da56b6407e379906dc8c78cda1ecaf7b2565c903883c92f"
+    }
+  },
+  "changes": [
+    {
+      "path": "changelog.md",
+      "before": "2080c964cadb51af139b0eee39b4b2cbd84f8aa034336219484ac6b705cda1e8",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTEtMDEKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMS0wMQoKQ2F1c2UgZm91bmQgYW5kIGZpeGVkOiBMUCBTUkFNIChSVEMgZmFzdCBtZW1vcnkpIHdhcyBpbiB0aGUgaGVhcDsgUXVpY2tKUyBibG9ja3MgdGhlcmUgY29zdCA5OTQgbnMgcGVyIGFjY2VzcyAoMTQgbnMgZWxzZXdoZXJlKS4gc2RrY29uZmlnLmRlZmF1bHRzIGtlZXBzIGl0IG91dCAoNDE2OGI5NSkuIEFsc286IGNhY2hlc3RhdCBpbnN0cnVtZW50ICg2NjMxODA5KSwgTG9ncyBzZW5kcyBvbmx5IGl0cyB2aXNpYmxlIHdpbmRvdyAoMjZjNWViNiksIFNQSSB0cmFuc2ZlcnMgd2l0aG91dCBzcGlfbWFzdGVyIGNvcGllcyAoOGFiM2I1MSksIFJFQURNRSAoM2VkYzZiNCkuIEJlbmNobWFyayAxMTMtMTE2IG1zIC8gMzAuNSBtcyBpbiBldmVyeSBmaXJtd2FyZTsgc3RyZXNzIHJ1bnMgY2xlYW4uCgojIyMgUmVsYXRlZCBGaWxlcwoKLSAvaG9tZS9tYW51ZWwvY29kZS93ZXNlbi8yMDI2LTEwLTIwLS1kcy1qcy1vcy9waWNvY2FsYy1vcy9qcy9hcHBzL2xvZ3MuanMg4oCUIHZpc2libGUgd2luZG93Ci0gL2hvbWUvbWFudWVsL2NvZGUvd2VzZW4vMjAyNi0xMC0yMC0tZHMtanMtb3MvcGljb2NhbGMtb3MvcG9ydC9lc3AzMnA0L21haW4vYnVzX3A0LmMg4oCUIGFsaWduZWQgU1BJIHRyYW5zZmVycwotIC9ob21lL21hbnVlbC9jb2RlL3dlc2VuLzIwMjYtMTAtMjAtLWRzLWpzLW9zL3BpY29jYWxjLW9zL3BvcnQvZXNwMzJwNC9tYWluL3BlcmZfcDQuYyDigJQgY2FjaGVzdGF0Ci0gL2hvbWUvbWFudWVsL2NvZGUvd2VzZW4vMjAyNi0xMC0yMC0tZHMtanMtb3MvcGljb2NhbGMtb3MvcG9ydC9lc3AzMnA0L3Nka2NvbmZpZy5kZWZhdWx0cyDigJQgTFAgU1JBTSBvdXQgb2YgdGhlIGhlYXAKCiMjIDIwMjYtMTEtMDEKClRpY2tldCBjbG9zZWQK"
+    },
+    {
+      "path": "index.md",
+      "before": "88d2db1cfaefbfbdd4b8e76e77689352c32c665ffbdc6112e433c9aded42277f",
+      "after": "LS0tClRpdGxlOiAnSmF2YVNjcmlwdCBzbG93cyAyLjh4IG9uY2UgYSBuYXRpdmUgbW9kdWxlIGhhcyBsb2FkZWQ6IHRoZSBQNCcncyBjYWNoZSBhbmQgbWVtb3J5IHBsYWNlbWVudCcKVGlja2V0OiBQSUNPQ0FMQy1TUEVFRApTdGF0dXM6IGNvbXBsZXRlClRvcGljczoKICAgIC0gcGljb2NhbGMKICAgIC0gZXNwMzItcDQKICAgIC0gcGVyZm9ybWFuY2UKICAgIC0gcXVpY2tqcwpEb2NUeXBlOiBpbmRleApJbnRlbnQ6IGxvbmctdGVybQpPd25lcnM6IFtdClJlbGF0ZWRGaWxlczogW10KRXh0ZXJuYWxTb3VyY2VzOiBbXQpTdW1tYXJ5OiAiIgpMYXN0VXBkYXRlZDogMjAyNi0xMS0wMVQxNzowNzo1OC41NDgzODk1OTctMDU6MDAKV2hhdEZvcjogIiIKV2hlblRvVXNlOiAiIgotLS0KCiMgSmF2YVNjcmlwdCBzbG93cyAyLjh4IG9uY2UgYSBuYXRpdmUgbW9kdWxlIGhhcyBsb2FkZWQ6IHRoZSBQNCdzIGNhY2hlIGFuZCBtZW1vcnkgcGxhY2VtZW50CgojIyBPdmVydmlldwoKPCEtLSBQcm92aWRlIGEgYnJpZWYgb3ZlcnZpZXcgb2YgdGhlIHRpY2tldCwgaXRzIGdvYWxzLCBhbmQgY3VycmVudCBzdGF0dXMgLS0+CgojIyBLZXkgTGlua3MKCi0gKipSZWxhdGVkIEZpbGVzKio6IFNlZSBmcm9udG1hdHRlciBSZWxhdGVkRmlsZXMgZmllbGQKLSAqKkV4dGVybmFsIFNvdXJjZXMqKjogU2VlIGZyb250bWF0dGVyIEV4dGVybmFsU291cmNlcyBmaWVsZAoKIyMgU3RhdHVzCgpDdXJyZW50IHN0YXR1czogKiphY3RpdmUqKgoKIyMgVG9waWNzCgotIHBpY29jYWxjCi0gZXNwMzItcDQKLSBwZXJmb3JtYW5jZQotIHF1aWNranMKCiMjIFRhc2tzCgpTZWUgW3Rhc2tzLm1kXSguL3Rhc2tzLm1kKSBmb3IgdGhlIGN1cnJlbnQgdGFzayBsaXN0LgoKIyMgQ2hhbmdlbG9nCgpTZWUgW2NoYW5nZWxvZy5tZF0oLi9jaGFuZ2Vsb2cubWQpIGZvciByZWNlbnQgY2hhbmdlcyBhbmQgZGVjaXNpb25zLgoKIyMgU3RydWN0dXJlCgotIGRlc2lnbi8gLSBBcmNoaXRlY3R1cmUgYW5kIGRlc2lnbiBkb2N1bWVudHMKLSByZWZlcmVuY2UvIC0gUHJvbXB0IHBhY2tzLCBBUEkgY29udHJhY3RzLCBjb250ZXh0IHN1bW1hcmllcwotIHBsYXlib29rcy8gLSBDb21tYW5kIHNlcXVlbmNlcyBhbmQgdGVzdCBwcm9jZWR1cmVzCi0gc2NyaXB0cy8gLSBUZW1wb3JhcnkgY29kZSBhbmQgdG9vbGluZwotIHZhcmlvdXMvIC0gV29ya2luZyBub3RlcyBhbmQgcmVzZWFyY2gKLSBhcmNoaXZlLyAtIERlcHJlY2F0ZWQgb3IgcmVmZXJlbmNlLW9ubHkgYXJ0aWZhY3RzCg=="
+    }
+  ]
+}

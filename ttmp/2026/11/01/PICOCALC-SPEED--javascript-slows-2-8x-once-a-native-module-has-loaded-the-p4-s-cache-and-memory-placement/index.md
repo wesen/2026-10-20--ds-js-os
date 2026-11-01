@@ -1,7 +1,7 @@
 ---
 Title: 'JavaScript slows 2.8x once a native module has loaded: the P4''s cache and memory placement'
 Ticket: PICOCALC-SPEED
-Status: active
+Status: complete
 Topics:
     - picocalc
     - esp32-p4
@@ -13,7 +13,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-01T16:11:28.873189708-05:00
+LastUpdated: 2026-11-01T17:07:58.548389597-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

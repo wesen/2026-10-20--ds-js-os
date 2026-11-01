@@ -1,0 +1,259 @@
+I (285) esp_image: segment 1: paddr=0011dd00 vaddr=30100000 size=00068h (   104) load
+I (287) esp_image: segment 2: paddr=0011dd70 vaddr=4ff00000 size=022a8h (  8872) load
+I (292) esp_image: segment 3: paddr=00120020 vaddr=40000020 size=1631ach (1454508) map
+I (538) esp_image: segment 4: paddr=002831d4 vaddr=4ff022a8 size=12b30h ( 76592) load
+I (555) esp_image: segment 5: paddr=00295d0c vaddr=4ff14e00 sizeESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x30f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x15f0
+load:0x4ff2abd0,len:0xd88
+load:0x4ff2cbd0,len:0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:43:25
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00400000
+I (77) boot:  3 agentstore       WiFi data        01 02 00410000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00430000 00bd0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40170020 size=10dcd8h (1105112) map
+I (285) esp_image: segment 1: paddr=0011dd00 vaddr=30100000 size=00068h (   104) load
+I (287) esp_image: segment 2: paddr=0011dd70 vaddr=4ff00000 size=022a8h (  8872) load
+I (292) esp_image: segment 3: paddr=00120020 vaddr=40000020 size=1631ach (1454508) map
+I (538) esp_image: segment 4: paddr=002831d4 vaddr=4ff022a8 size=12b30h ( 76592) load
+I (555) esp_image: segment 5: paddr=00295d0c vaddr=4ff14e00 size=0330ch ( 13068) load
+I (563) boot: Loaded app from partition at offset 0x10000
+I (563) boot: Disabling RNG early entropy source...
+I (574) hex_psram: vendor id    : 0x0d (AP)
+I (574) hex_psram: Latency      : 0x01 (Fixed)
+I (574) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (575) hex_psram: dev id       : 0x03 (generation 4)
+I (579) hex_psram: density      : 0x07 (256 Mbit)
+I (584) hex_psram: good-die     : 0x06 (Pass)
+I (588) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (593) hex_psram: BurstType    : 0x00 ( Wrap)
+I (597) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (601) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (606) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (611) hex_psram: DriveStrength: 0x00 (1/1)
+I (615) MSPI DQS: tuning success, best phase id is 0
+I (788) MSPI DQS: tuning success, best delayline id is 17
+I (788) esp_psram: Found 32MB PSRAM device
+I (788) esp_psram: Speed: 200MHz
+I (789) hex_psram: psram CS IO is dedicated
+I (792) cpu_start: Multicore app
+I (1701) esp_psram: SPI SRAM memory test OK
+I (1711) cpu_start: Pro cpu start user code
+I (1711) cpu_start: cpu freq: 360000000 Hz
+I (1711) app_init: Application information:
+I (1711) app_init: Project name:     picocalc-os-p4
+I (1716) app_init: App version:      74fc4bc-dirty
+I (1720) app_init: Compile time:     Nov  1 2026 16:43:24
+I (1725) app_init: ELF file SHA256:  afa9321c5...
+I (1730) app_init: ESP-IDF:          v5.4.2
+I (1734) efuse_init: Min chip rev:     v0.1
+I (1737) efuse_init: Max chip rev:     v1.99 
+I (1742) efuse_init: Chip rev:         v1.3
+I (1746) heap_init: Initializing. RAM available for dynamic allocation:
+I (1752) heap_init: At 4FF288F0 len 000126D0 (73 KiB): RAM
+I (1757) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (1762) heap_init: At 4FF49E60 len 000561A0 (344 KiB): RAM
+I (1767) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (1773) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (1780) spi_flash: detected chip: generic
+W (1783) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (1793) spi_flash: flash io: dio
+I (1796) host_init: ESP Hosted : Host chip_ip[18]
+I (1801) H_API: ESP-Hosted starting. Hosted_Tasks: prio:23, stack: 5120 RPC_task_stack: 5120
+sdio_mempool_create free:33625744 min-free:33625744 lfb-def:33030144 lfb-8bit:33030144
+
+I (1817) gpio: GPIO[18]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1825) gpio: GPIO[19]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1834) gpio: GPIO[14]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1842) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1850) gpio: GPIO[16]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1859) gpio: GPIO[17]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1868) H_API: ** add_esp_wifi_remote_channels **
+I (1872) transport: Add ESP-Hosted channel IF[1]: S[0] Tx[0x400c6556] Rx[0x400d413a]
+I (1879) transport: Add ESP-Hosted channel IF[2]: S[0] Tx[0x400c649c] Rx[0x400d413a]
+I (1888) main_task: Started on CPU0
+I (1891) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (1899) main_task: Calling app_main()
+I (1902) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 392271 free (largest 311296), psram 33551748 free (largest 33030144)
+I (1942) fs: /files: 11956 KB, 11668 KB free (mounted in 6 ms)
+I (1948) transport: Attempt connection with slave: retry[0]
+I (1949) transport: Reset slave using GPIO[54]
+I (1950) os_wrapper_esp: GPIO [54] configured
+I (1950) gpio: GPIO[54]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1951) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1964) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2165) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2166) main_task: Returned from app_main()
+[   162.528] calibration on the real clock: the 100k loop took 116.4 ms (the model says 133), fib(20) 30.5 ms (the model says 29.1)
+[   195.375] booting 22 worlds from js/system.json
+[   206.232] booting 3 worlds from js/system.elf.json
+I (3088) sdio_wrapper: SDIO master: Data-Lines: 4-bit Freq(KHz)[20000 KHz]
+I (3089) H_SDIO_DRV: Starting SDIO process rx task
+I (3091) sdio_wrapper: GPIOs: CLK[18] CMD[19] D0[14] D1[15] D2[16] D3[17] Slave_Reset[54]
+I (3095) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1]
+I (3129) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (3133) gpio: GPIO[17]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+Name: 
+Type: SDIO
+Speed: 20.00 MHz (limit: 20.00 MHz)
+Size: 0MB
+CSD: ver=1, sector_size=0, capacity=0 read_bl_len=0
+SCR: sd_spec=0, bus_width=0
+TUPLE: DEVICE, size: 3: D9 01 FF 
+TUPLE: MANFID, size: 4
+  MANF: 0092, CARD: 6666
+TUPLE: FUNCID, size: 2: 0C 00 
+TUPLE: FUNCE, size: 4: 00 00 02 32 
+TUPLE: CONFIG, size: 5: 01 01 00 02 07 
+TUPLE: CFTABLE_ENTRY, size: 8
+  INDX: C1, Intface: 1, Default: 1, Conf-Entry-Num: 1
+  IF: 41
+  FS: 30, misc: 0, mem_space: 1, irq: 1, io_space: 0, timing: 0, power: 0
+  IR: 30, mask: 1,   IRQ: FF FF
+  LEN: FFFF
+TUPLE: END
+I (3183) sdio_wrapper: Function 0 Blocksize: 512
+I (3184) sdio_wrapper: Function 1 Blocksize: 512
+I (3192) H_SDIO_DRV: SDIO Host operating in STREAMING MODE
+I (3194) H_SDIO_DRV: generate slave intr
+I (3209) transport: Received INIT event from ESP32 peripheral
+I (3211) transport: EVENT: 12
+I (3211) transport: EVENT: 11
+I (3213) transport: capabilities: 0xd
+I (3213) transport: Features supported are:
+I (3214) transport: 	 * WLAN
+I (3223) transport: 	   - HCI over SDIO
+I (3224) transport: 	   - BLE only
+I (3225) transport: EVENT: 13
+I (3226) transport: ESP board type is : 13 
+
+I (3234) transport: Base transport is set-up
+
+I (3235) transport: Slave chip Id[12]
+I (3244) hci_stub_drv: Host BT Support: Disabled
+I (3245) H_SDIO_DRV: Received INIT event
+[  2126.392] nat-echo: TEST kind ok 
+[  2128.087] nat-echo: TEST provide ok 
+[  2128.536] nat-echo: TEST every ok 
+[  2128.964] nat-echo: TEST init done
+E (4296) ELF: Can't find common path_open
+[  2131.282] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2131.282,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+I (4311) H_API: esp_wifi_remote_connect
+I (4322) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+[  2192.214] nat-echo: TEST start self=nat-echo clock=running
+[  2193.698] nat-bench: BENCH loop n=1000 us=37 r=122468
+[  2194.448] nat-bench: BENCH loop n=4000 us=135 r=498743
+[  2195.588] nat-bench: BENCH loop n=16000 us=535 r=2028337
+E (4412) ELF: Can't find common path_open
+[  2247.289] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2247.289,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+[  2327.712] nat-echo: TEST ticks 3 timer=0
+E (4614) ELF: Can't find common path_open
+[  2449.334] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2449.334,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+E (5027) ELF: Can't find common path_open
+[  2861.652] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2861.652,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+E (5829) ELF: Can't find common path_open
+[  3664.317] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":3664.317,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+[  3664.317] nat-import crashed 5 times in ten seconds; it stays stopped
+I (7424) esp_wifi_remote: esp_wifi_internal_reg_rxcb: sta: 0x400d477c
+I (8454) esp_netif_handlers: sta ip: 192.168.0.88, mask: 255.255.255.0, gw: 192.168.0.1
+unknown command ÿ (try help)
+#OK ÿ
+[ 18021.021] calibration on the real clock: the 100k loop took 116.1 ms (the model says 133), fib(20) 30.8 ms (the model says 29.1)
+#OK bench
+  L2MEM (internal, DMA-capable)  at 0x4ff9eac0: 256k reads and writes in 3.59 ms (14.0 ns each)
+  LP SRAM (RTC fast memory)      no memory
+  PSRAM                          at 0x4861a84c: 256k reads and writes in 3.60 ms (14.1 ns each)
+  free: internal 55887 (LP SRAM 0), PSRAM 27212304
+#OK cachestat
+cachestat loop on the default heap: 116.1 ms; the runtime at 0x4ff9abf8, 17648 bytes of internal SRAM taken by the runtime
+  bus                               hit       miss   conflict    next rd    next wr  miss %
+  L1 ibus0 (core 0 code)         266946      38858          0         65          0  12.707
+  L1 ibus1 (core 1 code)       36758877    1486715          0       3359          0   3.887
+  L1 dbus0 (core 0 data)          58016       2796       2564          6          6   4.598
+  L1 dbus1 (core 1 data)       10161364     119741       1224        306        232   1.165
+  L2 ibus0 (core 0 code)             46      16496          0         23          0  99.722
+  L2 ibus1 (core 1 code)           4690     728692          0       1056          0  99.360
+  L2 dbus0 (core 0 data)             10        258          0          3          0  96.269
+  L2 dbus1 (core 1 data)            912      67829          0        352        143  98.673
+  allocations by region (runtime, context and the run): L2MEM (internal) 7 (12436 bytes); TCM 5 (6936 bytes); PSRAM 39 (134256 bytes);
+#OK cachestat
+cachestat fib on the default heap: 31.1 ms; the runtime at 0x4ff9abf8, 17648 bytes of internal SRAM taken by the runtime
+  bus                               hit       miss   conflict    next rd    next wr  miss %
+  L1 ibus0 (core 0 code)         175910      34655          0         55          0  16.458
+  L1 ibus1 (core 1 code)        9277618    1401157          0       2707          0  13.121
+  L1 dbus0 (core 0 data)          40128        283       7788          6          5   0.700
+  L1 dbus1 (core 1 data)        3824661     117581        928        414        302   2.983
+  L2 ibus0 (core 0 code)             46      16840          0         23          0  99.728
+  L2 ibus1 (core 1 code)           4150     686868          0        994          0  99.399
+  L2 dbus0 (core 0 data)              8        259          0          3          0  97.004
+  L2 dbus1 (core 1 data)           1046      67610          0        389        186  98.476
+  allocations by region (runtime, context and the run): L2MEM (internal) 7 (12436 bytes); TCM 5 (6936 bytes); PSRAM 39 (134256 bytes);
+#OK cachestat
+cachestat loop on the psram heap: 116.1 ms; the runtime at 0x4861aeac, 0 bytes of internal SRAM taken by the runtime
+  bus                               hit       miss   conflict    next rd    next wr  miss %
+  L1 ibus0 (core 0 code)         362275      28869          0         61          0   7.381
+  L1 ibus1 (core 1 code)       36741308    1469474          0       3252          0   3.846
+  L1 dbus0 (core 0 data)          80384       2496       8111         14         11   3.012
+  L1 dbus1 (core 1 data)       10158737     117090       1109        320        235   1.139
+  L2 ibus0 (core 0 code)             46      14401          0         21          0  99.682
+  L2 ibus1 (core 1 code)           4618     719702          0       1042          0  99.362
+  L2 dbus0 (core 0 data)             18        128          0          2          0  87.671
+  L2 dbus1 (core 1 data)            978      68584          0        352        157  98.594
+  allocations by region (runtime, context and the run): PSRAM 51 (153628 bytes);
+#OK cachestat
+heap: internal 55999 free (largest 31744), psram 27214108 free (largest 26738688)
+#OK heap
+[ 57990.474] calibration on the real clock: the 100k loop took 116.0 ms (the model says 133), fib(20) 30.7 ms (the model says 29.1)
+#OK bench
+t = 61838.0 ms, lane busy 7968.3 ms (12.9%), 4793 turns, 32 published, 64 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle          2935   2213.66    200.8    320    0  
+  power       driver   idle            13     76.64    198.8    320    0  
+  display     driver   idle            11    117.01    200.8    320    0  
+  compositor  service  idle           162    647.68    342.1    768    0  
+  agent       service  idle           597    210.55    319.7   1536    0  
+  chat        app      idle             8    122.11    232.9    768    0  
+  launcher    app      idle            31    578.03    212.6    384    0  
+  sysmon      app      idle           121    461.02    222.8    512    0  
+  files       app      idle             1     89.01    214.0    384    0  
+  editor      app      idle             0    105.79    245.0    512    0  
+  calc        app      idle             1    324.36    634.1   1024    0  
+  agenda      app      idle             5    134.42    261.9    384    0  
+  settings    app      idle            60    283.26    231.3    384    0  
+  logs        app      idle           120    304.27    209.8    384    0  
+  loader      app      idle            61    326.17    233.8    384    0  
+  repl        app      idle             0     65.00    201.1    384    0  
+  sandbox     service  idle             0     61.94    198.3    512    0  
+  snake       app      idle           539   1442.63    207.4    320    0  
+  faults      app      idle             5     88.70    204.1    384    0  
+  flaky       service  idle             0     59.15    198.2    320    0  
+  keys        app      idle            59    137.72    200.2    320    0  
+  about       app      idle            59     98.95    200.3    320    0  
+  nat-echo    service  idle             4      7.69     10.7     64    0  
+  nat-bench   service  idle             1      4.87      2.7     64    0  
+  nat-import  world    stopped          0      7.65      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  bus i2c0  busy 16106.05 ms, 2948 transfers, 11806 bytes, 0 errors
+  bus spi2  busy   116.49 ms, 78 transfers, 402876 bytes, 0 errors
+#OK stats

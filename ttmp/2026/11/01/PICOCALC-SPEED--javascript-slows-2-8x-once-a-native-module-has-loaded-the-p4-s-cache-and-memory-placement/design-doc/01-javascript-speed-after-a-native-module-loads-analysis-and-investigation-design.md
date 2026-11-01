@@ -40,6 +40,34 @@ candidate fixes and their costs. The first task in the ticket is not an investig
 running test firmware that loads three machine-code modules at boot, which keeps it in the slow state; flashing the
 normal firmware restores the speed while the cause is found.
 
+## 0. Outcome (added after the investigation)
+
+The investigation answered the question differently from every hypothesis below except half of H2. The diary has
+the measurements; in short:
+
+- **The cache counters refuted H1.** On the slow firmware the same program took 320 ms on the C library's heap and
+  116 ms on a PSRAM-only heap, with the same L1 and L2 refill counts.
+- **The cause is LP SRAM in the heap.** ESP-IDF adds 32 KB of LP SRAM ("RTC fast memory") to the heap as internal
+  memory by default (`CONFIG_ESP_SYSTEM_ALLOW_RTC_FAST_MEM_AS_HEAP=y`). Blocks of 4 KB or less go to internal memory
+  first and land there once the main SRAM runs short. A read and a write there take 994 ns, against 14 ns in internal
+  SRAM or cached PSRAM, and the caches do not see those accesses. Which QuickJS blocks landed there depended on how
+  full and fragmented internal SRAM was, which explains the module loads, the 16 KB `.bss` change and the
+  pathological boot calibrations. The benchmark's runtime had 8 blocks (29 KB) there.
+- **The fix is one configuration line** in `sdkconfig.defaults` (commit 4168b95). Every firmware now runs the
+  benchmark at 113–116 ms and 30.5 ms, at boot and with all worlds running, with or without native modules.
+- **Worlds were barely affected.** Their heaps are PSRAM only; their per-turn costs were within 5 % on fast and
+  slow firmware. The compositor's restart in the original report came from load: the Logs app put every log line
+  (up to 400) in each frame. It now sends only the visible window (26c5eb6).
+- **The acceptance runs found a third problem**: spi_master copied every unaligned SPI transaction into a fresh
+  internal block as large as the transaction (up to 32 KB), and a flush failed with `ESP_ERR_NO_MEM` when no such
+  block was free. The transfers are now aligned (8ab3b51).
+- **The candidate fixes of section 6** (QIO flash, XIP from PSRAM, a larger L2, IRAM placement) were not needed and
+  were not applied.
+
+Acceptance (section 7): the benchmark is within 3 % of the boot calibration in both firmwares; two stress runs (full
+log ring, nine app switches) had no overrun and no crash; internal SRAM free is 71–75 KB on the normal firmware and
+56 KB on the ELF test firmware. That reading no longer includes the 30 KB of LP SRAM; main SRAM free did not change.
+
 ## 1. What is observed
 
 The kernel's calibration benchmark (`vm_calibrate()` in `nucleus/vm.c`) runs two JavaScript programs in a fresh

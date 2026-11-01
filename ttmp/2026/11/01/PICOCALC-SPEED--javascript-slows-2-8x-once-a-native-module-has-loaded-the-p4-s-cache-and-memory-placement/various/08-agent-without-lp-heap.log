@@ -1,0 +1,200 @@
+I (281) esp_image: segment 1: paddr=00118778 vaddr=30100000 size=00068h (   104) load
+I (283) esp_image: segment 2: paddr=001187e8 vaddr=4ff00000 size=07830h ( 30768) load
+I (292) esp_image: segment 3: paddr=00120020 vaddr=40000020 size=15ed08h (1436936) map
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x30f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x15f0
+load:0x4ff2abd0,len:0xd88
+load:0x4ff2cbd0,len:0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:48:47
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00400000
+I (77) boot:  3 agentstore       WiFi data        01 02 00410000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00430000 00bd0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40160020 size=108750h (1083216) map
+I (281) esp_image: segment 1: paddr=00118778 vaddr=30100000 size=00068h (   104) load
+I (283) esp_image: segment 2: paddr=001187e8 vaddr=4ff00000 size=07830h ( 30768) load
+I (292) esp_image: segment 3: paddr=00120020 vaddr=40000020 size=15ed08h (1436936) map
+I (532) esp_image: segment 4: paddr=0027ed30 vaddr=4ff07830 size=0d460h ( 54368) load
+I (544) esp_image: segment 5: paddr=0028c198 vaddr=4ff14d00 size=0330ch ( 13068) load
+I (552) boot: Loaded app from partition at offset 0x10000
+I (553) boot: Disabling RNG early entropy source...
+I (563) hex_psram: vendor id    : 0x0d (AP)
+I (563) hex_psram: Latency      : 0x01 (Fixed)
+I (563) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (564) hex_psram: dev id       : 0x03 (generation 4)
+I (569) hex_psram: density      : 0x07 (256 Mbit)
+I (573) hex_psram: good-die     : 0x06 (Pass)
+I (577) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (582) hex_psram: BurstType    : 0x00 ( Wrap)
+I (586) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (591) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (595) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (600) hex_psram: DriveStrength: 0x00 (1/1)
+I (604) MSPI DQS: tuning success, best phase id is 0
+I (777) MSPI DQS: tuning success, best delayline id is 17
+I (777) esp_psram: Found 32MB PSRAM device
+I (777) esp_psram: Speed: 200MHz
+I (778) hex_psram: psram CS IO is dedicated
+I (781) cpu_start: Multicore app
+I (1690) esp_psram: SPI SRAM memory test OK
+I (1700) cpu_start: Pro cpu start user code
+I (1700) cpu_start: cpu freq: 360000000 Hz
+I (1700) app_init: Application information:
+I (1700) app_init: Project name:     picocalc-os-p4
+I (1705) app_init: App version:      74fc4bc-dirty
+I (1709) app_init: Compile time:     Nov  1 2026 16:48:44
+I (1715) app_init: ELF file SHA256:  ac8970050...
+I (1719) app_init: ESP-IDF:          v5.4.2
+I (1723) efuse_init: Min chip rev:     v0.1
+I (1727) efuse_init: Max chip rev:     v1.99 
+I (1731) efuse_init: Chip rev:         v1.3
+I (1735) heap_init: Initializing. RAM available for dynamic allocation:
+I (1741) heap_init: At 4FF287F0 len 000127D0 (73 KiB): RAM
+I (1746) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (1752) heap_init: At 4FF45D70 len 0005A290 (360 KiB): RAM
+I (1757) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (1762) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (1769) spi_flash: detected chip: generic
+W (1772) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (1783) spi_flash: flash io: dio
+I (1786) host_init: ESP Hosted : Host chip_ip[18]
+I (1790) H_API: ESP-Hosted starting. Hosted_Tasks: prio:23, stack: 5120 RPC_task_stack: 5120
+sdio_mempool_create free:33626000 min-free:33626000 lfb-def:33030144 lfb-8bit:33030144
+
+I (1807) gpio: GPIO[18]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1815) gpio: GPIO[19]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1823) gpio: GPIO[14]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1831) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1840) gpio: GPIO[16]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1848) gpio: GPIO[17]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1857) H_API: ** add_esp_wifi_remote_channels **
+I (1861) transport: Add ESP-Hosted channel IF[1]: S[0] Tx[0x400c5d32] Rx[0x400d3916]
+I (1869) transport: Add ESP-Hosted channel IF[2]: S[0] Tx[0x400c5c78] Rx[0x400d3916]
+I (1877) main_task: Started on CPU0
+I (1880) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (1888) main_task: Calling app_main()
+I (1891) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 409151 free (largest 327680), psram 33551748 free (largest 33030144)
+I (1931) fs: /files: 11956 KB, 11668 KB free (mounted in 6 ms)
+I (1937) transport: Attempt connection with slave: retry[0]
+I (1938) transport: Reset slave using GPIO[54]
+I (1939) os_wrapper_esp: GPIO [54] configured
+I (1939) gpio: GPIO[54]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1940) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1953) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2154) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2155) main_task: Returned from app_main()
+[   158.524] calibration on the real clock: the 100k loop took 112.7 ms (the model says 133), fib(20) 30.4 ms (the model says 29.1)
+[   191.523] booting 22 worlds from js/system.json
+I (3077) sdio_wrapper: SDIO master: Data-Lines: 4-bit Freq(KHz)[20000 KHz]
+I (3078) H_SDIO_DRV: Starting SDIO process rx task
+I (3079) sdio_wrapper: GPIOs: CLK[18] CMD[19] D0[14] D1[15] D2[16] D3[17] Slave_Reset[54]
+I (3080) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1]
+I (3123) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (3128) gpio: GPIO[17]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+Name: 
+Type: SDIO
+Speed: 20.00 MHz (limit: 20.00 MHz)
+Size: 0MB
+CSD: ver=1, sector_size=0, capacity=0 read_bl_len=0
+SCR: sd_spec=0, bus_width=0
+TUPLE: DEVICE, size: 3: D9 01 FF 
+TUPLE: MANFID, size: 4
+  MANF: 0092, CARD: 6666
+TUPLE: FUNCID, size: 2: 0C 00 
+TUPLE: FUNCE, size: 4: 00 00 02 32 
+TUPLE: CONFIG, size: 5: 01 01 00 02 07 
+TUPLE: CFTABLE_ENTRY, size: 8
+  INDX: C1, Intface: 1, Default: 1, Conf-Entry-Num: 1
+  IF: 41
+  FS: 30, misc: 0, mem_space: 1, irq: 1, io_space: 0, timing: 0, power: 0
+  IR: 30, mask: 1,   IRQ: FF FF
+  LEN: FFFF
+TUPLE: END
+I (3176) sdio_wrapper: Function 0 Blocksize: 512
+I (3185) sdio_wrapper: Function 1 Blocksize: 512
+I (3187) H_SDIO_DRV: SDIO Host operating in STREAMING MODE
+I (3188) H_SDIO_DRV: generate slave intr
+I (3200) transport: Received INIT event from ESP32 peripheral
+I (3202) transport: EVENT: 12
+I (3205) transport: EVENT: 11
+I (3205) transport: capabilities: 0xd
+I (3206) transport: Features supported are:
+I (3215) transport: 	 * WLAN
+I (3216) transport: 	   - HCI over SDIO
+I (3216) transport: 	   - BLE only
+I (3217) transport: EVENT: 13
+I (3226) transport: ESP board type is : 13 
+
+I (3227) transport: Base transport is set-up
+
+I (3236) transport: Slave chip Id[12]
+I (3237) hci_stub_drv: Host BT Support: Disabled
+I (3237) H_SDIO_DRV: Received INIT event
+I (4262) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+I (4302) H_API: esp_wifi_remote_connect
+I (7309) esp_wifi_remote: esp_wifi_internal_reg_rxcb: sta: 0x400d3f58
+I (8358) esp_netif_handlers: sta ip: 192.168.0.88, mask: 255.255.255.0, gw: 192.168.0.1
+unknown command ÿ (try help)
+#OK ÿ
+[ 18004.043] calibration on the real clock: the 100k loop took 113.0 ms (the model says 133), fib(20) 30.5 ms (the model says 29.1)
+#OK bench
+cachestat loop on the default heap: 113.1 ms; the runtime at 0x4ff933c8, 36300 bytes of internal SRAM taken by the runtime
+  bus                               hit       miss   conflict    next rd    next wr  miss %
+  L1 ibus0 (core 0 code)         330851     266950          0        743          0  44.655
+  L1 ibus1 (core 1 code)       35071229    1532749          0       3040          0   4.187
+  L1 dbus0 (core 0 data)          73601      13860       4188        148        110  15.847
+  L1 dbus1 (core 1 data)       10164545     118624      10029        387        302   1.154
+  L2 ibus0 (core 0 code)            484     116198          0        168          0  99.585
+  L2 ibus1 (core 1 code)           4346     747123          0       1082          0  99.422
+  L2 dbus0 (core 0 data)            148       3578          0         30         16  96.028
+  L2 dbus1 (core 1 data)            898      64933          0        320        111  98.636
+  allocations by region (runtime, context and the run): L2MEM (internal) 17 (32052 bytes); TCM 4 (7104 bytes); PSRAM 30 (114472 bytes);
+#OK cachestat
+heap: internal 74975 free (largest 31744), psram 27268900 free (largest 26738688)
+#OK heap
+[ 58020.631] calibration on the real clock: the 100k loop took 112.8 ms (the model says 133), fib(20) 30.7 ms (the model says 29.1)
+#OK bench
+t = 61866.5 ms, lane busy 7436.2 ms (12.0%), 4785 turns, 21 published, 33 delivered, 0 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle          2958   2121.30    200.8    320    0  
+  power       driver   idle            13     77.86    198.8    320    0  
+  display     driver   idle             6     91.23    200.8    320    0  
+  compositor  service  idle           146    398.62    322.3    768    0  
+  agent       service  idle           598    210.95    319.6   1536    0  
+  chat        app      idle             3    105.95    232.9    768    0  
+  launcher    app      idle            31    549.06    212.6    384    0  
+  sysmon      app      idle           122    470.09    222.8    512    0  
+  files       app      idle             1     88.95    214.0    384    0  
+  editor      app      idle             0    102.03    245.0    512    0  
+  calc        app      idle             1    324.07    634.1   1024    0  
+  agenda      app      idle             5    133.28    261.9    384    0  
+  settings    app      idle            60    274.93    231.3    384    0  
+  logs        app      idle           120    294.80    209.7    384    0  
+  loader      app      idle            61    325.23    233.8    384    0  
+  repl        app      idle             0     64.49    201.1    384    0  
+  sandbox     service  idle             0     61.42    198.2    512    0  
+  snake       app      idle           542   1380.47    207.4    320    0  
+  faults      app      idle             0     68.45    203.6    384    0  
+  flaky       service  idle             0     59.08    198.2    320    0  
+  keys        app      idle            59    137.37    200.2    320    0  
+  about       app      idle            59     96.52    200.3    320    0  
+  bus i2c0  busy 16206.92 ms, 2971 transfers, 11898 bytes, 0 errors
+  bus spi2  busy    89.33 ms, 54 transfers, 345844 bytes, 0 errors
+#OK stats
