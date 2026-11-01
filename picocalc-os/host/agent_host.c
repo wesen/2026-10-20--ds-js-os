@@ -27,6 +27,17 @@ const char *port_agent_mode(void) {
   return "offline";
 #endif
 }
+// PICOCALC_AGENT_API overrides (fixtures have no URL); otherwise a URL ending in /chat/completions speaks Chat Completions.
+const char *port_agent_api(void) {
+  const char *api = env_value("PICOCALC_AGENT_API"), *url = env_value("PICOCALC_AGENT_URL");
+  if (api && (!strcmp(api, "chat") || !strcmp(api, "responses"))) return api;
+  size_t n = url ? strlen(url) : 0, k = strlen("/chat/completions");
+  return n >= k && !strcmp(url + n - k, "/chat/completions") ? "chat" : "responses";
+}
+const char *port_agent_model(void) {
+  const char *m = env_value("PICOCALC_AGENT_MODEL");
+  return m ? m : "";
+}
 bool port_agent_configured(void) {
   if (env_value("PICOCALC_AGENT_FIXTURES")) return true;
 #ifdef AGENT_LIVE

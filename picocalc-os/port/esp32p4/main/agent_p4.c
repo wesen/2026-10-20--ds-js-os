@@ -1,4 +1,4 @@
-// Direct Responses HTTPS transport. No JS or kernel state is accessed on this worker.
+// Direct HTTPS transport for a Responses or Chat Completions endpoint. No JS or kernel state is accessed on this worker.
 // The nucleus owns ticket/world/epoch authorization; this port owns a single bounded native request.
 #include <ctype.h>
 #include <stdio.h>
@@ -10,6 +10,8 @@
 #ifndef PICOCALC_AGENT_WIFI
 bool port_agent_configured(void) { return false; }
 const char *port_agent_mode(void) { return "disabled"; }
+const char *port_agent_api(void) { return "responses"; }
+const char *port_agent_model(void) { return ""; }
 int port_agent_start(int ticket, const char *body, size_t len, char *error, size_t error_size) {
   snprintf(error, error_size, "Wi-Fi support not built; enable PICOCALC_AGENT_WIFI");
   return -1;
@@ -45,18 +47,20 @@ void p4_agent_console(const char *args) {
 #define CONFIG_NS "agentcfg"
 #define TOKEN_MAX 512
 #define ENDPOINT_MAX 255
+#define MODEL_MAX 80
 #define NOTIFY_CONNECT BIT0
 #define NOTIFY_REQUEST BIT1
 #define NOTIFY_DISCONNECT BIT2
 #define NOTIFY_TIME BIT3
 
 typedef struct {
-  char ssid[33], password[65], token[TOKEN_MAX + 1], endpoint[ENDPOINT_MAX + 1];
+  char ssid[33], password[65], token[TOKEN_MAX + 1], endpoint[ENDPOINT_MAX + 1], model[MODEL_MAX + 1];
 } transport_config_t;
 static TaskHandle_t worker;
 static SemaphoreHandle_t lock;
 static EventGroupHandle_t events;
 static atomic_bool configured;
+static char cfg_api[12] = "responses", cfg_model[MODEL_MAX + 1];   // kernel task only: set at init and by the console
 static atomic_bool reconnect_allowed;
 static atomic_int retries;
 static char network_state[160] = "starting";
@@ -90,6 +94,7 @@ static bool config_get(transport_config_t *c) {
   n = sizeof c->endpoint;
   if (nvs_get_str(h, "endpoint", c->endpoint, &n) != ESP_OK)
     snprintf(c->endpoint, sizeof c->endpoint, "%s", CONFIG_PICOCALC_AGENT_ENDPOINT);
+  n = sizeof c->model; if (nvs_get_str(h, "model", c->model, &n) != ESP_OK) c->model[0] = 0;
   nvs_close(h);
   return c->ssid[0] && c->token[0];
 }
@@ -106,9 +111,20 @@ static bool endpoint_ok(const char *s) {
   return true;
 }
 
+static bool model_ok(const char *s) {
+  size_t n = strlen(s);
+  if (!n || n > MODEL_MAX || !isalnum((unsigned char)s[0])) return false;
+  for (const unsigned char *p = (const unsigned char *)s; *p; p++)
+    if (!isalnum(*p) && !strchr("._:/-", *p)) return false;
+  return true;
+}
 static void refresh_configured(void) {
   transport_config_t c;
   atomic_store(&configured, config_get(&c) && endpoint_ok(c.endpoint));
+  static const char *CHAT = "/chat/completions";
+  size_t n = strlen(c.endpoint), k = strlen(CHAT);
+  snprintf(cfg_api, sizeof cfg_api, "%s", n >= k && !strcmp(c.endpoint + n - k, CHAT) ? "chat" : "responses");
+  snprintf(cfg_model, sizeof cfg_model, "%s", model_ok(c.model) ? c.model : "");
   wipe(&c, sizeof c);
 }
 
@@ -335,6 +351,8 @@ void p4_agent_init(void) {
 }
 bool port_agent_configured(void) { return worker && atomic_load(&configured); }
 const char *port_agent_mode(void) { return "https"; }
+const char *port_agent_api(void) { return cfg_api; }
+const char *port_agent_model(void) { return cfg_model; }
 
 int port_agent_start(int ticket, const char *body, size_t len, char *error, size_t error_size) {
   if (!worker || !atomic_load(&configured)) { snprintf(error, error_size, "set Wi-Fi and API credentials with net commands"); return -1; }
@@ -394,16 +412,19 @@ void p4_agent_console(const char *args) {
   if (!*cmd || !strcmp(cmd, "status")) {
     char state[sizeof network_state] = "worker unavailable";
     if (lock) { xSemaphoreTake(lock, portMAX_DELAY); memcpy(state, network_state, sizeof state); xSemaphoreGive(lock); }
-    printf("net: configured=%s wifi=%s clock=%s state=%s\n", port_agent_configured() ? "yes" : "no",
-           events && (xEventGroupGetBits(events) & NET_UP) ? "up" : "down", clock_ready() ? "set" : "unset", state);
+    printf("net: configured=%s wifi=%s clock=%s api=%s model=%s state=%s\n", port_agent_configured() ? "yes" : "no",
+           events && (xEventGroupGetBits(events) & NET_UP) ? "up" : "down", clock_ready() ? "set" : "unset",
+           cfg_api, cfg_model[0] ? cfg_model : "-", state);
   } else if (!strcmp(cmd, "connect")) {
     if (worker) { xTaskNotify(worker, NOTIFY_CONNECT, eSetBits); printf("net: connect queued\n"); }
     else printf("net: worker unavailable\n");
-  } else if (!strcmp(cmd, "ssid") || !strcmp(cmd, "password") || !strcmp(cmd, "token") || !strcmp(cmd, "endpoint")) {
+  } else if (!strcmp(cmd, "ssid") || !strcmp(cmd, "password") || !strcmp(cmd, "token") || !strcmp(cmd, "endpoint") ||
+             !strcmp(cmd, "model")) {
     size_t size = strlen(value);
     bool valid = !strcmp(cmd, "ssid") ? size > 0 && size <= 32 :
                  !strcmp(cmd, "password") ? size == 0 || (size >= 8 && size <= 64) :
-                 !strcmp(cmd, "token") ? size > 0 && size <= TOKEN_MAX : endpoint_ok(value);
+                 !strcmp(cmd, "token") ? size > 0 && size <= TOKEN_MAX :
+                 !strcmp(cmd, "model") ? model_ok(value) : endpoint_ok(value);
     for (const unsigned char *p = (const unsigned char *)value; *p; p++)
       if (*p < 32 || *p == 127 || (!strcmp(cmd, "token") && (*p > 126 || isspace(*p))) ||
           (!strcmp(cmd, "password") && size == 64 && !isxdigit(*p))) valid = false;
@@ -424,6 +445,6 @@ void p4_agent_console(const char *args) {
     }
     if (worker) xTaskNotify(worker, NOTIFY_DISCONNECT, eSetBits);
     printf("net: credential removal %s\n", e == ESP_OK ? "complete" : "failed");
-  } else printf("net status | ssid NAME | password VALUE | token VALUE | endpoint HTTPS_URL | connect | forget\n");
+  } else printf("net status | ssid NAME | password VALUE | token VALUE | endpoint HTTPS_URL | model ID | connect | forget\n");
 }
 #endif

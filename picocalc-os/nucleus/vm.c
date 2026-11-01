@@ -581,6 +581,8 @@ static JSValue op_agent_status(JSContext *ctx, world_t *W, int argc, JSValueCons
   JSValue r = JS_NewObject(ctx);
   JS_SetPropertyStr(ctx, r, "configured", JS_NewBool(ctx, port_agent_configured()));
   JS_SetPropertyStr(ctx, r, "mode", JS_NewString(ctx, port_agent_mode()));
+  JS_SetPropertyStr(ctx, r, "api", JS_NewString(ctx, port_agent_api()));
+  JS_SetPropertyStr(ctx, r, "model", JS_NewString(ctx, port_agent_model()));
   return r;
 }
 static JSValue op_agent_start(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {

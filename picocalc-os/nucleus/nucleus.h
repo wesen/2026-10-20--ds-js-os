@@ -358,6 +358,10 @@ int port_store_set(const char *ns, const char *key, const void *data, size_t len
 typedef struct { int status; char *body; char error[160]; } agent_net_result_t;
 bool port_agent_configured(void);
 const char *port_agent_mode(void);
+// The configured endpoint's dialect: "chat" (an OpenAI-compatible .../chat/completions) or "responses"; and the
+// model provisioned with it ("" if none). JS builds its request bodies for that dialect.
+const char *port_agent_api(void);
+const char *port_agent_model(void);
 int port_agent_start(int ticket, const char *body, size_t len, char *error, size_t error_size);
 int port_agent_poll(int ticket, agent_net_result_t *result);
 void port_agent_cancel(int ticket);

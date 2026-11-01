@@ -1,0 +1,1 @@
+{"id": "chatcmpl-fixture2", "object": "chat.completion", "model": "deepseek-4.1-flash", "choices": [{"index": 0, "finish_reason": "stop", "logprobs": null, "message": {"role": "assistant", "content": "6 * 7 = 42.\n\nI checked this with the local calculator tool.", "reasoning": null, "refusal": null}}], "usage": {"prompt_tokens": 420, "completion_tokens": 40}}

@@ -107,6 +107,23 @@ class NativeTests(unittest.TestCase):
         self.assertIn('"configured":false', log)
         self.assertIn('not configured', log)
 
+    def test_status_reports_api_and_model(self):
+        status = "service('w').onStart(()=>log('TEST status',JSON.stringify(agentNet.status())))"
+        s = self.scenario()
+        s.world("w", status)
+        log = s.run()
+        self.assertIn('"api":"responses"', log)
+        self.assertIn('"model":""', log)
+        s = self.scenario()
+        s.world("w", status)
+        log = s.run(extra_env={"PICOCALC_AGENT_API": "chat", "PICOCALC_AGENT_MODEL": "deepseek-4.1-flash"})
+        self.assertIn('"api":"chat"', log)
+        self.assertIn('"model":"deepseek-4.1-flash"', log)
+        s = self.scenario(fixtures=False)
+        s.world("w", status)
+        log = s.run(extra_env={"PICOCALC_AGENT_URL": "https://gw.example/v1/chat/completions"})
+        self.assertIn('"api":"chat"', log)
+
     def test_claim_required(self):
         s = self.scenario()
         s.world("w", "service('w').onStart(()=>{for(const f of [()=>agentNet.status(),()=>agentNet.start('{}'),()=>agentNet.poll(1),()=>agentNet.cancel(1)])try{f()}catch(e){log('TEST denied',e.message)}})", claims=())

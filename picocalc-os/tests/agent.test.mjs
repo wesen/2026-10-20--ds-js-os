@@ -9,7 +9,7 @@ const message = text => ({ type: 'message', role: 'assistant', status: 'complete
 const call = (name, args, id = 'call_1') => ({ type: 'function_call', status: 'completed', call_id: id, name, arguments: JSON.stringify(args) });
 const completed = (...output) => ({ status: 200, body: JSON.stringify({ id: 'resp_test', status: 'completed', output }) });
 
-function harness(saved = null) {
+function harness(saved = null, status = { configured: true, mode: 'fixture' }) {
   const def = { handlers: {} }, sent = [], requests = [], cancelled = [], pending = new Map();
   let clock = 0, serial = 0, session = copy(saved), storageStatus = { pending: false, error: '' };
   const builder = { state(s) { def.initial = s; return this; }, onStart(fn) { def.start = fn; return this; },
@@ -18,7 +18,7 @@ function harness(saved = null) {
     send: (to, type, payload) => sent.push({ to, type, payload: copy(payload) }), now: () => clock,
     store: { get: () => copy(session), set: (key, value) => { session = copy(value); }, status: () => copy(storageStatus) },
     sys: { worlds: () => [{ name: 'agent', state: 'idle', mem_kb: 300 }], stats: () => ({ crashes: 0 }) },
-    agentNet: { status: () => ({ configured: true, mode: 'fixture' }),
+    agentNet: { status: () => copy(status),
       start: body => { const id = ++serial; requests.push({ id, body, parsed: JSON.parse(body) }); pending.set(id, null); return id; },
       poll: id => { const result = pending.get(id); if (result) pending.delete(id); return result || null; },
       cancel: id => { cancelled.push(id); pending.delete(id); } },
@@ -268,4 +268,78 @@ test('UTF-8 bounds and local record quotas include multibyte text', () => {
   }
   assert.ok(Buffer.byteLength(JSON.stringify({ session: h.session() })) <= 16384);
   assert.ok(h.state.entries.length <= 40);
+});
+
+// Chat Completions, as gw.lunaroute.com (vLLM) answered on 2026-10-31.
+const CHAT = { configured: true, mode: 'https', api: 'chat', model: 'deepseek-4.1-flash' };
+const chatReply = (message, finish = message.tool_calls ? 'tool_calls' : 'stop') => ({ status: 200, body: JSON.stringify({
+  id: 'chatcmpl-848e6c764801ca15', object: 'chat.completion', model: 'deepseek-4.1-flash',
+  choices: [{ index: 0, finish_reason: finish, message: { role: 'assistant', content: null, reasoning: null, refusal: null, ...message } }],
+  usage: { prompt_tokens: 304, completion_tokens: 40 } }) });
+const chatCall = (name, args, id = 'chatcmpl-tool-ac92000da65f6a9d') => ({ id, type: 'function', function: { name, arguments: JSON.stringify(args) } });
+
+test('chat endpoint: request is Chat Completions with the provisioned model', () => {
+  const h = harness(null, CHAT);
+  h.send('submit', { text: 'What is 17*23?' });
+  const req = h.requests[0].parsed;
+  assert.equal(req.model, 'deepseek-4.1-flash'); assert.equal(req.stream, false); assert.equal(req.max_tokens, 2048);
+  assert.equal(req.reasoning_effort, 'low'); assert.equal(req.parallel_tool_calls, false);
+  assert.equal(req.input, undefined); assert.equal(req.instructions, undefined); assert.equal(req.store, undefined);
+  assert.equal(req.messages[0].role, 'system'); assert.match(req.messages[0].content, /PicoCalc/);
+  assert.deepEqual(req.messages[1], { role: 'user', content: 'What is 17*23?' });
+  assert.ok(req.tools.every(t => t.type === 'function' && t.function.name && t.function.parameters.additionalProperties === false));
+});
+
+test('chat endpoint: tool call, local result, continuation, answer', () => {
+  const h = harness(null, CHAT);
+  h.send('submit', { text: 'What is 17*23?' });
+  h.result(chatReply({ tool_calls: [chatCall('calculate', { expression: '17*23' })] }));
+  assert.equal(h.state.phase, 'tools'); h.tick(2);
+  assert.equal(h.requests.length, 2);
+  const m = h.requests[1].parsed.messages;
+  assert.deepEqual(m[2], { role: 'assistant', content: null, tool_calls: [chatCall('calculate', { expression: '17*23' })] });
+  assert.equal(m[3].role, 'tool'); assert.equal(m[3].tool_call_id, 'chatcmpl-tool-ac92000da65f6a9d');
+  assert.deepEqual(JSON.parse(m[3].content), { ok: true, value: 391 });
+  h.result(chatReply({ content: '17 x 23 = 391' }));
+  assert.equal(h.state.phase, 'done'); assert.equal(h.state.history.at(-1).content, '17 x 23 = 391');
+  h.send('submit', { text: 'And doubled?' });
+  assert.deepEqual(h.requests[2].parsed.messages.slice(1), [{ role: 'user', content: 'What is 17*23?' },
+    { role: 'assistant', content: '17 x 23 = 391' }, { role: 'user', content: 'And doubled?' }]);
+});
+
+test('chat endpoint: text with calls is one assistant message; reasoning is not sent back', () => {
+  const h = harness(null, CHAT);
+  h.send('submit', { text: 'List my notes and compute 2+2' });
+  h.result(chatReply({ content: 'Checking.', reasoning: 'long private thoughts',
+    tool_calls: [chatCall('list_notes', {}, 'c1'), chatCall('calculate', { expression: '2+2' }, 'c2')] }));
+  h.tick(3);
+  const m = h.requests[1].parsed.messages;
+  assert.equal(m[2].content, 'Checking.'); assert.deepEqual(m[2].tool_calls.map(t => t.id), ['c1', 'c2']);
+  assert.deepEqual(m.slice(3).map(x => [x.role, x.tool_call_id]), [['tool', 'c1'], ['tool', 'c2']]);
+  assert.ok(!JSON.stringify(m).includes('private thoughts'));
+});
+
+test('chat endpoint: a truncated or malformed reply runs no tool', () => {
+  const h = harness(null, CHAT);
+  h.send('submit', { text: 'Save a note' });
+  h.result(chatReply({ tool_calls: [chatCall('save_note', { name: 'a', text: 'b' })] }, 'length'));
+  assert.equal(h.state.phase, 'error'); assert.match(h.state.error, /Incomplete response/); assert.equal(h.state.approval, null);
+  const g = harness(null, CHAT);
+  g.send('submit', { text: 'Hi' });
+  g.result({ status: 200, body: JSON.stringify({ choices: [] }) });
+  assert.equal(g.state.phase, 'error'); assert.match(g.state.error, /invalid or failed/);
+  const e = harness(null, CHAT);
+  e.send('submit', { text: 'Hi' });
+  e.result({ status: 200, body: JSON.stringify({ choices: [{ finish_reason: 'tool_calls', message: { role: 'assistant', tool_calls: [{ id: 'bad id!', type: 'function', function: { name: 'calculate', arguments: '{}' } }] } }] }) });
+  assert.equal(e.state.phase, 'error'); assert.match(e.state.error, /Invalid or duplicate tool call/);
+});
+
+test('model precedence: chosen, then provisioned, then built-in', () => {
+  const old = { version: 1, model: 'gpt-6-luna', effort: 'low', history: [], notes: [], pending: false, prompt: '' };
+  assert.equal(harness(old, CHAT).state.model, 'deepseek-4.1-flash');
+  assert.equal(harness({ ...old, model: 'glm-5.3', chosen: true }, CHAT).state.model, 'glm-5.3');
+  assert.equal(harness(null, { configured: true, mode: 'https' }).state.model, 'gpt-6-luna');
+  const h = harness(null, CHAT);
+  h.send('submit', { text: '/model glm-5.3' }); assert.equal(h.state.model, 'glm-5.3'); assert.equal(h.session().chosen, true);
+  h.send('submit', { text: '/model default' }); assert.equal(h.state.model, 'deepseek-4.1-flash'); assert.equal(h.session().chosen, false);
 });

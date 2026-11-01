@@ -1,0 +1,1 @@
+{"id": "chatcmpl-fixture4", "object": "chat.completion", "model": "deepseek-4.1-flash", "choices": [{"index": 0, "finish_reason": "stop", "logprobs": null, "message": {"role": "assistant", "content": "Saved your note 'next':\n\nstudy groups", "reasoning": null, "refusal": null}}], "usage": {"prompt_tokens": 540, "completion_tokens": 40}}

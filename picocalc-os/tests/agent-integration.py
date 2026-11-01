@@ -10,7 +10,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def run(binary, work, name, script, fixture=None, store=None):
+def run(binary, work, name, script, fixture=None, store=None, env_extra=None):
     out = work / name
     out.mkdir()
     cmd = [str(binary), '-o', str(out)]
@@ -22,6 +22,7 @@ def run(binary, work, name, script, fixture=None, store=None):
     env.pop('PICOCALC_AGENT_FIXTURES', None)
     if fixture:
         env['PICOCALC_AGENT_FIXTURES'] = str(fixture)
+    env.update(env_extra or {})
     result = subprocess.run(cmd, cwd=ROOT, env=env, input=script, text=True, capture_output=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
     log = (out / 'uart.log').read_text()
@@ -52,6 +53,17 @@ def main():
     assert len(list(out.glob('agent-*.png'))) == 5
     assert len((state / 'w/agent').read_bytes()) <= 16384
     print('PASS: QuickJS chat -> native transport -> calculator -> answer -> approval -> durable note -> read')
+
+    # The same tour against a Chat Completions endpoint (the replies are the vLLM shape lunaroute returns).
+    chat_state = work / 'chat-store'
+    chat_env = {'PICOCALC_AGENT_API': 'chat', 'PICOCALC_AGENT_MODEL': 'deepseek-4.1-flash'}
+    out, log, _ = run(binary, work, 'chat-tour', (ROOT / 'scripts-agent/tour.txt').read_text(),
+                      ROOT / 'tests/fixtures/agent-chat', chat_state, chat_env)
+    record = json.loads((chat_state / 'w/agent').read_text())['session']
+    assert record['notes'] == [{'name': 'next', 'text': 'study groups'}], record
+    assert len(record['history']) == 6 and record['model'] == 'deepseek-4.1-flash' and record['chosen'] is False, record
+    assert 'rational numbers' in record['history'][-1]['content']
+    print('PASS: the same tour through a Chat Completions endpoint')
 
     before = (state / 'w/agent').read_bytes()
     run(binary, work, 'reboot', 'wait 1800\nkey c\nwait 300\ncapture reboot.png\nstats\n', None, state)
