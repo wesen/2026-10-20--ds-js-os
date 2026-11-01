@@ -1,0 +1,82 @@
+picocalc-os: read how many instructions a call into a module used. The fast interpreter reads the count limit
+from the exec env when it starts and never writes it back; this writes what is left back when it returns to the
+host or stops on an exception, and adds wasm_runtime_get_instruction_count_limit to read it. The caller computes
+the instructions used as the limit it set minus what is left.
+
+--- a/core/iwasm/common/wasm_runtime_common.c
++++ b/core/iwasm/common/wasm_runtime_common.c
+@@ -2348,6 +2348,13 @@
+ {
+     exec_env->instructions_to_execute = instructions_to_execute;
+ }
++
++/* picocalc-os: what is left of the limit after a call returned */
++int
++wasm_runtime_get_instruction_count_limit(WASMExecEnv *exec_env)
++{
++    return exec_env->instructions_to_execute;
++}
+ #endif
+ 
+ WASMFuncType *
+--- a/core/iwasm/common/wasm_runtime_common.h
++++ b/core/iwasm/common/wasm_runtime_common.h
+@@ -834,6 +834,10 @@
+ WASM_RUNTIME_API_EXTERN void
+ wasm_runtime_set_instruction_count_limit(WASMExecEnv *exec_env,
+                                          int instructions_to_execute);
++
++/* See wasm_export.h for description */
++WASM_RUNTIME_API_EXTERN int
++wasm_runtime_get_instruction_count_limit(WASMExecEnv *exec_env);
+ #endif
+ 
+ #if WASM_CONFIGURABLE_BOUNDS_CHECKS != 0
+--- a/core/iwasm/include/wasm_export.h
++++ b/core/iwasm/include/wasm_export.h
+@@ -1877,6 +1877,16 @@
+                                          int instruction_count);
+ 
+ /**
++ * picocalc-os: get what is left of the instruction count limit after a call
++ * into the module returned (normally or with an exception); -1 if there is
++ * no limit.
++ *
++ * @param exec_env the execution environment
++ */
++WASM_RUNTIME_API_EXTERN int
++wasm_runtime_get_instruction_count_limit(wasm_exec_env_t exec_env);
++
++/**
+  * Dump runtime memory consumption, including:
+  *     Exec env memory consumption
+  *     WASM module memory consumption
+--- a/core/iwasm/interpreter/wasm_interp_fast.c
++++ b/core/iwasm/interpreter/wasm_interp_fast.c
+@@ -7787,9 +7787,14 @@
+         FREE_FRAME(exec_env, frame);
+         wasm_exec_env_set_cur_frame(exec_env, (WASMRuntimeFrame *)prev_frame);
+ 
+-        if (!prev_frame->ip)
++        if (!prev_frame->ip) {
+             /* Called from native. */
++#if WASM_ENABLE_INSTRUCTION_METERING != 0
++            /* picocalc-os: the caller reads how many instructions are left */
++            exec_env->instructions_to_execute = instructions_left;
++#endif
+             return;
++        }
+ 
+         RECOVER_CONTEXT(prev_frame);
+ #if WASM_ENABLE_GC != 0
+@@ -7815,6 +7820,10 @@
+ 
+     got_exception:
+         SYNC_ALL_TO_FRAME();
++#if WASM_ENABLE_INSTRUCTION_METERING != 0
++        if (exec_env) /* picocalc-os: as at return_func */
++            exec_env->instructions_to_execute = instructions_left;
++#endif
+         return;
+ 
+ #if WASM_ENABLE_LABELS_AS_VALUES == 0
