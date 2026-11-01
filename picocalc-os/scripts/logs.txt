@@ -1,0 +1,25 @@
+# Logs and the launcher's fourth row: the boot's lines, a crash on purpose, the problems filter, scrolling back.
+wait 1200
+key down
+key down
+key down
+wait 200
+capture 90-home-row4.png
+key f
+wait 300
+key enter
+wait 1500
+key f1
+wait 200
+key l
+wait 800
+capture 91-logs.png
+key f2
+wait 200
+capture 92-logs-problems.png
+key f2
+key up
+key up
+key up
+wait 200
+capture 93-logs-held.png

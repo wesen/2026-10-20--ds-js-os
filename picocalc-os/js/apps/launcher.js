@@ -15,6 +15,8 @@ const APPS = [
   { app: "settings", key: "g", label: "Settings", about: "Wi-Fi: its state, nearby networks, joining one. The time zone, and the agent's provider.",
     ops: [["rect", 12, 7, 16, 16], ["fill", 18, 1, 4, 6], ["fill", 18, 23, 4, 6], ["fill", 6, 13, 6, 4], ["fill", 28, 13, 6, 4],
           ["fill", 17, 12, 6, 6, "accent"]] },
+  { app: "logs", key: "l", label: "Logs", about: "What the kernel, the worlds and the network have logged, newest at the bottom.",
+    ops: [["rect", 4, 1, 32, 28], ["fill", 8, 6, 14, 2], ["fill", 8, 11, 22, 2], ["fill", 8, 16, 18, 2], ["fill", 8, 21, 10, 2, "accent"]] },
   { app: "sysmon", key: "m", label: "System", about: "Every world, its memory, its turns and the buses, live.",
     ops: [["fill", 4, 18, 7, 12], ["fill", 13, 8, 7, 22], ["fill", 22, 13, 7, 17], ["fill", 31, 2, 7, 28]] },
   { app: "repl", key: "r", label: "REPL", about: "JavaScript, evaluated in a sandbox world with its own heap and budget.",
@@ -28,11 +30,18 @@ const APPS = [
   { app: "about", key: "a", label: "About", about: "The device profile, the clock calibration and the kernel's counters.",
     ops: [["rect", 6, 0, 28, 30], ["fill", 19, 6, 3, 3], ["fill", 19, 12, 3, 12]] },
 ];
-const COLS = 4;   // four narrower cells keep ten to twelve apps in three rows
+const COLS = 4, ROWS = 3;   // three rows of four fit the screen; more apps scroll by rows
+
+// Keep the selected app's row among the visible ones.
+function reveal(s) {
+  const row = Math.floor(s.sel / COLS);
+  if (row < s.top) s.top = row;
+  else if (row >= s.top + ROWS) s.top = row - ROWS + 1;
+}
 
 app("launcher")
   .title("PicoCalc")
-  .state({ sel: 0, worlds: 0, running: 0, crashes: 0 })
+  .state({ sel: 0, top: 0, worlds: 0, running: 0, crashes: 0 })
   .onStart((s) => count(s))
   .on("focus", (s) => count(s))
   .on("key", (s, k) => {
@@ -46,13 +55,17 @@ app("launcher")
       const i = APPS.findIndex((a) => a.key === (k.ch || "").toLowerCase());
       if (i >= 0) { s.sel = i; send("compositor", "open", { app: APPS[i].app }); }
     }
+    reveal(s);
   })
   .every(2000, (s) => count(s))
   .screen((s) => {
-    const a = APPS[s.sel];
+    const a = APPS[s.sel], first = s.top * COLS, shown = APPS.slice(first, first + ROWS * COLS);
+    const more = (s.top > 0 ? "▲" : " ") + (first + shown.length < APPS.length ? "▼" : " ");
     return ui.col({ gap: 6 },
-      ui.text("Apps", { font: "l" }),
-      ui.grid(APPS.map((x) => ({ label: x.label, ops: x.ops, key: x.key })), s.sel, { cols: COLS, cell: 58, gap: 5 }),
+      ui.row({},
+        ui.text("Apps", { font: "l" }),
+        ui.text(more.trim() ? `${more}  ${APPS.length} apps` : "", { font: "s", color: "muted", align: "right" })),
+      ui.grid(shown.map((x) => ({ label: x.label, ops: x.ops, key: x.key })), s.sel - first, { cols: COLS, cell: 58, gap: 5 }),
       ui.text(a.about, { wrap: true, font: "s", color: "ink" }),
       ui.gap(0),
       ui.text(`${s.running} of ${s.worlds} worlds running · ${s.crashes} crashes since boot`, { font: "s", color: "muted" }),

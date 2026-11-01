@@ -130,3 +130,86 @@ test("settings: the zone list marks the zone in effect and sets another", () => 
   h.key("esc");
   assert.deepEqual([h.s.page, h.s.sel], ["menu", 1]);
 });
+
+// ---- Logs ------------------------------------------------------------------------------------------------------
+// A fake ring like the kernel's: lines numbered from 1, the last 256 kept, 64 per read.
+function logs() {
+  const ring = { next: 1, lines: [] };
+  const add = (s, wall = -1) => { ring.lines.push({ n: ring.next, t: ring.next * 10, wall, s }); ring.next++; if (ring.lines.length > 256) ring.lines.shift(); };
+  const app = load("logs.js", {
+    Date,
+    sys: { log: (after) => {
+      const first = ring.lines.length ? ring.lines[0].n : ring.next;
+      return { first, next: ring.next, lines: ring.lines.filter((l) => l.n > after).slice(0, 64) };
+    } },
+  });
+  app.def.handlers.focus(app.s);
+  return { ...app, add, tick: () => app.def.every[0](app.s), shown: () => JSON.parse(app.screen()).kids[0].items.map((i) => i.s) };
+}
+
+test("logs: reads what is new, page by page, and marks lines the ring overwrote", () => {
+  const h = logs();
+  assert.deepEqual(h.shown(), ["Nothing logged yet."]);
+  h.add("booting 21 worlds"); h.add("I (812) wifi: connected", new Date(2026, 9, 22, 9, 41, 5).getTime());
+  h.tick();
+  assert.deepEqual(h.shown(), ["0.0s booting 21 worlds", "09:41:05 I (812) wifi: connected"]);
+  for (let i = 0; i < 150; i++) h.add("line " + i);
+  h.tick();
+  assert.equal(h.s.lines.length, 152);
+  assert.equal(h.s.after, 152);
+  h.def.handlers.blur(h.s);
+  for (let i = 0; i < 300; i++) h.add("away " + i);
+  h.tick();                                          // in the background it does not read
+  assert.equal(h.s.after, 152);
+  h.def.handlers.focus(h.s);
+  const shown = h.shown();
+  assert.equal(shown.filter((x) => x.startsWith("…")).length, 1);
+  assert.ok(shown.includes("… 44 lines are gone"), shown.find((x) => x.startsWith("…")));
+  assert.equal(h.s.after, 452);
+  assert.ok(h.s.lines.length <= 400);
+});
+
+test("logs: filters, colours, and a view that holds still while scrolled back", () => {
+  const h = logs();
+  h.add("booting"); h.add("snake crashed: boom"); h.add("E (900) wifi: auth failed"); h.add("I (950) files: mounted");
+  h.tick();
+  const tree = JSON.parse(h.screen()).kids[0];
+  assert.deepEqual(tree.items.map((i) => i.color), ["ink", "accent", "accent", "muted"]);
+  h.key("f2");
+  assert.deepEqual(h.shown().map((x) => x.split(" ").slice(1).join(" ")), ["snake crashed: boom", "E (900) wifi: auth failed"]);
+  h.key("f2");
+  assert.deepEqual(h.shown().length, 2);             // kernel: booting, snake
+  h.key("f2"); h.key("f2");                          // ESP-IDF, then all again
+  assert.equal(h.s.filter, 0);
+  h.key("up");
+  assert.equal(h.s.scroll, 1);
+  h.add("later"); h.tick();
+  assert.equal(h.shown().length, 4, "held: the new line waits");
+  assert.match(JSON.parse(h.screen()).kids[1].s, /held, End follows/);
+  h.key("end");
+  assert.equal(h.shown().length, 5);
+});
+
+// ---- the launcher ----------------------------------------------------------------------------------------------
+test("launcher: thirteen apps scroll by rows, and a letter still opens any of them", () => {
+  const sent = [];
+  const h = load("launcher.js", {
+    send: (to, type, payload) => sent.push(plain({ to, type, payload })),
+    sys: { worlds: () => [], stats: () => ({ crashes: 0 }) },
+  });
+  const grid = () => JSON.parse(h.screen()).kids[1];
+  const more = () => JSON.parse(h.screen()).kids[0].kids[1].s;
+  assert.equal(grid().items.length, 12);
+  assert.match(more(), /▼/);
+  h.key("down"); h.key("down"); h.key("down");
+  assert.deepEqual([h.s.sel, h.s.top], [12, 1]);
+  assert.equal(grid().items[grid().sel].label, "About");
+  assert.match(more(), /▲/);
+  h.key("up"); h.key("up"); h.key("up");
+  assert.deepEqual([h.s.sel, h.s.top], [0, 0]);
+  h.key("a", "a");
+  assert.deepEqual(sent.at(-1), { to: "compositor", type: "open", payload: { app: "about" } });
+  assert.equal(h.s.top, 1);
+  h.key("l", "l");
+  assert.deepEqual(sent.at(-1).payload, { app: "logs" });
+});
