@@ -6,7 +6,7 @@ const APPS = [
     ops: [["fill", 2, 3, 14, 4], ["rect", 2, 6, 36, 22], ["fill", 2, 6, 36, 3]] },
   { app: "editor", key: "e", label: "Editor", about: "Plain text and Markdown, with find, soft wrap and a preview.",
     ops: [["rect", 8, 0, 24, 30], ["fill", 12, 6, 16, 2], ["fill", 12, 12, 16, 2], ["fill", 12, 18, 9, 2], ["fill", 23, 16, 2, 7, "accent"]] },
-  { app: "calc", key: "x", label: "Calc", about: "Expressions, variables and functions with a history; F2 plots functions of x.",
+  { app: "calc", key: "x", label: "Calc", about: "Scientific, with calculus and a solver; graphs of up to four curves; F6 help.",
     ops: [["rect", 8, 0, 24, 30], ["fill", 11, 3, 18, 7], ["fill", 11, 13, 4, 3], ["fill", 18, 13, 4, 3], ["fill", 25, 13, 4, 3],
           ["fill", 11, 19, 4, 3], ["fill", 18, 19, 4, 3], ["fill", 25, 19, 4, 8, "accent"], ["fill", 11, 25, 11, 3]] },
   { app: "agenda", key: "t", label: "Agenda", about: "Tasks from notes/todo.txt by day, with reminders on the network clock.",

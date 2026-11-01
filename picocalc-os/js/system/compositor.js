@@ -59,7 +59,8 @@ function measure(n, w) {
     case "textarea": return { h: n.rows.length * (fh(n.font || "s") + (n.lead ?? 2)) + 4, grow: n.grow ?? 1 };
     case "list": case "lines": case "table": {
       const rh = rowH(n), head = n.t === "table" && n.head !== false ? fh("s") + 6 : 0;
-      return n.visible ? { h: n.visible * rh + head, grow: 0 } : { h: rh + head, grow: n.grow ?? 1 };   // visible: rows shown
+      const pad = n.t === "lines" ? 4 : 0;   // drawLines keeps 2 pixels above and below its rows
+      return n.visible ? { h: n.visible * rh + head + pad, grow: 0 } : { h: rh + head, grow: n.grow ?? 1 };   // visible: rows shown
     }
     case "box": {
       const p = n.pad ?? 6, m = measureStack(n.kids, w - 2 * p, n.gap ?? 4);

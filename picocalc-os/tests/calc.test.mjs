@@ -47,6 +47,13 @@ function setup(saved = null) {
   return { s, def, key, type, run, advance, fn, stored, setCost: (c) => { cost = c; } };
 }
 const value = (h, line) => { const r = h.run(line); assert.equal(r.ok, true, line + " -> " + r.r); return r.r; };
+// F4 opens the modes, where the angle comes first; → steps it; Esc goes back
+const angle = (h, a) => {
+  h.key("f4");
+  for (let i = 0; i < 3 && h.s.angle !== a; i++) h.key("right");
+  h.key("esc");
+  assert.deepEqual([h.s.mode, h.s.angle], ["calc", a]);
+};
 
 test("precedence, associativity, unary minus and implicit multiplication", () => {
   const h = setup();
@@ -71,13 +78,13 @@ test("functions, constants, ans and degree mode", () => {
   for (const [line, want] of Object.entries(cases)) assert.equal(value(h, line), want, line);
   value(h, "6 * 7");
   assert.equal(value(h, "ans + 1"), "= 43");
-  h.key("f4");
+  angle(h, "deg");
   assert.equal(value(h, "sin(30)"), "= 0.5");
   assert.equal(value(h, "asin(1)"), "= 90");
-  h.key("f4");                                    // gradians: a right angle is 100
+  angle(h, "grad");                               // gradians: a right angle is 100
   assert.equal(value(h, "sin(100)"), "= 1");
   assert.equal(value(h, "acos(0)"), "= 100");
-  h.key("f4");
+  angle(h, "rad");
   assert.equal(value(h, "sin(pi/6)"), "= 0.5");
 });
 
@@ -156,7 +163,7 @@ test("names view lists and removes variables and functions", () => {
 
 test("state is saved 3 seconds after a change and on blur, and restored", async () => {
   const h = setup();
-  value(h, "r = 3"); value(h, "f(x) = r x"); h.key("f4");
+  value(h, "r = 3"); value(h, "f(x) = r x"); angle(h, "deg");
   assert.equal(h.stored.calc, null);
   await h.advance(3000);
   assert.equal(h.stored.calc.vars.r, 3); assert.equal(h.stored.calc.angle, "deg");
@@ -425,4 +432,156 @@ test("graph: the table, the window page and the curve list", async () => {
   assert.deepEqual(plain(h.s.graphs), [{ src: "2x + 1", on: false }]);
   h.key("f2");                                                          // plotting it again puts it first
   assert.deepEqual(plain(h.s.graphs).map((g) => g.src), ["x^2", "2x + 1"]);
+});
+
+test("help: every built-in name has one entry, in one group, whose example gives the result written next to it", () => {
+  const h = setup(), ref = h.fn("HELP_REF"), names = (o) => Object.keys(h.fn(o));
+  const entries = new Map(ref.map((e) => [e[0], e]));
+  assert.equal(entries.size, ref.length, "one entry per name");
+  for (const n of [...names("CALC_FN"), ...names("CALC_CONST"), ...names("CALC_FORM"), "ans"]) assert.ok(entries.has(n), n + " has no help entry");
+  const count = {};
+  for (const t of h.fn("HELP_TOPICS")) for (const n of t.names ? t.names.split(" ") : []) count[n] = (count[n] || 0) + 1;
+  for (const e of ref) if (e[0] !== "ans") assert.equal(count[e[0]], 1, e[0] + " is in one group");
+  assert.deepEqual(Object.keys(count).filter((n) => !entries.has(n)), [], "groups name only entries");
+  const wrap = h.fn("helpWrap");
+  for (const e of ref) {
+    assert.ok(wrap(e[2], 49).length + wrap(e[3] + " = " + (e[4] || "0.123456789012"), 47).length <= 5, e[0] + "'s entry fits under the list");
+    if (e[0] === "polar" || e[0] === "param") { assert.equal(h.fn("plotKind")(e[3]), e[0]); continue; }
+    const r = h.run(e[3]);
+    assert.equal(r.ok, true, e[3] + " -> " + r.r);
+    if (e[4] !== null) assert.equal(r.r, "= " + e[4], e[3]);
+  }
+  for (let i = 0; i < 20; i++) {
+    const u = h.run("rand()").v, d = h.run("randint(1, 6)").v;
+    assert.ok(u >= 0 && u < 1 && Number.isInteger(d) && d >= 1 && d <= 6);
+  }
+  const tpl = h.fn("helpTemplate");
+  assert.deepEqual(["atan2", "rand", "pi", "log", "integ"].map((n) => tpl(entries.get(n))), ["atan2(", "rand()", "pi", "log(", "integ("]);
+});
+
+test("help: the guides' examples run in order, and every row fits the screen", () => {
+  const topics = setup().fn("HELP_TOPICS").filter((t) => t.text);
+  assert.deepEqual(plain(topics.map((t) => t.id)), ["start", "keys", "numbers", "names", "calculus", "graphing", "modes"]);
+  const want = { "fib(15)": "= 610", "integ(1/sqrt(x), x, 0, 1)": "= 1.99999999988", "solve(cos(x) - x, x, 0, 1)": "= 0.739085133215",
+    "integ(deriv(t^3, t, x), x, 0, 2)": "= 8", "prod(1 + 1/k, k, 1, 9)": "= 10", "area(3)": "= 7.06858347058", "1/2pi": "= 1.57079632679" };
+  let seen = 0;
+  for (const t of topics) {
+    const g = setup();
+    for (const p of t.text.filter((x) => x.startsWith("| "))) {
+      const ex = p.slice(2);
+      if (t.id === "graphing") {   // curves: F2 draws each one
+        g.s.line = ""; g.s.cur = 0; g.type(ex); g.key("f2");
+        assert.deepEqual([g.s.mode, g.s.graphs[0].src, g.s.note], ["plot", ex, ""], ex);
+        g.key("esc");
+        continue;
+      }
+      const r = g.run(ex);
+      assert.equal(r.ok, true, t.id + ": " + ex + " -> " + r.r);
+      if (want[ex]) { assert.equal(r.r, want[ex], ex); seen++; }
+    }
+    for (const row of g.fn("helpRows")(t)) assert.ok(row.s.length + (row.indent || 0) <= 49, t.id + ": " + row.s);
+  }
+  assert.equal(seen, Object.keys(want).length - 1);   // the prose's claims, checked here:
+  assert.equal(value(setup(), "1/2pi"), want["1/2pi"]);
+  assert.match(setup().run("integ(1/x, x, 0, 1)").r, /does not converge/);
+});
+
+test("help: F6 on the name at the cursor, completing a name, inserting from a group, searching", () => {
+  const h = setup(), page = () => h.s.help.stack.at(-1), screen = () => plain(h.def.screen(h.s));
+  h.type("atan2(1, ");                                 // in atan2's brackets
+  h.key("f6");
+  assert.deepEqual([h.s.mode, page().id], ["help", "trig"]);
+  let sc = screen();
+  assert.equal(sc.kids[1].items[sc.kids[1].sel].label, "atan2(y, x)");
+  assert.equal(sc.kids[2].items.at(-1).s, "atan2(1, -1) = 2.35619449019");
+  h.key("esc");
+  assert.deepEqual([h.s.mode, h.s.line], ["calc", "atan2(1, "]);
+  h.key("esc");                                        // clears the line
+  h.type("2at"); h.key("f6");                          // a name to complete
+  assert.deepEqual([page().id, h.s.help.filter], ["index", "at"]);
+  assert.deepEqual(screen().kids[1].items.slice(0, 3).map((i) => i.label), ["atan(x)", "atan2(y, x)", "atanh(x)"]);
+  h.key("down"); h.key("enter");
+  assert.deepEqual([h.s.mode, h.s.line, h.s.cur, h.s.note], ["calc", "2atan2(", 7, "atan2(y, x)"]);
+  h.s.line = "sq(2)"; h.s.cur = 1;                      // the bracket is there already
+  h.key("f6"); h.key("enter");
+  assert.deepEqual([h.s.line, h.s.cur], ["sqrt(2)", 4]);
+  value(h, "f(x) = x^2 - 2"); value(h, "r = 1.5");
+  h.type("f"); h.key("f6");                            // your own names: shown in the status line
+  assert.deepEqual([h.s.mode, h.s.note], ["calc", "f(x) = x^2 - 2"]);
+  h.key("esc"); h.type("2r"); h.key("left"); h.key("f6");
+  assert.equal(h.s.note, "r = 1.5");
+  h.key("esc"); h.key("f6");                           // nothing at the cursor: the topics
+  assert.equal(page().id, "home");
+  h.key("enter");                                      // Start here
+  assert.equal(page().id, "start");
+  const rows = h.fn("helpRows")(h.fn("HELP_BY_ID").start).length;
+  for (let i = 0; i < 40; i++) h.key("down");
+  assert.equal(page().top, Math.max(0, rows - 17));
+  h.key("pgup"); h.key("pgup");
+  assert.equal(page().top, 0);
+  h.type("g");                                         // letters search the index
+  assert.deepEqual([page().id, h.s.help.filter], ["index", "g"]);
+  assert.deepEqual(screen().kids[1].items.slice(0, 4).map((i) => i.label), ["g0", "gamma(x)", "Gc", "gcd(a, b)"]);
+  h.type("xyz");
+  assert.equal(screen().kids[1].kids[0].s, "Nothing matches gxyz.");
+  h.key("backspace"); h.key("backspace"); h.key("backspace"); h.key("backspace");
+  assert.equal(screen().kids[1].items.length, h.fn("HELP_REF").length);
+  h.key("esc"); h.key("esc"); h.key("esc");
+  assert.equal(h.s.mode, "calc");
+  h.key("f6");                                         // a group: Tab puts the function into the line
+  const trig = h.fn("HELP_TOPICS").findIndex((t) => t.id === "trig");
+  for (let i = 0; i < trig; i++) h.key("down");
+  h.key("enter"); h.key("down"); h.key("tab");
+  assert.deepEqual([h.s.mode, h.s.line, h.s.note], ["calc", "cos(", "cos(x)"]);
+  h.key("f6"); assert.equal(page().id, "trig");        // in cos's brackets
+  h.key("f6"); assert.equal(page().id, "home");        // F6 in the help: the topics
+  h.key("esc");
+  assert.equal(h.s.mode, "calc");
+  assert.deepEqual(h.fn("HELP_TOPICS").map((t) => h.fn("calcHints")({ mode: "help", help: { stack: [{ id: t.id }] } }).length <= 42), h.fn("HELP_TOPICS").map(() => true));
+});
+
+test("help: F6 in the graph, the pages and the modes opens their guide, and Esc returns there", async () => {
+  const h = setup(), page = () => h.s.help.stack.at(-1);
+  h.type("sin(x)"); h.key("f2");
+  h.key("f6");
+  assert.deepEqual([h.s.mode, page().id, h.s.help.from], ["help", "graphing", "plot"]);
+  h.key("esc");
+  assert.equal(h.s.mode, "plot");
+  h.key("f7"); h.key("f6"); h.key("esc");
+  assert.equal(h.s.mode, "table");
+  h.key("esc"); h.key("esc"); h.key("f3"); h.key("f6");
+  assert.equal(page().id, "names");
+  h.key("esc"); h.key("esc"); h.key("f4"); h.key("f6");
+  assert.equal(page().id, "modes");
+  h.key("esc");
+  assert.equal(h.s.mode, "modes");
+});
+
+test("modes: F4 sets the angle, the format, the digits and the base, and the history follows", async () => {
+  const h = setup();
+  value(h, "1/3"); value(h, "255");
+  h.key("f4");
+  assert.equal(h.s.mode, "modes");
+  h.key("right"); assert.equal(h.s.angle, "deg");
+  h.key("down"); h.key("right"); assert.equal(h.s.fmt.mode, "fix");
+  h.key("down"); h.key("left"); h.key("left"); assert.equal(h.s.fmt.digits, 8);
+  let sc = plain(h.def.screen(h.s));
+  assert.deepEqual(sc.kids[0].items.map((i) => i.right), ["degrees", "fixed", "8", "decimal"]);
+  assert.deepEqual(sc.kids[2].items.map((i) => i.s), ["asin(1)  = 90.00000000", "1/3      = 0.33333333", "2000pi   = 6283.18530718",
+    "0.375    = 0.37500000", "255      = 255.00000000"]);
+  h.key("down"); h.key("right"); h.key("enter");       // Enter steps too: hex, then binary
+  assert.equal(h.s.fmt.base, 2);
+  h.key("left");
+  h.key("up"); h.key("up"); h.key("left");             // back to normal: digits are not used
+  sc = plain(h.def.screen(h.s));
+  assert.deepEqual([sc.kids[0].items[2].detail, sc.kids[0].items[2].rightColor], ["not used by normal", "muted"]);
+  h.key("esc");
+  assert.equal(h.s.mode, "calc");
+  assert.deepEqual(plain(h.def.screen(h.s)).kids[0].items.map((i) => i.right), ["= 0.333333333333", "= 0xFF"]);
+  await h.advance(3000);
+  assert.deepEqual([h.stored.calc.angle, h.stored.calc.fmt], ["deg", { mode: "norm", digits: 8, base: 16 }]);
+  h.type("sin(x)"); h.key("f2"); h.key("f4");          // from the graph, and back to it
+  assert.equal(h.s.mode, "modes");
+  h.key("esc");
+  assert.equal(h.s.mode, "plot");
 });

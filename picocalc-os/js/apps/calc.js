@@ -1,10 +1,11 @@
 // The calculator: a scientific calculator with a history, functions of several variables, calculus and a solver,
-// and a plotter for functions, polar and parametric curves. A line is parsed once into a tree (a Pratt parser) and
-// compiled into closures, so the plotter can evaluate the same expression for three hundred values without parsing
-// again. Every name a closure binds (a function's parameters, the t of integ(..., t, ...), the plot's x) is a cell,
-// an object { v }, set by whoever binds it. A plot is sampled a slice of columns at a time, sized so that no turn
-// runs long on the device even with Wi-Fi up. Sampling and saving run as detached promise chains (sleep, then
-// work), never as a handler's returned promise: that would hold the turn open and keep keys from arriving.
+// a plotter for functions, polar and parametric curves, and help pages for every built-in name. A line is parsed
+// once into a tree (a Pratt parser) and compiled into closures, so the plotter can evaluate the same expression for
+// three hundred values without parsing again. Every name a closure binds (a function's parameters, the t of
+// integ(..., t, ...), the plot's x) is a cell, an object { v }, set by whoever binds it. A plot is sampled a slice of
+// columns at a time, sized so that no turn runs long on the device even with Wi-Fi up. Sampling and saving run as
+// detached promise chains (sleep, then work), never as a handler's returned promise: that would hold the turn open
+// and keep keys from arriving.
 const CALC_HIST = 100, CALC_FUNCS = 16, CALC_DEPTH = 32, CALC_PARAMS = 4, CALC_GRAPHS = 4;
 const CALC_FUEL = 200000;   // closure nodes one line may evaluate in loops and calls; calibrated on the P4
 const PLOT_W = 306, PLOT_H = 230, PLOT_COLORS = ["accent", "blue", "ok", "warn"];
@@ -359,11 +360,12 @@ function calcGK(f, a, b) {
   }
   return [k * h, Math.abs((k - g) * h)];
 }
+const CALC_PARTS = 100;   // an end where f is infinite, like 1/sqrt(x) at 0, needs about 50 halvings
 function calcInteg(f, [a, b]) {
   calcReal(a, "the lower limit"); calcReal(b, "the upper limit");
   if (a === b) return 0;
   const parts = [[a, b, ...calcGK(f, a, b)]];
-  for (let n = 1; n < 30; n++) {
+  for (let n = 1; n < CALC_PARTS; n++) {
     let total = 0, err = 0, worst = 0;
     parts.forEach((p, i) => { total += p[2]; err += p[3]; if (p[3] > parts[worst][3]) worst = i; });
     if (!Number.isFinite(total)) throw new Error("the integral does not converge here");
@@ -971,11 +973,459 @@ function calcPage(s, mode) {
   if (mode === "table") tableBuild(s);
   if (mode === "window") s.win = { sel: 0, edit: null };
   if (mode === "curves") s.csel = 0;
+  if (mode === "modes") s.msel = 0;
 }
 function calcBack(s) {
   s.note = "";
   if (s.back === "plot" && s.graphs.some((g) => g.on)) plotShow(s);
   else s.mode = "calc";
+}
+
+// ---- help ------------------------------------------------------------------------------------------------------
+// The reference: one entry per built-in name, [name, form, sentence, example, result]. The help shows the example
+// worked out now, in the current modes; a test checks that in the default modes it gives the result written here,
+// so the reference cannot drift from the engine. A null result: the example varies (rand) or draws a curve.
+const HELP_REF = [
+  ["sin", "sin(x)", "The sine of x, an angle in the angle mode (F4).", "sin(pi/6)", "0.5"],
+  ["cos", "cos(x)", "The cosine of x, an angle in the angle mode.", "cos(pi)", "-1"],
+  ["tan", "tan(x)", "The tangent of x, an angle in the angle mode.", "tan(pi/4)", "1"],
+  ["sec", "sec(x)", "The secant, 1/cos(x).", "sec(pi/3)", "2"],
+  ["csc", "csc(x)", "The cosecant, 1/sin(x).", "csc(pi/6)", "2"],
+  ["cot", "cot(x)", "The cotangent, 1/tan(x).", "cot(pi/4)", "1"],
+  ["asin", "asin(x)", "The angle whose sine is x, from minus to plus a quarter turn, in the angle mode.", "asin(1)", "1.57079632679"],
+  ["acos", "acos(x)", "The angle whose cosine is x, from 0 to half a turn.", "acos(-1)", "3.14159265359"],
+  ["atan", "atan(x)", "The angle whose tangent is x, between minus and plus a quarter turn.", "atan(1)", "0.785398163397"],
+  ["acot", "acot(x)", "The angle whose cotangent is x: atan(1/x).", "acot(1)", "0.785398163397"],
+  ["atan2", "atan2(y, x)", "The angle of the point (x, y) from the x axis, right in every quadrant: from minus to plus half a turn.",
+    "atan2(1, -1)", "2.35619449019"],
+  ["deg", "deg(x)", "x radians in degrees, whatever the angle mode.", "deg(pi)", "180"],
+  ["rad", "rad(x)", "x degrees in radians, whatever the angle mode.", "rad(180)", "3.14159265359"],
+  ["sinh", "sinh(x)", "The hyperbolic sine, (e^x - e^-x)/2.", "sinh(1)", "1.17520119364"],
+  ["cosh", "cosh(x)", "The hyperbolic cosine, (e^x + e^-x)/2.", "cosh(1)", "1.54308063482"],
+  ["tanh", "tanh(x)", "The hyperbolic tangent, sinh(x)/cosh(x), between -1 and 1.", "tanh(1)", "0.761594155956"],
+  ["asinh", "asinh(x)", "The inverse hyperbolic sine.", "asinh(1)", "0.88137358702"],
+  ["acosh", "acosh(x)", "The inverse hyperbolic cosine, for x of 1 or more.", "acosh(2)", "1.31695789692"],
+  ["atanh", "atanh(x)", "The inverse hyperbolic tangent, for x between -1 and 1.", "atanh(0.5)", "0.549306144334"],
+  ["sqrt", "sqrt(x)", "The square root of x, for x of 0 or more.", "sqrt(2)", "1.41421356237"],
+  ["cbrt", "cbrt(x)", "The cube root of x, of a negative x too.", "cbrt(-27)", "-3"],
+  ["root", "root(x, n)", "The n-th root of x; for an odd whole n, of a negative x too.", "root(-32, 5)", "-2"],
+  ["pow", "pow(x, y)", "x to the power y, the same as x^y.", "pow(2, 10)", "1024"],
+  ["hypot", "hypot(x, y, ...)", "The square root of the sum of the squares: the length of a vector.", "hypot(3, 4)", "5"],
+  ["exp", "exp(x)", "e to the power x.", "exp(1)", "2.71828182846"],
+  ["ln", "ln(x)", "The natural logarithm, to base e.", "ln(e^3)", "3"],
+  ["log", "log(x), log(x, b)", "The logarithm to base 10, or to base b.", "log(8, 2)", "3"],
+  ["log2", "log2(x)", "The logarithm to base 2.", "log2(1024)", "10"],
+  ["abs", "abs(x)", "The absolute value: x without its sign.", "abs(-2.5)", "2.5"],
+  ["sign", "sign(x)", "-1, 0 or 1, as x is negative, zero or positive.", "sign(-3)", "-1"],
+  ["floor", "floor(x)", "The greatest whole number not above x.", "floor(-2.5)", "-3"],
+  ["ceil", "ceil(x)", "The least whole number not below x.", "ceil(2.1)", "3"],
+  ["round", "round(x), round(x, d)", "x rounded to a whole number, or to d decimals; a half rounds up.", "round(2.71828, 2)", "2.72"],
+  ["trunc", "trunc(x)", "x without its fractional part, rounded toward zero.", "trunc(-2.7)", "-2"],
+  ["frac", "frac(x)", "The fractional part, x - trunc(x).", "frac(3.75)", "0.75"],
+  ["fact", "fact(n)", "n factorial, 1*2*...*n, for a whole n; n! is the same.", "fact(5)", "120"],
+  ["gamma", "gamma(x)", "The gamma function: gamma(n) is fact(n - 1), continued between whole numbers.", "gamma(0.5)", "1.77245385091"],
+  ["nCr", "nCr(n, k)", "The number of ways to choose k of n things, in any order.", "nCr(5, 2)", "10"],
+  ["nPr", "nPr(n, k)", "The number of ways to choose k of n things in order.", "nPr(5, 2)", "20"],
+  ["gcd", "gcd(a, b)", "The greatest common divisor of two whole numbers.", "gcd(84, 36)", "12"],
+  ["lcm", "lcm(a, b)", "The least common multiple of two whole numbers.", "lcm(4, 6)", "12"],
+  ["mod", "mod(a, b)", "The remainder of a / b with the sign of b; a % b keeps the sign of a.", "mod(-7, 3)", "2"],
+  ["isprime", "isprime(n)", "1 if the whole number n is a prime, 0 if not; up to 10^10.", "isprime(97)", "1"],
+  ["sum", "sum(a, b, ...)", "The sum of its arguments.", "sum(1, 2, 3, 4)", "10"],
+  ["mean", "mean(a, b, ...)", "The arithmetic mean of its arguments.", "mean(2, 4, 9)", "5"],
+  ["median", "median(a, b, ...)", "The middle value; of an even count, the mean of the two in the middle.", "median(3, 1, 4, 1, 5)", "3"],
+  ["var", "var(a, b, ...)", "The sample variance, divided by n - 1, of two values or more.", "var(2, 4, 4, 4, 5, 5, 7, 9)", "4.57142857143"],
+  ["sd", "sd(a, b, ...)", "The sample standard deviation, sqrt(var(...)).", "sd(2, 4, 4, 4, 5, 5, 7, 9)", "2.1380899353"],
+  ["min", "min(a, b, ...)", "The least of its arguments.", "min(3, -1, 2)", "-1"],
+  ["max", "max(a, b, ...)", "The greatest of its arguments.", "max(3, -1, 2)", "3"],
+  ["rand", "rand()", "A random number from 0 up to 1, not 1 itself.", "rand()", null],
+  ["randint", "randint(a, b)", "A random whole number from a to b, both included.", "randint(1, 6)", null],
+  ["deriv", "deriv(f, x, a)", "The derivative of f in x at x = a: the slope of f there.", "deriv(x^3, x, 2)", "12"],
+  ["integ", "integ(f, t, a, b)", "The integral of f over t from a to b: the area under f, to about 10 digits.", "integ(x^2, x, 0, 3)", "9"],
+  ["solve", "solve(f, x, g), solve(f, x, a, b)", "A value of x where f is 0: near the guess g, or between a and b.",
+    "solve(x^2 - 2, x, 1)", "1.41421356237"],
+  ["sigma", "sigma(f, k, a, b)", "The sum of f for k = a, a + 1, ..., b; at most 10000 terms.", "sigma(k^2, k, 1, 10)", "385"],
+  ["prod", "prod(f, k, a, b)", "The product of f for k = a, a + 1, ..., b; at most 10000 terms.", "prod(1 + 1/k, k, 1, 9)", "10"],
+  ["if", "if(c, a, b)", "a if c is not 0, otherwise b; only the one chosen is worked out. < > <= >= == != give 1 or 0.",
+    "if(2 > 1, 10, 20)", "10"],
+  ["polar", "polar(r)", "For the graph: the point at distance r from the origin at the angle t, as t runs.", "polar(1 + cos(t))", null],
+  ["param", "param(x, y)", "For the graph: the point (x, y) as t runs; x and y are expressions in t.", "param(cos(3t), sin(2t))", null],
+  ["pi", "pi", "The ratio of a circle's circumference to its diameter.", "pi", "3.14159265359"],
+  ["e", "e", "The base of the natural logarithm.", "e", "2.71828182846"],
+  ["tau", "tau", "A full turn in radians, 2pi.", "tau", "6.28318530718"],
+  ["c0", "c0", "The speed of light in vacuum, m/s.", "c0", "299792458"],
+  ["g0", "g0", "Standard gravity, m/s^2.", "g0", "9.80665"],
+  ["Gc", "Gc", "The gravitational constant, m^3/(kg s^2).", "Gc", "6.6743e-11"],
+  ["hP", "hP", "The Planck constant, J s.", "hP", "6.62607015e-34"],
+  ["hbar", "hbar", "The reduced Planck constant, hP/(2pi), J s.", "hbar", "1.05457181765e-34"],
+  ["kB", "kB", "The Boltzmann constant, J/K.", "kB", "1.380649e-23"],
+  ["NA", "NA", "The Avogadro constant, 1/mol.", "NA", "6.02214076e23"],
+  ["R0", "R0", "The molar gas constant, J/(mol K).", "R0", "8.314462618"],
+  ["qe", "qe", "The elementary charge, C.", "qe", "1.602176634e-19"],
+  ["me", "me", "The mass of the electron, kg.", "me", "9.1093837015e-31"],
+  ["mp", "mp", "The mass of the proton, kg.", "mp", "1.67262192369e-27"],
+  ["eps0", "eps0", "The vacuum permittivity, F/m.", "eps0", "8.8541878128e-12"],
+  ["mu0", "mu0", "The vacuum permeability, N/A^2.", "mu0", "0.00000125663706212"],
+  ["ans", "ans", "The last result. A line that starts with + * / ^ or % continues from it.", "ans", null],
+];
+const HELP_ENTRY = new Map(HELP_REF.map((e) => [e[0], e]));
+const HELP_SORTED = HELP_REF.slice().sort((a, b) => (a[0].toLowerCase() < b[0].toLowerCase() ? -1 : 1));
+const HELP_COLS = 49, HELP_ROWS = 17, HELP_DETAIL = 5;
+
+// Guides are paragraphs: "# " a heading, "| " an example (each one runs in a test, in order), "- key<tab>what" a
+// key, anything else prose. Groups list entries of the reference.
+const HELP_TOPICS = [
+  { id: "start", title: "Start here", text: [
+    "Type an expression and press Enter. The result goes into the history above the line.",
+    "| 2pi * 3", "| sqrt(2)^2", "| sin(pi/6) + cos(0)",
+    "↑ picks an earlier line: Enter brings it back to change, Tab puts its result into the line. Esc clears the line.",
+    "Give a value a name, or define a function, and use them in later lines:",
+    "| r = 2.5", "| 2pi r", "| area(d) = pi d^2/4", "| area(3)",
+    "F2 draws the line on the graph when it is a function of x, like x^2 - 2 or area(x).",
+    "A line that starts with + * / ^ or % continues from the last result: typing * 2 gives ans * 2.",
+    "F4 sets the angle (radians to begin with) and how results look. F6 opens this help; with the cursor on a name in the line, it opens that name, and Enter there completes it.",
+  ] },
+  { id: "keys", title: "Keys", text: [
+    "# Calculator",
+    "- Enter\twork out the line", "- ↑ ↓\tpick a line from the history", "- Tab\tput the picked result into the line",
+    "- Esc\tclear the line", "- F2\tdraw the line, or show the graph", "- F3\tyour variables and functions",
+    "- F4\tmodes: angle, format, digits, base", "- F5\ttwice: clear the history", "- F6\thelp, on the name at the cursor",
+    "- F7\ttable of the curves of x", "- F8\tthe curves", "- F9\tthe window",
+    "# Graph",
+    "- arrows\tmove the view", "- + -\tzoom in, zoom out", "- 0\tthe standard window", "- a\tfit y to the curves",
+    "- Enter\ttrace a curve", "- Del\tremove the traced curve", "- Esc\tback to the calculator",
+    "# Tracing",
+    "- ← →\tmove along the curve; PgUp PgDn by 10", "- ↑ ↓\tthe other curves", "- r\tthe root nearest the cursor",
+    "- n x\tthe nearest minimum, maximum", "- i\twhere it meets the next curve", "- d\tthe slope dy/dx here",
+    "- m s\tmark here; s: the area from the mark", "- Esc\tstop tracing",
+    "# Help",
+    "- ↑ ↓\tchoose", "- Enter\topen; on a function, put it into the line", "- letters\tfind a function or constant",
+    "- F6\tall topics", "- Esc\tback",
+  ] },
+  { id: "numbers", title: "Numbers and operators", text: [
+    "Numbers: 42, 3.5, .5, 2e3 (2000), 1.5e-3. Whole numbers also in hex 0x1F, binary 0b101 and octal 0o17.",
+    "# Operators, loosest first",
+    "- < > <= >=\tcompare: 1 if true, 0 if not", "- == !=\tequal, not equal", "- + -\tadd, subtract",
+    "- * / %\tmultiply, divide, remainder", "- -x\tminus", "- ^\tpower, from the right: 2^3^2 is 2^9",
+    "- !\tfactorial: 5! is 120",
+    "A number or a bracket next to a name or a bracket multiplies, as tightly as *:",
+    "| 2pi", "| 3(1 + 1)", "| (1 + 2)(3 + 4)",
+    "So 1/2pi is (1/2)pi. -2^2 is -4, because the power comes first; write (-2)^2 for 4.",
+    "% is the remainder with the sign of the left side, as in 7 % 3; mod(a, b) takes the sign of b.",
+    "ans is the last result. A line that starts with + * / ^ or % continues from it.",
+    "Results show 12 digits unless F4 sets another format. A line holds up to 256 characters.",
+  ] },
+  { id: "names", title: "Variables and functions", text: [
+    "A name and = store a value:",
+    "| r = 2.5", "| v = 4/3 pi r^3",
+    "A function is a name, its arguments in brackets, = and an expression:",
+    "| f(x) = x^2 - 2", "| g(x, y) = sqrt(x^2 + y^2)", "| f(3) + g(3, 4)",
+    "A function takes up to 4 arguments; you can keep 16 of them. Its expression uses the variables as they are when it runs.",
+    "A function can call itself, with if() to stop:",
+    "| fib(n) = if(n < 2, n, fib(n - 1) + fib(n - 2))", "| fib(15)",
+    "It may go 32 calls deep.",
+    "F3 lists your variables and functions: Enter puts one into the line, Del removes it. F6 on one of your names shows its value or definition.",
+    "Built-in names cannot be redefined. Short names like c, g, h, k and R are yours to use: the physical constants have longer names, c0, g0, hP, kB, R0.",
+    "Variables, functions, curves and the history are kept on the device.",
+  ] },
+  { id: "calculus", title: "Calculus and solving", text: [
+    "These take an expression and the name it varies, which can be any name that is not built in or yours: x, t, k.",
+    "| deriv(x^3, x, 2)",
+    "The slope of x^3 at x = 2. It is worked out from points close to 2 on both sides, so the expression must be smooth there.",
+    "| integ(x^2, x, 0, 3)",
+    "The area under x^2 from 0 to 3. The range is split until two estimates agree, to about 10 digits. An end where the expression is infinite is fine if the area is finite; integ(1/x, x, 0, 1) says it does not converge.",
+    "| integ(1/sqrt(x), x, 0, 1)",
+    "| solve(x^2 - 2, x, 1)",
+    "A root near 1. With two values, a root between them:",
+    "| solve(cos(x) - x, x, 0, 1)",
+    "A sign change at a pole, like tan at a quarter turn, is not taken for a root.",
+    "| sigma(k^2, k, 1, 10)", "| prod(1 + 1/k, k, 1, 9)",
+    "A sum and a product over whole k from a to b, at most 10000 terms.",
+    "They nest, and may use your functions:",
+    "| integ(deriv(t^3, t, x), x, 0, 2)",
+    "A line that would take too long stops with \"too much work for one step\".",
+    "On the graph, the trace keys r, n, x, i, d and s use the same methods on the traced curve.",
+  ] },
+  { id: "graphing", title: "Graphing", text: [
+    "F2 draws the line as a curve:",
+    "| x^3/8 - x", "| polar(2cos(3t))", "| param(cos(3t), sin(2t))",
+    "A function of x is drawn across the window. polar(r) draws r as a function of t at the angle t; param(x, y) draws the point (x, y) as t runs. t runs once around, unless the window sets its range. One of your functions can be drawn by its name alone.",
+    "Up to four curves are drawn together, each in its own colour, with their numbers at the top. A new curve comes first; a fifth pushes out the oldest. F2 on an empty line shows the graph again.",
+    "# Pages",
+    "- F8\tthe curves: space turns one off, Del removes it, Enter takes it back to the line",
+    "- F9\tthe window: x, y and t ranges, the table's start and step",
+    "- F7\ta table of the functions of x",
+    "# The graph",
+    "Arrows move the view a quarter, + and - zoom, 0 returns to the standard window, a fits y to the curves.",
+    "# Tracing",
+    "Enter puts a cursor on the first curve. ← → move it, PgUp and PgDn by ten, ↑ ↓ go to the other curves; the line under the graph shows where it is. On a function of x:",
+    "- r\tthe root nearest the cursor", "- n x\tthe nearest minimum, maximum", "- i\twhere it meets the next curve",
+    "- d\tthe slope dy/dx", "- m\tmark x; then s shades the area from the mark to the cursor and works it out",
+    "The cursor moves to what was found. Esc stops tracing, and Esc again goes back to the calculator.",
+    "A curve is worked out a few columns at a time, so the keys keep working while it is drawn.",
+  ] },
+  { id: "modes", title: "Modes and formats", text: [
+    "F4 shows the modes: ↑ ↓ choose one, ← → change it, Esc goes back. The whole history is shown again in the new format.",
+    "# Angle",
+    "Radians, degrees or gradians (400 to a turn). sin, cos and tan take angles in it; asin, acos, atan and atan2 give them in it; polar() and param() go once around in it. deg() and rad() convert whatever the mode.",
+    "# Format",
+    "- normal\tup to 12 digits; 1.5e-12 when very large or small", "- fixed\ta fixed number of decimals",
+    "- scientific\tdigits as 1.235e3", "- engineering\tpowers of ten in steps of three: 12.35e3",
+    "- fraction\tp/q when it is exact, with q up to 10000: 0.375 is 3/8",
+    "# Digits",
+    "How many digits fixed, scientific and engineering show: 1 to 15.",
+    "# Base",
+    "Whole numbers in decimal, hex (0xFF), binary (0b101) or octal (0o17); other numbers stay decimal. You can type numbers in any base in any mode.",
+    "The line under the input shows the modes that are not the default, and the last result.",
+  ] },
+  { id: "trig", title: "Trigonometry", tag: "trig", names: "sin cos tan sec csc cot asin acos atan acot atan2 deg rad" },
+  { id: "hyp", title: "Hyperbolic functions", tag: "hyperbolic", names: "sinh cosh tanh asinh acosh atanh" },
+  { id: "powers", title: "Powers and logarithms", tag: "powers", names: "sqrt cbrt root pow hypot exp ln log log2" },
+  { id: "rounding", title: "Rounding and parts", tag: "rounding", names: "abs sign floor ceil round trunc frac" },
+  { id: "integers", title: "Whole numbers and counting", tag: "integers", names: "fact gamma nCr nPr gcd lcm mod isprime" },
+  { id: "stats", title: "Statistics and chance", tag: "statistics", names: "sum mean median var sd min max rand randint" },
+  { id: "forms", title: "Calculus, sums and if", tag: "calculus", names: "deriv integ solve sigma prod if" },
+  { id: "curves", title: "Curves for the graph", tag: "graph", names: "polar param" },
+  { id: "consts", title: "Constants", tag: "constant", names: "pi e tau c0 g0 Gc hP hbar kB NA R0 qe me mp eps0 mu0" },
+  { id: "index", title: "Index" },
+];
+const HELP_BY_ID = {}, HELP_GROUP = {};
+for (const t of HELP_TOPICS) {
+  HELP_BY_ID[t.id] = t;
+  if (t.names) { t.entries = t.names.split(" ").map((n) => HELP_ENTRY.get(n)); for (const n of t.names.split(" ")) HELP_GROUP[n] = t.id; }
+}
+const helpTemplate = (e) => (e[1] === e[0] + "()" ? e[0] + "()" : e[1].startsWith(e[0] + "(") ? e[0] + "(" : e[0]);
+
+function helpWrap(text, cols) {
+  const out = [];
+  let line = "";
+  for (const w of text.split(" ")) {
+    if (!line) line = w;
+    else if (line.length + 1 + w.length <= cols) line += " " + w;
+    else { out.push(line); line = w; }
+    while (line.length > cols) { out.push(line.slice(0, cols)); line = line.slice(cols); }
+  }
+  out.push(line);
+  return out;
+}
+// A guide as rows for ui.lines, wrapped here so the app knows how far it scrolls.
+const helpRowCache = new Map();
+function helpRows(t) {
+  let rows = helpRowCache.get(t.id);
+  if (rows) return rows;
+  rows = [];
+  let prev = null;
+  for (const p of t.text) {
+    const kind = p.startsWith("# ") ? "head" : p.startsWith("| ") ? "ex" : p.startsWith("- ") ? "key" : "text";
+    if (rows.length && (kind === "text" || kind === "head") && prev !== "head") rows.push({ s: "" });
+    if (kind === "head") rows.push({ s: p.slice(2), color: "accent" });
+    else if (kind === "ex") helpWrap(p.slice(2), HELP_COLS - 2).forEach((r, i) => rows.push({ s: r, color: "blue", indent: i ? 4 : 2 }));
+    else if (kind === "key") {
+      const [key, what] = p.slice(2).split("\t"), w = Math.max(9, key.length + 2);
+      helpWrap(what, HELP_COLS - w).forEach((r, i) => rows.push(i ? { s: r, indent: w } : { s: key.padEnd(w) + r }));
+    } else helpWrap(p, HELP_COLS).forEach((r) => rows.push({ s: r }));
+    prev = kind;
+  }
+  helpRowCache.set(t.id, rows);
+  return rows;
+}
+
+// The index, filtered: names that start with the letters, then names that hold them, then (3 letters or more)
+// entries whose sentence holds them.
+function helpMatches(filter) {
+  const f = filter.toLowerCase();
+  if (!f) return HELP_SORTED;
+  const a = [], b = [], c = [];
+  for (const e of HELP_SORTED) {
+    const n = e[0].toLowerCase();
+    if (n.startsWith(f)) a.push(e);
+    else if (n.includes(f)) b.push(e);
+    else if (f.length >= 3 && e[2].toLowerCase().includes(f)) c.push(e);
+  }
+  return a.concat(b, c);
+}
+function helpItems(s, id) {
+  if (id === "home") return HELP_TOPICS;
+  if (id === "index") return helpMatches(s.help.filter);
+  return HELP_BY_ID[id].entries || [];
+}
+const helpPage = (s) => s.help.stack[s.help.stack.length - 1];
+
+// An example's value now, without touching ans or the history.
+function helpValue(s, ex) {
+  try {
+    const st = calcParse(ex, (n) => calcIsFunc(s, n));
+    calcFresh();
+    return calcShow(s, calcValue(calcCompile(st.tree, { s })()));
+  } catch (e) { return e.message; }
+}
+function helpDetail(s, e) {
+  const curve = e[0] === "polar" || e[0] === "param";
+  const rows = helpWrap(e[2], HELP_COLS).map((r) => ({ s: r }));
+  helpWrap(e[3] + (curve ? "   F2 draws it" : " = " + helpValue(s, e[3])), HELP_COLS - 2)
+    .forEach((r, i) => rows.push({ s: r, color: "blue", indent: i ? 4 : 2 }));
+  return rows.slice(0, HELP_DETAIL);
+}
+
+// The name at the cursor, with its place in the line; or else the function whose brackets the cursor is in.
+function calcWordAt(s) {
+  const cs = Array.from(s.line), isW = (c) => !!c && /[A-Za-z0-9_]/.test(c);
+  const around = (at) => {
+    let a = at, b = at;
+    while (a > 0 && isW(cs[a - 1])) a--;
+    while (b < cs.length && isW(cs[b])) b++;
+    while (a < b && /[0-9]/.test(cs[a])) a++;   // 2pi: the name is pi
+    return a < b ? { name: cs.slice(a, b).join(""), a, b } : null;
+  };
+  const w = around(s.cur);
+  if (w) return w;
+  for (let i = s.cur - 1, depth = 0; i >= 0; i--) {
+    if (cs[i] === ")") depth++;
+    else if (cs[i] === "(" && depth-- === 0) { const f = around(i); return f ? { name: f.name } : null; }
+  }
+  return null;
+}
+
+function helpOpen(s, id, sel, word) {
+  s.help = { from: s.mode, stack: [{ id, sel: sel || 0, top: 0 }], filter: "", word: word || null };
+  s.mode = "help"; s.note = "";
+}
+// F6: help on what is in front of the user.
+function helpF6(s) {
+  if (s.mode === "help") { s.help.stack = [{ id: "home", sel: 0, top: 0 }]; s.help.filter = ""; return; }
+  const page = { plot: "graphing", table: "graphing", window: "graphing", curves: "graphing", modes: "modes", names: "names" }[s.mode];
+  if (page) return helpOpen(s, page);
+  s.sel = -1;
+  const w = calcWordAt(s);
+  if (!w) return helpOpen(s, "home");
+  if (calcHas(s.funcs, w.name)) { const f = s.funcs[w.name]; s.note = w.name + "(" + f.ps.join(", ") + ") = " + f.src; return; }
+  if (calcHas(s.vars, w.name)) { s.note = w.name + " = " + calcShow(s, s.vars[w.name]); return; }
+  const word = w.a === undefined ? null : { a: w.a, b: w.b };
+  const e = HELP_ENTRY.get(w.name), g = e && HELP_GROUP[w.name];
+  if (g) return helpOpen(s, g, HELP_BY_ID[g].entries.indexOf(e), word);
+  helpOpen(s, "index", 0, word);
+  s.help.filter = w.name.slice(0, 12);
+}
+// Enter or Tab on an entry: its template into the line, in place of the name F6 was pressed on.
+function helpInsert(s, e) {
+  let tpl = helpTemplate(e);
+  const w = s.help.word;
+  s.help = null; s.mode = "calc"; s.sel = -1; s.trace = null;
+  if (w) {
+    const cs = Array.from(s.line);
+    if (tpl.endsWith("(") && cs[w.b] === "(") tpl = tpl.slice(0, -1);
+    cs.splice(w.a, w.b - w.a);
+    s.line = cs.join(""); s.cur = w.a;
+  }
+  calcInsert(s, tpl);
+  s.note = e[1];   // the form, while its arguments are typed
+}
+function helpBack(s) {
+  const h = s.help;
+  h.stack.pop();
+  if (h.stack.length) { if (helpPage(s).id !== "index") h.filter = ""; return; }
+  const from = h.from;
+  s.help = null;
+  if (from === "plot") plotShow(s); else s.mode = from;
+}
+// Letters and digits search the index, from any help page.
+function helpFind(s, k) {
+  if (!k.ch || !/[A-Za-z0-9_]/.test(k.ch)) return false;
+  const h = s.help;
+  if (helpPage(s).id !== "index") { h.filter = ""; h.stack.push({ id: "index", sel: 0, top: 0 }); }
+  h.filter = (h.filter + k.ch).slice(0, 12);
+  helpPage(s).sel = 0;
+  return true;
+}
+function helpKey(s, k, once) {
+  const h = s.help, p = helpPage(s), t = HELP_BY_ID[p.id];
+  if (k.key === "esc") { if (once) helpBack(s); return; }
+  if (t && t.text) {   // a guide scrolls
+    const max = Math.max(0, helpRows(t).length - HELP_ROWS);
+    if (k.key === "up") p.top = Math.max(0, p.top - 1);
+    else if (k.key === "down") p.top = Math.min(max, p.top + 1);
+    else if (k.key === "pgup") p.top = Math.max(0, p.top - (HELP_ROWS - 1));
+    else if (k.key === "pgdn" || k.key === "space") p.top = Math.min(max, p.top + HELP_ROWS - 1);
+    else if (once) helpFind(s, k);
+    return;
+  }
+  const items = helpItems(s, p.id), last = Math.max(0, items.length - 1);
+  if (k.key === "up") p.sel = Math.max(0, p.sel - 1);
+  else if (k.key === "down") p.sel = Math.min(last, p.sel + 1);
+  else if (k.key === "pgup") p.sel = Math.max(0, p.sel - 8);
+  else if (k.key === "pgdn") p.sel = Math.min(last, p.sel + 8);
+  else if (!once) return;
+  else if (k.key === "enter" || k.key === "tab" || k.key === "right") {
+    const it = items[p.sel];
+    if (!it) return;
+    if (p.id === "home") h.stack.push({ id: it.id, sel: 0, top: 0 });
+    else helpInsert(s, it);
+  } else if (p.id === "index" && (k.key === "backspace" || k.key === "del")) { h.filter = h.filter.slice(0, -1); p.sel = 0; }
+  else helpFind(s, k);
+}
+
+function helpScreen(s) {
+  const h = s.help, p = helpPage(s), t = HELP_BY_ID[p.id];
+  if (p.id === "home") {
+    const items = HELP_TOPICS.map((x) => ({ label: x.title, right: x.text ? "guide" : x.entries ? x.entries.length + (x.id === "consts" ? " constants" : " functions") : "A-Z",
+      rightColor: "muted" }));
+    return ui.col({ gap: 4 },
+      ui.text("Help", { font: "m" }),
+      ui.list(items, p.sel, { font: "s", lead: 5, grow: 1 }),
+      ui.text("Type letters to find a function or a constant.", { font: "s", color: "muted" }));
+  }
+  if (t.text) {
+    const rows = helpRows(t), more = rows.length > HELP_ROWS;
+    return ui.col({ gap: 4 },
+      ui.text(t.title, { font: "m" }),
+      ui.lines(rows.slice(p.top, p.top + HELP_ROWS), { font: "s", visible: HELP_ROWS }),
+      ui.col({ grow: 1 }),
+      ui.text(more ? "lines " + (p.top + 1) + "-" + Math.min(rows.length, p.top + HELP_ROWS) + " of " + rows.length : "", { font: "s", color: "muted" }));
+  }
+  const items = helpItems(s, p.id), e = items[p.sel], index = p.id === "index";
+  return ui.col({ gap: 4 },
+    index ? ui.input(h.filter, { cursor: Array.from(h.filter).length, prompt: "Find ", font: "m" }) : ui.text(t.title, { font: "m" }),
+    items.length ? ui.list(items.map((x) => ({ label: x[1], right: index ? (HELP_BY_ID[HELP_GROUP[x[0]]] || {}).tag || "" : "", rightColor: "muted" })),
+      p.sel, { font: "s", lead: 5, grow: 1 })
+      : ui.col({ grow: 1 }, ui.text("Nothing matches " + h.filter + ".", { font: "s", color: "muted" })),
+    e ? ui.lines(helpDetail(s, e), { font: "s", visible: HELP_DETAIL }) : null);
+}
+
+// ---- modes -----------------------------------------------------------------------------------------------------
+const MODE_FORMATS = { norm: "normal", fix: "fixed", sci: "scientific", eng: "engineering", frac: "fraction" };
+const MODE_FIELDS = [
+  { label: "Angle", get: (s) => s.angle, set: (s, v) => { s.angle = v; }, values: ["rad", "deg", "grad"],
+    names: { rad: "radians", deg: "degrees", grad: "gradians" } },
+  { label: "Format", get: (s) => s.fmt.mode, set: (s, v) => { s.fmt.mode = v; }, values: Object.keys(MODE_FORMATS), names: MODE_FORMATS },
+  { label: "Digits", get: (s) => s.fmt.digits, set: (s, v) => { s.fmt.digits = v; }, values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] },
+  { label: "Base", get: (s) => s.fmt.base, set: (s, v) => { s.fmt.base = v; }, values: [10, 16, 2, 8],
+    names: { 10: "decimal", 16: "hex", 2: "binary", 8: "octal" } },
+];
+function modesKey(s, k, once) {
+  const f = MODE_FIELDS[s.msel];
+  s.note = "";
+  if (k.key === "up") s.msel = Math.max(0, s.msel - 1);
+  else if (k.key === "down") s.msel = Math.min(MODE_FIELDS.length - 1, s.msel + 1);
+  else if (k.key === "left" || k.key === "right" || (k.key === "enter" && once)) {
+    const vs = f.values, i = vs.indexOf(f.get(s)), d = k.key === "left" ? -1 : 1;
+    f.set(s, vs[(i + d + vs.length) % vs.length]);
+    calcChanged(s);
+  } else if ((k.key === "esc" || k.key === "f4") && once) calcBack(s);
+}
+function modesScreen(s) {
+  const usesDigits = ["fix", "sci", "eng"].includes(s.fmt.mode);
+  const items = MODE_FIELDS.map((f) => {
+    const v = f.get(s);
+    return { label: f.label, right: f.names ? f.names[v] : String(v), rightColor: f.label === "Digits" && !usesDigits ? "muted" : "ink",
+      detail: f.label === "Digits" ? (usesDigits ? "" : "not used by " + MODE_FORMATS[s.fmt.mode]) : f.label === "Base" ? "whole numbers" : "" };
+  });
+  const shown = [["asin(1)", CALC_TURN[s.angle] / 4], ["1/3", 1 / 3], ["2000pi", 2000 * Math.PI], ["0.375", 0.375], ["255", 255]]
+    .map(([ex, v]) => ({ s: ex.padEnd(9) + "= " + calcShow(s, v), indent: 2 }));
+  return ui.col({ gap: 6 },
+    ui.list(items, s.msel, { font: "s", visible: MODE_FIELDS.length }),
+    ui.text("Results look like this:", { font: "s", color: "muted" }),
+    ui.lines(shown, { font: "s", visible: shown.length }),
+    ui.col({ grow: 1 }),
+    calcNoteText(s, "The whole history follows the format."));
 }
 
 // ---- the app -------------------------------------------------------------------------------------------------
@@ -1061,9 +1511,9 @@ function namesKey(s, k, once) {
   else if ((k.key === "esc" || k.key === "f3") && once) s.mode = "calc";
 }
 
-// F7 table, F8 curves, F9 window: from the calculator and from the graph
+// F4 modes, F7 table, F8 curves, F9 window: from the calculator and from the graph
 function calcPageKey(s, k) {
-  const page = { f7: "table", f8: "curves", f9: "window" }[k.key];
+  const page = { f4: "modes", f7: "table", f8: "curves", f9: "window" }[k.key];
   if (!page) return false;
   calcPage(s, page);
   return true;
@@ -1072,6 +1522,9 @@ function calcPageKey(s, k) {
 function calcKey(s, k) {
   if (!k || k.state === "up") return;
   const once = k.state !== "hold";
+  if (k.key === "f6") { if (once) helpF6(s); return; }
+  if (s.mode === "help") return helpKey(s, k, once);
+  if (s.mode === "modes") return modesKey(s, k, once);
   if (s.mode === "plot") {
     if (once && calcPageKey(s, k)) return;
     const changed = plotKey(s, k, once);
@@ -1104,9 +1557,6 @@ function calcKey(s, k) {
     case "esc": if (!once) return; if (s.sel >= 0) s.sel = -1; else { s.line = ""; s.cur = 0; s.note = ""; } return;
     case "f2": if (once) plotOpen(s, s.line.trim()); return;
     case "f3": if (once) { s.mode = "names"; s.nsel = 0; s.sel = -1; } return;
-    case "f4":
-      if (once) { s.angle = { rad: "deg", deg: "grad", grad: "rad" }[s.angle]; s.note = { rad: "Radians", deg: "Degrees", grad: "Gradians" }[s.angle]; calcChanged(s); }
-      return;
     case "f5":
       if (!once) return;
       if (!s.clearArmed) { s.clearArmed = true; s.note = "F5 again clears the history (" + s.hist.length + " entries)."; return; }
@@ -1164,6 +1614,8 @@ function calcScreen(s) {
     return ui.col({ gap: 4 },
       ui.canvas(PLOT_W, PLOT_H, s.plot.ops.concat(plotTraceOps(s)), { bg: "#ffffff", border: "line" }),
       ui.text(plotStatus(s), { font: "s", color: s.note ? "accent" : "ink" }));
+  if (s.mode === "help" && s.help) return helpScreen(s);
+  if (s.mode === "modes") return modesScreen(s);
   if (s.mode === "table" && s.tab) return tableScreen(s);
   if (s.mode === "window" && s.win) return winScreen(s);
   if (s.mode === "curves") return curvesScreen(s);
@@ -1183,19 +1635,26 @@ function calcScreen(s) {
     ui.text(calcStatus(s), { font: "s", color: s.note ? "accent" : "muted" }));
 }
 function calcHints(s) {
-  if (s.mode === "plot") return s.trace ? "←→ ↑↓  r root n min x max i meet d m s" : "arrows +- 0 a ⏎ trace F7 table F8 F9";
+  if (s.mode === "help" && s.help) {
+    const p = helpPage(s);
+    if (p.id === "home") return "↑↓ ⏎ open  letters find  Esc back";
+    if (HELP_BY_ID[p.id].text) return "↑↓ PgUp PgDn scroll  F6 topics  Esc back";
+    return p.id === "index" ? "type to find  ⏎ insert  ⌫  Esc back" : "↑↓ choose  ⏎ insert  F6 topics  Esc back";
+  }
+  if (s.mode === "modes") return "↑↓ choose  ←→ change  Esc back";
+  if (s.mode === "plot") return s.trace ? "←→ ↑↓  r root n min x max i meet d m s" : "arrows +- 0 a ⏎ trace F6 help F7-F9";
   if (s.mode === "names") return "⏎ insert  Del remove  Esc back";
   if (s.mode === "table") return "↑↓ PgUp PgDn scroll  F9 window  Esc back";
   if (s.mode === "window") return s.win && s.win.edit !== null ? "⏎ set  Esc cancel" : "↑↓ choose  ⏎ edit  Del reset  Esc back";
   if (s.mode === "curves") return "space on/off ⏎ edit Del remove F2 graph";
-  return s.sel >= 0 ? "⏎ edit  Tab result  Esc back" : "F2 graph F3 vars F4 angle F7 tbl F8 F9";
+  return s.sel >= 0 ? "⏎ edit  Tab result  Esc back" : "F2 graph F3 vars F4 modes F6 help F7-F9";
 }
 
 app("calc")
   .title("Calc")
   .state({ line: "", cur: 0, sel: -1, hist: [], vars: {}, funcs: {}, ans: 0, angle: "rad", fmt: { mode: "norm", digits: 10, base: 10 },
            note: "", mode: "calc", back: "calc", nsel: 0, csel: 0, clearArmed: false, graphs: [], view: Object.assign({}, PLOT_VIEW),
-           tview: null, table: { start: -5, step: 1 }, tab: null, win: null, mark: null, shade: null, plot: null, trace: null,
+           tview: null, table: { start: -5, step: 1 }, tab: null, win: null, mark: null, shade: null, plot: null, trace: null, help: null, msel: 0,
            dirty: false, saving: false, plotting: false, focused: false })
   .onStart((s) => { calcLoad(s); })
   .on("key", (s, k, msg) => { if (msg.from === "compositor") calcKey(s, k); })
