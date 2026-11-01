@@ -204,8 +204,11 @@ What differs from the host, all of it behind the port API at the end of `nucleus
 - **The js/ tree is compiled into the firmware** (`port/esp32p4/main/bundle_js.cmake`).
 
 The UART is a console as well as the log: `stats`, `worlds`, `handles`, `heap`, `key NAME`, `type TEXT`,
-`crash WORLD`, `restart WORLD`, `bench`, `trace on|off`, and `shot`, which sends the compositor's
-framebuffer for `tools/p4cap.py` to turn into a PNG.
+`crash WORLD`, `restart WORLD`, `bench`, `cachestat`, `trace on|off`, and `shot`, which sends the compositor's
+framebuffer for `tools/p4cap.py` to turn into a PNG. `cachestat loop|fib [default|internal|psram]` runs one
+calibration program on a chosen heap and prints the caches' own counters and where its memory landed;
+`cachestat mem` times memory. They found that LP SRAM, which ESP-IDF adds to the heap by default, costs about
+1 µs an access on the P4 (70 times internal SRAM): the firmware keeps it out of the heap (PICOCALC-SPEED).
 
 Measured on the device (QuickJS at -O2): the 100k-iteration loop takes 115 ms in the calibration runtime and
 124 ms in the sandbox world (the model says 133; at -Og it is 135, which is what the model was calibrated
