@@ -10,12 +10,18 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/js/apps/agenda.js
+      Note: the agenda
+    - Path: repo://picocalc-os/nucleus/vm.c
+      Note: clock ops
+    - Path: repo://picocalc-os/tools/provision_agent.py
+      Note: --tz
 ExternalSources: []
-Summary: "A todo list and agenda for picocalc-os, kept in the plain-text file notes/todo.txt that the editor and the agent also use, with reminders shown as banners. It needs a real clock first: the kernel exposes the wall clock (unknown until SNTP sets it on the P4), the device gets a time zone, QuickJS's local-time code on ESP-IDF is fixed for daylight saving time, and the compositor learns to show notifications from any world."
+Summary: 'A todo list and agenda for picocalc-os, kept in the plain-text file notes/todo.txt that the editor and the agent also use, with reminders shown as banners. It needs a real clock first: the kernel exposes the wall clock (unknown until SNTP sets it on the P4), the device gets a time zone, QuickJS''s local-time code on ESP-IDF is fixed for daylight saving time, and the compositor learns to show notifications from any world.'
 LastUpdated: 2026-11-01T00:30:00-04:00
-WhatFor: "Onboarding to time on picocalc-os and to the agenda, and the plan PICOCALC-AGENDA follows."
-WhenToUse: "Before changing Date or the clock in the prelude, port_wall_ms, the compositor's banners, or js/apps/agenda.js."
+WhatFor: Onboarding to time on picocalc-os and to the agenda, and the plan PICOCALC-AGENDA follows.
+WhenToUse: Before changing Date or the clock in the prelude, port_wall_ms, the compositor's banners, or js/apps/agenda.js.
 ---
 
 # Agenda: analysis, design and implementation guide
@@ -297,3 +303,29 @@ agDue(task)                  -> epoch ms of due - lead, in the device's zone
 | `picocalc-os/js/system.json`, `js/apps/launcher.js` | the `agenda` world (claim `fs:/notes`), key `t` |
 | `picocalc-os/tools/provision_agent.py` | `--tz` |
 | `picocalc-os/tests/agenda.test.mjs`, `tests/test_clock_native.py`, `scripts/agenda.txt` | tests and captures |
+
+## 11. As built and measured
+
+Commits: `0470bed` (A1–A2), `dc0dfa8` (A3–A4), `a5c90cf` (A5).
+
+### Differences from the plan
+
+| Topic | Planned | Built |
+|---|---|---|
+| Time-zone storage on the P4 | next to the network settings | NVS namespace `settings`, key `tz`: `net forget` erases the network namespace and must not take the zone with it |
+| Provisioning | `--tz` | `--tz ZONE` or `--tz host` (the POSIX footer of `/etc/localtime`), and `--skip-token` to change settings without the API key |
+| Date input | as in 4.3 | as in 4.3; a word after the date that looks like a time but is not one (`25:00`, `19am`) is an error, not part of the title |
+| Grouping | — | regrouped when the date changes or the clock becomes set; a date in another year shows the year |
+| Tests | as in section 8 | `make test-clock` (4), `tests/agenda.test.mjs` (9, in `make test-apps`), a notify test in `compositor-auth.test.mjs`, `scripts/agenda.txt` (captures 70–74) |
+
+### Measured on the device (ESP32-P4)
+
+| What | Result |
+|---|---|
+| Status bar before SNTP | `--:--` |
+| After SNTP, no zone | 04:16 (UTC) |
+| After `tz EST5EDT,M3.2.0,M11.1.0` | 00:17 |
+| `getTimezoneOffset()` in July / December / now | 240 / 300 / 240 (`GMT-0400`) |
+| A task at 00:20 with `!1m` | banner "agenda: pick up parcel at 00:20 / in 1m" at about 00:19:10, over the calculator |
+| After a software reboot | the time is kept (`clock=set` with Wi-Fi down); the reminder did not fire again |
+| PaperS3 build | compiles with the `port_wall_ms` stub |

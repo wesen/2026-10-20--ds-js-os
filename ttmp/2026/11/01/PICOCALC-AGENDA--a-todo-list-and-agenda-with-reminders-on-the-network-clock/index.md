@@ -1,7 +1,7 @@
 ---
 Title: A todo list and agenda with reminders on the network clock
 Ticket: PICOCALC-AGENDA
-Status: active
+Status: complete
 Topics:
     - picocalc
     - agenda
@@ -13,7 +13,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-01T00:03:18.538875605-04:00
+LastUpdated: 2026-11-01T00:22:58.59841602-04:00
 WhatFor: ""
 WhenToUse: ""
 ---
