@@ -97,10 +97,20 @@ static NativeSymbol WASI_IMPORTS[] = {
   { "proc_exit", wasi_exit, "(i)", NULL },
 };
 
+// The runtime's own memory (modules, instances, the interpreter's code and stacks) comes from the port's world heap:
+// PSRAM on the P4, as for JavaScript worlds. Linear memory is the platform layer's (patches/0002: PSRAM as well).
+static void *wamr_malloc(unsigned int n) { return port_heap_malloc(n); }
+static void *wamr_realloc(void *p, unsigned int n) { return port_heap_realloc(p, n); }
+static void wamr_free(void *p) { port_heap_free(p); }
+
 static bool runtime_ready(char *why, size_t n) {
   static bool ready;
   if (ready) return true;
-  if (!wasm_runtime_init()) { snprintf(why, n, "the WebAssembly runtime could not start"); return false; }
+  RuntimeInitArgs init = { .mem_alloc_type = Alloc_With_Allocator };
+  init.mem_alloc_option.allocator.malloc_func = (void *)wamr_malloc;
+  init.mem_alloc_option.allocator.realloc_func = (void *)wamr_realloc;
+  init.mem_alloc_option.allocator.free_func = (void *)wamr_free;
+  if (!wasm_runtime_full_init(&init)) { snprintf(why, n, "the WebAssembly runtime could not start"); return false; }
   wasm_runtime_set_log_level(WASM_LOG_LEVEL_FATAL);   // its errors come back to us as text; nothing on stdout
   if (!wasm_runtime_register_natives("nw", NW_IMPORTS, sizeof NW_IMPORTS / sizeof *NW_IMPORTS) ||
       !wasm_runtime_register_natives("wasi_snapshot_preview1", WASI_IMPORTS, sizeof WASI_IMPORTS / sizeof *WASI_IMPORTS)) {

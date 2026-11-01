@@ -33,9 +33,11 @@ os_thread_wrapper(void *arg)
 korp_tid
 os_self_thread(void)
 {
-    /* only allowed if this is a thread, xTaskCreate is not enough look at
-     * product_mini for how to use this*/
-    return pthread_self();
+    /* picocalc-os: the current FreeRTOS task, which works in any task;
+       pthread_self() asserts in a task that pthread_create did not make
+       (picocalc-os runs its kernel in one). Without the thread manager the
+       runtime only compares this value and logs it. */
+    return (korp_tid)(uintptr_t)xTaskGetCurrentTaskHandle();
 }
 
 int

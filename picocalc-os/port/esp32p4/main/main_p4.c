@@ -152,7 +152,7 @@ void console_exec(char *line) {
     else kernel_restart_world(W);
   } else if (!strcmp(cmd, "shot")) shot();
   else if (!strcmp(cmd, "net")) p4_agent_console(rest);
-  else if (!strcmp(cmd, "ls") || !strcmp(cmd, "cat") || !strcmp(cmd, "df")) p4_fs_console(cmd, rest);
+  else if (!strcmp(cmd, "ls") || !strcmp(cmd, "cat") || !strcmp(cmd, "df") || !strcmp(cmd, "put")) p4_fs_console(cmd, rest);
   else if (!strcmp(cmd, "hold")) printf("i2c0 %s; reboot or flash now\n", bus_p4_hold(100) ? "held between transactions" : "still busy");
   else if (!strcmp(cmd, "reboot")) {
     printf("i2c0 %s; rebooting\n", bus_p4_hold(100) ? "held" : "still busy");
@@ -161,7 +161,7 @@ void console_exec(char *line) {
   else if (!strcmp(cmd, "tz")) p4_tz_console(rest);
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help | ls [PATH] | cat PATH | df | hold | reboot | tz [POSIX TZ]\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);

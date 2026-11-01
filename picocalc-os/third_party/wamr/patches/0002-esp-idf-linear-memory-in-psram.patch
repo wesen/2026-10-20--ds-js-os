@@ -1,0 +1,26 @@
+picocalc-os: on ESP-IDF, put a module's linear memory in PSRAM when the board has it. Upstream asks for
+MALLOC_CAP_8BIT, which ESP-IDF serves from internal RAM first; on the ESP32-P4 that RAM is needed for DMA and the
+system, and every JavaScript world's heap is in PSRAM already.
+
+--- a/core/shared/platform/esp-idf/espidf_memmap.c
++++ b/core/shared/platform/esp-idf/espidf_memmap.c
+@@ -3,6 +3,7 @@
+  * SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+  */
+ 
++#include "sdkconfig.h"
+ #include "platform_api_vmcore.h"
+ #include "platform_api_extension.h"
+ #if (WASM_MEM_DUAL_BUS_MIRROR != 0)
+@@ -53,6 +54,11 @@
+     else {
+ #if (WASM_MEM_DUAL_BUS_MIRROR != 0)
+         uint32_t mem_caps = MALLOC_CAP_SPIRAM;
++#elif defined(CONFIG_SPIRAM)
++        /* picocalc-os: linear memory in PSRAM on a board that has it, as
++           every other world's heap is; internal RAM is kept for DMA and the
++           system */
++        uint32_t mem_caps = MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT;
+ #else
+         uint32_t mem_caps = MALLOC_CAP_8BIT;
+ #endif

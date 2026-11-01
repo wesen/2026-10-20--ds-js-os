@@ -1,0 +1,22 @@
+picocalc-os: on ESP-IDF, os_self_thread() returns the current FreeRTOS task handle instead of pthread_self(),
+which asserts ("Failed to find current thread ID!") in a task that pthread_create did not make. picocalc-os runs
+the runtime in its kernel task (xTaskCreatePinnedToCore). Without the thread manager the value is only compared
+(exec_env->handle) and logged.
+
+--- a/core/shared/platform/esp-idf/espidf_thread.c
++++ b/core/shared/platform/esp-idf/espidf_thread.c
+@@ -33,9 +33,11 @@
+ korp_tid
+ os_self_thread(void)
+ {
+-    /* only allowed if this is a thread, xTaskCreate is not enough look at
+-     * product_mini for how to use this*/
+-    return pthread_self();
++    /* picocalc-os: the current FreeRTOS task, which works in any task;
++       pthread_self() asserts in a task that pthread_create did not make
++       (picocalc-os runs its kernel in one). Without the thread manager the
++       runtime only compares this value and logs it. */
++    return (korp_tid)(uintptr_t)xTaskGetCurrentTaskHandle();
+ }
+ 
+ int

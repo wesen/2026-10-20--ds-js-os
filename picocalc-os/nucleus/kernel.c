@@ -47,7 +47,7 @@ profile_t PROFILE = {
   .spi_chunk_us = 12,
   .mem_scale = sizeof(void *) == 8 ? 1.17 : 1.0,   // measured: a world takes about 17% more host memory on 64-bit (see README)
   .loop_ms = 133,               // measured (esp32-s3-m5/0101); vm.c uses it as a constant
-  .wasm_ns_per_op = 40,         // estimate until measured on the P4 (PICOCALC-NATIVE N4)
+  .wasm_ns_per_op = 70,         // measured: natives/bench.c, 0.866 us per 12.5-instruction iteration (PICOCALC-NATIVE N4)
 };
 #endif
 

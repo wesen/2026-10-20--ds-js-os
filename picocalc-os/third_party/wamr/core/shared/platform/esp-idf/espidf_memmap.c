@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  */
 
+#include "sdkconfig.h"
 #include "platform_api_vmcore.h"
 #include "platform_api_extension.h"
 #if (WASM_MEM_DUAL_BUS_MIRROR != 0)
@@ -53,6 +54,11 @@ os_mmap(void *hint, size_t size, int prot, int flags, os_file_handle file)
     else {
 #if (WASM_MEM_DUAL_BUS_MIRROR != 0)
         uint32_t mem_caps = MALLOC_CAP_SPIRAM;
+#elif defined(CONFIG_SPIRAM)
+        /* picocalc-os: linear memory in PSRAM on a board that has it, as
+           every other world's heap is; internal RAM is kept for DMA and the
+           system */
+        uint32_t mem_caps = MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT;
 #else
         uint32_t mem_caps = MALLOC_CAP_8BIT;
 #endif

@@ -1,6 +1,6 @@
 // wprobe: a WebAssembly world that tries to leave its sandbox, for tests/test_native_worlds.py (the counterpart of
-// probe.c, which tries it as a process). Its name picks the attempt (wprobe_oob, wprobe_badptr, ...); it logs what it
-// is about to do, then does it. Each attempt must stop the module with a trap, an exit or the budget, except alloc
+// probe.c, which tries it as a process). Its name picks the attempt, after its last '_' or '-' (wprobe_oob in a
+// manifest, u-wp-oob from storage); it logs what it is about to do, then does it. Each attempt must stop the module with a trap, an exit or the budget, except alloc
 // and stdio, which must fail inside it while the world carries on.
 #include <stdint.h>
 #include <stdio.h>
@@ -59,6 +59,7 @@ int nw_on_event(const nw_event *e) {
   if (e->kind != NW_START) return NW_DONE;
   char me[32];
   nw_self(me, sizeof me);
-  attempt(strncmp(me, "wprobe_", 7) ? me : me + 7);
+  const char *u = strrchr(me, '_'), *d = strrchr(me, '-');
+  attempt(u ? u + 1 : d ? d + 1 : me);
   return NW_DONE;
 }

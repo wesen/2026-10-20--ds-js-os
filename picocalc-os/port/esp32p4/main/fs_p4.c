@@ -1,7 +1,8 @@
 // Files on the ESP32-P4: a FAT filesystem with wear levelling in the "files" flash partition, mounted at /files.
 // nucleus/fs.c does the work with POSIX calls through ESP-IDF's VFS. A job runs on the "fs" worker task; the
 // finished job comes back through p4_kq and the kernel task settles the world's promise. The console's ls, cat and
-// df read directly, for debugging.
+// df read directly, for debugging; put writes a file sent over the console (tools/p4put.py), which no world can do:
+// it is how a WebAssembly app gets into apps/ without a network.
 //
 // Where the worker runs matters. While ESP-IDF erases or writes flash, it parks the other CPU too (the flash cache
 // is off), for the whole operation: tens of milliseconds per 4 KB sector. With the worker on core 0, a save could
@@ -17,6 +18,7 @@
 #include "esp_timer.h"
 #include "esp_vfs_fat.h"
 #include "freertos/task.h"
+#include "mbedtls/base64.h"
 #include "p4.h"
 
 #define ROOT "/files"
@@ -65,8 +67,39 @@ void p4_fs_init(void) {
 }
 
 // ---- console: ls [PATH], cat PATH, df -------------------------------------------------------------------------------
+// put PATH [BASE64]: with no data, PATH is created empty (with its directories); with data, the decoded bytes are
+// appended. PATH has no spaces. A console line holds up to 1023 characters: about 680 bytes per put.
+static void put(const char *arg) {
+  char path[FS_PATH_MAX], dir[FS_PATH_MAX], f[FS_PATH_MAX + 16];
+  const char *sp = strchr(arg, ' ');
+  size_t pn = sp ? (size_t)(sp - arg) : strlen(arg);
+  if (!pn || pn >= sizeof path) { printf("put PATH [BASE64]\n"); return; }
+  memcpy(path, arg, pn); path[pn] = 0;
+  if (!fs_path_ok(path)) { printf("not a valid path: %s\n", path); return; }
+  snprintf(f, sizeof f, ROOT "/%s", path);
+  if (!sp) {
+    snprintf(dir, sizeof dir, "%s", path);
+    char *slash = strrchr(dir, '/');
+    if (slash) { *slash = 0; fs_mkdirs(dir); }
+    FILE *fp = fopen(f, "wb");
+    printf(fp ? "put %s: 0 bytes\n" : "put %s: cannot create it\n", path);
+    if (fp) fclose(fp);
+    return;
+  }
+  unsigned char b[768];
+  size_t n = 0;
+  if (mbedtls_base64_decode(b, sizeof b, &n, (const unsigned char *)sp + 1, strlen(sp + 1))) { printf("put %s: not base64 (or more than %u bytes)\n", path, (unsigned)sizeof b); return; }
+  FILE *fp = fopen(f, "ab");
+  if (!fp) { printf("put %s: cannot open it (put PATH first)\n", path); return; }
+  size_t w = fwrite(b, 1, n, fp);
+  long size = ftell(fp);
+  fclose(fp);
+  printf(w == n ? "put %s: %ld bytes\n" : "put %s: short write at %ld bytes\n", path, size);
+}
+
 void p4_fs_console(const char *cmd, const char *arg) {
   if (!mounted) { printf("no filesystem\n"); return; }
+  if (!strcmp(cmd, "put")) { put(arg); return; }
   char f[FS_PATH_MAX + 16];
   if (*arg && !fs_path_ok(arg)) { printf("not a valid path: %s\n", arg); return; }
   snprintf(f, sizeof f, ROOT "%s%s", *arg ? "/" : "", arg);
