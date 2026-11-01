@@ -1,0 +1,17 @@
+# A live run against a real provider (make AGENT_LIVE=1; -r paces virtual time to the wall clock). Needs
+# PICOCALC_AGENT_URL, PICOCALC_AGENT_TOKEN and PICOCALC_AGENT_MODEL in the environment; see the PICOCALC-AGENT guide.
+wait 1600
+key c
+wait 400
+type What is 1234*5678? Use the calculator.
+key enter
+wait 15000
+capture live-01-calculated.png
+type Save a note called shop with the text milk and eggs.
+key enter
+wait 12000
+capture live-02-approval.png
+key f4
+wait 12000
+capture live-03-saved.png
+stats
