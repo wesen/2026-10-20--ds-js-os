@@ -59,7 +59,10 @@ int nw_kind(const char *kind);            // "driver", "service", "app"
 int nw_title(const char *title);          // at most 31 bytes
 int nw_icon(const char *ops_json);        // drawing operations in a 40 x 30 box, a JSON array of at most 1024 bytes:
                                           // ["rect"|"fill", x, y, w, h, colour?], ["line", x1, y1, x2, y2, colour?],
-                                          // ["text", x, y, "A", "s"|"m", colour?]; colour: "accent", "muted", ...
+                                          // ["text", x, y, "A", font?, colour?] (1 to 3 characters; font s, m, mb,
+                                          // l, xl); colour: "ink", "muted", "accent", ... or "#rrggbb". The launcher
+                                          // clamps numbers to the box, drops what it does not know, draws at most
+                                          // 32 operations, and shows a letter if none are left.
 int nw_about(const char *text);           // one line about it, at most 159 bytes
 int nw_key(const char *letter);           // its shortcut on the launcher: one of a-z, 0-9
 

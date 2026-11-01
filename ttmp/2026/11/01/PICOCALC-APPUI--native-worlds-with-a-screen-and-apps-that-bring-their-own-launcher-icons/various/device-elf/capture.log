@@ -1,0 +1,1272 @@
+unknown command ÿ (try help)
+#OK ÿ
+i2c0 held between transactions; reboot or flash now
+#OK hold
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x30f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x15f0
+load:0x4ff2abd0,len:0xd88
+load:0x4ff2cbd0,len:0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:43:25
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00400000
+I (77) boot:  3 agentstore       WiFi data        01 02 00410000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00430000 00bd0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40170020 size=110dfch (1117692) map
+I (287) esp_image: segment 1: paddr=00120e24 vaddr=30100000 size=00068h (   104) load
+I (289) esp_image: segment 2: paddr=00120e94 vaddr=4ff00000 size=0f184h ( 61828) load
+I (304) esp_image: segment 3: paddr=00130020 vaddr=40000020 size=163dech (1457644) map
+I (547) esp_image: segment 4: paddr=00293e14 vaddr=4ff0f184 size=05c54h ( 23636) load
+I (553) esp_image: segment 5: paddr=00299a70 vaddr=4ff14e00 size=0330ch ( 13068) load
+I (561) boot: Loaded app from partition at offset 0x10000
+I (562) boot: Disabling RNG early entropy source...
+I (573) hex_psram: vendor id    : 0x0d (AP)
+I (573) hex_psram: Latency      : 0x01 (Fixed)
+I (573) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (574) hex_psram: dev id       : 0x03 (generation 4)
+I (578) hex_psram: density      : 0x07 (256 Mbit)
+I (583) hex_psram: good-die     : 0x06 (Pass)
+I (587) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (592) hex_psram: BurstType    : 0x00 ( Wrap)
+I (596) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (600) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (605) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (610) hex_psram: DriveStrength: 0x00 (1/1)
+I (614) MSPI DQS: tuning success, best phase id is 0
+I (787) MSPI DQS: tuning success, best delayline id is 17
+I (787) esp_psram: Found 32MB PSRAM device
+I (787) esp_psram: Speed: 200MHz
+I (788) hex_psram: psram CS IO is dedicated
+I (791) cpu_start: Multicore app
+I (1700) esp_psram: SPI SRAM memory test OK
+I (1710) cpu_start: Pro cpu start user code
+I (1710) cpu_start: cpu freq: 360000000 Hz
+I (1710) app_init: Application information:
+I (1710) app_init: Project name:     picocalc-os-p4
+I (1715) app_init: App version:      df0bec6
+I (1719) app_init: Compile time:     Nov  1 2026 17:54:49
+I (1724) app_init: ELF file SHA256:  02599b897...
+I (1728) app_init: ESP-IDF:          v5.4.2
+I (1732) efuse_init: Min chip rev:     v0.1
+I (1736) efuse_init: Max chip rev:     v1.99 
+I (1740) efuse_init: Chip rev:         v1.3
+I (1744) heap_init: Initializing. RAM available for dynamic allocation:
+I (1750) heap_init: At 4FF288F0 len 000126D0 (73 KiB): RAM
+I (1756) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (1761) heap_init: At 4FF49E60 len 000561A0 (344 KiB): RAM
+I (1766) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (1771) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (1779) spi_flash: detected chip: generic
+W (1782) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (1792) spi_flash: flash io: dio
+I (1795) host_init: ESP Hosted : Host chip_ip[18]
+I (1799) H_API: ESP-Hosted starting. Hosted_Tasks: prio:23, stack: 5120 RPC_task_stack: 5120
+sdio_mempool_create free:33625744 min-free:33625744 lfb-def:33030144 lfb-8bit:33030144
+
+I (1816) gpio: GPIO[18]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1824) gpio: GPIO[19]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1832) gpio: GPIO[14]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1841) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1849) gpio: GPIO[16]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (1857) gpio: GPIO[17]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1866) H_API: ** add_esp_wifi_remote_channels **
+I (1870) transport: Add ESP-Hosted channel IF[1]: S[0] Tx[0x400c7196] Rx[0x400d4d7a]
+I (1878) transport: Add ESP-Hosted channel IF[2]: S[0] Tx[0x400c70dc] Rx[0x400d4d7a]
+I (1886) main_task: Started on CPU0
+I (1889) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (1897) main_task: Calling app_main()
+I (1900) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 392271 free (largest 311296), psram 33551748 free (largest 33030144)
+I (1940) fs: /files: 11956 KB, 11668 KB free (mounted in 6 ms)
+I (1946) transport: Attempt connection with slave: retry[0]
+I (1947) transport: Reset slave using GPIO[54]
+I (1948) os_wrapper_esp: GPIO [54] configured
+I (1948) gpio: GPIO[54]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1949) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (1962) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2163) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2164) main_task: Returned from app_main()
+[   162.838] calibration on the real clock: the 100k loop took 116.6 ms (the model says 133), fib(20) 30.4 ms (the model says 29.1)
+[   196.532] booting 22 worlds from js/system.json
+[   208.200] booting 4 worlds from js/system.elf.json
+I (3086) sdio_wrapper: SDIO master: Data-Lines: 4-bit Freq(KHz)[20000 KHz]
+I (3087) H_SDIO_DRV: Starting SDIO process rx task
+I (3088) sdio_wrapper: GPIOs: CLK[18] CMD[19] D0[14] D1[15] D2[16] D3[17] Slave_Reset[54]
+I (3093) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1]
+I (3126) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (3131) gpio: GPIO[17]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+Name: 
+Type: SDIO
+Speed: 20.00 MHz (limit: 20.00 MHz)
+Size: 0MB
+CSD: ver=1, sector_size=0, capacity=0 read_bl_len=0
+SCR: sd_spec=0, bus_width=0
+TUPLE: DEVICE, size: 3: D9 01 FF 
+TUPLE: MANFID, size: 4
+  MANF: 0092, CARD: 6666
+TUPLE: FUNCID, size: 2: 0C 00 
+TUPLE: FUNCE, size: 4: 00 00 02 32 
+TUPLE: CONFIG, size: 5: 01 01 00 02 07 
+TUPLE: CFTABLE_ENTRY, size: 8
+  INDX: C1, Intface: 1, Default: 1, Conf-Entry-Num: 1
+  IF: 41
+  FS: 30, misc: 0, mem_space: 1, irq: 1, io_space: 0, timing: 0, power: 0
+  IR: 30, mask: 1,   IRQ: FF FF
+  LEN: FFFF
+TUPLE: END
+I (3178) sdio_wrapper: Function 0 Blocksize: 512
+I (3188) sdio_wrapper: Function 1 Blocksize: 512
+I (3189) H_SDIO_DRV: SDIO Host operating in STREAMING MODE
+I (3190) H_SDIO_DRV: generate slave intr
+I (3208) transport: Received INIT event from ESP32 peripheral
+I (3209) transport: EVENT: 12
+I (3210) transport: EVENT: 11
+I (3212) transport: capabilities: 0xd
+I (3212) transport: Features supported are:
+I (3213) transport: 	 * WLAN
+I (3220) transport: 	   - HCI over SDIO
+I (3220) transport: 	   - BLE only
+I (3221) transport: EVENT: 13
+I (3230) transport: ESP board type is : 13 
+
+I (3231) transport: Base transport is set-up
+
+I (3232) transport: Slave chip Id[12]
+I (3240) hci_stub_drv: Host BT Support: Disabled
+I (3242) H_SDIO_DRV: Received INIT event
+I (4310) H_API: esp_wifi_remote_connect
+[  2174.540] nat-echo: TEST kind ok 
+[  2175.753] nat-echo: TEST provide ok 
+[  2176.215] nat-echo: TEST every ok 
+[  2176.695] nat-echo: TEST title ok 
+[  2177.260] nat-echo: TEST icon ok 
+[  2177.695] nat-echo: TEST about ok 
+[  2178.224] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+[  2187.519] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+[  2197.373] nat-echo: TEST init done
+E (4363) ELF: Can't find common path_open
+[  2199.195] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2199.195,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+I (4399) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+[  2267.327] nat-echo: TEST start self=nat-echo clock=running
+[  2268.785] nat-bench: BENCH loop n=1000 us=36 r=122468
+[  2269.541] nat-bench: BENCH loop n=4000 us=138 r=498743
+[  2270.703] nat-bench: BENCH loop n=16000 us=535 r=2028337
+E (4466) ELF: Can't find common path_open
+[  2302.412] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2302.412,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+[  2354.384] nat-echo: TEST ticks 3 timer=0
+E (4668) ELF: Can't find common path_open
+[  2504.653] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2504.653,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+E (5070) ELF: Can't find common path_open
+[  2906.351] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2906.351,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+E (5872) ELF: Can't find common path_open
+[  3708.336] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":3708.336,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+[  3708.336] nat-import crashed 5 times in ten seconds; it stays stopped
+unknown command ÿ (try help)
+#OK ÿ
+[{"name":"keyboard","kind":"driver","engine":"js","title":"keyboard","state":"waiting","turns":171,"msgs":172,"cpu_ms":234.785,"mem_kb":212.5,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"drivers/keyboard.js","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"js","title":"power","state":"idle","turns":2,"msgs":2,"cpu_ms":71.413,"mem_kb":210.5,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"drivers/power.js","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"js","title":"display","state":"idle","turns":8,"msgs":8,"cpu_ms":103.963,"mem_kb":212.5,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"drivers/display.js","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"js","title":"compositor","state":"idle","turns":49,"msgs":49,"cpu_ms":435.445,"mem_kb":363.6,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"system/compositor.js","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"js","title":"agent","state":"idle","turns":39,"msgs":39,"cpu_ms":144.756,"mem_kb":323.6,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"system/agent.js","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":129.057,"mem_kb":242.7,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":3,"msgs":3,"cpu_ms":130.249,"mem_kb":260.6,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"js","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":89.374,"mem_kb":222.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/files.js","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"js","title":"Editor","state":"idle","turns":0,"msgs":0,"cpu_ms":102.306,"mem_kb":245.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/editor.js","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":333.435,"mem_kb":638.1,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"js","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":117.269,"mem_kb":265.8,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/agenda.js","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"js","title":"Settings","state":"idle","turns":4,"msgs":4,"cpu_ms":93.728,"mem_kb":239.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/settings.js","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":8,"msgs":8,"cpu_ms":87.087,"mem_kb":222.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":5,"msgs":5,"cpu_ms":120.694,"mem_kb":237.6,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":9,"msgs":9,"cpu_ms":107.377,"mem_kb":224.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":66.785,"mem_kb":212.8,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":63.059,"mem_kb":210.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"js","title":"Snake","state":"idle","turns":34,"msgs":34,"cpu_ms":161.130,"mem_kb":230.9,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/snake.js","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":88.568,"mem_kb":219.8,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"js","title":"flaky","state":"idle","turns":0,"msgs":0,"cpu_ms":66.648,"mem_kb":210.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"system/flaky.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":3,"msgs":3,"cpu_ms":71.579,"mem_kb":211.9,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":3,"msgs":3,"cpu_ms":76.553,"mem_kb":212.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":27.756,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.106,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":6.765,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":4,"msgs":4,"cpu_ms":5.694,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+I (8042) H_API: esp_wifi_remote_connect
+#OK type
+#OK shot
+#SHOT 320 320
+BABF0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF0TwB4xgEAEXRPAHjGAQARdEHAOMYBQB89wYA4xgC
+AHz3DQDjGAMAfPcYAeMYBABF0QcA4xgCAHz3AgDjGAIAfPcFAOMYAgB89w4A4xgCAHz3yADjGBQA
+fPc8AOMYBABF0QcA4xgCAHz3AwDjGAIAfPcUAOMYAgB8964A4xgBALGcBADjGAMAsZwDAOMYAwCx
+nAMA4xgBALGcAgDjGAEAsZwFAOMYAQB89xIA4xgBAHz3PADjGAQARdEHAOMYAgB89wMA4xgCAHz3
+AwDjGAMAfPcEAOMYBQB89wUA4xgCAHz3rQDjGAIAsZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwD
+AOMYAQCxnAEA4xgBALGcAQDjGAEAsZwBAOMYAQCxnAUA4xgBAHz3AQDjGBAAfPcBAOMYAQB89yEA
+4xgCAHz3GQDjGAQARdEHAOMYAgB89wMA4xgCAHz3BADjGAIAfPcIAOMYAgB89wQA4xgCAHz3rgDj
+GAEAsZwDAOMYAQCxnAIA4xgCALGcAQDjGAEAsZwCAOMYAgCxnAIA4xgBALGcAQDjGAEAsZwGAOMY
+AQB89wEA4xgQAHz3AQDjGAMAfPcfAOMYAgB89xkA4xgEAEXRBwDjGAIAfPcDAOMYAgB89wQA4xgC
+AHz3BADjGAYAfPcEAOMYAgB8964A4xgBALGcAwDjGAEAsZwBAOMYAQCxnAEA4xgBALGcAQDjGAEA
+sZwBAOMYAQCxnAEA4xgBALGcBADjGAEAsZwGAOMYAQB89wEA4xgQAHz3AQDjGAMAfPcMAOMYBwB8
+9wEA4xgHAHz3CQDjGAcAfPcBAOMYBwB89wcA4xgEAEXRBwDjGAIAfPcDAOMYAgB89wQA4xgCAHz3
+AwDjGAIAfPcDAOMYAgB89wQA4xgCAHz3rgDjGAEAsZwDAOMYAgCxnAIA4xgBALGcAQDjGAIAsZwC
+AOMYAQCxnAMA4xgBALGcBwDjGAEAfPcBAOMYEAB89wEA4xgDAHz3OgDjGAQARdEHAOMYAgB89wMA
+4xgCAHz3BADjGAIAfPcDAOMYAgB89wMA4xgCAHz3BADjGAIAfPeuAOMYAQCxnAMA4xgBALGcAwDj
+GAEAsZwBAOMYAQCxnAMA4xgBALGcAwDjGAEAsZwBAOMYAQCxnAUA4xgBAHz3AQDjGBAAfPcBAOMY
+AwB89zoA4xgEAEXRBwDjGAIAfPcCAOMYAgB89wUA4xgCAHz3AwDjGAIAfPcDAOMYAgB89wQA4xgC
+AHz3rgDjGAEAsZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwDAOMYAQCxnAIA4xgBALGcAQDjGAEA
+sZwBAOMYAQCxnAQA4xgBAHz3AQDjGBAAfPcBAOMYAQB89yEA4xgCAHz3GQDjGAQARdEHAOMYBQB8
+9wUA4xgEAHz3AwDjGAYAfPcDAOMYBAB896wA4xgDALGcAwDjGAMAsZwDAOMYAwCxnAMA4xgBALGc
+AgDjGAEAsZwFAOMYAQB89xIA4xgBAHz3IQDjGAIAfPcZAOMYBABF0ewA4xgUAHz3PADjGAQARdE8
+AeMYBABF0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF0TwB4xgEAEXRPAHjGAQFvfc4AUXRCAC99zgB
+RdEIAL33OAFF0QgAvfc4AUXRCAC99zgBRdEIAL33IgBF0QEA//+5AEXRAQD//zUARdEBAP//JQBF
+0QgAvfcWAEXRAQD//wsARdEBAP//HQBF0QEA//8RAEXRAQD//x8ARdEBAP//EABF0QIA//8DAEXR
+AQD//xUARdEFAP//HwBF0QEA//8ZAEXRAQD//xEARdEBAP//BABF0QMA//8cAEXRAQD//wUARdEB
+AP//HwBF0QgAvfcWAEXRAQD//ykARdEBAP//EQBF0QEA//8fAEXRAQD//w8ARdEBAP//BQBF0QEA
+//8VAEXRAQD//yMARdEBAP//KgBF0QIA//8DAEXRAQD//wMARdEBAP//IQBF0QEA//8fAEXRCAC9
+9wgARdEEAP//AwBF0QMA//8DAEXRAwD//wkARdECAP//AwBF0QQA//8CAEXRBAD//wMARdEDAP//
+AgBF0QEA//8BAEXRAwD//wIARdEDAP//CQBF0QQA//8CAEXRAwD//wMARdEDAP//AgBF0QQA//8C
+AEXRBAD//wMARdEDAP//AwBF0QQA//8IAEXRAwD//wMARdEDAP//AwBF0QMA//8DAEXRAwD//wIA
+RdEBAP//AQBF0QMA//8HAEXRAQD//wwARdEDAP//AgBF0QEA//8BAEXRAwD//wIARdEDAP//AwBF
+0QQA//8BAEXRBAD//wMARdEDAP//AwBF0QQA//8IAEXRAgD//wMARdEEAP//CgBF0QEA//8DAEXR
+AQD//wIARdECAP//CABF0QQA//8DAEXRAQD//woARdECAP//BABF0QMA//8eAEXRCAC99wgARdEB
+AP//AwBF0QEA//8FAEXRAQD//wMARdEBAP//CwBF0QEA//8DAEXRAQD//wEARdEBAP//AQBF0QEA
+//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdECAP//BgBF0QEA//8JAEXRAQD/
+/wcARdEBAP//AwBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//
+AQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8LAEXRAQD//wMARdEBAP//BQBF0QEA//8D
+AEXRAQD//wMARdEBAP//AQBF0QIA//8KAEXRBAD//wgARdEBAP//AwBF0QEA//8BAEXRAgD//wgA
+RdEBAP//AQBF0QEA//8FAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//DQBF
+0QEA//8DAEXRAQD//wMARdEBAP//CQBF0QEA//8DAEXRAQD//wEARdEBAP//AQBF0QEA//8HAEXR
+AQD//wcARdEBAP//CwBF0QEA//8FAEXRAQD//x8ARdEIAL33CABF0QEA//8DAEXRAQD//wIARdEE
+AP//AwBF0QEA//8DAEXRBQD//wMARdEBAP//AwBF0QEA//8BAEXRAQD//wEARdEBAP//AQBF0QEA
+//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD//wcARdEBAP//CgBF0QMA//8EAEXRAQD/
+/wMARdEBAP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEFAP//
+AQBF0QEA//8DAEXRAQD//wgARdEEAP//AwBF0QEA//8FAEXRAQD//wMARdEFAP//AQBF0QEA//8P
+AEXRAQD//wcARdEBAP//BQBF0QEA//8GAEXRBAD//wIARdEDAP//AgBF0QEA//8DAEXRAQD//wEA
+RdEFAP//AgBF0QMA//8KAEXRAQD//wMARdEBAP//AwBF0QEA//8JAEXRAQD//wMARdECAP//AgBF
+0QEA//8IAEXRAwD//xAARdEBAP//BQBF0QEA//8fAEXRCAC99wgARdEBAP//AwBF0QEA//8BAEXR
+AQD//wMARdEBAP//AwBF0QEA//8LAEXRAQD//wMARdEBAP//AQBF0QEA//8BAEXRAQD//wEARdEB
+AP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8HAEXRAQD//w0ARdEBAP//AwBF0QEA
+//8DAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD/
+/wUARdEBAP//AwBF0QEA//8HAEXRAQD//wMARdEBAP//AwBF0QEA//8FAEXRAQD//wMARdEBAP//
+BQBF0QEA//8PAEXRAQD//wcARdEBAP//BQBF0QEA//8FAEXRAQD//wMARdEBAP//BQBF0QEA//8B
+AEXRAQD//wMARdEBAP//AQBF0QEA//8JAEXRAQD//wkARdEBAP//AwBF0QEA//8DAEXRAQD//wkA
+RdEBAP//AwBF0QEA//8DAEXRAQD//wsARdEBAP//DwBF0QEA//8FAEXRAQD//x8ARdEIAL33CABF
+0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8DAEXRAQD//wsARdEBAP//AwBF0QEA//8BAEXR
+AQD//wEARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD//wcARdEB
+AP//DQBF0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA
+//8DAEXRAQD//wEARdEBAP//BQBF0QEA//8DAEXRAQD//wcARdEBAP//AwBF0QEA//8DAEXRAQD/
+/wUARdEBAP//AwBF0QEA//8FAEXRAQD//wsARdEBAP//AwBF0QEA//8HAEXRAQD//wMARdEBAP//
+AQBF0QEA//8FAEXRAQD//wMARdEBAP//BQBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8J
+AEXRAQD//wkARdEBAP//AwBF0QEA//8DAEXRAQD//wkARdEBAP//AwBF0QEA//8DAEXRAQD//wsA
+RdEBAP//AwBF0QEA//8LAEXRAQD//wUARdEBAP//HwBF0QgAvfcIAEXRAQD//wMARdEBAP//AgBF
+0QQA//8EAEXRAgD//wgARdEDAP//AgBF0QEA//8BAEXRAQD//wEARdEBAP//AQBF0QQA//8DAEXR
+AwD//wIARdEBAP//CABF0QIA//8HAEXRBAD//wUARdECAP//AgBF0QMA//8CAEXRBAD//wIARdEE
+AP//AwBF0QQA//8CAEXRBAD//wgARdEEAP//AwBF0QEA//8GAEXRAgD//wIARdEEAP//AQBF0QEA
+//8MAEXRAwD//wkARdEDAP//AgBF0QEA//8GAEXRBAD//wEARdEEAP//AgBF0QEA//8DAEXRAQD/
+/wIARdEEAP//AQBF0QQA//8JAEXRAwD//wIARdEBAP//AwBF0QEA//8IAEXRAwD//wMARdEDAP//
+CABF0QQA//8EAEXRAQD//woARdEDAP//BQBF0QIA//8dAEXRCAC99ywARdEBAP//LwBF0QEA//8F
+AEXRAQD//9UARdEIAL33LABF0QEA//8vAEXRAQD//wUARdEBAP//1QBF0QgAvfc4AUXRCAC99zgB
+RdEIAL33EABF0QEA//99AEXRAQD//x0ARdEBAP//iwBF0QgAvfcJAEXRAgD//wUARdEBAP//CgBF
+0QEA//8SAEXRAQD//x0ARdEBAP//AwBF0QEA//81AEXRAQD//wcARdEBAP//CQBF0QEA//8TAEXR
+AQD//xwARdECAP//JQBF0QEA//8nAEXRAQD//x8ARdEIAL33CgBF0QEA//8QAEXRAQD//xIARdEB
+AP//HQBF0QEA//8DAEXRAQD//zUARdEBAP//EQBF0QEA//8xAEXRAQD//yUARdEBAP//JwBF0QEA
+//8fAEXRCAC99woARdEBAP//BABF0QIA//8DAEXRBAD//wMARdEBAP//AgBF0QEA//8CAEXRBAD/
+/wgARdEDAP//AwBF0QMA//8IAEXRBAD//wMARdEDAP//AwBF0QMA//8CAEXRBAD//wkARdEDAP//
+AgBF0QQA//8DAEXRAwD//wIARdEEAP//DgBF0QEA//8DAEXRAQD//wEARdEEAP//AwBF0QIA//8E
+AEXRAwD//wIARdEEAP//CABF0QQA//8DAEXRAgD//wQARdEDAP//AwBF0QMA//8DAEXRAwD//wMA
+RdEDAP//BABF0QEA//8EAEXRAwD//wkARdEDAP//AwBF0QQA//8IAEXRBAD//wIARdEDAP//AwBF
+I (11055) H_API: esp_wifi_remote_connect
+0QMA//8DAEXRBAD//wcARdEEAP//AwBF0QMA//8DAEXRAwD//x4ARdEIAL33CgBF0QEA//8FAEXR
+AQD//wMARdEBAP//AwBF0QEA//8CAEXRAQD//wEARdEBAP//AgBF0QEA//8NAEXRAQD//wMARdEB
+AP//AwBF0QEA//8HAEXRAQD//wMARdEBAP//BQBF0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA
+//8HAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD/
+/wMARdEBAP//DQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8DAEXRAQD//wMARdEBAP//
+AwBF0QEA//8BAEXRAQD//wMARdEBAP//BwBF0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA//8D
+AEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//BQBF0QEA//8DAEXRAQD//wMA
+RdEBAP//AwBF0QEA//8HAEXRAQD//wMARdEBAP//AQBF0QEA//8LAEXRAQD//wMARdEBAP//AQBF
+0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD//wsARdEBAP//AwBF0QEA//8BAEXR
+AQD//wMARdEBAP//AwBF0QEA//8fAEXRCAC99woARdEBAP//BQBF0QEA//8DAEXRAQD//wMARdEB
+AP//AgBF0QIA//8EAEXRAwD//woARdEBAP//AwBF0QEA//8DAEXRAQD//wcARdEBAP//AwBF0QEA
+//8CAEXRBAD//wMARdEBAP//AwBF0QEA//8DAEXRAQD//wcARdEBAP//AwBF0QEA//8BAEXRAQD/
+/wMARdEBAP//AQBF0QUA//8BAEXRAQD//wMARdEBAP//DQBF0QEA//8BAEXRAQD//wEARdEBAP//
+AQBF0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA//8FAEXRAQD//wMARdEBAP//BwBF0QEA//8D
+AEXRAQD//wMARdEBAP//AwBF0QEA//8FAEXRAQD//wMARdEBAP//AQBF0QEA//8GAEXRBAD//wMA
+RdEBAP//AwBF0QEA//8FAEXRBQD//wEARdEBAP//AwBF0QEA//8CAEXRAwD//wgARdEBAP//AwBF
+0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QUA//8CAEXRAwD//wgARdEBAP//AwBF0QEA//8BAEXR
+AQD//wMARdEBAP//AwBF0QEA//8fAEXRCAC99woARdEBAP//BQBF0QEA//8DAEXRAQD//wMARdEB
+AP//AgBF0QIA//8HAEXRAQD//wkARdEBAP//AwBF0QEA//8DAEXRAQD//wcARdEBAP//AwBF0QEA
+//8BAEXRAQD//wMARdEBAP//AwBF0QEA//8DAEXRAQD//wMARdEBAP//BwBF0QEA//8DAEXRAQD/
+/wEARdEBAP//AwBF0QEA//8BAEXRAQD//wUARdEBAP//AwBF0QEA//8NAEXRAQD//wEARdEBAP//
+AQBF0QEA//8BAEXRAQD//wMARdEBAP//AwBF0QEA//8DAEXRAQD//wUARdEBAP//AwBF0QEA//8H
+AEXRAQD//wMARdEBAP//AwBF0QEA//8DAEXRAQD//wUARdEBAP//AwBF0QEA//8BAEXRAQD//wUA
+RdEBAP//AwBF0QEA//8DAEXRAQD//wMARdEBAP//CwBF0QEA//8DAEXRAQD//wUARdEBAP//BwBF
+0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD//wkARdEBAP//BwBF0QEA//8DAEXR
+AQD//wEARdEBAP//AwBF0QEA//8DAEXRAQD//x8ARdEIAL33CgBF0QEA//8FAEXRAQD//wMARdEB
+AP//AwBF0QEA//8CAEXRAQD//wEARdEBAP//BgBF0QEA//8JAEXRAQD//wMARdEBAP//AwBF0QEA
+//8HAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA//8DAEXRAQD/
+/wcARdEBAP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8FAEXRAQD//wMARdEBAP//
+AwBF0QEA//8JAEXRAQD//wEARdEBAP//AQBF0QEA//8BAEXRAQD//wMARdEBAP//AwBF0QEA//8D
+AEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wcARdEBAP//AwBF0QEA//8DAEXRAQD//wMA
+RdEBAP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF
+0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA//8HAEXRAQD//wMARdEBAP//BQBF0QEA//8HAEXR
+AQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//CQBF0QEA//8HAEXRAQD//wMARdEB
+AP//AQBF0QEA//8DAEXRAQD//wMARdEBAP//HwBF0QgAvfcJAEXRAwD//wMARdEDAP//AgBF0QEA
+//8DAEXRAQD//wIARdEBAP//AgBF0QEA//8BAEXRBAD//wsARdECAP//AgBF0QMA//8IAEXRBAD/
+/wMARdEEAP//BABF0QIA//8BAEXRAQD//wMARdEBAP//CABF0QMA//8CAEXRBAD//wMARdEEAP//
+AQBF0QEA//8DAEXRAQD//wMARdEBAP//CgBF0QMA//8CAEXRAQD//wMARdEBAP//AgBF0QMA//8D
+AEXRAwD//wIARdEBAP//AwBF0QEA//8HAEXRBAD//wMARdEDAP//AwBF0QMA//8DAEXRAwD//wMA
+RdEDAP//AwBF0QQA//8CAEXRAwD//wMARdEDAP//CQBF0QMA//8CAEXRBAD//wkARdEEAP//AgBF
+0QMA//8DAEXRBAD//wEARdEEAP//CABF0QEA//8DAEXRAQD//wIARdEDAP//BQBF0QIA//8dAEXR
+CAC99z4ARdEBAP//FwBF0QUA//8HAEXRAQD//xIARdEBAP//LgBF0QEA//+TAEXRCAC99z4ARdEB
+AP//IwBF0QEA//9BAEXRAQD//5MARdEIAL33OAFF0QgAvfc4AUXRCAC99xAARdEBAP//JwFF0QgA
+vfcQAEXRAQD//zEARdEBAP//CABF0QIA///rAEXRCAC990IARdEBAP//CQBF0QEA///rAEXRCAC9
+9wkARdEEAP//AgBF0QIA//8DAEXRAQD//wMARdEBAP//AgBF0QMA//8JAEXRAwD//wgARdEEAP//
+AwBF0QMA//8DAEXRBAD//wEARdEBAP//AwBF0QEA//8DAEXRAQD//wQARdEDAP//5ABF0QgAvfcI
+AEXRAQD//wMARdEBAP//AwBF0QEA//8DAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wsA
+RdEBAP//BwBF0QEA//8BAEXRAQD//wEARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF
+0QEA//8BAEXRAQD//wMARdEBAP//AwBF0QEA//8DAEXRAQD//wMARdEBAP//4wBF0QgAvfcIAEXR
+AQD//wMARdEBAP//AwBF0QEA//8EAEXRAQD//wEARdEBAP//AgBF0QUA//8IAEXRBAD//wcARdEB
+AP//AQBF0QEA//8BAEXRAQD//wEARdEBAP//AwBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA
+//8DAEXRAQD//wMARdEBAP//AwBF0QUA///jAEXRCAC99wgARdEBAP//AwBF0QEA//8DAEXRAQD/
+/wQARdEBAP//AQBF0QEA//8CAEXRAQD//wsARdEBAP//AwBF0QEA//8HAEXRAQD//wEARdEBAP//
+AQBF0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wEARdEBAP//AwBF0QEA//8D
+AEXRAQD//wMARdEBAP//5wBF0QgAvfcIAEXRAQD//wMARdEBAP//AwBF0QEA//8FAEXRAQD//wMA
+RdEBAP//CwBF0QEA//8DAEXRAQD//wcARdEBAP//AQBF0QEA//8BAEXRAQD//wEARdEBAP//AwBF
+0QEA//8BAEXRAQD//wMARdEBAP//AQBF0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA///nAEXR
+CAC99wkARdEEAP//AgBF0QMA//8EAEXRAQD//wQARdEEAP//CABF0QQA//8HAEXRAQD//wEARdEB
+AP//AQBF0QEA//8CAEXRAwD//wMARdEEAP//AgBF0QQA//8CAEXRAwD//wMARdEEAP//4wBF0QgA
+vfcMAEXRAQD//ysBRdEIAL33CQBF0QMA//8sAUXRCAC99zgBRdEIAL33OAFF0QgAvfc4AUXRCAC9
+90AARdEBABv/QQBF0QEAG/9ZAEXRAQAb/1sARdEIAL33JwBF0QIAG/8HAEXRAQAb/w8ARdEBABv/
+BQBF0QEAG/8DAEXRAQAb/y0ARdEBABv/CQBF0QEAG/87AEXRAQAb/xEARdEBABv/CwBF0QEAG/8F
+AEXRAQAb/1UARdEIAL33KABF0QEAG/8HAEXRAQAb/xUARdEBABv/AwBF0QEAG/8tAEXRAQAb/0UA
+RdEBABv/EQBF0QEAG/8RAEXRAQAb/1UARdEIAL33CQBF0QMAG/8IAEXRAQAb/wMARdEBABv/AgBF
+0QMAG/8CAEXRAQAb/wEARdEDABv/AwBF0QEAG/8EAEXRBAAb/wcARdEBABv/AwBF0QEAG/8CAEXR
+AgAb/wQARdEDABv/AgBF0QQAG/8JAEXRBAAb/wEARdEBABv/AwBF0QEAG/8CAEXRBAAb/wgARdED
+ABv/AwBF0QQAG/8BAEXRBAAb/wMARdECABv/AwBF0QQAG/8JAEXRAwAb/wMARdEDABv/AgBF0QQA
+G/8IAEXRAQAb/wEARdEDABv/AgBF0QMAG/8DAEXRBAAb/wIARdEDABv/AwBF0QMAG/8CAEXRAQAb
+/wEARdEDABv/AgBF0QMAG/8JAEXRAgAb/wQARdEDABv/VABF0QgAvfcMAEXRAQAb/wcARdEBABv/
+AwBF0QEAG/8BAEXRAQAb/wMARdEBABv/AQBF0QIAG/8GAEXRAQAb/wMARdEBABv/AwBF0QEAG/8H
+AEXRAQAb/wMARdEBABv/AwBF0QEAG/8FAEXRAQAb/wMARdEBABv/AwBF0QEAG/8HAEXRAQAb/wUA
+#OK key
+RdEBABv/AwBF0QEAG/8BAEXRAQAb/w8ARdEBABv/AQBF0QEAG/8DAEXRAQAb/wEARdEBABv/AQBF
+0QEAG/8BAEXRAQAb/wMARdEBABv/AwBF0QEAG/8DAEXRAQAb/wcARdEBABv/AwBF0QEAG/8FAEXR
+AQAb/wEARdEBABv/AwBF0QEAG/8HAEXRAgAb/wQARdEBABv/AwBF0QEAG/8BAEXRAQAb/wcARdEB
+ABv/BwBF0QEAG/8BAEXRAgAb/wYARdEBABv/CwBF0QEAG/8FAEXRAQAb/1UARdEIAL33CQBF0QQA
+G/8HAEXRAQAb/wEARdEBABv/AQBF0QEAG/8BAEXRAQAb/wMARdEBABv/AQBF0QEAG/8HAEXRAQAb
+/wMARdEBABv/AwBF0QEAG/8HAEXRAQAb/wEARdEBABv/AQBF0QEAG/8DAEXRAQAb/wUARdEBABv/
+AwBF0QEAG/8DAEXRAQAb/wgARdEDABv/AgBF0QEAG/8DAEXRAQAb/wIARdEDABv/CQBF0QQAG/8B
+AEXRAQAb/wMARdEBABv/AQBF0QEAG/8BAEXRAQAb/wEARdEBABv/AwBF0QEAG/8DAEXRAQAb/wMA
+RdEBABv/BwBF0QEAG/8GAEXRBAAb/wEARdEBABv/AwBF0QEAG/8HAEXRAQAb/wUARdEFABv/AgBF
+0QMAG/8EAEXRAQAb/wQARdEEABv/AQBF0QEAG/8HAEXRAQAb/wsARdEBABv/BQBF0QEAG/9VAEXR
+CAC99wgARdEBABv/AwBF0QEAG/8HAEXRAQAb/wEARdEBABv/AQBF0QEAG/8BAEXRAQAb/wMARdEB
+ABv/AQBF0QEAG/8HAEXRAQAb/wMARdEBABv/AwBF0QEAG/8HAEXRAQAb/wEARdEBABv/AQBF0QEA
+G/8DAEXRAQAb/wUARdEBABv/AwBF0QEAG/8DAEXRAQAb/wsARdEBABv/AQBF0QEAG/8DAEXRAQAb
+/wUARdEBABv/BwBF0QEAG/8DAEXRAQAb/wEARdEBABv/AwBF0QEAG/8BAEXRAQAb/wEARdEBABv/
+AQBF0QEAG/8DAEXRAQAb/wMARdEBABv/AwBF0QEAG/8HAEXRAQAb/wUARdEBABv/AwBF0QEAG/8B
+AEXRAQAb/wMARdEBABv/BwBF0QEAG/8FAEXRAQAb/wkARdEBABv/AwBF0QEAG/8DAEXRAQAb/wMA
+RdEBABv/AQBF0QEAG/8HAEXRAQAb/wsARdEBABv/BQBF0QEAG/9VAEXRCAC99wgARdEBABv/AwBF
+0QEAG/8HAEXRAQAb/wEARdEBABv/AQBF0QEAG/8BAEXRAQAb/wMARdEBABv/AQBF0QEAG/8HAEXR
+AQAb/wMARdEBABv/AwBF0QEAG/8HAEXRAQAb/wEARdEBABv/AQBF0QEAG/8DAEXRAQAb/wUARdEB
+ABv/AwBF0QEAG/8DAEXRAQAb/wsARdEBABv/AQBF0QEAG/8DAEXRAQAb/wUARdEBABv/AwBF0QEA
+G/8DAEXRAQAb/wMARdEBABv/AQBF0QEAG/8DAEXRAQAb/wEARdEBABv/AQBF0QEAG/8BAEXRAQAb
+/wMARdEBABv/AwBF0QEAG/8DAEXRAQAb/wcARdEBABv/AwBF0QEAG/8BAEXRAQAb/wMARdEBABv/
+AQBF0QEAG/8DAEXRAQAb/wcARdEBABv/BQBF0QEAG/8JAEXRAQAb/wMARdEBABv/AwBF0QEAG/8D
+AEXRAQAb/wEARdEBABv/BwBF0QEAG/8LAEXRAQAb/wUARdEBABv/VQBF0QgAvfcJAEXRBAAb/wgA
+RdEDABv/AwBF0QMAG/8CAEXRAQAb/wYARdEDABv/AwBF0QQAG/8IAEXRAwAb/wMARdEDABv/BQBF
+0QIAG/8BAEXRAQAb/wMARdEBABv/BwBF0QQAG/8DAEXRBAAb/wEARdEEABv/BABF0QEAG/8EAEXR
+BAAb/wIARdEEABv/AQBF0QEAG/8BAEXRAQAb/wEARdEBABv/AgBF0QMAG/8CAEXRAQAb/wMARdEB
+ABv/CABF0QMAG/8DAEXRBAAb/wEARdEBABv/AwBF0QEAG/8HAEXRAQAb/wYARdEEABv/AQBF0QQA
+G/8FAEXRAgAb/wIARdEEABv/AQBF0QEAG/8IAEXRAgAb/wgARdEDABv/BQBF0QIAG/9TAEXRCAC9
+92AARdEBABv/1wBF0QgAvfddAEXRAwAb/9gARdEIAL33OAFF0QgAvfc4AUXRCAC99zgBRdEIAL33
+OAFF0QgAvfc4AUXR4Qu99wQARdEDALneMQG99wwARdEDAL33CAC53iMBvfcSAEXRCwC99wYAud4Y
+Ab33EwBF0RUAvfcFALneDgG99xAARdELAL33AQCNexYAvfcFALneBQG99w4ARdERAL33AQCNexsA
+vfcEALne/wC99wsARdEWAL33AQCNex8AvfcCALne+gC99wkARdEbAL33AQCNeyEAvfcDALne9QC9
+9wIARdEBAL33BABF0R8AvfcBAI17JAC99wIAud7wAL33CABF0SEAvfcBAI17JgC99wMAud7rAL33
+AgBF0QEAvfcFAEXRIwC99wEAjXspAL33AgC53ucAvfcCAEXRAQC99wQARdFSAL33AgC53uMAvfcC
+AEXRAQC99wQARdFWAL33AgC53uAAvfcBAEXRAQC99wQARdFaAL33AQC53t0AvfcGAEXRXQC99wIA
+ud7aAL33BQBF0WEAvfcBALne2AC99wIARdEBAL33AQBF0SoAvfcFAI17AgC99wMAjXswAL33AQC5
+3tUAvfcFAEXRKwC99wEAjXsFAL33AQCNewMAvfcBAI17MAC99wIAud7SAL33AgBF0QEAvfcBAEXR
+LQC99wEAjXsFAL33AgDjGAEAvfcCAI17MgC99wEAud7PAL33AgBF0QEAvfcCAEXRLgC99wQAjXsC
+AL33AgDjGAEAjXsBAL33AQCNezMAvfcCALnezAC99wEARdEBAL33AgBF0TQAvfcBAI17AQC99wIA
+4xgCAL33AQCNezUAvfcBALneygC99wEARdEBAL33AQBF0TYAvfcBAI17AQC99wIA4xgCAL33AQCN
+ezYAvfcBALnexwC99wIARdEBAL33AQBF0TMAvfcBAI17AwC99wEAjXsBAL33AgDjGAIAvfcBAI17
+NwC99wEAud7FAL33BABF0TUAvfcDAI17AgC99wIA4xgCAI17OQC99wIAud7CAL33AwBF0TwAvfcC
+AOMYPQC99wEAud7AAL33AwBF0T0AvfcCAOMYPgC99wEAud6+AL33AwBF0T4AvfcCAOMYPwC99wEA
+#OK key
+ud67AL33BABF0T8AvfcCAOMYQAC99wEAud65AL33AQBF0QEAvfcCAEXRQAC99wIA4xhBAL33AgC5
+3rYAvfcBAEXRAQC99wEARdFCAL33AgDjGEMAvfcBALnetAC99wEARdEBAL33AQBF0UMAvfcCAOMY
+RAC99wEAud6yAL33AQBF0QEAvfcBAEXRRAC99wIA4xhFAL33AQC53rAAvfcBAEXRAQC99wEARdFF
+AL33AgDjGEYAvfcBALnerwC99wIARdEDAL33AQCNe0IAvfcCAOMYQQC99wEAjXsFAL33AQC53q0A
+vfcDAEXRBAC99wEAjXtBAL33AgDjGEAAvfcBAI17BgC99wEAud6sAL33AwBF0QYAvfcBAI17QAC9
+9wIA4xg/AL33AQCNewgAvfcBALneqgC99wMARdEIAL33AQCNez8AvfcCAOMYPgC99wEAjXsKAL33
+AQC53qgAvfcDAEXRCgC99wEAjXs+AL33AgDjGD0AvfcBAI17DAC99wEAud6mAL33AwBF0UoAvfcC
+AOMYSwC99wEAud6lAL33AgBF0UsAvfcCAOMYTAC99wEAud6jAL33AQBF0QEAvfcBAEXRSwC99wIA
+4xhMAL33AQC53qIAvfcBAEXRAQC99wEARdFMAL33AgDjGE0AvfcBALneoAC99wEARdEBAL33AQBF
+0U0AvfcCAOMYTgC99wEAud6eAL33AQBF0QEAvfcBAEXRTgC99wIA4xhPAL33AQC53p0AvfcCAEXR
+TwC99wIA4xhPAL33AQC53pwAvfcBAEXRAQC99wEARdFPAL33AgDjGFAAvfcBALnemgC99wMARdFQ
+AL33AgDjGFEAvfcBALnemQC99wEARdEBAL33AQBF0VAAvfcCAOMYUQC99wEAud6YAL33AwBF0VEA
+vfcCAOMYUgC99wEAud6WAL33AwBF0VIAvfcCAOMYUwC99wEAud6UAL33AgBF0QEAvfcBAEXRUgC9
+9wIA4xhUAL33AQC53pMAvfcDAEXRUwC99wIA4xhUAL33AQC53pIAvfcDAEXRVAC99wIA4xhVAL33
+AQC53pAAvfcBAEXRAQC99wIARdFUAL33AgDjGFYAvfcBALnejwC99wMARdFVAL33AgDjGFYAvfcB
+ALnejgC99wEARdEBAL33AgBF0VUAvfcCAOMYVwC99wEAud6NAL33AwBF0VYAvfcCAOMYVwC99wEA
+ud6MAL33AQBF0QEAvfcCAEXRVgC99wIA4xhYAL33AQC53osAvfcDAEXRVwC99wIA4xhYAL33AQC5
+3ooAvfcBAEXRAQC99wIARdFXAL33AgDjGFkAvfcBALneiQC99wMARdFYAL33AgDjGFkAvfcBALne
+iQC99wMARdFYAL33AgDjGFkAvfcBALneiAC99wMARdFZAL33AgDjGFoAvfcBALnehwC99wMARdFZ
+AL33AgDjGFoAvfcBALnehgC99wEARdEBAL33AgBF0VkAvfcCAOMYWwC99wEAud6FAL33AwBF0VoA
+vfcCAOMYWwC99wEAud6FAL33AwBF0VoAvfcCAOMYWwC99wEAud6EAL33AwBF0VsAvfcCAOMYXAC9
+9wEAud6DAL33AwBF0VsAvfcCAOMYXAC99wEAud6CAL33AwBF0VwAvfcCAOMYXQC99wEAud6BAL33
+AwBF0VwAvfcCAOMYXQC99wEAud6BAL33AwBF0VwAvfcCAOMYXQC99wEAud6BAL33AwBF0VwAvfcC
+AOMYXQC99wEAud6AAL33AwBF0V0AvfcCAOMYXgC99wEAud5/AL33AwBF0V0AvfcCAOMYXgC99wEA
+ud5/AL33AwBF0V0AvfcCAOMYXgC99wEAud5/AL33AwBF0V0AvfcCAOMYXgC99wEAud5/AL33AwBF
+0V0AvfcCAOMYXgC99wEAud5+AL33AwBF0V4AvfcCAOMYXwC99wEAud59AL33AwBF0V4AvfcCAOMY
+XwC99wEAud59AL33AwBF0V4AvfcCAOMYXwC99wEAud59AL33AwBF0V4AvfcCAOMYXwC99wEAud59
+AL33AwBF0V4AvfcCAOMYXwC99wEAud58AL33AwBF0V8AvfcCAOMYYAC99wEAud57AL33AwBF0V8A
+vfcCAOMYYAC99wEAud57AL33AwBF0V8AvfcCAOMYYAC99wEAud57AL33AwBF0V8AvfcCAOMYYAC9
+9wEAud57AL33AwBF0V8AvfcCAOMYYAC99wEAud57AL33AwBF0QoAvfcDAI17UgC99wIA4xhEAL33
+AQCNewQAvfcDAI17AwC99wMAjXsOAL33AQC53noAvfcDAEXRCgC99wEAjXsDAL33AQCNe1EAvfcC
+AOMYQwC99wIAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNew4AvfcBALneeQC99wMA
+RdEKAL33AQCNewIAvfcCAI17UQC99wIA4xhEAL33AQCNewMAvfcBAI17AgC99wIAjXsBAL33AQCN
+ewIAvfcCAI17DgC99wEAud55AL33AwBF0QoAvfcBAI17AQC99wEAjXsBAL33AQCNe1EAvfcCAOMY
+RAC99wEAjXsDAL33AQCNewEAvfcBAI17AQC99wEAjXsBAL33AQCNewEAvfcBAI17AQC99wEAjXsO
+AL33AQC53nkAvfcDAEXRCgC99wIAjXsCAL33AQCNe1EAvfcCAOMYRAC99wEAjXsDAL33AgCNewIA
+vfcBAI17AQC99wIAjXsCAL33AQCNew4AvfcBALneeQC99wMARdEKAL33AQCNewMAvfcBAI17UQC9
+9wIA4xhEAL33AQCNewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17DgC99wEAud55AL33
+AwBF0QoAvfcBAI17AwC99wEAjXtRAL33AgDjGEQAvfcBAI17AwC99wEAjXsDAL33AQCNewEAvfcB
+AI17AwC99wEAjXsOAL33AQC53nkAvfcDAEXRCwC99wMAjXtSAL33AgDjGEMAvfcDAI17AwC99wMA
+jXsDAL33AwCNew8AvfcBALneeQC99wMARdFcAL33CQDjGF4AvfcBALneeAC99wMARdFdAL33CQDj
+GF8AvfcBALnedwC99wMARdFdAL33CQDjGF8AvfcBALnedwC99wMARdFdAL33CQDjGF8AvfcBALne
+dwC99wMARdEBAL33BwCNe1UAvfcJAOMYVQC99wcAjXsDAL33AQC53tcAvfcJAOMYNwG99wkA4xg3
+Ab33CQDjGDcBvfcJAOMYZBO99wEAjXuHAL33AwDjGLUAvfcBAI17hgC99wEA4xgDAL33AQDjGLQA
+vfcBAI17AgC99wEAjXsCAL33AwCNewIAvfcBAI17AwC99wEAjXsCAL33BACNe3EAvfcBAOMYAgC9
+9wIA4xi0AL33AQCNewEAvfcBAI17AgC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33
+AQCNe3UAvfcBAOMYAQC99wEA4xgBAL33AQDjGLQAvfcCAI17AwC99wUAjXsBAL33AQCNewMAvfcB
+AI17AgC99wMAjXtyAL33AgDjGAIAvfcBAOMYtAC99wIAjXsDAL33AQCNewUAvfcBAI17AwC99wEA
+jXsFAL33AQCNe3EAvfcBAOMYAwC99wEA4xi0AL33AQCNewEAvfcBAI17AgC99wEAjXsFAL33AQCN
+ewMAvfcBAI17BQC99wEAjXtxAL33AQDjGAMAvfcBAOMYtAC99wEAjXsCAL33AQCNewIAvfcEAI17
+AgC99wQAjXsBAL33BACNe3MAvfcDAOMYxAC99wEAjXs8Ab33AwCNe9IIvfcBAI17ZgC99wMA4xjW
+AL33AQCNe2UAvfcBAOMYuAC99wQAjXsCAL33AwCNewMAvfcDAI17AwC99wMAjXsCAL33BACNewMA
+vfcEAI17AgC99wQAjXtfAL33AQDjGLcAvfcBAI17BQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC9
+9wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33
+AQCNe2MAvfcEAOMYtQC99wMAjXsCAL33BQCNewEAvfcBAI17BQC99wEAjXsDAL33AQCNewEAvfcB
+AI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AgC99wMAjXtgAL33AQDjGAMAvfcBAOMYtwC99wEA
+jXsBAL33AQCNewUAvfcBAI17BQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33AQCN
+ewMAvfcBAI17BQC99wEAjXtfAL33AQDjGAMAvfcBAOMYtwC99wEAjXsBAL33AQCNewUAvfcBAI17
+AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsF
+AL33AQCNe18AvfcBAOMYAwC99wEA4xizAL33BACNewMAvfcEAI17AgC99wMAjXsDAL33AwCNewIA
+vfcBAI17AwC99wEAjXsCAL33BACNewEAvfcEAI17YQC99wMA4xiCCb33AQCNe5MAvfcBAOMYnQC9
+9wEAjXsNAL33AQCNewQAvfcCAI17BQC99wEAjXt/AL33AQDjGAcAvfcBAOMYJQC99wEA4xh3AL33
+AQCNexMAvfcBAI17BQC99wEAjXt/AL33AQDjGC0AvfcBAOMYdwC99wQAjXsCAL33AQCNewMAvfcB
+AI17AgC99wIAjXsFAL33AQCNewQAvfcDAI17CQC99wMAjXsDAL33BACNe1kAvfcEAOMYAwC99wMA
+4xgDAL33AwDjGAIAvfcEAOMYAwC99wIA4xgDAL33BADjGAMAvfcDAOMYCQC99wMA4xgDAL33AwDj
+GAMAvfcEAOMYAgC99wMA4xhyAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewMAvfcBAI17
+BQC99wEAjXsFAL33AQCNew0AvfcBAI17AQC99wEAjXtdAL33AQDjGAEAvfcBAOMYAQC99wEA4xgF
+AL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAwC99wEA4xgDAL33AQDjGAMA
+vfcBAOMYAQC99wEA4xgDAL33AQDjGAcAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC9
+9wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xhxAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33
+AQCNewMAvfcBAI17BQC99wEAjXsFAL33AQCNewoAvfcEAI17AgC99wMAjXtaAL33AQDjGAEAvfcB
+AOMYAQC99wEA4xgCAL33BADjGAEAvfcBAOMYBQC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA
+4xgDAL33AQDjGAEAvfcFAOMYBwC99wEA4xgFAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDj
+GAEAvfcFAOMYcQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCNewUAvfcBAI17
+BQC99wEAjXsJAL33AQCNewMAvfcBAI17BQC99wEAjXtZAL33AQDjGAEAvfcBAOMYAQC99wEA4xgB
+#OK key
+AL33AQDjGAMAvfcBAOMYAQC99wEA4xgFAL33AQDjGAMAvfcBAOMYAwC99wEA4xgDAL33AQDjGAMA
+vfcBAOMYAQC99wEA4xgLAL33AQDjGAUAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC9
+9wEA4xh1AL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewMAvfcBAI17BQC99wEAjXsFAL33
+AQCNewkAvfcBAI17AwC99wEAjXsFAL33AQCNe1kAvfcBAOMYAQC99wEA4xgBAL33AQDjGAEAvfcB
+AOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA
+4xgDAL33AQDjGAEAvfcBAOMYCwC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33AQDj
+GAMAvfcBAOMYAQC99wEA4xh1AL33BACNewMAvfcEAI17AgC99wMAjXsDAL33AwCNewUAvfcCAI17
+CAC99wQAjXsBAL33BACNe1oAvfcBAOMYAQC99wEA4xgBAL33AQDjGAIAvfcEAOMYAgC99wMA4xgC
+AL33AQDjGAMAvfcBAOMYAgC99wMA4xgCAL33AQDjGAMAvfcBAOMYAgC99wQA4xgIAL33AwDjGAMA
+vfcDAOMYAwC99wQA4xgCAL33BADjGOk5vfdAAbneSAY77wUAjXsDADvvAQCNewkAO+8BAI17NwA7
+7wEAjXsRADvvAQCNewUAO+8BAI17CwA77wEAjXsEADvvAwCNew8AO+8DAI17uAA77wEAjXsGADvv
+AgCNewkAO+8BAI17JQA77wEAjXsGADvvAQCNewkAO+8CAI17EAA77wMAjXsEADvvAQCNewoAO+8C
+AI17AwA77wEAjXsDADvvAQCNew0AO+8BAI17AwA77wEAjXu3ADvvAQCNewcAO+8BAI17CQA77wQA
+jXsDADvvAwCNewIAO+8EAI17AwA77wMAjXsPADvvAgCNewYAO+8CAI17CQA77wEAjXsPADvvBQCN
+ewMAO+8BAI17CwA77wEAjXsDADvvAQCNewIAO+8CAI17DQA77wEAjXsCADvvAgCNewcAO+8FAI17
+AgA77wMAjXsCADvvAQCNewEAO+8DAI17AgA77wMAjXuaADvvBACNewQAO+8BAI17CQA77wEAjXsD
+ADvvAQCNewEAO+8BAI17AwA77wEAjXsBADvvAQCNewEAO+8BAI17AQA77wEAjXsBADvvAQCNewMA
+O+8BAI17DQA77wwAjXsIADvvAQCNexEAO+8BAI17BQA77wEAjXsLADvvAQCNewMAO+8BAI17AQA7
+7wEAjXsBADvvAQCNew0AO+8BAI17AQA77wEAjXsBADvvAQCNewoAO+8BAI17AgA77wEAjXsDADvv
+AQCNewEAO+8CAI17BAA77wEAjXsDADvvAQCNe5kAO+8BAI17BwA77wEAjXsJADvvAQCNewMAO+8B
+AI17AQA77wEAjXsDADvvAQCNewEAO+8BAI17AQA77wEAjXsBADvvAQCNewEAO+8FAI17DgA77wIA
+jXsGADvvAgCNewkAO+8BAI17EQA77wEAjXsFADvvAQCNewsAO+8BAI17AwA77wIAjXsCADvvAQCN
+ew0AO+8CAI17AgA77wEAjXsJADvvAQCNewMAO+8FAI17AQA77wEAjXsFADvvAQCNewMAO+8BAI17
+mQA77wEAjXsHADvvAQCNewkAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AQA77wEAjXsB
+ADvvAQCNewEAO+8BAI17AQA77wEAjXsTADvvAQCNewYAO+8BAI17CgA77wEAjXsRADvvAQCNewMA
+O+8FAI17CQA77wEAjXsDADvvAQCNewMAO+8BAI17DQA77wEAjXsDADvvAQCNewgAO+8BAI17BAA7
+7wEAjXsFADvvAQCNewUAO+8BAI17AwA77wEAjXuZADvvAQCNewcAO+8BAI17CQA77wEAjXsDADvv
+AQCNewEAO+8BAI17AwA77wEAjXsBADvvAQCNewEAO+8BAI17AQA77wEAjXsBADvvAQCNeyUAO+8B
+AI17EQA77wEAjXsEADvvAwCNewoAO+8BAI17AwA77wEAjXsDADvvAQCNew0AO+8BAI17AwA77wEA
+jXsHADvvAQCNewUAO+8BAI17BQA77wEAjXsFADvvAQCNewMAO+8BAI17mQA77wEAjXsGADvvAwCN
+ewgAO+8BAI17AwA77wEAjXsCADvvAwCNewIAO+8BAI17AQA77wEAjXsBADvvAQCNewIAO+8EAI17
+IAA77wMAjXsQADvvAQCNewUAO+8BAI17CgA77wMAjXsDADvvAwCNew8AO+8DAI17CAA77wUAjXsC
+ADvvBACNewEAO+8BAI17BgA77wMAjXuSBTvv
+#END 0918cda8 4296
+#OK shot
+#SHOT 320 320
+BABF0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF0TwB4xgEAEXRPAHjGAQARdEHAOMYBQB89wYA4xgC
+AHz3DQDjGAMAfPcYAeMYBABF0QcA4xgCAHz3AgDjGAIAfPcFAOMYAgB89w4A4xgCAHz3yADjGBQA
+fPc8AOMYBABF0QcA4xgCAHz3AwDjGAIAfPcUAOMYAgB8964A4xgBALGcBADjGAMAsZwDAOMYAwCx
+nAMA4xgBALGcAgDjGAEAsZwFAOMYAQB89xIA4xgBAHz3PADjGAQARdEHAOMYAgB89wMA4xgCAHz3
+AwDjGAMAfPcEAOMYBQB89wUA4xgCAHz3rQDjGAIAsZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwD
+AOMYAQCxnAEA4xgBALGcAQDjGAEAsZwBAOMYAQCxnAUA4xgBAHz3AQDjGBAAfPcBAOMYAQB89yEA
+4xgCAHz3GQDjGAQARdEHAOMYAgB89wMA4xgCAHz3BADjGAIAfPcIAOMYAgB89wQA4xgCAHz3rgDj
+GAEAsZwDAOMYAQCxnAIA4xgCALGcAQDjGAEAsZwCAOMYAgCxnAIA4xgBALGcAQDjGAEAsZwGAOMY
+AQB89wEA4xgQAHz3AQDjGAMAfPcfAOMYAgB89xkA4xgEAEXRBwDjGAIAfPcDAOMYAgB89wQA4xgC
+AHz3BADjGAYAfPcEAOMYAgB8964A4xgBALGcAwDjGAEAsZwBAOMYAQCxnAEA4xgBALGcAQDjGAEA
+sZwBAOMYAQCxnAEA4xgBALGcBADjGAEAsZwGAOMYAQB89wEA4xgQAHz3AQDjGAMAfPcMAOMYBwB8
+9wEA4xgHAHz3CQDjGAcAfPcBAOMYBwB89wcA4xgEAEXRBwDjGAIAfPcDAOMYAgB89wQA4xgCAHz3
+AwDjGAIAfPcDAOMYAgB89wQA4xgCAHz3rgDjGAEAsZwDAOMYAgCxnAIA4xgBALGcAQDjGAIAsZwC
+AOMYAQCxnAMA4xgBALGcBwDjGAEAfPcBAOMYEAB89wEA4xgDAHz3OgDjGAQARdEHAOMYAgB89wMA
+4xgCAHz3BADjGAIAfPcDAOMYAgB89wMA4xgCAHz3BADjGAIAfPeuAOMYAQCxnAMA4xgBALGcAwDj
+GAEAsZwBAOMYAQCxnAMA4xgBALGcAwDjGAEAsZwBAOMYAQCxnAUA4xgBAHz3AQDjGBAAfPcBAOMY
+AwB89zoA4xgEAEXRBwDjGAIAfPcCAOMYAgB89wUA4xgCAHz3AwDjGAIAfPcDAOMYAgB89wQA4xgC
+AHz3rgDjGAEAsZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwDAOMYAQCxnAIA4xgBALGcAQDjGAEA
+sZwBAOMYAQCxnAQA4xgBAHz3AQDjGBAAfPcBAOMYAQB89yEA4xgCAHz3GQDjGAQARdEHAOMYBQB8
+9wUA4xgEAHz3AwDjGAYAfPcDAOMYBAB896wA4xgDALGcAwDjGAMAsZwDAOMYAwCxnAMA4xgBALGc
+AgDjGAEAsZwFAOMYAQB89xIA4xgBAHz3IQDjGAIAfPcZAOMYBABF0ewA4xgUAHz3PADjGAQARdE8
+AeMYBABF0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF0TwB4xgEAEXRPAHjGEkLvfcCAOMYKAC99wMA
+4xgTAb33AgDjGCkAvfcCAOMYEwG99wIA4xgpAL33AgDjGBMBvfcCAOMYKQC99wIA4xjjAL33DQBF
+0QgAvfcDAEXRGAC99wIA4xgJAL33BgDjGAMAvfcCAOMYBAC99wIA4xgDAL33BgDjGAYAvfcCAOMY
+4wC99w0ARdEHAL33BABF0RgAvfcCAOMYCAC99wIA4xgEAL33AgDjGAIAvfcCAOMYBAC99wIA4xgC
+AL33AgDjGAQAvfcCAOMYBQC99wIA4xjjAL33AwBF0QcAvfcDAEXRBgC99wUARdEYAL33AgDjGAgA
+vfcCAOMYBAC99wIA4xgCAL33AgDjGAQAvfcCAOMYAgC99wIA4xgEAL33AgDjGAUAvfcCAOMY4wC9
+9wMARdEHAL33AwBF0QUAvfcGAEXRGAC99wIA4xgIAL33AgDjGAQAvfcCAOMYAwC99wIA4xgCAL33
+AgDjGAMAvfcCAOMYBAC99wIA4xgFAL33AgDjGOMAvfcDAEXRBwC99wMARdEFAL33BgBF0RgAvfcC
+AOMYCAC99wgA4xgDAL33AgDjGAIAvfcCAOMYAwC99wgA4xgFAL33AgDjGOMAvfcDAEXRBgC99wMA
+RdEJAL33AwBF0RgAvfcCAOMYCAC99wIA4xgJAL33AgDjGAIAvfcCAOMYAwC99wIA4xgLAL33AgDj
+GOwAvfcDAEXRCQC99wMARdEYAL33AgDjGAgAvfcCAOMYCgC99wQA4xgEAL33AgDjGAsAvfcCAOMY
+6wC99wMARdEKAL33AwBF0RgAvfcCAOMYCAC99wIA4xgEAL33AgDjGAUAvfcCAOMYBQC99wIA4xgE
+AL33AgDjGAUAvfcCAOMY6wC99wMARdEKAL33AwBF0RgAvfcIAOMYAwC99wYA4xgGAL33AgDjGAYA
+vfcGAOMYBQC99wQA4xjpAL33AwBF0QsAvfcDAEXRLwG99wMARdELAL33AwBF0S4BvfcDAEXRDAC9
+9wMARdEuAb33AwBF0QwAvfcDAEXRLQG99wMARdENAL33AwBF0S0BvfcDAEXRDQC99wMARdEtAb33
+AwBF0Q0AvfcDAEXRLQG99wMARdENAL33AwBF0S0BvfcDAEXRDQC99wMARdEtAb33AwBF0QoAvfcJ
+AEXRKgG99wMARdEKAL33CQBF0ZQRvffYAEXRWAA77xAAvffYAEXRWAA77xAAvffYAEXRWAA77xAA
+vffYAEXRWAA77xAAvffYAEXRWAA77xAAvffYAEXRWAA77xAAvffYAEXRWAA77xAAvffYAEXRWAA7
+7xAAvffYAEXRWAA77xAAvffYAEXRWAA77yUXvfcHAEXRMQG99xcARdEjAb33IwBF0RgBvfcTAEXR
+BwC99xMARdEOAb33EABF0QsAvfcBAI17CwC99xAARdEFAb33DgBF0REAvfcBAI17EQC99w4ARdH/
+AL33CwBF0RYAvfcBAI17FgC99wsARdH6AL33CQBF0RsAvfcBAI17GwC99wkARdH1AL33AgBF0QEA
+vfcEAEXRHwC99wEAjXsfAL33BABF0QEAvfcCAEXR8AC99wgARdEhAL33AQCNeyEAvfcIAEXR6wC9
+9wIARdEBAL33BQBF0SMAvfcBAI17IwC99wUARdEBAL33AgBF0ecAvfcCAEXRAQC99wQARdFNAL33
+BABF0QEAvfcCAEXR4wC99wIARdEBAL33BABF0VEAvfcEAEXRAQC99wIARdHgAL33AQBF0QEAvfcE
+AEXRVQC99wQARdEBAL33AQBF0d0AvfcGAEXRWQC99wYARdHaAL33BQBF0V0AvfcFAEXR2AC99wIA
+RdEBAL33AQBF0SoAvfcFAI17AgC99wMAjXstAL33AQBF0QEAvfcCAEXR1QC99wUARdErAL33AQCN
+ewUAvfcBAI17AwC99wEAjXstAL33BQBF0dIAvfcCAEXRAQC99wEARdEtAL33AQCNewUAvfcBAI17
+AgC99wIAjXsvAL33AQBF0QEAvfcCAEXRzwC99wIARdEBAL33AgBF0S4AvfcEAI17AgC99wEAjXsB
+AL33AQCNewEAvfcBAI17MAC99wIARdEBAL33AgBF0cwAvfcBAEXRAQC99wIARdE0AL33AQCNewEA
+vfcCAI17AgC99wEAjXsyAL33AgBF0QEAvfcBAEXRygC99wEARdEBAL33AQBF0TYAvfcBAI17AQC9
+9wEAjXsDAL33AQCNezQAvfcBAEXRAQC99wEARdHHAL33AgBF0QEAvfcBAEXRMwC99wEAjXsDAL33
+AQCNewEAvfcBAI17AwC99wEAjXs1AL33AQBF0QEAvfcBAEXRxQC99wQARdE1AL33AwCNewMAvfcD
+AI17NwC99wEARdEBAL33AgC53sIAvfcDAEXRewC99wEAud7AAL33AwBF0X0AvfcBALnevgC99wMA
+RdF/AL33AQC53rsAvfcEAEXRgQC99wEAud65AL33AQBF0QEAvfcCAEXRgwC99wIAud62AL33AQBF
+0QEAvfcBAEXRhwC99wEAud60AL33AQBF0QEAvfcBAEXRiQC99wEAud6yAL33AQBF0QEAvfcBAEXR
+iwC99wEAud6wAL33AQBF0QEAvfcBAEXRjQC99wEAud6vAL33AgBF0QMAvfcBAI17hQC99wEAjXsF
+AL33AQC53q0AvfcDAEXRBAC99wEAjXuDAL33AQCNewYAvfcBALnerAC99wMARdEGAL33AQCNe3EA
+vfcCAOMYDgC99wEAjXsIAL33AQC53qoAvfcDAEXRCAC99wEAjXtvAL33AgDjGA4AvfcBAI17CgC9
+9wEAud6oAL33AwBF0QoAvfcBAI17bQC99wIA4xgOAL33AQCNewwAvfcBALnepgC99wMARdF5AL33
+AgDjGBwAvfcBALnepQC99wIARdF5AL33AgDjGB4AvfcBALneowC99wEARdEBAL33AQBF0XgAvfcC
+AOMYHwC99wEAud6iAL33AQBF0QEAvfcBAEXReAC99wIA4xghAL33AQC53qAAvfcBAEXRAQC99wEA
+RdF5AL33AgDjGCIAvfcBALnengC99wEARdEBAL33AQBF0XkAvfcCAOMYJAC99wEAud6dAL33AgBF
+0XkAvfcCAOMYJQC99wEAud6cAL33AQBF0QEAvfcBAEXReAC99wIA4xgnAL33AQC53poAvfcDAEXR
+eQC99wIA4xgoAL33AQC53pkAvfcBAEXRAQC99wEARdF4AL33AgDjGCkAvfcBALnemAC99wMARdF4
+AL33AgDjGCsAvfcBALnelgC99wMARdF4AL33AgDjGC0AvfcBALnelAC99wIARdEBAL33AQBF0XgA
+vfcCAOMYLgC99wEAud6TAL33AwBF0XgAvfcCAOMYLwC99wEAud6SAL33AwBF0XgAvfcCAOMYMQC9
+9wEAud6QAL33AQBF0QEAvfcCAEXRdwC99wIA4xgzAL33AQC53o8AvfcDAEXReAC99wIA4xgzAL33
+AQC53o4AvfcBAEXRAQC99wIARdF3AL33AgDjGDUAvfcBALnejQC99wMARdF3AL33AgDjGDYAvfcB
+ALnejAC99wEARdEBAL33AgBF0XYAvfcCAOMYOAC99wEAud6LAL33AwBF0XcAvfcCAOMYOAC99wEA
+ud6KAL33AQBF0QEAvfcCAEXRdgC99wIA4xg6AL33AQC53okAvfcDAEXRdgC99wIA4xg7AL33AQC5
+3okAvfcDAEXRdQC99wIA4xg8AL33AQC53ogAvfcDAEXRdgC99wIA4xg9AL33AQC53ocAvfcDAEXR
+dQC99wIA4xg+AL33AQC53oYAvfcBAEXRAQC99wIARdF0AL33AgDjGEAAvfcBALnehQC99wMARdF0
+AL33AgDjGEEAvfcBALnehQC99wMARdF0AL33AgDjGEEAvfcBALnehAC99wMARdF0AL33AgDjGEMA
+vfcBALnegwC99wMARdFzAL33AgDjGEQAvfcBALneggC99wMARdFzAL33AgDjGEYAvfcBALnegQC9
+9wMARdFzAL33AgDjGEYAvfcBALnegQC99wMARdFyAL33AgDjGEcAvfcBALnegQC99wMARdFxAL33
+AgDjGEgAvfcBALnegAC99wMARdFxAL33AgDjGEoAvfcBALnefwC99wMARdFxAL33AgDjGEoAvfcB
+ALnefwC99wMARdFwAL33AgDjGEsAvfcBALnefwC99wMARdFvAL33AgDjGEwAvfcBALnefwC99wMA
+RdFuAL33AgDjGE0AvfcBALnefgC99wMARdFvAL33AgDjGE4AvfcBALnefQC99wMARdFuAL33AgDj
+GE8AvfcBALnefQC99wMARdFtAL33AgDjGFAAvfcBALnefQC99wMARdFsAL33AgDjGFEAvfcBALne
+fQC99wMARdFsAL33AgDjGFEAvfcBALnefAC99wMARdFsAL33AgDjGFMAvfcBALneewC99wMARdFr
+AL33AgDjGFQAvfcBALneewC99wMARdFqAL33AgDjGFUAvfcBALneewC99wMARdFqAL33AgDjGFUA
+vfcBALneewC99wMARdFpAL33AgDjGFYAvfcBALneewC99wMARdEKAL33AwCNe1sAvfcCAOMYOwC9
+9wEAjXsEAL33AwCNewMAvfcDAI17DgC99wEAud56AL33AwBF0QoAvfcBAI17AwC99wEAjXtZAL33
+AgDjGDsAvfcCAI17AwC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsOAL33AQC53nkAvfcD
+AEXRCgC99wEAjXsCAL33AgCNe1kAvfcCAOMYPAC99wEAjXsDAL33AQCNewIAvfcCAI17AQC99wEA
+jXsCAL33AgCNew4AvfcBALneeQC99wMARdEKAL33AQCNewEAvfcBAI17AQC99wEAjXtYAL33AgDj
+GD0AvfcBAI17AwC99wEAjXsBAL33AQCNewEAvfcBAI17AQC99wEAjXsBAL33AQCNewEAvfcBAI17
+DgC99wEAud55AL33AwBF0QoAvfcCAI17AgC99wEAjXtXAL33AgDjGD4AvfcBAI17AwC99wIAjXsC
+AL33AQCNewEAvfcCAI17AgC99wEAjXsOAL33AQC53nkAvfcDAEXRCgC99wEAjXsDAL33AQCNe1YA
+vfcCAOMYPwC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNew4AvfcBALneeQC9
+9wMARdEKAL33AQCNewMAvfcBAI17VgC99wIA4xg/AL33AQCNewMAvfcBAI17AwC99wEAjXsBAL33
+AQCNewMAvfcBAI17DgC99wEAud55AL33AwBF0QsAvfcDAI17VgC99wIA4xg/AL33AwCNewMAvfcD
+AI17AwC99wMAjXsPAL33AQC53nkAvfcDAEXRXAC99wkA4xheAL33AQC53ngAvfcDAEXRXQC99wkA
+4xhfAL33AQC53ncAvfcDAEXRXQC99wkA4xhfAL33AQC53ncAvfcDAEXRXQC99wkA4xhfAL33AQC5
+3ncAvfcDAEXRAQC99wcAjXtVAL33CQDjGFUAvfcHAI17AwC99wEAud7XAL33CQDjGDcBvfcJAOMY
+NwG99wkA4xg3Ab33CQDjGGQTvfcBAI17hwC99wMA4xi1AL33AQCNe4YAvfcBAOMYAwC99wEA4xi0
+AL33AQCNewIAvfcBAI17AgC99wMAjXsCAL33AQCNewMAvfcBAI17AgC99wQAjXt1AL33AQDjGLQA
+vfcBAI17AQC99wEAjXsCAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17dwC9
+9wIA4xi1AL33AgCNewMAvfcFAI17AQC99wEAjXsDAL33AQCNewIAvfcDAI17dgC99wEA4xi0AL33
+AgCNewMAvfcBAI17BQC99wEAjXsDAL33AQCNewUAvfcBAI17dQC99wEA4xi0AL33AQCNewEAvfcB
+AI17AgC99wEAjXsFAL33AQCNewMAvfcBAI17BQC99wEAjXtxAL33AQDjGAMAvfcBAOMYtAC99wEA
+jXsCAL33AQCNewIAvfcEAI17AgC99wQAjXsBAL33BACNe3MAvfcDAOMYxAC99wEAjXs8Ab33AwCN
+e9IIvfcBAI17ZgC99wMA4xjWAL33AQCNe2UAvfcBAOMYAwC99wEA4xi0AL33BACNewIAvfcDAI17
+AwC99wMAjXsDAL33AwCNewIAvfcEAI17AwC99wQAjXsCAL33BACNe18AvfcBAOMYAwC99wEA4xiz
+AL33AQCNewUAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEA
+vfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXtkAL33AwDjGLUAvfcDAI17AgC9
+9wUAjXsBAL33AQCNewUAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33
+AQCNewIAvfcDAI17YAC99wEA4xgDAL33AQDjGLcAvfcBAI17AQC99wEAjXsFAL33AQCNewUAvfcB
+AI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewUAvfcBAI17XwC99wEA
+4xgDAL33AQDjGLcAvfcBAI17AQC99wEAjXsFAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCN
+ewEAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17BQC99wEAjXtfAL33AQDjGAMAvfcBAOMY
+swC99wQAjXsDAL33BACNewIAvfcDAI17AwC99wMAjXsCAL33AQCNewMAvfcBAI17AgC99wQAjXsB
+AL33BACNe2EAvfcDAOMYggm99wEAjXuTAL33AQDjGJ0AvfcBAI17DQC99wEAjXsEAL33AgCNewUA
+vfcBAI17fwC99wEA4xgHAL33AQDjGCUAvfcBAOMYdwC99wEAjXsTAL33AQCNewUAvfcBAI17fwC9
+9wEA4xgtAL33AQDjGHcAvfcEAI17AgC99wEAjXsDAL33AQCNewIAvfcCAI17BQC99wEAjXsEAL33
+AwCNewkAvfcDAI17AwC99wQAjXtZAL33BADjGAMAvfcDAOMYAwC99wMA4xgCAL33BADjGAMAvfcC
+AOMYAwC99wQA4xgDAL33AwDjGAkAvfcDAOMYAwC99wMA4xgDAL33BADjGAIAvfcDAOMYcgC99wEA
+jXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCNewUAvfcBAI17BQC99wEAjXsNAL33AQCN
+ewEAvfcBAI17XQC99wEA4xgBAL33AQDjGAEAvfcBAOMYBQC99wEA4xgBAL33AQDjGAMAvfcBAOMY
+AQC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgH
+AL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMA
+vfcBAOMYcQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCNewUAvfcBAI17BQC9
+9wEAjXsKAL33BACNewIAvfcDAI17WgC99wEA4xgBAL33AQDjGAEAvfcBAOMYAgC99wQA4xgBAL33
+AQDjGAUAvfcBAOMYAwC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgBAL33BQDjGAcAvfcB
+AOMYBQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33BQDjGHEAvfcBAI17AwC99wEA
+jXsBAL33AQCNewMAvfcBAI17AwC99wEAjXsFAL33AQCNewUAvfcBAI17CQC99wEAjXsDAL33AQCN
+ewUAvfcBAI17WQC99wEA4xgBAL33AQDjGAEAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMY
+BQC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgDAL33AQDjGAEAvfcBAOMYCwC99wEA4xgF
+AL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYdQC99wEAjXsDAL33AQCNewEA
+vfcBAI17AwC99wEAjXsDAL33AQCNewUAvfcBAI17BQC99wEAjXsJAL33AQCNewMAvfcBAI17BQC9
+9wEAjXtZAL33AQDjGAEAvfcBAOMYAQC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33
+AQDjGAEAvfcBAOMYAwC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgBAL33AQDjGAsAvfcB
+AOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYdQC99wQA
+jXsDAL33BACNewIAvfcDAI17AwC99wMAjXsFAL33AgCNewgAvfcEAI17AQC99wQAjXtaAL33AQDj
+GAEAvfcBAOMYAQC99wEA4xgCAL33BADjGAIAvfcDAOMYAgC99wEA4xgDAL33AQDjGAIAvfcDAOMY
+AgC99wEA4xgDAL33AQDjGAIAvfcEAOMYCAC99wMA4xgDAL33AwDjGAMAvfcEAOMYAgC99wQA4xjp
+Ob33QAG53kgGO+8FAI17AwA77wEAjXsJADvvAQCNezcAO+8BAI17EQA77wEAjXsFADvvAQCNewsA
+O+8BAI17BAA77wMAjXsPADvvAwCNe7gAO+8BAI17BgA77wIAjXsJADvvAQCNeyUAO+8BAI17BgA7
+7wEAjXsJADvvAgCNexAAO+8DAI17BAA77wEAjXsKADvvAgCNewMAO+8BAI17AwA77wEAjXsNADvv
+AQCNewMAO+8BAI17twA77wEAjXsHADvvAQCNewkAO+8EAI17AwA77wMAjXsCADvvBACNewMAO+8D
+AI17DwA77wIAjXsGADvvAgCNewkAO+8BAI17DwA77wUAjXsDADvvAQCNewsAO+8BAI17AwA77wEA
+jXsCADvvAgCNew0AO+8BAI17AgA77wIAjXsHADvvBQCNewIAO+8DAI17AgA77wEAjXsBADvvAwCN
+ewIAO+8DAI17mgA77wQAjXsEADvvAQCNewkAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17
+AQA77wEAjXsBADvvAQCNewEAO+8BAI17AQA77wEAjXsDADvvAQCNew0AO+8MAI17CAA77wEAjXsR
+ADvvAQCNewUAO+8BAI17CwA77wEAjXsDADvvAQCNewEAO+8BAI17AQA77wEAjXsNADvvAQCNewEA
+O+8BAI17AQA77wEAjXsKADvvAQCNewIAO+8BAI17AwA77wEAjXsBADvvAgCNewQAO+8BAI17AwA7
+7wEAjXuZADvvAQCNewcAO+8BAI17CQA77wEAjXsDADvvAQCNewEAO+8BAI17AwA77wEAjXsBADvv
+AQCNewEAO+8BAI17AQA77wEAjXsBADvvBQCNew4AO+8CAI17BgA77wIAjXsJADvvAQCNexEAO+8B
+AI17BQA77wEAjXsLADvvAQCNewMAO+8CAI17AgA77wEAjXsNADvvAgCNewIAO+8BAI17CQA77wEA
+jXsDADvvBQCNewEAO+8BAI17BQA77wEAjXsDADvvAQCNe5kAO+8BAI17BwA77wEAjXsJADvvAQCN
+ewMAO+8BAI17AQA77wEAjXsDADvvAQCNewEAO+8BAI17AQA77wEAjXsBADvvAQCNewEAO+8BAI17
+EwA77wEAjXsGADvvAQCNewoAO+8BAI17EQA77wEAjXsDADvvBQCNewkAO+8BAI17AwA77wEAjXsD
+ADvvAQCNew0AO+8BAI17AwA77wEAjXsIADvvAQCNewQAO+8BAI17BQA77wEAjXsFADvvAQCNewMA
+O+8BAI17mQA77wEAjXsHADvvAQCNewkAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AQA7
+7wEAjXsBADvvAQCNewEAO+8BAI17AQA77wEAjXslADvvAQCNexEAO+8BAI17BAA77wMAjXsKADvv
+AQCNewMAO+8BAI17AwA77wEAjXsNADvvAQCNewMAO+8BAI17BwA77wEAjXsFADvvAQCNewUAO+8B
+AI17BQA77wEAjXsDADvvAQCNe5kAO+8BAI17BgA77wMAjXsIADvvAQCNewMAO+8BAI17AgA77wMA
+jXsCADvvAQCNewEAO+8BAI17AQA77wEAjXsCADvvBACNeyAAO+8DAI17EAA77wEAjXsFADvvAQCN
+ewoAO+8DAI17AwA77wMAjXsPADvvAwCNewgAO+8FAI17AgA77wQAjXsBADvvAQCNewYAO+8DAI17
+kgU77w==
+#END 33f53d3b 2281
+I (14487) H_API: esp_wifi_remote_connect
+#OK key
+#OK shot
+#SHOT 320 320
+BABF0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF0TwB4xgEAEXRPAHjGAQARdEHAOMYBgB89wUA4xgC
+AHz3FADjGAUAfPcMAOMYAwB89wAB4xgEAEXRBwDjGAIAfPcDAOMYAgB89wQA4xgCAHz3EwDjGAIA
+fPcDAOMYAgB89wwA4xgCAHz3sADjGBQAfPc8AOMYBABF0QcA4xgCAHz3AwDjGAIAfPcZAOMYAgB8
+9wMA4xgCAHz3DADjGAIAfPeWAOMYAQCxnAQA4xgDALGcAwDjGAMAsZwDAOMYAQCxnAIA4xgBALGc
+BQDjGAEAfPcSAOMYAQB89zwA4xgEAEXRBwDjGAIAfPcDAOMYAgB89wMA4xgDAHz3BADjGAUAfPcD
+AOMYBQB89wIA4xgCAHz3BwDjGAUAfPcFAOMYAgB89wQA4xgFAHz3jADjGAIAsZwDAOMYAQCxnAMA
+4xgBALGcAQDjGAEAsZwDAOMYAQCxnAEA4xgBALGcAQDjGAEAsZwBAOMYAQCxnAUA4xgBAHz3AQDj
+GBAAfPcBAOMYAQB89yEA4xgCAHz3GQDjGAQARdEHAOMYAgB89wMA4xgCAHz3BADjGAIAfPcDAOMY
+AgB89wMA4xgCAHz3AQDjGAIAfPcDAOMYAgB89wEA4xgCAHz3CwDjGAIAfPcEAOMYAgB89wMA4xgC
+AHz3AwDjGAIAfPeMAOMYAQCxnAMA4xgBALGcAgDjGAIAsZwBAOMYAQCxnAIA4xgCALGcAgDjGAEA
+sZwBAOMYAQCxnAYA4xgBAHz3AQDjGBAAfPcBAOMYAwB89x8A4xgCAHz3GQDjGAQARdEHAOMYBgB8
+9wUA4xgCAHz3AwDjGAIAfPcGAOMYAgB89wMA4xgCAHz3AQDjGAIAfPcHAOMYBgB89wQA4xgCAHz3
+AwDjGAIAfPeRAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwBAOMYAQCxnAEA4xgBALGcAQDjGAEAsZwB
+AOMYAQCxnAQA4xgBALGcBgDjGAEAfPcBAOMYEAB89wEA4xgDAHz3DADjGAcAfPcBAOMYBwB89wkA
+4xgHAHz3AQDjGAcAfPcHAOMYBABF0QcA4xgCAHz3CQDjGAIAfPcDAOMYAgB89wYA4xgCAHz3AwDj
+GAIAfPcBAOMYAgB89wYA4xgCAHz3AwDjGAIAfPcEAOMYAgB89wMA4xgCAHz3kQDjGAEAsZwDAOMY
+AgCxnAIA4xgBALGcAQDjGAIAsZwCAOMYAQCxnAMA4xgBALGcBwDjGAEAfPcBAOMYEAB89wEA4xgD
+AHz3OgDjGAQARdEHAOMYAgB89wkA4xgCAHz3AwDjGAIAfPcGAOMYAgB89wMA4xgCAHz3AQDjGAIA
+fPcDAOMYAgB89wEA4xgCAHz3AwDjGAIAfPcEAOMYAgB89wMA4xgCAHz3kQDjGAEAsZwDAOMYAQCx
+nAMA4xgBALGcAQDjGAEAsZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwFAOMYAQB89wEA4xgQAHz3
+AQDjGAMAfPc6AOMYBABF0QcA4xgCAHz3CQDjGAIAfPcDAOMYAgB89wMA4xgCAHz3AQDjGAIAfPcD
+AOMYAgB89wEA4xgCAHz3AwDjGAIAfPcBAOMYAgB89wMA4xgCAHz3BADjGAIAfPcDAOMYAgB89wMA
+4xgCAHz3jADjGAEAsZwDAOMYAQCxnAMA4xgBALGcAQDjGAEAsZwDAOMYAQCxnAIA4xgBALGcAQDj
+GAEAsZwBAOMYAQCxnAQA4xgBAHz3AQDjGBAAfPcBAOMYAQB89yEA4xgCAHz3GQDjGAQARdEHAOMY
+AgB89wgA4xgEAHz3AwDjGAUAfPcDAOMYBQB89wMA4xgFAHz3AwDjGAYAfPcDAOMYBAB89wMA4xgF
+AHz3jADjGAMAsZwDAOMYAwCxnAMA4xgDALGcAwDjGAEAsZwCAOMYAQCxnAUA4xgBAHz3EgDjGAEA
+fPchAOMYAgB89xkA4xgEAEXR7ADjGBQAfPc8AOMYBABF0TwB4xgEAEXRPAHjGAQARdE8AeMYBABF
+0TwB4xgEAEXRPAHjGAQARdE8AeMYEAu99wEAjXsDAL33BQCNezEAvfcGAOMY6AC99wIAjXsVAL33
+AgCNewMAvfcBAI17NAC99wIA4xgEAL33AgDjGOcAvfcCAI17FgC99wEAjXsDAL33AQCNewwAvfcD
+AI17AgC99wQAjXsCAL33BACNewMAvfcEAI17EgC99wIA4xgEAL33AgDjGOYAvfcEAI17FQC99wEA
+jXsDAL33BACNewwAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33AQCN
+exYAvfcCAOMYBAC99wIA4xjmAL33BACNexUAvfcBAI17BwC99wEAjXsIAL33BACNewEAvfcBAI17
+AwC99wEAjXsBAL33AQCNewMAvfcBAI17AgC99wMAjXsTAL33AgDjGAQAvfcCAOMYAgC99wcA4xgD
+AL33BwDjGAQAvfcGAOMYyAC99wYAjXsUAL33AQCNewcAvfcBAI17BwC99wEAjXsDAL33AQCNewEA
+vfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17BQC99wEAjXsSAL33AgDjGAQAvfcCAOMYAgC9
+9wIA4xgEAL33AgDjGAIAvfcCAOMYBAC99wIA4xgCAL33AgDjGAQAvfcCAOMYxwC99wYAjXsUAL33
+AQCNewMAvfcBAI17AwC99wEAjXsHAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcB
+AI17AwC99wEAjXsFAL33AQCNexIAvfcIAOMYAgC99wIA4xgEAL33AgDjGAIAvfcCAOMYBAC99wIA
+4xgCAL33AgDjGOYAvfcDAI17AwC99wMAjXsJAL33BACNewEAvfcEAI17AgC99wQAjXsCAL33BACN
+exMAvfcCAOMYBAC99wIA4xgCAL33AgDjGAQAvfcCAOMYAgC99wIA4xgEAL33AgDjGAIAvfcCAOMY
+/QC99wEAjXsFAL33AQCNexwAvfcCAOMYBAC99wIA4xgCAL33AgDjGAQAvfcCAOMYAgC99wIA4xgE
+AL33AgDjGAMAvfcGAOMY+AC99wEAjXsFAL33AQCNexwAvfcCAOMYBAC99wIA4xgCAL33AgDjGAQA
+vfcCAOMYAgC99wIA4xgEAL33AgDjGAgAvfcCAOMYGgG99wIA4xgEAL33AgDjGAIAvfcCAOMYBAC9
+9wIA4xgCAL33AgDjGAQAvfcCAOMYCAC99wIA4xgaAb33AgDjGAQAvfcCAOMYAgC99wIA4xgEAL33
+AgDjGAIAvfcCAOMYBAC99wIA4xgCAL33AgDjGAQAvfcCAOMYGgG99wIA4xgEAL33AgDjGAIAvfcH
+AOMYAwC99wcA4xgEAL33BgDjGCUBvfcCAOMYCAC99wIA4xg0Ab33AgDjGAgAvfcCAOMYNAG99wIA
+4xgIAL33AgDjGOkJvfdIALneBQC990gAud4FAL33SAC53gUAvfdIALneEQC99wEAud5GAP//AQC5
+3gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53hEAvfcBALne
+RgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4R
+AL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53kYA
+//8BALneEQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC9
+9wEAud5GAP//AQC53hEAvfcBALneBgD//wEAEq0/AP//AQC53gUAvfcBALneRgD//wEAud4FAL33
+AQC53gUA//8CABKtPwD//wEAud4FAL33AQC53kYA//8BALneEQC99wEAud4GAP//AQASrT8A//8B
+ALneBQC99wEAud5GAP//AQC53gUAvfcBALneBgD//wEAEq0/AP//AQC53gUAvfcBALneRgD//wEA
+ud4RAL33AQC53gUA//8DABKtPgD//wEAud4FAL33AQC53gUA//8EABKtPQD//wEAud4FAL33AQC5
+3gYA//8BABKtPwD//wEAud4FAL33AQC53gQA//8BABKtAwD//wEAEq09AP//AQC53hEAvfcBALne
+BgD//wEAEq0SAP//AgDjGBAA//8CAOMYGQD//wEAud4FAL33AQC53gQA//8BABKtAwD//wEAEq09
+AP//AQC53gUAvfcBALneBgD//wEAEq0/AP//AQC53gUAvfcBALneBAD//wEAEq0DAP//AQASrT0A
+//8BALneEQC99wEAud4GAP//AQASrRIA//8CAOMYEAD//wIA4xgZAP//AQC53gUAvfcBALneBAD/
+/wEAEq0DAP//AQASrRgA//8EAOMYIQD//wEAud4FAL33AQC53gYA//8BABKtDAD//yAA4xgTAP//
+AQC53gUAvfcBALneBAD//wEAEq0DAP//AQASrT0A//8BALneEQC99wEAud4GAP//AQASrQwA//8g
+I (16909) H_API: esp_wifi_remote_connect
+AOMYEwD//wEAud4FAL33AQC53gQA//8BABKtAwD//wEAEq0YAP//BADjGCEA//8BALneBQC99wEA
+ud4GAP//AQASrQwA//8BAOMYHgD//wEA4xgTAP//AQC53gUAvfcBALneBAD//wEAEq0DAP//AQAS
+rT0A//8BALneEQC99wEAud4GAP//AQASrQwA//8gAOMYEwD//wEAud4FAL33AQC53gQA//8BABKt
+AwD//wEAEq0YAP//BADjGCEA//8BALneBQC99wEAud4GAP//AQASrQwA//8BAOMYHgD//wEA4xgT
+AP//AQC53gUAvfcBALneBAD//wEAEq0DAP//AQASrT0A//8BALneEQC99wEAud4HAP//AgASrQoA
+//8gAOMYEwD//wEAud4FAL33AQC53gUA//8EABKtGAD//wQA4xghAP//AQC53gUAvfcBALneBQD/
+/wMAEq0LAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53gUA//8EABKtCgD//yAA4xgTAP//
+AQC53hEAvfcBALneEwD//yAA4xgTAP//AQC53gUAvfcBALneCAD//wEAEq0YAP//BADjGCEA//8B
+ALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53hMA//8gAOMYEwD//wEA
+ud4RAL33AQC53hMA//8gAOMYEwD//wEAud4FAL33AQC53gUA//8DABKtGQD//wQA4xghAP//AQC5
+3gUAvfcBALneEwD//wEA4xgDAP//DgDjGA0A//8BAOMYEwD//wEAud4FAL33AQC53hMA//8gAOMY
+EwD//wEAud4RAL33AQC53hMA//8gAOMYEwD//wEAud4FAL33AQC53hsA//8QAOMYGwD//wEAud4F
+AL33AQC53hMA//8BAOMYAwD//w4A4xgNAP//AQDjGBMA//8BALneBQC99wEAud4TAP//IADjGBMA
+//8BALneEQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53hsA//8BAOMYDgD/
+/wEA4xgbAP//AQC53gUAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEAud4TAP//
+IADjGBMA//8BALneEQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53hsA//8B
+AOMYDgD//wEA4xgbAP//AQC53gUAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEA
+ud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4RAL33AQC53hMA//8BAOMYHgD//wEA4xgTAP//AQC5
+3gUAvfcBALneGwD//wEA4xgOAP//AQDjGBsA//8BALneBQC99wEAud4TAP//AQDjGB4A//8BAOMY
+EwD//wEAud4FAL33AQC53hMA//8BAOMYHgD//wEA4xgTAP//AQC53hEAvfcBALneEwD//wEA4xge
+AP//AQDjGBMA//8BALneBQC99wEAud4bAP//AQDjGA4A//8BAOMYGwD//wEAud4FAL33AQC53hMA
+//8BAOMYAwD//xYA4xgFAP//AQDjGBMA//8BALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD/
+/wEAud4RAL33AQC53hMA//8BAOMYBAD//wQA4xgFAP//BADjGAUA//8EAOMYBAD//wEA4xgTAP//
+AQC53gUAvfcBALneGwD//wEA4xgEAP//BgBF0QQA//8BAOMYGwD//wEAud4FAL33AQC53hMA//8B
+AOMYAwD//xYA4xgFAP//AQDjGBMA//8BALneBQC99wEAud4TAP//AQDjGA0A//8EAEXRDQD//wEA
+4xgTAP//AQC53hEAvfcBALneEwD//wEA4xgEAP//BADjGAUA//8EAOMYBQD//wQA4xgEAP//AQDj
+GBMA//8BALneBQC99wEAud4VAP//BwDjGAQA//8GAEXRBAD//wcA4xgVAP//AQC53gUAvfcBALne
+EwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEAud4TAP//AQDjGA0A//8EAEXRDQD//wEA4xgT
+AP//AQC53hEAvfcBALneEwD//wEA4xgEAP//BADjGAUA//8EAOMYBQD//wQA4xgEAP//AQDjGBMA
+//8BALneBQC99wEAud4VAP//BwDjGAQA//8GAEXRBAD//wcA4xgVAP//AQC53gUAvfcBALneEwD/
+/wEA4xgeAP//AQDjGBMA//8BALneBQC99wEAud4TAP//AQDjGA0A//8EAEXRDQD//wEA4xgTAP//
+AQC53hEAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEAud4VAP//BwDjGAQA//8G
+AEXRBAD//wcA4xgVAP//AQC53gUAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEA
+ud4TAP//AQDjGA0A//8EAEXRDQD//wEA4xgTAP//AQC53hEAvfcBALneEwD//wEA4xgeAP//AQDj
+GBMA//8BALneBQC99wEAud4VAP//BwDjGAQA//8GAEXRBAD//wcA4xgVAP//AQC53gUAvfcBALne
+EwD//wEA4xgDAP//EgDjGAkA//8BAOMYEwD//wEAud4FAL33AQC53hMA//8BAOMYDQD//wQARdEN
+AP//AQDjGBMA//8BALneEQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53hsA
+//8BAOMYBAD//wYARdEEAP//AQDjGBsA//8BALneBQC99wEAud4TAP//AQDjGAMA//8SAOMYCQD/
+/wEA4xgTAP//AQC53gUAvfcBALneEwD//wEA4xgNAP//BABF0Q0A//8BAOMYEwD//wEAud4RAL33
+AQC53hMA//8BAOMYHgD//wEA4xgTAP//AQC53gUAvfcBALneGwD//wEA4xgOAP//AQDjGBsA//8B
+ALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53hMA//8BAOMYCQD//wwA
+RdEJAP//AQDjGBMA//8BALneEQC99wEAud4TAP//AQDjGAQA//8EAOMYBQD//wQARdEFAP//BADj
+GAQA//8BAOMYEwD//wEAud4FAL33AQC53hsA//8BAOMYDgD//wEA4xgbAP//AQC53gUAvfcBALne
+EwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEAud4TAP//AQDjGAkA//8MAEXRCQD//wEA4xgT
+AP//AQC53hEAvfcBALneEwD//wEA4xgEAP//BADjGAUA//8EAEXRBQD//wQA4xgEAP//AQDjGBMA
+//8BALneBQC99wEAud4bAP//AQDjGA4A//8BAOMYGwD//wEAud4FAL33AQC53hMA//8BAOMYHgD/
+/wEA4xgTAP//AQC53gUAvfcBALneEwD//wEA4xgLAP//CABF0QsA//8BAOMYEwD//wEAud4RAL33
+AQC53hMA//8BAOMYBAD//wQA4xgFAP//BABF0QUA//8EAOMYBAD//wEA4xgTAP//AQC53gUAvfcB
+ALneGwD//wEA4xgOAP//AQDjGBsA//8BALneBQC99wEAud4TAP//AQDjGAMA//8KAEXREQD//wEA
+4xgTAP//AQC53gUAvfcBALneEwD//wEA4xgLAP//CABF0QsA//8BAOMYEwD//wEAud4RAL33AQC5
+3hMA//8BAOMYHgD//wEA4xgTAP//AQC53gUAvfcBALneGwD//xAA4xgbAP//AQC53gUAvfcBALne
+EwD//wEA4xgDAP//CgBF0REA//8BAOMYEwD//wEAud4FAL33AQC53hMA//8BAOMYHgD//wEA4xgT
+AP//AQC53hEAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEAud4hAP//BADjGCEA
+//8BALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53hMA//8BAOMYHgD/
+/wEA4xgTAP//AQC53hEAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEAud4hAP//
+BADjGCEA//8BALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC53hMA//8B
+AOMYHgD//wEA4xgTAP//AQC53hEAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALneBQC99wEA
+ud4hAP//BADjGCEA//8BALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4FAL33AQC5
+3hMA//8BAOMYHgD//wEA4xgTAP//AQC53hEAvfcBALneEwD//wEA4xgeAP//AQDjGBMA//8BALne
+BQC99wEAud4hAP//BADjGCEA//8BALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD//wEAud4F
+AL33AQC53hMA//8BAOMYHgD//wEA4xgTAP//AQC53hEAvfcBALneEwD//wEA4xgeAP//AQDjGBMA
+//8BALneBQC99wEAud4hAP//BADjGCEA//8BALneBQC99wEAud4TAP//AQDjGB4A//8BAOMYEwD/
+/wEAud4FAL33AQC53hMA//8gAOMYEwD//wEAud4RAL33AQC53hMA//8BAOMYHgD//wEA4xgTAP//
+AQC53gUAvfcBALneIQD//wQA4xghAP//AQC53gUAvfcBALneEwD//yAA4xgTAP//AQC53gUAvfcB
+ALneRgD//wEAud4RAL33AQC53hMA//8gAOMYEwD//wEAud4FAL33AQC53kYA//8BALneBQC99wEA
+ud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC5
+3gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneEQC99wEAud5GAP//AQC53gUAvfcBALne
+RgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53hEAvfcBALneRgD//wEAud4F
+AL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53kYA
+//8BALneBQC99wEAud4lAP//AQDjGCAA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD/
+/wEAud4RAL33AQC53hIA//8DAOMYGAD//wEA4xgYAP//AQC53gUAvfcBALneDAD//wMA4xgKAP//
+AQDjGAUA//8BAOMYBQD//wEA4xggAP//AQC53gUAvfcBALneFwD//wEA4xguAP//AQC53gUAvfcB
+ALneEQD//wEA4xgVAP//AQDjGB4A//8BALneEQC99wEAud4RAP//AQDjGAMA//8BAOMYFwD//wEA
+4xgYAP//AQC53gUAvfcBALneCwD//wEA4xgDAP//AQDjGAkA//8BAOMYBQD//wEA4xgmAP//AQC5
+3gUAvfcBALneFwD//wEA4xguAP//AQC53gUAvfcBALneEQD//wEA4xgVAP//AQDjGB4A//8BALne
+EQC99wEAud4RAP//AQDjGAMA//8BAOMYAgD//wQA4xgCAP//AwDjGAIA//8EAOMYAwD//wQA4xgC
+AP//AwDjGBMA//8BALneBQC99wEAud4LAP//AQDjGAYA//8DAOMYAwD//wMA4xgDAP//AwDjGAMA
+//8CAOMYAwD//wQA4xgDAP//BADjGAIA//8EAOMYDAD//wEAud4FAL33AQC53hcA//8BAOMYBgD/
+/wMA4xgDAP//BADjGAIA//8EAOMYGAD//wEAud4FAL33AQC53hEA//8BAOMYBgD//wMA4xgDAP//
+AwDjGAMA//8EAOMYAgD//wMA4xgCAP//AQDjGAEA//8DAOMYEgD//wEAud4RAL33AQC53hEA//8B
+AOMYAwD//wEA4xgBAP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA
+4xgBAP//AQDjGAMA//8BAOMYBQD//wEA4xgSAP//AQC53gUAvfcBALneDAD//wMA4xgCAP//AQDj
+GAMA//8BAOMYAwD//wEA4xgFAP//AQDjGAUA//8BAOMYAwD//wEA4xgDAP//AQDjGAEA//8BAOMY
+AwD//wEA4xgBAP//AQDjGBAA//8BALneBQC99wEAud4XAP//AQDjGAUA//8BAOMYAwD//wEA4xgB
+AP//AQDjGAMA//8BAOMYAQD//wEA4xgcAP//AQC53gUAvfcBALneEQD//wEA4xgFAP//AQDjGAMA
+//8BAOMYBQD//wEA4xgBAP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAEA//8CAOMYFQD/
+/wEAud4RAL33AQC53hEA//8FAOMYAQD//wEA4xgDAP//AQDjGAEA//8FAOMYAQD//wEA4xgDAP//
+AQDjGAEA//8BAOMYAwD//wEA4xgCAP//BADjGBIA//8BALneBQC99wEAud4PAP//AQDjGAEA//8F
+AOMYAwD//wEA4xgFAP//AQDjGAUA//8BAOMYAwD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA
+4xgCAP//AwDjGA0A//8BALneBQC99wEAud4XAP//AQDjGAUA//8BAOMYAwD//wEA4xgBAP//AQDj
+GAMA//8BAOMYAgD//wMA4xgZAP//AQC53gUAvfcBALneEQD//wEA4xgFAP//AQDjGAMA//8BAOMY
+AgD//wQA4xgBAP//AQDjGAMA//8BAOMYAQD//wUA4xgBAP//AQDjGBYA//8BALneEQC99wEAud4R
+AP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAEA//8BAOMYBQD//wEA4xgDAP//AQDjGAEA
+//8BAOMYAwD//wEA4xgBAP//AQDjGAMA//8BAOMYEgD//wEAud4FAL33AQC53g8A//8BAOMYAQD/
+/wEA4xgHAP//AQDjGAUA//8BAOMYBQD//wEA4xgDAP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//
+AQDjGAUA//8BAOMYDAD//wEAud4FAL33AQC53hcA//8BAOMYBQD//wEA4xgDAP//AQDjGAEA//8B
+AOMYAwD//wEA4xgFAP//AQDjGBgA//8BALneBQC99wEAud4RAP//AQDjGAUA//8BAOMYAwD//wEA
+4xgBAP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAEA//8BAOMYBQD//wEA4xgWAP//AQC5
+3hEAvfcBALneEQD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgBAP//AQDjGAUA//8BAOMY
+AwD//wEA4xgBAP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGBIA//8BALneBQC99wEAud4L
+AP//AQDjGAMA//8BAOMYAQD//wEA4xgHAP//AQDjGAUA//8BAOMYBQD//wEA4xgDAP//AQDjGAMA
+//8BAOMYAQD//wEA4xgDAP//AQDjGAUA//8BAOMYDAD//wEAud4FAL33AQC53hcA//8BAOMYBQD/
+/wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgFAP//AQDjGBgA//8BALneBQC99wEAud4RAP//
+AQDjGAUA//8BAOMYAwD//wEA4xgBAP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAEA//8B
+AOMYBQD//wEA4xgWAP//AQC53hEAvfcBALneEQD//wEA4xgDAP//AQDjGAIA//8EAOMYAgD//wQA
+4xgBAP//AQDjGAMA//8BAOMYAgD//wQA4xgCAP//BADjGBIA//8BALneBQC99wEAud4MAP//AwDj
+GAMA//8EAOMYBAD//wIA4xgEAP//AgDjGAIA//8DAOMYAgD//wEA4xgDAP//AQDjGAIA//8EAOMY
+AQD//wQA4xgNAP//AQC53gUAvfcBALneFwD//wUA4xgCAP//AwDjGAMA//8EAOMYAQD//wQA4xgZ
+AP//AQC53gUAvfcBALneEQD//wUA4xgCAP//AwDjGAMA//8EAOMYAgD//wQA4xgCAP//BADjGAEA
+//8BAOMYFgD//wEAud4RAL33AQC53hsA//8BAOMYKgD//wEAud4FAL33AQC53jMA//8BAOMYEgD/
+/wEAud4FAL33AQC53icA//8BAOMYHgD//wEAud4FAL33AQC53kYA//8BALneEQC99wEAud4YAP//
+AwDjGCsA//8BALneBQC99wEAud4wAP//AwDjGBMA//8BALneBQC99wEAud4kAP//AwDjGB8A//8B
+ALneBQC99wEAud5GAP//AQC53hEAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEA
+ud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC5
+3gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneEQC99wEAud5GAP//AQC53gUAvfcBALne
+RgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53hEAvfcBALneRgD//wEAud4F
+AL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53kYA
+//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneEQC9
+90gAud4FAL33SAC53gUAvfdIALneBQC990gAud5RBr33SAC53gUAvfdIALneBQC990gAud4FAL33
+SAC53hEAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcB
+ALneRgD//wEAud4RAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEA
+ud4FAL33AQC53kYA//8BALneEQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC5
+3kYA//8BALneBQC99wEAud5GAP//AQC53hEAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALne
+BQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53kYA//8BALneBQC99wEAud5G
+AP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53gcA//8CABKtPQD//wEAud4RAL33AQC53kYA
+//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53gYA//8BABKtPwD/
+/wEAud4RAL33AQC53gQA//8EABKtPgD//wEAud4FAL33AQC53gQA//8BABKtAQD//wMAEq09AP//
+AQC53gUAvfcBALneBQD//wQAEq09AP//AQC53gUAvfcBALneBQD//wMAEq0+AP//AQC53hEAvfcB
+ALneBAD//wEAEq0BAP//AQASrQEA//8BABKtPQD//wEAud4FAL33AQC53gQA//8CABKtQAD//wEA
+ud4FAL33AQC53gQA//8BABKtQQD//wEAud4FAL33AQC53gYA//8BABKtPwD//wEAud4RAL33AQC5
+3gQA//8BABKtAQD//wEAEq0BAP//AQASrT0A//8BALneBQC99wEAud4EAP//AQASrUEA//8BALne
+BQC99wEAud4FAP//AwASrT4A//8BALneBQC99wEAud4GAP//AQASrRwA//8BAOMYIgD//wEAud4R
+AL33AQC53gQA//8BABKtAQD//wEAEq0BAP//AQASrSUA//8HAOMYEQD//wEAud4FAL33AQC53gQA
+//8BABKtQQD//wEAud4FAL33AQC53ggA//8BABKtPQD//wEAud4FAL33AQC53gYA//8BABKtGwD/
+/wEA4xgBAP//AQDjGCEA//8BALneEQC99wEAud4EAP//AQASrQEA//8BABKtAQD//wEAEq0lAP//
+BwDjGBEA//8BALneBQC99wEAud4EAP//AQASrUEA//8BALneBQC99wEAud4IAP//AQASrT0A//8B
+ALneBQC99wEAud4GAP//AQASrRsA//8BAOMYAQD//wEA4xghAP//AQC53hEAvfcBALneBAD//wEA
+Eq0BAP//AQASrQEA//8BABKtJQD//wcA4xgRAP//AQC53gUAvfcBALneBAD//wEAEq1BAP//AQC5
+3gUAvfcBALneBAD//wQAEq0+AP//AQC53gUAvfcBALneBgD//wEAEq0aAP//AQDjGAMA//8BAOMY
+IAD//wEAud4RAL33AQC53i4A//8HAOMYEQD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5G
+AP//AQC53gUAvfcBALneIAD//wEA4xgFAP//AQDjGB8A//8BALneEQC99wEAud4uAP//BwDjGBEA
+//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneEwD//wYARdEtAP//AQC53gUAvfcBALneIAD/
+/wEA4xgFAP//AQDjGB8A//8BALneEQC99wEAud4uAP//BwDjGBEA//8BALneBQC99wEAud5GAP//
+AQC53gUAvfcBALneEwD//wYARdEtAP//AQC53gUAvfcBALneHwD//wEA4xgHAP//AQDjGB4A//8B
+ALneEQC99wEAud4cAP//BwDjGAsA//8HAOMYEQD//wEAud4FAL33AQC53kYA//8BALneBQC99wEA
+ud4TAP//BgBF0QwA//8OAOMYEwD//wEAud4FAL33AQC53h4A//8BAOMYCQD//wEA4xgdAP//AQC5
+3hEAvfcBALneHAD//wcA4xgLAP//BwDjGBEA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALne
+EwD//wYARdEMAP//DgDjGBMA//8BALneBQC99wEAud4eAP//AQDjGAkA//8BAOMYHQD//wEAud4R
+AL33AQC53hwA//8HAOMYCwD//wcA4xgRAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53hMA
+//8GAEXRDAD//w4A4xgTAP//AQC53gUAvfcBALneHQD//wEA4xgEAP//AwDjGAQA//8BAOMYHAD/
+/wEAud4RAL33AQC53hwA//8HAOMYCwD//wcA4xgRAP//AQC53gUAvfcBALneRgD//wEAud4FAL33
+AQC53hMA//8GAEXRDAD//w4A4xgTAP//AQC53gUAvfcBALneHQD//wEA4xgEAP//AwDjGAQA//8B
+AOMYHAD//wEAud4RAL33AQC53hwA//8HAOMYCwD//wcA4xgRAP//AQC53gUAvfcBALneEwD//wMA
+4xgwAP//AQC53gUAvfcBALneJQD//w4A4xgTAP//AQC53gUAvfcBALneHAD//wEA4xgFAP//AwDj
+GAUA//8BAOMYGwD//wEAud4RAL33AQC53hwA//8HAOMYAgD//wcA4xgCAP//BwDjGBEA//8BALne
+BQC99wEAud4UAP//AwDjGC8A//8BALneBQC99wEAud4lAP//DgDjGBMA//8BALneBQC99wEAud4b
+AP//AQDjGAYA//8DAOMYBgD//wEA4xgaAP//AQC53hEAvfcBALneHAD//wcA4xgCAP//BwDjGAIA
+//8HAOMYEQD//wEAud4FAL33AQC53hUA//8DAOMYLgD//wEAud4FAL33AQC53iUA//8GAOMYGwD/
+/wEAud4FAL33AQC53hsA//8BAOMYBgD//wMA4xgGAP//AQDjGBoA//8BALneEQC99wEAud4cAP//
+BwDjGAIA//8HAOMYAgD//wcA4xgRAP//AQC53gUAvfcBALneFgD//wMA4xgtAP//AQC53gUAvfcB
+ALneJQD//wYA4xgbAP//AQC53gUAvfcBALneGgD//wEA4xgHAP//AwDjGAcA//8BAOMYGQD//wEA
+ud4RAL33AQC53hwA//8HAOMYAgD//wcA4xgCAP//BwDjGBEA//8BALneBQC99wEAud4XAP//AwDj
+GCwA//8BALneBQC99wEAud4lAP//BgDjGBsA//8BALneBQC99wEAud4ZAP//AQDjGAgA//8DAOMY
+t = 15848.8 ms, lane busy 4421.5 ms (27.9%), 1195 turns, 58 published, 127 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle           638    684.61    212.5    320    0  
+  power       driver   idle             4     73.18    210.5    320    0  
+CAD//wEA4xgYAP//AQC53hEAvfcBALneHAD//wcA4xgCAP//BwDjGAIA//8HAOMYEQD//wEAud4F
+  display     driver   idle            20    174.11    212.5    320    0  
+  compositor  service  idle           106    837.96    367.5    768    0  
+AL33AQC53hgA//8DAOMYKwD//wEAud4FAL33AQC53iUA//8GAOMYGwD//wEAud4FAL33AQC53hkA
+  agent       service  idle           134    164.56    323.6   1536    0  
+  chat        app      idle             8    129.06    242.7    768    0  
+//8BAOMYCAD//wMA4xgIAP//AQDjGBgA//8BALneEQC99wEAud4TAP//BwDjGAIA//8HAOMYAgD/
+  launcher    app      idle            11    223.54    284.4    384    0  
+  files       app      idle             1     89.37    222.0    384    0  
+/wcA4xgCAP//BwDjGBEA//8BALneBQC99wEAud4ZAP//AwDjGCoA//8BALneBQC99wEAud4lAP//
+  editor      app      idle             0    102.31    245.0    512    0  
+  calc        app      idle             1    333.44    638.1   1024    0  
+BgDjGBsA//8BALneBQC99wEAud4YAP//AQDjGAkA//8DAOMYCQD//wEA4xgXAP//AQC53hEAvfcB
+  agenda      app      idle             1    117.27    265.8    384    0  
+  settings    app      idle            14    118.59    239.0    384    0  
+  logs        app      idle            28    129.25    222.1    384    0  
+  loader      app      idle            15    157.51    237.6    384    0  
+ALneEwD//wcA4xgCAP//BwDjGAIA//8HAOMYAgD//wcA4xgRAP//AQC53gUAvfcBALneGgD//wMA
+  sysmon      app      idle            29    175.09    224.8    512    0  
+  repl        app      idle             0     66.78    212.8    384    0  
+4xgpAP//AQC53gUAvfcBALneJQD//wYA4xgbAP//AQC53gUAvfcBALneFwD//wEA4xgKAP//AwDj
+  sandbox     service  idle             0     63.06    210.0    512    0  
+  snake       app      idle           120    384.01    230.9    320    0  
+GAoA//8BAOMYFgD//wEAud4RAL33AQC53hMA//8HAOMYAgD//wcA4xgCAP//BwDjGAIA//8HAOMY
+  faults      app      idle             5     88.57    219.8    384    0  
+  flaky       service  idle             0     66.65    210.0    320    0  
+EQD//wEAud4FAL33AQC53hsA//8DAOMYKAD//wEAud4FAL33AQC53hEA//8aAOMYGwD//wEAud4F
+  keys        app      idle            23     96.70    211.9    320    0  
+  about       app      idle            13     83.55    212.0    320    0  
+  nat-echo    service  idle             4     27.76     28.2     64    0  
+  nat-bench   service  idle             1      3.11      2.7     64    0  
+  nat-import  world    stopped          0      6.76      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle            19     24.72     14.3     64    0  
+AL33AQC53hcA//8BAOMYCgD//wMA4xgKAP//AQDjGBYA//8BALneEQC99wEAud4TAP//BwDjGAIA
+  bus i2c0  busy  3610.62 ms, 652 transfers, 2623 bytes, 0 errors
+  bus spi2  busy   198.86 ms, 198 transfers, 686714 bytes, 0 errors
+#OK stats
+//8HAOMYAgD//wcA4xgCAP//BwDjGBEA//8BALneBQC99wEAud4cAP//AwDjGCcA//8BALneBQC9
+9wEAud4RAP//GgDjGBsA//8BALneBQC99wEAud4WAP//AQDjGBkA//8BAOMYFQD//wEAud4RAL33
+AQC53hMA//8HAOMYAgD//wcA4xgCAP//BwDjGAIA//8HAOMYEQD//wEAud4FAL33AQC53hwA//8D
+AOMYJwD//wEAud4FAL33AQC53hEA//8aAOMYGwD//wEAud4FAL33AQC53hUA//8BAOMYGwD//wEA
+4xgUAP//AQC53hEAvfcBALneEwD//wcA4xgCAP//BwDjGAIA//8HAOMYAgD//wcA4xgRAP//AQC5
+3gUAvfcBALneGwD//wMA4xgoAP//AQC53gUAvfcBALneEQD//xoA4xgbAP//AQC53gUAvfcBALne
+FQD//wEA4xgbAP//AQDjGBQA//8BALneEQC99wEAud4TAP//BwDjGAIA//8HAOMYAgD//wcA4xgC
+AP//BwDjGBEA//8BALneBQC99wEAud4aAP//AwDjGCkA//8BALneBQC99wEAud4RAP//GgDjGBsA
+//8BALneBQC99wEAud4UAP//AQDjGA0A//8DAOMYDQD//wEA4xgTAP//AQC53hEAvfcBALneEwD/
+/wcA4xgCAP//BwDjGAIA//8HAOMYAgD//wcA4xgRAP//AQC53gUAvfcBALneGQD//wMA4xgqAP//
+AQC53gUAvfcBALneEQD//xoA4xgbAP//AQC53gUAvfcBALneFAD//wEA4xgNAP//AwDjGA0A//8B
+AOMYEwD//wEAud4RAL33AQC53hMA//8HAOMYAgD//wcA4xgCAP//BwDjGAIA//8HAOMYEQD//wEA
+ud4FAL33AQC53hgA//8DAOMYCAD//xAA4xgTAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC5
+3hMA//8BAOMYDgD//wMA4xgOAP//AQDjGBIA//8BALneEQC99wEAud4TAP//BwDjGAIA//8HAOMY
+AgD//wcA4xgCAP//BwDjGBEA//8BALneBQC99wEAud4XAP//AwDjGAkA//8QAOMYEwD//wEAud4F
+AL33AQC53kYA//8BALneBQC99wEAud4SAP//AQDjGCEA//8BAOMYEQD//wEAud4RAL33AQC53hMA
+//8HAOMYAgD//wcA4xgCAP//BwDjGAIA//8HAOMYEQD//wEAud4FAL33AQC53hYA//8DAOMYCgD/
+/xAA4xgTAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53hIA//8BAOMYIQD//wEA4xgRAP//
+AQC53hEAvfcBALneEwD//wcA4xgCAP//BwDjGAIA//8HAOMYAgD//wcA4xgRAP//AQC53gUAvfcB
+ALneFQD//wMA4xguAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53hEA//8lAOMYEAD//wEA
+ud4RAL33AQC53kYA//8BALneBQC99wEAud4UAP//AwDjGC8A//8BALneBQC99wEAud5GAP//AQC5
+3gUAvfcBALneRgD//wEAud4RAL33AQC53kYA//8BALneBQC99wEAud4TAP//AwDjGDAA//8BALne
+BQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53kYA//8BALneBQC99wEAud5G
+AP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneEQC99wEAud5GAP//AQC53gUA
+vfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53hEAvfcBALneEgD/
+/wMA4xgQAP//AQDjGCAA//8BALneBQC99wEAud4XAP//BADjGAIA//8FAOMYAQD//wQA4xgCAP//
+AQDjGBwA//8BALneBQC99wEAud4VAP//AwDjGA8A//8BAOMYHgD//wEAud4FAL33AQC53hEA//8F
+AOMYDgD//wIA4xgFAP//AQDjGBoA//8BALneEQC99wEAud4RAP//AQDjGAMA//8BAOMYDwD//wEA
+4xggAP//AQC53gUAvfcBALneFwD//wEA4xgDAP//AQDjGAEA//8BAOMYBQD//wEA4xgDAP//AQDj
+GAEA//8BAOMYHAD//wEAud4FAL33AQC53hQA//8BAOMYAwD//wEA4xgOAP//AQDjGB4A//8BALne
+BQC99wEAud4RAP//AQDjGBMA//8BAOMYBQD//wEA4xgaAP//AQC53hEAvfcBALneEQD//wEA4xgF
+AP//AQDjGAMA//8BAOMYAgD//wQA4xgCAP//AwDjGAMA//8DAOMYAgD//wQA4xgTAP//AQC53gUA
+vfcBALneFwD//wEA4xgDAP//AQDjGAEA//8BAOMYBQD//wEA4xgDAP//AQDjGAEA//8BAOMYHAD/
+/wEAud4FAL33AQC53hQA//8BAOMYBQD//wQA4xgDAP//AwDjGAMA//8BAOMYAgD//wEA4xgCAP//
+AwDjGBYA//8BALneBQC99wEAud4RAP//AQDjGAYA//8DAOMYAgD//wEA4xgDAP//AQDjGAMA//8B
+AOMYBAD//wMA4xgDAP//BADjGBIA//8BALneEQC99wEAud4SAP//AwDjGAIA//8BAOMYAwD//wEA
+4xgBAP//AQDjGAcA//8BAOMYAwD//wEA4xgDAP//AQDjGAEA//8BAOMYAQD//wEA4xgBAP//AQDj
+GBIA//8BALneBQC99wEAud4XAP//AQDjGAMA//8BAOMYAQD//wQA4xgCAP//AQDjGAMA//8BAOMY
+AQD//wEA4xgcAP//AQC53gUAvfcBALneFQD//wMA4xgCAP//AQDjGAMA//8BAOMYBQD//wEA4xgC
+AP//AQDjGAEA//8BAOMYAgD//wEA4xgDAP//AQDjGBUA//8BALneBQC99wEAud4RAP//BADjGAYA
+//8BAOMYAQD//wEA4xgDAP//AQDjGAMA//8BAOMYBQD//wEA4xgDAP//AQDjGBYA//8BALneEQC9
+9wEAud4VAP//AQDjGAEA//8BAOMYAwD//wEA4xgCAP//AwDjGAQA//8BAOMYAwD//wUA4xgBAP//
+AQDjGAEA//8BAOMYAQD//wEA4xgSAP//AQC53gUAvfcBALneFwD//wQA4xgCAP//AQDjGAUA//8E
+AOMYAgD//wEA4xgcAP//AQC53gUAvfcBALneGAD//wEA4xgBAP//AQDjGAMA//8BAOMYAgD//wQA
+4xgCAP//AgDjGAMA//8FAOMYFQD//wEAud4FAL33AQC53hEA//8BAOMYBgD//wQA4xgBAP//AQDj
+GAMA//8BAOMYAwD//wEA4xgFAP//AQDjGAQA//8DAOMYEwD//wEAud4RAL33AQC53hUA//8BAOMY
+AQD//wEA4xgDAP//AQDjGAUA//8BAOMYAwD//wEA4xgDAP//AQDjGAUA//8BAOMYAQD//wEA4xgB
+AP//AQDjGBIA//8BALneBQC99wEAud4XAP//AQDjGAEA//8BAOMYAwD//wEA4xgFAP//AQDjGAUA
+//8BAOMYHAD//wEAud4FAL33AQC53hgA//8BAOMYAQD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD/
+/wEA4xgCAP//AgDjGAMA//8BAOMYGQD//wEAud4FAL33AQC53hEA//8BAOMYBQD//wEA4xgDAP//
+AQDjGAEA//8BAOMYAwD//wEA4xgDAP//AQDjGAUA//8BAOMYBwD//wEA4xgSAP//AQC53hEAvfcB
+ALneEQD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgFAP//AQDjGAMA//8BAOMYAwD//wEA
+4xgFAP//AQDjGAEA//8BAOMYAQD//wEA4xgSAP//AQC53gUAvfcBALneFwD//wEA4xgCAP//AQDj
+GAIA//8BAOMYBQD//wEA4xgFAP//AQDjGBwA//8BALneBQC99wEAud4UAP//AQDjGAMA//8BAOMY
+AQD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgCAP//AQDjGAEA//8BAOMYAgD//wEA4xgZ
+AP//AQC53gUAvfcBALneEQD//wEA4xgFAP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAMA
+//8BAOMYBQD//wEA4xgHAP//AQDjGBIA//8BALneEQC99wEAud4SAP//AwDjGAMA//8EAOMYAQD/
+/wQA4xgFAP//AgDjGAIA//8EAOMYAQD//wEA4xgBAP//AQDjGAEA//8BAOMYEgD//wEAud4FAL33
+AQC53hcA//8BAOMYAwD//wEA4xgBAP//BQDjGAEA//8BAOMYBQD//wUA4xgYAP//AQC53gUAvfcB
+ALneFQD//wMA4xgCAP//AQDjGAMA//8BAOMYAgD//wQA4xgCAP//AQDjGAIA//8BAOMYAgD//wQA
+4xgVAP//AQC53gUAvfcBALneEQD//wEA4xgGAP//BADjGAIA//8EAOMYAgD//wMA4xgFAP//AgDj
+GAEA//8EAOMYEwD//wEAud4RAL33AQC53hsA//8BAOMYKgD//wEAud4FAL33AQC53kYA//8BALne
+BQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53hgA//8DAOMYKwD//wEAud4F
+AL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4RAL33AQC53kYA
+//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneEQC9
+9wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//
+AQC53hEAvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcB
+ALneRgD//wEAud4RAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEA
+ud4FAL33AQC53kYA//8BALneEQC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33AQC5
+3kYA//8BALneBQC99wEAud5GAP//AQC53hEAvfdIALneBQC990gAud4FAL33SAC53gUAvfdIALne
+UQa990gAud4FAL33SAC53gUAvfdIAEXRXgC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4F
+AL33SABF0V4AvfcBALneRgD//wEAud4FAL33AQC53kYA//8BALneBQC990gARdFeAL33AQC53kYA
+//8BALneBQC99wEAud5GAP//AQC53gUAvfdIAEXRXgC99wEAud5GAP//AQC53gUAvfcBALneRgD/
+/wEAud4FAL33SABF0V4AvfcBALneBQD//wEAEq1AAP//AQC53gUAvfcBALneRgD//wEAud4FAL33
+SABF0V4AvfcBALneBQD//wEAEq1AAP//AQC53gUAvfcBALneRgD//wEAud4FAL33SABF0V4AvfcB
+ALneBQD//wEAEq0CAP//AQASrT0A//8BALneBQC99wEAud4FAP//AwASrT4A//8BALneBQC99wUA
+RdEEAP//PwBF0V4AvfcBALneBQD//wEAEq0BAP//AQASrT4A//8BALneBQC99wEAud4IAP//AQAS
+rQwA//8cAOMYFQD//wEAud4FAL33BQBF0QEA//8DAEXRAQD//z4ARdFeAL33AQC53gUA//8CABKt
+PwD//wEAud4FAL33AQC53gUA//8EABKtDAD//wEA4xgaAP//AQDjGBUA//8BALneBQC99wUARdEB
+AP//AwBF0QEA//8+AEXRXgC99wEAud4FAP//AgASrRAA//8YAOMYFwD//wEAud4FAL33AQC53gQA
+//8BABKtAwD//wEAEq0MAP//AQDjGBoA//8BAOMYFQD//wEAud4FAL33BQBF0QEA//8DAEXRAQD/
+/z4ARdFeAL33AQC53gUA//8BABKtAQD//wEAEq0PAP//AQDjGBYA//8BAOMYFwD//wEAud4FAL33
+AQC53gQA//8BABKtAwD//wEAEq0MAP//AQDjGBoA//8BAOMYFQD//wEAud4FAL33BQBF0QEA//8D
+AEXRAQD//z4ARdFeAL33AQC53gUA//8BABKtAgD//wEAEq0OAP//AQDjGAEA//8UAOMYAQD//wEA
+4xgXAP//AQC53gUAvfcBALneBQD//wQAEq0MAP//AQDjGBoA//8BAOMYFQD//wEAud4FAL33BQBF
+0QEA//8DAEXRAQD//z4ARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgSAP//AQDjGAEA//8BAOMY
+FwD//wEAud4FAL33AQC53hUA//8BAOMYGgD//wEA4xgVAP//AQC53gUAvfdIAEXRXgC99wEAud4X
+AP//AQDjGAEA//8BAOMYEgD//wEA4xgBAP//AQDjGBcA//8BALneBQC99wEAud4VAP//AQDjGAwA
+//8DAOMYCwD//wEA4xgVAP//AQC53gUAvfdIAEXRXgC99wEAud4XAP//AQDjGAEA//8BAOMYEgD/
+/wEA4xgBAP//AQDjGBcA//8BALneBQC99wEAud4VAP//AQDjGAwA//8DAOMYCwD//wEA4xgVAP//
+AQC53gUAvfdIAEXRXgC99wEAud4XAP//AQDjGAEA//8BAOMYBwD//wQA4xgHAP//AQDjGAEA//8B
+AOMYFwD//wEAud4FAL33AQC53hUA//8BAOMYDAD//wMA4xgLAP//AQDjGBUA//8BALneBQC990gA
+RdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgGAP//AQDjGAQA//8BAOMYBgD//wEA4xgBAP//AQDj
+GBcA//8BALneBQC99wEAud4VAP//AQDjGBoA//8BAOMYFQD//wEAud4FAL33HwBF0QsA//8eAEXR
+XgC99wEAud4XAP//AQDjGAEA//8BAOMYBgD//wEA4xgEAP//AQDjGAYA//8BAOMYAQD//wEA4xgX
+AP//AQC53gUAvfcBALneFQD//wEA4xgaAP//AQDjGBUA//8BALneBQC99x0ARdECAP//CwBF0QEA
+//8dAEXRXgC99wEAud4XAP//AQDjGAEA//8BAOMYBgD//wEA4xgEAP//AQDjGAYA//8BAOMYAQD/
+/wEA4xgXAP//AQC53gUAvfcBALneFQD//wEA4xgaAP//AQDjGBUA//8BALneBQC99xwARdEBAP//
+DgBF0QIA//8bAEXRXgC99wEAud4XAP//AQDjGAEA//8BAOMYBgD//wEA4xgEAP//AQDjGAYA//8B
+AOMYAQD//wEA4xgXAP//AQC53gUAvfcBALneFQD//wEA4xgMAP//AwDjGAsA//8BAOMYFQD//wEA
+ud4FAL33GwBF0QEA//8QAEXRAgD//xoARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgGAP//BgDj
+GAYA//8BAOMYAQD//wEA4xgXAP//AQC53gUAvfcBALneFQD//wEA4xgMAP//AwDjGAsA//8BAOMY
+FQD//wEAud4FAL33GQBF0QIA//8QAEXRAQD//wIARdEBAP//GQBF0V4AvfcBALneFwD//wEA4xgB
+AP//AQDjGAYA//8BAOMYBAD//wEA4xgGAP//AQDjGAEA//8BAOMYFwD//wEAud4FAL33AQC53hUA
+//8BAOMYDAD//wMA4xgLAP//AQDjGBUA//8BALneBQC99xgARdEBAP//EgBF0QEA//8DAEXRAgD/
+/xcARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgGAP//AQDjGAQA//8BAOMYBgD//wEA4xgBAP//
+AQDjGBcA//8BALneBQC99wEAud4VAP//AQDjGAwA//8DAOMYCwD//wEA4xgVAP//AQC53gUAvfcX
+AEXRAQD//xIARdEBAP//BgBF0QEA//8WAEXRXgC99wEAud4XAP//AQDjGAEA//8BAOMYBgD//wEA
+4xgEAP//AQDjGAYA//8BAOMYAQD//wEA4xgXAP//AQC53gUAvfcBALneFQD//wEA4xgMAP//AwDj
+GAsA//8BAOMYFQD//wEAud4FAL33FwBF0QEA//8RAEXRAQD//wcARdEBAP//FgBF0V4AvfcBALne
+FwD//wEA4xgBAP//AQDjGAYA//8BAOMYBAD//wEA4xgGAP//AQDjGAEA//8BAOMYFwD//wEAud4F
+AL33AQC53hUA//8BAOMYDAD//wMA4xgLAP//AQDjGBUA//8BALneBQC99xYARdEBAP//EgBF0QEA
+//8IAEXRAQD//xUARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgSAP//AQDjGAEA//8BAOMYFwD/
+/wEAud4FAL33AQC53hUA//8BAOMYDAD//wMA4xgLAP//AQDjGBUA//8BALneBQC99xYARdEBAP//
+EQBF0QEA//8JAEXRAQD//xUARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgSAP//AQDjGAEA//8B
+AOMYFwD//wEAud4FAL33AQC53hUA//8BAOMYDAD//wMA4xgLAP//AQDjGBUA//8BALneBQC99xYA
+RdEBAP//EABF0QEA//8KAEXRAQD//xUARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgSAP//AQDj
+GAEA//8BAOMYFwD//wEAud4FAL33AQC53hUA//8BAOMYDAD//wMA4xgLAP//AQDjGBUA//8BALne
+BQC99xUARdEBAP//EQBF0QEA//8LAEXRAQD//xQARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgS
+AP//AQDjGAEA//8BAOMYFwD//wEAud4FAL33AQC53hUA//8BAOMYDAD//wMA4xgLAP//AQDjGBUA
+//8BALneBQC99xUARdEBAP//EABF0QEA//8MAEXRAQD//xQARdFeAL33AQC53hcA//8BAOMYAQD/
+/wEA4xgSAP//AQDjGAEA//8BAOMYFwD//wEAud4FAL33AQC53hUA//8BAOMYDAD//wMA4xgLAP//
+AQDjGBUA//8BALneBQC99xUARdEBAP//DABF0QUA//8MAEXRAQD//xQARdFeAL33AQC53hcA//8B
+AOMYAQD//xQA4xgBAP//AQDjGBcA//8BALneBQC99wEAud4VAP//AQDjGAwA//8DAOMYCwD//wEA
+4xgVAP//AQC53gUAvfcUAEXRAQD//w0ARdEFAP//DQBF0QEA//8TAEXRXgC99wEAud4XAP//AQDj
+GBYA//8BAOMYFwD//wEAud4FAL33AQC53hUA//8BAOMYGgD//wEA4xgVAP//AQC53gUAvfcUAEXR
+AQD//w0ARdEFAP//DQBF0QEA//8TAEXRXgC99wEAud4XAP//GADjGBcA//8BALneBQC99wEAud4V
+AP//AQDjGBoA//8BAOMYFQD//wEAud4FAL33IgBF0QUA//8hAEXRXgC99wEAud5GAP//AQC53gUA
+vfcBALneFQD//wEA4xgaAP//AQDjGBUA//8BALneBQC99xIARdEkAP//EgBF0V4AvfcBALneRgD/
+/wEAud4FAL33AQC53hUA//8BAOMYGgD//wEA4xgVAP//AQC53gUAvfcSAEXRJAD//xIARdFeAL33
+AQC53kYA//8BALneBQC99wEAud4VAP//AQDjGBoA//8BAOMYFQD//wEAud4FAL33SABF0V4AvfcB
+ALneRgD//wEAud4FAL33AQC53hUA//8cAOMYFQD//wEAud4FAL33SABF0V4AvfcBALneRgD//wEA
+ud4FAL33AQC53kYA//8BALneBQC990gARdFeAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC5
+3gUAvfdIAEXRXgC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33SABF0V4AvfcBALne
+RgD//wEAud4FAL33AQC53kYA//8BALneBQC99yAARdEBAP//JwBF0V4AvfcBALneFwD//wEA4xgD
+AP//AQDjGCoA//8BALneBQC99wEAud4VAP//AwDjGAIA//8BAOMYEwD//wEA4xgXAP//AQC53gUA
+vfcYAEXRAwD//wUARdEBAP//CgBF0QIA//8bAEXRXgC99wEAud4XAP//AQDjGAIA//8BAOMYKwD/
+/wEAud4FAL33AQC53hQA//8BAOMYAwD//wEA4xgBAP//AQDjGBMA//8BAOMYFwD//wEAud4FAL33
+GABF0QEA//8CAEXRAQD//xAARdEBAP//GwBF0V4AvfcBALneFwD//wEA4xgBAP//AQDjGAQA//8D
+AOMYAgD//wEA4xgDAP//AQDjGAIA//8EAOMYGAD//wEAud4FAL33AQC53hQA//8BAOMYAwD//wEA
+4xgBAP//BADjGAMA//8DAOMYAgD//wEA4xgDAP//AQDjGAIA//8DAOMYFgD//wEAud4FAL33GABF
+0QEA//8DAEXRAQD//wIARdECAP//BABF0QMA//8EAEXRAQD//xsARdFeAL33AQC53hcA//8CAOMY
+BAD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgBAP//AQDjGBwA//8BALneBQC99wEAud4U
+AP//AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgBAP//AQDjGAMA
+//8BAOMYAwD//wEA4xgXAP//AQC53gUAvfcYAEXRAQD//wMARdEBAP//AwBF0QEA//8HAEXRAQD/
+/wMARdEBAP//GwBF0V4AvfcBALneFwD//wIA4xgEAP//BQDjGAEA//8BAOMYAwD//wEA4xgCAP//
+AwDjGBkA//8BALneBQC99wEAud4UAP//BQDjGAEA//8BAOMYAwD//wEA4xgBAP//AQDjGAMA//8B
+AOMYAQD//wEA4xgDAP//AQDjGAMA//8BAOMYFwD//wEAud4FAL33GABF0QEA//8DAEXRAQD//wMA
+RdEBAP//BABF0QQA//8DAEXRAQD//xsARdFeAL33AQC53hcA//8BAOMYAQD//wEA4xgDAP//AQDj
+GAUA//8BAOMYAwD//wEA4xgFAP//AQDjGBgA//8BALneBQC99wEAud4UAP//AQDjGAMA//8BAOMY
+AQD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgBAP//AQDjGAMA//8BAOMYAwD//wEA4xgX
+AP//AQC53gUAvfcYAEXRAQD//wMARdEBAP//AwBF0QEA//8DAEXRAQD//wMARdEBAP//AwBF0QEA
+//8bAEXRXgC99wEAud4XAP//AQDjGAIA//8BAOMYAgD//wEA4xgFAP//AQDjGAMA//8BAOMYBQD/
+/wEA4xgYAP//AQC53gUAvfcBALneFAD//wEA4xgDAP//AQDjGAEA//8BAOMYAwD//wEA4xgBAP//
+AQDjGAMA//8BAOMYAQD//wEA4xgDAP//AQDjGAMA//8BAOMYFwD//wEAud4FAL33GABF0QEA//8C
+AEXRAQD//wQARdEBAP//AwBF0QEA//8DAEXRAQD//wMARdEBAP//GwBF0V4AvfcBALneFwD//wEA
+4xgDAP//AQDjGAIA//8EAOMYAgD//wQA4xgBAP//BADjGBkA//8BALneBQC99wEAud4UAP//AQDj
+GAMA//8BAOMYAQD//wQA4xgDAP//AwDjGAMA//8EAOMYBAD//wIA4xgVAP//AQC53gUAvfcYAEXR
+AwD//wQARdEDAP//AwBF0QQA//8CAEXRAwD//xoARdFeAL33AQC53icA//8BAOMYHgD//wEAud4F
+AL33AQC53kYA//8BALneBQC990gARdFeAL33AQC53iQA//8DAOMYHwD//wEAud4FAL33AQC53kYA
+//8BALneBQC990gARdFeAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfdIAEXRXgC9
+9wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33SABF0V4AvfcBALneRgD//wEAud4FAL33
+AQC53kYA//8BALneBQC990gARdFeAL33AQC53kYA//8BALneBQC99wEAud5GAP//AQC53gUAvfdI
+AEXRXgC99wEAud5GAP//AQC53gUAvfcBALneRgD//wEAud4FAL33SABF0V4AvfdIALneBQC990gA
+ud4FAL33SABF0T4JvfcBAOMYLwC99wEA4xjwAL33AwDjGBYAvfcBAOMYBQC99wEA4xgvAL33AQDj
+GBAAvfcDAOMYgAC99wEA4xgDAL33AQDjGAcAvfcBAOMYBgC99wMA4xgaAL33AQDjGAYAvfcCAOMY
+IwC99wEA4xgDAL33AQDjGBUAvfcBAOMYRQC99wEA4xgDAL33AQDjGH8AvfcBAOMYAwC99wEA4xgH
+AL33AQDjGAUAvfcBAOMYAwC99wEA4xgZAL33AQDjGAcAvfcBAOMYIwC99wEA4xgDAL33AQDjGAcA
+vfcEAOMYAwC99wMA4xgDAL33AwDjGAMAvfcCAOMYAwC99wEA4xgDAL33AQDjGAIAvfcDAOMYCQC9
+9wMA4xgCAL33BADjGAIAvfcEAOMYCQC99wIA4xgDAL33BADjGAgAvfcBAOMYBwC99wEA4xgKAL33
+AwDjGAIAvfcEAOMYAwC99wMA4xgJAL33BADjGAIAvfcDAOMYAgC99wEA4xgDAL33AQDjGAEAvfcB
+AOMYAQC99wMA4xgCAL33AwDjGAMAvfcDAOMYDgC99wEA4xgBAL33AwDjGAEAvfcBAOMYAwC99wEA
+4xgBAL33BADjGAkAvfcDAOMYAwC99wQA4xgHAL33AQDjGAMAvfcBAOMYAgC99wMA4xgCAL33BADj
+GAIAvfcBAOMYAwC99wEA4xgCAL33BADjGAIAvfcEAOMYAgC99wMA4xgCAL33BADjGAIAvfcEAOMY
+BAC99wEA4xgDAL33AQDjGAMAvfcBAOMYGwC99wEA4xgDAL33AQDjGAcAvfcBAOMYAwC99wEA4xgF
+AL33AQDjGAMAvfcBAOMYBQC99wEA4xgDAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAsA
+vfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgJAL33AQDjGAMAvfcBAOMYAwC9
+9wEA4xgHAL33AQDjGAcAvfcBAOMYCQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33
+AQDjGAMAvfcBAOMYBwC99wEA4xgFAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcC
+AOMYBAC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgNAL33AgDjGAQAvfcBAOMYAwC99wEA
+4xgBAL33AQDjGAMAvfcBAOMYCwC99wEA4xgBAL33AQDjGAsAvfcBAOMYAwC99wEA4xgBAL33AQDj
+GAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33AQDjGAUAvfcBAOMY
+BQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAQC99wEA4xgBAL33AQDjGAEAvfcBAOMYAwC99wEA4xgD
+AL33AQDjGAMAvfcBAOMYAwC99wEA4xgbAL33BQDjGAcAvfcBAOMYAwC99wEA4xgCAL33BADjGAMA
+vfcBAOMYBQC99wEA4xgEAL33AQDjGAEAvfcBAOMYAgC99wUA4xgIAL33BADjGAEAvfcBAOMYAwC9
+9wEA4xgBAL33AQDjGAMAvfcBAOMYCQC99wEA4xgDAL33AQDjGAMAvfcBAOMYBwC99wEA4xgRAL33
+AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcFAOMYCAC99wMA4xgCAL33AQDjGAMAvfcB
+AOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYBQC99wEA4xgFAL33BQDjGA0AvfcBAOMYBQC99wEA
+4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgIAL33BADjGAIAvfcDAOMYCAC99wEA4xgBAL33AQDj
+GAEAvfcBAOMYAQC99wUA4xgBAL33AQDjGAMAvfcBAOMYAQC99wUA4xgCAL33AwDjGAMAvfcDAOMY
+AgC99wUA4xgBAL33AQDjGAEAvfcBAOMYAQC99wEA4xgBAL33AQDjGAMAvfcBAOMYAwC99wEA4xgD
+AL33AQDjGAMAvfcBAOMYGwC99wEA4xgDAL33AQDjGAcAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMA
+vfcBAOMYAwC99wEA4xgFAL33AQDjGAQAvfcBAOMYAQC99wEA4xgCAL33AQDjGAsAvfcBAOMYAwC9
+9wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAkAvfcBAOMYAwC99wEA4xgDAL33
+AQDjGAcAvfcBAOMYEQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33AQDjGA8AvfcB
+AOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33AQDjGAUAvfcBAOMYBQC99wEA
+4xgRAL33AQDjGAUAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYBwC99wEA4xgDAL33AQDj
+GAUAvfcBAOMYBwC99wEA4xgBAL33AQDjGAEAvfcBAOMYAQC99wEA4xgFAL33AQDjGAMAvfcBAOMY
+AQC99wEA4xgDAL33AQDjGAUAvfcBAOMYBQC99wEA4xgBAL33AQDjGAUAvfcBAOMYAQC99wEA4xgB
+AL33AQDjGAEAvfcBAOMYAwC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgbAL33AQDjGAMA
+vfcBAOMYBwC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgDAL33AQDjGAUAvfcBAOMYBQC9
+9wEA4xgDAL33AQDjGAsAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33
+AQDjGAkAvfcBAOMYAwC99wEA4xgDAL33AQDjGAcAvfcBAOMYAwC99wEA4xgDAL33AQDjGAkAvfcB
+AOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgPAL33AQDjGAEAvfcBAOMYAwC99wEA
+4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgFAL33AQDjGAMAvfcBAOMYAQC99wEA4xgHAL33AQDj
+GAkAvfcBAOMYBQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgHAL33AQDjGAMAvfcBAOMY
+BQC99wEA4xgHAL33AgDjGAEAvfcCAOMYAQC99wEA4xgFAL33AQDjGAMAvfcBAOMYAQC99wEA4xgD
+AL33AQDjGAUAvfcBAOMYBQC99wEA4xgBAL33AQDjGAUAvfcBAOMYAQC99wEA4xgBAL33AQDjGAEA
+vfcBAOMYAwC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgDAL33AQDjGBcAvfcBAOMYAwC9
+9wEA4xgHAL33AQDjGAMAvfcBAOMYAgC99wQA4xgEAL33AgDjGAIAvfcDAOMYBAC99wEA4xgEAL33
+BADjGAgAvfcEAOMYAQC99wQA4xgCAL33BADjGAkAvfcDAOMYAgC99wEA4xgDAL33AQDjGAgAvfcD
+AOMYBAC99wEA4xgKAL33AwDjGAIAvfcBAOMYAwC99wEA4xgCAL33BADjGAcAvfcEAOMYAwC99wMA
+4xgDAL33BADjGAEAvfcBAOMYBgC99wMA4xgDAL33BADjGAMAvfcBAOMYCQC99wEA4xgGAL33BADj
+GAEAvfcBAOMYAwC99wEA4xgIAL33BADjGAEAvfcEAOMYCAC99wEA4xgDAL33AQDjGAIAvfcEAOMY
+AQC99wQA4xgCAL33AQDjGAMAvfcBAOMYAQC99wQA4xgCAL33BADjGAMAvfcEAOMYAQC99wEA4xgB
+AL33AQDjGAEAvfcBAOMYAQC99wQA4xgDAL33AwDjGAMAvfcEAOMYAwC99wEA4xhTAL33AQDjGAUA
+vfcBAOMYbAC99wEA4xh0AL33AQDjGAIAvfcBAOMYVAC99wEA4xgFAL33AQDjGN4AvfcDAOMYiAG9
+9wEA4xg3Ab33AQDjGAcAvfcBAOMYJQC99wEA4xgRAb33AQDjGC0AvfcBAOMY7gC99wMA4xgDAL33
+BADjGAcAvfcEAOMYAwC99wMA4xgDAL33AwDjGAIAvfcEAOMYAwC99wIA4xgDAL33BADjGAMAvfcD
+AOMYCQC99wMA4xgDAL33AwDjGAMAvfcEAOMYAgC99wMA4xgJAL33AwDjGAIAvfcBAOMYAQC99wMA
+4xgIAL33AwDjGAMAvfcEAOMYCAC99wMA4xgIAL33BADjGAIAvfcBAOMYAQC99wMA4xgCAL33AwDj
+GAMAvfcDAOMYAwC99wMA4xgDAL33BADjGAIAvfcEAOMYiwC99wEA4xgBAL33AQDjGAsAvfcBAOMY
+AQC99wEA4xgBAL33AQDjGAUAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgD
+AL33AQDjGAMAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYBwC99wEA4xgDAL33AQDjGAEA
+vfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAcAvfcBAOMYAwC9
+9wEA4xgBAL33AgDjGA4AvfcBAOMYAQC99wEA4xgPAL33AQDjGAcAvfcBAOMYAwC99wEA4xgBAL33
+AgDjGAQAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcB
+AOMYBQC99wEA4xiMAL33BADjGAIAvfcDAOMYCAC99wEA4xgBAL33AQDjGAEAvfcBAOMYAgC99wQA
+4xgBAL33AQDjGAUAvfcBAOMYAwC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgBAL33BQDj
+GAcAvfcBAOMYBQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33BQDjGAcAvfcBAOMY
+AwC99wEA4xgBAL33AQDjGAwAvfcEAOMYAgC99wMA4xgJAL33BADjGAcAvfcBAOMYAwC99wEA4xgB
+AL33AQDjGAUAvfcBAOMYAwC99wEA4xgBAL33AQDjGAUAvfcFAOMYAgC99wMA4xgDAL33AwDjGIgA
+vfcBAOMYAwC99wEA4xgFAL33AQDjGAcAvfcBAOMYAQC99wEA4xgBAL33AQDjGAEAvfcBAOMYAwC9
+9wEA4xgBAL33AQDjGAUAvfcBAOMYAwC99wEA4xgDAL33AQDjGAMAvfcBAOMYAwC99wEA4xgBAL33
+AQDjGAsAvfcBAOMYBQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgBAL33AQDjGAsAvfcB
+AOMYAwC99wEA4xgBAL33AQDjGAsAvfcBAOMYAwC99wEA4xgFAL33AQDjGAcAvfcBAOMYAwC99wEA
+4xgHAL33AQDjGAMAvfcBAOMYAQC99wEA4xgFAL33AQDjGAMAvfcBAOMYAQC99wEA4xgFAL33AQDj
+GAkAvfcBAOMYBQC99wEA4xiHAL33AQDjGAMAvfcBAOMYBQC99wEA4xgHAL33AQDjGAEAvfcBAOMY
+AQC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYAwC99wEA4xgD
+AL33AQDjGAMAvfcBAOMYAwC99wEA4xgBAL33AQDjGAsAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMA
+vfcBAOMYAQC99wEA4xgDAL33AQDjGAEAvfcBAOMYCwC99wEA4xgDAL33AQDjGAEAvfcBAOMYCwC9
+9wEA4xgDAL33AQDjGAUAvfcBAOMYBwC99wEA4xgDAL33AQDjGAcAvfcBAOMYAwC99wEA4xgBAL33
+AQDjGAUAvfcBAOMYAwC99wEA4xgBAL33AQDjGAMAvfcBAOMYAQC99wEA4xgJAL33AQDjGAUAvfcB
+AOMYAwC99wEA4xiEAL33BADjGAEAvfcEAOMYCAC99wEA4xgBAL33AQDjGAEAvfcBAOMYAgC99wQA
+4xgCAL33AwDjGAIAvfcBAOMYAwC99wEA4xgCAL33AwDjGAIAvfcBAOMYAwC99wEA4xgCAL33BADj
+GAgAvfcDAOMYAwC99wMA4xgDAL33BADjGAIAvfcEAOMYCAC99wMA4xgCAL33AQDjGAwAvfcEAOMY
+AQC99wQA4xgJAL33BADjGAcAvfcEAOMYAgC99wEA4xgGAL33AwDjGAMAvfcDAOMYAwC99wQA4xgB
+AL33BADjGAIAvfcEAOMYBAC99wEA4xgTAb33AQDjGD8BvfcBAOMYaRG99wEAjXtlAL33AQCNe2AA
+vfcDAI17AgC99wUAjXsQAL33AgCNewgAvfcDAI17AwC99wMAjXsbAL33AgCNewcAvfcBAI17JwC9
+9wEAjXshAL33BQCNex8AvfcBAI17HwC99wEAjXsbAL33AQCNexMAvfcBAI17LwC99wEAjXsDAL33
+AQCNewEAvfcBAI17EwC99wEAjXsJAL33AQCNewMAvfcBAI17AQC99wEAjXsfAL33AQCNewcAvfcB
+AI17SQC99wEAjXsjAL33AQCNezsAvfcBAI17EwC99wEAjXsvAL33AQCNewMAvfcBAI17AQC99wEA
+jXsMAL33AwCNewMAvfcDAI17CAC99wEAjXsDAL33AQCNewEAvfcBAI17CwC99wEAjXsDAL33AQCN
+ewIAvfcDAI17AgC99wEAjXsBAL33AwCNewMAvfcBAI17BAC99wQAjXsCAL33BACNewcAvfcBAI17
+AQC99wMAjXsBAL33AQCNewMAvfcBAI17AQC99wQAjXsCAL33BACNewMAvfcCAI17AwC99wQAjXsD
+AL33BACNexMAvfcBAI17DAC99wMAjXsCAL33AQCNewEAvfcDAI17AgC99wMAjXsDAL33BACNewEA
+vfcEAI17AwC99wMAjXsDAL33BACNewgAvfcEAI17AgC99wIAjXsDAL33BACNewMAvfcDAI17AwC9
+9wMAjXsIAL33BACNewMAvfcDAI17AwC99wMAjXsDAL33AwCNezIAvfcBAI17AQC99wQAjXsIAL33
+AQCNewMAvfcBAI17AwC99wEAjXsNAL33AQCNewEAvfcEAI17CAC99wEAjXsDAL33AQCNewEAvfcB
+AI17AwC99wEAjXsBAL33AgCNewYAvfcBAI17AwC99wEAjXsDAL33AQCNewEAvfcBAI17CwC99wIA
+jXsEAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCN
+ewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17CQC99wEAjXsJAL33BACNewgAvfcBAI17
+AwC99wEAjXsBAL33AgCNewgAvfcBAI17AQC99wEAjXsFAL33AQCNewMAvfcBAI17AQC99wEAjXsD
+AL33AQCNewEAvfcBAI17CwC99wEAjXsHAL33AQCNewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMA
+vfcBAI17AQC99wEAjXsDAL33AQCNewcAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AQC9
+9wEAjXsDAL33AQCNewMAvfcBAI17MgC99wEAjXsGAL33AQCNewcAvfcBAI17AwC99wEAjXsDAL33
+AQCNewwAvfcBAI17AgC99wEAjXsDAL33AQCNewcAvfcBAI17AQC99wEAjXsBAL33AQCNewEAvfcB
+AI17AwC99wEAjXsBAL33AQCNewcAvfcBAI17AwC99wEAjXsDAL33AQCNewIAvfcDAI17CAC99wEA
+jXsFAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCN
+ewMAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17CQC99wEAjXsNAL33AQCNewcAvfcBAI17
+BQC99wEAjXsGAL33BACNewIAvfcDAI17AgC99wEAjXsDAL33AQCNewEAvfcFAI17AgC99wMAjXsJ
+AL33AwCNewQAvfcBAI17AwC99wEAjXsDAL33AQCNewEAvfcBAI17BQC99wUAjXsHAL33AQCNewMA
+vfcBAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsDAL33AQCNezEAvfcBAI17BwC9
+9wEAjXsHAL33AQCNewMAvfcBAI17AwC99wEAjXsLAL33AQCNewMAvfcBAI17AwC99wEAjXsHAL33
+AQCNewEAvfcBAI17AQC99wEAjXsBAL33AQCNewMAvfcBAI17AQC99wEAjXsHAL33AQCNewMAvfcB
+AI17AwC99wEAjXsFAL33AQCNewcAvfcBAI17BQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEA
+jXsBAL33AQCNewMAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCN
+excAvfcBAI17BwC99wEAjXsFAL33AQCNewUAvfcBAI17AwC99wEAjXsFAL33AQCNewEAvfcBAI17
+AwC99wEAjXsBAL33AQCNewkAvfcBAI17CwC99wEAjXsDAL33AQCNewMAvfcBAI17AwC99wEAjXsB
+AL33AQCNewUAvfcBAI17CwC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33AQCNewMA
+vfcBAI17AwC99wEAjXswAL33AQCNewQAvfcBAI17AwC99wEAjXsHAL33AQCNewMAvfcBAI17AwC9
+9wEAjXsKAL33AQCNewQAvfcBAI17AwC99wEAjXsHAL33AQCNewEAvfcBAI17AQC99wEAjXsBAL33
+AQCNewMAvfcBAI17AQC99wEAjXsHAL33AQCNewMAvfcBAI17AwC99wEAjXsFAL33AQCNewcAvfcB
+AI17BQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33AQCNewMAvfcBAI17AwC99wEA
+jXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsDAL33AQCNexMAvfcBAI17AwC99wEAjXsHAL33AQCN
+ewMAvfcBAI17AQC99wEAjXsFAL33AQCNewMAvfcBAI17BQC99wEAjXsBAL33AQCNewMAvfcBAI17
+AQC99wEAjXsJAL33AQCNewsAvfcBAI17AwC99wEAjXsDAL33AQCNewMAvfcBAI17AQC99wEAjXsD
+AL33AQCNewEAvfcBAI17CwC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsBAL33AQCNewMA
+vfcBAI17AwC99wEAjXsvAL33BQCNewIAvfcDAI17CQC99wMAjXsEAL33AQCNewkAvfcFAI17AgC9
+9wMAjXsJAL33AwCNewMAvfcDAI17AgC99wEAjXsGAL33AwCNewMAvfcEAI17AQC99wQAjXsIAL33
+AQCNewYAvfcEAI17AQC99wEAjXsDAL33AQCNewEAvfcBAI17AwC99wEAjXsCAL33AwCNewIAvfcB
+AI17AwC99wEAjXsCAL33BACNexQAvfcDAI17CQC99wMAjXsCAL33AQCNewYAvfcEAI17AQC99wQA
+jXsCAL33AQCNewMAvfcBAI17AgC99wQAjXsBAL33BACNewgAvfcEAI17AwC99wMAjXsCAL33AQCN
+ewMAvfcBAI17AgC99wMAjXsDAL33BACNewcAvfcEAI17AwC99wMAjXsDAL33AwCNewUAvfcCAI17
+tQC99wEAjXs8Ab33AwCNezANvfdAAbnevgU77wEAjXuXADvvAQCNewUAO+8BAI17DwA77wEAjXuR
+ADvvAQCNewUAO+8BAI17EAA77wIAjXsLADvvAQCNewUAO+8BAI17YQA77wEAjXsGADvvAQCNewMA
+O+8DAI17BAA77wEAjXsPADvvAQCNey0AO+8BAI17aQA77wEAjXsRADvvAQCNewsAO+8BAI17BQA7
+7wEAjXtgADvvAgCNewYAO+8CAI17AQA77wUAjXsDADvvAQCNewoAO+8DAI17AgA77wQAjXsDADvv
+AwCNewMAO+8DAI17AwA77wQAjXsCADvvAwCNexIAO+8BAI17CAA77wMAjXsCADvvBACNewMAO+8D
+AI17AgA77wQAjXsPADvvAwCNewIAO+8BAI17AQA77wMAjXsHADvvBACNewIAO+8BAI17AQA77wMA
+jXsCADvvAwCNewMAO+8EAI17AgA77wQAjXsIADvvAgCNewQAO+8DAI17AwA77wQAjXsJADvvAQCN
+ewQAO+8DAI17AwA77wMAjXsDADvvAwCNewMAO+8DAI17AgA77wEAjXsBADvvAwCNe1EAO+8MAI17
+AgA77wEAjXsFADvvAQCNewkAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AQA77wEAjXsD
+ADvvAQCNewEAO+8BAI17AwA77wEAjXsBADvvAQCNewUAO+8BAI17AwA77wEAjXsQADvvAgCNewcA
+O+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AQA77wEAjXsDADvvAQCNewEAO+8BAI17AwA7
+7wEAjXsNADvvAQCNewMAO+8BAI17AQA77wIAjXsKADvvAQCNewMAO+8BAI17AQA77wIAjXsEADvv
+AQCNewMAO+8BAI17AQA77wEAjXsFADvvAQCNew0AO+8BAI17BQA77wEAjXsDADvvAQCNew0AO+8B
+AI17AwA77wEAjXsDADvvAQCNewMAO+8BAI17BQA77wEAjXsDADvvAQCNewMAO+8BAI17AQA77wIA
+jXtVADvvAgCNewYAO+8CAI17AwA77wEAjXsFADvvAQCNewkAO+8BAI17BQA77wEAjXsDADvvAQCN
+I (20387) H_API: esp_wifi_remote_connect
+ewEAO+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17AgA77wMAjXsCADvvBQCNew8AO+8BAI17
+AQA77wEAjXsHADvvAQCNewMAO+8BAI17AQA77wEAjXsDADvvAQCNewEAO+8FAI17AQA77wEAjXsD
+ADvvAQCNew0AO+8BAI17AwA77wEAjXsBADvvAQCNewsAO+8BAI17AwA77wEAjXsBADvvAQCNewUA
+O+8FAI17AgA77wMAjXsDADvvAwCNewoAO+8BAI17BQA77wEAjXsEADvvAwCNewoAO+8BAI17AwA7
+7wUAjXsDADvvAQCNewUAO+8BAI17AwA77wUAjXsBADvvAQCNe1cAO+8BAI17BgA77wEAjXsEADvv
+AQCNewMAO+8FAI17BwA77wEAjXsFADvvAQCNewMAO+8BAI17AQA77wEAjXsDADvvAQCNewEAO+8B
+AI17AwA77wEAjXsFADvvAQCNewEAO+8BAI17EgA77wQAjXsHADvvAQCNewMAO+8BAI17AQA77wEA
+jXsDADvvAQCNewEAO+8BAI17BQA77wEAjXsDADvvAQCNew0AO+8BAI17AwA77wEAjXsBADvvAQCN
+ewsAO+8BAI17AwA77wEAjXsBADvvAQCNewUAO+8BAI17CQA77wEAjXsFADvvAQCNewkAO+8BAI17
+BQA77wEAjXsHADvvAQCNewkAO+8BAI17AwA77wEAjXsHADvvAQCNewUAO+8BAI17AwA77wEAjXsF
+ADvvAQCNe2MAO+8BAI17BAA77wMAjXsIADvvAQCNewMAO+8BAI17AQA77wEAjXsDADvvAQCNewEA
+O+8BAI17AwA77wEAjXsBADvvAQCNewMAO+8BAI17BQA77wEAjXsBADvvAQCNexMAO+8BAI17CQA7
+7wEAjXsDADvvAQCNewEAO+8BAI17AwA77wEAjXsBADvvAQCNewUAO+8BAI17AwA77wEAjXsNADvv
+AQCNewMAO+8BAI17AQA77wEAjXsLADvvAQCNewMAO+8BAI17AQA77wEAjXsFADvvAQCNewkAO+8B
+AI17BQA77wEAjXsJADvvAQCNewUAO+8BAI17BwA77wEAjXsJADvvAQCNewMAO+8BAI17BwA77wEA
+jXsFADvvAQCNewMAO+8BAI17BQA77wEAjXtjADvvAQCNewUAO+8BAI17CgA77wMAjXsCADvvAQCN
+ewMAO+8BAI17AgA77wMAjXsDADvvAwCNewIAO+8EAI17AwA77wQAjXsQADvvAQCNewkAO+8DAI17
+AgA77wQAjXsDADvvBACNewEAO+8BAI17AwA77wEAjXsOADvvAwCNewIAO+8BAI17CwA77wQAjXsC
+ADvvAQCNewYAO+8EAI17AQA77wQAjXsCADvvBACNewkAO+8DAI17BQA77wIAjXsBADvvBACNewkA
+O+8DAI17AwA77wQAjXsEADvvAgCNewQAO+8CAI17AgA77wQAjXsBADvvAQCNe7UAO+8BAI17LwA7
+7wEAjXsPATvvAQCNey8AO+8BAI17JwM77w==
+#END 7f600d43 8029
+[{"name":"keyboard","kind":"driver","engine":"js","title":"keyboard","state":"waiting","turns":926,"msgs":927,"cpu_ms":915.462,"mem_kb":212.5,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"drivers/keyboard.js","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"js","title":"power","state":"idle","turns":5,"msgs":5,"cpu_ms":73.933,"mem_kb":210.5,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"drivers/power.js","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"js","title":"display","state":"idle","turns":20,"msgs":20,"cpu_ms":174.109,"mem_kb":212.5,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"drivers/display.js","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"js","title":"compositor","state":"idle","turns":124,"msgs":124,"cpu_ms":881.318,"mem_kb":367.5,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"system/compositor.js","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"js","title":"agent","state":"idle","turns":193,"msgs":193,"cpu_ms":173.478,"mem_kb":323.6,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"system/agent.js","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":129.057,"mem_kb":242.7,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":14,"msgs":14,"cpu_ms":253.004,"mem_kb":284.4,"limit_kb":384,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"js","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":89.374,"mem_kb":222.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/files.js","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"js","title":"Editor","state":"idle","turns":0,"msgs":0,"cpu_ms":102.306,"mem_kb":245.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/editor.js","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":333.435,"mem_kb":638.1,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"js","title":"Agenda","state":"idle","turns":2,"msgs":2,"cpu_ms":119.636,"mem_kb":265.8,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/agenda.js","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"js","title":"Settings","state":"idle","turns":20,"msgs":20,"cpu_ms":132.651,"mem_kb":239.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/settings.js","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":40,"msgs":40,"cpu_ms":152.811,"mem_kb":222.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":21,"msgs":21,"cpu_ms":179.449,"mem_kb":237.6,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":41,"msgs":41,"cpu_ms":215.022,"mem_kb":228.6,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":66.785,"mem_kb":212.8,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":63.059,"mem_kb":210.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"js","title":"Snake","state":"idle","turns":173,"msgs":173,"cpu_ms":513.032,"mem_kb":230.9,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/snake.js","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":88.568,"mem_kb":219.8,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"js","title":"flaky","state":"idle","turns":0,"msgs":0,"cpu_ms":66.648,"mem_kb":210.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"system/flaky.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":29,"msgs":29,"cpu_ms":103.437,"mem_kb":211.9,"limit_kb":320,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":19,"msgs":19,"cpu_ms":87.378,"mem_kb":212.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":27.756,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.106,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":6.765,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":25,"msgs":25,"cpu_ms":32.681,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+
+[p4cap] shot 1: ../ttmp/2026/11/01/PICOCALC-APPUI--native-worlds-with-a-screen-and-apps-that-bring-their-own-launcher-icons/various/device-elf/shot-1.png (crc ok)
+
+[p4cap] shot 2: ../ttmp/2026/11/01/PICOCALC-APPUI--native-worlds-with-a-screen-and-apps-that-bring-their-own-launcher-icons/various/device-elf/shot-2.png (crc ok)
+
+[p4cap] shot 3: ../ttmp/2026/11/01/PICOCALC-APPUI--native-worlds-with-a-screen-and-apps-that-bring-their-own-launcher-icons/various/device-elf/shot-3.png (crc ok)

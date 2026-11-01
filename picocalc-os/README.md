@@ -81,6 +81,8 @@ js/system.json      the manifest: which worlds run, their claims, budgets and he
 js/drivers/         keyboard.js, power.js, display.js
 js/system/          compositor.js, sandbox.js, flaky.js
 js/apps/            launcher, sysmon, repl, snake, faults, keys, about
+sdk/                the native world SDK: nw.h (the API), nw_ui.h and nw_json.h, a runtime for each engine
+natives/            example native worlds: echo, battery, bench, the probes, and dial (an app with a screen)
 scripts/            the scripts behind the captures
 tools/gen_font.py   makes nucleus/font_data.h from Terminus Font
 tools/p4cap.py      resets the device, sends console lines, decodes shots to PNG
@@ -139,6 +141,8 @@ tree with the status and hint bars into the back buffer, the nucleus compares it
 and returns the changed rectangles, and the compositor asks the display driver to send them: `CASET`,
 `RASET`, `RAMWR` and the pixels, queued together so they run back to back on SPI2. The display driver
 is `picocalc_lcd.c` rewritten in JavaScript, with the same init sequence and the same 40 MHz clock.
+The compositor draws an app's tree inside a guard: a tree it cannot draw shows "<app>'s screen could not be
+drawn" with the reason, and the compositor and every other app carry on.
 
 Text uses bitmap fonts at 6x12, 8x16 (regular and bold), 10x20 bold and 16x32 bold, taken from
 Terminus Font with six symbols drawn on the pixel grid (`tools/gen_font.py`).
@@ -148,6 +152,9 @@ Terminus Font with six symbols drawn on the pixel grid (`tools/gen_font.py`).
 ```js
 app("snake")                         // or driver(...), service(...)
   .title("Snake")
+  .key("s").about("A game on a 22 x 18 grid, ticking on the virtual clock.")   // its letter and line on the launcher
+  .icon([["fill", 2, 20, 26, 6], ["fill", 22, 8, 6, 18], ["fill", 22, 8, 14, 6],    // drawn in a 40 x 30 box
+         ["fill", 4, 6, 6, 6, "accent"]])
   .state({ score: 0 })               // the world's state, kept until it restarts
   .needs("keys")                     // channels it receives;  .provides("frames") channels it posts on
   .onStart((s) => ...)
@@ -163,6 +170,35 @@ no handles, 4 KB per world), `sleep(ms)`, `now()`, `log(...)`, `hw.i2c/spi`, `dm
 `sys.fault/restart`; handles have `read(reg, n, gapMs)`, `transfer(bytes, nread, gapMs)`, `write`,
 `cmd`, `pixels`, `fill`, `text`, `commit`, `narrow`, `revoke`, `release`. `Math.random` is seeded per
 world and `Date` reads the virtual clock, so a script replays exactly.
+
+The launcher has no list of apps. It shows the worlds of kind `app` in manifest order, then the apps started from
+storage, each with the title, icon, description and letter it declared; the kernel checks them when the app starts
+(`sys.worlds("name,title,icon,about,key")` reports them) and the launcher draws only known operations inside the
+box. An app from storage is labelled by its world name, gets no letter and a mark in the tile's corner, so it
+cannot pass for a system app.
+
+## Native worlds
+
+A world can also be C or C++ written against `sdk/nw.h`: a host process under seccomp (engine `native`), a
+WebAssembly module in WAMR's interpreter (engine `wasm`, on the host and the device, and from `apps/` through the
+Loader), or machine code in the P4's ELF firmware (`port/esp32p4/README.md`). It defines `nw_init` and `nw_on_event`
+and asks the kernel for everything else, with the claims the manifest gives it, as a JavaScript world does.
+
+A native app has a screen as well: `nw_screen(tree, hints)` hands the kernel a tree of the same ui nodes as JSON
+(16 KB at most), which is shown after the event like a JavaScript app's frame; `sdk/nw_ui.h` writes such trees
+without a C library. In `nw_init` it declares what the launcher shows with `nw_title`, `nw_icon`, `nw_about` and
+`nw_key`. `natives/dial.c` is the example, one source built by `make natives wasm` and by the ELF firmware:
+
+```c
+void nw_init(void) { nw_kind("app"); nw_title("Dial"); nw_key("n"); nw_icon(ICON); nw_every(1000); }
+int nw_on_event(const nw_event *e) {
+  ... a key changes the level, a tick counts seconds ...
+  nw_ui_begin(&u, buf, sizeof buf);
+  nw_ui_open(&u, "col", "\"gap\":8"); nw_ui_text(&u, "Level", "\"font\":\"l\""); ...; nw_ui_close(&u);
+  if (nw_ui_end(&u) >= 0) nw_screen(buf, "←→ 1  ↑↓ 10  0 zero");
+  return NW_DONE;
+}
+```
 
 ## What the simulator caught
 

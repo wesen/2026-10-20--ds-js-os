@@ -9,9 +9,27 @@ Topics:
 DocType: log
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/js/apps/launcher.js
+      Note: the launcher from sys.worlds, lnOps, lnPoll (Phase 3)
+    - Path: repo://picocalc-os/js/system/compositor.js
+      Note: grid mark, icon text width, the paint guard (Phase 3)
+    - Path: repo://picocalc-os/natives/dial.c
+      Note: Dial (Phase 4)
+    - Path: repo://picocalc-os/nucleus/kernel.c
+      Note: kernel_present, boot_world, kernel_worlds_json_fields (Phase 1)
+    - Path: repo://picocalc-os/nucleus/native.c
+      Note: NW_SCREEN, NW_PRESENT, nat_render (Phase 1)
+    - Path: repo://picocalc-os/tests/sysapps.test.mjs
+      Note: launcher and loader tests on fake worlds
+    - Path: repo://picocalc-os/tests/test_native_worlds.py
+      Note: Dial on both engines and end to end
+    - Path: repo://ttmp/2026/11/01/PICOCALC-APPUI--native-worlds-with-a-screen-and-apps-that-bring-their-own-launcher-icons/various/device-elf/capture.log
+      Note: the ELF firmware capture (Step 5)
+    - Path: repo://ttmp/2026/11/01/PICOCALC-APPUI--native-worlds-with-a-screen-and-apps-that-bring-their-own-launcher-icons/various/device-wasm/2-from-storage/capture.log
+      Note: Dial from storage on the normal firmware (Step 5)
 ExternalSources: []
-Summary: "Chronological record of giving native worlds a screen and letting apps declare their own launcher icons."
+Summary: Chronological record of giving native worlds a screen and letting apps declare their own launcher icons.
 LastUpdated: 2026-11-01T17:24:21.192464418-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -401,3 +419,201 @@ each, the launcher's row (cpu ms at the first stats / heap):
 
 - The mark: `for (i = 0; i < 8; i++) fb.fill(cx + cw - 8 + i, cy + i, 8 - i, 1, colour)`.
 - The order of storage apps is their world ids, which is the order they were started.
+
+## Step 5: Phase 4, Dial in three builds, on the host and on the device
+
+Dial is the demonstration the guide asked for: a native app in C with a screen and launcher presentation, from one
+source. It runs as a host process and as WebAssembly in the tests, as machine code (`nat-dial`) in the P4's ELF
+firmware, and as `apps/dial.wasm` started by the Loader on the normal firmware. On the device it opened by its
+letter on the ELF firmware and, from storage, came forward as `u-dial` with its mark. Running it from storage showed
+that the Loader never opened a WebAssembly app after starting it. That was a sensible rule while such worlds
+had no screen, and it is now changed.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Phase 4 of the guide, including the device.
+**Inferred user intent:** A native app that is visibly a peer of the JavaScript apps, on the real device.
+**Commits (code):** df0bec6 — "picocalc-os: Dial, a native app with a screen, from one C source in three builds
+(PICOCALC-APPUI)"; d90901e — "picocalc-os: the Loader brings a WebAssembly app forward once it has said it is an
+app; Dial's needle clears its label (PICOCALC-APPUI)"
+
+### What I did
+
+- `natives/dial.c`: a level 0–100 (←→ by 1, ↑↓ by 10, `0` to zero), shown as an XL number, a bar, a canvas gauge
+  and a key/value list (keys, seconds, "built as": a host process, WebAssembly or machine code, from `__wasm__` and
+  `__riscv`). The gauge uses a table of cos(9k°)×1000 for k = 0..10 and integer arithmetic; the canvas node is
+  built with `vsnprintf` into a static 3 KB buffer, the tree with `nw_ui.h` into a static 6 KB one. `nw_init`
+  declares kind, title "Dial", letter `n`, description and a gauge icon of eight operations, and a 1 s timer;
+  `NW_START`, ticks and keys call `show()`.
+- Build wiring: `Makefile` (`NATIVES`, `WASMS`, and `sdk/nw_ui.h` in both SDK dependency lists);
+  `port/esp32p4/main/CMakeLists.txt` (dial in the ELF `foreach`, `nw_ui.h` in its dependencies);
+  `optional/native_elf/system.elf.json` (`nat-dial`, 64 KB, 20 ms).
+- Tests: `test_dial_a_native_app_with_a_screen` in both engine classes (presentation, the frame's shape, keys 50 → 41
+  → 0, the seconds counter, "built as"); `NativeAppOnTheSystemTests` (all of `js/` plus Dial from the manifest and
+  `apps/dial.wasm` through the Loader; a viewer logs the launcher's tiles and Dial's level); `PresentationTests` in
+  `test_sys_native.py` (a JavaScript app's declarations in `sys.worlds`, not in the default fields; a storage app's
+  title is its name; four refused declarations crash the start with the kernel's reason).
+- `js/apps/loader.js`: `ldWorlds` keeps `kind`; Enter calls `ldStart(s, a, true)`; a JavaScript app is opened at
+  once as before, a WebAssembly one after the start and only if its kind is `app`. Autostart and F5 still open
+  nothing. A loader test with a driver module and an app module.
+- Device, ELF firmware: held the bus, flashed `build-elf`, captured `type n`, `key right`, `key up` ×2, `key f1`.
+  Normal firmware: held the bus, flashed `build-agent`, `tools/p4put.py build/natives/dial.wasm apps/dial.wasm`
+  (36280 bytes), captured the Loader, Enter on `dial.wasm`, keys, F1. After the Loader change, flashed `build-agent`
+  again and repeated.
+
+### Why
+
+- The ELF manifest starts its worlds at boot, as `nat-echo`, `nat-bench` and `nat-import` always have; a boot loop
+  on that build would be recovered by flashing the normal firmware, which the bootloader allows in any state. On
+  the normal firmware nothing was put in `autostart.txt`: Dial from storage was started by hand.
+- Opening a WebAssembly world only when it says it is an app keeps the old reason for not opening (a driver module
+  has no screen; opening it would show "starting …" forever) and drops the rule where it no longer holds.
+
+### What worked
+
+- Host: `make test-native` 34 tests OK (Dial on both engines and end to end), `test-sys` 20 + 6, test-apps
+  10 + 27 + 9 + 16, chat-ui 13, test-fs 9, test-clock 4, test-agent 23 (7 skipped); `make shots` changed only
+  `41-about` (numbers).
+- `dial.elf` built with the firmware's flags links to exactly four symbols, all in the firmware's table:
+  `snprintf`, `vsnprintf`, `strcmp`, `strlen`; 6040 bytes.
+- ELF firmware (`various/device-elf/`): "booting 4 worlds from js/system.elf.json"; `nat-echo`'s presentation
+  checks pass as machine code (`TEST icon-object err an icon is a JSON array …`, `TEST key-upper err a shortcut key
+  is one of a-z and 0-9`); `nat-dial  app  idle  19 turns  24.72 ms  14.3 KB of 64`; `type n` opened Dial, right
+  and up ×2 gave 71; the launcher shows Dial with `n` and its icon, "15 apps", "25 of 26 worlds running · 5
+  crashes" (the five are `nat-import`, which links to `path_open` on purpose and stays stopped).
+- Normal firmware (`various/device-wasm/2-from-storage/`): the Loader lists `dial.wasm 35.4 KB not started` and
+  "0 running"; Enter: `starting u-dial from storage (36280 bytes, WebAssembly)` and `u-dial` comes forward, level
+  50, "built as WebAssembly"; right, right, down gave 42; the launcher shows `u-dial` with the corner mark and no
+  letter, "From storage: A native app in C: …", "23 of 23 worlds running · 0 crashes since boot".
+- In the end-to-end host run the launcher found `u-dial` about 20 ms after the Loader started it: the two-second poll
+  saw the names change.
+
+### What didn't work
+
+- The engine test first failed on its expectation, not on Dial: `sys.worlds` writes `about` before `key`, and I
+  had them the other way round. It also tried to parse whole frames from the log, which cuts lines at about a
+  kilobyte (`…["fill",1\n`), so the viewer now logs a summary of each frame. I had counted 17 canvas operations;
+  there are 15.
+- The first end-to-end assertion looked for Dial in the first launcher frame, whose grid shows 12 of the 15 apps.
+- The first device capture of the Loader ended at 12 s while the shot was still streaming: `[p4cap] shot 1: -
+  (BAD: 0 px)`. The next capture reused the directory and replaced the Loader shot; the runs now have their own
+  directories.
+- On the normal firmware, Enter on `dial.wasm` showed "Started u-dial." and stayed in the Loader; my arrow keys then
+  moved the Loader's selection (`various/device-wasm/1-before-loader-change/`). That was `ldStart(s, a, a.ext ===
+  "js")`, see Why.
+- At level 50 the needle ran through the "50" label (ELF shot 1); the needle is now 30 pixels shorter than the
+  arc's radius. The ELF capture was taken before this change.
+
+### What I learned
+
+- A turn of Dial costs about 1.3 ms as machine code on the P4 (24.72 ms over 19 turns) and about 20 ms in WAMR's
+  interpreter (393.8 ms over 20 turns), mostly in `vsnprintf` building the canvas. The budget for apps from
+  storage is 50 ms, so it fits, with less room than a JavaScript app of the same size would need.
+- JavaScript titles do not go through `kernel_present()`: `read_meta()` copies `.title()` with truncation, as it
+  did before this ticket. Only native titles are checked; a title is shown clipped in the status bar either way.
+
+### What was tricky to build
+
+- The gauge's chord between two table points: `at()` interpolates linearly between step `lv / 5` and the next, so
+  the accent arc ends exactly at the needle for every level, not only at multiples of 5.
+- Building the canvas in its own buffer keeps the tree within `nw_ui.h`'s bookkeeping: `nw_ui_node()` takes the
+  finished canvas as one child.
+
+### What warrants a second pair of eyes
+
+- `ldStart()` decides on `kind` 300 ms after the spawn (the existing sleep before `ldWorlds()`). A WebAssembly app
+  whose `nw_init` takes longer would start and not be opened; Enter on it again opens it.
+
+### What should be done in the future
+
+- Documentation, ticket bookkeeping, the vault report.
+
+### Code review instructions
+
+- `natives/dial.c` from top to bottom; `git show d90901e -- picocalc-os/js/apps/loader.js`.
+- `make natives wasm && make test-native`; the device steps are in What I did.
+
+### Technical details
+
+- Device commands: `python3 tools/p4cap.py --no-reset -s 1 -c "0.2 hold"`; `idf.py -B build-elf -D
+  PICOCALC_AGENT_WIFI=ON -D PICOCALC_NATIVE_ELF=ON -D SDKCONFIG=sdkconfig.agent-elf -D
+  'SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.agent-wifi' -p /dev/ttyACM0 flash`; the same with `-B build-agent
+  -D SDKCONFIG=sdkconfig.agent` and without `PICOCALC_NATIVE_ELF` for the normal firmware; `/dev/ttyACM0` stayed
+  after every flash.
+- The two capture scripts: `-s 26 -c "8 worlds" -c "9 type n" -c "10.5 shot" -c "11.5 key right" -c "11.8 key up"
+  -c "12.3 key up" -c "13 shot" -c "15 key f1" -c "16.5 shot" -c "18 stats" -c "24 worlds"` (ELF), and `-s 34 -c "8
+  type u" -c "9.5 shot" -c "12 key down" -c "12.3 key down" -c "12.8 key enter" -c "16 shot" -c "18 key right"
+  -c "18.3 key right" -c "18.6 key down" -c "19.5 shot" -c "22 key f1" -c "23 key down" -c "23.3 key down"
+  -c "24.3 shot" -c "27 stats"` (from storage).
+
+## Step 6: Documentation, the vault report, and closing the ticket
+
+This step writes down what was built where a reader will look for it, and closes the ticket. The README now
+explains how the launcher finds apps and gives native worlds a section of their own, which they never had. The guide
+gained a status note listing where the implementation differs from it. The vault has a project report with three
+device captures.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 ("… then vault report").
+**Assistant interpretation:** The docs task (03hs) and the vault report.
+**Inferred user intent:** The work can be found and understood later without this conversation.
+**Commit (docs):** the commit that adds this step.
+
+### What I did
+
+- `picocalc-os/README.md`: `sdk/` and `natives/` in the file list; the compositor's guard in "The screen";
+  `.key/.about/.icon` in "The world API" with Snake's real values, and a paragraph on how the launcher finds apps; a
+  new section "Native worlds" (the three engines, `nw_screen`, `nw_ui.h`, presentation, Dial).
+- `picocalc-os/sdk/nw.h`: the icon comment now gives the fonts, `#rrggbb`, 1–3 characters of text, and what the
+  launcher does with the rest.
+- The guide: a status note at the top (commits, the device runs, five differences from the plan).
+- `docmgr doc relate` for the guide (3 files) and this diary (9 files, two of them device captures); changelog;
+  `docmgr doctor --ticket PICOCALC-APPUI --stale-after 30`: all checks passed.
+- Before committing the device captures I searched them for SSIDs, passwords, tokens and keys: none; they contain
+  the device's LAN address only.
+- Vault: `Projects/2026/11/01/PROJ - picocalc-os - PICOCALC-APPUI - Native Screens and Apps That Bring Their Own
+  Icons.md` and three device shots in `_assets/` (`picocalc-appui-*.png`), committed as 3c18923 and pushed; only
+  those four files were staged (the vault's unrelated `Research/` changes stay as they were).
+
+### Why
+
+- The README had no word about native worlds although PICOCALC-NATIVE added them; this ticket made them a user-facing
+  feature, so the section was due.
+
+### What worked
+
+- The vault branch is `main...origin/main` after the push.
+
+### What didn't work
+
+- I first set the guide's `Status` to `complete`; the closed FRAMES and SPEED tickets keep their guides `active`
+  and mark only the ticket complete, so I set it back.
+- The first draft of the vault note said the compositor's next paint "threw again" after a restart. I had not
+  tested that, and a restarted compositor may focus the launcher first, so the note now says only what is known.
+
+### What I learned
+
+- Nothing new beyond Steps 2–5.
+
+### What was tricky to build
+
+- Nothing.
+
+### What warrants a second pair of eyes
+
+- The README's Dial snippet is abbreviated (`...` for the key handling); the full source is `natives/dial.c`.
+
+### What should be done in the future
+
+- The PaperS3's launcher (`js-papers3/apps/launcher.js`) still has its own list.
+
+### Code review instructions
+
+- `git show` of this commit; the vault note.
+
+### Technical details
+
+- The reMarkable copy of the guide (`/ai/2026/11/01/PICOCALC-APPUI`) is the version from Step 1; the status note is
+  in the ticket only.

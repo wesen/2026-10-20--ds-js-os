@@ -10,25 +10,31 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/native.c
-      Note: nat_syscall (where NW_SCREEN and NW_PRESENT go), nat_create, the payload checks
-    - Path: picocalc-os/nucleus/nucleus.h
-      Note: eng_render, world_t, the native system call numbers
-    - Path: picocalc-os/nucleus/kernel.c
-      Note: run_segment's render step, boot_world, kernel_worlds_json_fields
-    - Path: picocalc-os/nucleus/vm.c
-      Note: read_meta (what a JavaScript world declares), op_sys_worlds
     - Path: picocalc-os/js/apps/launcher.js
       Note: the home screen, today a fixed list of apps
     - Path: picocalc-os/js/system/compositor.js
       Note: the grid node that draws icons, paint()
+    - Path: picocalc-os/nucleus/kernel.c
+      Note: run_segment's render step, boot_world, kernel_worlds_json_fields
+    - Path: picocalc-os/nucleus/native.c
+      Note: nat_syscall (where NW_SCREEN and NW_PRESENT go), nat_create, the payload checks
+    - Path: picocalc-os/nucleus/nucleus.h
+      Note: eng_render, world_t, the native system call numbers
+    - Path: picocalc-os/nucleus/vm.c
+      Note: read_meta (what a JavaScript world declares), op_sys_worlds
     - Path: picocalc-os/sdk/nw.h
       Note: the native SDK
+    - Path: repo://picocalc-os/js/apps/loader.js
+      Note: ldStart opens a WebAssembly app that declared kind app
+    - Path: repo://picocalc-os/natives/dial.c
+      Note: 'the demonstration app: a screen, keys, presentation, three builds'
+    - Path: repo://picocalc-os/sdk/nw_ui.h
+      Note: writing a screen's tree without a C library
 ExternalSources: []
-Summary: "How picocalc-os draws app screens and the launcher, why native worlds (WebAssembly, machine code, processes) cannot show anything and why apps cannot bring their own icons, and the design and implementation that fix both."
+Summary: How picocalc-os draws app screens and the launcher, why native worlds (WebAssembly, machine code, processes) cannot show anything and why apps cannot bring their own icons, and the design and implementation that fix both.
 LastUpdated: 2026-11-01T18:30:00-05:00
-WhatFor: "Onboarding an engineer to picocalc-os's screen pipeline, its native-world ABI and its launcher, and implementing native screens and app-declared icons."
-WhenToUse: "Before writing a native app with a screen, changing what an app declares about itself, or changing the launcher."
+WhatFor: Onboarding an engineer to picocalc-os's screen pipeline, its native-world ABI and its launcher, and implementing native screens and app-declared icons.
+WhenToUse: Before writing a native app with a screen, changing what an app declares about itself, or changing the launcher.
 ---
 
 # Native screens and app icons: analysis, design and implementation guide
@@ -58,6 +64,24 @@ module for the ESP32-P4, a host process), shows a screen, reacts to keys and has
 > - **Untrusted apps stay recognisable.** An app from storage is shown under its world name (`u-dial`), with a
 >   corner mark and no shortcut letter, and its icon is sanitised before it reaches the compositor. A tree that
 >   cannot be drawn shows an error instead of crashing the compositor.
+
+> [!note] Status (2026-11-01): implemented
+> All four phases are implemented and committed (374e71d, 4e17af2, caa81ce, df0bec6, d90901e) and were run on the
+> device: Dial as machine code on the ELF firmware, and `apps/dial.wasm` from storage on the normal firmware. Where
+> the implementation differs from this guide:
+>
+> - **The launcher polls in two sizes (§7.3).** Every two seconds it reads only `name,kind,state,user` and reads the
+>   icons again only when the set of apps changes; start and focus read everything. Reading and sanitising every
+>   icon on every poll cost about 2.3 ms a time, seven times the old launcher.
+> - **Icon text is bounded in width only (§7.4).** The compositor passes `maxw = 40 - x`; a height check would have
+>   erased the REPL icon's 32-pixel `>`.
+> - **The Loader opens a WebAssembly app after starting it** when the world reports kind `app` (not in this guide):
+>   it used to open only JavaScript apps, because a WebAssembly world had no screen.
+> - Dial's letter is `n`; in the ELF firmware the world is `nat-dial`.
+> - A JavaScript `.title()` is still copied with truncation by `read_meta()`; only native titles go through
+>   `kernel_present()`.
+>
+> The diary (`log/01-diary.md`, steps 2–6) has the measurements and the device captures (`various/`).
 
 ## 1. The system in one page
 

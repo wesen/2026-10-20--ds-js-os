@@ -1,7 +1,7 @@
 ---
 Title: Native worlds with a screen, and apps that bring their own launcher icons
 Ticket: PICOCALC-APPUI
-Status: active
+Status: complete
 Topics:
     - picocalc
     - ui
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-01T17:24:20.974665514-05:00
+LastUpdated: 2026-11-01T18:08:20.621637977-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
