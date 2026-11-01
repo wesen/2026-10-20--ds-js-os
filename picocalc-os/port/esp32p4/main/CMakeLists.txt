@@ -64,7 +64,7 @@ if(PICOCALC_NATIVE_ELF)
     string(REPLACE "-elf-gcc" "-elf-strip" ELF_STRIP ${CMAKE_C_COMPILER})
     list(APPEND BUNDLE_EXTRA "system.elf.json=${ELF_DIR}/system.elf.json")
     list(APPEND BUNDLE_EXTRA_DEPS ${ELF_DIR}/system.elf.json)
-    foreach(m echo bench wimport)   # wimport links to a function no module is given (-Wno-attributes: its WebAssembly import attribute)
+    foreach(m echo bench wimport dial)   # wimport links to a function no module is given (-Wno-attributes: its WebAssembly import attribute)
         set(out ${CMAKE_CURRENT_BINARY_DIR}/natives/${m}.elf)
         add_custom_command(
             OUTPUT ${out}
@@ -72,6 +72,7 @@ if(PICOCALC_NATIVE_ELF)
             COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o ${out} ${OS}/natives/${m}.c ${OS}/sdk/nw_elf.c
             COMMAND ${ELF_STRIP} --strip-unneeded --remove-section=.comment --remove-section=.riscv.attributes ${out}
             DEPENDS ${OS}/natives/${m}.c ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_json.h
+                    ${OS}/sdk/nw_ui.h
             VERBATIM)
         list(APPEND BUNDLE_EXTRA "natives/${m}.elf=${out}")
         list(APPEND BUNDLE_EXTRA_DEPS ${out})

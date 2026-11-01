@@ -165,8 +165,8 @@ test-agent-live: $(BIN)
 
 # Native worlds (PICOCALC-NATIVE): the example binaries, each linked statically with the process runtime, and the tests
 # that run them under the host's sandbox (a process with a seccomp filter; x86-64 only, so not with M32=1).
-NW_SDK  := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_calls.inc sdk/nw_proc.c
-NATIVES := $(BUILD)/natives/echo $(BUILD)/natives/probe $(BUILD)/natives/battery
+NW_SDK  := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_ui.h sdk/nw_calls.inc sdk/nw_proc.c
+NATIVES := $(BUILD)/natives/echo $(BUILD)/natives/probe $(BUILD)/natives/battery $(BUILD)/natives/dial
 natives: $(NATIVES)
 
 $(BUILD)/natives/%: natives/%.c $(NW_SDK)
@@ -191,8 +191,8 @@ else
 endif
 WASM_FLAGS := --target=wasm32-wasi $(WASM_SYS) -O2 -Wall -Isdk
 WASM_LINK  := -mexec-model=reactor -Wl,--stack-first -Wl,-z,stack-size=16384 -Wl,--strip-all
-WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_calls.inc sdk/nw_wasm.c
-WASMS      := $(addprefix $(BUILD)/natives/,echo.wasm battery.wasm wprobe.wasm wimport.wasm bench.wasm)
+WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_ui.h sdk/nw_calls.inc sdk/nw_wasm.c
+WASMS      := $(addprefix $(BUILD)/natives/,echo.wasm battery.wasm wprobe.wasm wimport.wasm bench.wasm dial.wasm)
 wasm: $(WASMS)
 
 $(BUILD)/natives/%.wasm: natives/%.c $(WASM_SDK)

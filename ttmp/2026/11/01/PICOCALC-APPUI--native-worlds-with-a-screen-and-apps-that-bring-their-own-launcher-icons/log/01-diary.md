@@ -272,3 +272,132 @@ launcher's hand-made order. The launcher itself was not touched yet.
 
 - The letters: chat c, files d, editor e, calc x, agenda t, settings g, logs l, loader u, sysmon m, repl r, snake s,
   faults f, keys k, about a.
+
+## Step 4: Phase 3, the launcher from the worlds, and a compositor that survives a broken tree
+
+The launcher no longer has a list of apps. It asks the kernel for the worlds with their declared presentation and
+shows every app: system apps in manifest order with their letters, then apps from storage, labelled by their world
+name, marked in the corner, without a letter, described as "From storage: …". Every icon goes through a sanitiser;
+the compositor draws app trees inside `try`/`catch`. The home screen captures are byte-identical to before, which is
+the regression test this phase was planned around. A first version made the launcher seven times as expensive per
+poll; measuring it led to splitting the poll from the full read.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Phase 3 of the guide.
+**Inferred user intent:** An app that declares itself appears on the home screen without anyone editing a list,
+and a hostile or broken one cannot spoil the home screen or the compositor.
+**Commit (code):** caa81ce — "picocalc-os: the launcher lists the running apps as they declare themselves
+(PICOCALC-APPUI)"
+
+### What I did
+
+- `js/apps/launcher.js`: `APPS` removed. `lnRefresh()` reads `sys.worlds("name,kind,title,state,user,icon,about,key")`
+  and builds `s.apps`: kind `app`, not the launcher, not a stopped storage app; a letter only for a system app and
+  only the first claim on it; `mark` for storage apps; the selection follows the selected app by name. `lnOps()`
+  sanitises an icon (operations `fill`/`rect`/`line`/`text`; numbers finite, rounded, clamped to the 40×30 box, and
+  a rectangle's size to what is left of it; colours from the palette or `#rrggbb`; fonts `s m mb l xl`; text of 1–3
+  characters; at most 32 operations); with nothing left the tile shows the name's first letter. `lnPoll()` runs every
+  2 s with `sys.worlds("name,kind,state,user")` and calls `lnRefresh()` only when the list of shown names changed;
+  `start` and `focus` call `lnRefresh()`. The tiles sent to the compositor leave out `app` and `about`.
+- `js/system/compositor.js`: a grid item's `mark` draws an 8-pixel triangle in the tile's top right corner (accent,
+  or white on the selected tile); icon text gets `maxw = 40 - x`; `paint()` draws the focused app's tree in
+  `try`/`catch` and on an exception clears the body and writes "<title>'s screen could not be drawn" and the
+  exception's message.
+- `tests/sysapps.test.mjs`: the launcher test now runs on fake worlds (the fake returns only the fields asked for),
+  plus three tests: storage apps (mark, no letter, description, hidden when stopped, selection after one stops),
+  sanitising (clamping, unknown colour/font/operation, long text, 32 operations, two broken icons, a duplicate
+  letter), and no apps at all. The poll is checked not to ask for icons.
+- `tests/test_sys_native.py`: `LauncherTests`, the whole system plus an app `broken` (`key("b")`, an icon, a screen
+  `{t: "grid", items: null}`): `b` opens it, the compositor does not crash, and Calc opens afterwards.
+
+### Why
+
+- The poll/refresh split: an app declares its icon only when it starts, so the icons can only change when the set
+  of worlds changes or a world restarts; the home screen is read again whenever it comes to the front anyway.
+- Clamping instead of rejecting an operation keeps a slightly wrong icon recognisable; rejecting the whole icon
+  would replace it with a letter for one bad number.
+
+### What worked
+
+- `make shots`: `01-home`, `02-home-repl`, `90-home-row4` unchanged byte for byte; `03-sysmon`, `04-sysmon-sel` and
+  `41-about` changed only in heap and lane-time numbers (the compositor 363 → 365 KB, the total 5584 → 5633 KB).
+  `make BOARD=papers3 shots`: no change.
+- All suites: test-apps 10 + 27 + 9 + 15 (the last is sysapps), chat-ui 13, test-sys 18 (with the new one), test-native 31,
+  test-fs 9, test-clock 4, test-agent 23 (7 skipped).
+- A manual capture with the `broken` app and a JavaScript app in `apps/hello.js` started by the Loader (title
+  "Settings", key "g", an out-of-box fill): the launcher shows "16 apps", `u-hello` with the mark and no letter,
+  "From storage: Says hello.", its fill clamped to a bar; pressing `g` opens the real Settings; opening Broken shows
+  "Broken's screen could not be drawn / cannot read property 'forEach' of null".
+
+### What didn't work
+
+- My first launcher read everything every 2 s. The shot runs print a world table; the launcher's row, old against
+  new:
+
+  ```
+  t = 1200 ms   old: turns 1  cpu 0.42 ms  237.5 KB      new: turns 1  cpu  2.76 ms  271.2 KB
+  t = 20510 ms  old: turns 13 cpu 4.35 ms  237.5 KB      new: turns 13 cpu 30.04 ms  288.3 KB
+  ```
+
+  About 2.3 ms per refresh against 0.31. After the split, the poll costs 0.27 ms per turn (5.00 − 2.82 over 8 turns)
+  and only a full read costs 2.4 ms.
+- Two test mistakes: after pressing `e` the selection is on the Editor, so one `left` went to Files, not to the
+  storage app; and `assert.deepEqual` (strict) refuses arrays made in the VM's realm, so they go through `plain()`.
+- The end-to-end test's app first had `mem_kb: 256` and crashed at start: "ran out of memory (its limit is 256 KB)";
+  an empty world needs about 210 KB. 320 KB, like the smallest apps.
+
+### What I learned
+
+Measured with a two-`stats` script (`wait 1200 / stats / wait 4000 / stats`) on copies of `js/` with one change
+each, the launcher's row (cpu ms at the first stats / heap):
+
+| Variant | CPU | Heap |
+|---|---|---|
+| old launcher (the `APPS` table) | 0.42 | 237.5 |
+| old launcher without the icons | 0.38 | 227.2 |
+| old launcher plus the unused `lnOps` code | 0.42 | 242.5 |
+| new | 2.82 | 268.6 |
+| new, keeping no icons | 2.79 | 251.6 |
+| new, not sanitising (the parsed icons kept) | 0.65 | 255.0 |
+| new, sanitising but keeping the parsed icons | 3.12 | 254.9 |
+| new, the sanitised icons re-parsed | 3.13 | 278.9 |
+| new, `lnOps` with plain loops | 3.12 | 268.6 |
+
+- Sanitising costs about 2.2 ms per full read on the virtual clock, in native calls (`isFinite`, `round`, `min`,
+  `max`, `push` for about 1700 numbers), not in closures: the plain-loop version was no cheaper, so the clearer
+  version stayed.
+- Function code costs heap: the 25 lines of `lnOps` alone are 5 KB, and the old table's icons were 10.3 KB.
+- Keeping freshly built arrays costs 13–24 KB more than keeping the arrays `JSON.parse` built, for the same values. I
+  did not find why without instrumenting QuickJS's allocator; the launcher's 268.6 KB is 70 % of its 384 KB limit.
+
+### What was tricky to build
+
+- The XL font is 32 pixels high and the REPL icon draws `>` at y = 6, so a compositor rule "text must fit in the 30
+  rows" would have erased it. The width is bounded (`maxw`); a tall glyph can reach below its box, where the next
+  row's tiles paint their own backgrounds over it.
+- An empty app list: `% n` with n = 0, and `s.apps[s.sel]` undefined in the screen; both guarded.
+
+### What warrants a second pair of eyes
+
+- `lnPoll()` compares names only. A storage app reloaded by the Loader (stop and spawn in one turn) keeps its name;
+  the launcher sees its new icon when it next comes to the front, which it must, since the Loader is in front while
+  reloading.
+- The guard in `paint()` catches exceptions from `draw()` only; it does not log, so a broken screen is visible on the
+  screen and nowhere else.
+
+### What should be done in the future
+
+- Phase 4: the native demo app, and the device.
+
+### Code review instructions
+
+- `git show caa81ce -- picocalc-os/js/apps/launcher.js picocalc-os/js/system/compositor.js`.
+- `node --test picocalc-os/tests/sysapps.test.mjs`; `python3 -m unittest tests.test_sys_native.LauncherTests` in
+  `picocalc-os/`; `make shots` and `git status out/` (no launcher capture may change).
+
+### Technical details
+
+- The mark: `for (i = 0; i < 8; i++) fb.fill(cx + cw - 8 + i, cy + i, 8 - i, 1, colour)`.
+- The order of storage apps is their world ids, which is the order they were started.

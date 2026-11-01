@@ -178,6 +178,34 @@ class EngineTests:
         self.assertIn('TEST shown ok [{"name":"echo","kind":"service","title":"Echo","icon":[["rect",2,2,36,26],["text",14,8,"E","m","accent"]],"about":"Answers the tests.","key":""}]', log)
         self.assertIn("TEST default ok []", log)
 
+    def test_dial_a_native_app_with_a_screen(self):
+        s = self.scenario()
+        s.native("dial", self.DIAL, engine=self.ENGINE)
+        # a summary of each frame: a log line holds at most about a kilobyte, and a whole frame is three
+        s.world("viewer", """service('viewer').needs('frames').on('frames', (s, f) => {
+          const k = f.frame.tree.kids;
+          log('TEST frame ' + JSON.stringify({ level: k[0].kids[1].s, kinds: k.map((x) => x.t), v: k[1].v, ops: k[2].ops.length,
+                                               pairs: k[3].pairs, hints: f.frame.hints }));
+        });""", ["frames.read"])
+        s.world("drv", STEPS % """
+          await out('shown', () => sys.worlds('name,kind,title,about,key').filter((x) => x.name === 'dial'));
+          for (const key of ['right', 'right', 'up', 'down', 'down', 'left']) send('dial', 'key', { key, ch: '', state: 'down' });
+          await sleep(200);
+          send('dial', 'key', { key: '0', ch: '0', state: 'down' });
+        """, ["sys.read"])
+        log = s.run("wait 2500\n")
+        self.assertIn('TEST shown ok [{"name":"dial","kind":"app","title":"Dial","about":"A native app in C: one source, '
+                      'run as WebAssembly, as machine code or as a process.","key":"n"}]', log)
+        frames = [json.loads(l.split("TEST frame ", 1)[1]) for l in log.splitlines() if "TEST frame " in l]
+        self.assertEqual(frames[0], {"level": "50", "kinds": ["row", "bar", "canvas", "kv"], "v": 0.5, "ops": 15,
+                                     "pairs": [["keys", "0"], ["seconds", "0"], ["built as", self.DIAL_BUILT_AS]],
+                                     "hints": "←→ 1  ↑↓ 10  0 zero"})
+        self.assertIn("41", [f["level"] for f in frames])   # 50 + 1 + 1 + 10 - 10 - 10 - 1
+        self.assertEqual(frames[-1]["level"], "0")
+        self.assertEqual(dict(frames[-1]["pairs"])["keys"], "7")
+        self.assertGreaterEqual(int(dict(frames[-1]["pairs"])["seconds"]), 1)
+        self.assertNotIn("dial crashed", log)
+
     def test_screens_are_json_objects_and_presentation_is_declared_at_start(self):
         log = self.echo("send('echo', 'screen-bad', null);")
         for line in ("echo: TEST screen-text err a screen is a tree of ui nodes, a JSON object",
@@ -253,9 +281,10 @@ class EngineTests:
 class ProcessWorldTests(EngineTests, unittest.TestCase):
     """Engine "native" on the host: a static binary in a child process under seccomp and rlimits."""
     ENGINE, ECHO, BATTERY = "native", "echo", "battery"
+    DIAL, DIAL_BUILT_AS = "dial", "a host process"
     FAULT, FAULT_WHY = "segv", "segmentation fault"
     OVERRUN = "ran past its turn budget of 100 ms"   # a process runs in real time
-    BUILT = ("echo", "probe", "battery")
+    BUILT = ("echo", "probe", "battery", "dial")
 
     def test_the_sandbox_stops_escapes(self):
         s = self.scenario()
@@ -290,9 +319,10 @@ class ProcessWorldTests(EngineTests, unittest.TestCase):
 class WasmWorldTests(EngineTests, unittest.TestCase):
     """Engine "wasm": the same sources compiled to WebAssembly, in WAMR's interpreter inside picocalc-host."""
     ENGINE, ECHO, BATTERY = "wasm", "echo.wasm", "battery.wasm"
+    DIAL, DIAL_BUILT_AS = "dial.wasm", "WebAssembly"
     FAULT, FAULT_WHY = "oob", "it trapped: out of bounds memory access"   # address 0 is ordinary memory in WebAssembly
     OVERRUN = "ran past its turn budget of 100 virtual ms"   # counted in instructions, on the virtual clock
-    BUILT = ("echo.wasm", "battery.wasm", "wprobe.wasm", "wimport.wasm")
+    BUILT = ("echo.wasm", "battery.wasm", "wprobe.wasm", "wimport.wasm", "dial.wasm")
 
     def test_the_sandbox_stops_escapes(self):
         s = self.scenario()
@@ -338,6 +368,46 @@ class WasmWorldTests(EngineTests, unittest.TestCase):
         """)
         self.assertIn('TEST twenty ok {"pong":"done","from":"drv","ask":1}', log)
         self.assertNotIn("crashed", log)
+
+
+class NativeAppOnTheSystemTests(unittest.TestCase):
+    """The whole system (js/) with Dial as WebAssembly twice: a system app from the manifest, and apps/dial.wasm started by
+    the Loader as u-dial. A viewer logs the launcher's tiles and Dial's level from the frames."""
+
+    VIEWER = """service('viewer').needs('frames').on('frames', (s, f) => {
+      if (f.app === 'launcher') log('TEST tiles ' + JSON.stringify(f.frame.tree.kids[1].items.map((t) => [t.label, t.key, !!t.mark])));
+      else if (f.app.endsWith('dial')) log('TEST level ' + f.app + ' ' + f.frame.tree.kids[0].kids[1].s);
+    });"""
+
+    def test_dial_on_the_launcher_from_the_manifest_and_from_storage(self):
+        if not (NATIVES / "dial.wasm").exists():
+            self.skipTest(f"build the example binaries first (make wasm); no dial.wasm in {NATIVES}")
+        with tempfile.TemporaryDirectory(prefix="appui-dial-", dir=OS / "build") as d:
+            root = Path(d)
+            shutil.copytree(OS / "js", root / "js")
+            shutil.copytree(OS / "fs-seed", root / "fs")
+            (root / "fs/apps").mkdir(exist_ok=True)
+            shutil.copyfile(NATIVES / "dial.wasm", root / "js/dial.wasm")
+            shutil.copyfile(NATIVES / "dial.wasm", root / "fs/apps/dial.wasm")
+            (root / "js/viewer.js").write_text(self.VIEWER)
+            manifest = json.loads((root / "js/system.json").read_text())
+            manifest["worlds"] += [dict(name="dial", file="dial.wasm", engine="wasm", mem_kb=256, budget_ms=50),
+                                   dict(name="viewer", file="viewer.js", claims=["frames.read"], mem_kb=512)]
+            (root / "js/system.json").write_text(json.dumps(manifest))
+            script = ("wait 1500\nkey n\nwait 500\nkey right\nkey up\nwait 500\nkey f1\nwait 300\n"   # Dial by its letter
+                      "key u\nwait 800\nkey enter\nwait 1500\nkey f1\nwait 800\n")             # the Loader starts u-dial
+            done = subprocess.run([str(BINARY), "-j", str(root / "js"), "-o", str(root / "out"), "-f", str(root / "fs"), "-"],
+                                  input=script, text=True, capture_output=True, cwd=OS, timeout=60)
+            log = (root / "out/uart.log").read_text() + done.stderr
+        self.assertEqual(done.returncode, 0, log)
+        self.assertNotIn("crashed", log)
+        tiles = [json.loads(l.split("TEST tiles ", 1)[1]) for l in log.splitlines() if "TEST tiles " in l]
+        self.assertTrue(any(["Dial", "n", False] in t for t in tiles), tiles)   # the grid shows three rows of the 15
+        self.assertEqual(tiles[-1][-1], ["u-dial", "", True])   # last, marked, no letter
+        levels = [l.split("TEST level ", 1)[1].split() for l in log.splitlines() if "TEST level " in l]
+        dial = [v for i, (app, v) in enumerate(levels) if app == "dial" and v not in [w for a, w in levels[:i] if a == "dial"]]
+        self.assertEqual(dial, ["50", "51", "61"])   # a new frame every second too: its seconds counter
+        self.assertIn(["u-dial", "50"], levels)
 
 
 if __name__ == "__main__":

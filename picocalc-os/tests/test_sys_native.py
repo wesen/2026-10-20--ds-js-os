@@ -170,6 +170,45 @@ class LauncherTests(unittest.TestCase):
 
 
 
+class PresentationTests(unittest.TestCase):
+    """What a JavaScript app shows on the launcher: declared in its code, checked by the kernel when it starts."""
+
+    def setUp(self):
+        self.s = Scenario()
+
+    def tearDown(self):
+        self.s.close()
+
+    def test_an_app_declares_its_icon_description_and_letter_and_an_app_from_storage_keeps_its_name(self):
+        self.s.world("app", "app('app').title('The App').key('q').about('Does things.')"
+                            ".icon([['rect', 1, 2, 3, 4], ['text', 5, 6, 'A', 's', 'accent']]).screen(() => ui.text('x'));")
+        self.s.world("drv", STEPS % """
+          await out('asked', () => sys.worlds('name,title,icon,about,key').filter((w) => w.name === 'app'));
+          await out('default', () => Object.keys(sys.worlds().find((w) => w.name === 'app')).filter((k) => ['icon', 'about', 'key'].includes(k)));
+          await out('spawn', () => sys.spawn('x', 'app("x").title("Settings").key("g").about("Pretends.").screen(() => ui.text("x"));').world);
+          await sleep(100);
+          await out('storage', () => sys.worlds('name,title,user,about,key').filter((w) => w.name === 'u-x'));
+        """, ["sys.read", "sys.spawn"])
+        log = self.s.run()
+        self.assertIn('TEST asked ok [{"name":"app","title":"The App","icon":[["rect",1,2,3,4],["text",5,6,"A","s","accent"]],'
+                      '"about":"Does things.","key":"q"}]', log)
+        self.assertIn("TEST default ok []", log)
+        self.assertIn('TEST spawn ok "u-x"', log)
+        # the kernel keeps what it declared; its title is its name, and the launcher ignores its letter
+        self.assertIn('TEST storage ok [{"name":"u-x","title":"u-x","user":true,"about":"Pretends.","key":"g"}]', log)
+
+    def test_a_bad_declaration_stops_the_start_with_the_reason(self):
+        cases = [("obj", ".icon({ a: 1 })", "an icon is a JSON array of drawing operations, at most 1024 bytes"),
+                 ("big", ".icon([['text', 0, 0, 'x'.repeat(1100)]])", "an icon is a JSON array of drawing operations, at most 1024 bytes"),
+                 ("upper", ".key('Q')", "a shortcut key is one of a-z and 0-9"),
+                 ("long", ".about('x'.repeat(200))", "an app's description is at most 159 bytes of text")]
+        for name, declaration, _ in cases:
+            self.s.world(name, f"app('{name}'){declaration}.screen(() => ui.text('x'));")
+        log = self.s.run("wait 300\n")
+        for name, _, why in cases:
+            self.assertIn(f"{name} crashed: {why}", log)
+
+
 class LogTests(unittest.TestCase):
     def setUp(self):
         self.s = Scenario()
