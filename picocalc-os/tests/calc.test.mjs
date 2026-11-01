@@ -21,6 +21,7 @@ function setup(saved = null) {
     ui: {
       col: (o, ...kids) => ({ t: "col", ...o, kids }), text: (s, o) => ({ t: "text", s, ...o }), list: (items, sel, o) => ({ t: "list", items, sel, ...o }),
       input: (value, o) => ({ t: "input", value, ...o }), canvas: (w, h, ops, o) => ({ t: "canvas", w, h, ops, ...o }),
+      table: (cols, rows, o) => ({ t: "table", cols, rows, ...o }), gap: (h) => ({ t: "gap", h }), lines: (items, o) => ({ t: "lines", items, ...o }),
     },
   });
   vm.runInContext(source, context);
@@ -171,7 +172,7 @@ test("state is saved 3 seconds after a change and on blur, and restored", async 
 test("plot: sampling in slices, gaps for undefined values, breaks at asymptotes", async () => {
   const h = setup();
   h.type("tan(x)"); h.key("f2");
-  assert.equal(h.s.mode, "plot"); assert.deepEqual(plain(h.s.graph), ["tan(x)"]);
+  assert.equal(h.s.mode, "plot"); assert.deepEqual(plain(h.s.graphs), [{ src: "tan(x)", on: true }]);
   const p = h.s.plot;
   assert.equal(p.col, 32);   // the first slice is computed at once
   await h.advance(2000);
@@ -184,7 +185,7 @@ test("plot: sampling in slices, gaps for undefined values, breaks at asymptotes"
   await h.advance(2000);
   const sq = h.s.plot.curves[0].ys;
   assert.equal(sq[0], null); assert.equal(sq[152], null); assert.ok(sq[160] > 0);
-  assert.deepEqual(plain(h.s.graph), ["sqrt(x)", "tan(x)"]);
+  assert.deepEqual(plain(h.s.graphs).map((g) => g.src), ["sqrt(x)", "tan(x)"]);
 });
 
 test("plot: slices shrink when sampling is slow and grow when it is fast", async () => {
@@ -202,7 +203,7 @@ test("plot keys: pan, zoom, reset, fit, trace and remove", async () => {
   const h = setup();
   value(h, "f(x) = x^2");
   h.type("f"); h.key("f2");
-  assert.deepEqual(plain(h.s.graph), ["f(x)"]);
+  assert.deepEqual(plain(h.s.graphs), [{ src: "f(x)", on: true }]);
   await h.advance(2000);
   h.key("right"); assert.deepEqual(plain(h.s.view), { x0: -5, x1: 15, y0: -7.5, y1: 7.5 });
   h.key("+", "+"); assert.deepEqual(plain(h.s.view), { x0: 0, x1: 10, y0: -3.75, y1: 3.75 });
@@ -216,7 +217,7 @@ test("plot keys: pan, zoom, reset, fit, trace and remove", async () => {
   h.key("right"); h.key("pgdn");
   assert.match(h.fn("plotStatus")(h.s), /^1: x = /);
   h.key("esc"); assert.equal(h.s.trace, null); assert.equal(h.s.mode, "plot");
-  h.key("del"); assert.equal(h.s.mode, "calc"); assert.deepEqual(plain(h.s.graph), []);
+  h.key("del"); assert.equal(h.s.mode, "calc"); assert.deepEqual(plain(h.s.graphs), []);
 });
 
 test("plot: clipping and tick steps", () => {
@@ -333,4 +334,95 @@ test("sci: a version 1 record is migrated", () => {
   assert.equal(value(h, "f(3)"), "= 11");
   assert.deepEqual(plain(h.s.funcs.f), { ps: ["x"], src: "x^2 + r" });
   assert.equal(value(h, "sin(90)"), "= 1");
+});
+
+// ---- PICOCALC-SCI: graphing ------------------------------------------------------------------------------------
+const plotted = async (h, src) => { h.s.mode = "calc"; h.s.trace = null; h.s.line = ""; h.s.cur = 0; h.type(src); h.key("f2"); await h.advance(3000); return h.s.plot; };
+
+test("graph: polar and parametric curves are sampled in t and clipped to the canvas", async () => {
+  const h = setup();
+  const p = await plotted(h, "polar(4cos(2t))");
+  assert.equal(p.curves[0].kind, "polar");
+  assert.ok(Math.abs(p.curves[0].xs[0] - 4) < 1e-9 && Math.abs(p.curves[0].ys[0]) < 1e-9);   // t = 0: r = 4 on the x axis
+  const q = await plotted(h, "param(12cos(t), 9sin(t))");             // an ellipse wider than the view
+  const polys = q.ops.filter((o) => o[0] === "poly" && o[2] === "accent");
+  assert.ok(polys.length >= 2, "the ellipse leaves and re-enters the canvas: " + polys.length);
+  for (const [, pts] of polys) pts.forEach((v, i) => assert.ok(v >= 0 && v <= (i % 2 ? 229 : 305)));
+  h.s.angle = "deg"; h.s.tview = null;
+  assert.equal(h.fn("plotTRange")(h.s).t1, 360);
+  const clip = h.fn("plotClipRect");
+  assert.deepEqual(plain(clip(-10, 100, 10, 100)), [0, 100, 10, 100]);
+  assert.equal(clip(-10, -10, -1, -1), null);
+  h.s.mode = "calc"; h.s.trace = null;
+  assert.match(h.run("param(1, 2)").r, /draws a curve/);
+});
+
+test("graph: root, minimum, maximum, intersection, slope and area at the trace cursor", async () => {
+  const h = setup();
+  await plotted(h, "x^2 - 2");
+  h.key("enter");
+  for (let i = 0; i < 10; i++) h.key("right");
+  h.key("r", "r");
+  assert.equal(h.s.note, "root  x = 1.414213562");
+  assert.equal(h.s.trace.c, h.fn("plotCol")(h.s.view, Math.SQRT2));
+  h.key("n", "n");
+  assert.match(h.s.note, /^minimum  x = \S+  y = -2$/);
+  h.key("d", "d");
+  assert.match(h.s.note, /^dy\/dx = -?0(\.0+\d*)?(e-\d+)?  at x = |^dy\/dx = \S+ at x = /);
+  await plotted(h, "x + 2");                                         // now curves 1: x + 2, 2: x^2 - 2
+  h.key("enter"); for (let i = 0; i < 20; i++) h.key("right");
+  h.key("i", "i");
+  assert.equal(h.s.note, "meets 2 at x = 2.561552813  y = 4.561552813");   // x + 2 = x^2 - 2 at (1 + sqrt(17)) / 2
+  h.key("esc"); h.key("esc");
+  await plotted(h, "sin(x)");
+  h.key("enter"); for (let i = 0; i < 20; i++) h.key("right");
+  h.key("x", "x");
+  assert.match(h.s.note, /^maximum  x = 1\.5707963\d*  y = 1$/);
+  h.key("s", "s");
+  assert.equal(h.s.note, "m marks where the area starts");
+  h.s.trace.c = h.fn("plotCol")(h.s.view, 0); h.key("m", "m");
+  h.s.trace.c = h.fn("plotCol")(h.s.view, Math.PI);
+  h.key("s", "s");
+  assert.match(h.s.note, /^area 0\.03\d* \.\. 3\.1\d* = 1\.99\d+$/);   // marks fall on columns: 0.0328 .. 3.1148
+  assert.ok(h.s.plot.ops.some((o) => o[0] === "line" && o[5] === "#f6c9ca"), "the area is shaded");
+  h.key("up", "");                                                     // trace a parametric curve: no analysis
+  await plotted(h, "param(t, t)"); h.key("enter"); h.key("r", "r");
+  assert.match(h.s.note, /functions of x/);
+});
+
+test("graph: the table, the window page and the curve list", async () => {
+  const h = setup();
+  await plotted(h, "x^2");
+  await plotted(h, "2x + 1");
+  h.key("f7");
+  assert.equal(h.s.mode, "table");
+  assert.deepEqual(plain(h.s.tab.rows[0]), ["-5", "-9", "25"]);
+  h.key("down"); h.key("pgdn");
+  assert.equal(h.s.table.start, 8);
+  assert.deepEqual(plain(h.s.tab.rows[0]), ["8", "17", "64"]);
+  h.key("f9");
+  assert.equal(h.s.mode, "window");
+  h.key("enter");
+  assert.equal(h.s.win.edit, "-10");
+  for (let i = 0; i < 3; i++) h.key("backspace");
+  h.type("-2pi"); h.key("enter");
+  assert.equal(h.s.view.x0, -2 * Math.PI);
+  h.key("down"); h.key("down"); h.type("100"); h.key("enter");          // y min above y max
+  assert.equal(h.s.note, "y min must be below y max");
+  h.key("esc"); h.key("down"); h.key("down"); h.key("down"); h.key("down"); h.key("down");
+  h.key("enter"); h.key("backspace"); h.type("0.5"); h.key("enter");    // table step
+  assert.equal(h.s.table.step, 0.5);
+  h.key("esc");
+  assert.equal(h.s.mode, "plot");                                      // back where the table came from
+  h.key("f8");
+  assert.equal(h.s.mode, "curves");
+  h.key("space", " ");
+  assert.equal(h.s.graphs[0].on, false);
+  h.key("f2");
+  assert.equal(h.s.plot.curves.length, 1);
+  h.key("f8"); h.key("down"); h.key("enter");
+  assert.deepEqual([h.s.mode, h.s.line], ["calc", "x^2"]);
+  assert.deepEqual(plain(h.s.graphs), [{ src: "2x + 1", on: false }]);
+  h.key("f2");                                                          // plotting it again puts it first
+  assert.deepEqual(plain(h.s.graphs).map((g) => g.src), ["x^2", "2x + 1"]);
 });

@@ -241,7 +241,7 @@ let calcDepth = 0, calcFuel = CALC_FUEL;
 const calcCache = new Map();   // "params|source" -> { body, cells } of user functions
 // Loops (calculus, sums) and user-function calls burn fuel by the nodes they evaluate; a step that runs out stops.
 function calcBurn(n) { if ((calcFuel -= n) < 0) throw new Error("too much work for one step"); }
-function calcFresh() { calcDepth = 0; calcFuel = CALC_FUEL; }
+function calcFresh(fuel) { calcDepth = 0; calcFuel = fuel || CALC_FUEL; }
 
 function calcCompile(tree, ctx) {
   let size = 0;
@@ -516,52 +516,79 @@ function calcRun(s, line) {
 const calcEntryText = (s, h) => (h.ok && typeof h.v === "number" ? (h.name ? h.name + " = " : "= ") + calcShow(s, h.v) : h.r);
 
 // ---- the plotter ---------------------------------------------------------------------------------------------
+// Curves are { src, on } in s.graphs: a function of x, polar(r) or param(x, y) in t. Every curve that is on is
+// sampled at PLOT_W steps: the columns for a function, values of t for the others.
+const PLOT_TINT = ["#f6c9ca", "#c9d6ef", "#c5e0cf", "#f2ddb5"];   // shaded areas, in the curves' colours
+const CALC_CELL_FUEL = 20000;   // one plot column or table cell
 let plotFns = [];   // compiled curves, parallel to s.plot.curves (functions do not belong in the state)
 
 const plotX = (v, c) => v.x0 + c * (v.x1 - v.x0) / (PLOT_W - 1);
 const plotPy = (v, y) => (v.y1 - y) * (PLOT_H - 1) / (v.y1 - v.y0);
 const plotPx = (v, x) => (x - v.x0) * (PLOT_W - 1) / (v.x1 - v.x0);
+const plotCol = (v, x) => Math.max(0, Math.min(PLOT_W - 1, Math.round(plotPx(v, x))));
+const plotTRange = (s) => s.tview || { t0: 0, t1: CALC_TURN[s.angle] };   // one full turn until the window sets it
+const plotT = (s, c) => { const r = plotTRange(s); return r.t0 + c * (r.t1 - r.t0) / (PLOT_W - 1); };
 
+// { kind: "fx", f(x) } or { kind: "polar" | "param", f(t) -> [x, y] }, with the node count in size
 function plotCompile(s, src) {
-  const st = calcParse(src, (n) => n !== "x" && calcIsFunc(s, n));
+  const st = calcParse(src, (n) => n !== "x" && n !== "t" && calcIsFunc(s, n));
   if (st.kind !== "expr") throw new Error("plot an expression in x, like sin(x)");
-  const cell = { v: 0 }, body = calcCompile(st.tree, { s, scope: new Map([["x", cell]]) });
-  const f = (x) => { cell.v = x; return body(); };
-  f.size = body.size;
-  return f;
+  const tree = st.tree, cell = { v: 0 };
+  if (tree.form === "polar" || tree.form === "param") {
+    const scope = new Map([["t", cell]]), [a, b] = tree.args.map((n) => calcCompile(n, { s, scope })), ctx = { s };
+    const f = tree.form === "polar"
+      ? (t) => { cell.v = t; const r = a(), th = calcRad(ctx, t); return [r * Math.cos(th), r * Math.sin(th)]; }
+      : (t) => { cell.v = t; return [a(), b()]; };
+    return { kind: tree.form, f, size: a.size + (b ? b.size : 0) };
+  }
+  const body = calcCompile(tree, { s, scope: new Map([["x", cell]]) });
+  return { kind: "fx", f: (x) => { cell.v = x; return body(); }, size: body.size };
 }
+const plotKind = (src) => (/^\s*polar\s*\(/.test(src) ? "polar" : /^\s*param\s*\(/.test(src) ? "param" : "fx");
+
 // Start (or restart) sampling for the current view and curves.
 function plotReset(s) {
   plotFns = [];
-  const curves = s.graph.map((src) => {
-    try { plotFns.push(plotCompile(s, src)); return { src, ys: [], err: "" }; }
-    catch (e) { plotFns.push(null); return { src, ys: [], err: e.message }; }
+  const curves = [];
+  s.graphs.forEach((g, slot) => {
+    if (!g.on) return;
+    let fn = null, err = "";
+    try { fn = plotCompile(s, g.src); } catch (e) { err = e.message; }
+    plotFns.push(fn);
+    curves.push({ slot, src: g.src, kind: fn ? fn.kind : plotKind(g.src), xs: [], ys: [], err });
   });
   const size = plotFns.reduce((n, f) => n + (f ? f.size : 0), 0) || 1;
   const max = Math.max(8, Math.min(PLOT_W, Math.floor(3000 / size)));
   s.plot = { curves, col: 0, max, slice: Math.min(max, 32), grid: plotGrid(s.view), ops: [], ms: 0, t0: now(), slices: 0, worst: 0 };
   if (s.trace && s.trace.k >= curves.length) s.trace.k = 0;
+  if (s.trace && !curves.length) s.trace = null;
 }
+// One slice of columns, ended early once 25 ms have gone (on the device now() is the wall clock).
 function plotSample(s) {
   const p = s.plot;
   if (!p || p.col >= PLOT_W) return;
-  const t0 = now(), end = Math.min(PLOT_W, p.col + p.slice), v = s.view;
-  for (let c = p.col; c < end; c++) {
-    const x = plotX(v, c);
+  const t0 = now(), start = p.col, v = s.view;
+  for (let c = start; c < PLOT_W; c++) {
+    const x = plotX(v, c), t = plotT(s, c);
     for (let k = 0; k < p.curves.length; k++) {
-      const f = plotFns[k];
-      if (!f) continue;
-      let y = null;
-      try { calcFresh(); y = f(x); } catch (e) { if (!p.curves[k].err) p.curves[k].err = e.message; }
-      p.curves[k].ys[c] = typeof y === "number" && Number.isFinite(y) ? y : null;
+      const fn = plotFns[k], cv = p.curves[k];
+      if (!fn) continue;
+      let y = null, px = null;
+      try {
+        calcFresh(CALC_CELL_FUEL);
+        if (fn.kind === "fx") y = fn.f(x);
+        else [px, y] = fn.f(t);
+      } catch (e) { if (!cv.err) cv.err = e.message; }
+      cv.ys[c] = typeof y === "number" && Number.isFinite(y) ? y : null;
+      if (fn.kind !== "fx") cv.xs[c] = typeof px === "number" && Number.isFinite(px) ? px : null;
     }
+    p.col = c + 1;
+    if (p.col - start >= p.slice || now() - t0 > 25) break;
   }
-  p.col = end;
-  // on the device now() is wall-clock time and the slice follows the real speed; on the host it does not move
   const ms = now() - t0;
   p.ms = ms; p.slices++; p.worst = Math.max(p.worst, ms);
-  if (end === PLOT_W) log("plot of " + p.curves.length + " curve(s), " + plotFns.reduce((n, f) => n + (f ? f.size : 0), 0) + " nodes: " +
-    Math.round(now() - p.t0) + " ms in " + p.slices +  " slices (slowest " + p.worst.toFixed(1) + " ms), slice now " + p.slice + " columns");
+  if (p.col === PLOT_W) log("plot of " + p.curves.length + " curve(s), " + plotFns.reduce((n, f) => n + (f ? f.size : 0), 0) + " nodes: " +
+    Math.round(now() - p.t0) + " ms in " + p.slices + " slices (slowest " + p.worst.toFixed(1) + " ms), slice now " + p.slice + " columns");
   if (ms > 20) p.slice = Math.max(8, Math.floor(p.slice / 2));
   else if (ms < 6) p.slice = Math.min(p.max, Math.ceil(p.slice * 1.5));
   plotBuild(s);
@@ -577,18 +604,43 @@ function plotClip(xa, ya, xb, yb) {
   if (yb < lo) { x1 = X(lo); y1 = lo; } else if (yb > hi) { x1 = X(hi); y1 = hi; }
   return [Math.round(x0), Math.round(y0), Math.round(x1), Math.round(y1)];
 }
-// Polylines for one curve's samples: broken at missing values and where the curve jumps across the whole view.
+// Any segment clipped to the canvas (Liang-Barsky), for polar and parametric curves; null if it misses it.
+function plotClipRect(x0, y0, x1, y1) {
+  const dx = x1 - x0, dy = y1 - y0;
+  let a = 0, b = 1;
+  for (const [p, q] of [[-dx, x0], [dx, PLOT_W - 1 - x0], [-dy, y0], [dy, PLOT_H - 1 - y0]]) {
+    if (p === 0) { if (q < 0) return null; continue; }
+    const r = q / p;
+    if (p < 0) { if (r > b) return null; if (r > a) a = r; }
+    else { if (r < a) return null; if (r < b) b = r; }
+  }
+  return [Math.round(x0 + a * dx), Math.round(y0 + a * dy), Math.round(x0 + b * dx), Math.round(y0 + b * dy)];
+}
+// Joins segments that meet into polylines.
+function plotJoin(polys, seg, run) {
+  if (!seg) return null;
+  if (run && run[run.length - 2] === seg[0] && run[run.length - 1] === seg[1]) { run.push(seg[2], seg[3]); return run; }
+  const r = seg.slice();
+  polys.push(r);
+  return r;
+}
+// Polylines for one function's samples: broken at missing values and where it jumps across the whole view.
 function plotPolys(v, ys, upto) {
   const polys = [];
   let run = null;
   for (let c = 1; c < upto; c++) {
     const a = ys[c - 1], b = ys[c];
-    let seg = null;
-    if (a != null && b != null && !((a > v.y1 && b < v.y0) || (a < v.y0 && b > v.y1)))
-      seg = plotClip(c - 1, plotPy(v, a), c, plotPy(v, b));
-    if (!seg) { run = null; continue; }
-    if (run && run[run.length - 2] === seg[0] && run[run.length - 1] === seg[1]) run.push(seg[2], seg[3]);
-    else { run = seg.slice(); polys.push(run); }
+    const ok = a != null && b != null && !((a > v.y1 && b < v.y0) || (a < v.y0 && b > v.y1));
+    run = plotJoin(polys, ok ? plotClip(c - 1, plotPy(v, a), c, plotPy(v, b)) : null, run);
+  }
+  return polys;
+}
+function plotParamPolys(v, xs, ys, upto) {
+  const polys = [];
+  let run = null;
+  for (let c = 1; c < upto; c++) {
+    const ok = xs[c - 1] != null && ys[c - 1] != null && xs[c] != null && ys[c] != null;
+    run = plotJoin(polys, ok ? plotClipRect(plotPx(v, xs[c - 1]), plotPy(v, ys[c - 1]), plotPx(v, xs[c]), plotPy(v, ys[c])) : null, run);
   }
   return polys;
 }
@@ -616,21 +668,45 @@ function plotGrid(v) {
   if (ay >= 0 && ay < PLOT_H) ops.push(["line", 0, ay, PLOT_W - 1, ay, "muted"]);
   return ops;
 }
+// An area between a function and the x axis, as one vertical line per column.
+function plotShadeOps(s) {
+  const sh = s.shade, p = s.plot, v = s.view;
+  const k = sh && p ? p.curves.findIndex((cv) => cv.slot === sh.slot && cv.kind === "fx") : -1;
+  if (k < 0) return [];
+  const ys = p.curves[k].ys, ops = [], ay = Math.max(0, Math.min(PLOT_H - 1, Math.round(plotPy(v, 0))));
+  for (let c = plotCol(v, Math.min(sh.xa, sh.xb)); c <= plotCol(v, Math.max(sh.xa, sh.xb)) && c < p.col; c++) {
+    if (ys[c] == null) continue;
+    const py = Math.max(0, Math.min(PLOT_H - 1, Math.round(plotPy(v, ys[c]))));
+    ops.push(["line", c, Math.min(py, ay), c, Math.max(py, ay), PLOT_TINT[sh.slot]]);
+  }
+  return ops;
+}
 function plotBuild(s) {
-  const p = s.plot, v = s.view, ops = p.grid.slice();
-  const legend = p.curves.map((cv, k) => (k + 1) + " " + cv.src + (cv.err ? "  (" + cv.err + ")" : ""));
-  p.curves.forEach((cv, k) => { for (const poly of plotPolys(v, cv.ys, p.col)) ops.push(["poly", poly, PLOT_COLORS[k]]); });
+  const p = s.plot, v = s.view, ops = p.grid.concat(plotShadeOps(s));
+  p.curves.forEach((cv) => {
+    const polys = cv.kind === "fx" ? plotPolys(v, cv.ys, p.col) : plotParamPolys(v, cv.xs, cv.ys, p.col);
+    for (const poly of polys) ops.push(["poly", poly, PLOT_COLORS[cv.slot]]);
+  });
+  if (s.mark) { const c = plotCol(v, s.mark.x); ops.push(["line", c, 0, c, PLOT_H - 1, "faint"]); }
+  const legend = p.curves.map((cv) => (cv.slot + 1) + " " + cv.src + (cv.err ? "  (" + cv.err + ")" : ""));
   if (legend.length) ops.push(["fill", 1, 1, Math.min(PLOT_W - 2, 8 + 6 * Math.max(...legend.map((l) => l.length))), 4 + 13 * legend.length, "#ffffff"]);
-  legend.forEach((l, k) => ops.push(["text", 4, 3 + 13 * k, l, "s", PLOT_COLORS[k], PLOT_W - 8]));
+  legend.forEach((l, k) => ops.push(["text", 4, 3 + 13 * k, l, "s", PLOT_COLORS[p.curves[k].slot], PLOT_W - 8]));
   p.ops = ops;
+}
+// The traced point: (x, y) of curve k at step c, or null
+function plotPoint(s, k, c) {
+  const cv = s.plot && s.plot.curves[k];
+  if (!cv || cv.ys[c] == null) return null;
+  if (cv.kind === "fx") return [plotX(s.view, c), cv.ys[c]];
+  return cv.xs[c] == null ? null : [cv.xs[c], cv.ys[c]];
 }
 function plotTraceOps(s) {
   const t = s.trace, p = s.plot;
   if (!t || !p || !p.curves[t.k]) return [];
-  const y = p.curves[t.k].ys[t.c], ops = [["line", t.c, 0, t.c, PLOT_H - 1, "faint"]];
-  if (y != null) {
-    const py = Math.round(plotPy(s.view, y));
-    if (py >= 0 && py < PLOT_H) ops.push(["rect", t.c - 3, py - 3, 7, 7, "ink"]);
+  const fx = p.curves[t.k].kind === "fx", pt = plotPoint(s, t.k, t.c), ops = fx ? [["line", t.c, 0, t.c, PLOT_H - 1, "faint"]] : [];
+  if (pt) {
+    const px = Math.round(plotPx(s.view, pt[0])), py = Math.round(plotPy(s.view, pt[1]));
+    if (py >= 0 && py < PLOT_H && px >= 0 && px < PLOT_W) ops.push(["rect", px - 3, py - 3, 7, 7, "ink"]);
   }
   return ops;
 }
@@ -638,8 +714,9 @@ function plotStatus(s) {
   const t = s.trace, p = s.plot;
   if (s.note) return s.note;
   if (t && p && p.curves[t.k]) {
-    const y = p.curves[t.k].ys[t.c];
-    return (t.k + 1) + ": x = " + calcFormat(plotX(s.view, t.c), 6) + "   y = " + (y == null ? "none" : calcFormat(y, 8));
+    const cv = p.curves[t.k], pt = plotPoint(s, t.k, t.c), n = cv.slot + 1;
+    if (cv.kind === "fx") return n + ": x = " + calcFormat(plotX(s.view, t.c), 6) + "   y = " + (pt ? calcFormat(pt[1], 8) : "none");
+    return n + ": t = " + calcFormat(plotT(s, t.c), 5) + "  x = " + (pt ? calcFormat(pt[0], 5) : "none") + "  y = " + (pt ? calcFormat(pt[1], 5) : "none");
   }
   const v = s.view;
   return "x " + calcFormat(v.x0, 4) + " .. " + calcFormat(v.x1, 4) + "   y " + calcFormat(v.y0, 4) + " .. " + calcFormat(v.y1, 4) + (s.angle !== "rad" ? "   " + s.angle.toUpperCase() : "");
@@ -653,19 +730,96 @@ function plotFit(s) {
   s.view = { x0: s.view.x0, x1: s.view.x1, y0: lo - pad, y1: hi + pad };
 }
 function plotZoom(s, f) {
-  const v = s.view, cx = s.trace ? plotX(v, s.trace.c) : (v.x0 + v.x1) / 2, cy = (v.y0 + v.y1) / 2;
+  const v = s.view, pt = s.trace ? plotPoint(s, s.trace.k, s.trace.c) : null;
+  const cx = pt ? pt[0] : (v.x0 + v.x1) / 2, cy = (v.y0 + v.y1) / 2;
   s.view = { x0: cx - (cx - v.x0) * f, x1: cx + (v.x1 - cx) * f, y0: cy - (cy - v.y0) * f, y1: cy + (v.y1 - cy) * f };
 }
+
+// ---- analysing a traced function ---------------------------------------------------------------------------------
+// Candidates are found among the samples, nearest to the cursor first, and refined on the function itself.
+function plotTraced(s) {
+  const t = s.trace, cv = t && s.plot && s.plot.curves[t.k], fn = cv && plotFns[t.k];
+  if (!fn || fn.kind !== "fx") throw new Error("this works on functions of x; trace one with up and down");
+  return { cv, f: fn.f };
+}
+const plotNear = (c, list) => list.sort((a, b) => Math.abs(a - c) - Math.abs(b - c));
+// sign changes of d (an array over the columns), nearest first, refined by bisection of g
+function plotZero(s, ds, g, what) {
+  const v = s.view, js = [];
+  for (let j = 0; j + 1 < PLOT_W; j++) {
+    const a = ds[j], b = ds[j + 1];
+    if (a != null && b != null && (a === 0 || (a < 0) !== (b < 0))) js.push(j);
+  }
+  for (const j of plotNear(s.trace.c - 0.5, js).slice(0, 12)) {
+    const xa = plotX(v, j), xb = plotX(v, j + 1);
+    try { calcFresh(); const fa = g(xa); return fa === 0 ? xa : calcBisect(g, xa, xb, fa, g(xb)); } catch (e) { /* a pole: the next one */ }
+  }
+  throw new Error("no " + what + " on the screen");
+}
+function calcGolden(f, a, b, sign) {
+  const r = (Math.sqrt(5) - 1) / 2;
+  let c = b - r * (b - a), d = a + r * (b - a), fc = sign * f(c), fd = sign * f(d);
+  for (let i = 0; i < 100 && b - a > 1e-12 * Math.max(1, Math.abs(a) + Math.abs(b)); i++) {
+    if (fc < fd) { b = d; d = c; fd = fc; c = b - r * (b - a); fc = sign * f(c); }
+    else { a = c; c = d; fc = fd; d = a + r * (b - a); fd = sign * f(d); }
+  }
+  return (a + b) / 2;
+}
+function plotExtremum(s, ys, f, sign) {
+  const v = s.view, js = [];
+  for (let j = 1; j + 1 < PLOT_W; j++) {
+    const a = ys[j - 1], m = ys[j], b = ys[j + 1];
+    if (a != null && m != null && b != null && sign * m <= sign * a && sign * m <= sign * b && (a !== m || m !== b)) js.push(j);
+  }
+  const j = plotNear(s.trace.c, js)[0];
+  if (j === undefined) throw new Error("no " + (sign > 0 ? "minimum" : "maximum") + " on the screen");
+  calcFresh();
+  return calcGolden(f, plotX(v, j - 1), plotX(v, j + 1), sign);
+}
+const plotNum = (v) => calcFormat(Math.abs(v) < 1e-13 ? 0 : v, 10);
+function plotAnalyze(s, key) {
+  const v = s.view, t = s.trace;
+  try {
+    const { cv, f } = plotTraced(s), x0 = plotX(v, t.c);
+    let x = null;
+    if (key === "r") { x = plotZero(s, cv.ys, f, "root"); s.note = "root  x = " + plotNum(x); }
+    else if (key === "n" || key === "x") {
+      x = plotExtremum(s, cv.ys, f, key === "n" ? 1 : -1);
+      calcFresh();
+      s.note = (key === "n" ? "minimum" : "maximum") + "  x = " + calcFormat(x, 8) + "  y = " + plotNum(f(x));
+    } else if (key === "i") {
+      const k2 = s.plot.curves.findIndex((o, k) => k !== t.k && o.kind === "fx" && plotFns[k]);
+      if (k2 < 0) throw new Error("intersect needs a second function on the graph");
+      const g2 = plotFns[k2].f, other = s.plot.curves[k2].ys;
+      x = plotZero(s, cv.ys.map((y, c) => (y == null || other[c] == null ? null : y - other[c])), (z) => f(z) - g2(z), "intersection");
+      calcFresh();
+      s.note = "meets " + (s.plot.curves[k2].slot + 1) + " at x = " + calcFormat(x, 10) + "  y = " + plotNum(f(x));
+    } else if (key === "d") { calcFresh(); s.note = "dy/dx = " + plotNum(calcDeriv(f, [x0])) + " at x = " + calcFormat(x0, 6); }
+    else if (key === "m") { s.mark = { x: x0 }; s.shade = null; s.note = "Marked x = " + calcFormat(x0, 6) + ". Move, then s for the area."; }
+    else if (key === "s") {
+      if (!s.mark) throw new Error("m marks where the area starts");
+      calcFresh();
+      const a = calcInteg(f, [s.mark.x, x0]);
+      s.shade = { slot: cv.slot, xa: s.mark.x, xb: x0 };
+      s.note = "area " + calcFormat(s.mark.x, 5) + " .. " + calcFormat(x0, 5) + " = " + plotNum(a);
+    } else return false;
+    if (x !== null) t.c = plotCol(v, x);
+  } catch (e) { s.note = e.message; }
+  plotBuild(s);
+  return true;
+}
+
 function plotKey(s, k, once) {
   const v = s.view, w = v.x1 - v.x0, h = v.y1 - v.y0, t = s.trace;
   s.note = "";
   if (k.key === "esc") { if (!once) return false; if (t) s.trace = null; else s.mode = "calc"; return false; }
-  if (k.key === "enter") { if (once) s.trace = t ? null : { c: PLOT_W >> 1, k: 0 }; return false; }
+  if (k.key === "enter") { if (once && s.plot && s.plot.curves.length) s.trace = t ? null : { c: PLOT_W >> 1, k: 0 }; return false; }
   if (t) {
     const n = s.plot ? s.plot.curves.length : 0;
     if (k.key === "left" || k.key === "right") { t.c = Math.max(0, Math.min(PLOT_W - 1, t.c + (k.key === "left" ? -1 : 1))); return false; }
     if (k.key === "pgup" || k.key === "pgdn") { t.c = Math.max(0, Math.min(PLOT_W - 1, t.c + (k.key === "pgup" ? -10 : 10))); return false; }
     if ((k.key === "up" || k.key === "down") && n) { t.k = (t.k + (k.key === "up" ? n - 1 : 1)) % n; return false; }
+    if (once && "rnxidms".includes(k.ch || "_")) { plotAnalyze(s, k.ch); return false; }
   } else if (k.key === "left" || k.key === "right") { const d = (k.key === "left" ? -w : w) / 4; s.view = { x0: v.x0 + d, x1: v.x1 + d, y0: v.y0, y1: v.y1 }; return true; }
   else if (k.key === "up" || k.key === "down") { const d = (k.key === "down" ? -h : h) / 4; s.view = { x0: v.x0, x1: v.x1, y0: v.y0 + d, y1: v.y1 + d }; return true; }
   if (!once) return false;
@@ -674,12 +828,13 @@ function plotKey(s, k, once) {
   if (k.ch === "0") { s.view = Object.assign({}, PLOT_VIEW); return true; }
   if (k.ch === "a") { plotFit(s); return true; }
   if (k.key === "del" || k.key === "backspace") {
-    const i = t ? t.k : 0;
-    if (!s.graph.length) return false;
-    s.note = "Removed " + s.graph[i];
-    s.graph.splice(i, 1);
+    const cv = s.plot && s.plot.curves[t ? t.k : 0];
+    if (!cv) return false;
+    s.note = "Removed " + cv.src;
+    s.graphs.splice(cv.slot, 1);
+    if (s.shade && s.shade.slot === cv.slot) s.shade = null;
     if (t) t.k = 0;
-    if (!s.graph.length) { s.trace = null; s.mode = "calc"; }
+    if (!s.graphs.some((g) => g.on)) { s.trace = null; s.mode = "calc"; }
     return true;
   }
   return false;
@@ -695,17 +850,132 @@ async function plotRun(s) {
     }
   } finally { s.plotting = false; }
 }
+function plotShow(s) { s.mode = "plot"; s.note = ""; plotReset(s); plotSample(s); plotRun(s); }
+// F2: the line becomes the first curve (a defined function's name plots f(x)); an empty line shows the graph.
 function plotOpen(s, src) {
   if (src) {
-    if (Object.prototype.hasOwnProperty.call(s.funcs, src)) src = src + "(x)";   // "f" plots f(x)
+    if (calcHas(s.funcs, src)) src = src + "(x)";
     try { plotCompile(s, src); } catch (e) { s.note = e.message; return; }
-    s.graph = [src].concat(s.graph.filter((g) => g !== src)).slice(0, CALC_GRAPHS);
+    s.graphs = [{ src, on: true }].concat(s.graphs.filter((g) => g.src !== src)).slice(0, CALC_GRAPHS);
+    s.shade = null; s.mark = null;
     s.line = ""; s.cur = 0;
   }
-  if (!s.graph.length) { s.note = "Type a function of x, like sin(x), then F2."; return; }
-  s.mode = "plot"; s.note = "";
-  plotReset(s); plotSample(s); plotRun(s);
+  if (!s.graphs.some((g) => g.on)) { s.note = s.graphs.length ? "All curves are off: F8 turns them on." : "Type a function of x, like sin(x), then F2."; return; }
+  plotShow(s);
   calcChanged(s);
+}
+
+// ---- the table, the window and the curve list ------------------------------------------------------------------
+const TABLE_ROWS = 12;
+function tableBuild(s) {
+  const cols = [];
+  s.graphs.forEach((g, slot) => {
+    if (!g.on) return;
+    try { const c = plotCompile(s, g.src); if (c.kind === "fx") cols.push({ slot, f: c.f }); }
+    catch (e) { cols.push({ slot, err: e.message }); }
+  });
+  const { start, step } = s.table, rows = [];
+  for (let i = 0; i < TABLE_ROWS; i++) {
+    const x = Number((start + i * step).toPrecision(12));
+    rows.push([calcFormat(x, 7)].concat(cols.map((c) => {
+      if (!c.f) return "error";
+      try { calcFresh(CALC_CELL_FUEL); const y = c.f(x); return Number.isFinite(y) ? calcFormat(y, 7) : "none"; }
+      catch (e) { return "error"; }
+    })));
+  }
+  s.tab = { slots: cols.map((c) => c.slot), rows, err: cols.filter((c) => c.err).map((c) => (c.slot + 1) + ": " + c.err)[0] || "" };
+}
+function tableKey(s, k, once) {
+  const { step } = s.table;
+  if (k.key === "up") s.table.start -= step;
+  else if (k.key === "down") s.table.start += step;
+  else if (k.key === "pgup") s.table.start -= step * TABLE_ROWS;
+  else if (k.key === "pgdn") s.table.start += step * TABLE_ROWS;
+  else return false;
+  s.table.start = Number(s.table.start.toPrecision(12));
+  tableBuild(s);
+  calcChanged(s);
+  return true;
+}
+
+const WIN_FIELDS = [["x min", "x0"], ["x max", "x1"], ["y min", "y0"], ["y max", "y1"], ["t min", "t0"], ["t max", "t1"], ["table start", "start"], ["table step", "step"]];
+function winValue(s, key) {
+  if (key in s.view) return s.view[key];
+  if (key === "t0" || key === "t1") return plotTRange(s)[key];
+  return s.table[key];
+}
+// Sets one field from an expression, if the ranges stay valid.
+function winApply(s, key, text) {
+  const st = calcParse(text, (n) => calcIsFunc(s, n));
+  if (st.kind !== "expr") throw new Error("type a number or an expression, like -2pi");
+  calcFresh();
+  const v = calcValue(calcCompile(st.tree, { s })());
+  if (key in s.view) {
+    const nv = Object.assign({}, s.view, { [key]: v });
+    if (!(nv.x0 < nv.x1)) throw new Error("x min must be below x max");
+    if (!(nv.y0 < nv.y1)) throw new Error("y min must be below y max");
+    s.view = nv;
+  } else if (key === "t0" || key === "t1") {
+    const nt = Object.assign({}, plotTRange(s), { [key]: v });
+    if (!(nt.t0 < nt.t1)) throw new Error("t min must be below t max");
+    s.tview = nt;
+  } else if (key === "step") {
+    if (!(v > 0)) throw new Error("the table's step must be above 0");
+    s.table.step = v;
+  } else s.table.start = v;
+}
+function winKey(s, k, once) {
+  const w = s.win, [label, key] = WIN_FIELDS[w.sel];
+  if (w.edit !== null) {
+    const cs = Array.from(w.edit);
+    if (k.key === "esc" && once) { w.edit = null; s.note = ""; }
+    else if (k.key === "enter" && once) {
+      try { winApply(s, key, w.edit); w.edit = null; s.note = label + " set."; calcChanged(s); } catch (e) { s.note = e.message; }
+    } else if (k.key === "backspace") w.edit = cs.slice(0, -1).join("");
+    else if (k.ch && cs.length < 64) w.edit += k.ch;
+    else if (k.key === "space") w.edit += " ";
+    return;
+  }
+  s.note = "";
+  if (k.key === "up") w.sel = Math.max(0, w.sel - 1);
+  else if (k.key === "down") w.sel = Math.min(WIN_FIELDS.length - 1, w.sel + 1);
+  else if (k.key === "enter" && once) w.edit = calcFormat(winValue(s, key));
+  else if ((k.key === "del" || k.key === "backspace") && once && (key === "t0" || key === "t1")) { s.tview = null; s.note = "t follows the angle mode: one full turn."; calcChanged(s); }
+  else if ((k.key === "del" || k.key === "backspace") && once && key in s.view) { s.view = Object.assign({}, PLOT_VIEW); s.note = "The standard window."; calcChanged(s); }
+  else if (k.key === "esc" && once) calcBack(s);
+  else if (k.ch && once && /[-0-9.(a-z]/.test(k.ch)) w.edit = k.ch;   // typing starts a new value
+}
+
+function curvesKey(s, k, once) {
+  const g = s.graphs[s.csel];
+  if (k.key === "up") s.csel = Math.max(0, s.csel - 1);
+  else if (k.key === "down") s.csel = Math.min(Math.max(0, s.graphs.length - 1), s.csel + 1);
+  else if (!once) return;
+  else if ((k.key === "space" || k.ch === " ") && g) { g.on = !g.on; calcChanged(s); }
+  else if ((k.key === "del" || k.key === "backspace") && g) {
+    s.graphs.splice(s.csel, 1); s.shade = null;
+    s.csel = Math.min(s.csel, Math.max(0, s.graphs.length - 1)); calcChanged(s);
+  } else if (k.key === "enter" && g) {
+    s.graphs.splice(s.csel, 1); s.shade = null;
+    s.line = g.src; s.cur = Array.from(g.src).length; s.mode = "calc"; s.note = "Edit it, then F2 to plot it again.";
+    calcChanged(s);
+  } else if (k.key === "f2") plotOpen(s, "");
+  else if (k.key === "esc") calcBack(s);
+}
+
+// Pages remember where they were opened from; Esc returns there.
+function calcPage(s, mode) {
+  if (s.mode === "calc" || s.mode === "plot") s.back = s.mode;
+  s.note = "";
+  s.mode = mode;
+  if (mode === "table") tableBuild(s);
+  if (mode === "window") s.win = { sel: 0, edit: null };
+  if (mode === "curves") s.csel = 0;
+}
+function calcBack(s) {
+  s.note = "";
+  if (s.back === "plot" && s.graphs.some((g) => g.on)) plotShow(s);
+  else s.mode = "calc";
 }
 
 // ---- the app -------------------------------------------------------------------------------------------------
@@ -719,7 +989,8 @@ function calcChanged(s) {
 }
 function calcSave(s) {
   if (!s.dirty) return;
-  const rec = { v: 2, hist: s.hist, vars: s.vars, funcs: s.funcs, graph: s.graph, view: s.view, angle: s.angle, fmt: s.fmt, ans: s.ans };
+  const rec = { v: 2, hist: s.hist, vars: s.vars, funcs: s.funcs, graphs: s.graphs, view: s.view, tview: s.tview, table: s.table,
+    angle: s.angle, fmt: s.fmt, ans: s.ans };
   try { store.set("calc", rec); s.dirty = false; }
   catch (e) {
     if (s.hist.length > 10) { s.hist.splice(0, s.hist.length >> 1); return calcSave(s); }
@@ -729,7 +1000,7 @@ function calcSave(s) {
 function calcLoad(s) {
   let r = null;
   try { r = store.get("calc", null); } catch (_) {}
-  if (!r || (r.v !== 1 && r.v !== 2)) return;   // version 1: deg instead of angle, one parameter p per function
+  if (!r || (r.v !== 1 && r.v !== 2)) return;   // version 1: deg instead of angle, graph as strings, one parameter p
   const num = (v) => typeof v === "number" && Number.isFinite(v);
   if (Array.isArray(r.hist))
     s.hist = r.hist.filter((h) => h && typeof h.e === "string" && typeof h.r === "string").slice(-CALC_HIST)
@@ -743,8 +1014,11 @@ function calcLoad(s) {
   for (const k of Object.keys(s.funcs)) {   // a stored function that no longer compiles is dropped
     try { calcUserFn(s, k); } catch (e) { delete s.funcs[k]; s.note = "Dropped " + k + ": " + e.message; }
   }
-  if (Array.isArray(r.graph)) s.graph = r.graph.filter((g) => typeof g === "string").slice(0, CALC_GRAPHS);
+  const graphs = Array.isArray(r.graphs) ? r.graphs : Array.isArray(r.graph) ? r.graph.map((src) => ({ src, on: true })) : [];
+  s.graphs = graphs.filter((g) => g && typeof g.src === "string").slice(0, CALC_GRAPHS).map((g) => ({ src: g.src, on: g.on !== false }));
   if (r.view && [r.view.x0, r.view.x1, r.view.y0, r.view.y1].every(num) && r.view.x1 > r.view.x0 && r.view.y1 > r.view.y0) s.view = r.view;
+  if (r.tview && num(r.tview.t0) && num(r.tview.t1) && r.tview.t1 > r.tview.t0) s.tview = { t0: r.tview.t0, t1: r.tview.t1 };
+  if (r.table && num(r.table.start) && num(r.table.step) && r.table.step > 0) s.table = { start: r.table.start, step: r.table.step };
   s.angle = calcHas(CALC_TURN, r.angle) ? r.angle : r.deg === true ? "deg" : "rad";
   const fm = r.fmt;
   if (fm && ["norm", "fix", "sci", "eng", "frac"].includes(fm.mode) && calcInt(fm.digits) && fm.digits >= 1 && fm.digits <= 15 && [10, 16, 2, 8].includes(fm.base))
@@ -770,32 +1044,52 @@ function calcInsert(s, text) {
   s.line = cs.join(""); s.cur += Array.from(text).length;
 }
 function calcNames(s) {
-  return Object.keys(s.vars).sort().map((n) => ({ kind: "var", name: n, label: n, right: calcFormat(s.vars[n]) }))
+  return Object.keys(s.vars).sort().map((n) => ({ kind: "var", name: n, label: n, right: calcShow(s, s.vars[n]) }))
     .concat(Object.keys(s.funcs).sort().map((n) => ({ kind: "func", name: n, label: n + "(" + s.funcs[n].ps.join(", ") + ")", right: s.funcs[n].src })));
+}
+
+function namesKey(s, k, once) {
+  const names = calcNames(s);
+  if (k.key === "up") s.nsel = Math.max(0, s.nsel - 1);
+  else if (k.key === "down") s.nsel = Math.min(Math.max(0, names.length - 1), s.nsel + 1);
+  else if ((k.key === "del" || k.key === "backspace") && once && names[s.nsel]) {
+    const n = names[s.nsel];
+    if (n.kind === "var") delete s.vars[n.name]; else delete s.funcs[n.name];
+    s.nsel = Math.min(s.nsel, Math.max(0, names.length - 2));
+    calcChanged(s);
+  } else if (k.key === "enter" && once && names[s.nsel]) { s.mode = "calc"; calcInsert(s, names[s.nsel].name + (names[s.nsel].kind === "func" ? "(" : "")); }
+  else if ((k.key === "esc" || k.key === "f3") && once) s.mode = "calc";
+}
+
+// F7 table, F8 curves, F9 window: from the calculator and from the graph
+function calcPageKey(s, k) {
+  const page = { f7: "table", f8: "curves", f9: "window" }[k.key];
+  if (!page) return false;
+  calcPage(s, page);
+  return true;
 }
 
 function calcKey(s, k) {
   if (!k || k.state === "up") return;
   const once = k.state !== "hold";
   if (s.mode === "plot") {
+    if (once && calcPageKey(s, k)) return;
     const changed = plotKey(s, k, once);
     if (changed && s.mode === "plot") { plotReset(s); plotSample(s); plotRun(s); }
     if (changed) calcChanged(s);
     return;
   }
-  if (s.mode === "names") {
-    const names = calcNames(s);
-    if (k.key === "up") s.nsel = Math.max(0, s.nsel - 1);
-    else if (k.key === "down") s.nsel = Math.min(Math.max(0, names.length - 1), s.nsel + 1);
-    else if ((k.key === "del" || k.key === "backspace") && once && names[s.nsel]) {
-      const n = names[s.nsel];
-      if (n.kind === "var") delete s.vars[n.name]; else delete s.funcs[n.name];
-      s.nsel = Math.min(s.nsel, Math.max(0, names.length - 2));
-      calcChanged(s);
-    } else if ((k.key === "esc" || k.key === "f3") && once) s.mode = "calc";
-    return;
+  if (s.mode === "names") return namesKey(s, k, once);
+  if (s.mode === "table") {
+    if (k.key === "esc" && once) return calcBack(s);
+    if (k.key === "f9" && once) return calcPage(s, "window");
+    if (k.key === "f2" && once) return plotOpen(s, "");
+    return tableKey(s, k, once);
   }
+  if (s.mode === "window") return winKey(s, k, once);
+  if (s.mode === "curves") return curvesKey(s, k, once);
   if (k.key !== "f5") s.clearArmed = false;
+  if (once && calcPageKey(s, k)) return;
   const chars = Array.from(s.line);
   switch (k.key) {
     case "enter":
@@ -834,39 +1128,78 @@ function calcKey(s, k) {
 
 function calcStatus(s) {
   if (s.note) return s.note;
-  return s.angle.toUpperCase() + " · ans = " + calcShow(s, s.ans);
+  const f = s.fmt, mode = f.mode === "norm" ? "" : " " + f.mode.toUpperCase() + (f.mode === "frac" ? "" : " " + f.digits);
+  return s.angle.toUpperCase() + mode + (f.base !== 10 ? " " + { 16: "HEX", 2: "BIN", 8: "OCT" }[f.base] : "") + " · ans = " + calcShow(s, s.ans);
+}
+
+// ---- screens -------------------------------------------------------------------------------------------------
+const calcNoteText = (s, fallback) => ui.text(s.note || fallback, { font: "s", color: s.note ? "accent" : "muted" });
+function tableScreen(s) {
+  const t = s.tab, cw = t.slots.length ? Math.floor(236 / t.slots.length) : 236;
+  const cols = [{ label: "x", w: 68, align: "right" }].concat(t.slots.map((slot) => ({ label: "y" + (slot + 1), w: cw, align: "right" })));
+  const rows = t.rows.map((r) => r.map((c, i) => (i ? { s: c, color: c === "error" || c === "none" ? "muted" : PLOT_COLORS[t.slots[i - 1]] } : c)));
+  return ui.col({ gap: 4 },
+    t.slots.length ? ui.table(cols, rows, { font: "s", lead: 6, grow: 1 })
+      : ui.col({ grow: 1 }, ui.text("No function of x is on. F2 plots one; F8 lists the curves.", { font: "s", color: "muted", wrap: true })),
+    calcNoteText(s, t.err || "from " + calcFormat(s.table.start, 6) + " in steps of " + calcFormat(s.table.step, 6)));
+}
+function winScreen(s) {
+  const w = s.win, items = WIN_FIELDS.map(([label, key]) => ({ label, right: (key[0] === "t" && key.length === 2 && !s.tview ? "auto " : "") + calcFormat(winValue(s, key), 8), rightColor: "ink" }));
+  return ui.col({ gap: 6 },
+    ui.list(items, w.sel, { font: "s", lead: 6, grow: 1 }),
+    w.edit !== null ? ui.input(w.edit, { prompt: WIN_FIELDS[w.sel][0] + " = ", font: "m" }) : ui.gap(0),
+    calcNoteText(s, "t is for polar() and param(); Del resets"));
+}
+function curvesScreen(s) {
+  const kinds = { fx: "y(x)", polar: "polar", param: "param" };
+  const items = s.graphs.map((g, i) => ({ icon: g.on ? "✓" : "·", iconColor: PLOT_COLORS[i], label: (i + 1) + "  " + g.src, color: g.on ? PLOT_COLORS[i] : "muted",
+    right: kinds[plotKind(g.src)], rightColor: "muted" }));
+  return ui.col({ gap: 6 },
+    items.length ? ui.list(items, s.csel, { font: "s", lead: 7, grow: 1 })
+      : ui.col({ grow: 1 }, ui.text("No curves. Type sin(x), polar(1 + cos(t)) or param(cos(3t), sin(2t)), then F2.", { font: "s", color: "muted", wrap: true })),
+    calcNoteText(s, s.graphs.length + " of " + CALC_GRAPHS + " curves"));
+}
+function calcScreen(s) {
+  if (s.mode === "plot" && s.plot)
+    return ui.col({ gap: 4 },
+      ui.canvas(PLOT_W, PLOT_H, s.plot.ops.concat(plotTraceOps(s)), { bg: "#ffffff", border: "line" }),
+      ui.text(plotStatus(s), { font: "s", color: s.note ? "accent" : "ink" }));
+  if (s.mode === "table" && s.tab) return tableScreen(s);
+  if (s.mode === "window" && s.win) return winScreen(s);
+  if (s.mode === "curves") return curvesScreen(s);
+  if (s.mode === "names") {
+    const names = calcNames(s);
+    return ui.col({ gap: 6 },
+      ui.text("Variables and functions", { font: "m" }),
+      names.length ? ui.list(names.map((n) => ({ label: n.label, right: n.right, rightColor: "ink" })), s.nsel, { font: "s", lead: 6, grow: 1 })
+        : ui.text("None yet. Define one with r = 2.5 or f(x) = x^2 - 2.", { font: "s", color: "muted", wrap: true, grow: 1 }));
+  }
+  const items = (s.sel < 0 ? s.hist.slice(-12) : s.hist).map((h) => ({ label: h.e, right: calcEntryText(s, h), rightColor: h.ok ? "ink" : "accent" }));
+  return ui.col({ gap: 4 },
+    items.length ? ui.list(items, s.sel, { font: "s", lead: 6, grow: 1 })
+      : ui.text("Type an expression and press Enter: 2pi r, sqrt(2), f(x) = x^2 - 2, then f(3). F2 plots a function of x.",
+          { font: "s", color: "muted", wrap: true, grow: 1 }),
+    ui.input(s.line, { cursor: s.cur, prompt: "▸ ", font: "m" }),
+    ui.text(calcStatus(s), { font: "s", color: s.note ? "accent" : "muted" }));
+}
+function calcHints(s) {
+  if (s.mode === "plot") return s.trace ? "←→ ↑↓  r root n min x max i meet d m s" : "arrows +- 0 a ⏎ trace F7 table F8 F9";
+  if (s.mode === "names") return "⏎ insert  Del remove  Esc back";
+  if (s.mode === "table") return "↑↓ PgUp PgDn scroll  F9 window  Esc back";
+  if (s.mode === "window") return s.win && s.win.edit !== null ? "⏎ set  Esc cancel" : "↑↓ choose  ⏎ edit  Del reset  Esc back";
+  if (s.mode === "curves") return "space on/off ⏎ edit Del remove F2 graph";
+  return s.sel >= 0 ? "⏎ edit  Tab result  Esc back" : "F2 graph F3 vars F4 angle F7 tbl F8 F9";
 }
 
 app("calc")
   .title("Calc")
   .state({ line: "", cur: 0, sel: -1, hist: [], vars: {}, funcs: {}, ans: 0, angle: "rad", fmt: { mode: "norm", digits: 10, base: 10 },
-           note: "", mode: "calc", nsel: 0,
-           clearArmed: false, graph: [], view: Object.assign({}, PLOT_VIEW), plot: null, trace: null, dirty: false,
-           saving: false, plotting: false, focused: false })
+           note: "", mode: "calc", back: "calc", nsel: 0, csel: 0, clearArmed: false, graphs: [], view: Object.assign({}, PLOT_VIEW),
+           tview: null, table: { start: -5, step: 1 }, tab: null, win: null, mark: null, shade: null, plot: null, trace: null,
+           dirty: false, saving: false, plotting: false, focused: false })
   .onStart((s) => { calcLoad(s); })
   .on("key", (s, k, msg) => { if (msg.from === "compositor") calcKey(s, k); })
   .on("focus", (s) => { s.focused = true; if (s.mode === "plot") plotRun(s); })
   .on("blur", (s) => { s.focused = false; calcSave(s); })
-  .screen((s) => {
-    if (s.mode === "plot" && s.plot)
-      return ui.col({ gap: 4 },
-        ui.canvas(PLOT_W, PLOT_H, s.plot.ops.concat(plotTraceOps(s)), { bg: "#ffffff", border: "line" }),
-        ui.text(plotStatus(s), { font: "s", color: s.note ? "accent" : "ink" }));
-    if (s.mode === "names") {
-      const names = calcNames(s);
-      return ui.col({ gap: 6 },
-        ui.text("Variables and functions", { font: "m" }),
-        names.length ? ui.list(names.map((n) => ({ label: n.label, right: n.right, rightColor: "ink" })), s.nsel, { font: "s", lead: 6, grow: 1 })
-          : ui.text("None yet. Define one with r = 2.5 or f(x) = x^2 - 2.", { font: "s", color: "muted", wrap: true, grow: 1 }));
-    }
-    const items = (s.sel < 0 ? s.hist.slice(-12) : s.hist).map((h) => ({ label: h.e, right: calcEntryText(s, h), rightColor: h.ok ? "ink" : "accent" }));
-    return ui.col({ gap: 4 },
-      items.length ? ui.list(items, s.sel, { font: "s", lead: 6, grow: 1 })
-        : ui.text("Type an expression and press Enter: 2pi r, sqrt(2), f(x) = x^2 - 2, then f(3). F2 plots a function of x.",
-            { font: "s", color: "muted", wrap: true, grow: 1 }),
-      ui.input(s.line, { cursor: s.cur, prompt: "▸ ", font: "m" }),
-      ui.text(calcStatus(s), { font: "s", color: s.note ? "accent" : "muted" }));
-  })
-  .hints((s) => s.mode === "plot" ? (s.trace ? "←→ move ↑↓ curve ⏎ stop Esc back" : "arrows pan +- zoom 0 reset a fit ⏎ trace")
-    : s.mode === "names" ? "Del remove  Esc back" : s.sel >= 0 ? "⏎ edit  Tab result  Esc back"
-    : "F2 graph F3 names F4 deg/rad F5 clear");
+  .screen(calcScreen)
+  .hints(calcHints);
