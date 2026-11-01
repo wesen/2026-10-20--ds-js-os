@@ -90,6 +90,7 @@ shots: $(BIN)
 test-apps:
 	$(NODE) tests/editor.test.mjs
 	$(NODE) tests/calc.test.mjs
+	$(NODE) tests/agenda.test.mjs
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
 test-clock: $(BIN)

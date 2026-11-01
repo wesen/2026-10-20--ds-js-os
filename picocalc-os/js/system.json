@@ -11,6 +11,7 @@
     { "name": "files",      "file": "apps/files.js",        "claims": ["fs:/"],                                    "mem_kb": 384 },
     { "name": "editor",     "file": "apps/editor.js",                                                              "mem_kb": 512 },
     { "name": "calc",       "file": "apps/calc.js",                                              "budget_ms": 80,  "mem_kb": 512 },
+    { "name": "agenda",     "file": "apps/agenda.js",       "claims": ["fs:/notes"],                               "mem_kb": 384 },
     { "name": "repl",       "file": "apps/repl.js",                                                                "mem_kb": 384 },
     { "name": "sandbox",    "file": "system/sandbox.js",                                         "budget_ms": 200, "mem_kb": 512, "priority": 0 },
     { "name": "snake",      "file": "apps/snake.js",                                                               "mem_kb": 320 },

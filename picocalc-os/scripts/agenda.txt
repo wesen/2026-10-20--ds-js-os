@@ -1,0 +1,38 @@
+# The agenda: the seed's tasks, three new ones with short dates, ticking one off, and a reminder over another app.
+# The host's clock starts at Thursday 22 October 2026, 09:41 UTC. The reminder (09:44 less 2 minutes) fires on the
+# agenda's 15-second tick at about 61 s and shows for 8 s, so it is captured at about 65 s.
+wait 1200
+key t
+wait 600
+capture 70-agenda.png
+key f2
+type dentist @today 9:44 !2m
+wait 100
+capture 71-agenda-new.png
+key enter
+wait 400
+key f2
+type call Anna @tom
+key enter
+wait 400
+key f2
+type standup @mon 9:30
+key enter
+wait 400
+key f2
+type renew passport @10-20
+key enter
+wait 400
+capture 72-agenda-tasks.png
+key down
+key down
+key enter
+wait 400
+key f4
+wait 200
+capture 73-agenda-done.png
+key f1
+wait 200
+key x
+wait 53000
+capture 74-reminder.png
