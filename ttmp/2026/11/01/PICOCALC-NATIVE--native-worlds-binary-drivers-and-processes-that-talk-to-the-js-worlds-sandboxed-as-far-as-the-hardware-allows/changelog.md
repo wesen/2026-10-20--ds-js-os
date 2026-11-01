@@ -43,3 +43,7 @@ N5: machine-code native worlds on the P4 through elf_loader 2.0.0, opt-in (PICOC
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c — the ELF backend: resolver, allocator, events, trust boundary
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/sdk/nw_elf.c — module runtime for ELF modules
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/sdk/nw_elf.h — ABI between kernel and ELF module
+
+## 2026-11-01
+
+Ticket closed

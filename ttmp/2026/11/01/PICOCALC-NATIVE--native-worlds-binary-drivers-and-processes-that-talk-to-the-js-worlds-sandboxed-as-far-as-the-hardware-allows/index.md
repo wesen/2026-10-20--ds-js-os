@@ -1,7 +1,7 @@
 ---
 Title: 'Native worlds: binary drivers and processes that talk to the JS worlds, sandboxed as far as the hardware allows'
 Ticket: PICOCALC-NATIVE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - security
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-01T07:46:26.648584685-05:00
+LastUpdated: 2026-11-01T13:47:22.075311147-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
