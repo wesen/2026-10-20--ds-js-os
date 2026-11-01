@@ -29,7 +29,7 @@ bool p4_config_available(void) { return config_ready; }
 #define SETTINGS_NS "settings"
 static bool tz_ok(const char *s) {
   size_t n = strlen(s);
-  if (!n || n > 63 || !isalpha((unsigned char)s[0]) && s[0] != '<') return false;
+  if (!n || n > 63 || (!isalpha((unsigned char)s[0]) && s[0] != '<')) return false;
   for (const unsigned char *p = (const unsigned char *)s; *p; p++) if (*p <= 32 || *p >= 127) return false;
   return true;
 }
