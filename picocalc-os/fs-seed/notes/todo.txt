@@ -1,0 +1,2 @@
+- charge the PicoCalc
+- write the editor

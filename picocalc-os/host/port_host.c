@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/statvfs.h>
 #include <time.h>
 #include <unistd.h>
 #include "../nucleus/nucleus.h"
@@ -95,5 +96,27 @@ int port_store_set(const char *ns, const char *key, const void *data, size_t len
     snprintf(r->ns, sizeof r->ns, "%s", ns); snprintf(r->key, sizeof r->key, "%s", key); *at = r;
   }
   free(r->data); r->data = copy; r->len = len;
+  return 0;
+}
+
+// ---- files: a directory stands in for the device's FAT partition --------------------------------------------------
+static char fs_root[512];
+void host_fs_root(const char *dir) {
+  snprintf(fs_root, sizeof fs_root, "%s", dir);
+  mkdir(fs_root, 0755);
+}
+const char *port_fs_root(void) { return fs_root[0] ? fs_root : NULL; }
+// The job runs now; its promise settles after a modelled cost (2 ms, plus 1 us a byte), so scripts stay repeatable.
+void port_fs_submit(fs_job_t *j, vtime_t at) {
+  fs_execute(j);
+  size_t bytes = j->len + (j->json ? strlen(j->json) : 0);
+  kernel_settle_at(j->w, j->epoch, j->promise, j->ok, j->json, at + MS(2) + (vtime_t)bytes);
+  j->json = NULL;
+  fs_job_free(j);
+}
+int port_fs_info(uint64_t *total, uint64_t *free_bytes) {
+  struct statvfs v;
+  if (!fs_root[0] || statvfs(fs_root, &v)) return -1;
+  *total = (uint64_t)v.f_blocks * v.f_frsize; *free_bytes = (uint64_t)v.f_bavail * v.f_frsize;
   return 0;
 }

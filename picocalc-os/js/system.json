@@ -12,7 +12,7 @@
     { "name": "sandbox",    "file": "system/sandbox.js",                                         "budget_ms": 200, "mem_kb": 512, "priority": 0 },
     { "name": "snake",      "file": "apps/snake.js",                                                               "mem_kb": 320 },
     { "name": "faults",     "file": "apps/faults.js",       "claims": ["sys.admin", "sys.read"],                   "mem_kb": 384 },
-    { "name": "flaky",      "file": "system/flaky.js",                                                             "mem_kb": 256 },
+    { "name": "flaky",      "file": "system/flaky.js",                                                             "mem_kb": 320 },
     { "name": "keys",       "file": "apps/keys.js",                                                                "mem_kb": 320 },
     { "name": "about",      "file": "apps/about.js",        "claims": ["sys.read"],                                "mem_kb": 320 }
   ]

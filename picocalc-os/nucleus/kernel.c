@@ -146,7 +146,7 @@ static void discard_deferred(void) {
   while (K.defer_head) {
     deferred_t *d = K.defer_head;
     K.defer_head = d->next;
-    free_msg(d->msg); free(d->bytes); free(d->json); free(d);
+    free_msg(d->msg); free(d->bytes); free(d->json); fs_job_free(d->job); free(d);
   }
   K.defer_tail = NULL;
 }

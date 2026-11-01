@@ -42,10 +42,11 @@ static bool revoked(handle_t *h) {
   return false;
 }
 
-static const char *type_name(int t) {
-  static const char *names[] = { "i2c", "spi", "dma", "epd", "adc", "gpio" };
-  return t >= 0 && t <= H_GPIO ? names[t] : "?";
+const char *handle_type_name(int t) {
+  static const char *names[] = { "i2c", "spi", "dma", "epd", "adc", "gpio", "fs" };
+  return t >= 0 && t <= H_FS ? names[t] : "?";
 }
+#define type_name handle_type_name
 
 handle_t *handle_use(world_t *W, int id, int type, int right, char *err, size_t n) {
   handle_t *h = handle_find(id);
@@ -65,6 +66,7 @@ handle_t *handle_child(world_t *W, handle_t *p, int rights) {
   if (!h) return NULL;
   h->rights = p->rights & rights; h->parent = p->id;
   h->bus = p->bus; h->addr = p->addr; h->hz = p->hz; h->buf = p->buf;
+  memcpy(h->path, p->path, sizeof h->path); h->file = p->file;
   if (h->buf >= 0) K.bufs[h->buf].refs++;
   return h;
 }
@@ -229,6 +231,7 @@ char *hw_handles_json(void) {
     sb_add(&b, "]");
     dmabuf_t *db = handle_buf(h);
     if (db) sb_printf(&b, ",\"w\":%d,\"h\":%d,\"kb\":%zu", db->w, db->h, db->bytes * 2 / 1024);
+    if (h->type == H_FS) { sb_add(&b, ",\"path\":"); sb_json_str(&b, h->path); sb_add(&b, h->file ? ",\"file\":true" : ",\"file\":false"); }
     if (h->type == H_I2C) sb_printf(&b, ",\"addr\":%d,\"hz\":%d", h->addr, h->hz);
     if (h->type == H_SPI) sb_printf(&b, ",\"hz\":%d", h->hz);
     sb_add(&b, "}");

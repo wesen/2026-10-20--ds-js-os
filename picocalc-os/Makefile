@@ -36,7 +36,7 @@ ifeq ($(BOARD),papers3)
   ENG_SRC := mquickjs.c dtoa.c libm.c cutils.c
   GEN     := $(BUILD)/gen
   CFLAGS  += -I$(GEN) -I$(ENG) -DBOARD_PAPERS3 -DNUCLEUS_GRAY8 -DNUCLEUS_FONT_HEADER='"font_paper.h"' -DMQJS_VERSION=\"$(shell cat $(ENG)/VERSION)\"
-  OS_SRC  := nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c \
+  OS_SRC  := nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c \
              sim/papers3/board.c sim/papers3/bus.c sim/papers3/epd.c sim/papers3/gt911.c sim/papers3/bm8563.c \
              host/port_host.c host/agent_host.c host/main_host.c
   HDRS    := nucleus/nucleus.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
@@ -49,7 +49,7 @@ else
   ENG     := third_party/quickjs
   ENG_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
   CFLAGS  += -I$(ENG) -DCONFIG_VERSION=\"2026-06-04\"
-  OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c \
+  OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c \
              sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/main_host.c
   HDRS    := nucleus/nucleus.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
@@ -83,7 +83,12 @@ $(GEN)/mqjs_stdlib.h: $(ENG)/nucleus_stdlib.c $(ENG)/mqjs_stdlib.c $(ENG)/mquick
 
 shots: $(BIN)
 	@mkdir -p $(OUT)
-	@for s in $(SCRIPTS)/*.txt; do echo "== $$s"; ./$(BIN) -j $(JSROOT) -o $(OUT) $$s || exit 1; done
+	@for s in $(SCRIPTS)/*.txt; do echo "== $$s"; rm -rf $(BUILD)/fs && cp -r fs-seed $(BUILD)/fs && \
+	  ./$(BIN) -j $(JSROOT) -o $(OUT) -f $(BUILD)/fs $$s || exit 1; done
+
+# Files through the host binary: claims, paths, rights, narrowing, passing and revoking handles (no device needed).
+test-fs: $(BIN)
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_fs_native.py
 
 # These tests make no provider API calls. The normal suite uses deterministic local fixtures.
 test-agent: $(BIN)
@@ -104,4 +109,4 @@ test-agent-live: $(BIN)
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*
 
-.PHONY: all shots clean test-agent test-agent-live
+.PHONY: all shots clean test-agent test-agent-live test-fs

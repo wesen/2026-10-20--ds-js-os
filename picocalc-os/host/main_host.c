@@ -151,16 +151,18 @@ int main(int argc, char **argv) {
     else if (!strcmp(argv[i], "-o") && i + 1 < argc) snprintf(out_dir, sizeof out_dir, "%s", argv[++i]);
     else if (!strcmp(argv[i], "-u") && i + 1 < argc) uart = argv[++i];
     else if (!strcmp(argv[i], "-s") && i + 1 < argc) host_store_dir(argv[++i]);   // the persistent store in files
+    else if (!strcmp(argv[i], "-f") && i + 1 < argc) host_fs_root(argv[++i]);     // the filesystem's root directory
     else if (!strcmp(argv[i], "-r")) realtime_pacing = true;  // pace waits when a real HTTPS worker is running
     else if (!strcmp(argv[i], "-t") && i + 1 < argc) run_ms = atof(argv[++i]);
     else if (!strcmp(argv[i], "-v")) K.verbose = true;
     else if (!strcmp(argv[i], "-vv")) K.verbose = K.trace = true;
     else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-s store_dir] [-r] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
+      printf("usage: %s [-j js_dir] [-m manifest] [-o out_dir] [-u uart_log] [-s store_dir] [-f fs_dir] [-r] [-t ms] [-v | -vv] [script | -]\n", argv[0]);
       return 0;
     } else script = argv[i];
   }
   mkdir(out_dir, 0755);
+  if (!port_fs_root()) { char d[300]; snprintf(d, sizeof d, "%s/fs", out_dir); host_fs_root(d); }
   char mpath[512], upath[512];
   if (!manifest) { snprintf(mpath, sizeof mpath, "%s/system.json", js); manifest = mpath; }
   if (!uart) { snprintf(upath, sizeof upath, "%s/uart.log", out_dir); uart = upath; }

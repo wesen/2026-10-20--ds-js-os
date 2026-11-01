@@ -38,3 +38,21 @@ void sb_json_str(sbuf_t *b, const char *s) {
   }
   sb_add(b, "\"");
 }
+
+// Well-formed UTF-8: the agent's responses and text files are checked before they become JS strings, so the engine
+// never silently replaces bytes.
+bool utf8_valid(const unsigned char *s, size_t n) {
+  for (size_t i = 0; i < n; ) {
+    unsigned a = s[i++];
+    if (a < 0x80) continue;
+    unsigned need, low = 0x80, high = 0xbf;
+    if (a >= 0xc2 && a <= 0xdf) need = 1;
+    else if (a >= 0xe0 && a <= 0xef) { need = 2; if (a == 0xe0) low = 0xa0; if (a == 0xed) high = 0x9f; }
+    else if (a >= 0xf0 && a <= 0xf4) { need = 3; if (a == 0xf0) low = 0x90; if (a == 0xf4) high = 0x8f; }
+    else return false;
+    if (n - i < need || s[i] < low || s[i] > high) return false;
+    i++;
+    while (--need) { if (s[i] < 0x80 || s[i] > 0xbf) return false; i++; }
+  }
+  return true;
+}

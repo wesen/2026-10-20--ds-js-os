@@ -25,3 +25,4 @@ picocalc-os/port/esp32s3-papers3/sdkconfig
 picocalc-os/port/esp32s3-papers3/sdkconfig.old
 picocalc-os/port/esp32s3-papers3/managed_components/
 picocalc-os/port/esp32p4/.cache/
+picocalc-os/out*/fs/

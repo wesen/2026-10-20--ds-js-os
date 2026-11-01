@@ -262,7 +262,11 @@ static JSValue op_turn_reject(JSContext *ctx, world_t *W, int argc, JSValueConst
 static JSValue handle_info(JSContext *ctx, handle_t *h) {
   JSValue o = JS_NewObject(ctx);
   JS_SetPropertyStr(ctx, o, "id", JS_NewInt32(ctx, h->id));
-  JS_SetPropertyStr(ctx, o, "type", JS_NewString(ctx, h->type == H_I2C ? "i2c" : h->type == H_SPI ? "spi" : "dma"));
+  JS_SetPropertyStr(ctx, o, "type", JS_NewString(ctx, handle_type_name(h->type)));
+  if (h->type == H_FS) {
+    JS_SetPropertyStr(ctx, o, "path", JS_NewString(ctx, h->path));
+    JS_SetPropertyStr(ctx, o, "file", JS_NewBool(ctx, h->file));
+  }
   char r[4] = { 0 }; int k = 0;
   if (h->rights & R_READ) r[k++] = 'r';
   if (h->rights & R_WRITE) r[k++] = 'w';
@@ -313,6 +317,100 @@ static JSValue op_dma_alloc(JSContext *ctx, world_t *W, int argc, JSValueConst *
   if (!hd) return fail(ctx, "out of handles");
   hd->buf = b;
   return handle_info(ctx, hd);
+}
+
+// Files. hw.fs("fs:/notes") gives a world a handle to the directory its manifest names (creating it); h.at(path,
+// rights) narrows a directory handle to a path inside it, a file if nothing or a file is there. Every operation is
+// asynchronous (__ka "fs"): a deferred effect hands the job to the port once the segment has ended cleanly.
+static JSValue op_hw_fs(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  char *claim = sarg(ctx, argv, argc, 0);
+  JSValue r;
+  const char *path = claim && !strncmp(claim, "fs:/", 4) ? claim + 4 : NULL;
+  if (!path || !fs_path_ok(path)) r = fail(ctx, "\"%s\" is not a file claim (like \"fs:/notes\")", claim ? claim : "");
+  else if (!world_claims(W, claim)) r = fail(ctx, "%s has no claim on %s", W->name, claim);
+  else if (!port_fs_root()) r = fail(ctx, "this device has no filesystem");
+  else if (!fs_mkdirs(path)) r = fail(ctx, "cannot make the directory %s", claim);
+  else {
+    handle_t *h = handle_new(H_FS, W, claim);
+    if (!h) r = fail(ctx, "out of handles");
+    else { snprintf(h->path, sizeof h->path, "%s", path); h->file = false; r = handle_info(ctx, h); }
+  }
+  free(claim);
+  return r;
+}
+static handle_t *use(JSContext *ctx, world_t *W, int id, int type, int right);
+static JSValue op_fs_at(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  handle_t *h = use(ctx, W, iarg(ctx, argv, argc, 0, 0), H_FS, 0);
+  if (!h) return JS_EXCEPTION;
+  char *rel = sarg(ctx, argv, argc, 1), *rs = sarg(ctx, argv, argc, 2);
+  char path[FS_PATH_MAX];
+  JSValue r;
+  int rights = 0;
+  for (char *p = rs; p && *p; p++) rights |= *p == 'r' ? R_READ : *p == 'w' ? R_WRITE : *p == 'g' ? R_GRANT : 0;
+  if (h->file) r = fail(ctx, "handle %d names a file; at() needs a directory", h->id);
+  else if (!rel || !*rel || !fs_path_ok(rel) || !fs_join(path, h->path, rel)) r = fail(ctx, "\"%s\" is not a path inside the directory", rel ? rel : "");
+  else {
+    handle_t *c = handle_child(W, h, rights);
+    if (!c) r = fail(ctx, "out of handles");
+    else { snprintf(c->path, sizeof c->path, "%s", path); c->file = fs_kind(path) != 1; r = handle_info(ctx, c); }
+  }
+  free(rel); free(rs);
+  return r;
+}
+static void run_fs(deferred_t *d, vtime_t at) {
+  fs_job_t *j = d->job;
+  d->job = NULL;
+  j->w = d->w; j->epoch = d->epoch; j->promise = d->promise;
+  port_fs_submit(j, at);
+}
+static const struct { const char *name; int op, right; bool dir_only, needs_path; } FS_OPS[] = {
+  { "list", FS_LIST, R_READ, true, false }, { "stat", FS_STAT, R_READ, false, false }, { "read", FS_READ, R_READ, false, false },
+  { "write", FS_WRITE, R_WRITE, false, false }, { "append", FS_APPEND, R_WRITE, false, false }, { "info", FS_INFO, R_READ, false, false },
+  { "mkdir", FS_MKDIR, R_WRITE, true, true }, { "remove", FS_REMOVE, R_WRITE, true, true }, { "rename", FS_RENAME, R_WRITE, true, true },
+};
+static int vm_new_promise(world_t *W, JSValue *out);
+// __ka("fs", handle, op, path, arg): arg is the new path for rename, the text for write and append
+static JSValue ka_fs(JSContext *ctx, world_t *W, int argc, JSValueConst *argv, JSValue *p) {
+  char *opn = sarg(ctx, argv, argc, 1);
+  int k = -1;
+  for (int i = 0; opn && i < (int)(sizeof FS_OPS / sizeof FS_OPS[0]); i++) if (!strcmp(opn, FS_OPS[i].name)) k = i;
+  free(opn);
+  if (k < 0) return fail(ctx, "no such file operation");
+  handle_t *h = use(ctx, W, iarg(ctx, argv, argc, 0, 0), H_FS, FS_OPS[k].right);
+  if (!h) return JS_EXCEPTION;
+  char *rel = sarg(ctx, argv, argc, 2);
+  fs_job_t *j = calloc(1, sizeof *j);
+  JSValue r = JS_UNDEFINED;
+  const char *why = NULL;
+  int op = FS_OPS[k].op;
+  if (!rel) rel = xstrdup("");
+  if (FS_OPS[k].dir_only && h->file) why = "a file handle cannot do that";
+  else if (h->file && *rel) why = "a file handle takes no path";
+  else if (FS_OPS[k].needs_path && !*rel) why = "this operation needs a path";
+  else if (!h->file && !*rel && (op == FS_READ || op == FS_WRITE || op == FS_APPEND)) why = "a directory cannot be read or written";
+  else if (!fs_path_ok(rel) || !fs_join(j->path, h->path, rel)) why = "not a valid path";
+  if (!why && op == FS_RENAME) {
+    char *to = sarg(ctx, argv, argc, 3);
+    if (!to || !*to || !fs_path_ok(to) || !fs_join(j->path2, h->path, to)) why = "not a valid path to rename to";
+    free(to);
+  }
+  if (!why && (op == FS_WRITE || op == FS_APPEND)) {
+    size_t n = 0;
+    const char *s = argc > 3 ? JS_ToCStringLen(ctx, &n, argv[3]) : NULL;
+    if (!s) why = "write needs text";
+    else if (n > FS_FILE_MAX) why = "a file is at most 65536 bytes";
+    else { j->data = malloc(n + 1); memcpy(j->data, s, n + 1); j->len = n; charge_json(n); }
+    if (s) JS_FreeCString(ctx, s);
+  }
+  free(rel);
+  int id;
+  if (why) { fs_job_free(j); return fail(ctx, "%s", why); }
+  if ((id = vm_new_promise(W, p)) < 0) { fs_job_free(j); return JS_EXCEPTION; }
+  j->op = op;
+  deferred_t *d = calloc(1, sizeof *d);
+  d->run = run_fs; d->w = W->id; d->epoch = W->epoch; d->promise = id; d->job = j;
+  defer(d);
+  return r;
 }
 
 static handle_t *use(JSContext *ctx, world_t *W, int id, int type, int right) {
@@ -513,22 +611,6 @@ static struct {
   agent_net_result_t result;
 } agent_request;
 static int agent_next_ticket;
-static bool agent_utf8_valid(const unsigned char *s, size_t n) {
-  // Reject malformed input instead of letting the engine replace bytes inside a JSON string.
-  for (size_t i = 0; i < n; ) {
-    unsigned a = s[i++];
-    if (a < 0x80) continue;
-    unsigned need, low = 0x80, high = 0xbf;
-    if (a >= 0xc2 && a <= 0xdf) need = 1;
-    else if (a >= 0xe0 && a <= 0xef) { need = 2; if (a == 0xe0) low = 0xa0; if (a == 0xed) high = 0x9f; }
-    else if (a >= 0xf0 && a <= 0xf4) { need = 3; if (a == 0xf0) low = 0x90; if (a == 0xf4) high = 0x8f; }
-    else return false;
-    if (n - i < need || s[i] < low || s[i] > high) return false;
-    i++;
-    while (--need) { if (s[i] < 0x80 || s[i] > 0xbf) return false; i++; }
-  }
-  return true;
-}
 static vtime_t agent_clock(void) {
   // Fixture latency is virtual; a real HTTPS deadline follows wall time even in the host simulator.
   return !strcmp(port_agent_mode(), "fixture") ? kernel_now() : port_clock();
@@ -629,7 +711,7 @@ static JSValue op_agent_poll(JSContext *ctx, world_t *W, int argc, JSValueConst 
   if (n > AGENT_NET_RESPONSE_MAX) {
     free(agent_request.result.body); agent_request.result.body = NULL; n = 0;
     snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent response exceeds %d bytes", AGENT_NET_RESPONSE_MAX);
-  } else if (n && !agent_utf8_valid((const unsigned char *)agent_request.result.body, n)) {
+  } else if (n && !utf8_valid((const unsigned char *)agent_request.result.body, n)) {
     free(agent_request.result.body); agent_request.result.body = NULL; n = 0;
     snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent response is not valid UTF-8");
   }
@@ -660,6 +742,7 @@ static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
   { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats },
   { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart },
+  { "hw.fs", op_hw_fs }, { "fs.at", op_fs_at },
   { "store.load", op_store_load }, { "store.save", op_store_save }, { "store.status", op_store_status },
   { "agent.status", op_agent_status }, { "agent.start", op_agent_start }, { "agent.poll", op_agent_poll }, { "agent.cancel", op_agent_cancel },
 };
@@ -751,6 +834,9 @@ static JSValue host_ka(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
       hw_spi_pixels(W, h, fb, iarg(ctx, argv, argc, 2, 0), iarg(ctx, argv, argc, 3, 0), iarg(ctx, argv, argc, 4, 0), iarg(ctx, argv, argc, 5, 0), id);
       r = p;
     }
+  } else if (!strcmp(op, "fs")) {
+    r = ka_fs(ctx, W, argc, argv, &p);
+    if (!JS_IsException(r)) r = p;
   } else r = fail(ctx, "no such kernel operation: %s", op);
   JS_FreeCString(ctx, op);
   return r;

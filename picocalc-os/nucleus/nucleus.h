@@ -124,8 +124,32 @@ typedef struct event {
   void *arg;
 } event_t;
 
+// ---- files: relative '/'-separated paths under the port's root (nucleus/fs.c) ------------------------------
+#define FS_PATH_MAX 96            // a path, with its terminator
+#define FS_FILE_MAX 65536         // the largest file a world reads or writes, in bytes
+#define FS_LIST_MAX 256           // entries a list returns
+enum { FS_LIST, FS_STAT, FS_READ, FS_WRITE, FS_APPEND, FS_MKDIR, FS_REMOVE, FS_RENAME, FS_INFO };
+typedef struct fs_job {          // one file operation, carried out after the segment that asked for it ends
+  int op;
+  char path[FS_PATH_MAX], path2[FS_PATH_MAX];
+  char *data; size_t len;         // FS_WRITE / FS_APPEND: the text
+  int w, epoch, promise;          // whose promise the result settles
+  int ok; char *json;             // the result: a JSON value, or (ok 0) an error message as a JSON string
+} fs_job_t;
+bool fs_path_ok(const char *p);   // relative, no empty/./.. segment, no leading dot, safe characters, fits
+bool fs_join(char *out, const char *base, const char *rel);   // base "/" rel into out[FS_PATH_MAX]; false if too long
+bool fs_mkdirs(const char *path); // create path and its parents under the root (claims make their directory)
+int fs_kind(const char *path);    // 1 a directory, 0 a file, -1 nothing there (or no filesystem)
+void fs_execute(fs_job_t *j);     // run the job against port_fs_root(); fills ok and json (POSIX; host and devices)
+void fs_job_free(fs_job_t *j);
+// ports: where files live (NULL: no filesystem), running a job (the result settles j->promise through
+// kernel_settle_at, now or later), and the filesystem's size.
+const char *port_fs_root(void);
+void port_fs_submit(fs_job_t *j, vtime_t at);
+int port_fs_info(uint64_t *total, uint64_t *free_bytes);
+
 // ---- handles: hardware a world holds ---------------------------------------------------------------------
-enum { H_I2C, H_SPI, H_DMA, H_EPD, H_ADC, H_GPIO };
+enum { H_I2C, H_SPI, H_DMA, H_EPD, H_ADC, H_GPIO, H_FS };
 enum { R_READ = 1, R_WRITE = 2, R_GRANT = 4 };
 typedef struct {
   int id, type, rights, parent, minter;
@@ -136,6 +160,8 @@ typedef struct {
   int buf;                  // H_DMA: index into the buffer table (shared by a handle and its children)
   int irq_mode;             // H_GPIO: watched for interrupts (IRQ_*), 0 if not
   bool irq_pending;         // H_GPIO: an "irq" message is out; the pin is re-armed when its turn ends
+  char path[FS_PATH_MAX];   // H_FS: the directory or file, relative to the root ("" is the root)
+  bool file;                // H_FS: names one file (operations take only the empty path)
 } handle_t;
 enum { IRQ_NONE, IRQ_LOW, IRQ_HIGH, IRQ_FALLING, IRQ_RISING };
 #define MAX_HANDLES 128
@@ -170,6 +196,7 @@ typedef struct deferred {
   uint8_t *bytes; int nbytes, nread;
   vtime_t delay;
   char *json; int ok;
+  struct fs_job *job;       // run_fs: the file operation
 } deferred_t;
 
 // ---- the kernel ---------------------------------------------------------------------------------------------
@@ -265,6 +292,7 @@ void vm_reset(void);        // the binding's own state, for kernel_reset (the wa
 
 // hw.c
 handle_t *handle_find(int id);
+const char *handle_type_name(int type);
 handle_t *handle_new(int type, world_t *holder, const char *claim);
 handle_t *handle_use(world_t *W, int id, int type, int right, char *err, size_t n);
 handle_t *handle_child(world_t *W, handle_t *h, int rights);
@@ -315,6 +343,7 @@ typedef struct { char *s; size_t n, cap; } sbuf_t;
 void sb_add(sbuf_t *b, const char *s);
 void sb_printf(sbuf_t *b, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 void sb_json_str(sbuf_t *b, const char *s);
+bool utf8_valid(const unsigned char *s, size_t n);   // well-formed UTF-8 (no overlongs, surrogates or > U+10FFFF)
 
 // ---- the port: what a build target provides (host/ + sim/ on Linux, port/esp32p4/ on the device) ---------------
 vtime_t port_clock(void);                 // real time, microseconds since boot; used when K.realtime

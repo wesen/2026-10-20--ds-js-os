@@ -40,8 +40,21 @@
     // i2c
     // write bytes, then read nread bytes; with gapMs, the bus is held between the two (one transaction)
     transfer(bytes, nread, gapMs) { return ka("i2c", this.id, bytes || [], nread || 0, gapMs || 0); }
-    read(reg, n = 2, gapMs = 0) { return ka("i2c", this.id, [reg], n, gapMs); }
-    write(reg, value) { return ka("i2c", this.id, [reg | 0x80, value], 0); }
+    // i2c: read(reg, n, gapMs), write(reg, value). fs: read(path), write(path, text); a file handle takes no path.
+    read(reg, n = 2, gapMs = 0) { return this.type === "fs" ? ka("fs", this.id, "read", reg || "") : ka("i2c", this.id, [reg], n, gapMs); }
+    write(reg, value) {
+      if (this.type !== "fs") return ka("i2c", this.id, [reg | 0x80, value], 0);
+      return value === undefined ? ka("fs", this.id, "write", "", String(reg)) : ka("fs", this.id, "write", reg, String(value));
+    }
+    // files: every operation is a promise, carried out after this segment ends (a segment that throws changes nothing)
+    at(path, rights = "rw") { return wrap(k("fs.at", this.id, path, rights)); }
+    list(path = "") { return ka("fs", this.id, "list", path); }
+    stat(path = "") { return ka("fs", this.id, "stat", path); }
+    append(path, text) { return text === undefined ? ka("fs", this.id, "append", "", String(path)) : ka("fs", this.id, "append", path, String(text)); }
+    mkdir(path) { return ka("fs", this.id, "mkdir", path); }
+    remove(path) { return ka("fs", this.id, "remove", path); }
+    rename(from, to) { return ka("fs", this.id, "rename", from, to); }
+    info() { return ka("fs", this.id, "info", ""); }
     // spi
     cmd(c, data) { return ka("spi.cmd", this.id, c, data || []); }
     pixels(fb, x, y, w, h) { return ka("spi.pixels", this.id, fb.id, x, y, w, h); }
@@ -70,6 +83,7 @@
   g.hw = {
     i2c: (claim, hz) => wrap(k("hw.i2c", claim, hz)),
     spi: (claim, hz) => wrap(k("hw.spi", claim, hz)),
+    fs: (claim) => wrap(k("hw.fs", claim)),
   };
   g.dma = { alloc: (w, h) => wrap(k("dma.alloc", w, h)) };
   g.gfx = { fonts: () => k("gfx.fonts") };
