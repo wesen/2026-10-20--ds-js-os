@@ -1,7 +1,8 @@
 // Native worlds: a binary instead of JavaScript (a WebAssembly module, or machine code for this board). The kernel
 // calls them through eng_* like any world; here a kernel message becomes an event for the port's backend, and the
 // binary's system calls are carried out with the same claims, handles and deferred effects as vm.c's operations.
-// The backend decides how the binary is isolated: a Linux process under seccomp on the host (host/native_proc.c).
+// The backend decides how the binary is isolated: a Linux process under seccomp on the host (host/native_proc.c), or
+// WAMR's interpreter for a WebAssembly module on any board (native_wasm.c).
 //
 // Everything a binary passes is untrusted: strings arrive with a length and are copied, names are checked for
 // length and embedded NULs, and declarations are accepted only while the binary's init runs.
@@ -9,6 +10,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "nucleus.h"
+#include "../sdk/nw_wire.h"
+
+// Every backend numbers the system calls as the SDK does: the wire (processes) and the imports (WebAssembly)
+_Static_assert((int)NW_CALL_LOG == (int)NW_LOG && (int)NW_CALL_TIMER == (int)NW_TIMER && (int)NW_CALL_COUNT == (int)NW_CALLS, "sdk/nw_wire.h and nucleus.h number the system calls alike");
+_Static_assert(NW_WIRE_INIT == (int)NW_INIT, "the init event's kind");
+_Static_assert(NW_WIRE_STR_MAX == NW_STR_MAX, "the longest string");
 
 static const char *const ENGINES[ENG_COUNT] = { "js", "wasm", "native" };
 const char *engine_name(int e) { return e >= 0 && e < ENG_COUNT ? ENGINES[e] : "?"; }

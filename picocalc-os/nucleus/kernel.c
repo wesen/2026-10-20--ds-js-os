@@ -33,6 +33,7 @@ profile_t PROFILE = {
   .spi_chunk_us = 0,
   .mem_scale = sizeof(void *) == 8 ? 1.7 : 1.0,   // 64-bit JSValues on the host; the test worlds' live sizes on Xtensa (QEMU) agree within 3%
   .loop_ms = 250,               // estimate: the 100k loop on mquickjs at 240 MHz
+  .wasm_ns_per_op = 60,         // estimate: WAMR's fast interpreter at 240 MHz (no WebAssembly on this device)
 };
 #else
 profile_t PROFILE = {
@@ -46,6 +47,7 @@ profile_t PROFILE = {
   .spi_chunk_us = 12,
   .mem_scale = sizeof(void *) == 8 ? 1.17 : 1.0,   // measured: a world takes about 17% more host memory on 64-bit (see README)
   .loop_ms = 133,               // measured (esp32-s3-m5/0101); vm.c uses it as a constant
+  .wasm_ns_per_op = 40,         // estimate until measured on the P4 (PICOCALC-NATIVE N4)
 };
 #endif
 
@@ -618,7 +620,7 @@ static void run_segment(world_t *W, bool is_settle) {
                             : PROFILE.turn_base_us + (vtime_t)(steps * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
   char why[300] = "";
   if (W->oom) snprintf(why, sizeof why, "ran out of memory (its limit is %zu KB)", W->mem_limit / 1024);
-  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld %sms", budget_kind, (long long)(budget / 1000), K.realtime || W->nat ? "" : "virtual ");   // a process runs in real time
+  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld %sms", budget_kind, (long long)(budget / 1000), K.realtime || W->engine == ENG_NATIVE ? "" : "virtual ");   // a process runs in real time
   else if (rc < 0) snprintf(why, sizeof why, "%s", W->last_error);
   else if (W->turn_failed) snprintf(why, sizeof why, "%s", W->turn_error ? W->turn_error : "its turn failed");
   W->cpu_us += cost;

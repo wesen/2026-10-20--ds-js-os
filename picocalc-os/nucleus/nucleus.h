@@ -35,6 +35,7 @@ typedef struct {
   vtime_t spi_chunk_us;     // per-DMA-chunk overhead on SPI
   double mem_scale;         // host bytes per device byte (64-bit pointers make worlds bigger)
   double loop_ms;           // what the 100k-iteration calibration loop takes on the device (vm_calibrate)
+  double wasm_ns_per_op;    // one instruction of WAMR's fast interpreter (a WebAssembly world's budget and cost)
 } profile_t;
 extern profile_t PROFILE;
 
@@ -344,6 +345,7 @@ typedef struct native {
   char err[200];                // why its last system call failed
 } native_t;
 const native_backend_t *port_native_backend(int engine);   // NULL: this board cannot run that engine
+const native_backend_t *wasm_backend(void);   // WebAssembly in WAMR (native_wasm.c); NULL when built without it
 int nat_create(world_t *W);
 void nat_dispose(world_t *W);
 void nat_begin_segment(world_t *W, vtime_t budget_us);

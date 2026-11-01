@@ -36,7 +36,7 @@ ifeq ($(BOARD),papers3)
   ENG_SRC := mquickjs.c dtoa.c libm.c cutils.c
   GEN     := $(BUILD)/gen
   CFLAGS  += -I$(GEN) -I$(ENG) -DBOARD_PAPERS3 -DNUCLEUS_GRAY8 -DNUCLEUS_FONT_HEADER='"font_paper.h"' -DMQJS_VERSION=\"$(shell cat $(ENG)/VERSION)\"
-  OS_SRC  := nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c \
+  OS_SRC  := nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
              sim/papers3/board.c sim/papers3/bus.c sim/papers3/epd.c sim/papers3/gt911.c sim/papers3/bm8563.c \
              host/port_host.c host/agent_host.c host/main_host.c host/native_proc.c
   HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
@@ -49,7 +49,7 @@ else
   ENG     := third_party/quickjs
   ENG_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
   CFLAGS  += -I$(ENG) -DCONFIG_VERSION=\"2026-06-04\"
-  OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c \
+  OS_SRC  := nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
              sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/net_host.c host/main_host.c host/native_proc.c
   HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
@@ -61,10 +61,50 @@ endif
 ENG_OBJ := $(addprefix $(BUILD)/eng/,$(ENG_SRC:.c=.o))
 OS_OBJ  := $(addprefix $(BUILD)/,$(OS_SRC:.c=.o))
 
+# WebAssembly worlds (nucleus/native_wasm.c) run in WAMR's fast interpreter: a subset of WAMR 2.4.5 in third_party/wamr
+# (tools/vendor-wamr.sh), configured as WAMR's own CMake would for these options: no AOT, JIT, WASI or libc-builtin;
+# software bounds checks (no signal handlers in picocalc-host); instruction counting for the turn budget. x86-64 only,
+# so not with M32=1, which builds without WebAssembly.
+ifneq ($(M32),1)
+  WAMR     := third_party/wamr/core
+  WAMR_SRC := shared/platform/linux/platform_init.c \
+              $(addprefix shared/platform/common/posix/posix_,blocking_op.c malloc.c memmap.c sleep.c thread.c time.c) \
+              $(addprefix shared/mem-alloc/,mem_alloc.c ems/ems_alloc.c ems/ems_gc.c ems/ems_hmu.c ems/ems_kfc.c) \
+              $(addprefix shared/utils/bh_,assert.c bitmap.c common.c hashmap.c leb128.c list.c log.c queue.c vector.c) \
+              shared/utils/runtime_timer.c \
+              $(addprefix iwasm/common/wasm_,application.c blocking_op.c c_api.c exec_env.c loader_common.c memory.c \
+                native.c runtime_common.c shared_memory.c) \
+              $(addprefix iwasm/interpreter/wasm_,interp_fast.c loader.c runtime.c)
+  WAMR_DEF := -DBH_PLATFORM_LINUX -DBUILD_TARGET_X86_64 -DBH_MALLOC=wasm_runtime_malloc -DBH_FREE=wasm_runtime_free \
+              -DWASM_ENABLE_INTERP=1 -DWASM_ENABLE_FAST_INTERP=1 -DWASM_ENABLE_MINI_LOADER=0 -DWASM_ENABLE_BULK_MEMORY=1 \
+              -DWASM_ENABLE_REF_TYPES=1 -DWASM_ENABLE_INSTRUCTION_METERING=1 -DWASM_ENABLE_SHRUNK_MEMORY=1 \
+              -DWASM_ENABLE_MULTI_MODULE=0 -DWASM_ENABLE_SHARED_MEMORY=0 -DWASM_ENABLE_EXTENDED_CONST_EXPR=0 \
+              -DWASM_ENABLE_AOT_INTRINSICS=0 -DWASM_ENABLE_QUICK_AOT_ENTRY=0 -DWASM_HAVE_MREMAP=1 \
+              -DWASM_DISABLE_HW_BOUND_CHECK=1 -DWASM_DISABLE_STACK_HW_BOUND_CHECK=1 -DWASM_DISABLE_WAKEUP_BLOCKING_OP=1 \
+              -DWASM_DISABLE_WRITE_GS_BASE=0 -DNDEBUG
+  WAMR_INC := $(addprefix -I$(WAMR)/,iwasm/include iwasm/common iwasm/interpreter shared/utils shared/mem-alloc \
+              shared/platform/include shared/platform/linux)
+  WAMR_OBJ := $(addprefix $(BUILD)/wamr/,$(WAMR_SRC:.c=.o)) $(BUILD)/wamr/invokeNative_em64.o
+  CFLAGS   += -DNUCLEUS_WASM=1 -I$(WAMR)/iwasm/include
+  # With SAN=1: WAMR loads and stores unaligned on x86 by design, and checks for native stack overflow by comparing the
+  # address of a local with the thread's stack, which ASan's fake stacks (use-after-return detection) move elsewhere.
+  ifeq ($(SAN),1)
+    WAMR_DEF += -fno-sanitize=alignment --param asan-use-after-return=0
+  endif
+endif
+
 all: $(BIN)
 
-$(BIN): $(ENG_OBJ) $(OS_OBJ)
+$(BIN): $(ENG_OBJ) $(OS_OBJ) $(WAMR_OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+$(BUILD)/wamr/%.o: $(WAMR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -w $(WAMR_DEF) $(WAMR_INC) -c -o $@ $<
+
+$(BUILD)/wamr/invokeNative_em64.o: $(WAMR)/iwasm/common/arch/invokeNative_em64.s
+	@mkdir -p $(dir $@)
+	$(CC) -c -Wa,--noexecstack -o $@ $<   # the file has no .note.GNU-stack: without this the whole binary gets an executable stack
 
 $(BUILD)/eng/%.o: $(ENG)/%.c $(if $(GEN),$(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h)
 	@mkdir -p $(dir $@)
@@ -125,7 +165,7 @@ test-agent-live: $(BIN)
 
 # Native worlds (PICOCALC-NATIVE): the example binaries, each linked statically with the process runtime, and the tests
 # that run them under the host's sandbox (a process with a seccomp filter; x86-64 only, so not with M32=1).
-NW_SDK  := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_proc.c
+NW_SDK  := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_calls.inc sdk/nw_proc.c
 NATIVES := $(BUILD)/natives/echo $(BUILD)/natives/probe $(BUILD)/natives/battery
 natives: $(NATIVES)
 
@@ -138,10 +178,36 @@ $(BUILD)/natives/%: natives/%.cc $(NW_SDK)
 	$(CC) -O2 -Wall -Isdk -c -o $@-rt.o sdk/nw_proc.c
 	$(CXX) -O2 -Wall -static -Isdk -o $@ $< $@-rt.o
 
-test-native: $(BIN) natives
+# The same examples as WebAssembly modules, and the WebAssembly probes: clang 18 for wasm32-wasi with wasi-libc (and
+# libc++ for C++), linked with the WebAssembly runtime (sdk/nw_wasm.c) as a reactor. The system's packages if they are
+# installed, else tools/wasm-toolchain.sh's copy in build/wasm-toolchain. The shadow stack comes first in memory, so
+# overflowing it traps instead of running into the module's data.
+WASM_TC := $(CURDIR)/build/wasm-toolchain
+ifneq ($(wildcard $(WASM_TC)/root),)
+  WASM_ENV := PATH=$(WASM_TC)/root/usr/lib/llvm-18/bin:$$PATH
+  WASM_SYS := --sysroot=$(WASM_TC)/root/usr -resource-dir $(WASM_TC)/res
+else
+  WASM_SYS := --sysroot=/usr
+endif
+WASM_FLAGS := --target=wasm32-wasi $(WASM_SYS) -O2 -Wall -Isdk
+WASM_LINK  := -mexec-model=reactor -Wl,--stack-first -Wl,-z,stack-size=16384 -Wl,--strip-all
+WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_calls.inc sdk/nw_wasm.c
+WASMS      := $(BUILD)/natives/echo.wasm $(BUILD)/natives/battery.wasm $(BUILD)/natives/wprobe.wasm $(BUILD)/natives/wimport.wasm
+wasm: $(WASMS)
+
+$(BUILD)/natives/%.wasm: natives/%.c $(WASM_SDK)
+	@mkdir -p $(dir $@)
+	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $< sdk/nw_wasm.c
+
+$(BUILD)/natives/%.wasm: natives/%.cc $(WASM_SDK)
+	@mkdir -p $(dir $@)
+	$(WASM_ENV) clang-18 $(WASM_FLAGS) -c -o $@-rt.o sdk/nw_wasm.c
+	$(WASM_ENV) clang++-18 $(WASM_FLAGS) $(WASM_LINK) -fno-exceptions -fno-rtti -o $@ $< $@-rt.o
+
+test-native: $(BIN) natives $(if $(filter 1,$(M32)),,wasm)
 	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_NATIVES=$(BUILD)/natives $(PYTHON) tests/test_native_worlds.py
 
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*
 
-.PHONY: all shots clean test-agent test-agent-live test-fs test-apps test-clock test-sys test-native natives
+.PHONY: all shots clean test-agent test-agent-live test-fs test-apps test-clock test-sys test-native natives wasm

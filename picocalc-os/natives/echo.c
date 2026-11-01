@@ -1,5 +1,6 @@
 // echo: a native world that exercises every system call, for tests/test_native_worlds.py. Each message type is one
 // case; results are logged as "TEST <label> <result>" lines, as the JavaScript test worlds do.
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "nw.h"
@@ -101,9 +102,12 @@ int nw_on_event(const nw_event *e) {
   } else if (!strcmp(t, "i2c-other")) {
     report("i2c-other", nw_i2c_open("i2c0:0x50", 10000));
     report("i2c-forged", nw_i2c(12345, (const unsigned char *)"\0", 1, 1, 0));
-  } else if (!strcmp(t, "segv")) {
+  } else if (!strcmp(t, "segv")) {   // address 0 is ordinary memory in WebAssembly: this faults only as a process
     volatile int *volatile nowhere = 0;
     *nowhere = 1;
+  } else if (!strcmp(t, "oob")) {   // outside the memory everywhere: unmapped in a process, past the end in a module
+    volatile int *volatile far = (volatile int *)(uintptr_t)0xfffffff0u;
+    *far = 1;
   } else if (!strcmp(t, "spin")) {
     for (volatile unsigned long i = 0;; i++) {}
   }

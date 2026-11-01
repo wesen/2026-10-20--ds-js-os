@@ -29,10 +29,6 @@
 #include "../nucleus/nucleus.h"
 #include "../sdk/nw_wire.h"
 
-_Static_assert((int)NW_CALL_LOG == (int)NW_LOG && (int)NW_CALL_TIMER == (int)NW_TIMER && (int)NW_CALL_COUNT == (int)NW_CALLS, "sdk/nw_wire.h and nucleus.h number the system calls alike");
-_Static_assert(NW_WIRE_INIT == (int)NW_INIT, "the init event's kind");
-_Static_assert(NW_WIRE_STR_MAX == NW_STR_MAX, "the longest string");
-
 typedef struct { pid_t pid; int fd; unsigned char *buf; bool dead; int status; } proc_t;
 
 static vtime_t mono_us(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (vtime_t)t.tv_sec * 1000000 + t.tv_nsec / 1000; }
@@ -249,4 +245,4 @@ static int proc_event(world_t *W, const nw_event_t *e) {
 }
 
 static const native_backend_t PROC = { "proc", proc_load, proc_event, proc_unload };
-const native_backend_t *port_native_backend(int engine) { return engine == ENG_NATIVE ? &PROC : NULL; }
+const native_backend_t *port_native_backend(int engine) { return engine == ENG_NATIVE ? &PROC : engine == ENG_WASM ? wasm_backend() : NULL; }
