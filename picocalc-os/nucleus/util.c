@@ -56,3 +56,29 @@ bool utf8_valid(const unsigned char *s, size_t n) {
   }
   return true;
 }
+
+// Settings' inputs, checked the same way in the kernel op and in the port.
+bool net_ssid_ok(const char *s) {   // 1 to 32 bytes, no control characters
+  size_t n = s ? strlen(s) : 0;
+  if (!n || n > 32 || !utf8_valid((const unsigned char *)s, n)) return false;
+  for (const unsigned char *p = (const unsigned char *)s; *p; p++) if (*p < 32 || *p == 127) return false;
+  return true;
+}
+bool net_password_ok(const char *s) {   // none (an open network), 8 to 63 printable ASCII, or 64 hex digits (a PSK)
+  size_t n = s ? strlen(s) : 0;
+  if (!n) return true;
+  if (n < 8 || n > 64) return false;
+  for (const unsigned char *p = (const unsigned char *)s; *p; p++) {
+    if (*p < 32 || *p > 126) return false;
+    if (n == 64 && !((*p >= '0' && *p <= '9') || (*p >= 'a' && *p <= 'f') || (*p >= 'A' && *p <= 'F'))) return false;
+  }
+  return true;
+}
+bool tz_valid(const char *s) {   // a POSIX TZ string: a name or <+05>, an offset, maybe rules; printable, no spaces
+  size_t n = s ? strlen(s) : 0;
+  if (!n || n > 63 || (!((s[0] >= 'A' && s[0] <= 'Z') || (s[0] >= 'a' && s[0] <= 'z')) && s[0] != '<')) return false;
+  for (const unsigned char *p = (const unsigned char *)s; *p; p++) if (*p <= 32 || *p >= 127) return false;
+  return true;
+}
+// Clears a secret before its memory is freed; the volatile writes cannot be dropped as dead stores.
+void secret_wipe(void *p, size_t n) { volatile unsigned char *q = p; while (n--) *q++ = 0; }

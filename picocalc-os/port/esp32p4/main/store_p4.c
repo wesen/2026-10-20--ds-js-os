@@ -27,31 +27,30 @@ bool p4_config_available(void) { return config_ready; }
 // The time zone, as a POSIX TZ string ("EST5EDT,M3.2.0,M11.1.0"), in the device settings: its own NVS namespace,
 // so "net forget" (which erases the network credentials) leaves it alone. newlib reads TZ for localtime().
 #define SETTINGS_NS "settings"
-static bool tz_ok(const char *s) {
-  size_t n = strlen(s);
-  if (!n || n > 63 || (!isalpha((unsigned char)s[0]) && s[0] != '<')) return false;
-  for (const unsigned char *p = (const unsigned char *)s; *p; p++) if (*p <= 32 || *p >= 127) return false;
-  return true;
-}
 static void tz_set(const char *tz) { setenv("TZ", tz, 1); tzset(); }
 void p4_tz_apply(void) {
   char tz[64] = "UTC0";
   nvs_handle_t h;
   if (config_ready && nvs_open(SETTINGS_NS, NVS_READONLY, &h) == ESP_OK) {
     size_t n = sizeof tz;
-    if (nvs_get_str(h, "tz", tz, &n) != ESP_OK || !tz_ok(tz)) snprintf(tz, sizeof tz, "UTC0");
+    if (nvs_get_str(h, "tz", tz, &n) != ESP_OK || !tz_valid(tz)) snprintf(tz, sizeof tz, "UTC0");
     nvs_close(h);
   }
   tz_set(tz);
 }
-void p4_tz_console(const char *arg) {
-  if (!*arg) { const char *tz = getenv("TZ"); printf("tz: %s\n", tz ? tz : "UTC0"); return; }
-  if (!tz_ok(arg)) { printf("tz: expected a POSIX TZ string like EST5EDT,M3.2.0,M11.1.0 or CET-1CEST,M3.5.0,M10.5.0/3\n"); return; }
+// Settings' zone (op clock.setzone, claim sys.clock) and the console's: applied at once, saved for the next boot.
+int port_tz_set(const char *tz) {
+  if (!tz_valid(tz)) return 1;
   nvs_handle_t h;
   esp_err_t e = config_ready ? nvs_open(SETTINGS_NS, NVS_READWRITE, &h) : ESP_FAIL;
-  if (e == ESP_OK) { e = nvs_set_str(h, "tz", arg); if (e == ESP_OK) e = nvs_commit(h); nvs_close(h); }
-  tz_set(arg);
-  printf("tz: %s (%s)\n", arg, e == ESP_OK ? "saved" : "not saved");
+  if (e == ESP_OK) { e = nvs_set_str(h, "tz", tz); if (e == ESP_OK) e = nvs_commit(h); nvs_close(h); }
+  tz_set(tz);
+  return e == ESP_OK ? 0 : 1;
+}
+void p4_tz_console(const char *arg) {
+  if (!*arg) { const char *tz = getenv("TZ"); printf("tz: %s\n", tz ? tz : "UTC0"); return; }
+  if (!tz_valid(arg)) { printf("tz: expected a POSIX TZ string like EST5EDT,M3.2.0,M11.1.0 or CET-1CEST,M3.5.0,M10.5.0/3\n"); return; }
+  printf("tz: %s (%s)\n", arg, port_tz_set(arg) == 0 ? "saved" : "not saved");
 }
 
 static bool name_ok(const char *ns, const char *key) {

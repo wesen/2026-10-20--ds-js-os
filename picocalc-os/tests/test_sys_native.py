@@ -108,5 +108,95 @@ class LogTests(unittest.TestCase):
         self.assertIn('TEST log err w has no claim on sys.log', self.s.run())
 
 
+
+class NetTests(unittest.TestCase):
+    def setUp(self):
+        self.s = Scenario()
+
+    def tearDown(self):
+        self.s.close()
+
+    def test_scan_join_and_info(self):
+        self.s.world("w", STEPS % """
+          const pick = (i) => [i.wifi, i.ssid, i.ip, i.rssi, i.state];
+          await out('before', () => pick(net.info()));
+          await out('scan', () => net.scan());
+          await out('again', () => net.scan());
+          await out('pending', () => net.scanResult());
+          await sleep(1600);
+          await out('result', () => net.scanResult());
+          await out('wrong', () => net.join('picocalc-lab', 'not the password'));
+          await sleep(200);
+          await out('trying', () => pick(net.info()));
+          await sleep(2000);
+          await out('failed', () => pick(net.info()));
+          await out('right', () => net.join('picocalc-lab', 'correct horse battery'));
+          await sleep(1300);
+          await out('up', () => pick(net.info()));
+          await out('open', () => net.join('cafe-guest'));
+          await sleep(1300);
+          await out('cafe', () => pick(net.info()));
+          await out('keys', () => Object.keys(net.info()).sort());
+        """, ["net.admin"])
+        log = self.s.run("wait 9000\n")
+        self.assertIn('TEST before ok ["off","","",0,"Wi-Fi not set up"]', log)
+        self.assertIn('TEST scan ok true', log)
+        self.assertIn('TEST again err a scan is running', log)
+        self.assertIn('TEST pending ok null', log)
+        self.assertIn('TEST result ok [{"ssid":"picocalc-lab","rssi":-48,"secure":true},'
+                      '{"ssid":"cafe-guest","rssi":-71,"secure":false},{"ssid":"neighbour-5G","rssi":-83,"secure":true}]', log)
+        self.assertIn('TEST trying ok ["connecting","picocalc-lab","",0,"connecting"]', log)
+        self.assertIn('TEST failed ok ["failed","picocalc-lab","",0,"wrong password"]', log)
+        self.assertIn('TEST up ok ["up","picocalc-lab","192.168.4.23",-48,"Wi-Fi connected"]', log)
+        self.assertIn('TEST cafe ok ["up","cafe-guest","10.0.0.57",-71,"Wi-Fi connected"]', log)
+        self.assertIn('TEST keys ok ["api","clock","ip","key","mode","model","provider","rssi","ssid","state","wifi"]', log)
+        self.assertNotIn("correct horse", log)
+        self.assertNotIn("not the password", log)
+
+    def test_validation(self):
+        self.s.world("w", STEPS % """
+          await out('short', () => net.join('lab', 'seven77'));
+          await out('long', () => net.join('lab', 'x'.repeat(64)));
+          await out('hex', () => net.join('lab', 'ab'.repeat(32)));
+          await out('control', () => net.join('lab', 'password\\n1'));
+          await out('noname', () => net.join('', 'password1'));
+          await out('bigname', () => net.join('n'.repeat(33), 'password1'));
+        """, ["net.admin"])
+        log = self.s.run()
+        bad = "err a Wi-Fi password is 8 to 63 characters, or 64 hexadecimal digits"
+        self.assertIn('TEST short ' + bad, log)
+        self.assertIn('TEST long ' + bad, log)
+        self.assertIn('TEST hex ok true', log)
+        self.assertIn('TEST control ' + bad, log)
+        self.assertIn('TEST noname err a network name is 1 to 32 bytes', log)
+        self.assertIn('TEST bigname err a network name is 1 to 32 bytes', log)
+
+    def test_claims(self):
+        self.s.world("w", STEPS % """
+          await out('info', () => net.info().mode);
+          await out('scan', () => net.scan());
+          await out('join', () => net.join('cafe-guest'));
+          await out('zone', () => clock.setZone('UTC0'));
+        """, ["sys.read"])
+        log = self.s.run()
+        self.assertIn('TEST info ok "simulated"', log)
+        self.assertIn('TEST scan err w has no claim on net.admin', log)
+        self.assertIn('TEST join err w has no claim on net.admin', log)
+        self.assertIn('TEST zone err w has no claim on sys.clock', log)
+
+    def test_setting_the_zone(self):
+        self.s.world("w", STEPS % """
+          await out('before', () => [clock.zone(), new Date(2026, 6, 1).getTimezoneOffset()]);
+          await out('set', () => clock.setZone('EST5EDT,M3.2.0,M11.1.0'));
+          await out('after', () => [clock.zone(), new Date(2026, 6, 1).getTimezoneOffset(), new Date(2026, 11, 1).getTimezoneOffset()]);
+          await out('bad', () => clock.setZone('New York'));
+        """, ["sys.clock"])
+        log = self.s.run()
+        self.assertIn('TEST before ok ["UTC0",0]', log)
+        self.assertIn('TEST set ok {"zone":"EST5EDT,M3.2.0,M11.1.0","saved":false}', log)
+        self.assertIn('TEST after ok ["EST5EDT,M3.2.0,M11.1.0",240,300]', log)
+        self.assertIn('TEST bad err expected a POSIX time zone like EST5EDT,M3.2.0,M11.1.0', log)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

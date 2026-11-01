@@ -208,6 +208,21 @@ static JSValue op_clock_zone(JSContext *ctx, world_t *W, int argc, JSValueConst 
   const char *tz = getenv("TZ");
   return JS_NewString(ctx, tz && *tz ? tz : "UTC0");
 }
+// The time zone for every world (claim sys.clock): QuickJS reads TZ through the C library for each local time.
+static JSValue op_clock_setzone(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  if (!world_claims(W, "sys.clock")) return fail(ctx, "%s has no claim on sys.clock", W->name);
+  char *tz = sarg(ctx, argv, argc, 0);
+  JSValue r;
+  if (!tz || !tz_valid(tz)) r = fail(ctx, "expected a POSIX time zone like EST5EDT,M3.2.0,M11.1.0");
+  else {
+    int saved = port_tz_set(tz) == 0;
+    r = JS_NewObject(ctx);
+    JS_SetPropertyStr(ctx, r, "zone", JS_NewString(ctx, tz));
+    JS_SetPropertyStr(ctx, r, "saved", JS_NewBool(ctx, saved));
+  }
+  free(tz);
+  return r;
+}
 static JSValue op_self(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return JS_NewString(ctx, W->name); }
 static JSValue op_seed(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) { (void)argc; (void)argv; return JS_NewFloat64(ctx, (double)(W->seed & 0xffffffff)); }
 static JSValue op_log(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
@@ -531,6 +546,41 @@ static JSValue op_sys_json(JSContext *ctx, world_t *W, const char *what) {
   charge_json(strlen(j));
   return json_value(ctx, j);
 }
+// Network administration, for Settings. The password passes through here once: checked, copied by the port, wiped.
+static JSValue op_net_info(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  (void)argc; (void)argv;
+  if (!world_claims(W, "net.admin") && !world_claims(W, "sys.read")) return fail(ctx, "%s has no claim on net.admin", W->name);
+  char *j = port_net_info();
+  charge_json(j ? strlen(j) : 0);
+  return json_value(ctx, j);
+}
+static JSValue op_net_scan(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  (void)argc; (void)argv;
+  if (!world_claims(W, "net.admin")) return fail(ctx, "%s has no claim on net.admin", W->name);
+  char why[160] = "";
+  if (port_net_scan(why, sizeof why)) return fail(ctx, "%s", why[0] ? why : "cannot scan");
+  return JS_TRUE;
+}
+static JSValue op_net_scan_result(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  (void)argc; (void)argv;
+  if (!world_claims(W, "net.admin")) return fail(ctx, "%s has no claim on net.admin", W->name);
+  char *j = port_net_scan_result();
+  if (j) charge_json(strlen(j));
+  return json_value(ctx, j);
+}
+static JSValue op_net_join(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  if (!world_claims(W, "net.admin")) return fail(ctx, "%s has no claim on net.admin", W->name);
+  char *ssid = sarg(ctx, argv, argc, 0), *pw = argc > 1 && !JS_IsUndefined(argv[1]) ? sarg(ctx, argv, argc, 1) : xstrdup("");
+  char why[160] = "";
+  JSValue r = JS_TRUE;
+  if (!net_ssid_ok(ssid)) r = fail(ctx, "a network name is 1 to 32 bytes");
+  else if (!pw || !net_password_ok(pw)) r = fail(ctx, "a Wi-Fi password is 8 to 63 characters, or 64 hexadecimal digits");
+  else if (port_net_join(ssid, pw, why, sizeof why)) r = fail(ctx, "%s", why[0] ? why : "cannot join");
+  if (pw) { secret_wipe(pw, strlen(pw)); free(pw); }
+  free(ssid);
+  return r;
+}
+
 // The kernel's log, for the Logs app (claim sys.log): what worlds print can be private, so sys.read is not enough.
 static JSValue op_sys_log(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
   if (!world_claims(W, "sys.log")) return fail(ctx, "%s has no claim on sys.log", W->name);
@@ -756,11 +806,12 @@ static JSValue op_agent_cancel(JSContext *ctx, world_t *W, int argc, JSValueCons
 static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
   { "gfx.text", op_gfx_text }, { "gfx.fill", op_gfx_fill }, { "gfx.rect", op_gfx_rect }, { "gfx.line", op_gfx_line },
   { "gfx.commit", op_gfx_commit }, { "gfx.fonts", op_gfx_fonts }, { "gfx.invalidate", op_gfx_invalidate },
-  { "now", op_now }, { "clock.wall", op_clock_wall }, { "clock.zone", op_clock_zone }, { "send", op_send }, { "publish", op_publish }, { "log", op_log }, { "self", op_self }, { "seed", op_seed },
+  { "now", op_now }, { "clock.wall", op_clock_wall }, { "clock.zone", op_clock_zone }, { "clock.setzone", op_clock_setzone }, { "send", op_send }, { "publish", op_publish }, { "log", op_log }, { "self", op_self }, { "seed", op_seed },
   { "turn.async", op_turn_async }, { "turn.done", op_turn_done }, { "turn.fail", op_turn_fail }, { "turn.reject", op_turn_reject },
   { "hw.i2c", op_hw_i2c }, { "hw.spi", op_hw_spi }, { "dma.alloc", op_dma_alloc },
   { "h.info", op_h_info }, { "h.attenuate", op_h_attenuate }, { "h.revoke", op_h_revoke }, { "h.release", op_h_release },
   { "sys.worlds", op_sys_worlds }, { "sys.handles", op_sys_handles }, { "sys.stats", op_sys_stats }, { "sys.log", op_sys_log },
+  { "net.info", op_net_info }, { "net.scan", op_net_scan }, { "net.scanresult", op_net_scan_result }, { "net.join", op_net_join },
   { "sys.fault", op_sys_fault }, { "sys.restart", op_sys_restart },
   { "hw.fs", op_hw_fs }, { "fs.at", op_fs_at },
   { "store.load", op_store_load }, { "store.save", op_store_save }, { "store.status", op_store_status },

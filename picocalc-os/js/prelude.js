@@ -26,7 +26,8 @@
     static now() { return stamp(); }
   }
   g.Date = VDate;
-  g.clock = { wall: () => k("clock.wall"), set: () => k("clock.wall") != null, zone: () => k("clock.zone") };
+  g.clock = { wall: () => k("clock.wall"), set: () => k("clock.wall") != null, zone: () => k("clock.zone"),
+    setZone: (tz) => k("clock.setzone", tz) };   // claim sys.clock: every world's local time, { zone, saved }
   g.now = () => k("now");                  // virtual milliseconds since boot
   g.self = k("self");
   g.log = (...a) => k("log", a.map((x) => (typeof x === "string" ? x : show(x))).join(" "));
@@ -109,6 +110,16 @@
     start: (body) => k("agent.start", typeof body === "string" ? body : JSON.stringify(body)),
     poll: (ticket) => k("agent.poll", ticket),
     cancel: (ticket) => k("agent.cancel", ticket),
+  };
+
+  // The Wi-Fi station, for Settings (claim net.admin; info also with sys.read). A scan runs on the port's network
+  // worker: start it, then poll scanResult() until it is not null. join hands the password to the port, which
+  // keeps it in its own storage; no operation gives it back.
+  g.net = {
+    info: () => k("net.info"),
+    scan: () => k("net.scan"),
+    scanResult: () => k("net.scanresult"),
+    join: (ssid, password) => k("net.join", ssid, password || ""),
   };
 
   // Private, quota-bound JSON per world. set/remove stage a write at the end of this segment.

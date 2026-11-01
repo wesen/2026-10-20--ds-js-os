@@ -19,6 +19,13 @@ int port_agent_start(int ticket, const char *body, size_t len, char *error, size
 int port_agent_poll(int ticket, agent_net_result_t *result) { return -1; }
 void port_agent_cancel(int ticket) { }
 void p4_agent_init(void) { }
+char *port_net_info(void) {
+  return xstrdup("{\"mode\":\"none\",\"wifi\":\"off\",\"state\":\"Wi-Fi support not built\",\"ssid\":\"\",\"ip\":\"\","
+                 "\"rssi\":0,\"clock\":false,\"provider\":\"\",\"api\":\"responses\",\"model\":\"\",\"key\":false}");
+}
+int port_net_scan(char *why, size_t n) { snprintf(why, n, "this build has no Wi-Fi"); return 1; }
+char *port_net_scan_result(void) { return xstrdup("[]"); }
+int port_net_join(const char *ssid, const char *password, char *why, size_t n) { snprintf(why, n, "this build has no Wi-Fi"); return 1; }
 void p4_agent_console(const char *args) {
   printf("net: disabled; build with -D PICOCALC_AGENT_WIFI=ON (see port guide)\n");
 }
@@ -52,6 +59,10 @@ void p4_agent_console(const char *args) {
 #define NOTIFY_REQUEST BIT1
 #define NOTIFY_DISCONNECT BIT2
 #define NOTIFY_TIME BIT3
+#define NOTIFY_SCAN BIT4
+#define NOTIFY_JOIN BIT5
+#define SCAN_DONE BIT1
+#define SCAN_KEEP 16
 
 typedef struct {
   char ssid[33], password[65], token[TOKEN_MAX + 1], endpoint[ENDPOINT_MAX + 1], model[MODEL_MAX + 1];
@@ -66,6 +77,14 @@ static atomic_int retries;
 static char network_state[160] = "starting";
 static bool wifi_initialized, wifi_started, sntp_started, wifi_init_attempted;
 static esp_err_t wifi_init_result = ESP_FAIL;
+// For Settings, under lock: the station as the events report it, the last scan, and a join waiting for the worker.
+// cfg_host and cfg_key are the kernel task's, like cfg_api.
+enum { LINK_OFF, LINK_CONNECTING, LINK_UP, LINK_FAILED };
+static struct { int state; char ssid[33], ip[16]; int rssi; } link_info;
+static struct { bool running; char *result; } scan;
+static struct { bool pending; char ssid[33], password[65]; } join_slot;
+static char cfg_host[80];
+static bool cfg_key;
 static struct {
   int ticket;
   bool active, done, cancelled;
@@ -125,23 +144,61 @@ static void refresh_configured(void) {
   size_t n = strlen(c.endpoint), k = strlen(CHAT);
   snprintf(cfg_api, sizeof cfg_api, "%s", n >= k && !strcmp(c.endpoint + n - k, CHAT) ? "chat" : "responses");
   snprintf(cfg_model, sizeof cfg_model, "%s", model_ok(c.model) ? c.model : "");
+  const char *host = !strncmp(c.endpoint, "https://", 8) ? c.endpoint + 8 : "";
+  size_t hn = strcspn(host, "/");
+  snprintf(cfg_host, sizeof cfg_host, "%.*s", (int)(hn < sizeof cfg_host ? hn : sizeof cfg_host - 1), host);
+  cfg_key = c.token[0] != 0;
+  if (lock) { xSemaphoreTake(lock, portMAX_DELAY); memcpy(link_info.ssid, c.ssid, sizeof link_info.ssid); xSemaphoreGive(lock); }
   wipe(&c, sizeof c);
+}
+// The worker's version, after a join: only the atomic flag, since cfg_* belong to the kernel task.
+static void refresh_ready(void) {
+  transport_config_t c;
+  atomic_store(&configured, config_get(&c) && endpoint_ok(c.endpoint));
+  wipe(&c, sizeof c);
+}
+static void link_set(int state, const char *ip) {
+  xSemaphoreTake(lock, portMAX_DELAY);
+  link_info.state = state;
+  if (ip) snprintf(link_info.ip, sizeof link_info.ip, "%s", ip);
+  xSemaphoreGive(lock);
+}
+// The reasons a station gives up, in words (esp_wifi_types.h: wifi_err_reason_t).
+static const char *disconnect_reason(int r) {
+  switch (r) {
+    case 2: case 15: case 202: case 204: case 205: return "wrong password?";
+    case 201: return "network not found";
+    case 203: return "association failed";
+    default: return "disconnected";
+  }
 }
 
 static void wifi_event(void *arg, esp_event_base_t base, int32_t id, void *data) {
   if (base == IP_EVENT && id == IP_EVENT_STA_GOT_IP) {
+    char ip[16];
+    snprintf(ip, sizeof ip, IPSTR, IP2STR(&((ip_event_got_ip_t *)data)->ip_info.ip));
+    link_set(LINK_UP, ip);
     atomic_store(&retries, 0);
     xEventGroupSetBits(events, NET_UP);
     if (worker) xTaskNotify(worker, NOTIFY_TIME, eSetBits);
     state_set("Wi-Fi connected; waiting for clock if necessary");
   } else if (base == WIFI_EVENT && id == WIFI_EVENT_STA_START) {
     if (atomic_load(&reconnect_allowed)) esp_wifi_connect();
+  } else if (base == WIFI_EVENT && id == WIFI_EVENT_SCAN_DONE) {
+    xEventGroupSetBits(events, SCAN_DONE);
   } else if (base == WIFI_EVENT && id == WIFI_EVENT_STA_DISCONNECTED) {
     xEventGroupClearBits(events, NET_UP);
+    int reason = data ? ((wifi_event_sta_disconnected_t *)data)->reason : 0;
     if (atomic_load(&reconnect_allowed) && atomic_fetch_add(&retries, 1) < 5) {
+      link_set(LINK_CONNECTING, "");
       state_set("Wi-Fi reconnecting");
       esp_wifi_connect();
-    } else state_set("Wi-Fi disconnected; check credentials, then net connect");
+    } else {
+      char msg[96];
+      snprintf(msg, sizeof msg, "Wi-Fi gave up: %s (reason %d)", disconnect_reason(reason), reason);
+      link_set(LINK_FAILED, "");
+      state_set(msg);
+    }
   }
 }
 
@@ -185,13 +242,15 @@ static void wifi_apply(void) {
   wipe(&wc, sizeof wc); wipe(&c, sizeof c);
   atomic_store(&retries, 0);
   if (e == ESP_OK) {
+    link_set(LINK_CONNECTING, "");
+    state_set("Wi-Fi connecting");
     atomic_store(&reconnect_allowed, true);
     if (wifi_started) e = esp_wifi_connect();
     else { e = esp_wifi_start(); wifi_started = e == ESP_OK; }
   }
   if (e != ESP_OK) {
     char msg[120]; snprintf(msg, sizeof msg, "Wi-Fi initialization failed: %s", esp_err_to_name(e));
-    state_set(msg); return;
+    link_set(LINK_FAILED, ""); state_set(msg); return;
   }
   if (!sntp_started) {
     esp_sntp_config_t sc = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
@@ -319,12 +378,86 @@ static void request_run(int ticket, char *request, size_t len) {
   xSemaphoreGive(lock);
 }
 
+static bool config_write(const char *key, const char *value);
+
+// A join typed in Settings: the worker saves it like net ssid + net password, then connects as net connect does.
+static void join_run(void) {
+  char ssid[33], password[65];
+  xSemaphoreTake(lock, portMAX_DELAY);
+  bool pending = join_slot.pending;
+  memcpy(ssid, join_slot.ssid, sizeof ssid); memcpy(password, join_slot.password, sizeof password);
+  wipe(&join_slot, sizeof join_slot);
+  xSemaphoreGive(lock);
+  if (pending) {
+    bool ok = config_write("ssid", ssid) && config_write("password", password);
+    wipe(password, sizeof password);
+    refresh_ready();
+    xSemaphoreTake(lock, portMAX_DELAY); memcpy(link_info.ssid, ssid, sizeof ssid); xSemaphoreGive(lock);
+    if (ok) wifi_apply();
+    else { link_set(LINK_FAILED, ""); state_set("could not save the network"); }
+  }
+  wipe(password, sizeof password);
+}
+
+// One scan: the station is started if it is not (without connecting, unless it has a network), the scan runs without
+// blocking the event task, and the result is kept as JSON, strongest first, one entry per name.
+static void scan_run(void) {
+  sbuf_t b = { 0 };
+  esp_err_t e = wifi_prepare();
+  if (e == ESP_OK && !wifi_started) { e = esp_wifi_start(); wifi_started = e == ESP_OK; }
+  wifi_scan_config_t sc = { .show_hidden = false };
+  xEventGroupClearBits(events, SCAN_DONE);
+  if (e == ESP_OK) e = esp_wifi_scan_start(&sc, false);
+  if (e == ESP_OK && !(xEventGroupWaitBits(events, SCAN_DONE, pdTRUE, pdTRUE, pdMS_TO_TICKS(12000)) & SCAN_DONE)) e = ESP_ERR_TIMEOUT;
+  uint16_t n = 24;
+  wifi_ap_record_t *aps = calloc(n, sizeof *aps);
+  if (!aps) e = ESP_ERR_NO_MEM;
+  if (e == ESP_OK) e = esp_wifi_scan_get_ap_records(&n, aps);
+  else esp_wifi_clear_ap_list();
+  if (e != ESP_OK) {
+    sb_add(&b, "{\"error\":");
+    char t[96]; snprintf(t, sizeof t, "scan failed: %s", esp_err_to_name(e)); sb_json_str(&b, t);
+    sb_add(&b, "}");
+  } else {
+    // keep the strongest entry for each name, then sort by signal
+    int kept = 0;
+    for (int i = 0; i < n; i++) {
+      const char *name = (const char *)aps[i].ssid;
+      if (!name[0] || !net_ssid_ok(name)) continue;
+      int j = 0;
+      while (j < kept && strcmp((const char *)aps[j].ssid, name)) j++;
+      if (j < kept) { if (aps[i].rssi > aps[j].rssi) aps[j] = aps[i]; continue; }
+      aps[kept++] = aps[i];
+    }
+    for (int i = 1; i < kept; i++) for (int j = i; j > 0 && aps[j].rssi > aps[j - 1].rssi; j--) { wifi_ap_record_t t = aps[j]; aps[j] = aps[j - 1]; aps[j - 1] = t; }
+    sb_add(&b, "[");
+    for (int i = 0; i < kept && i < SCAN_KEEP; i++) {
+      sb_add(&b, i ? ",{\"ssid\":" : "{\"ssid\":"); sb_json_str(&b, (const char *)aps[i].ssid);
+      sb_printf(&b, ",\"rssi\":%d,\"secure\":%s}", aps[i].rssi, aps[i].authmode == WIFI_AUTH_OPEN ? "false" : "true");
+    }
+    sb_add(&b, "]");
+  }
+  free(aps);
+  xSemaphoreTake(lock, portMAX_DELAY);
+  free(scan.result); scan.result = b.s; scan.running = false;
+  xSemaphoreGive(lock);
+}
+
 static void network_task(void *arg) {
   wifi_apply();
   for (;;) {
     uint32_t flags = 0;
-    xTaskNotifyWait(0, UINT32_MAX, &flags, portMAX_DELAY);
+    // every 10 s while connected, the signal strength for Settings
+    if (!xTaskNotifyWait(0, UINT32_MAX, &flags, pdMS_TO_TICKS(10000))) {
+      wifi_ap_record_t ap;
+      if ((xEventGroupGetBits(events) & NET_UP) && esp_wifi_sta_get_ap_info(&ap) == ESP_OK) {
+        xSemaphoreTake(lock, portMAX_DELAY); link_info.rssi = ap.rssi; xSemaphoreGive(lock);
+      }
+      continue;
+    }
     if ((flags & NOTIFY_DISCONNECT) && wifi_started) esp_wifi_disconnect();
+    if (flags & NOTIFY_JOIN) join_run();
+    if (flags & NOTIFY_SCAN) scan_run();
     if (flags & NOTIFY_CONNECT) wifi_apply();
     if ((flags & NOTIFY_TIME) && sntp_started) esp_netif_sntp_start();
     if (flags & NOTIFY_REQUEST) {
@@ -392,15 +525,80 @@ void port_agent_cancel(int ticket) {
   // exits, so there is no cross-task close/free race. A new request reports busy until cleanup finishes.
 }
 
-static bool config_set(const char *key, const char *value) {
+static bool config_write(const char *key, const char *value) {
   if (!p4_config_available()) return false;
   nvs_handle_t h;
   if (nvs_open(CONFIG_NS, NVS_READWRITE, &h) != ESP_OK) return false;
   esp_err_t e = nvs_set_str(h, key, value);
   if (e == ESP_OK) e = nvs_commit(h);
   nvs_close(h);
-  refresh_configured();
   return e == ESP_OK;
+}
+static bool config_set(const char *key, const char *value) {   // the console's, on the kernel task
+  bool ok = config_write(key, value);
+  refresh_configured();
+  return ok;
+}
+
+// ---- Settings: the station's state, a scan, a join (kernel task; the worker does the blocking parts) ----------
+char *port_net_info(void) {
+  static const char *const STATES[] = { "off", "connecting", "up", "failed" };
+  char state[sizeof network_state] = "worker unavailable", ssid[33] = "", ip[16] = "";
+  int st = LINK_OFF, rssi = 0;
+  if (lock) {
+    xSemaphoreTake(lock, portMAX_DELAY);
+    memcpy(state, network_state, sizeof state);
+    st = link_info.state; rssi = link_info.rssi;
+    memcpy(ssid, link_info.ssid, sizeof ssid); memcpy(ip, link_info.ip, sizeof ip);
+    xSemaphoreGive(lock);
+  }
+  bool up = st == LINK_UP;
+  sbuf_t b = { 0 };
+  sb_add(&b, "{\"mode\":\"esp-hosted\",\"wifi\":"); sb_json_str(&b, STATES[st]);
+  sb_add(&b, ",\"state\":"); sb_json_str(&b, state);
+  sb_add(&b, ",\"ssid\":"); sb_json_str(&b, ssid);
+  sb_add(&b, ",\"ip\":"); sb_json_str(&b, up ? ip : "");
+  sb_printf(&b, ",\"rssi\":%d,\"clock\":%s", up ? rssi : 0, clock_ready() ? "true" : "false");
+  sb_add(&b, ",\"provider\":"); sb_json_str(&b, cfg_host);
+  sb_add(&b, ",\"api\":"); sb_json_str(&b, cfg_api);
+  sb_add(&b, ",\"model\":"); sb_json_str(&b, cfg_model);
+  sb_printf(&b, ",\"key\":%s}", cfg_key ? "true" : "false");
+  return b.s;
+}
+
+int port_net_scan(char *why, size_t n) {
+  if (!worker) { snprintf(why, n, "the network worker is not running"); return 1; }
+  xSemaphoreTake(lock, portMAX_DELAY);
+  bool busy = scan.running;
+  scan.running = true;
+  xSemaphoreGive(lock);
+  if (busy) { snprintf(why, n, "a scan is running"); return 1; }
+  xTaskNotify(worker, NOTIFY_SCAN, eSetBits);
+  return 0;
+}
+
+char *port_net_scan_result(void) {
+  if (!lock) return xstrdup("[]");
+  xSemaphoreTake(lock, portMAX_DELAY);
+  char *r = scan.running ? NULL : xstrdup(scan.result ? scan.result : "[]");
+  xSemaphoreGive(lock);
+  return r;
+}
+
+int port_net_join(const char *ssid, const char *password, char *why, size_t n) {
+  if (!worker) { snprintf(why, n, "the network worker is not running"); return 1; }
+  if (!net_ssid_ok(ssid) || !net_password_ok(password)) { snprintf(why, n, "invalid network name or password"); return 1; }
+  if (!p4_config_available()) { snprintf(why, n, "settings storage is unavailable"); return 1; }
+  xSemaphoreTake(lock, portMAX_DELAY);
+  wipe(&join_slot, sizeof join_slot);
+  snprintf(join_slot.ssid, sizeof join_slot.ssid, "%s", ssid);
+  snprintf(join_slot.password, sizeof join_slot.password, "%s", password);
+  join_slot.pending = true;
+  link_info.state = LINK_CONNECTING;
+  snprintf(network_state, sizeof network_state, "joining");
+  xSemaphoreGive(lock);
+  xTaskNotify(worker, NOTIFY_JOIN, eSetBits);
+  return 0;
 }
 
 void p4_agent_console(const char *args) {

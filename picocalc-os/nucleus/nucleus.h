@@ -346,6 +346,10 @@ void sb_add(sbuf_t *b, const char *s);
 void sb_printf(sbuf_t *b, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 void sb_json_str(sbuf_t *b, const char *s);
 bool utf8_valid(const unsigned char *s, size_t n);   // well-formed UTF-8 (no overlongs, surrogates or > U+10FFFF)
+bool net_ssid_ok(const char *s);       // 1 to 32 bytes of UTF-8 without control characters
+bool net_password_ok(const char *s);   // empty, 8 to 63 printable ASCII characters, or 64 hexadecimal digits
+bool tz_valid(const char *s);          // a plausible POSIX TZ string (the C library interprets it)
+void secret_wipe(void *p, size_t n);
 
 // ---- the port: what a build target provides (host/ + sim/ on Linux, port/esp32p4/ on the device) ---------------
 vtime_t port_clock(void);                 // real time, microseconds since boot; used when K.realtime
@@ -406,6 +410,16 @@ const char *port_agent_model(void);
 int port_agent_start(int ticket, const char *body, size_t len, char *error, size_t error_size);
 int port_agent_poll(int ticket, agent_net_result_t *result);
 void port_agent_cancel(int ticket);
+// Network administration, for Settings (claim net.admin; net.info also with sys.read). All of these return promptly
+// on the kernel thread: the P4 hands scans and joins to its network worker. A board without Wi-Fi reports mode
+// "none" and refuses the rest. join copies the password, uses it and wipes it; nothing returns or logs it.
+char *port_net_info(void);                 // malloc'ed JSON: {"mode", "wifi", "state", "ssid", "ip", "rssi", "clock",
+                                           //   "provider", "api", "model", "key"}
+int port_net_scan(char *why, size_t n);    // start a scan: 0, or nonzero with why filled in
+char *port_net_scan_result(void);          // NULL while scanning; else malloc'ed JSON, the last scan's
+                                           //   [{"ssid", "rssi", "secure"}] strongest first, or {"error"}
+int port_net_join(const char *ssid, const char *password, char *why, size_t n);   // save and connect
+int port_tz_set(const char *tz);           // TZ for every world at once; 0 saved, 1 applied but not kept
 // Switch the board off (operation "poweroff", claim sys.power). The device does not return if the power went; the
 // host sets K.halted and returns 0. Nonzero, with why filled in: the board is still running (external power).
 int port_power_off(char *why, size_t n);
