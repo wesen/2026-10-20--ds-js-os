@@ -644,7 +644,7 @@ module (PICOCALC-NATIVE N4)"; 7ba759e — "picocalc-os: WebAssembly worlds on th
 
 ### What worked
 
-- Host: `test-native` 25 OK, `test-sys` (13 with the new class) OK, `test-fs`, `test-apps` OK; shots unchanged
+- Host: `test-native` 25 OK, `test-sys` OK (11 system tests, and 6 loader tests with the 2 new ones), `test-fs`, `test-apps` OK; shots unchanged
   except `out/41-about.png` (JS heap total 5490 → 5502 KB, the longer prelude).
 - Device (`build-agent`, 2.50 MB, 38 % of the app partition free): `u-echo` loads, inits, starts and ticks;
   `u-batt: battery: open failed: u-batt has no claim on i2c0:0x1f`; `u-wp-oob` and `u-wp-badptr` `it trapped: out
