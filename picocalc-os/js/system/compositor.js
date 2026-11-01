@@ -56,6 +56,7 @@ function measure(n, w) {
       const cols = n.cols || 3, rows = Math.ceil(n.items.length / cols);
       return { h: rows * (n.cell || 64) + (rows - 1) * (n.gap ?? 8), grow: 0 };
     }
+    case "textarea": return { h: n.rows.length * (fh(n.font || "s") + (n.lead ?? 2)) + 4, grow: n.grow ?? 1 };
     case "list": case "lines": case "table": {
       const rh = rowH(n), head = n.t === "table" && n.head !== false ? fh("s") + 6 : 0;
       return n.visible ? { h: n.visible * rh + head, grow: 0 } : { h: rh + head, grow: n.grow ?? 1 };   // visible: rows shown
@@ -207,6 +208,7 @@ function draw(fb, n, x, y, w, h) {
     }
     case "list": drawList(fb, n, x, y, w, h); break;
     case "lines": drawLines(fb, n, x, y, w, h); break;
+    case "textarea": drawTextarea(fb, n, x, y, w, h); break;
     case "table": drawTable(fb, n, x, y, w, h); break;
     default: break;
   }
@@ -265,6 +267,20 @@ function drawLines(fb, n, x, y, w, h) {
   const from = n.bottom ? Math.max(0, rows.length - vis - (n.scroll || 0)) : Math.min(n.scroll || 0, Math.max(0, rows.length - vis));
   const dark = n.bg === "ink" || n.bg === "bar";
   rows.slice(from, from + vis).forEach((r, i) => fb.text(x + 4 + r.indent * fw(f), y + 2 + i * rh, r.s, f, colorOn(dark, r.color || "ink")));
+}
+
+// Rows drawn exactly as given (the app wraps them), with highlighted spans and a cursor: the editor's view.
+function drawTextarea(fb, n, x, y, w, h) {
+  const f = n.font || "s", cw = fw(f), rh = fh(f) + (n.lead ?? 2), vis = Math.floor((h - 4) / rh);
+  const rows = n.rows.slice(0, vis);
+  if (n.bg) fb.fill(x, y, w, h, color(n.bg));
+  for (const [r, c, l, tint] of n.marks || []) if (r < rows.length) fb.fill(x + 4 + c * cw, y + 1 + r * rh, l * cw, rh, color(tint, C.soft));
+  rows.forEach((r, i) => {
+    const o = typeof r === "string" ? { s: r } : r;
+    fb.text(x + 4, y + 2 + i * rh, o.s, f, color(o.color), w - 8);
+  });
+  const cur = n.cursor;
+  if (cur && cur[0] >= 0 && cur[0] < rows.length) fb.fill(x + 4 + cur[1] * cw, y + 1 + cur[0] * rh, 2, rh, C.accent);
 }
 
 function drawTable(fb, n, x, y, w, h) {

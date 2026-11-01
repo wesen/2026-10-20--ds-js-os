@@ -1,0 +1,52 @@
+# Files and the editor: browse, open a note, edit, find, preview, save; then make a new file.
+wait 1200
+key d
+wait 600
+capture 50-files.png
+key enter
+wait 300
+key down
+wait 100
+capture 51-files-notes.png
+key enter
+wait 600
+capture 52-editor.png
+key down
+key down
+key down
+key end
+key enter
+type Notes can be long now: up to 64 KB, and the editor wraps them at 49 columns.
+wait 200
+capture 53-editor-typed.png
+key f3
+type note
+key enter
+wait 200
+key f4
+wait 200
+capture 54-editor-find.png
+key f6
+wait 200
+capture 55-editor-preview.png
+key f6
+key f2
+wait 400
+capture 56-editor-saved.png
+key esc
+wait 400
+capture 57-files-back.png
+key f2
+type ideas.md
+wait 100
+capture 58-files-new.png
+key enter
+wait 600
+type # Ideas
+key enter
+type - a calculator that graphs
+key enter
+type an agenda with reminders
+key f2
+wait 400
+capture 59-editor-new.png

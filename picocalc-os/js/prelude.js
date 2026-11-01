@@ -223,6 +223,8 @@
     list: (items, sel, o) => Object.assign({ t: "list", items, sel: sel == null ? -1 : sel }, o),
     table: (cols, rows, o) => Object.assign({ t: "table", cols, rows }, o),
     lines: (items, o) => Object.assign({ t: "lines", items }, o),
+    // rows drawn as given (already wrapped), with o.cursor [row, col] and o.marks [[row, col, len, color]]
+    textarea: (rows, o) => Object.assign({ t: "textarea", rows }, o),
     spark: (values, o) => Object.assign({ t: "spark", values }, o),
     canvas: (w, h, ops, o) => Object.assign({ t: "canvas", w, h, ops }, o),
     input: (value, o) => Object.assign({ t: "input", value: String(value) }, o),

@@ -2,6 +2,10 @@
 const APPS = [
   { app: "chat", key: "c", label: "Agent", about: "Ask, read, and act with a focused assistant. Your phone can stay put.",
     ops: [["rect", 2, 2, 36, 22], ["line", 9, 24, 9, 30], ["line", 9, 30, 17, 24], ["fill", 8, 9, 24, 2], ["fill", 8, 15, 17, 2]] },
+  { app: "files", key: "d", label: "Files", about: "Browse the files on the device. Opening one hands the editor that file and nothing else.",
+    ops: [["fill", 2, 3, 14, 4], ["rect", 2, 6, 36, 22], ["fill", 2, 6, 36, 3]] },
+  { app: "editor", key: "e", label: "Editor", about: "Plain text and Markdown, with find, soft wrap and a preview.",
+    ops: [["rect", 8, 0, 24, 30], ["fill", 12, 6, 16, 2], ["fill", 12, 12, 16, 2], ["fill", 12, 18, 9, 2], ["fill", 23, 16, 2, 7, "accent"]] },
   { app: "sysmon", key: "m", label: "System", about: "Every world, its memory, its turns and the buses, live.",
     ops: [["fill", 4, 18, 7, 12], ["fill", 13, 8, 7, 22], ["fill", 22, 13, 7, 17], ["fill", 31, 2, 7, 28]] },
   { app: "repl", key: "r", label: "REPL", about: "JavaScript, evaluated in a sandbox world with its own heap and budget.",
