@@ -429,7 +429,7 @@ service("compositor")
     if (f.app === s.focus) dirty(s);
   })
   .on("keys", (s, e, msg) => {
-    // Channel subscriptions are not capabilities yet; authenticate the physical keyboard path.
+    // Only worlds with the claim keys.raw may provide keys; checking the sender as well keeps a second line.
     if (msg.from !== "keyboard") return;
     if (e.state === "up") return;
     if (e.key === "f1") return focus(s, "launcher");

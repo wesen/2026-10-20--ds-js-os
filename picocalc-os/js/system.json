@@ -1,9 +1,9 @@
 {
   "worlds": [
-    { "name": "keyboard",   "file": "drivers/keyboard.js",  "claims": ["i2c0:0x1f"],             "budget_ms": 20,  "mem_kb": 320 },
+    { "name": "keyboard",   "file": "drivers/keyboard.js",  "claims": ["i2c0:0x1f", "keys.raw"], "budget_ms": 20,  "mem_kb": 320 },
     { "name": "power",      "file": "drivers/power.js",     "claims": ["i2c0:0x1f"],             "budget_ms": 20,  "mem_kb": 320 },
     { "name": "display",    "file": "drivers/display.js",   "claims": ["spi2"],                  "budget_ms": 30,  "mem_kb": 320 },
-    { "name": "compositor", "file": "system/compositor.js", "claims": ["dma"],                   "budget_ms": 80,  "mem_kb": 768 },
+    { "name": "compositor", "file": "system/compositor.js", "claims": ["dma", "keys.raw", "frames.read"], "budget_ms": 80, "mem_kb": 768 },
     { "name": "agent",      "file": "system/agent.js",      "claims": ["net.agent", "sys.read", "fs:/notes"], "budget_ms": 100, "mem_kb": 1536, "store_kb": 16 },
     { "name": "chat",       "file": "apps/chat.js",                                              "budget_ms": 80,  "mem_kb": 768 },
     { "name": "launcher",   "file": "apps/launcher.js",     "claims": ["sys.read"],                                "mem_kb": 384 },
@@ -17,7 +17,7 @@
     { "name": "snake",      "file": "apps/snake.js",                                                               "mem_kb": 320 },
     { "name": "faults",     "file": "apps/faults.js",       "claims": ["sys.admin", "sys.read"],                   "mem_kb": 384 },
     { "name": "flaky",      "file": "system/flaky.js",                                                             "mem_kb": 320 },
-    { "name": "keys",       "file": "apps/keys.js",                                                                "mem_kb": 320 },
+    { "name": "keys",       "file": "apps/keys.js",         "claims": ["keys.raw"],                                "mem_kb": 320 },
     { "name": "about",      "file": "apps/about.js",        "claims": ["sys.read"],                                "mem_kb": 320 }
   ]
 }

@@ -265,6 +265,8 @@ char *kernel_stats_json(void);
 void kernel_stats_print(void);
 bool world_needs(world_t *W, const char *ch);
 bool world_provides(world_t *W, const char *ch);
+const char *channel_claim(const char *ch);      // the claim a guarded channel takes ("keys": "keys.raw"), or NULL
+bool world_may_use(world_t *W, const char *ch);  // W has that claim, or the channel is open
 bool world_claims(world_t *W, const char *claim);
 
 // the engine binding: vm.c (QuickJS) or vm_mqjs.c (MicroQuickJS); one is linked into a build

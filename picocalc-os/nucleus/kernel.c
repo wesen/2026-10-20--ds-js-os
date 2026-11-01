@@ -115,6 +115,28 @@ static bool in_list(char (*l)[NAME_LEN], int n, const char *s) { for (int i = 0;
 bool world_needs(world_t *W, const char *ch) { return in_list(W->needs, W->n_needs, ch); }
 bool world_provides(world_t *W, const char *ch) { return in_list(W->provides, W->n_provides, ch); }
 bool world_claims(world_t *W, const char *c) { return in_list(W->claims, W->n_claims, c); }
+// Channels that carry what the user types or sees: a world needs or provides one only with its claim, so no world
+// can listen to keystrokes or read another app's screen, or forge either, unless the manifest says it may.
+static const struct { const char *channel, *claim; } GUARDED[] = {
+  { "keys", "keys.raw" }, { "frames", "frames.read" }, { "touch", "touch.raw" },
+};
+const char *channel_claim(const char *ch) {
+  for (size_t i = 0; i < sizeof GUARDED / sizeof GUARDED[0]; i++) if (!strcmp(GUARDED[i].channel, ch)) return GUARDED[i].claim;
+  return NULL;
+}
+bool world_may_use(world_t *W, const char *ch) { const char *c = channel_claim(ch); return !c || world_claims(W, c); }
+static bool channels_allowed(world_t *W) {
+  for (int l = 0; l < 2; l++) {
+    char (*names)[NAME_LEN] = l ? W->provides : W->needs;
+    for (int i = 0, n = l ? W->n_provides : W->n_needs; i < n; i++)
+      if (!world_may_use(W, names[i])) {
+        snprintf(W->last_error, sizeof W->last_error, "the channel \"%s\" takes the claim %s, which the manifest does not give %s",
+                 names[i], channel_claim(names[i]), W->name);
+        return false;
+      }
+  }
+  return true;
+}
 static bool alive(world_t *W) { return W->status == W_IDLE && W->vm; }
 
 msg_t *new_msg(int kind, const char *type, const char *json, int from) {
@@ -182,7 +204,7 @@ void kernel_publish(world_t *from, const char *ch, const char *json, const int *
   K.published++;
   for (int i = 0; i < K.n_worlds; i++) {
     world_t *T = K.worlds[i];
-    if (T == from || T->status == W_STOPPED || !world_needs(T, ch)) continue;
+    if (T == from || T->status == W_STOPPED || !world_needs(T, ch) || !world_may_use(T, ch)) continue;
     msg_t *m = new_msg(M_ON, ch, json, from ? from->id : -1);
     for (int k = 0; k < nh && k < MAX_MSG_HANDLES; k++) m->hs[m->nh++] = hs[k];
     defer_deliver(T, m);
@@ -365,6 +387,7 @@ void kernel_timer_set(world_t *W, int i, bool on) {
 static int boot_world(world_t *W) {
   int rc = vm_create(W);
   if (rc) return rc;
+  if (!channels_allowed(W)) return -1;
   if (W->prio < 0) W->prio = !strcmp(W->kind, "driver") ? 3 : !strcmp(W->kind, "service") ? 2 : 1;
   W->status = W_IDLE;
   if (W->has_start) {
@@ -440,7 +463,10 @@ static void run_segment(world_t *W, bool is_settle) {
       else snprintf(W->turn_type, sizeof W->turn_type, "%s", m->type);
       if (K.trace) {
         world_t *F = m->from >= 0 ? world_by_id(m->from) : NULL;
-        klog("%s <- %s%s from %s %.120s", W->name, W->turn_type, m->ask ? " (ask)" : "", F ? F->name : "kernel", m->json ? m->json : "");
+        // keystrokes are not logged: one of them may be part of a password
+        bool typed = !strcmp(m->type, "key") || !strcmp(m->type, "keys");
+        klog("%s <- %s%s from %s %.120s", W->name, W->turn_type, m->ask ? " (ask)" : "", F ? F->name : "kernel",
+             typed ? "[key]" : m->json ? m->json : "");
       }
       rc = vm_dispatch(W, m);
       free_msg(m);

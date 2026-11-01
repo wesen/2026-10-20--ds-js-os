@@ -210,6 +210,7 @@ static JSValue op_publish(JSContext *ctx, world_t *W, int argc, JSValue *argv) {
   char *ch = sarg(ctx, argv, argc, 0), *json = sarg(ctx, argv, argc, 1);
   JSValue r = JS_UNDEFINED;
   if (!ch || !world_provides(W, ch)) r = fail(ctx, "%s does not provide the channel \"%s\"", W->name, ch ? ch : "");
+  else if (!world_may_use(W, ch)) r = fail(ctx, "%s has no claim on %s", W->name, channel_claim(ch));
   else if (check_grants(ctx, W, hs, nh)) { charge_json(json ? strlen(json) : 0); kernel_publish(W, ch, json, hs, nh); }
   else r = JS_EXCEPTION;
   free(ch); free(json);
