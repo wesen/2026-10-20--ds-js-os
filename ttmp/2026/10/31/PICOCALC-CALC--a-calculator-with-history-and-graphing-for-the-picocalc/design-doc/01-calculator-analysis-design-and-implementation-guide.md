@@ -9,12 +9,16 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/js/apps/calc.js
+      Note: the calculator and plotter
+    - Path: repo://picocalc-os/js/apps/launcher.js
+      Note: Calc entry, four columns
 ExternalSources: []
-Summary: "A calculator app for picocalc-os: an expression language with variables and one-argument functions, compiled to closures; a history the user can recall; and a function plotter that computes its samples in slices small enough for the kernel's turn budgets, on the host model and on the ESP32-P4."
+Summary: 'A calculator app for picocalc-os: an expression language with variables and one-argument functions, compiled to closures; a history the user can recall; and a function plotter that computes its samples in slices small enough for the kernel''s turn budgets, on the host model and on the ESP32-P4.'
 LastUpdated: 2026-10-31T23:59:00-04:00
-WhatFor: "Onboarding to the calculator and the plan PICOCALC-CALC follows."
-WhenToUse: "Before changing js/apps/calc.js, the compositor's canvas poly operation, or the home screen's grid."
+WhatFor: Onboarding to the calculator and the plan PICOCALC-CALC follows.
+WhenToUse: Before changing js/apps/calc.js, the compositor's canvas poly operation, or the home screen's grid.
 ---
 
 # Calculator: analysis, design and implementation guide
@@ -422,3 +426,34 @@ plotOps(s)                           -> canvas operations for axes, grid, labels
 | `picocalc-os/js/system/agent.js` | `calculate`, the agent's own evaluator (unchanged; section 2.5) |
 | `picocalc-os/nucleus/vm.c` | budgets and the host cost model (`vm_begin_segment`, `on_interrupt`) |
 | `picocalc-os/nucleus/kernel.c` | the render step after a segment |
+
+## 13. As built and measured
+
+The plan was followed; this section records where the code differs and what the device measured. Commits:
+`d51cf0c` (C1–C4), `a5c66ab` (C5).
+
+### Differences from the plan
+
+| Topic | Planned | Built |
+|---|---|---|
+| Implicit multiplication | before a number, a name or `(` | before a name or `(` only: `2 3` is an error ("unexpected 3"), `(1+2)3` too |
+| Timers | `every 30 ms` while plotting, a save timer | no timers: sampling is a detached chain (`await sleep(30); plotSample`) started when a plot needs it, saving a `sleep(3000).then(save)` started on the first change of a burst. A chain is never returned from a handler, since a returned promise holds the turn open and blocks keys |
+| Canvas size | 308×230 | 306×230, so the border fits inside the body |
+| Plot labels | along the axes | along the axes; labels that would run past the canvas are left out; the legend has a white backing |
+| Plot timing | — | a log line per completed plot: curves, nodes, total ms, slices, slowest slice, final slice |
+| Tests | `tests/calc.test.mjs` | 13 tests; `make test-apps` runs the editor's and the calculator's |
+
+### Measurements on the device (ESP32-P4, Wi-Fi up)
+
+| What | Result |
+|---|---|
+| One curve, `sin(x)` | 298 ms in 5 slices, slowest slice 3.8 ms |
+| Two curves | 480 ms in 6 slices, slowest 6.3 ms, slice settled at 72 columns |
+| Three curves (`tan`, `f`, `sin`) | 563–580 ms in 6 slices, slowest 8.8 ms |
+| Calculator turns during the run | 47 turns, 1,213 ms (about 26 ms each: drawing operations and render dominate) |
+| Calculator heap with three curves | 394 KB of 512 KB |
+| Crashes | 0 |
+| After a reboot | history and `f(x)` restored |
+
+On the host the same three-curve plot takes 160 ms of virtual time in 5 slices: the host's `now()` advances within
+a segment by the cost model, so the adaptation runs there too.

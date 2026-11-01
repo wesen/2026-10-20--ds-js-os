@@ -1,7 +1,7 @@
 ---
 Title: A calculator with history and graphing for the PicoCalc
 Ticket: PICOCALC-CALC
-Status: active
+Status: complete
 Topics:
     - picocalc
     - calculator
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-10-31T23:45:28.363332989-04:00
+LastUpdated: 2026-10-31T23:59:52.791152926-04:00
 WhatFor: ""
 WhenToUse: ""
 ---
