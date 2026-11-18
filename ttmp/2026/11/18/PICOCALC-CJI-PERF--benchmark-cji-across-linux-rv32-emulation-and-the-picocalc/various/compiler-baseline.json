@@ -1,0 +1,223 @@
+{
+  "worlds": {
+    "files": {
+      "slir_sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa",
+      "source_sha256": "5ad09cd9421031b03497ce1fcc6ebade53a1496a44420e126272546a48ef8587",
+      "native": {
+        "instructions": 20174143435,
+        "top": [
+          {
+            "symbol": "whole_bits",
+            "instructions": 1643283991
+          },
+          {
+            "symbol": "rt_any_index",
+            "instructions": 1187024655
+          },
+          {
+            "symbol": "rt_any_eq",
+            "instructions": 1075454980
+          },
+          {
+            "symbol": "rt_any_get",
+            "instructions": 857192505
+          },
+          {
+            "symbol": "extra_find",
+            "instructions": 824620957
+          },
+          {
+            "symbol": "field_index",
+            "instructions": 819903889
+          },
+          {
+            "symbol": "rt_any_from_int",
+            "instructions": 817948682
+          },
+          {
+            "symbol": "rt_num_to_int32",
+            "instructions": 745298800
+          },
+          {
+            "symbol": "order_bits",
+            "instructions": 643428271
+          },
+          {
+            "symbol": "str_equal",
+            "instructions": 505976365
+          },
+          {
+            "symbol": "0x0000000000411539",
+            "instructions": 477056455
+          },
+          {
+            "symbol": "rt_any_to_int",
+            "instructions": 386380984
+          }
+        ]
+      }
+    },
+    "agenda": {
+      "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+      "source_sha256": "a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e"
+    }
+  },
+  "host_timing": [
+    {
+      "world": "agenda",
+      "heap_bytes": 8388608,
+      "variant": "measured",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 25558225,
+        "min": 17893302,
+        "max": 45339216
+      },
+      "process_cpu_us": {
+        "median": 25324750,
+        "min": 17838578,
+        "max": 31250168
+      },
+      "frontend_us": {
+        "median": 25556174,
+        "min": 17891559,
+        "max": 45336079
+      },
+      "gc_us": {
+        "median": 1858193,
+        "min": 1454466,
+        "max": 2978096
+      },
+      "collections": 424,
+      "survivor_bytes": 1434574696,
+      "slide_bytes": 211914816,
+      "live_peak_bytes": 4491400,
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0"
+    },
+    {
+      "world": "agenda",
+      "heap_bytes": 8388608,
+      "variant": "plain",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 19087380,
+        "min": 16669780,
+        "max": 25632232
+      },
+      "process_cpu_us": {
+        "median": 18948632,
+        "min": 16663897,
+        "max": 24247917
+      },
+      "collections": 424,
+      "survivor_bytes": 1434574696,
+      "slide_bytes": null,
+      "live_peak_bytes": 4491400,
+      "executable_sha256": "6f26ff7c103d5ab6d1ae793879f98360b62c0be10d324699e072d57760ffefa4"
+    },
+    {
+      "world": "agenda",
+      "heap_bytes": 10485760,
+      "variant": "measured",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 23480776,
+        "min": 19097010,
+        "max": 33303450
+      },
+      "process_cpu_us": {
+        "median": 23023228,
+        "min": 18803949,
+        "max": 31398727
+      },
+      "frontend_us": {
+        "median": 23478970,
+        "min": 19095081,
+        "max": 33301132
+      },
+      "gc_us": {
+        "median": 1254142,
+        "min": 1091712,
+        "max": 1555699
+      },
+      "collections": 297,
+      "survivor_bytes": 995195416,
+      "slide_bytes": 172771688,
+      "live_peak_bytes": 4460280,
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0"
+    },
+    {
+      "world": "agenda",
+      "heap_bytes": 10485760,
+      "variant": "plain",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 19932083,
+        "min": 17399054,
+        "max": 23743839
+      },
+      "process_cpu_us": {
+        "median": 19832004,
+        "min": 17351147,
+        "max": 22946463
+      },
+      "collections": 297,
+      "survivor_bytes": 995195416,
+      "slide_bytes": null,
+      "live_peak_bytes": 4460280,
+      "executable_sha256": "6f26ff7c103d5ab6d1ae793879f98360b62c0be10d324699e072d57760ffefa4"
+    },
+    {
+      "world": "files",
+      "heap_bytes": 8388608,
+      "variant": "measured",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 3515916,
+        "min": 2497835,
+        "max": 4865435
+      },
+      "process_cpu_us": {
+        "median": 3339151,
+        "min": 2494858,
+        "max": 4709488
+      },
+      "frontend_us": {
+        "median": 3513527,
+        "min": 2496084,
+        "max": 4863103
+      },
+      "gc_us": {
+        "median": 160221,
+        "min": 128435,
+        "max": 189439
+      },
+      "collections": 80,
+      "survivor_bytes": 151459216,
+      "slide_bytes": 47127400,
+      "live_peak_bytes": 3973240,
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0"
+    },
+    {
+      "world": "files",
+      "heap_bytes": 8388608,
+      "variant": "plain",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 2778376,
+        "min": 2323742,
+        "max": 3207706
+      },
+      "process_cpu_us": {
+        "median": 2733915,
+        "min": 2323421,
+        "max": 3028917
+      },
+      "collections": 80,
+      "survivor_bytes": 151459216,
+      "slide_bytes": null,
+      "live_peak_bytes": 3973240,
+      "executable_sha256": "6f26ff7c103d5ab6d1ae793879f98360b62c0be10d324699e072d57760ffefa4"
+    }
+  ]
+}

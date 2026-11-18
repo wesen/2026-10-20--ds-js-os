@@ -272,3 +272,44 @@ Paths starting with `runtime/`, `tools/` and `build/` below are relative to the 
 | Port ticket `various/device-catalog-results.json` | Historical world attempts, firmware identities and reference ELF digests |
 
 The first implementation milestone is a native host report for Files and Agenda, one RV32 profile with named hotspots, and one falsifiable hardware prediction. The second adds matched GC boundaries and the physical A/B result. Keep benchmark artifacts in a per-run directory and promote only a small reproducible summary and validated receipts to the ticket. The design needs no dashboard or resident profiling service.
+
+## Running the implemented probes
+
+The [script index](../scripts/README.md) gives the entry points for the Linux and guest runs. Every run begins by generating stage-0 SLIR for the same source file. Stage 1 must emit that exact byte sequence. On the board, verification goes one step further and compares the final linked module to the independent host RV32 assembler output.
+
+A regular P4 build exposes phase progress through the serial console and the kernel log. For an existing job, send `cji status`. A heartbeat reports the source digest prefix, current phase, elapsed milliseconds, successful allocation-call count and current scratch bytes. Allocation count can increase while scratch stays flat as temporary buffers are released and reused. Neither value measures lines compiled or predicts a completion percentage. Use the terminal receipt with the full source and module digests to identify the result.
+
+```text
+stage 0 JS ──► expected world SLIR
+                     ▲ compare bytes
+Linux AOT / RV32 ────┘
+
+P4 serial command ─► worker ─► relocate ─► frontend ─► link ─► assemble ─► hash
+                                              │                             │
+                                    elapsed and GC counters         compare host ELF
+```
+
+A benchmark firmware built with `PICOCALC_COMPILER_PROFILE=ON` also accepts `cji profile 8 apps/agenda.js` and `cji profile 10 apps/agenda.js`. Each job requests one contiguous frontend heap after relocation. The observer records the reservation actually obtained. The frontend timer brackets the stage-1 call. A nested accumulator times completed collections. The worker prints the metrics after the call returns. A failed frontend can still report partial counters. Require a complete sample and a matching module before comparing durations.
+
+| Field | How to interpret it |
+|---|---|
+| `frontend_us` | Elapsed time around stage 1. The P4 worker can be preempted during this interval. |
+| `gc_us` | Elapsed time inside completed collections during the measured frontend interval. Divide by frontend time for a GC fraction. |
+| `collections`, `live_peak_bytes` | Collection count and maximum live heap observed at collection points. |
+| `survivor_bytes` | Cumulative live bytes encountered by collections. The same surviving object can contribute repeatedly. |
+| `slide_bytes` | Bytes passed to the compact collector's actual moving operation. Objects already at their destination contribute zero. |
+| `elapsed_ms`, `scratch_peak` | Entire device job and peak job-accounted allocation. These include buffers used outside the frontend interval. |
+
+The initial Linux Files profile counted 20,174,143,435 x86 instructions with Callgrind. Its three largest named functions were `whole_bits` (8.15%), `rt_any_index` (5.88%) and `rt_any_eq` (5.33%). They implement number classification, dynamic indexing and equality in CJI’s runtime. The cost is spread across many operations. This result alone gives no estimate of cycles spent in those functions on the P4.
+
+### Linux timing baseline
+
+On the Core i7-1165G7 host, each of the six configurations ran once to warm up and seven more times for measurement. The runner pinned itself to logical CPU 2 and reversed configuration order on successive rounds. Other profiling jobs ran concurrently. Each of the 48 outputs matched its stage-0 reference. Times below are medians in seconds. Ranges and binary identities are in the [machine-readable baseline](../various/compiler-baseline.json).
+
+| World and heap | Plain process | Instrumented process | Instrumented frontend | Inside GC | Collections | Bytes actually slid |
+|---|---:|---:|---:|---:|---:|---:|
+| Files, 8 MiB | 2.778 | 3.516 | 3.514 | 0.160 | 80 | 47,127,400 |
+| Agenda, 8 MiB | 19.087 | 25.558 | 25.556 | 1.858 | 424 | 211,914,816 |
+| Agenda, 10 MiB | 19.932 | 23.481 | 23.479 | 1.254 | 297 | 172,771,688 |
+
+The larger Agenda heap reduces collection count by 30% and bytes slid by 18%. In the instrumented binary the median frontend time fell 8.1%. In the plain binary the median process time rose 4.4%. The measured process took 18–34% longer than its plain counterpart across these configurations, with wide overlapping run ranges and concurrent host load. Treat these as baseline observations. They establish an effect on collector work but do not justify raising the production heap. A timing-based change needs the physical measurement.

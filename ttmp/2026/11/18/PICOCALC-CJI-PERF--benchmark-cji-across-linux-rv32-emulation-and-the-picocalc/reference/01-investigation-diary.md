@@ -191,3 +191,49 @@ Start with scripts/README.md. Inspect 06-board-experiment.sh for the ownership b
 ### Technical details
 
 The original Callgrind launch used 8,388,608 bytes for both heap bounds. The serial console was held between keyboard transactions for the pending physical run. Large generated outputs live under /tmp/nov18-perf-base and /tmp/nov18-perf-board.
+
+## Step 5 — Capture the first complete Linux timing matrix
+
+### Prompt Context
+
+Continuing the request for a traceable baseline across the Linux host, emulator and PicoCalc.
+
+### What I did
+
+Summarized 48 qualified AOT processes, committed the compact baseline rather than large dumps, and added the progress protocol, counter definitions and measured host medians to the intern guide. Built the profile-enabled P4 application with ESP-IDF 5.4.2.
+
+### Why
+
+A deterministic reduction in collector work and a wall-time improvement answer different questions. Measuring the probe build against a plain build exposes that distinction.
+
+### What worked
+
+All six Linux configurations passed the reference digest check on eight runs each. Excluding each warm-up left seven samples per configuration. The P4 application fit the existing partition with 0x27830 bytes to spare.
+
+### What didn't work
+
+Linux wall times varied substantially. Instrumented Agenda at 8 MiB ranged from 17.893 to 45.339 seconds with other profilers active. A small speed difference is ambiguous in this run.
+
+### What I learned
+
+Giving Agenda 2 MiB more reduced collections from 424 to 297. It reduced cumulative bytes slid by 39,143,128. The host plain binary nevertheless had a higher median process time at 10 MiB.
+
+### What was tricky to build
+
+An older profiling launch used an already-built stage-1 executable. The host matrix uses the paired plain and instrumented executables freshly built from a single generated object. Keep their identities distinct.
+
+### What warrants a second pair of eyes
+
+Both instrumentation and system load affect wall time. Inspect the measured and plain ranges in the JSON. Compare collector counts across word sizes only after validating each output.
+
+### What should be done in the future
+
+Finish the long guest profiles and physical Agenda comparison. The existing board run still owns serial. The experiment driver waits for its terminal receipt.
+
+### Code review instructions
+
+Re-run scripts/07-summarize.py on the working directory, compare the JSON, then review the Linux baseline table in the design guide. The ticket script archive and hardware handoff were committed in 05bc67b.
+
+### Technical details
+
+The benchmark firmware ELF SHA-256 is 154cd68cbe549538a837ec20293d389515d094b26a0a08a38a9da017ac8b4379, with application BIN SHA-256 5eced004bec6eb3da3d30042bf7a84cbc80242b133514d05be7bee8b43637792. This build selects 360 MHz. Host timings used CLOCK_MONOTONIC and per-process child CPU usage.
