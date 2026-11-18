@@ -1,0 +1,425 @@
+{
+  "firmware": {
+    "baseline": "0fb80be375d0f90c1c9b634f8be751a9c17d1fa06c0af14862afc7d52e78a78b",
+    "instrumented": "5ca8eb6ef46930a1f35c2e353ddde550a45e8683cce4e84ad017b2a0d8eddecd",
+    "reserved": "e46c655 (code revision, separate inflate buffer)",
+    "shared": "e72bc108aa7a5dfefae43a684492fab8c49225b73407a6de3947757c5d600000"
+  },
+  "worlds": [
+    {
+      "world": "keyboard",
+      "file": "drivers/keyboard.js",
+      "source_sha256": "ded04a85d5cf8c13349ad0eee2d8a2228af2b553c2477d833c90ad6ee7a16c16",
+      "source_bytes": 2336,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "ok",
+          "elapsed_ms": 16313,
+          "scratch_bytes": 8527233,
+          "elf_bytes": 30248,
+          "elf_sha256": "3c04f1d48da474574b13f9abacee88351912daff9f8edc596428f298e891a23c"
+        }
+      ],
+      "host_elf_sha256": "3c04f1d48da474574b13f9abacee88351912daff9f8edc596428f298e891a23c"
+    },
+    {
+      "world": "power",
+      "file": "drivers/power.js",
+      "source_sha256": "cfbca152ce92b207c6506e90158aa18e30abf9e512ecfcc2c30d176e7a6b09b7",
+      "source_bytes": 2579,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "ok",
+          "elapsed_ms": 20425,
+          "scratch_bytes": 8593012,
+          "elf_bytes": 40424,
+          "elf_sha256": "3d8b75dc29445a967045b6899a5bac0ddec7af9d1145bcad8220a3128ab2e7bf"
+        }
+      ],
+      "host_elf_sha256": "3d8b75dc29445a967045b6899a5bac0ddec7af9d1145bcad8220a3128ab2e7bf"
+    },
+    {
+      "world": "display",
+      "file": "drivers/display.js",
+      "source_sha256": "70631255ff3bb057f52a45af1c01e20e3a9754f80e56b2c7de057312413571ee",
+      "source_bytes": 2173,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "ok",
+          "elapsed_ms": 20148,
+          "scratch_bytes": 8527070,
+          "elf_bytes": 36976,
+          "elf_sha256": "b5674cb0e3d80a00e5cfc1f0959f81ba72feb10faee7102fda9c62fa89000b4e"
+        }
+      ],
+      "host_elf_sha256": "b5674cb0e3d80a00e5cfc1f0959f81ba72feb10faee7102fda9c62fa89000b4e"
+    },
+    {
+      "world": "compositor",
+      "file": "system/compositor.js",
+      "source_sha256": "ee42394ea397125e56297fd0d7ac7eec1d8f3860733860bbf06de9afc78de7f2",
+      "source_bytes": 24009,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "failed",
+          "elapsed_ms": 304288,
+          "scratch_bytes": 9007658,
+          "diagnostic": "compiler scratch limit"
+        }
+      ],
+      "host_elf_sha256": "7c2b1bc177b472147dfe5c6b90fc97a28200d62016019b236d7430c3ed2cf782"
+    },
+    {
+      "world": "agent",
+      "file": "system/agent.js",
+      "source_sha256": "6cb57edc021bea33953fa89a70573c5c7cf905a9d0a0077ec1d2a31cd94d3d5f",
+      "source_bytes": 34596,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "failed",
+          "elapsed_ms": 115379,
+          "scratch_bytes": 8493893,
+          "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "instrumented",
+          "result": "failed",
+          "elapsed_ms": 114911,
+          "scratch_bytes": 8493893,
+          "allocation_refusal": {
+            "reason": "psram",
+            "request": 8388608,
+            "header": 16,
+            "held": 4299573,
+            "limit": 18874368,
+            "psram_free": 15803180,
+            "psram_largest": 5767168
+          },
+          "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "reserved",
+          "result": "failed",
+          "elapsed_ms": 401,
+          "scratch_bytes": 10485776,
+          "diagnostic": "compiler relocation -12"
+        },
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 906400,
+          "scratch_bytes": 13736837,
+          "elf_bytes": 750832,
+          "elf_sha256": "b92e5d7f1146db7f5b44ec9c42f962618a09a93b2ebfad0322ec793318b7e179"
+        }
+      ],
+      "host_elf_sha256": "b92e5d7f1146db7f5b44ec9c42f962618a09a93b2ebfad0322ec793318b7e179"
+    },
+    {
+      "world": "chat",
+      "file": "apps/chat.js",
+      "source_sha256": "ce694cdcaf75baf833d09144c0bec8e7449a790dd5485dd5c83e48f9943f468f",
+      "source_bytes": 11812,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "ok",
+          "elapsed_ms": 122793,
+          "scratch_bytes": 8733317,
+          "elf_bytes": 102280,
+          "elf_sha256": "7e10cafd5a7e838c35c8ef3ac0f9e082e0db7837de821c3805475371643fcd04"
+        }
+      ],
+      "host_elf_sha256": "7e10cafd5a7e838c35c8ef3ac0f9e082e0db7837de821c3805475371643fcd04"
+    },
+    {
+      "world": "launcher",
+      "file": "apps/launcher.js",
+      "source_sha256": "320181b043caaa3b4157c666e3cf7ba9418f2f30ed40afc1cf4d3deea1078793",
+      "source_bytes": 5583,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "failed",
+          "elapsed_ms": 163527,
+          "scratch_bytes": 8727088,
+          "diagnostic": "compiler scratch limit"
+        }
+      ],
+      "host_elf_sha256": "9633b36006b9bdef21ccf7e4cee58830df8e8289994598651aefcc3c28b8f95f"
+    },
+    {
+      "world": "files",
+      "file": "apps/files.js",
+      "source_sha256": "5ad09cd9421031b03497ce1fcc6ebade53a1496a44420e126272546a48ef8587",
+      "source_bytes": 5873,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "failed",
+          "elapsed_ms": 327777,
+          "scratch_bytes": 8465218,
+          "diagnostic": "compiler scratch limit"
+        }
+      ],
+      "host_elf_sha256": "bad610f6574efa4e5bcb588f7c53d114236db672b49cdb786f10531884426797"
+    },
+    {
+      "world": "editor",
+      "file": "apps/editor.js",
+      "source_sha256": "0b1dde88a043c59fd2e0c2d214ddde890a9156502d93659394de7f5456d647a6",
+      "source_bytes": 15610,
+      "runs": [
+        {
+          "firmware": "baseline",
+          "result": "failed",
+          "elapsed_ms": 416611,
+          "scratch_bytes": 8606043,
+          "diagnostic": "compiler scratch limit"
+        }
+      ],
+      "host_elf_sha256": "2743f1f55b87cd8ec909c8a103aacdeb77773d64aededa9b145ba7eb98228ff0"
+    },
+    {
+      "world": "calc",
+      "file": "apps/calc.js",
+      "source_sha256": "762948bbf41330504f9ba6991201afeff59be3ae717c47f0e7212e95ff750a6c",
+      "source_bytes": 95967,
+      "runs": [
+        {
+          "firmware": "instrumented",
+          "result": "failed",
+          "elapsed_ms": 49911,
+          "scratch_bytes": 8555264,
+          "allocation_refusal": {
+            "reason": "psram",
+            "request": 8388608,
+            "header": 16,
+            "held": 4360944,
+            "limit": 18874368,
+            "psram_free": 15681216,
+            "psram_largest": 5767168
+          },
+          "diagnostic": "compiler scratch limit"
+        }
+      ],
+      "host_error": "cji: error: .size = : a ()=>Any has no properties in this subset"
+    },
+    {
+      "world": "agenda",
+      "file": "apps/agenda.js",
+      "source_sha256": "a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e",
+      "source_bytes": 16326,
+      "runs": [
+        {
+          "firmware": "instrumented",
+          "result": "failed",
+          "elapsed_ms": 425984,
+          "scratch_bytes": 8475623,
+          "allocation_refusal": {
+            "reason": "psram",
+            "request": 4194304,
+            "header": 16,
+            "held": 4281303,
+            "limit": 18874368,
+            "psram_free": 15846016,
+            "psram_largest": 4194304
+          },
+          "diagnostic": "compiler scratch limit"
+        }
+      ],
+      "host_elf_sha256": "9c0cb6c10f05e09391e4ebd299ffe532661e255c9b7868e52a2c713009652f98"
+    },
+    {
+      "world": "settings",
+      "file": "apps/settings.js",
+      "source_sha256": "a43739fd9a81f36d65796c9e973fb6a1e2fbdb95382ac8fd2f3d74d8678a2aff",
+      "source_bytes": 10718,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 150494,
+          "scratch_bytes": 8994367,
+          "elf_bytes": 156000,
+          "elf_sha256": "41af07c90a2b0f83384580dea12417af69765dfc10d996cb98be78dff9215c37"
+        }
+      ],
+      "host_elf_sha256": "41af07c90a2b0f83384580dea12417af69765dfc10d996cb98be78dff9215c37"
+    },
+    {
+      "world": "logs",
+      "file": "apps/logs.js",
+      "source_sha256": "36eb63ff8acb18e3960f3b7ab9a478a9f4340d052f059ec0ad45900193a937af",
+      "source_bytes": 4259,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 111593,
+          "scratch_bytes": 8594692,
+          "elf_bytes": 63456,
+          "elf_sha256": "f666cd01c8097ff4d4df7086d94e0a448ddcdf8537140c37e9cd8e6901b35dcc"
+        }
+      ],
+      "host_elf_sha256": "f666cd01c8097ff4d4df7086d94e0a448ddcdf8537140c37e9cd8e6901b35dcc"
+    },
+    {
+      "world": "loader",
+      "file": "apps/loader.js",
+      "source_sha256": "7aff0d56c11b109ad531f6ca3a7ef7fd660bf1d4950efc16970f7f054d987f51",
+      "source_bytes": 8437,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 455890,
+          "scratch_bytes": 8992086,
+          "elf_bytes": 174184,
+          "elf_sha256": "4dadbcc2cc3c00563ff914c3dc9ce5a9e066604b27f1bbbe0a9311cf32a4ead2"
+        }
+      ],
+      "host_elf_sha256": "4dadbcc2cc3c00563ff914c3dc9ce5a9e066604b27f1bbbe0a9311cf32a4ead2"
+    },
+    {
+      "world": "sysmon",
+      "file": "apps/sysmon.js",
+      "source_sha256": "81647637675f1c998a85d31ee6e5877522eaa8c40de02da2ca5910741ef4aa37",
+      "source_bytes": 6175,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 52985,
+          "scratch_bytes": 8727680,
+          "elf_bytes": 88584,
+          "elf_sha256": "3256d74d30515d4fd5b627c9ed358c8f4a3f30c3f992f9165560d64649f539a0"
+        }
+      ],
+      "host_elf_sha256": "3256d74d30515d4fd5b627c9ed358c8f4a3f30c3f992f9165560d64649f539a0"
+    },
+    {
+      "world": "repl",
+      "file": "apps/repl.js",
+      "source_sha256": "29b9747fd8e8db00dc5462cb2e0ffb5786b31fba5357a93e09ec641838489c78",
+      "source_bytes": 2529,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 28169,
+          "scratch_bytes": 8592962,
+          "elf_bytes": 45288,
+          "elf_sha256": "c44a9b9ed4021e3922f235140abe3606cb240b194b0ab43d89d325e91d890065"
+        }
+      ],
+      "host_elf_sha256": "c44a9b9ed4021e3922f235140abe3606cb240b194b0ab43d89d325e91d890065"
+    },
+    {
+      "world": "sandbox",
+      "file": "system/sandbox.js",
+      "source_sha256": "6de023d5f0cea1e87f967cdced1c2704aa99ef64970d2cb388826954ba67659d",
+      "source_bytes": 955,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "failed",
+          "elapsed_ms": 3569,
+          "scratch_bytes": 8460252,
+          "diagnostic": "Uncaught Error: 15:13: expected ), found ,"
+        }
+      ],
+      "host_error": "cji: error: 15:13: expected ), found ,"
+    },
+    {
+      "world": "snake",
+      "file": "apps/snake.js",
+      "source_sha256": "707c5d503adfa55c35ecad4618d00374cd13e80d432516d2eeb793aa6d879885",
+      "source_bytes": 5362,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 59888,
+          "scratch_bytes": 8595795,
+          "elf_bytes": 77176,
+          "elf_sha256": "77fef8ac465344bcc88293b1f0997307f919fe36e5169fa4c93bbf3394769bd9"
+        }
+      ],
+      "host_elf_sha256": "77fef8ac465344bcc88293b1f0997307f919fe36e5169fa4c93bbf3394769bd9"
+    },
+    {
+      "world": "faults",
+      "file": "apps/faults.js",
+      "source_sha256": "f99a40cba4ab4746c81043de3f0a6162eae13f848a1a029b674776167c3f1787",
+      "source_bytes": 3215,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 25335,
+          "scratch_bytes": 8528112,
+          "elf_bytes": 51528,
+          "elf_sha256": "4362af67ee997b51e3b2fd9c2abf50dc65acf361aab22754637857429765a624"
+        }
+      ],
+      "host_elf_sha256": "4362af67ee997b51e3b2fd9c2abf50dc65acf361aab22754637857429765a624"
+    },
+    {
+      "world": "flaky",
+      "file": "system/flaky.js",
+      "source_sha256": "9345f6cca612e190c6c8d389fd46e77004f3cdce66f1c931bf6726c409720229",
+      "source_bytes": 349,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 8236,
+          "scratch_bytes": 8476094,
+          "elf_bytes": 10800,
+          "elf_sha256": "e74d83cd6c8ebebf9319e5314f8f03818fb74c8954af2f58b23a005530d5f595"
+        }
+      ],
+      "host_elf_sha256": "e74d83cd6c8ebebf9319e5314f8f03818fb74c8954af2f58b23a005530d5f595"
+    },
+    {
+      "world": "keys",
+      "file": "apps/keys.js",
+      "source_sha256": "05784051db39f2f2229879e496e2a4708ad53b7ecd74e8dec6bcb65c13350b1e",
+      "source_bytes": 2045,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 26743,
+          "scratch_bytes": 8592478,
+          "elf_bytes": 41944,
+          "elf_sha256": "fd391bdfefb05662ee6b8061fac72361962b43ca8ba95b5a9e05e6349aeb5194"
+        }
+      ],
+      "host_elf_sha256": "fd391bdfefb05662ee6b8061fac72361962b43ca8ba95b5a9e05e6349aeb5194"
+    },
+    {
+      "world": "about",
+      "file": "apps/about.js",
+      "source_sha256": "f3fe6146245d123b99d82406e6eb123b36ea54d0c69ed8df60feef9f1eb4352f",
+      "source_bytes": 1899,
+      "runs": [
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 12954,
+          "scratch_bytes": 8477644,
+          "elf_bytes": 27184,
+          "elf_sha256": "7f70301ddf43a99231fad9be547a63bf84cdf51848bc777137beeba5fbd15232"
+        }
+      ],
+      "host_elf_sha256": "7f70301ddf43a99231fad9be547a63bf84cdf51848bc777137beeba5fbd15232"
+    }
+  ]
+}

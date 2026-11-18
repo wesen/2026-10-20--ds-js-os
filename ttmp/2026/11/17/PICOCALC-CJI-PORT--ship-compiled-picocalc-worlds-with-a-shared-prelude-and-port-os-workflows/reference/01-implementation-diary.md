@@ -985,3 +985,56 @@ Compare the ELF SHA-256 in various/agent-on-device.jsonl with the output of sha2
 ### Technical details
 
 Source SHA-256 is 6cb57edc021bea33953fa89a70573c5c7cf905a9d0a0077ec1d2a31cd94d3d5f. ELF SHA-256 is b92e5d7f1146db7f5b44ec9c42f962618a09a93b2ebfad0322ec793318b7e179. The firmware uses the 18 MiB per-job cap and the 10 MiB upfront frontend reservation for this run.
+
+## Step 19: Complete the physical catalog sweep
+
+Every original world in picocalc-os/js/system.json now has a board receipt. Fifteen of the 22 produced a host-matching native ELF on at least one attempt. Four of the earlier memory refusals were queued for replay after the final catalog input.
+
+### Prompt Context
+
+**User prompt.** See Step 14 for the original full-catalog request and Step 16 for the Agent follow-up.
+
+**Assistant interpretation and inferred intent.** Exercise each bundled source through the physical stage-1 frontend and RV32 assembler and distinguish failures by observed phase and diagnostic.
+
+**Agent verification commit** afea912.
+
+### What I did
+
+- Resumed the serial sweep after Agent. Compiled Settings, Logs, Loader, Sysmon, REPL, Sandbox, Snake, Faults, Flaky, Keys and About.
+- Merged completed attempts from the baseline, allocator-instrumented and two workspace-reservation builds into various/device-catalog-results.json. Verified every source digest against its catalog file and every successful ELF digest against the host reference.
+
+### Why
+
+A host build or bundled native module only supplies a comparison artifact. Each catalog entry needs a terminal response with the digest of the input the physical worker actually read.
+
+### What worked
+
+The final eleven inputs yielded ten host-matching modules and a source diagnostic for Sandbox. Loader took 455,890 ms. About took 12,954 ms. The lasting evidence records repeated attempts per world and the firmware used for each.
+
+### What didn't work
+
+At first full coverage, Compositor, Launcher, Files, Editor, Calc and Agenda had only memory-related physical failures. Sandbox reached the parser and reported “Uncaught Error: 15:13: expected ), found ,”. The host also refused that syntax. The Calc host reference separately failed on a .size assignment.
+
+### What I learned
+
+The source alone does not determine whether a multi-megabyte contiguous allocation succeeds. Agenda had enough total free memory for its request, but its largest available block matched only the payload size before the allocation header.
+
+### What was tricky to build
+
+The catalog sweep spanned firmware changes and a host observer interruption. Matching full SHA-256 input digests prevents an unrelated asynchronous terminal message from being attributed to the next input.
+
+### What warrants a second pair of eyes
+
+Compare individual attempts under the firmware labels in the JSON. Only runs with an ELF digest establish native output parity. An earlier configuration's memory result remains evidence for that run.
+
+### What should be done in the future
+
+Capture the queued Compositor, Launcher, Files and Editor replays on the current firmware to put physical allocation metrics beside their first results.
+
+### Code review instructions
+
+Compare the world names and source paths against picocalc-os/js/system.json. For each successful receipt, recompute SHA-256 over the host's uncompressed RV32 ELF. See scripts/07-check-bundled-catalog.py for the terminal receipt parser.
+
+### Technical details
+
+The sweep used immutable bundled JavaScript. cji check bypasses the development-slot cache and discards its output after hashing. Measurements cover compile and assembly on the running system and exclude activation and application interaction.
