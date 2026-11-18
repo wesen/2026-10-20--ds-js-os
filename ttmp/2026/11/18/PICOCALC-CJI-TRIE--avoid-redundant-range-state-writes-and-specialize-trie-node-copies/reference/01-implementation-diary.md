@@ -134,3 +134,52 @@ Compared with guarded Agenda, reuse reduced the number of collections from 255 t
 ### Step 2 follow-up — Check the remaining dynamic work
 
 Script 12 links the STATIC ticket's counting runtime to a named copy of each candidate object and verifies each emitted unit. Script 13 aggregates directly counted generated calls, keeping slice specializations separate from the total. For Agenda the guarded executable made 58,932,328 direct dynamic index calls. Reuse made 52,925,493, typed 43,031,072, and both 43,343,705. Across all slice specializations the last two made 28,548 such calls. Reuse and typed copying therefore overlap in the calls they remove. The combined build's total is slightly above typed-only because the new write algorithm also inspects the old child dynamically. The compiler-as-input test produced the original compiler SLIR hash in a separate run.
+
+## Step 3 — Qualify the physical tradeoff and publish the results
+
+### Prompt Context
+
+The original request is quoted in Step 1. The user identified elapsed compile time on the device as the project goal and requested the completed technical report in the go-go-parc vault. The main investigator supplied a same-session guarded control and released the serial device after its ordinary restoration. I took exclusive ownership through the final flash and smoke test.
+
+### What I did
+
+- Built and flashed three independent compiler images. Flashed the combined image first, path reuse second and typed copying third. Each boot compiled Flaky first, followed by Agenda and Files. Reflashed the saved ordinary headless image and ran Flaky again.
+- Revalidated each raw ledger against the PERF report tool, checked firmware identities, source and output hashes, condition and cap, and preserved UART, flash, and JSON receipts. Rendered the paired tables and zero-based comparison figure from the recorded values.
+- Ran the original 278-case harness on each candidate. Compared the combined candidate with the original on 335 fixture files, on the compiler's complete source as input and on strict Files proof replay. Compared the full native linked catalog for all three builds.
+- Compared each board observation with exact x86 Callgrind counts, independent generated-caller instrumentation in project commit `cc7c625`, and the four post-warm-up native rounds.
+
+### Why
+
+A persistent tree can preserve sharing while increasing the live memory observed at collection boundaries. A typed load can remove millions of runtime calls while retaining the underlying visits. Device wall time, correctness, executed instructions and live-set observations answer distinct questions and are all necessary for deciding whether this compiler is worth using.
+
+### What worked
+
+The combined P4 compiler produced a verified Agenda module in 522.587 seconds and Files in 206.321 seconds. The guarded control took 544.293 and 209.770 seconds. All candidate ledgers passed verification. All three host catalog checks matched all twenty supported modules and the established capped rejection behavior. The combined fixture differential matched all 335 results (289 accepted and 46 rejected). The restored ordinary compiler produced the reference Flaky ELF.
+
+### What didn't work
+
+There was no hardware replication within each variant. The small differences among observed Files times do not establish a stable ranking. Native times were affected by workstation activity. The original Calc compile still exhausts its 10 MiB arena, and Sandbox still reports its original parse error. Neither was an optimization target. The boot log also contains the existing nat-import missing-host-import demonstration.
+
+### What I learned
+
+The combined build avoided 2,591,424,342 x86 instructions for Agenda and 476,352,366 for Files. On Agenda it collected fifteen fewer times, yet sampled peak live bytes rose by 368,160. Files' peak live and both scratch peaks were unchanged. Removing 26.45% of Agenda's directly counted dynamic indexing operations produced a 3.99% improvement in the complete measured board command. Those calls make up only part of that command.
+
+### What was tricky to build
+
+The physical harness records a digest of the firmware ELF while the flash utility transfers an application BIN. Each snapshot retains both identifiers. The board report compares linked module ELF digests, a third distinct identity, and confirms equality of the source and arena across all rows. The elapsed timer includes final module creation; the frontend timer does not. Script 10 checks the measurement provenance before script 14 formats the numbers.
+
+### What warrants a second pair of eyes
+
+Review the typed helper's allocation path and checked read in SLIR before reusing this specialization at any other call site. Test a memory-tight workload before adopting path reuse in a general build. Treat reductions smaller than one second on Files as single physical observations. The combined flash image exceeds the guarded image by 176 bytes.
+
+### What should be done in the future
+
+Measure avoided proof-consumer visits and record how often their inputs actually change. Repeat close physical comparisons if choosing among variants on the basis of seconds. The ordinary firmware is installed and the serial device has been released to the main investigator.
+
+### Code review instructions
+
+Start at `scripts/01-variant.py` and `various/typed-copy.slir`. Compare `various/generated-calls.json`, `various/x86-instructions.txt`, and `various/physical/physical-summary.json`. Review `scripts/10-board-receipt.py` for identity checks and `scripts/14-render-table.py` for table fields. The guide gives the opt-in bootstrap, firmware build and physical run commands.
+
+### Technical details
+
+The final guide was uploaded as `/ai/2026/11/18/PICOCALC-CJI-TRIE/CJI Intern Guide - Range State Experiments and Physical Results.pdf`. The new go-go-parc article and its measured figure were committed and pushed as `7338625f1f903ba3c9317a2229fb8e5b2d62399c`; the remote main ref was checked after push. The article is `Projects/2026/11/18/ARTICLE - When a Compiler Copies an Unchanged Fact.md`.

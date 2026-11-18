@@ -1,0 +1,232 @@
+I (459) esp_image: segment 1: paddr=0021f88c vaddr=30100000 size=00068h (   104) load
+I (461) esp_image: segment 2: paddr=0021f8fc vaddr=4ff00000 size=0071ch (  1820) load
+I (465) esp_image: segment 3: paddr=00220020 vaddr=40000020 size=1a2c30h (1715248) map
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x20f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x15f0
+load:0x4ff2abd0,len:0xd88
+load:0x4ff2cbd0,len:0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:48:47
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00400000
+I (77) boot:  3 agentstore       WiFi data        01 02 00410000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00430000 00bd0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=401b0020 size=20f864h (2160740) map
+I (459) esp_image: segment 1: paddr=0021f88c vaddr=30100000 size=00068h (   104) load
+I (461) esp_image: segment 2: paddr=0021f8fc vaddr=4ff00000 size=0071ch (  1820) load
+I (465) esp_image: segment 3: paddr=00220020 vaddr=40000020 size=1a2c30h (1715248) map
+I (756) esp_image: segment 4: paddr=003c2c58 vaddr=4ff0071c size=124a8h ( 74920) load
+I (772) esp_image: segment 5: paddr=003d5108 vaddr=4ff12c00 size=05274h ( 21108) load
+I (782) boot: Loaded app from partition at offset 0x10000
+I (782) boot: Disabling RNG early entropy source...
+I (793) hex_psram: vendor id    : 0x0d (AP)
+I (793) hex_psram: Latency      : 0x01 (Fixed)
+I (793) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (794) hex_psram: dev id       : 0x03 (generation 4)
+I (799) hex_psram: density      : 0x07 (256 Mbit)
+I (803) hex_psram: good-die     : 0x06 (Pass)
+I (807) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (812) hex_psram: BurstType    : 0x00 ( Wrap)
+I (816) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (821) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (825) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (830) hex_psram: DriveStrength: 0x00 (1/1)
+I (834) MSPI DQS: tuning success, best phase id is 0
+I (1007) MSPI DQS: tuning success, best delayline id is 17
+I (1007) esp_psram: Found 32MB PSRAM device
+I (1007) esp_psram: Speed: 200MHz
+I (1008) hex_psram: psram CS IO is dedicated
+I (1012) cpu_start: Multicore app
+I (1921) esp_psram: SPI SRAM memory test OK
+I (1930) cpu_start: Pro cpu start user code
+I (1931) cpu_start: cpu freq: 360000000 Hz
+I (1931) app_init: Application information:
+I (1931) app_init: Project name:     picocalc-os-p4
+I (1935) app_init: App version:      34ee464-dirty
+I (1940) app_init: Compile time:     Nov 18 2026 10:51:33
+I (1945) app_init: ELF file SHA256:  49a732031...
+I (1949) app_init: ESP-IDF:          v5.4.2
+I (1953) efuse_init: Min chip rev:     v0.1
+I (1957) efuse_init: Max chip rev:     v1.99 
+I (1961) efuse_init: Chip rev:         v1.3
+I (1965) heap_init: Initializing. RAM available for dynamic allocation:
+I (1972) heap_init: At 4FF284C0 len 00012B00 (74 KiB): RAM
+I (1977) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (1982) heap_init: At 4FF511E0 len 0004EE20 (315 KiB): RAM
+I (1987) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (1993) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (2000) spi_flash: detected chip: generic
+W (2003) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (2013) spi_flash: flash io: dio
+I (2016) host_init: ESP Hosted : Host chip_ip[18]
+I (2021) H_API: ESP-Hosted starting. Hosted_Tasks: prio:23, stack: 5120 RPC_task_stack: 5120
+sdio_mempool_create free:33626816 min-free:33626816 lfb-def:33030144 lfb-8bit:33030144
+
+I (2037) gpio: GPIO[18]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2045) gpio: GPIO[19]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2053) gpio: GPIO[14]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2062) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2070) gpio: GPIO[16]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (2079) gpio: GPIO[17]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2087) H_API: ** add_esp_wifi_remote_channels **
+I (2092) transport: Add ESP-Hosted channel IF[1]: S[0] Tx[0x400c9c6e] Rx[0x400d7852]
+I (2099) transport: Add ESP-Hosted channel IF[2]: S[0] Tx[0x400c9bb4] Rx[0x400d7852]
+I (2107) main_task: Started on CPU0
+I (2110) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (2118) main_task: Calling app_main()
+I (2121) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 363775 free (largest 286720), psram 33551748 free (largest 33030144)
+I (2164) fs: /files: 11956 KB, 11596 KB free (mounted in 7 ms)
+I (2170) transport: Attempt connection with slave: retry[0]
+I (2171) transport: Reset slave using GPIO[54]
+I (2171) os_wrapper_esp: GPIO [54] configured
+I (2172) gpio: GPIO[54]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2172) bus: headless: keyboard/power I2C and display SPI offline
+I (2184) main_task: Returned from app_main()
+[   159.325] calibration on the real clock: the 100k loop took 116.1 ms (the model says 133), fib(20) 29.3 ms (the model says 29.1)
+[   282.622] booting 18 worlds from js/system.cji.json
+[   294.059] booting 5 worlds from js/system.elf.json
+cji: progress src=5a19058f phase=load elapsed_ms=2 allocs=0 scratch=0
+cji: compiling source on device
+cji: begin elapsed_ms=4 psram_free=31515460 psram_largest=31457280
+I (3307) sdio_wrapper: SDIO master: Data-Lines: 4-bit Freq(KHz)[20000 KHz]
+I (3308) H_SDIO_DRV: Starting SDIO process rx task
+I (3313) sdio_wrapper: GPIOs: CLK[18] CMD[19] D0[14] D1[15] D2[16] D3[17] Slave_Reset[54]
+I (3315) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1]
+cji: relocated elapsed_ms=849 psram_free=24262716 psram_largest=18874368
+cji: frontend reserved_bytes=8388608
+cji: progress src=5a19058f phase=frontend elapsed_ms=854 allocs=1 scratch=8388624
+I (3350) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+I (3355) gpio: GPIO[17]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 
+Name: 
+Type: SDIO
+Speed: 20.00 MHz (limit: 20.00 MHz)
+Size: 0MB
+CSD: ver=1, sector_size=0, capacity=0 read_bl_len=0
+SCR: sd_spec=0, bus_width=0
+TUPLE: DEVICE, size: 3: D9 01 FF 
+TUPLE: MANFID, size: 4
+  MANF: 0092, CARD: 6666
+TUPLE: FUNCID, size: 2: 0C 00 
+TUPLE: FUNCE, size: 4: 00 00 02 32 
+TUPLE: CONFIG, size: 5: 01 01 00 02 07 
+TUPLE: CFTABLE_ENTRY, size: 8
+  INDX: C1, Intface: 1, Default: 1, Conf-Entry-Num: 1
+  IF: 41
+  FS: 30, misc: 0, mem_space: 1, irq: 1, io_space: 0, timing: 0, power: 0
+  IR: 30, mask: 1,   IRQ: FF FF
+  LEN: FFFF
+TUPLE: END
+I (3403) sdio_wrapper: Function 0 Blocksize: 512
+I (3412) sdio_wrapper: Function 1 Blocksize: 512
+I (3413) H_SDIO_DRV: SDIO Host operating in STREAMING MODE
+I (3414) H_SDIO_DRV: generate slave intr
+I (3433) transport: Received INIT event from ESP32 peripheral
+I (3435) transport: EVENT: 12
+I (3436) transport: EVENT: 11
+I (3436) transport: capabilities: 0xd
+I (3437) transport: Features supported are:
+I (3437) transport: 	 * WLAN
+I (3444) transport: 	   - HCI over SDIO
+I (3445) transport: 	   - BLE only
+I (3445) transport: EVENT: 13
+I (3454) transport: ESP board type is : 13 
+
+I (3455) transport: Base transport is set-up
+
+I (3456) transport: Slave chip Id[12]
+I (3464) hci_stub_drv: Host BT Support: Disabled
+I (3466) H_SDIO_DRV: Received INIT event
+[  2311.849] toplog: hello from the top level
+[  2316.324] nat-echo: TEST kind ok 
+[  2317.610] nat-echo: TEST provide ok 
+[  2318.237] nat-echo: TEST every ok 
+[  2318.920] nat-echo: TEST title ok 
+[  2319.564] nat-echo: TEST icon ok 
+[  2320.022] nat-echo: TEST about ok 
+[  2320.610] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+[  2330.984] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+[  2340.656] nat-echo: TEST init done
+E (4530) ELF: Can't find common path_open
+[  2347.915] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+I (4532) H_API: esp_wifi_remote_connect
+#OCT1 {"ev":"fault","t":2347.915,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+[  2410.971] nat-echo: TEST start self=nat-echo clock=running
+[  2412.610] nat-bench: BENCH loop n=1000 us=36 r=122468
+[  2413.554] nat-bench: BENCH loop n=4000 us=140 r=498743
+[  2414.922] nat-bench: BENCH loop n=16000 us=544 r=2028337
+E (4679) ELF: Can't find common path_open
+[  2496.108] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2496.108,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+[  2551.382] nat-echo: TEST ticks 3 timer=0
+E (4897) ELF: Can't find common path_open
+[  2713.812] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":2713.812,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+E (5301) ELF: Can't find common path_open
+[  3117.921] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":3117.921,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+E (6105) ELF: Can't find common path_open
+[  3921.625] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":3921.625,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+[  3921.625] nat-import crashed 5 times in ten seconds; it stays stopped
+I (7572) esp_wifi_remote: esp_wifi_internal_reg_rxcb: sta: 0x400d7e94
+cji: progress src=5a19058f phase=link elapsed_ms=5377 allocs=20 scratch=8467661
+cji: progress src=5a19058f phase=assemble elapsed_ms=5380 allocs=24 scratch=17702
+cji: assembled elapsed_ms=5392 psram_free=21275344 psram_largest=18874368
+cji: progress src=5a19058f phase=assembled elapsed_ms=5397 allocs=587 scratch=0
+cji: released elapsed_ms=5398 psram_free=26488444 psram_largest=23592960
+[  6405.787] starting dev-cji from storage (3704 bytes)
+I (8594) esp_netif_handlers: sta ip: 192.168.0.88, mask: 255.255.255.0, gw: 192.168.0.1
+[  6413.333] dev-cji: hello from the top level
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=miss elapsed_ms=6122 scratch_peak=8721869
+unknown command ÿ (try help)
+#OK ÿ
+[{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":70,"msgs":70,"cpu_ms":277.780,"mem_kb":803.8,"limit_kb":1536,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":258.715,"mem_kb":246.6,"limit_kb":768,"mbox":0,"mbox_peak":5,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":5,"msgs":5,"cpu_ms":241.703,"mem_kb":264.6,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":69.556,"mem_kb":227.4,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/files.elf","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":36.910,"mem_kb":275.9,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/editor.elf","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":344.215,"mem_kb":638.1,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"js","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":215.775,"mem_kb":265.9,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/agenda.js","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":9,"msgs":9,"cpu_ms":71.751,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":15,"msgs":15,"cpu_ms":187.528,"mem_kb":222.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":9,"msgs":9,"cpu_ms":221.309,"mem_kb":237.9,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":15,"msgs":15,"cpu_ms":205.542,"mem_kb":224.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":103.302,"mem_kb":212.8,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":98.413,"mem_kb":210.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":61,"msgs":61,"cpu_ms":393.611,"mem_kb":113.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":141.717,"mem_kb":219.8,"limit_kb":384,"mbox":0,"mbox_peak":3,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":9.645,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":7,"msgs":7,"cpu_ms":129.372,"mem_kb":211.9,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":7,"msgs":7,"cpu_ms":125.448,"mem_kb":212.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":9.991,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":30.029,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.853,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":16.894,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":8,"msgs":8,"cpu_ms":9.932,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]},{"name":"dev-cji","kind":"service","engine":"native","title":"dev-cji","state":"idle","turns":1,"msgs":1,"cpu_ms":8.326,"mem_kb":41.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":true,"file":"apps/dev-cji.elf","claims":[]}]
+#OK worlds
+t = 13807.5 ms, lane busy 3548.9 ms (25.7%), 337 turns, 44 published, 13 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  agent       service  idle           106    299.88    803.8   1536    0  
+  chat        app      idle             8    258.71    246.6    768    0  
+  launcher    app      idle             7    264.91    264.6    384    0  
+  files       app      idle             1     69.56    227.4    384    0  
+  editor      app      idle             1     36.91    275.9    512    0  
+  calc        app      idle             1    344.21    638.1   1024    0  
+  agenda      app      idle             1    215.78    265.9    384    0  
+  settings    app      idle            13     91.69    190.1    384    0  
+  logs        app      idle            23    219.57    222.1    384    0  
+  loader      app      idle            13    244.63    237.9    384    0  
+  sysmon      app      idle            23    241.97    224.8    512    0  
+  repl        app      idle             0    103.30    212.8    384    0  
+  sandbox     service  idle             0     98.41    210.0    512    0  
+  snake       app      idle            93    552.04    113.3    320    0  
+  faults      app      idle             5    141.72    219.8    384    0  
+  flaky       service  idle             1      9.64     48.3    320    0  
+  keys        app      idle            11    141.19    211.9    320    0  
+  about       app      idle            11    130.87    212.0    320    0  
+  toplog      service  idle             1      9.99     41.3    320    0  
+  nat-echo    service  idle             4     30.03     28.2     64    0  
+  nat-bench   service  idle             1      4.85      2.7     64    0  
+  nat-import  world    stopped          0     16.89      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle            12     13.87     14.3     64    0  
+  dev-cji     service  idle             1      8.33     41.3    384    0  
+  bus i2c0  busy     0.00 ms, 0 transfers, 0 bytes, 0 errors
+  bus spi2  busy     0.00 ms, 0 transfers, 0 bytes, 0 errors
+#OK stats
+cji: idle
+#OK cji

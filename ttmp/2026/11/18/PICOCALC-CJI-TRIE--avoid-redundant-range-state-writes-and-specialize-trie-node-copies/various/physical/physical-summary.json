@@ -1,0 +1,78 @@
+{
+  "agenda": {
+    "guard": {
+      "elapsed_s": 544.293,
+      "frontend_s": 543.063071,
+      "gc_s": 58.914351,
+      "live_peak_bytes": 5728200,
+      "collections": 255,
+      "scratch_bytes": 10048551,
+      "elapsed_reduction_percent": 0.0
+    },
+    "reuse": {
+      "elapsed_s": 529.675,
+      "frontend_s": 528.410193,
+      "gc_s": 54.158798,
+      "live_peak_bytes": 6096360,
+      "collections": 240,
+      "scratch_bytes": 10048551,
+      "elapsed_reduction_percent": 2.685685834651552
+    },
+    "typed": {
+      "elapsed_s": 536.601,
+      "frontend_s": 535.3785,
+      "gc_s": 59.040777,
+      "live_peak_bytes": 5728200,
+      "collections": 255,
+      "scratch_bytes": 10048551,
+      "elapsed_reduction_percent": 1.4132094294800779
+    },
+    "both": {
+      "elapsed_s": 522.587,
+      "frontend_s": 521.380213,
+      "gc_s": 54.173042,
+      "live_peak_bytes": 6096360,
+      "collections": 240,
+      "scratch_bytes": 10048551,
+      "elapsed_reduction_percent": 3.9879256209431335
+    }
+  },
+  "files": {
+    "guard": {
+      "elapsed_s": 209.77,
+      "frontend_s": 208.872546,
+      "gc_s": 9.83833,
+      "live_peak_bytes": 4312224,
+      "collections": 74,
+      "scratch_bytes": 9251666,
+      "elapsed_reduction_percent": 0.0
+    },
+    "reuse": {
+      "elapsed_s": 206.609,
+      "frontend_s": 205.733162,
+      "gc_s": 9.025665,
+      "live_peak_bytes": 4312224,
+      "collections": 72,
+      "scratch_bytes": 9251666,
+      "elapsed_reduction_percent": 1.5068884969252072
+    },
+    "typed": {
+      "elapsed_s": 207.054,
+      "frontend_s": 206.165061,
+      "gc_s": 9.805484,
+      "live_peak_bytes": 4312224,
+      "collections": 74,
+      "scratch_bytes": 9251666,
+      "elapsed_reduction_percent": 1.2947513943843303
+    },
+    "both": {
+      "elapsed_s": 206.321,
+      "frontend_s": 205.456978,
+      "gc_s": 9.120873,
+      "live_peak_bytes": 4312224,
+      "collections": 72,
+      "scratch_bytes": 9251666,
+      "elapsed_reduction_percent": 1.6441817228392996
+    }
+  }
+}

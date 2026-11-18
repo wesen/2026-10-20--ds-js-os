@@ -1,0 +1,31 @@
+Checking apps/files.js
+cji: progress src=5ad09cd9 phase=load elapsed_ms=0 allocs=0 scratch=0
+cji: begin elapsed_ms=1 psram_free=26441988 psram_largest=23592960
+cji: relocated elapsed_ms=460 psram_free=13157736 psram_largest=10747904
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=466 allocs=1 scratch=8388624
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=10004 allocs=20 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=20022 allocs=26 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=30022 allocs=36 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=40022 allocs=40 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=50064 allocs=44 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=60065 allocs=48 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=70075 allocs=52 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=80095 allocs=56 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=90096 allocs=64 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=100105 allocs=79 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=110113 allocs=89 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=120113 allocs=101 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=130122 allocs=101 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=140122 allocs=101 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=150122 allocs=101 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=160122 allocs=101 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=170122 allocs=103 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=180122 allocs=103 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=190171 allocs=103 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=200173 allocs=123 scratch=8465202
+cji: progress src=5ad09cd9 phase=link elapsed_ms=209342 allocs=170 scratch=8989362
+cji: progress src=5ad09cd9 phase=assemble elapsed_ms=209374 allocs=175 scratch=368864
+cji: metrics complete=1 frontend_us=208872546 gc_us=9838330 collections=74 live_peak_bytes=4312224 survivor_bytes=155662752 slide_bytes=49870232
+cji: assembled elapsed_ms=209712 psram_free=19309880 psram_largest=10747904
+cji: progress src=5ad09cd9 phase=assembled elapsed_ms=209722 allocs=1279 scratch=0
+cji: released elapsed_ms=209723 psram_free=26441988 psram_largest=23592960

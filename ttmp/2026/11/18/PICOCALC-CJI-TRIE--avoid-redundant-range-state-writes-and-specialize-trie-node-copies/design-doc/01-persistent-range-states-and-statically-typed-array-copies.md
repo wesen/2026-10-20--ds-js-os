@@ -14,6 +14,12 @@ RelatedFiles:
       Note: Multi-depth snapshot and work-count probes
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-TRIE--avoid-redundant-range-state-writes-and-specialize-trie-node-copies/scripts/04-benchmark.py
       Note: Rotated native performance measurements
+    - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-TRIE--avoid-redundant-range-state-writes-and-specialize-trie-node-copies/scripts/06-make-firmware.sh
+      Note: Build opt-in ESP32-P4 firmware with a pinned control link
+    - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-TRIE--avoid-redundant-range-state-writes-and-specialize-trie-node-copies/scripts/07-board.sh
+      Note: Run four-way physical comparison and restore ordinary firmware
+    - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-TRIE--avoid-redundant-range-state-writes-and-specialize-trie-node-copies/scripts/10-board-receipt.py
+      Note: Validate physical source, compiler, cap and output identities
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-18T15:11:53.775533194-05:00
@@ -97,6 +103,16 @@ Scripts 01–04 implement the first two designs above. Script 01 performs source
 ```bash
 p=(ttmp/2026/11/18/*CJI-TRIE*)
 scripts="$p/scripts"
+ranges=(ttmp/2026/11/18/*CJI-RANGES*/scripts)
+cji=(ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+scratch=$(mktemp -d)
+refs="$scratch/reference"
+mkdir "$refs"
+bash "$ranges/20-build-deferred.sh" "$scratch/guard" guard
+guard="$scratch/guard/stage1"
+for world in agenda files; do
+    node "$cji/cji.js" "picocalc-os/js/apps/$world.js" --world-unit --emit > "$refs/$world.ref"
+done
 for variant in reuse typed both; do
     bash "$scripts/02-build.sh" "$scratch/$variant" "$variant"
 done
@@ -116,3 +132,47 @@ bash "$scripts/07-board.sh" "$scratch" "$ordinary" "$runs" both reuse typed
 ```
 
 The source-level snapshot checks found that path reuse removed 197,158 of Agenda's 496,705 existing-node copies. The result still represented the same 490,367 stores. The typed-only source had the same copy count as the control. These numbers count units of compiler work; the four executables' physical timings measure the consequence for the user.
+
+## Measured results and conclusion
+
+The ESP32-P4 ran each program once per firmware at an 8 MiB frontend heap. The guarded control came from the same headless board session. Each candidate started from a fresh flash and a Flaky smoke test. The timed application command included producing a linked module. The frontend's timer measures compilation inside that command, and its collector timer measures a subset of frontend time. The last column below comes from a separate Callgrind run of each native x86 compiler on the same application source. A counted instruction on x86 does not correspond to one cycle on the P4.
+
+| World | Compiler | Module time (s) | Frontend (s) | GC (s) | x86 instructions (billions) |
+|---|---|---:|---:|---:|---:|
+| Agenda | guard | 544.293 | 543.063 | 58.914 | 49.355 |
+| Agenda | reuse | 529.675 | 528.410 | 54.159 | 47.835 |
+| Agenda | typed | 536.601 | 535.379 | 59.041 | 47.579 |
+| Agenda | both | 522.587 | 521.380 | 54.173 | 46.764 |
+| Files | guard | 209.770 | 208.873 | 9.838 | 15.278 |
+| Files | reuse | 206.609 | 205.733 | 9.026 | 15.005 |
+| Files | typed | 207.054 | 206.165 | 9.805 | 14.955 |
+| Files | both | 206.321 | 205.457 | 9.121 | 14.802 |
+
+| World | Compiler | Collections | Peak live (bytes) | Scratch peak (bytes) |
+|---|---|---:|---:|---:|
+| Agenda | guard | 255 | 5,728,200 | 10,048,551 |
+| Agenda | reuse | 240 | 6,096,360 | 10,048,551 |
+| Agenda | typed | 255 | 5,728,200 | 10,048,551 |
+| Agenda | both | 240 | 6,096,360 | 10,048,551 |
+| Files | guard | 74 | 4,312,224 | 9,251,666 |
+| Files | reuse | 72 | 4,312,224 | 9,251,666 |
+| Files | typed | 74 | 4,312,224 | 9,251,666 |
+| Files | both | 72 | 4,312,224 | 9,251,666 |
+
+![Physical compile times for Agenda and Files, starting both axes at zero. Each bar is one verified compile.](../various/range-state-p4.png)
+
+The combined candidate reduced Agenda's end-to-end time by 21.706 seconds (3.99%) and Files' by 3.449 seconds (1.64%) against the guarded control. Its exact x86 instruction reductions were 2,591,424,342 (5.25%) and 476,352,366 (3.12%), respectively. The two independent changes overlap. For example, Agenda made 58,932,328 dynamic index calls in the guard and 43,343,705 in the combined executable, a 26.45% reduction. Typed copying alone made 43,031,072, slightly fewer than the combination. Descending before copying must inspect the old child. Other work, including proof traversal, survives both changes.
+
+On Agenda, the combined collector ran fifteen fewer times and consumed 4.741 fewer seconds. Its largest sampled live set rose by 368,160 bytes. Peak live is measured when a collection happens, so changing allocation changes where the samples are taken. The scratch measurement includes reservations outside the 8 MiB frontend arena. All four configurations reported the same scratch peak for each world. The combined flashable application was 3,974,928 bytes, 176 bytes larger than the guarded image. Preserving sharing improves total work but can change the memory headroom needed by the workload.
+
+Four timed native rounds followed a warm-up. Guarded and combined frontend medians were 7.286 and 5.553 seconds for Agenda and 2.126 and 2.127 seconds for Files. The workstation was shared, and individual timings overlapped. On the P4, the combined result was the shortest observation in each world. The difference between combined and path reuse for Files was 0.288 seconds. Without repeated board runs there is no estimate of run-to-run variation and no basis for a precise ranking of close variants.
+
+### Qualification and reproduction
+
+- Every variant passed all 278 original harness cases. Each produced all twenty reference ELF modules in the catalog, including Agent under its established 10 MiB cap. Calc reproduced its capped out-of-memory result and Sandbox its parser diagnostic.
+- A separate differential compared the combined frontend with the original on 335 fixture files. It matched output on 289 accepted cases and reproduced all 46 rejections. The combined compiler also reproduced the original compiler's intermediate program when that compiler was the input. Strict replay of the original Files sidecar accepted all three recorded proofs.
+- Script 03 checked snapshots at depths one, two and three and counted work on actual input. Script 08 inspected the generated typed private read. Scripts 09 and 12–13 independently gathered executed instruction and generated runtime-call counts. Instrumented timing was excluded from the physical comparison.
+- Script 10 verified the firmware identity, program source hash, final module hash, heap reservation and board configuration. Raw UART records and firmware hashes are under `various/physical/`. The restore receipt identifies the ordinary headless firmware ELF by SHA-256 `49a7320315fa45896797f825760f8ca92cac9a0f485ea38c5da3a861bc97749b`. Its smoke test produced the reference 10,800-byte Flaky module.
+- Script 11 regenerates the figure. Script 14 regenerates both tables from `various/physical/physical-summary.json` and `various/x86-instructions.txt`. The complete host trial sequence is in `various/native-trials.json`.
+
+The larger scheduling change in the RANGES ticket took ordinary Agenda from 1,474.601 to 544.293 seconds on this headless board. The combined trie changes reduced it further to 522.587 seconds. This is a measured opt-in compiler build, and the user still waits over eight minutes. To target that remaining time, count proof consumers that are revisited despite unchanged relevant inputs. That measurement can guide a decision about avoiding entire traversals.

@@ -1,0 +1,8 @@
+agenda guard 49355143862
+agenda both 46763719520
+agenda reuse 47835472851
+agenda typed 47579076888
+files guard 15278042270
+files both 14801689904
+files reuse 15004677324
+files typed 14954585778

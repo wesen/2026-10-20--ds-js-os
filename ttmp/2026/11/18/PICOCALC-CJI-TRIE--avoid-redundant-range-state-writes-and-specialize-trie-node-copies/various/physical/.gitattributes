@@ -1,0 +1,2 @@
+# Raw serial and flash captures preserve device bytes and carriage returns.
+*.log -text -diff
