@@ -564,3 +564,51 @@ Read compiler/install.c from build_one through compiler_tick. Compare the ESP-ID
 ### Technical details
 
 The persistent compiler task requests a 128 KiB external stack. The physical kernel task already has an 80 KiB internal stack. World ELF activation continues to use the existing production backend. Neither the application partition layout nor the world turn budgets were changed.
+
+## Step 11. Follow the first physical frontend run into the prelude linker
+
+With relocation moved to the kernel task, the compiler returned control cleanly and the board accepted a key while the job ran. It then reported a missing world entry. I compared the precise host SLIR with the scanner used by the new tool and corrected the scanner before retrying the hardware gate.
+
+### Prompt Context
+
+See steps 8 and 10. The worker/relocation checkpoint is ca473e1.
+
+### What I did
+
+Ran scripts/04-observe-compiler.py with “cji build apps/cjiprobe.js”. Compared the reported failure to the main declaration in build/rv32/nw/toplog.own.slir and the pattern used by tools/link-units.mjs. Built an end-to-end acceptance script which checks the exact host module digest, boots a second world to ask for a reply, edits the source in the board's Editor, and checks recovery and cached reboot.
+
+### Why
+
+A linker that assumes an exact empty header discards the frontend's valid register/frame layout metadata. The stage boundary should accept the same SLIR syntax the host linker consumes.
+
+### What worked
+
+At 533 ms the tool was relocated. The board acknowledged a key during compilation. At 6,292 ms the failing job released its memory and reported its error without resetting the device. Free PSRAM was 25,213,288 bytes before the job and 25,213,124 after it. The largest free block fell from 24,641,536 to 14,942,208 bytes, which is why subsequent runs must check contiguous capacity too.
+
+### What didn't work
+
+The serial observer exited with “cji: build failed: missing world entry”. The scanner expected function main/0 immediately followed by a newline. The host emits “function main/0 scratches=4 saveds=2 local=0”, then a start label on the next line.
+
+### What I learned
+
+A successful return from the worker is a lifecycle observation. The module hash and the independent peer's ping are the functional acceptance evidence.
+
+### What was tricky to build
+
+The register counts vary with the source. The corrected insertion point matches the named function, skips its header through the newline and verifies the start label before inserting the prelude call.
+
+### What warrants a second pair of eyes
+
+Compare the device insertion logic in tool.c with tools/link-units.mjs and the device ELF digest with the host's uncompressed module.
+
+### What should be done in the future
+
+Verify the corrected image on the PicoCalc and record every phase's hardware observations.
+
+### Code review instructions
+
+Read compiler_entry, then follow each assertion in scripts/06-exercise-device-compiler.py. The caller fixture uses the normal storage Loader and message path.
+
+### Technical details
+
+The first source used exactly the 268 bytes in the imported toplog fixture. Hardware with the fix was built using the same unit export list as the host reference.

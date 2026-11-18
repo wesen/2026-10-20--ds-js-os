@@ -82,9 +82,12 @@ void compiler_entry(int argc, char **argv) {
         return;
     }
     rt_free(fromspace_begin); rt_free(rootstack_begin); rt_spill_reset();
-    char *main=strstr(slir,"function main/0\nstart:\n");
-    if (!main) failure("missing world entry");
-    char *start=main+strlen("function main/0\nstart:\n");
+    // SLIR function headers carry scratch/saved register and frame-size fields.
+    char *main=!strncmp(slir,"function main/0 ",16) ? slir : strstr(slir,"\nfunction main/0 ");
+    if (main && *main=='\n') main++;
+    char *start=main ? strchr(main,'\n') : NULL;
+    if (!start || strncmp(start,"\nstart:\n",8)) failure("missing world entry");
+    start+=8;
     FILE *linked=fopen("world.slir","w");
     if (!linked || fwrite(slir,1,start-slir,linked)!=(size_t)(start-slir) ||
         fputs("    call    $main$prelude/0\n",linked)<0 ||
