@@ -1,0 +1,15 @@
+{
+  "world": "agenda",
+  "mib": 10,
+  "matched_work": {
+    "collections": 297,
+    "survivor_bytes": 995195416,
+    "slide_bytes": 172771688,
+    "live_peak_bytes": 4460280
+  },
+  "guest_frontend_steps": 287136497453,
+  "guest_gc_steps": 10766094296,
+  "p4_frontend_us": 1461217032,
+  "p4_gc_us": 62050097,
+  "native_frontend_median_us": 23478970
+}

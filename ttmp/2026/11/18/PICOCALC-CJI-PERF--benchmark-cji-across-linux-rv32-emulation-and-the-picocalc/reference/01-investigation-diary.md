@@ -777,3 +777,7 @@ Start with scripts/22-board-variant.sh and scripts/24-board-candidates.sh. Check
 ### Technical details
 
 The control uses firmware ELF 49a7320315fa45896797f825760f8ca92cac9a0f485ea38c5da3a861bc97749b. Each stage-1 object uses the original 4096-byte assembler root-stack slack argument and ILP32 conversion. The app partition is flashed at 0x10000.
+
+### Follow-up — Match the ordinary Agenda workload across targets
+
+I used the disconnected-board interval to compare the finished 10 MiB RV32 Agenda run against historical native and P4 measurements. Script 26 compares the guest unit with the reference, checks the heap limit and nested instruction counts, and requires all four collector counters to equal the native and physical records. Running `python3 scripts/26-match-ordinary-counters.py /tmp/nov18-perf-base agenda 10` from the ticket directory produced the retained cross-target receipt. All four counters matched. The physical collector occupied 62.050 seconds of a 1,461.217-second frontend, which sets a measured upper bound on the benefit of eliminating that collector work. The 8 MiB control and ordinary per-symbol profile were still computing when I recorded this result.
