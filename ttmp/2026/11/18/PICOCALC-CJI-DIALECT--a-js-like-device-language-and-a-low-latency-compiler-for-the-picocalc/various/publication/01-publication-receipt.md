@@ -1,3 +1,13 @@
+---
+Title: Verified reMarkable publication receipt
+Ticket: PICOCALC-CJI-DIALECT
+Status: complete
+Topics: [picocalc]
+DocType: reference
+Intent: long-term
+Summary: "Identities of the intern guide and the PDF retrieved from reMarkable cloud."
+---
+
 # reMarkable publication receipt
 
 The 19-page guide was uploaded on 2026-11-18. The cloud copy's embedded PDF matched the reviewed file byte for byte.

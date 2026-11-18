@@ -291,7 +291,7 @@ Re-render if the guide source changes. Upload any later revision under a fresh n
 
 ### Code review instructions
 
-Use the [publication receipt](../various/publication/receipt.md). It records the source and output hashes, remote identity, verification results and local render commands.
+Use the [publication receipt](../various/publication/01-publication-receipt.md). It records the source and output hashes, remote identity, verification results and local render commands.
 
 ### Technical details
 

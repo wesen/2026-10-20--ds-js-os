@@ -28,7 +28,7 @@ The attached ESP32-P4 compiled the entire 22-world JS catalog to QuickJS bytecod
 ## Start here
 
 - [Intern design and implementation guide](design-doc/01-designing-a-js-like-language-for-interactive-compilation-on-the-picocalc.md)
-- [Illustrated PDF for offline reading](various/publication/picocalc-device-language-guide.pdf)
+- [Illustrated PDF for offline reading](various/publication/picocalc-device-language-guide.pdf) and [verified reMarkable delivery](various/publication/01-publication-receipt.md)
 - [Catalog contracts and app-port evidence](analysis/02-catalog-contracts.md)
 - [Execution format alternatives and simulator workflows](analysis/03-fast-paths.md)
 - [Physical timing and identity receipts](various/board/) and [board reproduction instructions](scripts/board/00-reproducing-board-measurements.md)
