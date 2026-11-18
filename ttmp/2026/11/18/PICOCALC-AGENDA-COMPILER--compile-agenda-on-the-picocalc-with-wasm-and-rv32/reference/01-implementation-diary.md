@@ -287,3 +287,55 @@ The host integration and forthcoming firmware bundle need identical reactor byte
 
 - make -C picocalc-os agenda-reactor produced build/agenda-reactor.wasm.
 - scripts/04-check-wasm-world.mjs used that artifact and passed. The receipt records its hash and the distinct hash of the linked application.
+
+## Step 9 — Compile, run and measure Agenda on the ESP32-P4
+
+The opt-in firmware built Agenda from source in a new QuickJS realm on the device and loaded the emitted Wasm as the ordinary Agenda world. The serial build command repeated the benchmark with a fresh compiler realm and a fresh WAMR instance. The interval ended on the first file-backed frame published by the kernel.
+
+### Prompt context
+
+See Step 1 for the cold-response target, hardware measurements and RV32 sequence. The host clock and storage milestone is c5fdd25.
+
+### What I did
+
+- Added PICOCALC_TYPED_AGENDA, a boot manifest choosing the Wasm world with Agenda's notes claim, and the compiler bridge in agenda_p4.c.
+- Backed up the current app partition, compared the prefix to the prior headless image, then installed test images at 0x10000 without writing the bootloader, partition table or data partitions.
+- Measured both bundled source and the new editable notes/agenda.typed file. The device already contained a 43-byte todo.txt and did not have an agenda.typed before the test. I left the valid source on the device after the edit checks.
+- Replaced expansion of runtime code into JS number arrays with byte views and one typed-array copy. Compared host linked bytes and repeated the same board experiment.
+- Verified that an intentionally invalid typed edit reports a location and leaves the previous Agenda world idle. Restored the valid source and rebuilt it.
+
+### Why
+
+Compile time alone cannot answer the two-second question. The run also waits for restart scheduling, Wasm init, file I/O and the settlement that publishes the view. Boot competition from the other worlds is measured separately.
+
+### What worked
+
+The first stable suite measured a 767 ms median and 830 ms p95 from source capture to frame publication over 20 bundled-source trials. The optimized linker measured 538 ms median and 606 ms p95 on the same workload. The five optimized editable-file trials had a 535 ms median and 599 ms maximum. A fresh full-system boot reached Agenda's frame about 2.428 seconds after its compile began.
+
+The median compiler heap peak fell from 1,358,068 to 407,436 bytes. Compile medians fell from 483.4 to 258.7 ms. The first settlement turn was typically 2.45 ms. Wasm linear-memory plus interpreter-stack accounting was 147,456 bytes. The emitted module size was 42,201 bytes. Exact raw trials reside in various/p4-wasm-bench.json.
+
+### What didn't work
+
+The first cold build failed with “TypeError: not a function” because the host linker expects a Uint8Array but firmware passed an ArrayBuffer. The first correction then failed with “RangeError: invalid length”. The QuickJS buffer-view constructor reads three argument slots, so the corrected invocation explicitly supplies buffer, zero byte offset, and reactor byte length.
+
+The PicoCalc keyboard's I2C address returned NACK and ESP_ERR_INVALID_STATE. The physical keypress-to-visible-frame gate is still open. The measured endpoint is the kernel's frame publish, which precedes display transfer. A response in the first unsynchronized trial took 2.656 seconds, and the raw set preserves it. The serial observer subsequently waited six seconds after opening the port before collecting the settled series.
+
+### What I learned
+
+Wasm body bytes in the runtime can be copied intact. Representing them as boxed JavaScript numbers and flattening vectors creates temporary arrays large enough to dominate this compiler's peak heap. The existing runtime contributes most of the binary, while the input source owns the reminder parser.
+
+### What was tricky to build
+
+The reboot preserves filesystem capabilities only when the compiled module is installed as the manifest's Agenda world. An ordinary unclaimed storage launch would not perform the benchmark's actual notes read.
+
+### What warrants a second pair of eyes
+
+The measured peak is the compiler allocator's live bytes. It is separate from WAMR's world accounting and the board's aggregate PSRAM. The standalone application boot and serial restart share the same compile path, with different competing startup work.
+
+### What should be done in the future
+
+Enable the physical keyboard and display test, instrument the successful panel transfer after the Agenda keypress, and verify the RV32 target against the same file and clock cases.
+
+### Code review instructions
+
+Run make -C picocalc-os agenda-reactor and the ticket's host world test. Build the ESP-IDF project with PICOCALC_TYPED_AGENDA enabled. Use scripts/05-measure-agenda-p4.py with the configured serial port and compare the emitted JSON to the committed hardware receipt.

@@ -262,6 +262,7 @@ void nw_init(void)
 {
     nw_kind("app");
     nw_title("Typed Agenda");
+    nw_key("t");
     notes = nw_fs_open("fs:/notes");
     refresh_timer = nw_every(15000);
 }

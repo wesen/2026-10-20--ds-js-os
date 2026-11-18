@@ -23,3 +23,7 @@ Verified Wasm Agenda reads, renders and delivers a clock-driven reminder with su
 ## 2026-11-18
 
 Pushed the storage, clock and display deep dive to go-go-parc at fe8b62d. The live compile entry now checks the typed runtime layout.
+
+## 2026-11-18
+
+Verified cold on-device Wasm Agenda builds and measured the linker optimization. File-to-frame p95 was 606 ms for bundled source on the settled OS. The physical keyboard returned I2C NACKs.

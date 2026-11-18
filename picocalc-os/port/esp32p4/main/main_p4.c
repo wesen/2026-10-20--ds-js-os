@@ -135,6 +135,9 @@ void console_exec(char *line) {
   char *rest = p + n;
   while (isspace((unsigned char)*rest)) rest++;
   vtime_t now = port_clock();
+#if PICOCALC_TYPED_AGENDA
+  if (!strcmp(cmd, "agenda")) { p4_agenda_console(rest); return; }
+#endif
   if (!strcmp(cmd, "stats")) kernel_stats_print();
   else if (!strcmp(cmd, "worlds") || !strcmp(cmd, "handles")) {
     char *j = !strcmp(cmd, "worlds") ? kernel_worlds_json() : hw_handles_json();
@@ -203,6 +206,9 @@ static void kernel_task(void *arg) {
   const char *manifest = "js/system.cji.json";
 #else
   const char *manifest = "js/system.json";
+#endif
+#if PICOCALC_TYPED_AGENDA
+  if (p4_agenda_prepare()) manifest = "js/system.typed-agenda.json";
 #endif
   if (kernel_boot(manifest)) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
 #if PICOCALC_NATIVE_ELF

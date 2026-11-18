@@ -537,6 +537,18 @@ function encodeModule(header, sections) {
     return result;
 }
 
+function encodeByteVector(elements) {
+    const prefix = unsigned(elements.length);
+    const result = new Uint8Array(prefix.length + elements.reduce((sum, bytes) => sum + bytes.length, 0));
+    result.set(prefix);
+    let at = prefix.length;
+    for (const bytes of elements) {
+        result.set(bytes, at);
+        at += bytes.length;
+    }
+    return result;
+}
+
 // The trusted runtime owns memory, host imports, and world exports. Its
 // direct calls to the exported slot keep their original function index.
 function linkWorld(source, runtime, entry) {
@@ -567,8 +579,9 @@ function linkWorld(source, runtime, entry) {
     const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
     const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
     const bodies = readSection(sections, 10, r => r.vector(item => {
-        const body = item.sized();
-        return [...unsigned(body.length), ...body];
+        const start = item.offset;
+        item.sized();
+        return item.bytes.subarray(start, item.offset);
     }));
     if (bodies.length !== definitions.length || !Number.isInteger(slot) || slot < 0 || slot >= bodies.length) {
         throw new SyntaxError("missing Wasm runtime function slot " + entry);
@@ -586,7 +599,7 @@ function linkWorld(source, runtime, entry) {
     const replacement = new Map([
         [1, vec([...types, ...functions.map(signature)])],
         [3, vec([...definitions.map(unsigned), ...functions.map((_, i) => unsigned(types.length + i))])],
-        [10, vec([...bodies, ...functions.map(fn => fn.body)])],
+        [10, encodeByteVector([...bodies, ...functions.map(fn => fn.body)])],
     ]);
     for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
     const {name, params, result} = functions[target];

@@ -42,3 +42,9 @@ void p4_tz_console(const char *arg);  // console: tz [POSIX TZ]
 void p4_cachestat(const char *args);   // perf_p4.c: the cache counters around a benchmark or a window
 void p4_agent_init(void);             // creates the native worker; never touches K from that worker
 void p4_agent_console(const char *args); // secret values are accepted but never echoed
+
+#if PICOCALC_TYPED_AGENDA
+bool p4_agenda_prepare(void);
+char *p4_agenda_take_module(size_t *length);
+void p4_agenda_console(const char *command);
+#endif

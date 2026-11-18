@@ -734,6 +734,10 @@ static void run_segment(world_t *W, bool is_settle) {
       free(W->frame); W->frame = f;
       char *post = frame_message(W);
       kernel_publish(W, "frames", post, NULL, 0);
+#if PICOCALC_TYPED_AGENDA
+      extern void p4_agenda_frame(world_t *, vtime_t);
+      p4_agenda_frame(W, K.vnow);
+#endif
       free(post);
     } else free(f);
   }

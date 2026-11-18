@@ -203,6 +203,39 @@ set_source_files_properties(
     # compositor's first paint crashed every boot); -Og and -O2 -fno-strict-aliasing both run clean.
     PROPERTIES COMPILE_OPTIONS "-w;-Wno-error=incompatible-pointer-types;-fwrapv;-fno-strict-aliasing")
 
+if(PICOCALC_TYPED_AGENDA)
+    set(PICOCALC_AGENDA_REACTOR "${OS}/build/agenda-reactor.wasm" CACHE FILEPATH "Prebuilt Agenda SDK reactor")
+    if(NOT EXISTS "${PICOCALC_AGENDA_REACTOR}")
+        message(FATAL_ERROR "Build the Agenda reactor with make -C picocalc-os agenda-reactor")
+    endif()
+    file(READ "${OS}/js/system.json" agenda_manifest)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${OS}/js/system.json")
+    string(JSON world_count LENGTH "${agenda_manifest}" worlds)
+    math(EXPR last_world "${world_count} - 1")
+    foreach(i RANGE ${last_world})
+        string(JSON world_name GET "${agenda_manifest}" worlds ${i} name)
+        if(world_name STREQUAL "agenda")
+            string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} file "\"agenda/compiled.wasm\"")
+            string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} engine "\"wasm\"")
+            string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} budget_ms 100)
+            break()
+        endif()
+    endforeach()
+    set(agenda_manifest_path "${CMAKE_CURRENT_BINARY_DIR}/system.typed-agenda.json")
+    file(CONFIGURE OUTPUT "${agenda_manifest_path}" CONTENT "${agenda_manifest}" @ONLY)
+    target_sources(${COMPONENT_LIB} PRIVATE agenda_p4.c)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_AGENDA=1)
+    list(APPEND BUNDLE_EXTRA
+        "system.typed-agenda.json=${agenda_manifest_path}"
+        "agenda/typed-wasm.js=${OS}/compiler/typed-wasm.js"
+        "agenda/compile.js=${OS}/worlds/agenda/compile.js"
+        "agenda/reminder.typed=${OS}/worlds/agenda/reminder.typed"
+        "agenda/reactor.wasm=${PICOCALC_AGENDA_REACTOR}")
+    list(APPEND BUNDLE_EXTRA_DEPS
+        "${agenda_manifest_path}" "${PICOCALC_AGENDA_REACTOR}"
+        "${OS}/compiler/typed-wasm.js" "${OS}/worlds/agenda/compile.js" "${OS}/worlds/agenda/reminder.typed")
+endif()
+
 file(GLOB_RECURSE JS_FILES CONFIGURE_DEPENDS ${OS}/js/*.js ${OS}/js/*.json ${OS}/js/*.wasm)
 set(BUNDLE ${CMAKE_CURRENT_BINARY_DIR}/js_bundle.c)
 add_custom_command(
