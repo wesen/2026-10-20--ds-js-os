@@ -1,0 +1,101 @@
+{
+  "case": "join",
+  "world": "agenda",
+  "heap_mib": 8,
+  "reference_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+  "variants": {
+    "baseline": {
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0",
+      "runs": [
+        {
+          "ordinal": 0,
+          "warmup": true,
+          "frontend_us": 32019243,
+          "gc_us": 2007146,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 1,
+          "warmup": false,
+          "frontend_us": 31793695,
+          "gc_us": 1996547,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 2,
+          "warmup": false,
+          "frontend_us": 30515407,
+          "gc_us": 1916239,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 3,
+          "warmup": false,
+          "frontend_us": 31381604,
+          "gc_us": 1976743,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        }
+      ],
+      "median_us": 31381604
+    },
+    "candidate": {
+      "executable_sha256": "fc0b322dd84169fb78d5d1d3b2280af276bf1aad91d8190767784bffac5a1a70",
+      "runs": [
+        {
+          "ordinal": 0,
+          "warmup": true,
+          "frontend_us": 30340858,
+          "gc_us": 2115072,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 1,
+          "warmup": false,
+          "frontend_us": 27783014,
+          "gc_us": 1956941,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 2,
+          "warmup": false,
+          "frontend_us": 27650757,
+          "gc_us": 1966154,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 3,
+          "warmup": false,
+          "frontend_us": 27564691,
+          "gc_us": 1952687,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        }
+      ],
+      "median_us": 27650757
+    }
+  },
+  "median_change_percent": -11.88864342307041
+}

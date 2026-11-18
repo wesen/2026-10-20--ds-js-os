@@ -613,3 +613,7 @@ Review the empty-payload condition in picocalc-os/nucleus/png.c. Re-run scripts/
 ### Technical details
 
 The valid IEND CRC is ae426082. The genuine PicoCalc screenshot used a separate 320 × 320 framebuffer CRC of 3ed26c5b. The native cache trial receipt was checkpointed in 498508a.
+
+### Step 11 follow-up — Compare the smaller range-join candidate
+
+Rebootstrapped the native compiler with one identical-ID check in ranges.js:join using the ticket-only candidate builder. The normal compiler source and P4 firmware remain at their documented baselines. After warm-up, Agenda medians were 31.382 versus 27.651 seconds, a measured 11.9% reduction. Every output matched. Peak live data, number of collections and actual slide bytes were identical. The two cache/shortcut absolute baselines differ with host load; use within-pair comparisons. Store the detailed eight-run receipt in various/linux-profiles/agenda-join-trial.json. The already delivered cloud edition contains the cache result and the identically valued join hypothesis; this later trial is recorded in the repository report.

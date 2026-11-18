@@ -162,3 +162,9 @@ Rebootstrapped the compiler with the cross-round memo enabled. Both native execu
 | Bytes physically slid | 211,914,816 | 370,900,408 |
 
 This candidate reduced median native frontend time by **28.8%** while increasing peak live data by **2,777,296 bytes**. The cache's ability to avoid range work paid for its validation, serialization and additional GC on this host and workload. Peak live data leaves much less headroom within the 8 MiB arena. The physical 8/10 MiB experiment changed only heap size and used ordinary inference in both cases. A cache-on P4 measurement would be the relevant next physical trial. [Full paired receipts](../various/linux-profiles/agenda-memo-trial.json).
+
+### A narrower alternative that keeps the heap footprint
+
+The isolated range-join candidate added one source condition at the start of `ranges.js:join`: return `a` when `a === b`. An identical interned interval ID represents the same bounds and exceptional-value flags, so joining that interval with itself yields the same ID. Both the baseline and candidate produced the expected Agenda SLIR on all four runs. The normal compiler in the project still uses its previous implementation.
+
+The paired Linux stage-1 frontend medians were **31.382 s ordinary** and **27.651 s with the short circuit** (three post-warm-up samples per executable, 11.9% lower). Each had exactly 424 collections, 4,491,400 peak live bytes and 211,914,816 bytes slid. This is a cheaper first physical optimization trial than retaining the cross-round cache. Compare each candidate with its own interleaved baseline; separate experiments ran under different host loads. Combining their percentages would overstate the evidence. [Join trial receipts](../various/linux-profiles/agenda-join-trial.json).
