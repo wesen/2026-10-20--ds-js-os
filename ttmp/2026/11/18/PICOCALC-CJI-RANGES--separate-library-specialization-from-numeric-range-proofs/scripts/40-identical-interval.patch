@@ -1,0 +1,6 @@
+--- a/src/ranges.js
++++ b/src/ranges.js
+@@ -94,2 +94,3 @@
+ function join(a, b) {
++  if (a === b) return a;
+   if (empty(a)) return b;

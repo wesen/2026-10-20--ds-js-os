@@ -9,10 +9,10 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
+Summary: Experiments, failures, corrections and receipts from moving numeric range proofs in CJI.
 LastUpdated: 2026-11-18T11:12:27.735059355-05:00
-WhatFor: ""
-WhenToUse: ""
+WhatFor: Reproduce compiler experiments and distinguish physical from host-only evidence.
+WhenToUse: Use to review the experiment or resume an interrupted board trial.
 ---
 
 # Investigation diary
@@ -143,3 +143,13 @@ Checkpoint 56102e3 contains the guarded prototype and paired host results. I the
 The compiled Calc diagnostic differed from Node's reference: the 10 MiB frontend ran out of space first. Script 32 compared the ordinary and guarded compiled frontends under the same cap. Both exhausted it. Both rejected Sandbox at 15:13. This confirms parity of the supported set without conflating the Node and compiled diagnostics. Script 34 sampled the guarded native executable after proving its machine-code text identical to the timed executable. Agenda produced 7,207 samples. The raw sample addresses and symbol rankings are committed alongside the catalog.
 
 The linked-catalog rows retain comparison with the Node reference, including the Calc diagnostic difference. Script 35 reconciles unsupported rows with a memory-matched compiled control and fails on missing, duplicated or mismatched worlds. Its result lists 20 complete module matches, Calc exit 4 at 10,485,760 bytes, and Sandbox exit 2 with the parser location. The working ESP-IDF build directory was subsequently reset to the ordinary headless configuration using build-only commands; experiment snapshots have their own immutable identities.
+
+### Step 2 follow-up — Separate RV32 guest work from x86 time
+
+Script 30 compiled Files under the corrected RV32 guest and returned the expected 353,200-byte unit. I edited the launcher to let the separate Agenda worker await its existing control while Files was still running. After Files finished, the older shell read the changed remainder of the file and reported a syntax error near an unexpected semicolon before writing the final identity receipt. The revised source passes bash -n. I explicitly compared the Files control ELF and metrics against the pinned ordinary guest, compared ordinary and guarded IR against the original reference, confirmed the guarded guest image matched the already-verified Flaky guest, and regenerated the receipt. Script 37 checked the identities, frontend and GC counters and arena bounds. Keep a running shell script immutable on future runs.
+
+Files frontend guest instructions fell by 18.60% (55,750,760,529 to 45,379,556,556). Flaky changed by 0.00155%. The resulting JSON evidence is in various/files-guest.json and various/flaky-guest.json. These results measure the target instruction stream on the host. Device elapsed time is still open.
+
+### Step 2 follow-up — Measure the marginal interval shortcut
+
+The guarded trace still counted 2,331,158 identical-ID joins out of 3,036,247. Script 41 measured the pre-existing shortcut with the guard-only compiler as its control. Agenda's frontend median changed by +0.63% and Files' by −5.93%. Both sample ranges overlapped and all generated units matched. These are within-pair changes from three measured samples per variant. The prioritized device candidate remains guard-only. The shortcut and guarded scheduling remove overlapping work. This combination received its own measured control.

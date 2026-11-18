@@ -1,0 +1,15 @@
+digraph guard {
+  graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35];
+  node [shape=box, style="rounded,filled", fillcolor="#edf4f8", fontname="DejaVu Sans", fontsize=12];
+  edge [fontname="DejaVu Sans", fontsize=10];
+  solve [label="Solve structural types and resolve cycles"];
+  key [shape=diamond, label="Provisional Int key could\nchange collection helper?"];
+  prove [label="Prove numeric ranges\nand finish any demotions", fillcolor="#ffe8bd"];
+  intermediate [label="Write intermediate annotations", fillcolor="#d7eddf"];
+  select [label="Select helper source from argument types"];
+  solve -> key;
+  key -> prove [label="yes"];
+  key -> intermediate [label="no, provisional round"];
+  prove -> select;
+  intermediate -> select;
+}

@@ -19,7 +19,17 @@ cmp "$out/control.elf" "$base/fw-stage1-profile.elf"
 link_guest "$variant/ilp32.o" "$out/guard.elf"
 file=$(jq -er --arg w "$world" '.worlds[]|select(.name==$w)|.file' picocalc-os/js/system.json)
 node "$cji/cji.js" "picocalc-os/js/$file" --world-unit --emit > "$out/ref.ir"
-for name in control guard; do
+for name in guard control; do
+    if [[ $name == control && ${5:-} == --await-control ]]; then
+        # Another worker already owns the identical ordinary guest and heap configuration.
+        # Wait for both a complete world unit and terminal instruction statistics.
+        for ((i=0; i<1440; i++)); do
+            if grep -q ' instructions' "$base/$world-8-guest.stats" && cmp -s "$base/$world-8-guest.ir" "$out/ref.ir"; then break; fi
+            sleep 10
+        done
+        grep -q ' instructions' "$base/$world-8-guest.stats"
+        cmp "$base/$world-8-guest.ir" "$out/ref.ir"
+    fi
     if [[ $name == control && -s $base/$world-8-guest.stats ]] && cmp -s "$base/$world-8-guest.ir" "$out/ref.ir"; then
         cp "$base/$world-8-guest.stats" "$out/control.stats"
     else

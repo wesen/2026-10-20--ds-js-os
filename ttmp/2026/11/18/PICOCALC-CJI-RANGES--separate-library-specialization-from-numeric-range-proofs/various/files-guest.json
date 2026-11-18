@@ -1,0 +1,26 @@
+{
+  "world": "files",
+  "heap_mib": 8,
+  "slir_sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa",
+  "variants": {
+    "control": {
+      "firmware_sha256": "dab4c956efd4a83875592ca55dba8f93e08a689e7acf084027e3979f3bba92d0",
+      "frontend_steps": 55750760529,
+      "gc_steps": 1607765080,
+      "slide_bytes": 47127400,
+      "collections": 80,
+      "survivor_bytes": 151459216,
+      "live_peak_bytes": 3973240
+    },
+    "guard": {
+      "firmware_sha256": "0cdadb90a1d3da6d4c44a92b1e21d03d68e840980a5e65672a45708cc341a3b9",
+      "frontend_steps": 45379556556,
+      "gc_steps": 1726516948,
+      "slide_bytes": 49870232,
+      "collections": 74,
+      "survivor_bytes": 155662752,
+      "live_peak_bytes": 4312224
+    }
+  },
+  "frontend_instruction_reduction_percent": 18.60280267854855
+}

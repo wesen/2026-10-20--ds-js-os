@@ -4,6 +4,9 @@ set -euo pipefail
 root=$(realpath "${1:?experiment directory}"); shift
 scripts=$(realpath "$(dirname "$0")")
 test -s "$root/control/p4-runs.jsonl"
+control_digest=$(sha256sum "$root/control/picocalc-os-p4.elf" | cut -d' ' -f1)
+jq -es --arg sha "$control_digest" 'any(.[]; .verified and .world=="agenda" and
+    .requested_heap_mib==8 and .firmware_sha256==$sha)' "$root/control/p4-runs.jsonl" > /dev/null
 python3 "$scripts/09-board-report.py" "$root/control" > "$root/control/qualified.json"
 control="$root/control"
 restore() {

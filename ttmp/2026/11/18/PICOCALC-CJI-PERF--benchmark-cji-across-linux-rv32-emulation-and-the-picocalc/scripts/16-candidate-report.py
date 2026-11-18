@@ -8,7 +8,7 @@ from statistics import median
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("out",type=Path)
-parser.add_argument("case",choices=["memo","join","defer","guard"])
+parser.add_argument("case",choices=["memo","join","defer","guard","guard-join"])
 parser.add_argument("--case-dir", type=Path, help="candidate receipts when stored outside OUT")
 parser.add_argument("--world", default="agenda")
 parser.add_argument("--candidate-exe", type=Path)

@@ -1,0 +1,26 @@
+{
+  "world": "flaky",
+  "heap_mib": 8,
+  "slir_sha256": "d4e6ee2fea6a21a09aff50f62ad5f0b03797f395ea11085c9ae511a50ed9f0e9",
+  "variants": {
+    "control": {
+      "firmware_sha256": "dab4c956efd4a83875592ca55dba8f93e08a689e7acf084027e3979f3bba92d0",
+      "frontend_steps": 1169986185,
+      "gc_steps": 38960504,
+      "slide_bytes": 1464824,
+      "collections": 4,
+      "survivor_bytes": 1998216,
+      "live_peak_bytes": 561440
+    },
+    "guard": {
+      "firmware_sha256": "0cdadb90a1d3da6d4c44a92b1e21d03d68e840980a5e65672a45708cc341a3b9",
+      "frontend_steps": 1169968003,
+      "gc_steps": 38962582,
+      "slide_bytes": 1464800,
+      "collections": 4,
+      "survivor_bytes": 1998216,
+      "live_peak_bytes": 561512
+    }
+  },
+  "frontend_instruction_reduction_percent": 0.0015540354435894471
+}
