@@ -663,3 +663,58 @@ Compare rt_uncaught with cji_elf.c's fatal and leave functions. Run scripts/06-e
 ### Technical details
 
 The host/board module SHA-256 is 4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14. The physical second revision was f2723227fa8d198b38a5076110344b7ac66e5bdcda3be2a6e7e74c2607a88ce8.
+
+## Step 13. Verify live recovery, reboot policy and deliver the hardware guide
+
+I ran the complete procedure against the final compiler-enabled application on the connected PicoCalc. The independent caller received the expected result after editing, both failure modes, fallback and reboot. The test left the compiled service idle and stopped its polling caller.
+
+### Prompt Context
+
+See step 8 for the implementation/design request and step 10 for the diary-format reminder. The preceding hardware and exception-containment checkpoint was 95c7442.
+
+### What I did
+
+- Rebuilt and flashed the operator firmware, then observed it recompile an already installed source when the firmware build identity changed.
+- Changed the acceptance procedure to position the Editor cursor explicitly. Verified the saved bytes, sent requests from a separate QuickJS app, rejected a syntax error, triggered a candidate boot failure and tested unsupported Proxy source under automatic policy.
+- Damaged the active artifact, rebooted and verified the regenerated host-equivalent ELF. Changed the saved source and checked that restore refused it. Reinstalled the original source explicitly, tested a concurrent request, rebooted and checked the caller's result again.
+- Checked the on-device world listing and bus counters, ran the compiler-off firmware build, host regressions and both RV32 gates. Added sanitized hardware evidence to the ticket, related its sources, checked off all phases and delivered the final guide edition.
+
+### Why
+
+The installer must validate both its artifact and its saved source snapshot. Reinstalling a good source when its saved snapshot has been altered should repair the inactive slot and publish a new valid record. Reusing only the otherwise valid ELF would leave the next boot unable to recover.
+
+### What worked
+
+The native build of the edited file took 5,907 ms and the peer received pong-two. The invalid source produced “Uncaught Error: 1:16: expected an expression, found ;”. The intentionally throwing native candidate failed during boot and the same peer received pong-two afterward. Valid Proxy source produced the expected CJI rejection, booted in QuickJS and returned fallback-pong. Returning to native took 6,025 ms and produced the host digest.
+
+The original native install survived reboot with zero compiler scratch. Damaged native bytes were rebuilt in 7,047 ms. An altered saved source was refused. The authorized reinstall produced the reference SHA-256 and a simultaneous submission returned busy. A final reboot hit cache in 1,450 ms and the peer received pong. The final independent world listing showed dev-cji native idle with zero restarts and u-0-cjicheck stopped. I2C reported 4,875 transfers and SPI 258, both with zero errors.
+
+### What didn't work
+
+One intermediate acceptance run timed out waiting for the saved line matching ^"pong-two"\);$. Reading just the disposable test file showed the expected two-line source followed by a new line containing -two. Editor had restored its previous cursor. From a known top line and Home position, the same keys reliably edited the string and the final test checked the stored text before compiling.
+
+### What I learned
+
+Cache latency at normal boot includes other worlds' startup. A hot cache hit on a running board took 20 ms and the same verified native artifact reached ready in about 1,450 ms during system boot. Neither measurement includes frontend work. A separate firmware identity forced a rebuild without any change to the authorized source bytes.
+
+### What was tricky to build
+
+The source snapshot on FAT can change independently of the editable source presented by an operator. The repair path verifies the saved source as well as the cached artifact before reusing a previous record. A physical firmware update, an ordinary reboot, a corrupted artifact and a damaged source each have a distinct expected outcome.
+
+### What warrants a second pair of eyes
+
+Review the source and artifact comparisons inside begin, and the candidate boot confirmation before port_store_set publishes the active slot. The final receipt distinguishes timing under load from the compiler scratch allocation counter.
+
+### What should be done in the future
+
+A deployment that needs larger worlds or more than one development slot should measure representative sources before changing capacity or cache policy. The current three implementation phases are verified for the documented single-slot design.
+
+### Code review instructions
+
+Start with the Phase 4–6 guide and various/phase-4-6-p4-acceptance.txt. Compare the reviewed logic with the acceptance runner's replies and reboot tests. For an independent test, use the board instructions in the guide. The test intentionally replaces the operator development slot.
+
+### Technical details
+
+Final application SHA-256 65cd0cc230a1797cf9c508e1e7c3e6e0a92e8d56e0a4d032c846faa175a19390. Compiler-enabled size 0x3d79f0, compiler-disabled size 0x332a00. Host applications, filesystem and native suites passed. The RV32 board-emulation gate matched SLIR, ELF and calls for all four available fixtures. The shared-runtime gate passed four worlds, isolated the over-budget heap case and observed three incorrect worlds in the deliberately broken state-swap control.
+
+Remarquee receipt: OK: uploaded PICOCALC-CJI-PORT - Phases 4 to 6 hardware implementation.pdf -> /ai/2026/11/17/PICOCALC-CJI-PORT. The earlier design edition remains available. The physical device retains apps/cjiprobe.js, apps/0-cjicheck.js and the verified dev-cji installation for reproduction.

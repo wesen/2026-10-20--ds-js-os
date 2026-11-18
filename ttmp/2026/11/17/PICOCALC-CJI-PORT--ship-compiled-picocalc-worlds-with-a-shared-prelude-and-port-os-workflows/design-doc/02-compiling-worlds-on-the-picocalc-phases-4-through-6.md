@@ -1,7 +1,7 @@
 ---
 Title: Compiling worlds on the PicoCalc - phases 4 through 6
 Ticket: PICOCALC-CJI-PORT
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -22,6 +22,8 @@ RelatedFiles:
       Note: Emulator compilation reference
     - Path: repo://ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/scripts/06-exercise-device-compiler.py
       Note: Physical Editor, peer IPC, failure and reboot acceptance
+    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/various/phase-4-6-p4-acceptance.txt
+      Note: Physical release digest, timings, peer replies and corruption checks
 ExternalSources: []
 Summary: Compile trusted JavaScript on the ESP32-P4, replace a development world and reuse a verified installation after reboot.
 LastUpdated: 2026-11-17T21:35:20.183356433-05:00
@@ -177,3 +179,50 @@ Both commands install a successful result in the single dev-cji slot. Here the p
 The tool in `picocalc-os/port/esp32p4/compiler/tool.c` has a private CJI runtime, memory files and assembler. The shared object links without unresolved symbols. Its sole entry takes a job described by `compiler_job.h`. The firmware supplies bounded allocation, number parsing, formatting, math and timing callbacks. It copies the module out before freeing every job allocation and unloading the tool. The output ELF then goes through the ordinary world loader.
 
 Read `picocalc-os/port/esp32p4/compiler/install.c` in lifecycle order. compiler_console captures a source snapshot. begin tries the trusted record or starts the worker. compiler_tick consumes the result on the kernel task and activates the immutable bytes. The inactive FAT slot receives the source and artifact before the NVS record changes. compiler_restore verifies stored bytes before use at the next boot. Changing the application build identity invalidates the cached machine code. The cache uses two slots under cjidev/ and one private kernel record keyed cji-installed.
+
+## Read one install transaction in the debugger
+
+The global job has one owner at a time. The source snapshot belongs to the transaction until success or cleanup. Each handoff uses a FreeRTOS notification or queue operation. The separate compiler image has no unresolved imports. Its job pointer is the interface to the firmware. A generated **world** has a different entry point and resolves the existing firmware world API. Keeping these two entry contracts separate lets the compiler use its private memory streams without exposing filesystem calls to a world.
+
+```text
+kernel task, core 1                    worker, core 0
+capture source and policy
+READY -> LOADING   ---- notify ------> expand tool and read exports
+                  <---- queue -------- wait for relocation
+relocate tool using internal stack
+LOADING -> BUILDING --- notify ------> compile -> assemble -> copy ELF
+                  <---- queue -------- unload tool and release scratch
+stage bytes in inactive slot
+activate world -> STARTING
+   boot error  -> restore previous revision -> READY
+   boot OK     -> commit NVS record          -> READY
+```
+
+A verified cache hit enters BUILDING with the previously authorized bytes already held in memory. It skips the worker and joins the same activation path. During install after a source-file repair, the cache lookup also checks the **saved source snapshot** in the active slot. Otherwise a legitimate reinstall could run the correct artifact once and still leave the next boot unable to verify its source.
+
+The private record stores the slot, engine, automatic-policy bit, source SHA-256, firmware ELF build identity and artifact SHA-256. Reads enforce size limits and hash the exact bytes used for activation. The record stores fixed-width fields, so lookup has no string concatenation or ambiguous key separators. The application binary's SHA-256 printed by a host tool identifies the flashed image for a test report. The internal cache key uses the SDK's firmware ELF build identity.
+
+### Debugging a rejection
+
+The standalone compiler can report an uncaught frontend exception and stop. On-device, the runtime directs that exception to the embedder's fatal callback. The private tool captures a bounded UTF-8 diagnostic. An automatic install can then give the original JavaScript to QuickJS. If QuickJS cannot boot it, activation fails and the previous revision is restored. A native candidate throwing during initialization reaches the **world's** fatal callback. The kernel can reject that candidate without restarting the board.
+
+For a repeatable board check, use the ticket's scripts/04-observe-compiler.py with an existing trusted test source, then scripts/06-exercise-device-compiler.py from the repository root. The latter writes two disposable apps, operates Loader and Editor over the serial console, asks dev-cji for a reply from a separate QuickJS world, and tests failure and reboot behavior. Reserve the dev-cji slot for this exercise because the procedure installs its fixture in that slot. The corrupted-file cases touch only the installer's test artifacts under cjidev/. Hardware traces should identify the logging world to distinguish the bundled toplog greeting from the new dev-cji instance.
+
+## Results on the physical PicoCalc
+
+The final image is 0x3d79f0 bytes. The packed compiler and assembler account for 659,778 bytes. The board kept its original 4 MiB application partition, private records and files. The test image includes Wi-Fi and native ELF support and has the Phase 3 diagnostics disabled.
+
+| Operation on the physical board | Observed result |
+| --- | --- |
+| Restore an authorized source after the firmware identity changed | Cache miss. Compiled the 268-byte toplog source and started the 3,704-byte native world in 7,028 ms during system boot. |
+| Active-board native install of the original source | 6,025 ms to ready, 8,459,613 bytes peak private scratch. The host and device produced SHA-256 4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14. The QuickJS peer received pong. |
+| Save the changed reply in Editor and rebuild | 5,907 ms. The peer received pong-two from the same development slot. |
+| Submit invalid source, then a candidate throwing at boot | Compiler reported line 1, column 16 for the syntax error. The second candidate failed at boot. The live peer received pong-two after each failure. |
+| Install valid JavaScript using Proxy | Frontend reported its unsupported construct. The ordinary QuickJS engine started the source and the peer received fallback-pong. |
+| Reboot with the verified native install | Native cache hit, zero compiler scratch. About 1,450 ms to ready during boot. A later cache hit on an already running system took 20 ms. |
+| Damage the cached ELF on FAT | Next boot rebuilt the artifact, reproducing the host SHA-256 in 7,047 ms. |
+| Change the saved source under the trusted record | Boot refused the changed bytes. An explicit install of the original source repaired the saved slot. A simultaneous build got busy. After another reboot the peer received pong again. |
+
+Source-to-ready includes scheduling, storage and world activation. The scratch peak measures the private allocation list. The relocated tool image, worker stack, kernel/world memory and temporary copies consume additional PSRAM. The sanitized serial record under various/phase-4-6-p4-acceptance.txt preserves samples of free and largest contiguous PSRAM. Earlier measurements in the diary explain how the stack size and relocation context were established.
+
+The installer supports one trusted development slot, source files up to 32 KiB and modules up to 384 KiB. These measurements come from small service fixtures. A larger world requires its own latency, memory and interactive workload measurements. Compiler-enabled builds use the existing operator console to authorize installation. The final board retains the original toplog test in dev-cji and the two small test sources under apps/. The acceptance runner stops its polling caller and returns to the launcher.

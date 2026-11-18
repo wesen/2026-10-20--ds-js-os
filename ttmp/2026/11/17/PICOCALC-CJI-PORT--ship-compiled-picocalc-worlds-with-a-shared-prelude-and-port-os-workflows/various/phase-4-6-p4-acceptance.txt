@@ -1,0 +1,90 @@
+Physical PicoCalc ESP32-P4. Compiler-enabled release acceptance.
+Application SHA-256: 65cd0cc230a1797cf9c508e1e7c3e6e0a92e8d56e0a4d032c846faa175a19390
+App partition: 0x400000. Image: 0x3d79f0. Packed compiler and assembler: 659778 bytes.
+
+Firmware identity change; previously authorized source recompiled on cold boot:
+cji: compiling source on device
+cji: begin elapsed_ms=2 psram_free=31140628 psram_largest=30932992
+cji: relocated elapsed_ms=600 psram_free=24251164 psram_largest=18874368
+cji: assembled elapsed_ms=6294 psram_free=19867724 psram_largest=14942208
+cji: released elapsed_ms=6302 psram_free=25076532 psram_largest=14942208
+[  7348.888] dev-cji: hello from the top level
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=miss elapsed_ms=7028 scratch_peak=8459613
+
+Physical Editor and two-slot install exercise, in observation order:
+cji: verified cache hit
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=hit elapsed_ms=20 scratch_peak=0
+[ 24158.270] u-0-cjicheck: CJI-CHECK reply pong
+"pong-two");
+cji: compiling source on device
+cji: begin elapsed_ms=0 psram_free=24781856 psram_largest=14942208
+cji: relocated elapsed_ms=520 psram_free=19891416 psram_largest=9961472
+cji: assembled elapsed_ms=5103 psram_free=19570972 psram_largest=9961472
+cji: released elapsed_ms=5108 psram_free=24778404 psram_largest=14942208
+cji: artifact 3408 bytes sha256=f2723227fa8d198b38a5076110344b7ac66e5bdcda3be2a6e7e74c2607a88ce8
+cji: ready dev-cji engine=native cache=miss elapsed_ms=5907 scratch_peak=8459388
+[ 49657.201] u-0-cjicheck: CJI-CHECK reply pong-two
+cji: compiling source on device
+cji: begin elapsed_ms=0 psram_free=24782368 psram_largest=14942208
+cji: relocated elapsed_ms=532 psram_free=19891928 psram_largest=9961472
+cji: compiler refused elapsed_ms=3503 psram_free=15626760 psram_largest=5767168
+cji: released elapsed_ms=3509 psram_free=24782376 psram_largest=14942208
+cji: build failed: Uncaught Error: 1:16: expected an expression, found ;
+[ 54158.263] u-0-cjicheck: CJI-CHECK reply pong-two
+cji: compiling source on device
+cji: begin elapsed_ms=0 psram_free=24782368 psram_largest=14942208
+cji: relocated elapsed_ms=538 psram_free=19891928 psram_largest=9961472
+cji: assembled elapsed_ms=3830 psram_free=19589840 psram_largest=9961472
+cji: released elapsed_ms=3835 psram_free=24779548 psram_largest=14942208
+cji: candidate failed during boot
+[ 60157.489] u-0-cjicheck: CJI-CHECK reply pong-two
+cji: compiling source on device
+cji: begin elapsed_ms=0 psram_free=24781744 psram_largest=14942208
+cji: relocated elapsed_ms=560 psram_free=19891312 psram_largest=9961472
+cji: compiler refused elapsed_ms=3520 psram_free=15626060 psram_largest=5767168
+cji: released elapsed_ms=3523 psram_free=24781748 psram_largest=14942208
+cji: testing QuickJS fallback after Uncaught Error: 1:15: new Proxy is not in the subset
+cji: artifact 88 bytes sha256=8118b609bff460426b04aba9eaa99b4028d289d43b8151aa43ca2bea74686189
+cji: ready dev-cji engine=js cache=miss elapsed_ms=4362 scratch_peak=8459385
+[ 65082.206] u-0-cjicheck: CJI-CHECK reply fallback-pong
+cji: compiling source on device
+cji: begin elapsed_ms=0 psram_free=24612720 psram_largest=14942208
+cji: relocated elapsed_ms=561 psram_free=19722224 psram_largest=9961472
+cji: assembled elapsed_ms=5234 psram_free=19400108 psram_largest=9961472
+cji: released elapsed_ms=5244 psram_free=24608940 psram_largest=14942208
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=miss elapsed_ms=6025 scratch_peak=8459613
+[ 72157.493] u-0-cjicheck: CJI-CHECK reply pong
+cji: verified cache hit
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=hit elapsed_ms=1450 scratch_peak=0
+[ 10961.017] u-0-cjicheck: CJI-CHECK reply pong
+put cjidev/b.elf: 21 bytes
+cji: compiling source on device
+cji: begin elapsed_ms=6 psram_free=31140628 psram_largest=30932992
+cji: relocated elapsed_ms=605 psram_free=24251164 psram_largest=18874368
+cji: assembled elapsed_ms=6311 psram_free=19867492 psram_largest=14942208
+cji: released elapsed_ms=6317 psram_free=25076324 psram_largest=14942208
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=miss elapsed_ms=7047 scratch_peak=8459613
+put cjidev/a.js: 25 bytes
+cji: installed source missing or changed
+cji: compiling source on device
+cji: begin elapsed_ms=4 psram_free=25081324 psram_largest=24117248
+cji: busy
+cji: relocated elapsed_ms=529 psram_free=20190880 psram_largest=14417920
+cji: assembled elapsed_ms=5206 psram_free=19868848 psram_largest=14417920
+cji: released elapsed_ms=5213 psram_free=25077588 psram_largest=24117248
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=miss elapsed_ms=5950 scratch_peak=8459613
+cji: verified cache hit
+cji: artifact 3704 bytes sha256=4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14
+cji: ready dev-cji engine=native cache=hit elapsed_ms=1450 scratch_peak=0
+[ 10965.696] u-0-cjicheck: CJI-CHECK reply pong
+PASS native parity, Editor, rollback, fallback, verified reboot, artifact repair, source refusal and authorized reinstall
+dev-cji native idle 0
+u-0-cjicheck js stopped 0
+bus i2c0  busy 26479.09 ms, 4875 transfers, 19589 bytes, 0 errors
+bus spi2  busy   334.94 ms, 258 transfers, 1180055 bytes, 0 errors

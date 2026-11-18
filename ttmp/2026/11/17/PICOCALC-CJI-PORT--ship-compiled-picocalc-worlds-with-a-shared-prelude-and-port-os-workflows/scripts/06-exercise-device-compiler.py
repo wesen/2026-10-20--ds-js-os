@@ -81,6 +81,22 @@ def caller():
     loader_select("0-cjicheck.js")
     key("enter")
 
+def installed_slot():
+    # At this checkpoint exactly one slot contains the original toplog image.
+    send("ls cjidev")
+    slots = []
+    end = time.monotonic() + 5
+    while time.monotonic() < end:
+        line = port.readline().decode(errors="replace").strip()
+        if line == "#OK ls":
+            break
+        match = re.fullmatch(r"([ab])\.elf\s+([0-9]+)", line)
+        if match and int(match.group(2)) == len(reference):
+            slots.append(match.group(1))
+    if len(slots) != 1:
+        raise RuntimeError(f"cannot uniquely identify the test slot: {slots}")
+    return slots[0]
+
 def build(mode, expectation):
     send("cji " + mode + " " + probe)
     until(expectation)
@@ -100,7 +116,12 @@ try:
     loader_select("cjiprobe.js")
     key("f3")
     time.sleep(.8)
+    # Editor restores the previous cursor for this file across boots.
+    for _ in range(4):
+        key("up")
+    key("home")
     key("down")
+    key("home")
     for _ in range(5):
         key("right")
     command("type -two")
@@ -132,6 +153,30 @@ try:
     caller()
     until(r"CJI-CHECK reply pong$", 12)
     key("f1")
-    print("PASS native parity, two revisions, failed source, failed boot, JS fallback, reboot cache and IPC")
+    # Only mutate the disposable installer slots created by this test.
+    put("cjidev/" + installed_slot() + ".elf", b"invalid test artifact")
+    send("reboot")
+    until("cji: compiling source on device", 20)
+    until("artifact .*sha256=" + reference_hash)
+    until("ready dev-cji engine=native cache=miss")
+    put("cjidev/" + installed_slot() + ".js", b"log('unapproved source');")
+    send("reboot")
+    until("cji: installed source missing or changed", 20)
+    time.sleep(6)
+    send("cji install " + probe)
+    until("cji: compiling source on device")
+    send("cji build " + probe)
+    until("cji: busy", 5)
+    until("artifact .*sha256=" + reference_hash)
+    until("ready dev-cji engine=native cache=miss")
+    send("reboot")
+    until("ready dev-cji engine=native cache=hit", 35)
+    caller()
+    until(r"CJI-CHECK reply pong$", 12)
+    key("f1")
+    loader_select("0-cjicheck.js")
+    key("f2")
+    key("f1")
+    print("PASS native parity, Editor, rollback, fallback, verified reboot, artifact repair, source refusal and authorized reinstall")
 finally:
     port.close()

@@ -170,7 +170,14 @@ static void begin(char *source,size_t len,bool automatic) {
     reuse=active.version && active.automatic==automatic &&
          !memcmp(candidate.firmware,active.firmware,32) && !memcmp(candidate.source,active.source,32);
     if (reuse) {
-        output=read_bounded_file(artifact_path(active.slot),MODULE_LIMIT,&output_size);
+        // A manual reinstall must repair a damaged saved source as well as a
+        // damaged ELF. Both files are required to restore the slot at boot.
+        size_t saved_size=0;
+        char *saved=read_bounded_file(source_path(active.slot),SOURCE_LIMIT,&saved_size);
+        bool source_intact=saved && saved_size==len && !memcmp(saved,source,len);
+        free(saved);
+        if (source_intact)
+            output=read_bounded_file(artifact_path(active.slot),MODULE_LIMIT,&output_size);
         if (output && matches(output,output_size,active.artifact)) {
             candidate=active;
             state=BUILDING; job.status=0;

@@ -15,3 +15,11 @@ Implemented bundled CJI handle transfer in b2c196a. Physical P4 checked send, as
 ## 2026-11-17
 
 Verified the compiled Phase 3 workflows on the ESP32-P4 and recorded release measurements in the intern guide.
+
+## 2026-11-17
+
+Qualified physical source compilation, Editor replacement, live rollback, QuickJS fallback, verified cached reboot and repair of altered storage. See the Phase 4–6 guide and hardware receipt.
+
+## 2026-11-17
+
+Closed after physical Phase 4–6 acceptance and final reMarkable guide delivery.
