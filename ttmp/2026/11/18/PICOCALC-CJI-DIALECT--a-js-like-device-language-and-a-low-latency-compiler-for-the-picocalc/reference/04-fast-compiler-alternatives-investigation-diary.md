@@ -122,7 +122,7 @@ If distributing bytecode, use a trusted build artifact or an authenticated priva
 
 ### Code review instructions
 
-Run both commands in [scripts/fastpath/README.md](../scripts/fastpath/README.md). The paired results live in [quickjs-host.json](../various/fastpath/quickjs-host.json).
+Run both commands in [scripts/fastpath/00-running-the-backend-experiments.md](../scripts/fastpath/00-running-the-backend-experiments.md). The paired results live in [quickjs-host.json](../various/fastpath/quickjs-host.json).
 
 ### Technical details
 
@@ -271,7 +271,7 @@ Generate the ABI wrapper and marshaling explicitly for a full typed world. Compa
 
 ### Code review instructions
 
-Run the WAMR command in [the reproducer index](../scripts/fastpath/README.md). Read [the receipt](../various/fastpath/wasm-world.json) and [the integration analysis](../analysis/03-fast-paths.md#through-the-linux-world-abi).
+Run the WAMR command in [the reproducer index](../scripts/fastpath/00-running-the-backend-experiments.md). Read [the receipt](../various/fastpath/wasm-world.json) and [the integration analysis](../analysis/03-fast-paths.md#through-the-linux-world-abi).
 
 ### Technical details
 

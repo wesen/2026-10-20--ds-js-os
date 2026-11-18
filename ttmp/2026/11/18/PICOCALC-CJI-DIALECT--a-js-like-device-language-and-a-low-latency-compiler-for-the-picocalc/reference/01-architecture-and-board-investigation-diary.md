@@ -199,3 +199,50 @@ Exercise typed code through the actual kernel world event ABI. The first complet
 ### Code review instructions
 
 Run scripts/board/verify-typed.py against various/board/typed-uart.log. Run scripts/board/summarize-qjs.py on the captured JSONL and compare the CSV. Inspect scripts/report/figures.py and the three *-flash-smoke.json records for all firmware swaps. No firmware or compiler binaries are committed to the ticket.
+
+## Step 5 — Exercise the event ABI and prepare the intern edition
+
+**Prompt context.** The user asked for a technical guide for a new intern which can be read later on a reMarkable. Each platform measurement must explain what the newcomer could reproduce and what still needs a production implementation.
+
+### What I did
+
+- Integrated the typed code into the existing Linux kernel event workflow through a separate investigator. The test found the exact generated Wasm function body by signature and used the project's SDK to supply a test world's events and JSON. A QuickJS peer received six correct replies. The sentinel-control world proved that reaching only the SDK glue could not pass the positive cases.
+- Added a concrete source walkthrough, diagrams for the compiler routes and file capability handoff, the measured timing plot, an actual simulator screenshot and a migration plan. Included real and proposed APIs, implementation pseudocode, sampling boundaries, storage and trust rules, phase budgets, prior art and the next full-world test.
+- Reproduced the CSV and typed JSON from captured data, verified the two native ELF hashes again, matched the screenshot to the independent replay receipt and checked repository-relative links. Three compressed smoke records preserve target and restored image identity per series. The guide snapshot was committed at 09c7bdd and the kernel-routed experiment at 5aaa73b; the physical candidate/typed firmware evidence was committed at 6ac248a.
+- Numbered both reproduction indexes under scripts after docmgr treated conventional README names as managed documents. Repaired their current links and reran the complete ticket doctor.
+
+### Why
+
+A valid scalar module can still fail to interact with the OS. A real event/reply extends validation across that boundary. A docs reader on an e-reader needs an offline source map, readable figure captions and a clear unit for every timing.
+
+### What worked
+
+The patched test world handled center, lower/upper clamp, no selection, short list and a signed-boundary case. The placeholder consistently returned -999 and a deliberately malformed numeric string was rejected. The final 19-page PDF has four raster figures, 89 internal and 14 HTTPS annotations. The independent layout check found no clipping or overlapping text in the published layout. A root-side rendering inspection also verified all four figures on pages 2, 5, 6 and 13.
+
+### What didn't work
+
+The first PDF rehearsal duplicated the title in the outline, emitted file links which would be invalid on an e-reader, and overran an API table cell with an unbroken signature. The staging and layout scripts replace the synthetic title, link references to an offline path map, and split long signatures and hashes at safe positions. Canonical Markdown and machine evidence retain complete hashes.
+
+### What I learned
+
+The typed body can service real cross-engine requests when the ordinary SDK supplies the surrounding world. None of these tests generates a complete typed application with managed heap objects, retained mutable state, scheduling, cancellation and transferable file handles. The plan now makes that boundary explicit and testable.
+
+### What was tricky to build
+
+The final document needed useful links both in Git and on a notebook without the repository. PDF verification checked destinations, outline depth, figure count and text geometry. Source and rendered binary identities have separate hashes; the release receipt records both.
+
+### What warrants a second pair of eyes
+
+Use the 19-page edition or the canonical guide to find the OS source map, look up the four timing boundaries, and verify which physical, simulator and host-only results support the recommendation. Re-run the fixture with the sentinel first and compare the application-level replies.
+
+### What should be done in the future
+
+Generate actual state, string and event glue for a small complete typed world. Test normal loader startup and input-to-visible-result latency on an assembled device. Keep the catalog qualification matrix separate from the smoke tests.
+
+### Code review instructions
+
+The source guide, experimental logs, four diaries and scripts live in PICOCALC-CJI-DIALECT. The PDF, layout verification and reMarkable readback belong in various/publication. Reproduce the report figures from scripts/report/figures.py and open the simulator replay/hash entry for 72-agenda-tasks.png.
+
+### Delivery receipt
+
+Uploaded **CJI Intern Guide - Rethinking the PicoCalc Device Language** to `/ai/2026/11/18/PICOCALC-CJI-DIALECT`. Cloud readback returned the same 346,080 bytes as the ticket PDF, SHA-256 `37cc2e5becf1b8630f32065be9428abad8e6da918a2a9feb98d19cecd1c3eff9`. The remote document UUID is `c512405e-d691-4ee4-954e-768ec2dde76e`. The canonical source hash is `8c3015be6d231a0cfc72618d3b1d3eaad67d53c8c0e673328aa2ce5bdf139c24`. Complete metadata resides with the ticket PDF.

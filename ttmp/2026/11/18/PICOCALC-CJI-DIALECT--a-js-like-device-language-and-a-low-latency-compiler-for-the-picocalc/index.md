@@ -1,7 +1,7 @@
 ---
 Title: A JS-like device language and a low-latency compiler for the PicoCalc
 Ticket: PICOCALC-CJI-DIALECT
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Intern architecture guide with language contract and measurements
 ExternalSources: []
 Summary: Physical measurements and a design for a JS-like PicoCalc language with fast interactive compilation.
-LastUpdated: 2026-11-18T16:16:10.92066368-05:00
+LastUpdated: 2026-11-18T16:48:55.452264686-05:00
 WhatFor: Choose a device compiler architecture and qualify the first typed world.
 WhenToUse: Before changing language semantics, the edit/run path or native optimization policy.
 ---
@@ -28,9 +28,10 @@ The attached ESP32-P4 compiled the entire 22-world JS catalog to QuickJS bytecod
 ## Start here
 
 - [Intern design and implementation guide](design-doc/01-designing-a-js-like-language-for-interactive-compilation-on-the-picocalc.md)
+- [Illustrated PDF for offline reading](various/publication/picocalc-device-language-guide.pdf)
 - [Catalog contracts and app-port evidence](analysis/02-catalog-contracts.md)
 - [Execution format alternatives and simulator workflows](analysis/03-fast-paths.md)
-- [Physical timing and identity receipts](various/board/) and [board reproduction instructions](scripts/board/README.md)
+- [Physical timing and identity receipts](various/board/) and [board reproduction instructions](scripts/board/00-reproducing-board-measurements.md)
 
 ## Investigation diaries
 
