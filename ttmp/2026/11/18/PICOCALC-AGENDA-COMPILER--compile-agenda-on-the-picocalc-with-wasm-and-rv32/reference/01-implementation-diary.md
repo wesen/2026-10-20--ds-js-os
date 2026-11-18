@@ -405,3 +405,25 @@ The native boot trace places typed-manifest registration about 727 ms into the k
 ### What should be done in the future
 
 Measure compiler restore, first dispatch, native activation, file request and settlement with timestamps from the same clock. Repeat the two compiler profiles with the same CJI installation and peripheral settings to see where the full-system response misses two seconds. Compare any scheduling change against installed CJI restoration and the regular Agenda frame path.
+
+## Step 13 — Measure startup by stage on the same RV32 profile
+
+### What I did
+
+I added first-response timestamps around manifest registration, installed CJI restore, dispatch, engine creation, filesystem submission and return, settlement, and publication. The new serial sampler makes fresh resets and keeps only Agenda timing fields. I flashed the instrumented application at 0x10000 and conducted three measured reboots with the same headless hardware and existing files. The raw trials are in various/p4-rv32-boot-stages-baseline.json.
+
+### What worked
+
+Median source-to-publication was 3.083 s, with 449 ms of compilation. Manifest handling reached the CJI restore call after about 586 ms. The restore call returned in about 10 ms. Agenda's engine was instantiated around 1.454 s and took 6 ms. The world submitted its notes read around 2.881 s. The returned file reached the kernel about 200 ms later, with roughly another 2 ms to dispatch its settlement and publish the first frame.
+
+### What I learned
+
+The synchronous restore call was short. However, its asynchronous job loads an ELF whose relocation runs on the kernel task because it requires an internal stack. While other worlds initialize, this phase competes directly with the dispatch lane. There is also a 1.42 s interval from Agenda engine initialization to its start message submitting a file request. The kernel gives all manifest boot segments precedence over ready messages. That policy is a separate candidate to measure after isolating the effect of CJI relocation.
+
+### What warrants a second pair of eyes
+
+The trace comes from kernel-side timestamps. The submit-to-return interval includes scheduling on the same-core filesystem worker and queue drain. It does not measure flash read service time. Serial logging also adds a small cost to the instrumented first settlement turn.
+
+### Code review instructions
+
+Build with PICOCALC_RV32_AGENDA enabled. Run scripts/10-measure-agenda-boot.py with the attached UART, keeping the existing app, note, installed CJI slot and peripheral configuration fixed across measurements.

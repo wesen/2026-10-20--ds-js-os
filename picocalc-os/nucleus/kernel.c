@@ -687,12 +687,20 @@ static void run_segment(world_t *W, bool is_settle) {
   const char *budget_kind = "turn";
   vtime_t budget = W->budget_us;
   bool booting = W->boot_ready;
+#if PICOCALC_TYPED_AGENDA
+  extern void p4_agenda_stage(const world_t *, const char *);
+  if (booting) p4_agenda_stage(W, "world-init");
+  if (is_settle) p4_agenda_stage(W, "settle");
+#endif
   if (booting) {
     if (K.trace) klog("starting %s (%s)", W->name, W->file);
     W->boot_ready = false;
     budget_kind = "start";
     budget = MS(600);
     rc = boot_world(W);
+#if PICOCALC_TYPED_AGENDA
+    p4_agenda_stage(W, "world-init-done");
+#endif
     if (rc == 0 && W->restarts++ > 0) publish_status(W, "running", NULL, 0);
   } else {
     eng_begin_segment(W, budget);

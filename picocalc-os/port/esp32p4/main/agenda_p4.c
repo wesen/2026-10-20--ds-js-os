@@ -211,6 +211,12 @@ void p4_agenda_console(const char *command) {
   kernel_restart_world(world);
 }
 
+void p4_agenda_stage(const world_t *world, const char *stage) {
+  if (!first_response) return;
+  if (world && (strcmp(world->name, "agenda") || world->engine != AGENDA_ENGINE)) return;
+  printf("agenda stage %s us=%lld\n", stage, (long long)(port_clock() - first_response));
+}
+
 void p4_agenda_frame(world_t *world, vtime_t segment_start) {
   if (strcmp(world->name, "agenda") || world->engine != AGENDA_ENGINE) return;
   vtime_t now = port_clock();

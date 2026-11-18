@@ -216,7 +216,13 @@ static void kernel_task(void *arg) {
   if (kernel_boot("js/system.elf.json")) ESP_LOGE(TAG, "the ELF manifest did not load");
 #endif
 #if PICOCALC_DEVICE_COMPILER
+#if PICOCALC_TYPED_AGENDA
+  p4_agenda_stage(NULL, "before-cji-restore");
+#endif
   compiler_restore();
+#endif
+#if PICOCALC_TYPED_AGENDA
+  p4_agenda_stage(NULL, "before-dispatch");
 #endif
   for (;;) {
     kmsg_t m;
