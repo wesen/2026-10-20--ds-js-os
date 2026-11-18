@@ -67,6 +67,9 @@ int nw_about(const char *text);           // one line about it, at most 159 byte
 int nw_key(const char *letter);           // its shortcut on the launcher: one of a-z, 0-9
 
 // Time, timers and storage.
+// Configured wall clock and the local-minus-UTC offset in minutes at an epoch.
+int64_t nw_clock_wall(void);           // epoch milliseconds, -1 when unset
+int nw_clock_offset(int64_t epoch_ms, int *minutes); // 0 on success
 int nw_sleep(int ms);                     // a token, settled after ms
 int nw_timer(int index, int on);
 int nw_store_load(char *buf, int n);      // the world's saved record (JSON), its length; 0 if none

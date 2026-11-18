@@ -22,7 +22,11 @@ int parseTask(const void *line, void *title, void *task);
 
 static text_buffer line_buffer, title_buffer;
 static char input[UTF8_BYTES], title[UTF8_BYTES];
-static int notes, read_token;
+enum { MINUTE_MS = 60000, DAY_MS = 86400000, REMINDER_WINDOW = 2 * 3600000,
+       LATE_MS = 120000, STORE_CAPACITY = 16384, FIRED_MAX = 200 };
+static int notes, read_token, refresh_timer;
+static char stored[STORE_CAPACITY + 1], pending_store[STORE_CAPACITY + 1];
+static char reminder_key[UTF8_BYTES + 32], quoted_key[6 * LINE_UNITS + 48];
 static char screen[16384], quoted[UTF8_BYTES + 128], reply[UTF8_BYTES + 256];
 
 // Strict UTF-8 decoding. Offsets in the compiled record count UTF-16 units.
@@ -96,6 +100,121 @@ static int parse_line(const char *source, task_record *task)
     return 1;
 }
 
+static int decimal_at(unsigned start, unsigned count)
+{
+    int value = 0;
+    for (unsigned i = 0; i < count; i++) value = value * 10 + line_buffer.units[start + i] - '0';
+    return value;
+}
+
+static int64_t days_before_year(int year)
+{
+    int previous = year - 1;
+    return (int64_t)previous * 365 + previous / 4 - previous / 100 + previous / 400;
+}
+
+// Agenda's Date constructor evaluates the time zone at the nominal UTC instant.
+static int64_t due_ms(const task_record *task, char time_text[6])
+{
+    static const int before_month[] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+    if (task->due_start < 0 || (uint64_t)task->due_start + 11 > line_buffer.length ||
+        task->time_start < 0 || (uint64_t)task->time_start + 5 > line_buffer.length) return INT64_MIN;
+    int year = decimal_at(task->due_start + 1, 4);
+    int month = decimal_at(task->due_start + 6, 2);
+    int day = decimal_at(task->due_start + 9, 2);
+    if (year < 100) year += 1900;
+    int hour = decimal_at(task->time_start, 2);
+    int minute = decimal_at(task->time_start + 3, 2);
+    if (month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 ||
+        minute < 0 || minute > 59) return INT64_MIN;
+    int64_t days = days_before_year(year) - days_before_year(1970) + before_month[month - 1] + day - 1;
+    if (month > 2 && days_before_year(year + 1) - days_before_year(year) == 366) days++;
+    int64_t nominal = days * DAY_MS + (hour * 60 + minute) * MINUTE_MS;
+    int offset;
+    if (nw_clock_offset(nominal, &offset) < 0) return INT64_MIN;
+    for (unsigned i = 0; i < 5; i++) time_text[i] = (char)line_buffer.units[task->time_start + i];
+    time_text[5] = 0;
+    return nominal - offset * MINUTE_MS;
+}
+
+static int remember(const char *key, int64_t now)
+{
+    int key_len = nw_json_quote(quoted_key, sizeof quoted_key, key);
+    if (key_len < 0) return 0;
+    const char *old = nw_json_find(stored, "fired");
+    if (old && *old == '{') {
+        // The SDK lookup compares the escaped property spelling as stored.
+        quoted_key[key_len - 1] = 0;
+        int exists = nw_json_find(old, quoted_key + 1) != NULL;
+        quoted_key[key_len - 1] = '"';
+        if (exists) return 0;
+    }
+    int length = snprintf(pending_store, sizeof pending_store, "{\"fired\":{%s:%lld", quoted_key, (long long)now);
+    if (length < 0 || length > STORE_CAPACITY - 2) return 0;
+    if (old && *old == '{') {
+        const char *entry = nw_json__ws(old + 1);
+        for (int count = 1; count < FIRED_MAX && *entry == '"'; ) {
+            const char *colon = nw_json__skip(entry, 0);
+            if (!colon || *colon != ':') break;
+            char *end;
+            int64_t fired_at = strtoll(colon + 1, &end, 10);
+            if (end == colon + 1 || (*end != ',' && *end != '}')) break;
+            size_t len = (size_t)(end - entry);
+            if (fired_at >= now - 2LL * DAY_MS) {
+                if ((size_t)length + 1 + len + 2 > STORE_CAPACITY) break;
+                pending_store[length++] = ',';
+                memcpy(pending_store + length, entry, len);
+                length += (int)len;
+                count++;
+            }
+            if (*end != ',') break;
+            entry = nw_json__ws(end + 1);
+        }
+    }
+    memcpy(pending_store + length, "}}", 3);
+    if (nw_store_save(pending_store) < 0) {
+        nw_log("Agenda could not save the fired reminders");
+        return 0;
+    }
+    memcpy(stored, pending_store, (size_t)length + 3);
+    return 1;
+}
+
+static void remind(const task_record *task, const char *label, int64_t now)
+{
+    if (now < 0 || !task->time_valid) return;
+    char time_text[6];
+    int64_t due = due_ms(task, time_text);
+    if (due == INT64_MIN) return;
+    int64_t fire = due - (task->lead_minutes > 0 ? task->lead_minutes * (int64_t)MINUTE_MS : 0);
+    if (fire > now || now - fire > REMINDER_WINDOW) return;
+    int n = snprintf(reminder_key, sizeof reminder_key, "%lld|%s", (long long)fire, label);
+    if (n < 0 || n >= (int)sizeof reminder_key) return;
+    // The JSON and UTF-8 buffers are separate so the title is escaped once.
+    n = snprintf(input, sizeof input, "%s at %s", label, time_text);
+    if (n < 0 || n >= (int)sizeof input || nw_json_quote(quoted, sizeof quoted, input) < 0) return;
+    char sub[48] = "now";
+    int late = now - fire > LATE_MS;
+    if (late) snprintf(sub, sizeof sub, "was due at %s", time_text);
+    if (task->lead_minutes > 0 &&
+        task->lead_start >= 0 && task->lead_end > task->lead_start &&
+        task->lead_end - task->lead_start <= 6 && (unsigned)task->lead_end <= line_buffer.length) {
+        if (late) strcat(sub, " less ");
+        else memcpy(sub, "in ", 4);
+        // Lead offsets count UTF-16 units and the lead token is ASCII.
+        size_t len = strlen(sub);
+        for (int at = task->lead_start + 1; at < task->lead_end; at++) {
+            uint16_t code = line_buffer.units[at];
+            if ((code < '0' || code > '9') && code != 'm' && code != 'h' && code != 'd') return;
+            sub[len++] = (char)code;
+        }
+        sub[len] = 0;
+    }
+    n = snprintf(reply, sizeof reply, "{\"text\":%s,\"sub\":\"%s\"}", quoted, sub);
+    if (n >= 0 && n < (int)sizeof reply && remember(reminder_key, now))
+        nw_send("compositor", "notify", reply);
+}
+
 static void render_file(const nw_event *event)
 {
     if (!event->ok) {
@@ -116,16 +235,20 @@ static void render_file(const nw_event *event)
     nw_ui_begin(&ui, screen, sizeof screen - 2); // leave space to close the column
     nw_ui_open(&ui, "col", NULL);
     unsigned shown = 0;
-    for (char *line = text; line && shown < 12; ) {
+    int64_t wall = nw_clock_wall();
+    for (char *line = text; line; ) {
         char *next = strchr(line, '\n');
         if (next) *next++ = '\0';
         task_record task;
         if (parse_line(line, &task) > 0 && !task.done) {
-            nw_ui row = ui;
-            nw_ui_text(&row, task.title_length ? title : "(untitled)", NULL);
-            if (row.bad) break;
-            ui = row;
-            shown++;
+            const char *label = task.title_length ? title : "(untitled)";
+            remind(&task, label, wall);
+            if (shown < 12) {
+                nw_ui row = ui;
+                nw_ui_text(&row, label, NULL);
+                if (row.bad) shown = 12;
+                else { ui = row; shown++; }
+            }
         }
         line = next;
     }
@@ -140,13 +263,18 @@ void nw_init(void)
     nw_kind("app");
     nw_title("Typed Agenda");
     notes = nw_fs_open("fs:/notes");
+    refresh_timer = nw_every(15000);
 }
 
 int nw_on_event(const nw_event *event)
 {
-    if (event->kind == NW_START) {
+    if (event->kind == NW_START && nw_store_load(stored, sizeof stored) < 0) stored[0] = 0;
+    if ((event->kind == NW_START || (event->kind == NW_TICK && event->timer == refresh_timer)) && !read_token) {
         if (notes >= 0) read_token = nw_fs_read(notes, "todo.txt");
-        if (notes < 0 || read_token < 0) nw_log("Agenda could not start its notes read");
+        if (notes < 0 || read_token < 0) {
+            read_token = 0;
+            nw_log("Agenda could not start its notes read");
+        }
     }
     if (event->kind == NW_SETTLE && read_token > 0 && event->token == read_token) {
         read_token = 0;

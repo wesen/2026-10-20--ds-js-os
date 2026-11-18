@@ -224,3 +224,47 @@ Connect calendar-to-epoch conversion, timer events and durable duplicate suppres
 ### Code review instructions
 
 Build with make -C picocalc-os and run scripts/04-check-wasm-world.mjs from the repository root. Inspect wasm-world.c, linkWorld in typed-wasm.js and the NW_FS_OPEN and NW_FS_READ handlers. The exact reply, frame and module identity are in various/wasm-world.json.
+
+## Step 6 — Schedule reminders from the compiled task and verify durable suppression
+
+Agenda now re-reads its notes on a 15-second timer, interprets each compiled task's civil time with the configured device zone, and uses the compositor's notification message. The same file supplies the view. A real simulator display capture shows both open task rows.
+
+### Prompt context
+
+See Step 1. The preceding file-backed Wasm checkpoint is d4d6bfb.
+
+### What I did
+
+Added native SDK access to the wall clock and the timezone offset at a nominal epoch. Updated the Wasm runtime to calculate the due instant from the generated record, save the fired identity, and send the notification. Drove the host workflow with a fixed EST/EDT timezone, a persisted store across two cold boots, an unset clock, and the repeated hour at the autumn DST transition. Captured the real compositor and display simulation with the Wasm app focused.
+
+### Why
+
+The same local clock time can occur twice during the fall transition. The existing JS Date binding applies the offset at the nominal UTC instant. Using that rule with 64-bit epoch milliseconds avoids choosing the other occurrence. An identity based on the scheduled instant and normalized title survives re-reading the file and restarting the world.
+
+### What worked
+
+The configured local reminder at 14:15 became eligible at epoch 1793733300000 and reached the simulated compositor 14,003 virtual milliseconds later. The store recorded the firing and a separate boot suppressed the repeat. With an unset clock no notification was sent. The fall-transition test selected the earlier 01:15 and also fired on the first eligible tick. The existing 34 native tests and the app suites passed. The receipt includes the final module and PNG identities.
+
+### What didn't work
+
+The physical board currently runs its prior firmware. All clock, store and display assertions in this step use the host simulator. The simulated font substitutes a fallback glyph for the emoji that the record and frame text preserve.
+
+### What I learned
+
+A raw civil time and a wall-clock epoch must have separate representations. The filesystem settlement is the point where the newest persisted text, parsed records and current clock are all available in one turn.
+
+### What was tricky to build
+
+Stored identities are JSON property names. Duplicate detection uses the same escaped spelling used when persisting the key. Retention is limited by both entry count and the SDK store quota. The renderer enforces its row and frame limit independently from the reminder scan.
+
+### What warrants a second pair of eyes
+
+Check the event boundaries in the receipt and the handling of out-of-range offsets returned by editable parser code. Device timing must take measurements from firmware running this world and use a physical input/visible-frame measurement for the separate display target.
+
+### What should be done in the future
+
+Bundle the reactor and source compiler for on-device cold builds. Measure first response, turn and memory use on the P4, then compare the trusted RV32 backend against the same persisted-reminder workflow.
+
+### Code review instructions
+
+Build the simulator, run scripts/04-check-wasm-world.mjs, and compare the reminder object and captured screen with various/wasm-world.json. For timezone behavior inspect getTimezoneOffset and set_date_fields in the vendored QuickJS implementation.

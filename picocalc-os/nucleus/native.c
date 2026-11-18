@@ -10,6 +10,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "nucleus.h"
 #include "../sdk/nw_wire.h"
 
@@ -487,6 +488,24 @@ fs_done:
       }
       free(path);
       return result < 0 ? fail(W, "%s", err) : result;
+    }
+    case NW_CLOCK_OFFSET: {
+      int64_t seconds = c->v / 1000;
+      // Match the Date binding on ports with 32-bit time_t.
+      if (sizeof(time_t) == 4) {
+        int64_t min = (time_t)-1 < 0 ? INT32_MIN : 0;
+        int64_t max = (time_t)-1 < 0 ? (int64_t)INT32_MAX : UINT32_MAX;
+        if (seconds < min) seconds = min;
+        if (seconds > max) seconds = max;
+      }
+      time_t instant = (time_t)seconds;
+      struct tm utc, local;
+      if (!gmtime_r(&instant, &utc) || !localtime_r(&instant, &local))
+        return fail(W, "invalid clock instant");
+      int days = local.tm_yday - utc.tm_yday;
+      if (local.tm_year != utc.tm_year) days = local.tm_year > utc.tm_year ? 1 : -1;
+      int minutes = (days * 24 + local.tm_hour - utc.tm_hour) * 60 + local.tm_min - utc.tm_min;
+      return minutes + 1440;
     }
     case NW_CLOCK_WALL: return port_wall_ms();
     case NW_CLOCK_ZONE: return snprintf(out, out_n, "%s", clock_zone());

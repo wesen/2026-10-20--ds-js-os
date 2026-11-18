@@ -1,8 +1,8 @@
 {
-  "linkedBytes": 35489,
+  "linkedBytes": 42095,
   "sourceSha": "615832ecd3abf957efe86137f604bc43e216c91d456198d8ad8d00f91fef0928",
-  "runtimeSha": "b656efcea6a0c81eafd2a633c7957ccfaacef97c308f8e379d353e1b853b41a0",
-  "linkedSha": "12a27cb0c1ce8180068641f3e0846dc69772899b47afad72b9bfc76f98258df0",
+  "runtimeSha": "e79ee21c5ada7b6228b62e82c731063a74d71f90dd02adf6ec100243e65ee849",
+  "linkedSha": "6ada77edc0405e98bf1573abf0751b54e5177763cb5751bac58f64f0d25e3364",
   "reply": {
     "title": "dentist 🦷",
     "done": false,
@@ -31,6 +31,29 @@
   "deniedWithoutNotesClaim": true,
   "perMessageInstructions": [
     11632,
-    464
-  ]
+    487
+  ],
+  "screenshot": {
+    "sha256": "1e6e00e90f911de0b32bdfcb460cd8e95a6afccf03c3dcf3e9e1d1171c10cda1",
+    "bytes": 3588
+  },
+  "reminder": {
+    "notice": {
+      "text": "dentist 🦷 at 14:30",
+      "sub": "in 15m"
+    },
+    "sender": "agenda-wasm",
+    "scheduled": 1793733300000,
+    "firedAt": 1793733314003,
+    "persisted": {
+      "fired": {
+        "1793733300000|dentist 🦷": 1793733314002
+      }
+    },
+    "restartSuppressed": true,
+    "unsetSuppressed": true,
+    "zone": "EST5EDT,M3.2.0/2,M11.1.0/2",
+    "transitionScheduled": 1793510100000,
+    "transitionFiredAt": 1793510114003
+  }
 }

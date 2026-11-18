@@ -28,6 +28,14 @@ int nw_title(const char *title) { return present("title", title); }
 int nw_icon(const char *ops_json) { return present("icon", ops_json); }
 int nw_about(const char *text) { return present("about", text); }
 int nw_key(const char *letter) { return present("key", letter); }
+int64_t nw_clock_wall(void) { return call(NW_CALL_CLOCK_WALL, 0, 0, 0, NONE, NONE, NONE, NULL, 0); }
+int nw_clock_offset(int64_t epoch_ms, int *minutes) {
+  // Bias the result so a west-of-UTC offset cannot be mistaken for an error.
+  int64_t result = call(NW_CALL_CLOCK_OFFSET, 0, 0, epoch_ms, NONE, NONE, NONE, NULL, 0);
+  if (result < 0) return -1;
+  *minutes = (int)result - 1440;
+  return 0;
+}
 int nw_sleep(int ms) { return (int)call(NW_CALL_SLEEP, ms, 0, 0, NONE, NONE, NONE, NULL, 0); }
 int nw_timer(int index, int on) { return (int)call(NW_CALL_TIMER, index, on, 0, NONE, NONE, NONE, NULL, 0); }
 int nw_store_load(char *buf, int n) { return (int)call(NW_CALL_STORE_LOAD, 0, 0, 0, NONE, NONE, NONE, buf, n); }
