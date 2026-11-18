@@ -136,6 +136,10 @@ static int64_t k_call(int op, int a, int b, int64_t c, const char *s0, size_t n0
   // in PSRAM instead, the change in the internal layout alone made the kernel's JavaScript calibration loop (sums
   // that outgrow 32 bits and become floats) take 1604 ms instead of 113 on the board, while fib(20) did not change
   // (PICOCALC-NATIVE diary, step 7).
+  // CJI owns the destination until its synchronous call returns. Use it directly for large
+  // results rather than reserving 64 KiB in the kernel task's internal RAM.
+  if (W->nat->cji_handles && (op == CJI_AGENT_BODY || op == CJI_WORLDS || op == NW_STORE_LOAD) && out && out_n)
+    return nat_syscall(W, &k, out, out_n);
   static char text[NW_OUT_MAX];
   text[0] = 0;
   int64_t r = nat_syscall(W, &k, text, NW_OUT_MAX);

@@ -56,6 +56,8 @@ int nat_create(world_t *W) {
 void nat_dispose(world_t *W) {
   if (!W->nat) return;
   if (W->nat->inst) W->nat->be->unload(W);
+  agent_drop(W);
+  free(W->nat->agent_body);
   free(W->nat->screen);
   free(W->nat);
   W->nat = NULL;
@@ -267,9 +269,104 @@ static void run_store_save(deferred_t *d, vtime_t at) {
   world_t *W = world_by_id(d->w);
   if (W && W->nat && W->epoch == d->epoch) {
     bool empty = !strcmp(d->json, "{}") || !d->json[0];
-    if (port_store_set("w", W->name, d->json, empty ? 0 : strlen(d->json))) klog("%s: persistent storage write failed", W->name);
+    W->nat->store_pending = false;
+    W->nat->store_failed = port_store_set("w", W->name, d->json, empty ? 0 : strlen(d->json)) != 0;
+    if (W->nat->store_failed) klog("%s: persistent storage write failed", W->name);
   }
   free(d->json);
+}
+
+// Bundled CJI graphics operations. Rectangle arguments use four signed little-endian
+// 32-bit words. The CJI compiler and firmware both target the same RV32 P4.
+static int64_t text_result(world_t *W, char *json, char *out, size_t cap) {
+  if (!json) return fail(W, "out of memory");
+  size_t len = strlen(json);
+  if (len < cap) memcpy(out, json, len + 1);
+  free(json);
+  return len < cap ? (int64_t)len : fail(W, "result exceeds output buffer");
+}
+
+static int64_t cji_graphics(world_t *W, const nw_call_t *c, char *out, size_t cap) {
+  char err[160];
+  int id = c->i[0], arg = c->i[1], op = c->op;
+  int32_t rect[4] = {0};
+  if (op == CJI_PIXELS || (op >= CJI_FILL && op <= CJI_TEXT)) {
+    if (c->n[0] < sizeof rect || c->n[0] > sizeof rect + 7) return fail(W, "invalid drawing packet");
+    if (op != CJI_PIXELS && c->n[0] > sizeof rect) {
+      char color[8] = {0};
+      memcpy(color, c->s[0] + sizeof rect, c->n[0] - sizeof rect);
+      arg = gfx_color(color);
+    }
+    memcpy(rect, c->s[0], sizeof rect);
+  }
+  if (op == CJI_FONTS) return text_result(W, gfx_fonts_json(), out, cap);
+  if (op == CJI_DMA) {
+    if (!world_claims(W, "dma")) return fail(W, "%s has no claim on dma", W->name);
+    if (id < 1 || arg < 1 || id > 640 || arg > 640) return fail(W, "a framebuffer is at most 640 x 640");
+    int buf = dmabuf_alloc(id, arg);
+    if (buf < 0) return fail(W, "out of DMA buffers");
+    handle_t *h = handle_new(H_DMA, W, "dma");
+    if (!h) { dmabuf_unref(buf); return fail(W, "out of handles"); }
+    h->buf = buf;
+    return h->id;
+  }
+  if (op == CJI_SPI) {
+    if (c->n[0] != 4 || memcmp(c->s[0], "spi2", 4)) return fail(W, "panel SPI claim must be spi2");
+    if (!world_claims(W, "spi2")) return fail(W, "%s has no claim on spi2", W->name);
+    handle_t *h = handle_new(H_SPI, W, "spi2");
+    if (!h) return fail(W, "out of handles");
+    h->bus = BUS_SPI2;
+    h->hz = id > 80000000 ? 80000000 : id;
+    return h->id;
+  }
+  if (op == CJI_NARROW) {
+    handle_t *parent = handle_use(W, id, -1, 0, err, sizeof err);
+    if (!parent) return fail(W, "%s", err);
+    handle_t *child = handle_child(W, parent, arg);
+    return child ? child->id : fail(W, "out of handles");
+  }
+  if (op == CJI_CMD || op == CJI_PIXELS) {
+    handle_t *spi = handle_use(W, id, H_SPI, R_WRITE, err, sizeof err);
+    if (!spi) return fail(W, "%s", err);
+    int token;
+    if (op == CJI_CMD) {
+      if (c->n[0] > 64) return fail(W, "a panel command carries at most 64 bytes");
+      token = ++K.next_promise;
+      hw_spi_cmd(W, spi, arg, (const uint8_t *)c->s[0], c->n[0], token);
+    } else {
+      handle_t *fb = handle_use(W, arg, H_DMA, R_READ, err, sizeof err);
+      if (!fb) return fail(W, "%s", err);
+      token = ++K.next_promise;
+      hw_spi_pixels(W, spi, fb, rect[0], rect[1], rect[2], rect[3], token);
+    }
+    return token;
+  }
+  handle_t *h = handle_use(W, id, H_DMA, R_WRITE, err, sizeof err);
+  if (!h) return fail(W, "%s", err);
+  dmabuf_t *b = handle_buf(h);
+  if (!b) return fail(W, "framebuffer is gone");
+  if (op == CJI_INVALIDATE) { gfx_invalidate(b); return 0; }
+  if (op == CJI_COMMIT) {
+    int rs[64 * 4], count = gfx_commit(b, rs, 64);
+    sbuf_t json = {0};
+    sb_add(&json, "[");
+    for (int i = 0; i < count; ++i) {
+      const int *r = rs + 4*i;
+      sb_printf(&json, "%s[%d,%d,%d,%d]", i ? "," : "", r[0], r[1], r[2], r[3]);
+    }
+    sb_add(&json, "]");
+    return text_result(W, json.s, out, cap);
+  }
+  if (op == CJI_TEXT) {
+    char *text = str(c, 1), *font = str(c, 2);
+    int width = text && font ? gfx_text(b, rect[0], rect[1], text, gfx_font_index(font), arg, rect[2]) : -1;
+    free(text); free(font);
+    return width >= 0 ? width : fail(W, "out of memory");
+  }
+  if (op == CJI_FILL) gfx_fill(b, rect[0], rect[1], rect[2], rect[3], arg);
+  else if (op == CJI_RECT) gfx_rect(b, rect[0], rect[1], rect[2], rect[3], arg);
+  else gfx_line(b, rect[0], rect[1], rect[2], rect[3], arg);
+  return 0;
 }
 
 int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
@@ -286,10 +383,11 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
       if (!handle_may_grant(W, grants.ids[i], err, sizeof err)) return fail(W, "%s", err);
     }
   }
-  if (c->op >= 1001 && !W->nat->cji_handles) return fail(W, "operation requires a bundled CJI module");
+  if (c->op >= CJI_HANDLE_INFO && !W->nat->cji_handles) return fail(W, "operation requires a bundled CJI module");
+  if (c->op >= CJI_DMA && c->op <= CJI_FONTS) return cji_graphics(W, c, out, out_n);
   switch (c->op) {
     // Firmware-private CJI operation, outside the public native wire ABI.
-    case 1001: {
+    case CJI_HANDLE_INFO: {
       char err[160];
       handle_t *h = handle_use(W, c->i[0], -1, 0, err, sizeof err);
       if (!h) return fail(W, "%s", err);
@@ -297,27 +395,27 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
                       handle_type_name(h->type), h->rights & R_READ ? "r" : "", h->rights & R_WRITE ? "w" : "",
                       h->rights & R_GRANT ? "g" : "", h->path, h->file ? "true" : "false");
     }
-    case 1002: case 1003: case 1004: { // FS open, derive child, submit operation
+    case CJI_FS_OPEN: case CJI_FS_AT: case CJI_FS_OP: { // FS open, derive child, submit operation
       char err[160] = "out of memory";
       char *args[3] = {0};
       int64_t result = -1;
       for (int i = 0; i < 3; i++) {
         if (!c->s[i]) continue;
-        if (c->n[i] && memchr(c->s[i], 0, c->n[i]) && !(c->op == 1004 && i == 2 &&
+        if (c->n[i] && memchr(c->s[i], 0, c->n[i]) && !(c->op == CJI_FS_OP && i == 2 &&
             args[0] && (!strcmp(args[0], "write") || !strcmp(args[0], "append")))) {
           snprintf(err, sizeof err, "unexpected NUL in file operation");
           goto fs_done;
         }
         if (!(args[i] = str(c, i))) goto fs_done;
       }
-      if (c->op == 1004) {
+      if (c->op == CJI_FS_OP) {
         fs_job_t *job = fs_prepare(W, c->i[0], args[0], args[1], args[2], c->n[2], err, sizeof err);
         if (job) {
           result = ++K.next_promise;
           fs_defer(W, job, (int)result);
         }
       } else {
-        handle_t *h = c->op == 1002 ? fs_open_claim(W, args[0], err, sizeof err)
+        handle_t *h = c->op == CJI_FS_OPEN ? fs_open_claim(W, args[0], err, sizeof err)
                                      : fs_at(W, c->i[0], args[0], args[1], err, sizeof err);
         if (h) result = h->id;
       }
@@ -325,12 +423,51 @@ fs_done:
       for (int i = 0; i < 3; i++) free(args[i]);
       return result < 0 ? fail(W, "%s", err) : result;
     }
-    case 1005: {
+    case CJI_REVOKE: {
       handle_t *h = handle_find(c->i[0]);
       if (!h) return fail(W, "there is no handle %d", (int)c->i[0]);
       if (h->minter != W->id || !h->parent) return fail(W, "only the world that narrowed handle %d can revoke it", h->id);
       h->revoked = true;
       return 1;
+    }
+    case CJI_WORLDS: case CJI_STATS: {
+      if (!world_claims(W, "sys.read")) return fail(W, "%s has no claim on sys.read", W->name);
+      char *fields = c->s[0] ? str(c, 0) : NULL;
+      char *json = c->op == CJI_STATS ? kernel_stats_json() : kernel_worlds_json_fields(fields);
+      free(fields);
+      if (json) charge(strlen(json));
+      return text_result(W, json, out, out_n);
+    }
+    case CJI_STORE_STATUS: {
+      return snprintf(out, out_n, "{\"pending\":%s,\"error\":\"%s\"}", W->nat->store_pending ? "true" : "false",
+                      W->nat->store_failed ? "persistent storage write failed" : "");
+    }
+    case CJI_AGENT_STATUS: case CJI_AGENT_START: case CJI_AGENT_POLL: case CJI_AGENT_CANCEL: case CJI_AGENT_BODY: {
+      if (!world_claims(W, "net.agent")) return fail(W, "%s has no claim on net.agent", W->name);
+      char err[160];
+      int rc;
+      if (c->op == CJI_AGENT_STATUS) return text_result(W, agent_status_json(), out, out_n);
+      if (c->op == CJI_AGENT_START) rc = agent_start(W, c->s[0], c->n[0], err, sizeof err);
+      else if (c->op == CJI_AGENT_CANCEL) rc = agent_cancel(W, c->i[0], err, sizeof err);
+      else if (c->op == CJI_AGENT_BODY) {
+        // The prelude consumes the body immediately after a completed poll in the same segment.
+        char *body = W->nat->agent_body;
+        W->nat->agent_body = NULL;
+        return body ? text_result(W, body, out, out_n) : 0;
+      } else {
+        agent_net_result_t result;
+        rc = agent_poll(W, c->i[0], &result, err, sizeof err);
+        if (rc == 1) {
+          free(W->nat->agent_body);
+          W->nat->agent_body = result.body;
+          sbuf_t json = {0};
+          sb_printf(&json, "{\"status\":%d,\"error\":", result.status);
+          sb_json_str(&json, result.error);
+          sb_add(&json, "}");
+          return text_result(W, json.s, out, out_n);
+        }
+      }
+      return rc < 0 ? fail(W, "%s", err) : rc;
     }
     case NW_CLOCK_WALL: return port_wall_ms();
     case NW_CLOCK_ZONE: return snprintf(out, out_n, "%s", clock_zone());
@@ -504,6 +641,10 @@ fs_done:
         if (K.handles[i].live && K.handles[i].id == c->i[0] && world_holds(W, c->i[0])) { handle_release(&K.handles[i], W); return 1; }
       return 0;
     case NW_STORE_LOAD: {
+      for (deferred_t *d = K.defer_head; d; d = d->next) {
+        if (d->run == run_store_save && d->w == W->id && d->epoch == W->epoch)
+          return text_result(W, xstrdup(d->json), out, out_n);
+      }
       size_t n = 0;
       char *j = strlen(W->name) <= 15 ? port_store_get("w", W->name, &n) : NULL;
       if (!j) return 0;
@@ -525,6 +666,7 @@ fs_done:
         if (d->run == run_store_save && d->w == W->id) { free(d->json); d->json = json; return 0; }
       deferred_t *d = calloc(1, sizeof *d);
       if (!d) { free(json); return fail(W, "out of memory"); }
+      W->nat->store_pending = true;
       d->run = run_store_save; d->w = W->id; d->epoch = W->epoch; d->json = json;
       defer(d);
       return 0;

@@ -296,3 +296,60 @@ Read pack_elf.py, the native module build loop in main/CMakeLists.txt and port_r
 ### Technical details
 
 The packed entry starts with CJIZ, then the original 32-bit little-endian length and a zlib stream. The ROM helper verifies the stream during expansion. Partition layout and the SDK ELF relocation routines are unchanged.
+
+## Step 6. Run the full graphics and Agent workflows in compiled worlds
+
+The P4 now builds the application logic for compositor, display and Agent from their shipping JS sources. The compositor and display use the existing graphics and SPI functions, and the QuickJS and compiled Agent call the same request lifecycle. I used opt-in diagnostic worlds to exercise real capabilities without giving the test access to a provider or the user's conversation record.
+
+### Prompt Context
+
+See step 4. The preceding firmware storage checkpoint was 07def4d. The remaining implementation needed observable rendering, cancellation and resource-lifetime behavior.
+
+### What I did
+
+- Added native framebuffer drawing, dirty rectangle commit, font metrics, SPI command and pixel transfer, handle attenuation, system enumeration, store status and model transport operations.
+- Extracted request ownership and cancellation into nucleus/agent_transport.c. Both bridges capture the same world ID, epoch and monotonically increasing request ticket.
+- Promoted the existing compositor, display and Agent modules in the P4 manifest. The fixture gives the same compiled Agent the name agent-probe so it reads a separate store key. A test Chat world drives its normal message API.
+- Tested the compositor using a QuickJS-rendered reference and three P4 captures. Tested the Agent against an intentionally delayed local transport, including a real device_status tool continuation.
+
+### Why
+
+Separate modules need to share the kernel's front-buffer pin while queued SPI requests finish. Likewise the Agent service needs the kernel's request lifetime across many scheduled turns. Treating the first completed promise as the end of an async draw can leave the front buffer invalidated even though its world appears idle.
+
+### What worked
+
+Three native captures matched the QuickJS compositor reference exactly over the 320-by-298-pixel application and hints area, including after separate display and compositor restarts. The full native screenshots had the same CRC 65031729. Native Editor reopened the previously saved file after the new image booted. The isolated filesystem probe rejected an unclaimed root, an escaping relative path and a revoked file read.
+
+The first corrected Agent fixture run reported start 1, cancel 1, start 2, late completion 1 while polling 2, start 3 for the device_status continuation, and replacement true. A second run also passed. Tracing measured 30.135 and 33.441 ms for its two submit turns after speeding up the compiled regex scan. The host application, clock, filesystem, system, native and Agent suites passed. The local TLS suite ran all 23 cases. The shared-unit RV32 emulator gate passed four worlds, isolated an out-of-memory fifth, and produced its expected failing state-sharing control.
+
+### What didn't work
+
+- The first compiled preview had inverted colors. The RGB values were exact complements. gfx_invalidate intentionally stores the complement in the front buffer, so I traced the flush promise. The original compiled prelude returned DONE on the first settlement while the async handler was still waiting on other jobs. Keeping the turn open until its outer promise resolves fixed the rendering.
+- Kernel lifecycle messages use a null sender in the application API. The native wire uses an empty string. Normalizing it at the prelude boundary fixed the compositor's authenticated restart handler.
+- The initial fixture reported “agent-probe crashed handling agent.submit: ran past its turn budget of 100 ms”. Its ASCII classification regex allocated capture state at every character position. A single-range scan now avoids that work. The original turn budget is preserved.
+- The first mock success response lacked the required status and message role. The real Agent correctly reported “Provider returned an invalid or failed response.” I corrected the fixture and verified that its continuation actually contained results from the board.
+- One diagnostic boot exceeded the compositor's 80 ms draw allowance. Packing four coordinates directly in the runtime and reusing gfx_color removes repeated short string construction and color parsing from each primitive. The latest device run checks this change and the final DMA and transport probes.
+
+### What I learned
+
+A screenshot's color difference can identify a protocol failure. Every inverted pixel pointed to a specific assignment in gfx_invalidate. A healthy-looking world listing could not prove that the display had accepted the flush.
+
+### What was tricky to build
+
+A 65,536-byte model response exceeds the ordinary native reply buffer. The kernel returns bounded metadata, retains the completed body for this world and transfers it synchronously through a separately sized buffer in the same turn. Disposal frees any unconsumed body. The raw document is converted to a JS string once, without escaping it inside a larger JSON envelope.
+
+### What warrants a second pair of eyes
+
+Review callback ownership in agent_poll and the CJI poll/body sequence. Inspect the optional diagnostic link wrappers separately from production drivers. The hardware stress probe intentionally drops its own framebuffer handle between SPI submission and completion.
+
+### What should be done in the future
+
+Finish the release-image boot audit with test fixtures disabled. Compare screenshots again after the coordinate optimization and check the boundary and DMA probes.
+
+### Code review instructions
+
+Trace compositor.js attach/draw into world-native.js, cji_graphics and bus_p4.c. Trace agent.js startRequest through agent_transport.c. Read tests/fixtures/cji-phase3 to see the exact stale-result and permission cases.
+
+### Technical details
+
+The reference images are under various/editor-quickjs-compositor.png and various/editor-cji-compositor.png. Capture dimensions are 640 by 640 at two host pixels per device pixel. Comparisons exclude the top 44 host rows because the status clock advances. The hardware test for provider replacement uses an isolated world name and a local fixture with no external account.

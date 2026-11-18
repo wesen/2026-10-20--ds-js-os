@@ -343,6 +343,14 @@ enum {
   NW_CLOCK_WALL, NW_CLOCK_ZONE, NW_CLOCK_SETZONE, NW_NET_INFO, NW_NET_SCAN, NW_NET_RESULT, NW_NET_JOIN,
   NW_CALLS
 };
+// Firmware-private CJI operations. The compiler uses the matching CJI constants in world-native.js.
+enum {
+  CJI_HANDLE_INFO = 1001, CJI_FS_OPEN, CJI_FS_AT, CJI_FS_OP, CJI_REVOKE,
+  CJI_DMA = 1010, CJI_NARROW, CJI_SPI, CJI_CMD, CJI_PIXELS, CJI_FILL, CJI_RECT, CJI_LINE,
+  CJI_TEXT, CJI_COMMIT, CJI_INVALIDATE, CJI_FONTS,
+  CJI_WORLDS = 1030, CJI_STATS, CJI_STORE_STATUS, CJI_AGENT_STATUS, CJI_AGENT_START, CJI_AGENT_POLL,
+  CJI_AGENT_CANCEL, CJI_AGENT_BODY
+};
 typedef struct {                // one event for a binary
   int kind;
   const char *type, *json, *from;   // NUL-terminated; json is "null" when there is no payload
@@ -373,6 +381,8 @@ typedef struct native {
   bool in_init;                 // its init is running: declarations are allowed
   vtime_t budget_us;            // this segment's budget
   char err[200];                // why its last system call failed
+  char *agent_body;             // completed response until its immediate CJI body read
+  bool store_pending, store_failed;
   char *screen;                 // its screen as nw_screen last set it: {"tree":...,"hints":"..."}, or NULL
 } native_t;
 const native_backend_t *port_native_backend(int engine);   // NULL: this board cannot run that engine
@@ -508,6 +518,12 @@ int port_store_set(const char *ns, const char *key, const void *data, size_t len
 #define AGENT_NET_RESPONSE_MAX 65536
 #define AGENT_NET_TIMEOUT_MS 45000
 typedef struct { int status; char *body; char error[160]; } agent_net_result_t;
+void agent_reset(void);
+void agent_drop(world_t *W);
+char *agent_status_json(void);
+int agent_start(world_t *W, const char *body, size_t n, char *err, size_t cap);
+int agent_poll(world_t *W, int ticket, agent_net_result_t *result, char *err, size_t cap);
+int agent_cancel(world_t *W, int ticket, char *err, size_t cap);
 bool port_agent_configured(void);
 const char *port_agent_mode(void);
 // The configured endpoint's dialect: "chat" (an OpenAI-compatible .../chat/completions) or "responses"; and the

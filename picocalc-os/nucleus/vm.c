@@ -701,36 +701,6 @@ static JSValue op_store_status(JSContext *ctx, world_t *W, int argc, JSValueCons
   return r;
 }
 
-// Bounded native HTTPS, with ownership independent of the JS object. Starting/cancelling is deferred
-// like a bus transfer. A rebooted world cannot poll an old request, and disposal cancels its worker.
-static struct {
-  int ticket, owner, epoch;
-  bool active, started, complete, cancelling;
-  vtime_t since;
-  agent_net_result_t result;
-} agent_request;
-static int agent_next_ticket;
-static vtime_t agent_clock(void) {
-  // Fixture latency is virtual; a real HTTPS deadline follows wall time even in the host simulator.
-  return !strcmp(port_agent_mode(), "fixture") ? kernel_now() : port_clock();
-}
-
-static void agent_clear(void) {
-  free(agent_request.result.body);
-  memset(&agent_request, 0, sizeof agent_request);
-}
-static void agent_drop(world_t *W) {
-  if (!agent_request.active || agent_request.owner != W->id) return;
-  if (agent_request.started) port_agent_cancel(agent_request.ticket);
-  agent_clear();
-}
-static bool agent_owned(JSContext *ctx, world_t *W, int ticket) {
-  if (!world_claims(W, "net.agent")) { fail(ctx, "%s has no claim on net.agent", W->name); return false; }
-  if (!agent_request.active || agent_request.ticket != ticket || agent_request.owner != W->id || agent_request.epoch != W->epoch) {
-    fail(ctx, "agent request is not owned by this world or has already finished"); return false;
-  }
-  return true;
-}
 static int agent_ticket(JSContext *ctx, int argc, JSValueConst *argv) {
   double n = 0;
   if (!argc || !JS_IsNumber(argv[0]) || JS_ToFloat64(ctx, &n, argv[0]) || !isfinite(n) || n < 1 || n > INT_MAX || n != (int)n) {
@@ -738,98 +708,39 @@ static int agent_ticket(JSContext *ctx, int argc, JSValueConst *argv) {
   }
   return (int)n;
 }
-static void run_agent_start(deferred_t *d, vtime_t at) {
-  if (agent_request.active && agent_request.ticket == d->op && agent_request.epoch == d->epoch) {
-    agent_request.since = agent_clock();
-    int rc = port_agent_start(d->op, d->json, strlen(d->json), agent_request.result.error, sizeof agent_request.result.error);
-    if (rc) {
-      if (!agent_request.result.error[0]) snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent transport could not start");
-      agent_request.complete = true;
-    } else agent_request.started = true;
-  }
-  free(d->json);
-}
-static void run_agent_cancel(deferred_t *d, vtime_t at) {
-  (void)at;
-  if (agent_request.active && agent_request.ticket == d->op && agent_request.epoch == d->epoch) {
-    if (agent_request.started) port_agent_cancel(d->op);
-    agent_clear();
-  }
-}
 static JSValue op_agent_status(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
-  (void)argc; (void)argv;
   if (!world_claims(W, "net.agent")) return fail(ctx, "%s has no claim on net.agent", W->name);
-  JSValue r = JS_NewObject(ctx);
-  JS_SetPropertyStr(ctx, r, "configured", JS_NewBool(ctx, port_agent_configured()));
-  JS_SetPropertyStr(ctx, r, "mode", JS_NewString(ctx, port_agent_mode()));
-  JS_SetPropertyStr(ctx, r, "api", JS_NewString(ctx, port_agent_api()));
-  JS_SetPropertyStr(ctx, r, "model", JS_NewString(ctx, port_agent_model()));
-  return r;
+  return json_value(ctx, agent_status_json());
 }
 static JSValue op_agent_start(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
-  if (!world_claims(W, "net.agent")) return fail(ctx, "%s has no claim on net.agent", W->name);
-  if (agent_request.active) return fail(ctx, "agent transport is busy");
-  if (!port_agent_configured()) return fail(ctx, "agent transport is not configured");
-  if (agent_next_ticket == INT_MAX) return fail(ctx, "agent request counter exhausted; reboot required");
-  if (!argc || !JS_IsString(argv[0])) return fail(ctx, "agentNet.start needs JSON text");
-  size_t n;
-  const char *body = JS_ToCStringLen(ctx, &n, argv[0]);
-  if (!body) return JS_EXCEPTION;
-  if (!n || n > AGENT_NET_REQUEST_MAX || memchr(body, 0, n)) {
-    JS_FreeCString(ctx, body); return fail(ctx, "agent request must contain 1..%d UTF-8 bytes of JSON", AGENT_NET_REQUEST_MAX);
-  }
-  deferred_t *d = calloc(1, sizeof *d);
-  char *copy = malloc(n + 1);
-  if (!d || !copy) { free(d); free(copy); JS_FreeCString(ctx, body); return JS_ThrowOutOfMemory(ctx); }
-  memcpy(copy, body, n + 1); JS_FreeCString(ctx, body);
-  agent_request.active = true;
-  agent_request.ticket = ++agent_next_ticket;
-  agent_request.owner = W->id; agent_request.epoch = W->epoch;
-  d->run = run_agent_start; d->w = W->id; d->epoch = W->epoch; d->op = agent_request.ticket; d->json = copy;
-  charge_json(n); defer(d);
-  return JS_NewInt32(ctx, agent_request.ticket);
+  char err[160];
+  size_t n = 0;
+  const char *body = argc && JS_IsString(argv[0]) ? JS_ToCStringLen(ctx, &n, argv[0]) : NULL;
+  int ticket = agent_start(W, body, n, err, sizeof err);
+  if (body) JS_FreeCString(ctx, body);
+  return ticket < 0 ? fail(ctx, "%s", err) : JS_NewInt32(ctx, ticket);
 }
 static JSValue op_agent_poll(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
   int ticket = agent_ticket(ctx, argc, argv);
   if (!ticket) return JS_EXCEPTION;
-  if (!agent_owned(ctx, W, ticket)) return JS_EXCEPTION;
-  if (agent_request.cancelling || (!agent_request.started && !agent_request.complete)) return JS_NULL;
-  if (!agent_request.complete) {
-    if (agent_clock() - agent_request.since >= MS(AGENT_NET_TIMEOUT_MS)) {
-      port_agent_cancel(ticket);
-      snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent request timed out after %d ms", AGENT_NET_TIMEOUT_MS);
-      agent_request.complete = true;
-    } else {
-      int rc = port_agent_poll(ticket, &agent_request.result);
-      if (!rc) return JS_NULL;
-      agent_request.complete = true;
-      if (rc < 0 && !agent_request.result.error[0]) snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent transport lost the request");
-    }
-  }
-  size_t n = agent_request.result.body ? strnlen(agent_request.result.body, AGENT_NET_RESPONSE_MAX + 1) : 0;
-  if (n > AGENT_NET_RESPONSE_MAX) {
-    free(agent_request.result.body); agent_request.result.body = NULL; n = 0;
-    snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent response exceeds %d bytes", AGENT_NET_RESPONSE_MAX);
-  } else if (n && !utf8_valid((const unsigned char *)agent_request.result.body, n)) {
-    free(agent_request.result.body); agent_request.result.body = NULL; n = 0;
-    snprintf(agent_request.result.error, sizeof agent_request.result.error, "agent response is not valid UTF-8");
-  }
+  char err[160];
+  agent_net_result_t result;
+  int rc = agent_poll(W, ticket, &result, err, sizeof err);
+  if (rc < 0) return fail(ctx, "%s", err);
+  if (!rc) return JS_NULL;
   JSValue r = JS_NewObject(ctx);
-  JS_SetPropertyStr(ctx, r, "status", JS_NewInt32(ctx, agent_request.result.status));
-  JS_SetPropertyStr(ctx, r, "body", JS_NewStringLen(ctx, agent_request.result.body ? agent_request.result.body : "", n));
-  JS_SetPropertyStr(ctx, r, "error", JS_NewString(ctx, agent_request.result.error));
-  charge_json(n); agent_clear(); return r;
+  JS_SetPropertyStr(ctx, r, "status", JS_NewInt32(ctx, result.status));
+  JS_SetPropertyStr(ctx, r, "body", JS_NewString(ctx, result.body ? result.body : ""));
+  JS_SetPropertyStr(ctx, r, "error", JS_NewString(ctx, result.error));
+  free(result.body);
+  return r;
 }
 static JSValue op_agent_cancel(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
   int ticket = agent_ticket(ctx, argc, argv);
   if (!ticket) return JS_EXCEPTION;
-  if (!agent_owned(ctx, W, ticket)) return JS_EXCEPTION;
-  if (agent_request.cancelling) return JS_FALSE;
-  deferred_t *d = calloc(1, sizeof *d);
-  if (!d) return JS_ThrowOutOfMemory(ctx);
-  agent_request.cancelling = true;
-  d->run = run_agent_cancel; d->w = W->id; d->epoch = W->epoch; d->op = ticket;
-  defer(d); return JS_TRUE;
+  char err[160];
+  int rc = agent_cancel(W, ticket, err, sizeof err);
+  return rc < 0 ? fail(ctx, "%s", err) : JS_NewBool(ctx, rc);
 }
 
 static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
@@ -1207,8 +1118,7 @@ static int64_t count_steps(const char *src, double *real_ms) {
 }
 double vm_fib20_ms;
 void vm_reset(void) {
-  if (agent_request.active && agent_request.started) port_agent_cancel(agent_request.ticket);
-  agent_clear();   // tickets are deliberately not reused across an in-process cold boot
+  agent_reset();
 }
 
 void vm_calibrate(void) {

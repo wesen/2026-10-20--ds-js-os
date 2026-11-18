@@ -386,6 +386,18 @@ function $regex(prog /*: Int[] */, cls /*: Int[] */, ncap /*: Int */, nregs /*: 
 }
 // The capture slots of the first match at or after start (only at start, when sticky), or [].
 function $reSearch(prog /*: Int[] */, cls /*: Int[] */, ncap /*: Int */, nregs /*: Int */, fl /*: Int */, s /*: String */, start /*: Int */, sticky /*: Bool */) /*: Int[] */ {
+  // SAVE 0, CLASS 0, SAVE 1, MATCH: a single case-sensitive range needs no
+  // backtracking or capture array at each candidate position. Agent tests whole
+  // request strings for non-ASCII before counting their UTF-8 bytes.
+  if (prog.length === 7 && prog[2] === 4 && cls.length === 4) {
+    const lo = cls[2], hi = cls[3], neg = cls[1] !== 0;
+    for (let p = start; p < s.length; p++) {
+      const c = s.charCodeAt(p);
+      if ((c >= lo && c <= hi) !== neg) return [p, p + 1];
+      if (sticky) break;
+    }
+    return [];
+  }
   const size = 2 * ncap + nregs;
   for (let p = start; p <= s.length; p++) {
     const m /*: Int[] */ = [];

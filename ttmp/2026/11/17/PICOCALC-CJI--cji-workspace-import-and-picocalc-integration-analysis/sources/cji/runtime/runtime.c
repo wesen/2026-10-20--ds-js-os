@@ -2538,6 +2538,21 @@ int64_t rt_host_arg(int64_t k, int64_t v)
 {
 	char buf[64];
 	if (k == 3) { host_c = is_number(v) ? (int64_t)to_double(v) : 0; return 0; }
+	if (k >= 5 && k <= 8) {
+		int32_t coord = is_number(v) ? (int32_t)to_double(v) : 0;
+		memcpy(host_buf(0, 16) + 4 * (k - 5), &coord, sizeof coord);
+		host_n[0] = 16; host_set[0] = 1;
+		return 0;
+	}
+	if (k == 9 && is_string(v)) {
+		/* A color appended to a drawing packet is a short ASCII RGB literal. */
+		size_t n = (size_t)slen(v);
+		if (n > 7) n = 7;
+		char *dst = host_buf(0, 16 + n);
+		for (size_t i = 0; i < n; i++) dst[16+i] = (char)(units(v)[i] & 127);
+		host_n[0] = 16 + n;
+		return 0;
+	}
 	if (k == 4) {   /* bytes */
 		const uint16_t *u = is_string(v) ? units(v) : NULL;
 		int64_t n = u ? slen(v) : 0;
@@ -2560,8 +2575,8 @@ int64_t rt_host_call(int64_t op, int64_t a, int64_t b, int64_t *roots)
 	/* (chapter 26) only a store's text (17) and an error's (-1) can be long: the other calls answer
 	   with a number or a world's name, in a buffer on the stack */
 	char small[256], *out = small;
-	size_t cap = op == 17 || op == -1 ? HOST_STR_MAX + 1 :
-		(op == 25 || op == 27 ? 16384 : sizeof small); /* net info and scan result */
+	size_t cap = op == 17 || op == 1030 || op == 1037 || op == -1 ? HOST_STR_MAX + 1 :
+		(op == 25 || op == 27 || op == 1031 || op == 1033 || op == 1035 || op == 1019 ? 16384 : sizeof small); /* net info and scan result */
 	int64_t r, result;
 	if (!rt_kernel_call)
 		type_error("host calls run only in a world inside picocalc-os");

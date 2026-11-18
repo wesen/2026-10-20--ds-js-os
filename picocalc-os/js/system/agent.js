@@ -477,7 +477,7 @@ function nextTool(s) {
     let result;
     if (call.name === "calculate") result = { ok: true, value: calculate(a.expression) };
     else if (call.name === "device_status") result = { ok: true, uptime_ms: Math.round(now()),
-      worlds: sys.worlds().map((w) => ({ name: w.name, state: w.state, mem_kb: w.mem_kb })), stats: sys.stats() };
+      worlds: sys.worlds("name,state,mem_kb").map((w) => ({ name: w.name, state: w.state, mem_kb: w.mem_kb })), stats: sys.stats() };
     toolEntry(s, call.name + (result.ok ? ": done" : ": " + result.error));
     toolResult(s, call, result); snapshot(s);
   } catch (e) {

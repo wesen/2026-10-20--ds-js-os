@@ -37,7 +37,7 @@ set(AGENT_REQUIRES nvs_flash esp_http_client esp_netif esp_event esp_wifi mbedtl
 idf_component_register(
     SRCS
         "main_p4.c" "port_p4.c" "bus_p4.c" "agent_p4.c" "store_p4.c" "fs_p4.c" "perf_p4.c"
-        "${OS}/nucleus/kernel.c" "${OS}/nucleus/vm.c" "${OS}/nucleus/hw.c" "${OS}/nucleus/gfx.c" "${OS}/nucleus/util.c" "${OS}/nucleus/fs.c" "${OS}/nucleus/native.c"
+        "${OS}/nucleus/agent_transport.c" "${OS}/nucleus/kernel.c" "${OS}/nucleus/vm.c" "${OS}/nucleus/hw.c" "${OS}/nucleus/gfx.c" "${OS}/nucleus/util.c" "${OS}/nucleus/fs.c" "${OS}/nucleus/native.c"
         "${OS}/nucleus/native_wasm.c"
         "${QJS}/quickjs.c" "${QJS}/libregexp.c" "${QJS}/libunicode.c" "${QJS}/cutils.c" "${QJS}/dtoa.c"
         ${WAMR_SRCS}
@@ -69,6 +69,17 @@ if(PICOCALC_NATIVE_ELF)
     file(READ ${OS}/js/system.json system_json)
     string(JSON count LENGTH "${system_json}" worlds)
     math(EXPR last "${count} - 1")
+    if(PICOCALC_TEST_CJI_PHASE3)
+        set(phase3_dir ${OS}/tests/fixtures/cji-phase3)
+        target_sources(${COMPONENT_LIB} PRIVATE ${phase3_dir}/transport.c ${phase3_dir}/pixels.c)
+        target_link_options(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=bus_run_spi_pixels" "-Wl,--wrap=bus_p4_done")
+        foreach(fn configured mode api model start poll cancel)
+            target_link_options(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=port_agent_${fn}")
+        endforeach()
+        set(cji_input_fs-probe ${phase3_dir}/files.js)
+        list(APPEND BUNDLE_EXTRA "tests/chat-fixture.js=${phase3_dir}/chat.js")
+        list(APPEND BUNDLE_EXTRA_DEPS ${phase3_dir}/chat.js)
+    endif()
     foreach(i RANGE ${last})
         string(JSON name GET "${system_json}" worlds ${i} name)
         if(name IN_LIST CJI_WORLDS)
@@ -77,7 +88,19 @@ if(PICOCALC_NATIVE_ELF)
             string(JSON system_json SET "${system_json}" worlds ${i} engine "\"native\"")
             string(JSON system_json SET "${system_json}" worlds ${i} file "\"natives/${name}.elf\"")
         endif()
+        if(PICOCALC_TEST_CJI_PHASE3)
+            if(name STREQUAL "agent")
+                string(JSON system_json SET "${system_json}" worlds ${i} name "\"agent-probe\"")
+            elseif(name STREQUAL "chat")
+                string(JSON system_json SET "${system_json}" worlds ${i} file "\"tests/chat-fixture.js\"")
+            endif()
+        endif()
     endforeach()
+    if(PICOCALC_TEST_CJI_PHASE3)
+        string(JSON system_json SET "${system_json}" worlds ${count}
+            [[{"name":"fs-probe","file":"natives/fs-probe.elf","engine":"native","claims":["fs:/notes","dma","spi2","net.agent"],"mem_kb":1536,"budget_ms":200}]])
+        math(EXPR count "${count} + 1")
+    endif()
     if(PICOCALC_TEST_CJI_GRANTS)
         set(test_dir ${OS}/tests/fixtures/cji-grants)
         set(cji_input_grant-peer ${test_dir}/peer.js)

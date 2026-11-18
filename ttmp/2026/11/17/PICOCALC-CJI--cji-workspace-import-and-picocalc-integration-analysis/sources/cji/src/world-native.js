@@ -3,10 +3,8 @@
 // Chapter 16's WORLD_SOURCE answers the world's calls itself, for a test. This one makes them
 // system calls of picocalc-os's native-world interface: every operation is $call(op, a, b,
 // s0, s1, s2), numbered as picocalc-os's sdk/nw_wire.h numbers them, and the kernel carries it
-// out with the world's claims. The interface is the same for a host process (the simulated
-// board) and for an ELF module on the ESP32-P4. It does not carry the prelude's other
-// operations (sys.*, files, SPI, framebuffers, the network): a world that uses them stays on
-// QuickJS for now, and here they fail when called.
+// out with the world's claims. The P4 extends the public native interface with checked calls
+// for its firmware-bundled CJI applications, including files, graphics, SPI and Agent transport.
 //
 // The kernel drives the world through two entries, which the embedder (runtime/nw_world.c)
 // calls between events: $nwInit after the world's file has run, and $nwEvent for each event,
@@ -23,6 +21,15 @@ import { noteKeyOrder, logKeyOrders } from './types.js';
 // sdk/nw_wire.h: the system calls; sdk/nw.h: the events
 export const NW = { LOG: 1, NOW: 2, SELF: 3, SEND: 4, PUBLISH: 5, REPLY: 6, REJECT: 7, NEED: 8, PROVIDE: 9, EVERY: 10, KIND: 11,
   ASK: 12, SLEEP: 13, I2C_OPEN: 14, I2C: 15, RELEASE: 16, STORE_LOAD: 17, STORE_SAVE: 18, TIMER: 19, SCREEN: 20, PRESENT: 21, CLOCK_WALL: 22, CLOCK_ZONE: 23, CLOCK_SETZONE: 24, NET_INFO: 25, NET_SCAN: 26, NET_RESULT: 27, NET_JOIN: 28 };
+
+// Private to firmware-bundled worlds. Keep the values aligned with nucleus/nucleus.h.
+const CJI = {
+  HANDLE_INFO: 1001, FS_OPEN: 1002, FS_AT: 1003, FS_OP: 1004, REVOKE: 1005,
+  DMA: 1010, NARROW: 1011, SPI: 1012, CMD: 1013, PIXELS: 1014, FILL: 1015, RECT: 1016,
+  LINE: 1017, TEXT: 1018, COMMIT: 1019, INVALIDATE: 1020, FONTS: 1021,
+  WORLDS: 1030, STATS: 1031, STORE_STATUS: 1032, AGENT_STATUS: 1033, AGENT_START: 1034,
+  AGENT_POLL: 1035, AGENT_CANCEL: 1036, AGENT_BODY: 1037
+};
 
 export const NATIVE_WORLD_SOURCE = `
 let $def /*: Any */ = { kind: 'world', name: '', title: '', icon: undefined, about: undefined, key: undefined, initial: undefined,
@@ -107,7 +114,7 @@ function $wire(v /*: Any */, incoming /*: Bool */, depth /*: Int */) /*: Any */ 
   if (depth > 64) throw new Error('message nesting exceeds 64');
   if (!incoming && typeof v.release === 'function' && typeof v.id === 'number') return { $h: v.id };
   if (incoming && typeof v.$h === 'number' && Object.keys(v).length === 1) {
-    const info /*: Any */ = $call(1001, v.$h, 0, undefined, undefined, undefined);
+    const info /*: Any */ = $call(${CJI.HANDLE_INFO}, v.$h, 0, undefined, undefined, undefined);
     if (typeof info !== 'string') return $handle(v.$h, 'gone', '');
     const meta /*: Any */ = JSON.parse(info);
     return $handle(v.$h, meta.type, meta.rights, meta.path, meta.file);
@@ -161,7 +168,7 @@ const store /*: Any */ = {
   set: (k /*: Any */, v /*: Any */) => { const r /*: Any */ = $record(); if (v === undefined) delete r[String(k)]; else r[String(k)] = $copy(v); $check($call(${NW.STORE_SAVE}, 0, 0, JSON.stringify(r), undefined, undefined)); },
   remove: (k /*: Any */) => { const r /*: Any */ = $record(); delete r[String(k)]; $check($call(${NW.STORE_SAVE}, 0, 0, JSON.stringify(r), undefined, undefined)); },
   all: () => $record(),
-  status: () => ({ ok: true }),
+  status: () => JSON.parse($check($call(${CJI.STORE_STATUS}, 0, 0, undefined, undefined, undefined))),
 };
 // ---- hardware: I2C, through a claim ----
 function $bytes(xs /*: Any */) /*: Any */ {
@@ -177,19 +184,52 @@ function $i2c(h /*: Any */, wr /*: Any */, nrd /*: Any */, gap /*: Any */) /*: A
 }
 function $unavailable(what /*: Any */) /*: Any */ { throw new Error(what + ' is not available to a native world'); }
 function $fsOp(h /*: Any */, op /*: Any */, rel /*: Any */, arg /*: Any */) /*: Any */ {
-  return new Promise((resolve /*: Any */, reject /*: Any */) => $later($call(1004, h, 0, op, rel || '', arg), resolve, reject));
+  return new Promise((resolve /*: Any */, reject /*: Any */) => $later($call(${CJI.FS_OP}, h, 0, op, rel || '', arg), resolve, reject));
 }
-function $fsHandle(h /*: Any */) /*: Any */ {
+function $checkedHandle(h /*: Any */) /*: Any */ {
   $check(h);
-  const info /*: Any */ = JSON.parse($check($call(1001, h, 0, undefined, undefined, undefined)));
+  const info /*: Any */ = JSON.parse($check($call(${CJI.HANDLE_INFO}, h, 0, undefined, undefined, undefined)));
   return $handle(h, info.type, info.rights, info.path, info.file);
+}
+// Slots 5..8 pack the four coordinates directly into host argument zero. Slot 9
+// appends a CSS color for the kernel's existing RGB565 conversion.
+function $coords(x /*: Any */, y /*: Any */, w /*: Any */, h /*: Any */) {
+  $hostArg(5, x | 0); $hostArg(6, y | 0); $hostArg(7, w | 0); $hostArg(8, h | 0);
+}
+function $ink(c /*: Any */) /*: Int */ {
+  if (typeof c === 'string') { $hostArg(9, c); return 0; }
+  return c | 0;
+}
+function $draw(op /*: Int */, id /*: Any */, x /*: Any */, y /*: Any */, w /*: Any */, h /*: Any */, color /*: Any */) {
+  $coords(x, y, w, h);
+  $check($hostCall(op, id, $ink(color)));
 }
 function $handle(h /*: Any */, type /*: Any */, rights /*: Any */, path /*: Any */, file /*: Any */) /*: Any */ {
   $hasHandles = true;
+  if (type === 'spi') return { id: h, type: type, rights: rights,
+    release: () => $call(${NW.RELEASE}, h, 0, undefined, undefined, undefined),
+    cmd: (cmd /*: Any */, bytes /*: Any */) => new Promise((resolve /*: Any */, reject /*: Any */) => {
+      $hostArg(4, $bytes(bytes || [])); $later($hostCall(${CJI.CMD}, h, cmd), resolve, reject);
+    }),
+    pixels: (fb /*: Any */, x /*: Any */, y /*: Any */, w /*: Any */, ht /*: Any */) => new Promise((resolve /*: Any */, reject /*: Any */) => {
+      $coords(x, y, w, ht); $later($hostCall(${CJI.PIXELS}, h, fb.id), resolve, reject);
+    }) };
+  if (type === 'dma') return { id: h, type: type, rights: rights,
+    release: () => $call(${NW.RELEASE}, h, 0, undefined, undefined, undefined),
+    narrow: (r /*: Any */) => $checkedHandle($call(${CJI.NARROW}, h, (r.indexOf('r') >= 0 ? 1 : 0) | (r.indexOf('w') >= 0 ? 2 : 0) | (r.indexOf('g') >= 0 ? 4 : 0), undefined, undefined, undefined)),
+    fill: (x /*: Any */, y /*: Any */, w /*: Any */, ht /*: Any */, c /*: Any */) => $draw(${CJI.FILL}, h, x, y, w, ht, c),
+    rect: (x /*: Any */, y /*: Any */, w /*: Any */, ht /*: Any */, c /*: Any */) => $draw(${CJI.RECT}, h, x, y, w, ht, c),
+    line: (x /*: Any */, y /*: Any */, x1 /*: Any */, y1 /*: Any */, c /*: Any */) => $draw(${CJI.LINE}, h, x, y, x1, y1, c),
+    text: (x /*: Any */, y /*: Any */, t /*: Any */, font /*: Any */, c /*: Any */, maxw /*: Any */) => {
+      $coords(x, y, maxw || 0, 0); $hostArg(1, String(t)); $hostArg(2, font || 'm');
+      return $check($hostCall(${CJI.TEXT}, h, $ink(c)));
+    },
+    commit: () => JSON.parse($check($call(${CJI.COMMIT}, h, 0, undefined, undefined, undefined))),
+    invalidate: () => $check($call(${CJI.INVALIDATE}, h, 0, undefined, undefined, undefined)) };
   if (type === 'fs') return { id: h, type: type, rights: rights, path: path, file: file,
     release: () => $call(${NW.RELEASE}, h, 0, undefined, undefined, undefined),
-    revoke: () => $check($call(1005, h, 0, undefined, undefined, undefined)),
-    at: (rel /*: Any */, rs /*: Any */) => $fsHandle($call(1003, h, 0, rel, rs === undefined ? 'rw' : rs, undefined)),
+    revoke: () => $check($call(${CJI.REVOKE}, h, 0, undefined, undefined, undefined)),
+    at: (rel /*: Any */, rs /*: Any */) => $checkedHandle($call(${CJI.FS_AT}, h, 0, rel, rs === undefined ? 'rw' : rs, undefined)),
     list: (rel /*: Any */) => $fsOp(h, 'list', rel, undefined),
     stat: (rel /*: Any */) => $fsOp(h, 'stat', rel, undefined),
     read: (rel /*: Any */) => $fsOp(h, 'read', rel, undefined),
@@ -212,13 +252,27 @@ const hw /*: Any */ = {
     const h = $check($call(${NW.I2C_OPEN}, hz === undefined ? 0 : hz, 0, claim, undefined, undefined));
     return $handle(h, 'i2c', 'rwg');
   },
-  spi: (c /*: Any */, hz /*: Any */) => $unavailable('hw.spi'), fs: (c /*: Any */) => $fsHandle($call(1002, 0, 0, c, undefined, undefined)) };
-const dma /*: Any */ = { alloc: (w /*: Any */, h /*: Any */) => $unavailable('dma.alloc') };
-const gfx /*: Any */ = { fonts: () => $unavailable('gfx.fonts') };
-const sys /*: Any */ = { worlds: (f /*: Any */) => $unavailable('sys.worlds'), handles: () => $unavailable('sys.handles'), stats: () => $unavailable('sys.stats'),
+  spi: (c /*: Any */, hz /*: Any */) => $checkedHandle($call(${CJI.SPI}, hz === undefined ? 40000000 : hz, 0, c, undefined, undefined)), fs: (c /*: Any */) => $checkedHandle($call(${CJI.FS_OPEN}, 0, 0, c, undefined, undefined)) };
+const dma /*: Any */ = { alloc: (w /*: Any */, h /*: Any */) => $checkedHandle($call(${CJI.DMA}, w === undefined ? 320 : w, h === undefined ? 320 : h, undefined, undefined, undefined)) };
+const gfx /*: Any */ = { fonts: () => JSON.parse($check($call(${CJI.FONTS}, 0, 0, undefined, undefined, undefined))) };
+const sys /*: Any */ = { worlds: (f /*: Any */) => JSON.parse($check($call(${CJI.WORLDS}, 0, 0, f, undefined, undefined))), handles: () => $unavailable('sys.handles'), stats: () => JSON.parse($check($call(${CJI.STATS}, 0, 0, undefined, undefined, undefined))),
   fault: (n /*: Any */) => $unavailable('sys.fault'), restart: (n /*: Any */) => $unavailable('sys.restart'), log: (a /*: Any */) => $unavailable('sys.log'),
   spawn: (n /*: Any */, s /*: Any */) => $unavailable('sys.spawn'), stop: (w /*: Any */) => $unavailable('sys.stop') };
-const agentNet /*: Any */ = { status: () => $unavailable('agentNet'), start: (b /*: Any */) => $unavailable('agentNet'), poll: (t /*: Any */) => $unavailable('agentNet'), cancel: (t /*: Any */) => $unavailable('agentNet') };
+function $agentTicket(v /*: Any */) /*: Int */ {
+  if (typeof v !== 'number' || v <= 0 || v !== (v | 0)) throw new Error('agent ticket must be a positive integer');
+  return v | 0;
+}
+const agentNet /*: Any */ = {
+  status: () => JSON.parse($check($call(${CJI.AGENT_STATUS}, 0, 0, undefined, undefined, undefined))),
+  start: (body /*: Any */) => $check($call(${CJI.AGENT_START}, 0, 0, typeof body === 'string' ? body : JSON.stringify(body), undefined, undefined)),
+  poll: (ticket /*: Any */) => {
+    const raw /*: Any */ = $check($call(${CJI.AGENT_POLL}, $agentTicket(ticket), 0, undefined, undefined, undefined));
+    if (typeof raw !== 'string') return null;
+    const result /*: Any */ = JSON.parse(raw);
+    const body /*: Any */ = $check($call(${CJI.AGENT_BODY}, 0, 0, undefined, undefined, undefined));
+    return { status: result.status, body: typeof body === 'string' ? body : '', error: result.error };
+  },
+  cancel: (ticket /*: Any */) => $check($call(${CJI.AGENT_CANCEL}, $agentTicket(ticket), 0, undefined, undefined, undefined)) === 1 };
 function $netResult(op /*: Int */) /*: Any */ {
   const r /*: Any */ = $check($call(op, 0, 0, undefined, undefined, undefined));
   return typeof r === 'string' ? JSON.parse(r) : null;
@@ -318,6 +372,19 @@ function $nwInit() /*: Int */ {
   } catch (e) { $crash(e); }
   return $crashed ? 2 : 0;
 }
+// The kernel asks after EVERY settle whether the open turn has ended. A turn waiting
+// for several SPI jobs or chained sleeps must stay open until its outer promise settles.
+let $turnWaiting = false;
+function $awaitTurn(r /*: Any */, isAsk /*: Bool */, label /*: Any */) {
+  if (!$isPromise(r)) { if (isAsk) $reply(r); return; }
+  $turnWaiting = true;
+  r.then((v /*: Any */) => { $turnWaiting = false; if (isAsk) $reply(v); },
+    (e /*: Any */) => {
+      $turnWaiting = false;
+      if (isAsk) $call(${NW.REJECT}, 0, 0, errText(e), undefined, undefined);
+      else $call(${NW.LOG}, 0, 0, label + ' failed: ' + errText(e), undefined, undefined);
+    });
+}
 function $message() /*: Int */ {
   const type /*: Any */ = $hostEvent(1), json /*: Any */ = $hostEvent(2), from /*: Any */ = $hostEvent(3), isAsk = $hostEvent(4) === 1;
   const payload /*: Any */ = $decode(json);
@@ -326,20 +393,15 @@ function $message() /*: Int */ {
     if (isAsk) $call(${NW.REJECT}, 0, 0, self + ' has no handler for "' + type + '"', undefined, undefined);
     return 0;
   }
-  const r /*: Any */ = $call3(fn, $S, payload, { from: from, type: type, ask: isAsk });
-  if ($isPromise(r)) {
-    r.then((v /*: Any */) => { if (isAsk) $reply(v); },
-      (e /*: Any */) => { if (isAsk) $call(${NW.REJECT}, 0, 0, errText(e), undefined, undefined); else $call(${NW.LOG}, 0, 0, type + ' failed: ' + errText(e), undefined, undefined); });
-    return isAsk ? 1 : 0;
-  }
-  if (isAsk) $reply(r);
+  const r /*: Any */ = $call3(fn, $S, payload, { from: from || null, type: type, ask: isAsk });
+  $awaitTurn(r, isAsk, type);
   return 0;
 }
 function $tick(timer /*: Any */) {
   for (let i = 0; i < $def.timers.length; i++)
     if ($def.timers[i] === timer) {
       const r /*: Any */ = $call3($def.every[i].fn, $S, undefined, { from: '', type: i, ask: false });
-      if ($isPromise(r)) r.then((v /*: Any */) => undefined, (e /*: Any */) => $call(${NW.LOG}, 0, 0, 'every failed: ' + errText(e), undefined, undefined));
+      $awaitTurn(r, false, 'every');
     }
 }
 function $settle() {
@@ -356,18 +418,17 @@ function $settle() {
   }
 }
 function $nwEvent() /*: Int */ {
-  let later = 0;
   try {
     Math.$clock($BOOT + now());
     const kind /*: Any */ = $hostEvent(0);
-    if (kind === 0) later = $message();
+    if (kind === 0) $message();
     else if (kind === 1) $tick($hostEvent(5));
-    else if (kind === 2) { if ($def.start !== undefined) { const r /*: Any */ = $call3($def.start, $S, undefined, { from: '', type: 'start', ask: false }); if ($isPromise(r)) r.then((v /*: Any */) => undefined, (e /*: Any */) => $call(${NW.LOG}, 0, 0, 'start failed: ' + errText(e), undefined, undefined)); } }
+    else if (kind === 2) { if ($def.start !== undefined) { const r /*: Any */ = $call3($def.start, $S, undefined, { from: '', type: 'start', ask: false }); $awaitTurn(r, false, 'start'); } }
     else if (kind === 4) $settle();
     $drain();
     $render();
   } catch (e) { $crash(e); }
-  return $crashed ? 2 : later;
+  return $crashed ? 2 : ($turnWaiting ? 1 : 0);
 }
 `;
 
