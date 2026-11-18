@@ -1,0 +1,75 @@
+---
+Title: Investigation diary
+Ticket: PICOCALC-CJI-STATIC
+Status: active
+Topics:
+    - picocalc
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: ""
+LastUpdated: 2026-11-18T14:31:13.132868353-05:00
+WhatFor: ""
+WhenToUse: ""
+---
+
+# Investigation diary
+
+## Step 1 — Reattach the board and locate dynamic calls in the self-hosted compiler
+
+The device test compares the previously qualified guarded build against its exact ordinary headless control. Host instrumentation runs independently on the guarded x86 stage 1. Keeping those experiments separate allows us to change the instrumentation without changing the firmware under test.
+
+### Prompt Context
+
+**User prompt (verbatim)**
+
+> I reattached the esp32 so you can now test on the machine. while it's computing and all, you can research how and why and what it is about range analysis and ynamic type checking and what compiler techniques could be that basically say, determine if something needs to be dynamic in the first place and how to reduce the intervals stuff and all that. Our programs are small and we should be able to reduce dynamic values and allow for more "static compiled" qualities to emerge. Do the research in a separate docmgr ticket and Create  a detailed analysis / design / implementation guide that is for a new intern, explaining all the parts of the system needed to understand what it is, with prose paragraphs and bullet point sand pseudocode and diagrams and api references and file references. It should be very clear and technical. Store in the ticket and the nupload to remarkable.
+>
+>
+> Make sure to study the literature (for example the book I gave you earlier, but also just papers and the web) to see what algorithms are there. Also, we do have an SD-Card we could use to spill out pass information and the like.
+
+**Assistant interpretation.** Run the existing candidate on the board while researching further optimization. **Inferred user intent.** Reduce the time a user waits for a verified module, with a design that a newcomer can implement and evaluate.
+
+### What I did
+
+- Started script 01 in tmux. It uses the previous PERF ticket's flashing, boot checks, module validation and restoration. Its fresh output directory keeps the previous interrupted run intact.
+- Linked counters into the guarded native compiler. Scripts 02–04 track direct calls from generated code. Scripts 05–06 count actual branches in a separate copy of the runtime. Script 07 isolates the receiver of one highly executed library helper.
+- Read the local textbook's data-flow and SSA treatment, primary papers on type constraints, constant propagation, widening and versioning, and CJI's inference, lowering, library and runtime sources.
+
+### Why
+
+The previous CPU timer reported the executing instruction. Many passes share the same runtime helpers. Naming the compiled callers and measuring receiver classes gives a testable alternative to changing the runtime indiscriminately.
+
+### What worked
+
+The device booted with idle compiler and zero keyboard/display bus transfers, and compiled the Flaky smoke world. Both standalone native counter builds emitted the exact reference Agenda and Files SLIR. The leading index caller in each was the same slice specialization. A third diagnostic isolates that call site.
+
+### What didn't work
+
+Serial discovery inside the filesystem sandbox returned “No such file or directory” for /dev/serial/by-id. The host check found the expected adapter, serial 5B61091051, attached as ttyACM0. No device restart was needed for discovery.
+
+### What I learned
+
+A dynamic call can combine independent unknowns. The Agenda slice loop already carries an integer index. Its generated code boxes that index to satisfy the dynamic receiver ABI. A known array layout would allow a simpler access even if every element still needed a dynamic tag.
+
+### What was tricky to build
+
+A linker wrapper observes external generated calls, while a runtime helper can call another helper internally. I measured those populations separately. Address resolution subtracts one byte from the return address and checks the symbol's actual size. The extra-property counters distinguish an absent extras array from a scan that examined entries.
+
+### What warrants a second pair of eyes
+
+Check that a proposed specialized read preserves the generic missing-index result, hole handling, element layout and collection roots. Counts collected under instrumentation describe workload frequency. They are insufficient to infer elapsed time saved.
+
+### What should be done in the future
+
+Run a differential prototype only after specifying the static proof or runtime guard. Measure emitted code, output behavior and physical compile latency independently.
+
+### Code review instructions
+
+Start with scripts/03-measure-sites.sh and 06-run-probes.sh. Both accept the named-object directory from RANGES script 34 followed by a new scratch directory. Each checks generated bytes before reporting. Script 01 takes a new output directory and the immutable firmware snapshots.
+
+### Technical details
+
+Both host compilers used compacting GC and an 8,388,608-byte heap. Symbol names include a canonical suffix which distinguishes specializations with the same source name. The board compares complete linked modules against the independent catalog reference.
