@@ -1,7 +1,7 @@
 ---
 Title: Ship compiled PicoCalc worlds with a shared prelude and port OS workflows
 Ticket: PICOCALC-CJI-PORT
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-17T20:08:57.104272817-05:00
+LastUpdated: 2026-11-17T21:31:34.072957812-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -21,7 +21,7 @@ WhenToUse: ""
 
 ## Overview
 
-Migrate shipping PicoCalc workflows to trusted CJI native worlds. Start with the [intern guide](design-doc/01-porting-picocalc-workflows-to-shared-cji-machine-code.md). The [diary](reference/01-implementation-diary.md) records the implementation and hardware tests. See [tasks](tasks.md) for the remaining workflows.
+Migrate shipping PicoCalc workflows to trusted CJI native worlds. Start with the [intern guide](design-doc/01-porting-picocalc-workflows-to-shared-cji-machine-code.md). The [diary](reference/01-implementation-diary.md) records the implementation and hardware tests. See [tasks](tasks.md) for the verified workflows.
 
 ## Key Links
 
@@ -30,7 +30,7 @@ Migrate shipping PicoCalc workflows to trusted CJI native worlds. Start with the
 
 ## Status
 
-Current status: **active**
+Phase 3 is complete and verified on the ESP32-P4.
 
 ## Topics
 

@@ -403,3 +403,5 @@ Compare the compiled store wrapper with the per-read record parser, then follow 
 ### Technical details
 
 The final fixture-disabled P4 application SHA-256 was 2e3130435cff840b6280c3a5bbda5accf554a332ef498082b89bf6d6911d153e. The transport suite used local TLS and diagnostic responses. No paid provider request was needed.
+
+Release checkpoint e6dee4e contains the Agent changes and regression. All six ticket tasks are checked and docmgr doctor passed. Remarquee confirmed upload of “PICOCALC-CJI-PORT - Phase 3 hardware implementation.pdf” to /ai/2026/11/17/PICOCALC-CJI-PORT. The board retains the diagnostic note p3-checkpoint.txt used to verify Editor persistence.

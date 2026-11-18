@@ -1,7 +1,7 @@
 ---
 Title: Porting PicoCalc workflows to shared CJI machine code
 Ticket: PICOCALC-CJI-PORT
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -10,6 +10,12 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
+    - Path: repo://picocalc-os/js/system/agent.js
+      Note: Saved conversation restoration
+    - Path: repo://picocalc-os/nucleus/agent_transport.c
+      Note: Request ownership and cancellation
+    - Path: repo://picocalc-os/nucleus/fs.c
+      Note: Delegated filesystem operations
     - Path: repo://picocalc-os/nucleus/native.c
       Note: Kernel native system calls
     - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
@@ -168,7 +174,7 @@ QuickJS uses the `enc` and `revive` functions in `picocalc-os/js/prelude.js`. It
 | CJI handler return and `publish(channel, payload, opts)` | A return value becomes `NW_REPLY`. An invalid transfer rejects the ask. A publication requires a declared channel and honors its claim. Retained publications reject handles because replay could grant authority to a future subscriber. |
 | `handle_may_grant` in `nucleus/hw.c` | Uses `handle_use` to check existence, ownership and ancestor revocation. A holder can delegate a grantable handle. A minter can give out its own attenuated child. A recipient of a read-only child without grant rights cannot pass it on. |
 | `handle_event` and `settle_ask` in `nucleus/kernel.c` | Delivery or successful reply adds each live handle to the receiver's holdings. Message handling may occur later than delivery. Releasing a handle after delivery can affect a message still in the mailbox. |
-| `$decode` and `$handle` in the compiled prelude | Rebuild the wrapper using receiver-checked type and rights. I2C wrappers support existing transfers. Other types can be inspected, forwarded when permitted and released. Their filesystem, drawing and SPI methods are separate implementation work. |
+| `$decode` and `$handle` in the compiled prelude | Rebuild the wrapper using receiver-checked type and rights. Each wrapper supplies operations for its kernel type. File, directory, framebuffer and SPI calls enter the checked native syscall path. The kernel verifies the holder and rights again at each use. |
 
 ```text
 validate the entire payload
@@ -182,6 +188,50 @@ enqueue the operation with its checked IDs
 ```
 
 An intern can reproduce this independently of the user interface. Add `-DPICOCALC_TEST_CJI_GRANTS=ON` to the native firmware build below. Inspect `picocalc-os/tests/fixtures/cji-grants/sender.js` and `peer.js`. The sender allocates a one-pixel buffer and passes it inside an array. The compiled peer returns it, exercises all four message directions and attempts to return a read-only child. Search the serial boot output for `CJI GRANT`. The sender expects a refusal for the child, an unknown ID and a retained publication. Build again with `-DPICOCALC_TEST_CJI_GRANTS=OFF` for the normal application image. The test worlds and their DMA claim exist only in the diagnostic manifest.
+
+## How phase 3 runs on the handheld
+
+The build host runs Node, CJI and the RV32 assembler. The PicoCalc runs the resulting worlds. For each selected world the build packs its ELF into a zlib stream with the original byte length. At boot the P4 ROM decompressor expands the bytes from the trusted firmware bundle. The loader checks the image, relocates it in PSRAM and registers its event entry points. The existing application partition, NVS records and file storage keep their layout.
+
+The imported compiler also contains a separate `rv32-stage1` target for a compiler compiled by CJI and a `BOARD=1` test harness for compile, assemble, load and run under an emulated kernel. The physical shipping firmware in this ticket builds its modules ahead of time. A physical self-hosting experiment would need to package the compiler and assembler, allocate their working memory, and demonstrate one source-to-running-world round trip under ESP-IDF.
+
+### From a file selection to persistent text
+
+The browser owns a root directory handle. When a file opens, `fs_at` derives its path and intersects its rights with the parent's rights. Editor receives that child by message. `fs_prepare` checks the operation, path and byte limit before the requesting engine allocates a promise token. `fs_defer` records the owner's ID, epoch and token. The filesystem worker performs the I/O, then the kernel delivers the settlement to the same running instance.
+
+### From an app frame to LCD pixels
+
+The compositor subscribes to frames and draws the active app into a back buffer. A commit compares that buffer with the front buffer and returns dirty rectangles. The display world holds a read-only child and submits SPI commands and pixel jobs for the rectangles. A submitted pixel job pins the front buffer. The bus completion drops that pin, including when all application handles have already been released.
+
+```text
+compiled compositor -> paint -> commit -> ask display to flush
+                                          |-- SPI command
+                                          |-- SPI command
+                                          +-- SPI pixels (buffer pinned)
+nucleus delivers each settlement          |
+display awaits the whole group <-----------+
+display replies -> compositor finishes this draw
+```
+
+The shared prelude tracks the promise returned by the outer handler. A settlement for one SPI job can run a continuation while other jobs remain pending. Ending the turn on that intermediate event makes the compositor invalidate the framebuffer. On this device the symptom was an image with every color complemented. The host-side framebuffer captures made that failure reproducible.
+
+### From Chat to a provider result
+
+Chat sends a submit or cancel message. The compiled Agent validates the sender and owns a bounded conversation state. The C transport accepts one request at a time and associates it with a ticket, owner and epoch. Start and cancel take effect after the current segment commits. Poll returns pending, an error or a single completed result. The compiled prelude reads completed metadata and response text in the same segment. The body may contain up to 65,536 UTF-8 bytes. The outgoing request limit is 49,152 bytes.
+
+| Code | Review question |
+| --- | --- |
+| `nucleus/fs.c`, `nucleus/native.c` | Which rights and relative path permit this file operation? Who owns its eventual settlement? |
+| `js/system/compositor.js`, `js/drivers/display.js`, `port/esp32p4/main/bus_p4.c` | When does a dirty rectangle become panel I/O, and who holds the last buffer reference? |
+| `nucleus/agent_transport.c`, `port/esp32p4/main/agent_p4.c` | Is this ticket still active for the same world and epoch? Has the result body changed owners? |
+| `tests/fixtures/cji-phase3` | How do the on-board tests simulate a canceled completion, compare a replacement answer, and release a framebuffer during transfer? |
+
+### Reproduce the acceptance checks
+
+1. Build the optional ELF configuration below with `-DPICOCALC_TEST_CJI_PHASE3=ON`. The diagnostic manifest uses the shipping Agent binary under the name `agent-probe`, which gives the fixture its own persistent record. A local provider and Chat driver exercise cancellation, a replacement run, a device-status continuation, and transport limits.
+2. Look for `PHASE3 FS containment true`, `PHASE3 DMA pinned true`, `PHASE3 DMA completion true`, `PHASE3 AGENT replacement true` and `PHASE3 AGENT bounds true` on serial. The delayed-completion log identifies both the canceled and replacement tickets.
+3. Open a disposable note through Files, save it in Editor, reboot and reopen it. Compare the Editor frame before and after a display restart. Restart the compositor separately, refocus Editor from the launcher and compare the application region again. The reference and native captures in the ticket's `various` directory use two host pixels per device pixel. Cropping the first 44 host rows excludes the changing status clock.
+4. Build with both diagnostic flags off for the normal image. Compare the generated manifest with `js/system.json`. The selected worlds change engine and file only. Check the physical world table and open Chat using the existing session. The isolated fixture and the ordinary startup exercise different workloads.
 
 ## Build and investigate
 
@@ -208,3 +258,18 @@ Before writing, capture the running baseline using tools/p4cap.py and identify t
 - An empty frame after a compositor restart is a retention or resource-lifetime failure until the recorded screen tree and framebuffer show otherwise. Test the late subscriber path explicitly.
 
 The optional ELF manifest starts a diagnostic world named `nat-import`. Its source, `picocalc-os/natives/wimport.c`, declares an external `path_open` symbol. The P4 resolver refuses the module during relocation, before its initialization or file access can run. Five attempts within ten seconds trigger the kernel's restart limit. A boot log with `nat-import ... stays stopped` alongside healthy application worlds is the expected outcome of that test.
+
+## Release verification on the PicoCalc
+
+A normal boot loads the saved conversation from the Agent's store. The compiled store wrapper parses a fresh record on each read. The returned object is private to the caller. The Agent validates the history once, clips each message into its display entry, then publishes a snapshot to Chat. With an existing record, initialize yields to the scheduler between the expensive stages. The 100 ms budget applies separately to each turn.
+
+| Hardware observation | Result |
+| --- | --- |
+| Original single-turn native restoration, five attempts | 147.065–159.763 ms, all over budget |
+| Final release cold boot, existing conversation | Agent and Chat idle, zero restarts |
+| First deliberate Agent restart, consecutive turns | 22.100, 55.087, 19.417, 10.839 ms |
+| Second deliberate Agent restart, consecutive turns | 20.027, 58.508, 20.424, 11.294 ms |
+| Final bus counters | 877 I2C and 158 SPI transfers, zero errors |
+| Diagnostic image | Filesystem containment, pending DMA lifetime, stale request suppression, transport bounds and network denial passed |
+
+The earlier QuickJS release also restored the saved conversation. A comparison of engine speed would require paired measurements on the same workload. The final release application occupied 0x332790 bytes. Its SHA-256 is recorded in step 7 of the diary. The compiler runs on the development machine to build these modules. Booting this firmware executes their RV32 machine code on the ESP32-P4.
