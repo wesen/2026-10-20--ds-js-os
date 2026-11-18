@@ -166,3 +166,13 @@ Use the records in a task collection, generate the world entry points, and conne
 ### Code review instructions
 
 Run scripts/01-check-calendar.mjs, scripts/02-check-leads.mjs and scripts/03-check-task-records.mjs from the repository root. Read reminder.typed alongside agParse in picocalc-os/js/apps/agenda.js. The receipt proves execution in the host Wasm engine. The board and world ABI have separate gates.
+
+## Step 4 — Publish the stored-line milestone
+
+Project commit a8c71ad is the reproducible source checkpoint for the parser milestone. I wrote a new Obsidian project report explaining the distinction between token shape and validity, linear memory layout, and the boundary covered by each test.
+
+### Evidence
+
+- Vault note: Projects/2026/11/18/PROJ - PicoCalc Agenda - Compiling a stored reminder to WebAssembly.md
+- Vault commit 5f1dd76 was pushed to origin main. The remote-tracking ref resolved to the same commit after the push.
+- The parser task is complete. The publication task stays open for the integration, device and RV32 milestones.
