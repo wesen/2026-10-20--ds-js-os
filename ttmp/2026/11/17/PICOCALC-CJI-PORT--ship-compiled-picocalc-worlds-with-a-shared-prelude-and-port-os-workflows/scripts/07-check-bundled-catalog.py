@@ -18,7 +18,8 @@ def check(port, file, source):
     expected = hashlib.sha256(source).hexdigest()
     port.reset_input_buffer()
     port.write(f"\ncji check {file}\n".encode())
-    deadline = time.monotonic() + 360
+    refusal = None
+    deadline = time.monotonic() + 1200
     while time.monotonic() < deadline:
         line = port.readline().decode(errors="replace").strip()
         if line.startswith("cji: busy"):
@@ -30,6 +31,10 @@ def check(port, file, source):
             return {"result": "device fault", "diagnostic": line}
         if line.startswith(("cji: bundled JS", "cji: cannot allocate", "unknown command cji")):
             raise RuntimeError(line)
+        if line.startswith("cji: allocation refused "):
+            fields = dict(pair.split("=", 1) for pair in line.split()[3:])
+            refusal = {key: value if key == "reason" else int(value) for key, value in fields.items()}
+            continue
         match = re.search(r"cji: check (ok|failed) elapsed_ms=(\d+) scratch_peak=(\d+) source_sha256=([0-9a-f]{64}) (.*)", line)
         if not match:
             continue
@@ -37,6 +42,8 @@ def check(port, file, source):
         if received != expected:
             raise RuntimeError(f"{file}: unexpected source SHA-256 {received}")
         row = {"result": status, "elapsed_ms": int(ms), "scratch_bytes": int(peak), "source_sha256": received}
+        if refusal is not None:
+            row["allocation_refusal"] = refusal
         if status == "ok":
             size, sha = re.fullmatch(r"bytes=(\d+) sha256=([0-9a-f]{64})", detail).groups()
             row.update(elf_bytes=int(size), elf_sha256=sha)

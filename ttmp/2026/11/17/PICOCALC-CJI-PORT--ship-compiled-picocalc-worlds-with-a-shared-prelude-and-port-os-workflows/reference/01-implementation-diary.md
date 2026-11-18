@@ -767,3 +767,51 @@ Follow compiler_console into begin, build_one and compiler_tick in compiler/inst
 ### Technical details
 
 The application image SHA-256 for this sweep is 0fb80be375d0f90c1c9b634f8be751a9c17d1fa06c0af14862afc7d52e78a78b. The frontend heap cap is 8 MiB and the private scratch limit is 18 MiB.
+
+## Step 15. Distinguish the job quota from a failed PSRAM allocation
+
+The initial catalog run produced successful native modules and several identical “compiler scratch limit” errors. The terminal scratch peak counts successful allocations only. It cannot identify which allocator branch refused the next request.
+
+### Prompt Context
+
+User prompts (verbatim): “what's the scratch limit? and how big is it set / can we make it bigger?”, “yes do that measurement if you can”, and “don't forget to write / backfill your diary, use the diary format from the diary skill”. I interpreted the measurement request as observing actual failing allocations while keeping both caps fixed. Catalog checkpoint 5c715b1.
+
+### What I did
+
+Read the worker's allocate and resize paths, the PSRAM wrapper and the private frontend's heap setup. Added a worker-local refusal record at the two possible rejection sites. Added decoding of that record to the catalog runner. Built the instrumented P4 application separately while the baseline firmware continued compiling.
+
+### Why
+
+Both the quota check and a NULL result from aligned PSRAM allocation reached the same failure callback. Increasing the 18 MiB job limit would affect only the quota check. A useful hardware observation compares the pending request plus allocation header with the held bytes, remaining quota, free PSRAM and largest free block at that instant.
+
+### What worked
+
+The first baseline results included a host-identical 102,280-byte Chat ELF in 122,793 ms. Compositor failed after 304,288 ms, Agent after 115,379 ms and Launcher after 163,527 ms. The instrumented firmware built successfully without changing either cap.
+
+### What didn't work
+
+The baseline diagnostic “compiler scratch limit” supplied no request size or allocator branch. Compositor's successful high-water count of 9,007,658 bytes could not distinguish the two causes. I retained the baseline results and arranged a hardware replay with instrumentation.
+
+### What I learned
+
+The 8 MiB frontend heap cap bounds one managed heap space. The 18 MiB scratch budget accounts for allocations by the entire compiler job. Copying collection and a growing realloc may need both old and new blocks at once.
+
+### What was tricky to build
+
+Free-space samples taken after the private tool unloads do not describe the failure. The new record samples PSRAM directly on the worker before returning NULL. It prints the measurement after the tool returns, while the worker still owns its state.
+
+### What warrants a second pair of eyes
+
+Check the requested number of bytes, 16-byte allocation header, remaining quota, and largest contiguous PSRAM block separately. Replay conditions can differ between consecutive jobs and a fresh boot.
+
+### What should be done in the future
+
+Finish the physical sweep, replay failed jobs and compare matching input hashes. Record the measured branch before proposing a budget change.
+
+### Code review instructions
+
+Follow record_refusal in compiler/install.c into build_one. Inspect the allocation_refusal fields in the serial runner. The initial baseline rows intentionally have no such fields.
+
+### Technical details
+
+SCRATCH_LIMIT is 18,874,368 bytes, the frontend cap is 8,388,608 bytes and its initial heap is 4,194,304 bytes. These are firmware build settings. No scratch or heap setting was increased in this investigation.

@@ -42,15 +42,30 @@ typedef struct allocation {
 } allocation;
 static allocation head = { .next=&head, .prev=&head };
 static size_t held, peak;
+static struct {
+    const char *reason;
+    size_t request, held_before, free_psram, largest_psram;
+} refusal;
+
+static void *record_refusal(const char *reason, size_t request) {
+    const uint32_t caps=MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT;
+    refusal.reason=reason;
+    refusal.request=request;
+    refusal.held_before=held;
+    refusal.free_psram=heap_caps_get_free_size(caps);
+    refusal.largest_psram=heap_caps_get_largest_free_block(caps);
+    return NULL;
+}
 static int64_t last_yield;
 static void *allocate(size_t size) {
     if (esp_timer_get_time()-last_yield>20000) {
         vTaskDelay(1);
         last_yield=esp_timer_get_time();
     }
-    if (size > SCRATCH_LIMIT-sizeof(allocation) || held > SCRATCH_LIMIT-sizeof(allocation)-size) return NULL;
+    if (size > SCRATCH_LIMIT-sizeof(allocation) || held > SCRATCH_LIMIT-sizeof(allocation)-size)
+        return record_refusal("quota",size);
     allocation *p=port_heap_malloc(sizeof(*p)+size);
-    if (!p) return NULL;
+    if (!p) return record_refusal("psram",size);
     p->size=size; p->prev=&head; p->next=head.next; head.next->prev=p; head.next=p;
     held+=size+sizeof(*p);
     if (held>peak) peak=held;
@@ -134,10 +149,17 @@ static void build_one(void) {
     // The kernel task performs that step on its internal stack.
     ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
     peak=0;
+    refusal.reason=NULL;
     if (!job.error[0]) {
         char *args[]={(char *)&job};
         memory_sample("relocated");
         esp_elf_request(&tool,0,1,args);
+        if (refusal.reason) {
+            printf("cji: allocation refused reason=%s request=%u header=%u held=%u limit=%u psram_free=%u psram_largest=%u\n",
+                   refusal.reason,(unsigned)refusal.request,(unsigned)sizeof(allocation),
+                   (unsigned)refusal.held_before,(unsigned)SCRATCH_LIMIT,
+                   (unsigned)refusal.free_psram,(unsigned)refusal.largest_psram);
+        }
         memory_sample(job.status ? "compiler refused" : "assembled");
         if (!job.status && checking) {
             if (!digest(job.module,job.module_length,candidate.artifact)) {
