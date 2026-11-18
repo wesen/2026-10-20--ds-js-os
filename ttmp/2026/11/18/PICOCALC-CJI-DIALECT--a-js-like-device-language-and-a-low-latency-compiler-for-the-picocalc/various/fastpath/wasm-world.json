@@ -1,0 +1,155 @@
+{
+  "node": "v24.18.0",
+  "clang": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+  "wamr": "WAMR-2.4.5 25bd7eb63e828e4bd242cc9b38d260b4b31c6605",
+  "host_sha256": "489bd7ea478e9495672653f451456771f46372688c22fa999c3a147d911075eb",
+  "typed_source_sha256": "f138084bcd0b2c227347899135bdcb2eb0453f857763bc0d9734ae8897f25541",
+  "standalone_wasm_sha256": "1f33714cf1dd24f7926bf8995326e92c1da0b67686d3198d9aaea07a38ab0685",
+  "exact_scroll_body_bytes": 75,
+  "exact_scroll_body_sha256": "7a684bff04047baafec04c73a575ad4b1155209c29a9350b844bd841154ac6e8",
+  "shell_sha256": "1e6bed005f2f88fb564434b469dc70b8eebfd76a9d76717b075ab2655a6551de",
+  "patched_module_bytes": 30327,
+  "patched_module_sha256": "33bc2c3283d74f9e5131a9915a3e6c304444af6a866537bc67bb189198fbe465",
+  "candidates": [
+    {
+      "id": "inside",
+      "args": [
+        15,
+        20,
+        6
+      ],
+      "expected": 12
+    },
+    {
+      "id": "lower-clamp",
+      "args": [
+        1,
+        20,
+        6
+      ],
+      "expected": 0
+    },
+    {
+      "id": "upper-clamp",
+      "args": [
+        19,
+        20,
+        6
+      ],
+      "expected": 14
+    },
+    {
+      "id": "unset-selection",
+      "args": [
+        -1,
+        20,
+        6
+      ],
+      "expected": 0
+    },
+    {
+      "id": "whole-list-visible",
+      "args": [
+        1,
+        5,
+        6
+      ],
+      "expected": 0
+    },
+    {
+      "id": "max-i32",
+      "args": [
+        2147483647,
+        2147483647,
+        1
+      ],
+      "expected": 2147483646
+    }
+  ],
+  "typed": {
+    "world": {
+      "engine": "wasm",
+      "state": "idle",
+      "kind": "service"
+    },
+    "replies": [
+      [
+        "inside",
+        12
+      ],
+      [
+        "lower-clamp",
+        0
+      ],
+      [
+        "upper-clamp",
+        14
+      ],
+      [
+        "unset-selection",
+        0
+      ],
+      [
+        "whole-list-visible",
+        0
+      ],
+      [
+        "max-i32",
+        2147483646
+      ]
+    ],
+    "rejected": "expected three i32 values",
+    "per_message_wasm_instructions": [
+      1457,
+      1365,
+      1356,
+      1364,
+      1337,
+      1845,
+      350
+    ]
+  },
+  "placeholder_control": {
+    "world": {
+      "engine": "wasm",
+      "state": "idle",
+      "kind": "service"
+    },
+    "replies": [
+      [
+        "inside",
+        -999
+      ],
+      [
+        "lower-clamp",
+        -999
+      ],
+      [
+        "upper-clamp",
+        -999
+      ],
+      [
+        "unset-selection",
+        -999
+      ],
+      [
+        "whole-list-visible",
+        -999
+      ],
+      [
+        "max-i32",
+        -999
+      ]
+    ],
+    "rejected": "expected three i32 values",
+    "per_message_wasm_instructions": [
+      1461,
+      1342,
+      1359,
+      1353,
+      1325,
+      1733,
+      350
+    ]
+  }
+}

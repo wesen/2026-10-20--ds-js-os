@@ -14,6 +14,8 @@ RelatedFiles:
       Note: Reproduces timing and replay for the complete manifest
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-DIALECT--a-js-like-device-language-and-a-low-latency-compiler-for-the-picocalc/scripts/fastpath/05-check-typed-wasm.mjs
       Note: Compositor differential and boundary cases
+    - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-DIALECT--a-js-like-device-language-and-a-low-latency-compiler-for-the-picocalc/various/fastpath/wasm-world.json
+      Note: Verified WAMR service initialization and ask replies
 ExternalSources: []
 Summary: Investigation and verification of the existing QuickJS path and a typed direct WebAssembly emitter.
 LastUpdated: 2026-11-18T16:16:12.258387197-05:00
@@ -224,3 +226,53 @@ Start with [scroll.typed](../scripts/fastpath/scroll.typed), [the emitter](../sc
 ### Technical details
 
 All locals and results are Wasm I32. I32 add/multiply wrap and signed division truncates toward zero, trapping for zero or signed overflow. Only Boolean operands can participate in logical expressions. The bridge rejects coercion and requires exact arity.
+
+## Step 5 — Run the generated function in a real kernel turn
+
+The next experiment put the same generated function in a diagnostic Wasm world. It rebuilt the package around a linked SDK reactor and function placeholder, then copied the exact typed body into the placeholder's slot. A separate QuickJS peer drove the Wasm service through normal kernel asks rather than calling the leaf's export directly.
+
+### Prompt Context
+
+The follow-up asked for the generated typed function to execute in the Linux WAMR world lifecycle, with real request/reply and exact linkage to the prior typed compiler experiment. It authorized a test-only ABI shell, while retaining production adapters and device firmware as they are.
+
+### What I did
+
+- Added C fixtures for the SDK event handler and the exported placeholder, and used existing Clang/WASI tools to link them with the unchanged `sdk/nw_wasm.c`.
+- Added a focused binary packager which verifies `scrollStart`'s exact I32 signature, resolves the definition index using the module's imported-function count, replaces the code body and revalidates the rebuilt module. The packager verifies the standalone module digest in the earlier receipt and checks the replacement byte for byte.
+- Ran the generated Wasm service and the unchanged sentinel control in separate simulator boots. Tested six real asks and one malformed request in each.
+
+### Why
+
+Node execution qualifies the typed arithmetic. The integration test adds evidence for the actual kernel loader, WAMR initialization, event buffer, SDK import, reply and JavaScript settlement. The unchanged placeholder control distinguishes executing the generated code from executing the linked C stub.
+
+### What worked
+
+The QuickJS peer observed `["wasm","idle","service"]`. It received six replies matching the original compositor function, including both clamps and the signed I32 maximum boundary. The malformed numeric-string tuple was rejected by the C test adapter. In the unchanged control all valid replies returned the sentinel `-999`. The generated function body is 75 bytes at SHA-256 `7a684bff04047baafec04c73a575ad4b1155209c29a9350b844bd841154ac6e8`. The repacked module is 30,327 bytes, including SDK code and the adapter. The test was rerun and the JSON receipts matched byte for byte.
+
+### What didn't work
+
+The initial invocation `node "$ticket/scripts/fastpath/07-check-wasm-world.mjs" /tmp/picocalc-quickjs-Ns6Fao3U/source-host` reached Clang and reported `Error: spawnSync clang-18 EPERM` with child status 0 while using Node's piped synchronous subprocess output in this sandbox. Redirected process streams to temporary file descriptors instead. Retrying the same compiler and loader exercise passed.
+
+### What I learned
+
+The three Wasm world exports can remain ordinary SDK reactor code while a generated typed leaf runs inside the service. The surrounding event adaptation and libc parsing dominate the instruction count of this test. Substituting the body is a qualification tool for this import-free leaf and does not establish a general Wasm linker.
+
+### What was tricky to build
+
+A WebAssembly export index includes imported functions before the module's definitions. The packager subtracts the actual imported-function count, verifies the declared type at the resulting index and checks the repacked function after parsing the new code section. Stable function indexes preserve the SDK adapter's call target.
+
+### What warrants a second pair of eyes
+
+The body transposition works for this tested function's inline block types and local expressions. A function that carries module-level type, memory, global or call indexes needs a real linking contract. The C adapter is deliberately narrow and cannot qualify the runtime for a whole dialect app.
+
+### What should be done in the future
+
+Generate the ABI wrapper and marshaling explicitly for a full typed world. Compare end-to-end kernel event time, allocation and meters against the QuickJS path with real app workloads.
+
+### Code review instructions
+
+Run the WAMR command in [the reproducer index](../scripts/fastpath/README.md). Read [the receipt](../various/fastpath/wasm-world.json) and [the integration analysis](../analysis/03-fast-paths.md#through-the-linux-world-abi).
+
+### Technical details
+
+The simulator binary was the fresh source-only binary from Step 2. The harness uses `-vv`, keeps simulator output in temporary files and records the observed WAMR operation count for each ask. Those counters cover both SDK/adapter and leaf instructions and are distinct from device wall time.
