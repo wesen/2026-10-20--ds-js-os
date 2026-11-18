@@ -142,24 +142,23 @@ static void memory_sample(const char *phase) {
 }
 static void build_one(void) {
     memory_sample("begin");
+    peak=0;
+    refusal.reason=NULL;
+    // Large bundled sources need a single space before relocation divides PSRAM.
+    if (job.length>SOURCE_LIMIT) {
+        job.frontend_heap=allocate(LARGE_FRONTEND_HEAP);
+        if (!job.frontend_heap) snprintf(job.error,sizeof job.error,"frontend heap reservation");
+    }
     tool_image=port_read_file("natives/compiler.elf",&tool_size);
     job.exports=port_read_file("compiler/unit.list",&job.exports_length);
     signal_kernel();
     // ELF relocation flushes the instruction cache with both CPUs stopped.
     // The kernel task performs that step on its internal stack.
     ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
-    peak=0;
-    refusal.reason=NULL;
     if (!job.error[0]) {
         char *args[]={(char *)&job};
         memory_sample("relocated");
         esp_elf_request(&tool,0,1,args);
-        if (refusal.reason) {
-            printf("cji: allocation refused reason=%s request=%u header=%u held=%u limit=%u psram_free=%u psram_largest=%u\n",
-                   refusal.reason,(unsigned)refusal.request,(unsigned)sizeof(allocation),
-                   (unsigned)refusal.held_before,(unsigned)SCRATCH_LIMIT,
-                   (unsigned)refusal.free_psram,(unsigned)refusal.largest_psram);
-        }
         memory_sample(job.status ? "compiler refused" : "assembled");
         if (!job.status && checking) {
             if (!digest(job.module,job.module_length,candidate.artifact)) {
@@ -171,6 +170,12 @@ static void build_one(void) {
             if (output) { output_size=job.module_length; memcpy(output,job.module,output_size); }
         }
         if (!checking && !job.status && !output) snprintf(job.error,sizeof job.error,"module size or allocation");
+    }
+    if (refusal.reason) {
+        printf("cji: allocation refused reason=%s request=%u header=%u held=%u limit=%u psram_free=%u psram_largest=%u\n",
+               refusal.reason,(unsigned)refusal.request,(unsigned)sizeof(allocation),
+               (unsigned)refusal.held_before,(unsigned)SCRATCH_LIMIT,
+               (unsigned)refusal.free_psram,(unsigned)refusal.largest_psram);
     }
     esp_elf_deinit(&tool);
     free((void *)job.exports);

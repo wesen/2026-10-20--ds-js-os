@@ -815,3 +815,68 @@ Follow record_refusal in compiler/install.c into build_one. Inspect the allocati
 ### Technical details
 
 SCRATCH_LIMIT is 18,874,368 bytes, the frontend cap is 8,388,608 bytes and its initial heap is 4,194,304 bytes. These are firmware build settings. No scratch or heap setting was increased in this investigation.
+
+## Step 16: Measure Agent's live heap and reserve a workspace for the device frontend
+
+The baseline P4 compiler refused Agent after 114.911 seconds. The allocator receipt located the refusal in PSRAM. I ran the compiled stage-1 frontend on the host to determine a heap size that could carry the same source through all frontend passes, then built firmware that reserves that space before loading the compiler ELF.
+
+### Prompt Context
+
+**User prompts (verbatim)**
+
+> isit memory fragmentation? how is this differing from the host compiler version ?
+
+> what do we need to do to make the failed ones work?
+
+> Ok, compile Agent
+
+**Assistant interpretation.** Produce Agent's native ELF on the physical P4 and compare it to the independently built host module. The catalog command compiles without activating a world.
+
+**Inferred user intent.** Establish whether the full Agent source fits on the handheld and measure the actual compile.
+
+**Prior instrumentation commit** 7e5af30.
+
+### What I did
+
+- Compared the allocation refusal with the job limit and largest available block. Checked the independent host frontend errors for Calc and Sandbox.
+- Ran host slas on build/rv32/stage1/stage1.slir with Agent and --world-unit. With -C -g -h 10485760 -H 10485760, cmp verified the emitted SLIR against the Node frontend's 1,236,326-byte output.
+- Added a job-owned heap for bundled inputs above the existing editable-source limit. The worker allocates it before materializing the compiler image. The frontend passes it into the runtime's first heap allocation and releases it before assembly.
+- Built using ESP-IDF 5.4.2 and idf.py -B build-elf build. Extended the catalog observer to accept a per-world deadline and print compiler phase samples.
+
+### Why
+
+Agent's rejection requested 8,388,608 payload bytes plus a 16-byte header. The worker held 4,299,573 bytes against an 18,874,368-byte limit. PSRAM had 15,803,180 bytes free across blocks, with 5,767,168 bytes in the largest. Raising the job quota alone could not satisfy that allocation. A single fixed space avoids both heap doubling and the copying collector's second space.
+
+### What worked
+
+The compact host run finished in 4.08 seconds, performed 252 collections and reported 8,737,136 bytes live at peak. The existing host ELF reference is 750,832 bytes, digest b92e5d7f1146db7f5b44ec9c42f962618a09a93b2ebfad0322ec793318b7e179.
+
+### What didn't work
+
+- The baseline console reported “compiler scratch limit” for Agent. Only the instrumented firmware distinguished the PSRAM refusal from a quota refusal.
+- The original Editor observer timed out at 360 seconds. A passive reader recovered the terminal receipt. A host session interruption later disconnected the Agenda observer. A tmux reader recovered Agenda's terminal receipt at 425,984 ms. Agenda requested a 4,194,304-byte payload with a 16-byte header when the largest reported block was 4,194,304 bytes.
+- Paused the catalog reader during Settings to use the board for Agent. Settings requires a fresh receipt.
+
+### What I learned
+
+Node runs the frontend under V8. The handheld executes a compiled copy of the frontend with a CJI-managed heap. Running the same stage-1 SLIR on host slas isolates the collector and heap-size choice from board relocation and PSRAM layout. Calc also has a host type error involving assignment to .size. Sandbox uses indirect eval syntax rejected by the host frontend.
+
+### What was tricky to build
+
+Both the inflated compiler image and its relocated segments must fit while loading. Reserving the frontend space first changes where both can land. Worker cleanup must reclaim the reservation on relocation failure as well as after an assembler or compiler exit.
+
+### What warrants a second pair of eyes
+
+Check that rt_initialize requests its data heap first and that the allocator hook restores malloc before the root stack allocation. The source-length threshold only selects a policy. It does not predict the live set for every world.
+
+### What should be done in the future
+
+Capture the P4 terminal receipt and compare the module identity and size. Resume catalog cases interrupted during the firmware change.
+
+### Code review instructions
+
+Read compiler/install.c build_one, compiler/tool.c compiler_entry and the allocation order in sources/cji/runtime/runtime.c rt_initialize. To reproduce the board check, run the ticket's scripts/07-check-bundled-catalog.py --timeout 7200 agent with the board connected.
+
+### Technical details
+
+The 10 MiB reservation uses the existing tracked job allocator and counts toward the 18 MiB worker limit. The host stage-1 timing excludes RV32 assembly and device I/O. Agent was measured on its complete 34,596-byte bundled source.

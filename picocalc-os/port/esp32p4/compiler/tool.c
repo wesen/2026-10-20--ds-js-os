@@ -59,6 +59,13 @@ UNARY(acosh,10) UNARY(atanh,11) UNARY(exp,12) UNARY(log,13) UNARY(log10,14)
 UNARY(log2,15) UNARY(sqrt,16) UNARY(cbrt,17)
 BINARY(atan2,18) BINARY(fmod,19) BINARY(pow,20) BINARY(hypot,21) BINARY(nextafter,22)
 
+// rt_initialize allocates the heap first, then its root stack through rt_malloc.
+static void *use_reserved_heap(size_t size) {
+    rt_malloc=malloc;
+    if (size!=LARGE_FRONTEND_HEAP) failure("unexpected frontend heap size");
+    return job->frontend_heap;
+}
+
 void compiler_entry(int argc, char **argv) {
     if (argc != 1) return;
     job=(compiler_job_t *)argv[0];
@@ -68,7 +75,14 @@ void compiler_entry(int argc, char **argv) {
     char *args[]={"input.js","--world-unit",NULL};
     rt_argc=2; rt_argv=args; rt_fatal=failure;
     rt_heap_cap=8*1024*1024;
-    rt_initialize(4*1024*1024,65536+4096);
+    size_t initial_heap=4*1024*1024;
+    if (job->frontend_heap) {
+        initial_heap=LARGE_FRONTEND_HEAP;
+        rt_heap_cap=initial_heap;
+        rt_gc_compact=1;
+        rt_malloc=use_reserved_heap;
+    }
+    rt_initialize(initial_heap,65536+4096);
     rootstack_end-=4096/8;
     char *slir=NULL;
     size_t size=0;

@@ -14,14 +14,16 @@ import time
 import serial
 
 
-def check(port, file, source):
+def check(port, file, source, timeout):
     expected = hashlib.sha256(source).hexdigest()
     port.reset_input_buffer()
     port.write(f"\ncji check {file}\n".encode())
     refusal = None
-    deadline = time.monotonic() + 1200
+    deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         line = port.readline().decode(errors="replace").strip()
+        if line.startswith(("cji: begin ", "cji: relocated ", "cji: released ", "cji: assembled ", "cji: compiler refused ")):
+            print(line, file=sys.stderr, flush=True)
         if line.startswith("cji: busy"):
             time.sleep(2)
             port.write(f"\ncji check {file}\n".encode())
@@ -55,6 +57,7 @@ def check(port, file, source):
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--port", default="/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00")
+parser.add_argument("--timeout", type=int, default=1200, help="seconds to wait per world")
 parser.add_argument("names", nargs="*")
 args = parser.parse_args()
 root = Path("picocalc-os/js")
@@ -67,5 +70,5 @@ with serial.Serial(args.port, 115200, timeout=.25) as connection:
         source = (root / file).read_bytes()
         print(f"Checking {file}", file=sys.stderr, flush=True)
         row = {"world": world["name"], "file": file, "source_bytes": len(source)}
-        row.update(check(connection, file, source))
+        row.update(check(connection, file, source, args.timeout))
         print(json.dumps(row), flush=True)

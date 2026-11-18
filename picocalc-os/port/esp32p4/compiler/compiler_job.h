@@ -4,7 +4,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
+#define LARGE_FRONTEND_HEAP (10u * 1024 * 1024)
 typedef struct {
+    void *frontend_heap;
     const char *source;
     size_t length;
     const char *exports;
