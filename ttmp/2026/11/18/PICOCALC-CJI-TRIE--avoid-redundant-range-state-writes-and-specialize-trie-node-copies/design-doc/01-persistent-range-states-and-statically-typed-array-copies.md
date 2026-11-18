@@ -89,3 +89,30 @@ Use the corrected guarded compiler from PICOCALC-CJI-RANGES as the control. Chan
 3. Probe the changed operation with a multi-level tree, repeated write, changed leaf, missing leaf, and divergent snapshots. Validating both independent handles catches an accidental mutation of a shared node.
 4. Examine the candidate's generated copy loop and run a counter on fresh and suppressed copies. Collect physical evidence using the same guarded control and board configuration. A lower number of writes is evidence about mechanism; elapsed seconds must come from a separate timed executable.
 5. Restore the headless ordinary firmware and retain the boot and smoke test receipt. Publish the criteria, failures and observed results in the guide and report.
+
+## Building and inspecting the implemented compiler
+
+Scripts 01–04 implement the first two designs above. Script 01 performs source-anchor checks before editing a scratch copy of `src/ranges.js`. Script 02 applies the baseline proof-scheduling and numeric-key patches, builds the source bundle with the normal bundler, and translates it with the original stage 0. The resulting `stage1` is runnable on Linux. `stage1.slir` is the exact frontend to assemble into the firmware. These two artifacts let an intern measure compile latency and inspect the generated code from the same source. Create a fresh directory for each build to retain the original evidence.
+
+```bash
+p=(ttmp/2026/11/18/*CJI-TRIE*)
+scripts="$p/scripts"
+for variant in reuse typed both; do
+    bash "$scripts/02-build.sh" "$scratch/$variant" "$variant"
+done
+python3 "$scripts/04-benchmark.py" "$scratch" "$guard" "$refs"
+python3 "$scripts/08-inspect-copy.py" "$scratch/both/stage1.slir"
+```
+
+Here `guard` is the guarded native stage-1 executable from the RANGES ticket. The reference directory contains independently recorded Agenda and Files SLIR. The artifact directory for each variant also contains the source that generated it. The guide uses “typed” for the private clone variant and “reuse” for the equality-preserving write. These labels identify experimental builds.
+
+The typed helper's machine representation makes its obligations visible. Its body calls a specialized `$read0` helper. That helper checks the index, reads the array data pointer, shifts the index left by three to obtain a byte offset, and loads an eight-byte element word. Its out-of-range path can return the undefined tag. The loop uses an integer from 0 through 31. The verified helper body contains no dynamic subscript dispatch or index boxing. Array bounds and exception checks remain. See `various/typed-copy.slir` for the exact generated program.
+
+To package a variant for the measured ESP32-P4 configuration, run script 06 from a workspace where the PERF and RANGES tickets' ESP-IDF profile and headless configuration are already built. The script checks that linking the ordinary compiler object reproduces the pinned control tool. It substitutes only the selected stage-1 object, emits an application binary and ELF, records their SHA-256 and restores the ordinary setting of the local build directory. Script 07 accepts this build root, the saved ordinary headless firmware directory, a fresh run directory, and a list of variant names. It flashes the app partition, verifies boot conditions, checks Flaky, compiles Agenda and Files, then restores the ordinary image and runs Flaky again. Flashing requires exclusive access to the serial device.
+
+```bash
+bash "$scripts/06-make-firmware.sh" "$scratch" both reuse typed
+bash "$scripts/07-board.sh" "$scratch" "$ordinary" "$runs" both reuse typed
+```
+
+The source-level snapshot checks found that path reuse removed 197,158 of Agenda's 496,705 existing-node copies. The result still represented the same 490,367 stores. The typed-only source had the same copy count as the control. These numbers count units of compiler work; the four executables' physical timings measure the consequence for the user.

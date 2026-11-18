@@ -1,0 +1,432 @@
+{
+  "images": {
+    "guard": "3486741b775953ca0aa60b616165ee0b2ae93d9decfe84771b4d39a7bfd4a34c",
+    "reuse": "c23c5fa3e893398ee7015623d86482976c863bd67a69945ae1a00f0a690c46b4",
+    "typed": "1db89a5868dad993919c04e1017c1d847012d7167075d8681c65a957652cbf25",
+    "both": "20090209ed2c2de083ed278f77217c6ec03271973e6530a5d4152863590b3b4d"
+  },
+  "worlds": {
+    "agenda": {
+      "rows": [
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "guard",
+          "frontend_us": 3982048,
+          "gc_us": 643785,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "reuse",
+          "frontend_us": 3921187,
+          "gc_us": 588695,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "typed",
+          "frontend_us": 5128498,
+          "gc_us": 817725,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "both",
+          "frontend_us": 5841730,
+          "gc_us": 810904,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "guard",
+          "frontend_us": 6301838,
+          "gc_us": 940063,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "reuse",
+          "frontend_us": 5808527,
+          "gc_us": 830010,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "typed",
+          "frontend_us": 5183860,
+          "gc_us": 821045,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "both",
+          "frontend_us": 5693923,
+          "gc_us": 815174,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "reuse",
+          "frontend_us": 5438202,
+          "gc_us": 775589,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "typed",
+          "frontend_us": 6348272,
+          "gc_us": 969425,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "both",
+          "frontend_us": 5411688,
+          "gc_us": 769363,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "guard",
+          "frontend_us": 5364634,
+          "gc_us": 827806,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "typed",
+          "frontend_us": 5267620,
+          "gc_us": 841318,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "both",
+          "frontend_us": 5238487,
+          "gc_us": 782084,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "guard",
+          "frontend_us": 8269791,
+          "gc_us": 1162053,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "reuse",
+          "frontend_us": 7377258,
+          "gc_us": 996115,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "both",
+          "frontend_us": 6494410,
+          "gc_us": 912424,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "guard",
+          "frontend_us": 9705588,
+          "gc_us": 1254944,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "reuse",
+          "frontend_us": 7361664,
+          "gc_us": 982443,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "typed",
+          "frontend_us": 7526657,
+          "gc_us": 1107353,
+          "slide_bytes": 155379632,
+          "collections": 255,
+          "live_peak_bytes": 5728200
+        }
+      ],
+      "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+      "medians": {
+        "guard": 7285814.5,
+        "reuse": 6585095.5,
+        "typed": 5807946.0,
+        "both": 5552805.5
+      }
+    },
+    "files": {
+      "rows": [
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "guard",
+          "frontend_us": 2243906,
+          "gc_us": 149098,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "reuse",
+          "frontend_us": 1627395,
+          "gc_us": 110042,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "typed",
+          "frontend_us": 1662608,
+          "gc_us": 128263,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "variant": "both",
+          "frontend_us": 2014911,
+          "gc_us": 131354,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "guard",
+          "frontend_us": 1816507,
+          "gc_us": 134327,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "reuse",
+          "frontend_us": 1906419,
+          "gc_us": 123223,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "typed",
+          "frontend_us": 2544529,
+          "gc_us": 168277,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "variant": "both",
+          "frontend_us": 3347589,
+          "gc_us": 191504,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "reuse",
+          "frontend_us": 3912489,
+          "gc_us": 216325,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "typed",
+          "frontend_us": 2819161,
+          "gc_us": 175500,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "both",
+          "frontend_us": 2201113,
+          "gc_us": 142828,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "variant": "guard",
+          "frontend_us": 2693204,
+          "gc_us": 171612,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "typed",
+          "frontend_us": 1956531,
+          "gc_us": 142383,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "both",
+          "frontend_us": 2052154,
+          "gc_us": 136125,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "guard",
+          "frontend_us": 2101866,
+          "gc_us": 155857,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "variant": "reuse",
+          "frontend_us": 2161621,
+          "gc_us": 144494,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "both",
+          "frontend_us": 1994409,
+          "gc_us": 133248,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "guard",
+          "frontend_us": 2150911,
+          "gc_us": 150927,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "reuse",
+          "frontend_us": 1998330,
+          "gc_us": 132753,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "variant": "typed",
+          "frontend_us": 1916805,
+          "gc_us": 141324,
+          "slide_bytes": 49870232,
+          "collections": 74,
+          "live_peak_bytes": 4312224
+        }
+      ],
+      "slir_sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa",
+      "medians": {
+        "guard": 2126388.5,
+        "reuse": 2079975.5,
+        "typed": 2250530.0,
+        "both": 2126633.5
+      }
+    }
+  }
+}

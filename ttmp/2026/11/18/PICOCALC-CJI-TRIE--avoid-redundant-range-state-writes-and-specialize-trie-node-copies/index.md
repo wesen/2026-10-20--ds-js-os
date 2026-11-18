@@ -17,36 +17,8 @@ WhenToUse: ""
 
 # Avoid redundant range-state writes and specialize trie node copies
 
-## Overview
+The experiments change the cost of range-state updates inside the CJI compiler that runs on the ESP32-P4. Each variant is built against the guarded schedule from PICOCALC-CJI-RANGES. The imported ordinary compiler remains the independent reference.
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
-
-## Key Links
-
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+- [Intern implementation guide](design-doc/01-persistent-range-states-and-statically-typed-array-copies.md)
+- [Detailed investigation diary](reference/01-implementation-diary.md)
+- [Reproduction scripts](scripts/) and [experimental evidence](various/)

@@ -1,0 +1,70 @@
+function cloneTrieNode.df8b125430a4/2 scratches=7 saveds=3 local=0
+start:
+    mov     [s0+0], #0
+    mov     [s0+8], #0
+    add     s0, s0, #16
+    mov     [s0-16], r1
+    mov     r0, #0
+    mov     r1, #32
+    call    Array_new.33d0e0ec4d18/2
+    mov     [s0-8], r0
+    mov     r0, [@exc_flag]
+    bne     r0, #0, block.552305
+block.552316:
+    mov     s1, #0
+loop.552306:
+    blt     s1, #32, block.552314
+block.552307:
+    return  [s0-8]
+block.552314:
+    mov     r2, s1
+    mov     r0, #0
+    mov     r1, [s0-16]
+    call    $read0.86ee22bf7c78/3
+    mov     s2, r0
+    mov     r0, [@exc_flag]
+    bne     r0, #0, block.552305
+block.552313:
+    blt     s1, #0, block.552310
+block.552311:
+    mov     r6, [s0-8]
+    mov     r0, [r6+8]
+    blt     s1, r0, block.552309
+block.552310:
+    icall   index_error/0
+block.552309:
+    mov     r6, [s0-8]
+    mov     r0, [r6+16]
+    shl     r1, s1, #3
+    add     r1, r1, r0
+    mov     [r1+8], s2
+    add     s1, s1, #1
+    jump    loop.552306
+block.552305:
+    return  #0
+end
+function $read0.86ee22bf7c78/3 scratches=3 saveds=3 local=0
+start:
+    mov     s1, r1
+    mov     s2, r2
+    blt     s2, #0, block.337729
+block.337735:
+    mov     r0, [s1+8]
+    blt     s2, r0, block.337734
+block.337729:
+    mov     r0, #10
+    return  r0
+block.337734:
+    blt     s2, #0, block.337732
+block.337733:
+    mov     r0, [s1+8]
+    blt     s2, r0, block.337731
+block.337732:
+    icall   index_error/0
+block.337731:
+    mov     r0, [s1+16]
+    shl     r1, s2, #3
+    add     r1, r1, r0
+    mov     r0, [r1+8]
+    return  r0
+end
