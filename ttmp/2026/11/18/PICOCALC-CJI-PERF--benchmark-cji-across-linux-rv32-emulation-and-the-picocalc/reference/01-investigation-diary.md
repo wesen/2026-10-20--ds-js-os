@@ -421,3 +421,49 @@ Read the analysis, compare figures to various/p4 and various/compiler-baseline.j
 ### Technical details
 
 The host screenshot used fixed UTC 2026-10-22 09:41, a private copy of fs-seed and the actual picocalc-host binary. All diagrams and generated charts are retained as standalone report PNGs.
+
+## Step 10 — Attribute the host bottleneck to numeric range analysis
+
+### Prompt Context
+
+The user asked “85 seconds seems pretty irrelevant compared to a 1480s total runtime, right/ what are some other potentially lower hanging fruits”, “do you have precise instrumentation / instruction sample profiling information on the host?” and “what does instantiate_library do?”.
+
+### What I did
+
+Collected dedicated host pass diagnostics, then rebuilt the native compiler with SLAS_SYMBOLS and compared its full text section with both initial executables. Captured actual instruction-pointer samples with ITIMER_PROF, retained the original line-level Callgrind traces, and started address-level instruction and jump counting. Added a pass-cost figure, the library-pass algorithm and concrete optimization trials to the illustrated report.
+
+### Why
+
+The 8 MiB Agenda collector consumes 5.8% of physical elapsed time. Finding a broader source of work requires caller attribution. The host Linux PMU is restricted but Callgrind and an in-process CPU timer work independently of it.
+
+### What worked
+
+Both AOT pass runs and both sampled runs emitted the expected SLIR. The same executable text SHA-256 covers all three native images. Agenda reported 17,178 ms in library instantiation out of 18,253 reported pass milliseconds. The inclusive Callgrind cost at analyzeRanges was 88.03% of whole-program Ir. The independent sampled run collected 35,612 Agenda PCs and 5,193 Files PCs.
+
+### What didn't work
+
+The first Callgrind files recorded line positions and anonymous generated function addresses. They cannot supply individual instruction counts retrospectively. Shared .text identity allows named address lookup, and a fresh dedicated run requests individual addresses. Pass diagnostics force collections and do not replace baseline timings.
+
+### What I learned
+
+The library pass both generates helpers and reruns inference. Numeric range analysis accounts for most of the inclusive native instruction work. The range-join helper accounts for 3.88% of sampled Agenda PCs even before counting its callees.
+
+### What was tricky to build
+
+The sampler only records the interrupted instruction pointer into preallocated storage. Symbolication and output occur outside the signal handler. Recursion and nested calls make summing inclusive Callgrind percentages invalid.
+
+### What warrants a second pair of eyes
+
+The candidate equality shortcut in range join is a hypothesis. Measure actual equal-ID hit rate and verify unchanged output before accepting it. Device attribution requires the corresponding target measurement.
+
+### What should be done in the future
+
+Finish the instruction-address profiles, physical candidate and verified display captures. Use the precise evidence to prioritize work inside range analysis.
+
+### Code review instructions
+
+Check scripts/11-host-pass-times.sh, scripts/12-host-instructions.sh and scripts/host-sampling. Review the compressed raw PCs, Callgrind graphs and pass logs in various/linux-profiles. Visual evidence began in ee9179e.
+
+### Technical details
+
+SHA-256 of the native text section was 133cfe0d4e7f28f387a947d12786f17eaf59f1ac5c9a750d4d23d289a5120390. The sampled executable's full ELF SHA-256 is c5c629b968f32caa654e844fdebc176ef5f74e9f58dc6845e5eb0fe09b05822b. The address of analyzeRanges in this non-PIE binary is 0x4f0822.

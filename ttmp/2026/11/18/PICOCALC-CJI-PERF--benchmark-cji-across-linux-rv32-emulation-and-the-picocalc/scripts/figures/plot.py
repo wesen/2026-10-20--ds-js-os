@@ -61,3 +61,19 @@ for ax,key,label in zip(axes,["native","rv32"],["Linux x86-64","Emulated RV32"])
 fig.suptitle("Files compiler · highest instruction counts by symbol",fontweight="bold")
 fig.savefig(out/"files-hotspots.png")
 plt.close(fig)
+
+fig,ax=plt.subplots(figsize=(8.3,4.4),layout="constrained")
+for i,world in enumerate(["files","agenda"]):
+    raw=(ticket/"various/linux-profiles"/f"{world}.pass.log").read_text()
+    passes={name:int(ms) for name,ms in re.findall(r"^pass (\w+): (\d+) ms",raw,re.M)}
+    lib=passes["instantiate_library"]/1000
+    others=sum(passes.values())/1000-lib
+    ax.barh(i,lib,color="#246383")
+    ax.barh(i,others,left=lib,color="#a9b6bb")
+    ax.text(lib/2,i,f"{lib:.2f} s",ha="center",va="center",color="white",weight="bold")
+    ax.text(lib+others+.15,i,f"{100*lib/(lib+others):.1f}% in library pass",va="center")
+ax.set_yticks([0,1],["Files","Agenda"]); ax.invert_yaxis(); ax.set_xlim(0,24.5)
+ax.set(xlabel="Sum of reported pass times (seconds)",title="Where the host stage-1 diagnostic spends its time")
+ax.legend(["Instantiate library (includes inference)","Other reported passes"],loc="lower right",frameon=False)
+fig.savefig(out/"host-pass-times.png")
+plt.close(fig)

@@ -1,0 +1,215 @@
+{
+  "event": "ITIMER_PROF",
+  "requested_period_us": 1000,
+  "samples": 35612,
+  "executable_sha256": "c5c629b968f32caa654e844fdebc176ef5f74e9f58dc6845e5eb0fe09b05822b",
+  "top_symbols": [
+    {
+      "symbol": "whole_bits",
+      "samples": 3062,
+      "percent": 8.598225317308772
+    },
+    {
+      "symbol": "rt_any_index",
+      "samples": 2677,
+      "percent": 7.517129057621027
+    },
+    {
+      "symbol": "rt_any_eq",
+      "samples": 2349,
+      "percent": 6.596091205211726
+    },
+    {
+      "symbol": "field_index",
+      "samples": 1930,
+      "percent": 5.419521509603505
+    },
+    {
+      "symbol": "extra_find",
+      "samples": 1711,
+      "percent": 4.804560260586319
+    },
+    {
+      "symbol": "rt_any_from_int",
+      "samples": 1645,
+      "percent": 4.619229473211277
+    },
+    {
+      "symbol": "rt_any_get",
+      "samples": 1507,
+      "percent": 4.231719645063461
+    },
+    {
+      "symbol": "join.a7ddece0a659",
+      "samples": 1383,
+      "percent": 3.883522408177019
+    },
+    {
+      "symbol": "order_bits",
+      "samples": 1185,
+      "percent": 3.327530046051893
+    },
+    {
+      "symbol": "$read0.86ee22bf7c78",
+      "samples": 1119,
+      "percent": 3.1421992586768503
+    },
+    {
+      "symbol": "rt_any_to_int",
+      "samples": 933,
+      "percent": 2.619903403347186
+    },
+    {
+      "symbol": "str_equal",
+      "samples": 725,
+      "percent": 2.035830618892508
+    },
+    {
+      "symbol": "mc_mark.part.0",
+      "samples": 678,
+      "percent": 1.9038526339436146
+    },
+    {
+      "symbol": "rt_any_sub",
+      "samples": 638,
+      "percent": 1.791530944625407
+    },
+    {
+      "symbol": "slice.4604fbb68ec0",
+      "samples": 622,
+      "percent": 1.7466022688981242
+    },
+    {
+      "symbol": "rt_key_hash",
+      "samples": 604,
+      "percent": 1.696057508704931
+    },
+    {
+      "symbol": "lambda.bc2f18d0e34f",
+      "samples": 501,
+      "percent": 1.406829158710547
+    },
+    {
+      "symbol": "mc_mark_fields",
+      "samples": 493,
+      "percent": 1.3843648208469055
+    },
+    {
+      "symbol": "Map$get.18420998537f",
+      "samples": 486,
+      "percent": 1.3647085252162192
+    },
+    {
+      "symbol": "Object$is.9bafba816d66",
+      "samples": 456,
+      "percent": 1.2804672582275638
+    },
+    {
+      "symbol": "Map$get.173ed256e964",
+      "samples": 445,
+      "percent": 1.2495787936650566
+    },
+    {
+      "symbol": "lambda.3ffc32b080f5",
+      "samples": 369,
+      "percent": 1.0361675839604627
+    },
+    {
+      "symbol": "rt_collect",
+      "samples": 359,
+      "percent": 1.0080871616309108
+    },
+    {
+      "symbol": "mc_rewrite_fields",
+      "samples": 341,
+      "percent": 0.9575424014377176
+    },
+    {
+      "symbol": "rt_any_length",
+      "samples": 318,
+      "percent": 0.8929574300797484
+    }
+  ],
+  "top_pcs": [
+    {
+      "pc": "0x403dc0",
+      "samples": 647
+    },
+    {
+      "pc": "0x402b90",
+      "samples": 599
+    },
+    {
+      "pc": "0x407220",
+      "samples": 521
+    },
+    {
+      "pc": "0x40b825",
+      "samples": 471
+    },
+    {
+      "pc": "0x411592",
+      "samples": 470
+    },
+    {
+      "pc": "0x404db8",
+      "samples": 405
+    },
+    {
+      "pc": "0x402bad",
+      "samples": 379
+    },
+    {
+      "pc": "0x4073d0",
+      "samples": 377
+    },
+    {
+      "pc": "0x402bfa",
+      "samples": 327
+    },
+    {
+      "pc": "0x404299",
+      "samples": 299
+    },
+    {
+      "pc": "0x4074e2",
+      "samples": 286
+    },
+    {
+      "pc": "0x404450",
+      "samples": 284
+    },
+    {
+      "pc": "0x40722f",
+      "samples": 284
+    },
+    {
+      "pc": "0x404db3",
+      "samples": 251
+    },
+    {
+      "pc": "0x407490",
+      "samples": 239
+    },
+    {
+      "pc": "0x40b804",
+      "samples": 236
+    },
+    {
+      "pc": "0x402bdc",
+      "samples": 231
+    },
+    {
+      "pc": "0x402bf0",
+      "samples": 203
+    },
+    {
+      "pc": "0x40b5f0",
+      "samples": 200
+    },
+    {
+      "pc": "0x407269",
+      "samples": 199
+    }
+  ]
+}

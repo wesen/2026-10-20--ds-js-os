@@ -62,7 +62,35 @@ The outer allocator manages available ESP-IDF heap regions. The compiler job sep
 
 Files and Agenda produced exactly the same collection count, survivor bytes and actual slide bytes on Linux and the P4 at 8 MiB. For Agenda the collector reported 1,434,574,696 cumulative survivor bytes and 211,914,816 bytes passed to the slide operation. Multiple collections can revisit the same live object. Counting its size on each visit describes repeated collector work and overstates actual memory movement if interpreted as physical traffic.
 
-## Optimization experiments in order
+## Why library instantiation dominates the host compile
+
+![Host pass diagnostics show that library instantiation takes 65 percent of reported Files pass time and 94 percent of Agenda pass time.](../various/figures/host-pass-times.png)
+
+For a call such as `tasks.filter(isOpen).map(titleOf)`, CJI must decide what each method means for its receiver, adapt the callback's arity, and specialize the subset-language implementation. The first call becomes an ordinary call to a fresh helper for this site. The compiler can defer the second specialization until inference establishes what the first call returns. Constructors, dynamic receivers and user-defined methods add similar ordering constraints.
+
+The build calls `instantiateLibraryTaking` in CJI's `src/library.js`. One round walks the program, rewrites resolvable calls and accumulates helper definitions. If it adds definitions, it feeds the expanded program back through `inferTypes`. Inference includes numeric range analysis. For example, an integer operation must preserve JavaScript behavior if an operand can be negative zero, NaN or outside the exact integer range. The analysis propagates bounds and flags across branches, loops and calls until its summaries stabilize.
+
+```text
+repeat
+    select helpers for resolvable library calls
+    if helpers were added
+        infer types and numeric ranges of the expanded program
+        use the new information in the next round
+    else if unresolved receivers need the final dynamic fallback
+        make one final resolution round
+    else
+        return the rewritten program
+```
+
+One diagnostic native AOT run reported 17,178 of 18,253 pass milliseconds in library instantiation for Agenda (94.1%). Files reported 1,475 of 2,268 ms (65.0%). The diagnostic forces a collection when reporting liveness. Some uninstrumented work and source preparation sit outside the summed timers, and the middle-pass timings are grouped. These percentages describe this diagnostic's reported pass times. They are independent of the plain Callgrind measurement.
+
+The Agenda Callgrind graph attributes **120,492,745,140 inclusive instructions (88.03%)** to `analyzeRanges` across all inference calls. Generated symbols were resolved against a named executable with the same machine code. Inclusive function costs overlap. A separate 1 ms Linux process-CPU timer captured 35,612 Agenda instruction pointers. The largest self-sample shares were `whole_bits` (8.60%), `rt_any_index` (7.52%), `rt_any_eq` (6.60%) and `field_index` (5.42%). The range-interval join itself accounts for 3.88% of samples. Runtime operations can dominate a flat profile while a particular compiler algorithm accounts for most of their callers.
+
+**First optimization trial.** Count range joins receiving identical interned interval IDs, then test an immediate `if (a === b) return a` in `src/ranges.js:join`. Today the function checks emptiness and reads interval tables before identifying an unchanged answer. Identical IDs represent exactly the same bounds and flags. Measure the hit rate, the inclusive cost of joins and the before/after Files and Agenda outputs. This small change has a clear semantic condition and a straightforward falsification test.
+
+**Next trial.** Count calls to range analysis per library round, fixpoint iterations, functions revisited and the number actually changed. Within a range-analysis invocation the compiler already skips functions whose recorded summaries remain valid. The existing cross-round episode cache costs substantial memory in stage 1 and is disabled in this configuration. A useful candidate would target repeated work with a small measured footprint. A general cache or broad change to type inference should come after those counters show which computations recur.
+
+## Follow-up experiments
 
 | Experiment | Hypothesis and measurement | Decision criterion |
 |---|---|---|
