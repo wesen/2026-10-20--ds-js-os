@@ -1,0 +1,75 @@
+--- a/src/infer.js
++++ b/src/infer.js
+@@ -94,7 +94,7 @@
+ // tree: the returned round writes the program statement by statement and lets each statement of the input
+ // go once it is written, so that the input and its written copy are not alive whole together. Not while a
+ // sidecar is recorded, which reads the input after the call.)
+-export function inferTypes(p, episodes = null, consume = false) {
++export function inferTypes(p, episodes = null, consume = false, receiverOnly = false) {
+   const sc = sidecarSession();
+   if (sc?.mode === 'use') {
+     const entry = nextEntry(sc);
+@@ -114,7 +114,7 @@
+   let r = null;
+   for (let round = 1; ; round++) {
+     r = null;
+-    r = inferOnce(p, demote, episodes, null, consume && sc?.mode !== 'record');
++    r = inferOnce(p, demote, episodes, null, consume && sc?.mode !== 'record', receiverOnly);
+     if (r.fresh === 0) {
+       if (sc?.mode === 'record') sc.calls.push(entryOf(p, demote, sc));
+       return { ...r.program, rangeVerdicts: round };
+@@ -200,7 +200,7 @@
+ const sameAnswer = (a, b) => a === b || (a !== null && b !== null && typeof a === 'object' && typeof b === 'object'
+   && a.ret === b.ret && a.params.length === b.params.length && a.params.every((k, i) => k === b.params[i]));
+ 
+-function inferOnce(p, demote, episodes, check = null, consume = false) {
++function inferOnce(p, demote, episodes, check = null, consume = false, receiverOnly = false) {
+   let changed = false;
+   // (CJI-3 lane 4: while a sidecar's types are checked, strict is set, and anything but merging
+   // two cells of one type, or two classes alike, is a violation: the types were not a fixpoint)
+@@ -970,6 +970,9 @@
+     solve();
+   }
+   // (the tables' sizes, each by name: an array of the tables would make cji join their types)
++  // During library expansion only receiver and argument types select helpers.
++  // Run the numeric proof on the fully expanded tree before lowering it.
++  if (receiverOnly) return { program: write(), fresh: 0 };
+   const sizes = [vars.size, literals.size, calls.size, prints.size, records.size, sigs.size];
+   const grew = () => vars.size !== sizes[0] || literals.size !== sizes[1] || calls.size !== sizes[2] || prints.size !== sizes[3]
+     || records.size !== sizes[4] || sigs.size !== sizes[5];
+--- a/src/library.js
++++ b/src/library.js
+@@ -21,6 +21,7 @@
+ import { parse, coreDefs, INSPECT_NAMES } from './parse.js';
+ import { CLASSES, BRANDS, classOfType, CLASS_METHOD_NAMES, isSource, CLAMP8, NATIVES } from './classes.js';
+ import { uniquify } from './uniquify.js';
++import { sidecarSession } from './sidecar.js';
+ import { inferTypes } from './infer.js';
+ import { dropEpisodes } from './ranges.js';
+ import { functionParts, isFunctionType, isArrayType, isRecordType } from './types.js';
+@@ -503,6 +504,8 @@
+   // (chapter 22: a round that can make constructors makes only them. Until an instance's
+   // class is known, a type that includes it is too narrow: [new Set(xs), 7] would be a
+   // Number[], and its for...of or Array.from decided for numbers.)
++  const deferProof = !sidecarSession();
++  let expanded = false;
+   let last = false, deferred = false, ctorsOnly = false;
+   // (CJI-3: the ranges' work, kept from one round to the next; see ranges.js. Lane 5: as text in the build's
+   // store; and none when the caller says so (memo false): stage 1 with its store in the heap, where the memo
+@@ -521,13 +524,14 @@
+       p = null;
+       body = null;
+       added.length = 0;
+-      p = inferTypes(input, episodes, true);   // (lane 5: input is this call's alone, and a tree)
++      expanded = true;
++      p = inferTypes(input, episodes, true, deferProof);   // (lane 5: input is this call's alone, and a tree)
+       program(p.body);
+     }
+     else if (!last && (hasUnknown(p.body) || deferred)) { last = true; p = { ...p, body }; }
+     else {
+       if (episodes) dropEpisodes(episodes);   // (lane 5: the memo's last texts and episodes leave the store with the pass)
+-      return { ...p, body };   // (chapter 22: with the rewrites that add nothing, $items of an array)
++      return expanded && deferProof ? inferTypes({ ...p, body }, null, true) : { ...p, body };   // (chapter 22: with the rewrites that add nothing, $items of an array)
+     }
+     if (round > 20) throw new Error('instantiate_library: too many rounds');
+   }

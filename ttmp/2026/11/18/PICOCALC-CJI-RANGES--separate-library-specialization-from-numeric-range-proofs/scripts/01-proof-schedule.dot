@@ -1,0 +1,16 @@
+digraph schedule {
+  graph [rankdir=TB, bgcolor="white", pad=0.2];
+  node [shape=box, style="rounded,filled", fillcolor="#edf4f8", fontname="DejaVu Sans", fontsize=13];
+  edge [fontname="DejaVu Sans", fontsize=11];
+  initial [label="Initial type and range analysis"];
+  expand [label="Resolve library calls and add helper definitions"];
+  interim [label="Infer receiver and argument shapes", fillcolor="#d7eddf"];
+  proof [label="Final range proof on expanded program", fillcolor="#ffe8bd"];
+  lower [label="Lower numeric operations and emit world unit"];
+  initial -> expand;
+  expand -> interim [label="helpers added"];
+  interim -> expand;
+  expand -> proof [label="expansion complete after adding helpers"];
+  proof -> lower;
+  expand -> lower [label="no helpers ever added"];
+}
