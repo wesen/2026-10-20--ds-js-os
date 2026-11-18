@@ -164,8 +164,8 @@ function $record() /*: Any */ {
 }
 const $copy /*: Any */ = (v /*: Any */) => (v === undefined ? undefined : JSON.parse(JSON.stringify(v)));
 const store /*: Any */ = {
-  get: (k /*: Any */, d /*: Any */) => { const r /*: Any */ = $record(); return String(k) in r ? $copy(r[String(k)]) : $copy(d); },
-  set: (k /*: Any */, v /*: Any */) => { const r /*: Any */ = $record(); if (v === undefined) delete r[String(k)]; else r[String(k)] = $copy(v); $check($call(${NW.STORE_SAVE}, 0, 0, JSON.stringify(r), undefined, undefined)); },
+  get: (k /*: Any */, d /*: Any */) => { const r /*: Any */ = $record(); return String(k) in r ? r[String(k)] : $copy(d); },
+  set: (k /*: Any */, v /*: Any */) => { const r /*: Any */ = $record(); if (v === undefined) delete r[String(k)]; else r[String(k)] = v; $check($call(${NW.STORE_SAVE}, 0, 0, JSON.stringify(r), undefined, undefined)); },
   remove: (k /*: Any */) => { const r /*: Any */ = $record(); delete r[String(k)]; $check($call(${NW.STORE_SAVE}, 0, 0, JSON.stringify(r), undefined, undefined)); },
   all: () => $record(),
   status: () => JSON.parse($check($call(${CJI.STORE_STATUS}, 0, 0, undefined, undefined, undefined))),

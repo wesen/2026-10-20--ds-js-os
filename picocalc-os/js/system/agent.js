@@ -162,7 +162,7 @@ async function migrateNotes(s) {
     (kept ? " (" + kept + " already had a file of that name, which was kept)." : ". Files and the editor show them now."));
   snapshot(s);
 }
-function initialize(s) {
+async function initialize(s) {
   Object.assign(s, { run: 0, phase: "idle", model: DEFAULT_MODEL, modelChosen: false, api: "responses", providerModel: "",
     effort: "low", history: [], legacyNotes: [], dir: null, notesError: "", migration: null, toolBusy: null,
     entries: [], approval: null, error: "", prompt: "", input: [], calls: [], rounds: 0, toolCount: 0,
@@ -170,12 +170,18 @@ function initialize(s) {
   try { s.dir = hw.fs("fs:/notes"); } catch (e) { s.notesError = clipBytes(String(e.message || e), 160); }
   let saved;
   try { saved = store.get("session", null); } catch (e) { s.storageError = "Could not read local session"; }
+  // Yield between decoding, validating and publishing a stored session. The nucleus
+  // holds the startup turn open and schedules other worlds between segments.
+  if (saved) await sleep(0);
   if (saved && (saved.version === 1 || saved.version === 2) && validHistory(saved.history) && validLegacyNotes(saved.notes)) {
+    await sleep(0);
     s.history = saved.history; s.legacyNotes = saved.notes;
     // Only a model the user picked with /model outlives re-provisioning; otherwise the provisioned one applies.
     if (saved.chosen === true && typeof saved.model === "string" && MODEL_RE.test(saved.model)) { s.model = saved.model; s.modelChosen = true; }
     if (["none", "low", "medium", "high", "omit"].includes(saved.effort)) s.effort = saved.effort;
-    for (const m of s.history) addEntry(s, m.role, m.content);
+    // validHistory bounds the entire input below the display limit. These entries
+    // omit tool metadata and shorten content, so each prefix already fits.
+    s.entries = s.history.map(m => ({ role: m.role, text: clipBytes(m.content, AGENT_LIMIT.answerBytes) }));
     if (saved.pending) {
       addEntry(s, "system", "Previous run was interrupted. No action was resumed automatically.");
       if (typeof saved.prompt === "string") addEntry(s, "user", saved.prompt);
@@ -183,6 +189,7 @@ function initialize(s) {
       persist(s);
     }
   } else if (saved) addEntry(s, "system", "Stored session was invalid; starting with empty history.");
+  if (saved) await sleep(0);
   if (s.dir && s.legacyNotes.length) s.migration = migrateNotes(s).catch((e) => {
     addEntry(s, "system", "Notes could not be moved into files (" + clipBytes(String(e.message || e), 160) +
       "); they stay in the session and the move is tried again at the next start.");

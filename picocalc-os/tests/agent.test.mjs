@@ -38,7 +38,7 @@ function harness(saved = null, status = { configured: true, mode: 'fixture' }, n
   const builder = { state(s) { def.initial = s; return this; }, onStart(fn) { def.start = fn; return this; },
     on(name, fn) { def.handlers[name] = fn; return this; }, every(ms, fn) { def.tick = fn; return this; } };
   const ctx = vm.createContext({ service: () => builder,
-    send: (to, type, payload) => sent.push({ to, type, payload: copy(payload) }), now: () => clock,
+    send: (to, type, payload) => sent.push({ to, type, payload: copy(payload) }), now: () => clock, sleep: () => Promise.resolve(),
     store: { get: () => copy(session), set: (key, value) => { session = copy(value); }, status: () => copy(storageStatus) },
     sys: { worlds: () => [{ name: 'agent', state: 'idle', mem_kb: 300 }], stats: () => ({ crashes: 0 }) },
     hw: { fs: claim => { if (claim !== 'fs:/notes') throw new Error('agent has no claim on ' + claim); return dir.handle; } },
@@ -49,18 +49,18 @@ function harness(saved = null, status = { configured: true, mode: 'fixture' }, n
   });
   vm.runInContext(source, ctx);
   const state = def.initial;
-  def.start(state);
+  const ready = def.start(state);
   function send(type, payload = {}, from = 'chat') { return def.handlers['agent.' + type](state, payload, { from }); }
   function tick(n = 1) { for (let i = 0; i < n; i++) { clock += 100; def.tick(state); } }
   function result(value, id = state.ticket) { pending.set(id, value); tick(); }
-  return { state, requests, sent, cancelled, ctx, send, tick, result, session: () => copy(session), settle, dir, notes,
+  return { state, requests, sent, cancelled, ctx, send, tick, result, ready, session: () => copy(session), settle, dir, notes,
     storage: value => { storageStatus = value; }, jump: ms => { clock += ms; def.tick(state); },
     elapse: ms => { clock += ms; },
     // VM state disappears on supervised restart; the native ticket counter does not.
-    restart: () => { pending.clear(); for (const key of Object.keys(state)) delete state[key]; def.start(state); } };
+    restart: () => { pending.clear(); for (const key of Object.keys(state)) delete state[key]; return def.start(state); } };
 }
 
-test('real request contract, complete answer, history and reboot restoration', () => {
+test('real request contract, complete answer, history and reboot restoration', async () => {
   const h = harness();
   assert.equal(h.send('submit', { text: 'Explain a group.' }), undefined);
   const req = h.requests[0].parsed;
@@ -73,8 +73,21 @@ test('real request contract, complete answer, history and reboot restoration', (
   h.send('submit', { text: 'An example?' });
   assert.equal(h.requests[1].parsed.input[0].content, 'Explain a group.');
   h.result(completed(message('Integers under addition.')));
-  const re = harness(h.session());
+  const re = harness(h.session()); await re.ready;
   assert.equal(re.state.history.length, 4); assert.equal(re.requests.length, 0);
+});
+
+test('a near-limit saved history reaches Chat after cooperative startup without rewriting the record', async () => {
+  const history = Array.from({ length: 12 }, (_, i) => ({
+    role: i % 2 ? 'assistant' : 'user', content: ('é' + i).repeat(230),
+  }));
+  const saved = { version: 2, model: 'restored', chosen: true, effort: 'low', history, notes: [], pending: false };
+  const h = harness(saved, { configured: true, mode: 'https' });
+  await h.ready;
+  assert.deepEqual(h.session(), saved);
+  const snapshot = h.sent.filter(m => m.to === 'chat' && m.type === 'agent.state').at(-1);
+  assert.deepEqual(snapshot.payload.entries, history.map(m => ({ role: m.role, text: m.content })));
+  assert.equal(h.requests.length, 0);
 });
 
 test('calculator is bounded arithmetic, with precedence and no JavaScript evaluation', () => {
@@ -198,7 +211,7 @@ test('native request tickets distinguish approvals when a supervised restart res
   const h = harness(); h.send('submit', { text: 'First note' });
   h.result(completed(call('save_note', { name: 'n', text: 'first' }, 'same_call'))); h.tick(); await h.settle();
   const old = h.state.approval.id, oldRun = h.state.run;
-  h.restart();
+  await h.restart();
   assert.equal(h.state.phase, 'cancelled'); assert.equal(h.state.approval, null);
   h.send('submit', { text: 'Second note' });
   h.result(completed(call('save_note', { name: 'n', text: 'second' }, 'same_call'))); h.tick(); await h.settle();
@@ -370,7 +383,7 @@ test('chat endpoint: request is Chat Completions with the provisioned model', ()
   assert.ok(req.tools.every(t => t.type === 'function' && t.function.name && t.function.parameters.additionalProperties === false));
 });
 
-test('chat endpoint: tool call, local result, continuation, answer', () => {
+test('chat endpoint: tool call, local result, continuation, answer', async () => {
   const h = harness(null, CHAT);
   h.send('submit', { text: 'What is 17*23?' });
   h.result(chatReply({ tool_calls: [chatCall('calculate', { expression: '17*23' })] }));
@@ -388,7 +401,7 @@ test('chat endpoint: tool call, local result, continuation, answer', () => {
     { role: 'assistant', content: '17 x 23 = 391' },
     { role: 'user', content: '[PicoCalc: for your previous answer the device ran these tools and confirmed the results: calculate: done]\n\nAnd doubled?' }]);
   assert.ok(h.state.entries.every(e => !e.text.includes('[PicoCalc')));
-  const re = harness(h.session(), CHAT);
+  const re = harness(h.session(), CHAT); await re.ready;
   assert.equal(re.state.history[1].tools, 'calculate: done');
   assert.ok(re.state.entries.every(e => !e.text.includes('[PicoCalc')));
 });
@@ -420,10 +433,12 @@ test('chat endpoint: a truncated or malformed reply runs no tool', () => {
   assert.equal(e.state.phase, 'error'); assert.match(e.state.error, /Invalid or duplicate tool call/);
 });
 
-test('model precedence: chosen, then provisioned, then built-in', () => {
+test('model precedence: chosen, then provisioned, then built-in', async () => {
   const old = { version: 1, model: 'gpt-6-luna', effort: 'low', history: [], notes: [], pending: false, prompt: '' };
-  assert.equal(harness(old, CHAT).state.model, 'deepseek-4.1-flash');
-  assert.equal(harness({ ...old, model: 'glm-5.3', chosen: true }, CHAT).state.model, 'glm-5.3');
+  const provisioned = harness(old, CHAT); await provisioned.ready;
+  assert.equal(provisioned.state.model, 'deepseek-4.1-flash');
+  const chosen = harness({ ...old, model: 'glm-5.3', chosen: true }, CHAT); await chosen.ready;
+  assert.equal(chosen.state.model, 'glm-5.3');
   assert.equal(harness(null, { configured: true, mode: 'https' }).state.model, 'gpt-6-luna');
   const h = harness(null, CHAT);
   h.send('submit', { text: '/model glm-5.3' }); assert.equal(h.state.model, 'glm-5.3'); assert.equal(h.session().chosen, true);

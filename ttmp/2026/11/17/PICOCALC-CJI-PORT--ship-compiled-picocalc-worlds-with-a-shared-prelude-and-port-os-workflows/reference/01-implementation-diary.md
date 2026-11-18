@@ -353,3 +353,53 @@ Trace compositor.js attach/draw into world-native.js, cji_graphics and bus_p4.c.
 ### Technical details
 
 The reference images are under various/editor-quickjs-compositor.png and various/editor-cji-compositor.png. Capture dimensions are 640 by 640 at two host pixels per device pixel. Comparisons exclude the top 44 host rows because the status clock advances. The hardware test for provider replacement uses an isolated world name and a local fixture with no external account.
+
+## Step 7. Restore a saved Agent conversation within the P4 turn budget
+
+The fixture exercised submissions and cancellation. The normal image added a different workload when Agent opened the conversation already saved on the physical device.
+
+### Prompt Context
+
+The user asked “the quickjs agent is fast enough, but not the compiled one?” Earlier QuickJS firmware restored the conversation and remained idle. We had no paired QuickJS timing trace. I measured the compiled startup directly before and after changing it.
+
+### What I did
+
+- Timed native startup, removed a redundant JSON round trip in the compiled store wrapper and built display entries in one pass from validated history.
+- Added cooperative scheduling points during restoration. Chat receives state after startup has restored the saved record.
+- Added a 12-entry UTF-8 history regression and flashed only the application partition. Collected timings and world state without recording conversation contents.
+
+### Why
+
+The scheduler budgets each uninterrupted turn. Decoding the record, validating its bounds, rebuilding display history and publishing the snapshot had all run together. Each stage has a natural boundary where the scheduler can run another world.
+
+### What worked
+
+The final release boot showed Agent and Chat idle with zero restarts. Two deliberate Agent restarts produced four startup turns each. Their durations in milliseconds were 22.100, 55.087, 19.417, 10.839 and 20.027, 58.508, 20.424, 11.294. Chat received Agent state. Both buses reported zero errors. The 31 Agent unit cases, combined host gate and shared-unit emulator gate passed.
+
+### What didn't work
+
+Before the fix, five startup turns took 147.065–159.763 ms each under a 100 ms budget. Removing the extra copying alone brought one warm restart down to 96.300 ms but cold retries persisted.
+
+### What I learned
+
+A short submit turn says little about startup with existing data. Counting unexpected restarts on a normal boot catches failures that isolated fixtures miss.
+
+### What was tricky to build
+
+The persisted record and published display have different size limits. Validation bounds history before the one-pass conversion. Text clipping can only shorten each restored entry. A missing key still returns an independent copy of its caller-provided default.
+
+### What warrants a second pair of eyes
+
+Review initialize in agent.js together with its async test harness. Check where each sleep resumes and where Chat gets the first restored snapshot.
+
+### What should be done in the future
+
+A paired QuickJS and native timing study would be appropriate if selecting engines on performance grounds. This verification covers the shipping workload and the board's existing conversation.
+
+### Code review instructions
+
+Compare the compiled store wrapper with the per-read record parser, then follow validHistory through initialize into publish. Run make -C picocalc-os test-agent. Prior checkpoint 5c00850 contains the graphics, transport and diagnostic changes.
+
+### Technical details
+
+The final fixture-disabled P4 application SHA-256 was 2e3130435cff840b6280c3a5bbda5accf554a332ef498082b89bf6d6911d153e. The transport suite used local TLS and diagnostic responses. No paid provider request was needed.
