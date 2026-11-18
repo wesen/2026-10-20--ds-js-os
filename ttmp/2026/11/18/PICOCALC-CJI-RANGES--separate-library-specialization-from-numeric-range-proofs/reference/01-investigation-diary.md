@@ -153,3 +153,5 @@ Files frontend guest instructions fell by 18.60% (55,750,760,529 to 45,379,556,5
 ### Step 2 follow-up — Measure the marginal interval shortcut
 
 The guarded trace still counted 2,331,158 identical-ID joins out of 3,036,247. Script 41 measured the pre-existing shortcut with the guard-only compiler as its control. Agenda's frontend median changed by +0.63% and Files' by −5.93%. Both sample ranges overlapped and all generated units matched. These are within-pair changes from three measured samples per variant. The prioritized device candidate remains guard-only. The shortcut and guarded scheduling remove overlapping work. This combination received its own measured control.
+
+Script 38 ran the original archive harness with the guarded native stage 1 in a temporary directory. The final line was “all 278 passed”. This is a separate execution and pass-level check from the CLI differential. Full output is retained in various/guard-original-suite.log. At this point the completed host checks include the original default suite, broader archive differential, twenty RV32 ELF identities and matched native Agenda/Files samples.
