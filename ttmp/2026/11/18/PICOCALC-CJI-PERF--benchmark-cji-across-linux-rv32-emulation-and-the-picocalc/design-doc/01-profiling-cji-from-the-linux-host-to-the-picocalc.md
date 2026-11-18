@@ -277,7 +277,7 @@ The first implementation milestone is a native host report for Files and Agenda,
 
 The [script index](../scripts/README.md) gives the entry points for the Linux and guest runs. Every run begins by generating stage-0 SLIR for the same source file. Stage 1 must emit that exact byte sequence. On the board, verification goes one step further and compares the final linked module to the independent host RV32 assembler output.
 
-A regular P4 build exposes phase progress through the serial console and the kernel log. For an existing job, send `cji status`. A heartbeat reports the source digest prefix, current phase, elapsed milliseconds, successful allocation-call count and current scratch bytes. Allocation count can increase while scratch stays flat as temporary buffers are released and reused. Neither value measures lines compiled or predicts a completion percentage. Use the terminal receipt with the full source and module digests to identify the result.
+A regular P4 build exposes phase progress through the serial console and the kernel log. For an existing job, send `cji status`. A heartbeat reports the source digest prefix, current phase, elapsed milliseconds, allocation-call count and current scratch bytes. Allocation count can increase while scratch stays flat as temporary buffers are released and reused. Neither value measures lines compiled or predicts a completion percentage. Use the terminal receipt with the full source and module digests to identify the result.
 
 ```text
 stage 0 JS ──► expected world SLIR
@@ -289,7 +289,7 @@ P4 serial command ─► worker ─► relocate ─► frontend ─► link ─�
                                     elapsed and GC counters         compare host ELF
 ```
 
-A benchmark firmware built with `PICOCALC_COMPILER_PROFILE=ON` also accepts `cji profile 8 apps/agenda.js` and `cji profile 10 apps/agenda.js`. Each job requests one contiguous frontend heap after relocation. The observer records the reservation actually obtained. The frontend timer brackets the stage-1 call. A nested accumulator times completed collections. The worker prints the metrics after the call returns. A failed frontend can still report partial counters. Require a complete sample and a matching module before comparing durations.
+A benchmark firmware built with `PICOCALC_COMPILER_PROFILE=ON` also accepts `cji profile 8 apps/agenda.js` and `cji profile 10 apps/agenda.js`. Both benchmark cases reserve one contiguous frontend heap before relocation. The loader uses that block to decompress its private compiler image, then the frontend reuses it. The ordinary Files and Agenda check path first tries its 8 MiB reservation after relocation. The observer records the reservation actually obtained. The frontend timer brackets the stage-1 call. A nested accumulator times completed collections. The worker prints the metrics after the call returns. A failed frontend can still report partial counters. Require a complete sample and a matching module before comparing durations.
 
 | Field | How to interpret it |
 |---|---|
@@ -313,3 +313,17 @@ On the Core i7-1165G7 host, each of the six configurations ran once to warm up a
 | Agenda, 10 MiB | 19.932 | 23.481 | 23.479 | 1.254 | 297 | 172,771,688 |
 
 The larger Agenda heap reduces collection count by 30% and bytes slid by 18%. In the instrumented binary the median frontend time fell 8.1%. In the plain binary the median process time rose 4.4%. The measured process took 18–34% longer than its plain counterpart across these configurations, with wide overlapping run ranges and concurrent host load. Treat these as baseline observations. They establish an effect on collector work but do not justify raising the production heap. A timing-based change needs the physical measurement.
+
+### Generated-world measurements on Linux and RV32
+
+A small service provides three work handlers and a separate state query. Each test first warms the service, sends 24 measured messages and verifies every reply to the state query against an independent calculation. Host measurements use the project's QuickJS objects and JS prelude alongside the x86-64 compiled CJI world, alternating which engine goes first. The host clock brackets the QuickJS dispatch call or the compiled world's event entry. Querying state, checking the reply and printing results happen afterward. RV32 loads the shared-unit ELF into the emulated test firmware, then counts guest instructions for the same message. See the [dispatch sources](../scripts/dispatch) and [distribution and artifact hashes](../various/world-dispatch-baseline.json).
+
+| Payload per message | QuickJS host median (µs) | CJI host median (µs) | CJI guest instructions (median) | Expected checksum |
+|---|---:|---:|---:|---:|
+| 1,024 xorshift iterations, seed 17 | 44.38 | 10.14 | 174,937 | 2,114,935,371 |
+| Initialize 16 elements and traverse eight times | 7.90 | 2.19 | 67,955 | 15,552 |
+| Initialize 128 elements and traverse eight times | 43.61 | 9.17 | 434,324 | 128,512 |
+| Initialize 512 elements and traverse eight times | 157.57 | 30.23 | 1,689,162 | 522,240 |
+| Toggle 24 Agenda task lines and checksum their text | 22.60 | 48.40 | 1,550,080 | 1,418,922,918 |
+
+The CJI host world wins the arithmetic and array cases. QuickJS wins the Agenda string-and-regexp case on this host. The edit fixture uses the shipped task-line expression and toggle function. It excludes filesystem I/O, drawing, reminders and the rest of the Agenda application. Guest instruction totals quantify the RV32 work and cannot tell us which engine responds faster on the physical screen.

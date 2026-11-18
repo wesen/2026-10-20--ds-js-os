@@ -237,3 +237,49 @@ Re-run scripts/07-summarize.py on the working directory, compare the JSON, then 
 ### Technical details
 
 The benchmark firmware ELF SHA-256 is 154cd68cbe549538a837ec20293d389515d094b26a0a08a38a9da017ac8b4379, with application BIN SHA-256 5eced004bec6eb3da3d30042bf7a84cbc80242b133514d05be7bee8b43637792. This build selects 360 MHz. Host timings used CLOCK_MONOTONIC and per-process child CPU usage.
+
+## Step 6 — Exercise generated world handlers and qualify their outputs
+
+### Prompt Context
+
+Continuing the profiling guide's generated-world experiment while the sequential physical compiler jobs run.
+
+### What I did
+
+Added a ticket-local service, host driver, build recipe and verifier. Ran integer mixing, three array sizes and Agenda text edits through QuickJS, host AOT and the RV32 shared-unit module. Recorded each median and range. Added the exact IDF profile build flags to scripts/08-build-board.sh.
+
+### Why
+
+Compiler latency measures how long it takes to build a world. The dispatch test measures an already-loaded world handling an event. This lets us answer separate questions about the experience of editing and running applications.
+
+### What worked
+
+Five cases passed across three paths. Each produced one warm-up reply and 24 measured replies per engine. The host engines share one process and clock. Validation reads a separate state reply outside the timed handler. All measured checksums agreed with the independent Python reference.
+
+### What didn't work
+
+The import references an older standalone fake-kernel test program that is absent from the imported files. Its shared call implementation and both real event-entry interfaces are present. The ticket driver uses those directly.
+
+### What I learned
+
+Linux AOT ran the integer batch in 10.14 microseconds versus 44.38 for QuickJS. For Agenda edits QuickJS ran in 22.60 microseconds versus 48.40 for AOT. Engine choice depends on the operations in the handler.
+
+### What was tricky to build
+
+Both engines parse the same JSON and handle the same state message. Excluding readback from each timed interval avoids measuring diagnostic output. The RV32 fake kernel measures guest steps for each message independently.
+
+### What warrants a second pair of eyes
+
+Host numbers describe the world-event entry and exclude OS scheduler and renderer costs. The RV32 guest measures steps. A physical dispatch timing would be a separate experiment. The array case includes initialization.
+
+### What should be done in the future
+
+Collect the physical compiler results and the full guest compiler rankings. The current board run uses the profile-enabled firmware whose boot-reported digest prefix matches the retained ELF.
+
+### Code review instructions
+
+Inspect scripts/dispatch/measure.py for exact source parity of the edit function, independent checksums, warm-up removal and sample counts. Inspect host.c for the timer brackets. Compiler baseline commit cfbcbdd and physical Agenda commit a589266 cover different workloads.
+
+### Technical details
+
+The RV32 module is 17,320 bytes. Linux uses CLOCK_MONOTONIC around each dispatch. All timing, collection and dispatch helpers live under ticket scripts directories. The ordinary on-device Agenda run finished before flashing the profiling build.

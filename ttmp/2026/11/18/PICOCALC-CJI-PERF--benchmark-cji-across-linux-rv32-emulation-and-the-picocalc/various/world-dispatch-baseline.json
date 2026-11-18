@@ -1,0 +1,147 @@
+{
+  "suite": "world-dispatch",
+  "identities": {
+    "bench.world.js": "bdc9eca31b6971532b3bda13893bd7ec4de1cab1185d07612b248e33bb7681f5",
+    "prelude.js": "7c11d4b89c5245fafc8fb8a62324e6ce667c609fc7942ec6e447e05a2394fa9e",
+    "host": "eb61730af75b879d3bae428c41e095ea4277cfb8bf088406738a89c77385098b",
+    "bench.so": "959e44eb4d349b840951e4f2eb2b6577d98310dbe51531e0bbf21afbd2a77a43",
+    "fw-nw-units.elf": "485d5e3361467e1086654909937ac4179757bbf1c6e414923b8e5630d0f35bd0"
+  },
+  "results": [
+    {
+      "case": "mix",
+      "input": 17,
+      "operations": 1024,
+      "checksum": 2114935371,
+      "quickjs": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 44380.0,
+        "min": 42555,
+        "max": 67436
+      },
+      "cji-aot": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 10143.0,
+        "min": 9941,
+        "max": 11948
+      },
+      "cji-rv32": {
+        "unit": "guest_steps_per_message",
+        "n": 24,
+        "median": 174937.0,
+        "min": 174937,
+        "max": 174937
+      }
+    },
+    {
+      "case": "array",
+      "input": 16,
+      "operations": 128,
+      "checksum": 15552,
+      "quickjs": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 7896.5,
+        "min": 7717,
+        "max": 12215
+      },
+      "cji-aot": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 2186.5,
+        "min": 2003,
+        "max": 3137
+      },
+      "cji-rv32": {
+        "unit": "guest_steps_per_message",
+        "n": 24,
+        "median": 67955.0,
+        "min": 67955,
+        "max": 67955
+      }
+    },
+    {
+      "case": "array",
+      "input": 128,
+      "operations": 1024,
+      "checksum": 128512,
+      "quickjs": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 43611.5,
+        "min": 42997,
+        "max": 70396
+      },
+      "cji-aot": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 9170.5,
+        "min": 8348,
+        "max": 17733
+      },
+      "cji-rv32": {
+        "unit": "guest_steps_per_message",
+        "n": 24,
+        "median": 434324.0,
+        "min": 434324,
+        "max": 470327
+      }
+    },
+    {
+      "case": "array",
+      "input": 512,
+      "operations": 4096,
+      "checksum": 522240,
+      "quickjs": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 157571.5,
+        "min": 155956,
+        "max": 188312
+      },
+      "cji-aot": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 30229.5,
+        "min": 28532,
+        "max": 42861
+      },
+      "cji-rv32": {
+        "unit": "guest_steps_per_message",
+        "n": 24,
+        "median": 1689162.0,
+        "min": 1689162,
+        "max": 1725164
+      }
+    },
+    {
+      "case": "edit",
+      "input": 17,
+      "operations": 24,
+      "checksum": 1418922918,
+      "quickjs": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 22596.5,
+        "min": 21973,
+        "max": 38826
+      },
+      "cji-aot": {
+        "unit": "ns_per_message",
+        "n": 24,
+        "median": 48399.5,
+        "min": 46794,
+        "max": 72890
+      },
+      "cji-rv32": {
+        "unit": "guest_steps_per_message",
+        "n": 24,
+        "median": 1550080.0,
+        "min": 1549124,
+        "max": 1587080
+      }
+    }
+  ]
+}
