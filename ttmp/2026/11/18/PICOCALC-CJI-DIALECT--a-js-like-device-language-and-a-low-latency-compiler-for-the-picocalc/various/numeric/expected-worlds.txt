@@ -1,0 +1,12 @@
+/tmp/cji-dialect-numeric-local-r1/expected-native/flaky.elf 10800 bytes
+9345f6cca612e190c6c8d389fd46e77004f3cdce66f1c931bf6726c409720229  picocalc-os/js/system/flaky.js
+d4e6ee2fea6a21a09aff50f62ad5f0b03797f395ea11085c9ae511a50ed9f0e9  /tmp/cji-dialect-numeric-local-r1/expected-native/flaky.slir
+e74d83cd6c8ebebf9319e5314f8f03818fb74c8954af2f58b23a005530d5f595  /tmp/cji-dialect-numeric-local-r1/expected-native/flaky.elf
+/tmp/cji-dialect-numeric-local-r1/expected-native/agenda.elf 330984 bytes
+a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e  picocalc-os/js/apps/agenda.js
+234c04f2011a6c5c2d2c403196a4e9085beba97b25aa36193e0585ea7cd68617  /tmp/cji-dialect-numeric-local-r1/expected-native/agenda.slir
+19ac388cde229215547764869ca18c15e4c43f600539778c46455cee00d1fca3  /tmp/cji-dialect-numeric-local-r1/expected-native/agenda.elf
+/tmp/cji-dialect-numeric-local-r1/expected-native/files.elf 217176 bytes
+5ad09cd9421031b03497ce1fcc6ebade53a1496a44420e126272546a48ef8587  picocalc-os/js/apps/files.js
+8f5c5a7b2fb2ba9de27f9aa8d74edcb81e80ba80db1bb0f69c30cefa538412a2  /tmp/cji-dialect-numeric-local-r1/expected-native/files.slir
+fedf1397b2ee65b57c6d1641c581f89461e4e0670817805467ee498abe8f7a28  /tmp/cji-dialect-numeric-local-r1/expected-native/files.elf

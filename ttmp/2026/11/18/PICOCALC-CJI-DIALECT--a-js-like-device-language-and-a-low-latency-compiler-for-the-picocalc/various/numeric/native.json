@@ -1,0 +1,448 @@
+{
+  "arena_mib": 8,
+  "compiler_sha256": {
+    "control": "20090209ed2c2de083ed278f77217c6ec03271973e6530a5d4152863590b3b4d",
+    "local": "8987e41ad93b90184725186d627dab7b784a4d8180162958cfabac5b12e3c265",
+    "proof_off": "41159c5bb564fab9d3503252569236341170e0d8fc9d665de7c9353afafbef85"
+  },
+  "worlds": {
+    "agenda": {
+      "source_sha256": "a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e",
+      "outputs": {
+        "control": {
+          "sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+          "bytes": 620515
+        },
+        "local": {
+          "sha256": "234c04f2011a6c5c2d2c403196a4e9085beba97b25aa36193e0585ea7cd68617",
+          "bytes": 632002
+        },
+        "proof_off": {
+          "sha256": "f4e317391bed8e2f1f0449764276a65117a8576a8adf9fd5418bd724e340c0b3",
+          "bytes": 618557
+        }
+      },
+      "medians": {
+        "control": {
+          "frontend_us": 4257151,
+          "gc_us": 632743,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        "local": {
+          "frontend_us": 1162826,
+          "gc_us": 160471,
+          "collections": 134,
+          "live_peak_bytes": 4357696
+        },
+        "proof_off": {
+          "frontend_us": 1155224,
+          "gc_us": 155655,
+          "collections": 131,
+          "live_peak_bytes": 4457632
+        }
+      },
+      "rows": [
+        {
+          "warmup": true,
+          "round": -1,
+          "compiler": "control",
+          "frontend_us": 3628668,
+          "gc_us": 562642,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "compiler": "local",
+          "frontend_us": 1381085,
+          "gc_us": 192790,
+          "slide_bytes": 131886416,
+          "collections": 134,
+          "live_peak_bytes": 4357696
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "compiler": "proof_off",
+          "frontend_us": 1002625,
+          "gc_us": 139479,
+          "slide_bytes": 129970968,
+          "collections": 131,
+          "live_peak_bytes": 4457632
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "compiler": "control",
+          "frontend_us": 3663012,
+          "gc_us": 579017,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "compiler": "local",
+          "frontend_us": 1069623,
+          "gc_us": 151104,
+          "slide_bytes": 131886416,
+          "collections": 134,
+          "live_peak_bytes": 4357696
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "compiler": "proof_off",
+          "frontend_us": 1300805,
+          "gc_us": 201423,
+          "slide_bytes": 129970968,
+          "collections": 131,
+          "live_peak_bytes": 4457632
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "compiler": "local",
+          "frontend_us": 1045830,
+          "gc_us": 145561,
+          "slide_bytes": 131886416,
+          "collections": 134,
+          "live_peak_bytes": 4357696
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "compiler": "proof_off",
+          "frontend_us": 1116376,
+          "gc_us": 145081,
+          "slide_bytes": 129970968,
+          "collections": 131,
+          "live_peak_bytes": 4457632
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "compiler": "control",
+          "frontend_us": 3804938,
+          "gc_us": 581169,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "compiler": "proof_off",
+          "frontend_us": 1045158,
+          "gc_us": 146725,
+          "slide_bytes": 129970968,
+          "collections": 131,
+          "live_peak_bytes": 4457632
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "compiler": "control",
+          "frontend_us": 4257151,
+          "gc_us": 632743,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "compiler": "local",
+          "frontend_us": 1247791,
+          "gc_us": 163666,
+          "slide_bytes": 131886416,
+          "collections": 134,
+          "live_peak_bytes": 4357696
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "compiler": "control",
+          "frontend_us": 4625481,
+          "gc_us": 685754,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "compiler": "local",
+          "frontend_us": 1405287,
+          "gc_us": 193696,
+          "slide_bytes": 131886416,
+          "collections": 134,
+          "live_peak_bytes": 4357696
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "compiler": "proof_off",
+          "frontend_us": 1155224,
+          "gc_us": 155655,
+          "slide_bytes": 129970968,
+          "collections": 131,
+          "live_peak_bytes": 4457632
+        },
+        {
+          "warmup": false,
+          "round": 4,
+          "compiler": "local",
+          "frontend_us": 1162826,
+          "gc_us": 160471,
+          "slide_bytes": 131886416,
+          "collections": 134,
+          "live_peak_bytes": 4357696
+        },
+        {
+          "warmup": false,
+          "round": 4,
+          "compiler": "proof_off",
+          "frontend_us": 1185811,
+          "gc_us": 162805,
+          "slide_bytes": 129970968,
+          "collections": 131,
+          "live_peak_bytes": 4457632
+        },
+        {
+          "warmup": false,
+          "round": 4,
+          "compiler": "control",
+          "frontend_us": 4667873,
+          "gc_us": 689272,
+          "slide_bytes": 155945304,
+          "collections": 240,
+          "live_peak_bytes": 6096360
+        }
+      ]
+    },
+    "files": {
+      "source_sha256": "5ad09cd9421031b03497ce1fcc6ebade53a1496a44420e126272546a48ef8587",
+      "outputs": {
+        "control": {
+          "sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa",
+          "bytes": 353200
+        },
+        "local": {
+          "sha256": "8f5c5a7b2fb2ba9de27f9aa8d74edcb81e80ba80db1bb0f69c30cefa538412a2",
+          "bytes": 358721
+        },
+        "proof_off": {
+          "sha256": "91e94be541d92c831b9429c0fda008a9b6eea0d06acb75455ad956a9c3fea321",
+          "bytes": 351870
+        }
+      },
+      "medians": {
+        "control": {
+          "frontend_us": 1552873,
+          "gc_us": 105406,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        "local": {
+          "frontend_us": 827687,
+          "gc_us": 59159,
+          "collections": 58,
+          "live_peak_bytes": 3737976
+        },
+        "proof_off": {
+          "frontend_us": 1138734,
+          "gc_us": 70923,
+          "collections": 57,
+          "live_peak_bytes": 3970088
+        }
+      },
+      "rows": [
+        {
+          "warmup": true,
+          "round": -1,
+          "compiler": "control",
+          "frontend_us": 1704411,
+          "gc_us": 101252,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "compiler": "local",
+          "frontend_us": 699445,
+          "gc_us": 51102,
+          "slide_bytes": 38635640,
+          "collections": 58,
+          "live_peak_bytes": 3737976
+        },
+        {
+          "warmup": true,
+          "round": -1,
+          "compiler": "proof_off",
+          "frontend_us": 740526,
+          "gc_us": 54247,
+          "slide_bytes": 37862848,
+          "collections": 57,
+          "live_peak_bytes": 3970088
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "compiler": "control",
+          "frontend_us": 2925686,
+          "gc_us": 203092,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "compiler": "local",
+          "frontend_us": 649860,
+          "gc_us": 49748,
+          "slide_bytes": 38635640,
+          "collections": 58,
+          "live_peak_bytes": 3737976
+        },
+        {
+          "warmup": false,
+          "round": 0,
+          "compiler": "proof_off",
+          "frontend_us": 666866,
+          "gc_us": 51964,
+          "slide_bytes": 37862848,
+          "collections": 57,
+          "live_peak_bytes": 3970088
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "compiler": "local",
+          "frontend_us": 717346,
+          "gc_us": 52496,
+          "slide_bytes": 38635640,
+          "collections": 58,
+          "live_peak_bytes": 3737976
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "compiler": "proof_off",
+          "frontend_us": 1068413,
+          "gc_us": 70923,
+          "slide_bytes": 37862848,
+          "collections": 57,
+          "live_peak_bytes": 3970088
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "compiler": "control",
+          "frontend_us": 1363281,
+          "gc_us": 95151,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "compiler": "proof_off",
+          "frontend_us": 1210406,
+          "gc_us": 62503,
+          "slide_bytes": 37862848,
+          "collections": 57,
+          "live_peak_bytes": 3970088
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "compiler": "control",
+          "frontend_us": 2919044,
+          "gc_us": 216506,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "compiler": "local",
+          "frontend_us": 827687,
+          "gc_us": 62067,
+          "slide_bytes": 38635640,
+          "collections": 58,
+          "live_peak_bytes": 3737976
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "compiler": "control",
+          "frontend_us": 1552873,
+          "gc_us": 105034,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "compiler": "local",
+          "frontend_us": 869700,
+          "gc_us": 65653,
+          "slide_bytes": 38635640,
+          "collections": 58,
+          "live_peak_bytes": 3737976
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "compiler": "proof_off",
+          "frontend_us": 2723335,
+          "gc_us": 218841,
+          "slide_bytes": 37862848,
+          "collections": 57,
+          "live_peak_bytes": 3970088
+        },
+        {
+          "warmup": false,
+          "round": 4,
+          "compiler": "local",
+          "frontend_us": 855274,
+          "gc_us": 59159,
+          "slide_bytes": 38635640,
+          "collections": 58,
+          "live_peak_bytes": 3737976
+        },
+        {
+          "warmup": false,
+          "round": 4,
+          "compiler": "proof_off",
+          "frontend_us": 1138734,
+          "gc_us": 87061,
+          "slide_bytes": 37862848,
+          "collections": 57,
+          "live_peak_bytes": 3970088
+        },
+        {
+          "warmup": false,
+          "round": 4,
+          "compiler": "control",
+          "frontend_us": 1523052,
+          "gc_us": 105406,
+          "slide_bytes": 47948984,
+          "collections": 72,
+          "live_peak_bytes": 4312224
+        }
+      ]
+    }
+  }
+}

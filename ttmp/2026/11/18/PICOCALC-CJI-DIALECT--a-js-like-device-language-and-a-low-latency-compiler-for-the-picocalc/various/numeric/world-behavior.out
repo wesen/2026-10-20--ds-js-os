@@ -1,0 +1,12 @@
+loaded 2 4 1
+reminder Book dentist 15
+# Tasks
+- [x] Book dentist @2026-11-03 14:30 !15m
+- [ ] Charge PicoCalc
+
+next Charge PicoCalc
+done true 4
+order notes,a.txt,z.txt 0 1.5 MB
+last z.txt 1.5 KB
+folder notes todo.txt
+back true notes

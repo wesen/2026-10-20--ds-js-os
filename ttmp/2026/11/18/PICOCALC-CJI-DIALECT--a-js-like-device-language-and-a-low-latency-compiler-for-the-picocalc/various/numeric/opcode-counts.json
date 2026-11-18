@@ -1,0 +1,70 @@
+{
+  "agenda": {
+    "control": {
+      "num_to_int": 37,
+      "any_to_int": 9,
+      "num_mod": 11,
+      "int_mod": 0,
+      "num_to_str": 0,
+      "int_to_str": 2,
+      "fadd": 60,
+      "fsub": 27,
+      "fmul": 14,
+      "fdiv": 9,
+      "i2f": 46,
+      "add": 1025,
+      "sub": 47,
+      "mul": 16
+    },
+    "local": {
+      "num_to_int": 124,
+      "any_to_int": 9,
+      "num_mod": 11,
+      "int_mod": 0,
+      "num_to_str": 1,
+      "int_to_str": 1,
+      "fadd": 184,
+      "fsub": 56,
+      "fmul": 28,
+      "fdiv": 9,
+      "i2f": 195,
+      "add": 917,
+      "sub": 15,
+      "mul": 2
+    }
+  },
+  "files": {
+    "control": {
+      "num_to_int": 22,
+      "any_to_int": 2,
+      "num_mod": 0,
+      "int_mod": 0,
+      "num_to_str": 0,
+      "int_to_str": 0,
+      "fadd": 22,
+      "fsub": 0,
+      "fmul": 3,
+      "fdiv": 0,
+      "i2f": 21,
+      "add": 406,
+      "sub": 22,
+      "mul": 8
+    },
+    "local": {
+      "num_to_int": 70,
+      "any_to_int": 2,
+      "num_mod": 0,
+      "int_mod": 0,
+      "num_to_str": 0,
+      "int_to_str": 0,
+      "fadd": 67,
+      "fsub": 14,
+      "fmul": 11,
+      "fdiv": 0,
+      "i2f": 78,
+      "add": 368,
+      "sub": 8,
+      "mul": 0
+    }
+  }
+}
