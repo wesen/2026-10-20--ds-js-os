@@ -27,3 +27,7 @@ Pushed the storage, clock and display deep dive to go-go-parc at fe8b62d. The li
 ## 2026-11-18
 
 Verified cold on-device Wasm Agenda builds and measured the linker optimization. File-to-frame p95 was 606 ms for bundled source on the settled OS. The physical keyboard returned I2C NACKs.
+
+## 2026-11-18
+
+Restored the prior PicoCalc firmware with a verified app-partition write and published the Wasm hardware deep dive to go-go-parc at 3b4640c.

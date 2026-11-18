@@ -339,3 +339,13 @@ Enable the physical keyboard and display test, instrument the successful panel t
 ### Code review instructions
 
 Run make -C picocalc-os agenda-reactor and the ticket's host world test. Build the ESP-IDF project with PICOCALC_TYPED_AGENDA enabled. Use scripts/05-measure-agenda-p4.py with the configured serial port and compare the emitted JSON to the committed hardware receipt.
+
+## Step 10 — Restore the prior image and publish the benchmark
+
+The measured firmware checkpoint is 2d1238c. I kept the valid editable source and restored the exact app image whose bytes matched the saved flash prefix. This returns the P4 to its previous headless configuration while preserving the board's notes and settings.
+
+### Evidence
+
+- esptool verified the restored flash write. The boot trace reported keyboard/power I2C and display SPI offline as before, loaded the two CJI manifests, and answered cji status with #OK cji.
+- The vault report “PicoCalc Agenda — Measuring a cold Wasm build on the handheld” was pushed to go-go-parc main at 3b4640c.
+- The hardware task remains open for the separate physical input-to-panel measurement. The readiness and memory portion passed on the P4, and the RV32 implementation can begin from the same parser and runtime contract.
