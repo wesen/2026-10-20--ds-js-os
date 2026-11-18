@@ -56,9 +56,52 @@ static void *record_refusal(const char *reason, size_t request) {
     refusal.largest_psram=heap_caps_get_largest_free_block(caps);
     return NULL;
 }
+// The worker owns held and allocations. The kernel samples a short snapshot
+// independently, so time spent inside one long compiler pass is visible.
+static portMUX_TYPE progress_lock=portMUX_INITIALIZER_UNLOCKED;
+typedef struct {
+    const char *phase; // firmware string; remains valid after unloading the tool
+    size_t scratch;
+    unsigned allocations;
+} progress_t;
+static progress_t progress;
+static unsigned allocations;
+static int64_t next_report;
+#define REPORT_INTERVAL_US (10LL * 1000 * 1000)
+
+static void snapshot_progress(const char *phase) {
+    portENTER_CRITICAL(&progress_lock);
+    if (phase) progress.phase=phase;
+    progress.scratch=held;
+    progress.allocations=allocations;
+    portEXIT_CRITICAL(&progress_lock);
+}
+static void report_progress(void) {
+    portENTER_CRITICAL(&progress_lock);
+    progress_t sample=progress;
+    portEXIT_CRITICAL(&progress_lock);
+    char line[120];
+    snprintf(line,sizeof line,"cji: progress src=%02x%02x%02x%02x phase=%s elapsed_ms=%lld allocs=%u scratch=%u",
+             candidate.source[0],candidate.source[1],candidate.source[2],candidate.source[3],
+             sample.phase,(long long)((esp_timer_get_time()-began)/1000),
+             sample.allocations,(unsigned)sample.scratch);
+    kernel_log_add(port_clock(),line);
+    puts(line);
+}
+static void enter_phase(const char *phase) {
+    snapshot_progress(phase);
+    report_progress();
+}
+static void tool_phase(compiler_phase_t phase) {
+    static const char *const names[]={"frontend","link","assemble"};
+    enter_phase(names[phase]);
+}
+
 static int64_t last_yield;
 static void *allocate(size_t size) {
+    allocations++;
     if (esp_timer_get_time()-last_yield>20000) {
+        snapshot_progress(NULL);
         vTaskDelay(1);
         last_yield=esp_timer_get_time();
     }
@@ -192,6 +235,7 @@ static void build_one(void) {
     esp_elf_deinit(&tool);
     free((void *)job.exports);
     while (head.next!=&head) release(head.next+1);
+    enter_phase(job.status ? "failed" : "assembled");
     memory_sample("released");
     signal_kernel();
 }
@@ -210,7 +254,7 @@ static void begin(char *source,size_t len,bool automatic,bool check_only) {
     memcpy(candidate.firmware,esp_app_get_description()->app_elf_sha256,32);
     if (!digest(source,len,candidate.source)) { free(source); puts("cji: hash failed"); return; }
     job=(compiler_job_t){.source=source,.length=len,.alloc=allocate,.resize=resize,.release=release,
-        .format=vsnprintf,.number=strtod,.math=compiler_math,.micros=esp_timer_get_time,.status=-1};
+        .format=vsnprintf,.number=strtod,.math=compiler_math,.micros=esp_timer_get_time,.phase=tool_phase,.status=-1};
     began=esp_timer_get_time();
     reuse=!checking && active.version && active.automatic==automatic &&
          !memcmp(candidate.firmware,active.firmware,32) && !memcmp(candidate.source,active.source,32);
@@ -237,11 +281,19 @@ static void begin(char *source,size_t len,bool automatic,bool check_only) {
     if (!worker || !finished) {
         puts("cji: cannot allocate compiler task"); cleanup(); return;
     }
+    allocations=0;
+    next_report=began+REPORT_INTERVAL_US;
+    enter_phase("load");
     state=LOADING;
     xTaskNotifyGive(worker);
     puts("cji: compiling source on device");
 }
 void compiler_console(const char *command) {
+    if (!strcmp(command,"status")) {
+        if (!reuse && (state==LOADING || state==BUILDING)) report_progress();
+        else puts(state==READY ? "cji: idle" : "cji: activating");
+        return;
+    }
     if (state!=READY) { puts("cji: busy"); return; }
     const char *path=strchr(command,' ');
     if (!strncmp(command,"check ",6)) {
@@ -254,7 +306,7 @@ void compiler_console(const char *command) {
     }
     bool automatic=!strncmp(command,"install ",8);
     if (!path || (!automatic && strncmp(command,"build ",6)) || !fs_path_ok(++path)) {
-        puts("cji build PATH | cji install PATH | cji check BUNDLED.js"); return;
+        puts("cji build PATH | cji install PATH | cji check BUNDLED.js | cji status"); return;
     }
     char full[FS_PATH_MAX+8];
     snprintf(full,sizeof full,"/files/%s",path);
@@ -285,6 +337,13 @@ static void rollback(void) {
     cleanup();
 }
 void compiler_tick(void) {
+    if ((state==LOADING || state==BUILDING) && !reuse) {
+        int64_t now=esp_timer_get_time();
+        if (now>=next_report) {
+            next_report=now+REPORT_INTERVAL_US;
+            report_progress();
+        }
+    }
     world_t *w=world_by_name("dev-cji");
     if (state==STARTING) {
         if (!w || w->epoch!=candidate_epoch || w->last_error[0]) { puts("cji: candidate failed during boot"); rollback(); return; }

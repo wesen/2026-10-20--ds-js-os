@@ -23,7 +23,7 @@ def check(port, file, source, timeout):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         line = port.readline().decode(errors="replace").strip()
-        if line.startswith(("cji: begin ", "cji: relocated ", "cji: released ", "cji: assembled ", "cji: compiler refused ")):
+        if line.startswith(("cji: progress ", "cji: begin ", "cji: relocated ", "cji: released ", "cji: assembled ", "cji: compiler refused ")):
             print(line, file=sys.stderr, flush=True)
         if line.startswith("cji: busy"):
             time.sleep(2)

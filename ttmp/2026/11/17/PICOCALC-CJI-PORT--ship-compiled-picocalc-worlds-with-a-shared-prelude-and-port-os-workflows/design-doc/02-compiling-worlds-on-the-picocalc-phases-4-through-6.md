@@ -225,6 +225,14 @@ The final image is 0x3d79f0 bytes. The packed compiler and assembler account for
 
 Source-to-ready includes scheduling, storage and world activation. The scratch peak measures the private allocation list. The relocated tool image, worker stack, kernel/world memory and temporary copies consume additional PSRAM. The sanitized serial record under various/phase-4-6-p4-acceptance.txt preserves samples of free and largest contiguous PSRAM. Earlier measurements in the diary explain how the stack size and relocation context were established.
 
+### Watching a physical build
+
+The compiler emits a `cji: progress` line when it starts loading the tool, enters the frontend, links the generated text, starts assembly, or finishes worker cleanup. During a build the kernel also emits a line about every ten seconds. The worker only publishes allocation counters at yield points and phase boundaries. A rising allocation count is evidence that the worker has reached new allocator calls. Elapsed time can advance during a long computation with identical counters. The `assembled` phase denotes successful worker output; the terminal check receipt supplies the digest, and an install has additional activation steps.
+
+Each line contains an eight-hex-digit source digest prefix, phase, elapsed milliseconds, allocation call count and tracked scratch bytes. The complete source and module digests are in the terminal check receipt. Use `cji status` at the serial console for a fresh sample. The catalog checker forwards progress lines to stderr and writes its JSON result to stdout.
+
+The same line is appended to the existing 256-line kernel log ring. A world with the `sys.log` claim reads pages with `sys.log(after)`, then advances `after` to the last line number it consumed. The built-in Logs app already does this in `apps/logs.js`. Filter on the `cji: progress ` prefix to print or forward compiler events. A reader that falls behind can detect overwritten lines from the page's `first` field.
+
 ### How the device allocates compiler memory
 
 ESP-IDF manages external RAM as a heap shared by the OS, running worlds and compiler. A caller asking for a contiguous buffer receives one address. Several free blocks separated by live objects can add up to more bytes than the caller requested and still be unusable for that request. The port requests 8-byte-aligned, byte-addressable PSRAM using `heap_caps_aligned_alloc` with `MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT`. See `picocalc-os/port/esp32p4/main/port_p4.c`, function `port_heap_malloc`.

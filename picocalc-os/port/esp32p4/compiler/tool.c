@@ -71,6 +71,7 @@ void compiler_entry(int argc, char **argv) {
     job=(compiler_job_t *)argv[0];
     job->status=-1;
     if (setjmp(escape)) return;
+    job->phase(CJI_FRONTEND);
     if (fw_file_put("input.js",job->source,job->length)) failure("source allocation");
     char *args[]={"input.js","--world-unit",NULL};
     rt_argc=2; rt_argv=args; rt_fatal=failure;
@@ -99,6 +100,7 @@ void compiler_entry(int argc, char **argv) {
         job->status=1;
         return;
     }
+    job->phase(CJI_LINK);
     rt_free(fromspace_begin); rt_free(rootstack_begin); rt_spill_reset();
     // SLIR function headers carry scratch/saved register and frame-size fields.
     char *main=!strncmp(slir,"function main/0 ",16) ? slir : strstr(slir,"\nfunction main/0 ");
@@ -114,6 +116,7 @@ void compiler_entry(int argc, char **argv) {
     fclose(linked); free(slir);
     if (fw_file_put("unit.list",job->exports,job->exports_length)) failure("exports allocation");
     char *as[]={"slas","-c","world.so","--module","--extern","unit.list","world.slir",NULL};
+    job->phase(CJI_ASSEMBLE);
     if (slas_main(7,as)) failure("assembly failed");
     const char *module=fw_file_get("world.so",&job->module_length);
     if (!module || !job->module_length) failure("no module");

@@ -1251,3 +1251,61 @@ See “How the device allocates compiler memory” in the phases 4–6 design gu
 ### Technical details
 
 The port requests MALLOC_CAP_SPIRAM and MALLOC_CAP_8BIT with 8-byte alignment. Freeing a tracked scratch block removes the worker's 16-byte RV32 header from its accounting, then returns the underlying block to ESP-IDF.
+
+## Step 24: Publish compiler phases and periodic progress to the log ring
+
+Agenda's serial reader disconnected during the first attempt. A retry reached relocation and then stayed silent during compilation. I added progress messages to the firmware so the operator can see the current phase and the worker's latest allocation activity through serial or the Logs app.
+
+### Prompt Context
+
+**User prompts (verbatim)**
+
+> how are things going?
+
+> is it still running?
+
+> can we have the compiler maybe output progress or so? or send messages that a logging service can capture and forward / print out?
+
+**Assistant interpretation and inferred intent.** Expose actionable progress during a long compile and make the same events available to existing logging clients. Preserve the original ordered Files and Agenda verification.
+
+### What I did
+
+- Verified Files before launching Agenda. The Agenda observer disconnected and the device later reported idle. Started a fresh Agenda check using the same USB identity and firmware.
+- Added a small callback to the private compiler ABI for frontend, link and assemble phases. The kernel periodically reads a synchronized sample and emits elapsed time, allocation calls and scratch bytes. The worker emits phase changes immediately.
+- Sent bounded lines to the existing kernel log ring and serial stdout. Updated the catalog checker to forward progress on stderr and added cji status for on-demand sampling. Added reader instructions to the intern guide.
+
+### Why
+
+A serial port with a blocked reader is insufficient evidence of compiler activity. A heartbeat from the kernel and an allocation count from the worker let an operator distinguish time elapsed from observed work. Reporting a percentage would require a calibrated denominator across different programs.
+
+### What worked
+
+The retry reached relocation in 702 ms. The firmware build with phase reporting linked successfully. The kernel log ring already supports concurrent writers and the Logs app already polls it using sys.log(after).
+
+### What didn't work
+
+The original Agenda reader failed in port.readline with “device reports readiness to read but returned no data (device disconnected or multiple access on port?)”. No terminal digest was recovered. During the retry, a status probe received no matching response in six seconds and a second received zero bytes in eighteen seconds. Those observations provide no proof of either successful completion or a compiler hang.
+
+### What I learned
+
+The existing kernel tick runs independently of the compiler worker. It can sample progress even while the worker is spending time inside one phase. A continuing heartbeat with unchanged counters only proves that the kernel is still reporting.
+
+### What was tricky to build
+
+The compiler ELF is unloaded at the end of every job. The firmware owns phase names, and the callback passes an enum across the ABI. A small critical section protects the copied snapshot. Formatting, ring writes and serial output occur outside that section.
+
+### What warrants a second pair of eyes
+
+Verify the ring's 120-byte line budget, scope the eight-hex-digit prefix to display, and keep the full digests for verification. Confirm an idle poll and a cache hit do not report stale work.
+
+### What should be done in the future
+
+Verify repeated heartbeat lines, terminal success and failure reporting, and byte identity on the physical board. Record an Agenda result only after checking its module digest.
+
+### Code review instructions
+
+Start at compiler/install.c report_progress, enter_phase and compiler_tick. Follow the tool callback in compiler/tool.c and the ring consumer in apps/logs.js. The ticket's catalog runner keeps progress output separate from its JSON receipt.
+
+### Technical details
+
+The reporting interval is ten seconds. The worker snapshots counters at its existing roughly 20 ms allocator yield points. Reports contain no source text, credentials or application payload.

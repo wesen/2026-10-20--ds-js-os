@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #define FRONTEND_HEAP_CAP (8u * 1024 * 1024)
 #define LARGE_FRONTEND_HEAP (10u * 1024 * 1024)
+typedef enum { CJI_FRONTEND, CJI_LINK, CJI_ASSEMBLE } compiler_phase_t;
 typedef struct {
     void *frontend_heap;
     size_t frontend_heap_size;
@@ -20,6 +21,7 @@ typedef struct {
     double (*number)(const char *, char **);
     double (*math)(unsigned, double, double);
     int64_t (*micros)(void);
+    void (*phase)(compiler_phase_t);
     unsigned char *module;
     size_t module_length;
     char error[192];
