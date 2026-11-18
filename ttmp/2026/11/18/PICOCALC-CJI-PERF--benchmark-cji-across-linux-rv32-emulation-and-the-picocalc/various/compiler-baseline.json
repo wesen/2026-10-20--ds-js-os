@@ -182,6 +182,81 @@
             "instructions": 2909441217
           }
         ]
+      },
+      "rv32": {
+        "harness_instructions": 291503117558,
+        "top": [
+          {
+            "symbol": "main",
+            "instructions": 133740841111,
+            "entries": 1
+          },
+          {
+            "symbol": "rt_any_eq",
+            "instructions": 18928827484,
+            "entries": 447813049
+          },
+          {
+            "symbol": "rt_any_index",
+            "instructions": 18481293092,
+            "entries": 192236884
+          },
+          {
+            "symbol": "rt_any_from_int",
+            "instructions": 16615572284,
+            "entries": 358039100
+          },
+          {
+            "symbol": "rt_any_get",
+            "instructions": 14864880766,
+            "entries": 176625308
+          },
+          {
+            "symbol": "field_index",
+            "instructions": 13986546458,
+            "entries": 153662027
+          },
+          {
+            "symbol": "rt_any_to_int",
+            "instructions": 11863275875,
+            "entries": 201334135
+          },
+          {
+            "symbol": "rt_collect",
+            "instructions": 8938176198,
+            "entries": 424
+          },
+          {
+            "symbol": "rt_any_sub",
+            "instructions": 6077091828,
+            "entries": 33822648
+          },
+          {
+            "symbol": "mc_mark",
+            "instructions": 4605577973,
+            "entries": 89238804
+          },
+          {
+            "symbol": "memset",
+            "instructions": 3962413852,
+            "entries": 9225663
+          },
+          {
+            "symbol": "rt_key_hash",
+            "instructions": 3829591378,
+            "entries": 32815971
+          }
+        ]
+      },
+      "guest_metrics_8MiB": {
+        "frontend_steps": 291433489291,
+        "gc_steps": 14986562802,
+        "slide_bytes": 211914816
+      },
+      "guest_metrics_10MiB": {
+        "frontend_steps": 287136497453,
+        "gc_steps": 10766094296,
+        "slide_bytes": 172771688
       }
     }
   },

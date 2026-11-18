@@ -199,8 +199,11 @@ Cross-assembling twenty world modules checks the output architecture. Running th
 
 | World, 8 MiB | Ordinary RV32 frontend instructions | Guarded RV32 frontend instructions | Reduction |
 |---|---:|---:|---:|
+| Agenda | 291,433,489,291 | 108,188,425,787 | 62.88% |
 | Files | 55,750,760,529 | 45,379,556,556 | 18.60% |
 | Flaky | 1,169,986,185 | 1,169,968,003 | 0.00155% |
+
+Agenda saved 183.245 billion frontend instructions. Collection accounted for 4.683 billion of the saved instructions, about 2.56% of the total saving. The remaining 178.562 billion came from work outside collection. Peak live data grew by 1,236,800 bytes to 5,728,200 bytes in the same 8 MiB arena. These results agree in direction and approximate magnitude with the native Agenda timing. The evidence supports testing this build on the board. [Paired Agenda guest receipt](../various/agenda-guest.json)
 
 Files removed over ten billion guest instructions, even though the collector executed 1.727 billion instructions instead of 1.608 billion. Excluding collection, the frontend fell from 54.143 billion to 43.653 billion instructions. Flaky is a small control showing little benefit at this scale. The observed 18.60% reduction for Files differs from the 33.71% reduction in native Linux median frontend time. An RV32 instruction and an x86 elapsed second are different units. Target cache stalls, memory latency, instruction mix and the operating system influence the physical result; a terminal on-device timestamp remains the acceptance measurement.
 

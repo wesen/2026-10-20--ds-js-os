@@ -1,0 +1,26 @@
+{
+  "world": "agenda",
+  "heap_mib": 8,
+  "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+  "variants": {
+    "control": {
+      "firmware_sha256": "dab4c956efd4a83875592ca55dba8f93e08a689e7acf084027e3979f3bba92d0",
+      "frontend_steps": 291433489291,
+      "gc_steps": 14986562802,
+      "slide_bytes": 211914816,
+      "collections": 424,
+      "survivor_bytes": 1434574696,
+      "live_peak_bytes": 4491400
+    },
+    "guard": {
+      "firmware_sha256": "0cdadb90a1d3da6d4c44a92b1e21d03d68e840980a5e65672a45708cc341a3b9",
+      "frontend_steps": 108188425787,
+      "gc_steps": 10303624905,
+      "slide_bytes": 155379632,
+      "collections": 255,
+      "survivor_bytes": 1012603808,
+      "live_peak_bytes": 5728200
+    }
+  },
+  "frontend_instruction_reduction_percent": 62.877147012101794
+}
