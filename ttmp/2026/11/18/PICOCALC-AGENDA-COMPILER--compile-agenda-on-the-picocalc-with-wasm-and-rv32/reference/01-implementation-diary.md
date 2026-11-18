@@ -467,3 +467,25 @@ Review `compiler_tick`, the startup deadline in `agenda_p4.c`, and the unchanged
 ## Step 15 — Restore the device and publish the boot report
 
 The flash writer verified the previously saved application image at 0x10000. After restoration, the P4 again reported the headless profile, loaded its two normal manifests and answered cji status. The data partitions were outside the write. The vault deep dive on the startup dispatch delay was pushed to go-go-parc main at 4ea333d. The physical timing task stays open until the assembled keyboard and LCD can be exercised.
+
+## Step 16 — Attribute cold boot to individual world initializations
+
+### What I did
+
+I measured complete boot segments for every world and subdivided QuickJS initialization into context setup, evaluation of the trusted prelude, evaluation of the app source, and metadata/jobs. The firmware retains the timing samples in a fixed array and prints them after frame publication. I repeated three resets on the same headless RV32 profile and preserved the unaggregated receipts in various/p4-rv32-boot-per-world.json. The instrumented binary SHA-256 was 44691861a05ff7c04018190040bf60a295ce3383516613327ce1c9a0133d3317.
+
+### What worked
+
+Median Agenda response was 2.733 s. The 23 worlds occupied about 1.37 s in initialization segments before the first frame, based on the sum of their median times. The eleven QuickJS worlds spent about 627 ms inside prelude evaluation, 411 ms in app source evaluation, 88 ms setting up runtimes, and 31 ms in metadata and init jobs. Calc was the largest individual boot turn at 297 ms, including 225 ms in its source. Agent took 50 ms and native Agenda took 6 ms. These totals count only measured world segments. The first-response timer also includes dispatch gaps, CJI work, filesystem scheduling and Agenda's runtime turn.
+
+### What I learned
+
+The shared prelude is parsed and compiled repeatedly. It is a fixed firmware asset, but each QuickJS world must still execute it in an independent context with its own globals and host functions. Sharing serialized compilation output can preserve that separation. The trace is also evidence against changing world scheduling before quantifying that simpler optimization.
+
+### What warrants a second pair of eyes
+
+Prelude evaluation includes both compilation and execution. Only the first part is eligible for reuse. A serialized bytecode optimization must measure decode and first compile costs as well as resident shared bytes and first-frame latency.
+
+### Code review instructions
+
+Rebuild the headless RV32 profile and run scripts/10-measure-agenda-boot.py with --world-profile. Inspect the returned world objects and their four QuickJS stage intervals. Reconcile the per-world sum with the top-level before-dispatch and file-submitted timestamps.

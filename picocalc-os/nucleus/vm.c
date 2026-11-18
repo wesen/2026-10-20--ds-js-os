@@ -940,6 +940,10 @@ static int read_meta(world_t *W, JSValue meta) {
 }
 
 int vm_create(world_t *W) {
+#if PICOCALC_TYPED_AGENDA
+  extern void p4_agenda_js_boot(const world_t *, const vtime_t *);
+  vtime_t stages[5] = {port_clock()};
+#endif
   W->oom = false; W->interrupts = 0; W->mem_used = 0;
   W->vm = calloc(1, sizeof(*W->vm));
   W->vm->rt = JS_NewRuntime2(&MF, W);
@@ -957,14 +961,23 @@ int vm_create(world_t *W) {
   JS_SetPropertyStr(ctx, g, "__ka", JS_NewCFunction(ctx, host_ka, "__ka", 1));
   W->vm->fn_dispatch = JS_UNDEFINED; W->vm->fn_render = JS_UNDEFINED;
   int rc = 0;
+#if PICOCALC_TYPED_AGENDA
+  stages[1] = port_clock();
+#endif
   JSValue r = JS_Eval(ctx, K.prelude, K.prelude_len, "prelude.js", JS_EVAL_TYPE_GLOBAL);
   if (JS_IsException(r)) { set_error(W); rc = -1; }
   JS_FreeValue(ctx, r);
+#if PICOCALC_TYPED_AGENDA
+  stages[2] = port_clock();
+#endif
   if (!rc) {
     r = JS_Eval(ctx, W->source, strlen(W->source), W->file, JS_EVAL_TYPE_GLOBAL);
     if (JS_IsException(r)) { set_error(W); rc = -1; }
     JS_FreeValue(ctx, r);
   }
+#if PICOCALC_TYPED_AGENDA
+  stages[3] = port_clock();
+#endif
   if (!rc) {
     JSValue init = JS_GetPropertyStr(ctx, g, "__init");
     JSValue meta = JS_Call(ctx, init, JS_UNDEFINED, 0, NULL);
@@ -978,6 +991,10 @@ int vm_create(world_t *W) {
     rc = run_jobs(W);
   }
   JS_FreeValue(ctx, g);
+#if PICOCALC_TYPED_AGENDA
+  stages[4] = port_clock();
+  p4_agenda_js_boot(W, stages);
+#endif
   if (rc && W->oom) snprintf(W->last_error, sizeof W->last_error, "ran out of memory while starting (its limit is %zu KB)", W->mem_limit / 1024);
   return rc;
 }

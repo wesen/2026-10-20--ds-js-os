@@ -28,6 +28,18 @@ static size_t startup_length;
 static vtime_t first_response;
 static vtime_t boot_frame_deadline;
 
+// Buffer the timing data because UART writes would compete with the startup turns.
+typedef struct {
+  const char *name;
+  vtime_t first_us, total_us, js_us[4];
+  unsigned attempts;
+  int engine;
+} world_startup;
+
+static world_startup startup[MAX_WORLDS];
+static bool recording_boot;
+static bool boot_report_pending;
+
 static void account(compile_heap *heap, size_t old, size_t current) {
   heap->live = heap->live - old + current;
   if (heap->live > heap->peak) heap->peak = heap->live;
@@ -180,7 +192,10 @@ done:
 
 bool p4_agenda_prepare(void) {
   startup_module = compile(false, &startup_length, &first_response);
-  if (startup_module) boot_frame_deadline = first_response + FIRST_FRAME_TARGET_US;
+  if (startup_module) {
+    boot_frame_deadline = first_response + FIRST_FRAME_TARGET_US;
+    recording_boot = true;
+  }
   return startup_module != NULL;
 }
 
@@ -224,6 +239,38 @@ void p4_agenda_stage(const world_t *world, const char *stage) {
   printf("agenda stage %s us=%lld\n", stage, (long long)(port_clock() - first_response));
 }
 
+void p4_agenda_world_boot(const world_t *world, vtime_t start, vtime_t cost) {
+  if (!recording_boot) return;
+  world_startup *sample = &startup[world->id];
+  if (!sample->attempts++) {
+    sample->name = world->name;
+    sample->engine = world->engine;
+    sample->first_us = start - (boot_frame_deadline - FIRST_FRAME_TARGET_US);
+  }
+  sample->total_us += cost;
+}
+
+void p4_agenda_js_boot(const world_t *world, const vtime_t *stages) {
+  if (!recording_boot) return;
+  world_startup *sample = &startup[world->id];
+  for (int i = 0; i < 4; i++) sample->js_us[i] += stages[i + 1] - stages[i];
+}
+
+void p4_agenda_report_boot(void) {
+  if (!boot_report_pending) return;
+  boot_report_pending = false;
+  for (int i = 0; i < MAX_WORLDS; i++) {
+    const world_startup *sample = &startup[i];
+    if (!sample->attempts) continue;
+    printf("agenda boot-world name=%s engine=%d first_us=%lld total_us=%lld attempts=%u"
+           " js_setup_us=%lld js_prelude_us=%lld js_source_us=%lld js_init_us=%lld\n",
+           sample->name, sample->engine, (long long)sample->first_us,
+           (long long)sample->total_us, sample->attempts,
+           (long long)sample->js_us[0], (long long)sample->js_us[1],
+           (long long)sample->js_us[2], (long long)sample->js_us[3]);
+  }
+}
+
 void p4_agenda_frame(world_t *world, vtime_t segment_start) {
   if (strcmp(world->name, "agenda") || world->engine != AGENDA_ENGINE) return;
   vtime_t now = port_clock();
@@ -235,4 +282,8 @@ void p4_agenda_frame(world_t *world, vtime_t segment_start) {
   boot_frame_deadline = 0;
   printf("agenda frame turn_us=%lld world_bytes=%zu\n",
          (long long)(now - segment_start), world->mem_used);
+  if (recording_boot) {
+    recording_boot = false;
+    boot_report_pending = true;
+  }
 }

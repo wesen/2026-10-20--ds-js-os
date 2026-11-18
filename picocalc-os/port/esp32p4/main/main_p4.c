@@ -232,6 +232,9 @@ static void kernel_task(void *arg) {
       else bus_p4_done(&m);
     }
     kernel_run_until(port_clock());
+#if PICOCALC_TYPED_AGENDA
+    p4_agenda_report_boot();
+#endif
 #if PICOCALC_DEVICE_COMPILER
     // Relocating the installed development compiler holds the dispatch lane.
     // Give the built-in app its first frame or let the deadline expire.
