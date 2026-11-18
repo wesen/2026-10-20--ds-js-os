@@ -9,23 +9,15 @@ import '../../../../../../picocalc-os/worlds/agenda/compile.js';
 
 const os = resolve('picocalc-os');
 const host = process.argv[2] ? resolve(process.argv[2]) : join(os, 'build/picocalc-host');
-const tools = join(os, 'build/wasm-toolchain');
-const sysroot = join(tools, 'root/usr');
-const sdk = join(os, 'sdk');
 const world = join(os, 'worlds/agenda');
 const scratch = mkdtempSync(join(tmpdir(), 'picocalc-agenda-wasm-'));
-const runtime = join(scratch, 'runtime.wasm');
+const runtime = join(os, 'build/agenda-reactor.wasm');
 const asset = join(scratch, 'agenda.wasm');
 const fsRoot = join(scratch, 'fs');
 const out = join(scratch, 'out');
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 
-execFileSync('clang-18', [
-    '--target=wasm32-wasi', '--sysroot=' + sysroot, '-resource-dir', join(tools, 'res'),
-    '-B' + join(sysroot, 'lib/llvm-18/bin'), '-O2', '-Wall', '-I' + sdk,
-    '-mexec-model=reactor', '-Wl,--stack-first', '-Wl,-z,stack-size=16384', '-Wl,--strip-all',
-    join(world, 'wasm-world.c'), join(world, 'wasm-slot.c'), join(sdk, 'nw_wasm.c'), '-o', runtime,
-], {stdio: ['ignore', 'inherit', 'inherit']});
+execFileSync('make', ['-C', os, 'agenda-reactor'], {stdio: ['ignore', 'pipe', 'inherit']});
 
 const source = readFileSync(join(world, 'reminder.typed'), 'utf8');
 const object = readFileSync(runtime);

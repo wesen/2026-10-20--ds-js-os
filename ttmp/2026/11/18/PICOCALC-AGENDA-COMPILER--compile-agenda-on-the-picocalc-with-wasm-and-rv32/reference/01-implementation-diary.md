@@ -278,3 +278,12 @@ The rendered simulator view and persisted reminder now have a vault report. In p
 - The first push of b0ccaa4 was rejected as non-fast-forward. The vault was clean. I fetched 9b6b7c3, rebased the report and its screenshot, and pushed fe8b62d to origin main.
 - The report's screenshot SHA-256 matches the test receipt. It is the real compositor output from the host simulation.
 - The compiler rejects a moved Task field before returning code to load. The successful integration still exercises the three clock cases and the disk-backed restart.
+
+## Step 8 — Give the reactor a normal build target
+
+The host integration and forthcoming firmware bundle need identical reactor bytes. The agenda-reactor Make target builds just the SDK runtime and parser slot. The integration test calls that target before compiling the editable source and linking it to the reactor. The test still boots the result and checks its storage, frame, clock and restart evidence.
+
+### Evidence
+
+- make -C picocalc-os agenda-reactor produced build/agenda-reactor.wasm.
+- scripts/04-check-wasm-world.mjs used that artifact and passed. The receipt records its hash and the distinct hash of the linked application.

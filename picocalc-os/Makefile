@@ -195,6 +195,15 @@ WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_ui.h sdk/nw_calls.inc 
 WASMS      := $(addprefix $(BUILD)/natives/,echo.wasm battery.wasm wprobe.wasm wimport.wasm bench.wasm dial.wasm)
 wasm: $(WASMS)
 
+# Only the reactor is built here. The handheld compiles and links reminder.typed.
+AGENDA_SRC := worlds/agenda/wasm-world.c worlds/agenda/wasm-slot.c
+.PHONY: agenda-reactor
+agenda-reactor: $(BUILD)/agenda-reactor.wasm
+
+$(BUILD)/agenda-reactor.wasm: $(AGENDA_SRC) $(WASM_SDK)
+	@mkdir -p $(dir $@)
+	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(AGENDA_SRC) sdk/nw_wasm.c
+
 $(BUILD)/natives/%.wasm: natives/%.c $(WASM_SDK)
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $< sdk/nw_wasm.c
