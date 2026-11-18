@@ -1,0 +1,7 @@
+slas-rv32: build/rv32/unit/unit.o: 191568 bytes of code, a table of 423 words, 7392 of data, 423 + 149 relocations
+flaky (one of four in one firmware): ok
+snake (one of four in one firmware): ok
+toplog (one of four in one firmware): ok
+topstate (one of four in one firmware): ok
+hog (with them, at mem_kb 320): crashed alone, out of memory, after 3 asks; 6632 bytes loaded, blocks at most 268032
+control, the runtime's state not swapped: 3 of 4 worlds wrong, as they should be

@@ -72,3 +72,53 @@ Start with the optional component CMake file, then the main component's manifest
 ### Technical details
 
 The first mixed candidate was 0x2eb400 bytes. Flaky's counter test used kernel restart commands and ordinary REPL asks. These exercise the native loader and its state across independently scheduled worlds.
+
+## Step 2. Move keyboard, power and Settings onto the native path
+
+After the first checkpoint (58e27b9) I checked bus units, extended the kernel operations for Settings and ran the applications on the handheld. The driver asks and screenshots exercised the real firmware message path.
+
+### Prompt context
+
+See Step 1. I treated clock and network configuration as privileged device operations and reused the existing claim, validation and port functions.
+
+### What I did
+
+Converted the I2C read gap from milliseconds in the JS API to microseconds in the native ABI. Selected keyboard and power in the manifest. Added claim-checked network operations and wall-clock/time-zone bindings, rebuilt prelude exports and selected Settings. Captured the original time zone before changing it through the actual Settings UI.
+
+### Why
+
+Keyboard and power share the same chip and must keep the bus locked across the write, delay and read. A factor of a thousand matters even if an emulator fixture answers immediately.
+
+### What worked
+
+Physical driver stats showed 1,081 keyboard polls and 104 events, with zero keyboard or power errors. The sandbox's unauthorized backlight request returned null. The native Settings menu changed Eastern to Atlantic and back to Eastern, verified with the firmware console. A repeated Snake capture matched the QuickJS frame pixel for pixel below the status bar after shifting the injected steering key by one tick. One traced input took 35.642 ms from compositor receipt to Snake dispatch and 7.623 ms inside its machine-code key handler. These are traced inputs, not a measurement of LCD scanout. A framebuffer capture after compositor restart verified the retained power indicator.
+
+### What didn't work
+
+Two short screenshot runs ended during framebuffer transmission. I repeated the capture with extra time for the serial transfer. The original physical Snake trace also had one cell of steering jitter, resolved by comparing the same game state.
+
+### What I learned
+
+Sharing the prelude changes the cost per additional world. A complete future image still needs a flash budget. Even before adding capability code, agent.elf alone was approximately 726 KiB.
+
+### What was tricky to build
+
+Clock.wall needs a distinct unset sentinel and the OS's current time zone. The device runtime consults the kernel for Date.now while the host and emulator retain their existing virtual clock behavior. Scan results may exceed the small string buffer used for most syscall replies.
+
+### What warrants a second pair of eyes
+
+The remaining file and framebuffer workflows cross the native ABI's explicit prohibition on passing handles. I requested the interface-scope decision required by the repository instructions. A JSON string containing an integer must never grant authority by itself.
+
+### What should be done in the future
+
+Verify the chosen transfer design against both positive delegation and negative ownership tests. Qualify agent cancellation with deterministic transport.
+
+### Code review instructions
+
+Compare the keyboard and power source to NW_I2C in nucleus/native.c. Inspect the new native claim checks against the QuickJS bindings in vm.c. See various/hardware-checks.txt for serial evidence.
+
+### Technical details
+
+The installed Settings image took 0x323820 bytes. Filesystem, system, clock and agent host regression targets were also run; the host agent tests skip cases requiring a live transport configuration.
+
+The shared-unit emulator gate also ran with UNITS=1 MULTI=1. Four worlds matched their traces, a fifth exhausted its own 320 KiB budget after three asks, and the negative control that omits the state swap produced wrong output for three of four worlds. The physical image preserved both the original time zone and network credentials.

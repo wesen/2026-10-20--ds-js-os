@@ -1210,6 +1210,12 @@ static double virtual_clock = NAN;
 int64_t rt_date_now(void)
 {
 	struct timespec ts;
+#ifdef ESP_PLATFORM
+	if (rt_kernel_call) {
+		int64_t ms = rt_kernel_call(22, 0, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0);
+		if (ms >= 0) return double_bits((double)ms);
+	}
+#endif
 	if (!isnan(virtual_clock)) return double_bits(virtual_clock);
 	clock_gettime(CLOCK_REALTIME, &ts);
 	return double_bits((double)ts.tv_sec * 1000 + (double)(ts.tv_nsec / 1000000));
@@ -2554,7 +2560,8 @@ int64_t rt_host_call(int64_t op, int64_t a, int64_t b, int64_t *roots)
 	/* (chapter 26) only a store's text (17) and an error's (-1) can be long: the other calls answer
 	   with a number or a world's name, in a buffer on the stack */
 	char small[256], *out = small;
-	size_t cap = op == 17 || op == -1 ? HOST_STR_MAX + 1 : sizeof small;
+	size_t cap = op == 17 || op == -1 ? HOST_STR_MAX + 1 :
+		(op == 25 || op == 27 ? 16384 : sizeof small); /* net info and scan result */
 	int64_t r, result;
 	if (!rt_kernel_call)
 		type_error("host calls run only in a world inside picocalc-os");

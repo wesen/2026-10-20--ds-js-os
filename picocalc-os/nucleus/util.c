@@ -74,6 +74,11 @@ bool net_password_ok(const char *s) {   // none (an open network), 8 to 63 print
   }
   return true;
 }
+const char *clock_zone(void) {
+  const char *zone = getenv("TZ");
+  return zone && *zone ? zone : "UTC0";
+}
+
 bool tz_valid(const char *s) {   // a POSIX TZ string: a name or <+05>, an offset, maybe rules; printable, no spaces
   size_t n = s ? strlen(s) : 0;
   if (!n || n > 63 || (!((s[0] >= 'A' && s[0] <= 'Z') || (s[0] >= 'a' && s[0] <= 'z')) && s[0] != '<')) return false;

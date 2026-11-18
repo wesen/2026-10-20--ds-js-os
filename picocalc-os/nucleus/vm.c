@@ -205,8 +205,7 @@ static JSValue op_clock_wall(JSContext *ctx, world_t *W, int argc, JSValueConst 
 }
 static JSValue op_clock_zone(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
   (void)W; (void)argc; (void)argv;
-  const char *tz = getenv("TZ");
-  return JS_NewString(ctx, tz && *tz ? tz : "UTC0");
+  return JS_NewString(ctx, clock_zone());
 }
 // The time zone for every world (claim sys.clock): QuickJS reads TZ through the C library for each local time.
 static JSValue op_clock_setzone(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {

@@ -9,7 +9,13 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/nucleus/native.c
+      Note: Kernel native system calls
+    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+      Note: Build and manifest selection
+    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/various/hardware-checks.txt
+      Note: Physical measurements and restart evidence
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-17T20:08:57.341329891-05:00

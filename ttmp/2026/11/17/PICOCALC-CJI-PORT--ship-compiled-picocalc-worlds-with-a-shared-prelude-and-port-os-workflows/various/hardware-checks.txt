@@ -1,0 +1,42 @@
+cji-port-run1
+#END 389bd6aa 3123
+[ 99397.744] sandbox: before pong 1
+snake idle 113.2 733 0
+flaky idle 48.3 1 0
+snake idle 113.2 927 1 restarted by an administrator
+flaky idle 48.3 2 0
+cji-port-run2
+[136201.601] sandbox: after pong 2
+[146397.484] sandbox: fresh pong 1
+snake idle 113.3 1370 1 restarted by an administrator
+flaky idle 48.3 5 1 restarted by an administrator
+cji-driver-test
+[ 24431.404] sandbox: KEY {polls: 1081, events: 104, errors: 0, lastError: ""}
+[ 31412.838] sandbox: PWR {errors: 0, lastError: ""}
+[ 39456.104] sandbox: DENY null
+keyboard idle 67.3 706 0
+power idle 77.2 4 0
+snake idle 113.2 128 0
+flaky idle 48.3 1 0
+keyboard idle 67.3 2103 0
+power idle 77.2 12 0
+snake idle 113.2 386 0
+flaky idle 48.3 1 0
+cji-parity
+#END b8053c62 3133
+cji-latency
+#END 36fe8ce9 8157
+[208922.803] compositor <- keys from keyboard [key]
+[208958.445] snake <- key from compositor [key]
+[208974.010] snake: 7623 us of machine code (event 0, key)
+[209048.899] compositor <- keys from keyboard [key]
+cji-settings-ui
+tz: EST5EDT,M3.2.0,M11.1.0
+tz: AST4ADT,M3.2.0,M11.1.0
+tz: EST5EDT,M3.2.0,M11.1.0
+#END 6b4edeab 6357
+keyboard idle 67.3 2069 0
+power idle 77.2 9 0
+settings idle 191.3 53 0
+snake idle 113.2 377 0
+flaky idle 48.3 1 0

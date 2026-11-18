@@ -255,6 +255,40 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
   K.seg_cost += 1;   // a kernel call costs about a microsecond, as for JavaScript
   for (int i = 0; i < 3; i++) if (c->n[i] > NW_STR_MAX) return fail(W, "a system call's string is longer than %d bytes", NW_STR_MAX);
   switch (c->op) {
+    case NW_CLOCK_WALL: return port_wall_ms();
+    case NW_CLOCK_ZONE: return snprintf(out, out_n, "%s", clock_zone());
+    case NW_CLOCK_SETZONE: {
+      if (!world_claims(W, "sys.clock")) return fail(W, "%s has no claim on sys.clock", W->name);
+      if (!name_ok(c, 0, 64)) return fail(W, "invalid time zone");
+      char *zone = str(c, 0);
+      int64_t result = tz_valid(zone) ? (port_tz_set(zone) == 0) : fail(W, "invalid time zone");
+      free(zone);
+      return result;
+    }
+    case NW_NET_INFO: case NW_NET_RESULT: {
+      if (!world_claims(W, "net.admin") && !(c->op == NW_NET_INFO && world_claims(W, "sys.read")))
+        return fail(W, "%s has no claim on net.admin", W->name);
+      char *json = c->op == NW_NET_INFO ? port_net_info() : port_net_scan_result();
+      if (!json) return 0;
+      size_t len = strlen(json);
+      if (len >= out_n) { free(json); return fail(W, "network result exceeds buffer"); }
+      memcpy(out, json, len + 1); free(json); charge(len);
+      return len;
+    }
+    case NW_NET_SCAN: case NW_NET_JOIN: {
+      if (!world_claims(W, "net.admin")) return fail(W, "%s has no claim on net.admin", W->name);
+      char why[160] = "";
+      if (c->op == NW_NET_SCAN) return port_net_scan(why, sizeof why) ? fail(W, "%s", why) : 1;
+      if (!name_ok(c, 0, 33) || c->n[1] > 64 || (c->n[1] && memchr(c->s[1], 0, c->n[1])))
+        return fail(W, "invalid Wi-Fi credentials");
+      char *ssid = str(c, 0), *pw = str(c, 1);
+      int64_t result;
+      if (!net_ssid_ok(ssid) || !net_password_ok(pw)) result = fail(W, "invalid Wi-Fi credentials");
+      else result = port_net_join(ssid, pw, why, sizeof why) ? fail(W, "%s", why) : 1;
+      if (pw) secret_wipe(pw, c->n[1]);
+      free(pw); free(ssid);
+      return result;
+    }
     case NW_LOG: {
       char *s = str(c, 0);
       klog("%s: %s", W->name, s ? s : "");

@@ -22,7 +22,7 @@ import { noteKeyOrder, logKeyOrders } from './types.js';
 
 // sdk/nw_wire.h: the system calls; sdk/nw.h: the events
 export const NW = { LOG: 1, NOW: 2, SELF: 3, SEND: 4, PUBLISH: 5, REPLY: 6, REJECT: 7, NEED: 8, PROVIDE: 9, EVERY: 10, KIND: 11,
-  ASK: 12, SLEEP: 13, I2C_OPEN: 14, I2C: 15, RELEASE: 16, STORE_LOAD: 17, STORE_SAVE: 18, TIMER: 19, SCREEN: 20, PRESENT: 21 };
+  ASK: 12, SLEEP: 13, I2C_OPEN: 14, I2C: 15, RELEASE: 16, STORE_LOAD: 17, STORE_SAVE: 18, TIMER: 19, SCREEN: 20, PRESENT: 21, CLOCK_WALL: 22, CLOCK_ZONE: 23, CLOCK_SETZONE: 24, NET_INFO: 25, NET_SCAN: 26, NET_RESULT: 27, NET_JOIN: 28 };
 
 export const NATIVE_WORLD_SOURCE = `
 let $def /*: Any */ = { kind: 'world', name: '', title: '', icon: undefined, about: undefined, key: undefined, initial: undefined,
@@ -140,7 +140,7 @@ function $bytes(xs /*: Any */) /*: Any */ {
 }
 function $i2c(h /*: Any */, wr /*: Any */, nrd /*: Any */, gap /*: Any */) /*: Any */ {
   return new Promise((resolve /*: Any */, reject /*: Any */) => {
-    $hostArg(4, $bytes(wr)); $hostArg(3, gap);
+    $hostArg(4, $bytes(wr)); $hostArg(3, gap === undefined ? 0 : gap * 1000);
     $later($hostCall(${NW.I2C}, h, nrd), resolve, reject);
   });
 }
@@ -162,8 +162,22 @@ const sys /*: Any */ = { worlds: (f /*: Any */) => $unavailable('sys.worlds'), h
   fault: (n /*: Any */) => $unavailable('sys.fault'), restart: (n /*: Any */) => $unavailable('sys.restart'), log: (a /*: Any */) => $unavailable('sys.log'),
   spawn: (n /*: Any */, s /*: Any */) => $unavailable('sys.spawn'), stop: (w /*: Any */) => $unavailable('sys.stop') };
 const agentNet /*: Any */ = { status: () => $unavailable('agentNet'), start: (b /*: Any */) => $unavailable('agentNet'), poll: (t /*: Any */) => $unavailable('agentNet'), cancel: (t /*: Any */) => $unavailable('agentNet') };
-const net /*: Any */ = { info: () => $unavailable('net'), scan: () => $unavailable('net'), scanResult: () => $unavailable('net'), join: (s /*: Any */, p /*: Any */) => $unavailable('net') };
-const clock /*: Any */ = { wall: () => null, set: () => false, zone: () => $unavailable('clock.zone'), setZone: (z /*: Any */) => $unavailable('clock.setZone') };
+function $netResult(op /*: Int */) /*: Any */ {
+  const r /*: Any */ = $check($call(op, 0, 0, undefined, undefined, undefined));
+  return typeof r === 'string' ? JSON.parse(r) : null;
+}
+const net /*: Any */ = {
+  info: () => $netResult(${NW.NET_INFO}), scanResult: () => $netResult(${NW.NET_RESULT}),
+  scan: () => $check($call(${NW.NET_SCAN}, 0, 0, undefined, undefined, undefined)) === 1,
+  join: (ssid /*: Any */, pw /*: Any */) => $check($call(${NW.NET_JOIN}, 0, 0, ssid, pw, undefined)) === 1
+};
+function $wall() /*: Any */ {
+  const ms /*: Any */ = $call(${NW.CLOCK_WALL}, 0, 0, undefined, undefined, undefined);
+  return ms < 0 ? null : ms;
+}
+const clock /*: Any */ = { wall: $wall, set: () => $wall() !== null,
+  zone: () => $check($call(${NW.CLOCK_ZONE}, 0, 0, undefined, undefined, undefined)),
+  setZone: (z /*: Any */) => ({ zone: z, saved: $check($call(${NW.CLOCK_SETZONE}, 0, 0, z, undefined, undefined)) === 1 }) };
 // ---- the ui vocabulary: plain objects, made as the prelude makes them (chapter 23: options
 // first, children flattened, null, undefined and false dropped; col, row and box take their
 // children as one array, which lower_rest packs for them)

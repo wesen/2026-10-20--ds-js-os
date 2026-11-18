@@ -21,7 +21,7 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+Migrate shipping PicoCalc workflows to trusted CJI native worlds. Start with the [intern guide](design-doc/01-porting-picocalc-workflows-to-shared-cji-machine-code.md). The [diary](reference/01-implementation-diary.md) records the implementation and hardware tests. See [tasks](tasks.md) for the remaining workflows.
 
 ## Key Links
 

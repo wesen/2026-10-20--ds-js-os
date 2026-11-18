@@ -335,6 +335,7 @@ enum { NW_DONE = 0, NW_LATER = 1 };   // what an event handler returns: the turn
 enum {
   NW_LOG = 1, NW_NOW, NW_SELF, NW_SEND, NW_PUBLISH, NW_REPLY, NW_REJECT, NW_NEED, NW_PROVIDE, NW_EVERY, NW_KIND,
   NW_ASK, NW_SLEEP, NW_I2C_OPEN, NW_I2C, NW_RELEASE, NW_STORE_LOAD, NW_STORE_SAVE, NW_TIMER, NW_SCREEN, NW_PRESENT,
+  NW_CLOCK_WALL, NW_CLOCK_ZONE, NW_CLOCK_SETZONE, NW_NET_INFO, NW_NET_SCAN, NW_NET_RESULT, NW_NET_JOIN,
   NW_CALLS
 };
 typedef struct {                // one event for a binary
@@ -446,6 +447,7 @@ void sb_json_str(sbuf_t *b, const char *s);
 bool utf8_valid(const unsigned char *s, size_t n);   // well-formed UTF-8 (no overlongs, surrogates or > U+10FFFF)
 bool net_ssid_ok(const char *s);       // 1 to 32 bytes of UTF-8 without control characters
 bool net_password_ok(const char *s);   // empty, 8 to 63 printable ASCII characters, or 64 hexadecimal digits
+const char *clock_zone(void);
 bool tz_valid(const char *s);          // a plausible POSIX TZ string (the C library interprets it)
 void secret_wipe(void *p, size_t n);
 
