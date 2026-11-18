@@ -125,3 +125,53 @@ Inspect the records in various/agenda-{join-sites,state-copies,slice} and the ex
 The Node observers only wrap source transfers or inspect the resulting 32 slots. Their elapsed times would be distorted. The independent sidecar timing script runs a clean Node process for each measurement. A measurement of native x86 instructions for the entire named slice function was started separately with Callgrind.
 
 The completed independent Callgrind run attributed 34,472,179,959 of 49,355,143,290 guarded Agenda x86 instructions to analyzeRanges including callees (69.85%). Files was 39.36%. The named slice alone accounted for 8.73% and 3.78% inclusively. This resolves the earlier uncertainty about whether range analysis remained important after reducing its full analyses from seven to two. The categories overlap. Script 15 separately recorded the actual file-store traffic under Node: 593 append operations and 753 reads for Agenda, including 549 offset discontinuities. This measures the concrete I/O workload a card backend would inherit, independent of any assumed device bandwidth.
+
+## Step 3 — Complete the hardware pair and deliver the guide
+
+The paired test from Step 1 ran to completion and restored the saved ordinary headless image. The guarded image saved 930.308 seconds for Agenda and 52.084 seconds for Files. Both application modules matched the independently built catalog digests. These runs test the earlier guarded-proof scheduling change; the proposals in this research guide were measured separately and are being implemented in PICOCALC-CJI-TRIE.
+
+### Prompt Context
+
+See Step 1. Commits a74574b and b933ab9 contain the intern guide, source and instruction evidence that preceded physical completion.
+
+### What I did
+
+- Ran script 14 against /tmp/cji-reattach-pair. It revalidated every physical group with PERF script 09 and checked the four GC work counters against independent RV32 receipts for both variants.
+- Recorded elapsed and frontend times, GC, module and firmware identities. Verified the ordinary restoration with a terminal Flaky smoke and handed off the serial port to the TRIE experiment.
+- Re-read the guide against the evidence. Shortened commands that exceeded the PDF margin and rearranged the proof diagram labels. Generated the final 13-page PDF; both diagrams were embedded, the elapsed-time table survived text extraction, and no extracted word reached the right-page edge.
+
+### Why
+
+The primary outcome is physical job latency. The complete job contains load, link and assembly in addition to frontend analysis. A full-module digest also verifies the final product.
+
+### What worked
+
+Both end-to-end times improved at the same 8 MiB arena cap, with higher live-byte peaks in the guarded run. The full collector work matched emulation across both programs and builds. Remarquee reported “OK: uploaded CJI Intern Guide - Static Types and Sparse Range Analysis.pdf” to /ai/2026/11/18/PICOCALC-CJI-STATIC.
+
+### What didn't work
+
+The first rendered reproduction block had three commands extending to the right edge. PDF text bounding boxes exposed the clipping. Short variables and a shell line continuation fixed it in the delivered edition.
+
+### What I learned
+
+Single-pair physical savings were 63.09% for Agenda and 19.89% for Files. These are close to the independently measured guest instruction reductions, although instruction count alone cannot predict physical time in general.
+
+### What was tricky to build
+
+The firmware used for compiling and the installed application ELF have separate identities. Script 14 checks each against its own reference and checks target memory configuration. The restore run uses the original image, whose identity matches the control.
+
+### What warrants a second pair of eyes
+
+There was one physical measurement per cell. The comparison supports the direction and magnitude for these jobs; estimating trial-to-trial spread requires repeated pairs.
+
+### What should be done in the future
+
+Compare the next candidate to the now-qualified guarded base; changing the reference back to the ordinary build would mix independent effects.
+
+### Code review instructions
+
+Open various/p4/pair.json, then the corresponding raw progress log and p4-runs.jsonl in each group. Regenerate using scripts/01-board-pair.sh and scripts/14-physical-comparison.py. The full board test overwrites only the application firmware and restores the saved ordinary headless build afterward.
+
+### Technical details
+
+Agenda's guarded module SHA-256 starts 9c0cb6c10f05 and Files' starts bad610f6574e. The guarded compiler application binary SHA-256 starts 7c9597c13e0b. The ordinary application binary starts 2b9e8371ee8e. The cloud upload confirms delivery to the account; tablet sync was not inspected.

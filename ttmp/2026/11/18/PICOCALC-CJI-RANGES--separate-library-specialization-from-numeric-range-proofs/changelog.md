@@ -15,3 +15,7 @@ Guarded numeric keys, restored original fixture and self-host outputs; measured 
 ## 2026-11-18
 
 Verify a 62.88% reduction in Agenda RV32 frontend instructions at 8 MiB with identical output.
+
+## 2026-11-18
+
+Verified physical guarded Agenda and Files at 8 MiB. The paired receipts and restored smoke are stored in PICOCALC-CJI-STATIC/various/p4.

@@ -1,5 +1,6 @@
 """Qualify the paired physical benchmark, check independent counters and capture its small receipts."""
 import argparse
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -31,7 +32,7 @@ for name, folder in [('control','control'),('files-control','files-control'),('g
         shutil.copyfile(source/file,dest/file)
     for file in ['flash.log','boot.log']:
         if (source/file).exists():
-            shutil.copyfile(source/file,dest/file)
+            (dest/(file + ".gz")).write_bytes(gzip.compress((source/file).read_bytes(), mtime=0))
 
 summary = {}
 for w in ('agenda','files'):

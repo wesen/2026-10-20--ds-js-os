@@ -1,0 +1,11 @@
+Checking system/flaky.js
+cji: progress src=9345f6cc phase=load elapsed_ms=2 allocs=0 scratch=0
+cji: begin elapsed_ms=4 psram_free=26441980 psram_largest=26214400
+cji: relocated elapsed_ms=469 psram_free=13162272 psram_largest=12845056
+cji: progress src=9345f6cc phase=frontend elapsed_ms=475 allocs=1 scratch=8388624
+cji: progress src=9345f6cc phase=link elapsed_ms=6450 allocs=26 scratch=8492318
+cji: progress src=9345f6cc phase=assemble elapsed_ms=6454 allocs=30 scratch=32857
+cji: metrics complete=1 frontend_us=5970783 gc_us=221421 collections=4 live_peak_bytes=561440 survivor_bytes=1998216 slide_bytes=1464824
+cji: assembled elapsed_ms=6493 psram_free=21168404 psram_largest=12845056
+cji: progress src=9345f6cc phase=assembled elapsed_ms=6500 allocs=641 scratch=0
+cji: released elapsed_ms=6501 psram_free=26443784 psram_largest=25690112

@@ -14,12 +14,12 @@ module [label="Link prelude and assemble Agenda module"];
 build -> stage [label=" stage-1 machine code"]; input -> stage;
 stage -> ir [label=" measured frontend time"]; ir -> module;
 ''')
-draw('proof-queue','''
-d [label="Consumer: choose helper or arithmetic instruction"];
-q [label="Question about receiver, integer or possible -0"];
-r [label="Evaluate definitions and read shared summaries"];
-u [label="Publish a wider fact; enqueue affected readers"];
-e [label="Proved: emit the specialized operation"];
-g [label="Unknown: use general representation or guard"];
+draw('proof-queue',r'''
+d [label="Choose helper or arithmetic instruction"];
+q [label="Request receiver kind or\nexact-integer proof"];
+r [label="Evaluate definitions\nand shared summaries"];
+u [label="Publish change\nSchedule readers"];
+e [label="Proved\nEmit specialized code"];
+g [label="Unknown\nEmit general code or guard"];
 d -> q; q -> r; r -> u [label=" change"]; u -> r; r -> e [label=" stable"]; r -> g [label=" inconclusive"];
 ''')

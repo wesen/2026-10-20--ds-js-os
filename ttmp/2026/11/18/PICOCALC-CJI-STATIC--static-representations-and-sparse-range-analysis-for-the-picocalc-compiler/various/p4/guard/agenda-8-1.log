@@ -1,0 +1,65 @@
+Checking apps/agenda.js
+cji: progress src=a6f613bb phase=load elapsed_ms=0 allocs=0 scratch=0
+cji: begin elapsed_ms=1 psram_free=26427384 psram_largest=23592960
+cji: relocated elapsed_ms=450 psram_free=13143132 psram_largest=10747904
+cji: progress src=a6f613bb phase=frontend elapsed_ms=456 allocs=1 scratch=8388624
+cji: progress src=a6f613bb phase=frontend elapsed_ms=10004 allocs=20 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=20014 allocs=30 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=30024 allocs=36 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=40036 allocs=48 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=50044 allocs=58 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=60045 allocs=70 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=70055 allocs=82 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=80065 allocs=94 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=90075 allocs=102 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=100085 allocs=106 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=110092 allocs=112 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=120092 allocs=118 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=130124 allocs=122 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=140135 allocs=128 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=150140 allocs=134 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=160140 allocs=140 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=170155 allocs=146 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=180165 allocs=152 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=190184 allocs=160 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=200190 allocs=166 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=210193 allocs=172 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=220205 allocs=178 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=230215 allocs=184 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=240225 allocs=190 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=250245 allocs=196 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=260245 allocs=204 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=270253 allocs=210 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=280253 allocs=216 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=290285 allocs=222 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=300295 allocs=228 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=310304 allocs=236 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=320311 allocs=242 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=330315 allocs=248 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=340323 allocs=254 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=350324 allocs=262 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=360354 allocs=268 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=370365 allocs=274 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=380374 allocs=282 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=390375 allocs=288 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=400385 allocs=294 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=410392 allocs=300 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=420415 allocs=308 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=430424 allocs=316 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=440435 allocs=332 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=450435 allocs=349 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=460453 allocs=361 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=470464 allocs=373 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=480465 allocs=383 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=490483 allocs=395 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=500485 allocs=409 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=510492 allocs=419 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=520492 allocs=431 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=530492 allocs=461 scratch=8475655
+cji: progress src=a6f613bb phase=frontend elapsed_ms=540492 allocs=515 scratch=8999959
+cji: progress src=a6f613bb phase=link elapsed_ms=543523 allocs=533 scratch=9524103
+cji: progress src=a6f613bb phase=assemble elapsed_ms=543600 allocs=538 scratch=646632
+cji: metrics complete=1 frontend_us=543063071 gc_us=58914351 collections=255 live_peak_bytes=5728200 survivor_bytes=1012603808 slide_bytes=155379632
+cji: assembled elapsed_ms=544274 psram_free=17372916 psram_largest=10747904
+cji: progress src=a6f613bb phase=assembled elapsed_ms=544288 allocs=2318 scratch=0
+cji: released elapsed_ms=544290 psram_free=26431492 psram_largest=23592960

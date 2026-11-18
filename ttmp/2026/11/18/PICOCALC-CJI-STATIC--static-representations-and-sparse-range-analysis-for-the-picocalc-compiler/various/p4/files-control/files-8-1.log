@@ -1,0 +1,37 @@
+Checking apps/files.js
+cji: progress src=5ad09cd9 phase=load elapsed_ms=0 allocs=0 scratch=0
+cji: begin elapsed_ms=1 psram_free=26442000 psram_largest=13369344
+cji: relocated elapsed_ms=500 psram_free=13162292 psram_largest=8650752
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=506 allocs=1 scratch=8388624
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=10000 allocs=20 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=20015 allocs=26 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=30033 allocs=32 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=40037 allocs=34 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=50057 allocs=38 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=60057 allocs=40 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=70063 allocs=44 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=80100 allocs=50 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=90119 allocs=54 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=100120 allocs=58 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=110127 allocs=62 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=120127 allocs=64 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=130159 allocs=68 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=140160 allocs=74 scratch=8465154
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=150170 allocs=87 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=160189 allocs=99 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=170200 allocs=111 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=180200 allocs=115 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=190217 allocs=115 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=200228 allocs=115 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=210238 allocs=115 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=220248 allocs=115 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=230250 allocs=115 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=240251 allocs=115 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=250251 allocs=129 scratch=8465202
+cji: progress src=5ad09cd9 phase=frontend elapsed_ms=260252 allocs=174 scratch=8727362
+cji: progress src=5ad09cd9 phase=link elapsed_ms=261443 allocs=182 scratch=8989362
+cji: progress src=5ad09cd9 phase=assemble elapsed_ms=261484 allocs=187 scratch=368864
+cji: metrics complete=1 frontend_us=260932943 gc_us=9121609 collections=80 live_peak_bytes=3973240 survivor_bytes=151459216 slide_bytes=47127400
+cji: assembled elapsed_ms=261828 psram_free=19314384 psram_largest=18874368
+cji: progress src=5ad09cd9 phase=assembled elapsed_ms=261837 allocs=1291 scratch=0
+cji: released elapsed_ms=261838 psram_free=26442000 psram_largest=24117248

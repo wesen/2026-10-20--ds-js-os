@@ -37,6 +37,17 @@ The first experiment I recommend is suppressing unchanged writes to the range so
 
 ![Where a static fact changes physical compile time](../various/compile-levels.png)
 
+## A physical result to explain
+
+On the reattached ESP32-P4, the guarded compiler completed Agenda in **9 minutes 4 seconds**; the ordinary compiler took **24 minutes 35 seconds**. Both emitted exactly the catalog reference module. This pair measures the earlier RANGES scheduling change, which avoids complete numeric proofs during library expansion when the next helper choice is independent of those proofs. All proposals below start from the guarded build.
+
+| Physical board, 8 MiB | Ordinary job | Guarded job | Elapsed time saved | Ordinary / guarded peak live |
+|---|---:|---:|---:|---:|
+| Agenda | 1,474.601 s | 544.293 s | 930.308 s (63.09%) | 4,491,400 / 5,728,200 B |
+| Files | 261.854 s | 209.770 s | 52.084 s (19.89%) | 3,973,240 / 4,312,224 B |
+
+Each cell is one completed physical job, with the same source, 8 MiB reserved heap, headless peripherals, profiler, and independently checked output digest. The ELF identity changes between the two compiler builds. Both job receipts include loading, frontend, prelude link and native module assembly. For Agenda the guarded frontend took 543.063 s, including 58.914 s in GC. For Files it took 208.873 s, including 9.838 s in GC. The RV32 emulator had predicted 62.88% and 18.60% fewer frontend instructions respectively. The paired board jobs establish elapsed time, and show that even a successful 2.71-fold speedup leaves a nine-minute edit/compile wait for Agenda. The source-level research below addresses that remaining cost.
+
 ## Follow one read from JavaScript to the processor
 
 Open `src/library.js` in the imported CJI tree. Its slice helper normalizes endpoints, obtains the source length, allocates a result and copies a span. In the generated guarded stage 1, find the function whose full name is `slice.4604fbb68ec0`. Its loop already subtracts and compares native integers. Here is the significant portion of its SLIR, the textual instruction representation consumed by the assembler. Register names are retained so the boxing step is visible.
@@ -245,13 +256,16 @@ Run from repository root. The scripts take directories as arguments to keep larg
 
 ```bash
 ticket=(ttmp/2026/11/18/*CJI-STATIC*)
-bash "$ticket/scripts/03-measure-sites.sh" "$named" "$scratch/callers"
-bash "$ticket/scripts/06-run-probes.sh" "$named" "$scratch/probes"
-python3 "$ticket/scripts/07-slice-receiver.py" "$named" "$scratch/slice"
-python3 "$ticket/scripts/08-sidecar-trial.py" "$guarded_source" "$reference" "$scratch/cache"
-node "$ticket/scripts/11-range-consumers.mjs" "$guarded_source" agenda "$reference/agenda.ref"
-node "$ticket/scripts/12-range-state-copies.mjs" "$guarded_source" agenda "$reference/agenda.ref"
-python3 "$ticket/scripts/09-figures.py"
+scripts="$ticket/scripts"
+ref="$reference/agenda.ref"
+bash "$scripts/03-measure-sites.sh" "$named" "$scratch/callers"
+bash "$scripts/06-run-probes.sh" "$named" "$scratch/probes"
+python3 "$scripts/07-slice-receiver.py" "$named" "$scratch/slice"
+python3 "$scripts/08-sidecar-trial.py" "$guarded_source" \
+    "$reference" "$scratch/cache"
+node "$scripts/11-range-consumers.mjs" "$guarded_source" agenda "$ref"
+node "$scripts/12-range-state-copies.mjs" "$guarded_source" agenda "$ref"
+python3 "$scripts/09-figures.py"
 ```
 
 Here `named` contains the named guarded stage-1 object and reference inputs produced by RANGES script 34. `guarded_source` is the guarded bootstrap source tree containing `cji.js`; `reference` contains Agenda and Files reference SLIR. The long board runner is `scripts/01-board-pair.sh NEW_OUTPUT SAVED_IMAGES`, where the image directory contains the ordinary and guarded snapshots. It uses the existing device port and restores the ordinary headless image after the pair. The board runner flashes the app partition. Source-level research proposals in this chapter have no effect on that image.
