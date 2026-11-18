@@ -191,3 +191,51 @@ Inspect the two component CMake files, native_elf_p4.c and the manifest. Rebuild
 ### Technical details
 
 The pre-flash console reported 67,383 internal and 27,009,252 PSRAM bytes free. The cached prior image was retained locally. The application slot begins at 0x10000 and is 4 MiB.
+
+## Step 4. Recover kernel RAM after the first physical boot
+
+Firmware commit 559addc reached flash and verified its hash. Boot reported the expected version and the network worker remained active. Across 42 seconds there were no world lists, calibration line or answers to console commands. The serial device stayed present during the entire write.
+
+### Prompt context
+
+See Step 3. The required test includes a real reply and a second reply after restart.
+
+### What I did
+
+Inspected the target library with nm --size-sort -S. The field cache alone occupied 0x18000 internal bytes. Selected the runtime's existing uncached path on ESP and added a diagnostic for a failed 80 KiB kernel task allocation.
+
+### Why
+
+A module's literal and shape addresses can be reused after unload. Keeping a firmware-global cache indexed by those addresses would also risk a stale field index on restart.
+
+### What worked
+
+All 82 dynamic import names in the generated module had providers. The post-port emulator gate passed four worlds and its C control. Five workstation probes of the ESP-specific time calculation passed UTC, spring DST transition and both directions across New Year.
+
+### What didn't work
+
+The first p4cap.py capture booted firmware version 559addc and printed main_task: Returned from app_main(), then only Wi-Fi retries. None of the requested kernel console commands executed.
+
+### What I learned
+
+Flash headroom does not predict whether the internal allocator can supply the kernel task stack. The board can keep running network tasks when the nucleus never gets its own task.
+
+### What was tricky to build
+
+Disabling the address cache preserves the ordinary field search. At the device build's optimization level this also removes the entire cache array.
+
+### What warrants a second pair of eyes
+
+Compare the second link map and the boot-time internal heap. Verify both replies independently.
+
+### What should be done in the future
+
+Record the second hardware run and any further physical diagnosis.
+
+### Code review instructions
+
+Inspect field_index in runtime.c and the kernel task creation at the end of main_p4.c. Compare target symbol sizes and the two physical boot logs.
+
+### Technical details
+
+First image size 2,952,640 bytes, SHA-256 b7c7243bf2e2157e669fa7eb1caf9515053ece8503cb8a552fe75aa65c4a7c19. The boot-time heap showed 266,255 internal bytes free before peripheral initialization.

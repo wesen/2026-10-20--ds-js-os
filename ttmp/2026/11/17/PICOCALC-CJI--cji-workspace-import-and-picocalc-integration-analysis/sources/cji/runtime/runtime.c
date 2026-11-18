@@ -1221,7 +1221,7 @@ static double local_offset(double t)
 	if (!isfinite(t)) return NAN;
 	s = (time_t)floor(t / 1000);
 	if (!localtime_r(&s, &tm)) return NAN;
-	#ifdef ESP_PLATFORM
+#ifdef ESP_PLATFORM
 	struct tm utc;
 	if (!gmtime_r(&s, &utc)) return NAN;
 	/* The two civil dates are at most a day apart, including at New Year. */
@@ -1824,7 +1824,13 @@ static struct { int64_t shape, name, k; } field_cache[FIELD_CACHE];
 static int64_t field_index(int64_t o, int64_t name)
 {
 	int64_t *shape = (int64_t *)((int64_t *)o)[1], k;
+#ifdef ESP_PLATFORM
+	/* Module literals and shapes are freed on unload. Never retain their addresses
+	   in the shared firmware cache (which also occupies 96 KiB of internal RAM). */
+	const int cached = 0;
+#else
 	int cached = (uint64_t)name < (uint64_t)(uintptr_t)fromspace_begin || (uint64_t)name >= (uint64_t)(uintptr_t)fromspace_end;
+#endif
 	uint64_t h = 0;
 	if (cached) {
 		h = (((uint64_t)(uintptr_t)shape >> 3) * 0x9E3779B97F4A7C15ULL ^ ((uint64_t)name >> 3)) * 0x9E3779B97F4A7C15ULL >> 52;

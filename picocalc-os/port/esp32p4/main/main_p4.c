@@ -238,5 +238,6 @@ void app_main(void) {
   xTaskCreatePinnedToCore(console_task, "console", 4096, NULL, 3, NULL, 0);
   xTaskCreatePinnedToCore(shot_task, "shot", 4096, NULL, 2, &snap.task, 0);
   // QuickJS recurses on the C stack: the kernel task gets 80 KB of internal RAM (port_js_stack is 56 KB of it)
-  xTaskCreatePinnedToCore(kernel_task, "kernel", 80 * 1024, NULL, 5, NULL, 1);
+  if (xTaskCreatePinnedToCore(kernel_task, "kernel", 80 * 1024, NULL, 5, NULL, 1) != pdPASS)
+    ESP_LOGE(TAG, "cannot allocate kernel task (80 KiB internal stack)");
 }
