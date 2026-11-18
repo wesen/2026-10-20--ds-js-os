@@ -10,3 +10,23 @@ function validDate(year: i32, month: i32, day: i32): bool {
     if (month === 4 || month === 6 || month === 9 || month === 11) return day <= 30;
     return true;
 }
+
+// Return the lead in minutes, or -1 for an absent or malformed reminder token.
+function leadMinutes(token: string): i32 {
+    const n: i32 = token.length;
+    if (n < 3 || n > 6) return -1;
+    if (!(token.charCodeAt(0) === 33)) return -1;
+    let at: i32 = 1;
+    let value: i32 = 0;
+    while (at < n - 1) {
+        const digit: i32 = token.charCodeAt(at) - 48;
+        if (digit < 0 || digit > 9) return -1;
+        value = value * 10 + digit;
+        at = at + 1;
+    }
+    const unit: i32 = token.charCodeAt(at);
+    if (unit === 109) return value;
+    if (unit === 104) return value * 60;
+    if (unit === 100) return value * 1440;
+    return -1;
+}

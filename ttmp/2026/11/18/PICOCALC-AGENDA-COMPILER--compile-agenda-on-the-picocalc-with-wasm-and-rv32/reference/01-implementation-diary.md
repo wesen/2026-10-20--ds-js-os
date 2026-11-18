@@ -78,3 +78,47 @@ Read picocalc-os/worlds/agenda/reminder.typed alongside js/apps/agenda.js in the
 ### Technical details
 
 The script calls WebAssembly.instantiate on new output and compares the exported validDate against the function extracted from Agenda. No precompiled module or JS replacement supplies the tested result.
+
+## Step 2 — Parse reminder lead tokens in compiled code
+
+Agenda reads a value such as !15m from a task line. The application source now parses that token inside the generated Wasm. The compiler gained the string reads, assignments and loop needed to express this behavior.
+
+### Prompt context
+
+See Step 1. Calendar checkpoint 320fb63 established the first callable Wasm functions.
+
+### What I did
+
+Implemented typed string length and checked UTF-16 code-unit indexing, mutable locals and structured while loops. Added the leadMinutes function and a differential test against agParse. Ran the calendar regression after combining the functions into a 559-byte module.
+
+### Why
+
+A single token exercises real source text, bounds, decimal accumulation, unit conversion and a missing-value result. These operations will also be needed when scanning the complete task line.
+
+### What worked
+
+The host executed 30,010 token comparisons including all one-to-four-digit numeric values for minutes, hours and days, leading zeroes, malformed inputs and non-ASCII text. All matched the existing Agenda parser. The 235,158 calendar cases still matched.
+
+### What didn't work
+
+No differential mismatch occurred in this step. The existing host invoke utility accepts scalar arguments only. This test writes an explicit length-prefixed string into the module's memory, so it does not yet exercise OS event decoding.
+
+### What I learned
+
+An unsigned bounds comparison catches negative indexes as well as indexes at or above the string length. Checking before the load keeps malformed indexing inside the normal Wasm fault mechanism.
+
+### What was tricky to build
+
+A temporary local preserves the evaluated index exactly once. Loop declarations have lexical names scoped to the body but physical Wasm locals belong to the enclosing function.
+
+### What warrants a second pair of eyes
+
+Validate incoming buffer lengths before creating strings at the kernel boundary. The internal string representation assumes that a valid owned allocation backs its header.
+
+### What should be done in the future
+
+Return a full parsed task record including title, status, civil date, time and lead, then construct the view's task collection and route it through the real world ABI.
+
+### Code review instructions
+
+Run scripts/01-check-calendar.mjs and scripts/02-check-leads.mjs with Node from repository root. Inspect the compiler's checked charCodeAt emission and the application's use of the declared string type.

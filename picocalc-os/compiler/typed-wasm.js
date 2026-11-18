@@ -19,7 +19,7 @@ const BINARY = new Map([
 ]);
 const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(?<op>===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
-    "true", "false", "Math"]);
+    "true", "false", "Math", "let", "while", "string"]);
 
 function unsigned(value) {
     const bytes = [];
@@ -97,7 +97,7 @@ class Lexer {
 
     type() {
         const { value } = this.token;
-        if (value !== "i32" && value !== "bool") this.fail("expected i32 or bool");
+        if (value !== "i32" && value !== "bool" && value !== "string") this.fail("expected i32, bool or string");
         this.next();
         return value;
     }
@@ -113,10 +113,10 @@ class FunctionEmitter {
         this.depth = 0;
     }
 
-    local(name, type) {
+    local(name, type, mutable = false) {
         if (this.locals.has(name)) this.lex.fail("duplicate local " + name);
         const index = this.nextLocal++;
-        this.locals.set(name, { type, index });
+        this.locals.set(name, { type, index, mutable });
         return index;
     }
 
@@ -212,6 +212,25 @@ class FunctionEmitter {
         const binding = this.locals.get(name);
         if (!binding) lex.fail("unknown local " + name);
         this.emitLocal(OP.get, binding.index);
+        if (binding.type === "string" && lex.accept(".")) {
+            if (lex.accept("length")) {
+                this.code.push(0x28, 2, 0);
+                return "i32";
+            }
+            lex.expect("charCodeAt");
+            lex.expect("(");
+            const pos = this.nextLocal++;
+            this.want(this.expr(), "i32");
+            lex.expect(")");
+            this.emitLocal(OP.set, pos);
+            this.emitLocal(OP.get, pos);
+            this.emitLocal(OP.get, binding.index);
+            this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
+            this.emitLocal(OP.get, pos);
+            this.emitConst(1);
+            this.code.push(0x74, OP.add, 0x2f, 1, 4);
+            return "i32";
+        }
         return binding.type;
     }
 
@@ -223,6 +242,7 @@ class FunctionEmitter {
             const rule = BINARY.get(op);
             if (!rule || rule[0] < minPrecedence) break;
             const [precedence, input, result, opcode] = rule;
+            if (!input && type === "string") this.lex.fail("string equality requires content comparison");
             const expected = input ?? type;
             this.want(type, expected);
             this.lex.next();
@@ -255,6 +275,51 @@ class FunctionEmitter {
         if (branch) this.code.push(OP.return);
     }
 
+    statement(result) {
+        const lex = this.lex;
+        if (lex.accept("if")) {
+            lex.expect("(");
+            this.want(this.expr(), "bool");
+            lex.expect(")");
+            this.code.push(OP.if, VOID);
+            this.result(result, true);
+            this.code.push(OP.end);
+            return;
+        }
+        if (lex.accept("while")) {
+            lex.expect("(");
+            this.code.push(0x02, VOID, 0x03, VOID);
+            this.want(this.expr(), "bool");
+            lex.expect(")");
+            this.code.push(OP.eqz, 0x0d, 1);
+            lex.expect("{");
+            const enclosing = this.locals;
+            this.locals = new Map(enclosing);
+            while (!lex.accept("}")) this.statement(result);
+            this.locals = enclosing;
+            this.code.push(0x0c, 0, OP.end, OP.end);
+            return;
+        }
+        if (lex.token.value === "const" || lex.token.value === "let") {
+            const mutable = lex.token.value === "let";
+            lex.next();
+            const id = lex.ident();
+            lex.expect(":");
+            const type = lex.type();
+            lex.expect("=");
+            this.want(this.expr(), type);
+            this.emitLocal(OP.set, this.local(id, type, mutable));
+        } else {
+            const id = lex.ident();
+            const local = this.locals.get(id);
+            if (!local || !local.mutable) lex.fail("expected mutable local " + id);
+            lex.expect("=");
+            this.want(this.expr(), local.type);
+            this.emitLocal(OP.set, local.index);
+        }
+        lex.expect(";");
+    }
+
     function() {
         const lex = this.lex;
         lex.expect("function");
@@ -274,25 +339,7 @@ class FunctionEmitter {
         lex.expect(":");
         const result = lex.type();
         lex.expect("{");
-        while (lex.token.value !== "return") {
-            if (lex.accept("if")) {
-                lex.expect("(");
-                this.want(this.expr(), "bool");
-                lex.expect(")");
-                this.code.push(OP.if, VOID);
-                this.result(result, true);
-                this.code.push(OP.end);
-            } else {
-                lex.expect("const");
-                const id = lex.ident();
-                lex.expect(":");
-                const type = lex.type();
-                lex.expect("=");
-                this.want(this.expr(), type);
-                this.emitLocal(OP.set, this.local(id, type));
-                lex.expect(";");
-            }
-        }
+        while (lex.token.value !== "return") this.statement(result);
         this.result(result, false);
         lex.expect("}");
         this.code.push(OP.end);
@@ -310,6 +357,7 @@ function compile(source) {
     const functions = [];
     while (lex.token.kind !== "eof") {
         const fn = new FunctionEmitter(lex, declared).function();
+        if (fn.name === "memory") lex.fail("reserved memory export");
         if (declared.has(fn.name)) lex.fail("duplicate function " + fn.name);
         declared.set(fn.name, {index: functions.length, params: fn.params, result: fn.result});
         functions.push(fn);
@@ -324,7 +372,8 @@ function compile(source) {
         0, 0x61, 0x73, 0x6d, 1, 0, 0, 0,
         ...section(1, vec(headers)),
         ...section(3, vec(functions.map((_, i) => unsigned(i)))),
-        ...section(7, vec(names)),
+        ...section(5, [1, 1, 1, 1]),
+        ...section(7, vec([...names, [...vec([109,101,109,111,114,121]), 2, 0]])),
         ...section(10, vec(functions.map(fn => fn.body))),
     ]);
     return {
