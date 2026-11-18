@@ -1,0 +1,36 @@
+{
+  "matched_modules": [
+    "keyboard",
+    "power",
+    "display",
+    "compositor",
+    "agent",
+    "chat",
+    "launcher",
+    "files",
+    "editor",
+    "agenda",
+    "settings",
+    "logs",
+    "loader",
+    "sysmon",
+    "repl",
+    "snake",
+    "faults",
+    "flaky",
+    "keys",
+    "about"
+  ],
+  "matched_capped_rejections": {
+    "calc": {
+      "exit_code": 4,
+      "reason": "out of memory at 10485760 bytes",
+      "node_reference_diagnostic_matches": false
+    },
+    "sandbox": {
+      "exit_code": 2,
+      "reason": "Uncaught Error: 15:13: expected ), found ,",
+      "node_reference_diagnostic_matches": true
+    }
+  }
+}

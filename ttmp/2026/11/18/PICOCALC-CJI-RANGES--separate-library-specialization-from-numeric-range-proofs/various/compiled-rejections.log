@@ -1,0 +1,4 @@
+out of memory: the heap would grow to 20971520 bytes, past its cap of 10485760 (10460144 live, 32776 asked for)
+out of memory: the heap would grow to 20971520 bytes, past its cap of 10485760 (10481664 live, 4104 asked for)
+Uncaught Error: 15:13: expected ), found ,
+Uncaught Error: 15:13: expected ), found ,

@@ -6,13 +6,19 @@ from pathlib import Path
 import re
 import subprocess
 import time
+import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("compiler", type=Path)
+parser.add_argument("--link", type=Path, help="board build cji/ directory containing prelude and RV32 assembler")
 args = parser.parse_args()
 ticket = Path(__file__).resolve().parents[1]
 reference = {r["world"]: r for r in map(json.loads, (ticket / "various/catalog.jsonl").read_text().splitlines())}
 root = Path("picocalc-os/js")
+cji = next(Path("ttmp/2026/11/17").glob("*--cji-workspace*/sources/cji"))
+ledger = next(Path("ttmp/2026/11/17").glob("*CJI-PORT*/various/device-catalog-results.json"))
+modules = {row["world"]: row.get("host_elf_sha256") for row in json.loads(ledger.read_text())["worlds"]}
+
 failed = False
 for world in json.loads((root / "system.json").read_text())["worlds"]:
     source = root / world["file"]
@@ -22,6 +28,7 @@ for world in json.loads((root / "system.json").read_text())["worlds"]:
     start = time.monotonic()
     run = subprocess.run([args.compiler, "-g", "-C", "-h", cap, "-H", cap, "--", source, "--world-unit"],
                          capture_output=True, timeout=900)
+    elapsed = time.monotonic() - start
     expected = reference[world["name"]]
     digest = hashlib.sha256(run.stdout).hexdigest() if run.returncode == 0 else None
     diagnostics = run.stderr.decode(errors="replace")
@@ -32,11 +39,24 @@ for world in json.loads((root / "system.json").read_text())["worlds"]:
         match = run.returncode != 0 and bool(message) and message in diagnostics
     else:
         match = digest == expected["slir_sha256"][0]
+    module_sha = None
+    if args.link and digest:
+        with tempfile.TemporaryDirectory() as temp:
+            scratch = Path(temp)
+            own, linked, elf = (scratch / name for name in ("own.slir", "linked.slir", "world.elf"))
+            own.write_bytes(run.stdout)
+            with linked.open("wb") as sink:
+                subprocess.run(["node", cji / "tools/link-units.mjs", args.link / "prelude.slir", own],
+                               stdout=sink, check=True)
+            subprocess.run([args.link / "slas-rv32", "-c", elf, "--module", "--extern",
+                            args.link / "unit.list", linked], capture_output=True, check=True)
+            module_sha = hashlib.sha256(elf.read_bytes()).hexdigest()
+        match &= module_sha == modules[world["name"]]
     failed |= not match
     metrics = dict((key, int(value)) for key, value in re.findall(r"(frontend_us|gc_us|slide_bytes)=(\d+)", diagnostics))
     peak = re.search(r"most live (\d+) bytes", diagnostics)
     print(json.dumps(dict(world=world["name"], mib=mib, reference_match=match, status=run.returncode,
-                          sha256=digest, elapsed_s=round(time.monotonic()-start, 3),
+                          sha256=digest, elf_sha256=module_sha, elapsed_s=round(elapsed, 3),
                           live_peak_bytes=int(peak[1]) if peak else None, metrics=metrics,
                           error=diagnostics[-900:] if run.returncode else None)), flush=True)
 raise SystemExit(int(failed))

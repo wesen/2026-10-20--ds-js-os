@@ -1,0 +1,215 @@
+{
+  "event": "ITIMER_PROF",
+  "requested_period_us": 1000,
+  "samples": 7207,
+  "executable_sha256": "5517450d1e8c12b9d77683d80a8519a40bf6f4706ba5aba008f60041b72c9527",
+  "top_symbols": [
+    {
+      "symbol": "whole_bits",
+      "samples": 521,
+      "percent": 7.229082836131539
+    },
+    {
+      "symbol": "extra_find",
+      "samples": 437,
+      "percent": 6.063549327043153
+    },
+    {
+      "symbol": "rt_any_eq",
+      "samples": 435,
+      "percent": 6.035798529207715
+    },
+    {
+      "symbol": "rt_any_index",
+      "samples": 400,
+      "percent": 5.550159567087554
+    },
+    {
+      "symbol": "field_index",
+      "samples": 386,
+      "percent": 5.355903982239489
+    },
+    {
+      "symbol": "rt_any_get",
+      "samples": 360,
+      "percent": 4.995143610378799
+    },
+    {
+      "symbol": "mc_mark.part.0",
+      "samples": 338,
+      "percent": 4.689884834188983
+    },
+    {
+      "symbol": "rt_any_from_int",
+      "samples": 255,
+      "percent": 3.5382267240183154
+    },
+    {
+      "symbol": "mc_mark_fields",
+      "samples": 227,
+      "percent": 3.149715554322187
+    },
+    {
+      "symbol": "$read0.86ee22bf7c78",
+      "samples": 195,
+      "percent": 2.7057027889551826
+    },
+    {
+      "symbol": "str_equal",
+      "samples": 194,
+      "percent": 2.6918273900374636
+    },
+    {
+      "symbol": "join.a7ddece0a659",
+      "samples": 184,
+      "percent": 2.5530734008602747
+    },
+    {
+      "symbol": "mc_rewrite_fields",
+      "samples": 168,
+      "percent": 2.3310670181767725
+    },
+    {
+      "symbol": "rt_collect",
+      "samples": 158,
+      "percent": 2.1923130289995836
+    },
+    {
+      "symbol": "order_bits",
+      "samples": 145,
+      "percent": 2.0119328430692383
+    },
+    {
+      "symbol": "mc_new_word",
+      "samples": 128,
+      "percent": 1.7760510614680172
+    },
+    {
+      "symbol": "rt_key_hash",
+      "samples": 126,
+      "percent": 1.7483002636325795
+    },
+    {
+      "symbol": "rt_arr_resize",
+      "samples": 95,
+      "percent": 1.318162897183294
+    },
+    {
+      "symbol": "rt_any_to_int",
+      "samples": 92,
+      "percent": 1.2765367004301373
+    },
+    {
+      "symbol": "rt_any_sub",
+      "samples": 89,
+      "percent": 1.2349105036769807
+    },
+    {
+      "symbol": "slice.4604fbb68ec0",
+      "samples": 84,
+      "percent": 1.1655335090883863
+    },
+    {
+      "symbol": "Map$get.18420998537f",
+      "samples": 81,
+      "percent": 1.1239073123352297
+    },
+    {
+      "symbol": "[outside named executable functions]",
+      "samples": 76,
+      "percent": 1.0545303177466352
+    },
+    {
+      "symbol": "lambda.bc2f18d0e34f",
+      "samples": 71,
+      "percent": 0.9851533231580408
+    },
+    {
+      "symbol": "Object$is.9bafba816d66",
+      "samples": 64,
+      "percent": 0.8880255307340086
+    }
+  ],
+  "top_pcs": [
+    {
+      "pc": "0x404369",
+      "samples": 134
+    },
+    {
+      "pc": "0x403e90",
+      "samples": 100
+    },
+    {
+      "pc": "0x404e88",
+      "samples": 92
+    },
+    {
+      "pc": "0x407340",
+      "samples": 80
+    },
+    {
+      "pc": "0x402c60",
+      "samples": 74
+    },
+    {
+      "pc": "0x403d00",
+      "samples": 67
+    },
+    {
+      "pc": "0x4116b2",
+      "samples": 65
+    },
+    {
+      "pc": "0x402cca",
+      "samples": 60
+    },
+    {
+      "pc": "0x402c7d",
+      "samples": 57
+    },
+    {
+      "pc": "0x40b945",
+      "samples": 54
+    },
+    {
+      "pc": "0x402caf",
+      "samples": 46
+    },
+    {
+      "pc": "0x404ee4",
+      "samples": 44
+    },
+    {
+      "pc": "0x403e9a",
+      "samples": 43
+    },
+    {
+      "pc": "0x4074f0",
+      "samples": 41
+    },
+    {
+      "pc": "0x404e60",
+      "samples": 40
+    },
+    {
+      "pc": "0x404e8f",
+      "samples": 40
+    },
+    {
+      "pc": "0x407389",
+      "samples": 39
+    },
+    {
+      "pc": "0x40adc5",
+      "samples": 37
+    },
+    {
+      "pc": "0x402cba",
+      "samples": 35
+    },
+    {
+      "pc": "0x411659",
+      "samples": 33
+    }
+  ]
+}

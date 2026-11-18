@@ -135,3 +135,11 @@ Apply script 19 followed by script 26 via the guard build recipe. Compare variou
 ### Technical details
 
 The reduced fixture's control and guarded SLIR SHA-256 is 0f02736eb94596125e4cff0257022fa890b189d33f3b5a717585b933066e2bd8. The unguarded SLIR hash is 0fa6f817a33258f2df460768d2c6d3f4e60df9d5c984bfb7e28164caf21df3b4. The ordinary and guarded compiler-as-input checks matched at d4a68eaabc4971cf92263795e58d261b19ef9150313a0959a81c1ecbf50db452.
+
+### Step 2 follow-up — Validate the linked device catalog on the host
+
+Checkpoint 56102e3 contains the guarded prototype and paired host results. I then ran the compiled frontend against all manifest sources and linked the successful units against the actual device prelude with the RV32 module assembler. All 20 supported ELF hashes matched the independent device catalog, including Agent in the 10 MiB configuration. The first ledger reader failed with KeyError 'host_elf_sha256' because unsupported worlds do not have that field. Script 31 now treats their absence as expected, and preserves diagnostics and exit codes.
+
+The compiled Calc diagnostic differed from Node's reference: the 10 MiB frontend ran out of space first. Script 32 compared the ordinary and guarded compiled frontends under the same cap. Both exhausted it. Both rejected Sandbox at 15:13. This confirms parity of the supported set without conflating the Node and compiled diagnostics. Script 34 sampled the guarded native executable after proving its machine-code text identical to the timed executable. Agenda produced 7,207 samples. The raw sample addresses and symbol rankings are committed alongside the catalog.
+
+The linked-catalog rows retain comparison with the Node reference, including the Calc diagnostic difference. Script 35 reconciles unsupported rows with a memory-matched compiled control and fails on missing, duplicated or mismatched worlds. Its result lists 20 complete module matches, Calc exit 4 at 10,485,760 bytes, and Sandbox exit 2 with the parser location. The working ESP-IDF build directory was subsequently reset to the ordinary headless configuration using build-only commands; experiment snapshots have their own immutable identities.
