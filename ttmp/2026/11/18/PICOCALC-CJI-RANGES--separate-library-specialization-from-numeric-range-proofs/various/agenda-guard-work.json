@@ -1,0 +1,47 @@
+{
+  "world": "agenda",
+  "mode": "baseline",
+  "functionVisits": 2445,
+  "unchangedSkips": 1793,
+  "replayChecks": 0,
+  "episodeHits": 0,
+  "wholeRangeHits": 2,
+  "peakMemoTextUnits": 0,
+  "joins": 3036247,
+  "identical": 2331158,
+  "analyses": 2,
+  "fixpointRounds": 20,
+  "rounds": [
+    {
+      "round": 0,
+      "added": 12,
+      "originalTopLevelNodes": 104
+    },
+    {
+      "round": 1,
+      "added": 58,
+      "originalTopLevelNodes": 116
+    },
+    {
+      "round": 2,
+      "added": 1,
+      "originalTopLevelNodes": 174
+    },
+    {
+      "round": 3,
+      "added": 4,
+      "originalTopLevelNodes": 175
+    },
+    {
+      "round": 4,
+      "added": 3,
+      "originalTopLevelNodes": 179
+    },
+    {
+      "round": 5,
+      "added": 1,
+      "originalTopLevelNodes": 182
+    }
+  ],
+  "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa"
+}

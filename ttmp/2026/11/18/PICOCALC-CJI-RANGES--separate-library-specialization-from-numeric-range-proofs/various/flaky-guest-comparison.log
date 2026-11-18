@@ -1,0 +1,4 @@
+cji_metrics frontend_steps=1169986185 gc_steps=38960504 slide_bytes=1464824
+cji: 4 collections, 1998216 bytes copied, heap now 8388608 bytes, most live 561440 bytes, spilled 0 bytes; 1169986417 instructions
+cji_metrics frontend_steps=1169968003 gc_steps=38962582 slide_bytes=1464800
+cji: 4 collections, 1998216 bytes copied, heap now 8388608 bytes, most live 561512 bytes, spilled 0 bytes; 1169968235 instructions

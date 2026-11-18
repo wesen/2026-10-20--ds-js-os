@@ -10,14 +10,16 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("out",type=Path)
 parser.add_argument("case",choices=["memo","join","defer","guard"])
 parser.add_argument("--case-dir", type=Path, help="candidate receipts when stored outside OUT")
+parser.add_argument("--world", default="agenda")
+parser.add_argument("--candidate-exe", type=Path)
 args=parser.parse_args()
 out=args.out
 case=args.case_dir or out/args.case
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
-reference=sha(out/"agenda.ref")
-report=dict(case=args.case,world="agenda",heap_mib=8,reference_sha256=reference,variants={})
-for name, exe in [("baseline",out/"stage1-measured"),("candidate",case/"stage1")]:
+reference=sha(out/f"{args.world}.ref")
+report=dict(case=args.case,world=args.world,heap_mib=8,reference_sha256=reference,variants={})
+for name, exe in [("baseline",out/"stage1-measured"),("candidate",args.candidate_exe or case/"stage1")]:
     assert sha(case/f"{name}.ir")==reference
     runs=[]
     for ordinal in range(4):

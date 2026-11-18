@@ -19,12 +19,13 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+Reduce time to a verified module on the physical ESP32-P4 by separating receiver inference from full numeric proofs. The guarded prototype is qualified on the host. A complete physical comparison is pending board access.
 
 ## Key Links
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
+- [Intern design and implementation guide](design-doc/01-scheduling-numeric-range-proofs-in-the-cji-compiler.md)
+- [Investigation diary](reference/01-investigation-diary.md)
+- [Paired Agenda host measurements](various/agenda-guard-native.json)
 
 ## Status
 

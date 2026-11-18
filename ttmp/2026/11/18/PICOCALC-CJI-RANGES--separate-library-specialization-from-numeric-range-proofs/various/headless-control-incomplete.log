@@ -1,0 +1,118 @@
+Checking apps/agenda.js
+cji: progress src=a6f613bb phase=load elapsed_ms=0 allocs=0 scratch=0
+cji: begin elapsed_ms=1 psram_free=26431800 psram_largest=23592960
+cji: relocated elapsed_ms=440 psram_free=13152092 psram_largest=10747904
+cji: progress src=a6f613bb phase=frontend elapsed_ms=446 allocs=1 scratch=8388624
+cji: progress src=a6f613bb phase=frontend elapsed_ms=10014 allocs=22 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=20014 allocs=30 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=30058 allocs=36 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=40068 allocs=44 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=50078 allocs=48 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=60087 allocs=52 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=70098 allocs=56 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=80103 allocs=60 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=90103 allocs=64 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=100103 allocs=74 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=110138 allocs=80 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=120148 allocs=84 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=130157 allocs=88 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=140168 allocs=92 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=150177 allocs=96 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=160187 allocs=100 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=170197 allocs=104 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=180208 allocs=108 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=190218 allocs=112 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=200228 allocs=116 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=210238 allocs=120 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=220248 allocs=124 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=230258 allocs=128 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=240268 allocs=132 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=250278 allocs=138 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=260287 allocs=142 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=270297 allocs=150 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=280300 allocs=158 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=290300 allocs=162 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=300318 allocs=166 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=310328 allocs=170 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=320339 allocs=174 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=330349 allocs=180 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=340358 allocs=184 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=350363 allocs=188 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=360378 allocs=192 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=370398 allocs=196 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=380407 allocs=200 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=390417 allocs=204 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=400427 allocs=210 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=410438 allocs=214 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=420448 allocs=218 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=430457 allocs=222 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=440467 allocs=228 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=450477 allocs=238 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=460482 allocs=246 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=470484 allocs=250 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=480508 allocs=254 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=490508 allocs=256 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=500527 allocs=260 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=510538 allocs=264 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=520547 allocs=270 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=530557 allocs=274 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=540568 allocs=278 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=550577 allocs=282 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=560588 allocs=286 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=570597 allocs=290 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=580603 allocs=296 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=590617 allocs=300 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=600627 allocs=304 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=610638 allocs=308 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=620647 allocs=312 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=630658 allocs=318 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=640668 allocs=322 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=650677 allocs=326 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=660688 allocs=332 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=670698 allocs=336 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=680709 allocs=346 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=690718 allocs=354 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=700728 allocs=358 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=710735 allocs=362 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=720747 allocs=366 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=730757 allocs=370 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=740776 allocs=374 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=750776 allocs=378 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=760777 allocs=382 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=770777 allocs=386 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=780777 allocs=390 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=790818 allocs=396 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=800818 allocs=400 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=810826 allocs=404 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=820826 allocs=408 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=830827 allocs=412 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=840827 allocs=418 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=850834 allocs=422 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=860835 allocs=426 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=870837 allocs=430 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=880848 allocs=434 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=890858 allocs=440 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=900858 allocs=444 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=910863 allocs=448 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=920863 allocs=452 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=930914 allocs=458 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=940916 allocs=462 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=950919 allocs=466 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=960927 allocs=470 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=970938 allocs=476 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=980948 allocs=480 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=990957 allocs=484 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=1000963 allocs=488 scratch=8475607
+cji: progress src=a6f613bb phase=frontend elapsed_ms=1011013 allocs=494 scratch=8475607
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/scripts/07-check-bundled-catalog.py", line 90, in <module>
+    row.update(check(connection, file, source, args.timeout, args.profile_heap))
+               ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/scripts/07-check-bundled-catalog.py", line 27, in check
+    line = port.readline().decode(errors="replace").strip()
+           ~~~~~~~~~~~~~^^
+  File "/home/manuel/.pyenv/versions/3.13.2/lib/python3.13/site-packages/serial/serialposix.py", line 595, in read
+    raise SerialException(
+        'device reports readiness to read but returned no data '
+        '(device disconnected or multiple access on port?)')
+serial.serialutil.SerialException: device reports readiness to read but returned no data (device disconnected or multiple access on port?)

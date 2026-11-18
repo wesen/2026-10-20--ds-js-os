@@ -9,6 +9,11 @@ mkdir -p "$out"
 work=$(mktemp -d "$out/source-XXXXXX")
 cp -r "$cji/src" "$cji/package.json" "$cji/cji.js" "$work/"
 patch -d "$work" -p1 < "$scripts/19-defer-range-proof.patch"
+case "${2:-defer}" in
+    defer) ;;
+    guard) patch -d "$work" -p1 < "$scripts/26-prove-numeric-keys.patch" ;;
+    *) echo "Expected defer or guard" >&2; exit 2 ;;
+esac
 (cd "$work" && node "$cji/tools/bundle.mjs" --target cji -o "$out/bundle.js")
 node --max-old-space-size=6000 --stack-size=4000 "$cji/cji.js" "$out/bundle.js" --emit > "$out/stage1.slir"
 "$cji/slas" -S -c "$out/stage1.o" "$out/stage1.slir"

@@ -77,3 +77,61 @@ Read design-doc/01-scheduling-numeric-range-proofs-in-the-cji-compiler.md, then 
 ### Technical details
 
 The two accepted translations of hashed.js have SHA-256 values fa672dd2459953595b549a2bc70eb198c19e7e58e5ff746b6689b0175fadcc72 and 37255ee6a2c9f07d05266e885eb9471df10d66604b2d7356ea9b2efbb2686755. This checkpoint qualifies the source experiments. Performance claims need separate receipts.
+
+## Step 2 — Restore negative-zero semantics and qualify the guarded compiler on Linux
+
+The first archived mismatch provided a source-level lead: the removed floating equality branch occurs in a map insertion helper. Reading the helper generator exposed a choice between integer and general-number normalization. A reduced program made the semantic difference visible. I guarded the pass at that dependency, rebuilt it, and measured two applications.
+
+### Prompt Context
+
+See Step 1 for the pass-change request. **User prompt (verbatim):** “our main goal is being able to cmpie things in a reasonable amount of time on the device, btw.”
+
+**User prompt (verbatim):** “i'm gonna have to disconnec tthe device, maybe you can do your work on the host for now.”
+
+**Assistant interpretation and inferred intent:** Evaluate improvements to cold compile latency. Preserve completed host measurements and pause physical trials while the device is away. **Previous code checkpoint:** c445954 (prototype) and 4125701 (firmware comparison harness).
+
+### What I did
+
+- Added the reduced program in scripts/fixtures. Ran it with Node and with the original native SLIR runner after compiling it using the control, unguarded and guarded frontends.
+- Added scripts/26-prove-numeric-keys.patch and rebuilt using scripts/20-build-deferred.sh with the guard argument. The guard observes provisional integer keys when selecting add/set methods and Map/Set construction.
+- Checked 335 original archive fixtures and 22 manifest worlds. Ran strict sidecar record/replay for Files and compiled the original compiler source bundle using the candidate.
+- Timed Agenda and Files in alternating native trials and recorded the raw samples. Archived the interrupted physical control trace and canceled the serial waiter. No candidate was flashed.
+- Linked the corrected compiler for RV32 emulation using the original instrumented guest runtime. Each guest recipe first relinks the ordinary ELF and compares it with the pinned control.
+
+### Why
+
+The full archived hash-map test happened to print the same results despite a real signed-zero behavior change. Inspecting the reciprocal of the first iterated key directly distinguishes a negative zero from a normalized positive zero.
+
+### What worked
+
+The reduced fixture printed positive infinity in all four observations with the guard. Its emitted SLIR matched the ordinary compiler byte for byte. All 335 archive and 22 catalog results matched. The baseline and guarded self-host SLIR hashes were identical. Files accepted all three entries from the ordinary sidecar during strict replay.
+
+The guarded native Agenda medians were 29.709 and 11.217 seconds. Files medians were 2.277 and 1.509 seconds. Both improvements cost additional live heap, respectively 1,236,800 and 338,984 bytes. Detailed per-run receipts are under various/.
+
+### What didn't work
+
+The unguarded compiler returned negative infinity twice in the constructor portion of the focused fixture. A draft shell invocation for this fixture failed with an unmatched quote and did not create the file. The rerun created it explicitly and checked real output. The physical control was interrupted after its 1,011.013-second frontend heartbeat. Its terminal JSONL was empty; the operator requested host-only work. An initial tmux permission review timed out. The narrower Linux timing launch succeeded.
+
+### What I learned
+
+Numeric proof placement can affect which helper source exists before final inference even when common application modules match. A language-semantic regression test must inspect the operation that exposes the representation choice.
+
+### What was tricky to build
+
+The existing type walk visits calls after structural solving. The guard must decide before an owned tree is consumed and must let an already-started full proof finish its demotion iterations. Sidecar sessions preserve their ordinary call order. The headless firmware image is built and identified, but an image alone supplies no device timing.
+
+### What warrants a second pair of eyes
+
+Audit future helper generators for numeric type distinctions that would require an additional proof guard. An 8 MiB host arena held the two measured workloads, but physical outer job scratch and other programs' maximum live sets remain separate questions.
+
+### What should be done in the future
+
+Use the qualified headless ordinary and guarded firmware with the same source, heap and final ELF check when the PicoCalc is available. Report absolute device minutes saved; the stored incomplete control is excluded.
+
+### Code review instructions
+
+Apply script 19 followed by script 26 via the guard build recipe. Compare various/defer-original-fixtures.json with various/guard-original-fixtures.json, then inspect the reduced numeric-collection-keys.js and the two native timing receipts. The late pass must still prove the fully expanded program.
+
+### Technical details
+
+The reduced fixture's control and guarded SLIR SHA-256 is 0f02736eb94596125e4cff0257022fa890b189d33f3b5a717585b933066e2bd8. The unguarded SLIR hash is 0fa6f817a33258f2df460768d2c6d3f4e60df9d5c984bfb7e28164caf21df3b4. The ordinary and guarded compiler-as-input checks matched at d4a68eaabc4971cf92263795e58d261b19ef9150313a0959a81c1ecbf50db452.

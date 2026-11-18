@@ -1,0 +1,25 @@
+{
+  "total": 335,
+  "accepted": 289,
+  "rejected": 46,
+  "mismatches": [
+    {
+      "fixture": "collections/hashed.js",
+      "match": false,
+      "status": [
+        0,
+        0
+      ],
+      "digests": [
+        "fa672dd2459953595b549a2bc70eb198c19e7e58e5ff746b6689b0175fadcc72",
+        "37255ee6a2c9f07d05266e885eb9471df10d66604b2d7356ea9b2efbb2686755"
+      ],
+      "diagnostics": [
+        "",
+        ""
+      ]
+    }
+  ],
+  "raw_sha256": "a3eec56685d2dcd5381ece1a45f15fe6d39b88ddfe824a11acaf96e04844796e",
+  "input_zip_sha256": "4275d9447fca25e529683228be36a514da657eaeddacf6806c4142efc6ae97c1"
+}

@@ -1,0 +1,33 @@
+--- a/src/infer.js
++++ b/src/infer.js
+@@ -842,6 +842,8 @@
+   // (CJI-3, lane 5: write(false) makes the same calls in the same order, so that it finds the same cyclic
+   // types, but builds nothing: the check for cycles no longer makes a copy of the program beside it.
+   // Whatever write() reads or computes, it reads and computes in both modes.)
++  // Map/Set helper generation can observe numeric demotion through SameValueZero.
++  let needsKeyProof = false;
+   function write(build = true) {
+     const withType = (q, type) => (build ? { ...q, type } : q);
+     const fn = (f) => {
+@@ -887,6 +889,12 @@
+         const recvAnyElems = r?.k === 'Array' && find(r.elem).t.k === 'Any';   // known dynamic, not just unknown
+         const recvUnknown = r?.k === 'Bot' || unknown.has(e);
+         const argTypes = calls.get(e).args.map((t) => show(t, new Set()));
++        if (receiverOnly && !build) {
++          const key = argTypes[0];
++          if ((e.name === 'set' || e.name === 'add') && key === 'Int') needsKeyProof = true;
++          if (e.name === 'new Map' && key === 'Int[][]') needsKeyProof = true;
++          if (e.name === 'new Set' && key === 'Int[]') needsKeyProof = true;
++        }
+         if (build) {
+           out.recvType = recvType;
+           out.recvAnyElems = recvAnyElems;
+@@ -972,7 +980,7 @@
+   // (the tables' sizes, each by name: an array of the tables would make cji join their types)
+   // During library expansion only receiver and argument types select helpers.
+   // Run the numeric proof on the fully expanded tree before lowering it.
+-  if (receiverOnly) return { program: write(), fresh: 0 };
++  if (receiverOnly && !needsKeyProof && !demote.ranges) return { program: write(), fresh: 0 };
+   const sizes = [vars.size, literals.size, calls.size, prints.size, records.size, sigs.size];
+   const grew = () => vars.size !== sizes[0] || literals.size !== sizes[1] || calls.size !== sizes[2] || prints.size !== sizes[3]
+     || records.size !== sizes[4] || sigs.size !== sizes[5];
