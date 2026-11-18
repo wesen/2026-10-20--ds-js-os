@@ -1,3 +1,19 @@
+// Offsets refer to the original task line in UTF-16 code units. A negative
+// offset (or leadMinutes) marks an absent field. Ends are exclusive.
+record Task {
+    done: bool;
+    textStart: i32;
+    dueStart: i32;
+    dueEnd: i32;
+    timeStart: i32;
+    dateValid: bool;
+    timeValid: bool;
+    leadStart: i32;
+    leadEnd: i32;
+    leadMinutes: i32;
+    titleLength: i32;
+}
+
 // The stored task format has a four-digit year. The JS parser calls Date.UTC,
 // which interprets years 00 through 99 relative to 1900.
 function leap(year: i32): bool {
@@ -12,13 +28,12 @@ function validDate(year: i32, month: i32, day: i32): bool {
 }
 
 // Return the lead in minutes, or -1 for an absent or malformed reminder token.
-function leadMinutes(token: string): i32 {
-    const n: i32 = token.length;
-    if (n < 3 || n > 6) return -1;
-    if (!(token.charCodeAt(0) === 33)) return -1;
-    let at: i32 = 1;
+function leadValue(token: string, start: i32, end: i32): i32 {
+    if (end - start < 3 || end - start > 6) return -1;
+    if (!(token.charCodeAt(start) === 33)) return -1;
+    let at: i32 = start + 1;
     let value: i32 = 0;
-    while (at < n - 1) {
+    while (at < end - 1) {
         const digit: i32 = token.charCodeAt(at) - 48;
         if (digit < 0 || digit > 9) return -1;
         value = value * 10 + digit;
@@ -29,4 +44,152 @@ function leadMinutes(token: string): i32 {
     if (unit === 104) return value * 60;
     if (unit === 100) return value * 1440;
     return -1;
+}
+
+function leadMinutes(token: string): i32 {
+    return leadValue(token, 0, token.length);
+}
+
+function space(code: i32): bool {
+    return (code >= 9 && code <= 13) || code === 32 || code === 160 || code === 5760 ||
+        (code >= 8192 && code <= 8202) || code === 8232 || code === 8233 || code === 8239 ||
+        code === 8287 || code === 12288 || code === 65279;
+}
+
+function skipSpace(line: string, start: i32): i32 {
+    let at: i32 = start;
+    while (at < line.length && space(line.charCodeAt(at))) {
+        at = at + 1;
+    }
+    return at;
+}
+
+function decimal(line: string, start: i32, width: i32): i32 {
+    if (start + width > line.length) return -1;
+    let at: i32 = start;
+    let value: i32 = 0;
+    while (at < start + width) {
+        const digit: i32 = line.charCodeAt(at) - 48;
+        if (digit < 0 || digit > 9) return -1;
+        value = value * 10 + digit;
+        at = at + 1;
+    }
+    return value;
+}
+
+function boundary(line: string, at: i32): bool {
+    return at === line.length || space(line.charCodeAt(at));
+}
+
+function readDue(line: string, at: i32, task: Task): bool {
+    if (at + 11 > line.length) return false;
+    if (!(line.charCodeAt(at + 5) === 45 && line.charCodeAt(at + 8) === 45)) return false;
+    const year: i32 = decimal(line, at + 1, 4);
+    const month: i32 = decimal(line, at + 6, 2);
+    const day: i32 = decimal(line, at + 9, 2);
+    if (year < 0 || month < 0 || day < 0 || !boundary(line, at + 11)) return false;
+    task.dueStart = at;
+    task.dueEnd = at + 11;
+    task.dateValid = validDate(year, month, day);
+    const time: i32 = skipSpace(line, at + 11);
+    if (time + 5 > line.length || !(line.charCodeAt(time + 2) === 58)) return true;
+    const hour: i32 = decimal(line, time, 2);
+    const minute: i32 = decimal(line, time + 3, 2);
+    if (hour < 0 || minute < 0 || !boundary(line, time + 5)) return true;
+    task.dueEnd = time + 5;
+    task.timeStart = time;
+    task.timeValid = task.dateValid && hour < 24 && minute < 60;
+    return true;
+}
+
+function readLead(line: string, at: i32, task: Task): bool {
+    let end: i32 = at + 1;
+    while (end < line.length && end - at <= 6 && !space(line.charCodeAt(end))) {
+        end = end + 1;
+    }
+    const lead: i32 = leadValue(line, at, end);
+    if (lead < 0) return false;
+    task.leadStart = at;
+    task.leadEnd = end;
+    task.leadMinutes = lead;
+    return true;
+}
+
+function scanTask(line: string, task: Task): bool {
+    const start: i32 = skipSpace(line, 0);
+    if (start + 2 > line.length) return false;
+    if (!(line.charCodeAt(start) === 45 && line.charCodeAt(start + 1) === 32)) return false;
+    task.done = false;
+    task.textStart = start + 2;
+    task.dueStart = -1;
+    task.dueEnd = -1;
+    task.timeStart = -1;
+    task.dateValid = false;
+    task.timeValid = false;
+    task.leadStart = -1;
+    task.leadEnd = -1;
+    task.leadMinutes = -1;
+    if (start + 6 <= line.length && line.charCodeAt(start + 2) === 91 &&
+        line.charCodeAt(start + 4) === 93 && line.charCodeAt(start + 5) === 32) {
+        const mark: i32 = line.charCodeAt(start + 3);
+        if (mark === 32 || mark === 120 || mark === 88) {
+            task.textStart = start + 6;
+            task.done = mark === 120 || mark === 88;
+        }
+    }
+    let at: i32 = task.textStart;
+    let tokenStart: bool = true;
+    while (at < line.length) {
+        const code: i32 = line.charCodeAt(at);
+        // Agenda's line matcher permits these characters only in indentation.
+        if (code === 10 || code === 13 || code === 8232 || code === 8233) return false;
+        if (tokenStart && code === 64 && task.dueStart < 0) {
+            readDue(line, at, task);
+        }
+        if (tokenStart && code === 33 && task.leadStart < 0) {
+            readLead(line, at, task);
+        }
+        tokenStart = space(code);
+        at = at + 1;
+    }
+    return true;
+}
+
+function writeTitle(line: string, title: buffer, task: Task): i32 {
+    let at: i32 = task.textStart;
+    let written: i32 = 0;
+    let gap: bool = false;
+    while (at < line.length) {
+        if (at === task.dueStart) {
+            at = task.dueEnd;
+            gap = true;
+        }
+        if (at === task.leadStart) {
+            at = task.leadEnd;
+            gap = true;
+        }
+        if (at < line.length) {
+            const code: i32 = line.charCodeAt(at);
+            if (space(code)) {
+                gap = true;
+            }
+            if (!space(code)) {
+                if (gap && written > 0) {
+                    title.setCharCodeAt(written, 32);
+                    written = written + 1;
+                }
+                title.setCharCodeAt(written, code);
+                written = written + 1;
+                gap = false;
+            }
+            at = at + 1;
+        }
+    }
+    return written;
+}
+
+function parseTask(line: string, title: buffer, task: Task): bool {
+    if (!scanTask(line, task)) return false;
+    task.titleLength = writeTitle(line, title, task);
+    return true;
 }

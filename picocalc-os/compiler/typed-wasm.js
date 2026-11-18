@@ -19,7 +19,7 @@ const BINARY = new Map([
 ]);
 const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(?<op>===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
-    "true", "false", "Math", "let", "while", "string"]);
+    "true", "false", "Math", "let", "while", "string", "record", "buffer"]);
 
 function unsigned(value) {
     const bytes = [];
@@ -95,16 +95,17 @@ class Lexer {
         return value;
     }
 
-    type() {
+    type(records) {
         const { value } = this.token;
-        if (value !== "i32" && value !== "bool" && value !== "string") this.fail("expected i32, bool or string");
+        if (value !== "i32" && value !== "bool" && value !== "string" && value !== "buffer" && !records.has(value)) this.fail("unknown type " + value);
         this.next();
         return value;
     }
 }
 
 class FunctionEmitter {
-    constructor(lexer, functions) {
+    constructor(lexer, functions, records) {
+        this.records = records;
         this.functions = functions;
         this.lex = lexer;
         this.locals = new Map();
@@ -198,22 +199,18 @@ class FunctionEmitter {
             return "i32";
         }
         const name = lex.ident();
-        if (lex.accept("(")) {
-            const callee = this.functions.get(name);
-            if (!callee) lex.fail("unknown function " + name);
-            for (let i = 0; i < callee.params.length; i++) {
-                if (i) lex.expect(",");
-                this.want(this.expr(), callee.params[i]);
-            }
-            lex.expect(")");
-            this.code.push(0x10, ...unsigned(callee.index));
-            return callee.result;
-        }
+        if (lex.accept("(")) return this.call(name);
         const binding = this.locals.get(name);
         if (!binding) lex.fail("unknown local " + name);
-        this.emitLocal(OP.get, binding.index);
-        if (binding.type === "string" && lex.accept(".")) {
+        if (this.records.has(binding.type) && lex.accept(".")) {
+            this.emitLocal(OP.get, binding.index);
+            const field = this.field(binding.type);
+            this.code.push(0x28, 2, ...unsigned(field.offset));
+            return field.type;
+        }
+        if ((binding.type === "string" || binding.type === "buffer") && lex.accept(".")) {
             if (lex.accept("length")) {
+                this.emitLocal(OP.get, binding.index);
                 this.code.push(0x28, 2, 0);
                 return "i32";
             }
@@ -223,14 +220,11 @@ class FunctionEmitter {
             this.want(this.expr(), "i32");
             lex.expect(")");
             this.emitLocal(OP.set, pos);
-            this.emitLocal(OP.get, pos);
-            this.emitLocal(OP.get, binding.index);
-            this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
-            this.emitLocal(OP.get, pos);
-            this.emitConst(1);
-            this.code.push(0x74, OP.add, 0x2f, 1, 4);
+            this.codeUnitAddress(binding.index, pos);
+            this.code.push(0x2f, 1, 4);
             return "i32";
         }
+        this.emitLocal(OP.get, binding.index);
         return binding.type;
     }
 
@@ -242,7 +236,7 @@ class FunctionEmitter {
             const rule = BINARY.get(op);
             if (!rule || rule[0] < minPrecedence) break;
             const [precedence, input, result, opcode] = rule;
-            if (!input && type === "string") this.lex.fail("string equality requires content comparison");
+            if (!input && type !== "i32" && type !== "bool") this.lex.fail("expected scalar equality operands");
             const expected = input ?? type;
             this.want(type, expected);
             this.lex.next();
@@ -275,6 +269,60 @@ class FunctionEmitter {
         if (branch) this.code.push(OP.return);
     }
 
+    codeUnitAddress(receiver, position) {
+        this.emitLocal(OP.get, position);
+        this.emitLocal(OP.get, receiver);
+        this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
+        this.emitLocal(OP.get, receiver);
+        this.emitLocal(OP.get, position);
+        this.emitConst(1);
+        this.code.push(0x74, OP.add);
+    }
+
+    bufferWrite(receiver) {
+        const lex = this.lex;
+        lex.expect("setCharCodeAt");
+        lex.expect("(");
+        const position = this.nextLocal++;
+        this.want(this.expr(), "i32");
+        this.emitLocal(OP.set, position);
+        lex.expect(",");
+        this.codeUnitAddress(receiver, position);
+        this.want(this.expr(), "i32");
+        lex.expect(")");
+        this.code.push(0x3b, 1, 4); // i32.store16 into the buffer's data after its capacity
+    }
+
+    call(name) {
+        const lex = this.lex;
+        const callee = this.functions.get(name);
+        if (!callee) lex.fail("unknown function " + name);
+        for (let i = 0; i < callee.params.length; i++) {
+            if (i) lex.expect(",");
+            this.want(this.expr(), callee.params[i]);
+        }
+        lex.expect(")");
+        this.code.push(0x10, ...unsigned(callee.index));
+        return callee.result;
+    }
+
+    field(type) {
+        const name = this.lex.ident();
+        const field = this.records.get(type)?.get(name);
+        if (!field) this.lex.fail("unknown field " + type + "." + name);
+        return field;
+    }
+
+    block(result) {
+        if (++this.depth > 128) this.lex.fail("block nesting limit exceeded");
+        this.lex.expect("{");
+        const enclosing = this.locals;
+        this.locals = new Map(enclosing);
+        while (!this.lex.accept("}")) this.statement(result);
+        this.locals = enclosing;
+        this.depth--;
+    }
+
     statement(result) {
         const lex = this.lex;
         if (lex.accept("if")) {
@@ -282,7 +330,8 @@ class FunctionEmitter {
             this.want(this.expr(), "bool");
             lex.expect(")");
             this.code.push(OP.if, VOID);
-            this.result(result, true);
+            if (lex.token.value === "{") this.block(result);
+            else this.result(result, true);
             this.code.push(OP.end);
             return;
         }
@@ -292,11 +341,7 @@ class FunctionEmitter {
             this.want(this.expr(), "bool");
             lex.expect(")");
             this.code.push(OP.eqz, 0x0d, 1);
-            lex.expect("{");
-            const enclosing = this.locals;
-            this.locals = new Map(enclosing);
-            while (!lex.accept("}")) this.statement(result);
-            this.locals = enclosing;
+            this.block(result);
             this.code.push(0x0c, 0, OP.end, OP.end);
             return;
         }
@@ -305,17 +350,36 @@ class FunctionEmitter {
             lex.next();
             const id = lex.ident();
             lex.expect(":");
-            const type = lex.type();
+            const type = lex.type(this.records);
             lex.expect("=");
             this.want(this.expr(), type);
             this.emitLocal(OP.set, this.local(id, type, mutable));
         } else {
             const id = lex.ident();
+            if (lex.accept("(")) {
+                this.call(id);
+                this.code.push(0x1a); // drop the unused call result
+                lex.expect(";");
+                return;
+            }
             const local = this.locals.get(id);
-            if (!local || !local.mutable) lex.fail("expected mutable local " + id);
-            lex.expect("=");
-            this.want(this.expr(), local.type);
-            this.emitLocal(OP.set, local.index);
+            if (!local) lex.fail("unknown local " + id);
+            if (lex.accept(".")) {
+                if (local.type === "buffer") {
+                    this.bufferWrite(local.index);
+                } else {
+                    const field = this.field(local.type);
+                    this.emitLocal(OP.get, local.index);
+                    lex.expect("=");
+                    this.want(this.expr(), field.type);
+                    this.code.push(0x36, 2, ...unsigned(field.offset));
+                }
+            } else {
+                if (!local.mutable) lex.fail("expected mutable local " + id);
+                lex.expect("=");
+                this.want(this.expr(), local.type);
+                this.emitLocal(OP.set, local.index);
+            }
         }
         lex.expect(";");
     }
@@ -330,14 +394,14 @@ class FunctionEmitter {
             do {
                 const id = lex.ident();
                 lex.expect(":");
-                const type = lex.type();
+                const type = lex.type(this.records);
                 this.local(id, type);
                 params.push(type);
             } while (lex.accept(","));
             lex.expect(")");
         }
         lex.expect(":");
-        const result = lex.type();
+        const result = lex.type(this.records);
         lex.expect("{");
         while (lex.token.value !== "return") this.statement(result);
         this.result(result, false);
@@ -354,9 +418,25 @@ function compile(source) {
     if (source.length > 64 * 1024) throw new SyntaxError("input limit exceeded");
     const lex = new Lexer(source);
     const declared = new Map();
+    const records = new Map();
+    while (lex.accept("record")) {
+        const name = lex.ident();
+        if (records.has(name)) lex.fail("duplicate record " + name);
+        const fields = new Map();
+        lex.expect("{");
+        while (!lex.accept("}")) {
+            const field = lex.ident();
+            if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
+            lex.expect(":");
+            const type = lex.type(records);
+            lex.expect(";");
+            fields.set(field, {type, offset: fields.size * 4});
+        }
+        records.set(name, fields);
+    }
     const functions = [];
     while (lex.token.kind !== "eof") {
-        const fn = new FunctionEmitter(lex, declared).function();
+        const fn = new FunctionEmitter(lex, declared, records).function();
         if (fn.name === "memory") lex.fail("reserved memory export");
         if (declared.has(fn.name)) lex.fail("duplicate function " + fn.name);
         declared.set(fn.name, {index: functions.length, params: fn.params, result: fn.result});
@@ -378,6 +458,7 @@ function compile(source) {
     ]);
     return {
         bytes,
+        records: Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)])),
         signatures: functions.map(({ name, params, result }) => ({ name, params, result })),
     };
 }

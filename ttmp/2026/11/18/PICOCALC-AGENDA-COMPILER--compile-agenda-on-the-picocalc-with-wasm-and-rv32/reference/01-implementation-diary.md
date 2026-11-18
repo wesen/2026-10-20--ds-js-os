@@ -122,3 +122,47 @@ Return a full parsed task record including title, status, civil date, time and l
 ### Code review instructions
 
 Run scripts/01-check-calendar.mjs and scripts/02-check-leads.mjs with Node from repository root. Inspect the compiler's checked charCodeAt emission and the application's use of the declared string type.
+
+## Step 3 — Compile complete stored task lines
+
+The typed Agenda source now scans the original UTF-16 line, records the first syntactic date and reminder tags, and writes the normalized title to a bounded output buffer. The test runner reads the record and title after instantiating the freshly generated module.
+
+### Prompt context
+
+See Step 1. This concludes the stored-line parser milestone. The preceding string and loop checkpoint is 941e7aa.
+
+### What I did
+
+Added declared record fields, typed record loads and stores, block statements, calls used as statements, and a writable UTF-16 buffer. Implemented scanTask, readDue, readLead and writeTitle. Added scripts/03-check-task-records.mjs and its receipt.
+
+### Why
+
+A malformed date is absent to the scheduler but its syntactic tag is removed from the title. This needs both source offsets and validity fields. Keeping the original text supports the later workflow that locates a task by its unmodified line before writing a shared file.
+
+### What worked
+
+All 6,411 differential lines matched agParse, including completed tasks, Unicode whitespace, duplicate tags, date-only tasks, text beside a time, and invalid dates and times. Two negative cases produced source-located type diagnostics. The generated module is 2,605 bytes. Calendar and lead matrices still passed. Running node tests/agenda.test.mjs from picocalc-os passed nine existing Agenda application tests.
+
+### What didn't work
+
+The first complete-line implementation normalized titles in the host oracle. That left a behavior of the application outside the generated module. I added a bounded title output and reran the same cases with the host decoder only reading the result and supplying the presentation label for an empty title.
+
+### What I learned
+
+Separate a regular expression's syntactic match from validation of the fields it matches. A fixed-offset record and caller-provided output can express this boundary with predictable allocation costs.
+
+### What was tricky to build
+
+The optional time requires whitespace, validates its token boundary independently, and extends the due span even for out-of-range hour and minute values. The title writer must collapse whitespace around the removed spans while keeping all other characters in order.
+
+### What warrants a second pair of eyes
+
+The test harness allocates distinct input, title and result regions. The forthcoming world runtime must apply this ownership rule to bounded input and preserve the distinction between a record reference and a scalar type.
+
+### What should be done in the future
+
+Use the records in a task collection, generate the world entry points, and connect the first reminder workflow to storage, the clock and the rendered view.
+
+### Code review instructions
+
+Run scripts/01-check-calendar.mjs, scripts/02-check-leads.mjs and scripts/03-check-task-records.mjs from the repository root. Read reminder.typed alongside agParse in picocalc-os/js/apps/agenda.js. The receipt proves execution in the host Wasm engine. The board and world ABI have separate gates.
