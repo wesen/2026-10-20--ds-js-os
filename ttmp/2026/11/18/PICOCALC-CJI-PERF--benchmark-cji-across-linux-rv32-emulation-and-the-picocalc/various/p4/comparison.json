@@ -1,0 +1,106 @@
+{
+  "firmware_sha256": "154cd68cbe549538a837ec20293d389515d094b26a0a08a38a9da017ac8b4379",
+  "condition": "Keyboard I2C held between transactions, worker on core 0",
+  "runs": [
+    {
+      "world": "files",
+      "mib": 8,
+      "ordinal": 1,
+      "progress_samples": 31,
+      "memory": {
+        "begin": {
+          "elapsed_ms": 1,
+          "free": 25025840,
+          "largest": 24117248
+        },
+        "relocated": {
+          "elapsed_ms": 448,
+          "free": 11746132,
+          "largest": 11010048
+        },
+        "assembled": {
+          "elapsed_ms": 263106,
+          "free": 17896212,
+          "largest": 10747904
+        },
+        "released": {
+          "elapsed_ms": 263117,
+          "free": 25023764,
+          "largest": 13107200
+        }
+      },
+      "gc_fraction": 0.03510345891558881
+    },
+    {
+      "world": "agenda",
+      "mib": 8,
+      "ordinal": 1,
+      "progress_samples": 152,
+      "memory": {
+        "begin": {
+          "elapsed_ms": 1,
+          "free": 25013256,
+          "largest": 13107200
+        },
+        "relocated": {
+          "elapsed_ms": 452,
+          "free": 11733560,
+          "largest": 8388608
+        },
+        "assembled": {
+          "elapsed_ms": 1480315,
+          "free": 15963208,
+          "largest": 14417920
+        },
+        "released": {
+          "elapsed_ms": 1480328,
+          "free": 25017348,
+          "largest": 24117248
+        }
+      },
+      "gc_fraction": 0.058073930112090104
+    },
+    {
+      "world": "agenda",
+      "mib": 10,
+      "ordinal": 1,
+      "progress_samples": 151,
+      "memory": {
+        "begin": {
+          "elapsed_ms": 1,
+          "free": 25017336,
+          "largest": 24117248
+        },
+        "relocated": {
+          "elapsed_ms": 454,
+          "free": 9640476,
+          "largest": 8912896
+        },
+        "assembled": {
+          "elapsed_ms": 1462417,
+          "free": 15963212,
+          "largest": 10485760
+        },
+        "released": {
+          "elapsed_ms": 1462431,
+          "free": 25017336,
+          "largest": 24117248
+        }
+      },
+      "gc_fraction": 0.04246466858867
+    }
+  ],
+  "agenda_10_vs_8": {
+    "n_8": 1,
+    "n_10": 1,
+    "median_delta_percent": {
+      "frontend_us": -1.2096177452263768,
+      "gc_us": -27.762752854854035,
+      "elapsed_ms": -1.2085737060405055,
+      "collections": -29.952830188679247,
+      "survivor_bytes": -30.627842609040414,
+      "slide_bytes": -18.47116154445756,
+      "scratch_bytes": 20.870193125357073
+    }
+  }
+}

@@ -25,6 +25,10 @@ Agenda spends almost its entire physical compile inside stage 1. With an 8 MiB h
 
 **Linux simulator framebuffer.** This is the application whose bundled source we compile. Its launch screen verifies what the workload represents. The compiler benchmark ends after hashing the generated module. It excludes world startup, drawing and typing latency.
 
+![Actual post-benchmark ESP32-P4 launcher framebuffer decoded from the serial screenshot command.](../various/figures/p4-launcher.png)
+
+**Physical PicoCalc framebuffer.** This 320 × 320 capture is shown at 2× nearest-neighbor scale. After the separate demonstration compile, the framebuffer command returned the same CRC as before it. The launcher reports 27 of 28 worlds running and five crashes since boot. After the benchmark reset, the keyboard bus recorded 390 errors in 390 transfers; the attempted Logs shortcut did not change the screen. The figure shows the available launcher state. Compiler liveness during the timed runs comes from the serial progress traces. [Capture record](../various/p4/display-capture.json).
+
 ## Which work crosses platforms
 
 ![The compiler input forks into native host, guest emulator and physical board paths.](../various/figures/compiler-paths.png)
@@ -53,6 +57,10 @@ On this matrix the P4 frontend took approximately 75 times as long as Linux for 
 ![Cumulative allocator call count from physical frontend heartbeat records.](../various/figures/frontend-heartbeats.png)
 
 **Reading a slow run.** Each point is an observed frontend heartbeat. The same job can allocate, reuse and free temporary buffers throughout stage 1. A rising call count confirms activity. An interval with a flat count may still be running generated code. A terminal full-digest receipt establishes completion. Comparing the final link and assemble timestamps shows that improving them has very little leverage on Agenda's present wall time.
+
+### What the larger heap bought on the board
+
+The matched 10 MiB run returned the same Agenda ELF. GC fell from 85.898 to 62.050 s, but total frontend time fell from 1,479.109 to 1,461.217 s. Time outside measured collections increased by 5.956 s. The full job improved 1.21% at a cost of exactly 2 MiB additional peak scratch. One pair in a fixed order establishes the observed result and its memory cost. It cannot resolve device run-to-run variation. Keep 8 MiB as the default and prioritize range-analysis work for a larger latency improvement. [Physical receipts and memory samples](../various/p4/comparison.json).
 
 ## Memory ownership on the device
 

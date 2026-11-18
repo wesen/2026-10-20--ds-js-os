@@ -350,3 +350,18 @@ The guest harness count rose by 1,377,250 instructions with instrumentation (0.0
 A second Linux matrix reused the exact same two executables, source bytes and output references. It ran after Callgrind exited, pinned to logical CPU 1 with its sibling free of our benchmark processes. Other emulators continued on separate physical cores. Each cell again has seven measured samples following one warm-up. Process wall-time medians were 2.364 s plain and 2.317 s instrumented for Files, 17.897 s and 16.757 s for Agenda at 8 MiB, and 17.398 s and 16.390 s for Agenda at 10 MiB.
 
 The direction of the plain-versus-instrumented timing difference reversed between the two matrices. The ELF identity and work counters stayed fixed. Consequently the Linux timings do not isolate a reliable overhead percentage. The RV32 guest gives a deterministic estimate in instructions for Files. Doubling down on host wall-clock precision would do little to answer the physical heap question. The [second host matrix](../various/linux-repeat-summary.json) and [individual receipts](../various/linux-repeat-samples.jsonl) preserve both sample counts and spread.
+
+### Physical Agenda heap experiment
+
+Both jobs used firmware 154cd68c, the same source and prelude, identical early reservation policy and the held keyboard bus. Each ran once in the order 8 MiB then 10 MiB. Both returned the expected 301,496-byte module.
+
+| Agenda | 8 MiB | 10 MiB | Change |
+|---|---:|---:|---:|
+| Frontend | 1,479.109 s | 1,461.217 s | −17.892 s |
+| Collector | 85.898 s | 62.050 s | −23.848 s |
+| Frontend outside GC | 1,393.211 s | 1,399.167 s | +5.956 s |
+| Full compile check | 1,480.340 s | 1,462.449 s | −17.891 s |
+| Collections | 424 | 297 | −127 |
+| Peak job scratch | 10,048,551 B | 12,145,703 B | +2,097,152 B |
+
+The larger heap reduced collector time by 27.8% and whole-job time by 1.21% in this pair. Increasing the default would consume two additional MiB for the duration of a job. Keep 8 MiB for normal Agenda builds based on the current evidence. Replay the pair in reverse order before attributing small overall differences to the heap configuration. The [raw progress logs and validated comparison](../various/p4) include free and largest PSRAM samples before and after each job.

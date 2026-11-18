@@ -1,0 +1,31 @@
+{
+  "native_size": [
+    320,
+    320
+  ],
+  "saved_size": [
+    640,
+    640
+  ],
+  "frames": [
+    {
+      "crc32": "3ed26c5b",
+      "rle_runs": 8129
+    },
+    {
+      "crc32": "3ed26c5b",
+      "rle_runs": 8129
+    },
+    {
+      "crc32": "3ed26c5b",
+      "rle_runs": 8129
+    }
+  ],
+  "png_sha256": "bc364f25c7cf0eb3a28a67801f76f0195cf963018c1b9170192406dca4c180f2",
+  "keyboard_bus_after_reset": {
+    "transfers": 390,
+    "errors": 390,
+    "bytes": 1564,
+    "busy_ms": 5087.82
+  }
+}

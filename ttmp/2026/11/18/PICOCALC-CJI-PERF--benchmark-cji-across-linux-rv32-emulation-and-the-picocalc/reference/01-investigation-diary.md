@@ -517,3 +517,49 @@ Compare the two per-world reuse JSON files in various/linux-profiles and inspect
 ### Technical details
 
 Agenda's peak tracked memo text was 1,530,495 UTF-16 units. Files peaked at 429,257. The two source digests and SLIR digests remain the previously qualified values.
+
+## Step 12 — Close the physical A/B and verify the real display
+
+### Prompt Context
+
+Continuing the request for physical screenshots, a cross-target report and a traceable heap experiment.
+
+### What I did
+
+Validated the second Agenda module, checked all phase transitions and PSRAM snapshots, and rerendered the time and heartbeat figures from the three completed physical jobs. The experiment reset the board. In a separate demonstration I captured three physical frames around a successful Keyboard compilation and inspected the decoded pixels.
+
+### Why
+
+A picture obtained during the timed compile would perturb the serial traffic. Separating the framebuffer demonstration makes the timing comparison and image provenance clear.
+
+### What worked
+
+The candidate finished in 1,462.449 seconds with the expected module. Using 10 MiB saved 17.891 seconds end to end, reduced collector time by 23.848 seconds and increased peak scratch by exactly 2 MiB. All three 320 × 320 physical captures passed CRC verification and showed the same launcher. Retained one copy. The bus hold was released by the normal reset.
+
+### What didn't work
+
+After reset the keyboard bus reported 390 failures in 390 transfers. The shortcut to Logs did not change the launcher. All frame CRCs were 3ed26c5b. The report uses serial receipts for progress and the picture for the physical display.
+
+### What I learned
+
+More heap can materially reduce collector activity while producing a small net latency change. Time outside collection rose by about six seconds in this pair. The result does not support a production default change.
+
+### What was tricky to build
+
+A normal reset re-enables keyboard transfers but cannot establish that the separate keyboard controller responds. The post-reset counters document that distinction. Avoid retaining the full unfiltered console transcript in Git.
+
+### What warrants a second pair of eyes
+
+Both P4 samples used the same firmware and held-bus condition. There is one run per heap size. A reverse-order repeat is appropriate before drawing conclusions about a difference near one percent.
+
+### What should be done in the future
+
+Use a whole-device power cycle to restore the keyboard controller, then verify normal bus transfers before a UI latency benchmark. The host memo candidate and larger guest profiles continue separately.
+
+### Code review instructions
+
+Check various/p4/comparison.json against p4-runs.jsonl. Compare the launcher image hash with display-capture.json. The figure source and physical resource capture scripts are in scripts/figures. Previous inference-cache checkpoint ec58483.
+
+### Technical details
+
+The 10 MiB P4 job reported 297 collections, 995,195,416 survivor bytes and 172,771,688 slide bytes. Frontend time was 1,461,217,032 microseconds. The board SHA-256 for Agenda matches its 8 MiB build and the independent host ELF.
