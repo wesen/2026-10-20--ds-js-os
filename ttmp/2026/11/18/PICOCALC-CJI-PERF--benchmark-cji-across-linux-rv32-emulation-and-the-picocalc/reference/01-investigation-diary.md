@@ -329,3 +329,49 @@ Inspect the actual P4 log and JSON, guest stats and symbol ranking, then compare
 ### Technical details
 
 The retained initial native executable hash is e748e63a8ac14fb841c9bb1dc672a4e4b2a63920e87255c9f769768750743ecd. The initial and measured guest firmware hashes are d276e380ebabcf694a61c7ad3e2e029a7d369c9ccafb1d5e51d025992ed4f702 and dab4c956efd4a83875592ca55dba8f93e08a689e7acf084027e3979f3bba92d0. The Files physical digest matched the independent host module.
+
+## Step 8 — Repeat the host control after Callgrind finishes
+
+### Prompt Context
+
+Continuing the baseline request and the requirement to preserve every runner in its ticket.
+
+### What I did
+
+Reran the same Linux AOT matrix on CPU 1 when the Callgrind processes had exited. Kept the original configuration order, binaries and references. Added a physical report reader which validates the source, module, firmware consistency, phases, nested timings and memory samples before summarizing a heap comparison.
+
+### Why
+
+The original 18–34% instrumented/ordinary process differences were too large to attribute confidently to the few added clock calls. An independent scheduling condition tests that interpretation.
+
+### What worked
+
+All 48 outputs in the repeat qualified. Across both runs there are now 96 verified Linux outputs. The second matrix produced identical work counters. The physical report reader validated all five phase transitions and four allocator snapshots for Files.
+
+### What didn't work
+
+Even after moving onto a dedicated physical core, host time ranges overlap. The direction of instrumented versus plain median latency reversed. The measurements cannot resolve a reliable probe cost in wall time.
+
+### What I learned
+
+Matched RV32 instruction counts establish the work added by the probe more cleanly than host timing differences. On the second matrix Agenda GC time fell from 1.400 to 0.997 seconds while the plain 10 MiB process median fell only 2.8%.
+
+### What was tricky to build
+
+Firmware dumps can be large. The physical reporting script uses the full receipt and short phase logs, and requires source identity, module identity and measured heap equality before calculating relative changes.
+
+### What warrants a second pair of eyes
+
+The statistical unit is one compiler process. Warm-up rows are retained but excluded from summaries. Other emulators shared package-level power and memory resources with the host control.
+
+### What should be done in the future
+
+Complete the physical A/B and larger guest work. This step leaves the first Files baseline intact so a reviewer can inspect each host scheduling condition independently.
+
+### Code review instructions
+
+Start at scripts/as-run/04-host-repeat.sh and compare its executable hashes in the two host receipts. Run scripts/09-board-report.py on the retained physical evidence to reproduce the memory and progress checks. The preceding three-target baseline is a35e113.
+
+### Technical details
+
+The repeat's plain process medians were 2,363,525, 17,897,174 and 17,397,927 microseconds for Files 8, Agenda 8 and Agenda 10. All runs used the same stage-0 digest per world.

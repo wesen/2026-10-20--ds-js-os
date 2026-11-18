@@ -1,0 +1,170 @@
+{
+  "worlds": {
+    "files": {
+      "slir_sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa",
+      "source_sha256": "5ad09cd9421031b03497ce1fcc6ebade53a1496a44420e126272546a48ef8587"
+    },
+    "agenda": {
+      "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+      "source_sha256": "a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e"
+    }
+  },
+  "host_timing": [
+    {
+      "world": "agenda",
+      "heap_bytes": 8388608,
+      "variant": "measured",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 16756562,
+        "min": 15688767,
+        "max": 21962416
+      },
+      "process_cpu_us": {
+        "median": 16602504,
+        "min": 15687691,
+        "max": 21501318
+      },
+      "frontend_us": {
+        "median": 16754774,
+        "min": 15686887,
+        "max": 21960617
+      },
+      "gc_us": {
+        "median": 1400128,
+        "min": 1329533,
+        "max": 1724737
+      },
+      "collections": 424,
+      "survivor_bytes": 1434574696,
+      "slide_bytes": 211914816,
+      "live_peak_bytes": 4491400,
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0"
+    },
+    {
+      "world": "agenda",
+      "heap_bytes": 8388608,
+      "variant": "plain",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 17897174,
+        "min": 15758073,
+        "max": 21822044
+      },
+      "process_cpu_us": {
+        "median": 17704035,
+        "min": 15756559,
+        "max": 21633133
+      },
+      "collections": 424,
+      "survivor_bytes": 1434574696,
+      "slide_bytes": null,
+      "live_peak_bytes": 4491400,
+      "executable_sha256": "6f26ff7c103d5ab6d1ae793879f98360b62c0be10d324699e072d57760ffefa4"
+    },
+    {
+      "world": "agenda",
+      "heap_bytes": 10485760,
+      "variant": "measured",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 16390030,
+        "min": 15259248,
+        "max": 20948725
+      },
+      "process_cpu_us": {
+        "median": 16207768,
+        "min": 15257981,
+        "max": 20656741
+      },
+      "frontend_us": {
+        "median": 16388190,
+        "min": 15257610,
+        "max": 20946581
+      },
+      "gc_us": {
+        "median": 996778,
+        "min": 943441,
+        "max": 1173473
+      },
+      "collections": 297,
+      "survivor_bytes": 995195416,
+      "slide_bytes": 172771688,
+      "live_peak_bytes": 4460280,
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0"
+    },
+    {
+      "world": "agenda",
+      "heap_bytes": 10485760,
+      "variant": "plain",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 17397927,
+        "min": 15606043,
+        "max": 20673240
+      },
+      "process_cpu_us": {
+        "median": 17195486,
+        "min": 15602888,
+        "max": 20643523
+      },
+      "collections": 297,
+      "survivor_bytes": 995195416,
+      "slide_bytes": null,
+      "live_peak_bytes": 4460280,
+      "executable_sha256": "6f26ff7c103d5ab6d1ae793879f98360b62c0be10d324699e072d57760ffefa4"
+    },
+    {
+      "world": "files",
+      "heap_bytes": 8388608,
+      "variant": "measured",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 2316537,
+        "min": 2168407,
+        "max": 3028360
+      },
+      "process_cpu_us": {
+        "median": 2291900,
+        "min": 2168039,
+        "max": 2983402
+      },
+      "frontend_us": {
+        "median": 2314785,
+        "min": 2166825,
+        "max": 3026587
+      },
+      "gc_us": {
+        "median": 118595,
+        "min": 112151,
+        "max": 150924
+      },
+      "collections": 80,
+      "survivor_bytes": 151459216,
+      "slide_bytes": 47127400,
+      "live_peak_bytes": 3973240,
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0"
+    },
+    {
+      "world": "files",
+      "heap_bytes": 8388608,
+      "variant": "plain",
+      "n": 7,
+      "process_elapsed_us": {
+        "median": 2363525,
+        "min": 2207697,
+        "max": 2949105
+      },
+      "process_cpu_us": {
+        "median": 2363132,
+        "min": 2207300,
+        "max": 2936022
+      },
+      "collections": 80,
+      "survivor_bytes": 151459216,
+      "slide_bytes": null,
+      "live_peak_bytes": 3973240,
+      "executable_sha256": "6f26ff7c103d5ab6d1ae793879f98360b62c0be10d324699e072d57760ffefa4"
+    }
+  ]
+}

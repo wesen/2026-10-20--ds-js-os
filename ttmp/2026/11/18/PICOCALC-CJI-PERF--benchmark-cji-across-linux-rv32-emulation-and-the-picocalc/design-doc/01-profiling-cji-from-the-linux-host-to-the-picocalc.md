@@ -344,3 +344,9 @@ Files executed 55,749,383,511 instructions in the plain RV32 guest harness. Abou
 | Bytes physically slid | 47,127,400 | 47,127,400 | 47,127,400 |
 
 The guest harness count rose by 1,377,250 instructions with instrumentation (0.0025%). On the P4, GC occupied 3.51% of frontend time. The full check took 263.136 s and peaked at 9,251,666 scratch bytes. The board returned the expected 193,896-byte module. For Files, even eliminating all measured GC time would save about nine seconds under these conditions. The [P4 receipts](../various/p4) and [RV32 reports](../various/rv32) preserve the measurements.
+
+### Probe overhead and host load
+
+A second Linux matrix reused the exact same two executables, source bytes and output references. It ran after Callgrind exited, pinned to logical CPU 1 with its sibling free of our benchmark processes. Other emulators continued on separate physical cores. Each cell again has seven measured samples following one warm-up. Process wall-time medians were 2.364 s plain and 2.317 s instrumented for Files, 17.897 s and 16.757 s for Agenda at 8 MiB, and 17.398 s and 16.390 s for Agenda at 10 MiB.
+
+The direction of the plain-versus-instrumented timing difference reversed between the two matrices. The ELF identity and work counters stayed fixed. Consequently the Linux timings do not isolate a reliable overhead percentage. The RV32 guest gives a deterministic estimate in instructions for Files. Doubling down on host wall-clock precision would do little to answer the physical heap question. The [second host matrix](../various/linux-repeat-summary.json) and [individual receipts](../various/linux-repeat-samples.jsonl) preserve both sample counts and spread.
