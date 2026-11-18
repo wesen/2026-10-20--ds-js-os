@@ -1,0 +1,10 @@
+kind service
+-> done
+reply {"sum":20540,"r":0.00006295018829405308,"keys":"a,b,c","count":1}
+-> done
+reply 4
+-> done
+reply {"sum":20540,"r":0.00006295018829405308,"keys":"a,b,c,d1","count":2}
+-> done
+reply 5
+-> done

@@ -1,0 +1,18 @@
+kind app
+title Snake
+icon [["fill",2,20,26,6],["fill",22,8,6,18],["fill",22,8,14,6],["fill",4,6,6,6,"accent"]]
+about A game on a 22 x 18 grid, ticking on the virtual clock.
+key s
+every 110 -> 0
+screen {"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"score 0","font":"mb","w":104},{"t":"text","s":"length 4 · best 0","font":"s","color":"muted","align":"right","pad":3}]},{"t":"canvas","w":286,"h":234,"ops":[["fill",40,105,11,11,"ink"],["fill",53,105,11,11,"ink"],["fill",66,105,11,11,"ink"],["fill",79,105,11,11,"accent"],["fill",237,16,7,7,"accent"],["rect",235,14,11,11,"accent"]],"bg":"#ffffff","border":"line"}]} | ←→↑↓ or wasd steer  p autopilot
+-> done
+screen {"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"score 0","font":"mb","w":104},{"t":"text","s":"length 4 · best 0","font":"s","color":"muted","align":"right","pad":3}]},{"t":"canvas","w":286,"h":234,"ops":[["fill",40,105,11,11,"ink"],["fill",53,105,11,11,"ink"],["fill",66,105,11,11,"ink"],["fill",79,105,11,11,"accent"],["fill",237,16,7,7,"accent"],["rect",235,14,11,11,"accent"]],"bg":"#ffffff","border":"line"}]} | ←→↑↓ or wasd steer  p autopilot
+-> done
+screen {"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"score 0","font":"mb","w":104},{"t":"text","s":"length 4 · best 0","font":"s","color":"muted","align":"right","pad":3}]},{"t":"canvas","w":286,"h":234,"ops":[["fill",53,105,11,11,"ink"],["fill",66,105,11,11,"ink"],["fill",79,105,11,11,"ink"],["fill",92,105,11,11,"accent"],["fill",237,16,7,7,"accent"],["rect",235,14,11,11,"accent"]],"bg":"#ffffff","border":"line"}]} | ←→↑↓ or wasd steer  p autopilot
+-> done
+screen {"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"score 0","font":"mb","w":104},{"t":"text","s":"length 4 · best 0","font":"s","color":"muted","align":"right","pad":3}]},{"t":"canvas","w":286,"h":234,"ops":[["fill",66,105,11,11,"ink"],["fill",79,105,11,11,"ink"],["fill",92,105,11,11,"ink"],["fill",105,105,11,11,"accent"],["fill",237,16,7,7,"accent"],["rect",235,14,11,11,"accent"]],"bg":"#ffffff","border":"line"}]} | ←→↑↓ or wasd steer  p autopilot
+-> done
+screen {"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"score 0","font":"mb","w":104},{"t":"text","s":"length 4 · best 0","font":"s","color":"muted","align":"right","pad":3}]},{"t":"canvas","w":286,"h":234,"ops":[["fill",66,105,11,11,"ink"],["fill",79,105,11,11,"ink"],["fill",92,105,11,11,"ink"],["fill",105,105,11,11,"accent"],["fill",237,16,7,7,"accent"],["rect",235,14,11,11,"accent"]],"bg":"#ffffff","border":"line"}]} | ←→↑↓ or wasd steer  p autopilot
+-> done
+screen {"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"score 0","font":"mb","w":104},{"t":"text","s":"length 4 · best 0","font":"s","color":"muted","align":"right","pad":3}]},{"t":"canvas","w":286,"h":234,"ops":[["fill",79,105,11,11,"ink"],["fill",92,105,11,11,"ink"],["fill",105,105,11,11,"ink"],["fill",105,118,11,11,"accent"],["fill",237,16,7,7,"accent"],["rect",235,14,11,11,"accent"]],"bg":"#ffffff","border":"line"}]} | ←→↑↓ or wasd steer  p autopilot
+-> done

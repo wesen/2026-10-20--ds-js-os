@@ -1,0 +1,5 @@
+kind service
+-> done
+reply 100
+-> done
+log crashed: root stack overflow

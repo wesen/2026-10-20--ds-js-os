@@ -1,0 +1,5 @@
+flaky: ok (module 170120 bytes, 170096 loaded; blocks at most 38676, of its root stack 320 bytes used)
+snake: ok (module 233864 bytes, 233840 loaded; blocks at most 71604, of its root stack 376 bytes used)
+toplog: ok (module 199640 bytes, 199616 loaded; blocks at most 38672, of its root stack 304 bytes used)
+topstate: ok (module 169280 bytes, 169256 loaded; blocks at most 38674, of its root stack 304 bytes used)
+ref_module (C, ld.lld): ok

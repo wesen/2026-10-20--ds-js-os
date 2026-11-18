@@ -1,0 +1,9 @@
+system/flaky.js
+start
+ask ping null
+ask ping null
+ask slow '{"ms":50}'
+wait 50
+settle 1 1 null
+ask missing null
+ask boom null

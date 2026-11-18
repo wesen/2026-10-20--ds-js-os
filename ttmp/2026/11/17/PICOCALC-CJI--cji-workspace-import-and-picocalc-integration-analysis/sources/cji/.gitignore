@@ -1,0 +1,4 @@
+build/
+*.o
+/slas
+slas-rv32

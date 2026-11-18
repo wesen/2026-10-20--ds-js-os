@@ -1,0 +1,9 @@
+{
+  "name": "cji",
+  "version": "0.1.0",
+  "description": "Compiling JavaScript, Incrementally: the companion compiler",
+  "type": "module",
+  "private": true,
+  "scripts": { "test": "node run-tests.js" },
+  "engines": { "node": ">=18" }
+}

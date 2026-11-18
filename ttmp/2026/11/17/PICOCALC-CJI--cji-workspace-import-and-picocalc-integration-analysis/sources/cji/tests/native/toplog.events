@@ -1,0 +1,3 @@
+tests/native/toplog.world.js
+start
+ask ping null

@@ -1,0 +1,13 @@
+kind service
+-> done
+reply "pong 1"
+-> done
+reply "pong 2"
+-> done
+sleep 50 -> token 1
+-> later
+reply "finally done"
+-> done
+reject flaky has no handler for "missing"
+-> done
+log crashed: boom, thrown on purpose

@@ -1,0 +1,6 @@
+tests/native/topstate.world.js
+start
+ask get null
+ask bump null
+ask get null
+ask bump null

@@ -1,0 +1,7 @@
+apps/snake.js
+start
+msg focus null
+tick 0
+tick 0
+msg key '{"code":0,"key":"down","ch":"","state":"down","caps":false}'
+tick 0

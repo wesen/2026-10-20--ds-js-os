@@ -1,0 +1,5 @@
+kind service
+log hello
+-> done
+reply {"n":1}
+-> done

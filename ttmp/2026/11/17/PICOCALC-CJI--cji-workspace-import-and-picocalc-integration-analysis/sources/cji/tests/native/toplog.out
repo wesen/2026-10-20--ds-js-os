@@ -1,0 +1,5 @@
+log hello from the top level
+kind service
+-> done
+reply "pong"
+-> done
