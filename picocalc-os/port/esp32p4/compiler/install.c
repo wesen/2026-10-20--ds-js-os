@@ -160,6 +160,15 @@ static bool write_file(const char *path,const void *bytes,size_t len) {
 static bool digest(const void *bytes,size_t len,uint8_t out[32]) {
     return mbedtls_sha256((const unsigned char *)bytes,len,out,0)==0;
 }
+// Format before printing so other tasks cannot split a digest across log lines.
+static void digest_hex(const uint8_t digest[32],char text[65]) {
+    static const char digits[]="0123456789abcdef";
+    for (size_t i=0;i<32;i++) {
+        text[2*i]=digits[digest[i]>>4];
+        text[2*i+1]=digits[digest[i]&15];
+    }
+    text[64]=0;
+}
 static bool matches(const void *bytes,size_t len,const uint8_t expected[32]) {
     uint8_t hash[32];
     return digest(bytes,len,hash) && !memcmp(hash,expected,32);
@@ -352,9 +361,9 @@ void compiler_tick(void) {
             puts("cji: install record commit failed"); rollback(); return;
         }
         active=candidate;
-        printf("cji: artifact %u bytes sha256=",(unsigned)output_size);
-        for (size_t i=0;i<sizeof active.artifact;i++) printf("%02x",active.artifact[i]);
-        putchar('\n');
+        char hash[65];
+        digest_hex(active.artifact,hash);
+        printf("cji: artifact %u bytes sha256=%s\n",(unsigned)output_size,hash);
         printf("cji: ready dev-cji engine=%s cache=%s elapsed_ms=%lld scratch_peak=%u\n",
             candidate.engine==ENG_JS ? "js":"native",reuse ? "hit":"miss",
             (long long)((esp_timer_get_time()-began)/1000),(unsigned)(reuse ? 0:peak));
@@ -379,15 +388,17 @@ void compiler_tick(void) {
     if (state!=BUILDING) return;
     if (!reuse && xQueueReceive(finished,&done,0)!=pdTRUE) return;
     if (checking) {
-        printf("cji: check %s elapsed_ms=%lld scratch_peak=%u source_sha256=",job.status ? "failed" : "ok",
-               (long long)((esp_timer_get_time()-began)/1000),(unsigned)peak);
-        for (size_t i=0;i<32;i++) printf("%02x",candidate.source[i]);
-        if (job.status) printf(" error=%s",job.error);
+        char source_hash[65],detail[sizeof job.error+8];
+        digest_hex(candidate.source,source_hash);
+        if (job.status) snprintf(detail,sizeof detail,"error=%s",job.error);
         else {
-            printf(" bytes=%u sha256=",(unsigned)job.module_length);
-            for (size_t i=0;i<32;i++) printf("%02x",candidate.artifact[i]);
+            char module_hash[65];
+            digest_hex(candidate.artifact,module_hash);
+            snprintf(detail,sizeof detail,"bytes=%u sha256=%s",(unsigned)job.module_length,module_hash);
         }
-        putchar('\n');
+        printf("cji: check %s elapsed_ms=%lld scratch_peak=%u source_sha256=%s %s\n",
+               job.status ? "failed" : "ok",(long long)((esp_timer_get_time()-began)/1000),
+               (unsigned)peak,source_hash,detail);
         cleanup();
         return;
     }

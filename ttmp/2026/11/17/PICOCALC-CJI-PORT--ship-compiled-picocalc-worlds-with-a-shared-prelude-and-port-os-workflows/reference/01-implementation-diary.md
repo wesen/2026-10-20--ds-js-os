@@ -1363,3 +1363,5 @@ Inspect digest_hex and the two terminal printing branches in compiler/install.c.
 ### Technical details
 
 The progress firmware ELF SHA-256 is c6c484679a1ba2f965a31f29244239c83dde020bee0e43c90c9b43a6302ec505. Each displayed progress line fits within the system log ring's 119-byte text payload.
+
+**Checkpoint correction.** Commit 59ce482 recorded this investigation in the diary. Its first edit command raised “ValueError: substring not found” while looking for a same-line return, before writing install.c. I corrected the edit to match the actual cleanup branch, inspected the source diff and rebuilt it. The single-write application binary occupies 0x3d84b0 bytes. The subsequent implementation commit contains the formatter itself.
