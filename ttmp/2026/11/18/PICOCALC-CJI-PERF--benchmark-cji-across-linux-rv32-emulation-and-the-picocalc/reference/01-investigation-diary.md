@@ -672,3 +672,58 @@ Follow scripts/13-library-rounds.mjs through scripts/16-candidate-report.py. The
 ### Technical details
 
 The stage-1 time trials used an 8 MiB arena, one warm-up and three measured runs per variant. All native comparisons compiled Agenda as a world unit.
+
+## Step 15 — Set up the main-board-only profiling configuration
+
+The operator clarified that only the ESP32-P4 board has power. Earlier bus errors were consistent with the external devices being off. I added an opt-in native firmware configuration that leaves the UART compiler console available and avoids initializing either external peripheral bus.
+
+### Prompt Context
+
+**User prompt (verbatim):** “you can disable the keyboard driver and display driver on the picocalc for now i think. the hardware peripherals are turned off and only the main board is running”
+
+**Assistant interpretation:** Prepare the attached P4 for headless compiler experiments. **Inferred user intent:** Keep the profiling setup usable without the PicoCalc case electronics. **Previous checkpoint:** 34ee464 records the host optimization evidence and decision history.
+
+### What I did
+
+- Added PICOCALC_HEADLESS to the P4 native build. The generated boot manifest omits keyboard, display and power. Power polls the same STM32 I2C target as keyboard.
+- Kept the kernel completion queue used by UART and filesystem operations. Skipped panel GPIO reset, bus initialization, DMA buffers and peripheral workers.
+- Added scripts/18-headless-smoke.sh for flashing only the application and capturing the generated manifest check, boot, world list, stats and compiler status.
+- Published the expanded report to reMarkable under the separate title “PicoCalc CJI Optimization Experiments and Validation”.
+
+### Why
+
+Holding the keyboard bus after normal boot still brings up the display bus and schedules peripheral worlds. Main-board-only timings need an explicit, reproducible boot condition.
+
+### What worked
+
+The headless ESP-IDF build produced application SHA-256 debaea6bb0b6c9ec60ecaf078bc201ac19e36c17d0c6ae41edba53e6446aa50c. The generated manifest retained Agenda and omitted all three external driver worlds. The remote uploader returned OK for the new report.
+
+### What didn't work
+
+The restricted device namespace did not expose the serial port. Using the hardware-access execution context resolved the stable USB serial identity.
+
+### What I learned
+
+The shared kernel queue is created inside bus initialization. Skipping the entire initialization function would also break console delivery.
+
+### What was tricky to build
+
+An explicit bus request can originate outside the three driver worlds. Requests to an absent backend reject their promise and release owned command bytes before any enqueue or framebuffer pin.
+
+### What warrants a second pair of eyes
+
+Review the request-buffer cleanup and compare driver presence in the generated manifest with the running world list. Historical screen captures and timings belong to the earlier firmware.
+
+### What should be done in the future
+
+Use this same configuration for both sides of future on-device optimization trials. To repeat earlier measurements with peripherals, rebuild with scripts/08-build-board.sh OFF.
+
+### Code review instructions
+
+Start in port/esp32p4/main/bus_p4.c at bus_p4_init and trace each bus_run entry. Inspect the generated system.cji.json under build-elf/esp-idf/main before running the serial smoke script.
+
+### Technical details
+
+The on-board C6 network transport is independent of the keyboard/power southbridge and LCD panel. The headless firmware continues to include the catalog’s driver sources and compiled modules. Only their boot selection and physical bus access change.
+
+The first physical headless boot answered `cji status` with `cji: idle` and both bus counters were zero. The UART fault trace also reported five compositor failures during start with “it broke the native protocol (an end of 2)”. Five additional faults belonged to the pre-existing nat-import negative fixture for the unprovided path_open import. I removed the compositor from headless boot and added its absence to the manifest assertion in the same smoke recipe. Repeated the build and application-only flash with a separate capture directory to retain the first run.

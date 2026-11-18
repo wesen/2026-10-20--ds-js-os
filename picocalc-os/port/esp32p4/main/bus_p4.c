@@ -127,7 +127,15 @@ static void i2c_worker(void *arg) {
   }
 }
 
+// Explicit requests from other worlds must settle even when the hardware workers are absent.
+static bool peripheral_offline(QueueHandle_t queue, deferred_t *d, vtime_t at) {
+  if (queue) return false;
+  kernel_settle_at(d->w, d->epoch, d->promise, 0, xstrdup("\"peripheral bus offline\""), at);
+  return true;
+}
+
 void bus_run_i2c(deferred_t *d, vtime_t at) {
+  if (peripheral_offline(q_i2c, d, at)) { free(d->bytes); d->bytes = NULL; return; }
   handle_t *h = handle_find(d->handle);
   if (!h) {
     kernel_settle_at(d->w, d->epoch, d->promise, 0, xstrdup("\"the handle went away before the transfer\""), at);
@@ -236,6 +244,7 @@ static void spi_worker(void *arg) {
 }
 
 void bus_run_spi_cmd(deferred_t *d, vtime_t at) {
+  if (peripheral_offline(q_spi, d, at)) { free(d->bytes); d->bytes = NULL; return; }
   handle_t *h = handle_find(d->handle);
   req_t r = { .kind = REQ_SPI_CMD, .w = d->w, .epoch = d->epoch, .promise = d->promise, .hz = h ? h->hz : 1000000,
               .cmd = d->op, .nbytes = d->nbytes > 64 ? 64 : d->nbytes };
@@ -245,6 +254,7 @@ void bus_run_spi_cmd(deferred_t *d, vtime_t at) {
 }
 
 void bus_run_spi_pixels(deferred_t *d, vtime_t at) {
+  if (peripheral_offline(q_spi, d, at)) return;
   handle_t *h = handle_find(d->handle), *fb = handle_find(d->fb);
   dmabuf_t *b = handle_buf(fb);
   if (!b) { kernel_settle_at(d->w, d->epoch, d->promise, 0, xstrdup("\"the framebuffer went away before the transfer\""), at); return; }
@@ -270,9 +280,13 @@ void bus_p4_done(const kmsg_t *m) {
 void bus_p4_init(void) {
   // the kernel queue is big enough for every request the bus queues can hold, so a worker never waits on it
   // while the kernel task waits on the worker's request queue
+  p4_kq = xQueueCreate(64 + 256 + 64, sizeof(kmsg_t));
+#if PICOCALC_HEADLESS
+  ESP_LOGI(TAG, "headless: keyboard/power I2C and display SPI offline");
+  return;
+#endif
   q_i2c = xQueueCreate(64, sizeof(req_t));
   q_spi = xQueueCreate(256, sizeof(req_t));
-  p4_kq = xQueueCreate(64 + 256 + 64, sizeof(kmsg_t));
 
   // the panel's D/C and reset lines; a hardware reset now, so the JS driver's SWRESET finds it out of reset
   gpio_config_t out = { .pin_bit_mask = (1ULL << PIN_LCD_DC) | (1ULL << PIN_LCD_RST), .mode = GPIO_MODE_OUTPUT };
