@@ -1145,3 +1145,53 @@ Follow build_one in compiler/install.c through compiler_entry and use_reserved_h
 ### Technical details
 
 There are no app-specific heap settings and the job scratch cap stays at 18 MiB. The ordinary reservation and fallback growth cap are both 8 MiB. The reserved block is charged, including its allocation header, to the job.
+
+## Step 22: Verify Files before starting Agenda
+
+The physical board compiled apps/files.js into a 193,896-byte ELF in 329,116 ms. The ELF matched the host reference. The serial runner then issued the Agenda command on the same boot.
+
+### Prompt Context
+
+**User prompt and inferred intent.** See Step 21. The acceptance condition for Files was a full on-device compile whose output matches the host.
+
+**Code commit** 6160410 — Reserve the ordinary PicoCalc frontend heap after compiler relocation.
+
+### What I did
+
+Flashed the application partition after receiving the keyboard-bus hold acknowledgement. The flash tool reported “Hash of data verified.” Ran the ticket's 07-check-bundled-catalog.py --timeout 7200 files. Compared source hash, ELF size and hash, then appended the physical attempt to various/device-catalog-results.json.
+
+### Why
+
+The same source had previously failed after about 327 seconds when the collector attempted to obtain an 8 MiB block. Recording the actual reserved byte count distinguishes the new collector path from a successful retry on the original path.
+
+### What worked
+
+The worker reserved 8,388,608 bytes, reached assembly completion at 329,099 ms and reported a 9,251,666-byte scratch peak. ELF SHA-256 matched bad610f6574efa4e5bcb588f7c53d114236db672b49cdb786f10531884426797. The catalog reached 19 verified worlds.
+
+### What didn't work
+
+The prior two failures remain under Files in the catalog evidence. This run completed without a reported error.
+
+### What I learned
+
+A single 8 MiB space accommodates the actual Files frontend workload on this board. Ordinary jobs can claim the block after relocation while leaving the workspace used for inflation available to the allocator.
+
+### What was tricky to build
+
+The serial checker gates the second compile on successful comparison against the first host ELF. Merely receiving a successful compiler status would omit that identity check.
+
+### What warrants a second pair of eyes
+
+Review the input digest against the bundled source and the recorded module digest against the uncompressed host output. Free PSRAM is sampled on a live system and varies between measurements.
+
+### What should be done in the future
+
+Finish the already-running Agenda check and capture its independent receipt.
+
+### Code review instructions
+
+Inspect the Files runs under the ordinary-reservation firmware label in various/device-catalog-results.json and compare against the shared-firmware refusal recorded in Step 20.
+
+### Technical details
+
+Source size was 5,873 bytes. Free PSRAM was 20,135,180 bytes after relocation and 25,028,120 bytes after cleanup. The compile-only path released the output after hashing.

@@ -3,7 +3,8 @@
     "baseline": "0fb80be375d0f90c1c9b634f8be751a9c17d1fa06c0af14862afc7d52e78a78b",
     "instrumented": "5ca8eb6ef46930a1f35c2e353ddde550a45e8683cce4e84ad017b2a0d8eddecd",
     "reserved": "e46c655 (code revision, separate inflate buffer)",
-    "shared": "e72bc108aa7a5dfefae43a684492fab8c49225b73407a6de3947757c5d600000"
+    "shared": "e72bc108aa7a5dfefae43a684492fab8c49225b73407a6de3947757c5d600000",
+    "ordinary-reservation": "851906a5dbe318723bab9b63dcff9674b2f0e5d76d94b4a82ab0e9bc73482861"
   },
   "worlds": [
     {
@@ -197,6 +198,15 @@
             "psram_largest": 4849664
           },
           "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "ordinary-reservation",
+          "result": "ok",
+          "elapsed_ms": 329116,
+          "scratch_bytes": 9251666,
+          "frontend_reserved_bytes": 8388608,
+          "elf_bytes": 193896,
+          "elf_sha256": "bad610f6574efa4e5bcb588f7c53d114236db672b49cdb786f10531884426797"
         }
       ],
       "host_elf_sha256": "bad610f6574efa4e5bcb588f7c53d114236db672b49cdb786f10531884426797"
