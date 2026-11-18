@@ -1,0 +1,8 @@
+Checking system/sandbox.js
+cji: progress src=6de023d5 phase=load elapsed_ms=0 allocs=0 scratch=0
+cji: begin elapsed_ms=1 psram_free=25029388 psram_largest=24117248
+cji: relocated elapsed_ms=448 psram_free=20138820 psram_largest=14417920
+cji: progress src=6de023d5 phase=frontend elapsed_ms=455 allocs=1 scratch=8388624
+cji: compiler refused elapsed_ms=2814 psram_free=11678396 psram_largest=6029312
+cji: progress src=6de023d5 phase=failed elapsed_ms=2817 allocs=14 scratch=0
+cji: released elapsed_ms=2818 psram_free=25029376 psram_largest=24117248

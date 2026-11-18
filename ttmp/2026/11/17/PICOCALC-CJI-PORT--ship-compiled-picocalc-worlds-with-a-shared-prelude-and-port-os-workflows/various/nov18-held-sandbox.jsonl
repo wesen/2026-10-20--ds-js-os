@@ -1,0 +1,1 @@
+{"world": "sandbox", "file": "system/sandbox.js", "source_bytes": 955, "result": "failed", "elapsed_ms": 2827, "scratch_bytes": 8722556, "source_sha256": "6de023d5f0cea1e87f967cdced1c2704aa99ef64970d2cb388826954ba67659d", "frontend_reserved_bytes": 8388608, "diagnostic": "Uncaught Error: 15:13: expected ), found ,"}

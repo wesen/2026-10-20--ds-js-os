@@ -1417,3 +1417,49 @@ Compare the Keyboard receipt's module digest with the existing keyboard entry in
 ### Technical details
 
 The application used for the control and subsequent Agenda runs has firmware ELF SHA-256 c3bc3996bf359ecda310acc0cef018d94444f23eb56835869327c5c81b47ff44. Only the application partition was written. The held-bus trial started with 25,011,996 free PSRAM bytes and a 24,117,248-byte largest block.
+
+## Step 27 — Verify Agenda against the host ELF and exercise failure reporting
+
+### Prompt Context
+
+Follow-up to “ok, do files and then agenda” and the request for visible compiler progress and traceable scripts.
+
+### What I did
+
+Ran the ordinary on-device bundled-source check for Agenda with the keyboard bus held. Compared its digest and byte length with an independently assembled host module. Checked Sandbox immediately afterward to observe a terminal frontend error on the same firmware.
+
+### Why
+
+Earlier long runs had lost their serial receipts. A terminal source and module identity is necessary to count a successful compile. A second input with a known parser error exercises the failure phase and cleanup path.
+
+### What worked
+
+Agenda compiled in 1,481,352 ms. All 301,496 output bytes matched by SHA-256, with 8,388,608 frontend bytes reserved and 10,048,551 bytes of peak job scratch. The observer captured 153 progress records including 148 in the frontend. The worker entered link at 1,480,585 ms and reported assembled at 1,481,337 ms. Twenty of 22 manifest entries now have a matching physical result.
+
+### What didn't work
+
+Sandbox still fails in the frontend at 15:13 with “expected ), found ,”. It emitted the failed phase and returned a terminal receipt in 2,827 ms. Calc's existing host diagnostic concerns assigning .size to a function. Both remain outside the successfully compiled catalog.
+
+### What I learned
+
+Nearly all elapsed time in this Agenda run was spent in stage 1. The last frontend heartbeat used 8,492,055 scratch bytes. After assembly and cleanup the allocator again reported zero job scratch. Capturing the phase transition makes a long compile observable even without a completion percentage.
+
+### What was tricky to build
+
+Serial loss had made it impossible to infer whether previous jobs succeeded. This run used a held keyboard bus and continuously draining serial observer. A simultaneous change in those conditions prevents attributing the earlier failure conclusively to I²C.
+
+### What warrants a second pair of eyes
+
+The check compiled the bundled source and discarded the verified artifact. Catalog qualification covers compiler output. The earlier physical workflow tests establish application behavior separately.
+
+### What should be done in the future
+
+The PERF experiment follows with the same explicit bus condition and a separate profiling firmware. Its cleanup resets the board, releasing the bus.
+
+### Code review instructions
+
+Read various/nov18-held-agenda.jsonl alongside the catalog entry and scripts/2026-11-18-session/nov18-persist-held.py. Use various/nov18-held-agenda.log for every phase and memory sample, and the paired Sandbox files for the failure control.
+
+### Technical details
+
+Agenda source SHA-256 a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e. Module SHA-256 9c0cb6c10f05e09391e4ebd299ffe532661e255c9b7868e52a2c713009652f98. The post-release PSRAM sample showed 25,013,964 bytes free and a 22,544,384-byte largest block.

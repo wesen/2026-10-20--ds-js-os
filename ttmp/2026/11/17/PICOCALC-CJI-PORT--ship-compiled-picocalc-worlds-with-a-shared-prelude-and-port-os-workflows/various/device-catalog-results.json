@@ -4,7 +4,8 @@
     "instrumented": "5ca8eb6ef46930a1f35c2e353ddde550a45e8683cce4e84ad017b2a0d8eddecd",
     "reserved": "e46c655 (code revision, separate inflate buffer)",
     "shared": "e72bc108aa7a5dfefae43a684492fab8c49225b73407a6de3947757c5d600000",
-    "ordinary-reservation": "851906a5dbe318723bab9b63dcff9674b2f0e5d76d94b4a82ab0e9bc73482861"
+    "ordinary-reservation": "851906a5dbe318723bab9b63dcff9674b2f0e5d76d94b4a82ab0e9bc73482861",
+    "compiler-progress": "c3bc3996bf359ecda310acc0cef018d94444f23eb56835869327c5c81b47ff44"
   },
   "worlds": [
     {
@@ -281,6 +282,16 @@
             "psram_largest": 4194304
           },
           "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "compiler-progress",
+          "i2c_bus": "held",
+          "result": "ok",
+          "elapsed_ms": 1481352,
+          "scratch_bytes": 10048551,
+          "frontend_reserved_bytes": 8388608,
+          "elf_bytes": 301496,
+          "elf_sha256": "9c0cb6c10f05e09391e4ebd299ffe532661e255c9b7868e52a2c713009652f98"
         }
       ],
       "host_elf_sha256": "9c0cb6c10f05e09391e4ebd299ffe532661e255c9b7868e52a2c713009652f98"
