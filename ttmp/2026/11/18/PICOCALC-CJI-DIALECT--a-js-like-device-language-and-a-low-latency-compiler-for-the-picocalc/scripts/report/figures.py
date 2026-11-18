@@ -38,6 +38,26 @@ def architecture():
     plt.close(fig)
 
 
+def messaging():
+    fig, ax = plt.subplots(figsize=(8, 4.25))
+    ax.set(xlim=(-.53,2.51), ylim=(0,4.95))
+    ax.axis("off")
+    for x, title in enumerate(("Files", "Kernel", "Editor")):
+        ax.text(x, 4.63, title, ha="center", weight="bold", fontsize=14)
+        ax.plot([x,x],[.55,4.43],color="#666666",linewidth=1,linestyle="dashed")
+    steps = [(0,1,3.84,"ask: open + file grant"), (1,2,3.02,"validate and deliver"),
+             (2,1,2.20,"accept or reject"), (1,0,1.38,"settle waiting token")]
+    for a,b,y,caption in steps:
+        ax.annotate("",(b,y),(a,y),arrowprops={"arrowstyle":"-|>","lw":1.7,"color":"#303030"})
+        ax.text((a+b)/2,y+.09,caption,ha="center",fontsize=11.3,
+                bbox={"facecolor":"white","edgecolor":"none","pad":1})
+    ax.text(1,.29,"On settlement, Files retains or releases the appropriate handle.",
+            fontsize=11.5,ha="center")
+    fig.tight_layout(pad=.35)
+    fig.savefig(OUT/"file-handoff.png",dpi=175,bbox_inches="tight")
+    plt.close(fig)
+
+
 def timings():
     prior = next(HERE.parent.glob("*CJI-TRIE*/various/physical/physical-summary.json"))
     ref = json.loads(prior.read_text())
@@ -67,9 +87,11 @@ def timings():
 
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("figure", choices=("architecture","timings","all"))
+parser.add_argument("figure", choices=("architecture","messaging","timings","all"))
 choice = parser.parse_args().figure
 if choice in ("architecture","all"):
     architecture()
+if choice in ("messaging","all"):
+    messaging()
 if choice in ("timings","all"):
     timings()
