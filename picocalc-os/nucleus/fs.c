@@ -256,3 +256,92 @@ void fs_job_free(fs_job_t *j) {
   if (!j) return;
   free(j->data); free(j->json); free(j);
 }
+
+handle_t *fs_open_claim(world_t *W, const char *claim, char *err, size_t size) {
+  const char *path = claim && !strncmp(claim, "fs:/", 4) ? claim + 4 : NULL;
+  if (!path || !fs_path_ok(path)) snprintf(err, size, "\"%s\" is not a file claim (like \"fs:/notes\")", claim ? claim : "");
+  else if (!world_claims(W, claim)) snprintf(err, size, "%s has no claim on %s", W->name, claim);
+  else if (!port_fs_root()) snprintf(err, size, "this device has no filesystem");
+  else if (!fs_mkdirs(path)) snprintf(err, size, "cannot make the directory %s", claim);
+  else {
+    handle_t *h = handle_new(H_FS, W, claim);
+    if (h) { snprintf(h->path, sizeof h->path, "%s", path); return h; }
+    snprintf(err, size, "out of handles");
+  }
+  return NULL;
+}
+
+handle_t *fs_at(world_t *W, int id, const char *rel, const char *rs, char *err, size_t size) {
+  handle_t *parent = handle_use(W, id, H_FS, 0, err, size);
+  char path[FS_PATH_MAX];
+  if (!parent) return NULL;
+  if (parent->file) snprintf(err, size, "handle %d names a file; at() needs a directory", id);
+  else if (!rel || !*rel || !fs_path_ok(rel) || !fs_join(path, parent->path, rel))
+    snprintf(err, size, "\"%s\" is not a path inside the directory", rel ? rel : "");
+  else {
+    int rights = 0;
+    for (const char *p = rs; p && *p; ++p) rights |= *p == 'r' ? R_READ : *p == 'w' ? R_WRITE : *p == 'g' ? R_GRANT : 0;
+    handle_t *child = handle_child(W, parent, rights);
+    if (child) {
+      snprintf(child->path, sizeof child->path, "%s", path);
+      child->file = fs_kind(path) != 1;
+      return child;
+    }
+    snprintf(err, size, "out of handles");
+  }
+  return NULL;
+}
+
+static void run_fs(deferred_t *d, vtime_t at) {
+  fs_job_t *j = d->job;
+  d->job = NULL;
+  j->w = d->w; j->epoch = d->epoch; j->promise = d->promise;
+  port_fs_submit(j, at);
+}
+static const struct { const char *name; int op, right; bool dir_only, needs_path; } FS_OPS[] = {
+  { "list", FS_LIST, R_READ, true, false }, { "stat", FS_STAT, R_READ, false, false }, { "read", FS_READ, R_READ, false, false },
+  { "write", FS_WRITE, R_WRITE, false, false }, { "append", FS_APPEND, R_WRITE, false, false }, { "info", FS_INFO, R_READ, false, false },
+  { "mkdir", FS_MKDIR, R_WRITE, true, true }, { "remove", FS_REMOVE, R_WRITE, true, true }, { "rename", FS_RENAME, R_WRITE, true, true },
+};
+
+fs_job_t *fs_prepare(world_t *W, int id, const char *name, const char *rel, const char *arg,
+                     size_t len, char *err, size_t size) {
+  int k = -1;
+  for (size_t i = 0; name && i < sizeof FS_OPS / sizeof FS_OPS[0]; i++)
+    if (!strcmp(name, FS_OPS[i].name)) { k = i; break; }
+  if (k < 0) { snprintf(err, size, "no such file operation"); return NULL; }
+  handle_t *h = handle_use(W, id, H_FS, FS_OPS[k].right, err, size);
+  if (!h) return NULL;
+  fs_job_t *j = calloc(1, sizeof *j);
+  if (!j) { snprintf(err, size, "out of memory"); return NULL; }
+  const char *why = NULL;
+  int op = FS_OPS[k].op;
+  if (!rel) rel = "";
+  if (FS_OPS[k].dir_only && h->file) why = "a file handle cannot do that";
+  else if (h->file && *rel) why = "a file handle takes no path";
+  else if (FS_OPS[k].needs_path && !*rel) why = "this operation needs a path";
+  else if (!h->file && !*rel && (op == FS_READ || op == FS_WRITE || op == FS_APPEND)) why = "a directory cannot be read or written";
+  else if (!fs_path_ok(rel) || !fs_join(j->path, h->path, rel)) why = "not a valid path";
+  else if (op == FS_RENAME && (!arg || !*arg || !fs_path_ok(arg) || !fs_join(j->path2, h->path, arg)))
+    why = "not a valid path to rename to";
+  else if (op == FS_WRITE || op == FS_APPEND) {
+    if (!arg) why = "write needs text";
+    else if (len > FS_FILE_MAX) why = "a file is at most 65536 bytes";
+    else if (!(j->data = malloc(len + 1))) why = "out of memory";
+    else {
+      memcpy(j->data, arg, len);
+      j->data[len] = 0;
+      j->len = len;
+      K.seg_cost += (vtime_t)(len * PROFILE.json_ns_per_byte / 1000.0);
+    }
+  }
+  if (why) { snprintf(err, size, "%s", why); fs_job_free(j); return NULL; }
+  j->op = op;
+  return j;
+}
+
+void fs_defer(world_t *W, fs_job_t *j, int promise) {
+  deferred_t *d = calloc(1, sizeof *d);
+  d->run = run_fs; d->w = W->id; d->epoch = W->epoch; d->promise = promise; d->job = j;
+  defer(d);
+}

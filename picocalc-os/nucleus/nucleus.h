@@ -177,6 +177,11 @@ typedef struct {
   char path[FS_PATH_MAX];   // H_FS: the directory or file, relative to the root ("" is the root)
   bool file;                // H_FS: names one file (operations take only the empty path)
 } handle_t;
+handle_t *fs_open_claim(world_t *W, const char *claim, char *err, size_t size);
+handle_t *fs_at(world_t *W, int id, const char *rel, const char *rights, char *err, size_t size);
+fs_job_t *fs_prepare(world_t *W, int id, const char *name, const char *rel, const char *arg,
+                     size_t len, char *err, size_t size);
+void fs_defer(world_t *W, fs_job_t *job, int promise);
 enum { IRQ_NONE, IRQ_LOW, IRQ_HIGH, IRQ_FALLING, IRQ_RISING };
 #define MAX_HANDLES 128
 

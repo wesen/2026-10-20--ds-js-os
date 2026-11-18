@@ -351,94 +351,32 @@ static JSValue op_dma_alloc(JSContext *ctx, world_t *W, int argc, JSValueConst *
 // rights) narrows a directory handle to a path inside it, a file if nothing or a file is there. Every operation is
 // asynchronous (__ka "fs"): a deferred effect hands the job to the port once the segment has ended cleanly.
 static JSValue op_hw_fs(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
-  char *claim = sarg(ctx, argv, argc, 0);
-  JSValue r;
-  const char *path = claim && !strncmp(claim, "fs:/", 4) ? claim + 4 : NULL;
-  if (!path || !fs_path_ok(path)) r = fail(ctx, "\"%s\" is not a file claim (like \"fs:/notes\")", claim ? claim : "");
-  else if (!world_claims(W, claim)) r = fail(ctx, "%s has no claim on %s", W->name, claim);
-  else if (!port_fs_root()) r = fail(ctx, "this device has no filesystem");
-  else if (!fs_mkdirs(path)) r = fail(ctx, "cannot make the directory %s", claim);
-  else {
-    handle_t *h = handle_new(H_FS, W, claim);
-    if (!h) r = fail(ctx, "out of handles");
-    else { snprintf(h->path, sizeof h->path, "%s", path); h->file = false; r = handle_info(ctx, h); }
-  }
+  char err[160], *claim = sarg(ctx, argv, argc, 0);
+  handle_t *h = fs_open_claim(W, claim, err, sizeof err);
   free(claim);
-  return r;
+  return h ? handle_info(ctx, h) : fail(ctx, "%s", err);
 }
-static handle_t *use(JSContext *ctx, world_t *W, int id, int type, int right);
+
 static JSValue op_fs_at(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
-  handle_t *h = use(ctx, W, iarg(ctx, argv, argc, 0, 0), H_FS, 0);
-  if (!h) return JS_EXCEPTION;
-  char *rel = sarg(ctx, argv, argc, 1), *rs = sarg(ctx, argv, argc, 2);
-  char path[FS_PATH_MAX];
-  JSValue r;
-  int rights = 0;
-  for (char *p = rs; p && *p; p++) rights |= *p == 'r' ? R_READ : *p == 'w' ? R_WRITE : *p == 'g' ? R_GRANT : 0;
-  if (h->file) r = fail(ctx, "handle %d names a file; at() needs a directory", h->id);
-  else if (!rel || !*rel || !fs_path_ok(rel) || !fs_join(path, h->path, rel)) r = fail(ctx, "\"%s\" is not a path inside the directory", rel ? rel : "");
-  else {
-    handle_t *c = handle_child(W, h, rights);
-    if (!c) r = fail(ctx, "out of handles");
-    else { snprintf(c->path, sizeof c->path, "%s", path); c->file = fs_kind(path) != 1; r = handle_info(ctx, c); }
-  }
+  char err[160], *rel = sarg(ctx, argv, argc, 1), *rs = sarg(ctx, argv, argc, 2);
+  handle_t *h = fs_at(W, iarg(ctx, argv, argc, 0, 0), rel, rs, err, sizeof err);
   free(rel); free(rs);
-  return r;
+  return h ? handle_info(ctx, h) : fail(ctx, "%s", err);
 }
-static void run_fs(deferred_t *d, vtime_t at) {
-  fs_job_t *j = d->job;
-  d->job = NULL;
-  j->w = d->w; j->epoch = d->epoch; j->promise = d->promise;
-  port_fs_submit(j, at);
-}
-static const struct { const char *name; int op, right; bool dir_only, needs_path; } FS_OPS[] = {
-  { "list", FS_LIST, R_READ, true, false }, { "stat", FS_STAT, R_READ, false, false }, { "read", FS_READ, R_READ, false, false },
-  { "write", FS_WRITE, R_WRITE, false, false }, { "append", FS_APPEND, R_WRITE, false, false }, { "info", FS_INFO, R_READ, false, false },
-  { "mkdir", FS_MKDIR, R_WRITE, true, true }, { "remove", FS_REMOVE, R_WRITE, true, true }, { "rename", FS_RENAME, R_WRITE, true, true },
-};
+
 static int vm_new_promise(world_t *W, JSValue *out);
-// __ka("fs", handle, op, path, arg): arg is the new path for rename, the text for write and append
 static JSValue ka_fs(JSContext *ctx, world_t *W, int argc, JSValueConst *argv, JSValue *p) {
-  char *opn = sarg(ctx, argv, argc, 1);
-  int k = -1;
-  for (int i = 0; opn && i < (int)(sizeof FS_OPS / sizeof FS_OPS[0]); i++) if (!strcmp(opn, FS_OPS[i].name)) k = i;
-  free(opn);
-  if (k < 0) return fail(ctx, "no such file operation");
-  handle_t *h = use(ctx, W, iarg(ctx, argv, argc, 0, 0), H_FS, FS_OPS[k].right);
-  if (!h) return JS_EXCEPTION;
-  char *rel = sarg(ctx, argv, argc, 2);
-  fs_job_t *j = calloc(1, sizeof *j);
-  JSValue r = JS_UNDEFINED;
-  const char *why = NULL;
-  int op = FS_OPS[k].op;
-  if (!rel) rel = xstrdup("");
-  if (FS_OPS[k].dir_only && h->file) why = "a file handle cannot do that";
-  else if (h->file && *rel) why = "a file handle takes no path";
-  else if (FS_OPS[k].needs_path && !*rel) why = "this operation needs a path";
-  else if (!h->file && !*rel && (op == FS_READ || op == FS_WRITE || op == FS_APPEND)) why = "a directory cannot be read or written";
-  else if (!fs_path_ok(rel) || !fs_join(j->path, h->path, rel)) why = "not a valid path";
-  if (!why && op == FS_RENAME) {
-    char *to = sarg(ctx, argv, argc, 3);
-    if (!to || !*to || !fs_path_ok(to) || !fs_join(j->path2, h->path, to)) why = "not a valid path to rename to";
-    free(to);
-  }
-  if (!why && (op == FS_WRITE || op == FS_APPEND)) {
-    size_t n = 0;
-    const char *s = argc > 3 ? JS_ToCStringLen(ctx, &n, argv[3]) : NULL;
-    if (!s) why = "write needs text";
-    else if (n > FS_FILE_MAX) why = "a file is at most 65536 bytes";
-    else { j->data = malloc(n + 1); memcpy(j->data, s, n + 1); j->len = n; charge_json(n); }
-    if (s) JS_FreeCString(ctx, s);
-  }
-  free(rel);
-  int id;
-  if (why) { fs_job_free(j); return fail(ctx, "%s", why); }
-  if ((id = vm_new_promise(W, p)) < 0) { fs_job_free(j); return JS_EXCEPTION; }
-  j->op = op;
-  deferred_t *d = calloc(1, sizeof *d);
-  d->run = run_fs; d->w = W->id; d->epoch = W->epoch; d->promise = id; d->job = j;
-  defer(d);
-  return r;
+  char err[160], *op = sarg(ctx, argv, argc, 1), *rel = sarg(ctx, argv, argc, 2);
+  size_t len = 0;
+  const char *arg = argc > 3 ? JS_ToCStringLen(ctx, &len, argv[3]) : NULL;
+  fs_job_t *j = fs_prepare(W, iarg(ctx, argv, argc, 0, 0), op, rel, arg, len, err, sizeof err);
+  free(op); free(rel);
+  if (arg) JS_FreeCString(ctx, arg);
+  if (!j) return fail(ctx, "%s", err);
+  int id = vm_new_promise(W, p);
+  if (id < 0) { fs_job_free(j); return JS_EXCEPTION; }
+  fs_defer(W, j, id);
+  return JS_UNDEFINED;
 }
 
 static handle_t *use(JSContext *ctx, world_t *W, int id, int type, int right) {
@@ -690,9 +628,7 @@ static JSValue ka_spawn(JSContext *ctx, world_t *W, int argc, JSValueConst *argv
   snprintf(j->path, sizeof j->path, "%s", h->path);
   snprintf(j->name, sizeof j->name, "%s", name);
   free(name);
-  deferred_t *d = calloc(1, sizeof *d);
-  d->run = run_fs; d->w = W->id; d->epoch = W->epoch; d->promise = id; d->job = j;
-  defer(d);
+  fs_defer(W, j, id);
   return *p;
 }
 static void run_stop(deferred_t *d, vtime_t at) {

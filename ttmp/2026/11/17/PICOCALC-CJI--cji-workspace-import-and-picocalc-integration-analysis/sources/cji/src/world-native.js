@@ -110,7 +110,7 @@ function $wire(v /*: Any */, incoming /*: Bool */, depth /*: Int */) /*: Any */ 
     const info /*: Any */ = $call(1001, v.$h, 0, undefined, undefined, undefined);
     if (typeof info !== 'string') return $handle(v.$h, 'gone', '');
     const meta /*: Any */ = JSON.parse(info);
-    return $handle(v.$h, meta.type, meta.rights);
+    return $handle(v.$h, meta.type, meta.rights, meta.path, meta.file);
   }
   if (!incoming && !Array.isArray(v) && ('$date' in v || '$mk' in v || '$sv' in v)) return v;
   if (Array.isArray(v)) {
@@ -176,8 +176,29 @@ function $i2c(h /*: Any */, wr /*: Any */, nrd /*: Any */, gap /*: Any */) /*: A
   });
 }
 function $unavailable(what /*: Any */) /*: Any */ { throw new Error(what + ' is not available to a native world'); }
-function $handle(h /*: Any */, type /*: Any */, rights /*: Any */) /*: Any */ {
+function $fsOp(h /*: Any */, op /*: Any */, rel /*: Any */, arg /*: Any */) /*: Any */ {
+  return new Promise((resolve /*: Any */, reject /*: Any */) => $later($call(1004, h, 0, op, rel || '', arg), resolve, reject));
+}
+function $fsHandle(h /*: Any */) /*: Any */ {
+  $check(h);
+  const info /*: Any */ = JSON.parse($check($call(1001, h, 0, undefined, undefined, undefined)));
+  return $handle(h, info.type, info.rights, info.path, info.file);
+}
+function $handle(h /*: Any */, type /*: Any */, rights /*: Any */, path /*: Any */, file /*: Any */) /*: Any */ {
   $hasHandles = true;
+  if (type === 'fs') return { id: h, type: type, rights: rights, path: path, file: file,
+    release: () => $call(${NW.RELEASE}, h, 0, undefined, undefined, undefined),
+    revoke: () => $check($call(1005, h, 0, undefined, undefined, undefined)),
+    at: (rel /*: Any */, rs /*: Any */) => $fsHandle($call(1003, h, 0, rel, rs === undefined ? 'rw' : rs, undefined)),
+    list: (rel /*: Any */) => $fsOp(h, 'list', rel, undefined),
+    stat: (rel /*: Any */) => $fsOp(h, 'stat', rel, undefined),
+    read: (rel /*: Any */) => $fsOp(h, 'read', rel, undefined),
+    write: (rel /*: Any */, text /*: Any */) => text === undefined ? $fsOp(h, 'write', '', String(rel)) : $fsOp(h, 'write', rel, String(text)),
+    append: (rel /*: Any */, text /*: Any */) => text === undefined ? $fsOp(h, 'append', '', String(rel)) : $fsOp(h, 'append', rel, String(text)),
+    mkdir: (rel /*: Any */) => $fsOp(h, 'mkdir', rel, undefined),
+    remove: (rel /*: Any */) => $fsOp(h, 'remove', rel, undefined),
+    rename: (rel /*: Any */, to /*: Any */) => $fsOp(h, 'rename', rel, to),
+    info: () => $fsOp(h, 'info', '', undefined) };
   if (type !== 'i2c') return { id: h, type: type, rights: rights, release: () => $call(${NW.RELEASE}, h, 0, undefined, undefined, undefined) };
     const out /*: Any */ = { id: h, type: type, rights: rights,
       transfer: (bytes /*: Any */, nread /*: Any */, gap /*: Any */) => $i2c(h, bytes || [], nread || 0, gap || 0),
@@ -191,7 +212,7 @@ const hw /*: Any */ = {
     const h = $check($call(${NW.I2C_OPEN}, hz === undefined ? 0 : hz, 0, claim, undefined, undefined));
     return $handle(h, 'i2c', 'rwg');
   },
-  spi: (c /*: Any */, hz /*: Any */) => $unavailable('hw.spi'), fs: (c /*: Any */) => $unavailable('hw.fs') };
+  spi: (c /*: Any */, hz /*: Any */) => $unavailable('hw.spi'), fs: (c /*: Any */) => $fsHandle($call(1002, 0, 0, c, undefined, undefined)) };
 const dma /*: Any */ = { alloc: (w /*: Any */, h /*: Any */) => $unavailable('dma.alloc') };
 const gfx /*: Any */ = { fonts: () => $unavailable('gfx.fonts') };
 const sys /*: Any */ = { worlds: (f /*: Any */) => $unavailable('sys.worlds'), handles: () => $unavailable('sys.handles'), stats: () => $unavailable('sys.stats'),

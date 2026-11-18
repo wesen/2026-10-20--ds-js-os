@@ -194,3 +194,55 @@ Commit b2c196a contains the implementation and board fixtures. The uploader repo
 During the board check the user asked “what;s nat-import btw?” I traced the world to the separate system.elf.json manifest and natives/wimport.c. The loader deliberately refuses its unresolved path_open import during relocation. Its five startup failures were independent of the grant probe.
 
 The normal application was rebuilt with the fixture flag off (0x326280 bytes, 21% of the app partition free). The application-only write verified its hash. The physical console then listed 27 worlds, no grant-test or grant-peer, and idle keyboard, power, settings, snake, flaky and toplog worlds with zero restarts. The diagnostic nat-import world was stopped as expected.
+
+## Step 4. Connect native filesystem handles to the existing worker
+
+I traced Files opening a new note, Editor saving it and Agent writing under its notes directory. All three need the same handle-relative filesystem operations. I moved the shared validation and deferred job construction into the filesystem layer, then connected both the QuickJS bindings and the compiled prelude to it.
+
+### Prompt Context
+
+**User prompt (verbatim)** “build phase 3 in its entirety. commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)”
+
+The requested endpoint includes Files/Editor, compositor/display, Settings/Agent and their device acceptance checks. This checkpoint implements the file calls and produces the first two application modules for physical testing.
+
+### What I did
+
+- Extracted fs_open_claim, fs_at, fs_prepare and fs_defer from the QuickJS bridge into nucleus/fs.c.
+- Added firmware-private open, derive, operate and revoke calls. The prelude exposes these as ordinary methods on a file or directory wrapper and obtains the path and file flag from the kernel.
+- Enabled files and editor in the CJI build manifest while preserving their existing claims and sources.
+
+### Why
+
+Filesystem rights and path containment belong to the nucleus. The worker, the file byte limit, the atomic write implementation and the owner epoch for late completions already exist.
+
+### What worked
+
+The host command make -C picocalc-os -j4 test-fs passed all nine cases, including the restarted-world, delegation, containment and file-size cases. The ESP-IDF build produced a firmware image containing the Files and Editor modules.
+
+### What didn't work
+
+The first idf.py -B build-elf build failed at native.c with “format '%d' expects argument of type 'int', but argument 3 has type 'int32_t' {aka 'long int'}”. Casting the ID to the kernel's int type fixed the target build.
+
+### What I learned
+
+A file handle uses an empty relative path for reads and writes. A directory handle uses its own path as a prefix. Only write and append accept embedded zero bytes as data. The length-aware kernel boundary keeps those bytes distinct from path terminators.
+
+### What was tricky to build
+
+The worker accepts a promise token whose representation belongs to the requesting engine. Each bridge creates that token only after fs_prepare validates the job. fs_defer then captures the owning world ID and epoch for the worker.
+
+### What warrants a second pair of eyes
+
+Check full-size UTF-8 text, rejection of malformed relative paths and a revoked child in the native receiver. Watch the Editor's memory usage with the full compiled module loaded.
+
+### What should be done in the future
+
+Verify the note on flash after a reboot, then exercise repaint and agent cancellation against the complete mixed runtime on the board.
+
+### Code review instructions
+
+Start with fs_prepare in nucleus/fs.c. Follow ka_fs in vm.c and the corresponding native file operation in native.c down to fs_defer. Compare the wrapper in src/world-native.js against js/prelude.js.
+
+### Technical details
+
+The file transfer limit remains 65,536 bytes. File data stays in an owned worker job until submission. Reading and listing return JSON through normal promise settlements.

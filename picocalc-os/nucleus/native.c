@@ -286,15 +286,51 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
       if (!handle_may_grant(W, grants.ids[i], err, sizeof err)) return fail(W, "%s", err);
     }
   }
+  if (c->op >= 1001 && !W->nat->cji_handles) return fail(W, "operation requires a bundled CJI module");
   switch (c->op) {
     // Firmware-private CJI operation, outside the public native wire ABI.
     case 1001: {
-      if (!W->nat->cji_handles) return fail(W, "handle metadata requires a bundled CJI module");
       char err[160];
       handle_t *h = handle_use(W, c->i[0], -1, 0, err, sizeof err);
       if (!h) return fail(W, "%s", err);
-      return snprintf(out, out_n, "{\"type\":\"%s\",\"rights\":\"%s%s%s\"}", handle_type_name(h->type),
-                      h->rights & R_READ ? "r" : "", h->rights & R_WRITE ? "w" : "", h->rights & R_GRANT ? "g" : "");
+      return snprintf(out, out_n, "{\"type\":\"%s\",\"rights\":\"%s%s%s\",\"path\":\"%s\",\"file\":%s}",
+                      handle_type_name(h->type), h->rights & R_READ ? "r" : "", h->rights & R_WRITE ? "w" : "",
+                      h->rights & R_GRANT ? "g" : "", h->path, h->file ? "true" : "false");
+    }
+    case 1002: case 1003: case 1004: { // FS open, derive child, submit operation
+      char err[160] = "out of memory";
+      char *args[3] = {0};
+      int64_t result = -1;
+      for (int i = 0; i < 3; i++) {
+        if (!c->s[i]) continue;
+        if (c->n[i] && memchr(c->s[i], 0, c->n[i]) && !(c->op == 1004 && i == 2 &&
+            args[0] && (!strcmp(args[0], "write") || !strcmp(args[0], "append")))) {
+          snprintf(err, sizeof err, "unexpected NUL in file operation");
+          goto fs_done;
+        }
+        if (!(args[i] = str(c, i))) goto fs_done;
+      }
+      if (c->op == 1004) {
+        fs_job_t *job = fs_prepare(W, c->i[0], args[0], args[1], args[2], c->n[2], err, sizeof err);
+        if (job) {
+          result = ++K.next_promise;
+          fs_defer(W, job, (int)result);
+        }
+      } else {
+        handle_t *h = c->op == 1002 ? fs_open_claim(W, args[0], err, sizeof err)
+                                     : fs_at(W, c->i[0], args[0], args[1], err, sizeof err);
+        if (h) result = h->id;
+      }
+fs_done:
+      for (int i = 0; i < 3; i++) free(args[i]);
+      return result < 0 ? fail(W, "%s", err) : result;
+    }
+    case 1005: {
+      handle_t *h = handle_find(c->i[0]);
+      if (!h) return fail(W, "there is no handle %d", (int)c->i[0]);
+      if (h->minter != W->id || !h->parent) return fail(W, "only the world that narrowed handle %d can revoke it", h->id);
+      h->revoked = true;
+      return 1;
     }
     case NW_CLOCK_WALL: return port_wall_ms();
     case NW_CLOCK_ZONE: return snprintf(out, out_n, "%s", clock_zone());
