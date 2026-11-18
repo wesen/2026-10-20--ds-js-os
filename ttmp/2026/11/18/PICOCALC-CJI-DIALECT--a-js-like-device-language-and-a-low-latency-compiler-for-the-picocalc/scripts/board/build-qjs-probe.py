@@ -10,6 +10,7 @@ import subprocess
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument("build",type=Path)
 parser.add_argument("out",type=Path)
+parser.add_argument("--typed",nargs=2,type=Path,metavar=("EMITTER_JS","INPUT"))
 args=parser.parse_args()
 b=args.build.resolve()
 out=args.out.resolve()
@@ -18,8 +19,22 @@ probe=Path(__file__).resolve().with_name("qjs_probe.c")
 worlds=json.loads(Path("picocalc-os/js/system.json").read_text())["worlds"]
 (out/"probe_manifest.inc").write_text("".join(
     "    {"+json.dumps(w["name"])+", "+json.dumps(w["file"])+", "+str(w.get("mem_kb",1024))+"},\n" for w in worlds))
+extra=[]
+unit="/perf_p4.c"
+if args.typed:
+    core, source = args.typed
+    extra=[core.resolve(),source.resolve()]
+    probe=probe.with_name("typed_probe.c")
+    unit="/native_wasm.c"
+    with (out/"typed_input.inc").open("w") as generated:
+        for name, path in (("emitter",core),("source",source)):
+            data=path.read_bytes()+bytes([0])
+            generated.write("static const char "+name+"[] = {\n")
+            for start in range(0,len(data),24):
+                generated.write(",".join(str(b) for b in data[start:start+24])+",\n")
+            generated.write("};\n")
 commands=json.loads((b/"compile_commands.json").read_text())
-row=next(r for r in commands if r["file"].endswith("/perf_p4.c"))
+row=next(r for r in commands if r["file"].endswith(unit))
 cc=shlex.split(row["command"])
 cc[cc.index("-o")+1]=str(out/"probe.o")
 cc[cc.index("-c")+1]=str(probe)
@@ -47,5 +62,5 @@ subprocess.run(cmd,cwd=b,check=True)
 (out/"esp-idf/main").mkdir(parents=True,exist_ok=True)
 for f in ("CMakeCache.txt","esp-idf/main/system.cji.json"):
     shutil.copyfile(b/f,out/f)
-artifacts=[probe,out/"probe_manifest.inc",out/"picocalc-os-p4.elf",out/"picocalc-os-p4.bin"]
+artifacts=[probe,*extra,out/"probe_manifest.inc",out/"picocalc-os-p4.elf",out/"picocalc-os-p4.bin"]
 (out/"identities.sha256").write_text("".join(hashlib.sha256(p.read_bytes()).hexdigest()+"  "+str(p)+"\n" for p in artifacts))

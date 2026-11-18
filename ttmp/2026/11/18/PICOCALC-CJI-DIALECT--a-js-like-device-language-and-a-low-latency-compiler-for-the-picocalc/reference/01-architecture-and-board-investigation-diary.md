@@ -114,3 +114,88 @@ Profile the actual operator edit/start through the kernel with live input and di
 ### Code review instructions
 
 Read scripts/board/qjs_probe.c alongside scripts/board/run-qjs.py, then replay scripts/board/summarize-qjs.py against various/board/quickjs-p4.jsonl. scripts/board/qjs-series.sh contains the restoration trap. The initial design and diary were committed as 64abaf3.
+
+## Step 3 — Rebuild stage 1, verify physical native artifacts, and specify the typed alternative
+
+**Prompt context.** The user's “JS like” instruction permits representation changes. I chose to compare a conservative reduction in today's compiler work against a typed direct emitter whose different arithmetic rules are intentional.
+
+### What I did
+
+- Used the numeric investigator's stage-1 SLIR (a80b9fc3d6c9…) to build an ESP32-P4 compiler tool. Verified the relinked base tool, generated the diagnostic image, restored the local IDF configuration, and scheduled the serial run after the QuickJS series ended. The native candidate app image was 947d8aecbfd9….
+- Checked Flaky at boot, then compiled Files and Agenda through the physical worker's 8 MiB profile command. Verified the new ELF sizes and hashes against both source and compiled host candidate. Archived raw progress, GC counters, image identities and restore evidence. No compiled application was installed in a user slot.
+- Read Cooper and Torczon's treatment of linear representation and data-flow, the Liftoff and Sparkplug project articles, the copy-and-patch paper, the QuickJS documentation, Wasm numeric definitions, Rust's incremental model, and the Luau/AssemblyScript implementation descriptions. Cross-checked the local source for native caps, pass order, filesystem, SDK, messaging and the loader. Drafted the novice guide and its architecture/performance figures.
+
+### Why
+
+The previous native artifact hashes would reject legitimate representation changes. Correctness requires independent candidate output and application behavior probes in addition to successful compilation. A headless native check returns an ELF; initial registration in a VM and an interactive workflow end at different points.
+
+### What worked
+
+Files compiled in 140.602 s (9,251,666 bytes job scratch, 58 collections) and Agenda in 169.739 s (10,048,551 bytes, 134 collections). The expected new 217,176- and 330,984-byte modules matched. Those are reductions of 31.9% and 67.5% against the combined historical range-state variant. The absolute time remaining rules out treating removal of the current collector alone as an interactive solution.
+
+### What didn't work
+
+An early local guide link assumed an incorrect relative path to the prior day's CJI import. A link checker resolved the actual ticket tree and the final path now traverses to day 17. The host catalog's broad native-process suite also had harness errors, recorded by its investigator; the guide distinguishes its incomplete result from the successful scoped suites.
+
+### What I learned
+
+Frontend time accounts for over 99% of these two new physical jobs. Whole-job scratch stayed at the same maxima as the previous combined variant even as peak live GC data fell. The full catalog is inexpensive to parse in QuickJS. The argument for a new language is consequently about local compilation, explicit representations and predictable runtime and wire behavior.
+
+### What was tricky to build
+
+PSRAM reservation, GC peak live memory and aggregate job scratch are different counters. The production file module currently mounts wear-levelled internal SPI flash; the physical SD card requires an actual storage path. The Wasm ABI rejects native wire handle payloads, so a full Files port has a concrete dependency absent from the scalar and simulated workflow tests.
+
+### What warrants a second pair of eyes
+
+Reproduce the exact firmware/tool identities and confirm that elapsed time and frontend time in the receipts have different scopes. Review how the proposed fixed types handle unchecked addition, divide-by-zero, f64 formatting, time, state mutation across await and nonnumeric operations.
+
+### What should be done in the future
+
+Run a typed function, compiled from source on device, through the firmware's WAMR engine. Adopt an end-to-end typed world such as Flaky as the next integration gate, then measure real event latency and exercise a failed replacement.
+
+### Code review instructions
+
+Read scripts/board/native-series.sh and verify-native.py, compare various/board/native-{files,agenda}.jsonl with the previous TRIE physical summary, then open the numeric and catalog investigators' receipts. The bytecode hardware baseline is commit 0c51e9a; the independent numeric, catalog and fast-backend studies are df7fcaf/4e12bc4, 9f9ef8a, and 0fbaa96.
+
+## Step 4 — Compile a typed source function on the P4 and execute its new Wasm bytes
+
+**Prompt context.** The requested fundamental rethink needed a runnable consequence of changing the language contract. Host-only elapsed time would not answer the user's device question.
+
+### What I did
+
+- The fast-path investigator supplied a dependency-free source emitter and a typed copy of the actual compositor layout function. I embedded both texts, never the output Wasm, in a separate diagnostic. It used a fresh QuickJS realm each trial to parse the compiler and compile the typed source. The firmware's ordinary WAMR runtime then loaded the result and called the exported function.
+- Checked 396 physical results against an independent C implementation per trial, including no selection, the short-list return, both clamp limits and middle positions. Matched the emitted 118 bytes' digest to an independent Node build. Repeated three times.
+- Ran the headless restoration smoke at the end of the third diagnostic series. Stored app and firmware identities, UART and the ordinary control's Flaky compile. Revalidated all timing files and rendered figures from the committed data.
+- Asked for an independent reading and reMarkable PDF rehearsal. That reader found a repeated synthetic title and repository-relative links that would not resolve in an e-reader PDF. The source guide keeps repository navigation; the publication staging pass will make the printed version usable independently.
+
+### Why
+
+Running a prebuilt test module in WAMR would prove the interpreter works but leave the entire compiler latency unknown. Running a JavaScript equivalent of an integer function is also insufficient to establish the intended wrapping, signed division and boolean rules.
+
+### What worked
+
+Every physical trial emitted the host module hash 1f33714cf1dd24f7926bf8995326e92c1da0b67686d3198d9aaea07a38ab0685. Medians were 37.548 ms for a fresh compiler realm and emitter evaluation, 10.368 ms for the actual source compilation, 2.059 ms for WAMR readiness through export lookup, and 1.407 ms for all 396 calls with checks. The independent host matrix matched original JavaScript on 667,780 valid/comparison cases, while intentional language differences had dedicated tests. Final restore installed ordinary app 2b9e8371ee8e… and produced the expected Flaky module again.
+
+### What didn't work
+
+The new flash-receipt packer initially decoded boot logs as strict UTF-8. UART captures can include arbitrary reset bytes. It now decodes only the search view with replacement and retains the original bytes in its deterministic gzip archive. Docmgr doctor also classified two scripts README files as ticket documents; the tables of contents/reproducers need frontmatter.
+
+### What I learned
+
+Arithmetic can be locally checked and emitted on the actual P4 with a small JS implementation. The largest measured phase for this leaf was parsing/starting the emitter itself. Keeping the compiler hot is an interesting separate memory/latency trade-off. The leaf makes no imports and owns no mutable application state. Building any whole-app forecast from its size or time would be premature.
+
+### What was tricky to build
+
+The WAMR runtime initialization is private to the production translation unit. An isolated diagnostic includes that translation unit with the existing flags/allocator and substitutes the diagnostic console callback at link time. This lets the probe use the same interpreter while supplying a directly callable leaf. The probe copies out a real ArrayBuffer, preserves it until WAMR unloads and times server setup, generation, loading and calls separately. The per-case execution timer includes the C expected result, marshalling and instruction allowance.
+
+### What warrants a second pair of eyes
+
+Confirm that the input manifest and newly emitted module came from the board. Read the three cold-start timing rows, the Node-side SHA and the restore receipts. Review the difference between a kernel-routed event and a direct call to a Wasm export.
+
+### What should be done in the future
+
+Exercise typed code through the actual kernel world event ABI. The first complete typed application's behavior and interactive latency will determine whether more language or native optimization is worthwhile.
+
+### Code review instructions
+
+Run scripts/board/verify-typed.py against various/board/typed-uart.log. Run scripts/board/summarize-qjs.py on the captured JSONL and compare the CSV. Inspect scripts/report/figures.py and the three *-flash-smoke.json records for all firmware swaps. No firmware or compiler binaries are committed to the ticket.

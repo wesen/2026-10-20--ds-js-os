@@ -1,0 +1,16 @@
+[
+  {
+    "stage": "candidate",
+    "app_bin": "947d8aecbfd91622a72ceff96583f4001a910e83d1b0693ef8d987100c7a7842",
+    "firmware_elf": "21d3bc36bf291b435692af53049e0378f92ee523a17904d559923b808e5553e4",
+    "flaky_elf": "e74d83cd6c8ebebf9319e5314f8f03818fb74c8954af2f58b23a005530d5f595",
+    "flaky_elapsed_ms": 6390
+  },
+  {
+    "stage": "restored",
+    "app_bin": "2b9e8371ee8e3a4e2ea5cabd43d74cb539806607947d47fa242f77174ca1dfbf",
+    "firmware_elf": "49a7320315fa45896797f825760f8ca92cac9a0f485ea38c5da3a861bc97749b",
+    "flaky_elf": "e74d83cd6c8ebebf9319e5314f8f03818fb74c8954af2f58b23a005530d5f595",
+    "flaky_elapsed_ms": 6505
+  }
+]

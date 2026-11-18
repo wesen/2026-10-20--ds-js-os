@@ -1,0 +1,3 @@
+{"trial": 1, "ok": 1, "bytes": 118, "sha": "1f33714cf1dd24f7926bf8995326e92c1da0b67686d3198d9aaea07a38ab0685", "setup_us": 37894, "compile_us": 10368, "load_us": 2227, "exec_us": 1395, "checks": 396, "detail": ""}
+{"trial": 2, "ok": 1, "bytes": 118, "sha": "1f33714cf1dd24f7926bf8995326e92c1da0b67686d3198d9aaea07a38ab0685", "setup_us": 36975, "compile_us": 10261, "load_us": 2059, "exec_us": 1407, "checks": 396, "detail": ""}
+{"trial": 3, "ok": 1, "bytes": 118, "sha": "1f33714cf1dd24f7926bf8995326e92c1da0b67686d3198d9aaea07a38ab0685", "setup_us": 37548, "compile_us": 10420, "load_us": 2038, "exec_us": 1416, "checks": 396, "detail": ""}
