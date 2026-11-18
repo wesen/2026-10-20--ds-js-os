@@ -327,3 +327,20 @@ A small service provides three work handlers and a separate state query. Each te
 | Toggle 24 Agenda task lines and checksum their text | 22.60 | 48.40 | 1,550,080 | 1,418,922,918 |
 
 The CJI host world wins the arithmetic and array cases. QuickJS wins the Agenda string-and-regexp case on this host. The edit fixture uses the shipped task-line expression and toggle function. It excludes filesystem I/O, drawing, reminders and the rest of the Agenda application. Guest instruction totals quantify the RV32 work and cannot tell us which engine responds faster on the physical screen.
+
+### First matched compiler profile from host to handheld
+
+The Agenda 8 MiB Callgrind run retired 136,873,785,302 x86 instructions, 6.78 times the Files count. Its top three functions were again `whole_bits` (12.18%), `rt_any_index` (7.71%) and `rt_any_eq` (6.49%). Each input produced the expected SLIR. Source size alone is a poor estimate of compilation time.
+
+Files executed 55,749,383,511 instructions in the plain RV32 guest harness. About 24.89 billion fell in the address range labeled `main`. The emulator attributes each PC to the nearest preceding ELF function symbol. Generated routines can share that range, so that count cannot identify one expensive source function. Named guest hotspots include the soft-float functions `f64_add` (2.40 billion) and `__divdf3` (2.26 billion), followed by `rt_any_eq` (2.20 billion), `rt_any_get` (2.17 billion), and `rt_any_index` (2.03 billion). Dynamic equality and indexing are substantial on both instruction sets. Software floating point changes the RV32 ranking.
+
+| Files with 8 MiB compact heap | Linux AOT instrumented, median of 7 | RV32 instrumented, one run | P4 instrumented, one run |
+|---|---:|---:|---:|
+| Frontend | 3.514 s | 55,750,760,529 steps | 262.264 s |
+| GC within frontend | 0.160 s | 1,607,765,080 steps | 9.206 s |
+| Collections | 80 | 80 | 80 |
+| Peak live bytes | 3,973,240 | 3,973,240 | 3,973,240 |
+| Cumulative survivor bytes | 151,459,216 | 151,459,216 | 151,459,216 |
+| Bytes physically slid | 47,127,400 | 47,127,400 | 47,127,400 |
+
+The guest harness count rose by 1,377,250 instructions with instrumentation (0.0025%). On the P4, GC occupied 3.51% of frontend time. The full check took 263.136 s and peaked at 9,251,666 scratch bytes. The board returned the expected 193,896-byte module. For Files, even eliminating all measured GC time would save about nine seconds under these conditions. The [P4 receipts](../various/p4) and [RV32 reports](../various/rv32) preserve the measurements.

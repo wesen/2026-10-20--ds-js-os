@@ -55,11 +55,134 @@
             "instructions": 386380984
           }
         ]
+      },
+      "rv32": {
+        "harness_instructions": 55749383511,
+        "top": [
+          {
+            "symbol": "main",
+            "instructions": 24894148140,
+            "entries": 1
+          },
+          {
+            "symbol": "f64_add",
+            "instructions": 2401179368,
+            "entries": 23999050
+          },
+          {
+            "symbol": "__divdf3",
+            "instructions": 2257256670,
+            "entries": 2577142
+          },
+          {
+            "symbol": "rt_any_eq",
+            "instructions": 2204454120,
+            "entries": 52513701
+          },
+          {
+            "symbol": "rt_any_get",
+            "instructions": 2170910175,
+            "entries": 23325917
+          },
+          {
+            "symbol": "rt_any_index",
+            "instructions": 2026615909,
+            "entries": 21664569
+          },
+          {
+            "symbol": "field_index",
+            "instructions": 1819281779,
+            "entries": 19983135
+          },
+          {
+            "symbol": "rt_any_from_int",
+            "instructions": 1758757614,
+            "entries": 37905133
+          },
+          {
+            "symbol": "norm_round_pack",
+            "instructions": 1702128890,
+            "entries": 31232585
+          },
+          {
+            "symbol": "rt_num_to_int32",
+            "instructions": 1516078787,
+            "entries": 24915567
+          },
+          {
+            "symbol": "__muldf3",
+            "instructions": 1453037131,
+            "entries": 14325314
+          },
+          {
+            "symbol": "rt_any_to_int",
+            "instructions": 1032601190,
+            "entries": 17562772
+          }
+        ]
+      },
+      "guest_metrics_8MiB": {
+        "frontend_steps": 55750760529,
+        "gc_steps": 1607765080,
+        "slide_bytes": 47127400
       }
     },
     "agenda": {
       "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
-      "source_sha256": "a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e"
+      "source_sha256": "a6f613bbbd7b65b9169dd38ce573679484fffb74d67efef0df9deb5aa0a9ca1e",
+      "native": {
+        "instructions": 136873785302,
+        "top": [
+          {
+            "symbol": "whole_bits",
+            "instructions": 16671571311
+          },
+          {
+            "symbol": "rt_any_index",
+            "instructions": 10558633062
+          },
+          {
+            "symbol": "rt_any_eq",
+            "instructions": 8882420840
+          },
+          {
+            "symbol": "rt_any_from_int",
+            "instructions": 7726613706
+          },
+          {
+            "symbol": "rt_any_get",
+            "instructions": 6495189334
+          },
+          {
+            "symbol": "order_bits",
+            "instructions": 6434172998
+          },
+          {
+            "symbol": "field_index",
+            "instructions": 6301877201
+          },
+          {
+            "symbol": "extra_find",
+            "instructions": 5424655775
+          },
+          {
+            "symbol": "rt_any_to_int",
+            "instructions": 4429350970
+          },
+          {
+            "symbol": "0x0000000000411539",
+            "instructions": 4182721184
+          },
+          {
+            "symbol": "str_equal",
+            "instructions": 3015352577
+          },
+          {
+            "symbol": "0x00000000004d46c8",
+            "instructions": 2909441217
+          }
+        ]
+      }
     }
   },
   "host_timing": [

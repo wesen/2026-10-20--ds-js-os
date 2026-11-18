@@ -283,3 +283,49 @@ Inspect scripts/dispatch/measure.py for exact source parity of the edit function
 ### Technical details
 
 The RV32 module is 17,320 bytes. Linux uses CLOCK_MONOTONIC around each dispatch. All timing, collection and dispatch helpers live under ticket scripts directories. The ordinary on-device Agenda run finished before flashing the profiling build.
+
+## Step 7 — Reconcile Files across three execution targets
+
+### Prompt Context
+
+Continuing the requested cross-platform baseline with traceable device logs.
+
+### What I did
+
+Qualified both native Callgrind outputs, the Files RV32 ranking, its instrumented guest output and the physical Files module. Copied compact raw reports into various/p4 and various/rv32. Compared the counters across architectures and launched the independent Agenda 10 MiB guest candidate on the now-free host-timing core.
+
+### Why
+
+Identical output establishes correctness. Equal collection counts, live bytes and moved bytes give a second check that the configurations exercise comparable runtime behavior.
+
+### What worked
+
+All three Files targets agreed on every deterministic GC counter. Physical GC consumed 9,206,362 microseconds during the 262,263,671-microsecond frontend. Agenda and Files native profiles ranked the same three named runtime functions first.
+
+### What didn't work
+
+Guest symbolization grouped much generated code under main. Per-symbol attribution cannot identify individual generated compiler functions there. Hardware cycle counters were unavailable on the Linux host.
+
+### What I learned
+
+For Files, even a perfect elimination of measured collector time can explain only 3.51% of P4 frontend time. Both dynamic operations and software floating-point helpers deserve investigation before generalizing the cause of compiler latency.
+
+### What was tricky to build
+
+The guest's full harness and frontend-only instruction counts have slightly different boundaries. The overhead calculation compares two harness totals. The Files instrumented harness reports 55,750,760,761 instructions.
+
+### What warrants a second pair of eyes
+
+Callgrind counts x86 instructions. The emulator counts RV32 guest instructions. Neither gives P4 wall-clock attribution for individual symbols. Linux timings had competing jobs.
+
+### What should be done in the future
+
+Finish the larger Agenda RV32 and physical heap comparison and interpret it separately from Files. The original guest series runs the two 8 MiB cases and would subsequently repeat the independently launched candidate.
+
+### Code review instructions
+
+Inspect the actual P4 log and JSON, guest stats and symbol ranking, then compare them with the updated guide and aggregated JSON. The earlier world-dispatch experiment is checkpoint abaae1e.
+
+### Technical details
+
+The retained initial native executable hash is e748e63a8ac14fb841c9bb1dc672a4e4b2a63920e87255c9f769768750743ecd. The initial and measured guest firmware hashes are d276e380ebabcf694a61c7ad3e2e029a7d369c9ccafb1d5e51d025992ed4f702 and dab4c956efd4a83875592ca55dba8f93e08a689e7acf084027e3979f3bba92d0. The Files physical digest matched the independent host module.
