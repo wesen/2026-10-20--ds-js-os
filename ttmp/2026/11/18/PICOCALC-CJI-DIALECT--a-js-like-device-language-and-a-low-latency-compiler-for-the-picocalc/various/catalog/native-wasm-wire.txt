@@ -1,0 +1,11 @@
+test_asks_replies_rejections_and_later_answers (__main__.WasmWorldTests.test_asks_replies_rejections_and_later_answers) ... ok
+test_payloads_must_be_strict_json_without_handles (__main__.WasmWorldTests.test_payloads_must_be_strict_json_without_handles) ... ok
+test_messages_to_and_from_javascript (__main__.WasmWorldTests.test_messages_to_and_from_javascript) ... ok
+test_a_retained_post_reaches_a_listener_that_starts_later (__main__.WasmWorldTests.test_a_retained_post_reaches_a_listener_that_starts_later) ... ok
+test_screens_are_json_objects_and_presentation_is_declared_at_start (__main__.WasmWorldTests.test_screens_are_json_objects_and_presentation_is_declared_at_start) ... ok
+test_storage (__main__.WasmWorldTests.test_storage) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.133s
+
+OK

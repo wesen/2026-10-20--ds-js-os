@@ -1,0 +1,16 @@
+{"missing":28,"maps":10,"sets":3,"explicitSorts":1,"sortedUnique":1}
+# tests 113
+# pass 113
+# fail 0
+absent-null-falsy PASS
+json-values PASS
+suspending-reply PASS
+missing-handler PASS
+nested-handle-and-file-io PASS
+revocation PASS
+sandbox-print-completion PASS
+sandbox-global-async PASS
+sandbox-errors PASS
+files-editor new file written through a narrowed handle PASS
+agenda normalized dates, wrote completion, and persisted a reminder PASS
+calc fractional evaluation and user definition persisted in history PASS

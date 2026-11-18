@@ -1,0 +1,52 @@
+Local baseline at c35e75c and unchanged catalog sources
+Command: make -C picocalc-os test-apps test-agent test-fs test-clock test-sys
+489bd7ea478e9495672653f451456771f46372688c22fa999c3a147d911075eb  picocalc-os/build/picocalc-host
+node tests/editor.test.mjs
+ℹ tests 10
+ℹ pass 10
+ℹ fail 0
+node tests/calc.test.mjs
+ℹ tests 27
+ℹ pass 27
+ℹ fail 0
+node tests/agenda.test.mjs
+ℹ tests 9
+ℹ pass 9
+ℹ fail 0
+node tests/sysapps.test.mjs
+ℹ tests 16
+ℹ pass 16
+ℹ fail 0
+node tests/agent.test.mjs
+ℹ tests 31
+ℹ pass 31
+ℹ fail 0
+node tests/chat-ui.test.mjs
+ℹ tests 13
+ℹ pass 13
+ℹ fail 0
+node tests/compositor-auth.test.mjs
+ℹ tests 7
+ℹ pass 7
+ℹ fail 0
+python3 tests/agent-integration.py --binary build/picocalc-host
+PASS: QuickJS chat -> native transport -> calculator -> answer -> approval -> note file -> read
+PASS: the same tour through a Chat Completions endpoint
+PASS: a cold process restores the session and keeps the notes without starting a network request
+PASS: notes from an old session record move into files once
+PASS: cancellation remains responsive during a 40-second virtual network delay
+PASS: a 53 KiB provider reply stays within world budgets and bounded display/history
+PICOCALC_TEST_BINARY=build/picocalc-host python3 tests/test_agent_native.py
+Ran 23 tests in 0.447s
+PICOCALC_TEST_BINARY=build/picocalc-host python3 tests/test_fs_native.py
+Ran 9 tests in 0.152s
+OK
+PICOCALC_TEST_BINARY=build/picocalc-host python3 tests/test_clock_native.py
+Ran 4 tests in 0.039s
+OK
+PICOCALC_TEST_BINARY=build/picocalc-host python3 tests/test_sys_native.py
+Ran 20 tests in 0.747s
+OK
+PICOCALC_TEST_BINARY=build/picocalc-host python3 tests/test_loader_native.py
+Ran 6 tests in 0.245s
+OK
