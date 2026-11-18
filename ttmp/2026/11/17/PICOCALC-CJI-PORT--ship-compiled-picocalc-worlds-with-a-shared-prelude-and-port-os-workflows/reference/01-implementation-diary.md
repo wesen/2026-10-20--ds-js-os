@@ -1309,3 +1309,57 @@ Start at compiler/install.c report_progress, enter_phase and compiler_tick. Foll
 ### Technical details
 
 The reporting interval is ten seconds. The worker snapshots counters at its existing roughly 20 ms allocator yield points. Reports contain no source text, credentials or application payload.
+
+## Step 25: Verify live board progress and protect serial receipts
+
+Keyboard exercised on-demand status, ten-second heartbeats and all compilation phases. Agenda's next trial reported increasing allocation counts. Hardware validation also exposed a preexisting race in the serial receipt formatter. I changed each SHA-256 report to print as a complete line.
+
+### Prompt Context
+
+**User prompts and intent.** See Step 24. This step checks whether physical progress is observable while the compiler runs.
+
+**Progress implementation commit** b0e7157.
+
+### What I did
+
+- Recovered the previously silent console using the project reset utility. The first post-reset console showed the ROM boot banner, a verified development-slot cache hit and a working heap command. After the bus acknowledged hold, flashed only the application partition and verified the flash hash.
+- Ran a Keyboard check with cji status during and after the compile. Started Agenda with the ticket observer forwarding progress to stderr.
+- Formatted hashes into fixed-size strings before calling printf. Kept the existing terminal line grammar so receipt consumers still verify the full digests.
+
+### Why
+
+Logging activity from unrelated tasks can occur at any time. The terminal receipt previously printed each digest byte in a separate printf. A single stdio operation for the whole line removes those interleaving points.
+
+### What worked
+
+The Keyboard observer received an on-demand frontend sample at 2,509 ms. Periodic samples at 10,006 ms and 20,006 ms reported 14 and 21 allocator calls. The board then reported link, assemble, assembled and idle. Agenda reported 14, 24 and 30 allocations at its first three heartbeats.
+
+### What didn't work
+
+- The previously silent Agenda trial returned no receipt. Hardware status probes received zero bytes, even with the normal serial configuration. Resetting the board ended that unverified attempt.
+- A temporary Keyboard observer initially raised UnicodeDecodeError on byte 0x81. Changed the temporary filter to decode individual serial lines with replacement, as the catalog checker already does.
+- During the Keyboard control, an ESP-IDF I²C transaction failure line appeared inside the printed source digest after “ded04a85d5cf”. That control established live phase visibility, but the clipped digest is insufficient for independent artifact verification.
+
+### What I learned
+
+Seeing “assembled” shows that the worker finished. Digest equality requires a complete terminal receipt. The heartbeat's allocator count can establish recent worker activity even when the frontend phase name stays the same for minutes.
+
+### What was tricky to build
+
+The independently emitting firmware tasks share the UART. The worker must finish hashing before releasing the output, and the kernel must serialize the complete receipt before writing it.
+
+### What warrants a second pair of eyes
+
+The I²C transaction failure is a separate hardware observation. Inspect the final bus counters before evaluating board health. Distinguish the progress firmware used for Agenda from the subsequent single-write receipt build.
+
+### What should be done in the future
+
+Finish Agenda, verify the revised receipt formatting on hardware, and check that a compiler failure produces a terminal progress event.
+
+### Code review instructions
+
+Inspect digest_hex and the two terminal printing branches in compiler/install.c. Compare the result line format with the regular expression in scripts/07-check-bundled-catalog.py.
+
+### Technical details
+
+The progress firmware ELF SHA-256 is c6c484679a1ba2f965a31f29244239c83dde020bee0e43c90c9b43a6302ec505. Each displayed progress line fits within the system log ring's 119-byte text payload.
