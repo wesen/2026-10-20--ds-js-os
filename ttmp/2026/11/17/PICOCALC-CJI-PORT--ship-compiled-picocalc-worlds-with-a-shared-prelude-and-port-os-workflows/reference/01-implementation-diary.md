@@ -880,3 +880,57 @@ Read compiler/install.c build_one, compiler/tool.c compiler_entry and the alloca
 ### Technical details
 
 The 10 MiB reservation uses the existing tracked job allocator and counts toward the 18 MiB worker limit. The host stage-1 timing excludes RV32 assembly and device I/O. Agent was measured on its complete 34,596-byte bundled source.
+
+## Step 17: Reuse the frontend heap while loading the compiler
+
+The first board trial of the reserved heap failed while loading the compiler. I removed the overlap between the decompressed compiler file and the unused frontend heap. The second trial reached the frontend on the physical P4.
+
+### Prompt Context
+
+**User prompt.** See Step 16, “Ok, compile Agent”.
+
+**Assistant interpretation and inferred intent.** Finish the compile on hardware using the original Agent source and verify the output.
+
+**Prior code commit** e46c655.
+
+### What I did
+
+- Flashed the application partition and ran scripts/07-check-bundled-catalog.py --timeout 7200 agent.
+- Added a caller-supplied destination and capacity to the P4 immutable-bundle reader. The normal port_read_file entry point still allocates its result. The compiler worker lends its reserved heap to the decompressor and reuses it after synchronous relocation returns.
+- Rebuilt, held the keyboard bus, wrote the app partition, verified the flash hash and restarted the physical check.
+
+### Why
+
+The ELF loader reads a complete 4.6 MiB input image while constructing independent executable segments. The reserved heap can hold that input until relocation completes. The frontend starts after the kernel signals the worker.
+
+### What worked
+
+The second run reported 24,997,100 bytes free at entry, with an 18,874,368-byte largest block. It reached “relocated” at 525 ms, with 9,620,740 bytes free after charging the frontend reservation and loading the tool. Independently, assembling the compact host run's exact SLIR with the device's prelude-call insertion and unit.list produced the reference 750,832-byte ELF byte for byte.
+
+### What didn't work
+
+The first firmware returned “compiler relocation -12” at 401 ms, with a 10,485,776-byte scratch peak. The worker never entered stage 1. Retaining separate buffers for the decompressed image and the future frontend heap exhausted the available contiguous space during relocation.
+
+### What I learned
+
+The loader's input buffer becomes reusable as soon as relocation returns. ELF execution subsequently reads the separate relocated code and data.
+
+### What was tricky to build
+
+The two buffer paths have different owners. The kernel frees the ordinary file allocation. The worker keeps the borrowed input as a tracked heap allocation and frees it after the frontend or during job cleanup.
+
+### What warrants a second pair of eyes
+
+Check the terminating byte against destination capacity in the packed and plain file paths. Verify short input and decompression failure leave caller-owned storage for the worker to release.
+
+### What should be done in the future
+
+Collect the terminal receipt from the worker, compare the ELF digest and record scratch use and elapsed time.
+
+### Code review instructions
+
+Follow p4_bundle_read in main/port_p4.c through build_one and the LOADING branch of compiler_tick. Review the host ELF comparison using slas-rv32 -c agent.elf --module --extern unit.list with the linked SLIR.
+
+### Technical details
+
+The second firmware ELF SHA-256 is e72bc108aa7a5dfefae43a684492fab8c49225b73407a6de3947757c5d600000. The application binary uses 0x3d7f50 bytes of the 0x400000-byte app partition.

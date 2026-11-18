@@ -149,7 +149,10 @@ static void build_one(void) {
         job.frontend_heap=allocate(LARGE_FRONTEND_HEAP);
         if (!job.frontend_heap) snprintf(job.error,sizeof job.error,"frontend heap reservation");
     }
-    tool_image=port_read_file("natives/compiler.elf",&tool_size);
+    // Relocation finishes before stage 1 writes its heap. Share the reservation
+    // with the decompressor so a third multi-megabyte block is unnecessary.
+    tool_image=job.error[0] ? NULL : p4_bundle_read("natives/compiler.elf",&tool_size,
+                                                   job.frontend_heap,LARGE_FRONTEND_HEAP);
     job.exports=port_read_file("compiler/unit.list",&job.exports_length);
     signal_kernel();
     // ELF relocation flushes the instruction cache with both CPUs stopped.
@@ -293,12 +296,14 @@ void compiler_tick(void) {
     if (state==LOADING) {
         if (xQueueReceive(finished,&done,0)!=pdTRUE) return;
         esp_elf_init(&tool);
-        if (!tool_image || !job.exports) snprintf(job.error,sizeof job.error,"compiler bundle allocation");
-        else {
+        if (!tool_image || !job.exports) {
+            if (!job.error[0]) snprintf(job.error,sizeof job.error,"compiler bundle allocation");
+        } else {
             int rc=esp_elf_relocate(&tool,(const uint8_t *)tool_image,tool_size);
             if (rc) snprintf(job.error,sizeof job.error,"compiler relocation %d",rc);
         }
-        free(tool_image); tool_image=NULL;
+        if (!job.frontend_heap) free(tool_image);
+        tool_image=NULL;
         state=BUILDING;
         xTaskNotifyGive(worker);
         return;
