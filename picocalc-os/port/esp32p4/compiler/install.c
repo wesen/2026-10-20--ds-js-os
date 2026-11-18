@@ -31,7 +31,7 @@ static enum { READY, LOADING, BUILDING, STARTING } state;
 static char *output, *old_source;
 static size_t output_size, old_size;
 static int old_engine, candidate_epoch;
-static bool reuse;
+static bool reuse, checking;
 static int64_t began;
 
 // Include the header in the allocation limit and preserve 16-byte alignment.
@@ -139,11 +139,16 @@ static void build_one(void) {
         memory_sample("relocated");
         esp_elf_request(&tool,0,1,args);
         memory_sample(job.status ? "compiler refused" : "assembled");
-        if (!job.status && job.module_length<=MODULE_LIMIT) {
+        if (!job.status && checking) {
+            if (!digest(job.module,job.module_length,candidate.artifact)) {
+                job.status=-1;
+                snprintf(job.error,sizeof job.error,"module digest failed");
+            }
+        } else if (!job.status && job.module_length<=MODULE_LIMIT) {
             output=malloc(job.module_length);
             if (output) { output_size=job.module_length; memcpy(output,job.module,output_size); }
         }
-        if (!job.status && !output) snprintf(job.error,sizeof job.error,"module size or allocation");
+        if (!checking && !job.status && !output) snprintf(job.error,sizeof job.error,"module size or allocation");
     }
     esp_elf_deinit(&tool);
     free((void *)job.exports);
@@ -158,7 +163,8 @@ static void build_worker(void *arg) {
         build_one();
     }
 }
-static void begin(char *source,size_t len,bool automatic) {
+static void begin(char *source,size_t len,bool automatic,bool check_only) {
+    checking=check_only;
     memset(&candidate,0,sizeof candidate);
     candidate.version=1; candidate.slot=active.version ? !active.slot : 0;
     candidate.engine=ENG_NATIVE; candidate.automatic=automatic;
@@ -167,7 +173,7 @@ static void begin(char *source,size_t len,bool automatic) {
     job=(compiler_job_t){.source=source,.length=len,.alloc=allocate,.resize=resize,.release=release,
         .format=vsnprintf,.number=strtod,.math=compiler_math,.micros=esp_timer_get_time,.status=-1};
     began=esp_timer_get_time();
-    reuse=active.version && active.automatic==automatic &&
+    reuse=!checking && active.version && active.automatic==automatic &&
          !memcmp(candidate.firmware,active.firmware,32) && !memcmp(candidate.source,active.source,32);
     if (reuse) {
         // A manual reinstall must repair a damaged saved source as well as a
@@ -199,16 +205,24 @@ static void begin(char *source,size_t len,bool automatic) {
 void compiler_console(const char *command) {
     if (state!=READY) { puts("cji: busy"); return; }
     const char *path=strchr(command,' ');
+    if (!strncmp(command,"check ",6)) {
+        const char *file=command+6;
+        size_t n=strlen(file), len=0;
+        char *source=n>3 && !strcmp(file+n-3,".js") && fs_path_ok(file) ? port_read_file(file,&len) : NULL;
+        if (!source) { puts("cji: bundled JS source unavailable"); return; }
+        begin(source,len,false,true);
+        return;
+    }
     bool automatic=!strncmp(command,"install ",8);
     if (!path || (!automatic && strncmp(command,"build ",6)) || !fs_path_ok(++path)) {
-        puts("cji build PATH | cji install PATH"); return;
+        puts("cji build PATH | cji install PATH | cji check BUNDLED.js"); return;
     }
     char full[FS_PATH_MAX+8];
     snprintf(full,sizeof full,"/files/%s",path);
     size_t len=0;
     char *source=read_bounded_file(full,SOURCE_LIMIT,&len);
     if (!source || memchr(source,0,len)) { free(source); puts("cji: expected bounded JavaScript source"); return; }
-    begin(source,len,automatic);
+    begin(source,len,automatic,false);
 }
 void compiler_restore(void) {
     size_t n=0;
@@ -219,7 +233,7 @@ void compiler_restore(void) {
         (active.engine!=ENG_NATIVE && active.engine!=ENG_JS)) { memset(&active,0,sizeof active); return; }
     char *src=read_bounded_file(source_path(active.slot),SOURCE_LIMIT,&n);
     if (!src || !matches(src,n,active.source)) { puts("cji: installed source missing or changed"); free(src); return; }
-    begin(src,n,active.automatic);
+    begin(src,n,active.automatic,false);
 }
 static void rollback(void) {
     char why[128];
@@ -264,6 +278,19 @@ void compiler_tick(void) {
     }
     if (state!=BUILDING) return;
     if (!reuse && xQueueReceive(finished,&done,0)!=pdTRUE) return;
+    if (checking) {
+        printf("cji: check %s elapsed_ms=%lld scratch_peak=%u source_sha256=",job.status ? "failed" : "ok",
+               (long long)((esp_timer_get_time()-began)/1000),(unsigned)peak);
+        for (size_t i=0;i<32;i++) printf("%02x",candidate.source[i]);
+        if (job.status) printf(" error=%s",job.error);
+        else {
+            printf(" bytes=%u sha256=",(unsigned)job.module_length);
+            for (size_t i=0;i<32;i++) printf("%02x",candidate.artifact[i]);
+        }
+        putchar('\n');
+        cleanup();
+        return;
+    }
     if (!output && job.status==1 && candidate.automatic) {
         output_size=job.length;
         output=malloc(output_size+1);

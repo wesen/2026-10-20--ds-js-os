@@ -718,3 +718,52 @@ Start with the Phase 4–6 guide and various/phase-4-6-p4-acceptance.txt. Compar
 Final application SHA-256 65cd0cc230a1797cf9c508e1e7c3e6e0a92e8d56e0a4d032c846faa175a19390. Compiler-enabled size 0x3d79f0, compiler-disabled size 0x332a00. Host applications, filesystem and native suites passed. The RV32 board-emulation gate matched SLIR, ELF and calls for all four available fixtures. The shared-runtime gate passed four worlds, isolated the over-budget heap case and observed three incorrect worlds in the deliberately broken state-swap control.
 
 Remarquee receipt: OK: uploaded PICOCALC-CJI-PORT - Phases 4 to 6 hardware implementation.pdf -> /ai/2026/11/17/PICOCALC-CJI-PORT. The earlier design edition remains available. The physical device retains apps/cjiprobe.js, apps/0-cjicheck.js and the verified dev-cji installation for reproduction.
+
+## Step 14. Run the real compiler against the bundled catalog
+
+The production manifest names 22 JavaScript sources. I used those paths to drive a serial sweep on the ESP32-P4. A successful check must produce ELF bytes on the board, and the source hash in each receipt must match the checkout.
+
+### Prompt Context
+
+User prompt (verbatim): “run compiler on device across the whole catalog”. I interpreted the catalog as all 15 application sources and all seven driver and system sources in system.json.
+
+### What I did
+
+- Added the operator command cji check BUNDLED.js. It reads a source from the immutable firmware bundle and runs the existing frontend and assembler.
+- Added a serial runner and built host reference modules with the firmware's export list. The runner compares source digests and records the board's terminal result for each input.
+
+### Why
+
+The ordinary operator build activates a world, and some catalog entries drive shared hardware or depend on manifest claims. A catalog compile needs neither activation nor a claim change. Reading the immutable sources also lets Calc and Agent reach the compiler even though they exceed the 32 KiB editable-file limit.
+
+### What worked
+
+The application-only flash completed. The first three board outputs (Keyboard, Power and Display) matched the host ELF digests. Keyboard took 16,313 ms.
+
+### What didn't work
+
+The first serial run stopped on “unknown command � (try help)”, a stale console byte. I narrowed command-error recognition to the requested cji command and restarted the sweep.
+
+### What I learned
+
+Existing host-generated ELF modules are reference artifacts. A board-side source digest, elapsed time and output digest identify an actual fresh compilation.
+
+### What was tricky to build
+
+The module lives in the tool's private allocation list. The check hashes it while the worker owns that memory, then publishes the small result through the existing completion queue. A check bypasses cache lookup, filesystem staging and world activation.
+
+### What warrants a second pair of eyes
+
+Compare each successful receipt with the host bytes and check that the runner covers the full source manifest exactly once.
+
+### What should be done in the future
+
+Record the completed sweep and any exact refusal diagnostics.
+
+### Code review instructions
+
+Follow compiler_console into begin, build_one and compiler_tick in compiler/install.c. The serial driver is scripts/07-check-bundled-catalog.py.
+
+### Technical details
+
+The application image SHA-256 for this sweep is 0fb80be375d0f90c1c9b634f8be751a9c17d1fa06c0af14862afc7d52e78a78b. The frontend heap cap is 8 MiB and the private scratch limit is 18 MiB.
