@@ -467,3 +467,7 @@ Check scripts/11-host-pass-times.sh, scripts/12-host-instructions.sh and scripts
 ### Technical details
 
 SHA-256 of the native text section was 133cfe0d4e7f28f387a947d12786f17eaf59f1ac5c9a750d4d23d289a5120390. The sampled executable's full ELF SHA-256 is c5c629b968f32caa654e844fdebc176ef5f74e9f58dc6845e5eb0fe09b05822b. The address of analyzeRanges in this non-PIE binary is 0x4f0822.
+
+### Step 10 follow-up — Count the work inside library expansion
+
+The source-level trace now reproduces the observed Agenda helper sequence. Ran scripts/13-library-rounds.mjs under Node 24 against Files and Agenda. Both outputs matched the independent SLIR references. Recorded the traces in various/linux-profiles. Agenda made 11,743,517 joins with 9,195,456 identical inputs. Files made 1,013,096 joins with 757,722 identical inputs. The counters establish an opportunity; a compiled candidate and actual board times are necessary to quantify a speedup. The previous host profiling checkpoint is 3482d82.
