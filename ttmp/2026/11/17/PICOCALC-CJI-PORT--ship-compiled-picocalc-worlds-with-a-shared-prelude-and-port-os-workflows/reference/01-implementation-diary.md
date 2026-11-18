@@ -1365,3 +1365,55 @@ Inspect digest_hex and the two terminal printing branches in compiler/install.c.
 The progress firmware ELF SHA-256 is c6c484679a1ba2f965a31f29244239c83dde020bee0e43c90c9b43a6302ec505. Each displayed progress line fits within the system log ring's 119-byte text payload.
 
 **Checkpoint correction.** Commit 59ce482 recorded this investigation in the diary. Its first edit command raised “ValueError: substring not found” while looking for a same-line return, before writing install.c. I corrected the edit to match the actual cleanup branch, inspected the source diff and rebuilt it. The single-write application binary occupies 0x3d84b0 bytes. The subsequent implementation commit contains the formatter itself.
+
+## Step 26: Capture complete control output and isolate the keyboard bus
+
+The rebuilt firmware produced a complete Keyboard receipt under concurrent logging. During a longer Agenda run, periodic reports stopped altogether. I kept that attempt unverified and isolated the board's noisy keyboard bus for the next run.
+
+### Prompt Context
+
+**User prompt and inferred intent.** See Steps 21 and 24 for the ordered module checks, live progress and logging requirements.
+
+**Formatter implementation commit** aeacee6.
+
+### What I did
+
+- Flashed the application after a confirmed keyboard-bus hold, then exercised cji status mid-build and after completion.
+- Observed current activity via the log-forwarding catalog checker. After Agenda's heartbeats stopped, sent an on-demand status request, checked the serial owner's read counters and inspected USB power state.
+- Tried resetting only the CH343 USB bridge. Recovered the processor with the project reset utility, requested hold on the running firmware, and started Agenda on the same application with I²C suspended. This isolates the high-volume errors while leaving the compiler, flash image, source, caps and expected ELF unchanged.
+
+### Why
+
+A quiet terminal during the original build provided little diagnostic information. With independent kernel heartbeats, the last known frontend activity is observable. Holding the bus also tests whether the serial stream can remain usable without the unrelated I²C traffic.
+
+### What worked
+
+Keyboard's 22,160 ms check reported both full hashes in one line. Its 30,248-byte module matched the host reference. The revised observer received the idle reply after completion. The next Agenda run reached 1,350,663 ms with 358 allocation calls and 8,475,607 bytes in its most recent scratch sample. In the subsequent bus-held trial, the board acknowledged “i2c0 held between transactions” and reported increasing frontend allocation counts.
+
+### What didn't work
+
+No heartbeat or status reply followed the 1,350,663 ms sample on the bus-active Agenda run. The USB bridge remained enumerated with runtime_status active, and the reader's byte count stopped moving. The USB-only command usbreset 003/018 returned “can't open [Permission denied]”. I ended that observer and reset the processor. Without a terminal receipt that attempt cannot count toward catalog parity.
+
+### What I learned
+
+The progress records distinguish an active long pass from a stopped reporting path. Loss of the reporting path alone does not identify a compiler crash, a serial transport fault or an I²C-related failure.
+
+### What was tricky to build
+
+The chip and keyboard controller have separate reset behavior. Holding the bus helps isolate the compile, but the keyboard cannot serve normal input during that measurement. A subsequent reboot releases the hold.
+
+### What warrants a second pair of eyes
+
+Keep the I²C isolation in the final receipt. Check bus health separately after releasing the hold. A prior failed transaction may require a whole-device power cycle to recover the keyboard controller.
+
+### What should be done in the future
+
+Capture and validate the Agenda terminal receipt, check a failing input, then release the bus and sample board status.
+
+### Code review instructions
+
+Compare the Keyboard receipt's module digest with the existing keyboard entry in the catalog. Compare elapsed time and allocation counts across the earlier Agenda samples without treating them as a percentage.
+
+### Technical details
+
+The application used for the control and subsequent Agenda runs has firmware ELF SHA-256 c3bc3996bf359ecda310acc0cef018d94444f23eb56835869327c5c81b47ff44. Only the application partition was written. The held-bus trial started with 25,011,996 free PSRAM bytes and a 24,117,248-byte largest block.
