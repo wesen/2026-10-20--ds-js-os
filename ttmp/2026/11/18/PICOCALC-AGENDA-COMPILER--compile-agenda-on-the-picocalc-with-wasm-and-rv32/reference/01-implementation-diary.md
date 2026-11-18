@@ -176,3 +176,51 @@ Project commit a8c71ad is the reproducible source checkpoint for the parser mile
 - Vault note: Projects/2026/11/18/PROJ - PicoCalc Agenda - Compiling a stored reminder to WebAssembly.md
 - Vault commit 5f1dd76 was pushed to origin main. The remote-tracking ref resolved to the same commit after the push.
 - The parser task is complete. The publication task stays open for the integration, device and RV32 milestones.
+
+## Step 5 — Read the notes file and publish a frame from a linked Wasm world
+
+The host simulator now runs the compiled parser inside an Agenda world. The world's startup obtains a directory handle from its manifest, submits a read of notes/todo.txt, and builds a frame in the settlement turn. The fixture has two open tasks and one completed task. The resulting frame contains the two parsed open titles, including the supplementary-plane character in the first title.
+
+### Prompt context
+
+See Step 1. This is the first storage and rendering checkpoint on the Wasm path. The parser and vault milestone were committed at a8c71ad and 5f1dd76 respectively.
+
+### What I did
+
+- Extended typed-wasm.js to link generated functions into a prebuilt reactor. Original runtime indices and sections stay in place. The compiler emits calls after the imported and existing function ranges, and a small forwarding body occupies the runtime's named parser slot.
+- Added Agenda's Wasm reactor in picocalc-os/worlds/agenda. It uses the SDK for lifecycle and frame delivery, translates UTF-8 to the typed compiler's bounded UTF-16 buffer, and reads the generated record and title.
+- Added public native file-open and deferred-read operations. They reuse fs_open_claim, fs_prepare and fs_defer so the same manifest, handle ownership and path checks still govern file access.
+- Ran scripts/04-check-wasm-world.mjs with and without the Agenda notes claim. The unprivileged run cannot fetch the file or produce a frame from its contents. The direct message path also rejects a numeric line value.
+- Queried the actual ESP32-P4 console with p4cap.py --no-reset and the stats command. It returned the live world table via /dev/ttyACM0. This was a connectivity check against the running firmware.
+
+### Why
+
+A reactor can retain OS-specific startup and SDK behavior while the app's parsing routines remain editable and compiled at runtime. Adding a narrow read-only operation through the existing filesystem capability path allows Wasm Agenda itself to own the read.
+
+### What worked
+
+The linked module validated and booted under the existing WAMR backend. Its first frame carried both expected open titles and excluded the completed task and the header. The 6,411 stored-line comparisons, make test-apps, and all 17 focused Wasm tests passed. The USB port was present on the host outside the sandbox and answered a read-only console query.
+
+### What didn't work
+
+The initial simulator assertion assumed the WAMR trace names event 4 “settle”. That trace prints only the numeric event for the settlement. The file frame had already arrived. I updated the expectation. I also removed the direct parse request's temporary frame update, which would otherwise replace the actual file view. The broader native suite entered its Linux subprocess tests and hit a subprocess test error inside the sandbox. The focused Wasm class passed separately. A bounded retry on the host outside the sandbox completed all 34 native regression tests successfully.
+
+### What I learned
+
+The filesystem settlement arrives as a JSON string. The focused test exercises the kernel I/O path, token dispatch, the linked parser call, and publication to the frame channel. These are simulator observations. The instructions counted in the trace describe WAMR work and are independent of handheld timing.
+
+### What was tricky to build
+
+A standalone Wasm function's call indices start at zero. In the merged module, typed definitions come after the runtime's imports and definitions. Emitting against the final index range avoids rewriting opcodes or shifting existing runtime references. The test compares the declared Task layout against the reactor's expected field order and verifies the Wasm type of the forwarding slot.
+
+### What warrants a second pair of eyes
+
+Review the ABI between the compiler and runtime before exposing a source install command. The displayed projection is bounded to 12 rows and the frame size. The runtime currently discards a line it cannot represent in its 2,048-unit input buffer.
+
+### What should be done in the future
+
+Connect calendar-to-epoch conversion, timer events and durable duplicate suppression to the stored-task scan. Qualify refresh and the rendered result through a real compositor. Add cold compilation and frame instrumentation to the device path and test it on the connected PicoCalc before the RV32 target.
+
+### Code review instructions
+
+Build with make -C picocalc-os and run scripts/04-check-wasm-world.mjs from the repository root. Inspect wasm-world.c, linkWorld in typed-wasm.js and the NW_FS_OPEN and NW_FS_READ handlers. The exact reply, frame and module identity are in various/wasm-world.json.

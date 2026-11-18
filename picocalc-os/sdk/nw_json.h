@@ -87,8 +87,7 @@ static inline int nw_json_num(const char *json, const char *key, double *out) {
   return p && nw_json__number(p, out) ? 1 : 0;
 }
 
-static inline int nw_json_str(const char *json, const char *key, char *buf, int n) {
-  const char *p = nw_json_find(json, key);
+static inline int nw_json_string(const char *p, char *buf, int n) {
   if (!p || *p != '"' || n <= 0) return -1;
   int k = 0;
   for (p++; *p && *p != '"'; p++) {
@@ -111,6 +110,10 @@ static inline int nw_json_str(const char *json, const char *key, char *buf, int 
   }
   buf[k] = 0;
   return *p == '"' ? k : -1;
+}
+
+static inline int nw_json_str(const char *json, const char *key, char *buf, int n) {
+  return nw_json_string(nw_json_find(json, key), buf, n);
 }
 
 static inline int nw_json_bytes(const char *json, unsigned char *out, int n) {

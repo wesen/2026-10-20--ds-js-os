@@ -22,6 +22,7 @@ enum {
   // Wall time is milliseconds (-1 when unset). ZONE writes the POSIX zone; SETZONE returns 1 if persisted.
   // NET_INFO and NET_RESULT return JSON text (empty while scanning); SCAN and JOIN return 1 on success.
   NW_CALL_CLOCK_WALL, NW_CALL_CLOCK_ZONE, NW_CALL_CLOCK_SETZONE, NW_CALL_NET_INFO, NW_CALL_NET_SCAN, NW_CALL_NET_RESULT, NW_CALL_NET_JOIN,
+  NW_CALL_FS_OPEN, NW_CALL_FS_READ,
   NW_CALL_COUNT
 };
 typedef struct {

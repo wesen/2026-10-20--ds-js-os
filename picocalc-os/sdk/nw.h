@@ -71,6 +71,8 @@ int nw_sleep(int ms);                     // a token, settled after ms
 int nw_timer(int index, int on);
 int nw_store_load(char *buf, int n);      // the world's saved record (JSON), its length; 0 if none
 int nw_store_save(const char *json);
+int nw_fs_open(const char *claim);       // a handle to a directory declared in the manifest
+int nw_fs_read(int handle, const char *path);  // a token; settles with a JSON string
 
 // Hardware, through claims and handles.
 int nw_i2c_open(const char *claim, int hz);   // "i2c0:0x1f"; a handle

@@ -1,0 +1,36 @@
+{
+  "linkedBytes": 35489,
+  "sourceSha": "615832ecd3abf957efe86137f604bc43e216c91d456198d8ad8d00f91fef0928",
+  "runtimeSha": "b656efcea6a0c81eafd2a633c7957ccfaacef97c308f8e379d353e1b853b41a0",
+  "linkedSha": "12a27cb0c1ce8180068641f3e0846dc69772899b47afad72b9bfc76f98258df0",
+  "reply": {
+    "title": "dentist 🦷",
+    "done": false,
+    "dateValid": true,
+    "timeValid": true,
+    "leadMinutes": 15
+  },
+  "frame": {
+    "t": "col",
+    "kids": [
+      {
+        "t": "text",
+        "s": "dentist 🦷"
+      },
+      {
+        "t": "text",
+        "s": "book a train"
+      }
+    ]
+  },
+  "engine": [
+    "wasm",
+    "idle",
+    "app"
+  ],
+  "deniedWithoutNotesClaim": true,
+  "perMessageInstructions": [
+    11632,
+    464
+  ]
+}

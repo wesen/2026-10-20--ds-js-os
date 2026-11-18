@@ -469,6 +469,25 @@ fs_done:
       }
       return rc < 0 ? fail(W, "%s", err) : rc;
     }
+    case NW_FS_OPEN: case NW_FS_READ: {
+      if (c->n[0] && memchr(c->s[0], 0, c->n[0])) return fail(W, "unexpected NUL in file operation");
+      char *path = str(c, 0);
+      if (!path) return fail(W, "out of memory");
+      char err[160];
+      int result = -1;
+      if (c->op == NW_FS_OPEN) {
+        handle_t *handle = fs_open_claim(W, path, err, sizeof err);
+        if (handle) result = handle->id;
+      } else {
+        fs_job_t *job = fs_prepare(W, c->i[0], "read", path, NULL, 0, err, sizeof err);
+        if (job) {
+          result = ++K.next_promise;
+          fs_defer(W, job, result);
+        }
+      }
+      free(path);
+      return result < 0 ? fail(W, "%s", err) : result;
+    }
     case NW_CLOCK_WALL: return port_wall_ms();
     case NW_CLOCK_ZONE: return snprintf(out, out_n, "%s", clock_zone());
     case NW_CLOCK_SETZONE: {

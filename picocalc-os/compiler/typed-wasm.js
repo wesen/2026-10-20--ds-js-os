@@ -414,7 +414,7 @@ class FunctionEmitter {
     }
 }
 
-function compile(source) {
+function compileFunctions(source, functionBase) {
     if (source.length > 64 * 1024) throw new SyntaxError("input limit exceeded");
     const lex = new Lexer(source);
     const declared = new Map();
@@ -439,12 +439,25 @@ function compile(source) {
         const fn = new FunctionEmitter(lex, declared, records).function();
         if (fn.name === "memory") lex.fail("reserved memory export");
         if (declared.has(fn.name)) lex.fail("duplicate function " + fn.name);
-        declared.set(fn.name, {index: functions.length, params: fn.params, result: fn.result});
+        declared.set(fn.name, {index: functionBase + functions.length, params: fn.params, result: fn.result});
         functions.push(fn);
     }
     if (!functions.length) lex.fail("expected a function");
 
-    const headers = functions.map(fn => [0x60, ...vec(fn.params.map(() => I32)), 1, I32]);
+    return { functions, records };
+}
+
+function signature(fn) {
+    return [0x60, ...vec(fn.params.map(() => I32)), 1, I32];
+}
+
+function recordLayouts(records) {
+    return Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)]));
+}
+
+function compile(source) {
+    const { functions, records } = compileFunctions(source, 0);
+    const headers = functions.map(signature);
     const names = functions.map((fn, i) => [
         ...vec(Array.from(fn.name, char => char.charCodeAt(0))), 0, ...unsigned(i),
     ]);
@@ -458,9 +471,125 @@ function compile(source) {
     ]);
     return {
         bytes,
-        records: Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)])),
+        records: recordLayouts(records),
         signatures: functions.map(({ name, params, result }) => ({ name, params, result })),
     };
+}
+
+class WasmReader {
+    constructor(bytes) {
+        this.bytes = bytes;
+        this.offset = 0;
+    }
+
+    take(length) {
+        const end = this.offset + length;
+        if (end > this.bytes.length) throw new SyntaxError("truncated Wasm runtime");
+        const bytes = this.bytes.subarray(this.offset, end);
+        this.offset = end;
+        return bytes;
+    }
+
+    byte() { return this.take(1)[0]; }
+
+    uint() {
+        let value = 0;
+        for (let shift = 0; shift <= 28; shift += 7) {
+            const part = this.byte();
+            value += (part & 127) * 2 ** shift;
+            if (!(part & 128) && value <= 0xffffffff) return value;
+        }
+        throw new SyntaxError("invalid Wasm u32");
+    }
+
+    sized() { return this.take(this.uint()); }
+
+    vector(read) {
+        const count = this.uint();
+        if (count > this.bytes.length - this.offset) throw new SyntaxError("truncated Wasm vector");
+        return Array.from({length: count}, () => read(this));
+    }
+
+    end() { return this.offset === this.bytes.length; }
+}
+
+function readSection(sections, id, read) {
+    const section = sections.find(part => part.id === id);
+    if (!section) throw new SyntaxError("missing Wasm runtime section " + id);
+    const reader = new WasmReader(section.bytes);
+    const result = read(reader);
+    if (!reader.end()) throw new SyntaxError("trailing Wasm runtime section data " + id);
+    return result;
+}
+
+function encodeModule(header, sections) {
+    const result = new Uint8Array(header.length + sections.reduce(
+        (sum, part) => sum + 1 + unsigned(part.bytes.length).length + part.bytes.length, 0));
+    result.set(header);
+    let offset = header.length;
+    for (const {id, bytes} of sections) {
+        const prefix = [id, ...unsigned(bytes.length)];
+        result.set(prefix, offset);
+        offset += prefix.length;
+        result.set(bytes, offset);
+        offset += bytes.length;
+    }
+    return result;
+}
+
+// The trusted runtime owns memory, host imports, and world exports. Its
+// direct calls to the exported slot keep their original function index.
+function linkWorld(source, runtime, entry) {
+    const reader = new WasmReader(runtime);
+    const header = reader.take(8);
+    if (header.join(",") !== "0,97,115,109,1,0,0,0") throw new SyntaxError("invalid Wasm runtime header");
+    const sections = [];
+    while (!reader.end()) {
+        const id = reader.byte(), bytes = reader.sized();
+        if (id !== 0) sections.push({id, bytes}); // discard stale names and producer metadata
+    }
+    if (new Set(sections.map(part => part.id)).size !== sections.length) throw new SyntaxError("duplicate Wasm runtime section");
+    const types = readSection(sections, 1, r => r.vector(t => {
+        if (t.byte() !== 0x60) throw new SyntaxError("expected Wasm function type");
+        return [0x60, ...vec(Array.from(t.sized())), ...vec(Array.from(t.sized()))];
+    }));
+    const importCount = sections.some(part => part.id === 2)
+        ? readSection(sections, 2, r => r.vector(item => {
+            item.sized();
+            item.sized();
+            if (item.byte() !== 0) throw new SyntaxError("expected a Wasm function import");
+            return item.uint();
+        }).length) : 0;
+    const definitions = readSection(sections, 3, r => r.vector(item => item.uint()));
+    const exports = readSection(sections, 7, r => r.vector(item => ({
+        name: item.sized().join(","), kind: item.byte(), index: item.uint(),
+    })));
+    const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
+    const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
+    const bodies = readSection(sections, 10, r => r.vector(item => {
+        const body = item.sized();
+        return [...unsigned(body.length), ...body];
+    }));
+    if (bodies.length !== definitions.length || !Number.isInteger(slot) || slot < 0 || slot >= bodies.length) {
+        throw new SyntaxError("missing Wasm runtime function slot " + entry);
+    }
+    const base = importCount + definitions.length;
+    const {functions, records} = compileFunctions(source, base);
+    const target = functions.findIndex(fn => fn.name === entry);
+    if (target < 0 || signature(functions[target]).join(",") !== types[definitions[slot]]?.join(",")) {
+        throw new SyntaxError("Wasm runtime slot signature mismatch for " + entry);
+    }
+    const bridge = [0];
+    for (let i = 0; i < functions[target].params.length; i++) bridge.push(OP.get, ...unsigned(i));
+    bridge.push(0x10, ...unsigned(base + target), OP.end);
+    bodies[slot] = [...unsigned(bridge.length), ...bridge];
+    const replacement = new Map([
+        [1, vec([...types, ...functions.map(signature)])],
+        [3, vec([...definitions.map(unsigned), ...functions.map((_, i) => unsigned(types.length + i))])],
+        [10, vec([...bodies, ...functions.map(fn => fn.body)])],
+    ]);
+    for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
+    return {bytes: encodeModule(header, sections), records: recordLayouts(records)};
 }
 
 function invoke(exports, signature, args) {
@@ -476,5 +605,5 @@ function invoke(exports, signature, args) {
 }
 
 globalThis.compileTyped = source => compile(source).bytes;
-globalThis.typedWasm = { compile, invoke };
+globalThis.typedWasm = { compile, linkWorld, invoke };
 })();
