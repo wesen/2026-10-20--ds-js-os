@@ -471,3 +471,49 @@ SHA-256 of the native text section was 133cfe0d4e7f28f387a947d12786f17eaf59f1ac5
 ### Step 10 follow-up — Count the work inside library expansion
 
 The source-level trace now reproduces the observed Agenda helper sequence. Ran scripts/13-library-rounds.mjs under Node 24 against Files and Agenda. Both outputs matched the independent SLIR references. Recorded the traces in various/linux-profiles. Agenda made 11,743,517 joins with 9,195,456 identical inputs. Files made 1,013,096 joins with 757,722 identical inputs. The counters establish an opportunity; a compiled candidate and actual board times are necessary to quantify a speedup. The previous host profiling checkpoint is 3482d82.
+
+## Step 11 — Separate existing inference reuse from additional cache hits
+
+### Prompt Context
+
+The user asked “how much of the repeated type inference can be cached / reused / avoided ?”.
+
+### What I did
+
+Extended the in-memory reference-compiler trace to count top-level visits, unchanged-summary skips, whole-result reuse, episode validation attempts, successful replays and retained memo text. Qualified Files and Agenda in both modes. Started a separate compiled-stage-1 experiment with just the cross-round cache flag changed.
+
+### Why
+
+Rerunning an inference pass does not imply reexecuting every function. An upper bound from simply counting identical source functions would ignore changed call sites, widened ranges and replay validation costs.
+
+### What worked
+
+All four outputs matched. Agenda skipped 9,019 of 11,760 function visits in both modes. The optional cache replayed 1,690 additional visits and reduced interval joins by 44.5%. On Files it reduced joins by 5.5%. The report's new figure partitions visits into mutually exclusive outcomes.
+
+### What didn't work
+
+These reference counters cannot estimate a P4 wall-time improvement from the number of avoided bodies. Cache entries impose a substantial cost in serialized text and validation.
+
+### What I learned
+
+All 95 Agenda fixpoint rounds still execute with the cache. The compiler can reuse more of their contents. Seven whole-range replays also occur in both modes, separately from the optional function episodes.
+
+### What was tricky to build
+
+Peak memo text tracks live string lengths before instantiate_library exits. Releasing a repeated store ID is counted once. Code units measure payload and exclude containers and headers. The native experiment leaves the normal compiler untouched and substitutes the cache flag only in the input bundle read by the bootstrap compiler.
+
+### What warrants a second pair of eyes
+
+The correct denominator for the additional 61.7% avoidance is the 2,741 remaining body executions. The original denominator of 11,760 includes work already skipped. Neither denominator measures end-to-end CPU cost.
+
+### What should be done in the future
+
+Compare the native candidate's peak live heap, collection count, frontend and GC timings with matched baselines. Preserve even an allocation failure at the 8 MiB cap.
+
+### Code review instructions
+
+Compare the two per-world reuse JSON files in various/linux-profiles and inspect scripts/13-library-rounds.mjs. The initial reference trace was committed in 3f23b4a.
+
+### Technical details
+
+Agenda's peak tracked memo text was 1,530,495 UTF-16 units. Files peaked at 429,257. The two source digests and SLIR digests remain the previously qualified values.

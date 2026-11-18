@@ -77,3 +77,18 @@ ax.set(xlabel="Sum of reported pass times (seconds)",title="Where the host stage
 ax.legend(["Instantiate library (includes inference)","Other reported passes"],loc="lower right",frameon=False)
 fig.savefig(out/"host-pass-times.png")
 plt.close(fig)
+
+fig,ax=plt.subplots(figsize=(8.4,3.8),layout="constrained")
+for i,mode in enumerate(["baseline","memo"]):
+    stats=json.loads((ticket/"various/linux-profiles"/f"agenda.{mode}.reuse.json").read_text())
+    skip=stats["unchangedSkips"]; replay=stats["episodeHits"]; fresh=stats["functionVisits"]-skip-replay
+    start=0
+    for n,c in zip([skip,replay,fresh],["#c6d2d9","#42856e","#a25630"]):
+        ax.barh(i,n,left=start,color=c,height=.62)
+        if n: ax.text(start+n/2,i,f"{n:,}",ha="center",va="center",color="#17232a" if start==0 else "white")
+        start+=n
+ax.set_yticks([0,1],["Existing skips","Plus cross-round cache"])
+ax.invert_yaxis(); ax.set(xlabel="Top-level function visits across Agenda range fixpoint rounds",title="Which function visits still require analysis?")
+ax.legend(["Unchanged within analysis","Replayed across calls","Body analyzed"],loc="upper center",
+          bbox_to_anchor=(.5,-.29),ncol=3,frameon=False)
+fig.savefig(out/"agenda-range-reuse.png"); plt.close(fig)

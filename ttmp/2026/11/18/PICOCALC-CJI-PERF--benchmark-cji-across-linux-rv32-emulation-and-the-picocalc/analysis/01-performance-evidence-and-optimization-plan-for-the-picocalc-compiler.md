@@ -107,3 +107,25 @@ The existing dispatch control illustrates the last distinction. On Linux the com
 ## Reproducing the evidence
 
 The [intern guide](../design-doc/01-profiling-cji-from-the-linux-host-to-the-picocalc.md) defines the APIs, tools, timing boundaries and expected digests. The [script index](../scripts/README.md) gives the execution order. The physical report reader validates the phase order, allocation snapshots, full source and module identities. The figures read the ticket evidence directly. The diagram sources, plotting program and screenshot capture recipes reside in [scripts/figures](../scripts/figures).
+
+## How much repeated inference can Agenda reuse?
+
+![Agenda range-analysis visits split between unchanged summaries, cross-call replay and fresh body execution.](../various/figures/agenda-range-reuse.png)
+
+The first layer of reuse is already active on the device compiler's normal path. During one range analysis the compiler remembers which summaries each top-level function read. On a later fixpoint iteration it skips the body when those summaries still have the same values. Within a type-inference invocation it also reuses a complete previous range result when its recorded type questions still receive the same answers.
+
+There is an additional cache between successive library expansion rounds. An entry records a function's code shape, the type questions and answers it used, the numeric summaries it read and fed, and its recorded range results. Replay also requires matching widening stage and thresholds. Adding a library helper can change existing call signatures and inferred return types. Identical function text alone is insufficient to establish that an old result is valid.
+
+| Reference compiler work, same input and SLIR | Agenda | Files |
+|---|---:|---:|
+| Top-level function visits during fixpoint iteration | 11,760 | 348 |
+| Visits already skipped by the ordinary path | 9,019 | 123 |
+| Fresh body executions on the ordinary path | 2,741 | 225 |
+| Additional visits successfully replayed with the cross-call cache | 1,690 | 56 |
+| Body executions after enabling that cache | 1,051 | 169 |
+| Reduction in interval joins | 44.5% | 5.5% |
+| Peak retained cache text, UTF-16 code units | 1,530,495 | 429,257 |
+
+For Agenda, this cache avoided 61.7% of the body executions remaining after existing skips. It tried 3,403 candidate episode validations for 1,690 successful replays. Evaluation still entered seven full range analyses and made 95 fixpoint iterations in both configurations. The separate whole-result reuse check succeeded seven times in each. None of these percentages measures the avoidable fraction of the entire compiler or of its elapsed time.
+
+The cache's Agenda text payload alone corresponds to roughly 2.92 MiB at two bytes per code unit. Temporary objects, metadata, and allocator overhead are separate. Compare a native compiled stage-1 candidate using the same in-heap store, heap bounds and output reference before paying that cost on the board. The trace and the candidate build recipes are in the ticket scripts directory.

@@ -1,0 +1,27 @@
+{
+  "world": "files",
+  "mode": "memo",
+  "functionVisits": 348,
+  "unchangedSkips": 123,
+  "replayChecks": 94,
+  "episodeHits": 56,
+  "wholeRangeHits": 3,
+  "peakMemoTextUnits": 429257,
+  "joins": 957259,
+  "identical": 709438,
+  "analyses": 3,
+  "fixpointRounds": 12,
+  "rounds": [
+    {
+      "round": 0,
+      "added": 7,
+      "originalTopLevelNodes": 45
+    },
+    {
+      "round": 1,
+      "added": 1,
+      "originalTopLevelNodes": 52
+    }
+  ],
+  "slir_sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa"
+}
