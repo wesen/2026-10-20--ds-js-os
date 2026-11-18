@@ -8,10 +8,11 @@ from statistics import median
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("out",type=Path)
-parser.add_argument("case",choices=["memo","join"])
+parser.add_argument("case",choices=["memo","join","defer","guard"])
+parser.add_argument("--case-dir", type=Path, help="candidate receipts when stored outside OUT")
 args=parser.parse_args()
 out=args.out
-case=out/args.case
+case=args.case_dir or out/args.case
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 reference=sha(out/"agenda.ref")

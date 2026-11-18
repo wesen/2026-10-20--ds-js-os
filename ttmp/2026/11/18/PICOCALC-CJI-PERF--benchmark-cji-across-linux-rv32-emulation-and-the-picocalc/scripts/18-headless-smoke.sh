@@ -2,7 +2,7 @@
 # From the repository root, with the built profiling image and exclusive serial access.
 set -euo pipefail
 out=${1:?supply a directory for UART captures}
-build=picocalc-os/port/esp32p4/build-elf
+build=${2:-picocalc-os/port/esp32p4/build-elf}
 port=/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00
 mkdir -p "$out"
 grep -qx 'PICOCALC_HEADLESS:BOOL=ON' "$build/CMakeCache.txt"

@@ -729,3 +729,51 @@ The on-board C6 network transport is independent of the keyboard/power southbrid
 The first physical headless boot answered `cji status` with `cji: idle` and both bus counters were zero. The UART fault trace also reported five compositor failures during start with “it broke the native protocol (an end of 2)”. Five additional faults belonged to the pre-existing nat-import negative fixture for the unprovided path_open import. I removed the compositor from headless boot and added its absence to the manifest assertion in the same smoke recipe. Repeated the build and application-only flash with a separate capture directory to retain the first run.
 
 **Physical validation of 27c5a2e.** The second application image (SHA-256 2b9e8371ee8e3a4e2ea5cabd43d74cb539806607947d47fa242f77174ca1dfbf) booted with zero I2C and SPI transfers or errors, and the compiler answered idle. Five boot fault records all identify the nat-import negative fixture. Compiled the bundled Flaky world with the 8 MiB profiling heap. Its frontend took 5.941625 s, and the resulting 10,800-byte module matched the catalog host SHA-256 e74d83cd6c8ebebf9319e5314f8f03818fb74c8954af2f58b23a005530d5f595. See various/p4/headless-smoke.jsonl, headless-flaky.log and headless-boot-excerpt.log. This qualifies the main-board-only setup for subsequent A/B trials.
+
+## Step 16 — Prepare isolated stage-1 comparisons on the headless board
+
+The board already ran the ordinary headless compiler. I started its Agenda control and prepared separate firmware snapshots for changing only the compiler stage-1 object. The structural experiment has its own guide and diary in PICOCALC-CJI-RANGES.
+
+### Prompt Context
+
+See PICOCALC-CJI-RANGES diary Step 1 for the request for consequential optimization experiments and reproducible records. The requested comparison needs the same heap, hardware operating condition and module reference. Previous device smoke commit: a65b90a.
+
+### What I did
+
+Started the ordinary 8 MiB control at 11:05 EDT on November 18. Saved its image and build ELF before reconfiguring the build directory. Added scripts/22-board-variant.sh to relink the ordinary compiler tool, compare it byte for byte with the bundled baseline, substitute the candidate frontend, and snapshot an identified firmware image. Added scripts/24-board-candidates.sh for the series and restoration of the pinned control.
+
+### Why
+
+A stale compiler object or mismatched image/ELF pair would make an apparent speedup uninterpretable. A control on the old peripheral configuration would also mix scheduling and memory changes into the comparison.
+
+### What worked
+
+The join, memo and initial deferred builds reproduced the original tool on relink and then produced separate profiled images. UART heartbeats confirmed the headless control entered the frontend. The generic raw-log validator accepted the earlier Flaky headless smoke receipt.
+
+### What didn't work
+
+The first structural candidate changed one original archive fixture. It was kept for diagnostic host timing. The idle hardware-series waiter was switched to the refined candidate before the ordinary control finished. See the child ticket for the regression and fix.
+
+### What I learned
+
+Image identity and workload identity are distinct. The board binaries should differ, but every accepted Agenda result must match the same independent catalog module.
+
+### What was tricky to build
+
+The firmware assembler, runtime objects, main image and catalog are separate build products. The board series takes a snapshot of the binary, ELF, generated manifest and configuration together, and qualifies the boot before the long compile. On completion or error it attempts to restore the ordinary headless image.
+
+### What warrants a second pair of eyes
+
+Review the alternative payload switch in port/esp32p4/main/CMakeLists.txt, gated on both profiling and headless mode. Confirm each sample's raw log belongs to its firmware and that each reported collection interval is nested inside its frontend interval.
+
+### What should be done in the future
+
+Read the completed control and candidate receipts before publishing physical timing results. Keep the prior held-bus baseline as a historical experiment.
+
+### Code review instructions
+
+Start with scripts/22-board-variant.sh and scripts/24-board-candidates.sh. Check the captured identities.sha256 and compare the actual ELF digest with the host catalog.
+
+### Technical details
+
+The control uses firmware ELF 49a7320315fa45896797f825760f8ca92cac9a0f485ea38c5da3a861bc97749b. Each stage-1 object uses the original 4096-byte assembler root-stack slack argument and ILP32 conversion. The app partition is flashed at 0x10000.
