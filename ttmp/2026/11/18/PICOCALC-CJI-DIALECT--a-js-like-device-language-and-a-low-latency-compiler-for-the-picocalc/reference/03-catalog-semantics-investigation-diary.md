@@ -181,3 +181,118 @@ Open [native-oracle.py](../scripts/catalog/native-oracle.py) and [native results
 ### Technical details
 
 The x86-64 receipt is keyed by SLIR SHA-256. The RV32 receipt is keyed by assembled relocatable object SHA-256. Node's result is also checked against a separately specified expected dictionary, so identical wrong outputs do not pass.
+
+## Step 4 — Rehearse the reMarkable PDF and repair publication layout
+
+I rendered the evolving guide with the reMarkable tool in PDF-only mode, inspected full-page grids and read the code, API table and diagrams at larger scale. The published layout uses a single document title, four source figures and an internal map for links into the repository. The source document retains its normal Markdown links.
+
+### Prompt Context
+
+**User prompt** See Step 1 for the original request and delivery target. The guide owner subsequently specified PDF-only rehearsal and inspection, followed by a single exact-file cloud upload when the source digest was frozen.
+
+**Assistant interpretation** Deliver a readable offline guide and verify the bytes delivered to reMarkable when cloud access permits.
+
+**Inferred user intent** Read the same intern guide on device, including evidence citations, without relying on unpublished repository URLs or replacing a prior annotated document.
+
+### What I did
+
+- Ran `remarquee upload bundle <guide> --toc-depth 2 --resolve-images --pdf-only ...` and inspected the result with PyMuPDF and rendered PNGs.
+- Added `scripts/report/stage-guide-pdf.py`, `guide-layout.tex`, and `inspect-guide-pdf.py`. Publication staging uses a readable filename as the single title, moves source-relative references to PDF-internal anchors, keeps real web links, checks local files and copies figures for embedding.
+- Set 0.85-inch side margins and 0.80-inch top margin. Kept each figure with its caption and retained the Agenda figure's dimensional override. Kept code listings and a table's introductory heading together when they fit.
+- Grouped SHA-256 hex for printing and added invisible break points at punctuation of long code spans in tables. Checked named destinations, embedded figure count, page bounds and text overlap.
+
+### Why
+
+The unmodified bundle treated its source filename as a second title. A relative link to a checkout cannot resolve on a reMarkable. Offline anchors preserve the reader's ability to follow citations without making misleading clickable file actions. The guide's official web links keep their original destinations.
+
+### What worked
+
+The four-figure rehearsal rendered 19 pages. All 90 internal link annotations resolved, including the TOC and repository map, and there were 14 HTTPS annotations. I inspected both page grids and the API table and file handoff diagram at full size.
+
+### What didn't work
+
+- The initial PDF had two title headings and retained checkout-local annotations. Fixed both in the staging step.
+- The supplied CLI geometry was superseded by `\geometry{margin=1in}` in Remarquee's default LaTeX header. The custom header made the desired geometry visible in the PDF coordinates.
+- The physical typed example's 64-character hex digest overran the page by 1.1 pt. The layout checker now catches and blocks that condition. The API table's long `nw_wasm_event` signature overprinted its neighbor although both columns fit inside the page. Code punctuation breakpoints fixed the line wrapping, confirmed by the full-page view and an additional text-overlap check.
+- A shell diagnostic used `path` in zsh and failed with `zsh:2: command not found: rg` because zsh binds that variable to `PATH`. Re-ran with a guide-specific variable.
+
+### What I learned
+
+PyMuPDF reports the clickable contents and reference map as named destinations. An in-bounds span test alone can miss visually illegible text when table columns collide. Rasterizing every page to an overview and reviewing high-risk pages at full scale caught that overlap.
+
+### What was tricky to build
+
+To preserve official URLs and avoid temporary file links, the staging step resolves only local Markdown reference targets and copies the figures independently. The map prefixes use checked, unique shell globs for older ticket paths to avoid overflowing device pages.
+
+### What warrants a second pair of eyes
+
+Compare the frozen source digest against the publication receipt and use the uploaded content hash to verify the exact remote PDF when the cloud read is available.
+
+### What should be done in the future
+
+Use the same render and inspection scripts if this guide gets revised. Keep existing annotated copies by using prior delivered names only after explicit overwrite authorization.
+
+### Code review instructions
+
+Open the two scripts and the LaTeX header in [scripts/report](../scripts/report). Inspect the final page grid, API table, each figure, contents entries and final repository map.
+
+### Technical details
+
+The stage rewrites Markdown into a temporary directory. The guide in the repository supplies the source of truth. Footer page numbers, text geometry and annotation destinations are checked against the final PDF rather than an intermediate LaTeX file.
+
+## Step 5 — Deliver the frozen PDF and verify the cloud bytes
+
+I rendered the frozen Markdown with its four figures and inspected the new render before copying its bytes into the ticket deliverables. I used Remarquee's exact-file upload so the cloud document received the same PDF I reviewed, then downloaded its archive and compared the embedded PDF bytes.
+
+### Prompt Context
+
+**User prompt** See Step 1. The guide owner authorized exact-file publication to the ticket's reMarkable folder, with the specified document title and independent download verification.
+
+**Assistant interpretation** Verify the frozen Markdown digest, approve the actual PDF layout, upload once, and check the cloud copy.
+
+**Inferred user intent** Make the guide available on the device while preserving existing annotated files and retaining an offline copy in the ticket.
+
+### What I did
+
+- Staged only Markdown with SHA-256 `8c3015be6d231a0cfc72618d3b1d3eaad67d53c8c0e673328aa2ce5bdf139c24`.
+- Rendered and checked four figures, 19 numbered pages, two outline levels, 89 valid internal destinations, 14 web annotations, and zero detected clipping or text overlap. Reviewed both page grids, the narrow API table and file handoff graphic.
+- Saved [the exact PDF](../various/publication/picocalc-device-language-guide.pdf) and ran `remarquee cloud put "<verified PDF>" /ai/2026/11/18/PICOCALC-CJI-DIALECT --non-interactive` with overwrite flags omitted.
+- Listed the folder and downloaded the document with `remarquee cloud get`, then compared the ZIP archive's PDF entry against the upload input.
+
+### Why
+
+A render-and-upload bundle would regenerate the document after inspection. Exact-file upload plus archive comparison ties the reMarkable copy to the reviewed bytes.
+
+### What worked
+
+The actual cloud path was `/ai/2026/11/18/PICOCALC-CJI-DIALECT/CJI Intern Guide - Rethinking the PicoCalc Device Language`. The cloud identifier is `c512405e-d691-4ee4-954e-768ec2dde76e`. The remote PDF was exactly 346,080 bytes with SHA-256 `37cc2e5becf1b8630f32065be9428abad8e6da918a2a9feb98d19cecd1c3eff9`, identical to the local deliverable.
+
+### What didn't work
+
+- `remarquee cloud ls /ai/2026/11/18/PICOCALC-CJI-DIALECT --long --non-interactive` first reported `Error: no matches for 'PICOCALC-CJI-DIALECT'`. The folder did not exist.
+- The sandboxed `remarquee cloud mkdir` encountered DNS errors for `internal.cloud.remarkable.com` and the reMarkable token service. Retried with the tool's approved network access.
+- The shell stopped after the approved mkdir because `status` is read-only in zsh. Verified the folder existed and was empty, then used a task-specific return-code variable for the upload. The upload executed once.
+
+### What I learned
+
+The PDF embedded in the cloud archive was byte-identical to the input. A cloud delivery receipt verifies the account's remote copy. Physical synchronization requires observing the tablet.
+
+### What was tricky to build
+
+The remote display title comes from the uploaded basename. The local artifact has a repository-friendly filename. I kept both as byte-for-byte identical copies through the upload check.
+
+### What warrants a second pair of eyes
+
+Open the local guide and use the first-page contents and an evidence-map link. The physical device may use a different PDF viewer.
+
+### What should be done in the future
+
+Re-render if the guide source changes. Upload any later revision under a fresh name unless replacement is explicitly authorized.
+
+### Code review instructions
+
+Use the [publication receipt](../various/publication/receipt.md). It records the source and output hashes, remote identity, verification results and local render commands.
+
+### Technical details
+
+The cloud archive was downloaded only for verification. The ticket stores the same verified PDF without the archive wrapper.
