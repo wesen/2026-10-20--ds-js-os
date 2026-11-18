@@ -193,7 +193,12 @@ static void kernel_task(void *arg) {
   K.uart = stdout;            // the kernel log and the #OCT1 fault frames go to the console
   port_clock();               // starts the clock
   kernel_init("js", NULL);    // the prelude, and the calibration loops
-  if (kernel_boot("js/system.json")) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
+#if PICOCALC_NATIVE_ELF
+  const char *manifest = "js/system.cji.json";
+#else
+  const char *manifest = "js/system.json";
+#endif
+  if (kernel_boot(manifest)) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
 #if PICOCALC_NATIVE_ELF
   // the machine-code worlds this firmware was built with (optional/native_elf): only from here, never from storage
   if (kernel_boot("js/system.elf.json")) ESP_LOGE(TAG, "the ELF manifest did not load");

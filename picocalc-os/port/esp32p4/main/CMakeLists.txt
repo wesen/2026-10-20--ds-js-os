@@ -64,23 +64,39 @@ if(PICOCALC_NATIVE_ELF)
     string(REPLACE "-elf-gcc" "-elf-strip" ELF_STRIP ${CMAKE_C_COMPILER})
     list(APPEND BUNDLE_EXTRA "system.elf.json=${ELF_DIR}/system.elf.json")
     list(APPEND BUNDLE_EXTRA_DEPS ${ELF_DIR}/system.elf.json)
-    set(host_tools ${CMAKE_CURRENT_BINARY_DIR}/cji-host)
-    file(MAKE_DIRECTORY ${host_tools})
-    file(CREATE_LINK ${CJI_ROOT}/runtime ${host_tools}/runtime SYMBOLIC)
-    file(CREATE_LINK ${CJI_ROOT}/Makefile ${host_tools}/Makefile SYMBOLIC)
-    file(GLOB_RECURSE cji_assembler CONFIGURE_DEPENDS ${CJI_ROOT}/runtime/*.c ${CJI_ROOT}/runtime/*.h)
     file(GLOB cji_frontend CONFIGURE_DEPENDS ${CJI_ROOT}/src/*.js)
-    add_custom_command(OUTPUT ${host_tools}/slas-rv32
-        COMMAND make -C ${host_tools} CC=cc slas-rv32
-        DEPENDS ${CJI_ROOT}/Makefile ${cji_assembler} VERBATIM)
-    set(toplog ${CMAKE_CURRENT_BINARY_DIR}/natives/toplog.elf)
-    add_custom_command(OUTPUT ${toplog}
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/natives
-        COMMAND node ${CJI_ROOT}/cji.js ${CJI_ROOT}/tests/native/toplog.world.js --native --emit > ${host_tools}/toplog.slir
-        COMMAND ${host_tools}/slas-rv32 -c ${toplog} --module ${host_tools}/toplog.slir
-        DEPENDS ${host_tools}/slas-rv32 ${CJI_ROOT}/cji.js ${cji_frontend} ${CJI_ROOT}/tests/native/toplog.world.js VERBATIM)
-    list(APPEND BUNDLE_EXTRA "natives/toplog.elf=${toplog}")
-    list(APPEND BUNDLE_EXTRA_DEPS ${toplog})
+    set(builtin_manifest ${CMAKE_CURRENT_BINARY_DIR}/system.cji.json)
+    file(READ ${OS}/js/system.json system_json)
+    string(JSON count LENGTH "${system_json}" worlds)
+    math(EXPR last "${count} - 1")
+    foreach(i RANGE ${last})
+        string(JSON name GET "${system_json}" worlds ${i} name)
+        if(name IN_LIST CJI_WORLDS)
+            string(JSON file GET "${system_json}" worlds ${i} file)
+            set(cji_input_${name} ${OS}/js/${file})
+            string(JSON system_json SET "${system_json}" worlds ${i} engine "\"native\"")
+            string(JSON system_json SET "${system_json}" worlds ${i} file "\"natives/${name}.elf\"")
+        endif()
+    endforeach()
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/js/system.json)
+    file(GENERATE OUTPUT ${builtin_manifest} CONTENT "${system_json}\n")
+    list(APPEND BUNDLE_EXTRA "system.cji.json=${builtin_manifest}")
+    list(APPEND BUNDLE_EXTRA_DEPS ${builtin_manifest})
+    set(cji_input_toplog ${CJI_ROOT}/tests/native/toplog.world.js)
+    foreach(name IN LISTS CJI_WORLDS ITEMS toplog)
+        set(module ${CMAKE_CURRENT_BINARY_DIR}/natives/${name}.elf)
+        set(own ${CMAKE_CURRENT_BINARY_DIR}/${name}.own.slir)
+        set(linked ${CMAKE_CURRENT_BINARY_DIR}/${name}.slir)
+        add_custom_command(OUTPUT ${module}
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/natives
+            COMMAND node ${CJI_ROOT}/cji.js ${cji_input_${name}} --world-unit --emit > ${own}
+            COMMAND node ${CJI_ROOT}/tools/link-units.mjs ${CJI_BUILD}/prelude.slir ${own} > ${linked}
+            COMMAND ${CJI_BUILD}/slas-rv32 -c ${module} --module --extern ${CJI_BUILD}/unit.list ${linked}
+            DEPENDS cji_unit ${CJI_BUILD}/unit.list ${cji_input_${name}} ${CJI_ROOT}/cji.js
+                    ${CJI_ROOT}/tools/link-units.mjs ${cji_frontend} VERBATIM)
+        list(APPEND BUNDLE_EXTRA "natives/${name}.elf=${module}")
+        list(APPEND BUNDLE_EXTRA_DEPS ${module})
+    endforeach()
     foreach(m echo bench wimport dial)   # wimport links to a function no module is given (-Wno-attributes: its WebAssembly import attribute)
         set(out ${CMAKE_CURRENT_BINARY_DIR}/natives/${m}.elf)
         add_custom_command(
