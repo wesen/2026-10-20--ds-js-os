@@ -1,0 +1,9 @@
+I (2175) bus: headless: keyboard/power I2C and display SPI offline
+#OCT1 {"ev":"fault","t":2346.590,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+#OCT1 {"ev":"fault","t":2495.892,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+#OCT1 {"ev":"fault","t":2714.784,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+#OCT1 {"ev":"fault","t":3118.651,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+#OCT1 {"ev":"fault","t":3922.292,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+  bus i2c0  busy     0.00 ms, 0 transfers, 0 bytes, 0 errors
+  bus spi2  busy     0.00 ms, 0 transfers, 0 bytes, 0 errors
+cji: idle
