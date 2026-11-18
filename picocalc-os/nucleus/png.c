@@ -11,7 +11,7 @@ static void chunk(FILE *f, const char *type, const uint8_t *data, uint32_t n) {
   fwrite(hdr, 1, 8, f);
   if (n) fwrite(data, 1, n, f);
   uint32_t crc = crc32(0, (const uint8_t *)type, 4);
-  crc = crc32(crc, data, n);
+  if (n) crc = crc32(crc, data, n);
   uint8_t c[4]; be32(c, crc); fwrite(c, 1, 4, f);
 }
 

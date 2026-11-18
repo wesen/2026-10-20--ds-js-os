@@ -567,3 +567,49 @@ The 10 MiB P4 job reported 297 collections, 995,195,416 survivor bytes and 172,7
 ### Step 11 follow-up — Rebootstrap and time the actual host compiler
 
 The compiled in-heap memo trial completed without a reservation failure. At fixed 8 MiB, all eight outputs matched. Three post-warm-up samples per variant gave a median 37.243 seconds ordinary and 26.510 seconds with the cache. The cached build collected 676 times versus 424 and reached 7,268,696 live bytes versus 4,491,400. A fresh bootstrap changes the compiled binary layout. The paired result is native-host evidence and the board's memo-on time remains unmeasured. See scripts/16-candidate-report.py and various/linux-profiles/agenda-memo-trial.json. Physical A/B and independent captured display committed in 0b93048.
+
+## Step 13 — Deliver the illustrated baseline and recover the long guest runs
+
+### Prompt Context
+
+Continuing the request for a reMarkable report, reproducible scripts, hardware visuals and a detailed record of successful and failed attempts.
+
+### What I did
+
+Resolved the report's source paths through docmgr, validated the ticket, and requested a new reMarkable document title. The first PDF build failed. Reproduced its image CRC error, fixed the simulator screenshot writer, rebuilt the host and recaptured the image, then uploaded the bundle successfully. Restarted incomplete full Agenda emulation under an exclusive persistent tmux owner.
+
+### Why
+
+A simulator screenshot can display successfully in a permissive decoder while failing a strict PDF build. The raw image must be valid at its normal generation entry point. Full guest jobs need to survive independently of observation sessions.
+
+### What worked
+
+The recapture differed in precisely four bytes, the IEND checksum. Every decoded pixel stayed identical. Upload returned “OK: uploaded PicoCalc CJI Performance Measurements and Optimization Plan.pdf -> /ai/2026/11/18/PICOCALC-CJI-PERF”. The earlier design PDF remains under its original title. Docmgr reports no invalid frontmatter; it warns that the script README lacks a numeric filename prefix.
+
+### What didn't work
+
+XeLaTeX stopped with “libpng error: IEND: CRC error”. The simulator called crc32 with a null pointer for the empty IEND payload, which reset the running CRC. Three earlier full guest attempts reported exit 143 without a terminal digest. Their partial files were excluded.
+
+### What I learned
+
+The verified Files emulation, physical pair and both Linux matrices were already complete when the larger guest tasks needed recovery. Progress and evidence must be scoped to each run independently.
+
+### What was tricky to build
+
+The device and simulator PNGs have separate encoders. Only the simulator's empty-chunk handling required correction. The three new guest workers use pre-existing pinned firmware and independent output paths and compare each result before publishing a success marker.
+
+### What warrants a second pair of eyes
+
+Cloud upload proves delivery to the reMarkable account. It does not establish physical tablet synchronization. The reported physical device and host emulator are distinct from the reMarkable reader.
+
+### What should be done in the future
+
+Complete the remaining guest supplemental measurements and the named native instruction-address profile, and retain their qualification evidence. The illustrated delivery already contains the complete physical heap comparison and native memo trial.
+
+### Code review instructions
+
+Review the empty-payload condition in picocalc-os/nucleus/png.c. Re-run scripts/figures/capture-host.sh and scripts/10-publish.sh when a new edition is needed. Do not force-overwrite the delivered copy. Inspect scripts/as-run/06-guest-matrix.sh for the durable guest recovery path.
+
+### Technical details
+
+The valid IEND CRC is ae426082. The genuine PicoCalc screenshot used a separate 320 × 320 framebuffer CRC of 3ed26c5b. The native cache trial receipt was checkpointed in 498508a.

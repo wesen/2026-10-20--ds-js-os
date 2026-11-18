@@ -1,3 +1,12 @@
+---
+Title: Earlier porting helpers
+Ticket: PICOCALC-CJI-PORT
+Status: active
+Topics: [esp32-p4, native]
+DocType: reference
+Intent: long-term
+---
+
 # Earlier porting helpers
 
 These copies preserve the workstation scripts for the original runs. The shell launchers drove the serial catalog verifier. The two Agent launchers wrote separate sets of observations. The resume launcher recovered the existing console and continued with the remaining applications. cji-save-catalog-results.py assembled the early evidence using files in /tmp. Running that historical writer against today's ledger could replace later observations.

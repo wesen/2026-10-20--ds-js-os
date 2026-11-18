@@ -1,3 +1,12 @@
+---
+Title: Reproducing the compiler baseline
+Ticket: PICOCALC-CJI-PERF
+Status: active
+Topics: [esp32-p4, native]
+DocType: reference
+Intent: long-term
+---
+
 # Reproducing the compiler baseline
 
 Run the following from the repository root. Each command uses a separate process. Keep the build, source files and references fixed for the duration of the experiment. The output directory holds generated binaries, complete profiles, per-sample logs and JSON receipts.

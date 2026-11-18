@@ -1,3 +1,12 @@
+---
+Title: Files, Agenda and serial progress investigation
+Ticket: PICOCALC-CJI-PORT
+Status: active
+Topics: [esp32-p4, native]
+DocType: reference
+Intent: long-term
+---
+
 # Files, Agenda and serial progress investigation
 
 These are the exact local helper files used or staged during the November 18 measurements. The numbered catalog checker in the parent directory is the portable entry point. The trial and receipt scripts here refer to this workstation's scratch files. The probe variants target a historical PID and were used for one paused-reader diagnostic. The sequence and results appear in diary Steps 21–26 and the following verification entry.
