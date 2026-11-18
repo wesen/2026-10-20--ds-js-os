@@ -549,7 +549,14 @@ int kernel_spawn(const char *name, const char *source, size_t len, int engine, v
 
 // Only the physical operator's installer calls this. sys.spawn always has a u- prefix.
 int kernel_develop(const char *source, size_t len, int engine, char *why, size_t n) {
-  return spawn_named("dev-cji", "dev-cji", source, len, engine, kernel_now(), why, n);
+  int rc = spawn_named("dev-cji", "dev-cji", source, len, engine, kernel_now(), why, n);
+  if (rc == 0) {
+    world_t *W = world_by_name("dev-cji");
+    fail_mailbox(W, "development revision replaced");
+    W->prio = -1; // derive priority from the new revision's declared kind
+    memset(W->timer_off, 0, sizeof W->timer_off);
+  }
+  return rc;
 }
 
 // The end of sys.spawn(name, handle): the file's bytes have been read (fs.c, FS_LOAD) without passing through any

@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// clang -fstack-usage: slas_main (65,696 B) calls static_shape (70,224 B).
+#define WORKER_STACK (256 * 1024)
 #define SOURCE_LIMIT (32 * 1024)
 #define MODULE_LIMIT (384 * 1024)
 #define SCRATCH_LIMIT (18 * 1024 * 1024)
@@ -136,7 +138,7 @@ static void build_one(void) {
         char *args[]={(char *)&job};
         memory_sample("relocated");
         esp_elf_request(&tool,0,1,args);
-        memory_sample("assembled");
+        memory_sample(job.status ? "compiler refused" : "assembled");
         if (!job.status && job.module_length<=MODULE_LIMIT) {
             output=malloc(job.module_length);
             if (output) { output_size=job.module_length; memcpy(output,job.module,output_size); }
@@ -179,7 +181,7 @@ static void begin(char *source,size_t len,bool automatic) {
     }
     if (!finished) finished=xQueueCreate(1,sizeof(int));
     if (!worker && finished)
-        xTaskCreatePinnedToCoreWithCaps(build_worker,"cji-build",128*1024,NULL,2,&worker,0,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+        xTaskCreatePinnedToCoreWithCaps(build_worker,"cji-build",WORKER_STACK,NULL,2,&worker,0,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
     if (!worker || !finished) {
         puts("cji: cannot allocate compiler task"); cleanup(); return;
     }

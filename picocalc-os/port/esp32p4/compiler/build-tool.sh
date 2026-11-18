@@ -13,7 +13,7 @@ compile() {
  clang --target=riscv32-unknown-elf -march=rv32imc -mabi=ilp32 -Os -nostdinc \
     -isystem "$(clang -print-resource-dir)/include" -isystem "$fw/include" \
     -I"$out/inc" -I"$c/runtime" -I"$sljit" -I"$here" -fPIC -fvisibility=hidden \
-    -ffunction-sections -fdata-sections -fno-builtin -mno-relax "$@"
+    -fstack-usage -ffunction-sections -fdata-sections -fno-builtin -mno-relax "$@"
 }
 for name in runtime libc softfloat tool; do
  case $name in runtime) file=$c/runtime/runtime.c;; tool) file=$here/tool.c;; *) file=$fw/$name.c;; esac

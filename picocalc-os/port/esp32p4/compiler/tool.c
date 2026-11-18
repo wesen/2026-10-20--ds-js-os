@@ -10,6 +10,7 @@
 
 static compiler_job_t *job;
 static jmp_buf escape;
+static int in_frontend;
 extern int64_t cji_main(void), cji_error_shape[];
 extern int slas_main(int, char **);
 int64_t error_shape(void) { return (int64_t)(uintptr_t)cji_error_shape; }
@@ -35,6 +36,7 @@ long _hc_write(int fd, const void *p, size_t n) {
 }
 _Noreturn void _hc_exit(int code) { longjmp(escape,code ? code : 1); }
 static void failure(const char *msg) {
+    if (in_frontend && !strncmp(msg,"Uncaught ",9)) job->status=1;
     snprintf(job->error,sizeof job->error,"%s",msg);
     _hc_exit(1);
 }
@@ -74,7 +76,9 @@ void compiler_entry(int argc, char **argv) {
     if (!output) failure("output allocation");
     FILE *previous=stdout;
     stdout=output;
+    in_frontend=1;
     int status=(int)cji_main();
+    in_frontend=0;
     fclose(output); stdout=previous;
     if (status || exc_flag) {
         snprintf(job->error,sizeof job->error,"frontend: %.160s",slir ? slir : "");

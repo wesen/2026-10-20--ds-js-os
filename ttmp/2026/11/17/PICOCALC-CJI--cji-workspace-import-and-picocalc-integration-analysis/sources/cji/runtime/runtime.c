@@ -2250,11 +2250,23 @@ static int64_t throw_null_read(int64_t o, int64_t key)
 	exc_flag = 1;
 	return ANY_UNDEFINED;
 }
+static size_t to_utf8(int64_t s, char *out, size_t max);
 /* main's exit for an exception nobody caught: report it, and stop as a trap does. */
 void rt_uncaught(int64_t v)
 {
 	static const char *names[] = { "undefined", "boolean", "number", "object", "function", "string" };
 	char buf[64];
+	/* The ELF embedder owns termination. Its fatal callback may longjmp
+	   and retain this pointer until the kernel records the world fault. */
+	if (rt_fatal) {
+		static char message[192];
+		memcpy(message, "Uncaught ", 9);
+		if (is_string(v) || is_error(v))
+			to_utf8(rt_any_to_str(v, rootstack_begin), message + 9, sizeof message - 10);
+		else
+			snprintf(message + 9, sizeof message - 9, "%s", to_ascii(v, buf) ? buf : names[rt_any_typeof(v)]);
+		rt_fatal(message);
+	}
 	fflush(stdout);
 	fputs("Uncaught ", stderr);
 	if (is_string(v) || is_error(v))

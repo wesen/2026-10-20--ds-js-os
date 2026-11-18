@@ -12,10 +12,16 @@ Owners: []
 RelatedFiles:
     - Path: repo://picocalc-os/nucleus/kernel.c
       Note: World replacement lifecycle
+    - Path: repo://picocalc-os/port/esp32p4/compiler/install.c
+      Note: Kernel-task activation and verified two-slot installation
+    - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
+      Note: Private stage-1 invocation and module assembly
     - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: Production module ABI and relocation
     - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/tools/rv32/fw/board_main.c
       Note: Emulator compilation reference
+    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/scripts/06-exercise-device-compiler.py
+      Note: Physical Editor, peer IPC, failure and reboot acceptance
 ExternalSources: []
 Summary: Compile trusted JavaScript on the ESP32-P4, replace a development world and reuse a verified installation after reboot.
 LastUpdated: 2026-11-17T21:35:20.183356433-05:00
@@ -29,7 +35,7 @@ WhenToUse: ""
 
 Open the imported CJI tree at `ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/`. Paths beginning with `cji/` below are relative to that tree's parent. Other paths start at the repository root. Start with `cji/tests/native/toplog.world.js`. Its top-level statement logs a greeting. Its service registers a handler for a ping and returns the string pong. This example tests **both** evaluating module-level code and delivering a later event. The expected calls are in the adjacent `toplog.out`.
 
-Today the host runs the JavaScript compiler and the PicoCalc runs the resulting machine code. The proposed development loop moves the two middle steps below onto the PicoCalc. Authoring the compiler remains a host operation. An intern changing a world should have to transfer only its source.
+In the Phase 3 release the host ran the JavaScript compiler and the PicoCalc ran the resulting machine code. The development loop moves the two middle steps below onto the PicoCalc. Authoring the compiler remains a host operation. An intern changing a world should have to transfer only its source.
 
 ```text
 once per firmware/toolchain release, on host
@@ -53,7 +59,7 @@ The host recipe in `picocalc-os/port/esp32p4/main/CMakeLists.txt` emits a world 
 
 Chapter 35 of the import measured about 4.19 MB of compiler code and 8.5 MB peak compilation memory in its emulator experiments. Use these as sizing inputs. Memory for the running OS, loaded compiler, source, intermediate text, assembled module, loader copies and active worlds can overlap. Record the largest free PSRAM block as well as total free bytes before loading, after loading, after assembly and after cleanup. Fragmentation can prevent a single large allocation even when the total is sufficient.
 
-The partition table in `picocalc-os/port/esp32p4/partitions.csv` gives the factory application 4 MiB, world records 128 KiB, and the files FAT volume 0xBD0000 bytes. Phase 3's application already occupies 0x332790 bytes. The implementation compresses the entire private compiler and assembler to about 645 KiB and bundles them in the application partition. The physical build is 0x3d7410 bytes. The firmware reads the tool from the immutable bundle with port_read_file, expands it in memory, then relocates it into PSRAM. This removes compiler provisioning and a second trust decision from the installation path. A fresh compiler instance per build also gives the assembler's file-scope counters and pointers their original values.
+The partition table in `picocalc-os/port/esp32p4/partitions.csv` gives the factory application 4 MiB, world records 128 KiB, and the files FAT volume 0xBD0000 bytes. Phase 3's application already occupies 0x332790 bytes. The implementation compresses the entire private compiler and assembler to about 645 KiB and bundles them in the application partition. The compiler-enabled builds occupy about 3.84 MiB of the 4 MiB application partition. The firmware reads the tool from the immutable bundle with port_read_file, expands it in memory, then relocates it into PSRAM. This removes compiler provisioning and a second trust decision from the installation path. A fresh compiler instance per build also gives the assembler's file-scope counters and pointers their original values.
 
 ## Phase 4 · Compile one known world
 
@@ -157,7 +163,7 @@ idf.py -B build-elf -D PICOCALC_NATIVE_ELF=ON \
   -D PICOCALC_DEVICE_COMPILER=ON build
 ```
 
-The trusted operator uses the serial console. For an editable file under apps/, open Loader, select the file, press F3 to edit and F2 in Editor to save. The build reads up to 32 KiB from the specified file. The compiler runs on core 0 and the kernel runs on core 1. Send a second build while it is running to observe the busy response.
+The trusted operator uses the serial console. For an editable file under apps/, open Loader, select the file, press F3 to edit and F2 in Editor to save. The build reads up to 32 KiB from the specified file. The compiler runs on core 0 with a 256 KiB PSRAM stack. Two nested assembler frames alone use 65,696 and 70,224 bytes. Core 1 runs the kernel on its existing internal stack. The worker decompresses the immutable tool on core 0 and pauses. Core 1 relocates it because the SDK's instruction-cache flush temporarily disables external-memory access. The kernel then wakes the worker and resumes normal event dispatch. Send a second build while it is running to observe the busy response.
 
 ```text
 cji build apps/cjiprobe.js      require native compilation
@@ -166,7 +172,7 @@ worlds                         inspect dev-cji and its restart count
 heap                           free memory and largest blocks
 ```
 
-Both commands install a successful result in the single dev-cji slot. The build command is strict about native code. The install command first tries native code and allows a frontend rejection to reach the normal QuickJS boot checks. A failing boot restores the previous source. The general-purpose Loader continues to create worlds named u-NAME. It cannot select the operator's dev-cji identity.
+Both commands install a successful result in the single dev-cji slot. Here the physical console install command selects the automatic policy. Manifest engine names and ordinary storage spawn retain their established meanings. The build command is strict about native code. The install command first tries native code and allows a frontend rejection to reach the normal QuickJS boot checks. A failing boot restores the previous source. The general-purpose Loader continues to create worlds named u-NAME. It cannot select the operator's dev-cji identity.
 
 The tool in `picocalc-os/port/esp32p4/compiler/tool.c` has a private CJI runtime, memory files and assembler. The shared object links without unresolved symbols. Its sole entry takes a job described by `compiler_job.h`. The firmware supplies bounded allocation, number parsing, formatting, math and timing callbacks. It copies the module out before freeing every job allocation and unloading the tool. The output ELF then goes through the ordinary world loader.
 

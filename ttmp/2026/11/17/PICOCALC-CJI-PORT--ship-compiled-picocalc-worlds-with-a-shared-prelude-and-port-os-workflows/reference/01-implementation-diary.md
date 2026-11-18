@@ -612,3 +612,54 @@ Read compiler_entry, then follow each assertion in scripts/06-exercise-device-co
 ### Technical details
 
 The first source used exactly the 268 bytes in the imported toplog fixture. Hardware with the fix was built using the same unit export list as the host reference.
+
+## Step 12. Match host output on the P4 and exercise a failed revision
+
+The PicoCalc compiled the original toplog source, ran its top-level log and returned pong to an independent QuickJS caller. The Editor then changed its reply and the peer received the new value during the same boot. The negative tests exposed a separate process-exit path in the CJI runtime.
+
+### Prompt Context
+
+See steps 8 and 10. Linkage and first acceptance harness checkpoint b2f6fe4.
+
+### What I did
+
+- Captured the protected stack bounds after the assembler started and collected Clang's stack-usage files for the tool image.
+- Sized a 256 KiB PSRAM stack for the worker. Reset pending messages, priority and timer settings when replacing the operator revision. Built and flashed the application partition with the monitored serial link.
+- Ran the original fixture, the host digest comparison, the independent IPC caller and an edit using Loader F3 and Editor F2. Verified the stored text before requesting recompilation.
+- Tested syntactically invalid source and a valid program throwing during startup. Inspected rt_uncaught, the ELF world's fatal callback and the compiler tool's private callback.
+
+### Why
+
+The brief frontend result and a 128 KiB stack covered stage 1 but missed the assembler's simultaneous large C frames. The tests also need to distinguish compiler refusal, a world failing after producing valid machine code, and an actual device reboot.
+
+### What worked
+
+On the physical P4, build 1e8fa6d85a8fcda6baa46119f973a5186b1f896a1665e9094fcbf240a5660d8b produced a 3,704-byte module identical to the host reference. The device logged “dev-cji: hello from the top level” and acknowledged a key during compilation. Source to ready took 5,962 ms, including 524 ms to the end of tool relocation. Peak private scratch was 8,459,613 bytes. The peer received pong. After editing and saving the source, the second native module took 5,603 ms and the peer received pong-two. A parse error left pong-two working.
+
+### What didn't work
+
+The prior 128 KiB stack produced “Guru Meditation Error: Core 0 panic'ed (Stack protection fault)”. The captured stack pointer was 0x488093d0 and the lower bound 0x4880acdc, a 6,412-byte overrun. Clang reported 65,696 bytes in slas_main and 70,224 bytes in static_shape, which it calls. After fixing the stack, the intentionally throwing candidate restarted the board. The observer saw a cache hit for the previous 3,408-byte revision following reset. That proves persistence and also shows the requested live rollback had failed.
+
+### What I learned
+
+The standalone runtime handles an uncaught top-level exception by printing and calling exit(2). The physical firmware needs the existing world fatal callback for this path. The same distinction allows the private frontend to report unsupported JavaScript to the automatic installer.
+
+### What was tricky to build
+
+The ELF callback stores the error pointer and performs a nonlocal return. Its diagnostic must survive that return. The fix formats a bounded, persistent diagnostic and invokes the embedder's callback before reaching process exit. Out-of-memory failures remain separate from language rejection.
+
+### What warrants a second pair of eyes
+
+Review fault propagation in runtime.c, the compiler job's in_frontend state and rollback when the candidate has already replaced a running image. Check that the peer survives a failed candidate without reboot.
+
+### What should be done in the future
+
+Complete the live rollback, automatic fallback and post-reboot acceptance sequence with this runtime fix and record the final guide delivery.
+
+### Code review instructions
+
+Compare rt_uncaught with cji_elf.c's fatal and leave functions. Run scripts/06-exercise-device-compiler.py on compiler firmware and compare its evidence with the host-built toplog module.
+
+### Technical details
+
+The host/board module SHA-256 is 4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14. The physical second revision was f2723227fa8d198b38a5076110344b7ac66e5bdcda3be2a6e7e74c2607a88ce8.
