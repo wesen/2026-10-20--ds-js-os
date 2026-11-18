@@ -1,0 +1,189 @@
+{
+  "world": "agenda",
+  "positions": [
+    "instr",
+    "line"
+  ],
+  "event": "Ir",
+  "total": 136873785452,
+  "cg_sha256": "a83bf81f7671297cdf1c10c02ac27576e02ba6900e77658a743ab1e919e32317",
+  "executable_sha256": "c5c629b968f32caa654e844fdebc176ef5f74e9f58dc6845e5eb0fe09b05822b",
+  "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+  "top": [
+    {
+      "image": "stage1-named",
+      "pc": "0x402b90",
+      "instructions": 554879759,
+      "symbol": "whole_bits",
+      "assembly": "mov    %rdi,%rcx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402b93",
+      "instructions": 554879759,
+      "symbol": "whole_bits",
+      "assembly": "mov    %rdi,%rax"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402b96",
+      "instructions": 554879759,
+      "symbol": "whole_bits",
+      "assembly": "mov    %rsi,%r8"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402b99",
+      "instructions": 554879759,
+      "symbol": "whole_bits",
+      "assembly": "add    %rcx,%rcx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402b9c",
+      "instructions": 554879759,
+      "symbol": "whole_bits",
+      "assembly": "je     402c08 <whole_bits+0x78>"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bff",
+      "instructions": 554879759,
+      "symbol": "whole_bits",
+      "assembly": "mov    %edi,%eax"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402c01",
+      "instructions": 554879759,
+      "symbol": "whole_bits",
+      "assembly": "ret"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bfa",
+      "instructions": 554776978,
+      "symbol": "whole_bits",
+      "assembly": "mov    $0x1,%edi"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402b9e",
+      "instructions": 505670897,
+      "symbol": "whole_bits",
+      "assembly": "mov    %rdi,%rsi"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402ba1",
+      "instructions": 505670897,
+      "symbol": "whole_bits",
+      "assembly": "xor    %edi,%edi"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402ba3",
+      "instructions": 505670897,
+      "symbol": "whole_bits",
+      "assembly": "shr    $0x34,%rsi"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402ba7",
+      "instructions": 505670897,
+      "symbol": "whole_bits",
+      "assembly": "and    $0x7ff,%esi"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bad",
+      "instructions": 505670897,
+      "symbol": "whole_bits",
+      "assembly": "lea    -0x3ff(%rsi),%rdx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bb4",
+      "instructions": 505670897,
+      "symbol": "whole_bits",
+      "assembly": "cmp    $0x34,%rdx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bb8",
+      "instructions": 505670897,
+      "symbol": "whole_bits",
+      "assembly": "ja     402bff <whole_bits+0x6f>"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bba",
+      "instructions": 505568145,
+      "symbol": "whole_bits",
+      "assembly": "movabs $0xfffffffffffff,%rdx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bc4",
+      "instructions": 505568145,
+      "symbol": "whole_bits",
+      "assembly": "mov    $0x433,%ecx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bc9",
+      "instructions": 505568145,
+      "symbol": "whole_bits",
+      "assembly": "and    %rax,%rdx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bcc",
+      "instructions": 505568145,
+      "symbol": "whole_bits",
+      "assembly": "bts    $0x34,%rdx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bd1",
+      "instructions": 505568145,
+      "symbol": "whole_bits",
+      "assembly": "sub    %esi,%ecx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bd3",
+      "instructions": 505568145,
+      "symbol": "whole_bits",
+      "assembly": "je     402be7 <whole_bits+0x57>"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402be7",
+      "instructions": 505568116,
+      "symbol": "whole_bits",
+      "assembly": "shr    %cl,%rdx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bea",
+      "instructions": 505568116,
+      "symbol": "whole_bits",
+      "assembly": "mov    %rdx,%rcx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bed",
+      "instructions": 505568116,
+      "symbol": "whole_bits",
+      "assembly": "neg    %rcx"
+    },
+    {
+      "image": "stage1-named",
+      "pc": "0x402bf0",
+      "instructions": 505568116,
+      "symbol": "whole_bits",
+      "assembly": "test   %rax,%rax"
+    }
+  ]
+}
