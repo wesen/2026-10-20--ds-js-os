@@ -143,6 +143,46 @@ on completion(token, original instance, result):
 
 Do not send framebuffer bytes or filesystem contents through an unbounded JSON string. Use the existing size-limited operation or handle that the QuickJS implementation uses. Keep the direct hardware and network workers in C. Compiling the JS driver changes which engine executes its state machine, while the C worker still owns the peripheral transfer.
 
+## Following a handle from one world to another
+
+Consider what happens when Files opens a document in Editor. Files holds a directory capability. Its call to `root.at(path, "rw")` gives it a child capability for that one file. Editor has no filesystem claim of its own. Passing the child lets Editor read and write that file. A path string alone cannot authorize those operations. The same message mechanism lets a compositor give a display driver access to a framebuffer without copying its pixels through JSON.
+
+A handle has two representations. In application code it is an object with an ID, a type and methods. In a message it is a single-key JSON object such as `{"$h":17}`. The kernel owns the authoritative record for 17, including the holder set, rights, parent, revocation state and minter. Copying the marker into a text editor or persistent record does not add a holder.
+
+```text
+sender JS object       serialized message         native nucleus             receiver
+{items: [handle]}  ->  {"items":[{"$h":17}]}  ->  validate complete JSON
+                                                 check holder and grant
+                                                 enqueue JSON + ids[17]
+                                                       |
+                                                 deliver, grant 17   ->   decode marker
+                                                                          inspect metadata
+                                                                          create wrapper
+```
+
+QuickJS uses the `enc` and `revive` functions in `picocalc-os/js/prelude.js`. Its encoder sends the IDs separately to the VM bridge. A firmware-bundled CJI world calls the same messaging operations as before. Its kernel entry reads bounded bytes directly, so the native validator collects IDs while parsing the message. This keeps the checked list and wire data together. The P4 loader selects eligible module paths from the same CMake lists that produce their ELFs. User-loaded code, ordinary native test drivers, host processes and Wasm keep their existing messaging rules.
+
+| Entry point | What to follow in the code |
+| --- | --- |
+| CJI `send(to, type, payload)` and `ask(to, type, payload, opts)` | `src/world-native.js` serializes wrappers at the message boundary. `nucleus/native.c` copies the checked IDs to the deferred message or calls `kernel_ask` with them. |
+| CJI handler return and `publish(channel, payload, opts)` | A return value becomes `NW_REPLY`. An invalid transfer rejects the ask. A publication requires a declared channel and honors its claim. Retained publications reject handles because replay could grant authority to a future subscriber. |
+| `handle_may_grant` in `nucleus/hw.c` | Uses `handle_use` to check existence, ownership and ancestor revocation. A holder can delegate a grantable handle. A minter can give out its own attenuated child. A recipient of a read-only child without grant rights cannot pass it on. |
+| `handle_event` and `settle_ask` in `nucleus/kernel.c` | Delivery or successful reply adds each live handle to the receiver's holdings. Message handling may occur later than delivery. Releasing a handle after delivery can affect a message still in the mailbox. |
+| `$decode` and `$handle` in the compiled prelude | Rebuild the wrapper using receiver-checked type and rights. I2C wrappers support existing transfers. Other types can be inspected, forwarded when permitted and released. Their filesystem, drawing and SPI methods are separate implementation work. |
+
+```text
+validate the entire payload
+for each unique marker (at most MAX_MSG_HANDLES):
+    require a positive integer representable by the kernel
+    require that the caller holds a live, unrevoked handle
+    require the grant right or that the caller minted this handle
+if the publication requests retention and contains any handle:
+    reject
+enqueue the operation with its checked IDs
+```
+
+An intern can reproduce this independently of the user interface. Add `-DPICOCALC_TEST_CJI_GRANTS=ON` to the native firmware build below. Inspect `picocalc-os/tests/fixtures/cji-grants/sender.js` and `peer.js`. The sender allocates a one-pixel buffer and passes it inside an array. The compiled peer returns it, exercises all four message directions and attempts to return a read-only child. Search the serial boot output for `CJI GRANT`. The sender expects a refusal for the child, an unknown ID and a retained publication. Build again with `-DPICOCALC_TEST_CJI_GRANTS=OFF` for the normal application image. The test worlds and their DMA claim exist only in the diagnostic manifest.
+
 ## Build and investigate
 
 From picocalc-os/port/esp32p4 activate the installed ESP-IDF 5.4.2 environment. Build the same optional Wi-Fi/native configuration that was validated in the first ticket.
@@ -166,3 +206,5 @@ Before writing, capture the running baseline using tools/p4cap.py and identify t
 - A working game with a missing icon or silent key binding points to presentation registration in the prelude. A moving game that fails only under autopilot points to typed-array behavior, allocation or turn timing.
 - If restarting one world changes another's counter, inspect rt_swap and saved per-instance runtime fields. If an event completes after its world restarts, inspect token ownership and cleanup in the nucleus.
 - An empty frame after a compositor restart is a retention or resource-lifetime failure until the recorded screen tree and framebuffer show otherwise. Test the late subscriber path explicitly.
+
+The optional ELF manifest starts a diagnostic world named `nat-import`. Its source, `picocalc-os/natives/wimport.c`, declares an external `path_open` symbol. The P4 resolver refuses the module during relocation, before its initialization or file access can run. Five attempts within ten seconds trigger the kernel's restart limit. A boot log with `nat-import ... stays stopped` alongside healthy application worlds is the expected outcome of that test.

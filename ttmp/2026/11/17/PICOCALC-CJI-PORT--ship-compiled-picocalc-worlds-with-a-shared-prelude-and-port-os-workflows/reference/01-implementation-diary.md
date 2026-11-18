@@ -122,3 +122,75 @@ Compare the keyboard and power source to NW_I2C in nucleus/native.c. Inspect the
 The installed Settings image took 0x323820 bytes. Filesystem, system, clock and agent host regression targets were also run; the host agent tests skip cases requiring a live transport configuration.
 
 The shared-unit emulator gate also ran with UNITS=1 MULTI=1. Four worlds matched their traces, a fifth exhausted its own 320 KiB budget after three asks, and the negative control that omits the state swap produced wrong output for three of four worlds. The physical image preserved both the original time zone and network credentials.
+
+## Step 3. Pass checked capabilities between QuickJS and bundled CJI worlds
+
+The question about QuickJS led me to trace a real delegated resource through both engines. QuickJS already sends the kernel a list of handles along with its JSON. The ordinary native API explicitly rejects the same marker. I added a firmware-selected CJI path at the existing message boundary and used a physical framebuffer handle to exercise it.
+
+### Prompt context
+
+> why are the quickjs fine?
+
+> yes, do it
+
+I interpreted the approval as applying to the proposed scope of firmware-bundled CJI worlds. The implementation shares the delegation check with QuickJS.
+
+### What I did
+
+- Generated the list of eligible ELF paths from the P4 build lists. The loader enables transfers per native instance.
+- Extended the bounded native JSON parser to recognize a complete, single-key marker and collect up to eight distinct IDs. Each ID undergoes ownership, revocation and delegation checks before enqueue.
+- Added wrapper encoding and receiver-side metadata lookup to the shared prelude. An invalid CJI reply now rejects the ask.
+- Added an opt-in two-world board test. The normal manifest excludes the fixture's DMA claim and both worlds.
+- Extended the design guide with the wire representation, pseudocode, API/file map and board test instructions.
+
+### Why
+
+Files must delegate a child file capability to Editor. A framebuffer needs similar delegation before the display world can consume it. Both already use the nucleus message and delivery structures. Extending the checks there preserves the scheduler's delivery order and rights model.
+
+### What worked
+
+The first diagnostic boot exercised QuickJS minting a DMA handle, CJI receiving it inside an array and returning a wrapped handle. The kernel rejected the unknown ID, the attempted return of a read-only child by a non-minter, and a retained publication. A CJI-initiated ask also returned a usable wrapper.
+
+### What didn't work
+
+The first fixture reported false for send and publish. The sender awaited several replies in its startup turn. The kernel granted the handle when each message entered its mailbox, then the startup turn explicitly released the handle before either queued handler could inspect it. I changed the fixture to release its original handle before the compiled peer sends back a fresh grant. The first sandboxed host process run also reported errors. The native suite passed with its process sandbox available on the host.
+
+### What I learned
+
+Delivery and execution are separate events. The holder set has a bit per world. Delivering a handle already held by a recipient does not create a second reference for that world. This matters when an async handler releases a handle while other messages are queued.
+
+### What was tricky to build
+
+The filesystem and future framebuffer wrappers must survive a trip across engines as a marker nested in an application value. The compiled subset lacks a JSON replacer. Serialization therefore translates wrapper objects at message boundaries, and the kernel extracts the ID independently. A world which has never created or received a handle keeps its original serialization fast path.
+
+### What warrants a second pair of eyes
+
+Review the JSON parser's singleton-object rule and its overflow and unique-ID limits. Compare a plain integer to a marker and follow the separate paths for message grants, reply grants and retained messages.
+
+### What should be done in the future
+
+Wire the file operations and deferred worker completion into CJI before promoting Files or Editor. Implement framebuffer/SPI operations before promoting display. The grant test establishes cross-engine transfer and ownership, while each workflow still needs its own acceptance test.
+
+### Code review instructions
+
+Start with the two worlds under picocalc-os/tests/fixtures/cji-grants. Trace NW_SEND and NW_REPLY in nucleus/native.c through handle_may_grant in hw.c and delivery in kernel.c. Check the P4 loader's generated allowlist against the module packaging loop. Verify that the normal manifest excludes both test names.
+
+### Technical details
+
+The host command was make -C picocalc-os -j4 test-native test-fs test-sys. It passed all four Python suites (34 native, 20, 9 and 6 additional cases). The board used a monitored application-only write at 0x10000. The diagnostic flag is PICOCALC_TEST_CJI_GRANTS. Test output is intentionally limited to labels, booleans and error classifications.
+
+The corrected diagnostic run produced the following serial evidence on the P4. Times are milliseconds on the board's kernel clock.
+
+```text
+[  2176.212] grant-test: CJI GRANT roundtrip ok
+[  2200.013] grant-test: CJI GRANT denials ok
+[  2213.881] grant-test: CJI GRANT send true
+[  2223.058] grant-peer: CJI GRANT ask true
+[  2229.536] grant-test: CJI GRANT publish true
+```
+
+Commit b2c196a contains the implementation and board fixtures. The uploader reported success for “PICOCALC-CJI-PORT - Porting workflows with checked handles.pdf” in the original ticket folder. I used a new document title to preserve any annotations on the first copy.
+
+During the board check the user asked “what;s nat-import btw?” I traced the world to the separate system.elf.json manifest and natives/wimport.c. The loader deliberately refuses its unresolved path_open import during relocation. Its five startup failures were independent of the grant probe.
+
+The normal application was rebuilt with the fixture flag off (0x326280 bytes, 21% of the app partition free). The application-only write verified its hash. The physical console then listed 27 worlds, no grant-test or grant-peer, and idle keyboard, power, settings, snake, flaky and toplog worlds with zero restarts. The diagnostic nat-import world was stopped as expected.
