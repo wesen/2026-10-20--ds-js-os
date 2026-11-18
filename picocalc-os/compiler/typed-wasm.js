@@ -589,7 +589,8 @@ function linkWorld(source, runtime, entry) {
         [10, vec([...bodies, ...functions.map(fn => fn.body)])],
     ]);
     for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
-    return {bytes: encodeModule(header, sections), records: recordLayouts(records)};
+    const {name, params, result} = functions[target];
+    return {bytes: encodeModule(header, sections), records: recordLayouts(records), entry: {name, params, result}};
 }
 
 function invoke(exports, signature, args) {

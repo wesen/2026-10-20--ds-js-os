@@ -5,6 +5,7 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import '../../../../../../picocalc-os/compiler/typed-wasm.js';
+import '../../../../../../picocalc-os/worlds/agenda/compile.js';
 
 const os = resolve('picocalc-os');
 const host = process.argv[2] ? resolve(process.argv[2]) : join(os, 'build/picocalc-host');
@@ -28,15 +29,12 @@ execFileSync('clang-18', [
 
 const source = readFileSync(join(world, 'reminder.typed'), 'utf8');
 const object = readFileSync(runtime);
-const {bytes, records} = typedWasm.linkWorld(source, object, 'parseTask');
+const bytes = compileAgenda(source, object);
 assert(WebAssembly.validate(bytes));
 assert.throws(() => typedWasm.linkWorld(source.replace('title: buffer, task: Task): bool {\n    if (!scanTask',
     'title: buffer, task: Task, unused: i32): bool {\n    if (!scanTask'), object, 'parseTask'), /slot signature mismatch/);
-assert.deepEqual(Object.entries(records.Task), [
-    ['done', 'bool'], ['textStart', 'i32'], ['dueStart', 'i32'], ['dueEnd', 'i32'], ['timeStart', 'i32'],
-    ['dateValid', 'bool'], ['timeValid', 'bool'], ['leadStart', 'i32'], ['leadEnd', 'i32'], ['leadMinutes', 'i32'],
-    ['titleLength', 'i32'],
-].map(([name,type], i) => [name, {type,offset:i*4}]));
+assert.throws(() => compileAgenda(source.replace('    done: bool;\n    textStart: i32;',
+    '    textStart: i32;\n    done: bool;'), object), /Task fields do not match/);
 writeFileSync(asset, bytes);
 
 mkdirSync(join(fsRoot, 'notes'), {recursive: true});

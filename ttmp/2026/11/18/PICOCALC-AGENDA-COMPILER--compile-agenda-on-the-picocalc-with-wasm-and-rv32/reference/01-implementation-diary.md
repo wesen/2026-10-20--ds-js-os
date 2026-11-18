@@ -268,3 +268,13 @@ Bundle the reactor and source compiler for on-device cold builds. Measure first 
 ### Code review instructions
 
 Build the simulator, run scripts/04-check-wasm-world.mjs, and compare the reminder object and captured screen with various/wasm-world.json. For timezone behavior inspect getTimezoneOffset and set_date_fields in the vendored QuickJS implementation.
+
+## Step 7 — Publish the world milestone and check the compiler/runtime layout
+
+The rendered simulator view and persisted reminder now have a vault report. In preparation for linking edited source on the board, I moved the task layout and typed entry validation into compileAgenda, the same bare-JS entry exercised by the host integration. A field of type bool and a string pointer both lower to i32 in Wasm, so validating the reactor function's Wasm signature alone cannot check this contract.
+
+### Evidence
+
+- The first push of b0ccaa4 was rejected as non-fast-forward. The vault was clean. I fetched 9b6b7c3, rebased the report and its screenshot, and pushed fe8b62d to origin main.
+- The report's screenshot SHA-256 matches the test receipt. It is the real compositor output from the host simulation.
+- The compiler rejects a moved Task field before returning code to load. The successful integration still exercises the three clock cases and the disk-backed restart.
