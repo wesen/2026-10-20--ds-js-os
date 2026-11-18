@@ -9,7 +9,7 @@ import time
 import serial
 
 
-COMPILE = re.compile(r"agenda compile source=(\w+) status=(\w+) us=(\d+) peak_js_bytes=(\d+) wasm_bytes=(\d+)")
+COMPILE = re.compile(r"agenda compile source=(\w+) status=(\w+) us=(\d+) peak_js_bytes=(\d+) (?:wasm|module)_bytes=(\d+)")
 RESPONSE = re.compile(r"agenda response us=(\d+) world_bytes=(\d+)")
 FRAME = re.compile(r"agenda frame turn_us=(\d+) world_bytes=(\d+)")
 
@@ -26,7 +26,7 @@ def one(ser, command):
             _, status, elapsed, heap, length = compile_data.groups()
             if status != "ok":
                 raise RuntimeError(line)
-            result = dict(compile_us=int(elapsed), peak_js_bytes=int(heap), wasm_bytes=int(length))
+            result = dict(compile_us=int(elapsed), peak_js_bytes=int(heap), module_bytes=int(length))
         response = RESPONSE.search(line)
         if result and response:
             result["first_response_us"], result["world_bytes"] = map(int, response.groups())

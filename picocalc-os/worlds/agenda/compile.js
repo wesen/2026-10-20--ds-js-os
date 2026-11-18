@@ -10,14 +10,24 @@ const taskFields = [
     ["leadStart", "i32"], ["leadEnd", "i32"], ["leadMinutes", "i32"], ["titleLength", "i32"],
 ];
 
-globalThis.compileAgenda = function compileAgenda(source, reactor) {
-    const {bytes, records, entry} = typedWasm.linkWorld(source, reactor, "parseTask");
-    if (entry.result !== "bool" || entry.params.join(",") !== "string,buffer,Task")
+function validateAgenda(records, entry) {
+    if (!entry || entry.result !== "bool" || entry.params.join(",") !== "string,buffer,Task")
         throw new SyntaxError("Agenda requires parseTask(line: string, title: buffer, task: Task): bool");
     const fields = records.Task;
     if (!fields || Object.keys(fields).length !== taskFields.length ||
         taskFields.some(([name, type], i) => fields[name]?.type !== type || fields[name].offset !== i * 4))
         throw new SyntaxError("Task fields do not match the Agenda runtime layout");
+}
+
+globalThis.compileAgenda = function compileAgenda(source, reactor) {
+    const {bytes, records, entry} = typedWasm.linkWorld(source, reactor, "parseTask");
+    validateAgenda(records, entry);
     return bytes;
+};
+
+globalThis.compileAgendaRv32 = function compileAgendaRv32(source, reactor) {
+    const program = typedRv32.compile(source);
+    validateAgenda(program.records, program.signatures.find(fn => fn.name === "parseTask"));
+    return typedRv32.linkSlot(program, reactor, "parseTask");
 };
 })();

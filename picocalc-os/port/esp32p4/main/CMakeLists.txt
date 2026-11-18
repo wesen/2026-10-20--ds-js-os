@@ -204,19 +204,39 @@ set_source_files_properties(
     PROPERTIES COMPILE_OPTIONS "-w;-Wno-error=incompatible-pointer-types;-fwrapv;-fno-strict-aliasing")
 
 if(PICOCALC_TYPED_AGENDA)
-    set(PICOCALC_AGENDA_REACTOR "${OS}/build/agenda-reactor.wasm" CACHE FILEPATH "Prebuilt Agenda SDK reactor")
-    if(NOT EXISTS "${PICOCALC_AGENDA_REACTOR}")
-        message(FATAL_ERROR "Build the Agenda reactor with make -C picocalc-os agenda-reactor")
+    if(PICOCALC_RV32_AGENDA)
+        set(agenda_reactor "${CMAKE_CURRENT_BINARY_DIR}/agenda-reactor.elf")
+        set(agenda_sources "${OS}/worlds/agenda/wasm-world.c" "${OS}/worlds/agenda/rv32-slot.S")
+        add_custom_command(OUTPUT "${agenda_reactor}"
+            COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${agenda_reactor}" ${agenda_sources} ${OS}/sdk/nw_elf.c
+            DEPENDS ${agenda_sources} ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
+                    ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_ui.h
+            VERBATIM)
+        target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_AGENDA=1)
+        list(APPEND BUNDLE_EXTRA "agenda/typed-rv32.js=${OS}/compiler/typed-rv32.js")
+        list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-rv32.js")
+        set(agenda_engine native)
+    else()
+        set(PICOCALC_AGENDA_REACTOR "${OS}/build/agenda-reactor.wasm" CACHE FILEPATH "Prebuilt Agenda SDK reactor")
+        if(NOT EXISTS "${PICOCALC_AGENDA_REACTOR}")
+            message(FATAL_ERROR "Build the Agenda reactor with make -C picocalc-os agenda-reactor")
+        endif()
+        set(agenda_reactor "${PICOCALC_AGENDA_REACTOR}")
+        set(agenda_engine wasm)
     endif()
-    file(READ "${OS}/js/system.json" agenda_manifest)
+    if(PICOCALC_NATIVE_ELF)
+        file(READ "${builtin_manifest}" agenda_manifest)
+    else()
+        file(READ "${OS}/js/system.json" agenda_manifest)
+    endif()
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${OS}/js/system.json")
     string(JSON world_count LENGTH "${agenda_manifest}" worlds)
     math(EXPR last_world "${world_count} - 1")
     foreach(i RANGE ${last_world})
         string(JSON world_name GET "${agenda_manifest}" worlds ${i} name)
         if(world_name STREQUAL "agenda")
-            string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} file "\"agenda/compiled.wasm\"")
-            string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} engine "\"wasm\"")
+            string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} file "\"agenda/compiled.bin\"")
+            string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} engine "\"${agenda_engine}\"")
             string(JSON agenda_manifest SET "${agenda_manifest}" worlds ${i} budget_ms 100)
             break()
         endif()
@@ -230,9 +250,9 @@ if(PICOCALC_TYPED_AGENDA)
         "agenda/typed-wasm.js=${OS}/compiler/typed-wasm.js"
         "agenda/compile.js=${OS}/worlds/agenda/compile.js"
         "agenda/reminder.typed=${OS}/worlds/agenda/reminder.typed"
-        "agenda/reactor.wasm=${PICOCALC_AGENDA_REACTOR}")
+        "agenda/reactor.bin=${agenda_reactor}")
     list(APPEND BUNDLE_EXTRA_DEPS
-        "${agenda_manifest_path}" "${PICOCALC_AGENDA_REACTOR}"
+        "${agenda_manifest_path}" "${agenda_reactor}"
         "${OS}/compiler/typed-wasm.js" "${OS}/worlds/agenda/compile.js" "${OS}/worlds/agenda/reminder.typed")
 endif()
 

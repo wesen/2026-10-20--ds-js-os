@@ -410,7 +410,7 @@ class FunctionEmitter {
         const nlocals = this.nextLocal - params.length;
         const locals = nlocals ? [1, ...unsigned(nlocals), I32] : [0];
         const body = [...locals, ...this.code];
-        return { name, params, result, body: [...unsigned(body.length), ...body] };
+        return { name, params, result, code: this.code, nlocals, body: [...unsigned(body.length), ...body] };
     }
 }
 
@@ -619,5 +619,5 @@ function invoke(exports, signature, args) {
 }
 
 globalThis.compileTyped = source => compile(source).bytes;
-globalThis.typedWasm = { compile, linkWorld, invoke };
+globalThis.typedWasm = { compile, linkWorld, invoke, compileFunctions };
 })();

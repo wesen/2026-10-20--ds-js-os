@@ -1,0 +1,230 @@
+{
+  "configuration": "ESP32-P4 with PICOCALC_RV32_AGENDA and headless hardware, existing 43-byte notes/todo.txt",
+  "source_sha256": "615832ecd3abf957efe86137f604bc43e216c91d456198d8ad8d00f91fef0928",
+  "firmware_sha256": "348b3d2a76995399aea26ae54bccd75ab474ea7bf273d8a8c49b7bfc5ff5c6fd",
+  "endpoint": "Fresh compiler start through kernel publication of first file-backed frame, before physical display transfer",
+  "cold_system_boot": {
+    "compile_us": 445544,
+    "peak_js_bytes": 586108,
+    "module_bytes": 24304,
+    "first_response_us": 3046436,
+    "world_bytes": 124588,
+    "frame_turn_us": 741
+  },
+  "settled_bundled": {
+    "source": "baseline",
+    "trials": [
+      {
+        "compile_us": 575548,
+        "peak_js_bytes": 586108,
+        "module_bytes": 24304,
+        "first_response_us": 706146,
+        "world_bytes": 124588,
+        "frame_turn_us": 678
+      },
+      {
+        "compile_us": 663487,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 794567,
+        "world_bytes": 124588,
+        "frame_turn_us": 895
+      },
+      {
+        "compile_us": 703377,
+        "peak_js_bytes": 586108,
+        "module_bytes": 24304,
+        "first_response_us": 829272,
+        "world_bytes": 124588,
+        "frame_turn_us": 711
+      },
+      {
+        "compile_us": 659542,
+        "peak_js_bytes": 586116,
+        "module_bytes": 24304,
+        "first_response_us": 1455367,
+        "world_bytes": 124588,
+        "frame_turn_us": 643
+      },
+      {
+        "compile_us": 443995,
+        "peak_js_bytes": 586116,
+        "module_bytes": 24304,
+        "first_response_us": 573996,
+        "world_bytes": 124588,
+        "frame_turn_us": 665
+      },
+      {
+        "compile_us": 444956,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 566925,
+        "world_bytes": 124588,
+        "frame_turn_us": 637
+      },
+      {
+        "compile_us": 440734,
+        "peak_js_bytes": 586112,
+        "module_bytes": 24304,
+        "first_response_us": 563378,
+        "world_bytes": 124588,
+        "frame_turn_us": 634
+      },
+      {
+        "compile_us": 440908,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 563450,
+        "world_bytes": 124588,
+        "frame_turn_us": 637
+      },
+      {
+        "compile_us": 442776,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 573258,
+        "world_bytes": 124588,
+        "frame_turn_us": 713
+      },
+      {
+        "compile_us": 439886,
+        "peak_js_bytes": 586536,
+        "module_bytes": 24304,
+        "first_response_us": 574815,
+        "world_bytes": 124588,
+        "frame_turn_us": 646
+      },
+      {
+        "compile_us": 441420,
+        "peak_js_bytes": 586108,
+        "module_bytes": 24304,
+        "first_response_us": 564877,
+        "world_bytes": 124588,
+        "frame_turn_us": 642
+      },
+      {
+        "compile_us": 449079,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 581661,
+        "world_bytes": 124588,
+        "frame_turn_us": 696
+      },
+      {
+        "compile_us": 440584,
+        "peak_js_bytes": 586112,
+        "module_bytes": 24304,
+        "first_response_us": 564532,
+        "world_bytes": 124588,
+        "frame_turn_us": 652
+      },
+      {
+        "compile_us": 441392,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 565359,
+        "world_bytes": 124588,
+        "frame_turn_us": 640
+      },
+      {
+        "compile_us": 441263,
+        "peak_js_bytes": 586108,
+        "module_bytes": 24304,
+        "first_response_us": 577719,
+        "world_bytes": 124588,
+        "frame_turn_us": 682
+      },
+      {
+        "compile_us": 446119,
+        "peak_js_bytes": 586120,
+        "module_bytes": 24304,
+        "first_response_us": 571884,
+        "world_bytes": 124588,
+        "frame_turn_us": 674
+      },
+      {
+        "compile_us": 440682,
+        "peak_js_bytes": 586116,
+        "module_bytes": 24304,
+        "first_response_us": 565939,
+        "world_bytes": 124588,
+        "frame_turn_us": 567
+      },
+      {
+        "compile_us": 444079,
+        "peak_js_bytes": 586548,
+        "module_bytes": 24304,
+        "first_response_us": 577065,
+        "world_bytes": 124588,
+        "frame_turn_us": 515
+      },
+      {
+        "compile_us": 448683,
+        "peak_js_bytes": 586116,
+        "module_bytes": 24304,
+        "first_response_us": 573384,
+        "world_bytes": 124588,
+        "frame_turn_us": 666
+      },
+      {
+        "compile_us": 442919,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 567054,
+        "world_bytes": 124588,
+        "frame_turn_us": 661
+      }
+    ],
+    "median_response_us": 573321.0,
+    "p95_response_us": 829272,
+    "max_response_us": 1455367
+  },
+  "settled_editable": {
+    "source": "build",
+    "trials": [
+      {
+        "compile_us": 446465,
+        "peak_js_bytes": 586536,
+        "module_bytes": 24304,
+        "first_response_us": 568913,
+        "world_bytes": 124588,
+        "frame_turn_us": 656
+      },
+      {
+        "compile_us": 447668,
+        "peak_js_bytes": 586104,
+        "module_bytes": 24304,
+        "first_response_us": 579381,
+        "world_bytes": 124588,
+        "frame_turn_us": 654
+      },
+      {
+        "compile_us": 451628,
+        "peak_js_bytes": 586540,
+        "module_bytes": 24304,
+        "first_response_us": 586149,
+        "world_bytes": 124588,
+        "frame_turn_us": 694
+      },
+      {
+        "compile_us": 451488,
+        "peak_js_bytes": 586552,
+        "module_bytes": 24304,
+        "first_response_us": 573376,
+        "world_bytes": 124588,
+        "frame_turn_us": 639
+      },
+      {
+        "compile_us": 445453,
+        "peak_js_bytes": 586584,
+        "module_bytes": 24304,
+        "first_response_us": 568527,
+        "world_bytes": 124588,
+        "frame_turn_us": 659
+      }
+    ],
+    "median_response_us": 573376,
+    "p95_response_us": 586149,
+    "max_response_us": 586149
+  }
+}

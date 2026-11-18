@@ -31,3 +31,7 @@ Verified cold on-device Wasm Agenda builds and measured the linker optimization.
 ## 2026-11-18
 
 Restored the prior PicoCalc firmware with a verified app-partition write and published the Wasm hardware deep dive to go-go-parc at 3b4640c.
+
+## 2026-11-18
+
+Compiled the typed Agenda parser to RV32 on the P4, verified the relocated reminder, frame and restart behavior under emulation, and recorded native timing and firmware restore evidence.

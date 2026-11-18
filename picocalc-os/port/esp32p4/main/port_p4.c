@@ -107,7 +107,7 @@ char *p4_bundle_read(const char *path, size_t *len, char *buffer, size_t capacit
 
 char *port_read_file(const char *path, size_t *len) {
 #if PICOCALC_TYPED_AGENDA
-  if (!strcmp(path, "js/agenda/compiled.wasm")) return p4_agenda_take_module(len);
+  if (!strcmp(path, "js/agenda/compiled.bin")) return p4_agenda_take_module(len);
 #endif
   return p4_bundle_read(path, len, NULL, 0);
 }

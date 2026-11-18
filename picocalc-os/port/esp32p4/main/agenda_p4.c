@@ -9,6 +9,14 @@
 #define COMPILER_LIMIT (2 * 1024 * 1024)
 #define COMPILER_US 1700000
 
+#if PICOCALC_RV32_AGENDA
+#define AGENDA_ENGINE ENG_NATIVE
+#define AGENDA_COMPILE "compileAgendaRv32"
+#else
+#define AGENDA_ENGINE ENG_WASM
+#define AGENDA_COMPILE "compileAgenda"
+#endif
+
 typedef struct {
   size_t live, peak;
   vtime_t deadline;
@@ -95,7 +103,7 @@ static unsigned char *compile(bool edit, size_t *length, vtime_t *started) {
   *started = port_clock();
   size_t source_length = 0, reactor_length = 0;
   char *source = read_source(edit, &source_length);
-  char *reactor = p4_bundle_read("agenda/reactor.wasm", &reactor_length, NULL, 0);
+  char *reactor = p4_bundle_read("agenda/reactor.bin", &reactor_length, NULL, 0);
   if (!source || !reactor) {
     puts("agenda compile: source or reactor unavailable");
     free(source); free(reactor);
@@ -111,8 +119,11 @@ static unsigned char *compile(bool edit, size_t *length, vtime_t *started) {
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
   if (!eval_file(ctx, "agenda/typed-wasm.js") || !eval_file(ctx, "agenda/compile.js")) goto rejected;
+#if PICOCALC_RV32_AGENDA
+  if (!eval_file(ctx, "agenda/typed-rv32.js")) goto rejected;
+#endif
   JSValue global = JS_GetGlobalObject(ctx);
-  JSValue function = JS_GetPropertyStr(ctx, global, "compileAgenda");
+  JSValue function = JS_GetPropertyStr(ctx, global, AGENDA_COMPILE);
   JSValue reactor_buffer = JS_NewArrayBufferCopy(ctx, (const uint8_t *)reactor, reactor_length);
   // This QuickJS C entry reads three argument slots for a buffer view.
   JSValue view_args[] = {reactor_buffer, JS_NewUint32(ctx, 0), JS_NewUint32(ctx, reactor_length)};
@@ -159,7 +170,7 @@ done:
   if (ctx) JS_FreeContext(ctx);
   if (rt) JS_FreeRuntime(rt);
   free(source); free(reactor);
-  printf("agenda compile source=%s status=%s us=%lld peak_js_bytes=%zu wasm_bytes=%zu\n",
+  printf("agenda compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu\n",
          edit ? "edit" : "bundle", module ? "ok" : "failed",
          (long long)(port_clock() - *started), heap.peak, module ? *length : 0);
   return module;
@@ -184,7 +195,7 @@ void p4_agenda_console(const char *command) {
     return;
   }
   world_t *world = world_by_name("agenda");
-  if (!world || world->engine != ENG_WASM) {
+  if (!world || world->engine != AGENDA_ENGINE) {
     puts("agenda: the typed world is not active");
     return;
   }
@@ -201,7 +212,7 @@ void p4_agenda_console(const char *command) {
 }
 
 void p4_agenda_frame(world_t *world, vtime_t segment_start) {
-  if (strcmp(world->name, "agenda") || world->engine != ENG_WASM) return;
+  if (strcmp(world->name, "agenda") || world->engine != AGENDA_ENGINE) return;
   vtime_t now = port_clock();
   if (first_response) {
     printf("agenda response us=%lld world_bytes=%zu\n",

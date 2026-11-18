@@ -102,8 +102,8 @@ HELPERS(DECLARE)
 static const struct { const char *name; void *addr; } SYMS[] = {
   { "memcpy", memcpy }, { "memmove", memmove }, { "memset", memset }, { "memcmp", memcmp },
   { "strlen", strlen }, { "strcmp", strcmp }, { "strncmp", strncmp }, { "strchr", strchr }, { "strrchr", strrchr },
-  { "strstr", strstr }, { "strcpy", strcpy }, { "strncpy", strncpy },
-  { "strtol", strtol }, { "strtoul", strtoul }, { "strtod", strtod }, { "atoi", atoi },
+  { "strstr", strstr }, { "strcat", strcat }, { "strcpy", strcpy }, { "strncpy", strncpy },
+  { "strtol", strtol }, { "strtoll", strtoll }, { "strtoul", strtoul }, { "strtod", strtod }, { "atoi", atoi },
   { "snprintf", snprintf }, { "vsnprintf", vsnprintf },
   { "malloc", m_malloc }, { "calloc", m_calloc }, { "realloc", m_realloc }, { "free", m_free },
 #define ENTRY(f) { #f, f },

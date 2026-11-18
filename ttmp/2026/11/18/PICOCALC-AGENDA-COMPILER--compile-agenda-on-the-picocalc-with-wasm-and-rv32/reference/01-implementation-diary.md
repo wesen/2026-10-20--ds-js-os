@@ -349,3 +349,45 @@ The measured firmware checkpoint is 2d1238c. I kept the valid editable source an
 - esptool verified the restored flash write. The boot trace reported keyboard/power I2C and display SPI offline as before, loaded the two CJI manifests, and answered cji status with #OK cji.
 - The vault report “PicoCalc Agenda — Measuring a cold Wasm build on the handheld” was pushed to go-go-parc main at 3b4640c.
 - The hardware task remains open for the separate physical input-to-panel measurement. The readiness and memory portion passed on the P4, and the RV32 implementation can begin from the same parser and runtime contract.
+
+## Step 11 — Compile and load a trusted native Agenda world
+
+### What I did
+
+I exposed the typed frontend's function bodies to a second target. typed-rv32.js lowers the structured integer instructions to little-endian RV32IM words. It assigns locals and operand slots in a 16-byte-aligned frame, resolves local control-flow jumps, and emits PC-relative calls. compileAgendaRv32 performs the same Agenda ABI checks as compileAgenda, locates one reserved executable slot in the linked ELF, and patches a tail jump into the compiled parser. The existing SDK reactor still implements the file, timer, notification, and view behavior.
+
+- scripts/07-check-rv32-parser.mjs compares the native return value, all record fields and the cooked title against the Wasm oracle over 6,411 task lines. It also checks 405 date cases and 10,000 lead values.
+- scripts/09-check-rv32-world.mjs loads the patched ELF at two distinct addresses through the CJI emulator. The driver presents a deterministic file, a clock transition, a zone offset, and the saved fired identity to the new instance. Both instances render the file and the reminder fires once.
+- The opt-in P4 profile compiled on boot and ran 20 fresh bundled builds and five fresh editable-file builds. All used the existing notes/todo.txt. I restored the exact previous app image with a flash hash verification and confirmed the original headless profile and a successful cji status.
+
+### Why
+
+The same typed input and event contract make the two targets comparable. Cold source-to-frame, compile time, and the frame-producing turn describe different parts of the system. The new backend should prove that it runs real machine code and preserves the workflow before we attribute any timing changes to the target.
+
+### What worked
+
+The native ELF is 24,304 bytes and the stand-alone emitted parser is 12,532 bytes. On the settled board, fresh bundled builds had medians of 443.457 ms for compilation, 573.321 ms to publication, and 0.657 ms for the frame-producing turn. The settled bundled p95 was 829 ms and the maximum was 1.455 s. Editable builds had a 573 ms median and 586 ms maximum. On full-system boot, the compiler finished in 446 ms and the first publication arrived after 3.046 s. The per-trial data and executable hashes are in various/p4-rv32-bench.json and the emulator receipts.
+
+### What didn't work
+
+The first small parser runner used a partial initializer that caused GCC to emit an unresolved memset in a no-libc executable. Explicit initialization of the used fields removed that dependency. The full reactor driver first attempted to link floating-point ABI flags against emulator objects built for the integer ABI. The driver now uses the emulator toolchain's integer ABI and exercises the reactor's pointer and integer SDK boundary. The emulator then reported a missing resolution table. Supplying the reactor's ten explicit libc imports completed relocation. Node's sandboxed subprocess wait reported EPERM even after the emulator printed success. The regression script passed outside that sandbox.
+
+### What I learned
+
+Native execution cuts the observed settlement turn from roughly 2.45 ms to 0.66 ms. The current native emitter still spends more time compiling than the optimized Wasm emitter. Under full-system startup the build itself accounts for under half a second in either profile. The remaining time needs measurement between installation, Agenda dispatch, the filesystem settlement, and the rest of world startup.
+
+### What was tricky to build
+
+The compiled parser uses implicit Wasm linear-memory offsets on the first target and actual pointers on the second. The shared reactor keeps the record and UTF-16 layouts constant. The native code and the prebuilt call site must obey the register, stack, and return-address conventions, even when the ELF is relocated.
+
+### What warrants a second pair of eyes
+
+Check the native branch and stack effects, preserved ABI across calls and jumps, and the unique executable-slot check. The native output runs with firmware privileges. The emitted code should be used only for trusted input in the current profile, and a native trap can fault the firmware. The physical trials differed in peripheral configuration. Their runtime memory counters also count different components and should not be treated as comparable system-level peaks.
+
+### What should be done in the future
+
+Re-run both targets with identical firmware/peripheral settings. Measure the boot delay by stage. Capture a real keyboard event through completed panel transfer and verify the final visible frame on assembled hardware.
+
+### Code review instructions
+
+Run scripts/03-check-task-records.mjs, scripts/07-check-rv32-parser.mjs, and scripts/09-check-rv32-world.mjs from the repository root. Pass the ESP RV32 compiler and the built CJI rv32emu to the RV32 scripts. The world harness also takes the agenda-reactor.elf from an ESP-IDF build with PICOCALC_RV32_AGENDA=ON. Compare the receipts and repeat scripts/05-measure-agenda-p4.py against the correct flashed build.
