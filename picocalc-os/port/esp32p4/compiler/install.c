@@ -6,6 +6,7 @@
 #include "esp_app_desc.h"
 #include "esp_elf.h"
 #include "esp_heap_caps.h"
+#include "freertos/idf_additions.h"
 #include "esp_timer.h"
 #include "mbedtls/sha256.h"
 #include <math.h>
@@ -23,7 +24,8 @@ typedef struct {
 static install_record_t active, candidate;
 static compiler_job_t job;
 static QueueHandle_t finished;
-static enum { READY, BUILDING, STARTING } state;
+static TaskHandle_t worker;
+static enum { READY, LOADING, BUILDING, STARTING } state;
 static char *output, *old_source;
 static size_t output_size, old_size;
 static int old_engine, candidate_epoch;
@@ -108,35 +110,51 @@ static void cleanup(void) {
     free(old_source); old_source=NULL;
     state=READY;
 }
-static void build_worker(void *arg) {
-    (void)arg;
-    size_t len=0;
-    char *image=port_read_file("natives/compiler.elf",&len);
-    job.exports=port_read_file("compiler/unit.list",&job.exports_length);
-    esp_elf_t elf;
-    esp_elf_init(&elf);
-    peak=0;
-    if (!image || !job.exports) snprintf(job.error,sizeof job.error,"compiler bundle allocation");
-    else {
-        int rc=esp_elf_relocate(&elf,(const uint8_t *)image,len);
-        free(image); image=NULL;
-        if (rc) snprintf(job.error,sizeof job.error,"compiler relocation %d",rc);
-        else {
-            char *args[]={(char *)&job};
-            esp_elf_request(&elf,0,1,args);
-            if (!job.status && job.module_length<=MODULE_LIMIT) {
-                output=malloc(job.module_length);
-                if (output) { output_size=job.module_length; memcpy(output,job.module,output_size); }
-            }
-            if (!job.status && !output) snprintf(job.error,sizeof job.error,"module size or allocation");
-        }
-    }
-    esp_elf_deinit(&elf);
-    free(image); free((void *)job.exports);
-    while (head.next!=&head) release(head.next+1);
+static esp_elf_t tool;
+static char *tool_image;
+static size_t tool_size;
+static void signal_kernel(void) {
     int done=1;
     xQueueSend(finished,&done,portMAX_DELAY);
-    vTaskDelete(NULL);
+}
+static void memory_sample(const char *phase) {
+    printf("cji: %s elapsed_ms=%lld psram_free=%u psram_largest=%u\n", phase,
+           (long long)((esp_timer_get_time()-began)/1000),
+           (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
+           (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
+}
+static void build_one(void) {
+    memory_sample("begin");
+    tool_image=port_read_file("natives/compiler.elf",&tool_size);
+    job.exports=port_read_file("compiler/unit.list",&job.exports_length);
+    signal_kernel();
+    // ELF relocation flushes the instruction cache with both CPUs stopped.
+    // The kernel task performs that step on its internal stack.
+    ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
+    peak=0;
+    if (!job.error[0]) {
+        char *args[]={(char *)&job};
+        memory_sample("relocated");
+        esp_elf_request(&tool,0,1,args);
+        memory_sample("assembled");
+        if (!job.status && job.module_length<=MODULE_LIMIT) {
+            output=malloc(job.module_length);
+            if (output) { output_size=job.module_length; memcpy(output,job.module,output_size); }
+        }
+        if (!job.status && !output) snprintf(job.error,sizeof job.error,"module size or allocation");
+    }
+    esp_elf_deinit(&tool);
+    free((void *)job.exports);
+    while (head.next!=&head) release(head.next+1);
+    memory_sample("released");
+    signal_kernel();
+}
+static void build_worker(void *arg) {
+    (void)arg;
+    for (;;) {
+        ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
+        build_one();
+    }
 }
 static void begin(char *source,size_t len,bool automatic) {
     memset(&candidate,0,sizeof candidate);
@@ -160,10 +178,13 @@ static void begin(char *source,size_t len,bool automatic) {
         free(output); output=NULL; reuse=false;
     }
     if (!finished) finished=xQueueCreate(1,sizeof(int));
-    if (!finished || xTaskCreatePinnedToCore(build_worker,"cji-build",65536,NULL,2,NULL,0)!=pdPASS) {
+    if (!worker && finished)
+        xTaskCreatePinnedToCoreWithCaps(build_worker,"cji-build",128*1024,NULL,2,&worker,0,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if (!worker || !finished) {
         puts("cji: cannot allocate compiler task"); cleanup(); return;
     }
-    state=BUILDING;
+    state=LOADING;
+    xTaskNotifyGive(worker);
     puts("cji: compiling source on device");
 }
 void compiler_console(const char *command) {
@@ -210,13 +231,29 @@ void compiler_tick(void) {
             puts("cji: install record commit failed"); rollback(); return;
         }
         active=candidate;
+        printf("cji: artifact %u bytes sha256=",(unsigned)output_size);
+        for (size_t i=0;i<sizeof active.artifact;i++) printf("%02x",active.artifact[i]);
+        putchar('\n');
         printf("cji: ready dev-cji engine=%s cache=%s elapsed_ms=%lld scratch_peak=%u\n",
             candidate.engine==ENG_JS ? "js":"native",reuse ? "hit":"miss",
             (long long)((esp_timer_get_time()-began)/1000),(unsigned)(reuse ? 0:peak));
         cleanup(); return;
     }
-    if (state!=BUILDING) return;
     int done;
+    if (state==LOADING) {
+        if (xQueueReceive(finished,&done,0)!=pdTRUE) return;
+        esp_elf_init(&tool);
+        if (!tool_image || !job.exports) snprintf(job.error,sizeof job.error,"compiler bundle allocation");
+        else {
+            int rc=esp_elf_relocate(&tool,(const uint8_t *)tool_image,tool_size);
+            if (rc) snprintf(job.error,sizeof job.error,"compiler relocation %d",rc);
+        }
+        free(tool_image); tool_image=NULL;
+        state=BUILDING;
+        xTaskNotifyGive(worker);
+        return;
+    }
+    if (state!=BUILDING) return;
     if (!reuse && xQueueReceive(finished,&done,0)!=pdTRUE) return;
     if (!output && job.status==1 && candidate.automatic) {
         output_size=job.length;

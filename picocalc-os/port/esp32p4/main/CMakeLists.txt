@@ -32,10 +32,7 @@ set(WAMR_INCS ${WAMR}/iwasm/include ${WAMR}/iwasm/common ${WAMR}/iwasm/interpret
 # IDF expands component requirements in an early CMake process that does not see arbitrary
 # project cache options. Declare SDK requirements unconditionally; unused code is discarded.
 # Only the separate optional/agent_wifi component downloads ESP-Hosted / Wi-Fi Remote.
-if(PICOCALC_DEVICE_COMPILER)
-    list(APPEND AGENT_REQUIRES elf_loader)
-endif()
-list(APPEND AGENT_REQUIRES nvs_flash esp_http_client esp_netif esp_event esp_wifi mbedtls)
+set(AGENT_REQUIRES nvs_flash esp_http_client esp_netif esp_event esp_wifi mbedtls)
 
 idf_component_register(
     SRCS
@@ -122,13 +119,16 @@ if(PICOCALC_NATIVE_ELF)
     if(PICOCALC_DEVICE_COMPILER)
         set(tool_dir ${CMAKE_CURRENT_LIST_DIR}/../compiler)
         set(tool_output ${CJI_BUILD}/tool/compiler.elf)
-        file(GLOB tool_inputs CONFIGURE_DEPENDS ${tool_dir}/*.h ${tool_dir}/tool.c ${CJI_ROOT}/tools/rv32/fw/include/*.h)
+        file(GLOB_RECURSE tool_inputs CONFIGURE_DEPENDS ${tool_dir}/*.h ${CJI_ROOT}/runtime/*.h
+             ${CJI_ROOT}/runtime/*.c ${CJI_ROOT}/tools/rv32/fw/include/*.h)
         add_custom_command(OUTPUT ${tool_output}.z
             COMMAND sh ${tool_dir}/build-tool.sh ${CJI_ROOT} ${CJI_BUILD}/tool
             COMMAND ${PYTHON} ${CMAKE_CURRENT_LIST_DIR}/pack_elf.py ${tool_output} ${tool_output}.z
-            DEPENDS ${tool_inputs} ${tool_dir}/build-tool.sh ${cji_frontend} ${CJI_ROOT}/tools/bundle.mjs
+            DEPENDS ${tool_inputs} ${tool_dir}/tool.c ${tool_dir}/build-tool.sh ${cji_frontend} ${CJI_ROOT}/tools/bundle.mjs
                     ${CJI_ROOT}/tools/jstok.mjs ${CJI_ROOT}/runtime/runtime.c ${CJI_ROOT}/runtime/slas.c
-                    ${CJI_ROOT}/tools/rv32/fw/libc.c ${CJI_ROOT}/tools/rv32/fw/softfloat.c ${CJI_ROOT}/Makefile
+                    ${CJI_ROOT}/tools/rv32/fw/libc.c ${CJI_ROOT}/tools/rv32/fw/softfloat.c
+                    ${CJI_ROOT}/tools/rv32/fw/hostcalls.S ${CJI_ROOT}/tools/rv32/fw/board_exec.h
+                    ${CJI_ROOT}/tools/rv32/unit.mjs ${CJI_ROOT}/cji.js ${CJI_ROOT}/Makefile
             VERBATIM)
         list(APPEND BUNDLE_EXTRA "natives/compiler.elf=${tool_output}.z" "compiler/unit.list=${CJI_BUILD}/unit.list")
         list(APPEND BUNDLE_EXTRA_DEPS ${tool_output}.z ${CJI_BUILD}/unit.list)

@@ -512,3 +512,55 @@ Start with compiler_job.h and compiler/tool.c; follow install.c into kernel_deve
 ### Technical details
 
 Frontend source limit 32 KiB, compiler scratch limit 18 MiB, candidate module cap 384 KiB. The cache compares source hash, firmware build identity, policy and artifact hash.
+
+## Step 10. Separate compilation from cache-sensitive ELF relocation
+
+The first physical compile request returned before starting its worker. The second reached the ELF loader and triggered an SDK assertion. I traced both failures to stack placement and split the job at the point where the SDK changes cache state. The next board run must demonstrate that execution reaches stage 1.
+
+### Prompt Context
+
+See step 8 for the implementation request. The user added “don't forget to write / backfill your diary, using the format from the diary skill”. The implementation baseline is 04b5a91, “Compile and install a trusted development world on the ESP32-P4”.
+
+### What I did
+
+- Flashed only the application partition after the keyboard bus acknowledged hold. Monitored serial-device identity throughout each flash. Both writes finished with “Hash of data verified.”
+- Transferred the original 268-byte toplog.world.js to apps/cjiprobe.js and issued the physical operator command cji build apps/cjiprobe.js.
+- Sampled internal memory and PSRAM. After the internal allocation failure, created a persistent task with an explicit PSRAM stack. After the cache assertion, moved esp_elf_relocate to the existing internal-stack kernel task. The worker still expands the bundle, compiles and assembles the source, copies out the result and releases its allocation list.
+- Added a serial observer that logs compilation events without logging unrelated world state. Added a QuickJS caller fixture that asks dev-cji for a ping reply using the normal message API.
+- Added per-job measurements for the largest contiguous PSRAM block and free PSRAM. Extended dependency tracking for changes to the frontend, assembler, runtime, headers and build tools.
+
+### Why
+
+The boot log alone cannot distinguish a host-built toplog already bundled into the firmware from the new dev-cji world. The acceptance run must identify the latter, match the hash of its produced bytes and verify a reply after initialization. A cache flush performed on external RAM also needs a different stack than ordinary generated code does.
+
+### What worked
+
+The P4 reported 25,340,092 bytes of free PSRAM and a largest PSRAM block of 24,641,536 bytes before the first request. The joined firmware fit the existing partition. The independent host and emulator references produced the same 3,704-byte toplog module, SHA-256 4a3cb25deb8a4c8860148b39361bb4efb3528e29e456c62f9d051f0b8e526d14. The host Files and native regression suites passed following the world-slot refactor.
+
+### What didn't work
+
+The first command cji build apps/cjiprobe.js printed “cji: cannot allocate compiler task” twice. The internal heap had 29,007 bytes free and its largest block was 25,600 bytes. The requested ordinary stack was 65,536 bytes. After moving the stack to PSRAM, the same command printed “cji: compiling source on device” followed by “assert failed: spi_flash_disable_interrupts_caches_and_other_cpu cache_utils.c:152 (esp_task_stack_is_sane_cache_disabled())”. The device rebooted. The greeting from bundled toplog after that reboot is unrelated to dev-cji.
+
+### What I learned
+
+On this ESP32-P4 configuration esp_elf_arch_flush writes back cache and calls spi_flash_disable_interrupts_caches_and_other_cpu. That function checks the current stack pointer. Enough physical memory for compilation and a legal stack for relocation are distinct requirements.
+
+### What was tricky to build
+
+The completion queue now has two synchronization points. The worker publishes the decompressed image and waits. The kernel relocates it, frees the serialized ELF and wakes the worker. The worker can then execute without calling the cache-disabling loader. Only the final completion can reach world activation.
+
+### What warrants a second pair of eyes
+
+Check task notification ordering, unconsumed completion messages and the lifetime of module output during cleanup. Check the fallback path when a candidate throws during boot.
+
+### What should be done in the future
+
+Verify the split on physical hardware, then check repeated edits, invalid input, fallback and cached launch after reboot. Report measurements and failures from those runs separately.
+
+### Code review instructions
+
+Read compiler/install.c from build_one through compiler_tick. Compare the ESP-IDF elf_loader esp_elf_arch_flush implementation with cache_utils.c. Follow the operator's file through the kernel-owned activation step.
+
+### Technical details
+
+The persistent compiler task requests a 128 KiB external stack. The physical kernel task already has an 80 KiB internal stack. World ELF activation continues to use the existing production backend. Neither the application partition layout nor the world turn budgets were changed.
