@@ -505,14 +505,17 @@ int kernel_restart_world(world_t *W) {
 // A spawned world is named u-<name> and gets no claims; spawning the same name again keeps its slot (world ids are
 // referenced by handles, asks and timers, so a slot never changes hands) and boots the new source.
 static uint64_t hash(const char *s);
-int kernel_spawn(const char *name, const char *source, size_t len, int engine, vtime_t at, char *why, size_t n) {
-  char wname[NAME_LEN];
-  snprintf(wname, sizeof wname, "u-%s", name);
+static int spawn_named(const char *wname, const char *name, const char *source, size_t len, int engine, vtime_t at, char *why, size_t n) {
   world_t *W = world_by_name(wname);
   if (W && !W->user) { snprintf(why, n, "%s is a system world", wname); return -1; }
+  char *copy = malloc(len + 1);
+  if (!copy) { snprintf(why, n, "source allocation failed"); return -1; }
+  memcpy(copy, source, len);
+  copy[len] = 0;
   if (!W) {
-    if (K.n_worlds >= MAX_WORLDS) { snprintf(why, n, "no room for another world (%d at most)", MAX_WORLDS); return -1; }
+    if (K.n_worlds >= MAX_WORLDS) { free(copy); snprintf(why, n, "no room for another world (%d at most)", MAX_WORLDS); return -1; }
     W = calloc(1, sizeof(*W));
+    if (!W) { free(copy); snprintf(why, n, "world allocation failed"); return -1; }
     W->id = K.n_worlds;
     snprintf(W->name, sizeof W->name, "%s", wname);
     snprintf(W->kind, sizeof W->kind, "world");
@@ -525,12 +528,10 @@ int kernel_spawn(const char *name, const char *source, size_t len, int engine, v
   }
   if (W->status == W_IDLE) { teardown(W, "it was started again"); W->status = W_RESTARTING; }   // with its old engine
   free(W->source);
-  W->source = malloc(len + 1);
-  memcpy(W->source, source, len);
-  W->source[len] = 0;
+  W->source = copy;
   W->source_len = len;
   W->engine = engine;
-  snprintf(W->file, sizeof W->file, "apps/%s.%s", name, engine == ENG_WASM ? "wasm" : "js");
+  snprintf(W->file, sizeof W->file, "apps/%s.%s", name, engine == ENG_NATIVE ? "elf" : engine == ENG_WASM ? "wasm" : "js");
   if (W->status == W_STOPPED) W->status = W_RESTARTING;
   if (!W->boot_ready) { W->boot_ready = true; W->boot_t = at; W->boot_seq = ++K.seq; }   // a pending restart's event is now stale
   W->epoch++;
@@ -538,6 +539,17 @@ int kernel_spawn(const char *name, const char *source, size_t len, int engine, v
   W->last_error[0] = 0;
   klog("starting %s from storage (%zu bytes%s)", wname, len, engine == ENG_WASM ? ", WebAssembly" : "");
   return 0;
+}
+
+int kernel_spawn(const char *name, const char *source, size_t len, int engine, vtime_t at, char *why, size_t n) {
+  char wname[NAME_LEN];
+  snprintf(wname, sizeof wname, "u-%s", name);
+  return spawn_named(wname, name, source, len, engine, at, why, n);
+}
+
+// Only the physical operator's installer calls this. sys.spawn always has a u- prefix.
+int kernel_develop(const char *source, size_t len, int engine, char *why, size_t n) {
+  return spawn_named("dev-cji", "dev-cji", source, len, engine, kernel_now(), why, n);
 }
 
 // The end of sys.spawn(name, handle): the file's bytes have been read (fs.c, FS_LOAD) without passing through any

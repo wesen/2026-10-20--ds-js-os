@@ -464,3 +464,51 @@ Start at the guide's toplog example. Compare board_main.c with the P4 ELF backen
 ### Technical details
 
 The application partition is 4 MiB. The compiler alone exceeds its remaining space. Chapter 35's timing and memory numbers come from the emulator.
+
+## Step 9. Build the compiler as a private firmware tool
+
+Stage 1 bootstrapped from the restored source. I combined it with the assembler in one relocatable RISC-V tool. Measuring the packed size changed the storage decision in the guide.
+
+### Prompt Context
+
+See step 8. Design and bootstrap checkpoint 7f5a751.
+
+### What I did
+
+Built a private PIC tool with its own CJI runtime, memory streams and allocator callbacks. Added the operator build/install path, an isolated development identity, a two-slot FAT cache and trusted NVS activation. Published the first guide edition to the ticket's reMarkable folder.
+
+### Why
+
+A freshly relocated instance resets every assembler static between runs. The packed compiler fits in the application image. Binding it to firmware eliminates a separate provisioning mechanism and removes writable compiler files from the trust boundary.
+
+### What worked
+
+The host build generated 4,239,912 bytes of stage-1 code. The shared tool had only R_RISCV_RELATIVE relocations. The firmware linked at 0x3d7410 bytes, fitting its 4 MiB partition. Host filesystem/native regressions passed. Remarquee confirmed delivery of PICOCALC-CJI-PORT - On-device compiler phases 4 to 6.pdf.
+
+### What didn't work
+
+The initial IDF build stopped with “fatal error: esp_app_desc.h: No such file or directory”. I added the SDK app-format component dependency. The next compile found conflicting types for read_file. Naming the bounded storage reader separately fixed the collision.
+
+### What I learned
+
+The measured compressed image is approximately 645 KiB. The initial guide's separate compiler-file recommendation added avoidable installation work. I replaced it with the existing firmware bundle mechanism.
+
+### What was tricky to build
+
+Stage 1 and live worlds have separate globals. Only the kernel task activates worlds. Worker-owned allocations must outlive the module copy and be released even when stage 1 exits early.
+
+### What warrants a second pair of eyes
+
+Execution on both cores, soft-float callback calling conventions and rollback after a partially initialized candidate.
+
+### What should be done in the future
+
+Run physical cold compile, replacement, fallback and reboot acceptance checks. Include these results in the final guide edition.
+
+### Code review instructions
+
+Start with compiler_job.h and compiler/tool.c; follow install.c into kernel_develop and the existing ELF world backend. Inspect build-tool.sh for the no-undefined link.
+
+### Technical details
+
+Frontend source limit 32 KiB, compiler scratch limit 18 MiB, candidate module cap 384 KiB. The cache compares source hash, firmware build identity, policy and artifact hash.

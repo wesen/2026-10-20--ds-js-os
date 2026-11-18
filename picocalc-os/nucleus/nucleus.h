@@ -294,6 +294,7 @@ bool world_provides(world_t *W, const char *ch);
 // is JavaScript text or, read from a file through a handle, a WebAssembly module (never machine code).
 #define USER_SOURCE_MAX 65536
 #define USER_BINARY_MAX (256 * 1024)
+int kernel_develop(const char *source, size_t len, int engine, char *why, size_t n);
 int kernel_spawn(const char *name, const char *source, size_t len, int engine, vtime_t at, char *why, size_t n);
 struct fs_job;
 void kernel_spawn_loaded(struct fs_job *j, vtime_t at);   // the end of sys.spawn(name, handle)'s file job

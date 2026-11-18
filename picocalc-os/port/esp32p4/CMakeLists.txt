@@ -11,6 +11,7 @@ endif()
 # Trusted drivers as machine code (PICOCALC-NATIVE N5): Espressif's elf_loader, also downloaded, also opt-in.
 option(PICOCALC_NATIVE_ELF "Run manifest native worlds as ELF modules (trusted drivers, not isolated)" OFF)
 if(PICOCALC_NATIVE_ELF)
+    option(PICOCALC_DEVICE_COMPILER "Enable operator on-device compilation and installation" OFF)
     option(PICOCALC_TEST_CJI_GRANTS "Include the two capability-transfer hardware test worlds" OFF)
     option(PICOCALC_TEST_CJI_PHASE3 "Run the compiled workflow acceptance fixtures" OFF)
     set(CJI_DIAGNOSTICS toplog)

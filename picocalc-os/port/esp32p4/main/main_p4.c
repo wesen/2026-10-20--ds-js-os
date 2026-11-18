@@ -26,6 +26,9 @@
 #include "esp_system.h"
 #include "freertos/task.h"
 #include "p4.h"
+#if PICOCALC_DEVICE_COMPILER
+#include "install.h"
+#endif
 
 static const char *TAG = "picocalc-os";
 void vm_calibrate(void);
@@ -151,6 +154,9 @@ void console_exec(char *line) {
     else if (cmd[0] == 'c') kernel_fault(W, "killed from the console");
     else kernel_restart_world(W);
   } else if (!strcmp(cmd, "shot")) shot();
+#if PICOCALC_DEVICE_COMPILER
+  else if (!strcmp(cmd, "cji")) compiler_console(rest);
+#endif
   else if (!strcmp(cmd, "net")) p4_agent_console(rest);
   else if (!strcmp(cmd, "ls") || !strcmp(cmd, "cat") || !strcmp(cmd, "df") || !strcmp(cmd, "put")) p4_fs_console(cmd, rest);
   else if (!strcmp(cmd, "hold")) printf("i2c0 %s; reboot or flash now\n", bus_p4_hold(100) ? "held between transactions" : "still busy");
@@ -203,6 +209,9 @@ static void kernel_task(void *arg) {
   // the machine-code worlds this firmware was built with (optional/native_elf): only from here, never from storage
   if (kernel_boot("js/system.elf.json")) ESP_LOGE(TAG, "the ELF manifest did not load");
 #endif
+#if PICOCALC_DEVICE_COMPILER
+  compiler_restore();
+#endif
   for (;;) {
     kmsg_t m;
     while (xQueueReceive(p4_kq, &m, 0) == pdTRUE) {
@@ -211,6 +220,9 @@ static void kernel_task(void *arg) {
       else bus_p4_done(&m);
     }
     kernel_run_until(port_clock());
+#if PICOCALC_DEVICE_COMPILER
+    compiler_tick();
+#endif
     vtime_t wait = kernel_next_wake() - port_clock();
     if (wait <= 0) continue;
     if (wait > MS(50)) wait = MS(50);
