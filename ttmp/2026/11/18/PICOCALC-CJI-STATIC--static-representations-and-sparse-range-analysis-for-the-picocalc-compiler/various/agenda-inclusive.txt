@@ -1,0 +1,12 @@
+49,355,143,290 (100.0%)  PROGRAM TOTALS
+ 39,787,055,025 (80.61%)  ???:inferTypes.ffddcb677e04 [/tmp/nov18-guard-hotspots/stage1-named]
+ 38,584,580,533 (78.18%)  ???:instantiateLibraryTaking.c9f10c269202 [/tmp/nov18-guard-hotspots/stage1-named]
+ 34,472,179,959 (69.85%)  ???:analyzeRanges.ee3b7b81dffc [/tmp/nov18-guard-hotspots/stage1-named]
+  6,108,532,595 (12.38%)  ???:join.a7ddece0a659 [/tmp/nov18-guard-hotspots/stage1-named]
+  4,309,926,174 ( 8.73%)  ???:slice.4604fbb68ec0 [/tmp/nov18-guard-hotspots/stage1-named]
+    119,367,725 ( 0.24%)  ???:join.1d97e1ba8864 [/tmp/nov18-guard-hotspots/stage1-named]
+      1,040,813 ( 0.00%)  ???:slice.22c51816d044 [/tmp/nov18-guard-hotspots/stage1-named]
+        169,414 ( 0.00%)  ???:slice.70b0b8dc71e9 [/tmp/nov18-guard-hotspots/stage1-named]
+        154,660 ( 0.00%)  ???:slice.00007573f296 [/tmp/nov18-guard-hotspots/stage1-named]
+          1,799 ( 0.00%)  ???:slice.92cdf9606fcf [/tmp/nov18-guard-hotspots/stage1-named]
+          1,150 ( 0.00%)  ???:slice.bba7afc11c10 [/tmp/nov18-guard-hotspots/stage1-named]

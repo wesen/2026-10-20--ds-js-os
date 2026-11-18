@@ -19,10 +19,10 @@ RelatedFiles:
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-STATIC--static-representations-and-sparse-range-analysis-for-the-picocalc-compiler/scripts/12-range-state-copies.mjs
       Note: Measures unchanged writes and structural sharing
 ExternalSources: []
-Summary: ""
+Summary: Measurements and research on eliminating dynamic indexing and redundant interval-state copies in the self-hosted CJI compiler.
 LastUpdated: 2026-11-18T14:31:12.960517493-05:00
-WhatFor: ""
-WhenToUse: ""
+WhatFor: Choose and validate compiler changes that reduce on-device compilation latency.
+WhenToUse: Before changing type inference, range scheduling, generated helpers, or SD-backed pass storage.
 ---
 
 # When CJI can compile a dynamic operation statically
@@ -68,6 +68,8 @@ We linked the **guarded** named stage-1 object to three diagnostic runtimes. In 
 | Of those, string or other path | 0 | 0 |
 
 For Agenda, one generated slice body accounts for 27.0% of direct dynamic index calls. Another concrete source is the range expression evaluator, `ev` in `src/ranges.js`. Its generated symbol directly called dynamic equality 18,875,451 times and property get 3,913,332 times. A generated Map get specialization issued 12,221,134 property gets. Library and analysis code both contribute. Shared helpers and anonymous lambdas need call-chain evidence before assigning all their work to any particular pass. A receiver observed on two runs is evidence for choosing a specialization site. A correctness proof must cover every allowed invocation.
+
+A separate Callgrind run against the named, guarded native frontend counted executed x86 instructions. Agenda executed 49.36 billion instructions; 34.47 billion (69.85%) were attributed inclusively to `analyzeRanges`. Files executed 15.28 billion, including 6.01 billion (39.36%) in range analysis. The named slice specialization and its callees account for 8.73% of the Agenda total and 3.78% of the Files total. This establishes range analysis as a major remaining consumer for Agenda even after removing five of its seven whole-program analyses. The slice number includes its entire call tree and allocation costs, so eliminating its index dispatch alone could only recover part of that number. Inclusive percentages for callers and their callees overlap; the P4 has a separate instruction set and memory system. Scripts 10 and 16 reproduce the counts.
 
 The lookup measurements also change the priority of an apparent optimization. Agenda invoked the fixed-shape field lookup 51,039,567 times; 50,702,720 were cache hits on the instrumented host. It invoked the extra-property lookup 70,268,369 times; 50,465,661 immediately found no extras array. The remaining calls examined 52,346,290 name entries in total. Thus a general-purpose larger hash table for every record could add memory to handle objects that frequently need zero probes. Before changing lookup representation, measure cache behavior in the exact target build. The shared ESP runtime and loadable compiler have distinct builds and cache lifetimes.
 
@@ -218,6 +220,8 @@ Prefer two experiments in this order.
 A persistent cache needs a completed-file marker, version, byte counts and integrity check. Write to a unique temporary name and publish only after all writes and close succeed. Verify what the actual FAT driver guarantees through reset and remount; a rename alone does not prove durable data. Reject short reads, invalid lengths, invalid handles, a missing card or a partially published entry. For an optional cache, discard the entry and compile normally. A spill required to fit a job needs a clean recoverable job failure if the card disappears. Abort that job and release memory, and leave previous installed modules intact.
 
 **A measured sidecar trial.** Script 08 ran the guarded Node CLI in separate processes, primed the files, rotated cold/record/replay order, and measured three runs of each mode per application. Here “cold” means no proof file supplied; the operating system’s filesystem cache was warm. All outputs matched, and strict replay validated every entry. Files produced 22,664 bytes and had median times of 0.718 s without a sidecar, 0.914 s recording, and 0.592 s replaying. Agenda produced 142,671 bytes and took 1.239 s, 3.512 s and 0.801 s respectively. Recording Agenda costs about 2.27 s extra under Node; each later verified hit saves about 0.44 s. At these medians about six subsequent hits on the same source repay one recording. A sidecar produced on the host moves that recording cost off the board. These are host process times with local files. The stage-1 board entry currently supplies only the input and world-unit arguments; a device sidecar reader and physical SD timing would be additional implementation work.
+
+**A measured spill trace.** Script 15 wrapped the actual Node file store and accounted for every byte. Agenda appended 593 records (2,120,161 bytes) and read 753 (2,633,617 bytes). For 549 reads the requested file offset differed from the cursor after the previous operation; 141 reads were under 512 bytes. The largest record was 97,009 bytes. Files wrote 1,312,100 bytes and read 1,406,615 bytes. This is the existing host file-store workload, which also enables the range-episode memo. Offsets measure logical discontinuities; the operating system and the SD controller determine physical transfers. A port that stores every record as one file would add filesystem overhead. An append file and a small read cache are more credible first experiments. These transient megabytes are separate from the 142,671-byte persistent Agenda sidecar.
 
 The speed decision can be stated as a budget in seconds. On a warm run, saved recomputation must exceed serialization, transferred bytes divided by measured bandwidth, seeks, validation, and any extra GC. Measure sequential writes, reads and many small accesses on this board before choosing chunk sizes. For an out-of-memory workload, successful completion can justify slower elapsed time. For Agenda, which fits in the current configuration, moving frequently updated intervals onto SD could increase latency substantially. No SD writes were issued in this research.
 

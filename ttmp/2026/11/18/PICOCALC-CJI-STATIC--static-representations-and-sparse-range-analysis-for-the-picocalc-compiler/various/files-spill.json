@@ -1,0 +1,11 @@
+{
+  "world": "files",
+  "writes": 171,
+  "written": 1312100,
+  "gets": 221,
+  "bytesRead": 1406615,
+  "smallReads": 37,
+  "distinctReadRecords": 169,
+  "readOffsetDiscontinuities": 157,
+  "maximumRecordBytes": 140601
+}

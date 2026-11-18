@@ -123,3 +123,5 @@ Inspect the records in various/agenda-{join-sites,state-copies,slice} and the ex
 ### Technical details
 
 The Node observers only wrap source transfers or inspect the resulting 32 slots. Their elapsed times would be distorted. The independent sidecar timing script runs a clean Node process for each measurement. A measurement of native x86 instructions for the entire named slice function was started separately with Callgrind.
+
+The completed independent Callgrind run attributed 34,472,179,959 of 49,355,143,290 guarded Agenda x86 instructions to analyzeRanges including callees (69.85%). Files was 39.36%. The named slice alone accounted for 8.73% and 3.78% inclusively. This resolves the earlier uncertainty about whether range analysis remained important after reducing its full analyses from seven to two. The categories overlap. Script 15 separately recorded the actual file-store traffic under Node: 593 append operations and 753 reads for Agenda, including 549 offset discontinuities. This measures the concrete I/O workload a card backend would inherit, independent of any assumed device bandwidth.

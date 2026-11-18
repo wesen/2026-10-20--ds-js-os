@@ -1,0 +1,11 @@
+{
+  "world": "agenda",
+  "writes": 593,
+  "written": 2120161,
+  "gets": 753,
+  "bytesRead": 2633617,
+  "smallReads": 141,
+  "distinctReadRecords": 560,
+  "readOffsetDiscontinuities": 549,
+  "maximumRecordBytes": 97009
+}
