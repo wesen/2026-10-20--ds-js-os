@@ -391,3 +391,17 @@ Re-run both targets with identical firmware/peripheral settings. Measure the boo
 ### Code review instructions
 
 Run scripts/03-check-task-records.mjs, scripts/07-check-rv32-parser.mjs, and scripts/09-check-rv32-world.mjs from the repository root. Pass the ESP RV32 compiler and the built CJI rv32emu to the RV32 scripts. The world harness also takes the agenda-reactor.elf from an ESP-IDF build with PICOCALC_RV32_AGENDA=ON. Compare the receipts and repeat scripts/05-measure-agenda-p4.py against the correct flashed build.
+
+## Step 12 — Publish the RV32 milestone and locate the cold-boot interval
+
+### What I did
+
+I published the native RV32 report to go-go-parc main as 80cbd01, covering the typed parser ABI, instruction generation, ELF slot, deterministic restart experiment, and measured handheld results. The PicoCalc implementation and raw receipts are in e03e3ab. The host app suite passed, and all 34 native and Wasm world integration tests passed.
+
+### What I learned
+
+The native boot trace places typed-manifest registration about 727 ms into the kernel's clock and ELF-manifest registration at 738 ms. The first logged world initialization followed around 2,579 ms. The interval after manifest registration overlaps CJI relocation, frontend output, and radio initialization. `main_p4.c` calls `compiler_restore()` before entering the kernel dispatch loop. The restore loads the installed source and calls `begin()`, which also does work before the loop can run. The trace identifies a long pre-dispatch interval. It does not attribute that interval to a single function or prove the source of the remaining delay after dispatch.
+
+### What should be done in the future
+
+Measure compiler restore, first dispatch, native activation, file request and settlement with timestamps from the same clock. Repeat the two compiler profiles with the same CJI installation and peripheral settings to see where the full-system response misses two seconds. Compare any scheduling change against installed CJI restoration and the regular Agenda frame path.
