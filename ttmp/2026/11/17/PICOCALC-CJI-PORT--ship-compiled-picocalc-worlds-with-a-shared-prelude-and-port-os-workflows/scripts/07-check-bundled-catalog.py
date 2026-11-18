@@ -19,6 +19,7 @@ def check(port, file, source, timeout):
     port.reset_input_buffer()
     port.write(f"\ncji check {file}\n".encode())
     refusal = None
+    reserved_bytes = None
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         line = port.readline().decode(errors="replace").strip()
@@ -33,6 +34,9 @@ def check(port, file, source, timeout):
             return {"result": "device fault", "diagnostic": line}
         if line.startswith(("cji: bundled JS", "cji: cannot allocate", "unknown command cji")):
             raise RuntimeError(line)
+        if line.startswith("cji: frontend reserved_bytes="):
+            reserved_bytes = int(line.split("=")[1])
+            continue
         if line.startswith("cji: allocation refused "):
             fields = dict(pair.split("=", 1) for pair in line.split()[3:])
             refusal = {key: value if key == "reason" else int(value) for key, value in fields.items()}
@@ -44,6 +48,8 @@ def check(port, file, source, timeout):
         if received != expected:
             raise RuntimeError(f"{file}: unexpected source SHA-256 {received}")
         row = {"result": status, "elapsed_ms": int(ms), "scratch_bytes": int(peak), "source_sha256": received}
+        if reserved_bytes is not None:
+            row["frontend_reserved_bytes"] = reserved_bytes
         if refusal is not None:
             row["allocation_refusal"] = refusal
         if status == "ok":

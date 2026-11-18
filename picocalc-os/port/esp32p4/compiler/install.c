@@ -146,7 +146,8 @@ static void build_one(void) {
     refusal.reason=NULL;
     // Large bundled sources need a single space before relocation divides PSRAM.
     if (job.length>SOURCE_LIMIT) {
-        job.frontend_heap=allocate(LARGE_FRONTEND_HEAP);
+        job.frontend_heap_size=LARGE_FRONTEND_HEAP;
+        job.frontend_heap=allocate(job.frontend_heap_size);
         if (!job.frontend_heap) snprintf(job.error,sizeof job.error,"frontend heap reservation");
     }
     // Relocation finishes before stage 1 writes its heap. Share the reservation
@@ -161,6 +162,14 @@ static void build_one(void) {
     if (!job.error[0]) {
         char *args[]={(char *)&job};
         memory_sample("relocated");
+        // Once the temporary ELF image is released, claim the normal heap cap
+        // in one block if possible. This avoids allocating a second GC space.
+        if (!job.frontend_heap) {
+            job.frontend_heap=allocate(FRONTEND_HEAP_CAP);
+            if (job.frontend_heap) job.frontend_heap_size=FRONTEND_HEAP_CAP;
+            else refusal.reason=NULL; // Optional reservation; use the growing heap.
+        }
+        printf("cji: frontend reserved_bytes=%u\n",(unsigned)job.frontend_heap_size);
         esp_elf_request(&tool,0,1,args);
         memory_sample(job.status ? "compiler refused" : "assembled");
         if (!job.status && checking) {

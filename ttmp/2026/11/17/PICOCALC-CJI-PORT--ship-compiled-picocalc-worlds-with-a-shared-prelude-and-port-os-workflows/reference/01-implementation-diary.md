@@ -1089,3 +1089,59 @@ Read the runs array for each world in various/device-catalog-results.json. Filte
 ### Technical details
 
 Every original catalog source received a physical result. Across the recorded builds the four worlds without a verified physical ELF are Files, Agenda, Calc and Sandbox.
+
+## Step 21: Measure Files and Agenda and reserve the ordinary frontend heap
+
+Both sources produced their expected intermediate representation on the host with a fixed 8 MiB mark-compact heap. I changed the ordinary compiler path to claim its existing heap cap as one block while the block is still available. The physical trial checks Files first and allows Agenda to start only after the Files ELF matches the reference.
+
+### Prompt Context
+
+**User prompts (verbatim)**
+
+> ok, do files and then agenda
+
+> commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)
+
+**Assistant interpretation.** Compile the original bundled sources on the P4 and verify both complete modules. **Inferred intent.** Recover two catalog failures within the worker's existing memory budget.
+
+### What I did
+
+- Ran host slas with `-C -g -h 8388608 -H 8388608`, stage1.slir and each original source followed by --world-unit. Compared stdout with the independent host frontend output using cmp.
+- Made the reserved size explicit in compiler_job_t. For ordinary jobs, the worker now attempts to acquire 8 MiB after the kernel releases the temporary compiler image and before stage 1 performs small allocations. If that attempt fails, the worker uses the existing growing heap. Agent-sized jobs still request their 10 MiB block before relocation.
+- Added the actual reservation size to the serial receipt parser. Built the compiler and application with ESP-IDF 5.4.2.
+
+### Why
+
+The previous Files run had 11,672,524 bytes free when an 8 MiB payload plus header was refused. The Agenda run could not allocate a second 4 MiB space. An upfront reservation gives the collector room to compact existing objects and eliminates the need for a second space.
+
+### What worked
+
+Both host outputs matched byte for byte. Files reported 80 collections, 3,973,240 peak live bytes and 151,459,216 bytes copied. Agenda reported 424 collections, 4,491,400 peak live bytes and 1,434,574,696 bytes copied. Both completed without spilling.
+
+### What didn't work
+
+See Step 20 for the prior physical Files refusal and Step 16 for Agenda. The host comparison and firmware build completed successfully in this step.
+
+### What I learned
+
+Agenda's peak live set exceeded the original 4 MiB initial heap. Files' sampled live set remained below that size in this host run. Both fit the fixed ordinary cap.
+
+### What was tricky to build
+
+The kernel thread owns relocation and frees the temporary image. Ordinary jobs must reserve after that handoff. The tool restores its normal malloc callback before allocating the root stack. The worker's allocation list owns the reservation until stage 1 frees it or job cleanup releases it on error.
+
+### What warrants a second pair of eyes
+
+Check the firmware/tool ABI on both sides of the callback. An optional reservation failure should select the original growing path and should not be reported as a terminal allocator refusal. All actual failures in the subsequent compile still go through the measured allocator.
+
+### What should be done in the future
+
+Capture each board receipt in order and update the catalog only after checking its source hash, module length and ELF digest.
+
+### Code review instructions
+
+Follow build_one in compiler/install.c through compiler_entry and use_reserved_heap in compiler/tool.c. Compare the reserved byte count with the scratch peak in the board receipt. Reproduce the physical trial with the ticket's scripts/07-check-bundled-catalog.py --timeout 7200 files, then agenda.
+
+### Technical details
+
+There are no app-specific heap settings and the job scratch cap stays at 18 MiB. The ordinary reservation and fallback growth cap are both 8 MiB. The reserved block is charged, including its allocation header, to the job.
