@@ -1,0 +1,4 @@
+function scrollStart(sel: i32, count: i32, visible: i32): i32 {
+  if (count <= visible || sel < 0) return 0;
+  return Math.max(0, Math.min(count - visible, sel - (visible >> 1)));
+}
