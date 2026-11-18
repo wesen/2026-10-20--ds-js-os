@@ -934,3 +934,54 @@ Follow p4_bundle_read in main/port_p4.c through build_one and the LOADING branch
 ### Technical details
 
 The second firmware ELF SHA-256 is e72bc108aa7a5dfefae43a684492fab8c49225b73407a6de3947757c5d600000. The application binary uses 0x3d7f50 bytes of the 0x400000-byte app partition.
+
+## Step 18: Verify the full Agent module on the physical PicoCalc
+
+The P4 compiled the complete bundled Agent source into a 750,832-byte RV32 module. Source selection through the terminal SHA-256 receipt took 906,400 ms. The device ELF digest matched the independent host reference.
+
+### Prompt Context
+
+**User prompt.** See Step 16. The requested result was a physical compile of Agent.
+
+**Code commit** 1e3e157.
+
+### What I did
+
+- Ran the compile-only check for system/agent.js, captured various/agent-on-device.jsonl and compared its source and ELF hashes to the local source and reference ELF.
+- Checked the generated build-elf/esp-idf/main/system.cji.json manifest to identify the running configuration.
+
+### Why
+
+A completed frontend alone cannot prove that the RV32 assembler, linker inputs, and output buffer produced the correct module. The device hashes the assembled bytes before releasing the worker's allocations.
+
+### What worked
+
+The device reached assembly completion at 906,377 ms and cleanup at 906,396 ms. Peak job scratch was 13,736,837 bytes. PSRAM free after release was 24,999,416 bytes. The terminal receipt matched both the 34,596-byte source and the host ELF.
+
+### What didn't work
+
+I initially described the live Agent as QuickJS in a status update. The generated firmware manifest maps Agent to the native engine and natives/agent.elf. I corrected that report. The compile-only check did not activate the freshly produced bytes.
+
+### What I learned
+
+The physical device can compile this complete application with the original job quota. Compile latency and runtime request latency are different measurements.
+
+### What was tricky to build
+
+The worker has to keep the immutable source, loaded compiler and frontend workspace simultaneously, then release the frontend heap before assembling. The digest check comes before releasing the module itself.
+
+### What warrants a second pair of eyes
+
+The physical receipt proves byte identity. Inspect the generated manifest separately when reporting which runtime the operator is using.
+
+### What should be done in the future
+
+Complete the outstanding catalog measurements on this firmware.
+
+### Code review instructions
+
+Compare the ELF SHA-256 in various/agent-on-device.jsonl with the output of sha256sum on the reference ELF. See Steps 16 and 17 for the allocator and loader changes.
+
+### Technical details
+
+Source SHA-256 is 6cb57edc021bea33953fa89a70573c5c7cf905a9d0a0077ec1d2a31cd94d3d5f. ELF SHA-256 is b92e5d7f1146db7f5b44ec9c42f962618a09a93b2ebfad0322ec793318b7e179. The firmware uses the 18 MiB per-job cap and the 10 MiB upfront frontend reservation for this run.
