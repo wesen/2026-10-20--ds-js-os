@@ -130,3 +130,7 @@ Start with `various/typed-copy.slir` and compare the reference generic slice in 
 ### Technical details
 
 Compared with guarded Agenda, reuse reduced the number of collections from 255 to 240 while the sampled live peak increased from 5,728,200 to 6,096,360 bytes. The typed-only run preserved the original counts and peak. The board control was the parent's same-session guarded headless build; it produced the verified Agenda module in 544.293 seconds.
+
+### Step 2 follow-up — Check the remaining dynamic work
+
+Script 12 links the STATIC ticket's counting runtime to a named copy of each candidate object and verifies each emitted unit. Script 13 aggregates directly counted generated calls, keeping slice specializations separate from the total. For Agenda the guarded executable made 58,932,328 direct dynamic index calls. Reuse made 52,925,493, typed 43,031,072, and both 43,343,705. Across all slice specializations the last two made 28,548 such calls. Reuse and typed copying therefore overlap in the calls they remove. The combined build's total is slightly above typed-only because the new write algorithm also inspects the old child dynamically. The compiler-as-input test produced the original compiler SLIR hash in a separate run.

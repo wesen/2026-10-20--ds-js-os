@@ -1,0 +1,118 @@
+{
+  "agenda": {
+    "guard": {
+      "index": {
+        "total": 58932328,
+        "slice": 15923108
+      },
+      "get": {
+        "total": 59846109,
+        "slice": 0
+      },
+      "eq": {
+        "total": 145851991,
+        "slice": 1038240
+      }
+    },
+    "reuse": {
+      "index": {
+        "total": 52925493,
+        "slice": 9614052
+      },
+      "get": {
+        "total": 59845940,
+        "slice": 0
+      },
+      "eq": {
+        "total": 146933037,
+        "slice": 643924
+      }
+    },
+    "typed": {
+      "index": {
+        "total": 43031072,
+        "slice": 28548
+      },
+      "get": {
+        "total": 59846109,
+        "slice": 0
+      },
+      "eq": {
+        "total": 144853964,
+        "slice": 44830
+      }
+    },
+    "both": {
+      "index": {
+        "total": 43343705,
+        "slice": 28548
+      },
+      "get": {
+        "total": 59845940,
+        "slice": 0
+      },
+      "eq": {
+        "total": 146337308,
+        "slice": 44830
+      }
+    }
+  },
+  "files": {
+    "guard": {
+      "index": {
+        "total": 13660892,
+        "slice": 2910309
+      },
+      "get": {
+        "total": 15497857,
+        "slice": 0
+      },
+      "eq": {
+        "total": 34829510,
+        "slice": 204361
+      }
+    },
+    "reuse": {
+      "index": {
+        "total": 12523491,
+        "slice": 1830469
+      },
+      "get": {
+        "total": 15497867,
+        "slice": 0
+      },
+      "eq": {
+        "total": 34900818,
+        "slice": 136871
+      }
+    },
+    "typed": {
+      "index": {
+        "total": 10765270,
+        "slice": 14053
+      },
+      "get": {
+        "total": 15497857,
+        "slice": 0
+      },
+      "eq": {
+        "total": 34665697,
+        "slice": 23345
+      }
+    },
+    "both": {
+      "index": {
+        "total": 10707318,
+        "slice": 14053
+      },
+      "get": {
+        "total": 15497867,
+        "slice": 0
+      },
+      "eq": {
+        "total": 34796898,
+        "slice": 23345
+      }
+    }
+  }
+}
