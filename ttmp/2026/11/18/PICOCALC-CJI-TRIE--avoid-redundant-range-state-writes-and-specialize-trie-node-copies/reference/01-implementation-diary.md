@@ -75,3 +75,7 @@ Review trieSet and tableOf in the imported ranges.js, then read the design's two
 ### Technical details
 
 The fixed fanout is 32 and five bits choose each slot. The control is the 8 MiB guarded headless compiler. Other agents own current board captures.
+
+### Step 1 follow-up — Observe persistent states
+
+Commit 400b484 records the pre-implementation design. Script 01 now creates isolated edits for reuse, typed copying and both in the guarded source. Script 02 bootstraps each with the unchanged stage 0. Script 03 directly exercises the real trie closures at one, two, and three levels, checks both original and divergent branch snapshots, then compiles Agenda and checks every emitted byte. All three candidate sources passed. On Agenda, path reuse eliminated 197,158 copies along changed or unchanged paths, from 496,705 to 299,547. The underlying workload still performed 490,367 writes. Copies count tree nodes touched, which can exceed one per store. The typed-only variant performed all 496,705 original copies.

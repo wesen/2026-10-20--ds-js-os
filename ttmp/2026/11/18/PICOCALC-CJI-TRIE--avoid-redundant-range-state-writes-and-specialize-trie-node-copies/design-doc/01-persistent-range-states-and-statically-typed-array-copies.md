@@ -7,7 +7,13 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-TRIE--avoid-redundant-range-state-writes-and-specialize-trie-node-copies/scripts/01-variant.py
+      Note: Actual range-state and typed copy source edits
+    - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-TRIE--avoid-redundant-range-state-writes-and-specialize-trie-node-copies/scripts/03-check-states.mjs
+      Note: Multi-depth snapshot and work-count probes
+    - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-TRIE--avoid-redundant-range-state-writes-and-specialize-trie-node-copies/scripts/04-benchmark.py
+      Note: Rotated native performance measurements
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-18T15:11:53.775533194-05:00

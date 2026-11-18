@@ -1,0 +1,10 @@
+{
+  "name": "both",
+  "depths": 3,
+  "counts": {
+    "writes": 490367,
+    "nodeAllocations": 1322,
+    "existingNodeCopies": 299547,
+    "reusedNodes": 197158
+  }
+}
