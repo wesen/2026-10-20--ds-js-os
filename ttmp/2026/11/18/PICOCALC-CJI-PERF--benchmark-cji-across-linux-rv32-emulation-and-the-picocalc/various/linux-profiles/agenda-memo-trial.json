@@ -1,0 +1,101 @@
+{
+  "case": "memo",
+  "world": "agenda",
+  "heap_mib": 8,
+  "reference_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+  "variants": {
+    "baseline": {
+      "executable_sha256": "50a750db84cfa8b18524e438bdf971e0a293637f94399ba0904776f13bec99b0",
+      "runs": [
+        {
+          "ordinal": 0,
+          "warmup": true,
+          "frontend_us": 35691740,
+          "gc_us": 2177173,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 1,
+          "warmup": false,
+          "frontend_us": 38535267,
+          "gc_us": 2354680,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 2,
+          "warmup": false,
+          "frontend_us": 37242768,
+          "gc_us": 2259453,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        },
+        {
+          "ordinal": 3,
+          "warmup": false,
+          "frontend_us": 29894023,
+          "gc_us": 1846144,
+          "slide_bytes": 211914816,
+          "collections": 424,
+          "survivor_bytes": 1434574696,
+          "live_peak_bytes": 4491400
+        }
+      ],
+      "median_us": 37242768
+    },
+    "candidate": {
+      "executable_sha256": "ccd6101874aa716f26a5139fc1c5ceb337fd24017073280d084ecb28eca3b599",
+      "runs": [
+        {
+          "ordinal": 0,
+          "warmup": true,
+          "frontend_us": 27582538,
+          "gc_us": 4130192,
+          "slide_bytes": 370900408,
+          "collections": 676,
+          "survivor_bytes": 3730706736,
+          "live_peak_bytes": 7268696
+        },
+        {
+          "ordinal": 1,
+          "warmup": false,
+          "frontend_us": 26510203,
+          "gc_us": 3992906,
+          "slide_bytes": 370900408,
+          "collections": 676,
+          "survivor_bytes": 3730706736,
+          "live_peak_bytes": 7268696
+        },
+        {
+          "ordinal": 2,
+          "warmup": false,
+          "frontend_us": 27258870,
+          "gc_us": 4016436,
+          "slide_bytes": 370900408,
+          "collections": 676,
+          "survivor_bytes": 3730706736,
+          "live_peak_bytes": 7268696
+        },
+        {
+          "ordinal": 3,
+          "warmup": false,
+          "frontend_us": 23193168,
+          "gc_us": 3492928,
+          "slide_bytes": 370900408,
+          "collections": 676,
+          "survivor_bytes": 3730706736,
+          "live_peak_bytes": 7268696
+        }
+      ],
+      "median_us": 26510203
+    }
+  },
+  "median_change_percent": -28.817849951432184
+}

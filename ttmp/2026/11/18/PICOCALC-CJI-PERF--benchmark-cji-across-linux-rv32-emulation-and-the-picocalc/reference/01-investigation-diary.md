@@ -563,3 +563,7 @@ Check various/p4/comparison.json against p4-runs.jsonl. Compare the launcher ima
 ### Technical details
 
 The 10 MiB P4 job reported 297 collections, 995,195,416 survivor bytes and 172,771,688 slide bytes. Frontend time was 1,461,217,032 microseconds. The board SHA-256 for Agenda matches its 8 MiB build and the independent host ELF.
+
+### Step 11 follow-up — Rebootstrap and time the actual host compiler
+
+The compiled in-heap memo trial completed without a reservation failure. At fixed 8 MiB, all eight outputs matched. Three post-warm-up samples per variant gave a median 37.243 seconds ordinary and 26.510 seconds with the cache. The cached build collected 676 times versus 424 and reached 7,268,696 live bytes versus 4,491,400. A fresh bootstrap changes the compiled binary layout. The paired result is native-host evidence and the board's memo-on time remains unmeasured. See scripts/16-candidate-report.py and various/linux-profiles/agenda-memo-trial.json. Physical A/B and independent captured display committed in 0b93048.

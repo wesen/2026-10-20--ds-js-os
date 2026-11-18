@@ -137,3 +137,18 @@ There is an additional cache between successive library expansion rounds. An ent
 For Agenda, this cache avoided 61.7% of the body executions remaining after existing skips. It tried 3,403 candidate episode validations for 1,690 successful replays. Evaluation still entered seven full range analyses and made 95 fixpoint iterations in both configurations. The separate whole-result reuse check succeeded seven times in each. None of these percentages measures the avoidable fraction of the entire compiler or of its elapsed time.
 
 The cache's Agenda text payload alone corresponds to roughly 2.92 MiB at two bytes per code unit. Temporary objects, metadata, and allocator overhead are separate. Compare a native compiled stage-1 candidate using the same in-heap store, heap bounds and output reference before paying that cost on the board. The trace and the candidate build recipes are in the ticket scripts directory.
+
+### Native stage-1 test of the in-heap cache
+
+Rebootstrapped the compiler with the cross-round memo enabled. Both native executables used the same runtime probes and an 8 MiB compact heap. Each generated the identical expected Agenda SLIR on one warm-up and three measured runs, with execution order reversed on alternating rounds. Other benchmark processes were active on the host.
+
+| Agenda, compiled native host | Ordinary inference | Cross-round cache enabled |
+|---|---:|---:|
+| Frontend median | 37.243 s | 26.510 s |
+| Measured frontend range | 29.894–38.535 s | 23.193–27.259 s |
+| GC median | 2.259 s | 3.993 s |
+| Peak live heap | 4,491,400 B | 7,268,696 B |
+| Collections | 424 | 676 |
+| Bytes physically slid | 211,914,816 | 370,900,408 |
+
+This candidate reduced median native frontend time by **28.8%** while increasing peak live data by **2,777,296 bytes**. The cache's ability to avoid range work paid for its validation, serialization and additional GC on this host and workload. Peak live data leaves much less headroom within the 8 MiB arena. The physical 8/10 MiB experiment changed only heap size and used ordinary inference in both cases. A cache-on P4 measurement would be the relevant next physical trial. [Full paired receipts](../various/linux-profiles/agenda-memo-trial.json).
