@@ -207,6 +207,11 @@ static int elf_load(world_t *W, char *why, size_t n) {
              (x->elf.segment_size + 1023) / 1024, W->mem_limit / 1024);
     goto fail;
   }
+  static const char *const bundled_cji[] = {
+#include "cji_paths.inc"
+  };
+  for (size_t i = 0; !W->user && i < sizeof bundled_cji / sizeof bundled_cji[0]; i++)
+    if (!strcmp(W->file, bundled_cji[i])) W->nat->cji_handles = true;
   char *argv[2] = { (char *)(void *)&KERNEL, (char *)(void *)&x->mod };
   world_t *was = now;
   now = W;

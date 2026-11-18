@@ -6,6 +6,7 @@
 //
 // Everything a binary passes is untrusted: strings arrive with a length and are copied, names are checked for
 // length and embedded NULs, and declarations are accepted only while the binary's init runs.
+#include <limits.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -122,9 +123,10 @@ static bool in_list(char (*l)[NAME_LEN], int n, const char *s) { for (int i = 0;
 // ---- payloads ----------------------------------------------------------------------------------------------------
 // A JavaScript world sends what JSON.stringify made; a binary sends any bytes. A payload must therefore be strict JSON
 // (RFC 8259, UTF-8, nested at most 64 deep) before it reaches another world, or the receiver's JSON.parse would throw
-// inside its turn and crash it. It must also not name a handle: the receiver's prelude revives {"$h": n} as handle n,
-// and a binary cannot pass handles, so such a key is refused.
-typedef struct { const unsigned char *p, *e; int depth; } jp_t;
+// inside its turn and crash it. Only bundled CJI messages may name handles. Their marker IDs are
+// collected during validation and checked against the sender before any message is enqueued.
+typedef struct { int ids[MAX_MSG_HANDLES], count; } grants_t;
+typedef struct { const unsigned char *p, *e; int depth; grants_t *grants; } jp_t;
 static void jws(jp_t *j) { while (j->p < j->e && (*j->p == ' ' || *j->p == '\t' || *j->p == '\n' || *j->p == '\r')) j->p++; }
 static bool jlit(jp_t *j, const char *w) {
   size_t n = strlen(w);
@@ -168,7 +170,7 @@ static bool jstr(jp_t *j, char *key, size_t key_n) {
       else return false;
     } else if (c < 0x80) { ch = c; j->p++; }
     else { int n = utf8_len(j->p, j->e); if (!n) return false; j->p += n; ch = 0x80; }
-    if (key && k < key_n - 1) key[k] = (char)(ch < 0x80 ? ch : 0x80);
+    if (key && k < key_n - 1) key[k] = (char)(ch && ch < 0x80 ? ch : 0x80);
     k++;
   }
   return false;
@@ -186,6 +188,23 @@ static bool jnum(jp_t *j) {
   }
   return true;
 }
+// A marker occupies an entire object. Its decimal ID must fit the kernel's positive int.
+static bool jhandle(jp_t *j) {
+  jws(j);
+  if (!j->grants || j->p == j->e || *j->p < '1' || *j->p > '9') return false;
+  int id = 0;
+  while (j->p < j->e && *j->p >= '0' && *j->p <= '9') {
+    int digit = *j->p++ - '0';
+    if (id > (INT_MAX - digit) / 10) return false;
+    id = id * 10 + digit;
+  }
+  jws(j);
+  if (j->p == j->e || *j->p++ != '}') return false;
+  for (int i = 0; i < j->grants->count; i++) if (j->grants->ids[i] == id) return true;
+  if (j->grants->count == MAX_MSG_HANDLES) return false;
+  j->grants->ids[j->grants->count++] = id;
+  return true;
+}
 static bool jvalue(jp_t *j) {
   jws(j);
   if (j->p >= j->e) return false;
@@ -195,13 +214,16 @@ static bool jvalue(jp_t *j) {
     if (++j->depth > 64) return false;
     j->p++; jws(j);
     if (j->p < j->e && *j->p == close) { j->p++; j->depth--; return true; }
+    bool first = true;
     for (;;) {
       if (c == '{') {
         char key[4];
         jws(j);
-        if (!jstr(j, key, sizeof key) || !strcmp(key, "$h")) return false;
+        if (!jstr(j, key, sizeof key)) return false;
         jws(j);
         if (j->p >= j->e || *j->p++ != ':') return false;
+        if (!strcmp(key, "$h")) { j->depth--; return first && jhandle(j); }
+        first = false;
       }
       if (!jvalue(j)) return false;
       jws(j);
@@ -217,14 +239,14 @@ static bool jvalue(jp_t *j) {
   if (c == 'n') return jlit(j, "null");
   return jnum(j);
 }
-static bool nat_json_ok(const char *s, size_t n) {
-  jp_t j = { (const unsigned char *)s, (const unsigned char *)s + n, 0 };
+static bool nat_json_ok(const char *s, size_t n, grants_t *grants) {
+  jp_t j = { (const unsigned char *)s, (const unsigned char *)s + n, 0, grants };
   if (!jvalue(&j)) return false;
   jws(&j);
   return j.p == j.e;
 }
 // A call's string i, if present, must be such a payload.
-static bool payload_ok(const nw_call_t *c, int i) { return c->n[i] == 0 || nat_json_ok(c->s[i], c->n[i]); }
+static bool payload_ok(const nw_call_t *c, int i) { return c->n[i] == 0 || nat_json_ok(c->s[i], c->n[i], NULL); }
 #define BAD_JSON "the payload is not strict JSON (UTF-8, at most 64 deep, no \"$h\" keys)"
 // Text shown to the user (a title, a description, hints): at most max bytes of UTF-8, no control characters.
 static bool text_ok(const nw_call_t *c, int i, size_t max) {
@@ -254,7 +276,26 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
   if (out && out_n) out[0] = 0;
   K.seg_cost += 1;   // a kernel call costs about a microsecond, as for JavaScript
   for (int i = 0; i < 3; i++) if (c->n[i] > NW_STR_MAX) return fail(W, "a system call's string is longer than %d bytes", NW_STR_MAX);
+  grants_t grants = {0};
+  int payload = c->op == NW_SEND || c->op == NW_ASK ? 2 : c->op == NW_PUBLISH ? 1 : c->op == NW_REPLY ? 0 : -1;
+  if (payload >= 0 && c->n[payload]) {
+    if (!nat_json_ok(c->s[payload], c->n[payload], W->nat->cji_handles ? &grants : NULL))
+      return fail(W, W->nat->cji_handles ? "invalid JSON or capability marker" : BAD_JSON);
+    for (int i = 0; i < grants.count; i++) {
+      char err[160];
+      if (!handle_may_grant(W, grants.ids[i], err, sizeof err)) return fail(W, "%s", err);
+    }
+  }
   switch (c->op) {
+    // Firmware-private CJI operation, outside the public native wire ABI.
+    case 1001: {
+      if (!W->nat->cji_handles) return fail(W, "handle metadata requires a bundled CJI module");
+      char err[160];
+      handle_t *h = handle_use(W, c->i[0], -1, 0, err, sizeof err);
+      if (!h) return fail(W, "%s", err);
+      return snprintf(out, out_n, "{\"type\":\"%s\",\"rights\":\"%s%s%s\"}", handle_type_name(h->type),
+                      h->rights & R_READ ? "r" : "", h->rights & R_WRITE ? "w" : "", h->rights & R_GRANT ? "g" : "");
+    }
     case NW_CLOCK_WALL: return port_wall_ms();
     case NW_CLOCK_ZONE: return snprintf(out, out_n, "%s", clock_zone());
     case NW_CLOCK_SETZONE: {
@@ -299,35 +340,45 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
     case NW_SELF: snprintf(out, out_n, "%s", W->name); return (int64_t)strlen(out);
     case NW_SEND: {
       if (!name_ok(c, 0, NAME_LEN) || !name_ok(c, 1, NAME_LEN)) return fail(W, "send needs a world's name and a message type");
-      if (!payload_ok(c, 2)) return fail(W, BAD_JSON);
       char *to = str(c, 0), *type = str(c, 1), *json = c->n[2] ? str(c, 2) : NULL;
-      world_t *T = world_by_name(to);
+      world_t *T = to ? world_by_name(to) : NULL;
       int64_t r = 0;
-      if (!T) r = fail(W, "there is no world called \"%s\"", to);
-      else { msg_t *m = new_msg(M_ON, type, json, W->id); charge(c->n[2]); defer_deliver(T, m); }
+      if (!to || !type || (c->n[2] && !json)) r = fail(W, "out of memory");
+      else if (!T) r = fail(W, "there is no world called \"%s\"", to);
+      else {
+        msg_t *m = new_msg(M_ON, type, json, W->id);
+        memcpy(m->hs, grants.ids, grants.count * sizeof(int));
+        m->nh = grants.count;
+        charge(c->n[2]);
+        defer_deliver(T, m);
+      }
       free(to); free(type); free(json);
       return r;
     }
     case NW_PUBLISH: {
       if (!name_ok(c, 0, NAME_LEN)) return fail(W, "publish needs a channel's name");
-      if (!payload_ok(c, 1)) return fail(W, BAD_JSON);
       char *ch = str(c, 0), *json = c->n[1] ? str(c, 1) : NULL;
       int64_t r = 0;
       char why[160];
-      if (!world_provides(W, ch)) r = fail(W, "%s does not provide the channel \"%s\"", W->name, ch);
+      if (!ch || (c->n[1] && !json)) r = fail(W, "out of memory");
+      else if (!world_provides(W, ch)) r = fail(W, "%s does not provide the channel \"%s\"", W->name, ch);
       else if (!world_may_use(W, ch)) r = fail(W, "%s has no claim on %s", W->name, channel_claim(ch));
+      else if ((c->i[0] & 1) && grants.count) r = fail(W, "a retained post cannot carry handles");
       else if ((c->i[0] & 1) && kernel_retain(W, ch, json, why, sizeof why)) r = fail(W, "%s", why);   // bit 0: retain
-      else { charge(c->n[1]); kernel_publish(W, ch, json, NULL, 0); }
+      else { charge(c->n[1]); kernel_publish(W, ch, json, grants.ids, grants.count); }
       free(ch); free(json);
       return r;
     }
-    case NW_REPLY:
-      if (!payload_ok(c, 0)) return fail(W, BAD_JSON);
+    case NW_REPLY: {
       if (!W->in_turn || W->turn_done || W->turn_rejected) return 0;   // nothing to answer, or answered already
+      char *json = c->n[0] ? str(c, 0) : NULL;
+      if (c->n[0] && !json) return fail(W, "out of memory");
       free(W->turn_result);
-      W->turn_result = c->n[0] ? str(c, 0) : NULL;
+      memcpy(W->reply_hs, grants.ids, grants.count * sizeof(int)); W->reply_nh = grants.count;
+      W->turn_result = json;
       W->turn_done = true;
       return 0;
+    }
     case NW_REJECT:
       if (!W->in_turn || W->turn_done || W->turn_rejected) return 0;
       free(W->turn_error);
@@ -365,17 +416,17 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
     }
     case NW_ASK: {
       if (!name_ok(c, 0, NAME_LEN) || !name_ok(c, 1, NAME_LEN)) return fail(W, "ask needs a world's name and a message type");
-      if (!payload_ok(c, 2)) return fail(W, BAD_JSON);
       char *to = str(c, 0), *type = str(c, 1), *json = c->n[2] ? str(c, 2) : NULL;
-      world_t *T = world_by_name(to);
+      world_t *T = to ? world_by_name(to) : NULL;
       int64_t r;
-      if (!T) r = fail(W, "there is no world called \"%s\"", to);
+      if (!to || !type || (c->n[2] && !json)) r = fail(W, "out of memory");
+      else if (!T) r = fail(W, "there is no world called \"%s\"", to);
       else if (T == W) r = fail(W, "a world cannot ask itself (it would wait for its own turn to end)");
       else {
         int id = ++K.next_promise;
         vtime_t timeout = c->i[0] > 0 ? MS(c->i[0]) : MS(2000);
         charge(c->n[2]);
-        kernel_ask(W, T, type, json, NULL, 0, id, timeout);
+        kernel_ask(W, T, type, json, grants.ids, grants.count, id, timeout);
         r = id;
       }
       free(to); free(type); free(json);

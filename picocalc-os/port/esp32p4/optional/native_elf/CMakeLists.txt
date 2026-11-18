@@ -5,6 +5,13 @@ idf_component_register(SRCS "native_elf_p4.c"
                        PRIV_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../../../../nucleus" "${CMAKE_CURRENT_LIST_DIR}/../../../../sdk"
                        REQUIRES elf_loader WHOLE_ARCHIVE)
 
+set(cji_paths "")
+foreach(name IN LISTS CJI_WORLDS CJI_DIAGNOSTICS)
+    string(APPEND cji_paths "\"natives/${name}.elf\",\n")
+endforeach()
+file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/cji_paths.inc CONTENT "${cji_paths}")
+target_include_directories(${COMPONENT_LIB} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+
 # Build target objects first. Their defined symbols supply the relocation table.
 set(runtime_dir ${CJI_ROOT}/runtime)
 add_library(cji_runtime OBJECT ${runtime_dir}/runtime.c ${runtime_dir}/cji_elf.c)

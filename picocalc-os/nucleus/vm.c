@@ -182,10 +182,7 @@ static void charge_json(size_t n) { K.seg_cost += (vtime_t)(n * PROFILE.json_ns_
 static bool check_grants(JSContext *ctx, world_t *W, const int *hs, int nh) {
   char err[160];
   for (int i = 0; i < nh; i++) {
-    handle_t *h = handle_use(W, hs[i], -1, 0, err, sizeof err);
-    if (!h) { fail(ctx, "%s", err); return false; }
-    // a handle can be passed on if it carries the grant right, or by the world that narrowed it
-    if (!(h->rights & R_GRANT) && h->minter != W->id) { fail(ctx, "handle %d cannot be passed on by %s", hs[i], W->name); return false; }
+    if (!handle_may_grant(W, hs[i], err, sizeof err)) { fail(ctx, "%s", err); return false; }
   }
   return true;
 }

@@ -61,6 +61,14 @@ handle_t *handle_use(world_t *W, int id, int type, int right, char *err, size_t 
   return h;
 }
 
+bool handle_may_grant(world_t *W, int id, char *err, size_t n) {
+  handle_t *h = handle_use(W, id, -1, 0, err, n);
+  if (!h) return false;
+  if ((h->rights & R_GRANT) || h->minter == W->id) return true;
+  snprintf(err, n, "handle %d cannot be passed on by %s", id, W->name);
+  return false;
+}
+
 handle_t *handle_child(world_t *W, handle_t *p, int rights) {
   handle_t *h = handle_new(p->type, W, p->claim);
   if (!h) return NULL;

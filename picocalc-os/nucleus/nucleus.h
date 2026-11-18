@@ -364,6 +364,7 @@ typedef struct native_backend {
 typedef struct native {
   const native_backend_t *be;
   void *inst;                   // the backend's instance
+  bool cji_handles;             // set by the P4 loader for bundled CJI modules
   bool in_init;                 // its init is running: declarations are allowed
   vtime_t budget_us;            // this segment's budget
   char err[200];                // why its last system call failed
@@ -396,6 +397,7 @@ handle_t *handle_find(int id);
 const char *handle_type_name(int type);
 handle_t *handle_new(int type, world_t *holder, const char *claim);
 handle_t *handle_use(world_t *W, int id, int type, int right, char *err, size_t n);
+bool handle_may_grant(world_t *W, int id, char *err, size_t n);
 handle_t *handle_child(world_t *W, handle_t *h, int rights);
 void handle_grant(handle_t *h, world_t *to);
 void handle_release(handle_t *h, world_t *W);

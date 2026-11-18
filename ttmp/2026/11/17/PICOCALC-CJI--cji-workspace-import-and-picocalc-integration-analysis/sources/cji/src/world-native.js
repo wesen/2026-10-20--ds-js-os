@@ -100,7 +100,38 @@ function Math$random() /*: Any */ {
   return $seed / 4294967296;
 }
 // ---- messages ----
-const $json /*: Any */ = (v /*: Any */) => (v === undefined ? undefined : JSON.stringify(v));
+let $hasHandles = false;
+// Translate only at message boundaries. Preserve the ordinary JSON representation of dates and collections.
+function $wire(v /*: Any */, incoming /*: Bool */, depth /*: Int */) /*: Any */ {
+  if (v === null || typeof v !== 'object') return v;
+  if (depth > 64) throw new Error('message nesting exceeds 64');
+  if (!incoming && typeof v.release === 'function' && typeof v.id === 'number') return { $h: v.id };
+  if (incoming && typeof v.$h === 'number' && Object.keys(v).length === 1) {
+    const info /*: Any */ = $call(1001, v.$h, 0, undefined, undefined, undefined);
+    if (typeof info !== 'string') return $handle(v.$h, 'gone', '');
+    const meta /*: Any */ = JSON.parse(info);
+    return $handle(v.$h, meta.type, meta.rights);
+  }
+  if (!incoming && !Array.isArray(v) && ('$date' in v || '$mk' in v || '$sv' in v)) return v;
+  if (Array.isArray(v)) {
+    const xs /*: Any[] */ = [];
+    for (let i = 0; i < v.length; i++) xs.push($wire(v[i], incoming, depth + 1));
+    return xs;
+  }
+  const out /*: Any */ = {}, keys = Object.keys(v);
+  for (let i = 0; i < keys.length; i++) out[keys[i]] = $wire(v[keys[i]], incoming, depth + 1);
+  return out;
+}
+function $decode(json /*: Any */) /*: Any */ {
+  if (json === undefined || json === 'null') return undefined;
+  const v /*: Any */ = JSON.parse(json);
+  return json.indexOf('$h') >= 0 || json.indexOf(String.fromCharCode(92)) >= 0 ? $wire(v, true, 0) : v;
+}
+function $reply(v /*: Any */) {
+  try { $check($call(${NW.REPLY}, 0, 0, $json(v), undefined, undefined)); }
+  catch (e) { $call(${NW.REJECT}, 0, 0, errText(e), undefined, undefined); }
+}
+const $json /*: Any */ = (v /*: Any */) => (v === undefined ? undefined : JSON.stringify($hasHandles ? $wire(v, false, 0) : v));
 function send(to /*: Any */, type /*: Any */, payload /*: Any */) { $check($call(${NW.SEND}, 0, 0, to, type, $json(payload))); }
 function publish(ch /*: Any */, payload /*: Any */, opts /*: Any */) {
   $check($call(${NW.PUBLISH}, opts !== undefined && opts !== null && opts.retain ? 1 : 0, 0, ch, $json(payload), undefined));
@@ -145,15 +176,20 @@ function $i2c(h /*: Any */, wr /*: Any */, nrd /*: Any */, gap /*: Any */) /*: A
   });
 }
 function $unavailable(what /*: Any */) /*: Any */ { throw new Error(what + ' is not available to a native world'); }
-const hw /*: Any */ = {
-  i2c: (claim /*: Any */, hz /*: Any */) => {
-    const h = $check($call(${NW.I2C_OPEN}, hz === undefined ? 0 : hz, 0, claim, undefined, undefined));
-    const out /*: Any */ = { id: h, type: 'i2c', rights: 'rw',
+function $handle(h /*: Any */, type /*: Any */, rights /*: Any */) /*: Any */ {
+  $hasHandles = true;
+  if (type !== 'i2c') return { id: h, type: type, rights: rights, release: () => $call(${NW.RELEASE}, h, 0, undefined, undefined, undefined) };
+    const out /*: Any */ = { id: h, type: type, rights: rights,
       transfer: (bytes /*: Any */, nread /*: Any */, gap /*: Any */) => $i2c(h, bytes || [], nread || 0, gap || 0),
       read: (reg /*: Any */, n /*: Any */, gap /*: Any */) => $i2c(h, [reg], n === undefined ? 2 : n, gap || 0),
       write: (reg /*: Any */, v /*: Any */) => $i2c(h, [reg | 128, v], 0, 0),
       release: () => $call(${NW.RELEASE}, h, 0, undefined, undefined, undefined) };
     return out;
+}
+const hw /*: Any */ = {
+  i2c: (claim /*: Any */, hz /*: Any */) => {
+    const h = $check($call(${NW.I2C_OPEN}, hz === undefined ? 0 : hz, 0, claim, undefined, undefined));
+    return $handle(h, 'i2c', 'rwg');
   },
   spi: (c /*: Any */, hz /*: Any */) => $unavailable('hw.spi'), fs: (c /*: Any */) => $unavailable('hw.fs') };
 const dma /*: Any */ = { alloc: (w /*: Any */, h /*: Any */) => $unavailable('dma.alloc') };
@@ -263,7 +299,7 @@ function $nwInit() /*: Int */ {
 }
 function $message() /*: Int */ {
   const type /*: Any */ = $hostEvent(1), json /*: Any */ = $hostEvent(2), from /*: Any */ = $hostEvent(3), isAsk = $hostEvent(4) === 1;
-  const payload /*: Any */ = json === undefined || json === 'null' ? undefined : JSON.parse(json);
+  const payload /*: Any */ = $decode(json);
   const fn /*: Any */ = $handler(type);
   if (fn === undefined) {
     if (isAsk) $call(${NW.REJECT}, 0, 0, self + ' has no handler for "' + type + '"', undefined, undefined);
@@ -271,11 +307,11 @@ function $message() /*: Int */ {
   }
   const r /*: Any */ = $call3(fn, $S, payload, { from: from, type: type, ask: isAsk });
   if ($isPromise(r)) {
-    r.then((v /*: Any */) => { if (isAsk) $call(${NW.REPLY}, 0, 0, $json(v), undefined, undefined); },
+    r.then((v /*: Any */) => { if (isAsk) $reply(v); },
       (e /*: Any */) => { if (isAsk) $call(${NW.REJECT}, 0, 0, errText(e), undefined, undefined); else $call(${NW.LOG}, 0, 0, type + ' failed: ' + errText(e), undefined, undefined); });
     return isAsk ? 1 : 0;
   }
-  if (isAsk) $call(${NW.REPLY}, 0, 0, $json(r), undefined, undefined);
+  if (isAsk) $reply(r);
   return 0;
 }
 function $tick(timer /*: Any */) {
@@ -292,7 +328,7 @@ function $settle() {
     if (p.token === token) {
       for (let j = i + 1; j < $pending.length; j++) $pending[j - 1] = $pending[j];
       $pending.length = $pending.length - 1;
-      const v /*: Any */ = json === undefined || json === 'null' ? undefined : JSON.parse(json);
+      const v /*: Any */ = $decode(json);
       if (ok) p.resolve(v); else p.reject(new Error(typeof v === 'string' ? v : String(v)));
       return;
     }
