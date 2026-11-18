@@ -64,6 +64,23 @@ if(PICOCALC_NATIVE_ELF)
     string(REPLACE "-elf-gcc" "-elf-strip" ELF_STRIP ${CMAKE_C_COMPILER})
     list(APPEND BUNDLE_EXTRA "system.elf.json=${ELF_DIR}/system.elf.json")
     list(APPEND BUNDLE_EXTRA_DEPS ${ELF_DIR}/system.elf.json)
+    set(host_tools ${CMAKE_CURRENT_BINARY_DIR}/cji-host)
+    file(MAKE_DIRECTORY ${host_tools})
+    file(CREATE_LINK ${CJI_ROOT}/runtime ${host_tools}/runtime SYMBOLIC)
+    file(CREATE_LINK ${CJI_ROOT}/Makefile ${host_tools}/Makefile SYMBOLIC)
+    file(GLOB_RECURSE cji_assembler CONFIGURE_DEPENDS ${CJI_ROOT}/runtime/*.c ${CJI_ROOT}/runtime/*.h)
+    file(GLOB cji_frontend CONFIGURE_DEPENDS ${CJI_ROOT}/src/*.js)
+    add_custom_command(OUTPUT ${host_tools}/slas-rv32
+        COMMAND make -C ${host_tools} CC=cc slas-rv32
+        DEPENDS ${CJI_ROOT}/Makefile ${cji_assembler} VERBATIM)
+    set(toplog ${CMAKE_CURRENT_BINARY_DIR}/natives/toplog.elf)
+    add_custom_command(OUTPUT ${toplog}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/natives
+        COMMAND node ${CJI_ROOT}/cji.js ${CJI_ROOT}/tests/native/toplog.world.js --native --emit > ${host_tools}/toplog.slir
+        COMMAND ${host_tools}/slas-rv32 -c ${toplog} --module ${host_tools}/toplog.slir
+        DEPENDS ${host_tools}/slas-rv32 ${CJI_ROOT}/cji.js ${cji_frontend} ${CJI_ROOT}/tests/native/toplog.world.js VERBATIM)
+    list(APPEND BUNDLE_EXTRA "natives/toplog.elf=${toplog}")
+    list(APPEND BUNDLE_EXTRA_DEPS ${toplog})
     foreach(m echo bench wimport dial)   # wimport links to a function no module is given (-Wno-attributes: its WebAssembly import attribute)
         set(out ${CMAKE_CURRENT_BINARY_DIR}/natives/${m}.elf)
         add_custom_command(

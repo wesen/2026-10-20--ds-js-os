@@ -141,3 +141,53 @@ Compared all 163 imported files with their original ZIP members and checked each
 ```text
 OK: uploaded PICOCALC-CJI - First compiled world on ESP32-P4.pdf -> /ai/2026/11/17/PICOCALC-CJI
 ```
+
+## Step 3. Link the physical firmware and identify the attached board
+
+The optional native firmware now builds toplog on the workstation and links the CJI runtime and generated resolver into the ESP32-P4 application. I checked the real board's partition table before preparing an application-only write.
+
+### Prompt context
+
+> ok, Implement the ticket, commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill).  If the serial interface disappears while flashing, stop. Subagents should keep their own diary
+
+I took the physical start, ping and restart as the acceptance criteria. All investigation and implementation in this step were mine.
+
+### What I did
+
+Added a build-local host assembler, JavaScript compilation rule, target runtime object library and generated resolver table. Added toplog to the trusted manifest with a 320 KiB quota. Preserved kernel allocator precedence. Removed the unused uchar header and computed the UTC offset from calendar fields under ESP_PLATFORM.
+
+### Why
+
+The existing native loader already implements the module and kernel tables. Generating exports from the same objects that enter the firmware avoids hand-maintaining an address list.
+
+### What worked
+
+ESP-IDF 5.4.2 built a 0x2d0dc0-byte candidate, leaving 0x12f240 bytes free. The link map contains cji_elf_entry and cji_nresolve. The running console answered worlds and heap. After hold acknowledged the keyboard bus was idle, esptool read the partition sector and identified ESP32-P4 v1.3. The configured partition table matched the flash read byte for byte over its entire file length.
+
+### What didn't work
+
+The sandbox's /dev/serial/by-id was absent. Host access showed the expected bridge at ttyACM0, with cdc_acm bound. No driver change was needed.
+
+### What I learned
+
+This machine supplies both the Espressif toolchain and the host toolchain. The device linker needs target objects while the RV32 assembler itself must run on Linux.
+
+### What was tricky to build
+
+The generated C table depends on the contents of target objects. CMake's object-library dependency establishes ordering; the object-file dependencies also trigger regeneration when a runtime source changes.
+
+### What warrants a second pair of eyes
+
+Review the resolved dynamic symbol names, the physical startup log and measured heap after restart. A firmware link cannot establish those runtime properties.
+
+### What should be done in the future
+
+Flash the verified application slot while observing the serial interface. Stop immediately if the interface disappears during the write.
+
+### Code review instructions
+
+Inspect the two component CMake files, native_elf_p4.c and the manifest. Rebuild the build-elf configuration from the guide, then compare the generated module with its fixture.
+
+### Technical details
+
+The pre-flash console reported 67,383 internal and 27,009,252 PSRAM bytes free. The cached prior image was retained locally. The application slot begins at 0x10000 and is 4 MiB.

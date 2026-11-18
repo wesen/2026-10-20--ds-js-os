@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <uchar.h>
+
 
 #include "runtime.h"
 #include "casemap.h"   /* chapter 13 */
@@ -1221,7 +1221,17 @@ static double local_offset(double t)
 	if (!isfinite(t)) return NAN;
 	s = (time_t)floor(t / 1000);
 	if (!localtime_r(&s, &tm)) return NAN;
+	#ifdef ESP_PLATFORM
+	struct tm utc;
+	if (!gmtime_r(&s, &utc)) return NAN;
+	/* The two civil dates are at most a day apart, including at New Year. */
+	int days = tm.tm_year == utc.tm_year ? tm.tm_yday - utc.tm_yday :
+		(tm.tm_year > utc.tm_year ? 1 : -1);
+	return 1000.0 * (days * 86400 + (tm.tm_hour - utc.tm_hour) * 3600 +
+		(tm.tm_min - utc.tm_min) * 60 + tm.tm_sec - utc.tm_sec);
+#else
 	return (double)tm.tm_gmtoff * 1000;
+#endif
 }
 MATH1(date_tz, local_offset(x))
 static double set_clock(double t) { virtual_clock = t; return t; }

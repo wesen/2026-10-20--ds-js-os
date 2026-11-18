@@ -110,9 +110,14 @@ static const struct { const char *name; void *addr; } SYMS[] = {
   HELPERS(ENTRY)
 };
 
+extern const struct { const char *name; void *addr; } cji_resolve[];
+extern const int cji_nresolve;
+
 static uintptr_t resolve(const char *name) {
   for (size_t i = 0; i < sizeof SYMS / sizeof *SYMS; i++)
     if (!strcmp(SYMS[i].name, name)) return (uintptr_t)SYMS[i].addr;
+  for (int i = 0; i < cji_nresolve; i++)
+    if (!strcmp(cji_resolve[i].name, name)) return (uintptr_t)cji_resolve[i].addr;
   if (!missing[0]) snprintf(missing, sizeof missing, "%s", name);
   return 0;
 }
