@@ -405,3 +405,62 @@ Compare the compiled store wrapper with the per-read record parser, then follow 
 The final fixture-disabled P4 application SHA-256 was 2e3130435cff840b6280c3a5bbda5accf554a332ef498082b89bf6d6911d153e. The transport suite used local TLS and diagnostic responses. No paid provider request was needed.
 
 Release checkpoint e6dee4e contains the Agent changes and regression. All six ticket tasks are checked and docmgr doctor passed. Remarquee confirmed upload of “PICOCALC-CJI-PORT - Phase 3 hardware implementation.pdf” to /ai/2026/11/17/PICOCALC-CJI-PORT. The board retains the diagnostic note p3-checkpoint.txt used to verify Editor persistence.
+
+## Step 8. Trace the self-hosted compiler and define hardware acceptance
+
+I followed the compiler input from the host CMake recipe into the emulator firmware and the real ELF loader. The new guide gives the intern one example to follow across the entire port. The existing Phase 3 ticket now includes three implementation tasks.
+
+### Prompt Context
+
+User prompt (verbatim):
+
+> ok, create a design doc for phase 4 + 5 + 6. Create  a detailed analysis / design / implementation guide that is for a new intern, explaining all the parts of the system needed to understand what it is, with prose paragraphs and bullet point sand pseudocode and diagrams and api references and file references. It should be very clear and technical. Store in the ticket and the nupload to remarkable.
+>
+>
+> The document is detailed, but the design is simple streamlined composable on point, no bullshit.
+>
+> implement the ticket and commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)
+
+The deliverables now include working firmware in addition to the design and delivery.
+
+### What I did
+
+- Read the stage-1 build rules, board compiler, assembler, production loader, kernel spawn and P4 firmware layout.
+- Restored tools/bundle.mjs and tools/jstok.mjs from the original Downloads archive and started the native stage-1 bootstrap.
+- Added the design guide and reopened the implementation checklist. Verified the serial device exists outside the sandbox.
+
+### Why
+
+The emulator already tests compiler output against the host. The earlier import built shipping worlds using stage 0 and omitted the bundler required for stage 1.
+
+### What worked
+
+The corrected stage-1 target generated the bundled JS and entered frontend compilation. The source import is limited to two build tools.
+
+### What didn't work
+
+The command make build/rv32/stage1/stage1-rv32.o reported “No rule to make target”. The named make target is stage1-ilp32.o. That target initially reported “No rule to make target 'tools/bundle.mjs'”. Restoring only the bundler produced ERR_MODULE_NOT_FOUND for tools/jstok.mjs. Restoring its tokenizer allowed bundling to finish.
+
+### What I learned
+
+The production loader receives the same class of ELF module as the emulator. Its ABI checks, allocator, symbol resolver and real-world lifecycle are separate verification points.
+
+### What was tricky to build
+
+The compiler needs several megabytes of code before its scratch heap can be allocated. Keeping its image outside the factory partition avoids moving the existing files and records.
+
+### What warrants a second pair of eyes
+
+The trust boundary on source authorization and cached native bytes, and cleanup on failed activation.
+
+### What should be done in the future
+
+Implement the device path, measure it on hardware and fill in receipts for each phase.
+
+### Code review instructions
+
+Start at the guide's toplog example. Compare board_main.c with the P4 ELF backend and kernel_spawn_loaded.
+
+### Technical details
+
+The application partition is 4 MiB. The compiler alone exceeds its remaining space. Chapter 35's timing and memory numbers come from the emulator.
