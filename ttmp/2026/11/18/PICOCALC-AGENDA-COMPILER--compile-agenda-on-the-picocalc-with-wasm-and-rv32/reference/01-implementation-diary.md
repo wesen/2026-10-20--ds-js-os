@@ -463,3 +463,7 @@ Compare the deadline-expiry and frame-first paths under different boot loads. A 
 ### Code review instructions
 
 Review `compiler_tick`, the startup deadline in `agenda_p4.c`, and the unchanged worker handoff in `compiler/install.c`. Repeat scripts/10-measure-agenda-boot.py on both checkpoints. Check the serial trace for successful CJI progress after the deferral and preserve the baseline file, active installation, and profile.
+
+## Step 15 — Restore the device and publish the boot report
+
+The flash writer verified the previously saved application image at 0x10000. After restoration, the P4 again reported the headless profile, loaded its two normal manifests and answered cji status. The data partitions were outside the write. The vault deep dive on the startup dispatch delay was pushed to go-go-parc main at 4ea333d. The physical timing task stays open until the assembled keyboard and LCD can be exercised.
