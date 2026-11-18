@@ -72,3 +72,45 @@ Start at the intern guide. Reproducers and raw data are separated by experiment 
 ### Technical details
 
 The initial headless application binary starts with SHA-256 2b9e8371ee8e. Device examples use one 8 MiB frontend arena for Agenda and Files. App VM memory budgets in the manifest refer to another allocation and another phase.
+
+## Step 2 — Compile and reload the unchanged catalog on the physical ESP32-P4
+
+**Prompt context.** The same user request asks whether the language contract itself should change. I interpreted “validate” to include a control that retains today's JS semantics, compiles the actual source on the board and executes the resulting bytecode.
+
+### What I did
+
+- Added a diagnostic translation unit and linked it into an isolated headless image at the existing console calibration callback. Used the same firmware objects, QuickJS version, bundled sources and original prelude. Restricted native operations to seed and self identity. Created and destroyed separate compile and execution runtimes for each world, with its manifest budget.
+- Ran three complete serial manifest cycles. Checked SHA-256 against the checkout for each source, stable bytecode identities, fresh registration for 66/66 trials, and the three designated behavioral checks on all repetitions. Used the ordinary control's Flaky native compile as a hardware smoke gate.
+- Prepared the local-numeric CJI firmware against the same control tool. Used the host numeric experiment's generated stage-1 SLIR and independently established Agenda/Files RV32 module identities. Building the firmware was independent of access to the serial port.
+
+### Why
+
+A source language and an execution format are different choices. A fast startup for JS bytecode tests whether native ELF must block an interactive edit. Compiling native files with changed arithmetic rules tests a different hypothesis.
+
+### What worked
+
+The bytecode compiler accepted all 22 sources, including Calc and Sandbox. All registered successfully three times. Median compile/ready was 37.059/108.922 ms for Agenda, 15.931/82.127 ms for Files, and 193.839/311.267 ms for Calc. The RAM artifact crossed a runtime boundary. Included probes executed the compiled app's Agenda date expansion, Files byte-size formatter and Flaky ping.
+
+### What didn't work
+
+The first UART reader assumed that the first explicit bench command would return keyboard. Boot had already invoked the callback, so the first explicit command returned power. The reader stopped on this mismatch and the shell restored the control and ran its smoke test. I changed the reader to synchronize on the first manifest name and verify every subsequent trial and name; the successful run used a fresh directory. It retained the incomplete priming cycle in the compressed UART log and excluded that cycle from the statistical table.
+
+### What I learned
+
+On this board normal JS syntax, fractions, dynamic values and callbacks coexist with subsecond compilation for every bundled source. Prelude execution and fresh contexts comprise much of the smaller worlds' registration time. The emitted instructions, execution engine and semantic guarantees of a CJI ELF and a QuickJS artifact differ.
+
+### What was tricky to build
+
+The cap on each QuickJS realm is the manifest's cap. Source/prelude file reads, source hashing, and the application-specific witness are outside the ready timer; the two fresh realms, bytecode copy/serialization, prelude evaluation, registration and __init are inside. No simulated keypress or screen presentation is implied. The stub cannot exercise authority or async I/O. A separate Linux replay uses the real simulated kernel.
+
+### What warrants a second pair of eyes
+
+Compare the three raw values to their CSV medians; check the paths and SHA-256 in the hardware and host receipts. A reboot and immutable ordinary firmware snapshot provide the restore check.
+
+### What should be done in the future
+
+Profile the actual operator edit/start through the kernel with live input and display when those peripherals are available. Test the proposed typed emitter on the board and check whether native compilation remains a significant delay even with the numeric proof removed.
+
+### Code review instructions
+
+Read scripts/board/qjs_probe.c alongside scripts/board/run-qjs.py, then replay scripts/board/summarize-qjs.py against various/board/quickjs-p4.jsonl. scripts/board/qjs-series.sh contains the restoration trap. The initial design and diary were committed as 64abaf3.
