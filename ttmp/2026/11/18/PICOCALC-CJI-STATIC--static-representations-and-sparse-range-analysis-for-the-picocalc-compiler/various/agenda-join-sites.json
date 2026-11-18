@@ -1,0 +1,51 @@
+{
+  "world": "agenda",
+  "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa",
+  "counts": {
+    "342:78": {
+      "calls": 132986,
+      "identicalInputs": 109524,
+      "resultAlreadyLeft": 131438
+    },
+    "347:16": {
+      "calls": 149808,
+      "identicalInputs": 18262,
+      "resultAlreadyLeft": 137078
+    },
+    "678:23": {
+      "calls": 1655,
+      "identicalInputs": 120,
+      "resultAlreadyLeft": 1028
+    },
+    "451:state merge": {
+      "calls": 1826045,
+      "identicalInputs": 1546429,
+      "resultAlreadyLeft": 1605360
+    },
+    "610:13": {
+      "calls": 480,
+      "identicalInputs": 434,
+      "resultAlreadyLeft": 460
+    },
+    "564:15": {
+      "calls": 1510,
+      "identicalInputs": 1246,
+      "resultAlreadyLeft": 1337
+    },
+    "507:47": {
+      "calls": 257158,
+      "identicalInputs": 159130,
+      "resultAlreadyLeft": 248769
+    },
+    "507:71": {
+      "calls": 128984,
+      "identicalInputs": 30996,
+      "resultAlreadyLeft": 120605
+    },
+    "187:12": {
+      "calls": 537621,
+      "identicalInputs": 465017,
+      "resultAlreadyLeft": 494239
+    }
+  }
+}

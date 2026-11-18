@@ -1,0 +1,15 @@
+{
+  "world": "agenda",
+  "counts": {
+    "writes": 490367,
+    "unchangedWrites": 194247,
+    "sliceCopies": 496705,
+    "newWriteNodes": 1322,
+    "materializedMerges": 181798,
+    "mergeEqualsLeft": 19681,
+    "mergeEqualsRight": 43676,
+    "mergeEqualsEither": 53062,
+    "mergedSlots": 5817536,
+    "changedFromLeft": 280609
+  }
+}

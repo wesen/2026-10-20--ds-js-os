@@ -1,0 +1,114 @@
+{
+  "files": {
+    "rows": [
+      {
+        "mode": "cold",
+        "elapsed_s": 0.672118245,
+        "log": ""
+      },
+      {
+        "mode": "record",
+        "elapsed_s": 1.323586938,
+        "log": ""
+      },
+      {
+        "mode": "replay",
+        "elapsed_s": 1.305040837,
+        "log": "CJI-SIDECAR ok; ok; ok"
+      },
+      {
+        "mode": "record",
+        "elapsed_s": 0.882216309,
+        "log": ""
+      },
+      {
+        "mode": "replay",
+        "elapsed_s": 0.592366303,
+        "log": "CJI-SIDECAR ok; ok; ok"
+      },
+      {
+        "mode": "cold",
+        "elapsed_s": 0.717810824,
+        "log": ""
+      },
+      {
+        "mode": "replay",
+        "elapsed_s": 0.497048579,
+        "log": "CJI-SIDECAR ok; ok; ok"
+      },
+      {
+        "mode": "cold",
+        "elapsed_s": 0.874896509,
+        "log": ""
+      },
+      {
+        "mode": "record",
+        "elapsed_s": 0.913686705,
+        "log": ""
+      }
+    ],
+    "median_s": {
+      "cold": 0.717810824,
+      "record": 0.913686705,
+      "replay": 0.592366303
+    },
+    "sidecar_bytes": 22664,
+    "slir_sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa"
+  },
+  "agenda": {
+    "rows": [
+      {
+        "mode": "cold",
+        "elapsed_s": 1.411474274,
+        "log": ""
+      },
+      {
+        "mode": "record",
+        "elapsed_s": 3.149223178,
+        "log": ""
+      },
+      {
+        "mode": "replay",
+        "elapsed_s": 0.802224018,
+        "log": "CJI-SIDECAR ok; ok; ok; ok; ok; ok; ok"
+      },
+      {
+        "mode": "record",
+        "elapsed_s": 4.123770047,
+        "log": ""
+      },
+      {
+        "mode": "replay",
+        "elapsed_s": 0.800828311,
+        "log": "CJI-SIDECAR ok; ok; ok; ok; ok; ok; ok"
+      },
+      {
+        "mode": "cold",
+        "elapsed_s": 1.238738739,
+        "log": ""
+      },
+      {
+        "mode": "replay",
+        "elapsed_s": 0.773777583,
+        "log": "CJI-SIDECAR ok; ok; ok; ok; ok; ok; ok"
+      },
+      {
+        "mode": "cold",
+        "elapsed_s": 1.230281664,
+        "log": ""
+      },
+      {
+        "mode": "record",
+        "elapsed_s": 3.511980195,
+        "log": ""
+      }
+    ],
+    "median_s": {
+      "cold": 1.238738739,
+      "record": 3.511980195,
+      "replay": 0.800828311
+    },
+    "sidecar_bytes": 142671,
+    "slir_sha256": "06d73f7e6c872e37ea1c8d524c6fea9f2065296875b2e56c63f2d760c8c61baa"
+  }
+}

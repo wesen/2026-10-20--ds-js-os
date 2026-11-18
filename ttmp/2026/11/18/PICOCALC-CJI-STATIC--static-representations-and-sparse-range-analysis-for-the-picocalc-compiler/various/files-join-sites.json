@@ -1,0 +1,51 @@
+{
+  "world": "files",
+  "slir_sha256": "a18f279b25195a896b8fdc3fad85ec1467859abae5427721b03d7776c65d1baa",
+  "counts": {
+    "342:78": {
+      "calls": 35481,
+      "identicalInputs": 25283,
+      "resultAlreadyLeft": 34738
+    },
+    "347:16": {
+      "calls": 27772,
+      "identicalInputs": 3301,
+      "resultAlreadyLeft": 24272
+    },
+    "564:15": {
+      "calls": 792,
+      "identicalInputs": 552,
+      "resultAlreadyLeft": 608
+    },
+    "678:23": {
+      "calls": 748,
+      "identicalInputs": 80,
+      "resultAlreadyLeft": 748
+    },
+    "507:47": {
+      "calls": 48828,
+      "identicalInputs": 30558,
+      "resultAlreadyLeft": 46180
+    },
+    "507:71": {
+      "calls": 24470,
+      "identicalInputs": 6240,
+      "resultAlreadyLeft": 21856
+    },
+    "610:13": {
+      "calls": 286,
+      "identicalInputs": 274,
+      "resultAlreadyLeft": 286
+    },
+    "451:state merge": {
+      "calls": 312770,
+      "identicalInputs": 263211,
+      "resultAlreadyLeft": 274144
+    },
+    "187:12": {
+      "calls": 89352,
+      "identicalInputs": 75855,
+      "resultAlreadyLeft": 81012
+    }
+  }
+}

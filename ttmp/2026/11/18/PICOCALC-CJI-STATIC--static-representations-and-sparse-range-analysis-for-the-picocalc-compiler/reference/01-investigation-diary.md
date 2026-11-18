@@ -73,3 +73,53 @@ Start with scripts/03-measure-sites.sh and 06-run-probes.sh. Both accept the nam
 ### Technical details
 
 Both host compilers used compacting GC and an 8,388,608-byte heap. Symbol names include a canonical suffix which distinguishes specializations with the same source name. The board compares complete linked modules against the independent catalog reference.
+
+## Step 2 — Explain where the repeated indexing and joins originate
+
+Step 1 identified a hot slice loop. I inspected the compiled helper, traced the numeric analysis at source level, and changed the design's priority after finding the persistent-state writer. It can copy an entire 32-slot trie node even when a write assigns the existing interval. Avoiding that copy would also preserve subtree identity for future merges.
+
+### Prompt Context
+
+See Step 1. The question was whether a small program really requires this much dynamic representation and interval work. Commit 14677c7 records the first instrumentation checkpoint.
+
+### What I did
+
+- Counted direct join consumers under Node, reproducing all 3,036,247 joins on Agenda. Counted unchanged writes and shallow-equal merge results without substituting any return values.
+- Ran three rotated rounds of sidecar creation and strict replay on each world. Verified every byte of generated SLIR and every sidecar entry. Added a runnable three-function example demonstrating integer, floating-point and dynamic addition.
+- Read the implementations alongside the algorithms in Cooper and Torczon §§9.2–9.4, Palsberg and Schwartzbach, Wegman and Zadeck, Cousot and Cousot, Bodík et al., Chevalier-Boisvert and Feeley, and Braun et al. Compared each algorithm's model with the actual language and memory budget of CJI. Rendered the guide diagrams from script 09.
+
+### Why
+
+The slice receiver census can justify a new guard. It cannot tell whether the source program needed to copy any elements at all. The additional measurements distinguish eliminating an unnecessary state update from accelerating the dynamic operations it causes. Sidecar measurements distinguish recording cost from savings on an unchanged source.
+
+### What worked
+
+Agenda assigned an unchanged interval in 194,247 of 490,367 local state writes. Merging local states accounted for 1,826,045 joins. The source-level 496,705 copies of 32-slot arrays account numerically for almost the entire 15.92 million dynamic index reads observed in the generated slice body. This is corroboration across executions; the scripts do not match individual copy events. Strictly verified Agenda sidecar replay was faster on the host, but recording was sufficiently expensive to take roughly six subsequent cache hits to break even at these medians.
+
+### What didn't work
+
+Script 11 first rejected its source hooks with “unexpected number of source sites: 9”. Reviewing the actual calls showed nine sites including the callback supplied to merge. The next attempt reported “TypeError: compileSource is not a function”; the public source-level entry used by the previous profiling harness is in src/build.js. After both corrections the counts reproduced the control and output equality on both inputs.
+
+### What I learned
+
+The slice dispatchers split out strings before reaching the measured loop. Their remaining branch does not establish array layout on its own. CJI already interns intervals and widens progressively. A new proposal should leverage the stable interval identity across persistent-state updates within one analysis.
+
+### What was tricky to build
+
+The scope of a counter matters. A function-level inclusive instruction count includes its children. A direct call count from a compiler helper does not. An equal child array result can be tested shallowly in the diagnostic run without changing the identity of the result returned to the existing solver. The proposed production change needs observable equivalence when catch blocks retain shared mutable state handles.
+
+### What warrants a second pair of eyes
+
+Audit the exact definition of uninitialized slots and interval ID lifetime; verify negative zero, NaN, helper specialization, exceptions, roots and unknown callers. Confirm the proposed SD driver path physically on this carrier before treating the card as an available pass store.
+
+### What should be done in the future
+
+Compare an unchanged-write prototype against the guarded control. Measure a receiver-specialized loop separately. Track both on an unchanged source and after a local edit; measure proof-file recording overhead, verified replay and rejection of a stale entry.
+
+### Code review instructions
+
+Inspect the records in various/agenda-{join-sites,state-copies,slice} and the experimental scripts 07, 08, 11 and 12. In the guide, follow the slice example through to the persistent-state copy count and inspect the independently executable three-additions example. Script 09 regenerates both figures.
+
+### Technical details
+
+The Node observers only wrap source transfers or inspect the resulting 32 slots. Their elapsed times would be distorted. The independent sidecar timing script runs a clean Node process for each measurement. A measurement of native x86 instructions for the entire named slice function was started separately with Callgrind.

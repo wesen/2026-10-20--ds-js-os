@@ -17,36 +17,8 @@ WhenToUse: ""
 
 # Static representations and sparse range analysis for the PicoCalc compiler
 
-## Overview
+The investigation connects on-board compiler latency to type inference, numeric proofs and the generated machine code of CJI itself. It includes a paired physical benchmark of the guarded compiler and a separate measurement-driven design for future changes.
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
-
-## Key Links
-
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+- [Intern guide](design-doc/01-when-cji-can-compile-a-dynamic-operation-statically.md)
+- [Investigation diary](reference/01-investigation-diary.md)
+- [Reproduction scripts](scripts/) and [measurements](various/)

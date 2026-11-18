@@ -1,0 +1,22 @@
+function exact.12b4e8d3c6e8/2 scratches=2 saveds=0 local=0
+start:
+    add     r0, r1, #1
+    return  r0
+end
+function floating.0542d323933d/2 scratches=2 saveds=0 local=0
+start:
+    i2f     r0, r1
+    fadd    r0, r0, #4602678819172646912
+    return  r0
+end
+function mixed.72f1d1972d35/2 scratches=3 saveds=2 local=0
+start:
+    mov     s1, r1
+    mov     r0, #1
+    icall   any_from_int/1
+    mov     r1, r0
+    mov     r0, s1
+    mov     r2, s0
+    icall   any_add/3
+    return  r0
+end

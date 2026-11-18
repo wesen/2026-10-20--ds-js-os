@@ -1,0 +1,15 @@
+{
+  "world": "files",
+  "counts": {
+    "writes": 84941,
+    "unchangedWrites": 31599,
+    "sliceCopies": 90508,
+    "newWriteNodes": 319,
+    "materializedMerges": 37319,
+    "mergeEqualsLeft": 6699,
+    "mergeEqualsRight": 9669,
+    "mergeEqualsEither": 12600,
+    "mergedSlots": 1194208,
+    "changedFromLeft": 53412
+  }
+}
