@@ -8,6 +8,9 @@
 #include "esp_heap_caps.h"
 #include "esp_log.h"
 #include "esp_timer.h"
+#if PICOCALC_NATIVE_ELF
+#include "miniz.h"
+#endif
 #include "p4.h"
 
 static int64_t t_boot = -1;
@@ -73,6 +76,24 @@ char *port_read_file(const char *path, size_t *len) {
   if (!strncmp(path, "js/", 3)) path += 3;
   for (const struct js_file *f = js_bundle; f->path; f++) {
     if (strcmp(f->path, path)) continue;
+#if PICOCALC_NATIVE_ELF
+    // Only the immutable firmware bundle reaches this loop. The ELF loader receives the
+    // original byte count and image, so relocation and world memory accounting stay identical.
+    if (f->len >= 8 && !memcmp(f->data, "CJIZ", 4) && !strncmp(path, "natives/", 8)) {
+      uint32_t size;
+      memcpy(&size, f->data + 4, sizeof size); // little-endian P4
+      if (size < 52 || size == UINT32_MAX) return NULL;
+      char *image = malloc((size_t)size + 1);
+      if (!image) return NULL;
+      if (tinfl_decompress_mem_to_mem(image, size, f->data + 8, f->len - 8, TINFL_FLAG_PARSE_ZLIB_HEADER) != size) {
+        free(image);
+        return NULL;
+      }
+      image[size] = 0;
+      if (len) *len = size;
+      return image;
+    }
+#endif
     char *b = malloc(f->len + 1);
     if (!b) return NULL;
     memcpy(b, f->data, f->len + 1);

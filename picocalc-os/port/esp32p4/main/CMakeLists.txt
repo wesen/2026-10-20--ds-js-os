@@ -105,8 +105,11 @@ if(PICOCALC_NATIVE_ELF)
             COMMAND ${CJI_BUILD}/slas-rv32 -c ${module} --module --extern ${CJI_BUILD}/unit.list ${linked}
             DEPENDS cji_unit ${CJI_BUILD}/unit.list ${cji_input_${name}} ${CJI_ROOT}/cji.js
                     ${CJI_ROOT}/tools/link-units.mjs ${cji_frontend} VERBATIM)
-        list(APPEND BUNDLE_EXTRA "natives/${name}.elf=${module}")
-        list(APPEND BUNDLE_EXTRA_DEPS ${module})
+        add_custom_command(OUTPUT ${module}.z
+            COMMAND ${PYTHON} ${CMAKE_CURRENT_LIST_DIR}/pack_elf.py ${module} ${module}.z
+            DEPENDS ${module} ${CMAKE_CURRENT_LIST_DIR}/pack_elf.py VERBATIM)
+        list(APPEND BUNDLE_EXTRA "natives/${name}.elf=${module}.z")
+        list(APPEND BUNDLE_EXTRA_DEPS ${module}.z)
     endforeach()
     foreach(m echo bench wimport dial)   # wimport links to a function no module is given (-Wno-attributes: its WebAssembly import attribute)
         set(out ${CMAKE_CURRENT_BINARY_DIR}/natives/${m}.elf)

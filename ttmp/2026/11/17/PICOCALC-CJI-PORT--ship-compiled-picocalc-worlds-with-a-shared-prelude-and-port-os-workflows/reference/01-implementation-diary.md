@@ -246,3 +246,53 @@ Start with fs_prepare in nucleus/fs.c. Follow ka_fs in vm.c and the correspondin
 ### Technical details
 
 The file transfer limit remains 65,536 bytes. File data stays in an owned worker job until submission. Reading and listing return JSON through normal promise settlements.
+
+## Step 5. Fit the compiled modules into the existing flash layout
+
+Commit 2fe06a1 put Files and Editor on the native path. Their first uncompressed image used 0x3941a0 bytes of the 4 MiB application partition. I compressed the immutable CJI ELF files at bundle time. The loader still receives their original ELF contents and byte length.
+
+### Prompt Context
+
+See step 4. The complete workflow set must fit the installed board.
+
+### What I did
+
+- Added a deterministic zlib packing step for each compiled ELF.
+- Used the P4 ROM decompressor when copying a packed module from the firmware bundle.
+- Installed the packed image and exercised Files and Editor through the keyboard event path.
+
+### Why
+
+Keeping the partition table avoids moving the user's filesystem and NVS configuration. Flash compression saves space without changing load-time memory accounting.
+
+### What worked
+
+The packed image used 0x2fd500 bytes, leaving 25% of the application partition free. After a monitored application-only flash, Files opened a new p3-checkpoint.txt through Editor. Typing “Native note 73” and pressing F2 produced those exact bytes in the physical console's cat output. Both worlds were idle with no last error. The board reported 227.4 KiB for Files and 275.9 KiB for Editor. I captured the editor framebuffer before changing the compositor.
+
+### What didn't work
+
+No packing or decompression errors were observed. The original uncompressed layout left just 11% free before adding the compositor and Agent.
+
+### What I learned
+
+The ELF file lengths remain the loader's input for memory checks. The lengths used by the generated flash table can instead describe compressed data. The two quantities have different lifetimes.
+
+### What was tricky to build
+
+The trailing NUL appended by the bundle generator is outside the compressed byte count. The unpacker allocates space for the original image and its trailing NUL, requires the exact decompressed length, and then publishes that original length.
+
+### What warrants a second pair of eyes
+
+Review the trusted-bundle-only path and compare the packed file's original size against the loose module. The regular source and manifest entries continue through the plain copy path.
+
+### What should be done in the future
+
+Measure final image and heap sizes after all phase 3 modules are present.
+
+### Code review instructions
+
+Read pack_elf.py, the native module build loop in main/CMakeLists.txt and port_read_file in port_p4.c. Rebuild with the optional ELF configuration. Boot the physical image and check the engine and memory fields in worlds.
+
+### Technical details
+
+The packed entry starts with CJIZ, then the original 32-bit little-endian length and a zlib stream. The ROM helper verifies the stream during expansion. Partition layout and the SDK ELF relocation routines are unchanged.
