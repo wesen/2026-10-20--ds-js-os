@@ -1038,3 +1038,54 @@ Compare the world names and source paths against picocalc-os/js/system.json. For
 ### Technical details
 
 The sweep used immutable bundled JavaScript. cji check bypasses the development-slot cache and discards its output after hashing. Measurements cover compile and assembly on the running system and exclude activation and application interaction.
+
+## Step 20: Compare the replay results and check the running board
+
+Three of the four memory-failure replays completed on the physical P4. The final catalog contains 18 worlds with verified host-matching native modules and four with outstanding failures. The live board reported Agent and dev-cji both native and idle with zero restarts.
+
+### Prompt Context
+
+**User prompts and interpretation.** See Steps 14 and 16. This closes the catalog measurements that were running when the user prioritized Agent.
+
+**Previous evidence commit** 4ed32fb.
+
+### What I did
+
+- Replayed the original Compositor, Launcher, Files and Editor bundled sources after the 22-world sweep.
+- Matched the successful module hashes against the independent references. Queried worlds and stats after the serial worker finished.
+
+### Why
+
+Repeated runs distinguish input identity from allocation layout. A terminal failure without allocator metrics cannot identify whether the job cap or a particular PSRAM allocation was responsible.
+
+### What worked
+
+Compositor, Launcher and Editor matched the host ELF after failing on earlier attempts. Editor took 425,289 ms. SPI and I²C reported zero errors after the run.
+
+### What didn't work
+
+Files failed again after 327,220 ms. It requested 8,388,608 bytes plus its 16-byte header while holding 8,465,202 bytes. Total free PSRAM was 11,672,524 bytes and the largest free block was 4,849,664 bytes. The requested allocation fit the job quota.
+
+### What I learned
+
+Files is only 5,873 source bytes and still issued an 8 MiB allocation. The large-source policy used by Agent is sufficient for its measured workload, while file length alone cannot select the best policy for every world.
+
+### What was tricky to build
+
+These replays occurred on a live OS after earlier jobs had changed allocation placement. The evidence file keeps every attempt so readers can see how outcomes varied with the same source.
+
+### What warrants a second pair of eyes
+
+Avoid attributing the three recovered results to the 10 MiB collector. All three sources were below the threshold and used the ordinary frontend policy.
+
+### What should be done in the future
+
+For Files and Agenda, measure stage-1 live data and test an appropriate upfront reservation. Calc also needs its host type error resolved. Sandbox uses indirect eval and remains a QuickJS workload.
+
+### Code review instructions
+
+Read the runs array for each world in various/device-catalog-results.json. Filter on result and compare the ELF hashes with host_elf_sha256. The Agent-only receipt is in various/agent-on-device.jsonl.
+
+### Technical details
+
+Every original catalog source received a physical result. Across the recorded builds the four worlds without a verified physical ELF are Files, Agenda, Calc and Sandbox.

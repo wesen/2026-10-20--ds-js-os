@@ -69,6 +69,14 @@
           "elapsed_ms": 304288,
           "scratch_bytes": 9007658,
           "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 307879,
+          "scratch_bytes": 9007658,
+          "elf_bytes": 247048,
+          "elf_sha256": "7c2b1bc177b472147dfe5c6b90fc97a28200d62016019b236d7430c3ed2cf782"
         }
       ],
       "host_elf_sha256": "7c2b1bc177b472147dfe5c6b90fc97a28200d62016019b236d7430c3ed2cf782"
@@ -149,6 +157,14 @@
           "elapsed_ms": 163527,
           "scratch_bytes": 8727088,
           "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 164281,
+          "scratch_bytes": 8727088,
+          "elf_bytes": 105136,
+          "elf_sha256": "9633b36006b9bdef21ccf7e4cee58830df8e8289994598651aefcc3c28b8f95f"
         }
       ],
       "host_elf_sha256": "9633b36006b9bdef21ccf7e4cee58830df8e8289994598651aefcc3c28b8f95f"
@@ -164,6 +180,22 @@
           "result": "failed",
           "elapsed_ms": 327777,
           "scratch_bytes": 8465218,
+          "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "shared",
+          "result": "failed",
+          "elapsed_ms": 327220,
+          "scratch_bytes": 12659522,
+          "allocation_refusal": {
+            "reason": "psram",
+            "request": 8388608,
+            "header": 16,
+            "held": 8465202,
+            "limit": 18874368,
+            "psram_free": 11672524,
+            "psram_largest": 4849664
+          },
           "diagnostic": "compiler scratch limit"
         }
       ],
@@ -181,6 +213,14 @@
           "elapsed_ms": 416611,
           "scratch_bytes": 8606043,
           "diagnostic": "compiler scratch limit"
+        },
+        {
+          "firmware": "shared",
+          "result": "ok",
+          "elapsed_ms": 425289,
+          "scratch_bytes": 8999259,
+          "elf_bytes": 243936,
+          "elf_sha256": "2743f1f55b87cd8ec909c8a103aacdeb77773d64aededa9b145ba7eb98228ff0"
         }
       ],
       "host_elf_sha256": "2743f1f55b87cd8ec909c8a103aacdeb77773d64aededa9b145ba7eb98228ff0"
