@@ -1,0 +1,16 @@
+ESP32-P4 v1.3 / ESP-IDF 5.4.2 / application at 0x10000
+Firmware SHA-256 f8cb2ec7562e88ffe72331e7536b3074fcac760f21b1e568a3af63836099931a
+Flash result: Hash of data verified.
+Selected UART lines and toplog records from worlds:
+I (1761) app_init: App version:      6a8e1a0
+heap: internal 363727 free (largest 286720), psram 33551748 free (largest 33030144)
+[  2196.132] toplog: hello from the top level
+[ 15867.148] sandbox: CJI-A pong
+heap: internal 35831 free (largest 30720), psram 26428832 free (largest 26214400)
+#OK restart
+[ 19930.949] toplog: hello from the top level
+[ 28890.375] sandbox: CJI-B pong
+heap: internal 36363 free (largest 30720), psram 26429880 free (largest 26214400)
+#END 34d395eb 4265
+{"name": "toplog", "kind": "service", "engine": "native", "title": "toplog", "state": "idle", "turns": 1, "msgs": 1, "cpu_ms": 11.854, "mem_kb": 232.7, "limit_kb": 320, "mbox": 0, "mbox_peak": 0, "restarts": 0, "budget_ms": 20, "last_error": "", "user": false, "file": "natives/toplog.elf", "claims": []}
+{"name": "toplog", "kind": "service", "engine": "native", "title": "toplog", "state": "idle", "turns": 4, "msgs": 4, "cpu_ms": 26.121, "mem_kb": 232.7, "limit_kb": 320, "mbox": 0, "mbox_peak": 1, "restarts": 1, "budget_ms": 20, "last_error": "restarted by an administrator", "user": false, "file": "natives/toplog.elf", "claims": []}

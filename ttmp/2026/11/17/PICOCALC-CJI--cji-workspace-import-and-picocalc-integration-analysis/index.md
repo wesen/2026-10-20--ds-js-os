@@ -1,7 +1,7 @@
 ---
 Title: CJI workspace import and PicoCalc integration analysis
 Ticket: PICOCALC-CJI
-Status: active
+Status: complete
 Topics:
     - picocalc
     - esp32-p4
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-17T19:41:42.188989187-05:00
+LastUpdated: 2026-11-17T20:07:21.683548091-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -32,7 +32,7 @@ Read the [intern hardware bring-up guide](design-doc/01-running-a-compiled-javas
 
 ## Status
 
-Current status: **active**
+Physical bring-up completed on ESP32-P4 v1.3. See the [UART evidence](various/p4-acceptance.txt), [display capture](various/p4-repl-pong.png), and [system-wide migration analysis](analysis/02-from-one-compiled-service-to-the-picocalc-system-image.md).
 
 ## Topics
 

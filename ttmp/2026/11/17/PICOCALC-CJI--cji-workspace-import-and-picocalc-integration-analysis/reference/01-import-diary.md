@@ -239,3 +239,55 @@ Inspect field_index in runtime.c and the kernel task creation at the end of main
 ### Technical details
 
 First image size 2,952,640 bytes, SHA-256 b7c7243bf2e2157e669fa7eb1caf9515053ece8503cb8a552fe75aa65c4a7c19. The boot-time heap showed 266,255 internal bytes free before peripheral initialization.
+
+## Step 5. Qualify firmware 6a8e1a0 and establish the next porting boundary
+
+The corrected image started the kernel and toplog. I exercised two independent restart cycles through the physical PicoCalc REPL. I also compiled the current system manifest to identify the distance between this ticket and a system-wide migration.
+
+### Prompt context
+
+See Step 3 for the implementation request. During acceptance the user asked:
+
+> wait, that's all the ticket does? what's the full picture of porting everything over big time?
+
+I treated this as a request to quantify the broader work and explain its sequence alongside the completed bring-up.
+
+### What I did
+
+Flashed only the factory application and monitored the stable by-id serial node throughout. Captured boot, heap, world lists and two tagged replies. Ran a second pair of direct asks around another restart to display both return values. Ran cji.js with --world-unit --emit on all 22 manifest entries.
+
+### Why
+
+The first pair provides machine-readable serial evidence. The second shows exactly what a user sees on the display. The compile sweep distinguishes language coverage from missing OS APIs.
+
+### What worked
+
+The flash hash verified. The board reported version 6a8e1a0 and boot-time internal free memory of 363,727 bytes. toplog logged its initialization twice in the tagged run and sandbox printed CJI-A pong and CJI-B pong. Its final state was idle, charged 232.7 KiB against 320 KiB. The subsequent screen capture passed CRC and visibly displays two pong responses. The compiler emitted world-unit SLIR for 20 of the 22 built-ins.
+
+### What didn't work
+
+calc and sandbox did not emit world-unit SLIR. Their precise diagnostics and migration implications are in analysis/02. The existing nat-import negative-control module still reports a missing path_open as designed.
+
+### What I learned
+
+The 96 KiB cache reduction restored enough internal memory for the kernel and peripheral tasks. Restarts invalidate module literal addresses, which independently justifies the uncached device lookup.
+
+### What was tricky to build
+
+The flash monitor had to run on the host where the device node exists. Both application-only writes completed with the same serial node present. For the second write the prior kernel could not acknowledge hold; the initial firmware had never dispatched keyboard events.
+
+### What warrants a second pair of eyes
+
+The physical evidence covers one trusted CJI service in a mixed image. Whole-system migration needs a multi-world state isolation test, feature parity, image sizing and physical application tests.
+
+### What should be done in the future
+
+See analysis/02 for the staged migration and acceptance criteria.
+
+### Code review instructions
+
+Read various/p4-acceptance.txt, open various/p4-repl-pong.png and compare the two ping replies with tests/native/toplog.out. Inspect the system-wide coverage matrix before selecting the next application.
+
+### Technical details
+
+The final image uses 0x2d0d70 bytes with 0x12f290 free in the application partition. Normal kernel operation returned with a measured 113.2 ms calibration loop. Both direct REPL asks showed 16 ms on screen, including sandbox and scheduling overhead.

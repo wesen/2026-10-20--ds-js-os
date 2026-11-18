@@ -40,7 +40,7 @@ log("hello from the top level");
 service("toplog").on("ping", (s) => "pong");
 ```
 
-This guide uses the ticket's `sources/cji/` as the compiler root and the repository's `picocalc-os/` as the OS root. The compiler source is a curated snapshot. The host build and RV32 trace comparisons below ran on this checkout. Firmware changes in the implementation section are a design for the next build. The connected unit has yet to run this module.
+This guide uses the ticket's `sources/cji/` as the compiler root and the repository's `picocalc-os/` as the OS root. The compiler source is a curated snapshot. The host build and RV32 trace comparisons below ran on this checkout. Firmware revision 6a8e1a0 passed this procedure on ESP32-P4 v1.3. The implementation uses uncached field lookup on the board to release 96 KiB of internal RAM and avoid retaining module addresses across restarts. The ticket’s various/p4-acceptance.txt and various/p4-repl-pong.png record the physical results. The design and first-pass diagnostics below describe how the integration was developed.
 
 ## Follow a world across the system
 
