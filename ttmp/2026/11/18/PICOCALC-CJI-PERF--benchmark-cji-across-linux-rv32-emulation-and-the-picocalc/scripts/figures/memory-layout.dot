@@ -1,0 +1,14 @@
+digraph heap {
+  graph [rankdir=TB, bgcolor="white", pad=.25, nodesep=.3, ranksep=.45];
+  node [shape=box, style="rounded,filled", fillcolor="#eef3f6", color="#aebbc4", fontname="DejaVu Sans", fontsize=14, margin=".18,.12"];
+  edge [arrowsize=.7, color="#647482"];
+  psram [label="Board-wide PSRAM allocator (ESP-IDF TLSF)\nFree bytes and largest contiguous free block can differ."];
+  job [label="Compiler job allocation ledger\n18 MiB limit includes worker allocation headers.",fillcolor="#e3f1ed"];
+  other [label="Other allocations\nResident worlds, display and system services"];
+  heap [label="One contiguous frontend space\n8 or 10 MiB in the controlled experiment"];
+  temps [label="Other job scratch\nRoots, temporary buffers, assembler data"];
+  gc [label="CJI mark-compact collector\nMark reachable objects, update references, slide live objects.",fillcolor="#e3f1ed"];
+  psram -> {job other};
+  job -> {heap temps};
+  heap -> gc;
+}

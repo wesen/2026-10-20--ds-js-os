@@ -1,0 +1,4 @@
+wait 1200
+key t
+wait 650
+capture linux-agenda.png

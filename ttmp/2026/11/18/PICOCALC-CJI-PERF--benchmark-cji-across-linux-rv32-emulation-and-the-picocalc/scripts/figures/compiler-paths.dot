@@ -1,0 +1,15 @@
+digraph CJI {
+  graph [rankdir=TB, bgcolor="white", pad=0.25, nodesep=.28, ranksep=.5, fontname="DejaVu Sans"];
+  node [shape=box, style="rounded,filled", fillcolor="#f1f4f6", color="#aebbc4", fontname="DejaVu Sans", fontsize=14, margin=".17,.11"];
+  edge [color="#647482", arrowsize=.7];
+  source [label="Identical bundled world source\napps/files.js or apps/agenda.js", fillcolor="#e3f1ed"];
+  native [label="Linux AOT\nx86-64 stage 1\nCallgrind + monotonic clock"];
+  guest [label="RV32 emulator\nRV32IMC stage 1\nGuest instruction counter"];
+  board [label="Physical ESP32-P4\nRelocate private compiler in PSRAM\nWorker timer + phase heartbeats", fillcolor="#e6eef6"];
+  {rank=same; native; guest; board;}
+  ir [label="Compare emitted SLIR bytes\nagainst independent stage 0", fillcolor="#e3f1ed"];
+  module [label="Link shared prelude and assemble RV32 ELF\nCompare SHA-256 with host assembler", fillcolor="#e3f1ed"];
+  source -> {native guest board};
+  {native guest} -> ir;
+  board -> module;
+}

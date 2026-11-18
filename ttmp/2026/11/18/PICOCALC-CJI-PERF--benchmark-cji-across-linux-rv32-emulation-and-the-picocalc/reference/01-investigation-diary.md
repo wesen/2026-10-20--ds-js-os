@@ -375,3 +375,49 @@ Start at scripts/as-run/04-host-repeat.sh and compare its executable hashes in t
 ### Technical details
 
 The repeat's plain process medians were 2,363,525, 17,897,174 and 17,397,927 microseconds for Files 8, Agenda 8 and Agenda 10. All runs used the same stage-0 digest per world.
+
+## Step 9 — Capture report visuals and qualify the Agenda baseline
+
+### Prompt Context
+
+The user asked “take screenshots / make diagrams for the report we are going to write (detailed performance analysis and optimization planning and reports on how the device differs from the shost builds)”.
+
+### What I did
+
+Captured the actual Linux simulator's Agenda framebuffer, built two architecture diagrams and plotted three figures from checked-in receipts. Created an illustrated analysis with measurement limits and a ranked experiment plan. Queued a separate physical display capture after the experiment releases the serial port.
+
+### Why
+
+The program shown on screen, the compiler generating its module, and the three measurement targets have different boundaries. Labeling them explicitly prevents the Linux screenshot or guest instruction chart from being read as handheld latency evidence.
+
+### What worked
+
+The physical Agenda 8 MiB run matched the 301,496-byte reference module and reported 424 collections, identical to Linux. The screenshot shows the Agenda title and the two expected seeded tasks. Reviewed a contact sheet of all five diagrams and charts.
+
+### What didn't work
+
+Physical framebuffer capture needs the same UART as the active benchmark. Reading it concurrently would compromise receipt capture. A gated tmux job waits for both heap cases to qualify and the board to reset normally.
+
+### What I learned
+
+The physical 8 MiB Agenda job spent 1,479.109 seconds in stage 1 and 85.898 seconds in GC. The upper bound on the measured collector's contribution is much smaller than the whole compiler slowdown.
+
+### What was tricky to build
+
+Host and device seconds differ by more than an order of magnitude. The figure uses independently labeled axes and numerical values. The guest main bucket uses nearest-symbol attribution and cannot identify generated functions within it.
+
+### What warrants a second pair of eyes
+
+Inspect measured versus illustrative captions and the time axes. Code-path and allocation diagrams describe ownership and validation. The PNG screenshot is decoded framebuffer content. The physical framebuffer control is a separate demonstration from timed compiler runs.
+
+### What should be done in the future
+
+Complete the candidate measurement, review and add the physical framebuffer captures, then regenerate the figures and interpret the A/B.
+
+### Code review instructions
+
+Read the analysis, compare figures to various/p4 and various/compiler-baseline.json, and inspect scripts/figures and scripts/as-run/05-physical-screenshots.sh. The previous host control is 887fcee.
+
+### Technical details
+
+The host screenshot used fixed UTC 2026-10-22 09:41, a private copy of fs-seed and the actual picocalc-host binary. All diagrams and generated charts are retained as standalone report PNGs.
