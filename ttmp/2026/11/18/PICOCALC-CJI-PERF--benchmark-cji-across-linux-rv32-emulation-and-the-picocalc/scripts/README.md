@@ -1,0 +1,20 @@
+# Reproducing the compiler baseline
+
+Run the following from the repository root. Each command uses a separate process. Keep the build, source files and references fixed for the duration of the experiment. The output directory holds generated binaries, complete profiles, per-sample logs and JSON receipts.
+
+```bash
+scripts=(ttmp/2026/11/18/*CJI-PERF--*/scripts)
+out=$(mktemp -d)
+bash "$scripts/01-prepare.sh" "$out"
+bash "$scripts/02-profile.sh" "$out" native files agenda
+bash "$scripts/02-profile.sh" "$out" rv32 files agenda
+python3 "$scripts/03-host-runs.py" "$out"
+bash "$scripts/04-profile-guest-metrics.sh" "$out" files:8 agenda:8 agenda:10
+python3 "$scripts/07-summarize.py" "$out" > "$out/report.json"
+```
+
+The summary includes only completed profiles whose SLIR matches the reference. Host timing sample counts exclude warm-ups. Inspect the count for each configuration when summarizing a directory still being populated. The AOT and RV32 profilers count different instruction sets.
+
+For physical testing, build the P4 firmware with native ELF support and PICOCALC_COMPILER_PROFILE enabled. Run 06-board-experiment.sh with an idle device, the output and build directories, the ESP-IDF esptool executable and cases such as files:8 agenda:8 agenda:10. It records the flash image and its ELF, uses the application partition, confirms a held keyboard bus, runs 05-board-runs.py, and captures a normal boot on exit. The checker compares the module digest to the port catalog. The workstation-specific as-run directory preserves the initial launch scripts and smoke input.
+
+Earlier serial trials and one-time source edits are retained in the sibling PICOCALC-CJI-PORT ticket under scripts/2026-11-17-session and scripts/2026-11-18-session. Those scripts reference historical scratch paths and intermediate source revisions.

@@ -145,3 +145,49 @@ Follow rt_collect and compact_collect, then inspect each platform's cji_main bra
 ### Technical details
 
 Both hardware cases are compile-only, with the same source and prelude, normal 18 MiB job limit, and a private compiler instance per job. The generation and validation scripts reside under this ticket's scripts directory.
+
+## Step 4 — Preserve the launch history and qualify the reporting path
+
+### Prompt Context
+
+The user requested “save all scripts inside the ticket's scripts/ folder, btw so we can do a complete trace of your work”.
+
+### What I did
+
+Recovered six earlier PORT helpers, four tiny test worlds and the PERF smoke fixture. Added a reproduction index, the physical experiment driver, the workstation hand-off script and a compact profile summarizer.
+
+### Why
+
+Raw Callgrind dumps and firmware images are large. A reviewer can reconstruct the evidence from small launch scripts, configuration, SHA-256 receipts and summaries. The original one-time launchers also preserve order and failure handling.
+
+### What worked
+
+The report reader recovered the Files instruction total of 20,174,143,435 and a ranked list of runtime functions. It validated the emitted IR before accepting the profile. A partial host run can be inspected with explicit sample counts.
+
+### What didn't work
+
+The first physical Agenda trial with progress enabled stopped emitting receipts with the keyboard bus active. The held-bus retry was still advancing during this step. Earlier scratch-only scripts were scattered across /tmp.
+
+### What I learned
+
+The emulator already supports RV32_STEPS for a whole-program count. Enable it in future profiling runs. The original log records the guest harness interval and absolute symbol counts.
+
+### What was tricky to build
+
+The physical launch must wait for the previous observer to release serial. Copying the firmware ELF and binary into a unique boot directory pins both the measurement identity and the actual bytes passed to esptool.
+
+### What warrants a second pair of eyes
+
+The physical driver can flash the application partition. Its cleanup resets the board and saves the startup console. Historical source-edit scripts assume the exact original source revision.
+
+### What should be done in the future
+
+Compare the verified timing distributions and complete hardware receipts. Preserve the raw artifacts separately when retaining long-lived benchmark runs.
+
+### Code review instructions
+
+Start with scripts/README.md. Inspect 06-board-experiment.sh for the ownership boundary, 05-board-runs.py for output qualification, and 07-summarize.py for sample inclusion.
+
+### Technical details
+
+The original Callgrind launch used 8,388,608 bytes for both heap bounds. The serial console was held between keyboard transactions for the pending physical run. Large generated outputs live under /tmp/nov18-perf-base and /tmp/nov18-perf-board.
