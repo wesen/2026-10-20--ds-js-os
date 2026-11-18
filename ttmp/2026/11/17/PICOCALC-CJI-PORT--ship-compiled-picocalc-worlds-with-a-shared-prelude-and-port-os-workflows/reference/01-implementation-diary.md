@@ -1195,3 +1195,59 @@ Inspect the Files runs under the ordinary-reservation firmware label in various/
 ### Technical details
 
 Source size was 5,873 bytes. Free PSRAM was 20,135,180 bytes after relocation and 25,028,120 bytes after cleanup. The compile-only path released the output after hashing.
+
+## Step 23: Trace the board allocator through ESP-IDF and the compiler runtime
+
+While Agenda compiled, I followed a worker allocation down to ESP-IDF and traced the lifetimes back up through the frontend and assembler. The intern guide now includes the algorithms, ownership boundaries, timing of the reservation and the Files fragmentation example.
+
+### Prompt Context
+
+**User prompts (verbatim)**
+
+> how does memeory alloation and PSRAM management work?
+
+> what algorithm does ESP-IDF use?
+
+**Assistant interpretation and inferred intent.** Identify the allocator actually linked on this board and explain which layer can move memory. See Step 21 for the ongoing hardware work.
+
+**Previous verification commit** 33e4a5e.
+
+### What I did
+
+Read the 5.4.2 SDK checkout's heap_caps_base.c, multi_heap.c, tlsf.c and tlsf_control_functions.h. Checked the P4 firmware linker map for tlsf_memalign_offs, tlsf_free and tlsf_malloc. Added the verified path to the phases 4–6 design guide.
+
+### Why
+
+The worker's refusal message spans three distinct concerns. Its scratch limit is a quota, TLSF hands out external RAM blocks, and CJI reclaims JS objects inside one such block. Understanding which addresses can move explains why allocation order affected Files.
+
+### What worked
+
+The map attributes the aligned allocator and free functions to esp-idf/heap/libheap.a(tlsf.c.obj). Source shows heap capability and priority selection, two-level bitmap lookup, block splitting and coalescing with adjacent free neighbors.
+
+### What didn't work
+
+The earlier generic scratch error could not distinguish a quota failure from physical fragmentation. The current explanation uses the request, free and largest-block values recorded at refusal in Step 20.
+
+### What I learned
+
+TLSF can coalesce neighbors on release, but a live pointer between two free regions keeps them separate. Only the managed runtime has the object and root information needed to compact the compiler's JS objects.
+
+### What was tricky to build
+
+The job quota counts worker allocation headers, while the underlying allocator also applies its own alignment and size-class rules. The scratch peak additionally excludes the loaded tool and the separate FreeRTOS stack.
+
+### What warrants a second pair of eyes
+
+Keep claims about bounded bitmap lookup scoped to one TLSF heap. The capability allocator can try multiple regions, and resizing through the worker can copy a buffer.
+
+### What should be done in the future
+
+Finish the physical Agenda measurement and verify the module digest.
+
+### Code review instructions
+
+See “How the device allocates compiler memory” in the phases 4–6 design guide. Compare the linked tlsf symbols with heap_caps_aligned_alloc_base, search_suitable_block and tlsf_free in the SDK checkout used by this build.
+
+### Technical details
+
+The port requests MALLOC_CAP_SPIRAM and MALLOC_CAP_8BIT with 8-byte alignment. Freeing a tracked scratch block removes the worker's 16-byte RV32 header from its accounting, then returns the underlying block to ESP-IDF.
