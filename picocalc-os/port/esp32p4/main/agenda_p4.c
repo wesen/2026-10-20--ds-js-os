@@ -8,6 +8,7 @@
 #define SOURCE_LIMIT (64 * 1024)
 #define COMPILER_LIMIT (2 * 1024 * 1024)
 #define COMPILER_US 1700000
+#define FIRST_FRAME_TARGET_US 2000000
 
 #if PICOCALC_RV32_AGENDA
 #define AGENDA_ENGINE ENG_NATIVE
@@ -25,6 +26,7 @@ typedef struct {
 static unsigned char *startup_module;
 static size_t startup_length;
 static vtime_t first_response;
+static vtime_t boot_frame_deadline;
 
 static void account(compile_heap *heap, size_t old, size_t current) {
   heap->live = heap->live - old + current;
@@ -178,7 +180,12 @@ done:
 
 bool p4_agenda_prepare(void) {
   startup_module = compile(false, &startup_length, &first_response);
+  if (startup_module) boot_frame_deadline = first_response + FIRST_FRAME_TARGET_US;
   return startup_module != NULL;
+}
+
+bool p4_agenda_boot_frame_pending(void) {
+  return boot_frame_deadline && port_clock() < boot_frame_deadline;
 }
 
 char *p4_agenda_take_module(size_t *length) {
@@ -225,6 +232,7 @@ void p4_agenda_frame(world_t *world, vtime_t segment_start) {
            (long long)(now - first_response), world->mem_used);
     first_response = 0;
   }
+  boot_frame_deadline = 0;
   printf("agenda frame turn_us=%lld world_bytes=%zu\n",
          (long long)(now - segment_start), world->mem_used);
 }

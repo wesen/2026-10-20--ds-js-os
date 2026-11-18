@@ -1,0 +1,43 @@
+{
+  "trials": [
+    {
+      "compile_us": 449703,
+      "first_response_us": 2761934,
+      "world_bytes": 124588,
+      "frame_turn_us": 1169,
+      "before_cji_restore_us": 586063,
+      "before_dispatch_us": 595692,
+      "world_init_us": 1315449,
+      "world_init_done_us": 1320448,
+      "file_submitted_us": 2576782,
+      "file_returned_us": 2759840,
+      "settle_us": 2760775
+    },
+    {
+      "compile_us": 449876,
+      "first_response_us": 2736810,
+      "world_bytes": 124588,
+      "frame_turn_us": 1060,
+      "before_cji_restore_us": 586232,
+      "before_dispatch_us": 595759,
+      "world_init_us": 1312628,
+      "world_init_done_us": 1317642,
+      "file_submitted_us": 2547027,
+      "file_returned_us": 2734814,
+      "settle_us": 2735760
+    },
+    {
+      "compile_us": 449469,
+      "first_response_us": 2743435,
+      "world_bytes": 124588,
+      "frame_turn_us": 1105,
+      "before_cji_restore_us": 585767,
+      "before_dispatch_us": 595672,
+      "world_init_us": 1312324,
+      "world_init_done_us": 1317283,
+      "file_submitted_us": 2554824,
+      "file_returned_us": 2741397,
+      "settle_us": 2742340
+    }
+  ]
+}

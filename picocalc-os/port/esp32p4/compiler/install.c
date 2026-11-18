@@ -370,7 +370,7 @@ static void rollback(void) {
     }
     cleanup();
 }
-void compiler_tick(void) {
+void compiler_tick(bool defer_relocation) {
     if ((state==LOADING || state==BUILDING) && !reuse) {
         int64_t now=esp_timer_get_time();
         if (now>=next_report) {
@@ -396,6 +396,7 @@ void compiler_tick(void) {
     }
     int done;
     if (state==LOADING) {
+        if (defer_relocation) return;
         if (xQueueReceive(finished,&done,0)!=pdTRUE) return;
         esp_elf_init(&tool);
         if (!tool_image || !job.exports) {

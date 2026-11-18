@@ -35,3 +35,7 @@ Restored the prior PicoCalc firmware with a verified app-partition write and pub
 ## 2026-11-18
 
 Compiled the typed Agenda parser to RV32 on the P4, verified the relocated reminder, frame and restart behavior under emulation, and recorded native timing and firmware restore evidence.
+
+## 2026-11-18
+
+Measured full-boot stages and reduced median headless RV32 source-to-first-frame latency by 339 ms through bounded CJI relocation deferral.

@@ -427,3 +427,39 @@ The trace comes from kernel-side timestamps. The submit-to-return interval inclu
 ### Code review instructions
 
 Build with PICOCALC_RV32_AGENDA enabled. Run scripts/10-measure-agenda-boot.py with the attached UART, keeping the existing app, note, installed CJI slot and peripheral configuration fixed across measurements.
+
+## Step 14 — Defer CJI relocation during the first built-in frame
+
+### What I did
+
+I left CJI restore and the bundle-read worker in place, and added a bounded deferral to the kernel-side relocation phase. In the typed Agenda profile it waits for the first frame or for two seconds from the start of the boot compile, whichever comes first. Manual Agenda rebuilds do not extend the deadline. Cache-hit, progress, activation, and error handling still go through the same compiler state machine.
+
+I flashed only the application partition and repeated the stage capture three times with the same headless RV32 configuration, installed CJI source, and notes file. The firmware SHA-256 was 4a3ac9f0d0bf166c91d854dae0ea07c2e9d72a6216db771df9b80226c5480840. The three complete trials are in various/p4-rv32-boot-stages-cji-deferred.json. I also added a physical input test protocol to the design guide.
+
+### Why
+
+The CJI worker loads its tool independently, but relocation runs on the kernel task's internal stack and has instruction-cache coordination requirements. Moving only its earliest execution time keeps those constraints in place. The deadline bounds the delay to the installed CJI application if Agenda cannot render.
+
+### What worked
+
+Median cold source-to-frame dropped from 3.083 s to 2.743 s, an improvement of 339 ms in the three-reboot comparison. The optimized range was 2.737–2.762 s. Compile time stayed near 450 ms and world accounting stayed at 124,588 B. Median engine creation began about 141 ms earlier, while publication followed about 340 ms earlier. The relocation resumed at the deadline and CJI reported the frontend phase and answered the status command. Both host test targets passed, including all 34 native/Wasm integration cases.
+
+### What didn't work
+
+The first frame still missed two seconds. The first file submission occurred around 2.555 s, before the filesystem worker could service it. CJI reached its deadline before publication, so the observed speedup is from bounded reprioritization rather than from removing relocation from the boot interval. This run confirmed CJI's resumption through frontend progress. It did not wait for the unrelated installed CJI application's full compile to finish.
+
+### What I learned
+
+The confirmed gain comes from boot sequencing, with little change in Agenda's compilation or engine time. On both profiles, the app's start message waits behind other worlds' initialization. Decreasing the app's own compile or initial file size is unlikely to recover the whole difference between the measured full boot and the target. More detailed per-world bootstrap measurements are needed before changing general dispatch policy. Opening ready Agenda on physical hardware remains a different test.
+
+### What was tricky to build
+
+The deadline is pinned to the boot compile epoch and cleared by an actual typed Agenda publication. Missing hardware or a failed first render cannot suppress the compiler indefinitely. The work stays on the kernel stack required by the loader.
+
+### What warrants a second pair of eyes
+
+Compare the deadline-expiry and frame-first paths under different boot loads. A first-frame latency win should account for any corresponding delay to the restored CJI application. The two matched series here each cover three headless resets.
+
+### Code review instructions
+
+Review `compiler_tick`, the startup deadline in `agenda_p4.c`, and the unchanged worker handoff in `compiler/install.c`. Repeat scripts/10-measure-agenda-boot.py on both checkpoints. Check the serial trace for successful CJI progress after the deferral and preserve the baseline file, active installation, and profile.
