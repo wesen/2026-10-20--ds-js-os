@@ -122,7 +122,7 @@ if(PICOCALC_NATIVE_ELF)
         file(GLOB_RECURSE tool_inputs CONFIGURE_DEPENDS ${tool_dir}/*.h ${CJI_ROOT}/runtime/*.h
              ${CJI_ROOT}/runtime/*.c ${CJI_ROOT}/tools/rv32/fw/include/*.h)
         add_custom_command(OUTPUT ${tool_output}.z
-            COMMAND sh ${tool_dir}/build-tool.sh ${CJI_ROOT} ${CJI_BUILD}/tool
+            COMMAND sh ${tool_dir}/build-tool.sh ${CJI_ROOT} ${CJI_BUILD}/tool $<IF:$<BOOL:${PICOCALC_COMPILER_PROFILE}>,ON,OFF>
             COMMAND ${PYTHON} ${CMAKE_CURRENT_LIST_DIR}/pack_elf.py ${tool_output} ${tool_output}.z
             DEPENDS ${tool_inputs} ${tool_dir}/tool.c ${tool_dir}/build-tool.sh ${cji_frontend} ${CJI_ROOT}/tools/bundle.mjs
                     ${CJI_ROOT}/tools/jstok.mjs ${CJI_ROOT}/runtime/runtime.c ${CJI_ROOT}/runtime/slas.c
@@ -133,6 +133,9 @@ if(PICOCALC_NATIVE_ELF)
         list(APPEND BUNDLE_EXTRA "natives/compiler.elf=${tool_output}.z" "compiler/unit.list=${CJI_BUILD}/unit.list")
         list(APPEND BUNDLE_EXTRA_DEPS ${tool_output}.z ${CJI_BUILD}/unit.list)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_DEVICE_COMPILER=1)
+        if(PICOCALC_COMPILER_PROFILE)
+            target_compile_definitions(${COMPONENT_LIB} PRIVATE CJI_PROFILE_GC=1)
+        endif()
         target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader idf::esp_app_format)
         target_sources(${COMPONENT_LIB} PRIVATE ${tool_dir}/install.c)
         target_include_directories(${COMPONENT_LIB} PRIVATE ${tool_dir})

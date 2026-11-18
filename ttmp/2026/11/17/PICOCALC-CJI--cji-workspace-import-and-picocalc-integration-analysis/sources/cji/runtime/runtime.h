@@ -23,6 +23,11 @@ int64_t rt_any_length(int64_t a);
 int64_t rt_any_arity(int64_t a);
 int64_t rt_any_unhole(int64_t v);
 
+#ifdef CJI_PROFILE_GC
+/* The benchmark embedder chooses the clock unit (microseconds or guest steps). */
+extern int64_t (*rt_profile_clock)(void);
+extern int64_t rt_gc_ticks, rt_slide_bytes;
+#endif
 extern int64_t rt_collections, rt_copied_bytes;   /* statistics, for slas -g */
 
 void rt_initialize(int64_t heap_bytes, int64_t rootstack_bytes);

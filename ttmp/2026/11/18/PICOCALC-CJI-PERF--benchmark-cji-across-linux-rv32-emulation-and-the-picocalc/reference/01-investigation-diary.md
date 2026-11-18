@@ -92,3 +92,56 @@ Start at scripts/01-prepare.sh and scripts/02-profile.sh, then compare scripts/a
 ### Technical details
 
 The starting configuration uses mark-compact GC, an 8,388,608-byte initial and maximum heap, no spilling, and the original world sources. Temporary benchmark runs retain large profile files outside Git.
+
+## Step 3. Implement matched collection and frontend probes
+
+I added build-time collector instrumentation and a profiling-only P4 control for fixed 8 and 10 MiB heaps. The local Linux measurements now distinguish time in cji_main, time inside collection, and bytes actually handed to the slide loop's memmove. Native, RV32 and hardware measurements are in flight or queued.
+
+### Prompt Context
+
+**User prompts, interpretation and intent.** See Step 2. Preserve complete script provenance and obtain a defensible compiler baseline.
+
+**Previous ticket commit** 2c63204.
+
+### What I did
+
+- Guarded runtime counters with CJI_PROFILE_GC. The compiler embedder supplies either the microsecond clock or guest step counter. Each completed collection accumulates its interval; only a moved object's bytes increment the slide counter.
+- Added cji_main boundaries in aot_main.c, stage1_main.c and the P4 tool. A profiled P4 frontend error can report a partial interval.
+- Added an opt-in firmware build option and cji profile 8|10 for immutable bundled sources. The experiment reserves both configurations before tool loading so heap placement policy stays comparable. Ordinary build and install commands retain their settings.
+- Added scripts/03-host-runs.py, 04-profile-guest-metrics.sh and 05-board-runs.py. The physical runner checks hashes, actual reservation and nested timing bounds before accepting a run.
+
+### Why
+
+The historical counter called copied bytes includes survivors whose addresses are unchanged. Counting payload at the actual move branch answers a different question. A guest instruction count also needs its own unit rather than conversion to hypothetical board seconds.
+
+### What worked
+
+Both host executables built and began emitting reference-identical output. The 10 MiB Agenda warm-up reported 297 collections, 995,195,416 survivor bytes and 172,771,688 slide bytes. Files' completed native profile counted 20,174,143,435 x86 instructions.
+
+### What didn't work
+
+The first guest measurement briefly shared physical core 2 with host timing because Linux logical CPUs 2 and 6 are siblings. Moved the guest shell and emulator to logical CPU 4. Retain affected samples with the other runs and disclose host-load variability.
+
+### What I learned
+
+A small difference in peak live data can coexist with large differences in collection frequency and cumulative live bytes. Frontend-wide timing is required to learn how much that difference matters.
+
+### What was tricky to build
+
+The device firmware and private compiler tool compile independently and share compiler_job.h. Both sides must agree whether the profiling ABI is enabled. The feature is off by default; the benchmark build normalizes the CMake boolean passed to build-tool.sh.
+
+### What warrants a second pair of eyes
+
+Report slide bytes separately from survivor bytes. Exclude warm-up from summaries. The guest step counter includes the cost of the instrumentation itself. Keep self-instruction shares separate from elapsed time.
+
+### What should be done in the future
+
+Collect and qualify complete profiles. Test the prior prediction that increasing Agenda's heap will reduce collections and time in the collector while costing two additional MiB. The prediction of a wall-time improvement is falsified if the larger heap's matched frontend interval does not fall.
+
+### Code review instructions
+
+Follow rt_collect and compact_collect, then inspect each platform's cji_main brackets. The physical observer records the actual measured reservation and keeps progress on stderr.
+
+### Technical details
+
+Both hardware cases are compile-only, with the same source and prelude, normal 18 MiB job limit, and a private compiler instance per job. The generation and validation scripts reside under this ticket's scripts directory.

@@ -16,6 +16,9 @@ extern int64_t cji_error_shape[];
 int64_t error_shape(void) { return (int64_t)(intptr_t)cji_error_shape; }
 extern uint64_t _hc_steps(void);
 #define STAGE1_SLACK 4096
+#ifdef CJI_PROFILE_GC
+static int64_t guest_steps(void) { return (int64_t)_hc_steps(); }
+#endif
 
 int main(int argc, char **argv)
 {
@@ -48,7 +51,16 @@ int main(int argc, char **argv)
 	   past the end: stage 1 is assembled with --rootstack-slack STAGE1_SLACK, its largest frame being 2,832 bytes) */
 	rt_initialize((heap_bytes + 7) / 8 * 8, (root_bytes + 7) / 8 * 8 + STAGE1_SLACK);
 	rootstack_end -= STAGE1_SLACK / 8;
+#ifdef CJI_PROFILE_GC
+	rt_profile_clock = guest_steps;
+	uint64_t start = _hc_steps();
+#endif
 	status = cji_main();
+#ifdef CJI_PROFILE_GC
+	uint64_t elapsed = _hc_steps() - start;
+	if (gc_stats) fprintf(stderr, "cji_metrics frontend_steps=%llu gc_steps=%llu slide_bytes=%llu\n",
+		(unsigned long long)elapsed, (unsigned long long)rt_gc_ticks, (unsigned long long)rt_slide_bytes);
+#endif
 	fflush(stdout);
 	if (gc_stats)
 		fprintf(stderr, "cji: %lld collections, %lld bytes copied, heap now %lld bytes, most live %lld bytes, spilled %lld bytes;"

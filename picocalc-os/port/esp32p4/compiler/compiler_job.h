@@ -8,6 +8,11 @@
 #define LARGE_FRONTEND_HEAP (10u * 1024 * 1024)
 typedef enum { CJI_FRONTEND, CJI_LINK, CJI_ASSEMBLE } compiler_phase_t;
 typedef struct {
+#ifdef CJI_PROFILE_GC
+    size_t profile_heap;
+    int profile_started, profile_complete;
+    int64_t frontend_us, gc_us, slide_bytes, survivor_bytes, live_peak, collections;
+#endif
     void *frontend_heap;
     size_t frontend_heap_size;
     const char *source;

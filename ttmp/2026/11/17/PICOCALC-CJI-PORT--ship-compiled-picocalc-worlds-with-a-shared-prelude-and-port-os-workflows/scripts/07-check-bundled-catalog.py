@@ -14,10 +14,12 @@ import time
 import serial
 
 
-def check(port, file, source, timeout):
+def check(port, file, source, timeout, profile_heap):
     expected = hashlib.sha256(source).hexdigest()
+    command = f"cji profile {profile_heap} {file}" if profile_heap else f"cji check {file}"
+    metrics = None
     port.reset_input_buffer()
-    port.write(f"\ncji check {file}\n".encode())
+    port.write(f"\n{command}\n".encode())
     refusal = None
     reserved_bytes = None
     deadline = time.monotonic() + timeout
@@ -27,13 +29,17 @@ def check(port, file, source, timeout):
             print(line, file=sys.stderr, flush=True)
         if line.startswith("cji: busy"):
             time.sleep(2)
-            port.write(f"\ncji check {file}\n".encode())
+            port.write(f"\n{command}\n".encode())
             continue
         if "Guru Meditation" in line or "assert failed:" in line or "Rebooting..." in line:
             time.sleep(15)
             return {"result": "device fault", "diagnostic": line}
         if line.startswith(("cji: bundled JS", "cji: cannot allocate", "unknown command cji")):
             raise RuntimeError(line)
+        if line.startswith("cji: metrics "):
+            metrics = {key: int(value) for key, value in (field.split("=", 1) for field in line.split()[2:])}
+            print(line, file=sys.stderr, flush=True)
+            continue
         if line.startswith("cji: frontend reserved_bytes="):
             reserved_bytes = int(line.split("=")[1])
             continue
@@ -48,6 +54,10 @@ def check(port, file, source, timeout):
         if received != expected:
             raise RuntimeError(f"{file}: unexpected source SHA-256 {received}")
         row = {"result": status, "elapsed_ms": int(ms), "scratch_bytes": int(peak), "source_sha256": received}
+        if metrics is not None:
+            row["metrics"] = metrics
+        if profile_heap:
+            row["requested_heap_mib"] = profile_heap
         if reserved_bytes is not None:
             row["frontend_reserved_bytes"] = reserved_bytes
         if refusal is not None:
@@ -64,6 +74,7 @@ def check(port, file, source, timeout):
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--port", default="/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00")
 parser.add_argument("--timeout", type=int, default=1200, help="seconds to wait per world")
+parser.add_argument("--profile-heap", type=int, choices=(8, 10), help="run a controlled compile on profiling firmware (MiB)")
 parser.add_argument("names", nargs="*")
 args = parser.parse_args()
 root = Path("picocalc-os/js")
@@ -76,5 +87,5 @@ with serial.Serial(args.port, 115200, timeout=.25) as connection:
         source = (root / file).read_bytes()
         print(f"Checking {file}", file=sys.stderr, flush=True)
         row = {"world": world["name"], "file": file, "source_bytes": len(source)}
-        row.update(check(connection, file, source, args.timeout))
+        row.update(check(connection, file, source, args.timeout, args.profile_heap))
         print(json.dumps(row), flush=True)

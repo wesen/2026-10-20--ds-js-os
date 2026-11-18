@@ -15,9 +15,11 @@ compile() {
     -I"$out/inc" -I"$c/runtime" -I"$sljit" -I"$here" -fPIC -fvisibility=hidden \
     -fstack-usage -ffunction-sections -fdata-sections -fno-builtin -mno-relax "$@"
 }
+profile_flag=
+if [ "${3:-OFF}" = ON ]; then profile_flag=-DCJI_PROFILE_GC; fi
 for name in runtime libc softfloat tool; do
  case $name in runtime) file=$c/runtime/runtime.c;; tool) file=$here/tool.c;; *) file=$fw/$name.c;; esac
- compile -c "$file" -o "$out/$name.o"
+ compile $profile_flag -c "$file" -o "$out/$name.o"
 done
 sed -n '/^[[:space:]]*\.globl setjmp/,/^[[:space:]]*\.globl _start/{/\.globl _start/d;p;}' "$fw/hostcalls.S" > "$out/jump.S"
 compile -c "$out/jump.S" -o "$out/jump.o"

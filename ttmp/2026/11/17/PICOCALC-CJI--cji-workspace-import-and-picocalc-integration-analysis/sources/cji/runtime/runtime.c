@@ -44,6 +44,13 @@ int64_t rt_entries[2];
    reads with rt_import; a root while it is set, and gone from the snapshot (nothing reads it later) */
 int64_t rt_exports[2];
 int64_t rt_collections, rt_copied_bytes;
+#ifdef CJI_PROFILE_GC
+int64_t (*rt_profile_clock)(void);
+int64_t rt_gc_ticks, rt_slide_bytes;
+#define COUNT_SLIDE(n) (rt_slide_bytes += (n))
+#else
+#define COUNT_SLIDE(n) ((void)0)
+#endif
 int64_t rt_live_max;   /* CJI-3: the most bytes live after any collection (slas -g) */
 int64_t rt_heap_cap;   /* CJI-3: when set, the heap may not grow past this many bytes (-H) */
 int64_t rt_heap_ratio;   /* CJI-3: when set, the heap also grows while live data fill more than 1/ratio of it (-G) */
@@ -478,8 +485,11 @@ static void compact_collect(int64_t **rootstack_top, int64_t bytes)
 	}
 	MC_EACH_LIVE_FROM(p, mc_dense, n, {
 		int64_t *to = (int64_t *)(intptr_t)mc_new_word((int64_t)(intptr_t)p);
-		if (to != p)
-			memmove(to, p, (size_t)(length_of(p[0]) + 1) * 8);
+		if (to != p) {
+			size_t bytes = (size_t)(length_of(p[0]) + 1) * 8;
+			COUNT_SLIDE(bytes);
+			memmove(to, p, bytes);
+		}
 	});
 	rt_free(mc_live);
 	rt_free(mc_before);
@@ -510,6 +520,9 @@ int64_t rt_hybrid_compactions;   /* (statistics: the hybrid collector's collecti
 /* Called by compiled code when an allocation of `bytes` would not fit. */
 void rt_collect(int64_t **rootstack_top, int64_t bytes)
 {
+#ifdef CJI_PROFILE_GC
+	int64_t start = rt_profile_clock ? rt_profile_clock() : 0;
+#endif
 	stress_restore();
 	if (rt_gc_compact == 1 || (rt_gc_compact == 2 && !copy_fits())) {
 		rt_hybrid_compactions += rt_gc_compact == 2;
@@ -518,6 +531,9 @@ void rt_collect(int64_t **rootstack_top, int64_t bytes)
 	else
 		copy_collect(rootstack_top, bytes);
 	stress_lower(bytes);
+#ifdef CJI_PROFILE_GC
+	if (rt_profile_clock) rt_gc_ticks += rt_profile_clock() - start;
+#endif
 }
 
 /* ---- chapter 27: the heap after main, as data ---------------------------------------------

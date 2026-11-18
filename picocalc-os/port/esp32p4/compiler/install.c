@@ -197,15 +197,18 @@ static void build_one(void) {
     peak=0;
     refusal.reason=NULL;
     // Large bundled sources need a single space before relocation divides PSRAM.
-    if (job.length>SOURCE_LIMIT) {
-        job.frontend_heap_size=LARGE_FRONTEND_HEAP;
+    if (job.length>SOURCE_LIMIT) job.frontend_heap_size=LARGE_FRONTEND_HEAP;
+#ifdef CJI_PROFILE_GC
+    if (job.profile_heap) job.frontend_heap_size=job.profile_heap;
+#endif
+    if (job.frontend_heap_size) {
         job.frontend_heap=allocate(job.frontend_heap_size);
         if (!job.frontend_heap) snprintf(job.error,sizeof job.error,"frontend heap reservation");
     }
     // Relocation finishes before stage 1 writes its heap. Share the reservation
     // with the decompressor so a third multi-megabyte block is unnecessary.
     tool_image=job.error[0] ? NULL : p4_bundle_read("natives/compiler.elf",&tool_size,
-                                                   job.frontend_heap,LARGE_FRONTEND_HEAP);
+                                                   job.frontend_heap,job.frontend_heap_size);
     job.exports=port_read_file("compiler/unit.list",&job.exports_length);
     signal_kernel();
     // ELF relocation flushes the instruction cache with both CPUs stopped.
@@ -223,6 +226,14 @@ static void build_one(void) {
         }
         printf("cji: frontend reserved_bytes=%u\n",(unsigned)job.frontend_heap_size);
         esp_elf_request(&tool,0,1,args);
+#ifdef CJI_PROFILE_GC
+        if (job.profile_started) {
+            printf("cji: metrics complete=%d frontend_us=%lld gc_us=%lld collections=%lld live_peak_bytes=%lld survivor_bytes=%lld slide_bytes=%lld\n",
+                   job.profile_complete, (long long)job.frontend_us, (long long)job.gc_us,
+                   (long long)job.collections, (long long)job.live_peak, (long long)job.survivor_bytes,
+                   (long long)job.slide_bytes);
+        }
+#endif
         memory_sample(job.status ? "compiler refused" : "assembled");
         if (!job.status && checking) {
             if (!digest(job.module,job.module_length,candidate.artifact)) {
@@ -255,7 +266,7 @@ static void build_worker(void *arg) {
         build_one();
     }
 }
-static void begin(char *source,size_t len,bool automatic,bool check_only) {
+static void begin(char *source,size_t len,bool automatic,bool check_only,size_t profile_heap) {
     checking=check_only;
     memset(&candidate,0,sizeof candidate);
     candidate.version=1; candidate.slot=active.version ? !active.slot : 0;
@@ -264,6 +275,11 @@ static void begin(char *source,size_t len,bool automatic,bool check_only) {
     if (!digest(source,len,candidate.source)) { free(source); puts("cji: hash failed"); return; }
     job=(compiler_job_t){.source=source,.length=len,.alloc=allocate,.resize=resize,.release=release,
         .format=vsnprintf,.number=strtod,.math=compiler_math,.micros=esp_timer_get_time,.phase=tool_phase,.status=-1};
+#ifdef CJI_PROFILE_GC
+    job.profile_heap=profile_heap;
+#else
+    (void)profile_heap;
+#endif
     began=esp_timer_get_time();
     reuse=!checking && active.version && active.automatic==automatic &&
          !memcmp(candidate.firmware,active.firmware,32) && !memcmp(candidate.source,active.source,32);
@@ -305,12 +321,21 @@ void compiler_console(const char *command) {
     }
     if (state!=READY) { puts("cji: busy"); return; }
     const char *path=strchr(command,' ');
-    if (!strncmp(command,"check ",6)) {
-        const char *file=command+6;
+    size_t profile_heap=0;
+#ifdef CJI_PROFILE_GC
+    if (!strncmp(command,"profile ",8)) {
+        const char *arg=command+8;
+        if (!strncmp(arg,"8 ",2)) { profile_heap=FRONTEND_HEAP_CAP; path=arg+1; }
+        else if (!strncmp(arg,"10 ",3)) { profile_heap=LARGE_FRONTEND_HEAP; path=arg+2; }
+        else { puts("cji: expected profile 8|10 BUNDLED.js"); return; }
+    }
+#endif
+    if (profile_heap || !strncmp(command,"check ",6)) {
+        const char *file=path+1;
         size_t n=strlen(file), len=0;
         char *source=n>3 && !strcmp(file+n-3,".js") && fs_path_ok(file) ? port_read_file(file,&len) : NULL;
         if (!source) { puts("cji: bundled JS source unavailable"); return; }
-        begin(source,len,false,true);
+        begin(source,len,false,true,profile_heap);
         return;
     }
     bool automatic=!strncmp(command,"install ",8);
@@ -322,7 +347,7 @@ void compiler_console(const char *command) {
     size_t len=0;
     char *source=read_bounded_file(full,SOURCE_LIMIT,&len);
     if (!source || memchr(source,0,len)) { free(source); puts("cji: expected bounded JavaScript source"); return; }
-    begin(source,len,automatic,false);
+    begin(source,len,automatic,false,0);
 }
 void compiler_restore(void) {
     size_t n=0;
@@ -333,7 +358,7 @@ void compiler_restore(void) {
         (active.engine!=ENG_NATIVE && active.engine!=ENG_JS)) { memset(&active,0,sizeof active); return; }
     char *src=read_bounded_file(source_path(active.slot),SOURCE_LIMIT,&n);
     if (!src || !matches(src,n,active.source)) { puts("cji: installed source missing or changed"); free(src); return; }
-    begin(src,n,active.automatic,false);
+    begin(src,n,active.automatic,false,0);
 }
 static void rollback(void) {
     char why[128];

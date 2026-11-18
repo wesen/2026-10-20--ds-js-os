@@ -66,11 +66,29 @@ static void *use_reserved_heap(size_t size) {
     return job->frontend_heap;
 }
 
+#ifdef CJI_PROFILE_GC
+static int64_t frontend_start;
+static void finish_profile(int complete) {
+    job->frontend_us=job->micros()-frontend_start;
+    job->profile_complete=complete;
+    job->gc_us=rt_gc_ticks;
+    job->slide_bytes=rt_slide_bytes;
+    job->survivor_bytes=rt_copied_bytes;
+    job->live_peak=rt_live_max;
+    job->collections=rt_collections;
+}
+#endif
+
 void compiler_entry(int argc, char **argv) {
     if (argc != 1) return;
     job=(compiler_job_t *)argv[0];
     job->status=-1;
-    if (setjmp(escape)) return;
+    if (setjmp(escape)) {
+#ifdef CJI_PROFILE_GC
+        if (in_frontend && job->profile_started) finish_profile(0);
+#endif
+        return;
+    }
     job->phase(CJI_FRONTEND);
     if (fw_file_put("input.js",job->source,job->length)) failure("source allocation");
     char *args[]={"input.js","--world-unit",NULL};
@@ -92,7 +110,17 @@ void compiler_entry(int argc, char **argv) {
     FILE *previous=stdout;
     stdout=output;
     in_frontend=1;
+#ifdef CJI_PROFILE_GC
+    if (job->profile_heap) {
+        job->profile_started=1;
+        rt_profile_clock=job->micros;
+        frontend_start=job->micros();
+    }
+#endif
     int status=(int)cji_main();
+#ifdef CJI_PROFILE_GC
+    if (job->profile_started) finish_profile(!status && !exc_flag);
+#endif
     in_frontend=0;
     fclose(output); stdout=previous;
     if (status || exc_flag) {

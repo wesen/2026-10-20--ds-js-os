@@ -7,6 +7,16 @@
 #include <string.h>
 #include "runtime.h"
 
+#ifdef CJI_PROFILE_GC
+#include <time.h>
+static int64_t monotonic_us(void)
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+}
+#endif
+
 extern int64_t cji_main(void);
 extern int64_t cji_error_shape[];
 int64_t error_shape(void) { return (int64_t)cji_error_shape; }
@@ -43,7 +53,16 @@ int main(int argc, char **argv)
 	rt_argc = argc - i;
 	rt_argv = argv + i;
 	rt_initialize((heap_bytes + 7) / 8 * 8, (root_bytes + 7) / 8 * 8);
+#ifdef CJI_PROFILE_GC
+	rt_profile_clock = monotonic_us;
+	int64_t start = monotonic_us();
+#endif
 	status = cji_main();
+#ifdef CJI_PROFILE_GC
+	int64_t elapsed = monotonic_us() - start;
+	if (gc_stats) fprintf(stderr, "cji_metrics frontend_us=%lld gc_us=%lld slide_bytes=%lld\n",
+		(long long)elapsed, (long long)rt_gc_ticks, (long long)rt_slide_bytes);
+#endif
 	fflush(stdout);
 	if (gc_stats)
 		fprintf(stderr, "cji: %lld collections, %lld bytes copied, heap now %lld bytes, most live %lld bytes, spilled %lld bytes%s\n",
