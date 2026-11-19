@@ -713,3 +713,21 @@ Review the bounded record collection in `agenda_p4.c` and the completed-segment 
 ## Step 28 — Publish the powered startup profile and verify restoration
 
 The go-go-parc report was pushed on main at d1ce869. The flash writer verified the original app image after the profiling run and the console answered cji status. The profiling firmware remains available for reproducing the powered boot trace. The keyboard-to-LCD measurement still needs a physical press and capture.
+
+## Step 29 — Prepare a compositor message profile
+
+### What I did
+
+I added three compositor segment totals to the existing boot profiler for draw, world status, and all other turns. The collection uses the kernel turn label before completion clears it and includes segments that resume an asynchronous turn. Each total also records how much work ran after Agenda's successful file reply. The diagnostic world workload is still present for direct comparison.
+
+### What worked
+
+The peripheral-enabled RV32 image built with SHA-256 36dff73ad99d57b043dbade9e298d47b7c13862c58a594520d862c6628e77f04. Host system and native suites passed, including compositor restart, launcher behavior, and all 34 native/Wasm integration cases. The sampler accepted a saved powered trace and the extended trace format. The new image has not run on the board yet.
+
+### Why
+
+The earlier powered profile attributes 293 ms of the wait to the compositor. Separating draws and status handlers will reveal whether the cost is repainting, processing fault and restart messages, or other service work.
+
+### Code review instructions
+
+Use the powered boot probe with the compositor trace image and parse the per-world output from scripts/10-measure-agenda-boot.py. Compare the three compositor rows with the earlier world total before choosing an optimization.

@@ -41,6 +41,12 @@ typedef struct {
 } world_startup;
 
 static world_startup startup[MAX_WORLDS];
+typedef struct {
+  vtime_t total_us, reply_wait_us;
+  unsigned segments, reply_wait_segments;
+} compositor_startup;
+static compositor_startup compositor_turns[3];
+static const char *const compositor_kinds[] = {"draw", "worlds.status", "other"};
 static bool recording_boot;
 static bool boot_report_pending;
 
@@ -259,6 +265,17 @@ void p4_agenda_stage(const world_t *world, const char *stage) {
 
 void p4_agenda_world_segment(const world_t *world, vtime_t start, vtime_t cost, bool booting) {
   if (!recording_boot) return;
+  if (!booting && !strcmp(world->name, "compositor")) {
+    unsigned kind = 0;
+    while (kind < 2 && strcmp(world->turn_type, compositor_kinds[kind])) kind++;
+    compositor_startup *turn = &compositor_turns[kind];
+    turn->total_us += cost;
+    turn->segments++;
+    if (boot_reply_received) {
+      turn->reply_wait_us += cost;
+      turn->reply_wait_segments++;
+    }
+  }
   world_startup *sample = &startup[world->id];
   if (boot_reply_received) {
     sample->reply_wait_us += cost;
@@ -282,6 +299,12 @@ void p4_agenda_js_boot(const world_t *world, const vtime_t *stages) {
 void p4_agenda_report_boot(void) {
   if (!boot_report_pending) return;
   boot_report_pending = false;
+  for (unsigned i = 0; i < sizeof compositor_turns / sizeof *compositor_turns; i++) {
+    const compositor_startup *turn = &compositor_turns[i];
+    printf("agenda compositor kind=%s total_us=%lld segments=%u reply_wait_us=%lld reply_wait_segments=%u\n",
+           compositor_kinds[i], (long long)turn->total_us, turn->segments,
+           (long long)turn->reply_wait_us, turn->reply_wait_segments);
+  }
   for (int i = 0; i < MAX_WORLDS; i++) {
     const world_startup *sample = &startup[i];
     if (!sample->attempts) continue;

@@ -762,6 +762,11 @@ static void run_segment(world_t *W, bool is_settle) {
   else if (W->turn_failed) snprintf(why, sizeof why, "%s", W->turn_error ? W->turn_error : "its turn failed");
   W->cpu_us += cost;
   K.lane_busy += cost;
+#if PICOCALC_TYPED_AGENDA
+  // finish_turn and crash clear the current turn label.
+  extern void p4_agenda_world_segment(const world_t *, vtime_t, vtime_t, bool);
+  p4_agenda_world_segment(W, K.vnow, cost, booting);
+#endif
   if (why[0]) {
     if (W->status == W_RESTARTING || W->status == W_STOPPED) {   // it never started: count it as a crash of the start
       W->status = W_IDLE;
@@ -769,10 +774,6 @@ static void run_segment(world_t *W, bool is_settle) {
     crash(W, why);
   } else if (W->in_turn && (W->turn_done || W->turn_rejected)) finish_turn(W);
   if (rc == 0 && booting && !why[0]) { start_timers(W, K.vnow + cost); replay_retained(W); }
-#if PICOCALC_TYPED_AGENDA
-  extern void p4_agenda_world_segment(const world_t *, vtime_t, vtime_t, bool);
-  p4_agenda_world_segment(W, K.vnow, cost, booting);
-#endif
   K.lane_free = K.vnow + cost;
   K.cur = NULL;
   apply_deferred(K.lane_free);

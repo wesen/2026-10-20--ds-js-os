@@ -67,6 +67,20 @@ def capture(port, world_profile):
         if "agenda" not in worlds or not any(boot["engine"] == 0 for boot in worlds.values()):
             raise SystemExit("missing per-world boot measurements")
         trial["worlds"] = worlds
+        compositor = {
+            kind: {
+                "total_us": int(total), "segments": int(segments),
+                "reply_wait_us": int(wait), "reply_wait_segments": int(wait_segments),
+            }
+            for kind, total, segments, wait, wait_segments in re.findall(
+                r"agenda compositor kind=(\S+) total_us=(\d+) segments=(\d+) "
+                r"reply_wait_us=(\d+) reply_wait_segments=(\d+)", log
+            )
+        }
+        if compositor:
+            if compositor.keys() != {"draw", "worlds.status", "other"}:
+                raise SystemExit("incomplete compositor boot measurements")
+            trial["compositor"] = compositor
     return trial
 
 
