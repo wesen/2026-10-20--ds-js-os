@@ -90,8 +90,8 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         released++;
         return 1;
     case NW_CALL_SLEEP:
-        expect(a == 0 && yields < 32, "bounded open work");
-        return 200 + yields++;
+        expect(a == 0 && yields < 1900, "bounded deferred work");
+        return 2000 + yields++;
     case NW_CALL_STORE_LOAD: {
         size_t len = strlen(saved_record);
         expect(len < out_n, "store load capacity");
@@ -110,16 +110,20 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
 
 static int no_error(char *out, size_t n) { if (n) *out = 0; return 0; }
 
-#if defined(TEST_EDIT) || defined(TEST_POS) || defined(TEST_FIND) || defined(TEST_MARKDOWN)
+#if defined(TEST_EDIT) || defined(TEST_POS) || defined(TEST_FIND) || defined(TEST_PREVIEW)
 static void key(nw_elf_module *world, const char *name, const char *ch)
 {
     char payload[128];
     snprintf(payload, sizeof payload, "{\"key\":\"%s\",\"ch\":\"%s\",\"state\":\"down\"}", name, ch);
+    int first = yields;
     expect(world->event(NW_MESSAGE, 0, 0, 0, "key", payload, strlen(payload), "compositor") == NW_DONE, "key completes");
+    for (int i = first; i < yields; i++) {
+        expect(world->event(NW_SETTLE, 1, 0, 2000 + i, "", "null", 4, "") == NW_DONE, "background work completes");
+    }
 }
 #endif
 
-#if defined(TEST_EDIT) || defined(TEST_FIND) || defined(TEST_MARKDOWN)
+#if defined(TEST_EDIT) || defined(TEST_FIND) || defined(TEST_PREVIEW)
 static void type(nw_elf_module *world, const char *text)
 {
     for (; *text; text++) {
@@ -150,7 +154,7 @@ int main(void)
     int result = world.event(NW_SETTLE, 1, 0, 100, "", settled, strlen(settled), "");
     for (int i = 0; result == NW_LATER && i < 32; i++) {
         expect(yields == i + 1 && frames == 1 && replies == 0, "open stays pending during a slice");
-        result = world.event(NW_SETTLE, 1, 0, 200 + i, "", "null", 4, "");
+        result = world.event(NW_SETTLE, 1, 0, 2000 + i, "", "null", 4, "");
     }
     expect(result == NW_DONE && frames == 2 && replies == 1, "read settles and publishes");
 #ifdef TEST_FIND
@@ -160,16 +164,18 @@ int main(void)
         else type(&world, action + 5);
     }
 #endif
-#ifdef TEST_MARKDOWN
+#ifdef TEST_PREVIEW
     for (unsigned i = 0; i < sizeof markdown_actions / sizeof *markdown_actions; i++) {
         const char *action = markdown_actions[i];
         if (!strncmp(action, "key ", 4)) key(&world, action + 4, "");
         else type(&world, action + 5);
+#ifdef TEST_MARKDOWN
         if (!strcmp(action, "key f2")) {
             char saved[64];
             snprintf(saved, sizeof saved, "{\"bytes\":%d}", (int)strlen(saved_text));
             expect(world.event(NW_SETTLE, 1, 0, 300, "", saved, strlen(saved), "") == NW_DONE, "Markdown save");
         }
+#endif
     }
 #endif
 #ifdef TEST_POS

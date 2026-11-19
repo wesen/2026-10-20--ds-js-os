@@ -3,6 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {dirname, join, resolve} from 'node:path';
+import {runInNewContext} from 'node:vm';
 import {fileURLToPath} from 'node:url';
 import '../../../../../../picocalc-os/compiler/typed-wasm.js';
 import '../../../../../../picocalc-os/compiler/typed-rv32.js';
@@ -26,11 +27,18 @@ const edit = process.argv.includes('--edit');
 const positions = process.argv.includes('--positions');
 const find = process.argv.includes('--find');
 const markdown = process.argv.includes('--markdown');
-assert([large, edit, positions, find, markdown].filter(Boolean).length <= 1, 'select at most one workflow');
-const turnBudget = large && !process.argv.includes('--stock-budget') ? 200 : 50;
-const filename = markdown ? 'entry.MD' : 'entry.txt';
-const contents = markdown ? '# Straße **Title**\n- one\n9) numbered\n```\ncode\n\n```\n> quote `text`\n**plain** [link](u)\ncontinued\n\n### Low\n```\n' +
-        'more code\n'.repeat(22) + 'last code' :
+const previewLarge = process.argv.includes('--preview-large');
+const previewLine = process.argv.includes('--preview-line');
+const capacity = previewLarge || previewLine;
+const preview = markdown || capacity;
+assert([large, edit, positions, find, markdown, previewLarge, previewLine].filter(Boolean).length <= 1, 'select at most one workflow');
+const turnBudget = (large || previewLine) && !process.argv.includes('--stock-budget') ? 200 : 50;
+const filename = preview ? 'entry.MD' : 'entry.txt';
+const contents = previewLarge ?
+    ('A reading paragraph, followed by a blank line.\n\n').repeat(450) + 'END OF PREVIEW' :
+    previewLine ? '🙂'.repeat(4508) + ' END OF PREVIEW' :
+    markdown ? '# Straße **Title**\n- one\n9) numbered\n```\ncode\n\n```\n> quote `text`\n**plain** [link](u)\ncontinued\n\n### Low\n```\n' +
+        'more code\n'.repeat(22) + 'last code\n`' + '🙂'.repeat(54) + ' word  tab\tend' :
     find ? 'A🙂 BETA beta beta\nKelvin K and İce\nlast BeTa\noverlap ababa\n' :
     large ? ('text '.repeat(15) + '\r\n').repeat(851) + 'x'.repeat(9) :
     'A🙂  long line ' + 'abcd efgh '.repeat(9) + '\r\n\t"hello"\rLast\n';
@@ -46,6 +54,29 @@ const markdownActions = [
     'type ten', 'key f2', 'key f6', 'capture preview.png', 'key down', 'key pgdn', 'key up',
     'key esc', 'key f6', 'key f6', 'key f5', 'key f5', 'capture fence.png',
 ];
+const previewLargeActions = [
+    'key f6', 'capture preview.png',
+    ...Array(previewLine ? 7 : 57).fill('key pgdn'), 'capture preview-end.png',
+    ...Array(4).fill('key pgup'), 'capture preview-back.png', 'key esc',
+];
+const previewActions = capacity ? previewLargeActions : markdownActions;
+
+// Compare the compositor's visual row model for each captured frame.
+const compositor = readFileSync(join(os, 'js/system/compositor.js'), 'utf8');
+const wrap = runInNewContext(compositor.slice(compositor.indexOf('const len ='), compositor.indexOf('// ---- layout:')) + '\nwrapText');
+function visualFrame(frame) {
+    const node = frame.kids[1];
+    if (node?.t !== 'lines') return frame;
+    const rows = node.wrapped ? node.items : node.items.flatMap(item =>
+        wrap(item.s, 49 - (item.indent ?? 0)).map(s => ({...item, s})));
+    const first = node.wrapped ? 0 : Math.min(node.scroll ?? 0, Math.max(0, rows.length - 17));
+    return {...frame, kids:[frame.kids[0], rows.slice(first, first + 17).map(row => ({...row}))]};
+}
+
+function distinct(frames) {
+    return frames.filter((frame, i) => i === 0 || JSON.stringify(frame) !== JSON.stringify(frames[i - 1]));
+}
+
 if (find) {
     // Verify the folding assumptions behind ASCII keyboard queries.
     const asciiFolds = [], expandingFolds = [];
@@ -78,10 +109,10 @@ function run(name, compiled) {
         }
         mkdirSync(dirname(join(js, w.file)), {recursive:true});
         copyFileSync(join(os, 'js', w.file), join(js, w.file));
-        if (large && w.name === 'editor') return {...w, mem_kb:2048};
+        if ((large || capacity) && w.name === 'editor') return {...w, mem_kb:2048};
         return w;
     });
-    entries.push({name:'probe',file:'probe.js',claims:['frames.read'],mem_kb:384});
+    entries.push({name:'probe',file:'probe.js',claims:['frames.read'],mem_kb:capacity ? 2048 : 384});
     writeFileSync(join(js, 'system.json'), JSON.stringify({worlds:entries}));
     writeFileSync(join(js, 'probe.js'), `
 service("probe").needs("frames").on("frames", (s, m, msg) => {
@@ -102,7 +133,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         'wait 2000', 'key e', 'wait 1000', 'capture editor.png',
         'key f1', 'wait 530', 'key d', 'wait 530', 'key enter', 'wait 1000', 'capture opened.png',
         ...(find ? findActions.flatMap(action => [action, 'wait 530']) : []),
-        ...(markdown ? markdownActions.flatMap(action => [action, 'wait 530']) : []),
+        ...(preview ? previewActions.flatMap(action => [action, 'wait 530']) : []),
         ...(positions ? ['key right', 'wait 530', 'key esc', 'wait 530'] : []),
         ...(edit ? ['key right', 'wait 530', 'key right', 'wait 530', 'key backspace', 'wait 530',
             'key f5', 'wait 530', 'key f5', 'wait 530', 'type tail', 'wait 530', 'key enter', 'wait 530',
@@ -146,15 +177,23 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         assert(preview.items.some(item => item.s === 'STRASSE TITLE'));
         assert(preview.items.some(item => item.s === 'plain link continued'));
         assert(preview.items.some(item => item.s === '10) ten'));
-        assert(frames.some(frame => frame.tree.kids[1]?.scroll === 17));
         const viewport = frames.at(-2).tree.kids[1].rows;
         assert.equal(viewport.length, 18);
         assert(viewport.every(row => row.color === 'blue'));
+    } else if (capacity) {
+        const windows = frames.filter(frame => frame.tree.kids[1]?.t === 'lines');
+        assert(windows.some(frame => visualFrame(frame.tree).kids[1].some(row => row.s === 'END OF PREVIEW')));
+        assert(!visualFrame(windows.at(-1).tree).kids[1].some(row => row.s === 'END OF PREVIEW'));
+        if (compiled) assert(windows.every(frame => frame.tree.kids[1].items.length <= 17));
     } else assert.equal(statuses.length, positions ? 4 : 3);
     const pictures = ['editor', 'opened', ...(edit ? ['saved'] : []), ...(find ? ['found'] : []),
-        ...(markdown ? ['preview', 'fence'] : []), 'fresh'];
+        ...(markdown ? ['preview', 'fence'] : []),
+        ...(capacity ? ['preview', 'preview-end', 'preview-back'] : []), 'fresh'];
     const pixels = pictures.map(name => readFileSync(join(out, name + '.png')));
-    if (!positions) return {frames, pixels, saved};
+    if (!positions) {
+        const visual = preview ? distinct(frames.map(frame => ({...frame, tree:visualFrame(frame.tree)}))) : frames;
+        return {frames:visual, pixels, saved};
+    }
     const kept = JSON.parse(readFileSync(record, 'utf8')).pos;
     assert.equal(Object.keys(kept).length, 20);
     assert(!('prior-0' in kept), 'oldest entry is evicted');
@@ -194,8 +233,8 @@ try {
         (find ? '#define TEST_FIND\nstatic const char *const find_actions[] = {' +
             findActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
             '};\n' : '') +
-        (markdown ? '#define TEST_MARKDOWN\nstatic const char *const markdown_actions[] = {' +
-            markdownActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
+        (preview ? (markdown ? '#define TEST_MARKDOWN\n' : '') + '#define TEST_PREVIEW\nstatic const char *const markdown_actions[] = {' +
+            previewActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
             '};\n' : ''));
     execFileSync(cc, [
         '-march=rv32im', '-mabi=ilp32', '-O2', '-fno-builtin', '-msmall-data-limit=0',
@@ -206,7 +245,7 @@ try {
     const rv32 = execFileSync(emu, [driver, app], {encoding:'utf8',timeout:15000}).trim().split('\n');
     assert.equal(rv32.pop(), 'Typed Editor startup, file read, missing file, and grant release passed');
     const trees = rv32.map(line => JSON.parse(line)).filter(frame => frame.kids[0].s !== 'Saving...');
-    assert.deepEqual(trees.filter((frame, i) => i === 0 || JSON.stringify(frame) !== JSON.stringify(trees[i - 1])),
+    assert.deepEqual(distinct(trees.map(frame => preview ? visualFrame(frame) : frame)),
         original.frames.map(frame => frame.tree));
     console.log(JSON.stringify({inputBytes:Buffer.byteLength(contents), matchingWasmFramebuffers:compiled.pixels.length,
         rv32Open:true, wasmBytes:wasm.length, elfBytes:elf.length, wasmTurnBudgetMs:turnBudget}));

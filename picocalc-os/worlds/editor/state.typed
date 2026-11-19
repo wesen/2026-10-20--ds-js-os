@@ -45,5 +45,14 @@ record WorldState {
     preview: bool;
     previewTop: i32;
     previewParagraph: bool;
-    previewItems: i32;
+    previewFence: bool;
+    previewOffset: i32;
+    previewRows: i32;
+    previewUnits: i32;
+    previewColumns: i32;
+    previewToken: i32;
+    previewKind: i32;
+    previewFromDocument: bool;
+    previewAt: i32;
+    previewEnd: i32;
 }

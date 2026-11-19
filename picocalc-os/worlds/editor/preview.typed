@@ -1,120 +1,241 @@
-function editorPreviewItem(out: buffer, offset: i32, state: WorldState): i32 {
-    let at = offset;
-    if (state.previewItems > 0) { at = at + out.writeLiteral(at, ","); }
-    state.previewItems = state.previewItems + 1;
-    return at + out.writeLiteral(at, "{\"s\":\"");
+// The PicoCalc compositor's 304px body leaves 296px after the lines inset.
+// Small type is 6x12, so a row holds 49 code points and the body shows 17 rows.
+// Each of the 36 ring entries holds two headers and up to 98 UTF-16 units.
+// Kind values 0 through 5 describe a paragraph, accent heading, code,
+// quote, list item, and ink heading. -1 waits for input and -2 marks EOF.
+function editorPreviewSlot(row: i32): i32 {
+    return (row % 36) * 100;
 }
 
-function editorPreviewFlush(out: buffer, at: i32, state: WorldState): i32 {
-    if (!state.previewParagraph) return at;
-    state.previewParagraph = false;
-    return at + out.writeLiteral(at, "\"}");
+function editorPreviewFinish(rows: buffer, state: WorldState, kind: i32): i32 {
+    const slot = editorPreviewSlot(state.previewRows);
+    rows.setCharCodeAt(slot, state.previewUnits);
+    rows.setCharCodeAt(slot + 1, kind);
+    state.previewRows = state.previewRows + 1;
+    state.previewUnits = 0;
+    state.previewColumns = 0;
+    return 0;
 }
 
-function editorPreviewBlank(out: buffer, at: i32, state: WorldState): i32 {
-    const start = editorPreviewItem(out, at, state);
-    return start + out.writeLiteral(start, " \"}");
-}
-
-function editorPreviewUpper(out: buffer, at: i32, plain: buffer, size: i32): i32 {
-    const upper = typedSdkBuffer(7);
-    const length = typedSdkUpper(plain, size, upper);
-    if (length < 0) return editorQuoteContent(out, at, typedSdkView(plain, size), 0, size);
-    return editorQuoteContent(out, at, typedSdkView(upper, length), 0, length);
-}
-
-function editorPreviewText(out: buffer, at: i32, text: string, first: i32, end: i32, upper: bool): i32 {
-    const plain = typedSdkBuffer(5);
-    const size = editorMdPlain(text, first, end, plain);
-    if (upper) return editorPreviewUpper(out, at, plain, size);
-    return editorQuoteContent(out, at, typedSdkView(plain, size), 0, size);
-}
-
-function editorPreviewHeading(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
-    const level = editorMdHeading(text, first, end);
-    const lead = editorMdSpace(text, first + level, end);
-    let n = editorPreviewBlank(out, editorPreviewFlush(out, at, state), state);
-    n = editorPreviewItem(out, n, state);
-    n = editorPreviewText(out, n, text, lead, end, true);
-    if (level < 3) return n + out.writeLiteral(n, "\",\"color\":\"accent\"}");
-    return n + out.writeLiteral(n, "\",\"color\":\"ink\"}");
-}
-
-function editorPreviewList(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
-    const mark = editorMdListEnd(text, first, end);
-    let n = editorPreviewItem(out, editorPreviewFlush(out, at, state), state);
-    if (mark - first === 1) { n = n + out.writeLiteral(n, "•"); }
-    if (mark - first > 1) { n = editorQuoteContent(out, n, text, first, mark); }
-    n = n + out.writeLiteral(n, " ");
-    n = editorPreviewText(out, n, text, editorMdSpace(text, mark, end), end, false);
-    return n + out.writeLiteral(n, "\",\"indent\":2}");
-}
-
-function editorPreviewQuote(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
-    let n = editorPreviewItem(out, editorPreviewFlush(out, at, state), state);
-    let from = first + 1;
-    if (from < end && editorWhitespace(text.charCodeAt(from))) { from = from + 1; }
-    n = editorPreviewText(out, n, text, from, end, false);
-    return n + out.writeLiteral(n, "\",\"color\":\"muted\",\"indent\":2}");
-}
-
-function editorPreviewCode(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
-    let n = editorPreviewItem(out, at, state);
-    if (first === end) { n = n + out.writeLiteral(n, " "); }
-    n = editorQuoteContent(out, n, text, first, end);
-    return n + out.writeLiteral(n, "\",\"color\":\"blue\",\"indent\":2}");
-}
-
-function editorPreviewParagraph(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
-    let n = at;
-    if (state.previewParagraph) { n = n + out.writeLiteral(n, " "); }
-    if (!state.previewParagraph) { n = editorPreviewItem(out, n, state); }
-    state.previewParagraph = true;
-    let stop = end;
-    while (stop > first && editorWhitespace(text.charCodeAt(stop - 1))) { stop = stop - 1; }
-    return editorPreviewText(out, n, text, first, stop, false);
-}
-
-function editorPreviewLine(out: buffer, at: i32, text: string, state: WorldState, fenced: bool): i32 {
-    const start = state.lineStart;
-    const end = state.lineEnd;
-    if (editorMdFence(text, start, end)) return editorPreviewFlush(out, at, state);
-    if (fenced) return editorPreviewCode(out, at, text, start, end, state);
-    const first = editorMdSpace(text, start, end);
-    if (first === end) return editorPreviewBlank(out, editorPreviewFlush(out, at, state), state);
-    if (editorMdHeading(text, start, end) > 0) return editorPreviewHeading(out, at, text, start, end, state);
-    if (editorMdListEnd(text, first, end) > 0) return editorPreviewList(out, at, text, first, end, state);
-    if (text.charCodeAt(first) === 62) return editorPreviewQuote(out, at, text, first, end, state);
-    return editorPreviewParagraph(out, at, text, first, end, state);
-}
-
-function editorPreviewFrame(out: buffer, prefix: i32, text: string, state: WorldState): i32 {
-    let at = prefix + out.writeLiteral(prefix, ",{\"t\":\"lines\",\"items\":[");
-    state.previewItems = 0;
-    state.previewParagraph = false;
-    state.lineStart = 0;
-    state.lineEnd = editorLineEnd(text, 0);
-    let fenced = false;
-    while (state.lineStart <= text.length && at + (state.lineEnd - state.lineStart) * 6 + 512 < out.length) {
-        at = editorPreviewLine(out, at, text, state, fenced);
-        if (editorMdFence(text, state.lineStart, state.lineEnd)) { fenced = !fenced; }
-        state.lineStart = state.lineEnd + 1;
-        state.lineEnd = editorLineEnd(text, state.lineStart);
+function editorPreviewAppend(rows: buffer, state: WorldState, text: string, start: i32, end: i32, cols: i32): i32 {
+    const slot = editorPreviewSlot(state.previewRows) + 2;
+    let at = slot + state.previewUnits;
+    if (state.previewUnits > 0) {
+        rows.setCharCodeAt(at, 32);
+        at = at + 1;
+        state.previewColumns = state.previewColumns + 1;
     }
-    at = editorPreviewFlush(out, at, state);
-    at = at + out.writeLiteral(at, "],\"font\":\"s\",\"lead\":2,\"grow\":1,\"scroll\":");
-    at = editorDigits(out, at, state.previewTop);
-    return at + out.writeLiteral(at, "}]}");
+    let i = start;
+    while (i < end) {
+        rows.setCharCodeAt(at, text.charCodeAt(i));
+        at = at + 1;
+        i = i + 1;
+    }
+    state.previewUnits = at - slot;
+    state.previewColumns = state.previewColumns + cols;
+    return 0;
+}
+
+function editorPreviewIndent(kind: i32): i32 {
+    if (kind >= 2 && kind <= 4) return 2;
+    return 0;
+}
+
+// Feed one word or one width-limited piece of a long word into the pending
+// display row. A literal space separates words, as in compositor.wrapText.
+function editorPreviewWord(rows: buffer, text: string, state: WorldState): i32 {
+    const kind = state.previewKind;
+    const width = 49 - editorPreviewIndent(kind);
+    const first = state.previewAt;
+    let end = first;
+    let cols = 0;
+    while (end < state.previewEnd && cols < width && !(text.charCodeAt(end) === 32)) {
+        end = editorNext(text, end);
+        cols = cols + 1;
+    }
+    const split = end < state.previewEnd && !(text.charCodeAt(end) === 32);
+    if (state.previewUnits > 0 && (split || state.previewColumns + 1 + cols > width))
+        return editorPreviewFinish(rows, state, kind);
+    editorPreviewAppend(rows, state, text, first, end, cols);
+    state.previewAt = end + 1;
+    if (split) { state.previewAt = end; }
+    if (split) return editorPreviewFinish(rows, state, kind);
+    return 0;
+}
+
+function editorPreviewCopy(out: buffer, at: i32, text: string, start: i32, end: i32): i32 {
+    let i = start;
+    let n = at;
+    let stop = Math.min(end, start + out.length - at);
+    if (stop > start && stop < end && editorHighSurrogate(text.charCodeAt(stop - 1))) { stop = stop - 1; }
+    while (i < stop) {
+        out.setCharCodeAt(n, text.charCodeAt(i));
+        i = i + 1;
+        n = n + 1;
+    }
+    return n;
+}
+
+function editorPreviewStage(text: string, first: i32, end: i32, list: i32, state: WorldState): i32 {
+    const scratch = typedSdkBuffer(5);
+    const length = editorMdPlain(text, first, end, scratch);
+    const out = typedSdkBuffer(7);
+    state.previewAt = 0;
+    let upper = -1;
+    if (state.previewKind === 1 || state.previewKind === 5) { upper = typedSdkUpper(scratch, length, out); }
+    if (upper >= 0) { state.previewEnd = upper; }
+    if (upper >= 0) return 0;
+    let at = 0;
+    if (state.previewKind === 4) {
+        const start = editorMdSpace(text, state.previewOffset, list);
+        if (list - start === 1) { at = out.writeLiteral(0, "•"); }
+        if (list - start > 1) {
+            at = editorPreviewCopy(out, 0, text, start, Math.min(list, start + out.length - length - 1));
+        }
+        out.setCharCodeAt(at, 32);
+        at = at + 1;
+    }
+    state.previewEnd = editorPreviewCopy(out, at, typedSdkView(scratch, length), 0, length);
+    return 0;
+}
+
+function editorPreviewSource(rows: buffer, text: string, state: WorldState): i32 {
+    const start = state.previewOffset;
+    if (start > text.length) {
+        if (state.previewParagraph) { editorPreviewFinish(rows, state, 0); }
+        state.previewParagraph = false;
+        state.previewKind = -2;
+    }
+    if (start > text.length) return 0;
+    const end = editorLineEnd(text, start);
+    let first = editorMdSpace(text, start, end);
+    const fence = editorMdFence(text, first, end);
+    let kind = 0;
+    let stop = end;
+    let list = 0;
+    const heading = editorMdHeading(text, start, end);
+    if (fence) { kind = -3; }
+    if (!fence && state.previewFence) { kind = 2; }
+    if (!fence && !state.previewFence) {
+        if (first === end) { kind = -4; }
+        if (heading > 0) {
+            kind = 1;
+            if (heading > 2) { kind = 5; }
+            first = editorMdSpace(text, first + heading, end);
+        }
+        if (kind === 0) {
+            list = editorMdListEnd(text, first, end);
+            if (list > 0) {
+                kind = 4;
+                first = editorMdSpace(text, list, end);
+            }
+        }
+        if (kind === 0 && text.charCodeAt(first) === 62) {
+            kind = 3;
+            first = first + 1;
+            if (first < end && editorWhitespace(text.charCodeAt(first))) { first = first + 1; }
+        }
+        if (kind === 0) {
+            while (stop > first && editorWhitespace(text.charCodeAt(stop - 1))) { stop = stop - 1; }
+        }
+    }
+    const flush = !(kind === 0) && state.previewParagraph;
+    if (flush) { state.previewParagraph = false; }
+    if (flush) return editorPreviewFinish(rows, state, 0);
+    state.previewKind = kind;
+    state.previewFromDocument = kind === 2;
+    if (kind === 0 || kind === 3) {
+        state.previewFromDocument = typedSdkSeek(text, first, stop, 42, 96, 91, 42) === stop;
+    }
+    const stage = kind >= 0 && !state.previewFromDocument;
+    if (stage) { editorPreviewStage(text, first, stop, list, state); }
+    state.previewOffset = end + 1;
+    if (kind === -3) { state.previewFence = !state.previewFence; }
+    if (kind < 0) { state.previewKind = -1; }
+    if (kind === -4 || kind === 1 || kind === 5) { editorPreviewFinish(rows, state, 0); }
+    if (kind === 0) { state.previewParagraph = true; }
+    if (kind === 2) { first = start; }
+    if (state.previewFromDocument) {
+        state.previewAt = first;
+        state.previewEnd = stop;
+    }
+    if (stage) return (stop - first) / 16;
+    return 0;
+}
+
+function editorPreviewReset(state: WorldState): i32 {
+    state.previewRows = 0;
+    state.previewUnits = 0;
+    state.previewColumns = 0;
+    state.previewOffset = 0;
+    state.previewKind = -1;
+    state.previewParagraph = false;
+    state.previewFence = false;
+    state.previewToken = 0;
+    return 0;
+}
+
+function editorPreviewReady(text: string, state: WorldState): bool {
+    if (state.previewToken > 0) return false;
+    // The pending row (if any) shares the ring and may have overwritten
+    // the oldest entry. Backward navigation past that point rescans.
+    if (state.previewTop < state.previewRows - 35) { editorPreviewReset(state); }
+    const rows = typedSdkBuffer(8);
+    let steps = 0;
+    while (!(state.previewKind === -2) && state.previewRows < state.previewTop + 17 && steps < 96) {
+        const kind = state.previewKind;
+        if (kind === -1) { steps = steps + editorPreviewSource(rows, text, state); }
+        if (kind >= 0 && state.previewAt > state.previewEnd) {
+            if (!(kind === 0)) { editorPreviewFinish(rows, state, kind); }
+            state.previewKind = -1;
+        }
+        if (kind >= 0 && state.previewFromDocument && state.previewAt <= state.previewEnd) {
+            editorPreviewWord(rows, text, state);
+        }
+        if (kind >= 0 && !state.previewFromDocument && state.previewAt <= state.previewEnd) {
+            const staged = typedSdkView(typedSdkBuffer(7), state.previewEnd);
+            editorPreviewWord(rows, staged, state);
+        }
+        steps = steps + 1;
+    }
+    if (state.previewKind === -2 || state.previewRows >= state.previewTop + 17) return true;
+    state.previewToken = typedSdkYield();
+    return false;
+}
+
+function editorPreviewFrame(out: buffer, prefix: i32, state: WorldState): i32 {
+    const rows = typedSdkView(typedSdkBuffer(8), 3600);
+    let at = prefix + out.writeLiteral(prefix, ",{\"t\":\"lines\",\"wrapped\":true,\"items\":[");
+    const first = Math.min(state.previewTop, Math.max(0, state.previewRows - 17));
+    let row = first;
+    while (row < Math.min(state.previewRows, first + 17)) {
+        if (row > first) { at = at + out.writeLiteral(at, ","); }
+        const slot = editorPreviewSlot(row);
+        const kind = rows.charCodeAt(slot + 1);
+        at = at + out.writeLiteral(at, "{\"s\":");
+        at = editorQuote(out, at, rows, slot + 2, slot + 2 + rows.charCodeAt(slot));
+        if (kind === 1) { at = at + out.writeLiteral(at, ",\"color\":\"accent\""); }
+        if (kind === 2) { at = at + out.writeLiteral(at, ",\"color\":\"blue\""); }
+        if (kind === 3) { at = at + out.writeLiteral(at, ",\"color\":\"muted\""); }
+        if (kind === 5) { at = at + out.writeLiteral(at, ",\"color\":\"ink\""); }
+        if (editorPreviewIndent(kind) > 0) { at = at + out.writeLiteral(at, ",\"indent\":2"); }
+        at = at + out.writeLiteral(at, "}");
+        row = row + 1;
+    }
+    return at + out.writeLiteral(at, "],\"font\":\"s\",\"lead\":2,\"grow\":1}]}");
 }
 
 function editorBeginPreview(state: WorldState): i32 {
     state.preview = true;
     state.previewTop = 0;
-    return 0;
+    return editorPreviewReset(state);
 }
 
 function editorPreviewKey(state: WorldState, action: i32, held: bool): i32 {
-    if ((action === 15 || action === 18) && !held) { state.preview = false; }
+    if ((action === 15 || action === 18) && !held) {
+        state.preview = false;
+        state.previewToken = 0;
+    }
     if (action === 3) { state.previewTop = Math.max(0, state.previewTop - 1); }
     if (action === 4) { state.previewTop = state.previewTop + 1; }
     if (action === 5) { state.previewTop = Math.max(0, state.previewTop - 16); }

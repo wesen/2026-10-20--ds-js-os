@@ -14,7 +14,8 @@ enum { SCREEN_CAP = 16384, HINT_CAP = 120, LARGE_CAP = 65536, SMALL_CAP = 256 };
 static COUNTED(large_text, LARGE_CAP) large;
 static COUNTED(small_text, SMALL_CAP) small[5];
 static COUNTED(record_text, 4096) record_text;
-static struct record_text text_scratch;
+static COUNTED(expanded_text, 12288) text_scratch;
+static struct record_text row_scratch;
 static uint32_t world_state[64];
 static const nw_event *current;
 static struct { int32_t kind, ask, token, ok; } event_info;
@@ -84,7 +85,8 @@ SDK(typedSdkBuffer) void *typedSdkBuffer(int slot)
     static uint32_t empty;
     if (slot == 0) { large.length = LARGE_CAP; return &large; }
     if (slot == 5) { record_text.length = 4096; return &record_text; }
-    if (slot == 7) { text_scratch.length = 4096; return &text_scratch; }
+    if (slot == 7) { text_scratch.length = 12288; return &text_scratch; }
+    if (slot == 8) { row_scratch.length = 4096; return &row_scratch; }
     if (slot > 5) slot--;
     if (slot < 1 || (unsigned)slot > sizeof small / sizeof *small) return &empty;
     small[slot - 1].length = SMALL_CAP;
@@ -97,7 +99,8 @@ static int capacity(const void *buffer)
     if (buffer == &hints) return HINT_CAP;
     if (buffer == &large) return LARGE_CAP;
     if (buffer == &record_text) return 4096;
-    if (buffer == &text_scratch) return 4096;
+    if (buffer == &text_scratch) return 12288;
+    if (buffer == &row_scratch) return 4096;
     for (unsigned i = 0; i < sizeof small / sizeof *small; i++)
         if (buffer == &small[i]) return SMALL_CAP;
     return -1;

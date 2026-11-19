@@ -67,30 +67,45 @@ This pattern bounds work for stretches with few candidates. A dense candidate se
 
 ## Preview
 
-`preview.typed` translates physical lines into paragraphs, headings, lists, quotations, and fenced code. It currently builds one growing `lines` node. The loop in `editorPreviewFrame` stops admitting lines when the next one could exceed the frame allocation. The compositor then wraps only the items present in the frame, so increasing the scroll offset cannot recover the missing text. Translating more than the visible viewport on every key also makes runtime depend on document length.
+The original typed renderer serialized one item list until it approached the frame limit. The compositor wrapped only the items it received, so scrolling could never recover the omitted content. The current implementation owns Markdown recognition and wrapping in typed Editor. The generic `lines` node accepts `wrapped: true` and draws the provided strings as rows.
 
-The bounded design emits a window of **visual rows**. Keep block recognition and plain text extraction in typed Editor. Wrap according to the compositor’s `wrapText` rules, using visual code-point columns and applying each block’s indent before wrapping. A stream of source lines is insufficient to preserve layout because an ordinary paragraph joins lines with spaces. A stream of words also needs an item-end marker so empty code lines and blank rows can be represented. The compositor draws the supplied rows and handles the app’s existing padding and colors. The world keeps the requested top row and a scan continuation in state.
-
-```text
-start preview from document offset zero
-while this turn has work budget:
-    advance one bounded parsing or wrapping step
-    if it completes a visual row:
-        advance the visual row number
-        retain rows intersecting the requested viewport
-        retain a small final viewport for end clamping
-    if the desired viewport is complete or the document ends:
-        publish only the final window
-        stop
-yield and continue on the matching completion token
+```mermaid
+flowchart LR
+    A["Document and source offset"] --> B["Classify one source line"]
+    B --> C["Borrow text or stage formatted text"]
+    C --> D["Consume one word or word fragment"]
+    D --> E["Ring of finished rows plus pending row"]
+    E --> F["Serialize the selected 17 rows"]
+    D --> G["Yield and resume if the step budget expires"]
+    G --> D
 ```
 
-Use an initial scan from zero to establish correctness for arbitrary scroll offsets. Retain a forward continuation if measurement shows repeated parsing dominates Page Down. Going backward can restart from zero while keeping other worlds responsive. The first implementation should test spaces, tabs, astral characters, headings with Unicode uppercasing, paragraph continuation, long words, blank lines and fence transitions. Existing `lines` frames can use the same row renderer through a generic compositor option for already wrapped rows. Establish the actual font metrics and visible row count from the 320×320 compositor layout before wiring that option.
+`editorPreviewSource` classifies a source line, handles fences, and configures the next input span. Plain paragraphs without inline markers, literal quotations, and fenced code borrow a view directly from the document. Other lines use the existing typed inline formatting, and headings call the shared Unicode uppercase primitive. The 12,288-unit scratch buffer at slot 7 holds up to three output units for each staged input unit. The 4,096-unit formatter input is at slot 5. Slot 5 can be reused by position persistence after formatting completes. Only slot 7 persists a staged span across turns. Opening another file and leaving preview discard the continuation.
+
+The display draws a 304-pixel-wide body and keeps 8 pixels for horizontal insets. At 6 pixels per small-font cell this fits 49 code points. An indented row holds 47. The body is 270 pixels tall. The status row uses 12 pixels, the column gap uses 4, and `lines` holds 4 for vertical padding. The remaining 250 pixels fit 17 rows at 14 pixels per row. The existing editor viewport has separate measurements.
+
+`editorPreviewWord` consumes either one space-delimited word or a full-width piece of a long word. It counts code points, copies UTF-16 units, and never splits a surrogate pair. Separating ordinary physical lines at a space and keeping the pending row produces the same layout as wrapping a joined paragraph. A blank or special block finishes the paragraph before emitting its own rows.
+
+```text
+on preview request:
+    if requested row precedes the cache, restart at source offset zero
+    while the viewport is missing rows and the current slice has work left:
+        stage one source line, advance one word, or finish one row
+        stop at document end or when the viewport is ready
+    if more work remains, schedule a timer and resume on its matching token
+    otherwise clamp to the last full viewport and publish only those rows
+```
+
+A ring of 36 entries retains the last 35 complete rows and reserves enough room for the pending row. Each entry uses two UTF-16 header units plus up to 98 text units. Backward movement within the ring reads only cached rows. A longer jump restarts parsing in bounded slices. EOF clamps the display to the last visible window, while the requested scroll offset retains the reference app's behavior. At most 17 rows cross the SDK on each update. Even a conservative six bytes of JSON output per UTF-16 unit, plus row metadata, fits inside the screen budget.
+
+A slice advances up to 96 units of scheduling work. Ordinary steps cost one unit, and staging adds a cost based on source length. This limits how often the app returns to the event loop. Inline stripping still runs as one step per formatted source line with the existing 4,096-unit input cap. A large imported line with inline markup can therefore need further work, even though a long plain line can stream directly without that cap.
+
+![Preview at EOF in the host Wasm build](../various/preview-end-wasm.png)
 
 ## Implementation and verification
 
 1. Add the generic seek API to `sdk/typed/world.c`, `compiler/typed-world.js`, and `sdk/typed/rv32-slot.S` in a single change. The import order must match the RV32 trampolines. Update `find.typed` and `view.typed`, and compare exact frames and captures against the reference across both backends. Verify a full-size absent search in the host harness.
-2. Design the viewport output around the generic compositor contract. Keep any parsing and wrapping changes in the typed sources. Use the long preview fixture to verify that downwards scrolling reaches the last paragraph. Assert that moving above and below the bounds displays the same rows as the JavaScript reference.
+2. Replay the viewport tests with `scripts/02-check-preview-capacity.sh`. The 21,614-byte document reaches its end and navigates backward while matching the JavaScript reference. A separate fixture streams an 18,047-byte line with supplementary Unicode characters at the 200 virtual ms profile.
 3. Verify cursor placement late in the document, dense overlapping candidates, and a long repetitive absent query. Measure initial display, each search or preview key event, and longest scheduler slice using a reproducible corpus. Test both backends on the board when connected. Keep scripts in this ticket and record exact artifacts, build flags, and measured times in the diary.
 
 ## Code and evidence
@@ -100,7 +115,7 @@ Use an initial scan from zero to establish correctness for arbitrary scroll offs
 | `picocalc-os/worlds/editor/editor.typed` | `typedWorldEvent`, file normalization and deferred operations |
 | `picocalc-os/worlds/editor/find.typed` | `editorFindNext`, `editorFindSpan`, `editorFindMarks` |
 | `picocalc-os/worlds/editor/view.typed` | `editorLineEnd`, `editorLocate` and JSON quoting |
-| `picocalc-os/worlds/editor/preview.typed` | `editorPreviewLine`, `editorPreviewFrame`, navigation |
+| `picocalc-os/worlds/editor/preview.typed` | `editorPreviewSource`, `editorPreviewWord`, `editorPreviewFrame`, navigation |
 | `picocalc-os/js/system/compositor.js` | `wrapText`, `drawLines`, renderer layout constants |
 | `picocalc-os/sdk/typed/world.c` | Counted strings, screen transport and event marshaling |
 | `PICOCALC-TYPED-WORLDS/scripts/02-check-editor-world.mjs` | Matched JS, Wasm and RV32 regression fixtures |

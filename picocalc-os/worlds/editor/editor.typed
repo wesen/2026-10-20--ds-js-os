@@ -97,6 +97,7 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.nameLength = n;
     state.markdown = editorIsMarkdown(state);
     state.preview = false;
+    state.previewToken = 0;
     typedSdkReply(output, output.writeLiteral(0, "{\"ok\":true}"));
     state.cursor = 0;
     state.top = 0;
@@ -174,6 +175,10 @@ function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, h
     }
     if (event.kind === 4 && state.readToken > 0 && event.token === state.readToken) {
         editorReadDone(event, state, output, hints);
+    }
+    if (event.kind === 4 && state.previewToken > 0 && event.token === state.previewToken) {
+        state.previewToken = 0;
+        if (state.preview && state.readToken === 0) { editorShow(output, hints, state); }
     }
     if (event.kind === 2) {
         const hintLength = hints.writeLiteral(0, "Esc Files");

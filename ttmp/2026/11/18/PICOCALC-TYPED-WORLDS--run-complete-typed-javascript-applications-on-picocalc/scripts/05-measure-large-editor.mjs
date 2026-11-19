@@ -14,7 +14,9 @@ const trials = {
     save: {text:full, commands:['key f2', 'wait 1800'], marker:'Saved 64685 bytes.'},
     find: {text:full, commands:['key f3', 'wait 530', 'type zzz', 'wait 530', 'key enter', 'wait 1800'],
         marker:'Not found: zzz'},
-    preview: {text:preview, commands:['key f6', 'wait 1800'], marker:'END OF PREVIEW'},
+    preview: {text:preview, commands:['key f6', 'wait 530',
+        ...Array.from({length:57}, () => ['key pgdn', 'wait 530']).flat(), 'wait 1800'],
+        marker:'END OF PREVIEW'},
 };
 const summary = {};
 for (const variant of ['js', 'wasm']) for (const [name, trial] of Object.entries(trials)) {

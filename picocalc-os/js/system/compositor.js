@@ -269,7 +269,9 @@ function drawLines(fb, n, x, y, w, h) {
   const rows = [];
   for (const it of n.items) {
     const o = typeof it === "string" ? { s: it } : it;
-    for (const line of wrapText(o.s, cols - (o.indent || 0))) rows.push({ s: line, color: o.color, indent: o.indent || 0 });
+    for (const line of n.wrapped ? [o.s] : wrapText(o.s, cols - (o.indent || 0))) {
+      rows.push({ s: line, color: o.color, indent: o.indent || 0 });
+    }
   }
   const from = n.bottom ? Math.max(0, rows.length - vis - (n.scroll || 0)) : Math.min(n.scroll || 0, Math.max(0, rows.length - vis));
   const dark = n.bg === "ink" || n.bg === "bar";

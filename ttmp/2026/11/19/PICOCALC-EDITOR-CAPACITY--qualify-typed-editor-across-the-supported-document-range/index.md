@@ -19,7 +19,7 @@ WhenToUse: ""
 
 ## Overview
 
-Editor application logic is in typed JavaScript. This ticket addresses two large-document regressions identified after the port. The initial Wasm stress comparison confirms that the full-size absent search now completes. Large preview pagination and late-document traversal still need work.
+Editor application logic is in typed JavaScript. This ticket addresses two large-document regressions identified after the port. The initial Wasm stress comparison confirms that the full-size absent search now completes. The typed preview now reaches EOF and matches reference screenshots on the host. Dense matches, late-document edit traversal, and board requalification remain open.
 
 - [Design and implementation guide](design-doc/01-bounded-search-and-preview-for-large-picocalc-documents.md)
 - [Implementation diary](reference/01-implementation-diary.md)

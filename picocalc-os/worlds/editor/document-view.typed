@@ -47,7 +47,7 @@ function editorDocumentFrame(output: buffer, text: string, state: WorldState): i
     if (state.notice === 0 && !state.finding) {
         at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"muted\"}");
     }
-    if (state.preview) return editorPreviewFrame(output, at, text, state);
+    if (state.preview) return editorPreviewFrame(output, at, state);
     at = at + output.writeLiteral(at, ",{\"t\":\"textarea\",\"rows\":[");
     editorFirstRow(text, state);
     let fenced = false;
@@ -94,7 +94,8 @@ function editorHints(hints: buffer, state: WorldState): i32 {
 }
 
 function editorShow(output: buffer, hints: buffer, state: WorldState): i32 {
-    const hintLength = editorHints(hints, state);
     const text = typedSdkView(typedSdkBuffer(0), state.textLength);
+    if (state.preview && !editorPreviewReady(text, state)) return 0;
+    const hintLength = editorHints(hints, state);
     return typedSdkScreen(output, editorDocumentFrame(output, text, state), hints, hintLength);
 }

@@ -1,0 +1,26 @@
+{
+  "markdown": {
+    "inputBytes": 571,
+    "matchingWasmFramebuffers": 5,
+    "rv32Open": true,
+    "wasmBytes": 81773,
+    "elfBytes": 239732,
+    "wasmTurnBudgetMs": 50
+  },
+  "large": {
+    "inputBytes": 21614,
+    "matchingWasmFramebuffers": 6,
+    "rv32Open": true,
+    "wasmBytes": 81773,
+    "elfBytes": 239732,
+    "wasmTurnBudgetMs": 50
+  },
+  "singleLine": {
+    "inputBytes": 18047,
+    "matchingWasmFramebuffers": 6,
+    "rv32Open": true,
+    "wasmBytes": 81773,
+    "elfBytes": 239732,
+    "wasmTurnBudgetMs": 200
+  }
+}
