@@ -549,3 +549,17 @@ The slow boot was a race between the expiration of the fixed startup interval an
 ### Code review instructions
 
 Build the same headless RV32 profile as the prior milestone. Run scripts/10-measure-agenda-boot.py and compare file-returned, cji_loader.start_us, cji_loader.end_us, settle, and first_response for each independent reboot.
+
+## Step 20 — Build the peripheral-enabled profile from an empty build directory
+
+### What I did
+
+I configured a fresh ESP-IDF 5.4.2 build for typed RV32 Agenda with the keyboard, display, power and compositor enabled, using a copy of sdkconfig.agent-elf. The typed manifest previously read the generated CJI manifest at configure time, before that file exists in a clean build. I switched it to the in-memory JSON that the native profile already constructs.
+
+### What worked
+
+The fresh configuration and complete build succeeded. The resulting app image SHA-256 was f287addba826d494489d3a6eacb1cf006d7a1633907111bd7e5055ab385bfe3b and the app partition had 0x10850 bytes free. Checking both generated manifests showed identical world names and entries except for the expected Agenda file and budget change. The 22 entries include the native keyboard, power, compositor and display. The clean-build reproduction is in the design guide.
+
+### What should be done in the future
+
+The physical peripherals still need to be powered and observed. I built the enabled profile and left the physical run unclaimed. The eight-run timing experiment uses the headless firmware with the same scheduling and linker changes.

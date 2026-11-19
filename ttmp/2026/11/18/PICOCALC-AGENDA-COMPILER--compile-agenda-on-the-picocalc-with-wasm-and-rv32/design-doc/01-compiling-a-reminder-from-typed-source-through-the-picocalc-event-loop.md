@@ -54,3 +54,20 @@ Use a high-speed video or a shared acquisition clock to observe both ends of the
 4. Use firmware timestamps as intermediate diagnostics if needed. Keyboard I²C completion occurs after contact closure. SPI completion indicates transfer but may precede visible LCD response. The existing `agenda response` line measures an earlier frame-publication endpoint.
 
 The headless captures can exercise source-to-publication, including the real notes file, and are recorded in the corresponding benchmark receipts. The physical input gate needs an assembled run and a captured change on the panel.
+
+### Building a clean image for the physical test
+
+Build from `picocalc-os/port/esp32p4` with the ESP-IDF 5.4.2 environment active. Copy the ESP32-P4 agent/ELF configuration into a new build directory so the experiment uses a separate generated SDK config. With the existing radio and development-compiler options enabled, use the same profile as the headless measurements and explicitly include the panel and keyboard.
+
+```sh
+panel_build=$(mktemp -d /tmp/p4-agenda-panel-XXXXXX)
+cp sdkconfig.agent-elf "$panel_build/sdkconfig"
+idf.py -B "$panel_build" \
+  -D "SDKCONFIG=$panel_build/sdkconfig" \
+  -D 'SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.agent-wifi' \
+  -D PICOCALC_RV32_AGENDA=ON -D PICOCALC_HEADLESS=OFF \
+  -D PICOCALC_AGENT_WIFI=ON -D PICOCALC_DEVICE_COMPILER=ON \
+  -D PICOCALC_COMPILER_PROFILE=ON build
+```
+
+Check `esp-idf/main/system.typed-agenda.json` under the build directory. It should include `keyboard`, `display`, `power`, and `compositor`. Agenda should point to `agenda/compiled.bin` with the `native` engine and the existing `fs:/notes` claim. This manifest is derived from the same configured JSON as `system.cji.json`; a previously generated manifest is unnecessary. The image is `picocalc-os-p4.bin` under the build directory. Follow the existing application-partition restore procedure from the diary when testing on the device.

@@ -225,7 +225,9 @@ if(PICOCALC_TYPED_AGENDA)
         set(agenda_engine wasm)
     endif()
     if(PICOCALC_NATIVE_ELF)
-        file(READ "${builtin_manifest}" agenda_manifest)
+        # The native manifest file is written at generation time. Use the
+        # configured JSON directly, including the selected peripheral worlds.
+        set(agenda_manifest "${system_json}")
     else()
         file(READ "${OS}/js/system.json" agenda_manifest)
     endif()
