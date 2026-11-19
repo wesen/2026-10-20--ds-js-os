@@ -27,3 +27,7 @@ Implement selected-task toggle, F3 edit and two-press F5 deletion. Match the ori
 ## 2026-11-18
 
 Implement F6 through a narrowed file capability, verify refusal, timeout and successful replacement, and save through the bundled Editor on the PicoCalc.
+
+## 2026-11-18
+
+Match the original prompt errors, midnight grouping, cached reminder tick, and five-minute external refresh. Verify typed error spans on both targets and capture the displayed diagnostics on the PicoCalc.

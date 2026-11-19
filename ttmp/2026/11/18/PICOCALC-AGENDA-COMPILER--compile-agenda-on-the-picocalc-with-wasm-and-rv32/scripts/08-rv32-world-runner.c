@@ -14,6 +14,7 @@ int fw_nentries;
 static char saved[16385];
 static int frames, notifications, reads, offsets;
 static int64_t wall = 1793733299000LL;
+static int64_t now_us;
 static int writes;
 static int navigation;
 static const char *expected_write = "- [ ] dentist @2026-11-03 14:30 !15m\n- [x] completed\n- book a train\n"
@@ -74,6 +75,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         expect(retired_count > 0 && a == retired[retired_count - 1], "release the revoked handle");
         return 1;
     case NW_CALL_EVERY: expect(a == 15000, "timer cadence"); return 0;
+    case NW_CALL_NOW: return now_us;
     case NW_CALL_FS_READ:
         expect(a == 23 && !strcmp(s0, "todo.txt"), "file request");
         return ++reads;
@@ -174,8 +176,9 @@ int main(void)
         if (i == 0) {
             expect(notifications == 0, "before due");
             wall = 1793733314000LL;
+            now_us = 15000000;
             event(&world, NW_TICK, 0, 0, "null");
-            event(&world, NW_SETTLE, 1, reads, file);
+            expect(reads == 1 && notifications == 1, "remind from a fresh cached snapshot");
         } else {
             key(&world, "f2", "");
             for (const char *p = "call clinic @wed 2pm !15m"; *p; p++) {
@@ -191,7 +194,7 @@ int main(void)
                   "- [ ] call clinic @2026-11-04 14:00 !15m\\n\"");
         }
     }
-    expect(reads == 5 && frames == 4 && offsets == 5 && notifications == 1, "restart and reminder");
+    expect(reads == 4 && frames == 3 && offsets == 3 && notifications == 1, "restart and reminder");
     // Reopen the first reactor without another file read. Its dated/open/no-date
     // layout is still the original two open tasks and one hidden done task.
     nw_elf_module first = {0};
@@ -210,7 +213,12 @@ int main(void)
     const char *plain = "\"# head\\n  - a\\n- b\"";
     const char *ticked = "\"# head\\n  - [x] a\\n- b\"";
     const char *edited = "\"# head\\n  - [x] ac\\n- b\"";
+    now_us = 300000000;
     event(&first, NW_TICK, 0, 0, "null");
+    expect(reads == 4, "exactly five minutes is still fresh");
+    now_us = 315000000;
+    event(&first, NW_TICK, 0, 0, "null");
+    expect(reads == 5, "reload when more than five minutes old");
     event(&first, NW_SETTLE, 1, reads, plain);
     key(&first, "space", " ");
     expected_write = "# head\n  - [x] a\n- b";
@@ -248,6 +256,16 @@ int main(void)
     key(&first, "f6", "");
     event(&first, NW_SETTLE, 1, 204, "{\"ok\":true}");
     expect(editor_opens == 2 && retired_count == 3 && retired[2] == 31, "replacement revokes old grant");
-    printf("frames=%d reminders=%d writes=%d durable_restart=pass grouped_navigation=pass mutations=pass editor=pass\n", frames, notifications, writes);
+    int before = reads;
+    key(&first, "f2", "");
+    for (const char *p = "x @tue 25:60"; *p; p++) {
+        char ch[] = {*p, 0};
+        key(&first, ch, ch);
+    }
+    key(&first, "enter", "");
+    expect(reads == before && strstr(last_screen, "not a time: 25:60") && strstr(last_screen, "\"prompt\":\"New: \""),
+           "bad time names its token and preserves the prompt");
+    printf("frames=%d reminders=%d writes=%d durable_restart=pass grouped_navigation=pass mutations=pass editor=pass diagnostics=pass refresh=pass\n",
+           frames, notifications, writes);
     return 0;
 }

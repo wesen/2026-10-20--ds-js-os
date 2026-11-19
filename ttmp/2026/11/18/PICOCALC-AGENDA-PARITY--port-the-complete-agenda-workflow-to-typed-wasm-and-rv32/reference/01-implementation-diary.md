@@ -344,3 +344,61 @@ The ask uses a three-second timeout and sends the same `{file, name}` payload th
 ## Step 11 — Publish the Editor handoff milestone
 
 The SDK and reactor changes, simulator and emulator checks, and powered board evidence are in `39ebfa7`. I pushed “PicoCalc Agenda — Passing a single file to Editor” to go-go-parc main at `4b946f1`. The report explains the file scope, kernel authorization, request and grant lifetimes, and the verification boundary of the two framebuffer captures.
+
+## Step 12 — Match prompt diagnostics and calendar refresh
+
+The Agenda port now reports the failing date or time token in the original diagnostic style. The 15-second timer also follows the original distinction between checking known reminders and refreshing notes from storage. The Wasm simulator and RV32 harness cover those behaviors, and the powered board displayed both token errors while leaving the notes file untouched.
+
+### Prompt Context
+
+See Step 1 for the feature-identical typed Agenda goal and Step 10 for the remaining prompt and refresh work.
+
+### What I did
+
+- Added `EntryError` in the combined typed source prelude and checked its two offsets and field types in `compile.js`. The generated `normalizeEntry` takes the record by address and writes a half-open UTF-16 span only for invalid dates and invalid times. The C reactor renders the original message around the failing span.
+- Preserved the open prompt and file contents on parse errors. Restored the original app's title, description and calendar icon. The visible status uses the display's established clipping for long messages.
+- Split the timer from storage polling. At each 15-second tick, update clock-derived grouping if the calendar day changed, then check reminders against the current snapshot. Reread an external file when the snapshot is more than five minutes old or the app receives focus. A coalesced stale read checks newly loaded reminders once. For cached evaluation, scan the retained source lines in file order.
+- Keep fired identities in process memory even if the persistent-store write fails. This lets the notification through and suppresses duplicate alerts in the current process. Successful storage still supplies restart persistence.
+
+### Why
+
+A typed parser has the source positions when a diagnostic is produced. Passing the span avoids looking for a repeated token or treating UTF-8 byte offsets as UTF-16 positions. Separating the storage clock from the reminder and calendar clocks lets a timer update the view and deliver alarms without allocating a replacement notes snapshot every 15 seconds.
+
+### What worked
+
+- The generated Wasm and RV32 fixtures passed 3,924 calendar/time combinations and 319 full prompts, including exact half-open error spans after surrogate pairs and on repeated time tokens. The native typed instructions use 30,840 bytes.
+- The live host simulator matched the six original prompt error texts and checked that the prompt and file bytes were preserved. The original and Wasm apps showed the same midnight grouping and reminder order. Both ignored an external edit until the 315-second tick, then displayed its task and emitted its due reminder.
+- The RV32 world harness checked the exact five-minute boundary, cached notification, diagnostics, grouping, writes, Editor handoff, and reminder restart. The app and 34 native integration tests passed.
+- The PicoCalc frame captures show the offending date and time. The board's before and after reads show the empty notes file is unchanged. Both snapshots passed CRC and the I²C and SPI counts show zero errors in that test.
+
+### What didn't work
+
+- Running `node "$n/scripts/04-check-wasm-world.mjs"` with the record declared in `entry.typed` reported `SyntaxError: 409:1: expected function` because the combined source had already started its function section. I moved the record next to `Task` before the first function.
+- The next test reported `SyntaxError: 437:17: expected identifier`. A nested block ended with a bare return, which the typed grammar does not accept. An unconditional helper now writes both fields and returns the passed status. Each error branch uses a supported conditional return.
+- The first virtual-time fixture asserted `frames[0][0] < 2000`; the observer was still waiting in its own two-second writer turn when the retained initial frame arrived. The adjusted bound checks that frame before the first tick. The later wall-time and reload assertions keep their one-second bounds.
+
+### What I learned
+
+There are three relevant time representations. Kernel monotonic microseconds measure the relative age of the snapshot, the wall clock measures elapsed time relative to an absolute due instant, and a packed local civil date determines the grouping. They can change independently, so the timer checks each on its own terms.
+
+### What was tricky to build
+
+The cached snapshot uses NUL terminators in place of line feeds and the task index is sorted for display. Tracking the snapshot's byte length lets the reminder walk span empty lines and preserve source order. Maintaining a reminder flag alongside the asynchronous file token prevents an ordinary focus read from delivering an extra notification and lets an overlapping stale tick ask for a reminder check on settlement.
+
+### What warrants a second pair of eyes
+
+The cached path still parses due-date candidate lines at each tick. The test covers timing and behavior, while a dense notes fixture is needed for a meaningful device CPU and memory comparison. Very long status strings are clipped for the native screen budget. The powered screenshots came from a compositor framebuffer and the keys were injected.
+
+### What should be done in the future
+
+Run the same powered cold series on Wasm and RV32 with equivalent notes. Measure the time between Agenda initialization and the first filesystem request, which appears substantial in the current native trace. Measure physical keyboard input and the visible LCD response independently.
+
+### Code review instructions
+
+- Start at `EntryError` in `worlds/agenda/reminder.typed`, then follow `normalizeEntry` and `start_save`. Run the parent ticket's `16-check-entry-tokens.mjs`.
+- Read `refresh_tick` and `check_reminders` in `worlds/agenda/wasm-world.c` and run the parent ticket's Wasm and RV32 world harnesses. Read the JSON receipts and board snapshots under `various/`.
+- For a board smoke run, use `scripts/04-check-p4-agenda-diagnostics.sh` with the panel-enabled profile and an empty or absent notes file.
+
+### Technical details
+
+The linked Wasm world is 67,434 bytes and the RV32 ELF is 66,348 bytes. The RV32 reservation remains 48 KiB. A powered diagnostic smoke boot measured 723.799 ms for compilation, 709,796 peak compiler bytes and 2.136 s through first publication with 185,519 world bytes. Its first publication turn took 1.496 ms. The assembled firmware is 4,183,824 bytes in the 8 MiB partition.

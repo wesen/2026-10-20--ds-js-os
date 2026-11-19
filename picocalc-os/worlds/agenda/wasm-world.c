@@ -20,7 +20,8 @@ typedef struct {
 } task_record;
 
 int parseTask(const void *line, void *title, void *task);
-int normalizeEntry(const void *line, int32_t local_date, void *output);
+typedef struct { int32_t start, end; } entry_error;
+int normalizeEntry(const void *line, int32_t local_date, void *output, entry_error *error);
 int agendaDateKey(int32_t date, bool done);
 int entryAddDays(int32_t date, int32_t count);
 int entryWeekday(int32_t date);
@@ -31,6 +32,9 @@ static char input[UTF8_BYTES], title[UTF8_BYTES];
 enum { MINUTE_MS = 60000, DAY_MS = 86400000, REMINDER_WINDOW = 2 * 3600000,
        LATE_MS = 120000, STORE_CAPACITY = 16384, FIRED_MAX = 200 };
 static int notes, read_token, refresh_timer;
+static bool remind_after_read;
+static int64_t loaded_at;
+static const int64_t reload_us = 300000000;
 static char stored[STORE_CAPACITY + 1], pending_store[STORE_CAPACITY + 1];
 static char reminder_key[UTF8_BYTES + 32], quoted_key[6 * LINE_UNITS + 48];
 static char screen[16384], quoted[UTF8_BYTES + 128], reply[UTF8_BYTES + 256];
@@ -49,10 +53,11 @@ typedef struct {
     uint16_t offset, row;
 } agenda_item;
 static char *snapshot;
+static size_t snapshot_bytes;
 static agenda_item *items;
 static int item_count, open_count, visible_count, selected = -1, today = -1, tomorrow = -1;
 static bool show_done;
-static char view_note[4 * VIEW_CHARS + 32], view_error[128];
+static char view_note[4 * VIEW_CHARS + 80], view_error[128];
 static const char prompt_help[] = "@today @tue @+3d @11-15  14:30 or 2pm  !15m before";
 
 static void publish_view(void);
@@ -97,13 +102,13 @@ static int decode(const char *text, text_buffer *out)
     return 1;
 }
 
-static void encode_title(const text_buffer *text, unsigned length, char *out)
+static void encode_text(const uint16_t *units, unsigned length, char *out)
 {
     for (unsigned i = 0; i < length; i++) {
-        uint32_t cp = text->units[i];
+        uint32_t cp = units[i];
         if (cp >= 0xd800 && cp <= 0xdbff && i + 1 < length &&
-            text->units[i + 1] >= 0xdc00 && text->units[i + 1] <= 0xdfff) {
-            cp = 0x10000 + ((cp - 0xd800) << 10) + (text->units[++i] - 0xdc00);
+            units[i + 1] >= 0xdc00 && units[i + 1] <= 0xdfff) {
+            cp = 0x10000 + ((cp - 0xd800) << 10) + (units[++i] - 0xdc00);
         }
         if (cp >= 0x10000) {
             *out++ = 0xf0 | (cp >> 18);
@@ -124,7 +129,7 @@ static int parse_line(const char *source, task_record *task)
     title_buffer.length = LINE_UNITS;
     if (!parseTask(&line_buffer, &title_buffer, task)) return 0;
     if (task->title_length < 0 || task->title_length > LINE_UNITS) return -1;
-    encode_title(&title_buffer, (unsigned)task->title_length, title);
+    encode_text(title_buffer.units, (unsigned)task->title_length, title);
     return 1;
 }
 
@@ -207,11 +212,9 @@ static int remember(const char *key, int64_t now)
         }
     }
     memcpy(pending_store + length, "}}", 3);
-    if (nw_store_save(pending_store) < 0) {
-        nw_log("Agenda could not save the fired reminders");
-        return 0;
-    }
     memcpy(stored, pending_store, (size_t)length + 3);
+    if (nw_store_save(pending_store) < 0)
+        nw_log("Agenda could not save the fired reminders");
     return 1;
 }
 
@@ -248,6 +251,19 @@ static void remind(const task_record *task, const char *label, int64_t now)
     n = snprintf(reply, sizeof reply, "{\"text\":%s,\"sub\":\"%s\"}", quoted, sub);
     if (n >= 0 && n < (int)sizeof reply && remember(reminder_key, now))
         nw_send("compositor", "notify", reply);
+}
+
+static void check_reminders(void)
+{
+    int64_t wall = nw_clock_wall();
+    if (wall < 0 || !snapshot) return;
+    // The snapshot is split in place. Traverse original file order even though
+    // the display index is sorted by due date and completion state.
+    for (const char *line = snapshot; line < snapshot + snapshot_bytes; line += strlen(line) + 1) {
+        task_record task;
+        if (strchr(line, '@') && parse_line(line, &task) == 1 && !task.done)
+            remind(&task, task.title_length ? title : "(untitled)", wall);
+    }
 }
 
 static bool file_missing(const nw_event *event)
@@ -444,12 +460,13 @@ static int decode_file(const nw_event *event, char *text, int capacity)
 }
 
 // Takes ownership of the mutable buffer, including on allocation failure.
-static void publish_file(char *text)
+static void publish_file(char *text, bool ring)
 {
     // Count candidates before allocating. Ordinary notes lines consume no item
     // entries, and the retained text gives edits a byte-exact source line.
     int candidates = 0;
-    int64_t wall = nw_clock_wall();
+    size_t length = strlen(text);
+    int64_t wall = ring ? nw_clock_wall() : -1;
     for (const char *p = text; (p = strstr(p, "- ")); ) {
         candidates++;
         p = strchr(p, '\n');
@@ -460,6 +477,7 @@ static void publish_file(char *text)
     if (candidates && !parsed) {
         nw_log("Agenda could not allocate its task list");
         free(text);
+        if (ring) check_reminders();
         return;
     }
     int count = 0, open = 0;
@@ -481,6 +499,8 @@ static void publish_file(char *text)
     free(items);
     free(snapshot);
     snapshot = text;
+    snapshot_bytes = length;
+    loaded_at = nw_now();
     items = parsed;
     item_count = count;
     open_count = open;
@@ -489,17 +509,18 @@ static void publish_file(char *text)
     publish_view();
 }
 
-static void render_file(const nw_event *event)
+static void render_file(const nw_event *event, bool ring)
 {
     int capacity = file_capacity(event);
     char *text = capacity ? malloc(capacity) : NULL;
     if (text) {
         int length = decode_file(event, text, capacity);
-        if (length >= 0 && length <= FILE_LIMIT) { publish_file(text); return; }
+        if (length >= 0 && length <= FILE_LIMIT) { publish_file(text, ring); return; }
         free(text);
     }
     nw_log("Agenda could not read notes/todo.txt");
     snprintf(view_error, sizeof view_error, "Could not read notes/todo.txt");
+    if (ring) check_reminders();
     publish_view();
 }
 
@@ -509,15 +530,32 @@ static void prompt_view(const char *status)
     publish_view();
 }
 
-static void request_file(void)
+static bool request_file(bool ring)
 {
-    if (read_token || edit_read || edit_write) return;
-    if (notes < 0) { nw_log("Agenda could not start its notes read"); return; }
+    if (read_token) {
+        remind_after_read |= ring;
+        return true;
+    }
+    if (edit_read || edit_write) return false;
+    if (notes < 0) { nw_log("Agenda could not start its notes read"); return false; }
     read_token = nw_fs_read(notes, "todo.txt");
     if (read_token < 0) {
         read_token = 0;
         nw_log("Agenda could not start its notes read");
+        return false;
     }
+    remind_after_read = ring;
+    return true;
+}
+
+static void refresh_tick(void)
+{
+    if (nw_clock_today() != today) {
+        layout_items(selected_row());
+        publish_view();
+    }
+    if ((!snapshot || nw_now() - loaded_at > reload_us) && request_file(true)) return;
+    check_reminders();
 }
 
 static void request_change(task_change change)
@@ -531,6 +569,7 @@ static void request_change(task_change change)
     pending_change = change;
     // An earlier refresh cannot publish a stale snapshot during this change.
     read_token = 0;
+    remind_after_read = false;
 }
 
 static void start_save(void)
@@ -542,13 +581,23 @@ static void start_save(void)
     };
     if (!decode(prompt, &line_buffer)) return;
     title_buffer.length = LINE_UNITS;
-    int length = normalizeEntry(&line_buffer, nw_clock_today(), &title_buffer);
+    entry_error error = {-1, -1};
+    int length = normalizeEntry(&line_buffer, nw_clock_today(), &title_buffer, &error);
     if (length < 0) {
-        if (length >= -7) prompt_view(diagnostics[-length - 1]);
+        if ((length == -3 || length == -4) && error.start >= 0 && error.end > error.start &&
+            (unsigned)error.end <= line_buffer.length) {
+            encode_text(line_buffer.units + error.start, error.end - error.start, title);
+            clip_label(title);
+            if (length == -3)
+                snprintf(view_note, sizeof view_note, "unknown date %.*s (today, tomorrow, mon..sun, +3d, 11-15, 2026-11-15)",
+                         4 * VIEW_CHARS, title);
+            else snprintf(view_note, sizeof view_note, "not a time: %.*s", 4 * VIEW_CHARS, title);
+            publish_view();
+        } else if (length >= -7) prompt_view(diagnostics[-length - 1]);
         return;
     }
     if (length > LINE_UNITS) { prompt_view("the normalized task is too long"); return; }
-    encode_title(&title_buffer, (unsigned)length, new_task);
+    encode_text(title_buffer.units, (unsigned)length, new_task);
     task_change change = prompt_kind;
     prompt_kind = NO_CHANGE;
     view_note[0] = 0;
@@ -595,7 +644,7 @@ static void change_file(const nw_event *event)
     char *line = pending_change == ADD_TASK ? eof : find_line(file, original, &end);
     if (!line) {
         snprintf(view_note, sizeof view_note, "todo.txt changed meanwhile; reloaded.");
-        publish_file(file);
+        publish_file(file, false);
         return;
     }
     if (pending_change == DELETE_TASK) {
@@ -776,16 +825,23 @@ static void key_event(const char *json)
 void nw_init(void)
 {
     nw_kind("app");
-    nw_title("Typed Agenda");
+    nw_title("Agenda");
     nw_key("t");
+    nw_about("Tasks from notes/todo.txt by day, with reminders on the network clock.");
+    nw_icon("[[\"rect\",4,2,32,28],[\"fill\",4,2,32,6],[\"fill\",10,0,2,5],[\"fill\",28,0,2,5],"
+            "[\"fill\",9,12,4,3],[\"fill\",18,12,4,3],[\"fill\",27,12,4,3],"
+            "[\"fill\",9,19,4,3],[\"fill\",18,19,4,3,\"accent\"],[\"fill\",27,19,4,3]]");
     notes = nw_fs_open("fs:/notes");
     refresh_timer = nw_every(15000);
 }
 
 int nw_on_event(const nw_event *event)
 {
-    if (event->kind == NW_START && nw_store_load(stored, sizeof stored) < 0) stored[0] = 0;
-    if (event->kind == NW_START || (event->kind == NW_TICK && event->timer == refresh_timer)) request_file();
+    if (event->kind == NW_START) {
+        if (nw_store_load(stored, sizeof stored) < 0) stored[0] = 0;
+        request_file(true);
+    }
+    if (event->kind == NW_TICK && event->timer == refresh_timer) refresh_tick();
     if (event->kind == NW_SETTLE && edit_read && event->token == edit_read) {
         edit_read = 0;
         change_file(event);
@@ -800,19 +856,21 @@ int nw_on_event(const nw_event *event)
         if (event->ok) {
             if (pending_change == ADD_TASK || pending_change == DELETE_TASK)
                 snprintf(view_note, sizeof view_note, "%s", pending_change == ADD_TASK ? "Added." : "Deleted.");
-            request_file();
+            request_file(false);
         }
         else prompt_view("Could not save notes/todo.txt");
         return NW_DONE;
     }
     if (event->kind == NW_SETTLE && read_token > 0 && event->token == read_token) {
         read_token = 0;
-        render_file(event);
+        bool ring = remind_after_read;
+        remind_after_read = false;
+        render_file(event, ring);
     }
     if (event->kind != NW_MESSAGE) return NW_DONE;
     if (!strcmp(event->from, "compositor")) {
         if (!strcmp(event->type, "key")) key_event(event->json);
-        if (!strcmp(event->type, "focus")) request_file();
+        if (!strcmp(event->type, "focus")) request_file(false);
     }
     if (strcmp(event->type, "agenda.parse") != 0) return NW_DONE;
     // nw_json_str caps its result at n-1. Reserve that value to detect truncation.

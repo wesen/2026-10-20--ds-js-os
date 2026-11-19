@@ -12,7 +12,7 @@ const taskFields = [
 
 const signatures = [
     ["parseTask", "bool", "string,buffer,Task"],
-    ["normalizeEntry", "i32", "string,i32,buffer"],
+    ["normalizeEntry", "i32", "string,i32,buffer,EntryError"],
     ["agendaDateKey", "i32", "i32,bool"],
     ["entryAddDays", "i32", "i32,i32"],
     ["entryWeekday", "i32", "i32"],
@@ -26,10 +26,12 @@ function validateAgenda(records, functions) {
         if (!entry || entry.result !== result || entry.params.join(",") !== params)
             throw new SyntaxError("Agenda requires " + name + "(" + params + "): " + result);
     }
-    const fields = records.Task;
-    if (!fields || Object.keys(fields).length !== taskFields.length ||
-        taskFields.some(([name, type], i) => fields[name]?.type !== type || fields[name].offset !== i * 4))
-        throw new SyntaxError("Task fields do not match the Agenda runtime layout");
+    for (const [record, layout] of [["Task", taskFields], ["EntryError", [["start", "i32"], ["end", "i32"]]]]) {
+        const fields = records[record];
+        if (!fields || Object.keys(fields).length !== layout.length ||
+            layout.some(([name, type], i) => fields[name]?.type !== type || fields[name].offset !== i * 4))
+            throw new SyntaxError(record + " fields do not match the Agenda runtime layout");
+    }
 }
 
 globalThis.compileAgenda = function compileAgenda(source, reactor) {

@@ -210,10 +210,17 @@ function entryWriteDate(output: buffer, at: i32, date: i32): i32 {
     return entryNumber(output, pos, date % 100, 10);
 }
 
+function entryFailure(error: EntryError, start: i32, end: i32, code: i32): i32 {
+    error.start = start;
+    error.end = end;
+    return code;
+}
+
 // On success return the canonical prompt length in code units. On failure:
 // -1 duplicate date, -2 clock unset, -3 bad date, -4 bad time,
-// -5 bad lead, -6 no title, -7 output capacity. Ignore output on failure.
-function normalizeEntry(input: string, today: i32, output: buffer): i32 {
+// -5 bad lead, -6 no title, -7 output capacity. Errors -3 and -4 write the
+// offending token's half-open UTF-16 span. Ignore output on failure.
+function normalizeEntry(input: string, today: i32, output: buffer, error: EntryError): i32 {
     let at = skipSpace(input, 0);
     let written = 0;
     let hasDate = false;
@@ -228,7 +235,7 @@ function normalizeEntry(input: string, today: i32, output: buffer): i32 {
             if (hasDate) return -1;
             if (today < 0 && !entryYmdShape(input, at + 1, end)) return -2;
             const date = entryDateAt(input, at + 1, end, today);
-            if (date < 0) return -3;
+            if (date < 0) return entryFailure(error, at, end, -3);
             hasDate = true;
             // The original title check only strips dates with four-digit years.
             if (date / 10000 < 1000 || date / 10000 > 9999) { hasTitle = true; }
@@ -236,7 +243,7 @@ function normalizeEntry(input: string, today: i32, output: buffer): i32 {
             const next = skipSpace(input, end);
             const nextEnd = entryWordEnd(input, next);
             const time = entryClock(input, next, nextEnd);
-            if (time === -2) return -4;
+            if (time === -2) return entryFailure(error, next, nextEnd, -4);
             if (time >= 0) {
                 written = entryPut(output, written, 32);
                 written = entryNumber(output, written, time / 60, 10);

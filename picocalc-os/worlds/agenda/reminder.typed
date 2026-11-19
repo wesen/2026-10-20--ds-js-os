@@ -14,6 +14,12 @@ record Task {
     titleLength: i32;
 }
 
+// normalizeEntry writes the offending token's UTF-16 offsets here.
+record EntryError {
+    start: i32;
+    end: i32;
+}
+
 // The stored task format has a four-digit year. The JS parser calls Date.UTC,
 // which interprets years 00 through 99 relative to 1900.
 function leap(year: i32): bool {

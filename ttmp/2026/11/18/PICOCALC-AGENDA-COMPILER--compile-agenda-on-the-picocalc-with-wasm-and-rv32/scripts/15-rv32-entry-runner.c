@@ -3,13 +3,14 @@
 typedef struct { uint32_t length; uint16_t units[16]; } token;
 typedef struct { token word; int32_t today, date, time; } fixture;
 typedef struct { uint32_t length; uint16_t units[160]; } prompt;
-typedef struct { prompt input, expected; int32_t today, result, capacity; } prompt_fixture;
+typedef struct { int32_t start, end; } entry_error;
+typedef struct { prompt input, expected; int32_t today, result, capacity; entry_error error; } prompt_fixture;
 
 extern const fixture cases_start[], cases_end[];
 extern const prompt_fixture prompts_start[], prompts_end[];
 extern int32_t entryDate(const token *, int32_t);
 extern int32_t entryTime(const token *);
-extern int32_t normalizeEntry(const prompt *, int32_t, prompt *);
+extern int32_t normalizeEntry(const prompt *, int32_t, prompt *, entry_error *);
 
 void _start(void)
 {
@@ -25,8 +26,10 @@ void _start(void)
     for (; edit != prompts_end; ++edit) {
         prompt output;
         output.length = edit->capacity;
-        int32_t result = normalizeEntry(&edit->input, edit->today, &output);
+        entry_error error = {-1, -1};
+        int32_t result = normalizeEntry(&edit->input, edit->today, &output, &error);
         if (result != edit->result) break;
+        if (error.start != edit->error.start || error.end != edit->error.end) break;
         int32_t i = 0;
         while (i < result && output.units[i] == edit->expected.units[i]) ++i;
         if (result >= 0 && i != result) break;

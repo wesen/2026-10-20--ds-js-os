@@ -71,6 +71,7 @@ const examples = [
     '@11-15 02pm', 'x @2028-2-29 noon', 'x @tue 13pm', 'x @tue 12:60',
     'x @tue 6:4pm', 'x @tue 7o', 'x @tue 2 3', 'x @tue @tom 2pm',
     'x @yesterday', 'x @1-3-05', 'x @2100-2-29', 'x @0004-2-29',
+    '🙂 notes @unknown', 'x @🙂', '13pm y @tue 13pm',
     '@0004-2-29', '@2026-13-01', 'x !9999d', 'x !10000d', 'x !15M',
     '!15m', '!0d !1h', '@today !15m', '@today !15m !1h', '@ !',
     'x\n\r\u2028y', '  x '.repeat(30),
@@ -82,16 +83,25 @@ const statuses = [
 const capacity = 160, stride = 4 + capacity * 2;
 const promptRows = [];
 function addPrompt(input, today, limit) {
-    let expected = '', result;
+    let expected = '', result, start = -1, end = -1;
     try {
         expected = oracle.agExpand(input, today);
         result = expected.length > limit ? -7 : expected.length;
     } catch (error) {
         result = -1 - statuses.findIndex(prefix => error.message.startsWith(prefix));
         assert(result < 0, error.message);
+        if (result === -3 || result === -4) {
+            const tokens = [...input.matchAll(/\S+/gu)];
+            const at = tokens.findIndex(token => token[0].startsWith('@') && token[0].length > 1);
+            const span = tokens[at + (result === -4 ? 1 : 0)];
+            start = span.index;
+            end = start + span[0].length;
+            assert(error.message.includes(span[0]));
+        }
     }
-    const row = Buffer.alloc(stride * 2 + 12);
+    const row = Buffer.alloc(stride * 2 + 20);
     const output = 4096;
+    const error = 8192;
     row.writeUInt32LE(input.length, 0);
     row.writeUInt32LE(expected.length, stride);
     view.setUint32(0, input.length, true);
@@ -104,8 +114,13 @@ function addPrompt(input, today, limit) {
     row.writeInt32LE(encode(today), stride * 2);
     row.writeInt32LE(result, stride * 2 + 4);
     row.writeInt32LE(limit, stride * 2 + 8);
+    row.writeInt32LE(start, stride * 2 + 12);
+    row.writeInt32LE(end, stride * 2 + 16);
     const label = JSON.stringify([input, today, limit]);
-    assert.equal(exports.normalizeEntry(0, encode(today), output), result, label);
+    view.setInt32(error, -1, true);
+    view.setInt32(error + 4, -1, true);
+    assert.equal(exports.normalizeEntry(0, encode(today), output, error), result, label);
+    assert.deepEqual([view.getInt32(error, true), view.getInt32(error + 4, true)], [start, end], label);
     if (result >= 0) {
         let actual = '';
         for (let i = 0; i < result; i++) actual += String.fromCharCode(view.getUint16(output + 4 + i * 2, true));

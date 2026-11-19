@@ -1,0 +1,22 @@
+PicoCalc Agenda diagnostic check using the assembled, panel-enabled RV32 profile. Input was injected over serial.
+Firmware SHA-256 760a61390e7e9d0d9a110621725e2e08f9d26a193e9a761095d409911673699f
+Wrote 4183824 bytes (2556258 compressed) at 0x00010000 in 43.1 seconds (effective 775.8 kbit/s)...
+Hash of data verified.
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+agenda compile source=bundle status=ok us=723799 peak_js_bytes=709796 module_bytes=66348
+agenda stage before-cji-restore us=918928
+agenda stage before-dispatch us=919535
+agenda stage world-init us=1440271
+agenda stage world-init-done us=1447468
+agenda stage file-submitted us=1985876
+agenda stage file-returned us=2106273
+agenda stage settle us=2134220
+agenda response us=2135707 world_bytes=185519
+agenda frame turn_us=1496 world_bytes=185519
+#OK cji
+
+Both framebuffer snapshots passed CRC, and the notes file stayed empty.
+#END c58c18bb 2866
+#END 52e93658 2408
+  bus i2c0  busy  7677.87 ms, 1439 transfers, 5843 bytes, 0 errors
+  bus spi2  busy   228.99 ms, 290 transfers, 670815 bytes, 0 errors

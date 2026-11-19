@@ -27,6 +27,8 @@ assert.throws(() => typedWasm.linkWorld(source.replace('title: buffer, task: Tas
     'title: buffer, task: Task, unused: i32): bool {\n    if (!scanTask'), object, ['parseTask']), /slot signature mismatch/);
 assert.throws(() => compileAgenda(source.replace('    done: bool;\n    textStart: i32;',
     '    textStart: i32;\n    done: bool;'), object), /Task fields do not match/);
+assert.throws(() => compileAgenda(source.replace('record EntryError {\n    start: i32;\n    end: i32;',
+    'record EntryError {\n    end: i32;\n    start: i32;'), object), /EntryError fields do not match/);
 writeFileSync(asset, bytes);
 
 mkdirSync(join(fsRoot, 'notes'), {recursive: true});
@@ -238,7 +240,7 @@ const editResult = (name, edit) => {
 service("focus").needs("frames").on("frames", (s, frame, msg) => {
     if (msg.from !== "${name}") return;
     const kids = frame.frame.tree.kids;
-    log("AGENDA_STATUS " + JSON.stringify(kids[kids.length - 1].s));
+    log("AGENDA_STATUS " + JSON.stringify([kids[kids.length - 1].s, kids.some(k => k.t === "input")]));
 }).onStart(async () => {
     await sleep(600);
     send("compositor", "open", {app:"${name}"});
@@ -253,18 +255,83 @@ service("focus").needs("frames").on("frames", (s, frame, msg) => {
     writeFileSync(notePath, edit.before);
     writeFileSync(displayScript, 'wait 1700\n' + edit.commands + '\nwait 1500\n');
     const output = join(scratch, 'edit-' + name + '-' + edit.name);
-    execFileSync(host, ['-j', scratch, '-o', output, '-f', fsRoot, '-w', '2026-11-01T09:41:00', '-z', zone, displayScript],
+    execFileSync(host, ['-j', scratch, '-o', output, '-f', fsRoot, '-w', edit.wall ?? '2026-11-01T09:41:00', '-z', zone, displayScript],
         {stdio:['ignore','pipe','pipe'],timeout:15000});
     const uart = readFileSync(join(output, 'uart.log'), 'utf8');
     assert.doesNotMatch(uart, /crashed/);
     const status = [...uart.matchAll(/AGENDA_STATUS (.+)$/gm)].map(row => JSON.parse(row[1]));
-    return {text:readFileSync(notePath, 'utf8'), note: edit.note ? status.at(-1) : undefined};
+    const [note, prompt] = status.at(-1);
+    return {text:readFileSync(notePath, 'utf8'), note: edit.note ? note : undefined, prompt};
 };
 for (const edit of editCases) {
-    const expected = {text:edit.after, note:edit.note};
+    const expected = {text:edit.after, note:edit.note, prompt:false};
     assert.deepEqual(editResult('agenda', edit), expected, 'original: ' + edit.name);
     assert.deepEqual(editResult('agenda-wasm', edit), expected, 'typed Wasm: ' + edit.name);
 }
+const diagnostics = [
+    ['x @someday', 'unknown date @someday (today, tomorrow, mon..sun, +3d, 11-15, 2026-11-15)'],
+    ['x @tue 25:30', 'not a time: 25:30'],
+    ['x @tue @wed', 'one date per task'],
+    ['x !soon', 'a reminder is like !15m, !2h or !1d'],
+    ['@today !15m', 'a task needs some words'],
+    ['x @today', 'the clock is not set: write the date as @YYYY-MM-DD', 'unset'],
+];
+for (const [i, [prompt, note, wall]] of diagnostics.entries()) {
+    const before = '- existing\n';
+    const edit = {name:'diagnostic-' + i, before, note, wall,
+        commands:'key f2\nwait 300\ntype ' + prompt + '\nwait 1900\nkey enter'};
+    for (const name of ['agenda', 'agenda-wasm'])
+        assert.deepEqual(editResult(name, edit), {text:before, note, prompt:true}, name + ' ' + prompt);
+}
+
+const refreshRun = (name) => {
+    const before = '- midnight @2026-11-02 00:00\n';
+    const after = before + '- loaded later @2026-11-02 00:05\n';
+    writeFileSync(join(fsRoot, 'notes/todo.txt'), before);
+    const world = name === 'agenda' ? {...manifest.worlds[0], name, file:'agenda.js', engine:'js'} : manifest.worlds[0];
+    writeFileSync(join(scratch, 'focus.js'), `
+service("focus").needs("frames").on("frames", (s, frame, msg) => {
+    if (msg.from === "${name}") {
+        const list = frame.frame.tree.kids[0];
+        if (list.t === "list")
+            log("REFRESH_FRAME " + JSON.stringify([now(), list.items.map(i => i.label)]));
+    }
+}).onStart(async () => {
+    await sleep(2000);
+    await hw.fs("fs:/notes").write("todo.txt", ${JSON.stringify(after)});
+});
+`);
+    writeFileSync(join(scratch, 'notify.js'), `
+service("compositor").on("notify", (s, m) => log("REFRESH_NOTIFY " + JSON.stringify([now(), m.text])));
+`);
+    writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds:[
+        {...world, claims:['fs:/notes']}, {name:'compositor',file:'notify.js',mem_kb:384},
+        {name:'focus',file:'focus.js',claims:['frames.read','fs:/notes'],mem_kb:384},
+    ]}));
+    const output = join(scratch, 'refresh-' + name);
+    execFileSync(host, ['-j', scratch, '-o', output, '-f', fsRoot, '-w', '2026-11-01T23:59:52',
+        '-z', zone, '-t', '322000'], {stdio:['ignore','pipe','pipe'],timeout:15000});
+    const uart = readFileSync(join(output, 'uart.log'), 'utf8');
+    assert.doesNotMatch(uart, /crashed/);
+    const events = tag => [...uart.matchAll(new RegExp(tag + ' (.+)$', 'gm'))].map(row => JSON.parse(row[1]));
+    const frames = events('REFRESH_FRAME');
+    const notices = events('REFRESH_NOTIFY');
+    assert.equal(notices.length, 2);
+    // The observer completes its two-second writer turn before reading the retained frame.
+    assert(frames[0][0] < 5000);
+    assert(frames[1][0] >= 15000 && frames[1][0] < 16000, 'midnight regrouped without reloading');
+    assert(notices[0][0] >= 15000 && notices[0][0] < 16000, 'the existing reminder fired from the snapshot');
+    assert(frames.at(-1)[0] >= 315000 && frames.at(-1)[0] < 316000, 'external change surfaced at the first stale tick');
+    assert(notices[1][0] >= 315000 && notices[1][0] < 316000, 'the new reminder fired after reloading');
+    return {views:frames.map(row => row[1]), notifications:notices.map(row => row[1])};
+};
+const refresh = refreshRun('agenda-wasm');
+assert.deepEqual(refresh, refreshRun('agenda'));
+assert.deepEqual(refresh.views, [
+    ['TOMORROW · MON 2 NOV', '00:00  midnight'],
+    ['TODAY · MONDAY 2 NOV', '00:00  midnight'],
+    ['TODAY · MONDAY 2 NOV', '00:00  midnight', '00:05  loaded later'],
+]);
 
 // The real Editor has no notes-directory claim. F6 lets it edit precisely the granted file.
 writeFileSync(join(scratch, 'apps/editor.js'), readFileSync(join(os, 'js/apps/editor.js')));
@@ -366,6 +433,7 @@ console.log(JSON.stringify({linkedBytes:bytes.length, sourceSha:sha(source), run
     taskView:{matchesOriginalGroupedFrames:groups.length, matchesOriginalDoneOnlyFrames:doneFrames.length,
         scrollableTasks:manySelected.length},
     mutations:editCases.map(({name}) => name),
+    exactDiagnostics:diagnostics.length, refresh,
     editor:{savedAndReloaded:readFileSync(todo, 'utf8'), scopedToFile:true, forwardDenied:true,
         refusalAndTimeoutRevoked:true, previousPreservedUntilReplacement:true},
     reminder:{notice, sender, scheduled, firedAt, persisted:firedRecord, restartSuppressed:true, unsetSuppressed:true, zone, transitionScheduled, transitionFiredAt:transition[0][2]}}, null, 2));

@@ -12,11 +12,12 @@ int parseTask(const void *line, void *title, void *task)
 }
 
 __attribute__((export_name("normalizeEntry")))
-int normalizeEntry(const void *line, int32_t today, void *output)
+int normalizeEntry(const void *line, int32_t today, void *output, void *error)
 {
     (void)line;
     (void)today;
     (void)output;
+    (void)error;
     __builtin_trap();
 }
 
