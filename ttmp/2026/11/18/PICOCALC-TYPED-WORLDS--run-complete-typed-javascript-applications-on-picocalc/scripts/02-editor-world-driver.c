@@ -116,10 +116,16 @@ static void key(nw_elf_module *world, const char *name, const char *ch)
     char payload[128];
     snprintf(payload, sizeof payload, "{\"key\":\"%s\",\"ch\":\"%s\",\"state\":\"down\"}", name, ch);
     int first = yields;
-    expect(world->event(NW_MESSAGE, 0, 0, 0, "key", payload, strlen(payload), "compositor") == NW_DONE, "key completes");
-    for (int i = first; i < yields; i++) {
-        expect(world->event(NW_SETTLE, 1, 0, 2000 + i, "", "null", 4, "") == NW_DONE, "background work completes");
+    int result = world->event(NW_MESSAGE, 0, 0, 0, "key", payload, strlen(payload), "compositor");
+    if (result == NW_LATER) {
+        int before = frames;
+        expect(world->event(NW_SETTLE, 1, 0, 1999, "", "null", 4, "") == NW_LATER &&
+               frames == before, "unrelated receipt preserves pending key");
     }
+    for (int i = first; i < yields; i++) {
+        result = world->event(NW_SETTLE, 1, 0, 2000 + i, "", "null", 4, "");
+    }
+    expect(result == NW_DONE, "key and its queued work complete");
 }
 #endif
 

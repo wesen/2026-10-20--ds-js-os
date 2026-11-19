@@ -161,16 +161,17 @@ function editorPositionAppend(out: buffer, at: i32, json: string, key: buffer, s
 function editorRemember(state: WorldState, out: buffer): i32 {
     if (state.file <= 0 || state.nameLength <= 0) return 0;
     const doc = typedSdkView(typedSdkBuffer(0), state.textLength);
-    editorLocate(doc, state);
+    let newline = typedSdkLastIndex(doc, 0, state.cursor, 10);
+    if (newline === state.cursor) { newline = -1; }
     const key = typedSdkBuffer(4);
     const size = editorPositionKey(state, key);
     const keyText = typedSdkView(key, size);
     let at = out.writeLiteral(0, "{\"pos\":{");
     at = editorPositionCopy(out, at, keyText, 0, size);
     at = at + out.writeLiteral(at, ":[");
-    at = editorDigits(out, at, state.line);
+    at = editorDigits(out, at, typedSdkCountUnit(doc, 0, state.cursor, 10));
     out.setCharCodeAt(at, 44);
-    at = editorDigits(out, at + 1, editorColumn(doc, state.lineStart, state.cursor));
+    at = editorDigits(out, at + 1, editorColumn(doc, newline + 1, state.cursor));
     out.setCharCodeAt(at, 44);
     at = editorDigits(out, at + 1, state.top);
     out.setCharCodeAt(at, 44);

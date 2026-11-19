@@ -25,14 +25,17 @@ const worlds = system.worlds.filter(w => ['display', 'keyboard', 'compositor', '
 const large = process.argv.includes('--large');
 const edit = process.argv.includes('--edit');
 const positions = process.argv.includes('--positions');
+const denseSearch = process.argv.includes('--dense-search');
+const tailSearch = process.argv.includes('--tail-search');
+const longSearch = denseSearch || tailSearch;
 const find = process.argv.includes('--find');
 const markdown = process.argv.includes('--markdown');
 const previewLarge = process.argv.includes('--preview-large');
 const previewLine = process.argv.includes('--preview-line');
 const capacity = previewLarge || previewLine;
 const preview = markdown || capacity;
-assert([large, edit, positions, find, markdown, previewLarge, previewLine].filter(Boolean).length <= 1, 'select at most one workflow');
-const turnBudget = (large || previewLine) && !process.argv.includes('--stock-budget') ? 200 : 50;
+assert([large, edit, positions, find, markdown, previewLarge, previewLine, denseSearch, tailSearch].filter(Boolean).length <= 1, 'select at most one workflow');
+const turnBudget = (large || previewLine || longSearch) && !process.argv.includes('--stock-budget') ? 200 : 50;
 const filename = preview ? 'entry.MD' : 'entry.txt';
 const contents = previewLarge ?
     ('A reading paragraph, followed by a blank line.\n\n').repeat(450) + 'END OF PREVIEW' :
@@ -40,9 +43,12 @@ const contents = previewLarge ?
     markdown ? '# Straße **Title**\n- one\n9) numbered\n```\ncode\n\n```\n> quote `text`\n**plain** [link](u)\ncontinued\n\n### Low\n```\n' +
         'more code\n'.repeat(22) + 'last code\n`' + '🙂'.repeat(54) + ' word  tab\tend' :
     find ? 'A🙂 BETA beta beta\nKelvin K and İce\nlast BeTa\noverlap ababa\n' :
-    large ? ('text '.repeat(15) + '\r\n').repeat(851) + 'x'.repeat(9) :
+    large || longSearch ? ('text '.repeat(15) + '\r\n').repeat(851) + (tailSearch ? 'needlezzz' : 'x'.repeat(9)) :
     'A🙂  long line ' + 'abcd efgh '.repeat(9) + '\r\n\t"hello"\rLast\n';
-const findActions = [
+const findActions = longSearch ? [
+    'key f3', denseSearch ? 'type text text z' : 'type needle', 'key enter',
+    'wait 1500', 'capture found.png', 'key f4', 'wait 1500',
+] : [
     'key f4', 'key f3', 'type BeTx', 'key backspace', 'type A', 'key enter',
     'key f4', 'key f4', 'key f4', 'key f4', 'capture found.png', 'key f3', 'key esc',
     'key f3', 'type k', 'key enter', 'key f4', 'key f3', 'key backspace', 'type ce', 'key enter',
@@ -109,7 +115,7 @@ function run(name, compiled) {
         }
         mkdirSync(dirname(join(js, w.file)), {recursive:true});
         copyFileSync(join(os, 'js', w.file), join(js, w.file));
-        if ((large || capacity) && w.name === 'editor') return {...w, mem_kb:2048};
+        if ((large || capacity || longSearch) && w.name === 'editor') return {...w, mem_kb:2048};
         return w;
     });
     entries.push({name:'probe',file:'probe.js',claims:['frames.read'],mem_kb:capacity ? 2048 : 384});
@@ -132,7 +138,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
     writeFileSync(scenario, [
         'wait 2000', 'key e', 'wait 1000', 'capture editor.png',
         'key f1', 'wait 530', 'key d', 'wait 530', 'key enter', 'wait 1000', 'capture opened.png',
-        ...(find ? findActions.flatMap(action => [action, 'wait 530']) : []),
+        ...(find || longSearch ? findActions.flatMap(action => [action, 'wait 530']) : []),
         ...(preview ? previewActions.flatMap(action => [action, 'wait 530']) : []),
         ...(positions ? ['key right', 'wait 530', 'key esc', 'wait 530'] : []),
         ...(edit ? ['key right', 'wait 530', 'key right', 'wait 530', 'key backspace', 'wait 530',
@@ -170,6 +176,8 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         assert.equal(marks?.length, 4);
         const overlaps = frames.find(frame => frame.tree.kids[0].s === 'Find: aba_')?.tree.kids[1].marks;
         assert.deepEqual(overlaps, [[3, 8, 3, 'soft'], [3, 10, 3, 'soft']]);
+    } else if (longSearch) {
+        assert.equal(statuses.at(-2), denseSearch ? 'Not found: text text z' : 'entry.txt  852:1');
     } else if (markdown) {
         assert.deepEqual(frames[1].tree.kids[1].rows.slice(0, 8).map(row => row.color),
             ['accent', 'ink', 'ink', 'blue', 'blue', 'blue', 'blue', 'muted']);
@@ -186,7 +194,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         assert(!visualFrame(windows.at(-1).tree).kids[1].some(row => row.s === 'END OF PREVIEW'));
         if (compiled) assert(windows.every(frame => frame.tree.kids[1].items.length <= 17));
     } else assert.equal(statuses.length, positions ? 4 : 3);
-    const pictures = ['editor', 'opened', ...(edit ? ['saved'] : []), ...(find ? ['found'] : []),
+    const pictures = ['editor', 'opened', ...(edit ? ['saved'] : []), ...(find || longSearch ? ['found'] : []),
         ...(markdown ? ['preview', 'fence'] : []),
         ...(capacity ? ['preview', 'preview-end', 'preview-back'] : []), 'fresh'];
     const pixels = pictures.map(name => readFileSync(join(out, name + '.png')));
@@ -230,8 +238,8 @@ try {
         (edit ? '#define TEST_EDIT\n' : '') +
         (edit || markdown ? `static const char saved_text[] = ${JSON.stringify(original.saved)};\n` : '') +
         (positions ? `#define TEST_POS\nstatic const char initial_record[] = ${JSON.stringify(JSON.stringify(seed))};\n` : '') +
-        (find ? '#define TEST_FIND\nstatic const char *const find_actions[] = {' +
-            findActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
+        (find || longSearch ? '#define TEST_FIND\nstatic const char *const find_actions[] = {' +
+            findActions.filter(action => action.startsWith('key ') || action.startsWith('type ')).map(action => JSON.stringify(action)).join(',') +
             '};\n' : '') +
         (preview ? (markdown ? '#define TEST_MARKDOWN\n' : '') + '#define TEST_PREVIEW\nstatic const char *const markdown_actions[] = {' +
             previewActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +

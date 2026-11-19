@@ -227,6 +227,10 @@ function editorInput(state: WorldState, output: buffer, hints: buffer): i32 {
     n = typedSdkEventText(3, reference, reference.writeLiteral(0, "ch"), key);
     let ch = 0;
     if (n === 1) { ch = key.charCodeAt(0); }
+    if (state.frameToken > 0) {
+        state.frameToken = 0;
+        state.frameRow = 0;
+    }
     editorApplyKey(state, action, ch, held, output);
     if (state.file > 0) return editorShow(output, hints, state);
     return 0;

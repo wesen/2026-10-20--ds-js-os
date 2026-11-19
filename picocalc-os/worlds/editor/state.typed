@@ -25,6 +25,9 @@ record WorldState {
     rowEnd: i32;
     lineStart: i32;
     lineEnd: i32;
+    fenced: bool;
+    frameRow: i32;
+    frameToken: i32;
     dirty: bool;
     savedSlot: i32;
     discardArmed: bool;
@@ -41,6 +44,14 @@ record WorldState {
     positionEnd: i32;
     finding: bool;
     queryLength: i32;
+    findToken: i32;
+    findPhase: i32;
+    findOrigin: i32;
+    findFrom: i32;
+    findStart: i32;
+    findEnd: i32;
+    findAt: i32;
+    findFolded: i32;
     markdown: bool;
     preview: bool;
     previewTop: i32;

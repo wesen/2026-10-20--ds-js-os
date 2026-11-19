@@ -98,6 +98,8 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.markdown = editorIsMarkdown(state);
     state.preview = false;
     state.previewToken = 0;
+    state.frameToken = 0;
+    state.frameRow = 0;
     typedSdkReply(output, output.writeLiteral(0, "{\"ok\":true}"));
     state.cursor = 0;
     state.top = 0;
@@ -180,10 +182,19 @@ function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, h
         state.previewToken = 0;
         if (state.preview && state.readToken === 0) { editorShow(output, hints, state); }
     }
+    if (event.kind === 4 && state.findToken > 0 && event.token === state.findToken) {
+        state.findToken = 0;
+        editorFindStep(state, typedSdkView(typedSdkBuffer(0), state.textLength));
+        editorShow(output, hints, state);
+    }
+    if (event.kind === 4 && state.frameToken > 0 && event.token === state.frameToken) {
+        state.frameToken = 0;
+        editorShow(output, hints, state);
+    }
     if (event.kind === 2) {
         const hintLength = hints.writeLiteral(0, "Esc Files");
         typedSdkScreen(output, editorEmptyFrame(output), hints, hintLength);
     }
-    if (state.readToken > 0) return 1;
+    if (state.readToken > 0 || state.findToken > 0 || state.frameToken > 0) return 1;
     return 0;
 }

@@ -13,6 +13,7 @@ enum { SCREEN_CAP = 16384, HINT_CAP = 120, LARGE_CAP = 65536, SMALL_CAP = 256 };
 #define COUNTED(name, capacity) struct name { uint32_t length; uint16_t units[capacity]; }
 static COUNTED(large_text, LARGE_CAP) large;
 static COUNTED(small_text, SMALL_CAP) small[5];
+static struct small_text frame_scratch;
 static COUNTED(record_text, 4096) record_text;
 static COUNTED(expanded_text, 12288) text_scratch;
 static struct record_text row_scratch;
@@ -87,6 +88,7 @@ SDK(typedSdkBuffer) void *typedSdkBuffer(int slot)
     if (slot == 5) { record_text.length = 4096; return &record_text; }
     if (slot == 7) { text_scratch.length = 12288; return &text_scratch; }
     if (slot == 8) { row_scratch.length = 4096; return &row_scratch; }
+    if (slot == 9) { frame_scratch.length = SMALL_CAP; return &frame_scratch; }
     if (slot > 5) slot--;
     if (slot < 1 || (unsigned)slot > sizeof small / sizeof *small) return &empty;
     small[slot - 1].length = SMALL_CAP;
@@ -101,6 +103,7 @@ static int capacity(const void *buffer)
     if (buffer == &record_text) return 4096;
     if (buffer == &text_scratch) return 12288;
     if (buffer == &row_scratch) return 4096;
+    if (buffer == &frame_scratch) return SMALL_CAP;
     for (unsigned i = 0; i < sizeof small / sizeof *small; i++)
         if (buffer == &small[i]) return SMALL_CAP;
     return -1;
@@ -114,17 +117,42 @@ SDK(typedSdkView) const void *typedSdkView(void *buffer, int length)
     return buffer;
 }
 
+static int valid_span(const void *view, int start, int end)
+{
+    return start >= 0 && end >= start && end <= capacity(view) &&
+           (uint32_t)end <= *(const uint32_t *)view;
+}
+
 // Search a live string view for any of four exact UTF-16 units.
 SDK(typedSdkSeek) int typedSdkSeek(const void *view, int start, int end, int a, int b, int c, int d)
 {
-    if (start < 0 || end < start || end > capacity(view) ||
-        (uint32_t)end > *(const uint32_t *)view) return end;
+    if (!valid_span(view, start, end)) return end;
     const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
     for (int i = start; i < end; i++) {
         int unit = units[i];
         if (unit == a || unit == b || unit == c || unit == d) return i;
     }
     return end;
+}
+
+// Find the last occurrence of a UTF-16 unit in the window.
+SDK(typedSdkLastIndex)
+int typedSdkLastIndex(const void *view, int start, int end, int unit)
+{
+    if (!valid_span(view, start, end)) return end;
+    const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
+    for (int i = end; i > start;) if (units[--i] == unit) return i;
+    return end;
+}
+
+SDK(typedSdkCountUnit)
+int typedSdkCountUnit(const void *view, int start, int end, int unit)
+{
+    if (!valid_span(view, start, end)) return 0;
+    const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
+    int count = 0;
+    for (int i = start; i < end; i++) count += units[i] == unit;
+    return count;
 }
 
 static int hex4(const unsigned char **input)

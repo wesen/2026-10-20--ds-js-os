@@ -264,3 +264,65 @@ Read the structured paired receipt and the test entry points `03-build-editor-fi
 ### Technical details
 
 The firmware application starts at `0x10000`. The generated board bundles contain typed source and a generic reactor. The Editor compiler fills that reactor on boot. The standard profile selects a 200 ms Editor turn budget and a 768 KiB world memory limit.
+
+## Step 5: Give matching and late viewport traversal independent scheduler slices
+
+Both full-file search regressions now complete in the simulator. The dense absent query finishes without dropping its pending key, and the EOF query produces line 852, column 1. The complete replay also finds the same match after wrapping with F4 and opens a fresh file afterward.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Preserve whole-file find behavior and its workflow through cursor placement and file replacement.
+
+**Inferred user intent:** Make the typed app responsive within the device scheduler's limits.
+
+### What I did
+
+- Replaced synchronous candidate traversal in `find.typed` with four typed intervals and an explicit continuation. Each slice budgets candidate visits and the maximum work of an eligible comparison.
+- Kept the original UTF-16 folded coordinate rules, including the expansion caused by dotted I and matches that start before the origin but end beyond it.
+- Reworked `editorFrameLocate` to advance at most 64 wrapped rows per slice. A ring of 18 checkpoints lets the document renderer and the highlight pass recover the viewport without independently scanning from zero.
+- Used the generic backward seeker and unit counter to find the logical cursor line and persist its location. Search and persistence no longer use wrapped row walks to find line coordinates.
+- Updated the full-size replay and native driver. The driver delivers an unrelated receipt while a long key is waiting and asserts that the app remains pending and does not publish early.
+
+### Why
+
+Search work and viewport work can each exceed one segment. Retaining a separate continuation for each keeps the key ordered within Editor while the rest of the kernel can run. Counting newlines is sufficient for cursor persistence because the store records a logical line and column.
+
+### What worked
+
+- The slice-only run fixed `find-dense` and still reproduced `find-tail`, isolating the remaining viewport cost.
+- The final run of `scripts/04-check-search-traversal.sh` passed full-size open, dense and late search, short Unicode search, Markdown, edit and position persistence on Wasm and RV32. The long searches matched four JavaScript reference captures apiece and included another F4 search and a fresh file open.
+- The long Wasm replay used 200 virtual ms. The short workflows still pass at 50 virtual ms. Both target artifacts emitted from the same source measured 84,477 bytes for Wasm and 239,968 bytes for RV32.
+- The before and after outcome files are `various/editor-search-traversal-host.json` and `various/editor-search-traversal-after.json`.
+
+### What didn't work
+
+- The initial experiment inlined one call in `editorWrapEnd`. It made neither search test finish. I reverted it.
+- Bulk wrap range scans still produced `editor crashed handling key: ran past its turn budget of 200 virtual ms` in the late case. Reusing the viewport checkpoints removed redundant walks but did not by itself fix the remaining single walk. The final version retains typed wrap policy and uses scheduler slices.
+- The first attempt to track fence context during row traversal failed to compile with `SyntaxError: 200:79: unknown function editorMdFence`. The compiler resolves functions in source order. I moved the shared fold helper ahead of Markdown parsing in `source.list` so the view can call the fence helper.
+- After the first successful late frame, the extended `--tail-search --keep-fixture` run still logged `editor crashed handling open: ran past its turn budget of 200 virtual ms`. The matched status was already present. This identified cursor persistence during replacement, which had called `editorLocate` a second time. The final replay passes that transition.
+
+### What I learned
+
+Rendering one frame and recording the cursor before a later open were both independent whole-document walks. The kernel budgets each scheduler segment separately and accepts matching settles while a key is pending. Keeping the key pending preserves ordering without increasing its segment budget.
+
+### What was tricky to build
+
+Each ring entry records the fence state as it stood before drawing that row. A file-write receipt can use or replace the position-store buffer, so scratch slot 9 holds the viewport checkpoints independently. When the cursor is at the end of a 65,536-unit document, its offset needs 17 bits. The ring stores coordinate halves explicitly.
+
+### What warrants a second pair of eyes
+
+Review the phase changes when the current line is the first or last line, and review the comparison when a folded candidate reaches the original cursor boundary. Check the native import order and the clearing of stale frame work after another open or key.
+
+### What should be done in the future
+
+Measure arrow and Page Up navigation immediately after a late search. `editorPlainKey` still uses a synchronous locator for editing movement. Long imported physical lines with inline Markdown remain limited by the formatter's scratch buffer. The combined source is close to the current 64 KiB compiler input cap, so future work should measure source payload alongside compiler memory.
+
+### Code review instructions
+
+Read `editorFindStep`, `editorFrameLocate` and the two matching-token branches in `typedWorldEvent`. Replay the ticket's `04-check-search-traversal.sh` with P4 GCC and the RV32 emulator. Inspect the retained fixture path if a host or framebuffer comparison fails.
+
+### Technical details
+
+The find slice budget is 1,024 cost units. Matching may cross the original cursor boundary on the final pass when its folded start is earlier. Drawing waits for the cursor row and then restores its top row in constant time. Line persistence uses checked exact-unit scans over the live document view.

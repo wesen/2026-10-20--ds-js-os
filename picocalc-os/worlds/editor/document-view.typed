@@ -8,6 +8,7 @@ function editorRowColor(output: buffer, at: i32, color: i32): i32 {
 function editorStatus(output: buffer, text: string, state: WorldState): i32 {
     if (state.finding || state.notice === 10) return editorFindStatus(output, state);
     if (state.notice === 9) return output.writeLiteral(0, "F3 to find first.");
+    if (state.notice === 11) return output.writeLiteral(0, "Search interrupted.");
     if (state.notice === 1) return output.writeLiteral(0, "Saving...");
     if (state.notice === 2) return editorSavedStatus(output, state.savedBytes);
     if (state.notice === 3) return editorSaveError(output, state.errorLength);
@@ -32,7 +33,7 @@ function editorStatus(output: buffer, text: string, state: WorldState): i32 {
 }
 
 function editorDocumentFrame(output: buffer, text: string, state: WorldState): i32 {
-    const column = editorLocate(text, state);
+    const column = editorColumn(text, state.rowStart, state.cursor);
     if (state.row < state.top) { state.top = state.row; }
     if (state.row >= state.top + 18) { state.top = state.row - 17; }
     const cursorRow = state.row - state.top;
@@ -49,14 +50,7 @@ function editorDocumentFrame(output: buffer, text: string, state: WorldState): i
     }
     if (state.preview) return editorPreviewFrame(output, at, state);
     at = at + output.writeLiteral(at, ",{\"t\":\"textarea\",\"rows\":[");
-    editorFirstRow(text, state);
-    let fenced = false;
-    while (state.row < state.top) {
-        if (state.markdown && state.rowStart === state.lineStart && editorMdFence(text, state.lineStart, state.lineEnd)) {
-            fenced = !fenced;
-        }
-        editorNextRow(text, state);
-    }
+    editorFrameRow(text, state, state.top);
     let rows = 0;
     let more = true;
     while (rows < 18 && more) {
@@ -64,11 +58,8 @@ function editorDocumentFrame(output: buffer, text: string, state: WorldState): i
         at = at + output.writeLiteral(at, "{\"s\":");
         at = editorQuote(output, at, text, state.rowStart, state.rowEnd);
         let color = 0;
-        if (state.markdown) { color = editorMdColor(text, state.lineStart, state.lineEnd, fenced); }
+        if (state.markdown) { color = editorMdColor(text, state.lineStart, state.lineEnd, state.fenced); }
         at = editorRowColor(output, at, color);
-        if (state.markdown && state.rowStart === state.lineStart && editorMdFence(text, state.lineStart, state.lineEnd)) {
-            fenced = !fenced;
-        }
         more = editorNextRow(text, state);
         rows = rows + 1;
     }
@@ -94,8 +85,10 @@ function editorHints(hints: buffer, state: WorldState): i32 {
 }
 
 function editorShow(output: buffer, hints: buffer, state: WorldState): i32 {
+    if (state.findToken > 0 || state.frameToken > 0) return 0;
     const text = typedSdkView(typedSdkBuffer(0), state.textLength);
     if (state.preview && !editorPreviewReady(text, state)) return 0;
+    if (!editorFrameLocate(text, state)) return 0;
     const hintLength = editorHints(hints, state);
     return typedSdkScreen(output, editorDocumentFrame(output, text, state), hints, hintLength);
 }

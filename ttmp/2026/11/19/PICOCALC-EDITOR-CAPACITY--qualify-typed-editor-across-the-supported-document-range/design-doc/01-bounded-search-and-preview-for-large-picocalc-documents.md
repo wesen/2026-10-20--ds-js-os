@@ -48,22 +48,46 @@ F3 accepts printable ASCII, Enter finds the next match at or after the cursor, a
 
 The implementation compares against the reference’s lowercased strings without allocating them. U+212A (Kelvin sign) folds to lowercase k. U+0130 (dotted I) folds to lowercase i followed by combining dot. The latter adds one UTF-16 unit to the folded coordinate, even when the search candidate does not begin with i. The reference converts the folded position to a cursor in original text. `editorSetFound` applies this conversion and preserves surrogate boundaries.
 
-A generic SDK operation `typedSdkSeek(text, start, end, a, b, c, d)` returns the first position in a half-open range that equals one of the four exact UTF-16 units, or `end` on a miss. Repeated unit arguments are allowed. The SDK validates the span against the live view and the allocation. The search policy remains in `find.typed`. Pass the lowercase first query unit, its uppercase equivalent, the Kelvin sign only when the first unit is k, and U+0130. Use a repeated unit when there is no alternate. Newline scanning passes four copies of U+000A. Using one bulk operation per span removes per-unit typed function calls on the common path.
+Three generic SDK operations scan counted UTF-16 strings. `typedSdkSeek(text, start, end, a, b, c, d)` finds the first matching unit. `typedSdkLastIndex(text, start, end, unit)` finds the last, and `typedSdkCountUnit(text, start, end, unit)` counts occurrences. Search operations return `end` on a miss. The SDK validates each half-open interval against both the live string length and the allocation. Typed code decides which units and intervals to use.
+
+`editorFindNext` finds the start of the cursor's logical line by seeking backward for a newline. `editorFindStep` tracks the search phase, physical offsets, and folded coordinate across settle events. Candidate seeking checks the first query unit and its equivalent forms. It also returns every dotted I because an unmatched dotted I still changes later folded offsets. `editorFindMatch` verifies a candidate using the original query buffer. The current phase controls whether a match's folded start precedes or follows the original cursor.
 
 ```text
-while at < lineEnd:
-    candidate = seek(text, at, lineEnd, lowercase, uppercase, alternate, dottedI)
-    folded += candidate - at
-    if candidate == lineEnd:
-        break
-    if folded >= minimum and typedMatch(candidate, query):
-        return folded
-    folded += 1 + (text[candidate] == dottedI)
-    at = candidate + 1
-return -1
+start on the cursor line at its folded search boundary
+for each candidate and line transition within this slice:
+    seek the next candidate or dotted I
+    if the candidate is in this phase and the whole query matches:
+        set the cursor and start preparing its viewport
+        stop searching
+    if the line is exhausted:
+        advance to the next line or search phase
+    otherwise advance the source offset and folded offset
+if all four phases are exhausted:
+    show the miss
+otherwise:
+    wait for the timer receipt and resume the same search
 ```
 
-This pattern bounds work for stretches with few candidates. A dense candidate set or a long repeated prefix can still consume a full turn. If measured, move the matching loop to a resumable typed job. Each job step consumes a bounded number of candidate comparisons, stores its physical and folded offsets and remaining line ranges, and schedules `typedSdkYield`. With prefix-function matching, retain the matched prefix length and reconsider a unit after following a failure edge. Keep the dotted-I expansion visible to that matcher. Rendering after a match near EOF has a separate cost because `editorLocate`, the viewport, and marks can each walk wrapped rows from the beginning.
+A slice has 1,024 units of work. Visiting a candidate or advancing a line costs one unit. An eligible comparison contributes the full query length to conservatively bound even a long partial match. Returning `NW_LATER` keeps the active key turn open, so later keys wait while other worlds continue. Only the matching timer token advances the job. A file-write receipt can complete without closing the search turn.
+
+### Find and render a late viewport
+
+Rendering used to walk from the beginning separately to find the cursor, collect the viewport, and add find highlights. A hit near EOF therefore charged several whole-file walks to one segment. The typed view now locates the cursor in batches of 64 wrapped rows. It stores the last 18 entries in a ring and defers the next batch with `typedSdkYield`. Each entry holds the row offset, physical line offset and number, and the incoming Markdown fence state. Two 16-bit units hold each coordinate, including the 65,536 endpoint. The small buffer at SDK slot 9 survives interruption by an unrelated file receipt. Once the cursor is located, both drawing and highlighting recover the selected viewport from the ring.
+
+```mermaid
+flowchart TD
+    K["Enter or F4"] --> M["Compare candidates in a bounded slice"]
+    M -->|more candidates| Y["Timer completion"]
+    Y --> M
+    M -->|hit or miss| R["Locate viewport in 64-row slices"]
+    R -->|more rows| T["Timer completion"]
+    T --> R
+    R -->|ready| P["Publish rows and highlights"]
+```
+
+Closing the document or opening another one records a logical line and column. `editorRemember` counts the preceding newlines and locates the last one with the shared UTF-16 primitives. That path does not need display wrapping. A later open uses the recorded position to reconstruct its viewport.
+
+The replay checks a dense absent query and a hit on line 852 at 65,536 input bytes. It verifies another F4 search and opens a fresh file after the late hit. It also compares the original, Wasm, and RV32 frame traces on the long and short find fixtures. Ordinary cursor movement near EOF still deserves a dedicated fixture because it uses a separate synchronous lookup in `editorPlainKey`.
 
 ## Preview
 
@@ -104,17 +128,17 @@ A slice advances up to 96 units of scheduling work. Ordinary steps cost one unit
 
 ## Implementation and verification
 
-1. Add the generic seek API to `sdk/typed/world.c`, `compiler/typed-world.js`, and `sdk/typed/rv32-slot.S` in a single change. The import order must match the RV32 trampolines. Update `find.typed` and `view.typed`, and compare exact frames and captures against the reference across both backends. Verify a full-size absent search in the host harness.
+1. Replay search and position persistence with `scripts/04-check-search-traversal.sh`. The import order in `compiler/typed-world.js` matches the RV32 trampolines in `sdk/typed/rv32-slot.S`.
 2. Replay the viewport tests with `scripts/02-check-preview-capacity.sh`. The 21,614-byte document reaches its end and navigates backward while matching the JavaScript reference. A separate fixture streams an 18,047-byte line with supplementary Unicode characters at the 200 virtual ms profile.
-3. Verify cursor placement late in the document, dense overlapping candidates, and a long repetitive absent query. Measure initial display, each search or preview key event, and longest scheduler slice using a reproducible corpus. Test both backends on the board when connected. Keep scripts in this ticket and record exact artifacts, build flags, and measured times in the diary.
+3. Follow up with long-line and late-document edit fixtures. The ordinary movement path uses a different lookup from the bounded frame builder. Record backend, hardware image, budget, and input in the diary when qualifying each workflow.
 
 ## Code and evidence
 
 | File | Entry point or responsibility |
 | --- | --- |
 | `picocalc-os/worlds/editor/editor.typed` | `typedWorldEvent`, file normalization and deferred operations |
-| `picocalc-os/worlds/editor/find.typed` | `editorFindNext`, `editorFindSpan`, `editorFindMarks` |
-| `picocalc-os/worlds/editor/view.typed` | `editorLineEnd`, `editorLocate` and JSON quoting |
+| `picocalc-os/worlds/editor/find.typed` | `editorFindNext`, `editorFindStep`, `editorFindMarks` |
+| `picocalc-os/worlds/editor/view.typed` | `editorLineEnd`, `editorFrameLocate` and JSON quoting |
 | `picocalc-os/worlds/editor/preview.typed` | `editorPreviewSource`, `editorPreviewWord`, `editorPreviewFrame`, navigation |
 | `picocalc-os/js/system/compositor.js` | `wrapText`, `drawLines`, renderer layout constants |
 | `picocalc-os/sdk/typed/world.c` | Counted strings, screen transport and event marshaling |

@@ -62,3 +62,13 @@ function editorOffset(line: string, start: i32, end: i32, lineEnd: i32, column: 
     }
     return at;
 }
+
+// Queries admit ASCII printable keys. The only lowercase conversions from
+// outside ASCII that can match such a query are Kelvin sign and dotted I.
+// Dotted I produces an extra unit, so offsets into the folded line differ.
+function editorFold(unit: i32): i32 {
+    if (unit >= 65 && unit <= 90) return unit + 32;
+    if (unit === 8490) return 107;
+    if (unit === 304) return 105;
+    return unit;
+}

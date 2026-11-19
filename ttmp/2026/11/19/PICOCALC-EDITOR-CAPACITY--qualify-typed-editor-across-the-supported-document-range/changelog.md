@@ -15,3 +15,7 @@ Implemented typed preview row streaming and verified EOF navigation, backward re
 ## 2026-11-19
 
 Requalified the standard typed Editor workflow on physical Wasm and RV32. Captured the last row of a 21,614-byte preview on RV32.
+
+## 2026-11-19
+
+Segmented typed search and viewport preparation, and verified both 64 KiB search scenarios across Wasm and RV32.

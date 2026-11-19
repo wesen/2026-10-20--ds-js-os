@@ -1,0 +1,26 @@
+{
+  "js/find-dense": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "js/find-tail": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/find-dense": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/find-tail": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  }
+}
