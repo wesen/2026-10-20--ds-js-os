@@ -23,3 +23,7 @@ Expand the P4 app partition from 4 MiB to 8 MiB. Back up and verify the original
 ## 2026-11-18
 
 Implement selected-task toggle, F3 edit and two-press F5 deletion. Match the original update bytes and conflict behavior in the simulator, execute the native module under emulation, and verify writes on the PicoCalc.
+
+## 2026-11-18
+
+Implement F6 through a narrowed file capability, verify refusal, timeout and successful replacement, and save through the bundled Editor on the PicoCalc.

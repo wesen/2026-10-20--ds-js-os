@@ -1,0 +1,24 @@
+PicoCalc RV32 Agenda F6 handoff to the bundled Editor, using serial-injected keys.
+Firmware SHA-256 caf769f97d1359c3502b775d1893d64a29cb734e1f195cabcfe9f156f7f4187c
+Wrote 4182208 bytes (2555780 compressed) at 0x00010000 in 42.9 seconds (effective 780.8 kbit/s)...
+Hash of data verified.
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+agenda compile source=bundle status=ok us=722012 peak_js_bytes=701264 module_bytes=65300
+agenda response us=2139077 world_bytes=184419
+agenda frame turn_us=1515 world_bytes=184419
+agenda boot-world name=editor engine=2 first_us=1182717 total_us=24737 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+#OK cji
+
+The precondition was an empty notes/todo.txt, and the test restored it to empty.
+- editor fixtureX
+#OK cat
+#SHOT 320 320
+#END e84f6091 1638
+#SHOT 320 320
+#END 6c344d70 2022
+  bus i2c0  busy  7119.05 ms, 1273 transfers, 5115 bytes, 0 errors
+  bus spi2  busy   269.90 ms, 198 transfers, 910322 bytes, 0 errors
+
+Both framebuffer snapshots passed the CRC check. The first shows Editor after saving. The second shows Agenda after refocusing and rereading the file.
+put notes/todo.txt: 0 bytes
+#OK put

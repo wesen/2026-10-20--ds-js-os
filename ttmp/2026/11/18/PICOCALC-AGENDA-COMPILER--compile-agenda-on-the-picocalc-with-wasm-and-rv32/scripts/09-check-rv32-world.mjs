@@ -29,7 +29,7 @@ try {
         ...['libc.o', 'hostcalls.o', 'softfloat.o'].map(file => join(dirname(emu), file)),
     ], {stdio: 'inherit'});
     const result = execFileSync(emu, [driver, app, app], {encoding: 'utf8'}).trim();
-    assert.equal(result, 'frames=4 reminders=1 writes=4 durable_restart=pass grouped_navigation=pass mutations=pass');
+    assert.equal(result, 'frames=4 reminders=1 writes=4 durable_restart=pass grouped_navigation=pass mutations=pass editor=pass');
     console.log(JSON.stringify({
         module_bytes: module.length,
         module_sha256: createHash('sha256').update(module).digest('hex'),

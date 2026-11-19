@@ -285,3 +285,58 @@ The filesystem writes cross the existing notes directory capability. Write and r
 ## Step 9 — Publish the task-mutation and flash-layout milestone
 
 The implementation and powered PicoCalc evidence are in `09bee0c`. The technical report “PicoCalc Agenda — Editing a task in a shared text file” explains the byte-level splices, read/write conflict boundary, typed runtime contract and powered measurements. Its push advanced go-go-parc `origin/main` to `a7714a2`. The resized board remains on the verified panel-enabled native Agenda image.
+
+## Step 10 — Open the selected task file in Editor
+
+F6 now uses the same single-file permission model as the original Agenda. The real Wasm and RV32 worlds opened Editor, saved through the derived file handle, and displayed the result again after focus returned. A separate lifetime fixture held references after refusal, timeout and replacement to verify that the kernel enforced each revocation.
+
+### Prompt Context
+
+See Step 1 for the complete original workflow requirement. This checkpoint covers the capability handoff from Agenda to Editor, then back to the updated Agenda view.
+
+### What I did
+
+- Added `nw_fs_at`, `nw_ask_file`, and `nw_revoke` to the common native SDK. File derivation uses the existing `fs_at` checks. File asks accept a valid, held, passable, narrowed filesystem file and construct the usual message marker in the kernel. The public plain-JSON ask remains subject to its established validation rules.
+- Added F6 handling in `worlds/agenda/wasm-world.c`. It stores the pending grant and request token separately from the previous successful grant. An accepted request revokes the old grant before opening Editor. Refusal, timeout or synchronous failure revokes the pending grant and keeps the accepted one.
+- Added end-to-end simulator coverage using the existing Editor with no notes directory claim. Added a separate probe to retain received handles and assert their access and lifetime. Extended the RV32 emulator checks and added a firmware flash and smoke test in `scripts/03-check-p4-agenda-editor.sh`.
+
+### Why
+
+The receiver already implements a capability-scoped open protocol. Reusing it means Editor can directly read and write the document while the Agenda directory stays with its owner. Restricting the SDK operation to a narrowed file keeps the scope explicit and shares the existing kernel delivery and authorization paths.
+
+### What worked
+
+- The simulator saved `- firstX` in `todo.txt`, left a sibling file unchanged, and showed the saved text in Agenda after return. It independently demonstrated that the recipient could read the one file, could neither name a second path nor forward the grant, and could not use grants revoked after refusal, timeout or replacement. The prior grant remained usable across both failures.
+- RV32 emulation checked the request arguments, timeout, accepted handle, revocation order, compositor focus and error statuses. The application and 34 native integration tests all passed.
+- The assembled P4 compiled the bundled RV32 image and opened its real bundled Editor. Two CRC-checked framebuffer captures show Editor reporting a successful save and Agenda displaying the updated title after reopening. The FAT readback confirms the changed line. The test restored the previously empty task file. I²C and SPI reported zero errors.
+- This single cold boot compiled in 722.012 ms with a 701,264-byte compiler allocator peak. Agenda's response was at 2.139 s with 184,419 world bytes. Its first publication turn was 1.515 ms. The linked Wasm world is 65,459 bytes and the native ELF is 65,300 bytes. The firmware uses 4,182,208 bytes of the 8 MiB app partition.
+
+### What didn't work
+
+No new test failures occurred in this checkpoint. The boot sample still exceeds two seconds. The board experiment used injected input and captured compositor memory, so a physical keyboard-to-LCD measurement remains open.
+
+### What I learned
+
+The message payload and the actual grant travel together. The marker is just a serialized handle ID. The kernel records the attachment and grants it on delivery. A receiver may retain the marker or wrapper after revocation, but subsequent uses go through the handle table and fail.
+
+### What was tricky to build
+
+The accepted and pending capabilities must remain distinct across asynchronous turns. Dropping the accepted grant when opening a new request would make the original Editor file unusable on refusal. The timeout test also lets the receiver return a late success and checks that the late reply does not open Editor.
+
+### What warrants a second pair of eyes
+
+Check sender ownership, the child-file requirement and the revocation branches together. The SDK's private CJI operations share the same kernel dispatch switch. Existing callers still use their previous message validation. A focused hardware run tests one successful handoff, and timeout/refusal are covered by the host environments.
+
+### What should be done in the future
+
+Match the original status text for invalid prompt tokens and check timer and refresh semantics against the original. Measure a powered Wasm/RV32 cold series with equivalent notes files and capture physical input and LCD response.
+
+### Code review instructions
+
+- Follow `NW_FS_AT`, `NW_ASK_FILE`, and `NW_REVOKE` in `nucleus/native.c`; see `sdk/nw.h` and `nw_wire.h` for the API.
+- Follow `open_editor` and `editor_reply` in the shared reactor. Run the parent ticket's Wasm and RV32 harnesses. Their receipts and the two hardware screenshots are under this ticket's `various/`.
+- The board script checks for an empty or absent task file before setting up its fixture. It flashes the application at the existing offset in the 8 MiB layout and leaves the tested build on the board.
+
+### Technical details
+
+The ask uses a three-second timeout and sends the same `{file, name}` payload that the original Editor receives. The wire additions are appended after the existing public operation numbers. No typed parser signature or executable slot size changed in this checkpoint.

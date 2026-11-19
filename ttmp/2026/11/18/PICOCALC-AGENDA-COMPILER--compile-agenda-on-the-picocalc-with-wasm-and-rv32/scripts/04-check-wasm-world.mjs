@@ -265,6 +265,96 @@ for (const edit of editCases) {
     assert.deepEqual(editResult('agenda', edit), expected, 'original: ' + edit.name);
     assert.deepEqual(editResult('agenda-wasm', edit), expected, 'typed Wasm: ' + edit.name);
 }
+
+// The real Editor has no notes-directory claim. F6 lets it edit precisely the granted file.
+writeFileSync(join(scratch, 'apps/editor.js'), readFileSync(join(os, 'js/apps/editor.js')));
+writeFileSync(join(scratch, 'focus.js'), `
+service("focus").needs("frames").on("frames", (s, frame, msg) => {
+    if (["editor", "agenda-wasm"].includes(msg.from))
+        log("EDITOR_FRAME " + msg.from + " " + JSON.stringify(frame.frame.tree));
+}).onStart(async () => {
+    await sleep(600);
+    send("compositor", "open", {app:"agenda-wasm"});
+});
+`);
+writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds:[
+    ...displayWorlds, {...manifest.worlds[0], claims:['fs:/notes']},
+    {name:'editor',file:'apps/editor.js',mem_kb:512},
+    {name:'focus',file:'focus.js',claims:['frames.read'],mem_kb:384},
+]}));
+const todo = join(fsRoot, 'notes/todo.txt');
+writeFileSync(todo, '- first\n');
+writeFileSync(join(fsRoot, 'notes/other.txt'), 'untouched');
+writeFileSync(displayScript, 'wait 1700\nkey f6\nwait 1000\nkey end\nwait 200\ntype X\nwait 350\nkey f2\nwait 700\nkey f1\nwait 600\nkey t\nwait 1400\n');
+const editorOutput = join(scratch, 'editor');
+execFileSync(host, ['-j', scratch, '-o', editorOutput, '-f', fsRoot, displayScript],
+    {stdio:['ignore','pipe','pipe'],timeout:15000});
+assert.equal(readFileSync(todo, 'utf8'), '- firstX\n');
+assert.equal(readFileSync(join(fsRoot, 'notes/other.txt'), 'utf8'), 'untouched');
+const editorLog = readFileSync(join(editorOutput, 'uart.log'), 'utf8');
+assert.doesNotMatch(editorLog, /crashed/);
+assert.match(editorLog, /EDITOR_FRAME editor .*notes\/todo\.txt/);
+assert.match(editorLog, /EDITOR_FRAME agenda-wasm .*firstX/);
+
+// Keep handles on the receiver deliberately to verify the sender's revocation rules.
+writeFileSync(join(scratch, 'notify.js'), `
+service("compositor").on("open", (s, m) => log("EDITOR_OPEN " + m.app)).onStart(async () => {
+    await sleep(300);
+    for (const ms of [600, 600, 3800, 600]) {
+        send("agenda-wasm", "key", {key:"f6", state:"down"});
+        await sleep(ms);
+    }
+    send("editor", "verify");
+});
+`);
+writeFileSync(join(scratch, 'editor-probe.js'), `
+const files = [];
+const attempt = async (name, action) => {
+    try { log("EDITOR_CAP " + name + " " + JSON.stringify(await action())); }
+    catch (e) { log("EDITOR_CAP " + name + " " + e.message); }
+};
+service("editor").on("open", async (s, m) => {
+    files.push(m.file);
+    if (files.length === 1) {
+        log("EDITOR_CAP info " + JSON.stringify([m.file.path, m.file.rights, m.file.file, m.name]));
+        await attempt("read", () => m.file.read());
+        await attempt("other", () => m.file.read("other.txt"));
+        await attempt("forward", () => send("compositor", "unexpected", {file:m.file}));
+        return {ok:true};
+    }
+    if (files.length === 2) return {ok:false, why:"probe refusal"};
+    if (files.length === 3) {
+        await attempt("first-after-refusal", () => files[0].read());
+        await attempt("refused", () => files[1].read());
+        await sleep(3200);
+        await attempt("first-after-timeout", () => files[0].read());
+        await attempt("timed-out", () => files[2].read());
+        return {ok:true};
+    }
+    return {ok:true};
+}).on("verify", async () => {
+    await attempt("replaced", () => files[0].read());
+    await attempt("current", () => files[3].read());
+    for (const file of files) file.release();
+});
+`);
+writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds:[
+    {...manifest.worlds[0], claims:['fs:/notes']}, {name:'compositor',file:'notify.js',mem_kb:384},
+    {name:'editor',file:'editor-probe.js',mem_kb:384},
+]}));
+const capabilityOutput = join(scratch, 'editor-capability');
+execFileSync(host, ['-j', scratch, '-o', capabilityOutput, '-f', fsRoot, '-t', '7800'],
+    {stdio:['ignore','pipe','pipe'],timeout:15000});
+const capabilityLog = readFileSync(join(capabilityOutput, 'uart.log'), 'utf8');
+assert.doesNotMatch(capabilityLog, /crashed/);
+assert.match(capabilityLog, /EDITOR_CAP info \["notes\/todo\.txt","rw",true,"notes\/todo\.txt"\]/);
+assert.match(capabilityLog, /EDITOR_CAP other .*file handle takes no path/);
+assert.match(capabilityLog, /EDITOR_CAP forward .*cannot be passed on/);
+for (const phase of ['read', 'first-after-refusal', 'first-after-timeout', 'current'])
+    assert.match(capabilityLog, new RegExp('EDITOR_CAP ' + phase + ' "- firstX\\\\n"'));
+for (const phase of ['refused', 'timed-out', 'replaced'])
+    assert.match(capabilityLog, new RegExp('EDITOR_CAP ' + phase + ' .* was revoked'));
+assert.equal([...capabilityLog.matchAll(/EDITOR_OPEN editor/g)].length, 2);
 const instructions = [...log.matchAll(/agenda-wasm: (\d+) WebAssembly instructions \(event 0, agenda.parse\)/g)]
     .map(match => Number(match[1]));
 assert.equal(instructions.length, 2);
@@ -276,4 +366,6 @@ console.log(JSON.stringify({linkedBytes:bytes.length, sourceSha:sha(source), run
     taskView:{matchesOriginalGroupedFrames:groups.length, matchesOriginalDoneOnlyFrames:doneFrames.length,
         scrollableTasks:manySelected.length},
     mutations:editCases.map(({name}) => name),
+    editor:{savedAndReloaded:readFileSync(todo, 'utf8'), scopedToFile:true, forwardDenied:true,
+        refusalAndTimeoutRevoked:true, previousPreservedUntilReplacement:true},
     reminder:{notice, sender, scheduled, firedAt, persisted:firedRecord, restartSuppressed:true, unsetSuppressed:true, zone, transitionScheduled, transitionFiredAt:transition[0][2]}}, null, 2));

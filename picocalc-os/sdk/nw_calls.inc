@@ -18,6 +18,9 @@ int nw_reject(const char *why) { return (int)call(NW_CALL_REJECT, 0, 0, 0, S(why
 int nw_ask(const char *to, const char *type, const char *json, int timeout_ms) {
   return (int)call(NW_CALL_ASK, timeout_ms, 0, 0, S(to), S(type), S(json), NULL, 0);
 }
+int nw_ask_file(const char *to, const char *type, int file, const char *name, int timeout_ms) {
+  return (int)call(NW_CALL_ASK_FILE, timeout_ms, file, 0, S(to), S(type), S(name), NULL, 0);
+}
 int nw_need(const char *ch) { return (int)call(NW_CALL_NEED, 0, 0, 0, S(ch), NONE, NONE, NULL, 0); }
 int nw_provide(const char *ch) { return (int)call(NW_CALL_PROVIDE, 0, 0, 0, S(ch), NONE, NONE, NULL, 0); }
 int nw_every(int ms) { return (int)call(NW_CALL_EVERY, ms, 0, 0, NONE, NONE, NONE, NULL, 0); }
@@ -41,6 +44,7 @@ int nw_timer(int index, int on) { return (int)call(NW_CALL_TIMER, index, on, 0, 
 int nw_store_load(char *buf, int n) { return (int)call(NW_CALL_STORE_LOAD, 0, 0, 0, NONE, NONE, NONE, buf, n); }
 int nw_store_save(const char *json) { return (int)call(NW_CALL_STORE_SAVE, 0, 0, 0, S(json), NONE, NONE, NULL, 0); }
 int nw_fs_open(const char *claim) { return (int)call(NW_CALL_FS_OPEN, 0, 0, 0, S(claim), NONE, NONE, NULL, 0); }
+int nw_fs_at(int dir, const char *path, const char *rights) { return (int)call(NW_CALL_FS_AT, dir, 0, 0, S(path), S(rights), NONE, NULL, 0); }
 int nw_fs_read(int handle, const char *path) { return (int)call(NW_CALL_FS_READ, handle, 0, 0, S(path), NONE, NONE, NULL, 0); }
 int nw_fs_write(int handle, const char *path, const char *text) { return (int)call(NW_CALL_FS_WRITE, handle, 0, 0, S(path), S(text), NONE, NULL, 0); }
 int nw_clock_today(void) { return (int)call(NW_CALL_CLOCK_TODAY, 0, 0, 0, NONE, NONE, NONE, NULL, 0); }
@@ -50,6 +54,7 @@ int nw_i2c(int handle, const unsigned char *wr, int nwr, int nrd, int gap_ms) {
   return (int)call(NW_CALL_I2C, handle, nrd, (int64_t)gap_ms * 1000, (const char *)wr, nwr > 0 ? (size_t)nwr : 0, NONE, NONE, NULL, 0);
 }
 int nw_release(int handle) { return (int)call(NW_CALL_RELEASE, handle, 0, 0, NONE, NONE, NONE, NULL, 0); }
+int nw_revoke(int handle) { return (int)call(NW_CALL_REVOKE, handle, 0, 0, NONE, NONE, NONE, NULL, 0); }
 int nw_error(char *buf, int n) {
   if (n <= 0) return 0;
   size_t k = strlen(last_err);

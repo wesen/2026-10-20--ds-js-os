@@ -41,6 +41,7 @@ static task_change prompt_kind, pending_change;
 static unsigned prompt_units;
 static bool confirming;
 static int edit_read, edit_write;
+static int editor_token, editor_pending, editor_file;
 enum { UNDATED = 100000000, COMPLETED, OVERDUE = -1, VIEW_ROWS = 25, VIEW_CHARS = 80 };
 typedef struct {
     int32_t date_key;
@@ -426,7 +427,7 @@ static void publish_view(void)
     nw_ui_text(&ui, view_note[0] ? view_note : view_error[0] ? view_error : prompt_kind ? prompt_help : status,
                view_note[0] || view_error[0] ? "\"font\":\"s\",\"color\":\"accent\"" : "\"font\":\"s\",\"color\":\"muted\"");
     nw_ui_close(&ui);
-    if (nw_ui_end(&ui) >= 0) nw_screen(screen, prompt_kind ? "Enter ok  Esc cancel" : "⏎ tick F2 add F3 edit F4 all F5 del");
+    if (nw_ui_end(&ui) >= 0) nw_screen(screen, prompt_kind ? "Enter ok  Esc cancel" : "⏎ tick F2 add F3 edit F4 all F5 del F6 ed");
 }
 
 static int file_capacity(const nw_event *event)
@@ -643,9 +644,56 @@ cannot_save:
     prompt_view("Could not save notes/todo.txt");
 }
 
+static void drop_editor_file(int handle)
+{
+    if (handle <= 0) return;
+    nw_revoke(handle);
+    nw_release(handle);
+}
+
+static void editor_error(const char *why)
+{
+    snprintf(view_note, sizeof view_note, "Editor: %s", why[0] ? why : "no answer");
+    publish_view();
+}
+
+static void open_editor(void)
+{
+    int file = nw_fs_at(notes, "todo.txt", "rw");
+    if (file > 0) {
+        int token = nw_ask_file("editor", "open", file, "notes/todo.txt", 3000);
+        if (token > 0) {
+            editor_pending = file;
+            editor_token = token;
+            return;
+        }
+    }
+    char why[192];
+    nw_error(why, sizeof why);
+    drop_editor_file(file);
+    editor_error(why);
+}
+
+static void editor_reply(const nw_event *event)
+{
+    const char *ok = event->ok ? nw_json_find(event->json, "ok") : NULL;
+    if (ok && !strncmp(ok, "true", 4)) {
+        drop_editor_file(editor_file);
+        editor_file = editor_pending;
+        nw_send("compositor", "open", "{\"app\":\"editor\"}");
+    } else {
+        drop_editor_file(editor_pending);
+        char why[192] = "";
+        if (event->ok) nw_json_str(event->json, "why", why, sizeof why);
+        else nw_json_string(event->json, why, sizeof why);
+        editor_error(why);
+    }
+    editor_token = editor_pending = 0;
+}
+
 static void key_event(const char *json)
 {
-    if (edit_read || edit_write) return;
+    if (edit_read || edit_write || editor_token) return;
     char key[24], state[12], ch[8];
     if (nw_json_str(json, "key", key, sizeof key) < 0 ||
         nw_json_str(json, "state", state, sizeof state) < 0 || !strcmp(state, "up")) return;
@@ -687,6 +735,8 @@ static void key_event(const char *json)
                          task.title_length ? title : "(untitled)");
                 publish_view();
             }
+        } else if (once && notes >= 0 && !strcmp(key, "f6")) {
+            open_editor();
         } else if (once && !strcmp(key, "f4")) {
             show_done = !show_done;
             layout_items(selected_row());
@@ -739,6 +789,10 @@ int nw_on_event(const nw_event *event)
     if (event->kind == NW_SETTLE && edit_read && event->token == edit_read) {
         edit_read = 0;
         change_file(event);
+        return NW_DONE;
+    }
+    if (event->kind == NW_SETTLE && editor_token && event->token == editor_token) {
+        editor_reply(event);
         return NW_DONE;
     }
     if (event->kind == NW_SETTLE && edit_write && event->token == edit_write) {

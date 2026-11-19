@@ -1,0 +1,122 @@
+{
+  "linkedBytes": 65459,
+  "sourceSha": "bfde59bda1d301dbc3a3de09e5db938d14d49ade821052ac76fb4308c75fb5bb",
+  "runtimeSha": "332e733d8f2bd64ae0502bf4f257d4674de4178987789099fcd69e487be8ded4",
+  "linkedSha": "94f127ea621748f2e0450aa97cd992ed7b49206702e12f3d7d460c94c2be0cb2",
+  "reply": {
+    "title": "dentist 🦷",
+    "done": false,
+    "dateValid": true,
+    "timeValid": true,
+    "leadMinutes": 15
+  },
+  "frame": {
+    "t": "col",
+    "gap": 4,
+    "kids": [
+      {
+        "t": "list",
+        "font": "s",
+        "lead": 6,
+        "grow": 1,
+        "sel": 1,
+        "windowStart": 0,
+        "totalItems": 4,
+        "items": [
+          {
+            "label": "TUE 3 NOV 2026",
+            "color": "accent"
+          },
+          {
+            "label": "14:30  dentist 🦷",
+            "icon": "·",
+            "iconColor": "ink",
+            "color": "",
+            "right": "!15m",
+            "rightColor": "muted"
+          },
+          {
+            "label": "NO DATE",
+            "color": "accent"
+          },
+          {
+            "label": "book a train",
+            "icon": "·",
+            "iconColor": "ink",
+            "color": "",
+            "right": "",
+            "rightColor": "muted"
+          }
+        ]
+      },
+      {
+        "t": "gap",
+        "h": 0
+      },
+      {
+        "t": "text",
+        "s": "clock not set: reminders wait · 2 open · 1 done",
+        "font": "s",
+        "color": "muted"
+      }
+    ]
+  },
+  "engine": [
+    "wasm",
+    "idle",
+    "app"
+  ],
+  "deniedWithoutNotesClaim": true,
+  "perMessageInstructions": [
+    11862,
+    501
+  ],
+  "screenshot": {
+    "sha256": "0093bbb59e5470528471d253e95aae2f1c06fee33044ed2f53f8646e4bca838d",
+    "bytes": 4903
+  },
+  "taskEntry": {
+    "savedNotes": "# keep this heading\n- book a train\n- [ ] dentist @2026-11-03 14:00 !15m\n",
+    "invalidPromptUnchanged": true,
+    "createsMissingFile": true
+  },
+  "taskView": {
+    "matchesOriginalGroupedFrames": 14,
+    "matchesOriginalDoneOnlyFrames": 4,
+    "scrollableTasks": 48
+  },
+  "mutations": [
+    "toggle",
+    "edit",
+    "duplicate-delete",
+    "delete-last",
+    "single-delete-key",
+    "edit-conflict"
+  ],
+  "editor": {
+    "savedAndReloaded": "- firstX\n",
+    "scopedToFile": true,
+    "forwardDenied": true,
+    "refusalAndTimeoutRevoked": true,
+    "previousPreservedUntilReplacement": true
+  },
+  "reminder": {
+    "notice": {
+      "text": "dentist 🦷 at 14:30",
+      "sub": "in 15m"
+    },
+    "sender": "agenda-wasm",
+    "scheduled": 1793733300000,
+    "firedAt": 1793733314006,
+    "persisted": {
+      "fired": {
+        "1793733300000|dentist 🦷": 1793733314002
+      }
+    },
+    "restartSuppressed": true,
+    "unsetSuppressed": true,
+    "zone": "EST5EDT,M3.2.0/2,M11.1.0/2",
+    "transitionScheduled": 1793510100000,
+    "transitionFiredAt": 1793510114005
+  }
+}

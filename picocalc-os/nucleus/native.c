@@ -126,8 +126,8 @@ static bool in_list(char (*l)[NAME_LEN], int n, const char *s) { for (int i = 0;
 // ---- payloads ----------------------------------------------------------------------------------------------------
 // A JavaScript world sends what JSON.stringify made; a binary sends any bytes. A payload must therefore be strict JSON
 // (RFC 8259, UTF-8, nested at most 64 deep) before it reaches another world, or the receiver's JSON.parse would throw
-// inside its turn and crash it. Only bundled CJI messages may name handles. Their marker IDs are
-// collected during validation and checked against the sender before any message is enqueued.
+// inside its turn and crash it. Bundled CJI payloads can name handles. The
+// public file-ask operation generates its own marker after checking the sender.
 typedef struct { int ids[MAX_MSG_HANDLES], count; } grants_t;
 typedef struct { const unsigned char *p, *e; int depth; grants_t *grants; } jp_t;
 static void jws(jp_t *j) { while (j->p < j->e && (*j->p == ' ' || *j->p == '\t' || *j->p == '\n' || *j->p == '\r')) j->p++; }
@@ -424,7 +424,7 @@ fs_done:
       for (int i = 0; i < 3; i++) free(args[i]);
       return result < 0 ? fail(W, "%s", err) : result;
     }
-    case CJI_REVOKE: {
+    case CJI_REVOKE: case NW_REVOKE: {
       handle_t *h = handle_find(c->i[0]);
       if (!h) return fail(W, "there is no handle %d", (int)c->i[0]);
       if (h->minter != W->id || !h->parent) return fail(W, "only the world that narrowed handle %d can revoke it", h->id);
@@ -470,7 +470,7 @@ fs_done:
       }
       return rc < 0 ? fail(W, "%s", err) : rc;
     }
-    case NW_FS_OPEN: case NW_FS_READ: case NW_FS_WRITE: {
+    case NW_FS_OPEN: case NW_FS_AT: case NW_FS_READ: case NW_FS_WRITE: {
       if (c->n[0] && memchr(c->s[0], 0, c->n[0])) return fail(W, "unexpected NUL in file operation");
       char *path = str(c, 0);
       if (!path) return fail(W, "out of memory");
@@ -479,6 +479,16 @@ fs_done:
       if (c->op == NW_FS_OPEN) {
         handle_t *handle = fs_open_claim(W, path, err, sizeof err);
         if (handle) result = handle->id;
+      } else if (c->op == NW_FS_AT) {
+        const char *rights = NULL;
+        if (c->n[1] == 1 && c->s[1][0] == 'r') rights = "r";
+        else if (c->n[1] == 1 && c->s[1][0] == 'w') rights = "w";
+        else if (c->n[1] == 2 && !memcmp(c->s[1], "rw", 2)) rights = "rw";
+        if (!rights) snprintf(err, sizeof err, "file rights must be r, w, or rw");
+        else {
+          handle_t *handle = fs_at(W, c->i[0], path, rights, err, sizeof err);
+          if (handle) result = handle->id;
+        }
       } else {
         bool write = c->op == NW_FS_WRITE;
         const char *text = c->s[1] ? c->s[1] : "";
@@ -639,9 +649,31 @@ fs_done:
       free(k);
       return r;
     }
-    case NW_ASK: {
+    case NW_ASK: case NW_ASK_FILE: {
       if (!name_ok(c, 0, NAME_LEN) || !name_ok(c, 1, NAME_LEN)) return fail(W, "ask needs a world's name and a message type");
-      char *to = str(c, 0), *type = str(c, 1), *json = c->n[2] ? str(c, 2) : NULL;
+      char *json;
+      if (c->op == NW_ASK_FILE) {
+        int id = c->i[1];
+        char err[160];
+        if (!handle_may_grant(W, id, err, sizeof err)) return fail(W, "%s", err);
+        handle_t *file = handle_find(id);
+        if (file->type != H_FS || !file->file || !file->parent)
+          return fail(W, "a file ask needs a narrowed file handle");
+        if (!name_ok(c, 2, FS_PATH_MAX)) return fail(W, "a file ask needs a display name");
+        char *name = str(c, 2);
+        if (!name) return fail(W, "out of memory");
+        sbuf_t payload = {0};
+        sb_printf(&payload, "{\"file\":{\"$h\":%d},\"name\":", id);
+        sb_json_str(&payload, name);
+        sb_add(&payload, "}");
+        free(name);
+        if (!nat_json_ok(payload.s, payload.n, &grants)) {
+          free(payload.s);
+          return fail(W, "invalid UTF-8 in file display name");
+        }
+        json = payload.s;
+      } else json = c->n[2] ? str(c, 2) : NULL;
+      char *to = str(c, 0), *type = str(c, 1);
       world_t *T = to ? world_by_name(to) : NULL;
       int64_t r;
       if (!to || !type || (c->n[2] && !json)) r = fail(W, "out of memory");
@@ -650,7 +682,7 @@ fs_done:
       else {
         int id = ++K.next_promise;
         vtime_t timeout = c->i[0] > 0 ? MS(c->i[0]) : MS(2000);
-        charge(c->n[2]);
+        if (json) charge(strlen(json));
         kernel_ask(W, T, type, json, grants.ids, grants.count, id, timeout);
         r = id;
       }

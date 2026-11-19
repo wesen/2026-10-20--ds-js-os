@@ -44,6 +44,9 @@ int nw_publish_retained(const char *channel, const char *json);
 int nw_reply(const char *json);           // answer the ask being handled
 int nw_reject(const char *why);           // fail the ask being handled; the world does not crash
 int nw_ask(const char *to, const char *type, const char *json, int timeout_ms);   // a token
+// Ask with the payload {file: handle, name: name}. Attach one narrowed file,
+// which the sender must hold and be allowed to pass. Returns a settlement token.
+int nw_ask_file(const char *to, const char *type, int file, const char *name, int timeout_ms);
 
 // The screen: the tree of ui nodes it shows (a JSON object, as JavaScript's ui.* builds: {"t":"col","kids":[...]}; see
 // sdk/nw_ui.h) and the hint bar's text. At any time; the kernel shows it after the current event if it changed, kept
@@ -77,6 +80,7 @@ int nw_timer(int index, int on);
 int nw_store_load(char *buf, int n);      // the world's saved record (JSON), its length; 0 if none
 int nw_store_save(const char *json);
 int nw_fs_open(const char *claim);       // a handle to a directory declared in the manifest
+int nw_fs_at(int dir, const char *path, const char *rights);  // narrow to a path; rights are r, w, or rw
 int nw_fs_read(int handle, const char *path);  // a token; settles with a JSON string
 int nw_fs_write(int handle, const char *path, const char *text); // a token; settles after the write
 
@@ -84,6 +88,7 @@ int nw_fs_write(int handle, const char *path, const char *text); // a token; set
 int nw_i2c_open(const char *claim, int hz);   // "i2c0:0x1f"; a handle
 int nw_i2c(int handle, const unsigned char *wr, int nwr, int nrd, int gap_ms);   // a token; settles with the bytes read, [..]
 int nw_release(int handle);
+int nw_revoke(int handle);               // revoke a handle this world narrowed
 
 int nw_error(char *buf, int n);           // why the last call failed
 

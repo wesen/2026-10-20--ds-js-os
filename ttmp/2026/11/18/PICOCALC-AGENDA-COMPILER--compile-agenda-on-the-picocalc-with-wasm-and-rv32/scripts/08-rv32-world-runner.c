@@ -20,6 +20,8 @@ static const char *expected_write = "- [ ] dentist @2026-11-03 14:30 !15m\n- [x]
                                     "- [ ] call clinic @2026-11-04 14:00 !15m\n";
 static bool mutation_test;
 static char last_screen[2048];
+static int editor_grants, editor_asks, editor_opens;
+static int retired[3], retired_count;
 
 static void expect(int ok, const char *where)
 {
@@ -52,11 +54,25 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
                            const char *s1, size_t n1, const char *s2, size_t n2,
                            char *out, size_t out_n)
 {
-    (void)b; (void)n0; (void)n1; (void)n2;
+    (void)n0; (void)n1; (void)n2;
     switch (op) {
     case NW_CALL_KIND: expect(!strcmp(s0, "app"), "declare app"); return 0;
     case NW_CALL_PRESENT: return 0;
     case NW_CALL_FS_OPEN: expect(!strcmp(s0, "fs:/notes"), "claim"); return 23;
+    case NW_CALL_FS_AT:
+        expect(a == 23 && !strcmp(s0, "todo.txt") && !strcmp(s1, "rw"), "narrow to notes file");
+        return 30 + ++editor_grants;
+    case NW_CALL_ASK_FILE:
+        expect(a == 3000 && b == 30 + editor_grants && !strcmp(s0, "editor") && !strcmp(s1, "open") &&
+               !strcmp(s2, "notes/todo.txt"), "ask Editor with narrowed file");
+        return 200 + ++editor_asks;
+    case NW_CALL_REVOKE:
+        expect(retired_count < 3, "at most three retired grants");
+        retired[retired_count++] = a;
+        return 1;
+    case NW_CALL_RELEASE:
+        expect(retired_count > 0 && a == retired[retired_count - 1], "release the revoked handle");
+        return 1;
     case NW_CALL_EVERY: expect(a == 15000, "timer cadence"); return 0;
     case NW_CALL_FS_READ:
         expect(a == 23 && !strcmp(s0, "todo.txt"), "file request");
@@ -101,6 +117,11 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         frames++;
         return 0;
     case NW_CALL_SEND:
+        if (!strcmp(s1, "open")) {
+            expect(!strcmp(s0, "compositor") && !strcmp(s2, "{\"app\":\"editor\"}"), "focus Editor after acceptance");
+            editor_opens++;
+            return 0;
+        }
         expect(!strcmp(s0, "compositor") && !strcmp(s1, "notify"), "reminder destination");
         expect(!strcmp(s2, "{\"text\":\"dentist at 14:30\",\"sub\":\"in 15m\"}"), "reminder payload");
         notifications++;
@@ -213,6 +234,20 @@ int main(void)
     event(&first, NW_SETTLE, 1, reads, "\"# head\\n  - [x] changed elsewhere\"");
     expect(writes == 4 && strstr(last_screen, "todo.txt changed meanwhile; reloaded.") &&
            strstr(last_screen, "changed elsewhere"), "conflict reloads without writing");
-    printf("frames=%d reminders=%d writes=%d durable_restart=pass grouped_navigation=pass mutations=pass\n", frames, notifications, writes);
+    key(&first, "f6", "");
+    event(&first, NW_SETTLE, 1, 201, "{\"ok\":true}");
+    expect(editor_opens == 1 && retired_count == 0, "accepted first grant");
+    key(&first, "f6", "");
+    event(&first, NW_SETTLE, 1, 202, "{\"ok\":false,\"why\":\"refused\"}");
+    expect(editor_opens == 1 && retired_count == 1 && retired[0] == 32 &&
+           strstr(last_screen, "Editor: refused"), "refusal leaves old grant");
+    key(&first, "f6", "");
+    event(&first, NW_SETTLE, 0, 203, "\"no reply\"");
+    expect(editor_opens == 1 && retired_count == 2 && retired[1] == 33 &&
+           strstr(last_screen, "Editor: no reply"), "timeout leaves old grant");
+    key(&first, "f6", "");
+    event(&first, NW_SETTLE, 1, 204, "{\"ok\":true}");
+    expect(editor_opens == 2 && retired_count == 3 && retired[2] == 31, "replacement revokes old grant");
+    printf("frames=%d reminders=%d writes=%d durable_restart=pass grouped_navigation=pass mutations=pass editor=pass\n", frames, notifications, writes);
     return 0;
 }
