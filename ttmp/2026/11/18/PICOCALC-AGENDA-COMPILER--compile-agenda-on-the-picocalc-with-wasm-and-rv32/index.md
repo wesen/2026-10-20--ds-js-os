@@ -19,7 +19,11 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+Deliver a typed Agenda that is feature-identical to the original JavaScript Agenda on the PicoCalc. The original app is the behavioral reference. Compile the typed implementation to Wasm and trusted RV32, in that order, and validate both against the same public workflows and notes fixtures.
+
+The small reminder viewer established the compiler, notes, clock, restart and rendering path. The expanded goal includes the original Agenda's task entry, edits, completion and deletion, date shortcuts, grouped task view, and capability-based Editor handoff. Keep the two-second cold-build-to-first-response target and measure memory, turn latency and physical keypress-to-visible-frame separately on the assembled device. Record and commit the implementation diary and publish milestone reports to the go-go-parc vault.
+
+See the [feature-parity acceptance criteria](design-doc/01-compiling-a-reminder-from-typed-source-through-the-picocalc-event-loop.md#feature-parity-acceptance) for the scope and evidence needed to finish.
 
 ## Key Links
 

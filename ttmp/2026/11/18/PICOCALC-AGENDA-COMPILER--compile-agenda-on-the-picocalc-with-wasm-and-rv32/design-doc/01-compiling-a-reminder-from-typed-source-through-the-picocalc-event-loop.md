@@ -39,6 +39,19 @@ A stored line such as `- [ ] dentist @2026-11-03 14:30 !15m` identifies a task, 
 4. After the Wasm path works, compile the same application to RV32 for the trusted operator path. Use the same behavioral oracle, input and measurement definitions. Compare the two-second cold-response target with the measured distributions.
 5. Publish reproducible milestone reports to the go-go-parc vault with code references, hardware receipts and limitations.
 
+## Feature parity acceptance
+
+Use `picocalc-os/js/apps/agenda.js` and its tests as the reference for observable behavior. The completed typed app owns Agenda's task parsing, normalization, grouping, selection, editing, and reminder decisions in typed source. Keep platform file access, clock access, message transport, and display operations behind the existing world SDK.
+
+- Open from the launcher with the existing shortcut. Refresh on focus and pick up changes made by another app. Preserve the original order of groups and tasks, selection and scrolling, completed-task visibility, and date rollover.
+- Support the original keyboard commands for entering, editing, toggling and deleting tasks, including deletion confirmation and dismissal. Resolve date and time shorthand against the configured device clock and surface the original error cases.
+- Preserve the `notes/todo.txt` format, unrelated lines, and the original behavior when a selected line has changed before an edit. Cover absent files, failed writes, and a file changed by the Editor.
+- Transfer a narrow file capability to Editor, preserve the existing success, failure, timeout, and revocation behavior, and refresh the Agenda view on return.
+- Check reminder text, lead times, an unset clock, timezone transitions, and deduplication after restart. Check that both compiled targets agree with the original app on notes bytes, visible view state, and notifications under the same input sequences.
+- Re-run editable and cold-boot tests on the assembled handheld for both targets. Record compiler and world memory, turn latency, and the two-second cold-build target. Capture the physical keypress to first visible LCD change separately.
+
+The interface details below describe the implemented reminder milestone. Full parity remains open.
+
 ## Source, module, and world interfaces
 
 The editable language program is `picocalc-os/worlds/agenda/reminder.typed`. The compiler accepts typed text and lays out the fields of `Task`. The exported entry point `parseTask(line: string, title: buffer, task: Task): bool` writes the cooked task title and record to buffers supplied by the reactor. The return flag tells the caller whether a line was a task. String input and output use explicit UTF-16 lengths and spans. Date and lead-time routines operate on integer fields so the same test oracle can compare both targets.

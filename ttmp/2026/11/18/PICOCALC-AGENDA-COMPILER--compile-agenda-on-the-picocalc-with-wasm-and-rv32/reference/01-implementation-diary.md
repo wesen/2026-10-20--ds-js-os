@@ -731,3 +731,7 @@ The earlier powered profile attributes 293 ms of the wait to the compositor. Sep
 ### Code review instructions
 
 Use the powered boot probe with the compositor trace image and parse the per-world output from scripts/10-measure-agenda-boot.py. Compare the three compositor rows with the earlier world total before choosing an optimization.
+
+## Step 30 — Expand the finish line to typed Agenda feature parity
+
+The user asked to update the goal to feature-identical Agenda in the typed language. The ticket now uses the original JavaScript app and its tests as the behavioral reference. Its scope includes the UI, editing, file semantics, date shortcuts and Editor transfer, along with the existing reminders, backends, on-device budget measurements, physical timing, and publishing requirements. The goal status tool accepts status updates only, so the expansion is recorded in the ticket and applies to the working objective in this conversation.
