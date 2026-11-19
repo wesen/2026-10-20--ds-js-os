@@ -15,7 +15,7 @@ static char saved_record[4096];
 #if defined(TEST_EDIT) || defined(TEST_POS)
 static int sends;
 #endif
-#if defined(TEST_EDIT) || defined(TEST_MARKDOWN)
+#if defined(TEST_EDIT) || defined(TEST_MARKDOWN) || defined(TEST_NAVIGATION)
 static int writes;
 #endif
 #ifdef TEST_EDIT
@@ -65,7 +65,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
     case NW_CALL_FS_READ:
         expect(reads < 3 && a == 23 + reads && !*s0, "read the offered file");
         return 100 + reads++;
-#if defined(TEST_EDIT) || defined(TEST_MARKDOWN)
+#if defined(TEST_EDIT) || defined(TEST_MARKDOWN) || defined(TEST_NAVIGATION)
     case NW_CALL_FS_WRITE:
         expect(!*s0, "write the granted file without a path");
         if (!writes) expect(a == 23 && !strcmp(s1, saved_text), "exact saved file bytes");
@@ -168,6 +168,13 @@ int main(void)
         const char *action = find_actions[i];
         if (!strncmp(action, "key ", 4)) key(&world, action + 4, "");
         else type(&world, action + 5);
+#ifdef TEST_NAVIGATION
+        if (!strcmp(action, "key f2")) {
+            char saved[64];
+            snprintf(saved, sizeof saved, "{\"bytes\":%d}", (int)strlen(saved_text));
+            expect(world.event(NW_SETTLE, 1, 0, 300, "", saved, strlen(saved), "") == NW_DONE, "navigation save");
+        }
+#endif
     }
 #endif
 #ifdef TEST_PREVIEW

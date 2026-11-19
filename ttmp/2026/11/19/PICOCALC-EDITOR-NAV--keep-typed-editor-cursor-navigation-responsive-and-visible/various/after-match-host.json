@@ -1,0 +1,26 @@
+{
+  "js/tail-right": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "js/tail-up": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/tail-right": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/tail-up": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  }
+}

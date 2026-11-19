@@ -38,6 +38,7 @@ function editorChange(state: WorldState): i32 {
 function editorMakeRoom(doc: buffer, state: WorldState, count: i32): bool {
     if (state.textLength + count > doc.length) { state.notice = 5; }
     if (state.textLength + count > doc.length) return false;
+    state.frameLast = editorInvalidateRows(state, state.lineStart);
     typedSdkMove(doc, state.cursor + count, state.cursor, state.textLength - state.cursor);
     state.textLength = state.textLength + count;
     editorChange(state);
@@ -57,6 +58,14 @@ function editorInsert(state: WorldState, text: string, unit: i32, count: i32): i
 
 function editorDelete(state: WorldState, from: i32, end: i32): i32 {
     if (end <= from) return 0;
+    let affected = state.lineStart;
+    if (from < affected) {
+        const text = typedSdkView(typedSdkBuffer(0), state.textLength);
+        const newline = typedSdkLastIndex(text, 0, from, 10);
+        affected = 0;
+        if (newline < from) { affected = newline + 1; }
+    }
+    state.frameLast = editorInvalidateRows(state, affected);
     typedSdkMove(typedSdkBuffer(0), from, end, state.textLength - end);
     state.textLength = state.textLength - end + from;
     state.cursor = from;
@@ -106,7 +115,13 @@ function editorSplit(state: WorldState, text: string): i32 {
 function editorMoveRow(state: WorldState, text: string, column: i32, delta: i32): i32 {
     if (state.goal < 0) { state.goal = column; }
     const wanted = Math.max(0, state.row + delta);
-    if (wanted < state.row) { editorFirstRow(text, state); }
+    const missed = wanted < state.row && (wanted < state.frameFirst || wanted > state.frameLast);
+    if (missed) {
+        editorResetRows(state);
+        state.moveTarget = wanted + 1;
+    }
+    if (missed) return 0;
+    if (wanted < state.row) { editorFrameRow(text, state, wanted); }
     while (state.row < wanted && editorNextRow(text, state)) {}
     state.cursor = editorOffset(text, state.rowStart, state.rowEnd, state.lineEnd, state.goal);
     return 0;
@@ -168,6 +183,7 @@ function editorDiscard(state: WorldState, output: buffer): i32 {
     const length = typedSdkRestore(state.savedSlot, typedSdkBuffer(0));
     if (length < 0) return 0;
     state.textLength = length;
+    editorResetRows(state);
     state.cursor = 0;
     state.top = 0;
     state.goal = -1;
@@ -230,6 +246,7 @@ function editorInput(state: WorldState, output: buffer, hints: buffer): i32 {
     if (state.frameToken > 0) {
         state.frameToken = 0;
         state.frameRow = 0;
+        state.moveTarget = 0;
     }
     editorApplyKey(state, action, ch, held, output);
     if (state.file > 0) return editorShow(output, hints, state);

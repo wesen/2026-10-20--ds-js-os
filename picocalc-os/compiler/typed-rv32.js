@@ -221,9 +221,9 @@ class FunctionCode {
     }
 }
 
-function compile(source, imports = []) {
+function compile(source, imports = [], maxSourceLength) {
     const imported = imports.map((fn, index) => ({...fn, index}));
-    const {functions, records} = typedWasm.compileFunctions(source, imports.length, imported);
+    const {functions, records} = typedWasm.compileFunctions(source, imports.length, imported, maxSourceLength);
     const starts = functions.map(() => ({global: true}));
     const targets = [...imported.map(fn => ({importIndex: fn.index})), ...starts];
     const callables = [...imported, ...functions];

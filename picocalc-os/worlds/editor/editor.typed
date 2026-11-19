@@ -99,8 +99,9 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.preview = false;
     state.previewToken = 0;
     state.frameToken = 0;
-    state.frameRow = 0;
-    typedSdkReply(output, output.writeLiteral(0, "{\"ok\":true}"));
+    editorResetRows(state);
+    state.moveTarget = 0;
+    state.openFrame = true;
     state.cursor = 0;
     state.top = 0;
     state.goal = -1;

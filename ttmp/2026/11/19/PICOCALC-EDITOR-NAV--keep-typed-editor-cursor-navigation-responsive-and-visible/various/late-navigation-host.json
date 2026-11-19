@@ -1,0 +1,10 @@
+{
+  "inputBytes": 65536,
+  "matchingWasmFramebuffers": 6,
+  "rv32Open": true,
+  "wasmBytes": 85549,
+  "elfBytes": 240056,
+  "wasmTurnBudgetMs": 200,
+  "saved_bytes": 64686,
+  "reopened_position": "852:11"
+}

@@ -151,7 +151,7 @@ function editorFindMarks(out: buffer, offset: i32, text: string, state: WorldSta
     editorFrameRow(text, state, state.top);
     let row = 0;
     let more = true;
-    while (row < 18 && more) {
+    while (row < 17 && more) {
         const start = state.rowStart;
         const end = state.rowEnd;
         let pos = start;

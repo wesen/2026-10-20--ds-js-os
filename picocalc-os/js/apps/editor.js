@@ -2,7 +2,7 @@
 // (a narrowed handle) with an "open" ask, and it can read and write that file and nothing else. The text is kept
 // as logical lines; the cursor is a line and a column in characters; only the rows on screen are wrapped and
 // drawn, with a per-line cache of how many rows each line takes, so a 64 KB file costs what a short one does.
-const ED_COLS = 49, ED_ROWS = 18, ED_LINE_MAX = 4000, ED_FILE_MAX = 65536, ED_POS_MAX = 20;
+const ED_COLS = 49, ED_ROWS = 17, ED_PAGE_STEP = 16, ED_LINE_MAX = 4000, ED_FILE_MAX = 65536, ED_POS_MAX = 20;
 
 const edChars = (s) => Array.from(s);
 
@@ -237,8 +237,8 @@ function edKey(s, k) {
   }
   if (s.mode === "preview") {
     if ((k.key === "f6" || k.key === "esc") && once) { s.mode = "edit"; return; }
-    if (k.key === "down" || k.key === "pgdn") s.ptop += k.key === "down" ? 1 : ED_ROWS - 2;
-    if (k.key === "up" || k.key === "pgup") s.ptop = Math.max(0, s.ptop - (k.key === "up" ? 1 : ED_ROWS - 2));
+    if (k.key === "down" || k.key === "pgdn") s.ptop += k.key === "down" ? 1 : ED_PAGE_STEP;
+    if (k.key === "up" || k.key === "pgup") s.ptop = Math.max(0, s.ptop - (k.key === "up" ? 1 : ED_PAGE_STEP));
     return;
   }
   s.note = "";
@@ -260,8 +260,8 @@ function edKey(s, k) {
     case "right": if (s.col < edChars(s.lines[s.row]).length) s.col++; else if (s.row < s.lines.length - 1) { s.row++; s.col = 0; } s.goal = -1; break;
     case "up": edMoveRows(s, -1); break;
     case "down": edMoveRows(s, 1); break;
-    case "pgup": edMoveRows(s, -(ED_ROWS - 2)); break;
-    case "pgdn": edMoveRows(s, ED_ROWS - 2); break;
+    case "pgup": edMoveRows(s, -ED_PAGE_STEP); break;
+    case "pgdn": edMoveRows(s, ED_PAGE_STEP); break;
     case "home": { const [r] = edDisplay(s, s.row, s.col); [s.row, s.col] = edFromDisplay(s, r, 0); s.goal = -1; break; }
     case "end": { const [r] = edDisplay(s, s.row, s.col); [s.row, s.col] = edFromDisplay(s, r, ED_COLS); s.goal = -1; break; }
     case "enter": edNewline(s); break;

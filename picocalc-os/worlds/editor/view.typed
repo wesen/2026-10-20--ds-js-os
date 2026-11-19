@@ -65,7 +65,7 @@ function editorNextRow(text: string, state: WorldState): bool {
 }
 
 function editorStoreRow(rows: buffer, state: WorldState): i32 {
-    const slot = (state.row % 18) * 7;
+    const slot = (state.row % 36) * 7;
     rows.setCharCodeAt(slot, state.rowStart % 65536);
     rows.setCharCodeAt(slot + 1, state.rowStart / 65536);
     rows.setCharCodeAt(slot + 2, state.lineStart % 65536);
@@ -74,13 +74,15 @@ function editorStoreRow(rows: buffer, state: WorldState): i32 {
     rows.setCharCodeAt(slot + 5, state.line / 65536);
     rows.setCharCodeAt(slot + 6, 0);
     if (state.fenced) { rows.setCharCodeAt(slot + 6, 1); }
+    state.frameLast = Math.max(state.frameLast, state.row);
+    state.frameFirst = Math.max(state.frameFirst, state.frameLast - 35);
     return 0;
 }
 
 function editorFrameRow(text: string, state: WorldState, row: i32): i32 {
     const rows = typedSdkBuffer(9);
     state.row = row;
-    const slot = (state.row % 18) * 7;
+    const slot = (state.row % 36) * 7;
     state.rowStart = rows.charCodeAt(slot) + rows.charCodeAt(slot + 1) * 65536;
     state.lineStart = rows.charCodeAt(slot + 2) + rows.charCodeAt(slot + 3) * 65536;
     state.line = rows.charCodeAt(slot + 4) + rows.charCodeAt(slot + 5) * 65536;
@@ -90,29 +92,66 @@ function editorFrameRow(text: string, state: WorldState, row: i32): i32 {
     return 0;
 }
 
+function editorResetRows(state: WorldState): i32 {
+    state.frameFirst = 0;
+    state.frameLast = -1;
+    state.frameRow = 0;
+    return 0;
+}
+
+function editorInvalidateRows(state: WorldState, lineStart: i32): i32 {
+    const rows = typedSdkBuffer(9);
+    let last = state.frameLast;
+    while (last >= state.frameFirst) {
+        const slot = (last % 36) * 7 + 2;
+        const start = rows.charCodeAt(slot) + rows.charCodeAt(slot + 1) * 65536;
+        if (start < lineStart) return last;
+        last = last - 1;
+    }
+    return -1;
+}
+
+function editorRowAnchor(text: string, state: WorldState): i32 {
+    const cached = state.frameLast >= state.frameFirst;
+    if (cached) { editorFrameRow(text, state, state.frameFirst); }
+    if (cached && state.cursor >= state.rowStart) return 0;
+    editorResetRows(state);
+    return editorFirstRow(text, state);
+}
+
 function editorNeedsRow(text: string, state: WorldState): bool {
     return state.rowEnd < text.length && (state.cursor > state.rowEnd ||
         (state.cursor === state.rowEnd && state.rowEnd < state.lineEnd));
 }
 
 function editorLocate(text: string, state: WorldState): i32 {
-    editorFirstRow(text, state);
+    editorRowAnchor(text, state);
     while (editorNeedsRow(text, state)) { editorNextRow(text, state); }
     return editorColumn(text, state.rowStart, state.cursor);
 }
 
+function editorFrameNeedsRow(text: string, state: WorldState): bool {
+    if (state.moveTarget > 0) return state.row + 1 < state.moveTarget && state.rowEnd < text.length;
+    return editorNeedsRow(text, state);
+}
+
 function editorFrameLocate(text: string, state: WorldState): bool {
     const rows = typedSdkBuffer(9);
-    if (state.frameRow === 0) { editorFirstRow(text, state); }
+    if (state.frameRow === 0) { editorRowAnchor(text, state); }
     if (state.frameRow > 0) { editorFrameRow(text, state, state.frameRow); }
     const stop = state.row + 64;
-    while (state.row < stop && editorNeedsRow(text, state)) {
+    while (state.row < stop && editorFrameNeedsRow(text, state)) {
         editorStoreRow(rows, state);
         editorNextRow(text, state);
     }
     editorStoreRow(rows, state);
     state.frameRow = 0;
-    if (!editorNeedsRow(text, state)) return true;
+    const ready = !editorFrameNeedsRow(text, state);
+    if (ready && state.moveTarget > 0) {
+        state.cursor = editorOffset(text, state.rowStart, state.rowEnd, state.lineEnd, state.goal);
+        state.moveTarget = 0;
+    }
+    if (ready) return true;
     state.frameToken = typedSdkYield();
     if (state.frameToken > 0) { state.frameRow = state.row; }
     return false;

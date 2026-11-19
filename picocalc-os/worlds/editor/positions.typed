@@ -69,13 +69,12 @@ function editorPositionKey(state: WorldState, key: buffer): i32 {
 function editorPositionApply(state: WorldState): i32 {
     const doc = typedSdkView(typedSdkBuffer(0), state.textLength);
     let start = 0;
-    let end = editorLineEnd(doc, start);
-    let line = 0;
-    while (line < state.positionLine && end < doc.length) {
-        start = end + 1;
-        end = editorLineEnd(doc, start);
-        line = line + 1;
+    if (state.positionLine > 0) {
+        let newline = typedSdkNthIndex(doc, 0, doc.length, 10, state.positionLine);
+        if (newline === doc.length) { newline = typedSdkLastIndex(doc, 0, doc.length, 10); }
+        if (newline < doc.length) { start = newline + 1; }
     }
+    const end = editorLineEnd(doc, start);
     state.cursor = editorOffset(doc, start, end, end, state.positionColumn);
     state.top = state.positionTop;
     return 0;

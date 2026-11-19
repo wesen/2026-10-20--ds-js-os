@@ -28,6 +28,10 @@ record WorldState {
     fenced: bool;
     frameRow: i32;
     frameToken: i32;
+    frameFirst: i32;
+    frameLast: i32;
+    moveTarget: i32;
+    openFrame: bool;
     dirty: bool;
     savedSlot: i32;
     discardArmed: bool;

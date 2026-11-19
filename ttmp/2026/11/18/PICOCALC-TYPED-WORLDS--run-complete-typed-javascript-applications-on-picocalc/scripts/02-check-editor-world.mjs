@@ -27,14 +27,15 @@ const edit = process.argv.includes('--edit');
 const positions = process.argv.includes('--positions');
 const denseSearch = process.argv.includes('--dense-search');
 const tailSearch = process.argv.includes('--tail-search');
-const longSearch = denseSearch || tailSearch;
+const navigation = process.argv.includes('--late-navigation');
+const longSearch = denseSearch || tailSearch || navigation;
 const find = process.argv.includes('--find');
 const markdown = process.argv.includes('--markdown');
 const previewLarge = process.argv.includes('--preview-large');
 const previewLine = process.argv.includes('--preview-line');
 const capacity = previewLarge || previewLine;
 const preview = markdown || capacity;
-assert([large, edit, positions, find, markdown, previewLarge, previewLine, denseSearch, tailSearch].filter(Boolean).length <= 1, 'select at most one workflow');
+assert([large, edit, positions, find, markdown, previewLarge, previewLine, denseSearch, tailSearch, navigation].filter(Boolean).length <= 1, 'select at most one workflow');
 const turnBudget = (large || previewLine || longSearch) && !process.argv.includes('--stock-budget') ? 200 : 50;
 const filename = preview ? 'entry.MD' : 'entry.txt';
 const contents = previewLarge ?
@@ -43,11 +44,15 @@ const contents = previewLarge ?
     markdown ? '# Straße **Title**\n- one\n9) numbered\n```\ncode\n\n```\n> quote `text`\n**plain** [link](u)\ncontinued\n\n### Low\n```\n' +
         'more code\n'.repeat(22) + 'last code\n`' + '🙂'.repeat(54) + ' word  tab\tend' :
     find ? 'A🙂 BETA beta beta\nKelvin K and İce\nlast BeTa\noverlap ababa\n' :
-    large || longSearch ? ('text '.repeat(15) + '\r\n').repeat(851) + (tailSearch ? 'needlezzz' : 'x'.repeat(9)) :
+    large || longSearch ? ('text '.repeat(15) + '\r\n').repeat(851) + (tailSearch || navigation ? 'needlezzz' : 'x'.repeat(9)) :
     'A🙂  long line ' + 'abcd efgh '.repeat(9) + '\r\n\t"hello"\rLast\n';
 const findActions = longSearch ? [
     'key f3', denseSearch ? 'type text text z' : 'type needle', 'key enter',
     'wait 1500', 'capture found.png', 'key f4', 'wait 1500',
+    ...(navigation ? [
+        'key right', 'key up', ...Array(3).fill('key pgup'), 'wait 1500', 'key f4', 'wait 1500',
+        'key backspace', 'key enter', 'key end', 'type !', 'key f2', 'wait 1000', 'capture saved.png',
+    ] : []),
 ] : [
     'key f4', 'key f3', 'type BeTx', 'key backspace', 'type A', 'key enter',
     'key f4', 'key f4', 'key f4', 'key f4', 'capture found.png', 'key f3', 'key esc',
@@ -103,10 +108,8 @@ function run(name, compiled) {
     mkdirSync(js, {recursive:true});
     mkdirSync(fs, {recursive:true});
     writeFileSync(join(fs, filename), contents);
-    if (positions) {
-        mkdirSync(dirname(record), {recursive:true});
-        writeFileSync(record, JSON.stringify(seed));
-    }
+    if (positions || navigation) mkdirSync(dirname(record), {recursive:true});
+    if (positions) writeFileSync(record, JSON.stringify(seed));
     copyFileSync(join(os, 'js/prelude.js'), join(js, 'prelude.js'));
     const entries = worlds.map(w => {
         if (w.name === 'editor' && compiled) {
@@ -150,7 +153,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         'type fresh.txt', 'wait 1000', 'key enter', 'wait 1000', 'capture fresh.png',
         ...(positions ? ['key esc', 'wait 530'] : []), '',
     ].join('\n'));
-    const storeArgs = positions ? ['-s', store] : [];
+    const storeArgs = positions || navigation ? ['-s', store] : [];
     execFileSync(join(os, 'build/picocalc-host'), ['-j', js, '-f', fs, '-o', out, ...storeArgs, scenario],
         {encoding:'utf8',timeout:15000});
     const log = readFileSync(join(out, 'uart.log'), 'utf8');
@@ -163,6 +166,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
     assert.equal(statuses[1], `${filename}  1:${positions ? 3 : 1}`);
     assert.equal(statuses.at(-1), 'fresh.txt  1:1');
     const saved = markdown ? contents.replace('- one\n9) numbered\n', '- one\n\n9) numbered\n10) ten\n') :
+        navigation ? contents.replace(/\r\n/g, '\n') + '!' :
         edit ? contents.replace('🙂', '').replace(/\r\n?/g, '\n') + 'tail\nne' : contents;
     assert.equal(readFileSync(join(fs, filename), 'utf8'), saved);
     if (edit) {
@@ -176,9 +180,22 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         assert.equal(marks?.length, 4);
         const overlaps = frames.find(frame => frame.tree.kids[0].s === 'Find: aba_')?.tree.kids[1].marks;
         assert.deepEqual(overlaps, [[3, 8, 3, 'soft'], [3, 10, 3, 'soft']]);
+    } else if (navigation) {
+        assert(statuses.includes('entry.txt  852:2'));
+        assert(statuses.includes('entry.txt  851:47'));
+        assert(statuses.includes('* entry.txt  852:11'));
+        assert(statuses.includes(`Saved ${Buffer.byteLength(saved)} bytes.`));
     } else if (longSearch) {
         assert.equal(statuses.at(-2), denseSearch ? 'Not found: text text z' : 'entry.txt  852:1');
-    } else if (markdown) {
+    }
+    if (tailSearch || navigation) {
+        const hit = frames.find(frame => frame.tree.kids[0].s === 'entry.txt  852:1').tree.kids[1];
+        assert.equal(hit.rows.length, 17);
+        assert.deepEqual(hit.cursor, [16, 0]);
+        assert.equal(hit.rows[hit.cursor[0]].s, 'needlezzz');
+        assert(hit.marks.some(mark => mark[0] === hit.cursor[0] && mark[2] === 6));
+    }
+    if (markdown) {
         assert.deepEqual(frames[1].tree.kids[1].rows.slice(0, 8).map(row => row.color),
             ['accent', 'ink', 'ink', 'blue', 'blue', 'blue', 'blue', 'muted']);
         const preview = frames.find(frame => frame.tree.kids[1]?.t === 'lines').tree.kids[1];
@@ -186,18 +203,28 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         assert(preview.items.some(item => item.s === 'plain link continued'));
         assert(preview.items.some(item => item.s === '10) ten'));
         const viewport = frames.at(-2).tree.kids[1].rows;
-        assert.equal(viewport.length, 18);
+        assert.equal(viewport.length, 17);
         assert(viewport.every(row => row.color === 'blue'));
     } else if (capacity) {
         const windows = frames.filter(frame => frame.tree.kids[1]?.t === 'lines');
         assert(windows.some(frame => visualFrame(frame.tree).kids[1].some(row => row.s === 'END OF PREVIEW')));
         assert(!visualFrame(windows.at(-1).tree).kids[1].some(row => row.s === 'END OF PREVIEW'));
         if (compiled) assert(windows.every(frame => frame.tree.kids[1].items.length <= 17));
-    } else assert.equal(statuses.length, positions ? 4 : 3);
-    const pictures = ['editor', 'opened', ...(edit ? ['saved'] : []), ...(find || longSearch ? ['found'] : []),
+    } else if (!edit && !find && !longSearch) assert.equal(statuses.length, positions ? 4 : 3);
+    const pictures = ['editor', 'opened', ...(edit || navigation ? ['saved'] : []), ...(find || longSearch ? ['found'] : []),
         ...(markdown ? ['preview', 'fence'] : []),
         ...(capacity ? ['preview', 'preview-end', 'preview-back'] : []), 'fresh'];
     const pixels = pictures.map(name => readFileSync(join(out, name + '.png')));
+    if (navigation) {
+        const restarted = join(dir, name, 'restart'), scenario = join(dir, name + '-restart.txt');
+        writeFileSync(scenario, 'wait 2000\nkey d\nwait 530\nkey enter\nwait 2500\ncapture restored.png\n');
+        execFileSync(join(os, 'build/picocalc-host'), ['-j', js, '-f', fs, '-o', restarted, ...storeArgs, scenario],
+            {encoding:'utf8',timeout:15000});
+        const restartLog = readFileSync(join(restarted, 'uart.log'), 'utf8');
+        assert(!/crashed|timed out/.test(restartLog));
+        assert.match(restartLog, /entry\.txt  852:11/);
+        pixels.push(readFileSync(join(restarted, 'restored.png')));
+    }
     if (!positions) {
         const visual = preview ? distinct(frames.map(frame => ({...frame, tree:visualFrame(frame.tree)}))) : frames;
         return {frames:visual, pixels, saved};
@@ -236,7 +263,8 @@ try {
     const expected = join(dir, 'expected.h');
     writeFileSync(expected, `#define FIRST_FILE ${JSON.stringify(filename)}\nstatic const char settled[] = ${JSON.stringify(JSON.stringify(contents))};\n` +
         (edit ? '#define TEST_EDIT\n' : '') +
-        (edit || markdown ? `static const char saved_text[] = ${JSON.stringify(original.saved)};\n` : '') +
+        (navigation ? '#define TEST_NAVIGATION\n' : '') +
+        (edit || markdown || navigation ? `static const char saved_text[] = ${JSON.stringify(original.saved)};\n` : '') +
         (positions ? `#define TEST_POS\nstatic const char initial_record[] = ${JSON.stringify(JSON.stringify(seed))};\n` : '') +
         (find || longSearch ? '#define TEST_FIND\nstatic const char *const find_actions[] = {' +
             findActions.filter(action => action.startsWith('key ') || action.startsWith('type ')).map(action => JSON.stringify(action)).join(',') +

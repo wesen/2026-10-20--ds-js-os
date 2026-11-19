@@ -35,7 +35,7 @@ function editorStatus(output: buffer, text: string, state: WorldState): i32 {
 function editorDocumentFrame(output: buffer, text: string, state: WorldState): i32 {
     const column = editorColumn(text, state.rowStart, state.cursor);
     if (state.row < state.top) { state.top = state.row; }
-    if (state.row >= state.top + 18) { state.top = state.row - 17; }
+    if (state.row >= state.top + 17) { state.top = state.row - 16; }
     const cursorRow = state.row - state.top;
     const label = typedSdkBuffer(2);
     const length = editorStatus(label, text, state);
@@ -53,7 +53,7 @@ function editorDocumentFrame(output: buffer, text: string, state: WorldState): i
     editorFrameRow(text, state, state.top);
     let rows = 0;
     let more = true;
-    while (rows < 18 && more) {
+    while (rows < 17 && more) {
         if (rows > 0) { at = at + output.writeLiteral(at, ","); }
         at = at + output.writeLiteral(at, "{\"s\":");
         at = editorQuote(output, at, text, state.rowStart, state.rowEnd);
@@ -90,5 +90,10 @@ function editorShow(output: buffer, hints: buffer, state: WorldState): i32 {
     if (state.preview && !editorPreviewReady(text, state)) return 0;
     if (!editorFrameLocate(text, state)) return 0;
     const hintLength = editorHints(hints, state);
-    return typedSdkScreen(output, editorDocumentFrame(output, text, state), hints, hintLength);
+    const result = typedSdkScreen(output, editorDocumentFrame(output, text, state), hints, hintLength);
+    if (state.openFrame) {
+        state.openFrame = false;
+        typedSdkReply(output, output.writeLiteral(0, "{\"ok\":true}"));
+    }
+    return result;
 }

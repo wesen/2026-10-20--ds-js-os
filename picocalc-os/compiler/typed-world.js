@@ -6,6 +6,7 @@
         ["typedWorldEvent", "WorldEvent,WorldState,buffer,buffer"],
     ]);
     const entries = [...signatures.keys()];
+    const maxSourceLength = 96 * 1024;
     // Order matches the trampoline table in sdk/typed/rv32-slot.S.
     const imports = [
         ["typedSdkScreen", "buffer,i32,buffer,i32", "i32"],
@@ -32,6 +33,7 @@
         ["typedSdkSeek", "string,i32,i32,i32,i32,i32,i32", "i32"],
         ["typedSdkLastIndex", "string,i32,i32,i32", "i32"],
         ["typedSdkCountUnit", "string,i32,i32,i32", "i32"],
+        ["typedSdkNthIndex", "string,i32,i32,i32,i32", "i32"],
     ].map(([name, params, result]) => ({name, params: params ? params.split(",") : [], result}));
 
     function validate(program) {
@@ -51,13 +53,13 @@
     }
 
     globalThis.compileTypedWorld = function(source, reactor) {
-        const program = typedWasm.linkWorld(source, reactor, entries, imports);
+        const program = typedWasm.linkWorld(source, reactor, entries, imports, maxSourceLength);
         validate(program);
         return program.bytes;
     };
 
     globalThis.compileTypedWorldRv32 = function(source, reactor) {
-        const program = typedRv32.compile(source, imports);
+        const program = typedRv32.compile(source, imports, maxSourceLength);
         validate(program);
         return typedRv32.linkSlot(program, reactor, entries);
     };

@@ -155,6 +155,18 @@ int typedSdkCountUnit(const void *view, int start, int end, int unit)
     return count;
 }
 
+// Occurrences are one-based. A miss returns the interval end.
+SDK(typedSdkNthIndex)
+int typedSdkNthIndex(const void *view, int start, int end, int unit, int occurrence)
+{
+    if (occurrence <= 0 || !valid_span(view, start, end)) return end;
+    const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
+    for (int i = start; i < end; i++) {
+        if (units[i] == unit && --occurrence == 0) return i;
+    }
+    return end;
+}
+
 static int hex4(const unsigned char **input)
 {
     const unsigned char *p = *input;

@@ -453,8 +453,8 @@ class FunctionEmitter {
     }
 }
 
-function compileFunctions(source, functionBase, imported = []) {
-    if (source.length > 64 * 1024) throw new SyntaxError("input limit exceeded");
+function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024) {
+    if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
     const lex = new Lexer(source);
     const declared = new Map(imported.map(fn => [fn.name, fn]));
     const records = new Map();
@@ -590,7 +590,7 @@ function encodeByteVector(elements) {
 
 // The trusted runtime owns memory, host imports, and world exports. Its
 // direct calls to the exported slot keep their original function index.
-function linkWorld(source, runtime, entries, imports = []) {
+function linkWorld(source, runtime, entries, imports = [], maxSourceLength) {
     const reader = new WasmReader(runtime);
     const header = reader.take(8);
     if (header.join(",") !== "0,97,115,109,1,0,0,0") throw new SyntaxError("invalid Wasm runtime header");
@@ -630,7 +630,7 @@ function linkWorld(source, runtime, entries, imports = []) {
             throw new SyntaxError("Wasm runtime import signature mismatch for " + fn.name);
         return {...fn, index};
     });
-    const {functions, records} = compileFunctions(source, base, imported);
+    const {functions, records} = compileFunctions(source, base, imported, maxSourceLength);
     for (const entry of entries) {
         const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
         const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
