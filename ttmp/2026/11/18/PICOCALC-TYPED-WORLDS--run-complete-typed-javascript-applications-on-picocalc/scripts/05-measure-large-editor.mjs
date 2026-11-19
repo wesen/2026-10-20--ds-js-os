@@ -6,6 +6,7 @@ import {join, resolve} from 'node:path';
 // Use the retained fixture from 02-check-editor-world.mjs --large --keep-fixture.
 const [fixture, output] = process.argv.slice(2, 4).map(path => resolve(path));
 const adversarial = process.argv.includes('--adversarial');
+const afterMatch = process.argv.includes('--after-match');
 assert(fixture && output, 'pass the retained large fixture directory and an output directory');
 mkdirSync(output);
 
@@ -15,9 +16,13 @@ function query(value) {
     return ['key f3', 'wait 530', 'type ' + value, 'wait 530', 'key enter', 'wait 1800'];
 }
 
-const trials = adversarial ? {
+const tail = full.slice(0, -9) + 'needlezzz';
+const trials = afterMatch ? {
+    'tail-right': {text:tail, commands:[...query('needle'), 'key right', 'wait 1000'], marker:'entry.txt  852:2'},
+    'tail-up': {text:tail, commands:[...query('needle'), 'key up', 'wait 1000'], marker:'entry.txt  851:46'},
+} : adversarial ? {
     'find-dense': {text:full, commands:query('text text z'), marker:'Not found: text text z'},
-    'find-tail': {text:full.slice(0, -9) + 'needlezzz', commands:query('needle'), marker:'entry.txt  852:1'},
+    'find-tail': {text:tail, commands:query('needle'), marker:'entry.txt  852:1'},
 } : {
     save: {text:full, commands:['key f2', 'wait 1800'], marker:'Saved 64685 bytes.'},
     find: {text:full, commands:query('zzz'),

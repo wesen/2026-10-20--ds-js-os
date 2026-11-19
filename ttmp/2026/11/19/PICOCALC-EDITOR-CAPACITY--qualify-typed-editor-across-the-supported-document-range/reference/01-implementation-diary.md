@@ -277,6 +277,8 @@ Both full-file search regressions now complete in the simulator. The dense absen
 
 **Inferred user intent:** Make the typed app responsive within the device scheduler's limits.
 
+**Commit (code):** `0142d63` — "Bound typed Editor search and viewport work across scheduler segments"
+
 ### What I did
 
 - Replaced synchronous candidate traversal in `find.typed` with four typed intervals and an explicit continuation. Each slice budgets candidate visits and the maximum work of an eligible comparison.
@@ -295,6 +297,7 @@ Search work and viewport work can each exceed one segment. Retaining a separate 
 - The final run of `scripts/04-check-search-traversal.sh` passed full-size open, dense and late search, short Unicode search, Markdown, edit and position persistence on Wasm and RV32. The long searches matched four JavaScript reference captures apiece and included another F4 search and a fresh file open.
 - The long Wasm replay used 200 virtual ms. The short workflows still pass at 50 virtual ms. Both target artifacts emitted from the same source measured 84,477 bytes for Wasm and 239,968 bytes for RV32.
 - The before and after outcome files are `various/editor-search-traversal-host.json` and `various/editor-search-traversal-after.json`.
+- The reMarkable CLI confirmed `OK: uploaded PicoCalc Editor Search and Viewport Scheduling.pdf -> /ai/2026/11/19/PICOCALC-EDITOR-CAPACITY`.
 
 ### What didn't work
 
@@ -326,3 +329,57 @@ Read `editorFindStep`, `editorFrameLocate` and the two matching-token branches i
 ### Technical details
 
 The find slice budget is 1,024 cost units. Matching may cross the original cursor boundary on the final pass when its folded start is earlier. Drawing waits for the cursor row and then restores its top row in constant time. Line persistence uses checked exact-unit scans over the live document view.
+
+## Step 6: Test movement after a successful late match
+
+The passing find workflow does not cover the very next editing key. I ran the same tail search and followed it with a Right or Up press. Both variants confirm a separate overrun in ordinary navigation after the late viewport is already on screen.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Verify that the port can continue editing after it finds a match deep in a supported file.
+
+**Inferred user intent:** Keep existing Editor workflows usable end to end, including navigation after find.
+
+### What I did
+
+- Added the `--after-match` trial to the typed-worlds ticket's routine stress runner.
+- Reused the 65,536-byte tail fixture from Step 5. The expected results are 852:2 after Right and 851:46 after Up.
+- Recorded `various/editor-nav-after-match-host.json`.
+
+### Why
+
+The asynchronous frame locator covers publication. It does not replace the synchronous lookup in `editorPlainKey` or the backwards row walk in `editorMoveRow`.
+
+### What worked
+
+The JavaScript reference reached both expected coordinates. All runs preserved their input bytes.
+
+### What didn't work
+
+Both Wasm runs logged `editor crashed handling key: ran past its turn budget of 200 virtual ms` after the preceding find had reached the last line.
+
+### What I learned
+
+The viewport checkpoints survive long enough for two passes within one render. Reusing them for navigation needs an explicit validity rule after edits and file replacement. A checkpoint before the affected document position is only reusable when its preceding rows and fence state are still valid.
+
+### What was tricky to build
+
+An Up move at EOF targets the last wrapped row of the previous physical line. The expected column is 46, derived from the 45 code points in the previous wrapped row. Right instead moves within the final physical line.
+
+### What warrants a second pair of eyes
+
+Review whether to preserve the entire previous viewport ring or keep stable earlier checkpoints with explicit invalidation. Verify a movement immediately after an edit changes wrapping and after the user opens another file.
+
+### What should be done in the future
+
+Make `editorPlainKey` and `editorMoveRow` reuse valid row checkpoints or use a bounded lookup when a checkpoint misses. Retest both measured examples before expanding the evidence to Page Up, insertion, and deletion.
+
+### Code review instructions
+
+Run `05-measure-large-editor.mjs FIXTURE OUTPUT --after-match` against a retained `--large` fixture from the cross-target harness. Compare the final marker and fault list separately from file contents.
+
+### Technical details
+
+The simulator uses a 200 virtual ms per-segment budget. The two failures are independent of the successful search investigation. The status frame after the search contains 852:1 before the next input overrun.

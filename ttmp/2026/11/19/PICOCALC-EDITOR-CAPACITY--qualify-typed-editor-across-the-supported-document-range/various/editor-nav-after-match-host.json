@@ -1,0 +1,30 @@
+{
+  "js/tail-right": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "js/tail-up": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/tail-right": {
+    "input_bytes": 65536,
+    "finished": false,
+    "file_bytes_match": true,
+    "faults": [
+      "editor crashed handling key: ran past its turn budget of 200 virtual ms"
+    ]
+  },
+  "wasm/tail-up": {
+    "input_bytes": 65536,
+    "finished": false,
+    "file_bytes_match": true,
+    "faults": [
+      "editor crashed handling key: ran past its turn budget of 200 virtual ms"
+    ]
+  }
+}
