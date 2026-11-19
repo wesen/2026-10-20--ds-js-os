@@ -349,10 +349,10 @@ class FunctionEmitter {
             const mutable = lex.token.value === "let";
             lex.next();
             const id = lex.ident();
-            lex.expect(":");
-            const type = lex.type(this.records);
+            const annotation = lex.accept(":") ? lex.type(this.records) : null;
             lex.expect("=");
-            this.want(this.expr(), type);
+            const type = this.expr();
+            if (annotation !== null) this.want(type, annotation);
             this.emitLocal(OP.set, this.local(id, type, mutable));
         } else {
             const id = lex.ident();

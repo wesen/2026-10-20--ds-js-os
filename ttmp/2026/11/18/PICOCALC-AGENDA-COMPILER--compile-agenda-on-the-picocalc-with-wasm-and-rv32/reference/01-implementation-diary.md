@@ -739,3 +739,17 @@ The user asked to update the goal to feature-identical Agenda in the typed langu
 ## Step 31 — Run the compositor message trace on the powered device
 
 The same peripheral manifest and diagnostic workload booted with 145 I²C and 62 SPI transactions and no bus errors in the captured stats. Agenda published after 2.782 s. In the 462 ms from receipt to settlement, the compositor occupied 235 ms. Draws accounted for 84 ms across four segments, status handlers for 5 ms across two, and the other handlers for 146 ms across seventeen. The new split sums to the measured compositor world total. Removing draws alone would leave most of the delay. The app partition was restored and verified, and the original firmware answered cji status. The receipt is various/p4-powered-compositor-turns.json.
+
+## Step 32 — Infer initialized local types in the shared frontend
+
+### What I did
+
+I made the local type annotation optional for initialized let and const declarations. The compiler already derives a semantic type while emitting the initializer. The declaration now checks it against an explicit annotation or uses it as the binding type. Assignments continue to check that fixed type and the binding's mutability. Parameters, return types, and record fields still use explicit declarations.
+
+### What worked
+
+scripts/14-check-local-inference.mjs stripped all 25 local annotations from the existing typed reminder source in memory and compared the emitted Wasm and RV32 artifacts byte for byte. Both matched. A small inferred program executed in Wasm. Both compilation paths still reject incompatible assignments, a wrong annotation, mutation of const, self-reference, and a missing initializer. The 6,411 stored task-line comparisons also passed.
+
+### What I learned
+
+Initializer types are already available at declaration time, so this rule needs no extra pass or runtime representation. The change is independent of adding contextual typing for an empty typed collection later.
