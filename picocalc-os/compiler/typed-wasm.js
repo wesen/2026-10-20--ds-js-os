@@ -17,7 +17,7 @@ const BINARY = new Map([
     ["*", [7, "i32", "i32", 0x6c]], ["/", [7, "i32", "i32", OP.div]],
     ["%", [7, "i32", "i32", 0x6f]],
 ]);
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(?<op>===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(?<str>"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?<op>===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer"]);
 
@@ -61,8 +61,9 @@ class Lexer {
         TOKEN.lastIndex = this.offset;
         const match = TOKEN.exec(this.source);
         if (match) {
-            const value = match.groups.id ?? match.groups.int ?? match.groups.op;
-            this.token = { value, kind: match.groups.id ? "id" : match.groups.int ? "int" : "op",
+            const {id, int, str, op} = match.groups;
+            const value = id ?? int ?? str ?? op;
+            this.token = { value, kind: id ? "id" : int ? "int" : str ? "str" : "op",
                 at: TOKEN.lastIndex - value.length };
             this.offset = TOKEN.lastIndex;
             return;
@@ -209,6 +210,10 @@ class FunctionEmitter {
             return field.type;
         }
         if ((binding.type === "string" || binding.type === "buffer") && lex.accept(".")) {
+            if (binding.type === "buffer" && lex.accept("writeLiteral")) {
+                this.emitConst(this.bufferLiteral(binding.index));
+                return "i32";
+            }
             if (lex.accept("length")) {
                 this.emitLocal(OP.get, binding.index);
                 this.code.push(0x28, 2, 0);
@@ -281,6 +286,10 @@ class FunctionEmitter {
 
     bufferWrite(receiver) {
         const lex = this.lex;
+        if (lex.accept("writeLiteral")) {
+            this.bufferLiteral(receiver);
+            return;
+        }
         lex.expect("setCharCodeAt");
         lex.expect("(");
         const position = this.nextLocal++;
@@ -291,6 +300,36 @@ class FunctionEmitter {
         this.want(this.expr(), "i32");
         lex.expect(")");
         this.code.push(0x3b, 1, 4); // i32.store16 into the buffer's data after its capacity
+    }
+
+    bufferLiteral(receiver) {
+        const lex = this.lex;
+        lex.expect("(");
+        const position = this.nextLocal++, address = this.nextLocal++;
+        this.want(this.expr(), "i32");
+        this.emitLocal(OP.set, position);
+        lex.expect(",");
+        if (lex.token.kind !== "str") lex.fail("expected a double-quoted string literal");
+        const value = JSON.parse(lex.token.value);
+        if (value.length > 1022) lex.fail("buffer literal exceeds 1022 UTF-16 units");
+        lex.next();
+        lex.expect(")");
+        if (!value.length) return 0;
+        // Check the whole write before mutating the buffer. A negative start
+        // is outside the unsigned bound even if the literal would end inside.
+        this.codeUnitAddress(receiver, position);
+        this.emitLocal(OP.set, address);
+        this.emitLocal(OP.get, position);
+        this.emitConst(value.length - 1);
+        this.code.push(OP.add);
+        this.emitLocal(OP.get, receiver);
+        this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
+        for (let i = 0; i < value.length; i++) {
+            this.emitLocal(OP.get, address);
+            this.emitConst(value.charCodeAt(i));
+            this.code.push(0x3b, 1, ...unsigned(4 + 2 * i));
+        }
+        return value.length;
     }
 
     call(name) {
