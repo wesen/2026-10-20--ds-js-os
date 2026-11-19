@@ -1,0 +1,138 @@
+// Task-entry grammar. Compiled together with reminder.typed, which supplies
+// decimal() and validDate(). The reactor supplies the current local date.
+function entryLower(code: i32): i32 {
+    if (code >= 65 && code <= 90) return code + 32;
+    return code;
+}
+
+// Return minutes since midnight, or -1 for an invalid time token.
+function entryTime(word: string): i32 {
+    let end = word.length;
+    let suffix = 0;
+    if (end >= 3 && entryLower(word.charCodeAt(end - 1)) === 109) {
+        suffix = entryLower(word.charCodeAt(end - 2));
+        if (!(suffix === 97 || suffix === 112)) return -1;
+        end = end - 2;
+    }
+    let width = end;
+    let minute = 0;
+    if (end >= 4 && word.charCodeAt(end - 3) === 58) {
+        width = end - 3;
+        minute = decimal(word, end - 2, 2);
+    }
+    if (width < 1 || width > 2 || minute < 0 || minute > 59) return -1;
+    let hour = decimal(word, 0, width);
+    if (hour < 0 || hour > 23) return -1;
+    if (suffix > 0) {
+        if (hour < 1 || hour > 12) return -1;
+        hour = hour % 12;
+        if (suffix === 112) { hour = hour + 12; }
+    }
+    return hour * 60 + minute;
+}
+
+function entryMonthLength(year: i32, month: i32): i32 {
+    if (month === 2 && leap(year)) return 29;
+    if (month === 2) return 28;
+    if (month === 4 || month === 6 || month === 9 || month === 11) return 30;
+    return 31;
+}
+
+function entryAddDays(today: i32, count: i32): i32 {
+    let year = today / 10000;
+    let month = today / 100 % 100;
+    let day = today % 100 + count;
+    if (year < 100) { year = year + 1900; }
+    let length = entryMonthLength(year, month);
+    while (day > length) {
+        day = day - length;
+        month = month + 1;
+        if (month > 12) { month = 1; year = year + 1; }
+        length = entryMonthLength(year, month);
+    }
+    return year * 10000 + month * 100 + day;
+}
+
+// Sunday is zero. The old Date.UTC helper maps years 0–99 into 1900–1999.
+function entryWeekday(today: i32): i32 {
+    let year = today / 10000;
+    if (year < 100) { year = year + 1900; }
+    const prior = year - 1;
+    let days = 365 * prior + prior / 4 - prior / 100 + prior / 400 + today % 100;
+    let month = 1;
+    while (month < today / 100 % 100) {
+        days = days + entryMonthLength(year, month);
+        month = month + 1;
+    }
+    return days % 7;
+}
+
+// Pack at most six letters into an i32, using a=1 through z=26 in base 32.
+// Positive digits make the spelling and length unambiguous. Longer names
+// split after six letters so neither chunk can overflow.
+function entryLetters(word: string, start: i32, end: i32): i32 {
+    let packed = 0;
+    let at = start;
+    while (at < end) {
+        const letter = entryLower(word.charCodeAt(at)) - 96;
+        if (letter < 1 || letter > 26) return -1;
+        packed = packed * 32 + letter;
+        at = at + 1;
+    }
+    return packed;
+}
+
+function entryRelative(word: string, today: i32): i32 {
+    const first = entryLetters(word, 0, Math.min(word.length, 6));
+    const rest = entryLetters(word, 6, word.length);
+    if (first === 21467193 || first === 20964) return today; // today, tod
+    if (first === 20973 || first === 20914 ||
+        (first === 687259218 && rest === 503)) return entryAddDays(today, 1); // tom, tmr, tomorrow
+    let weekday = -1;
+    if (first === 20142 || (first === 660017209 && rest === 0)) { weekday = 0; } // sun, sunday
+    if (first === 13806 || (first === 452399161 && rest === 0)) { weekday = 1; } // mon, monday
+    if (first === 21157 || (first === 693292161 && rest === 25)) { weekday = 2; } // tue, tuesday
+    if (first === 23716 || (first === 777140403 && rest === 4153)) { weekday = 3; } // wed, wednesday
+    if (first === 20757 || (first === 680184420 && rest === 57)) { weekday = 4; } // thu, thursday
+    if (first === 6729 || (first === 220500025 && rest === 0)) { weekday = 5; } // fri, friday
+    if (first === 19508 || (first === 639260228 && rest === 57)) { weekday = 6; } // sat, saturday
+    if (weekday >= 0) return entryAddDays(today, (weekday - entryWeekday(today) + 6) % 7 + 1);
+    if (word.length < 3 || word.length > 5 || !(word.charCodeAt(0) === 43)) return -1;
+    const count = decimal(word, 1, word.length - 2);
+    if (count < 0) return -1;
+    const unit = entryLower(word.charCodeAt(word.length - 1));
+    if (unit === 100) return entryAddDays(today, count);
+    if (unit === 119) return entryAddDays(today, count * 7);
+    return -1;
+}
+
+function entryCalendar(word: string, today: i32, separator: i32): i32 {
+    let at = separator;
+    let year = today / 10000;
+    let monthStart = 0;
+    if (separator === 4) {
+        year = decimal(word, 0, 4);
+        monthStart = 5;
+        at = monthStart;
+        while (at < word.length && !(word.charCodeAt(at) === 45)) { at = at + 1; }
+    }
+    const width = at - monthStart;
+    const dayWidth = word.length - at - 1;
+    if (year < 0 || width < 1 || width > 2 || dayWidth < 1 || dayWidth > 2) return -1;
+    const month = decimal(word, monthStart, width);
+    const day = decimal(word, at + 1, dayWidth);
+    if (monthStart === 0 && month * 100 + day < today % 10000) { year = year + 1; }
+    if (!validDate(year, month, day)) return -1;
+    return year * 10000 + month * 100 + day;
+}
+
+// Input omits '@'. Today and the result use YYYYMMDD; -1 is invalid/unset.
+function entryDate(word: string, today: i32): i32 {
+    if (word.length < 1 || word.length > 10) return -1;
+    let at = 0;
+    while (at < word.length && !(word.charCodeAt(at) === 45)) { at = at + 1; }
+    if (at === 4 && at < word.length) return entryCalendar(word, today, at);
+    if (today < 0) return -1;
+    if (at > 0 && at <= 2 && at < word.length) return entryCalendar(word, today, at);
+    return entryRelative(word, today);
+}

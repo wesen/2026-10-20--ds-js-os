@@ -753,3 +753,25 @@ scripts/14-check-local-inference.mjs stripped all 25 local annotations from the 
 ### What I learned
 
 Initializer types are already available at declaration time, so this rule needs no extra pass or runtime representation. The change is independent of adding contextual typing for an empty typed collection later.
+
+## Step 33 — Port Agenda task-entry date and time tokens to typed source
+
+### What I did
+
+I added entry.typed with the original task-entry time forms, date shortcuts, weekday names, positive day and week offsets, and explicit or month/day dates. The helpers share decimal scanning and date validation with reminder.typed. They use inferred locals and accept the current civil date as an input supplied by the future task-entry handler. Tests load the original JavaScript parser as the oracle and run both emitted targets on the same inputs.
+
+### What worked
+
+Both backends agreed on 3,924 token and civil-date combinations. The RV32 runner executed the emitted machine instructions in rv32emu. The host app and native suites passed with all 34 world integration cases, and the existing full Wasm reminder workflow passed.
+
+### What didn't work
+
+The initial date implementation ended an if block with a bare return. The current grammar accepts conditional returns and a final function return, so I separated the numeric calendar parse into a normal helper. The combined native code is 23,308 bytes. The existing RV32 reactor reserves 16,384 bytes, including a four-byte entry jump. The new helpers are independently validated and remain outside the shipped reminder view.
+
+### What I learned
+
+The native prototype fits the original 12,532-byte reminder image. The task-entry module already exceeds that prototype's fixed region, so parity work needs a deliberate packaging decision before the runtime calls these helpers on RV32. The 16 KiB region is a reactor-template choice.
+
+### Code review instructions
+
+Read worlds/agenda/entry.typed beside agDateWord and agTimeWord in the original Agenda. Run scripts/16-check-entry-tokens.mjs with the ESP cross compiler and repository rv32emu. The tests include an unset clock, year rollover, leap and non-leap centuries, weekday aliases, relative offsets, malformed tokens, and time boundaries. They cover tokens; the remaining task-entry workflow must also normalize an entire input line, render diagnostics, and integrate file edits.
