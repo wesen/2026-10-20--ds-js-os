@@ -525,3 +525,9 @@ The exact memory tradeoff includes one shared 44,544-byte buffer and temporary c
 ### Code review instructions
 
 Inspect `eval_prelude`, `build_prelude_cache`, and `vm_reset` in nucleus/vm.c. Build with PICOCALC_RV32_AGENDA=ON, run scripts/10-measure-agenda-boot.py with --world-profile, and compare the 23-world receipts. scripts/11-plot-agenda-boot.py renders the before/after measurements. Issue `worlds`, `restart calc`, then `worlds` over the P4 console to check the restart path.
+
+## Step 18 — Publish the prelude experiment and restore the prior app
+
+I pushed the technical deep dive and generated comparison figure to go-go-parc main at a1f3854. The flash writer verified the prior app image at 0x10000, and the restored headless firmware loaded both manifests and answered cji status. The source, notes and installation were left on the device. The profiler and physical measurement protocol remain available for the next assembled run.
+
+In the cache receipt all 23 worlds had already made their first boot attempt by the time the notes result returned. The two slower trials had a roughly 242 ms gap from file return to settlement and the faster trial had a 74 ms gap. The next trace should report the actual CJI relocation interval and work taken ahead of the ready Agenda settlement. The remaining physical gate still requires a powered keyboard and panel.
