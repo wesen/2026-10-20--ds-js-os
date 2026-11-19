@@ -130,8 +130,12 @@ class FunctionEmitter {
         this.code.push(OP.const, ...signed(value));
     }
 
-    emitLocal(op, index) {
+    emitIndex(op, index) {
         this.code.push(op, ...unsigned(index));
+    }
+
+    emitMemory(op, alignment, offset) {
+        this.code.push(op, alignment, ...unsigned(offset));
     }
 
     minmax() {
@@ -143,17 +147,17 @@ class FunctionEmitter {
         const a = this.nextLocal++;
         const b = this.nextLocal++;
         this.want(this.expr(), "i32");
-        this.emitLocal(OP.set, a);
+        this.emitIndex(OP.set, a);
         lex.expect(",");
         this.want(this.expr(), "i32");
-        this.emitLocal(OP.set, b);
+        this.emitIndex(OP.set, b);
         lex.expect(")");
-        this.emitLocal(OP.get, a);
-        this.emitLocal(OP.get, b);
+        this.emitIndex(OP.get, a);
+        this.emitIndex(OP.get, b);
         this.code.push(OP.lt, OP.if, I32);
-        this.emitLocal(OP.get, name === "min" ? a : b);
+        this.emitIndex(OP.get, name === "min" ? a : b);
         this.code.push(OP.else);
-        this.emitLocal(OP.get, name === "min" ? b : a);
+        this.emitIndex(OP.get, name === "min" ? b : a);
         this.code.push(OP.end);
     }
 
@@ -204,9 +208,9 @@ class FunctionEmitter {
         const binding = this.locals.get(name);
         if (!binding) lex.fail("unknown local " + name);
         if (this.records.has(binding.type) && lex.accept(".")) {
-            this.emitLocal(OP.get, binding.index);
+            this.emitIndex(OP.get, binding.index);
             const field = this.field(binding.type);
-            this.code.push(0x28, 2, ...unsigned(field.offset));
+            this.emitMemory(0x28, 2, field.offset);
             return field.type;
         }
         if ((binding.type === "string" || binding.type === "buffer") && lex.accept(".")) {
@@ -215,7 +219,7 @@ class FunctionEmitter {
                 return "i32";
             }
             if (lex.accept("length")) {
-                this.emitLocal(OP.get, binding.index);
+                this.emitIndex(OP.get, binding.index);
                 this.code.push(0x28, 2, 0);
                 return "i32";
             }
@@ -224,12 +228,12 @@ class FunctionEmitter {
             const pos = this.nextLocal++;
             this.want(this.expr(), "i32");
             lex.expect(")");
-            this.emitLocal(OP.set, pos);
+            this.emitIndex(OP.set, pos);
             this.codeUnitAddress(binding.index, pos);
             this.code.push(0x2f, 1, 4);
             return "i32";
         }
-        this.emitLocal(OP.get, binding.index);
+        this.emitIndex(OP.get, binding.index);
         return binding.type;
     }
 
@@ -275,11 +279,11 @@ class FunctionEmitter {
     }
 
     codeUnitAddress(receiver, position) {
-        this.emitLocal(OP.get, position);
-        this.emitLocal(OP.get, receiver);
+        this.emitIndex(OP.get, position);
+        this.emitIndex(OP.get, receiver);
         this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
-        this.emitLocal(OP.get, receiver);
-        this.emitLocal(OP.get, position);
+        this.emitIndex(OP.get, receiver);
+        this.emitIndex(OP.get, position);
         this.emitConst(1);
         this.code.push(0x74, OP.add);
     }
@@ -294,7 +298,7 @@ class FunctionEmitter {
         lex.expect("(");
         const position = this.nextLocal++;
         this.want(this.expr(), "i32");
-        this.emitLocal(OP.set, position);
+        this.emitIndex(OP.set, position);
         lex.expect(",");
         this.codeUnitAddress(receiver, position);
         this.want(this.expr(), "i32");
@@ -307,7 +311,7 @@ class FunctionEmitter {
         lex.expect("(");
         const position = this.nextLocal++, address = this.nextLocal++;
         this.want(this.expr(), "i32");
-        this.emitLocal(OP.set, position);
+        this.emitIndex(OP.set, position);
         lex.expect(",");
         if (lex.token.kind !== "str") lex.fail("expected a double-quoted string literal");
         const value = JSON.parse(lex.token.value);
@@ -318,16 +322,16 @@ class FunctionEmitter {
         // Check the whole write before mutating the buffer. A negative start
         // is outside the unsigned bound even if the literal would end inside.
         this.codeUnitAddress(receiver, position);
-        this.emitLocal(OP.set, address);
-        this.emitLocal(OP.get, position);
+        this.emitIndex(OP.set, address);
+        this.emitIndex(OP.get, position);
         this.emitConst(value.length - 1);
         this.code.push(OP.add);
-        this.emitLocal(OP.get, receiver);
+        this.emitIndex(OP.get, receiver);
         this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
         for (let i = 0; i < value.length; i++) {
-            this.emitLocal(OP.get, address);
+            this.emitIndex(OP.get, address);
             this.emitConst(value.charCodeAt(i));
-            this.code.push(0x3b, 1, ...unsigned(4 + 2 * i));
+            this.emitMemory(0x3b, 1, 4 + 2 * i);
         }
         return value.length;
     }
@@ -341,7 +345,7 @@ class FunctionEmitter {
             this.want(this.expr(), callee.params[i]);
         }
         lex.expect(")");
-        this.code.push(0x10, ...unsigned(callee.index));
+        this.emitIndex(0x10, callee.index);
         return callee.result;
     }
 
@@ -392,7 +396,7 @@ class FunctionEmitter {
             lex.expect("=");
             const type = this.expr();
             if (annotation !== null) this.want(type, annotation);
-            this.emitLocal(OP.set, this.local(id, type, mutable));
+            this.emitIndex(OP.set, this.local(id, type, mutable));
         } else {
             const id = lex.ident();
             if (lex.accept("(")) {
@@ -408,16 +412,16 @@ class FunctionEmitter {
                     this.bufferWrite(local.index);
                 } else {
                     const field = this.field(local.type);
-                    this.emitLocal(OP.get, local.index);
+                    this.emitIndex(OP.get, local.index);
                     lex.expect("=");
                     this.want(this.expr(), field.type);
-                    this.code.push(0x36, 2, ...unsigned(field.offset));
+                    this.emitMemory(0x36, 2, field.offset);
                 }
             } else {
                 if (!local.mutable) lex.fail("expected mutable local " + id);
                 lex.expect("=");
                 this.want(this.expr(), local.type);
-                this.emitLocal(OP.set, local.index);
+                this.emitIndex(OP.set, local.index);
             }
         }
         lex.expect(";");
@@ -447,13 +451,28 @@ class FunctionEmitter {
         lex.expect("}");
         this.code.push(OP.end);
         const nlocals = this.nextLocal - params.length;
-        const locals = nlocals ? [1, ...unsigned(nlocals), I32] : [0];
-        const body = [...locals, ...this.code];
-        return { name, params, result, code: this.code, nlocals, body: [...unsigned(body.length), ...body] };
+        return this.finish({ name, params, result, code: this.code, nlocals });
+    }
+
+    finish(fn) {
+        const locals = fn.nlocals ? [1, ...unsigned(fn.nlocals), I32] : [0];
+        const body = [...locals, ...fn.code];
+        fn.body = [...unsigned(body.length), ...body];
+        return fn;
     }
 }
 
-function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024) {
+// The RV32 backend consumes one number per opcode and immediate. Only the
+// Wasm writer needs variable-length integers and framed function bodies.
+class NumericFunctionEmitter extends FunctionEmitter {
+    emitConst(value) { this.code.push(OP.const, value); }
+    emitIndex(op, index) { this.code.push(op, index); }
+    emitMemory(op, alignment, offset) { this.code.push(op, alignment, offset); }
+    finish(fn) { return fn; }
+}
+
+function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false) {
+    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
     const lex = new Lexer(source);
     const declared = new Map(imported.map(fn => [fn.name, fn]));
@@ -475,7 +494,7 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
     }
     const functions = [];
     while (lex.token.kind !== "eof") {
-        const fn = new FunctionEmitter(lex, declared, records).function();
+        const fn = new Emitter(lex, declared, records).function();
         if (fn.name === "memory") lex.fail("reserved memory export");
         if (declared.has(fn.name)) lex.fail("duplicate function " + fn.name);
         declared.set(fn.name, {index: functionBase + functions.length, params: fn.params, result: fn.result});

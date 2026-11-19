@@ -1,0 +1,44 @@
+{
+  "control": "e202e94",
+  "candidate": "worktree",
+  "worlds": [
+    {
+      "world": "files",
+      "target": "compileFiles",
+      "bytes": 49089,
+      "sha256": "c7f8892cd99ed86d9282582cc8c6d797a58cbe39623e8a9512a3bc0fbe90b07a"
+    },
+    {
+      "world": "files",
+      "target": "compileFilesRv32",
+      "bytes": 24424,
+      "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8"
+    },
+    {
+      "world": "agenda",
+      "target": "compileAgenda",
+      "bytes": 67429,
+      "sha256": "1d7f6ecbaaa629e40fe69b67fab9ed62dd596c667f0ab364641ee5cc311ef46a"
+    },
+    {
+      "world": "agenda",
+      "target": "compileAgendaRv32",
+      "bytes": 66364,
+      "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454"
+    },
+    {
+      "world": "editor",
+      "target": "compileTypedWorld",
+      "bytes": 88255,
+      "sha256": "274946940de536b018952c29fd6b9d786d42a13e1961c83ff54a668116745d82"
+    },
+    {
+      "world": "editor",
+      "target": "compileTypedWorldRv32",
+      "bytes": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    }
+  ],
+  "wideNativeBytes": 6200,
+  "rejections": 3
+}

@@ -33,21 +33,7 @@ class FunctionCode {
         this.exit = {};
     }
 
-    byte() { return this.program.code[this.at++]; }
-
-    leb(signed = false) {
-        let value = 0;
-        for (let shift = 0; shift < 35; shift += 7) {
-            const octet = this.byte();
-            if (octet === undefined) break;
-            value |= (octet & 127) << shift;
-            if (octet < 128) {
-                if (signed && shift < 28 && (octet & 64)) value |= -1 << (shift + 7);
-                return signed ? value : value >>> 0;
-            }
-        }
-        throw new SyntaxError("invalid structured integer");
-    }
+    cell() { return this.program.code[this.at++]; }
 
     emit(word) { this.words.push(word >>> 0); }
     load(reg, offset, base = SP, kind = 2) {
@@ -143,7 +129,7 @@ class FunctionCode {
     }
 
     begin(op) {
-        const type = this.byte();
+        const type = this.cell();
         if (type !== 0x40 && type !== 0x7f) throw new SyntaxError("unsupported RV32 control result");
         const condition = op === 0x04 ? this.pop(T5) : ZERO;
         const block = {op, depth: this.depth, value: type === 0x7f, start: {}, alternate: {}, end: {}};
@@ -193,25 +179,25 @@ class FunctionCode {
         }
         case 0x0b: return this.end();
         case 0x0c: case 0x0d: {
-            const block = this.control.at(-1 - this.leb());
+            const block = this.control.at(-1 - this.cell());
             const target = block.op === 0x03 ? block.start : block.end;
             if (op === 0x0d) this.branch(1, this.pop(T5), ZERO, target);
             else this.jump(target);
             break;
         }
         case 0x0f: this.move(A0, this.pop(A0)); this.jump(this.exit); break;
-        case 0x10: this.call(this.leb()); break;
+        case 0x10: this.call(this.cell()); break;
         case 0x1a: this.depth--; break;
         case 0x20: {
             const out = this.resultRegister();
-            this.load(out, 4 * this.leb());
+            this.load(out, 4 * this.cell());
             this.push(out);
             break;
         }
-        case 0x21: this.store(this.pop(T5), 4 * this.leb()); break;
+        case 0x21: this.store(this.pop(T5), 4 * this.cell()); break;
         case 0x28: case 0x2f: case 0x36: case 0x3b: {
-            this.leb(); // alignment hint
-            const offset = this.leb();
+            this.cell(); // alignment hint
+            const offset = this.cell();
             if (offset > 2047) throw new SyntaxError("RV32 field offset exceeds the instruction range");
             if (op === 0x28 || op === 0x2f) {
                 const base = this.pop(T5);
@@ -226,7 +212,7 @@ class FunctionCode {
         }
         case 0x41: {
             const out = this.resultRegister();
-            this.constant(out, this.leb(true));
+            this.constant(out, this.cell());
             this.push(out);
             break;
         }
@@ -248,7 +234,7 @@ class FunctionCode {
         this.emit(0);
         this.emit(0);
         for (let i = 0; i < count; i++) this.store(A0 + i, 4 * i);
-        while (this.at < this.program.code.length && !this.step(this.byte())) {}
+        while (this.at < this.program.code.length && !this.step(this.cell())) {}
         const frame = (4 * (this.locals + this.spillDepth + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
@@ -263,7 +249,7 @@ class FunctionCode {
 
 function compile(source, imports = [], maxSourceLength) {
     const imported = imports.map((fn, index) => ({...fn, index}));
-    const {functions, records} = typedWasm.compileFunctions(source, imports.length, imported, maxSourceLength);
+    const {functions, records} = typedWasm.compileFunctions(source, imports.length, imported, maxSourceLength, true);
     const starts = functions.map(() => ({global: true}));
     const targets = [...imported.map(fn => ({importIndex: fn.index})), ...starts];
     const callables = [...imported, ...functions];
