@@ -108,3 +108,24 @@ Set `PICOCALC_TYPED_FILES=ON` for Wasm. Build the template first with `make -C p
 Use `scripts/03-build-files-firmware.sh IDF_EXPORT BUILD_DIR SDKCONFIG wasm|rv32` from the repository root to build an image with the usual panel worlds and RV32 Agenda. The script verifies both possible boot manifests and the bundle entries. Use distinct build directories or save the first application binary before rebuilding the other profile in the same directory.
 
 Read the UART `files compile source=bundle` line for the compile duration, JS heap high-water mark, and module size. During cold boot each Files compile occurs while the kernel reads the Files entry. It adds to the time before dispatch, so a paired hardware trial should also record power-on to first interactive frame. Successful firmware builds verify the configuration and linkage. Physical qualification additionally requires the UART compile result, an on-screen listing, and a replay of the create, rename, remove and Editor save workflows.
+
+## Map Editor storage offsets to display columns
+
+Editor receives one file handle through the `open` ask. It loads UTF-8 text and normalizes CRLF and bare CR to LF. The typed layout routines operate on one document buffer with a 32-bit length followed by UTF-16 code units. Each logical line is a span inside that buffer. `editorWrapEnd` receives the absolute end of that span, so it can produce display rows without copying a line or looking past its separator.
+
+A file offset counts UTF-16 units. A display column counts Unicode code points, matching the original `Array.from` behavior in `js/apps/editor.js`. A supplementary character advances the file offset by two and the display column by one. Combining marks still count individually. The 49-column soft wrap can break after the last ASCII space in the candidate row. If the entire remaining span fits, keep it together. For cursor motion, the exclusive end of a wrapped non-final row points to the following row. The exclusive end of the final row is a valid insertion position on that row.
+
+```text
+at = logical_line_start
+repeat at least once:
+    end = editorWrapEnd(document, at, logical_line_end, 49)
+    render document[at:end]
+    when mapping a cursor column into this row:
+        use editorOffset(document, at, end, logical_line_end, column)
+    at = end
+until at == logical_line_end
+```
+
+Use `editorNext` and `editorPrevious` for code-point boundary movement and `editorColumn` for the reverse mapping. The native reactor will own file grants, document memory and screen JSON. Save must retain the exact submitted text until the write token settles, since the original app compares that snapshot with the current buffer when deciding whether the document is still dirty. Keep the `open` ask open until its read settles and check the real kernel scheduling for key events during saves.
+
+`scripts/07-check-editor-layout.mjs` compares the emitted Wasm and RV32 calls against the original JS wrap logic. It runs the same deterministic vectors in both engines, including a logical line whose offsets cross 65,535. This is a text layout check. The reactor, file workflows, search, Markdown mode and device integration require their own checks.

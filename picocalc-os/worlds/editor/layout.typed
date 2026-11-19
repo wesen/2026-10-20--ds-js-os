@@ -1,0 +1,64 @@
+// The document stores UTF-16 offsets. A PicoCalc column counts one code point.
+function editorHighSurrogate(unit: i32): bool {
+    return unit >= 55296 && unit <= 56319;
+}
+
+function editorLowSurrogate(unit: i32): bool {
+    return unit >= 56320 && unit <= 57343;
+}
+
+// Callers supply an offset on a code-point boundary in [0, line.length].
+function editorNext(line: string, at: i32): i32 {
+    if (at >= line.length) return line.length;
+    if (at + 1 < line.length && editorHighSurrogate(line.charCodeAt(at)) &&
+        editorLowSurrogate(line.charCodeAt(at + 1))) return at + 2;
+    return at + 1;
+}
+
+function editorPrevious(line: string, at: i32): i32 {
+    if (at <= 0) return 0;
+    if (at > 1 && editorLowSurrogate(line.charCodeAt(at - 1)) &&
+        editorHighSurrogate(line.charCodeAt(at - 2))) return at - 2;
+    return at - 1;
+}
+
+// Return the exclusive end of a display row. Whitespace other than U+0020
+// counts as a character but does not provide a wrap opportunity.
+function editorWrapEnd(line: string, start: i32, lineEnd: i32, width: i32): i32 {
+    if (width <= 0 || start >= lineEnd) return start;
+    let end = start;
+    let space = start;
+    let column = 0;
+    while (end < lineEnd && column < width) {
+        const point = line.charCodeAt(end);
+        end = editorNext(line, end);
+        if (point === 32) { space = end; }
+        column = column + 1;
+    }
+    if (end < lineEnd && space > start) return space;
+    return end;
+}
+
+// Both start and end are logical UTF-16 offsets on code-point boundaries.
+function editorColumn(line: string, start: i32, end: i32): i32 {
+    let at = start;
+    let column = 0;
+    while (at < end && at < line.length) {
+        at = editorNext(line, at);
+        column = column + 1;
+    }
+    return column;
+}
+
+// The exclusive limit of a non-final segment belongs to the next row.
+function editorOffset(line: string, start: i32, end: i32, lineEnd: i32, column: i32): i32 {
+    let limit = end;
+    if (end > start && end < lineEnd) { limit = editorPrevious(line, end); }
+    let at = start;
+    let remaining = column;
+    while (remaining > 0 && at < limit) {
+        at = editorNext(line, at);
+        remaining = remaining - 1;
+    }
+    return at;
+}
