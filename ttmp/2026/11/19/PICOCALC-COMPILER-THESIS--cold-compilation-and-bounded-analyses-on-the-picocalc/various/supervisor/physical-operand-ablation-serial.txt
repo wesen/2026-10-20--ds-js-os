@@ -1,0 +1,33 @@
+unframed compile source=bundle status=ok us=2728488 peak_js_bytes=1745944 module_bytes=240452
+thesis digest 0 0 unframed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+register compile source=bundle status=ok us=2896095 peak_js_bytes=2154668 module_bytes=240452
+thesis digest 0 1 register aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+stream compile source=bundle status=ok us=2405362 peak_js_bytes=1387080 module_bytes=240452
+thesis digest 0 2 stream aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+packed compile source=bundle status=ok us=2306643 peak_js_bytes=1735024 module_bytes=240452
+thesis digest 0 3 packed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+register compile source=bundle status=ok us=2879293 peak_js_bytes=2154740 module_bytes=240452
+thesis digest 1 0 register aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+packed compile source=bundle status=ok us=2304972 peak_js_bytes=1735888 module_bytes=240452
+thesis digest 1 1 packed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+unframed compile source=bundle status=ok us=2713851 peak_js_bytes=1745940 module_bytes=240452
+thesis digest 1 2 unframed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+stream compile source=bundle status=ok us=2383517 peak_js_bytes=1387000 module_bytes=240452
+thesis digest 1 3 stream aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+packed compile source=bundle status=ok us=2300927 peak_js_bytes=1735888 module_bytes=240452
+thesis digest 2 0 packed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+stream compile source=bundle status=ok us=2410587 peak_js_bytes=1387024 module_bytes=240452
+thesis digest 2 1 stream aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+register compile source=bundle status=ok us=2853311 peak_js_bytes=2154656 module_bytes=240452
+thesis digest 2 2 register aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+unframed compile source=bundle status=ok us=2721163 peak_js_bytes=1747380 module_bytes=240452
+thesis digest 2 3 unframed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+stream compile source=bundle status=ok us=2400110 peak_js_bytes=1387000 module_bytes=240452
+thesis digest 3 0 stream aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+unframed compile source=bundle status=ok us=2747367 peak_js_bytes=1747356 module_bytes=240452
+thesis digest 3 1 unframed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+packed compile source=bundle status=ok us=2289799 peak_js_bytes=1735904 module_bytes=240452
+thesis digest 3 2 packed aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+register compile source=bundle status=ok us=2874581 peak_js_bytes=2153296 module_bytes=240452
+thesis digest 3 3 register aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+thesis trials complete

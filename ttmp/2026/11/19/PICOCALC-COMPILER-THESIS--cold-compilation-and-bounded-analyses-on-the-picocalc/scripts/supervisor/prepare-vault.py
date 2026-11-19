@@ -17,10 +17,16 @@ SERIES = {
     "methods": "Measuring Compiler Costs",
 }
 ASSET = "_assets/picocalc-compiler-thesis-experiments.png"
+FOLLOWUPS = {
+    "physical-editor": "Numeric Operands on the Physical ESP32-P4",
+    "negative-results": "Negative Results and Deferred Optimizations",
+}
+FOLLOWUP_ASSETS = ["_assets/picocalc-p4-compiler-qualification.png",
+                   "_assets/picocalc-p4-compiler-editor-preview.png"]
 
 
 def filename(key):
-    return f"PROJECT REPORT - PicoCalc Compiler - {SERIES[key]}.md"
+    return f"PROJECT REPORT - PicoCalc Compiler - {(SERIES | FOLLOWUPS)[key]}.md"
 
 
 def render(key):
@@ -33,7 +39,7 @@ def render(key):
         if parts.scheme or not parts.path or parts.path.startswith("_assets/"):
             return match.group()
         path = (source.parent / unquote(parts.path)).resolve(strict=True)
-        if path.parent == REPORTS and path.stem in SERIES:
+        if path.parent == REPORTS and path.stem in (SERIES | FOLLOWUPS):
             anchor = "#" + parts.fragment if parts.fragment else ""
             return f"[{label}]({quote(filename(path.stem))}{anchor})"
         relative = path.relative_to(TICKET)
@@ -53,13 +59,16 @@ def render(key):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path, help="empty directory for staging before publication")
-    out = parser.parse_args().output
+    parser.add_argument("--followups", action="store_true", help="prepare the physical and negative-results papers")
+    args = parser.parse_args()
+    out = args.output
     out.mkdir(parents=True, exist_ok=True)
     if any(out.iterdir()):
         parser.error("the output directory must be empty")
-    pages = {filename(k): render(k) for k in SERIES}
+    pages = {filename(k): render(k) for k in (FOLLOWUPS if args.followups else SERIES)}
     (out / ASSET).parent.mkdir()
-    shutil.copyfile(REPORTS / ASSET, out / ASSET)
+    for asset in (FOLLOWUP_ASSETS if args.followups else [ASSET]):
+        shutil.copyfile(REPORTS / asset, out / asset)
     for name, body in pages.items():
         (out / name).write_text(body)
 

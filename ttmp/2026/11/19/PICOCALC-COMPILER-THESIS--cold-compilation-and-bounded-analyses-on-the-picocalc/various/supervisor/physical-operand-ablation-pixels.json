@@ -1,0 +1,17 @@
+{
+  "changed_pixel_bounds": {
+    "shot-1.png": [
+      548,
+      10,
+      626,
+      30
+    ],
+    "shot-2.png": [
+      548,
+      10,
+      626,
+      30
+    ]
+  },
+  "all_pixels_outside_clock_match": true
+}

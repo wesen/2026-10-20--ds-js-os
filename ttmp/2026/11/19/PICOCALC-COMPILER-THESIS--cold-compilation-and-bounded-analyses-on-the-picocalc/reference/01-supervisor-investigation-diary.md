@@ -403,3 +403,109 @@ Start with `various/supervisor/physical-editor.json`. Each trial records its pos
 ### Technical details
 
 The median tracked peaks were 2,454,968, 2,154,834, 1,735,524 and 1,387,004 bytes. Relative to the integrated register backend, buffered native compilation saves 419,310 peak bytes. Streaming saves another 348,520 bytes relative to buffering.
+
+## Step 8: Isolate the representation decision in a second physical experiment
+
+The first result favored packed buffering, but it combined fewer framing allocations with direct operand passing. I kept the register backend and the per-function buffering strategy constant, then introduced a control that still encodes and decodes each integer. That change made it possible to answer the specific merge question on hardware.
+
+### Prompt Context
+
+**User prompt:** See Step 6.
+**Assistant interpretation:** Establish the independent value of passing numeric operands before recommending a production change.
+**Inferred user intent:** Choose the simplest change with a demonstrated improvement on the handheld.
+**Commit (code):** eb74bec records the controlled compiler variants and the first physical qualification.
+
+### What I did
+
+- Built a second temporary diagnostic firmware with four register-backend configurations. The additional unframed control omits Wasm module framing while retaining the old integer representation. Repeated four balanced blocks, using the same physical Editor source and reactor.
+- Compared 16 module digests with each other and with the host oracle. Retained the raw serial timing lines in addition to the structured receipts.
+- Replayed the same 64 KiB fixture, verified its CRCs, exact frame equivalence outside the clock, and scratch cleanup. Prepared a follow-up report with the actual board data for the ticket and the go-go-parc vault.
+
+### Why
+
+A difference between stock and packed compilers measures the entire change. The unframed control has the same buffered function lifetime and native-only interface. The remaining difference covers operand construction and consumption, including avoiding the LEB encoding and decoding helpers.
+
+### What worked
+
+Unframed encoded operands took 2.725 s and 1,746,650 peak bytes. Unframed direct numeric operands took 2.303 s and 1,735,888 peak bytes. The four paired savings were 421,845, 408,879, 420,236 and 457,568 microseconds. All sixteen complete ELFs in this experiment had the same SHA-256.
+
+### What didn't work
+
+The first treatment matrix lacked an unframed byte-operand control; assigning its whole 544 ms saving to the representation would have overstated the measured effect. The second matrix supplies that missing comparison. Whole-frame hashes also change with the wall clock, so the content check explicitly verifies every pixel outside the small clock rectangle.
+
+### What I learned
+
+Direct numeric operand passing explains a large compile-time improvement on this board and a smaller incremental allocation saving. The 10,762-byte median peak difference between the two unframed lanes is much smaller than the 408,012 bytes saved together by omitting framing and unused Wasm writer code. Streaming reduces peak allocation further while increasing current Editor latency. Direct bounds proofs remain an independent generated-program optimization.
+
+### What was tricky to build
+
+The experimental native-only bundles omit the shared Wasm linker entry. The recommendation is to integrate native emission into the shared compiler behind an explicit output selection. The generator's frozen textual substitutions are appropriate experimental fixtures and do not constitute that production design.
+
+### What warrants a second pair of eyes
+
+The natural causal comparison is between unframed and packed in the second image. The first image establishes the baseline-to-optimized end-to-end saving. Mixing raw timings from different images or taking the 64 KiB Editor replay as a measurement of the bounds optimizer would answer different questions.
+
+### What should be done in the future
+
+Land a production buffered numeric consumer, run host and P4 qualification on both supported compiler targets, and evaluate text access proofs separately on the hot Files and Agenda helper paths.
+
+### Code review instructions
+
+Read the median and raw per-call rows in `various/supervisor/physical-operand-ablation.json` beside `physical-operand-ablation-serial.txt`. Compare each receipt to the compiled module digests in `p4-bundle-oracle.mjs`. Read `various/reports/physical-editor.md` for the implementation recommendation and reproduction commands.
+
+### Technical details
+
+Both images use the same source and production-linked reactor. The four treatment medians in seconds for the second image are 2.877 for the regular frontend, 2.725 for unframed encoded operands, 2.303 for unframed numeric operands and 2.403 for streaming. The difference between the two relevant medians is 421,876 microseconds, or 15.5%.
+
+## Step 9: Preserve the negative results and publish the decision
+
+The user asked that a decision against a merge still receive a report. I collected the negative and conditional findings in one paper, linked each to the detailed author or examiner paper, and published it beside the physical qualification. The comparison firmware was removed after both runs. The original factory image passed flash verification and its console reported the native Editor running.
+
+### Prompt Context
+
+**User prompt (verbatim):** “even if something rejected btw, it should have a report because we do want to keep these valuable scientific / engineering results”
+**Assistant interpretation:** Preserve the reasons, measured observations and reconsideration criteria for unmerged proposals.
+**Inferred user intent:** Make unsuccessful hypotheses as retrievable and reproducible as successful implementation work.
+
+### What I did
+
+- Published the null corpus result for chained bounds proofs, the scalar-retention experiment, the positive but incomplete direct-check case, the time versus heap cost of streaming, and the type information erased by the tested numeric representation.
+- Documented the measurements that required replacement and linked the rejected comparisons to the corrected controls. Included the conditional span experiment and the function-order counterexample.
+- Verified the second trial's final physical receipt, scratch cleanup, screenshot comparison and factory application restoration. All 32 on-board builds matched the expected linked hashes. Closed the ticket's final task and recorded its completed status.
+- Generated the follow-up vault edition, validated its figures and inter-article links, and fast-forwarded the clean vault checkout before adding four new paths. Pushed both reports and the two assets.
+
+### Why
+
+A zero gain for a stronger proof algorithm on one corpus is an empirical result with a scope. A lower-memory compiler that costs more time is a quantitative tradeoff. Documenting them separately helps future research start with the remaining question.
+
+### What worked
+
+The negative-results paper identifies a hypothesis, control, outcome and reopening condition for each design decision. The source record includes the original alternatives, individual examinations and machine-readable receipts. The remote vault head was verified as f4b320278693f002f924d55166cff9f2ef52aa68.
+
+### What didn't work
+
+The vault had advanced to 108cd65 since the earlier series. A clean fast-forward incorporated the unrelated new report before publication. No merge conflict occurred.
+
+### What I learned
+
+The current evidence supports a production native numeric operand path, a retained streaming experiment, and separate measurement of the direct bounds pass. Their scientific status and production status can be recorded independently.
+
+### What was tricky to build
+
+The earlier six-article vault edition has a stable historical navigation structure. The publisher now renders the two new follow-ups separately and resolves their references to the prior six without rewriting those articles.
+
+### What warrants a second pair of eyes
+
+Check that the null count refers to *additional chained eliminations* and that positive helper execution counts remain visible. The physical timings did not include the bounds analysis.
+
+### What should be done in the future
+
+Apply the same reporting convention when a new experiment fails or a design is deferred. Keep its control and raw evidence, describe what the test can establish and specify an observation that would change the decision.
+
+### Code review instructions
+
+Start with `various/reports/negative-results.md` and `various/reports/physical-editor.md`. Regenerate the vault follow-ups with `scripts/supervisor/prepare-vault.py --followups <empty-directory>` and compare against go-go-parc commit f4b3202.
+
+### Technical details
+
+Raw filtered serial receipts, P4 medians and per-block samples, host oracle hashes, pixel-difference bounds and restoration checks are under `various/supervisor/`. Hardware inputs and outputs used the same 240,452-byte reactor format in both device series.

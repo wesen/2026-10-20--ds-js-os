@@ -1,7 +1,7 @@
 ---
 Title: Cold compilation and bounded analyses on the PicoCalc
 Ticket: PICOCALC-COMPILER-THESIS
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: Three compiler experiments, two independent examinations, cold Linux QuickJS measurements and a physical P4 follow-up.
-LastUpdated: 2026-11-19T15:40:44.454676403-05:00
+LastUpdated: 2026-11-19T17:12:02.354011333-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -36,4 +36,6 @@ Start with [the supervisor's synthesis](various/reports/synthesis.md). Each inve
 
 The [lab scripts](scripts/) regenerate the [research receipts](various/). The [task list](tasks.md) tracks physical qualification and the [changelog](changelog.md) records delivery.
 
-The vault edition is in `Projects/2026/11/19/` in go-go-parc at commit `f2a26ab`. Its entry article is *Cold Compilation on a Handheld*. The independent reviews are complete. Task c9vc tracks the target-side comparison.
+The vault edition is in `Projects/2026/11/19/` in go-go-parc at commit `f2a26ab`. Its entry article is *Cold Compilation on a Handheld*. The independent reviews are complete. The [physical P4 follow-up](various/reports/physical-editor.md) completes task c9vc and records the decision about the native frontend.
+
+The [negative results and deferred decisions report](various/reports/negative-results.md) records failed hypotheses, workload-specific tradeoffs, the available counterexamples and the conditions for reopening each investigation.
