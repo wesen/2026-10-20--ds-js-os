@@ -102,6 +102,7 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.dirty = false;
     state.discardArmed = false;
     state.notice = 0;
+    editorRestorePosition(state);
     return editorShow(output, hints, state);
 }
 
@@ -126,7 +127,9 @@ function editorContinueRead(state: WorldState, doc: buffer, output: buffer, hint
     return editorOpened(state, size, output, hints);
 }
 
-function editorReadSuccess(state: WorldState, doc: buffer, output: buffer, hints: buffer): i32 {
+function editorReadSuccess(state: WorldState, output: buffer, hints: buffer): i32 {
+    editorRemember(state, output);
+    const doc = typedSdkBuffer(0);
     const size = typedSdkEventText(2, output, 0, doc);
     if (size < 0) return editorOpenFailed(state, output, -1, output);
     state.sourceLength = size;
@@ -141,16 +144,21 @@ function editorResumeRead(state: WorldState, doc: buffer, output: buffer, hints:
     return editorContinueRead(state, doc, output, hints);
 }
 
+function editorMissingFile(state: WorldState, output: buffer, hints: buffer): i32 {
+    editorRemember(state, output);
+    return editorOpened(state, 0, output, hints);
+}
+
 function editorReadDone(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
     state.readToken = 0;
     const doc = typedSdkBuffer(0);
     if (state.reading) return editorResumeRead(state, doc, output, hints);
-    if (event.ok) return editorReadSuccess(state, doc, output, hints);
+    if (event.ok) return editorReadSuccess(state, output, hints);
     const error = typedSdkBuffer(3);
     const size = typedSdkEventText(2, output, 0, error);
     if (size >= 7 && error.charCodeAt(0) === 110 && error.charCodeAt(1) === 111 &&
         error.charCodeAt(2) === 32 && error.charCodeAt(3) === 102 && error.charCodeAt(4) === 105 &&
-        error.charCodeAt(5) === 108 && error.charCodeAt(6) === 101) return editorOpened(state, 0, output, hints);
+        error.charCodeAt(5) === 108 && error.charCodeAt(6) === 101) return editorMissingFile(state, output, hints);
     return editorOpenFailed(state, error, size, output);
 }
 

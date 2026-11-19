@@ -25,6 +25,9 @@
         ["typedSdkRestore", "i32,buffer", "i32"],
         ["typedSdkMatches", "i32,buffer,i32", "i32"],
         ["typedSdkError", "buffer", "i32"],
+        ["typedSdkStoreLoad", "buffer", "i32"],
+        ["typedSdkStoreSave", "buffer,i32", "i32"],
+        ["typedSdkTimestamp", "buffer,i32", "i32"],
     ].map(([name, params, result]) => ({name, params: params ? params.split(",") : [], result}));
 
     function validate(program) {

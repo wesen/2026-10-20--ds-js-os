@@ -147,6 +147,7 @@ function editorDiscard(state: WorldState, output: buffer): i32 {
     state.dirty = false;
     state.discardArmed = false;
     state.notice = 8;
+    editorRemember(state, output);
     return editorGoFiles(output);
 }
 
@@ -162,6 +163,7 @@ function editorEscape(state: WorldState, output: buffer): i32 {
         state.notice = 7;
     }
     if (state.dirty) return 0;
+    editorRemember(state, output);
     return editorGoFiles(output);
 }
 
@@ -206,6 +208,7 @@ function editorWriteDone(event: WorldEvent, state: WorldState, output: buffer, h
         if (!state.dirty) { state.discardArmed = false; }
         state.savedBytes = Math.max(0, typedSdkEventInt(scratch, scratch.writeLiteral(0, "bytes")));
         state.notice = 2;
+        editorRemember(state, output);
         if (state.leaveAfterSave && !state.dirty) { editorGoFiles(output); }
     }
     state.leaveAfterSave = false;

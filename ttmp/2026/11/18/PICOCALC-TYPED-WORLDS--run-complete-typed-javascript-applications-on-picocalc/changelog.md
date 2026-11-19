@@ -27,3 +27,7 @@ Port keyboard editing and file writes to typed Editor and verify exact bytes on 
 ## 2026-11-19
 
 Preserve exact typed Editor snapshots across saves and qualify confirmed discard and write-failure recovery.
+
+## 2026-11-19
+
+Persist and restore typed Editor positions in the original record format, with independent restart and eviction checks.

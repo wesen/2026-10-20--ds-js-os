@@ -365,3 +365,61 @@ Start with `editorSave`, `editorWriteDone`, and `editorDiscard` in `worlds/edito
 ### Technical details
 
 The typed state keeps one index identifying the last successful snapshot. The second slot contains the text of the next pending write. Each generic slot holds up to 65,536 UTF-8 bytes and a terminating NUL. The filesystem SDK receives the snapshot using the current file capability. The same shared C source is linked into both backends and contains no Editor-specific ownership state.
+
+## Step 7 — Load and persist per-file cursor positions in typed Editor
+
+Typed Editor now reads the existing `pos` record and restores the logical line, code-point column, and viewport top when a file opens. It stores the current position on successful saves, departure, and replacement. The simulator verified a saved position across a fresh process with the same disk-backed store.
+
+The app keeps a position for up to 20 files. It ranks the previous positions by their stored timestamps and retains up to nineteen alongside the position it just touched. The kernel continues to own the world's store namespace and persistence.
+
+### Prompt Context
+
+See Step 1 for the full typed Editor migration goal.
+
+**Commit (preceding checkpoint)** `0b6ad0b` — “Preserve exact typed Editor save and discard snapshots.”
+
+### What I did
+
+- Added `worlds/editor/positions.typed` for reading and writing the original `{"pos":{"path":[line,column,top,epoch_millis]}}` schema. It parses the app's stored tuples, checks the filename, chooses which entries to keep, and applies the position to the current document.
+- Added generic store load and save bindings and a timestamp formatter to the common runtime. The timestamp uses the same boot epoch as the existing JS realm when wall time is unavailable.
+- Connected position updates to opening another file, a successful write, clean Escape, and confirmed discard. Restoration runs after new-file state initialization and before the first viewport is published.
+- Extended `02-check-editor-world.mjs --positions` with a seeded record containing 20 files and a second simulator invocation using the same on-disk store. The RV32 driver runs the corresponding seeded restore, updates, and eviction using the shared store ABI.
+
+### Why
+
+Persisting raw cursor offsets would lose the meaning of positions after file edits and would change the user's existing records. The original logical coordinates let the typed Editor clamp against the reopened text. The app can compare decimal timestamp spans directly without adding a 64-bit value type to the compiler.
+
+### What worked
+
+- The matched Wasm run restored the original position after a supplementary character, advanced one code-point column, wrote the updated record, and recovered that change in a fresh process. Its four framebuffer captures matched the original. Both runs retained 20 entries and evicted the oldest.
+- The linked RV32 driver matched the original frame trees and verified both the updated coordinate and the eviction in the stored record.
+- The editing, write, and discard comparison still passed at the stock 50 ms simulator turn budget. The 64 KiB open fixture still matched with the experimental 200 ms budget. The ten original Editor tests passed separately.
+- The linked artifacts were 64,339 bytes for Wasm and 138,220 bytes for the shared-runtime RV32 ELF.
+
+### What didn't work
+
+The first combined typed source run reported `SyntaxError: 362:11: expected identifier`. The local name `record` collided with the typed language's record keyword. Renaming it to `stored` resolved the parse failure.
+
+### What I learned
+
+The record's column counts code points, while the document's cursor is a UTF-16 offset. Restoring a stored column by advancing code points is necessary for supplementary characters. The snapshot routines and the position routines temporarily change a buffer's length header, so replacement must reacquire the writable document view before decoding the new file.
+
+### What was tricky to build
+
+Opening a replacement file overwrites document storage. The app remembers the old position while its coordinates can still be calculated, then restores the new file's position after reading and normalizing it. The shared store scratch slot keeps the existing JSON available while new JSON is assembled in a separate buffer.
+
+### What warrants a second pair of eyes
+
+The on-disk parser targets the compact, single-root `pos` record produced by the original Editor. Timestamp ties retain the previous order among untouched entries, with the new touch first. A backward clock jump can therefore differ from a full wall-clock sort. Long documents with a cursor near the end still need timing checks.
+
+### What should be done in the future
+
+Port find, find-next, and highlighting, then Markdown editing and preview. Run the full workflow tests on both compiled engines and qualify the physical device build.
+
+### Code review instructions
+
+Read the schema handling in `worlds/editor/positions.typed` next to the original `edRemember` and `edRestore`. Review lifecycle calls from `editorOpened`, `editorReadSuccess`, and the save and departure handlers. Rebuild `typed-world-reactor` and run `02-check-editor-world.mjs --positions` with P4 GCC and the CJI emulator.
+
+### Technical details
+
+The shared bridge supplies a bounded 4,096-unit store scratch buffer. Ranking uses compact UTF-16 offsets into that short record and stores no extra document copy. The RV32 code template now reserves 128 KiB. The position persistence test uses the actual host store directory, while the RV32 fixture intercepts the same native store opcodes.

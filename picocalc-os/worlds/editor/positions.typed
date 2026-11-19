@@ -1,0 +1,185 @@
+// The original Editor stores {"pos":{"path":[line,column,top,epoch_millis]}}.
+// The first three coordinates are zero based, and column counts code points.
+function editorPositionDict(s: string): bool {
+    if (s.length < 10) return false;
+    return s.charCodeAt(0) === 123 && s.charCodeAt(1) === 34 && s.charCodeAt(2) === 112 &&
+        s.charCodeAt(3) === 111 && s.charCodeAt(4) === 115 && s.charCodeAt(5) === 34 &&
+        s.charCodeAt(6) === 58 && s.charCodeAt(7) === 123;
+}
+
+function editorPositionKeyEnd(s: string, start: i32): i32 {
+    if (start >= s.length || !(s.charCodeAt(start) === 34)) return -1;
+    let i = start + 1;
+    while (i < s.length && !(s.charCodeAt(i) === 34)) {
+        if (s.charCodeAt(i) === 92) { i = i + 1; }
+        i = i + 1;
+    }
+    if (i + 2 >= s.length) return -1;
+    if (!(s.charCodeAt(i + 1) === 58 && s.charCodeAt(i + 2) === 91)) return -1;
+    return i + 1;
+}
+
+function editorPositionNumberStop(s: string, start: i32): i32 {
+    let i = start;
+    while (i < s.length && s.charCodeAt(i) >= 48 && s.charCodeAt(i) <= 57) { i = i + 1; }
+    return i;
+}
+
+function editorPositionNumber(s: string, start: i32, end: i32): i32 {
+    let value = 0;
+    let i = start;
+    while (i < end && value <= 65536) {
+        value = value * 10 + s.charCodeAt(i) - 48;
+        i = i + 1;
+    }
+    return Math.min(65536, value);
+}
+
+function editorPositionTuple(s: string, start: i32, state: WorldState): bool {
+    const rowEnd = editorPositionNumberStop(s, start);
+    if (rowEnd === start || rowEnd >= s.length || !(s.charCodeAt(rowEnd) === 44)) return false;
+    const colEnd = editorPositionNumberStop(s, rowEnd + 1);
+    if (colEnd === rowEnd + 1 || colEnd >= s.length || !(s.charCodeAt(colEnd) === 44)) return false;
+    const topEnd = editorPositionNumberStop(s, colEnd + 1);
+    if (topEnd === colEnd + 1 || topEnd >= s.length || !(s.charCodeAt(topEnd) === 44)) return false;
+    const timeEnd = editorPositionNumberStop(s, topEnd + 1);
+    if (timeEnd === topEnd + 1 || timeEnd + 1 >= s.length || !(s.charCodeAt(timeEnd) === 93)) return false;
+    const next = s.charCodeAt(timeEnd + 1);
+    if (!(next === 44 || next === 125)) return false;
+    state.positionLine = editorPositionNumber(s, start, rowEnd);
+    state.positionColumn = editorPositionNumber(s, rowEnd + 1, colEnd);
+    state.positionTop = editorPositionNumber(s, colEnd + 1, topEnd);
+    state.positionTime = topEnd + 1;
+    state.positionEnd = timeEnd + 1;
+    return true;
+}
+
+function editorPositionKeyEqual(s: string, first: i32, end: i32, key: buffer, size: i32): bool {
+    if (!(end - first === size)) return false;
+    let i = 0;
+    while (i < size && s.charCodeAt(first + i) === key.charCodeAt(i)) { i = i + 1; }
+    return i === size;
+}
+
+function editorPositionKey(state: WorldState, key: buffer): i32 {
+    const name = typedSdkView(typedSdkBuffer(1), state.nameLength);
+    return editorQuote(key, 0, name, 0, state.nameLength);
+}
+
+function editorPositionApply(state: WorldState): i32 {
+    const doc = typedSdkView(typedSdkBuffer(0), state.textLength);
+    let start = 0;
+    let end = editorLineEnd(doc, start);
+    let line = 0;
+    while (line < state.positionLine && end < doc.length) {
+        start = end + 1;
+        end = editorLineEnd(doc, start);
+        line = line + 1;
+    }
+    state.cursor = editorOffset(doc, start, end, end, state.positionColumn);
+    state.top = state.positionTop;
+    return 0;
+}
+
+function editorRestorePosition(state: WorldState): i32 {
+    if (state.nameLength <= 0) return 0;
+    const stored = typedSdkBuffer(5);
+    const length = typedSdkStoreLoad(stored);
+    if (length <= 0) return 0;
+    const json = typedSdkView(stored, length);
+    if (!editorPositionDict(json)) return 0;
+    const key = typedSdkBuffer(4);
+    const size = editorPositionKey(state, key);
+    let start = 8;
+    let end = editorPositionKeyEnd(json, start);
+    let found = false;
+    while (end >= 0 && !found && editorPositionTuple(json, end + 2, state)) {
+        found = editorPositionKeyEqual(json, start, end, key, size);
+        start = state.positionEnd + 1;
+        end = editorPositionKeyEnd(json, start);
+    }
+    if (!found) return 0;
+    return editorPositionApply(state);
+}
+
+// The timestamp is an integer in milliseconds and can exceed i32. Compare
+// its decimal span directly, so legacy records keep their eviction order.
+function editorPositionNewer(s: string, from: i32, end: i32, oldFrom: i32, oldEnd: i32): bool {
+    if (!(end - from === oldEnd - oldFrom)) return end - from > oldEnd - oldFrom;
+    let i = 0;
+    while (from + i < end && s.charCodeAt(from + i) === s.charCodeAt(oldFrom + i)) { i = i + 1; }
+    return from + i < end && s.charCodeAt(from + i) > s.charCodeAt(oldFrom + i);
+}
+
+function editorPositionRank(s: string, order: buffer, start: i32, state: WorldState, count: i32): i32 {
+    let i = 0;
+    while (i < count && !editorPositionNewer(s, state.positionTime, state.positionEnd - 1,
+        order.charCodeAt(i * 3 + 2), order.charCodeAt(i * 3 + 1) - 1)) { i = i + 1; }
+    if (i >= 19) return count;
+    const used = Math.min(count + 1, 19);
+    typedSdkMove(order, i * 3 + 3, i * 3, (used - i - 1) * 3);
+    order.setCharCodeAt(i * 3, start);
+    order.setCharCodeAt(i * 3 + 1, state.positionEnd);
+    order.setCharCodeAt(i * 3 + 2, state.positionTime);
+    return used;
+}
+
+function editorPositionCopy(out: buffer, at: i32, json: string, from: i32, end: i32): i32 {
+    let i = from;
+    let n = at;
+    while (i < end) {
+        out.setCharCodeAt(n, json.charCodeAt(i));
+        i = i + 1;
+        n = n + 1;
+    }
+    return n;
+}
+
+function editorPositionAppend(out: buffer, at: i32, json: string, key: buffer, size: i32, state: WorldState): i32 {
+    if (!editorPositionDict(json)) return at;
+    const order = typedSdkBuffer(3);
+    let count = 0;
+    let start = 8;
+    let end = editorPositionKeyEnd(json, start);
+    while (end >= 0 && editorPositionTuple(json, end + 2, state)) {
+        if (!editorPositionKeyEqual(json, start, end, key, size)) {
+            count = editorPositionRank(json, order, start, state, count);
+        }
+        start = state.positionEnd + 1;
+        end = editorPositionKeyEnd(json, start);
+    }
+    let i = 0;
+    let n = at;
+    while (i < count) {
+        out.setCharCodeAt(n, 44);
+        n = editorPositionCopy(out, n + 1, json, order.charCodeAt(i * 3), order.charCodeAt(i * 3 + 1));
+        i = i + 1;
+    }
+    return n;
+}
+
+function editorRemember(state: WorldState, out: buffer): i32 {
+    if (state.file <= 0 || state.nameLength <= 0) return 0;
+    const doc = typedSdkView(typedSdkBuffer(0), state.textLength);
+    editorLocate(doc, state);
+    const key = typedSdkBuffer(4);
+    const size = editorPositionKey(state, key);
+    const keyText = typedSdkView(key, size);
+    let at = out.writeLiteral(0, "{\"pos\":{");
+    at = editorPositionCopy(out, at, keyText, 0, size);
+    at = at + out.writeLiteral(at, ":[");
+    at = editorDigits(out, at, state.line);
+    out.setCharCodeAt(at, 44);
+    at = editorDigits(out, at + 1, editorColumn(doc, state.lineStart, state.cursor));
+    out.setCharCodeAt(at, 44);
+    at = editorDigits(out, at + 1, state.top);
+    out.setCharCodeAt(at, 44);
+    at = typedSdkTimestamp(out, at + 1);
+    if (at < 0) return 0;
+    out.setCharCodeAt(at, 93);
+    const stored = typedSdkBuffer(5);
+    const length = Math.max(0, typedSdkStoreLoad(stored));
+    const json = typedSdkView(stored, length);
+    at = editorPositionAppend(out, at + 1, json, typedSdkBuffer(4), size, state);
+    return typedSdkStoreSave(out, at + out.writeLiteral(at, "}}"));
+}

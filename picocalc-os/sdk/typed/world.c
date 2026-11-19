@@ -1,6 +1,7 @@
 // Shared runtime for typed worlds. The compiled app chooses all metadata,
 // content and event behavior. This layer translates counted UTF-16 to the SDK.
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include "nw.h"
 #include "nw_json.h"
@@ -10,6 +11,7 @@ enum { SCREEN_CAP = 16384, HINT_CAP = 120, LARGE_CAP = 65536, SMALL_CAP = 256 };
 #define COUNTED(name, capacity) struct name { uint32_t length; uint16_t units[capacity]; }
 static COUNTED(large_text, LARGE_CAP) large;
 static COUNTED(small_text, SMALL_CAP) small[4];
+static COUNTED(record_text, 4096) record_text;
 static uint32_t world_state[64];
 static const nw_event *current;
 static struct { int32_t kind, ask, token, ok; } event_info;
@@ -78,6 +80,7 @@ SDK(typedSdkBuffer) void *typedSdkBuffer(int slot)
 {
     static uint32_t empty;
     if (slot == 0) { large.length = LARGE_CAP; return &large; }
+    if (slot == 5) { record_text.length = 4096; return &record_text; }
     if (slot < 1 || (unsigned)slot > sizeof small / sizeof *small) return &empty;
     small[slot - 1].length = SMALL_CAP;
     return &small[slot - 1];
@@ -88,6 +91,7 @@ static int capacity(const void *buffer)
     if (buffer == &output) return SCREEN_CAP;
     if (buffer == &hints) return HINT_CAP;
     if (buffer == &large) return LARGE_CAP;
+    if (buffer == &record_text) return 4096;
     for (unsigned i = 0; i < sizeof small / sizeof *small; i++)
         if (buffer == &small[i]) return SMALL_CAP;
     return -1;
@@ -291,6 +295,37 @@ SDK(typedSdkError) int typedSdkError(void *buffer)
     char message[256];
     nw_error(message, sizeof message);
     return nw_utf16_decode(message, (uint16_t *)((uint32_t *)buffer + 1), cap);
+}
+
+SDK(typedSdkStoreLoad) int typedSdkStoreLoad(void *buffer)
+{
+    int cap = capacity(buffer);
+    if (cap < 0) return -1;
+    int size = nw_store_load(screen_bytes, sizeof screen_bytes);
+    if (size <= 0) return size;
+    return nw_utf16_decode(screen_bytes, (uint16_t *)((uint32_t *)buffer + 1), cap);
+}
+
+SDK(typedSdkStoreSave) int typedSdkStoreSave(const void *buffer, int length)
+{
+    if (length <= 0 || length > capacity(buffer) ||
+        utf8(units_at(buffer), length, screen_bytes, sizeof screen_bytes) < 0) return -1;
+    return nw_store_save(screen_bytes);
+}
+
+SDK(typedSdkTimestamp) int typedSdkTimestamp(void *buffer, int offset)
+{
+    int cap = capacity(buffer);
+    if (offset < 0 || offset > cap) return -1;
+    int64_t wall = nw_clock_wall();
+    // Match the JS realm's Date.now() fallback while wall time is unset.
+    if (wall < 0) wall = INT64_C(1792662060000) + nw_now() / 1000;
+    char digits[24];
+    int size = snprintf(digits, sizeof digits, "%lld", (long long)wall);
+    if (size <= 0 || size >= sizeof digits || size > cap - offset) return -1;
+    uint16_t *units = (uint16_t *)((uint32_t *)buffer + 1);
+    for (int i = 0; i < size; i++) units[offset + i] = digits[i];
+    return offset + size;
 }
 
 SDK(typedSdkMove) int typedSdkMove(void *buffer, int destination, int source, int count)

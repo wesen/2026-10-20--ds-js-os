@@ -33,4 +33,9 @@ record WorldState {
     errorLength: i32;
     notice: i32;
     leaveAfterSave: bool;
+    positionLine: i32;
+    positionColumn: i32;
+    positionTop: i32;
+    positionTime: i32;
+    positionEnd: i32;
 }

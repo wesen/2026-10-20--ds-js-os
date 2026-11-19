@@ -11,13 +11,19 @@ int (*fw_entries[16])(int, char **);
 uint32_t fw_sizes[16];
 int fw_nentries;
 static int declarations, frames, reads, replies, released, yields;
+static char saved_record[4096];
+#if defined(TEST_EDIT) || defined(TEST_POS)
+static int sends;
+#endif
 #ifdef TEST_EDIT
-static int writes, sends, testing_race;
+static int writes, testing_race;
 static char race_frame[1024];
 #endif
 
+extern int64_t __divdi3(int64_t, int64_t);
 const struct { const char *name; const void *address; } fw_resolve[] = {
     {"strlen", strlen}, {"memcpy", memcpy}, {"memset", memset}, {"memmove", memmove},
+    {"snprintf", snprintf}, {"__divdi3", __divdi3},
 };
 const int fw_nresolve = sizeof fw_resolve / sizeof *fw_resolve;
 
@@ -61,6 +67,8 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         else expect(a == 24 && !strcmp(s1, writes == 1 ? "z" : writes == 2 ? "zq" : "xzq"),
                     "the submitted write matches its snapshot");
         return 300 + writes++;
+#endif
+#if defined(TEST_EDIT) || defined(TEST_POS)
     case NW_CALL_SEND:
         expect(!strcmp(s0, "compositor") && !strcmp(s1, "open") && !strcmp(s2, "{\"app\":\"files\"}"),
                "returns to Files");
@@ -79,20 +87,34 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
     case NW_CALL_SLEEP:
         expect(a == 0 && yields < 32, "bounded open work");
         return 200 + yields++;
+    case NW_CALL_STORE_LOAD: {
+        size_t len = strlen(saved_record);
+        expect(len < out_n, "store load capacity");
+        memcpy(out, saved_record, len + 1);
+        return len;
+    }
+    case NW_CALL_STORE_SAVE:
+        expect(n0 < sizeof saved_record, "store save capacity");
+        memcpy(saved_record, s0, n0);
+        saved_record[n0] = 0;
+        return 0;
+    case NW_CALL_CLOCK_WALL: return INT64_C(1792662060000);
     default: printf("unexpected opcode %d\n", op); exit(1);
     }
 }
 
 static int no_error(char *out, size_t n) { if (n) *out = 0; return 0; }
 
-#ifdef TEST_EDIT
+#if defined(TEST_EDIT) || defined(TEST_POS)
 static void key(nw_elf_module *world, const char *name, const char *ch)
 {
     char payload[128];
     snprintf(payload, sizeof payload, "{\"key\":\"%s\",\"ch\":\"%s\",\"state\":\"down\"}", name, ch);
     expect(world->event(NW_MESSAGE, 0, 0, 0, "key", payload, strlen(payload), "compositor") == NW_DONE, "key completes");
 }
+#endif
 
+#ifdef TEST_EDIT
 static void type(nw_elf_module *world, const char *text)
 {
     for (; *text; text++) {
@@ -104,6 +126,9 @@ static void type(nw_elf_module *world, const char *text)
 
 int main(void)
 {
+#ifdef TEST_POS
+    memcpy(saved_record, initial_record, sizeof initial_record);
+#endif
     static const nw_elf_kernel kernel = {NW_ELF_ABI, kernel_call, no_error};
     nw_elf_module world = {0};
     char *args[] = {(char *)&kernel, (char *)&world};
@@ -123,6 +148,11 @@ int main(void)
         result = world.event(NW_SETTLE, 1, 0, 200 + i, "", "null", 4, "");
     }
     expect(result == NW_DONE && frames == 2 && replies == 1, "read settles and publishes");
+#ifdef TEST_POS
+    key(&world, "right", "");
+    key(&world, "esc", "");
+    expect(sends == 1 && strstr(saved_record, "\"entry.txt\":[0,3,0,"), "remember the new coordinate");
+#endif
 #ifdef TEST_EDIT
     key(&world, "right", "");
     key(&world, "right", "");
@@ -154,6 +184,11 @@ int main(void)
     expect(world.event(NW_MESSAGE, 1, 0, 0, "open", bad, strlen(bad), "files") == NW_LATER && reads == 3, "open denied file");
     expect(world.event(NW_SETTLE, 0, 0, 102, "", denied, strlen(denied), "") == NW_DONE &&
            frames == before_fresh + 1 && replies == 3 && released == 2, "refusal preserves the previous document and grant");
+#ifdef TEST_POS
+    key(&world, "esc", "");
+    expect(sends == 2 && strstr(saved_record, "\"fresh.txt\":[0,0,0,") && !strstr(saved_record, "\"prior-0\""),
+           "remember the fresh view and evict the oldest position");
+#endif
 #ifdef TEST_EDIT
     testing_race = 1;
     sends = 0;
