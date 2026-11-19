@@ -735,3 +735,7 @@ Use the powered boot probe with the compositor trace image and parse the per-wor
 ## Step 30 — Expand the finish line to typed Agenda feature parity
 
 The user asked to update the goal to feature-identical Agenda in the typed language. The ticket now uses the original JavaScript app and its tests as the behavioral reference. Its scope includes the UI, editing, file semantics, date shortcuts and Editor transfer, along with the existing reminders, backends, on-device budget measurements, physical timing, and publishing requirements. The goal status tool accepts status updates only, so the expansion is recorded in the ticket and applies to the working objective in this conversation.
+
+## Step 31 — Run the compositor message trace on the powered device
+
+The same peripheral manifest and diagnostic workload booted with 145 I²C and 62 SPI transactions and no bus errors in the captured stats. Agenda published after 2.782 s. In the 462 ms from receipt to settlement, the compositor occupied 235 ms. Draws accounted for 84 ms across four segments, status handlers for 5 ms across two, and the other handlers for 146 ms across seventeen. The new split sums to the measured compositor world total. Removing draws alone would leave most of the delay. The app partition was restored and verified, and the original firmware answered cji status. The receipt is various/p4-powered-compositor-turns.json.

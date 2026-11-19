@@ -1,0 +1,375 @@
+{
+  "configuration": "Powered RV32 Agenda with keyboard and display enabled and the existing native diagnostics",
+  "firmware_sha256": "36dff73ad99d57b043dbade9e298d47b7c13862c58a594520d862c6628e77f04",
+  "trials": [
+    {
+      "compile_us": 353493,
+      "peak_js_bytes": 433496,
+      "module_bytes": 24304,
+      "first_response_us": 2782010,
+      "world_bytes": 124588,
+      "frame_turn_us": 1501,
+      "before_cji_restore_us": 517013,
+      "before_dispatch_us": 526635,
+      "world_init_us": 1220214,
+      "world_init_done_us": 1225432,
+      "file_submitted_us": 1934502,
+      "file_returned_us": 2318843,
+      "settle_us": 2780515,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 103867
+      },
+      "cji_loader": {
+        "start_us": 2001656,
+        "end_us": 2141305
+      },
+      "worlds": {
+        "keyboard": {
+          "engine": 2,
+          "first_us": 527456,
+          "total_us": 13734,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 67583,
+          "reply_wait_segments": 38
+        },
+        "power": {
+          "engine": 2,
+          "first_us": 541517,
+          "total_us": 15627,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "display": {
+          "engine": 2,
+          "first_us": 557566,
+          "total_us": 12664,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 31748,
+          "reply_wait_segments": 46
+        },
+        "compositor": {
+          "engine": 2,
+          "first_us": 570621,
+          "total_us": 33662,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 235251,
+          "reply_wait_segments": 23
+        },
+        "agent": {
+          "engine": 2,
+          "first_us": 604731,
+          "total_us": 53521,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 2289,
+          "reply_wait_segments": 4
+        },
+        "chat": {
+          "engine": 0,
+          "first_us": 658672,
+          "total_us": 175593,
+          "attempts": 1,
+          "js_setup_us": 11086,
+          "js_prelude_us": 117169,
+          "js_source_us": 43452,
+          "js_init_us": 3684,
+          "reply_wait_us": 42195,
+          "reply_wait_segments": 3
+        },
+        "launcher": {
+          "engine": 0,
+          "first_us": 835009,
+          "total_us": 55913,
+          "attempts": 1,
+          "js_setup_us": 10131,
+          "js_prelude_us": 11602,
+          "js_source_us": 30983,
+          "js_init_us": 3033,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "files": {
+          "engine": 2,
+          "first_us": 891335,
+          "total_us": 26682,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 16830,
+          "reply_wait_segments": 1
+        },
+        "editor": {
+          "engine": 2,
+          "first_us": 918379,
+          "total_us": 34516,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "calc": {
+          "engine": 0,
+          "first_us": 953267,
+          "total_us": 266420,
+          "attempts": 1,
+          "js_setup_us": 10754,
+          "js_prelude_us": 11650,
+          "js_source_us": 239637,
+          "js_init_us": 4233,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "agenda": {
+          "engine": 2,
+          "first_us": 1220200,
+          "total_us": 6022,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "settings": {
+          "engine": 2,
+          "first_us": 1226548,
+          "total_us": 20825,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 4022,
+          "reply_wait_segments": 1
+        },
+        "logs": {
+          "engine": 0,
+          "first_us": 1247713,
+          "total_us": 32621,
+          "attempts": 1,
+          "js_setup_us": 7216,
+          "js_prelude_us": 8281,
+          "js_source_us": 14359,
+          "js_init_us": 2649,
+          "reply_wait_us": 5282,
+          "reply_wait_segments": 1
+        },
+        "loader": {
+          "engine": 0,
+          "first_us": 1280697,
+          "total_us": 39417,
+          "attempts": 1,
+          "js_setup_us": 6916,
+          "js_prelude_us": 8196,
+          "js_source_us": 21413,
+          "js_init_us": 2747,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "sysmon": {
+          "engine": 0,
+          "first_us": 1320488,
+          "total_us": 37914,
+          "attempts": 1,
+          "js_setup_us": 6716,
+          "js_prelude_us": 8127,
+          "js_source_us": 20222,
+          "js_init_us": 2706,
+          "reply_wait_us": 6388,
+          "reply_wait_segments": 1
+        },
+        "repl": {
+          "engine": 0,
+          "first_us": 1358787,
+          "total_us": 27326,
+          "attempts": 1,
+          "js_setup_us": 6709,
+          "js_prelude_us": 8100,
+          "js_source_us": 9648,
+          "js_init_us": 2756,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "sandbox": {
+          "engine": 0,
+          "first_us": 1386473,
+          "total_us": 23551,
+          "attempts": 1,
+          "js_setup_us": 6666,
+          "js_prelude_us": 8158,
+          "js_source_us": 6478,
+          "js_init_us": 2135,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "snake": {
+          "engine": 2,
+          "first_us": 1410380,
+          "total_us": 14791,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 7893,
+          "reply_wait_segments": 1
+        },
+        "faults": {
+          "engine": 0,
+          "first_us": 1425524,
+          "total_us": 30382,
+          "attempts": 1,
+          "js_setup_us": 7189,
+          "js_prelude_us": 8269,
+          "js_source_us": 12286,
+          "js_init_us": 2491,
+          "reply_wait_us": 14840,
+          "reply_wait_segments": 2
+        },
+        "flaky": {
+          "engine": 2,
+          "first_us": 1456304,
+          "total_us": 8417,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "keys": {
+          "engine": 0,
+          "first_us": 1465053,
+          "total_us": 26965,
+          "attempts": 1,
+          "js_setup_us": 6991,
+          "js_prelude_us": 8177,
+          "js_source_us": 9433,
+          "js_init_us": 2216,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "about": {
+          "engine": 0,
+          "first_us": 1492417,
+          "total_us": 25521,
+          "attempts": 1,
+          "js_setup_us": 6872,
+          "js_prelude_us": 8265,
+          "js_source_us": 7920,
+          "js_init_us": 2352,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "toplog": {
+          "engine": 2,
+          "first_us": 1518313,
+          "total_us": 8683,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "nat-echo": {
+          "engine": 2,
+          "first_us": 1527282,
+          "total_us": 25473,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "nat-bench": {
+          "engine": 2,
+          "first_us": 1552903,
+          "total_us": 303,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "nat-import": {
+          "engine": 2,
+          "first_us": 1553235,
+          "total_us": 10562,
+          "attempts": 4,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        },
+        "nat-dial": {
+          "engine": 2,
+          "first_us": 1583769,
+          "total_us": 638,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0,
+          "reply_wait_us": 0,
+          "reply_wait_segments": 0
+        }
+      },
+      "compositor": {
+        "draw": {
+          "total_us": 103690,
+          "segments": 6,
+          "reply_wait_us": 84195,
+          "reply_wait_segments": 4
+        },
+        "worlds.status": {
+          "total_us": 10867,
+          "segments": 4,
+          "reply_wait_us": 5406,
+          "reply_wait_segments": 2
+        },
+        "other": {
+          "total_us": 220396,
+          "segments": 22,
+          "reply_wait_us": 145650,
+          "reply_wait_segments": 17
+        }
+      }
+    }
+  ]
+}
