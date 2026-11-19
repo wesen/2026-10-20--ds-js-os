@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,6 +16,10 @@ static int frames, notifications, reads, offsets;
 static int64_t wall = 1793733299000LL;
 static int writes;
 static int navigation;
+static const char *expected_write = "- [ ] dentist @2026-11-03 14:30 !15m\n- [x] completed\n- book a train\n"
+                                    "- [ ] call clinic @2026-11-04 14:00 !15m\n";
+static bool mutation_test;
+static char last_screen[2048];
 
 static void expect(int ok, const char *where)
 {
@@ -36,7 +41,7 @@ const struct {
     void (*address)(void);
 } fw_resolve[] = {
 #define IMPORT(name) {#name, (void (*)(void))name}
-    IMPORT(free), IMPORT(malloc), IMPORT(memcpy), IMPORT(memset),
+    IMPORT(free), IMPORT(malloc), IMPORT(memcmp), IMPORT(memcpy), IMPORT(memmove), IMPORT(memset),
     IMPORT(snprintf), IMPORT(strcat), IMPORT(strchr), IMPORT(strcmp),
     IMPORT(strlen), IMPORT(strncmp), IMPORT(strtoll), IMPORT(strstr), IMPORT(strcpy), IMPORT(qsort),
 #undef IMPORT
@@ -58,8 +63,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         return ++reads;
     case NW_CALL_FS_WRITE:
         expect(a == 23 && !strcmp(s0, "todo.txt"), "write through notes claim");
-        expect(!strcmp(s1, "- [ ] dentist @2026-11-03 14:30 !15m\n- [x] completed\n- book a train\n"
-                           "- [ ] call clinic @2026-11-04 14:00 !15m\n"), "normalized saved entry");
+        expect(expected_write && !strcmp(s1, expected_write), "expected write bytes");
         writes++;
         return 100;
     case NW_CALL_CLOCK_WALL: return wall;
@@ -79,6 +83,10 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         strcpy(saved, s0);
         return 0;
     case NW_CALL_SCREEN:
+        if (mutation_test) {
+            snprintf(last_screen, sizeof last_screen, "%s", s0);
+            return 0;
+        }
         if (strstr(s0, "New:")) return 0;
         if (navigation) {
             const char *order[] = {"\"sel\":3", "\"sel\":3", "\"sel\":5", "\"sel\":3", "\"sel\":1", "\"sel\":1"};
@@ -119,6 +127,15 @@ static void key(nw_elf_module *world, const char *key_name, const char *ch)
     snprintf(payload, sizeof payload, "{\"key\":\"%s\",\"ch\":\"%s\",\"state\":\"down\"}", key_name, ch);
     expect(world->event(NW_MESSAGE, 0, 0, 0, "key", payload, (int)strlen(payload), "compositor") == NW_DONE,
            "key dispatch");
+}
+
+static void settle_change(nw_elf_module *world, const char *before, const char *after)
+{
+    int old_writes = writes;
+    event(world, NW_SETTLE, 1, reads, before);
+    expect(writes == old_writes + 1, "one write for the action");
+    event(world, NW_SETTLE, 1, 100, "{}");
+    event(world, NW_SETTLE, 1, reads, after);
 }
 
 int main(void)
@@ -167,6 +184,35 @@ int main(void)
     key(&first, "up", "");
     key(&first, "f4", "");
     expect(navigation == 7, "all navigation frames");
-    printf("frames=%d reminders=%d writes=%d durable_restart=pass grouped_navigation=pass\n", frames, notifications, writes);
+    mutation_test = true;
+    wall = -1;
+    const char *plain = "\"# head\\n  - a\\n- b\"";
+    const char *ticked = "\"# head\\n  - [x] a\\n- b\"";
+    const char *edited = "\"# head\\n  - [x] ac\\n- b\"";
+    event(&first, NW_TICK, 0, 0, "null");
+    event(&first, NW_SETTLE, 1, reads, plain);
+    key(&first, "space", " ");
+    expected_write = "# head\n  - [x] a\n- b";
+    settle_change(&first, plain, ticked);
+    key(&first, "f4", "");
+    key(&first, "down", "");
+    key(&first, "f3", "");
+    expect(strstr(last_screen, "\"prompt\":\"Edit: \"") && strstr(last_screen, "\"value\":\"a\""), "edit uses raw contents");
+    key(&first, "c", "c");
+    key(&first, "enter", "");
+    expected_write = "# head\n  - [x] ac\n- b";
+    settle_change(&first, ticked, edited);
+    key(&first, "up", "");
+    key(&first, "f5", "");
+    expect(writes == 3 && strstr(last_screen, "F5 again deletes: b"), "first delete key");
+    key(&first, "f5", "");
+    expected_write = "# head\n  - [x] ac";
+    settle_change(&first, edited, "\"# head\\n  - [x] ac\"");
+    key(&first, "enter", "");
+    expected_write = NULL;
+    event(&first, NW_SETTLE, 1, reads, "\"# head\\n  - [x] changed elsewhere\"");
+    expect(writes == 4 && strstr(last_screen, "todo.txt changed meanwhile; reloaded.") &&
+           strstr(last_screen, "changed elsewhere"), "conflict reloads without writing");
+    printf("frames=%d reminders=%d writes=%d durable_restart=pass grouped_navigation=pass mutations=pass\n", frames, notifications, writes);
     return 0;
 }

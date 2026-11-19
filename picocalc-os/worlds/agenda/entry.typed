@@ -79,6 +79,11 @@ function agendaDateKey(date: i32, done: bool): i32 {
     return date;
 }
 
+function agendaMark(done: bool, toggle: bool): i32 {
+    if (done === toggle) return 32;
+    return 120;
+}
+
 // Pack at most six letters into an i32, using a=1 through z=26 in base 32.
 // Positive digits make the spelling and length unambiguous. Longer names
 // split after six letters so neither chunk can overflow.

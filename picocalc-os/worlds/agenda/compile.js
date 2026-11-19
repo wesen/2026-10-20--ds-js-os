@@ -16,6 +16,7 @@ const signatures = [
     ["agendaDateKey", "i32", "i32,bool"],
     ["entryAddDays", "i32", "i32,i32"],
     ["entryWeekday", "i32", "i32"],
+    ["agendaMark", "i32", "bool,bool"],
 ];
 const entries = signatures.map(([name]) => name);
 

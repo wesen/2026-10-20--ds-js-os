@@ -3,7 +3,7 @@
 .Lprogram:
     // The linker reads the capacity and number of entry jumps from this header.
     .word 0x4147454e, 0x44415256, 0x3332534c
-    .word .Lprogram_end-.Lprogram, 5
+    .word .Lprogram_end-.Lprogram, 6
     .global parseTask
     .hidden parseTask
     .type parseTask,@function
@@ -27,5 +27,6 @@ normalizeEntry:
     entry agendaDateKey
     entry entryAddDays
     entry entryWeekday
+    entry agendaMark
     .space 49152 - (.-.Lprogram)
 .Lprogram_end:

@@ -42,3 +42,11 @@ int entryWeekday(int32_t date)
     (void)date;
     __builtin_trap();
 }
+
+__attribute__((export_name("agendaMark")))
+int agendaMark(bool done, bool toggle)
+{
+    (void)done;
+    (void)toggle;
+    __builtin_trap();
+}

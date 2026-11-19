@@ -24,6 +24,7 @@ int normalizeEntry(const void *line, int32_t local_date, void *output);
 int agendaDateKey(int32_t date, bool done);
 int entryAddDays(int32_t date, int32_t count);
 int entryWeekday(int32_t date);
+int agendaMark(bool done, bool toggle);
 
 static text_buffer line_buffer, title_buffer;
 static char input[UTF8_BYTES], title[UTF8_BYTES];
@@ -33,9 +34,12 @@ static int notes, read_token, refresh_timer;
 static char stored[STORE_CAPACITY + 1], pending_store[STORE_CAPACITY + 1];
 static char reminder_key[UTF8_BYTES + 32], quoted_key[6 * LINE_UNITS + 48];
 static char screen[16384], quoted[UTF8_BYTES + 128], reply[UTF8_BYTES + 256];
-enum { INPUT_KEYS = 120, ENTRY_UNITS = 160, FILE_LIMIT = 65536 };
-static char prompt[INPUT_KEYS + 1], new_task[ENTRY_UNITS * 3 + 1];
-static bool entering;
+enum { INPUT_KEYS = 120, FILE_LIMIT = 65536 };
+typedef enum { NO_CHANGE, ADD_TASK, EDIT_TASK, TOGGLE_TASK, DELETE_TASK } task_change;
+static char prompt[UTF8_BYTES], new_task[UTF8_BYTES], original[UTF8_BYTES];
+static task_change prompt_kind, pending_change;
+static unsigned prompt_units;
+static bool confirming;
 static int edit_read, edit_write;
 enum { UNDATED = 100000000, COMPLETED, OVERDUE = -1, VIEW_ROWS = 25, VIEW_CHARS = 80 };
 typedef struct {
@@ -47,7 +51,8 @@ static char *snapshot;
 static agenda_item *items;
 static int item_count, open_count, visible_count, selected = -1, today = -1, tomorrow = -1;
 static bool show_done;
-static char view_note[128], view_error[128];
+static char view_note[4 * VIEW_CHARS + 32], view_error[128];
+static const char prompt_help[] = "@today @tue @+3d @11-15  14:30 or 2pm  !15m before";
 
 static void publish_view(void);
 
@@ -329,6 +334,18 @@ static void clip_label(char *label)
     }
 }
 
+static const char *prompt_tail(void)
+{
+    const unsigned char *start = (const unsigned char *)prompt;
+    const unsigned char *p = start + strlen(prompt);
+    int count = 0;
+    while (p > start && count < VIEW_CHARS) {
+        p--;
+        if ((*p & 0xc0) != 0x80) count++;
+    }
+    return (const char *)p;
+}
+
 static void render_item(nw_ui *ui, const agenda_item *item)
 {
     task_record task;
@@ -392,9 +409,11 @@ static void publish_view(void)
         nw_ui_text(&ui, view_error[0] ? "" : "No tasks. F2 adds one, like: dentist @tue 14:30 !15m",
                    "\"font\":\"s\",\"color\":\"muted\",\"wrap\":true,\"grow\":1");
     }
-    if (entering) {
-        nw_ui_node(&ui, "{\"t\":\"input\",\"prompt\":\"New: \",\"font\":\"s\",\"value\":");
-        nw_ui_str(&ui, prompt);
+    if (prompt_kind) {
+        nw_ui_node(&ui, prompt_kind == ADD_TASK ?
+            "{\"t\":\"input\",\"prompt\":\"New: \",\"font\":\"s\",\"value\":" :
+            "{\"t\":\"input\",\"prompt\":\"Edit: \",\"font\":\"s\",\"value\":");
+        nw_ui_str(&ui, prompt_tail());
         nw_ui__raw(&ui, "}");
     } else nw_ui_node(&ui, "{\"t\":\"gap\",\"h\":0}");
     char status[160];
@@ -404,37 +423,28 @@ static void publish_view(void)
         if (rule) *rule = 0;
     }
     snprintf(status, sizeof status, "%s · %d open · %d done", zone, open_count, item_count - open_count);
-    nw_ui_text(&ui, view_note[0] ? view_note : view_error[0] ? view_error : status,
+    nw_ui_text(&ui, view_note[0] ? view_note : view_error[0] ? view_error : prompt_kind ? prompt_help : status,
                view_note[0] || view_error[0] ? "\"font\":\"s\",\"color\":\"accent\"" : "\"font\":\"s\",\"color\":\"muted\"");
     nw_ui_close(&ui);
-    if (nw_ui_end(&ui) >= 0) nw_screen(screen, entering ? "Enter ok  Esc cancel" : "↑↓ select F2 add F4 all");
+    if (nw_ui_end(&ui) >= 0) nw_screen(screen, prompt_kind ? "Enter ok  Esc cancel" : "⏎ tick F2 add F3 edit F4 all F5 del");
 }
 
-static void render_file(const nw_event *event)
+static int file_capacity(const nw_event *event)
 {
-    bool absent = file_missing(event);
-    if (!event->ok && !absent) {
-        nw_log("Agenda could not read notes/todo.txt");
-        snprintf(view_error, sizeof view_error, "Could not read notes/todo.txt");
-        publish_view();
-        return;
-    }
-    int capacity = absent ? 1 : event->json_len + 1;
-    if (capacity > FILE_LIMIT + 2) capacity = FILE_LIMIT + 2;
-    char *text = malloc(capacity);
-    if (!text) {
-        nw_log("Agenda could not allocate its file buffer");
-        return;
-    }
-    if (absent) text[0] = 0;
-    else {
-        int length = nw_json_string(event->json, text, capacity);
-        if (length < 0 || length > FILE_LIMIT) {
-            nw_log("Agenda got a malformed file read");
-            free(text);
-            return;
-        }
-    }
+    if (!event->ok) return file_missing(event) ? 1 : 0;
+    return event->json_len > FILE_LIMIT ? FILE_LIMIT + 2 : event->json_len + 1;
+}
+
+static int decode_file(const nw_event *event, char *text, int capacity)
+{
+    if (event->ok) return nw_json_string(event->json, text, capacity);
+    text[0] = 0;
+    return 0;
+}
+
+// Takes ownership of the mutable buffer, including on allocation failure.
+static void publish_file(char *text)
+{
     // Count candidates before allocating. Ordinary notes lines consume no item
     // entries, and the retained text gives edits a byte-exact source line.
     int candidates = 0;
@@ -478,6 +488,20 @@ static void render_file(const nw_event *event)
     publish_view();
 }
 
+static void render_file(const nw_event *event)
+{
+    int capacity = file_capacity(event);
+    char *text = capacity ? malloc(capacity) : NULL;
+    if (text) {
+        int length = decode_file(event, text, capacity);
+        if (length >= 0 && length <= FILE_LIMIT) { publish_file(text); return; }
+        free(text);
+    }
+    nw_log("Agenda could not read notes/todo.txt");
+    snprintf(view_error, sizeof view_error, "Could not read notes/todo.txt");
+    publish_view();
+}
+
 static void prompt_view(const char *status)
 {
     snprintf(view_note, sizeof view_note, "%s", status);
@@ -495,6 +519,19 @@ static void request_file(void)
     }
 }
 
+static void request_change(task_change change)
+{
+    edit_read = notes >= 0 ? nw_fs_read(notes, "todo.txt") : -1;
+    if (edit_read < 0) {
+        edit_read = 0;
+        prompt_view("Could not read notes/todo.txt");
+        return;
+    }
+    pending_change = change;
+    // An earlier refresh cannot publish a stale snapshot during this change.
+    read_token = 0;
+}
+
 static void start_save(void)
 {
     static const char *const diagnostics[] = {
@@ -503,56 +540,107 @@ static void start_save(void)
         "a task needs some words", "the normalized task is too long",
     };
     if (!decode(prompt, &line_buffer)) return;
-    title_buffer.length = ENTRY_UNITS;
+    title_buffer.length = LINE_UNITS;
     int length = normalizeEntry(&line_buffer, nw_clock_today(), &title_buffer);
     if (length < 0) {
         if (length >= -7) prompt_view(diagnostics[-length - 1]);
         return;
     }
-    if (length > ENTRY_UNITS) { prompt_view("the normalized task is too long"); return; }
+    if (length > LINE_UNITS) { prompt_view("the normalized task is too long"); return; }
     encode_title(&title_buffer, (unsigned)length, new_task);
-    edit_read = notes >= 0 ? nw_fs_read(notes, "todo.txt") : -1;
-    if (edit_read < 0) {
-        edit_read = 0;
-        prompt_view("Could not read notes/todo.txt");
-    } else {
-        // An earlier refresh cannot publish a stale snapshot after this write.
-        read_token = 0;
-        prompt_view("Saving...");
-    }
+    task_change change = prompt_kind;
+    prompt_kind = NO_CHANGE;
+    view_note[0] = 0;
+    request_change(change);
 }
 
-static void append_task(const nw_event *event)
+static char *find_line(char *file, const char *line, char **end)
 {
-    if (!event->ok && !file_missing(event)) {
+    size_t length = strlen(line);
+    while (*file) {
+        char *p = strchr(file, '\n');
+        if (!p) p = file + strlen(file);
+        if ((size_t)(p - file) == length && !memcmp(file, line, length)) {
+            *end = p;
+            return file;
+        }
+        if (!*p) break;
+        file = p + 1;
+    }
+    return NULL;
+}
+
+// scanTask established that this line starts with indentation and an ASCII marker.
+static int marker_width(const task_record *task)
+{
+    return line_buffer.units[task->text_start - 2] == ']' ? 6 : 2;
+}
+
+static void change_file(const nw_event *event)
+{
+    int capacity = file_capacity(event);
+    if (!capacity) {
         prompt_view("Could not read notes/todo.txt");
         return;
     }
-    static const char marker[] = "- [ ] ";
     size_t task_bytes = strlen(new_task);
-    size_t extra = sizeof marker - 1 + task_bytes + 2;
-    size_t size = event->ok ? (size_t)event->json_len : 0;
-    char *file = malloc(size + extra + 1);
+    size_t extra = pending_change == ADD_TASK || pending_change == EDIT_TASK ? task_bytes + 8 : 4;
+    char *file = malloc((size_t)capacity + extra);
     if (!file) { prompt_view("Could not allocate the file edit"); return; }
-    int length = event->ok ? nw_json_string(event->json, file, (int)size + 1) : 0;
-    if (length < 0 || (size_t)length > FILE_LIMIT - extra) {
-        free(file);
-        prompt_view("Could not save notes/todo.txt");
+    int length = decode_file(event, file, capacity);
+    if (length < 0 || length > FILE_LIMIT) goto cannot_save;
+    char *eof = file + length;
+    char *end = eof;
+    char *line = pending_change == ADD_TASK ? eof : find_line(file, original, &end);
+    if (!line) {
+        snprintf(view_note, sizeof view_note, "todo.txt changed meanwhile; reloaded.");
+        publish_file(file);
         return;
     }
-    if (length && file[length - 1] != '\n') file[length++] = '\n';
-    memcpy(file + length, marker, sizeof marker - 1);
-    length += sizeof marker - 1;
-    memcpy(file + length, new_task, task_bytes);
-    length += task_bytes;
-    file[length++] = '\n';
-    file[length] = 0;
+    if (pending_change == DELETE_TASK) {
+        if (*end == '\n') end++;
+        else if (line > file) line--; // removing the last line removes its preceding separator
+        memmove(line, end, (size_t)(eof - end) + 1);
+    } else {
+        char marker[] = "- [ ] ";
+        char *start = line;
+        if (pending_change == ADD_TASK) {
+            if (line > file && line[-1] != '\n') start++;
+        } else {
+            task_record task;
+            if (parse_line(original, &task) != 1) goto cannot_save;
+            start = strstr(line, "- ");
+            marker[3] = (char)agendaMark(task.done, pending_change == TOGGLE_TASK);
+            if (pending_change == TOGGLE_TASK) {
+                if (marker_width(&task) == 6) start[3] = marker[3];
+                else {
+                    memmove(start + 6, start + 2, (size_t)(eof - (start + 2)) + 1);
+                    memcpy(start, marker, 6);
+                }
+            }
+        }
+        if (pending_change == ADD_TASK || pending_change == EDIT_TASK) {
+            size_t inserted = 6 + task_bytes;
+            char *tail = start + inserted;
+            memmove(tail + (pending_change == ADD_TASK), end, (size_t)(eof - end) + 1);
+            if (pending_change == ADD_TASK && start != line) *line = '\n';
+            memcpy(start, marker, 6);
+            memcpy(start + 6, new_task, task_bytes);
+            if (pending_change == ADD_TASK) *tail = '\n';
+        }
+    }
+    if (strlen(file) > FILE_LIMIT) goto cannot_save;
     edit_write = nw_fs_write(notes, "todo.txt", file);
-    free(file);
     if (edit_write < 0) {
         edit_write = 0;
-        prompt_view("Could not save notes/todo.txt");
+        goto cannot_save;
     }
+    free(file);
+    return;
+
+cannot_save:
+    free(file);
+    prompt_view("Could not save notes/todo.txt");
 }
 
 static void key_event(const char *json)
@@ -562,13 +650,43 @@ static void key_event(const char *json)
     if (nw_json_str(json, "key", key, sizeof key) < 0 ||
         nw_json_str(json, "state", state, sizeof state) < 0 || !strcmp(state, "up")) return;
     bool once = strcmp(state, "hold") != 0;
-    const char *help = "@today @tue @+3d @11-15  14:30 or 2pm  !15m before";
-    if (!entering) {
+    if (!prompt_kind) {
+        bool delete_key = once && !strcmp(key, "f5");
+        if (!delete_key) confirming = false;
+        bool had_note = view_note[0] != 0;
         view_note[0] = 0;
+        const char *line = selected >= 0 ? snapshot + items[selected].offset : NULL;
         if (once && !strcmp(key, "f2")) {
-            entering = true;
+            prompt_kind = ADD_TASK;
             prompt[0] = 0;
-            prompt_view(help);
+            prompt_units = 0;
+            publish_view();
+        } else if (once && line && !strcmp(key, "f3")) {
+            task_record task;
+            if (parse_line(line, &task) != 1) return;
+            const char *content = strstr(line, "- ") + marker_width(&task);
+            strcpy(original, line);
+            strcpy(prompt, content);
+            prompt_units = line_buffer.length - task.text_start;
+            prompt_kind = EDIT_TASK;
+            publish_view();
+        } else if (once && line && (!strcmp(key, "enter") || !strcmp(key, "space"))) {
+            strcpy(original, line);
+            request_change(TOGGLE_TASK);
+        } else if (delete_key && line) {
+            if (confirming && !strcmp(original, line)) {
+                confirming = false;
+                request_change(DELETE_TASK);
+            } else {
+                task_record task;
+                if (parse_line(line, &task) != 1) return;
+                strcpy(original, line);
+                confirming = true;
+                clip_label(title);
+                snprintf(view_note, sizeof view_note, "F5 again deletes: %.*s", 4 * VIEW_CHARS,
+                         task.title_length ? title : "(untitled)");
+                publish_view();
+            }
         } else if (once && !strcmp(key, "f4")) {
             show_done = !show_done;
             layout_items(selected_row());
@@ -580,24 +698,29 @@ static void key_event(const char *json)
         } else if (!strcmp(key, "down")) {
             if (selected + 1 < visible_count) selected++;
             publish_view();
-        }
+        } else if (had_note) publish_view();
         return;
     }
     if (once && !strcmp(key, "esc")) {
-        entering = false;
+        prompt_kind = NO_CHANGE;
         prompt_view("");
         return;
     }
     if (once && !strcmp(key, "enter")) { start_save(); return; }
     size_t len = strlen(prompt);
     if (!strcmp(key, "backspace")) {
-        if (len) prompt[len - 1] = 0;
-    } else if (len < INPUT_KEYS && nw_json_str(json, "ch", ch, sizeof ch) == 1 &&
+        if (len) {
+            while (((unsigned char)prompt[--len] & 0xc0) == 0x80) {}
+            prompt_units -= (unsigned char)prompt[len] >= 0xf0 ? 2 : 1;
+            prompt[len] = 0;
+        }
+    } else if (prompt_units < INPUT_KEYS && nw_json_str(json, "ch", ch, sizeof ch) == 1 &&
                ch[0] >= 32 && ch[0] <= 126) {
         prompt[len] = ch[0];
         prompt[len + 1] = 0;
+        prompt_units++;
     } else return;
-    prompt_view(help);
+    publish_view();
 }
 
 void nw_init(void)
@@ -615,14 +738,14 @@ int nw_on_event(const nw_event *event)
     if (event->kind == NW_START || (event->kind == NW_TICK && event->timer == refresh_timer)) request_file();
     if (event->kind == NW_SETTLE && edit_read && event->token == edit_read) {
         edit_read = 0;
-        append_task(event);
+        change_file(event);
         return NW_DONE;
     }
     if (event->kind == NW_SETTLE && edit_write && event->token == edit_write) {
         edit_write = 0;
         if (event->ok) {
-            entering = false;
-            snprintf(view_note, sizeof view_note, "Added.");
+            if (pending_change == ADD_TASK || pending_change == DELETE_TASK)
+                snprintf(view_note, sizeof view_note, "%s", pending_change == ADD_TASK ? "Added." : "Deleted.");
             request_file();
         }
         else prompt_view("Could not save notes/todo.txt");

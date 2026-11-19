@@ -1,0 +1,50 @@
+PicoCalc hardware with bundled typed RV32 Agenda. Cold boot with settled FAT, then injected keys and real file writes.
+Firmware SHA-256 cbdf06ce3490248b48420e9f48429db645bdd7987d1bbc758f89f8377f6a5974
+Wrote 4180208 bytes (2554323 compressed) at 0x00010000 in 42.9 seconds (effective 779.6 kbit/s)...
+Hash of data verified.
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (2206) fs: /files: 7900 KB, 7892 KB free (mounted in 2 ms)
+agenda compile source=bundle status=ok us=718218 peak_js_bytes=700312 module_bytes=64348
+agenda response us=2137245 world_bytes=183437
+agenda frame turn_us=1458 world_bytes=183437
+/files: 7900 KB total, 7892 KB free
+#OK cji
+
+Initial fixture precondition
+no file notes/todo.txt
+#OK cat
+
+File reads after toggle, edit, first F5, and confirmed F5
+# Agenda smoke
+  - [x] write
+- remove
+#OK cat
+#OK key
+--
+# Agenda smoke
+  - [x] write changed
+- remove
+#OK cat
+#OK key
+--
+# Agenda smoke
+  - [x] write changed
+- remove
+#OK cat
+#OK key
+--
+# Agenda smoke
+  - [x] write changed
+#OK cat
+#OK shot
+#SHOT 320 320
+
+18 Agenda frame turns, microseconds
+967,787,858,885,855,1012,809,797,817,807,798,779,760,761,1009,826,837,894
+  bus i2c0  busy  6842.22 ms, 1187 transfers, 4790 bytes, 0 errors
+  bus spi2  busy   223.94 ms, 230 transfers, 735846 bytes, 0 errors
+
+Framebuffer snapshot CRC verified. Physical keypress and visibility timings are pending.
+put notes/todo.txt: 0 bytes
+#OK put

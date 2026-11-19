@@ -224,3 +224,60 @@ Use the new layout for subsequent app-only flashes. Retain the rollback set whil
 ### Technical details
 
 The app size grew from `0x400000` to `0x800000`. The migrated image for the grouped checkpoint is `0x3fc360` bytes. The relocation erased `0x7f0000` bytes starting at `0x810000`. The backup reads `0xff0000` bytes from `0x10000`, plus the separate 4 KiB partition-table sector at `0x8000`. The installed bootloader was retained.
+
+## Step 8 — Apply selected-task changes to the current file
+
+The grouped view now supports the original Agenda's checkbox toggle, F3 edit and confirmed F5 deletion. I verified the write bytes in the simulator and native emulator, then installed and exercised the new native firmware on the resized PicoCalc. The partition change and its first boot are in `7c405c4`.
+
+### Prompt Context
+
+See Step 1 for the user's full parity goal. These operations bind the normalizer and rendered selection to the real notes file while preserving the behavior when another world changes it.
+
+### What I did
+
+- Added the typed `agendaMark` entry, and validated it in the Wasm and RV32 reactor contracts. The original stored-line parser supplies completion state and the text start. F3 initializes the prompt with the raw task text. Backspace uses a UTF-8 boundary and counts supplementary code points as two UTF-16 units for the existing append limit.
+- Ran all changes through a fresh `nw_fs_read` and the matching settlement. An operation on an existing task copies its raw line from the retained snapshot. `find_line` chooses the first unchanged copy in the current file, matching the original app. The byte splices preserve indentation, other lines and the file's separator behavior. A missing exact match updates the view and emits the conflict status with no write.
+- Bound F5 confirmation to the raw selected line. A different key cancels confirmation. Valid prompt edits pass through the typed normalizer before requesting a fresh file.
+- Added original-versus-Wasm byte comparisons and RV32 emulator checks. Added `scripts/02-check-p4-agenda-mutations.sh` for the board check. It leaves an empty notes file after the verified fixture run, and keeps the new app image on the PicoCalc.
+
+### Why
+
+The notes file is shared by multiple worlds. An index from an older snapshot cannot identify the current line. The exact-line match preserves intervening edits to other lines, while a changed selected line forces a reload. The typed normalization and checkbox rules are shared by both generated targets, and the reactor continues to own capability authorization and async tokens.
+
+### What worked
+
+- The original-versus-Wasm simulator check matched six cases, including a bare task with a Unicode title, F3 with Unicode backspace and date normalization, first-match deletion of duplicate lines, deletion of a final line, clearing confirmation on navigation, and an external write during an edit. Creation, grouping and durable reminder checks also passed.
+- The native ELF loaded under the emulator and produced the expected text writes and conflict status. The app tests and all 34 native integration tests passed.
+- On the ESP32-P4, the same native image changed a disposable file through Space, F3 and two F5 presses. The first F5 left the exact bytes unchanged. The captured compositor framebuffer showed the edited completed task and the deletion status. The synthetic key input went through the keyboard driver and compositor on the live board. The bus counters reported zero I²C and SPI errors during the run.
+- On one boot after filesystem initialization, the bundled native compile took 718.218 ms and peaked at 700,312 bytes in its compiler allocator. Agenda published its first response at 2.137 s with 183,437 world bytes. The first frame-producing turn was 1.458 ms. Eighteen frame-turn samples during the synthetic edit sequence ranged from 0.760 to 1.012 ms. The final panel-enabled firmware uses 4,180,208 of its 8,388,608 bytes.
+
+### What didn't work
+
+- Earlier shell reads missed the returned serial port inside the sandbox. The direct USB check outside the sandbox identified the CH343 and the live console replied to `cji status`.
+- The two-second target is still slightly above threshold in this single mutation-build boot. The fresh filesystem differs from earlier timing fixtures. These measurements cannot establish a speedup over the earlier hardware runs.
+
+### What I learned
+
+An edit to an existing task involves both a parsed record and the original raw line. The record resolves the checkbox and text boundary. `parseTask` also normalizes the cooked title for rendering. For writes, the raw line preserves indentation and tokens that the title intentionally omits.
+
+### What was tricky to build
+
+Deleting the final unterminated line must consume the preceding separator, while deleting a line followed by a newline consumes that newline. Repeated identical tasks resolve to the first byte-identical match, even when selection was on the second. The simulator differential checks both cases.
+
+### What warrants a second pair of eyes
+
+The runtime can detect edits made before the fresh read. The existing filesystem API leaves a separate window between that read and the queued write. The fixed buffers for the prompt, selected line and normalized result also account for most of the increase in the native world footprint.
+
+### What should be done in the future
+
+Finish the F6 Editor capability handoff and exact prompt diagnostic text. Retest cold startup with comparable notes across targets. Capture a physical key and a visible LCD frame so that input-to-panel latency can be measured independently from the Agenda event turn.
+
+### Code review instructions
+
+- Review `worlds/agenda/wasm-world.c` at `request_change`, `change_file`, and `key_event`. The typed glue and checkbox function live in `compile.js` and `entry.typed`.
+- Run the parent ticket's `04-check-wasm-world.mjs` and `09-check-rv32-world.mjs`. See the linked JSON receipts in `various/` for results.
+- Inspect `various/p4-task-mutations.txt` and `p4-task-mutations.png` together. The serial snapshot is a compositor framebuffer capture, and the test used injected keys.
+
+### Technical details
+
+The filesystem writes cross the existing notes directory capability. Write and read tokens are distinct and the reactor ignores invalidated refresh responses. No ELF slot capacity increase was needed for the sixth typed entry jump. The 8 MiB flash partition leaves 4,208,400 bytes for this firmware's future system and app changes.

@@ -19,3 +19,7 @@ Port grouped task order, navigation, completed filtering and bounded viewport to
 ## 2026-11-18
 
 Expand the P4 app partition from 4 MiB to 8 MiB. Back up and verify the original layout, reset the relocated world store and FAT partitions, and prove the boot and filesystem mount on the PicoCalc.
+
+## 2026-11-18
+
+Implement selected-task toggle, F3 edit and two-press F5 deletion. Match the original update bytes and conflict behavior in the simulator, execute the native module under emulation, and verify writes on the PicoCalc.

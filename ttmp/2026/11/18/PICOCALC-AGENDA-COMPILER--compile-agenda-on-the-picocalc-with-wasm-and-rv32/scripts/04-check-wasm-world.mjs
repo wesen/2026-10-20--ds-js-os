@@ -214,6 +214,57 @@ assert.deepEqual(doneFrames.map(frame => frame[0]), [-1, 1, -1, 1]);
 const manyTasks = Array.from({length: 48}, (_, i) => '- task ' + (i + 1)).join('\n');
 const manySelected = groupFrames('agenda-wasm', manyTasks, Array(52).fill('down'), true);
 assert.deepEqual(manySelected, Array.from({length:48}, (_, i) => 'task ' + (i + 1)));
+
+// Compare exact resulting file bytes through both apps, including a competing writer.
+const editCases = [
+    {name:'toggle', before:'# head\n\t- plain 🦷\nnon-task\n- [ ] keep', commands:'key space',
+        after:'# head\n\t- [x] plain 🦷\nnon-task\n- [ ] keep'},
+    {name:'edit', before:'# head\n  - [X] rewrite 🦷', commands:'key f4\nwait 300\nkey down\nwait 300\nkey f3\nwait 300\nkey backspace\nwait 300\ntype name @tom 2pm\nwait 2000\nkey enter',
+        after:'# head\n  - [x] rewrite name @2026-11-02 14:00'},
+    {name:'duplicate-delete', before:'# head\n- same\n# keep\n- same\n- last\n',
+        commands:'key down\nwait 300\nkey f5\nwait 400\nkey f5',
+        after:'# head\n# keep\n- same\n- last\n', note:'Deleted.'},
+    {name:'delete-last', before:'# head\n- last', commands:'key f5\nwait 400\nkey f5',
+        after:'# head', note:'Deleted.'},
+    {name:'single-delete-key', before:'- keep\n', commands:'key f5\nwait 500\nkey up\nwait 500\nkey f5',
+        after:'- keep\n', note:'F5 again deletes: keep'},
+    {name:'edit-conflict', before:'- old\n- keep\n', commands:'key f3\nwait 1500\nkey enter',
+        competing:'- changed outside Agenda\n- keep\n', after:'- changed outside Agenda\n- keep\n',
+        note:'todo.txt changed meanwhile; reloaded.'},
+];
+const editResult = (name, edit) => {
+    const world = name === 'agenda' ? {...manifest.worlds[0], name, file:'agenda.js', engine:'js'} : manifest.worlds[0];
+    writeFileSync(join(scratch, 'focus.js'), `
+service("focus").needs("frames").on("frames", (s, frame, msg) => {
+    if (msg.from !== "${name}") return;
+    const kids = frame.frame.tree.kids;
+    log("AGENDA_STATUS " + JSON.stringify(kids[kids.length - 1].s));
+}).onStart(async () => {
+    await sleep(600);
+    send("compositor", "open", {app:"${name}"});
+    ${edit.competing ? `await sleep(2000); await hw.fs("fs:/notes").write("todo.txt", ${JSON.stringify(edit.competing)});` : ''}
+});
+`);
+    writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds:[
+        ...displayWorlds, {...world, claims:['fs:/notes']},
+        {name:'focus',file:'focus.js',claims:['frames.read','fs:/notes'],mem_kb:384},
+    ]}));
+    const notePath = join(fsRoot, 'notes/todo.txt');
+    writeFileSync(notePath, edit.before);
+    writeFileSync(displayScript, 'wait 1700\n' + edit.commands + '\nwait 1500\n');
+    const output = join(scratch, 'edit-' + name + '-' + edit.name);
+    execFileSync(host, ['-j', scratch, '-o', output, '-f', fsRoot, '-w', '2026-11-01T09:41:00', '-z', zone, displayScript],
+        {stdio:['ignore','pipe','pipe'],timeout:15000});
+    const uart = readFileSync(join(output, 'uart.log'), 'utf8');
+    assert.doesNotMatch(uart, /crashed/);
+    const status = [...uart.matchAll(/AGENDA_STATUS (.+)$/gm)].map(row => JSON.parse(row[1]));
+    return {text:readFileSync(notePath, 'utf8'), note: edit.note ? status.at(-1) : undefined};
+};
+for (const edit of editCases) {
+    const expected = {text:edit.after, note:edit.note};
+    assert.deepEqual(editResult('agenda', edit), expected, 'original: ' + edit.name);
+    assert.deepEqual(editResult('agenda-wasm', edit), expected, 'typed Wasm: ' + edit.name);
+}
 const instructions = [...log.matchAll(/agenda-wasm: (\d+) WebAssembly instructions \(event 0, agenda.parse\)/g)]
     .map(match => Number(match[1]));
 assert.equal(instructions.length, 2);
@@ -224,4 +275,5 @@ console.log(JSON.stringify({linkedBytes:bytes.length, sourceSha:sha(source), run
     taskEntry:{savedNotes, invalidPromptUnchanged:true, createsMissingFile:true},
     taskView:{matchesOriginalGroupedFrames:groups.length, matchesOriginalDoneOnlyFrames:doneFrames.length,
         scrollableTasks:manySelected.length},
+    mutations:editCases.map(({name}) => name),
     reminder:{notice, sender, scheduled, firedAt, persisted:firedRecord, restartSuppressed:true, unsetSuppressed:true, zone, transitionScheduled, transitionFiredAt:transition[0][2]}}, null, 2));
