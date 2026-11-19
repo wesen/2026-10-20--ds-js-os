@@ -101,7 +101,7 @@ static bool eval_file(JSContext *ctx, const char *path) {
   return ok;
 }
 
-static char *read_source(bool edit, size_t *length) {
+static char *read_reminder_source(bool edit, size_t *length) {
   if (!edit) return p4_bundle_read("agenda/reminder.typed", length, NULL, 0);
   const char *root = port_fs_root();
   if (!root) return NULL;
@@ -121,6 +121,25 @@ static char *read_source(bool edit, size_t *length) {
   }
   fclose(file);
   return text;
+}
+
+static char *read_source(bool edit, size_t *length) {
+  char *reminder = read_reminder_source(edit, length);
+  size_t entry_length = 0;
+  char *entry = p4_bundle_read("agenda/entry.typed", &entry_length, NULL, 0);
+  char *program = NULL;
+  if (reminder && entry && entry_length < SOURCE_LIMIT && *length < SOURCE_LIMIT - entry_length) {
+    program = realloc(reminder, *length + entry_length + 2);
+    if (program) {
+      program[(*length)++] = '\n';
+      memcpy(program + *length, entry, entry_length);
+      *length += entry_length;
+      program[*length] = 0;
+    }
+  }
+  if (!program) free(reminder);
+  free(entry);
+  return program;
 }
 
 static unsigned char *compile(bool edit, size_t *length, vtime_t *started) {

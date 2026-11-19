@@ -10,9 +10,18 @@ const taskFields = [
     ["leadStart", "i32"], ["leadEnd", "i32"], ["leadMinutes", "i32"], ["titleLength", "i32"],
 ];
 
-function validateAgenda(records, entry) {
-    if (!entry || entry.result !== "bool" || entry.params.join(",") !== "string,buffer,Task")
-        throw new SyntaxError("Agenda requires parseTask(line: string, title: buffer, task: Task): bool");
+const signatures = [
+    ["parseTask", "bool", "string,buffer,Task"],
+    ["normalizeEntry", "i32", "string,i32,buffer"],
+];
+const entries = signatures.map(([name]) => name);
+
+function validateAgenda(records, functions) {
+    for (const [name, result, params] of signatures) {
+        const entry = functions.find(fn => fn.name === name);
+        if (!entry || entry.result !== result || entry.params.join(",") !== params)
+            throw new SyntaxError("Agenda requires " + name + "(" + params + "): " + result);
+    }
     const fields = records.Task;
     if (!fields || Object.keys(fields).length !== taskFields.length ||
         taskFields.some(([name, type], i) => fields[name]?.type !== type || fields[name].offset !== i * 4))
@@ -20,14 +29,14 @@ function validateAgenda(records, entry) {
 }
 
 globalThis.compileAgenda = function compileAgenda(source, reactor) {
-    const {bytes, records, entry} = typedWasm.linkWorld(source, reactor, "parseTask");
-    validateAgenda(records, entry);
+    const {bytes, records, signatures} = typedWasm.linkWorld(source, reactor, entries);
+    validateAgenda(records, signatures);
     return bytes;
 };
 
 globalThis.compileAgendaRv32 = function compileAgendaRv32(source, reactor) {
     const program = typedRv32.compile(source);
-    validateAgenda(program.records, program.signatures.find(fn => fn.name === "parseTask"));
-    return typedRv32.linkSlot(program, reactor, "parseTask");
+    validateAgenda(program.records, program.signatures);
+    return typedRv32.linkSlot(program, reactor, entries);
 };
 })();

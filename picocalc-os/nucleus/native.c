@@ -470,7 +470,7 @@ fs_done:
       }
       return rc < 0 ? fail(W, "%s", err) : rc;
     }
-    case NW_FS_OPEN: case NW_FS_READ: {
+    case NW_FS_OPEN: case NW_FS_READ: case NW_FS_WRITE: {
       if (c->n[0] && memchr(c->s[0], 0, c->n[0])) return fail(W, "unexpected NUL in file operation");
       char *path = str(c, 0);
       if (!path) return fail(W, "out of memory");
@@ -480,7 +480,10 @@ fs_done:
         handle_t *handle = fs_open_claim(W, path, err, sizeof err);
         if (handle) result = handle->id;
       } else {
-        fs_job_t *job = fs_prepare(W, c->i[0], "read", path, NULL, 0, err, sizeof err);
+        bool write = c->op == NW_FS_WRITE;
+        const char *text = c->s[1] ? c->s[1] : "";
+        fs_job_t *job = fs_prepare(W, c->i[0], write ? "write" : "read", path,
+                                   write ? text : NULL, write ? c->n[1] : 0, err, sizeof err);
         if (job) {
           result = ++K.next_promise;
           fs_defer(W, job, result);
@@ -508,6 +511,17 @@ fs_done:
       return minutes + 1440;
     }
     case NW_CLOCK_WALL: return port_wall_ms();
+    case NW_CLOCK_TODAY: {
+      int64_t wall = port_wall_ms();
+      if (wall < 0) return -1;
+      int64_t seconds = wall / 1000;
+      time_t instant = (time_t)seconds;
+      struct tm local;
+      if ((int64_t)instant != seconds || !localtime_r(&instant, &local)) return -1;
+      int year = local.tm_year + 1900;
+      if (year < 0 || year > 9999) return -1;
+      return year * 10000 + (local.tm_mon + 1) * 100 + local.tm_mday;
+    }
     case NW_CLOCK_ZONE: return snprintf(out, out_n, "%s", clock_zone());
     case NW_CLOCK_SETZONE: {
       if (!world_claims(W, "sys.clock")) return fail(W, "%s has no claim on sys.clock", W->name);

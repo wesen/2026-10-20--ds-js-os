@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,6 +20,7 @@ typedef struct {
 } task_record;
 
 int parseTask(const void *line, void *title, void *task);
+int normalizeEntry(const void *line, int32_t local_date, void *output);
 
 static text_buffer line_buffer, title_buffer;
 static char input[UTF8_BYTES], title[UTF8_BYTES];
@@ -28,6 +30,10 @@ static int notes, read_token, refresh_timer;
 static char stored[STORE_CAPACITY + 1], pending_store[STORE_CAPACITY + 1];
 static char reminder_key[UTF8_BYTES + 32], quoted_key[6 * LINE_UNITS + 48];
 static char screen[16384], quoted[UTF8_BYTES + 128], reply[UTF8_BYTES + 256];
+enum { INPUT_KEYS = 120, ENTRY_UNITS = 160, FILE_LIMIT = 65536 };
+static char prompt[INPUT_KEYS + 1], new_task[ENTRY_UNITS * 3 + 1];
+static bool entering;
+static int edit_read, edit_write;
 
 // Strict UTF-8 decoding. Offsets in the compiled record count UTF-16 units.
 static int decode(const char *text, text_buffer *out)
@@ -215,9 +221,17 @@ static void remind(const task_record *task, const char *label, int64_t now)
         nw_send("compositor", "notify", reply);
 }
 
+static bool file_missing(const nw_event *event)
+{
+    char error[128];
+    return !event->ok && nw_json_string(event->json, error, sizeof error) >= 0 &&
+           !strncmp(error, "no file ", 8);
+}
+
 static void render_file(const nw_event *event)
 {
-    if (!event->ok) {
+    bool absent = file_missing(event);
+    if (!event->ok && !absent) {
         nw_log("Agenda could not read notes/todo.txt");
         return;
     }
@@ -226,7 +240,8 @@ static void render_file(const nw_event *event)
         nw_log("Agenda could not allocate its file buffer");
         return;
     }
-    if (nw_json_string(event->json, text, event->json_len + 1) < 0) {
+    if (absent) text[0] = 0;
+    else if (nw_json_string(event->json, text, event->json_len + 1) < 0) {
         nw_log("Agenda got a malformed file read");
         free(text);
         return;
@@ -254,8 +269,126 @@ static void render_file(const nw_event *event)
     }
     free(text);
     ui.n = sizeof screen;
+    if (!shown) nw_ui_text(&ui, "No tasks. F2 adds one.", NULL);
     nw_ui_close(&ui);
-    if (nw_ui_end(&ui) >= 0) nw_screen(screen, "");
+    if (nw_ui_end(&ui) >= 0 && !entering) nw_screen(screen, "F2 add task");
+}
+
+static void prompt_view(const char *status)
+{
+    char frame[1024], label[INPUT_KEYS + 8];
+    snprintf(label, sizeof label, "New: %s", prompt);
+    nw_ui ui;
+    nw_ui_begin(&ui, frame, sizeof frame);
+    nw_ui_open(&ui, "col", NULL);
+    nw_ui_text(&ui, label, NULL);
+    nw_ui_text(&ui, status, "\"font\":\"s\"");
+    nw_ui_close(&ui);
+    if (nw_ui_end(&ui) >= 0) nw_screen(frame, "Enter save   Esc cancel");
+}
+
+static void request_file(void)
+{
+    if (read_token || edit_read || edit_write) return;
+    if (notes < 0) { nw_log("Agenda could not start its notes read"); return; }
+    read_token = nw_fs_read(notes, "todo.txt");
+    if (read_token < 0) {
+        read_token = 0;
+        nw_log("Agenda could not start its notes read");
+    }
+}
+
+static void start_save(void)
+{
+    static const char *const diagnostics[] = {
+        "one date per task", "the clock is not set: write the date as @YYYY-MM-DD",
+        "unknown date", "not a time", "a reminder is like !15m, !2h or !1d",
+        "a task needs some words", "the normalized task is too long",
+    };
+    if (!decode(prompt, &line_buffer)) return;
+    title_buffer.length = ENTRY_UNITS;
+    int length = normalizeEntry(&line_buffer, nw_clock_today(), &title_buffer);
+    if (length < 0) {
+        if (length >= -7) prompt_view(diagnostics[-length - 1]);
+        return;
+    }
+    if (length > ENTRY_UNITS) { prompt_view("the normalized task is too long"); return; }
+    encode_title(&title_buffer, (unsigned)length, new_task);
+    edit_read = notes >= 0 ? nw_fs_read(notes, "todo.txt") : -1;
+    if (edit_read < 0) {
+        edit_read = 0;
+        prompt_view("Could not read notes/todo.txt");
+    } else {
+        // An earlier refresh cannot publish a stale snapshot after this write.
+        read_token = 0;
+        prompt_view("Saving...");
+    }
+}
+
+static void append_task(const nw_event *event)
+{
+    if (!event->ok && !file_missing(event)) {
+        prompt_view("Could not read notes/todo.txt");
+        return;
+    }
+    static const char marker[] = "- [ ] ";
+    size_t task_bytes = strlen(new_task);
+    size_t extra = sizeof marker - 1 + task_bytes + 2;
+    size_t size = event->ok ? (size_t)event->json_len : 0;
+    char *file = malloc(size + extra + 1);
+    if (!file) { prompt_view("Could not allocate the file edit"); return; }
+    int length = event->ok ? nw_json_string(event->json, file, (int)size + 1) : 0;
+    if (length < 0 || (size_t)length > FILE_LIMIT - extra) {
+        free(file);
+        prompt_view("Could not save notes/todo.txt");
+        return;
+    }
+    if (length && file[length - 1] != '\n') file[length++] = '\n';
+    memcpy(file + length, marker, sizeof marker - 1);
+    length += sizeof marker - 1;
+    memcpy(file + length, new_task, task_bytes);
+    length += task_bytes;
+    file[length++] = '\n';
+    file[length] = 0;
+    edit_write = nw_fs_write(notes, "todo.txt", file);
+    free(file);
+    if (edit_write < 0) {
+        edit_write = 0;
+        prompt_view("Could not save notes/todo.txt");
+    }
+}
+
+static void key_event(const char *json)
+{
+    if (edit_read || edit_write) return;
+    char key[24], state[12], ch[8];
+    if (nw_json_str(json, "key", key, sizeof key) < 0 ||
+        nw_json_str(json, "state", state, sizeof state) < 0 || !strcmp(state, "up")) return;
+    bool once = strcmp(state, "hold") != 0;
+    if (!entering) {
+        if (once && !strcmp(key, "f2")) {
+            entering = true;
+            prompt[0] = 0;
+            prompt_view("@today @tue @+3d   14:30 or 2pm   !15m");
+        }
+        return;
+    }
+    if (once && !strcmp(key, "esc")) {
+        entering = false;
+        if (screen[0]) nw_screen(screen, "F2 add task");
+        else request_file();
+        return;
+    }
+    if (once && !strcmp(key, "enter")) { start_save(); return; }
+    size_t len = strlen(prompt);
+    if (!strcmp(key, "backspace")) {
+        if (len) prompt[len - 1] = 0;
+    } else if (len < INPUT_KEYS && nw_json_str(json, "ch", ch, sizeof ch) == 1 &&
+               ch[0] >= 32 && ch[0] <= 126) {
+        prompt[len] = ch[0];
+        prompt[len + 1] = 0;
+    } else return;
+    prompt_view("@today @tue @+3d   14:30 or 2pm   !15m");
 }
 
 void nw_init(void)
@@ -270,18 +403,28 @@ void nw_init(void)
 int nw_on_event(const nw_event *event)
 {
     if (event->kind == NW_START && nw_store_load(stored, sizeof stored) < 0) stored[0] = 0;
-    if ((event->kind == NW_START || (event->kind == NW_TICK && event->timer == refresh_timer)) && !read_token) {
-        if (notes >= 0) read_token = nw_fs_read(notes, "todo.txt");
-        if (notes < 0 || read_token < 0) {
-            read_token = 0;
-            nw_log("Agenda could not start its notes read");
-        }
+    if (event->kind == NW_START || (event->kind == NW_TICK && event->timer == refresh_timer)) request_file();
+    if (event->kind == NW_SETTLE && edit_read && event->token == edit_read) {
+        edit_read = 0;
+        append_task(event);
+        return NW_DONE;
+    }
+    if (event->kind == NW_SETTLE && edit_write && event->token == edit_write) {
+        edit_write = 0;
+        if (event->ok) { entering = false; request_file(); }
+        else prompt_view("Could not save notes/todo.txt");
+        return NW_DONE;
     }
     if (event->kind == NW_SETTLE && read_token > 0 && event->token == read_token) {
         read_token = 0;
         render_file(event);
     }
-    if (event->kind != NW_MESSAGE || strcmp(event->type, "agenda.parse") != 0) return NW_DONE;
+    if (event->kind != NW_MESSAGE) return NW_DONE;
+    if (!strcmp(event->from, "compositor")) {
+        if (!strcmp(event->type, "key")) key_event(event->json);
+        if (!strcmp(event->type, "focus")) request_file();
+    }
+    if (strcmp(event->type, "agenda.parse") != 0) return NW_DONE;
     // nw_json_str caps its result at n-1. Reserve that value to detect truncation.
     int bytes = nw_json_str(event->json, "line", input, sizeof input);
     task_record task;

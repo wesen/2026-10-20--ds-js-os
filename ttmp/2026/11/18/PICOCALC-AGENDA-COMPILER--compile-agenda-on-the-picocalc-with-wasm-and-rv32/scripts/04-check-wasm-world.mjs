@@ -19,12 +19,12 @@ const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 
 execFileSync('make', ['-C', os, 'agenda-reactor'], {stdio: ['ignore', 'pipe', 'inherit']});
 
-const source = readFileSync(join(world, 'reminder.typed'), 'utf8');
+const source = ['reminder.typed', 'entry.typed'].map(name => readFileSync(join(world, name), 'utf8')).join('\n');
 const object = readFileSync(runtime);
 const bytes = compileAgenda(source, object);
 assert(WebAssembly.validate(bytes));
 assert.throws(() => typedWasm.linkWorld(source.replace('title: buffer, task: Task): bool {\n    if (!scanTask',
-    'title: buffer, task: Task, unused: i32): bool {\n    if (!scanTask'), object, 'parseTask'), /slot signature mismatch/);
+    'title: buffer, task: Task, unused: i32): bool {\n    if (!scanTask'), object, ['parseTask']), /slot signature mismatch/);
 assert.throws(() => compileAgenda(source.replace('    done: bool;\n    textStart: i32;',
     '    textStart: i32;\n    done: bool;'), object), /Task fields do not match/);
 writeFileSync(asset, bytes);
@@ -116,7 +116,7 @@ assert.equal(transition[0][0].text, 'transition at 01:30');
 assert(transition[0][2] >= transitionScheduled && transition[0][2] < transitionScheduled + 15000);
 // Check the real compositor and its display driver, separately from frame messages.
 const displayWorlds = JSON.parse(readFileSync(join(os, 'js/system.json'), 'utf8')).worlds
-    .filter(world => ['display', 'compositor', 'launcher'].includes(world.name));
+    .filter(world => ['keyboard', 'display', 'compositor', 'launcher'].includes(world.name));
 for (const world of displayWorlds) {
     mkdirSync(join(scratch, world.file.split('/')[0]), {recursive:true});
     writeFileSync(join(scratch, world.file), readFileSync(join(os, 'js', world.file)));
@@ -141,6 +141,23 @@ const screenshot = readFileSync(join(displayOutput, 'typed-agenda.png'));
 assert.equal(screenshot.subarray(1,4).toString(), 'PNG');
 assert.notEqual(sha(launcher), sha(screenshot));
 if (process.argv[3]) writeFileSync(resolve(process.argv[3]), screenshot);
+const seededNotes = '# keep this heading\n- book a train';
+const submit = (root, input) => {
+    writeFileSync(displayScript, 'wait 1700\nkey f2\nwait 300\n' +
+        'type ' + input + '\nwait 2800\nkey enter\nwait 1000\n');
+    execFileSync(host, ['-j', scratch, '-o', displayOutput, '-f', root, '-w', '2026-11-01T09:41:00', '-z', zone, displayScript],
+        {stdio:['ignore','pipe','pipe'],timeout:15000});
+};
+writeFileSync(join(fsRoot, 'notes/todo.txt'), seededNotes);
+submit(fsRoot, 'dentist @tue 2pm !15m');
+const savedNotes = readFileSync(join(fsRoot, 'notes/todo.txt'), 'utf8');
+assert.equal(savedNotes, seededNotes + '\n- [ ] dentist @2026-11-03 14:00 !15m\n');
+submit(fsRoot, 'invalid @tue 25:00');
+assert.equal(readFileSync(join(fsRoot, 'notes/todo.txt'), 'utf8'), savedNotes);
+const fresh = join(scratch, 'empty-fs');
+mkdirSync(join(fresh, 'notes'), {recursive:true});
+submit(fresh, 'first task');
+assert.equal(readFileSync(join(fresh, 'notes/todo.txt'), 'utf8'), '- [ ] first task\n');
 const instructions = [...log.matchAll(/agenda-wasm: (\d+) WebAssembly instructions \(event 0, agenda.parse\)/g)]
     .map(match => Number(match[1]));
 assert.equal(instructions.length, 2);
@@ -148,4 +165,5 @@ console.log(JSON.stringify({linkedBytes:bytes.length, sourceSha:sha(source), run
     linkedSha:sha(bytes), reply:jsonLine('AGENDA_REPLY'), frame:jsonLine('AGENDA_FRAME'),
     engine:jsonLine('AGENDA_ENGINE'), deniedWithoutNotesClaim:true, perMessageInstructions:instructions,
     screenshot:{sha256:sha(screenshot), bytes:screenshot.length},
+    taskEntry:{savedNotes, invalidPromptUnchanged:true, createsMissingFile:true},
     reminder:{notice, sender, scheduled, firedAt, persisted:firedRecord, restartSuppressed:true, unsetSuppressed:true, zone, transitionScheduled, transitionFiredAt:transition[0][2]}}, null, 2));

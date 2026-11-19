@@ -251,13 +251,11 @@ function compile(source) {
 
 // The bundled, already linked SDK reactor reserves this area in executable
 // text. The native world loader still validates and relocates the completed ELF.
-function linkSlot(program, runtime, entry) {
-    const capacity = 16384;
-    const magic = [0x00100073, 0x4147454e, 0x44415256, 0x3332534c];
+function linkSlot(program, runtime, entries) {
+    const magic = [0x4147454e, 0x44415256, 0x3332534c];
+    const headerBytes = 20;
+    const codeOffset = headerBytes + 4 * entries.length;
     const view = new DataView(runtime.buffer, runtime.byteOffset, runtime.byteLength);
-    const offset = program.entries[entry];
-    if (offset === undefined || program.image.length + 4 > capacity)
-        throw new SyntaxError("RV32 program does not fit the reactor slot");
     if (runtime.length < 52 || view.getUint32(0, true) !== 0x464c457f ||
         view.getUint8(4) !== 1 || view.getUint8(5) !== 1 ||
         view.getUint16(16, true) !== 3 || view.getUint16(18, true) !== 243 ||
@@ -269,24 +267,41 @@ function linkSlot(program, runtime, entry) {
     if (stride !== 32 || segments + stride * count > runtime.length)
         throw new SyntaxError("invalid RV32 reactor program headers");
 
-    let slot = -1;
+    let slot = -1, capacity = 0;
     for (let i = 0; i < count; i++) {
         const header = segments + i * stride;
         if (view.getUint32(header, true) !== 1 || !(view.getUint32(header + 24, true) & 1)) continue;
         const start = view.getUint32(header + 4, true);
         const end = start + view.getUint32(header + 16, true);
         if (end > runtime.length) throw new SyntaxError("truncated RV32 reactor code segment");
-        for (let at = (start + 3) & -4; at + capacity <= end; at += 4) {
+        for (let at = (start + 3) & -4; at + codeOffset <= end; at += 4) {
             if (view.getUint32(at, true) !== magic[0] || view.getUint32(at + 4, true) !== magic[1] ||
-                view.getUint32(at + 8, true) !== magic[2] || view.getUint32(at + 12, true) !== magic[3]) continue;
+                view.getUint32(at + 8, true) !== magic[2]) continue;
             if (slot >= 0) throw new SyntaxError("ambiguous RV32 reactor slot");
+            capacity = view.getUint32(at + 12, true);
+            if (view.getUint32(at + 16, true) !== entries.length || capacity < codeOffset ||
+                capacity > end - at || capacity > 1048576 || capacity % 4)
+                throw new SyntaxError("invalid RV32 reactor slot header");
+            for (let entry = at + headerBytes; entry < at + codeOffset; entry += 4) {
+                if (view.getUint32(entry, true) !== 0x00100073)
+                    throw new SyntaxError("invalid RV32 reactor entry stub");
+            }
             slot = at;
+            at += capacity - 4;
         }
     }
     if (slot < 0) throw new SyntaxError("missing RV32 reactor slot");
+    if (program.image.length > capacity - codeOffset) throw new SyntaxError("RV32 program does not fit the reactor slot");
     const bytes = new Uint8Array(runtime);
-    new DataView(bytes.buffer).setUint32(slot, instruction.j(ZERO, offset + 4), true);
-    bytes.set(program.image, slot + 4);
+    const patched = new DataView(bytes.buffer);
+    for (let i = 0; i < entries.length; i++) {
+        const offset = program.entries[entries[i]];
+        if (!Number.isInteger(offset) || offset < 0 || offset + 4 > program.image.length || offset % 4)
+            throw new SyntaxError("invalid RV32 entry " + entries[i]);
+        const stub = headerBytes + 4 * i;
+        patched.setUint32(slot + stub, instruction.j(ZERO, codeOffset + offset - stub), true);
+    }
+    bytes.set(program.image, slot + codeOffset);
     return bytes;
 }
 

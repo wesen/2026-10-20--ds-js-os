@@ -1,0 +1,64 @@
+{
+  "linkedBytes": 49806,
+  "sourceSha": "ffa7e0190e76306212e9778b89a2d8368e6233830f3f3fa0a0fdb29e56e6cfd2",
+  "runtimeSha": "c260adda9c9968c5a252a3e5d4c64ae1f637f3f1b2e3894f9a611a67ba840ed3",
+  "linkedSha": "8ba381869135e7ac6b59b839547e52bf1b5013aa6230deac304cbe668ff19353",
+  "reply": {
+    "title": "dentist 🦷",
+    "done": false,
+    "dateValid": true,
+    "timeValid": true,
+    "leadMinutes": 15
+  },
+  "frame": {
+    "t": "col",
+    "kids": [
+      {
+        "t": "text",
+        "s": "dentist 🦷"
+      },
+      {
+        "t": "text",
+        "s": "book a train"
+      }
+    ]
+  },
+  "engine": [
+    "wasm",
+    "idle",
+    "app"
+  ],
+  "deniedWithoutNotesClaim": true,
+  "perMessageInstructions": [
+    11892,
+    518
+  ],
+  "screenshot": {
+    "sha256": "d05ed9ef6ff4650b6d913716c17002d7cc2e8fd5aeda077d726949476ef7ff7d",
+    "bytes": 3738
+  },
+  "taskEntry": {
+    "savedNotes": "# keep this heading\n- book a train\n- [ ] dentist @2026-11-03 14:00 !15m\n",
+    "invalidPromptUnchanged": true,
+    "createsMissingFile": true
+  },
+  "reminder": {
+    "notice": {
+      "text": "dentist 🦷 at 14:30",
+      "sub": "in 15m"
+    },
+    "sender": "agenda-wasm",
+    "scheduled": 1793733300000,
+    "firedAt": 1793733314003,
+    "persisted": {
+      "fired": {
+        "1793733300000|dentist 🦷": 1793733314002
+      }
+    },
+    "restartSuppressed": true,
+    "unsetSuppressed": true,
+    "zone": "EST5EDT,M3.2.0/2,M11.1.0/2",
+    "transitionScheduled": 1793510100000,
+    "transitionFiredAt": 1793510114003
+  }
+}

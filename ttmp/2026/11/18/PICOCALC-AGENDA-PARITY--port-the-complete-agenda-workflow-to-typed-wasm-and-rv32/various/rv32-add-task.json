@@ -1,0 +1,6 @@
+{
+  "module_bytes": 59528,
+  "module_sha256": "dd983411c8349bec6accd68789ba1292c31ab872ddd3c3aa3ffcb9cc978cba0e",
+  "result": "frames=4 reminders=1 writes=1 durable_restart=pass",
+  "boundary": "Relocated RV32 instructions and SDK ABI under emulation, with deterministic filesystem, clock and storage stubs"
+}

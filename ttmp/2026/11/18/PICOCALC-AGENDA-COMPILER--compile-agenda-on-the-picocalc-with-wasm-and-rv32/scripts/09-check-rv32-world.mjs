@@ -14,7 +14,9 @@ const [cc, emu, reactorPath] = process.argv.slice(2);
 assert(cc && emu && reactorPath, 'pass the RV32 compiler, repository rv32emu, and P4 agenda-reactor.elf');
 const work = mkdtempSync(join(tmpdir(), 'agenda-rv32-world-'));
 try {
-    const source = readFileSync('picocalc-os/worlds/agenda/reminder.typed', 'utf8');
+    const source = ['reminder', 'entry'].map(
+        name => readFileSync('picocalc-os/worlds/agenda/' + name + '.typed', 'utf8')
+    ).join('\n');
     const module = compileAgendaRv32(source, readFileSync(reactorPath));
     const driver = join(work, 'driver.elf');
     const app = join(work, 'agenda.so');
@@ -27,7 +29,7 @@ try {
         ...['libc.o', 'hostcalls.o', 'softfloat.o'].map(file => join(dirname(emu), file)),
     ], {stdio: 'inherit'});
     const result = execFileSync(emu, [driver, app, app], {encoding: 'utf8'}).trim();
-    assert.equal(result, 'records=3 frames=3 reminders=1 durable_restart=pass');
+    assert.equal(result, 'frames=4 reminders=1 writes=1 durable_restart=pass');
     console.log(JSON.stringify({
         module_bytes: module.length,
         module_sha256: createHash('sha256').update(module).digest('hex'),

@@ -13,6 +13,7 @@ int fw_nentries;
 static char saved[16385];
 static int frames, notifications, reads, offsets;
 static int64_t wall = 1793733299000LL;
+static int writes;
 
 static void expect(int ok, const char *where)
 {
@@ -36,7 +37,7 @@ const struct {
 #define IMPORT(name) {#name, (void (*)(void))name}
     IMPORT(free), IMPORT(malloc), IMPORT(memcpy), IMPORT(memset),
     IMPORT(snprintf), IMPORT(strcat), IMPORT(strchr), IMPORT(strcmp),
-    IMPORT(strlen), IMPORT(strtoll),
+    IMPORT(strlen), IMPORT(strncmp), IMPORT(strtoll),
 #undef IMPORT
 };
 const int fw_nresolve = sizeof fw_resolve / sizeof fw_resolve[0];
@@ -54,9 +55,16 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
     case NW_CALL_FS_READ:
         expect(a == 23 && !strcmp(s0, "todo.txt"), "file request");
         return ++reads;
+    case NW_CALL_FS_WRITE:
+        expect(a == 23 && !strcmp(s0, "todo.txt"), "write through notes claim");
+        expect(!strcmp(s1, "- [ ] dentist @2026-11-03 14:30 !15m\n- [x] completed\n- book a train\n"
+                           "- [ ] call clinic @2026-11-04 14:00 !15m\n"), "normalized saved entry");
+        writes++;
+        return 100;
     case NW_CALL_CLOCK_WALL: return wall;
+    case NW_CALL_CLOCK_TODAY: return 20261101;
     case NW_CALL_CLOCK_OFFSET:
-        expect(c == 1793716200000LL, "nominal civil epoch");
+        expect(c == 1793716200000LL || c == 1793800800000LL, "nominal civil epoch");
         offsets++;
         return 1440 - 300;
     case NW_CALL_STORE_LOAD:
@@ -69,6 +77,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         strcpy(saved, s0);
         return 0;
     case NW_CALL_SCREEN:
+        if (strstr(s0, "New:")) return 0;
         expect(strstr(s0, "dentist") && strstr(s0, "book a train") && !strstr(s0, "completed"),
                "compiled task frame");
         frames++;
@@ -94,6 +103,14 @@ static void event(nw_elf_module *world, int kind, int ok, int token, const char 
            "world event result");
 }
 
+static void key(nw_elf_module *world, const char *key_name, const char *ch)
+{
+    char payload[80];
+    snprintf(payload, sizeof payload, "{\"key\":\"%s\",\"ch\":\"%s\",\"state\":\"down\"}", key_name, ch);
+    expect(world->event(NW_MESSAGE, 0, 0, 0, "key", payload, (int)strlen(payload), "compositor") == NW_DONE,
+           "key dispatch");
+}
+
 int main(void)
 {
     static const nw_elf_kernel kernel = {NW_ELF_ABI, kernel_call, no_error};
@@ -111,9 +128,22 @@ int main(void)
             wall = 1793733314000LL;
             event(&world, NW_TICK, 0, 0, "null");
             event(&world, NW_SETTLE, 1, reads, file);
+        } else {
+            key(&world, "f2", "");
+            for (const char *p = "call clinic @wed 2pm !15m"; *p; p++) {
+                char ch[] = {*p, 0};
+                key(&world, ch, ch);
+            }
+            key(&world, "enter", "");
+            event(&world, NW_SETTLE, 1, reads, file);
+            expect(writes == 1, "user task write");
+            event(&world, NW_SETTLE, 1, 100, "{}");
+            event(&world, NW_SETTLE, 1, reads,
+                  "\"- [ ] dentist @2026-11-03 14:30 !15m\\n- [x] completed\\n- book a train\\n"
+                  "- [ ] call clinic @2026-11-04 14:00 !15m\\n\"");
         }
     }
-    expect(reads == 3 && frames == 3 && offsets == 3 && notifications == 1, "restart and reminder");
-    printf("records=3 frames=%d reminders=%d durable_restart=pass\n", frames, notifications);
+    expect(reads == 5 && frames == 4 && offsets == 5 && notifications == 1, "restart and reminder");
+    printf("frames=%d reminders=%d writes=%d durable_restart=pass\n", frames, notifications, writes);
     return 0;
 }

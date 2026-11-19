@@ -252,10 +252,12 @@ if(PICOCALC_TYPED_AGENDA)
         "agenda/typed-wasm.js=${OS}/compiler/typed-wasm.js"
         "agenda/compile.js=${OS}/worlds/agenda/compile.js"
         "agenda/reminder.typed=${OS}/worlds/agenda/reminder.typed"
+        "agenda/entry.typed=${OS}/worlds/agenda/entry.typed"
         "agenda/reactor.bin=${agenda_reactor}")
     list(APPEND BUNDLE_EXTRA_DEPS
         "${agenda_manifest_path}" "${agenda_reactor}"
-        "${OS}/compiler/typed-wasm.js" "${OS}/worlds/agenda/compile.js" "${OS}/worlds/agenda/reminder.typed")
+        "${OS}/compiler/typed-wasm.js" "${OS}/worlds/agenda/compile.js" "${OS}/worlds/agenda/reminder.typed"
+        "${OS}/worlds/agenda/entry.typed")
 endif()
 
 file(GLOB_RECURSE JS_FILES CONFIGURE_DEPENDS ${OS}/js/*.js ${OS}/js/*.json ${OS}/js/*.wasm)
