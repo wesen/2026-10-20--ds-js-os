@@ -1,0 +1,43 @@
+Migration receipt for the 8 MiB ESP32-P4 application partition
+The private local rollback backup contains the previous table and bytes 0x10000 through 0xffffff.
+
+Hardware identification
+Chip is ESP32-P4 (revision v1.3)
+Detected flash size: 32MB
+
+Decoded old partition table
+# ESP-IDF Partition Table
+# Name, Type, SubType, Offset, Size, Flags
+nvs,data,nvs,0x9000,24K,
+phy_init,data,phy,0xf000,4K,
+factory,app,factory,0x10000,4M,
+agentstore,data,nvs,0x410000,128K,
+files,data,fat,0x430000,12096K,
+
+Decoded new partition table
+# ESP-IDF Partition Table
+# Name, Type, SubType, Offset, Size, Flags
+nvs,data,nvs,0x9000,24K,
+phy_init,data,phy,0xf000,4K,
+factory,app,factory,0x10000,8M,
+agentstore,data,nvs,0x810000,128K,
+files,data,fat,0x830000,8000K,
+
+Verified application image and partition table
+72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30  new-table.bin
+89bf7e11d34cfc5242c1a9ec22aa421cd3cabb4d284038d27d31ff7e416b490d  new-app.bin
+Wrote 3072 bytes (136 compressed) at 0x00008000 in 0.0 seconds (effective 555.0 kbit/s)...
+Hash of data verified.
+Wrote 4178784 bytes (2553226 compressed) at 0x00010000 in 43.0 seconds (effective 778.2 kbit/s)...
+Hash of data verified.
+
+First boot with new table
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (2651) fs: /files: 7900 KB, 7900 KB free (mounted in 447 ms)
+agenda compile source=bundle status=ok us=718933 peak_js_bytes=698720 module_bytes=63076
+agenda response us=2544685 world_bytes=164093
+#OK cji

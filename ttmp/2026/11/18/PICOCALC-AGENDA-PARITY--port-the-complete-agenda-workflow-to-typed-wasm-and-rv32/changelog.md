@@ -15,3 +15,7 @@ Linked typed prompt normalization into both reactors and implemented F2 task cre
 ## 2026-11-18
 
 Port grouped task order, navigation, completed filtering and bounded viewport to the Wasm and RV32 reactors. Match the original app in the keyboard-driven simulator; capture the grouped frame and record the rebuilt P4 image size.
+
+## 2026-11-18
+
+Expand the P4 app partition from 4 MiB to 8 MiB. Back up and verify the original layout, reset the relocated world store and FAT partitions, and prove the boot and filesystem mount on the PicoCalc.

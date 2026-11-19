@@ -300,7 +300,7 @@ Writes are staged until the end of the current segment and coalesced within that
 
 Persistent writes are deferred, not backgrounded: the current P4 backend performs the bounded NVS commit on the kernel thread after a segment. Flash erase/garbage-collection latency can temporarily delay input. Measure it during device acceptance; queueing durable writes is a future improvement if actual latency warrants it. Network I/O is the operation moved to a separate worker in this implementation.
 
-On the P4, a new `agentstore` NVS partition is placed at `0x410000`, after the existing 4 MiB factory application. Its size is 128 KiB. The original NVS and application offsets remain unchanged. World records live there; Wi-Fi/API configuration lives in a separate native namespace in the original NVS partition. The new store initialization does not automatically erase an existing partition when initialization fails.
+On the P4, the 128 KiB `agentstore` NVS partition starts at `0x810000`, after the 8 MiB factory application. Earlier images placed it at `0x410000` after a 4 MiB application. The original NVS and application offsets are unchanged. World records live in `agentstore`, and Wi-Fi/API configuration lives in a native namespace in the original NVS partition. Store initialization preserves existing data on initialization failure. Back up world records and files before updating a device from the earlier partition layout.
 
 The persisted session contains version, model, effort, bounded completed text history, notes, and a marker/prompt for an interrupted run. Draft editing belongs to the chat world's volatile state. The implementation does not persist every keystroke, poll, or model output chunk.
 

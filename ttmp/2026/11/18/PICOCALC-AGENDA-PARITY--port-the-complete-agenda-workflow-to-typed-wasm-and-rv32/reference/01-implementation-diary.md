@@ -170,3 +170,57 @@ The renderer clips labels after 80 UTF-8 code points, beyond what fits on the 32
 ## Step 6 — Publish the grouped-view milestone
 
 The grouped view implementation, differential fixtures, and screenshot are in `4f4ebf6`. I added the technical walkthrough “PicoCalc Agenda — Grouping and scrolling a file-backed task list” at `Projects/2026/11/18/PROJ - PicoCalc Agenda - Grouping and scrolling a file-backed task list.md` in go-go-parc. The vault push advanced `origin/main` to `08e95e1`. The report relates file offsets, logical rows and window-local indices through a concrete example, and records the simulator, emulator and firmware build evidence.
+
+## Step 7 — Expand the PicoCalc application partition to 8 MiB
+
+The 4 MiB partition had 15,520 bytes free after the grouped Agenda build. The device was connected again and replied to `cji status`. The installed flash chip reported 32 MiB, while the current layout already used all of the first 16 MiB. I increased the factory app allocation and placed the fresh world-store and files partitions directly after it within that same 16 MiB range.
+
+### Prompt Context
+
+The user asked “how much room do we have in total? can we make the app partition bigger?” and then authorized the reset with “it's fine we can erase it all, nothing of import”. I chose 8 MiB for the application, leaving the installed bootloader, credentials NVS and PHY data addresses unchanged.
+
+### What I did
+
+- Updated `port/esp32p4/partitions.csv` and the current storage layout in `docs/picocalc-agent-implementation.md`. The factory app remains at `0x10000`. The 128 KiB world store moves to `0x810000`. The files partition moves to `0x830000` and ends at `0x1000000`.
+- Added a migration script in this ticket. It checks the chip's detected size and both partition tables, holds the keyboard bus before resetting the board, and reads the previous partition table and data range to a private local directory. It computes a rollback checksum manifest before erasing the relocated partitions. It writes and verifies the new table and app separately.
+- Built the panel-enabled RV32 Agenda profile and installed its verified image at the unchanged application address. ESP-IDF accepted an 8 MiB partition and reported 4,209,824 bytes free for this image.
+
+### Why
+
+The 4 MiB capacity was a partition table choice. The main firmware contains system code, libraries and the built-in world bundle. The CJI compiler ELF alone is 660,255 bytes in the grouped checkpoint. Doubling the factory allocation provides room for the existing system and lets current Agenda work proceed with the same bundle. Keeping the partition ending below 16 MiB avoids changing flash addressing assumptions.
+
+### What worked
+
+- The bootloader reported the three expected applications and data ranges. The fresh FAT volume mounted with 7,900 KiB usable and free after metadata. `cji status` returned `#OK cji`.
+- The grouped RV32 Agenda compiled in 718.933 ms, published its first response at 2.545 s on the first migrated boot, and reported 164,093 world bytes. The first boot formatted an empty filesystem, so this is an operational check rather than a like-for-like cold-start benchmark with the previous notes and settings.
+- The rollback set is local under `/tmp/picocalc-p4-app8m-20261118`, with private permissions. The source repository only contains the filtered verification receipt.
+
+### What didn't work
+
+- The sizing CLI is installed as a Python module in the ESP-IDF environment. The attempted `esp_idf_size --archives` executable reported `command not found`. Running the matching SDK Python with `-m esp_idf_size --archives` produced the linker map attribution.
+- Boot still logs the preexisting `nat-import crashed: it links to path_open, which picocalc-os does not give a module` error from the developer probe. The same error appears in pre-migration traces.
+
+### What I learned
+
+The flash capacity, partition length, and filesystem's reported usable size are different measures. The app receives 8 MiB at a fixed address. The FAT partition receives 8,000 KiB raw and reports 7,900 KiB after initialization. The upper 16 MiB of the detected flash remain outside this table.
+
+### What was tricky to build
+
+The old table's store and files share the region into which the app allocation grows. The new data ranges had old filesystem bytes from higher offsets, so I erased the relocated store and FAT area before the first mount. The lower credentials region was outside the readback and write ranges.
+
+### What warrants a second pair of eyes
+
+Review the backup ranges and offsets before reuse on a different device. The script deliberately accepts the old four-mebibyte layout only. Applying just the app image to an unmigrated unit leaves its old table active.
+
+### What should be done in the future
+
+Use the new layout for subsequent app-only flashes. Retain the rollback set while this device is being qualified. Further increases would need a new allocation decision, especially if using the chip addresses past the current 16 MiB table.
+
+### Code review instructions
+
+- Read `port/esp32p4/partitions.csv` and `scripts/01-expand-p4-app-partition.sh`.
+- Inspect `various/p4-app-partition-8m.txt` for the decoded tables, the image and table hashes, and the firmware's boot-time observations.
+
+### Technical details
+
+The app size grew from `0x400000` to `0x800000`. The migrated image for the grouped checkpoint is `0x3fc360` bytes. The relocation erased `0x7f0000` bytes starting at `0x810000`. The backup reads `0xff0000` bytes from `0x10000`, plus the separate 4 KiB partition-table sector at `0x8000`. The installed bootloader was retained.

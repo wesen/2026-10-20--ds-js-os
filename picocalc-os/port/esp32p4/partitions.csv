@@ -1,8 +1,9 @@
 # Name,   Type, SubType, Offset,   Size, Flags
 nvs,      data, nvs,     0x9000,   0x6000,
 phy_init, data, phy,     0xf000,   0x1000,
-factory,  app,  factory, 0x10000,  4M,
-# World records are separate from existing Wi-Fi/credential NVS. The old app offsets do not move.
-agentstore, data, nvs,   0x410000, 128K,
-# Files (PICOCALC-FS): FAT with wear levelling, mounted at /files. ESP-IDF addresses the first 16 MB of the 32 MB chip.
-files,      data, fat,     0x430000, 0xBD0000,
+factory,  app,  factory, 0x10000,  8M,
+# World records remain separate from the Wi-Fi/credential NVS at 0x9000.
+agentstore, data, nvs,   0x810000, 128K,
+# Files (PICOCALC-FS): FAT with wear levelling, mounted at /files.
+# Keep this layout within the first 16 MiB of the 32 MiB flash.
+files,      data, fat,     0x830000, 0x7D0000,
