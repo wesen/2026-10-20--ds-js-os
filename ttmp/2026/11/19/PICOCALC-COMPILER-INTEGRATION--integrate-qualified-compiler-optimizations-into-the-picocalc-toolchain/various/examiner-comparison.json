@@ -1,0 +1,115 @@
+{
+  "node": "v24.18.0",
+  "sourceHash": "4e7cfbaaf0dd3c6e12eb9d5f4a8d2db9309ddf8a581b97a0d286bb3806b5ce33",
+  "digests": {
+    "4452064": {
+      "typed-wasm": "e2b1a7e86e254fb737db736fa1838644903e348db78d3b38e95e7742ab7ba4d0",
+      "typed-rv32": "4403533997d66ef49bb536249cc70caafc8420b0afa7d027213d9345514d0bce"
+    },
+    "e202e94": {
+      "typed-wasm": "8ad276d678c20ceecc797e3564552453547f343e5354f6c069c2153eaf404885",
+      "typed-rv32": "6f312e42fb873f5c6a676434880eec67ea54bd39a1249d26783d9f66bbe3e26e"
+    },
+    "e082ec3": {
+      "typed-wasm": "a6d3c21d32c7355bb6a6db534290646d5a8b4a6be9d0c24ccd13f901d02dbbe4",
+      "typed-rv32": "4403533997d66ef49bb536249cc70caafc8420b0afa7d027213d9345514d0bce"
+    }
+  },
+  "functions": 20,
+  "numericParity": {
+    "revision": "e202e94",
+    "fullWasm": true,
+    "nativeImageAndMetadata": true,
+    "imageSHA256": "1eb1897e0ff6f6922fbf6db412014fb9156dbe82f59d00da9d63ff68538ff9d7"
+  },
+  "baselineWasmHash": "9c1d4e0ae04903c2d4d7b770ec1c6f106b92e7a2a7f44257c91bd3d53f4595b2",
+  "candidateWasmHash": "612307a1898b058413b6b05d1f3881728e21d8c8558b09cf66b003d3cfdfcc81",
+  "sites": {
+    "positive": {
+      "baseline": 1,
+      "candidate": 0
+    },
+    "earlyMutation": {
+      "baseline": 1,
+      "candidate": 0
+    },
+    "earlyJoin": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "freshRight": {
+      "baseline": 1,
+      "candidate": 0
+    },
+    "staleRight": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "rhsOrder": {
+      "baseline": 1,
+      "candidate": 0
+    },
+    "rhsChecked": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "emptyLiteral": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "rebound": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "afterLoop": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "inclusive": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "strict": {
+      "baseline": 1,
+      "candidate": 0
+    },
+    "bodyAssign": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "nestedAssign": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "exclusiveBounds": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "nestedAlias": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "mixed": {
+      "baseline": 3,
+      "candidate": 2
+    },
+    "saturated": {
+      "baseline": 17,
+      "candidate": 1
+    },
+    "factCap": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "wide": {
+      "baseline": 1,
+      "candidate": 0
+    }
+  },
+  "calls": 1200,
+  "traps": 246,
+  "nativeSteps": {
+    "baseline": 105401,
+    "candidate": 94726
+  }
+}
