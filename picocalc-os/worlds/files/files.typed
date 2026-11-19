@@ -1,0 +1,72 @@
+// Files policy. The reactor owns UTF-8 conversion, capabilities and pending I/O.
+function filesSpace(c: i32): bool {
+    return (c >= 9 && c <= 13) || c === 32 || c === 160 || c === 5760 ||
+        (c >= 8192 && c <= 8202) || c === 8232 || c === 8233 || c === 8239 ||
+        c === 8287 || c === 12288 || c === 65279;
+}
+
+function filesAlnum(c: i32): bool {
+    return (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122);
+}
+
+// Return the normalized ASCII name length, or -1 if the prompt is invalid.
+function filesName(value: string, output: buffer): i32 {
+    let start = 0;
+    let end = value.length;
+    while (start < end && filesSpace(value.charCodeAt(start))) { start = start + 1; }
+    while (start < end && filesSpace(value.charCodeAt(end - 1))) { end = end - 1; }
+    const count = end - start;
+    if (count < 1 || count > 64 || count > output.length) return -1;
+    if (!filesAlnum(value.charCodeAt(start))) return -1;
+    if (value.charCodeAt(end - 1) === 46) return -1;
+    let at = 0;
+    while (at < count) {
+        const c = value.charCodeAt(start + at);
+        if (!(filesAlnum(c) || c === 32 || c === 46 || c === 95 || c === 45)) return -1;
+        output.setCharCodeAt(at, c);
+        at = at + 1;
+    }
+    return count;
+}
+
+function filesCompare(left: string, leftDir: bool, right: string, rightDir: bool): i32 {
+    if (leftDir && !rightDir) return -1;
+    if (rightDir && !leftDir) return 1;
+    let at = 0;
+    while (at < left.length && at < right.length) {
+        const order = left.charCodeAt(at) - right.charCodeAt(at);
+        if (!(order === 0)) return order;
+        at = at + 1;
+    }
+    return left.length - right.length;
+}
+
+function filesSelect(current: i32, count: i32, delta: i32): i32 {
+    const next = current + delta;
+    const last = Math.max(0, count - 1);
+    if (next > last) return last;
+    return Math.max(0, next);
+}
+
+function filesPromptAction(key: i32, once: bool): i32 {
+    if (key === 7) return 7;
+    if (key === 5 && once) return 15;
+    if (key === 13 && once) return 13;
+    return 16; // append a printable character if one was sent
+}
+
+// Input key indices are defined by key_names in the reactor. Actions use the
+// same indices for simple keys; 14 deletes and 15 submits the active prompt.
+function filesAction(key: i32, once: bool, prompt: bool, item: i32, confirmed: bool): i32 {
+    if (prompt) return filesPromptAction(key, once);
+    if (key > 0 && key <= 4) return key;
+    if (!once) return 0;
+    if (item === 2 && (key === 5 || key === 6)) return 6;
+    if (item === 1 && key === 5) return 5;
+    if (key === 7 || key === 8) return 8;
+    if (key === 9 || key === 10) return key;
+    if (item > 0 && key === 11) return 11;
+    if (item > 0 && key === 12 && confirmed) return 14;
+    if (item > 0 && key === 12) return 12;
+    return 0;
+}

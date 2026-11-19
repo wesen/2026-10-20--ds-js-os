@@ -396,20 +396,21 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
                       handle_type_name(h->type), h->rights & R_READ ? "r" : "", h->rights & R_WRITE ? "w" : "",
                       h->rights & R_GRANT ? "g" : "", h->path, h->file ? "true" : "false");
     }
-    case CJI_FS_OPEN: case CJI_FS_AT: case CJI_FS_OP: { // FS open, derive child, submit operation
+    case CJI_FS_OPEN: case CJI_FS_AT: case CJI_FS_OP: case NW_FS_OP: {
       char err[160] = "out of memory";
       char *args[3] = {0};
       int64_t result = -1;
+      bool submit = c->op == CJI_FS_OP || c->op == NW_FS_OP;
       for (int i = 0; i < 3; i++) {
         if (!c->s[i]) continue;
-        if (c->n[i] && memchr(c->s[i], 0, c->n[i]) && !(c->op == CJI_FS_OP && i == 2 &&
+        if (c->n[i] && memchr(c->s[i], 0, c->n[i]) && !(submit && i == 2 &&
             args[0] && (!strcmp(args[0], "write") || !strcmp(args[0], "append")))) {
           snprintf(err, sizeof err, "unexpected NUL in file operation");
           goto fs_done;
         }
         if (!(args[i] = str(c, i))) goto fs_done;
       }
-      if (c->op == CJI_FS_OP) {
+      if (submit) {
         fs_job_t *job = fs_prepare(W, c->i[0], args[0], args[1], args[2], c->n[2], err, sizeof err);
         if (job) {
           result = ++K.next_promise;

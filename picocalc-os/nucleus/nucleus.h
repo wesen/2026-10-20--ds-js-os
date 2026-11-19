@@ -344,6 +344,7 @@ enum {
   NW_CLOCK_WALL, NW_CLOCK_ZONE, NW_CLOCK_SETZONE, NW_NET_INFO, NW_NET_SCAN, NW_NET_RESULT, NW_NET_JOIN,
   NW_FS_OPEN, NW_FS_READ, NW_CLOCK_OFFSET, NW_FS_WRITE, NW_CLOCK_TODAY,
   NW_FS_AT, NW_REVOKE, NW_ASK_FILE,
+  NW_FS_OP,
   NW_CALLS
 };
 // Firmware-private CJI operations. The compiler uses the matching CJI constants in world-native.js.

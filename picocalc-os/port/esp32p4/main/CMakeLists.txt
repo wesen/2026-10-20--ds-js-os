@@ -213,7 +213,7 @@ if(PICOCALC_TYPED_AGENDA)
         add_custom_command(OUTPUT "${agenda_reactor}"
             COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${agenda_reactor}" ${agenda_sources} ${OS}/sdk/nw_elf.c
             DEPENDS ${agenda_sources} ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
-                    ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_ui.h
+                    ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_ui.h ${OS}/sdk/nw_utf16.h
             VERBATIM)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_AGENDA=1)
         list(APPEND BUNDLE_EXTRA "agenda/typed-rv32.js=${OS}/compiler/typed-rv32.js")

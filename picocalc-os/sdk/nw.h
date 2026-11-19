@@ -83,6 +83,9 @@ int nw_fs_open(const char *claim);       // a handle to a directory declared in 
 int nw_fs_at(int dir, const char *path, const char *rights);  // narrow to a path; rights are r, w, or rw
 int nw_fs_read(int handle, const char *path);  // a token; settles with a JSON string
 int nw_fs_write(int handle, const char *path, const char *text); // a token; settles after the write
+// Submit a checked filesystem operation through an existing handle.
+// For rename arg is the new path; for write/append it is text.
+int nw_fs_op(int handle, const char *operation, const char *path, const char *arg);
 
 // Hardware, through claims and handles.
 int nw_i2c_open(const char *claim, int hz);   // "i2c0:0x1f"; a handle

@@ -191,7 +191,7 @@ else
 endif
 WASM_FLAGS := --target=wasm32-wasi $(WASM_SYS) -O2 -Wall -Isdk
 WASM_LINK  := -mexec-model=reactor -Wl,--stack-first -Wl,-z,stack-size=16384 -Wl,--strip-all
-WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_ui.h sdk/nw_calls.inc sdk/nw_wasm.c
+WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_ui.h sdk/nw_utf16.h sdk/nw_calls.inc sdk/nw_wasm.c
 WASMS      := $(addprefix $(BUILD)/natives/,echo.wasm battery.wasm wprobe.wasm wimport.wasm bench.wasm dial.wasm)
 wasm: $(WASMS)
 
@@ -203,6 +203,14 @@ agenda-reactor: $(BUILD)/agenda-reactor.wasm
 $(BUILD)/agenda-reactor.wasm: $(AGENDA_SRC) $(WASM_SDK)
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(AGENDA_SRC) sdk/nw_wasm.c
+
+FILES_SRC := worlds/files/world.c worlds/files/wasm-slot.c
+.PHONY: files-reactor
+files-reactor: $(BUILD)/files-reactor.wasm
+
+$(BUILD)/files-reactor.wasm: $(FILES_SRC) worlds/files/slots.h $(WASM_SDK)
+	@mkdir -p $(dir $@)
+	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(FILES_SRC) sdk/nw_wasm.c
 
 $(BUILD)/natives/%.wasm: natives/%.c $(WASM_SDK)
 	@mkdir -p $(dir $@)
