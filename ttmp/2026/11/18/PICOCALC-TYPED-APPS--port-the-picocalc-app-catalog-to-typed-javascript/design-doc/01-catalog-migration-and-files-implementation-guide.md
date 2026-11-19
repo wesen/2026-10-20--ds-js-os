@@ -87,3 +87,24 @@ Open a file with Enter and a directory with Enter or Right. Backspace and Left g
 Start at `picocalc-os/js/apps/files.js` and `picocalc-os/tests/sysapps.test.mjs`. Consult `worlds/agenda/compile.js` for checked signatures and slot binding, `sdk/nw.h` and `nucleus/native.c` for public world calls, and `nucleus/fs.c` for worker operations and permissions. Add the smallest SDK surface required by each app, and exercise authorization with the original claims. Keep caller-visible results and custody of transferred handles the same. For new shared compiler features, include the program that requires the feature and check output on both backends.
 
 First compare pure behavior against the original JavaScript. Then load the actual compiled Wasm module through the manifest and drive realistic UI actions. Repeat representative cases with the generated RV32 code and on the target device. A linked ELF size or successful standalone parser call alone cannot qualify an app. Record the manifest entry, actual backend, fixtures, behavioral evidence, and any separately pending device checks. Commit an app when its implementation reaches a coherent checkpoint and preserve commands and decisions in the diary. Keep the remaining apps listed until their corresponding integration checks pass.
+
+## Compile Files on the ESP32-P4
+
+The firmware build includes the compiler scripts, the typed Files source, and an unfilled reactor. The P4 runs the compiler in a short-lived QuickJS runtime backed by its aligned PSRAM allocator. The application then runs under the engine selected in the manifest. The same runtime wrapper also runs the existing Agenda compiler.
+
+```mermaid
+flowchart LR
+    M[Manifest selects files/compiled.bin] --> R[port_read_file]
+    R --> C[p4_typed_compile]
+    B[Bundled typed source and reactor] --> C
+    C --> L[Files linker validates four exports]
+    L --> E[Wasm or RV32 module]
+    E --> K[Kernel world loader]
+    K --> F[Files start and first listing]
+```
+
+Set `PICOCALC_TYPED_FILES=ON` for Wasm. Build the template first with `make -C picocalc-os files-reactor`. Set `PICOCALC_RV32_FILES=ON` for RV32. That selects the trusted ELF loader and builds the template with the P4 toolchain. In both cases the Files entry keeps its original world name, root claim and memory limit. The option keeps the experimental firmware profile separately reproducible.
+
+Use `scripts/03-build-files-firmware.sh IDF_EXPORT BUILD_DIR SDKCONFIG wasm|rv32` from the repository root to build an image with the usual panel worlds and RV32 Agenda. The script verifies both possible boot manifests and the bundle entries. Use distinct build directories or save the first application binary before rebuilding the other profile in the same directory.
+
+Read the UART `files compile source=bundle` line for the compile duration, JS heap high-water mark, and module size. During cold boot each Files compile occurs while the kernel reads the Files entry. It adds to the time before dispatch, so a paired hardware trial should also record power-on to first interactive frame. Successful firmware builds verify the configuration and linkage. Physical qualification additionally requires the UART compile result, an on-screen listing, and a replay of the create, rename, remove and Editor save workflows.

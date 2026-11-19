@@ -202,7 +202,9 @@ static void kernel_task(void *arg) {
   K.uart = stdout;            // the kernel log and the #OCT1 fault frames go to the console
   port_clock();               // starts the clock
   kernel_init("js", NULL);    // the prelude, and the calibration loops
-#if PICOCALC_NATIVE_ELF
+#if PICOCALC_TYPED_FILES
+  const char *manifest = "js/system.typed-files.json";
+#elif PICOCALC_NATIVE_ELF
   const char *manifest = "js/system.cji.json";
 #else
   const char *manifest = "js/system.json";

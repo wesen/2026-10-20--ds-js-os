@@ -203,6 +203,67 @@ set_source_files_properties(
     # compositor's first paint crashed every boot); -Og and -O2 -fno-strict-aliasing both run clean.
     PROPERTIES COMPILE_OPTIONS "-w;-Wno-error=incompatible-pointer-types;-fwrapv;-fno-strict-aliasing")
 
+# Both typed apps override the same configured catalog, preserving the claims and
+# any peripheral or test selections made above.
+if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES)
+    target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c)
+    list(APPEND BUNDLE_EXTRA "typed/wasm.js=${OS}/compiler/typed-wasm.js")
+    list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-wasm.js")
+    if(PICOCALC_RV32_AGENDA OR PICOCALC_RV32_FILES)
+        list(APPEND BUNDLE_EXTRA "typed/rv32.js=${OS}/compiler/typed-rv32.js")
+        list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-rv32.js")
+    endif()
+    if(PICOCALC_NATIVE_ELF)
+        set(typed_manifest "${system_json}")
+    else()
+        file(READ "${OS}/js/system.json" typed_manifest)
+    endif()
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${OS}/js/system.json")
+    string(JSON world_count LENGTH "${typed_manifest}" worlds)
+    math(EXPR last_world "${world_count} - 1")
+endif()
+
+if(PICOCALC_TYPED_FILES)
+    if(PICOCALC_RV32_FILES)
+        set(files_reactor "${CMAKE_CURRENT_BINARY_DIR}/files-reactor.elf")
+        set(files_sources "${OS}/worlds/files/world.c" "${OS}/worlds/files/rv32-slot.S")
+        add_custom_command(OUTPUT "${files_reactor}"
+            COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${files_reactor}" ${files_sources} ${OS}/sdk/nw_elf.c
+            DEPENDS ${files_sources} ${OS}/worlds/files/slots.h
+                    ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h ${OS}/sdk/nw_calls.inc
+                    ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_ui.h ${OS}/sdk/nw_utf16.h
+            VERBATIM)
+        target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_FILES=1)
+        set(files_engine native)
+    else()
+        set(PICOCALC_FILES_REACTOR "${OS}/build/files-reactor.wasm" CACHE FILEPATH "Prebuilt Files SDK reactor")
+        if(NOT EXISTS "${PICOCALC_FILES_REACTOR}")
+            message(FATAL_ERROR "Build the Files reactor with make -C picocalc-os files-reactor")
+        endif()
+        set(files_reactor "${PICOCALC_FILES_REACTOR}")
+        set(files_engine wasm)
+    endif()
+    foreach(i RANGE ${last_world})
+        string(JSON world_name GET "${typed_manifest}" worlds ${i} name)
+        if(world_name STREQUAL "files")
+            string(JSON typed_manifest SET "${typed_manifest}" worlds ${i} file "\"files/compiled.bin\"")
+            string(JSON typed_manifest SET "${typed_manifest}" worlds ${i} engine "\"${files_engine}\"")
+            break()
+        endif()
+    endforeach()
+    set(files_manifest_path "${CMAKE_CURRENT_BINARY_DIR}/system.typed-files.json")
+    file(CONFIGURE OUTPUT "${files_manifest_path}" CONTENT "${typed_manifest}" @ONLY)
+    target_sources(${COMPONENT_LIB} PRIVATE files_p4.c)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_FILES=1)
+    list(APPEND BUNDLE_EXTRA
+        "system.typed-files.json=${files_manifest_path}"
+        "files/compile.js=${OS}/worlds/files/compile.js"
+        "files/files.typed=${OS}/worlds/files/files.typed"
+        "files/reactor.bin=${files_reactor}")
+    list(APPEND BUNDLE_EXTRA_DEPS
+        "${files_manifest_path}" "${files_reactor}" "${OS}/worlds/files/compile.js" "${OS}/worlds/files/files.typed")
+endif()
+
 if(PICOCALC_TYPED_AGENDA)
     if(PICOCALC_AGENDA_EARLY_BOOT)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_AGENDA_EARLY_BOOT=1)
@@ -216,8 +277,6 @@ if(PICOCALC_TYPED_AGENDA)
                     ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_ui.h ${OS}/sdk/nw_utf16.h
             VERBATIM)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_AGENDA=1)
-        list(APPEND BUNDLE_EXTRA "agenda/typed-rv32.js=${OS}/compiler/typed-rv32.js")
-        list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-rv32.js")
         set(agenda_engine native)
     else()
         set(PICOCALC_AGENDA_REACTOR "${OS}/build/agenda-reactor.wasm" CACHE FILEPATH "Prebuilt Agenda SDK reactor")
@@ -227,16 +286,7 @@ if(PICOCALC_TYPED_AGENDA)
         set(agenda_reactor "${PICOCALC_AGENDA_REACTOR}")
         set(agenda_engine wasm)
     endif()
-    if(PICOCALC_NATIVE_ELF)
-        # The native manifest file is written at generation time. Use the
-        # configured JSON directly, including the selected peripheral worlds.
-        set(agenda_manifest "${system_json}")
-    else()
-        file(READ "${OS}/js/system.json" agenda_manifest)
-    endif()
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${OS}/js/system.json")
-    string(JSON world_count LENGTH "${agenda_manifest}" worlds)
-    math(EXPR last_world "${world_count} - 1")
+    set(agenda_manifest "${typed_manifest}")
     foreach(i RANGE ${last_world})
         string(JSON world_name GET "${agenda_manifest}" worlds ${i} name)
         if(world_name STREQUAL "agenda")
@@ -252,14 +302,13 @@ if(PICOCALC_TYPED_AGENDA)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_AGENDA=1)
     list(APPEND BUNDLE_EXTRA
         "system.typed-agenda.json=${agenda_manifest_path}"
-        "agenda/typed-wasm.js=${OS}/compiler/typed-wasm.js"
         "agenda/compile.js=${OS}/worlds/agenda/compile.js"
         "agenda/reminder.typed=${OS}/worlds/agenda/reminder.typed"
         "agenda/entry.typed=${OS}/worlds/agenda/entry.typed"
         "agenda/reactor.bin=${agenda_reactor}")
     list(APPEND BUNDLE_EXTRA_DEPS
         "${agenda_manifest_path}" "${agenda_reactor}"
-        "${OS}/compiler/typed-wasm.js" "${OS}/worlds/agenda/compile.js" "${OS}/worlds/agenda/reminder.typed"
+        "${OS}/worlds/agenda/compile.js" "${OS}/worlds/agenda/reminder.typed"
         "${OS}/worlds/agenda/entry.typed")
 endif()
 

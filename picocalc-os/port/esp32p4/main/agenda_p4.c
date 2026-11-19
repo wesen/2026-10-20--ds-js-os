@@ -3,11 +3,8 @@
 #include <string.h>
 
 #include "p4.h"
-#include "quickjs.h"
 
 #define SOURCE_LIMIT (64 * 1024)
-#define COMPILER_LIMIT (2 * 1024 * 1024)
-#define COMPILER_US 1700000
 #define FIRST_FRAME_TARGET_US 2000000
 #define READY_REPLY_GRACE_US 50000
 
@@ -18,11 +15,6 @@
 #define AGENDA_ENGINE ENG_WASM
 #define AGENDA_COMPILE "compileAgenda"
 #endif
-
-typedef struct {
-  size_t live, peak;
-  vtime_t deadline;
-} compile_heap;
 
 static unsigned char *startup_module;
 static size_t startup_length;
@@ -52,57 +44,6 @@ static compositor_startup compositor_turns[3];
 static const char *const compositor_kinds[] = {"draw", "worlds.status", "other"};
 static bool recording_boot;
 static bool boot_report_pending;
-
-static void account(compile_heap *heap, size_t old, size_t current) {
-  heap->live = heap->live - old + current;
-  if (heap->live > heap->peak) heap->peak = heap->live;
-}
-
-static void *compile_malloc(JSMallocState *state, size_t size) {
-  compile_heap *heap = state->opaque;
-  if (heap->live >= COMPILER_LIMIT || size > COMPILER_LIMIT - heap->live) return NULL;
-  void *ptr = port_heap_malloc(size);
-  if (ptr) account(heap, 0, port_heap_usable(ptr));
-  return ptr;
-}
-
-static void compile_free(JSMallocState *state, void *ptr) {
-  if (!ptr) return;
-  account(state->opaque, port_heap_usable(ptr), 0);
-  port_heap_free(ptr);
-}
-
-static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
-  if (!ptr) return compile_malloc(state, size);
-  if (!size) { compile_free(state, ptr); return NULL; }
-  compile_heap *heap = state->opaque;
-  size_t old = port_heap_usable(ptr);
-  size_t retained = heap->live - old;
-  if (retained >= COMPILER_LIMIT || size > COMPILER_LIMIT - retained) return NULL;
-  void *next = port_heap_realloc(ptr, size);
-  if (next) account(heap, old, port_heap_usable(next));
-  return next;
-}
-
-static const JSMallocFunctions compiler_allocator = {
-  compile_malloc, compile_free, compile_realloc, port_heap_usable,
-};
-
-static int compile_interrupt(JSRuntime *rt, void *opaque) {
-  compile_heap *heap = opaque;
-  return port_clock() >= heap->deadline;
-}
-
-static bool eval_file(JSContext *ctx, const char *path) {
-  size_t length;
-  char *text = p4_bundle_read(path, &length, NULL, 0);
-  if (!text) return false;
-  JSValue value = JS_Eval(ctx, text, length, path, JS_EVAL_TYPE_GLOBAL);
-  free(text);
-  bool ok = !JS_IsException(value);
-  JS_FreeValue(ctx, value);
-  return ok;
-}
 
 static char *read_reminder_source(bool edit, size_t *length) {
   if (!edit) return p4_bundle_read("agenda/reminder.typed", length, NULL, 0);
@@ -155,70 +96,11 @@ static unsigned char *compile(bool edit, size_t *length, vtime_t *started) {
     free(source); free(reactor);
     return NULL;
   }
-  compile_heap heap = {.deadline = *started + COMPILER_US};
-  JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, &heap);
-  JSContext *ctx = NULL;
-  unsigned char *module = NULL;
-  if (!rt) goto done;
-  JS_SetMaxStackSize(rt, port_js_stack());
-  JS_SetInterruptHandler(rt, compile_interrupt, &heap);
-  ctx = JS_NewContext(rt);
-  if (!ctx) goto done;
-  if (!eval_file(ctx, "agenda/typed-wasm.js") || !eval_file(ctx, "agenda/compile.js")) goto rejected;
-#if PICOCALC_RV32_AGENDA
-  if (!eval_file(ctx, "agenda/typed-rv32.js")) goto rejected;
-#endif
-  JSValue global = JS_GetGlobalObject(ctx);
-  JSValue function = JS_GetPropertyStr(ctx, global, AGENDA_COMPILE);
-  JSValue reactor_buffer = JS_NewArrayBufferCopy(ctx, (const uint8_t *)reactor, reactor_length);
-  // This QuickJS C entry reads three argument slots for a buffer view.
-  JSValue view_args[] = {reactor_buffer, JS_NewUint32(ctx, 0), JS_NewUint32(ctx, reactor_length)};
-  JSValue reactor_view = JS_IsException(reactor_buffer) ? JS_EXCEPTION
-      : JS_NewTypedArray(ctx, 3, view_args, JS_TYPED_ARRAY_UINT8);
-  JS_FreeValue(ctx, reactor_buffer);
-  JSValue args[] = {JS_NewStringLen(ctx, source, source_length), reactor_view};
-  JSValue result = JS_EXCEPTION;
-  if (!JS_IsException(args[0]) && !JS_IsException(args[1])) result = JS_Call(ctx, function, JS_UNDEFINED, 2, args);
-  JS_FreeValue(ctx, args[1]); JS_FreeValue(ctx, args[0]);
-  JS_FreeValue(ctx, function); JS_FreeValue(ctx, global);
-  if (JS_IsException(result)) goto rejected;
-  size_t offset = 0, size = 0, unit = 0, available = 0;
-  JSValue buffer = JS_GetTypedArrayBuffer(ctx, result, &offset, &size, &unit);
-  uint8_t *bytes = JS_IsException(buffer) ? NULL : JS_GetArrayBuffer(ctx, &available, buffer);
-  if (bytes && unit == 1 && offset <= available && size <= available - offset && size <= UINT32_MAX - 1) {
-    module = malloc(size + 1);
-    if (module) {
-      memcpy(module, bytes + offset, size);
-      module[size] = 0;
-      *length = size;
-    }
-  }
-  JS_FreeValue(ctx, buffer);
-  JS_FreeValue(ctx, result);
-  goto done;
-
-rejected:
-  {
-    JSValue exception = JS_GetException(ctx);
-    const char *message = JS_ToCString(ctx, exception);
-    printf("agenda compile rejected: %s\n", message ? message : "unknown compiler error");
-    if (JS_IsError(ctx, exception)) {
-      JSValue stack = JS_GetPropertyStr(ctx, exception, "stack");
-      const char *trace = JS_IsString(stack) ? JS_ToCString(ctx, stack) : NULL;
-      if (trace) printf("%s\n", trace);
-      JS_FreeCString(ctx, trace);
-      JS_FreeValue(ctx, stack);
-    }
-    JS_FreeCString(ctx, message);
-    JS_FreeValue(ctx, exception);
-  }
-done:
-  if (ctx) JS_FreeContext(ctx);
-  if (rt) JS_FreeRuntime(rt);
-  free(source); free(reactor);
-  printf("agenda compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu\n",
-         edit ? "edit" : "bundle", module ? "ok" : "failed",
-         (long long)(port_clock() - *started), heap.peak, module ? *length : 0);
+  unsigned char *module = (unsigned char *)p4_typed_compile("agenda", edit ? "edit" : "bundle",
+      source, source_length, "agenda/compile.js", AGENDA_COMPILE, AGENDA_ENGINE,
+      reactor, reactor_length, length, *started);
+  free(source);
+  free(reactor);
   return module;
 }
 
