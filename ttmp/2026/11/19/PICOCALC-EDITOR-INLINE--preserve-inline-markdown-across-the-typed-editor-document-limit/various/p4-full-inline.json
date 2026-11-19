@@ -1,0 +1,13 @@
+{
+  "input_bytes": 65536,
+  "engine": "native",
+  "page_down_keys": 1,
+  "editor_mem_kb_at_start": 710.1,
+  "editor_limit_kb": 768,
+  "faults": [],
+  "scratch_removed": true,
+  "screenshots": {
+    "shot-1.png": "3bcd744531d1152588e39350afe5a63b0fdeb9cee8b8107f930c13ecb634c3bd",
+    "shot-2.png": "3bcd744531d1152588e39350afe5a63b0fdeb9cee8b8107f930c13ecb634c3bd"
+  }
+}

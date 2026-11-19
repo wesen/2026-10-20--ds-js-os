@@ -9,4 +9,4 @@
 - [x] Stream preview visual rows to fit the frame transport.
 - [x] Qualify the standard Editor workflow on the updated Wasm and RV32 board builds.
 - [x] Capture long preview EOF on the physical PicoCalc running RV32.
-- [ ] Qualify imported long lines in [PICOCALC-EDITOR-INLINE](../PICOCALC-EDITOR-INLINE--preserve-inline-markdown-across-the-typed-editor-document-limit/index.md).
+- [x] Qualify imported long lines in [PICOCALC-EDITOR-INLINE](../PICOCALC-EDITOR-INLINE--preserve-inline-markdown-across-the-typed-editor-document-limit/index.md).

@@ -1,7 +1,7 @@
 ---
 Title: Preserve inline Markdown across the typed Editor document limit
 Ticket: PICOCALC-EDITOR-INLINE
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T01:45:37.532242564-05:00
+LastUpdated: 2026-11-19T02:13:44.87884022-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -26,6 +26,10 @@ The typed formatter now preserves full-size inline Markdown and bounds malformed
 - [Matched host baseline](various/long-inline-before.json)
 - [Replay after the fix](various/long-inline-after.json)
 - [Cross-target parity](various/full-inline-parity.json)
+- [Physical 64 KiB preview](various/p4-full-inline.png)
+- [Physical build and workflow receipts](various/p4-inline-builds.json)
+- [Prior capacity work](../PICOCALC-EDITOR-CAPACITY--qualify-typed-editor-across-the-supported-document-range/index.md)
+- [Navigation and persistent cursor qualification](../PICOCALC-EDITOR-NAV--keep-typed-editor-cursor-navigation-responsive-and-visible/index.md)
 
 ## Key Links
 
@@ -34,7 +38,7 @@ The typed formatter now preserves full-size inline Markdown and bounds malformed
 
 ## Status
 
-Current status: **active**
+Current status: **complete**
 
 ## Topics
 

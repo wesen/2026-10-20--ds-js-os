@@ -1,0 +1,42 @@
+{
+  "wasm": {
+    "name": "editor",
+    "kind": "app",
+    "engine": "wasm",
+    "title": "Editor",
+    "state": "idle",
+    "turns": 1,
+    "msgs": 1,
+    "cpu_ms": 177.849,
+    "mem_kb": 528.0,
+    "limit_kb": 768,
+    "mbox": 0,
+    "mbox_peak": 0,
+    "restarts": 0,
+    "budget_ms": 200,
+    "last_error": "",
+    "user": false,
+    "file": "editor/compiled.bin",
+    "claims": []
+  },
+  "rv32": {
+    "name": "editor",
+    "kind": "app",
+    "engine": "native",
+    "title": "Editor",
+    "state": "idle",
+    "turns": 1,
+    "msgs": 1,
+    "cpu_ms": 14.636,
+    "mem_kb": 710.1,
+    "limit_kb": 768,
+    "mbox": 0,
+    "mbox_peak": 0,
+    "restarts": 0,
+    "budget_ms": 200,
+    "last_error": "",
+    "user": false,
+    "file": "editor/compiled.bin",
+    "claims": []
+  }
+}

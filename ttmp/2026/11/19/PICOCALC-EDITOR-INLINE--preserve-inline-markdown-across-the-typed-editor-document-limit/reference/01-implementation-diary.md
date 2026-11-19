@@ -83,6 +83,8 @@ The inline formatter now uses one full-size staging buffer and three resumable p
 
 **Inferred user intent:** Run the real Editor on PicoCalc with predictable memory and faithful output.
 
+**Commit (code):** `f828a63` — "Format full-size Markdown lines in typed Editor"
+
 ### What I did
 
 - Added a generic 65,536-unit scratch slot, a checked cross-buffer copy, and ranged uppercase conversion to the shared typed SDK. Registered matching imports in both linkers.
@@ -102,6 +104,7 @@ Formatting and row wrapping operate at different boundaries. The formatter needs
 - The maximum-size heading includes Unicode expansions, a surrogate pair, nested bold and code inside a link, and its marker beyond a long link destination. The maximum-size dense input exercises repeated valid replacements. Wasm matches four and five reference framebuffers respectively, and RV32 reproduces both frame traces.
 - The final preview regression also passes the 571-byte mixed Markdown example, the 18,047-byte plain Unicode line, the 21,614-byte preview, and the full-file late navigation workflow.
 - Cancelling and reopening the dense preview produced matching edit and final-preview framebuffers. The cold-open test persisted and restored 1:65473 on the maximum-size physical line and matched the reference framebuffer.
+- The implemented guide and simulator screenshot were uploaded to reMarkable. The uploader returned `OK: uploaded PicoCalc Typed Editor Inline Formatting Implementation.pdf -> /ai/2026/11/19/PICOCALC-EDITOR-INLINE`.
 - The final typed outputs measure 88,255 bytes for Wasm and 240,452 bytes for RV32 ELF. The test's Wasm world uses the board profile's 768 KiB limit.
 
 ### What didn't work
@@ -134,3 +137,70 @@ Start with `editorMdEmit`, `editorMdMatch`, `editorMdStep` and `editorPreviewUpp
 ### Technical details
 
 The formatting scratch uses 128 KiB of counted UTF-16. Each probe inspects up to 1,024 units, and a preview iteration charges eight work units for one probe. The typed-world record supports 80 scalar words and Editor uses 71. The row cache holds 36 records of nine UTF-16 units each.
+
+## Step 3: Verify the final physical build and audit the port
+
+The final Wasm and RV32 firmware both passed the physical standard workflow. I then staged the maximum-size formatted heading on RV32, opened its preview, and captured the final output before and after Page Down. The LCD contains `STRASSE` and the final `END EOF INLINE` marker. The tested RV32 firmware remains installed.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Validate the complete typed Editor on its real hardware entry point and preserve evidence that connects the firmware to source and behavior.
+
+**Inferred user intent:** maintain a real PicoCalc Editor whose application logic is typed JavaScript.
+
+### What I did
+
+- Verified that `worlds/editor/source.list` contains 11 typed sources and that the packaged 70,859-byte concatenation has SHA-256 `f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed`. Both firmware bundles contain that source and select `editor/compiled.bin` with the requested runtime engine.
+- Ran the paired standard qualifier and the capacity ticket's `03-check-large-preview-on-p4.py --engine native --long-inline` on `/dev/ttyACM0`. Checked flash hashes, source compilation receipts, staged byte counts, the captured final output and scratch cleanup.
+- Preserved the physical screenshots, paired results, and exact Editor startup world records in `various/`.
+- Reviewed the prior capacity and navigation evidence, rechecked the original Editor's ten unit tests, and verified the final cross-target fixtures.
+
+### Why
+
+The host comparison verifies exact source bytes, workflow decisions and framebuffer parity. Physical tests independently verify that the selected typed entry compiles from source on the device, fits the world allocation, and reaches the hardware display and filesystem.
+
+### What worked
+
+- The final board compiled Editor in 1.99 s on Wasm and 3.14 s on RV32. Loader times were about 176 ms and 14.1 ms. The standard captures and exact 20-byte save fixture passed on both engines, alongside zero I²C and SPI errors.
+- The boot world records show 528.0 KiB on Wasm and 710.1 KiB on RV32 against 768 KiB for each. RV32 reported 710.1 KiB before the maximum-line fixture and completed its preview with zero recorded faults.
+- The staged file reached exactly 65,536 bytes. Both physical framebuffer captures passed CRC and show the heading with the final marker. Scratch cleanup confirmed that its directory was gone.
+
+### What didn't work
+
+Some glyphs in the Unicode workload appear as question marks in the PicoCalc font. The host frames and JavaScript oracle use the same display fallback. The frame trace verifies the Unicode expansion before drawing, and the physical capture verifies that the whole rendered heading reaches the final marker.
+
+### What I learned
+
+The active board app can stay fully typed while storage, file capabilities, Unicode tables and graphics live in shared runtime layers. Board memory usage and simulator process memory are separate measurements. The native world retains about 58 KiB of reported startup headroom.
+
+### What was tricky to build
+
+The full board run uses binary UART staging for a file that is too long to type conveniently. Validating each acknowledged offset guards against transfer loss. It verifies the display and cleanup separately from merely seeing the compiler return.
+
+### What warrants a second pair of eyes
+
+Match the source SHA with the pair receipts, the active world entry with the selected engine, and the final screenshot with the 65,536-byte fixture. For Unicode validation, inspect the parity frame trace in addition to the LCD font fallback.
+
+### What should be done in the future
+
+The Editor implementation and verification work in this ticket is complete.
+
+### Code review instructions
+
+Read `various/p4-inline-builds.json`, `p4-editor-worlds-at-boot.json`, and `p4-full-inline.json`, then inspect `p4-full-inline.png`. Replay the host steps in the design guide to regenerate the compositor comparisons.
+
+### Technical details
+
+The images are 4,270,720 bytes for Wasm and 4,461,472 bytes for RV32. The existing factory application partition is 8 MiB. The typed firmware option selects the bundled app. The original JavaScript source is used by the differential fixtures.
+
+### Completion audit
+
+| Requirement | Checked evidence |
+| --- | --- |
+| Editor policy lives in typed JavaScript | Eleven files in `worlds/editor/source.list`, the manifest's `editor/compiled.bin` entry and the freshly compiled artifact receipts |
+| Real editing and file handoff | Cross-target grant, read, refuse, write, discard, and cursor-store traces. The paired standard hardware smoke exercised the same Editor apps. |
+| Device-scale operation | Full-file normalizing save, absent and dense searches, EOF match, scrolling, page movement, reopen and two maximum-size formatted preview cases in the capacity, navigation, and inline tickets |
+| Hardware validation | Final Wasm and RV32 standard runs, and the full-size RV32 LCD preview with normal scratch cleanup |
+| Requested records | Focused Git commits, detailed diaries, replay scripts in tickets, simulator and handheld captures, and confirmed reMarkable delivery |

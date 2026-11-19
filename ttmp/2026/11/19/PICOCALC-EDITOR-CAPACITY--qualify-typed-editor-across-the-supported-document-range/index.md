@@ -1,7 +1,7 @@
 ---
 Title: Qualify typed Editor across the supported document range
 Ticket: PICOCALC-EDITOR-CAPACITY
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T00:42:56.344975185-05:00
+LastUpdated: 2026-11-19T02:13:45.351280102-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -36,7 +36,7 @@ Editor application logic is in typed JavaScript. This ticket addresses two large
 
 ## Status
 
-Current status: **active**
+Current status: **complete**
 
 ## Topics
 

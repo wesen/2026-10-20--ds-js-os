@@ -23,3 +23,7 @@ Segmented typed search and viewport preparation, and verified both 64 KiB search
 ## 2026-11-19
 
 Verified both updated hardware builds and the physical RV32 full-file search. Recorded post-match navigation faults and the LCD row mismatch.
+
+## 2026-11-19
+
+Closed the final full-line Markdown capacity task with the recorded Wasm, RV32, and physical preview evidence.
