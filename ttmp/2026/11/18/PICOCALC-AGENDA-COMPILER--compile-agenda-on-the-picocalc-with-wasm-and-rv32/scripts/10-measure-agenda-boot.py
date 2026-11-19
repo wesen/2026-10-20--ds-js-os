@@ -15,6 +15,7 @@ WORLD_FIELDS = {
     "engine", "first_us", "total_us", "attempts", "js_setup_us", "js_prelude_us",
     "js_source_us", "js_init_us",
 }
+REPLY_WAIT_FIELDS = {"reply_wait_us", "reply_wait_segments"}
 
 
 def capture(port, world_profile):
@@ -60,7 +61,7 @@ def capture(port, world_profile):
                 sample = {
                     key: int(value) for key, value in re.findall(r"(\w+)=(\d+)", match[2])
                 }
-                if sample.keys() != WORLD_FIELDS:
+                if sample.keys() not in (WORLD_FIELDS, WORLD_FIELDS | REPLY_WAIT_FIELDS):
                     raise SystemExit(f"incomplete startup sample for {match[1]}")
                 worlds[match[1]] = sample
         if "agenda" not in worlds or not any(boot["engine"] == 0 for boot in worlds.values()):

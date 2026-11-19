@@ -681,3 +681,31 @@ Successful SPI transactions establish that the P4 sent display data. They cannot
 ### Code review instructions
 
 Read the two `bus i2c0` and `bus spi2` rows in the powered receipt. Reproduce with the Step 25 script and capture arguments `-s 20 -c '8 stats' -c '11 agenda build' -c '17 stats'`. The original application was restored and verified after both probes.
+
+## Step 27 — Attribute powered startup delay after Agenda's file reply
+
+### What I did
+
+I added per-world timing and segment counts between the first successful notes reply reaching the kernel and Agenda publishing its first view. This reuses the boot profiler's fixed array and prints it after the view, so it avoids per-segment serial writes. The timestamp used to recognize a ready reply is retained independently of the two-second relocation deadline. It gives the same bounded deferral when a read arrives in time while also recording later arrivals.
+
+I built the instrumented peripheral-enabled firmware with ESP-IDF 5.4.2 and booted it on the powered device. The application SHA-256 was fb8853717e0cc3e20b593762205c38a08fb8a27a65df3a5107cf9fde460d2203. The sampler parsed the saved capture as a full per-world profile. The host application and native integration suites passed, including all 34 native and Wasm integration tests.
+
+### What worked
+
+Agenda reached publication at 2.856 s. Its real notes reply reached the kernel at 2.296 s and its settlement started about 559 ms later. World segments measured during that gap totaled 529 ms. The compositor occupied 293 ms in 30 segments. The keyboard occupied 81 ms in 44 segments and the display driver used another 32 ms in 46 segments. These three worlds accounted for about 406 ms of the 559 ms gap. The counters at eight seconds showed 144 I²C transfers and 62 SPI transfers with zero errors. The per-world receipt is various/p4-powered-dispatch-profile.json.
+
+### Why
+
+The headless measurements exclude the UI worlds. Their startup traffic could affect the powered path even when Agenda loads its own engine quickly and the keyboard bus works. Summing the actual measured segments establishes how much time is taken by other worlds after the reply is already available.
+
+### What I learned
+
+The two slow intervals in this healthy boot are the wait to get the file result back and the scheduling delay after it reaches the kernel. The second interval is largely accounted for by real world work. The existing selection rule prioritizes driver and service work over app work. It is useful for responsive peripheral service, and it leaves Agenda waiting through UI startup. The result directs further work toward startup paint and dispatch behavior. A scheduler change would need to preserve input, output, and fairness for other apps.
+
+### What warrants a second pair of eyes
+
+The 29.6 ms remainder includes event-loop, queue, logging, and other work outside the measured segments. It is not assigned to a specific subsystem. This attribution is from one powered boot. Repeating that trace and adding the compositor's message type counts would discriminate startup paints from its other service turns.
+
+### Code review instructions
+
+Review the bounded record collection in `agenda_p4.c` and the completed-segment timestamp in `nucleus/kernel.c`. Run scripts/10-measure-agenda-boot.py with --world-profile and compare file_returned_us, settle_us, reply_wait_us, and reply_wait_segments. The physical T-key to LCD experiment remains a separate capture.

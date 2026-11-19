@@ -59,3 +59,7 @@ Booted the peripheral-enabled RV32 image and recorded Agenda publication alongsi
 ## 2026-11-18
 
 Confirmed the powered keyboard and display buses complete transfers without errors. Measured a 667 ms editable Agenda build and two slower full boots.
+
+## 2026-11-18
+
+Attributed 529 ms of the 559 ms powered startup settlement delay to measured dispatch segments, led by the compositor and peripheral drivers.

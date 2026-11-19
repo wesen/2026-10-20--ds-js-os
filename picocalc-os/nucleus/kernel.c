@@ -770,8 +770,8 @@ static void run_segment(world_t *W, bool is_settle) {
   } else if (W->in_turn && (W->turn_done || W->turn_rejected)) finish_turn(W);
   if (rc == 0 && booting && !why[0]) { start_timers(W, K.vnow + cost); replay_retained(W); }
 #if PICOCALC_TYPED_AGENDA
-  extern void p4_agenda_world_boot(const world_t *, vtime_t, vtime_t);
-  if (booting) p4_agenda_world_boot(W, K.vnow, cost);
+  extern void p4_agenda_world_segment(const world_t *, vtime_t, vtime_t, bool);
+  p4_agenda_world_segment(W, K.vnow, cost, booting);
 #endif
   K.lane_free = K.vnow + cost;
   K.cur = NULL;
