@@ -100,3 +100,9 @@ The live app now adds a task. Full grouping, selection, toggling, editing, delet
 ### Code review instructions
 
 Run the parent ticket's scripts/04-check-wasm-world.mjs for the real simulator and scripts/09-check-rv32-world.mjs with the current P4 reactor ELF for native execution. The receipts in various/ distinguish simulator integration from the native SDK emulation boundary.
+
+## Step 4 — Run the enlarged native reactor on the powered P4
+
+The newly linked native image loaded and published the real notes view after 3.277 s on full boot. Its compile took 719 ms and peaked at 695,364 B. The following editable build published after 2.158 s with 1.128 s in its compiler. The native world counter was 160,328 bytes. The I²C and SPI counters had no errors. These are single read-only boot and rebuild samples. They do not certify a real keypress, note write, or visible LCD timing. The new complete source exceeds two seconds in this powered session. Compare like-for-like activity before assigning that change to code size alone.
+
+The original application was restored and verified by the flash writer and cji status. The milestone report was pushed to go-go-parc main at 5641c3f.

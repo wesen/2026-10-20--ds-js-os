@@ -1,0 +1,27 @@
+Powered ESP32-P4 with the two-entry native Agenda world. One full boot and one editable rebuild.
+Firmware SHA-256 d9ef9b82554e863c2603d691dd92718c872c032641de51486a856577b2c849eb.
+agenda compile source=bundle status=ok us=719305 peak_js_bytes=695364 module_bytes=59528
+agenda boot source_start_us=162875
+agenda stage before-cji-restore us=908225
+agenda stage before-dispatch us=937795
+agenda stage world-init us=1610060
+agenda stage world-init-done us=1616648
+cji: loader start_us=2174363 end_us=2316411
+agenda stage file-submitted us=2646951
+agenda stage file-returned us=2796473
+agenda stage settle us=3275069
+agenda response us=3276751 world_bytes=160328
+agenda frame turn_us=1702 world_bytes=160328
+agenda compile source=edit status=ok us=1127551 peak_js_bytes=694608 module_bytes=59528
+agenda stage world-init us=1859423
+agenda stage world-init-done us=1865670
+agenda stage file-submitted us=2115572
+agenda stage file-returned us=2156561
+agenda stage settle us=2157416
+agenda response us=2158460 world_bytes=160328
+agenda frame turn_us=1045 world_bytes=160328
+  bus i2c0  busy  1679.25 ms, 277 transfers, 1111 bytes, 0 errors
+  bus spi2  busy   129.24 ms, 74 transfers, 436889 bytes, 0 errors
+Probe used existing notes without entering or writing a user task. Restore verification follows.
+Hash of data verified.
+#OK cji
