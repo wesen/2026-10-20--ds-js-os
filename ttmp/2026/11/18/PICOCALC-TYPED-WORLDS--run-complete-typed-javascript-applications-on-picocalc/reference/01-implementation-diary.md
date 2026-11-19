@@ -306,3 +306,62 @@ Read `worlds/editor/edit.typed` and check how its functions call `editorLocate` 
 ### Technical details
 
 The visible document is a bounded UTF-16 buffer. Cursor offsets and span copies use UTF-16 units, while status and wrap columns count code points. The kernel copies the UTF-8 snapshot for a write. The current typed state records the document revision at submission and matches the returned write token. The RV32 template slot is 96 KiB for the added command and view routines.
+
+## Step 6 — Preserve exact save snapshots and restore the last saved text
+
+The typed app now selects a saved snapshot and a separate pending snapshot from two storage slots. Editing continues in the document buffer while the kernel writes a copy of the submitted text. On a successful settlement, Editor promotes the pending snapshot and compares its content with the visible document. On failure, the old snapshot remains available for a later discard.
+
+The simulator replay now presses Escape twice after an unsaved edit and verifies that Files regains focus without any new write. The RV32 replay also covers editing back to the submitted bytes during an outstanding write and a subsequent failed write.
+
+### Prompt Context
+
+See Step 1 for the complete typed Editor goal.
+
+**Commit (preceding checkpoint)** `8b7df99` — “Port Editor keyboard editing and asynchronous saves to typed JavaScript.”
+
+### What I did
+
+- Replaced revision counters in `state.typed` and `edit.typed` with the saved slot and the typed discard arm. The event handler selects which snapshot to capture, promote, compare, or restore.
+- Added generic UTF-8 snapshot capture, exact comparison against UTF-16, restoration, and file submission to `sdk/typed/world.c`. Exposed those operations using the common compiler signature table and RV32 trampolines.
+- Implemented the original double-Escape confirmation, status text, restoration, and return-to-Files behavior. Edits cancel the armed state. A successful save that matches the document clears it as well.
+- Included asynchronous filesystem error text in the typed view and added the shared error-text path for immediate kernel call failure.
+- Extended `02-check-editor-world.mjs --edit` and its RV32 driver to verify discard, write races, and preservation of the accepted snapshot after rejection.
+
+### Why
+
+A revision counter cannot detect a sequence that edits and then restores the exact submitted content. Discard requires the saved content even after a failed write, and rereading the file would make the result depend on external changes. The app owns snapshot policy. The shared runtime owns representation conversion and transport.
+
+### What worked
+
+- The Wasm simulator matched the original's settled frames and four framebuffer captures, including the discard workflow. The persisted file bytes matched the reference.
+- The linked RV32 driver verified that additional text stayed dirty after the earlier write, that editing back to the submitted text was clean, and that a clean completion honored the return-to-Files request.
+- A simulated write failure displayed “Not saved: disk full”. A later confirmed discard restored the previous good snapshot without submitting another write.
+- The 65,536-byte open fixture still passed on both backends with the established 200 ms experimental Wasm budget and 512 KiB typed-world memory quota. The linked artifacts at this checkpoint were 42,884 bytes for Wasm and 104,820 bytes for ELF.
+
+### What didn't work
+
+No validation command failed in this checkpoint. The large-file test still uses the experimental budget recorded in Step 4. It exercises opening, not a full-size save or discard.
+
+### What I learned
+
+A successful save can swap slot roles without copying between them. Comparing UTF-8 and UTF-16 by decoding into scalar values handles supplementary characters and avoids adding another full document buffer. The document restored after discard uses the same normalized line endings as the editor view.
+
+### What was tricky to build
+
+The pending snapshot must survive until the matching write token settles. The active snapshot must survive a failed write. The typed event logic controls both lifetimes and clears the deferred leave request when the write completes. The runtime handles a single checked operation per call.
+
+### What warrants a second pair of eyes
+
+Check worst-case full-size snapshot capture and restore against Wasm instruction and memory limits. Persisted cursor positions, search, Markdown, and both physical installations remain open. The simulator and emulated RV32 workflow are independent evidence, with real filesystem effects in the former and explicit fault injection in the latter.
+
+### What should be done in the future
+
+Wire the typed app to the existing per-file position record. Then port search and Markdown, run the full original behavioral suite against both generated targets, and qualify the result on PicoCalc.
+
+### Code review instructions
+
+Start with `editorSave`, `editorWriteDone`, and `editorDiscard` in `worlds/editor/edit.typed`. Follow the snapshot imports to `sdk/typed/world.c`. Rebuild `typed-world-reactor` and run `02-check-editor-world.mjs --edit` with the ESP32-P4 GCC and CJI emulator. Run `--large` for the separate capacity fixture.
+
+### Technical details
+
+The typed state keeps one index identifying the last successful snapshot. The second slot contains the text of the next pending write. Each generic slot holds up to 65,536 UTF-8 bytes and a terminating NUL. The filesystem SDK receives the snapshot using the current file capability. The same shared C source is linked into both backends and contains no Editor-specific ownership state.

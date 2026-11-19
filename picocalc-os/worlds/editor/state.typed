@@ -26,10 +26,11 @@ record WorldState {
     lineStart: i32;
     lineEnd: i32;
     dirty: bool;
-    revision: i32;
-    saveRevision: i32;
+    savedSlot: i32;
+    discardArmed: bool;
     writeToken: i32;
     savedBytes: i32;
+    errorLength: i32;
     notice: i32;
     leaveAfterSave: bool;
 }

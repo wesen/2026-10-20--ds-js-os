@@ -85,14 +85,31 @@ function editorSavedStatus(output: buffer, bytes: i32): i32 {
     return end + output.writeLiteral(end, " bytes.");
 }
 
+function editorSaveError(output: buffer, size: i32): i32 {
+    if (size <= 0) return output.writeLiteral(0, "Not saved.");
+    const reason = typedSdkBuffer(4);
+    const start = output.writeLiteral(0, "Not saved: ");
+    let count = Math.min(size, output.length - start);
+    if (count < size && count > 0 && editorHighSurrogate(reason.charCodeAt(count - 1))) {
+        count = count - 1;
+    }
+    let i = 0;
+    while (i < count) {
+        output.setCharCodeAt(start + i, reason.charCodeAt(i));
+        i = i + 1;
+    }
+    return start + count;
+}
+
 function editorStatus(output: buffer, text: string, state: WorldState): i32 {
     if (state.notice === 1) return output.writeLiteral(0, "Saving...");
     if (state.notice === 2) return editorSavedStatus(output, state.savedBytes);
-    if (state.notice === 3) return output.writeLiteral(0, "Not saved.");
+    if (state.notice === 3) return editorSaveError(output, state.errorLength);
     if (state.notice === 4) return output.writeLiteral(0, "A line holds at most 4000 characters.");
     if (state.notice === 5) return output.writeLiteral(0, "Too large to save: a file holds at most 64 KB.");
     if (state.notice === 6) return output.writeLiteral(0, "Saving; back to Files once it is written.");
-    if (state.notice === 7) return output.writeLiteral(0, "Unsaved changes. F2 saves.");
+    if (state.notice === 7) return output.writeLiteral(0, "Unsaved changes. F2 saves; Esc again discards them.");
+    if (state.notice === 8) return output.writeLiteral(0, "Changes discarded.");
     const name = typedSdkBuffer(1);
     let at = 0;
     if (state.dirty) { at = output.writeLiteral(0, "* "); }

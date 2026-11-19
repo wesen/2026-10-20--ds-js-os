@@ -58,10 +58,11 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
     case NW_CALL_FS_WRITE:
         expect(!*s0, "write the granted file without a path");
         if (!writes) expect(a == 23 && !strcmp(s1, saved_text), "exact saved file bytes");
-        else expect(a == 24 && !strcmp(s1, writes == 1 ? "z" : "zq"), "the submitted write matches its revision");
+        else expect(a == 24 && !strcmp(s1, writes == 1 ? "z" : writes == 2 ? "zq" : "xzq"),
+                    "the submitted write matches its snapshot");
         return 300 + writes++;
     case NW_CALL_SEND:
-        expect(testing_race && !strcmp(s0, "compositor") && !strcmp(s1, "open") && !strcmp(s2, "{\"app\":\"files\"}"),
+        expect(!strcmp(s0, "compositor") && !strcmp(s1, "open") && !strcmp(s2, "{\"app\":\"files\"}"),
                "returns to Files");
         sends++;
         return 0;
@@ -138,6 +139,11 @@ int main(void)
     char saved[64];
     snprintf(saved, sizeof saved, "{\"bytes\":%d}", (int)strlen(saved_text));
     expect(world.event(NW_SETTLE, 1, 0, 300, "", saved, strlen(saved), "") == NW_DONE, "save settles");
+    type(&world, "X");
+    key(&world, "esc", "");
+    expect(sends == 0, "first Esc leaves the dirty editor in view");
+    key(&world, "esc", "");
+    expect(sends == 1, "second Esc returns to Files");
 #endif
     const int before_fresh = frames;
     expect(world.event(NW_MESSAGE, 1, 0, 0, "open", fresh, strlen(fresh), "files") == NW_LATER && reads == 2, "open another file");
@@ -150,6 +156,7 @@ int main(void)
            frames == before_fresh + 1 && replies == 3 && released == 2, "refusal preserves the previous document and grant");
 #ifdef TEST_EDIT
     testing_race = 1;
+    sends = 0;
     type(&world, "z");
     key(&world, "f2", "");
     type(&world, "q");
@@ -161,9 +168,25 @@ int main(void)
     key(&world, "left", "");
     expect(strstr(race_frame, "* fresh.txt") && strstr(race_frame, "zq"), "newer edits remain dirty");
     key(&world, "f2", "");
+    type(&world, "r");
+    key(&world, "backspace", "");
     key(&world, "esc", "");
     expect(world.event(NW_SETTLE, 1, 0, 302, "", two, strlen(two), "") == NW_DONE && sends == 1 && writes == 3,
-           "clean completion returns to Files");
+           "editing back to the submitted bytes is clean");
+    type(&world, "!");
+    key(&world, "esc", "");
+    expect(sends == 1 && strstr(race_frame, "Esc again discards"), "first Esc confirms discard");
+    key(&world, "esc", "");
+    expect(sends == 2 && writes == 3 && strstr(race_frame, "Changes discarded.") && strstr(race_frame, "\"s\":\"zq\""),
+           "confirmed discard restores the saved snapshot without writing");
+    type(&world, "x");
+    key(&world, "f2", "");
+    const char no_space[] = "\"disk full\"";
+    expect(world.event(NW_SETTLE, 0, 0, 303, "", no_space, strlen(no_space), "") == NW_DONE &&
+           sends == 2 && strstr(race_frame, "Not saved: disk full"), "failed save shows its error");
+    key(&world, "esc", "");
+    key(&world, "esc", "");
+    expect(sends == 3 && writes == 4 && strstr(race_frame, "\"s\":\"zq\""), "failed write leaves the last good snapshot");
 #endif
     puts("Typed Editor startup, file read, missing file, and grant release passed");
     return 0;

@@ -23,3 +23,7 @@ Implement typed Editor file-open, first viewport rendering, and grant lifetime c
 ## 2026-11-19
 
 Port keyboard editing and file writes to typed Editor and verify exact bytes on Wasm and RV32.
+
+## 2026-11-19
+
+Preserve exact typed Editor snapshots across saves and qualify confirmed discard and write-failure recovery.

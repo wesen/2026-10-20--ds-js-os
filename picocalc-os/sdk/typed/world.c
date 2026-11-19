@@ -9,14 +9,14 @@
 enum { SCREEN_CAP = 16384, HINT_CAP = 120, LARGE_CAP = 65536, SMALL_CAP = 256 };
 #define COUNTED(name, capacity) struct name { uint32_t length; uint16_t units[capacity]; }
 static COUNTED(large_text, LARGE_CAP) large;
-static COUNTED(small_text, SMALL_CAP) small[3];
+static COUNTED(small_text, SMALL_CAP) small[4];
 static uint32_t world_state[64];
 static const nw_event *current;
 static struct { int32_t kind, ask, token, ok; } event_info;
 static struct { uint32_t length; uint16_t units[SCREEN_CAP]; } output;
 static struct { uint32_t length; uint16_t units[HINT_CAP]; } hints;
 static char screen_bytes[SCREEN_CAP + 1], hint_bytes[HINT_CAP + 1];
-static char file_bytes[LARGE_CAP + 1];
+static char snapshots[2][LARGE_CAP + 1];
 
 int typedWorldMeta(int field, void *value);
 int typedWorldEvent(const void *event, void *state, void *screen, void *hints);
@@ -78,7 +78,7 @@ SDK(typedSdkBuffer) void *typedSdkBuffer(int slot)
 {
     static uint32_t empty;
     if (slot == 0) { large.length = LARGE_CAP; return &large; }
-    if (slot < 1 || slot > 3) return &empty;
+    if (slot < 1 || (unsigned)slot > sizeof small / sizeof *small) return &empty;
     small[slot - 1].length = SMALL_CAP;
     return &small[slot - 1];
 }
@@ -246,11 +246,51 @@ SDK(typedSdkEventInt) int typedSdkEventInt(const void *buffer, int length)
 }
 
 SDK(typedSdkFileRead) int typedSdkFileRead(int handle) { return nw_fs_read(handle, ""); }
-SDK(typedSdkFileWrite) int typedSdkFileWrite(int handle, const void *buffer, int length)
+SDK(typedSdkCapture) int typedSdkCapture(int slot, const void *buffer, int length)
 {
-    if (length < 0 || length > capacity(buffer) ||
-        utf8(units_at(buffer), length, file_bytes, sizeof file_bytes) < 0) return -1;
-    return nw_fs_write(handle, "", file_bytes);
+    if ((unsigned)slot >= 2 || length < 0 || length > capacity(buffer)) return -1;
+    return utf8(units_at(buffer), length, snapshots[slot], sizeof snapshots[slot]);
+}
+
+SDK(typedSdkWriteSnapshot) int typedSdkWriteSnapshot(int handle, int slot)
+{
+    if ((unsigned)slot >= 2) return -1;
+    return nw_fs_write(handle, "", snapshots[slot]);
+}
+
+SDK(typedSdkRestore) int typedSdkRestore(int slot, void *buffer)
+{
+    int cap = capacity(buffer);
+    if ((unsigned)slot >= 2 || cap < 0) return -1;
+    return nw_utf16_decode(snapshots[slot], (uint16_t *)((uint32_t *)buffer + 1), cap);
+}
+
+SDK(typedSdkMatches) int typedSdkMatches(int slot, const void *buffer, int length)
+{
+    if ((unsigned)slot >= 2 || length < 0 || length > capacity(buffer)) return 0;
+    const unsigned char *p = (const unsigned char *)snapshots[slot];
+    const uint16_t *text = units_at(buffer);
+    int i = 0;
+    while (*p && i < length) {
+        int point = nw_utf8_next(&p);
+        if (point < 0) return 0;
+        if (point >= 0x10000) {
+            point -= 0x10000;
+            if (text[i++] != 0xd800 + (point >> 10) || i == length) return 0;
+            point = 0xdc00 + (point & 1023);
+        }
+        if (text[i++] != point) return 0;
+    }
+    return !*p && i == length;
+}
+
+SDK(typedSdkError) int typedSdkError(void *buffer)
+{
+    int cap = capacity(buffer);
+    if (cap < 0) return -1;
+    char message[256];
+    nw_error(message, sizeof message);
+    return nw_utf16_decode(message, (uint16_t *)((uint32_t *)buffer + 1), cap);
 }
 
 SDK(typedSdkMove) int typedSdkMove(void *buffer, int destination, int source, int count)

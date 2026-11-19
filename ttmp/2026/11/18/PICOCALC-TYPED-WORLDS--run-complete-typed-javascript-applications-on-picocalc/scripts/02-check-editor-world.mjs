@@ -66,7 +66,8 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         ...(edit ? ['key right', 'wait 530', 'key right', 'wait 530', 'key backspace', 'wait 530',
             'key f5', 'wait 530', 'key f5', 'wait 530', 'type tail', 'wait 530', 'key enter', 'wait 530',
             'key backspace', 'wait 530', 'key enter', 'wait 530',
-            'type new', 'wait 530', 'key backspace', 'wait 530', 'key f2', 'wait 1000', 'capture saved.png'] : []),
+            'type new', 'wait 530', 'key backspace', 'wait 530', 'key f2', 'wait 1000', 'capture saved.png',
+            'type X', 'wait 530', 'key esc', 'wait 530', 'key esc', 'wait 530'] : []),
         'key f1', 'wait 530', 'key d', 'wait 530', 'key f2', 'wait 530',
         'type fresh.txt', 'wait 1000', 'key enter', 'wait 1000', 'capture fresh.png', '',
     ].join('\n'));
@@ -83,7 +84,10 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
     assert.equal(statuses.at(-1), 'fresh.txt  1:1');
     const saved = edit ? contents.replace('🙂', '').replace(/\r\n?/g, '\n') + 'tail\nne' : contents;
     assert.equal(readFileSync(join(fs, 'entry.txt'), 'utf8'), saved);
-    if (edit) assert.equal(statuses.at(-2), `Saved ${Buffer.byteLength(saved)} bytes.`);
+    if (edit) {
+        assert(statuses.includes(`Saved ${Buffer.byteLength(saved)} bytes.`));
+        assert.equal(statuses.at(-2), 'Changes discarded.');
+    }
     else assert.equal(statuses.length, 3);
     const pictures = edit ? ['editor', 'opened', 'saved', 'fresh'] : ['editor', 'opened', 'fresh'];
     return {frames, pixels:pictures.map(name => readFileSync(join(out, name + '.png'))), saved};

@@ -26,7 +26,7 @@ function editorKeyCode(key: buffer, len: i32, b: buffer): i32 {
 
 function editorChange(state: WorldState): i32 {
     state.dirty = true;
-    state.revision = state.revision + 1;
+    state.discardArmed = false;
     state.goal = -1;
     return 0;
 }
@@ -116,11 +116,17 @@ function editorPlainKey(state: WorldState, key: i32, ch: i32): i32 {
 function editorSave(state: WorldState): i32 {
     state.notice = 1;
     if (state.writeToken > 0) return 0;
-    const token = typedSdkFileWrite(state.file, typedSdkBuffer(0), state.textLength);
-    if (token <= 0) { state.notice = 3; }
+    const slot = 1 - state.savedSlot;
+    const bytes = typedSdkCapture(slot, typedSdkBuffer(0), state.textLength);
+    if (bytes < 0) { state.notice = 5; }
+    if (bytes < 0) return 0;
+    const token = typedSdkWriteSnapshot(state.file, slot);
+    if (token <= 0) {
+        state.notice = 3;
+        state.errorLength = typedSdkError(typedSdkBuffer(4));
+    }
     if (token <= 0) return 0;
     state.writeToken = token;
-    state.saveRevision = state.revision;
     return 0;
 }
 
@@ -131,13 +137,30 @@ function editorGoFiles(output: buffer): i32 {
         output, output.writeLiteral(0, "{\"app\":\"files\"}"));
 }
 
+function editorDiscard(state: WorldState, output: buffer): i32 {
+    const length = typedSdkRestore(state.savedSlot, typedSdkBuffer(0));
+    if (length < 0) return 0;
+    state.textLength = length;
+    state.cursor = 0;
+    state.top = 0;
+    state.goal = -1;
+    state.dirty = false;
+    state.discardArmed = false;
+    state.notice = 8;
+    return editorGoFiles(output);
+}
+
 function editorEscape(state: WorldState, output: buffer): i32 {
     if (state.writeToken > 0) {
         state.leaveAfterSave = true;
         state.notice = 6;
     }
     if (state.writeToken > 0) return 0;
-    if (state.dirty) { state.notice = 7; }
+    if (state.dirty && state.discardArmed) return editorDiscard(state, output);
+    if (state.dirty) {
+        state.discardArmed = true;
+        state.notice = 7;
+    }
     if (state.dirty) return 0;
     return editorGoFiles(output);
 }
@@ -176,8 +199,11 @@ function editorWriteDone(event: WorldEvent, state: WorldState, output: buffer, h
     state.writeToken = 0;
     state.notice = 3;
     const scratch = typedSdkBuffer(3);
+    if (!event.ok) { state.errorLength = typedSdkEventText(2, scratch, 0, typedSdkBuffer(4)); }
     if (event.ok) {
-        state.dirty = !(state.revision === state.saveRevision);
+        state.savedSlot = 1 - state.savedSlot;
+        state.dirty = typedSdkMatches(state.savedSlot, typedSdkBuffer(0), state.textLength) === 0;
+        if (!state.dirty) { state.discardArmed = false; }
         state.savedBytes = Math.max(0, typedSdkEventInt(scratch, scratch.writeLiteral(0, "bytes")));
         state.notice = 2;
         if (state.leaveAfterSave && !state.dirty) { editorGoFiles(output); }

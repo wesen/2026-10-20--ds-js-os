@@ -85,6 +85,8 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.file = state.offered;
     state.offered = 0;
     state.textLength = size;
+    state.savedSlot = 0;
+    typedSdkCapture(state.savedSlot, typedSdkBuffer(0), state.textLength);
     const pending = typedSdkBuffer(2);
     const name = typedSdkBuffer(1);
     let n = 0;
@@ -98,6 +100,7 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.top = 0;
     state.goal = -1;
     state.dirty = false;
+    state.discardArmed = false;
     state.notice = 0;
     return editorShow(output, hints, state);
 }
