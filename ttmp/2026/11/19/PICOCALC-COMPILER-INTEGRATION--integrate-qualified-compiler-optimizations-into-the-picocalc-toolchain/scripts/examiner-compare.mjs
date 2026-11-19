@@ -10,12 +10,14 @@ const [dir] = process.argv.slice(2);
 assert(dir, 'pass the extracted compiler snapshots directory');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const digests = {};
+const pinned = JSON.parse(readFileSync(new URL('../various/examiner-comparison.json', import.meta.url), 'utf8')).digests;
 function compiler(rev) {
     const c = vm.createContext();
     const scripts = {};
     for (const name of ['typed-wasm', 'typed-rv32']) {
         const src = readFileSync(join(dir, rev + '-' + name + '.js'));
         scripts[name] = hash(src);
+        assert.equal(scripts[name], pinned[rev][name], 'historical compiler digest ' + rev + '/' + name);
         vm.runInContext(src.toString(), c);
     }
     digests[rev] = scripts;

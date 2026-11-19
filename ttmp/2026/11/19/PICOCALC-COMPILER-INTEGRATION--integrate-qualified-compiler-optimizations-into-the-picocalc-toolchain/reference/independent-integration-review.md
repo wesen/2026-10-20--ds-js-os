@@ -8,6 +8,8 @@ Topics: [picocalc, compilers, correctness]
 
 # Independent review of the production operand and bounds integration
 
+**Historical qualification.** The direct bounds integration was reverted in `3785155`. This archived comparison uses compiler inputs from `e202e94`, `4452064`, and `e082ec3`, verified against their recorded digests. The subsequent streaming review is a separate experiment.
+
 **Verdict.** I found no blocking correctness defect in the buffered numeric handoff at `4452064` or the direct bounds pass at `e082ec3` for the supported typed frontend and its ordinary runtime contract. Pinned snapshots reproduced byte-identical native code and metadata and identical Wasm bytes for the numeric change. The subsequent bounds change altered the selected instruction sequences and preserved application results, object checks, and observable memory throughout the review workload.
 
 ## Implementation and test boundaries
