@@ -540,3 +540,60 @@ Read `markdown.typed` and `preview.typed` next to `edNewline`, `edColors`, and `
 ### Technical details
 
 The typed renderer writes UTF-16 JSON and the shared runtime checks and converts it at the screen SDK boundary. Preview borrows two bounded work buffers, while the shared uppercase primitive maps one scalar at a time. The position parser and preview transformations use their shared scratch at different event stages.
+
+## Step 10 — Build matched P4 firmware profiles for typed Editor
+
+The Wasm and RV32 firmware now each select Editor from the shared typed runtime. The CMake bundle includes the same typed source list verified by the simulator exercise. A dedicated runner passes the source and reactor into the existing on-device compiler.
+
+Both images built for the current panel-enabled ESP32-P4 profile. The physical test uses a backup of the installed application and writes only its partition. Board qualification was in progress at this checkpoint.
+
+### Prompt Context
+
+See Step 1 for the full typed Editor goal.
+
+**Commit (preceding checkpoint)** `59ad19f` — “Port Editor Markdown editing and preview to typed JavaScript.”
+
+### What I did
+
+- Added common source ordering in `worlds/editor/source.list`. The hardware bundle and host fixture now concatenate the same bytes.
+- Added optional typed Editor firmware switches and manifest selection. When enabled, the native profile omits the previous CJI Editor binary and selects the typed reactor with the existing world name and lack of root filesystem authority.
+- Added the thin P4 compiler invocation in `editor_p4.c`. It reuses the shared bounded runner with an Editor-specific compiler allocation and time ceiling. Agenda and Files continue using that runner's existing defaults.
+- Added reproducible build and powered qualification scripts. Backed up the currently installed 8 MiB application, checked that the live partition table matched the builds, and started the powered test in tmux.
+
+### Why
+
+Passing in Node and emulation does not exercise the device's source compilation time, actual memory allocator, ELF loader, panel, or FAT worker. The optional profile makes the first qualification reversible. Both profiles use the same peripheral and application configuration so a difference in Editor's backend is identifiable.
+
+### What worked
+
+- ESP-IDF 5.4.2 built a 4,251,472-byte Wasm Editor firmware and a 4,445,584-byte RV32 Editor firmware. Both fit the 8 MiB factory app partition.
+- The build scripts verified source SHA-256 `b243f5ac6b814d4871b8200958577522d8732e470f8ccbe326a64e69c166471a`, the selected manifest entries, the shared reactor bundle, and absence of `natives/editor.elf` in both images.
+- The image pair has identical SDK and partition configuration. All three possible boot manifests were assembled and Editor retains no filesystem claim. The physical table matched byte for byte, and esptool saved the existing 8 MiB application.
+
+### What didn't work
+
+No firmware build failed. Physical behavior and device compile timing were still being collected when this build checkpoint was recorded.
+
+### What I learned
+
+The Wasm fixture can run under a smaller world quota, while native ELF budgets include the reserved instruction segment and static data. A shared 768 KiB manifest cap lets the paired test exercise the same application settings. Both profiles use a 200 ms turn limit because the previous full-size Wasm read exceeded 50 ms in the simulator.
+
+### What was tricky to build
+
+Several existing typed app options stack their manifest entries. The Editor entry is applied first so the later Files and Agenda manifest variants carry the same Editor source and runtime. The compile runner reads the bundle when the kernel asks for `editor/compiled.bin`.
+
+### What warrants a second pair of eyes
+
+The profile's 4 MiB compiler heap ceiling and six-second compile limit are initial qualification parameters. Cold startup changes for all other worlds when Editor compiles synchronously during manifest loading. The device observations should distinguish compilation from loader and panel work.
+
+### What should be done in the future
+
+Finish the paired physical test and inspect both framebuffer captures on each target. Follow with a long-document search and preview budget audit before closing the migration.
+
+### Code review instructions
+
+Read the typed Editor block in `port/esp32p4/main/CMakeLists.txt`, the bundle dispatch in `port_p4.c`, and `editor_p4.c`. Use the ticket's `03-build-editor-firmware.sh` for both targets and `04-qualify-editor-on-p4.py --help` for the hardware trial.
+
+### Technical details
+
+The optional firmware mode keeps all Editor state and policy in the eleven typed source files. Its P4 adapter only acquires the source and reactor and invokes the compiler. The paired test writes the application at `0x10000`. The backup and output images remain under `/tmp/typed-editor-board-backup` and `/tmp/typed-editor-firmware`.

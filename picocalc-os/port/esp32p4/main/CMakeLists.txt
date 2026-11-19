@@ -203,13 +203,13 @@ set_source_files_properties(
     # compositor's first paint crashed every boot); -Og and -O2 -fno-strict-aliasing both run clean.
     PROPERTIES COMPILE_OPTIONS "-w;-Wno-error=incompatible-pointer-types;-fwrapv;-fno-strict-aliasing")
 
-# Both typed apps override the same configured catalog, preserving the claims and
+# Typed apps override the same configured catalog, preserving the claims and
 # any peripheral or test selections made above.
-if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES)
+if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR)
     target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c)
     list(APPEND BUNDLE_EXTRA "typed/wasm.js=${OS}/compiler/typed-wasm.js")
     list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-wasm.js")
-    if(PICOCALC_RV32_AGENDA OR PICOCALC_RV32_FILES)
+    if(PICOCALC_RV32_AGENDA OR PICOCALC_RV32_FILES OR PICOCALC_RV32_EDITOR)
         list(APPEND BUNDLE_EXTRA "typed/rv32.js=${OS}/compiler/typed-rv32.js")
         list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-rv32.js")
     endif()
@@ -221,6 +221,61 @@ if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES)
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${OS}/js/system.json")
     string(JSON world_count LENGTH "${typed_manifest}" worlds)
     math(EXPR last_world "${world_count} - 1")
+endif()
+
+if(PICOCALC_TYPED_EDITOR)
+    if(PICOCALC_RV32_EDITOR)
+        set(editor_reactor "${CMAKE_CURRENT_BINARY_DIR}/typed-world-reactor.elf")
+        set(editor_runtime "${OS}/sdk/typed/world.c" "${OS}/sdk/typed/rv32-slot.S" "${QJS}/libunicode.c")
+        add_custom_command(OUTPUT "${editor_reactor}"
+            COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${editor_reactor}" ${editor_runtime} ${OS}/sdk/nw_elf.c
+            DEPENDS ${editor_runtime} ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
+                    ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_utf16.h
+                    ${QJS}/cutils.h ${QJS}/libunicode.h ${QJS}/libunicode-table.h
+            VERBATIM)
+        target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_EDITOR=1)
+        set(editor_engine native)
+    else()
+        set(PICOCALC_EDITOR_REACTOR "${OS}/build/typed-world-reactor.wasm" CACHE FILEPATH "Prebuilt shared typed-world reactor")
+        if(NOT EXISTS "${PICOCALC_EDITOR_REACTOR}")
+            message(FATAL_ERROR "Build the shared typed reactor with make -C picocalc-os typed-world-reactor")
+        endif()
+        set(editor_reactor "${PICOCALC_EDITOR_REACTOR}")
+        set(editor_engine wasm)
+    endif()
+    set(editor_dir "${OS}/worlds/editor")
+    set(editor_list "${editor_dir}/source.list")
+    file(STRINGS "${editor_list}" editor_parts)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${editor_list}")
+    set(editor_source "${CMAKE_CURRENT_BINARY_DIR}/editor.typed")
+    set(editor_source_text "")
+    foreach(part IN LISTS editor_parts)
+        file(READ "${editor_dir}/${part}" source_part)
+        string(APPEND editor_source_text "${source_part}\n")
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${editor_dir}/${part}")
+    endforeach()
+    file(CONFIGURE OUTPUT "${editor_source}" CONTENT "${editor_source_text}" @ONLY)
+    foreach(i RANGE ${last_world})
+        string(JSON world_name GET "${typed_manifest}" worlds ${i} name)
+        if(world_name STREQUAL "editor")
+            string(JSON typed_manifest SET "${typed_manifest}" worlds ${i} file "\"editor/compiled.bin\"")
+            string(JSON typed_manifest SET "${typed_manifest}" worlds ${i} engine "\"${editor_engine}\"")
+            string(JSON typed_manifest SET "${typed_manifest}" worlds ${i} budget_ms 200)
+            string(JSON typed_manifest SET "${typed_manifest}" worlds ${i} mem_kb 768)
+            break()
+        endif()
+    endforeach()
+    set(editor_manifest_path "${CMAKE_CURRENT_BINARY_DIR}/system.typed-editor.json")
+    file(CONFIGURE OUTPUT "${editor_manifest_path}" CONTENT "${typed_manifest}" @ONLY)
+    target_sources(${COMPONENT_LIB} PRIVATE editor_p4.c)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_EDITOR=1)
+    list(APPEND BUNDLE_EXTRA
+        "system.typed-editor.json=${editor_manifest_path}"
+        "typed/world.js=${OS}/compiler/typed-world.js"
+        "editor/editor.typed=${editor_source}"
+        "editor/reactor.bin=${editor_reactor}")
+    list(APPEND BUNDLE_EXTRA_DEPS
+        "${editor_manifest_path}" "${editor_reactor}" "${editor_source}" "${OS}/compiler/typed-world.js")
 endif()
 
 if(PICOCALC_TYPED_FILES)

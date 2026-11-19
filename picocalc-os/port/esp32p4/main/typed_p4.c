@@ -9,7 +9,7 @@
 #define COMPILER_US 1700000
 
 typedef struct {
-  size_t live, peak;
+  size_t live, peak, limit;
   vtime_t deadline;
 } compile_heap;
 
@@ -20,7 +20,7 @@ static void account(compile_heap *heap, size_t old, size_t current) {
 
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
-  if (heap->live >= COMPILER_LIMIT || size > COMPILER_LIMIT - heap->live) return NULL;
+  if (heap->live >= heap->limit || size > heap->limit - heap->live) return NULL;
   void *ptr = port_heap_malloc(size);
   if (ptr) account(heap, 0, port_heap_usable(ptr));
   return ptr;
@@ -38,7 +38,7 @@ static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   compile_heap *heap = state->opaque;
   size_t old = port_heap_usable(ptr);
   size_t retained = heap->live - old;
-  if (retained >= COMPILER_LIMIT || size > COMPILER_LIMIT - retained) return NULL;
+  if (retained >= heap->limit || size > heap->limit - retained) return NULL;
   void *next = port_heap_realloc(ptr, size);
   if (next) account(heap, old, port_heap_usable(next));
   return next;
@@ -66,8 +66,12 @@ static bool eval_file(JSContext *ctx, const char *path) {
 
 char *p4_typed_compile(const char *app, const char *source_kind, const char *source,
                        size_t source_length, const char *linker, const char *entry, int engine,
-                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started) {
-  compile_heap heap = {.deadline = started + COMPILER_US};
+                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started,
+                       const p4_compile_limits *limits) {
+  compile_heap heap = {
+    .limit = limits ? limits->heap_bytes : COMPILER_LIMIT,
+    .deadline = started + (limits ? limits->duration_us : COMPILER_US),
+  };
   JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, &heap);
   JSContext *ctx = NULL;
   char *module = NULL;

@@ -11,8 +11,9 @@ import '../../../../../../picocalc-os/compiler/typed-world.js';
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
 const os = resolve('picocalc-os');
-const source = ['state', 'layout', 'empty', 'view', 'find', 'markdown', 'preview', 'document-view', 'positions', 'edit', 'editor'].map(name =>
-    readFileSync(join(os, 'worlds/editor', name + '.typed'), 'utf8')).join('\n');
+const editorDir = join(os, 'worlds/editor');
+const sources = readFileSync(join(editorDir, 'source.list'), 'utf8').trim().split('\n');
+const source = sources.map(name => readFileSync(join(editorDir, name), 'utf8') + '\n').join('');
 const wasmReactor = readFileSync(join(os, 'build/typed-world-reactor.wasm'));
 const wasm = compileTypedWorld(source, wasmReactor);
 const wrongCall = source.replace('typedSdkScreen(output,', 'typedSdkScreen(0,');

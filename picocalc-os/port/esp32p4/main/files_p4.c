@@ -18,7 +18,7 @@ char *p4_files_compile(size_t *length) {
 #endif
   if (source && reactor) {
     module = p4_typed_compile("files", "bundle", source, source_length, "files/compile.js",
-                              entry, engine, reactor, reactor_length, length, started);
+                              entry, engine, reactor, reactor_length, length, started, NULL);
   } else {
     puts("files compile: source or reactor unavailable");
   }

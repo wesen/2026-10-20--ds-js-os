@@ -98,7 +98,7 @@ static unsigned char *compile(bool edit, size_t *length, vtime_t *started) {
   }
   unsigned char *module = (unsigned char *)p4_typed_compile("agenda", edit ? "edit" : "bundle",
       source, source_length, "agenda/compile.js", AGENDA_COMPILE, AGENDA_ENGINE,
-      reactor, reactor_length, length, *started);
+      reactor, reactor_length, length, *started, NULL);
   free(source);
   free(reactor);
   return module;

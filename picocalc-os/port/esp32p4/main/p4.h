@@ -43,10 +43,18 @@ void p4_cachestat(const char *args);   // perf_p4.c: the cache counters around a
 void p4_agent_init(void);             // creates the native worker; never touches K from that worker
 void p4_agent_console(const char *args); // secret values are accepted but never echoed
 
-#if PICOCALC_TYPED_AGENDA || PICOCALC_TYPED_FILES
+#if PICOCALC_TYPED_AGENDA || PICOCALC_TYPED_FILES || PICOCALC_TYPED_EDITOR
+typedef struct {
+  size_t heap_bytes;
+  vtime_t duration_us;
+} p4_compile_limits;
 char *p4_typed_compile(const char *app, const char *source_kind, const char *source,
                        size_t source_length, const char *linker, const char *entry, int engine,
-                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started);
+                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started,
+                       const p4_compile_limits *limits);
+#endif
+#if PICOCALC_TYPED_EDITOR
+char *p4_editor_compile(size_t *length);
 #endif
 #if PICOCALC_TYPED_FILES
 char *p4_files_compile(size_t *length);

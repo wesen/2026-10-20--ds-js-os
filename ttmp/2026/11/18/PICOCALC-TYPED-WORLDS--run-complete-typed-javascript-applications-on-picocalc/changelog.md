@@ -39,3 +39,7 @@ Port Editor search prompts, wraparound, Unicode-aware ASCII queries, and highlig
 ## 2026-11-19
 
 Port Markdown list editing, fenced colors, inline rendering, and preview scrolling to typed JavaScript.
+
+## 2026-11-19
+
+Bundle complete typed Editor source in matched ESP32-P4 Wasm and RV32 firmware profiles.

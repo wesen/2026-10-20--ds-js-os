@@ -106,6 +106,9 @@ char *p4_bundle_read(const char *path, size_t *len, char *buffer, size_t capacit
 }
 
 char *port_read_file(const char *path, size_t *len) {
+#if PICOCALC_TYPED_EDITOR
+  if (!strcmp(path, "js/editor/compiled.bin")) return p4_editor_compile(len);
+#endif
 #if PICOCALC_TYPED_FILES
   if (!strcmp(path, "js/files/compiled.bin")) return p4_files_compile(len);
 #endif

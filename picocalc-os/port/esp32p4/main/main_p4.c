@@ -204,6 +204,8 @@ static void kernel_task(void *arg) {
   kernel_init("js", NULL);    // the prelude, and the calibration loops
 #if PICOCALC_TYPED_FILES
   const char *manifest = "js/system.typed-files.json";
+#elif PICOCALC_TYPED_EDITOR
+  const char *manifest = "js/system.typed-editor.json";
 #elif PICOCALC_NATIVE_ELF
   const char *manifest = "js/system.cji.json";
 #else
