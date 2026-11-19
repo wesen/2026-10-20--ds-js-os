@@ -36,6 +36,21 @@ function editorReplyError(output: buffer, error: string): i32 {
     return typedSdkReply(output, at + output.writeLiteral(at, "}"));
 }
 
+function editorRefuseOpen(state: WorldState, handle: i32, output: buffer): i32 {
+    typedSdkRelease(handle);
+    const reason = typedSdkBuffer(3);
+    if (!state.dirty)
+        return editorReplyError(output, typedSdkView(reason, reason.writeLiteral(0, "The editor is saving.")));
+    const name = typedSdkBuffer(1);
+    const end = reason.writeLiteral(0, "the editor has unsaved changes to ");
+    let i = 0;
+    while (i < state.nameLength) {
+        reason.setCharCodeAt(end + i, name.charCodeAt(i));
+        i = i + 1;
+    }
+    return editorReplyError(output, typedSdkView(reason, end + i));
+}
+
 function editorOpen(state: WorldState, output: buffer): i32 {
     const scratch = typedSdkBuffer(3);
     let n = typedSdkEventText(0, scratch, 0, scratch);
@@ -48,6 +63,7 @@ function editorOpen(state: WorldState, output: buffer): i32 {
         typedSdkReply(output, output.writeLiteral(0, "{\"ok\":false,\"why\":\"No file handle.\"}"));
     }
     if (handle <= 0) return 0;
+    if (state.dirty || state.writeToken > 0) return editorRefuseOpen(state, handle, output);
     const pending = typedSdkBuffer(2);
     n = scratch.writeLiteral(0, "name");
     let size = typedSdkEventText(3, scratch, n, pending);
@@ -64,7 +80,7 @@ function editorOpen(state: WorldState, output: buffer): i32 {
     return 1;
 }
 
-function editorOpened(state: WorldState, size: i32, doc: buffer, output: buffer, hints: buffer): i32 {
+function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffer): i32 {
     if (state.file > 0 && !(state.file === state.offered)) { typedSdkRelease(state.file); }
     state.file = state.offered;
     state.offered = 0;
@@ -78,9 +94,12 @@ function editorOpened(state: WorldState, size: i32, doc: buffer, output: buffer,
     }
     state.nameLength = n;
     typedSdkReply(output, output.writeLiteral(0, "{\"ok\":true}"));
-    const text = typedSdkView(doc, state.textLength);
-    const hintLength = hints.writeLiteral(0, "F2 save F3 find F4 next F6 view Esc back");
-    return typedSdkScreen(output, editorInitialFrame(output, text, name, state.nameLength), hints, hintLength);
+    state.cursor = 0;
+    state.top = 0;
+    state.goal = -1;
+    state.dirty = false;
+    state.notice = 0;
+    return editorShow(output, hints, state);
 }
 
 function editorOpenFailed(state: WorldState, scratch: buffer, length: i32, output: buffer): i32 {
@@ -101,7 +120,7 @@ function editorDeferRead(state: WorldState, output: buffer): i32 {
 function editorContinueRead(state: WorldState, doc: buffer, output: buffer, hints: buffer): i32 {
     const size = editorNormalize(doc, state);
     if (state.unitsRead < state.sourceLength) return editorDeferRead(state, output);
-    return editorOpened(state, size, doc, output, hints);
+    return editorOpened(state, size, output, hints);
 }
 
 function editorReadSuccess(state: WorldState, doc: buffer, output: buffer, hints: buffer): i32 {
@@ -128,12 +147,16 @@ function editorReadDone(event: WorldEvent, state: WorldState, output: buffer, hi
     const size = typedSdkEventText(2, output, 0, error);
     if (size >= 7 && error.charCodeAt(0) === 110 && error.charCodeAt(1) === 111 &&
         error.charCodeAt(2) === 32 && error.charCodeAt(3) === 102 && error.charCodeAt(4) === 105 &&
-        error.charCodeAt(5) === 108 && error.charCodeAt(6) === 101) return editorOpened(state, 0, doc, output, hints);
+        error.charCodeAt(5) === 108 && error.charCodeAt(6) === 101) return editorOpened(state, 0, output, hints);
     return editorOpenFailed(state, error, size, output);
 }
 
 function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
     if (event.kind === 0 && event.ask) return editorOpen(state, output);
+    if (event.kind === 0 && state.readToken === 0) { editorInput(state, output, hints); }
+    if (event.kind === 4 && state.writeToken > 0 && event.token === state.writeToken) {
+        editorWriteDone(event, state, output, hints);
+    }
     if (event.kind === 4 && state.readToken > 0 && event.token === state.readToken) {
         editorReadDone(event, state, output, hints);
     }

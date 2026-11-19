@@ -19,3 +19,7 @@ Bind shared typed SDK functions on Wasm and RV32 and move Editor's frame request
 ## 2026-11-19
 
 Implement typed Editor file-open, first viewport rendering, and grant lifetime checks on both backends.
+
+## 2026-11-19
+
+Port keyboard editing and file writes to typed Editor and verify exact bytes on Wasm and RV32.

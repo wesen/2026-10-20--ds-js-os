@@ -11,7 +11,7 @@ import '../../../../../../picocalc-os/compiler/typed-world.js';
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
 const os = resolve('picocalc-os');
-const source = ['state', 'layout', 'view', 'editor'].map(name =>
+const source = ['state', 'layout', 'view', 'edit', 'editor'].map(name =>
     readFileSync(join(os, 'worlds/editor', name + '.typed'), 'utf8')).join('\n');
 const wasmReactor = readFileSync(join(os, 'build/typed-world-reactor.wasm'));
 const wasm = compileTypedWorld(source, wasmReactor);
@@ -21,6 +21,8 @@ const dir = mkdtempSync(join(tmpdir(), 'typed-editor-reactor-'));
 const system = JSON.parse(readFileSync(join(os, 'js/system.json'), 'utf8'));
 const worlds = system.worlds.filter(w => ['display', 'keyboard', 'compositor', 'launcher', 'files', 'editor'].includes(w.name));
 const large = process.argv.includes('--large');
+const edit = process.argv.includes('--edit');
+assert(!(large && edit), 'run the capacity and mutation scenarios separately');
 const turnBudget = large && !process.argv.includes('--stock-budget') ? 200 : 50;
 const contents = large ? ('text '.repeat(15) + '\r\n').repeat(851) + 'x'.repeat(9) :
     'A🙂  long line ' + 'abcd efgh '.repeat(9) + '\r\n\t"hello"\rLast\n';
@@ -61,6 +63,10 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
     writeFileSync(scenario, [
         'wait 2000', 'key e', 'wait 1000', 'capture editor.png',
         'key f1', 'wait 530', 'key d', 'wait 530', 'key enter', 'wait 1000', 'capture opened.png',
+        ...(edit ? ['key right', 'wait 530', 'key right', 'wait 530', 'key backspace', 'wait 530',
+            'key f5', 'wait 530', 'key f5', 'wait 530', 'type tail', 'wait 530', 'key enter', 'wait 530',
+            'key backspace', 'wait 530', 'key enter', 'wait 530',
+            'type new', 'wait 530', 'key backspace', 'wait 530', 'key f2', 'wait 1000', 'capture saved.png'] : []),
         'key f1', 'wait 530', 'key d', 'wait 530', 'key f2', 'wait 530',
         'type fresh.txt', 'wait 1000', 'key enter', 'wait 1000', 'capture fresh.png', '',
     ].join('\n'));
@@ -69,10 +75,18 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
     const log = readFileSync(join(out, 'uart.log'), 'utf8');
     assert.doesNotMatch(log, /crashed|typed world .* rejected/);
     const frames = log.split('probe: EDITOR_FRAME\n').slice(1)
-        .map(block => JSON.parse([...block.matchAll(/EDITOR_PART (.*)$/gm)].map(match => match[1]).join('')));
+        .map(block => JSON.parse([...block.matchAll(/EDITOR_PART (.*)$/gm)].map(match => match[1]).join('')))
+        .filter(frame => frame.tree.kids[0].s !== 'Saving...');
     const statuses = frames.map(frame => frame.tree.kids[0].s);
-    assert.deepEqual(statuses, ['No file open.', 'entry.txt  1:1', 'fresh.txt  1:1']);
-    return {frames, pixels:['editor', 'opened', 'fresh'].map(name => readFileSync(join(out, name + '.png')))};
+    assert.equal(statuses[0], 'No file open.');
+    assert.equal(statuses[1], 'entry.txt  1:1');
+    assert.equal(statuses.at(-1), 'fresh.txt  1:1');
+    const saved = edit ? contents.replace('🙂', '').replace(/\r\n?/g, '\n') + 'tail\nne' : contents;
+    assert.equal(readFileSync(join(fs, 'entry.txt'), 'utf8'), saved);
+    if (edit) assert.equal(statuses.at(-2), `Saved ${Buffer.byteLength(saved)} bytes.`);
+    else assert.equal(statuses.length, 3);
+    const pictures = edit ? ['editor', 'opened', 'saved', 'fresh'] : ['editor', 'opened', 'fresh'];
+    return {frames, pixels:pictures.map(name => readFileSync(join(out, name + '.png'))), saved};
 }
 
 try {
@@ -91,7 +105,8 @@ try {
     assert.throws(() => compileTypedWorldRv32(wrongCall, rv32Reactor), SyntaxError);
     writeFileSync(app, elf);
     const expected = join(dir, 'expected.h');
-    writeFileSync(expected, `static const char settled[] = ${JSON.stringify(JSON.stringify(contents))};\n`);
+    writeFileSync(expected, `static const char settled[] = ${JSON.stringify(JSON.stringify(contents))};\n` +
+        (edit ? `#define TEST_EDIT\nstatic const char saved_text[] = ${JSON.stringify(original.saved)};\n` : ''));
     execFileSync(cc, [
         '-march=rv32im', '-mabi=ilp32', '-O2', '-fno-builtin', '-msmall-data-limit=0',
         '-mno-relax', '-nostdlib', '-Wl,-Ttext=0x10000', '-Wl,-e,_start', '-I', sdk, '-I', dir,
@@ -100,7 +115,8 @@ try {
     ], {stdio:'inherit'});
     const rv32 = execFileSync(emu, [driver, app], {encoding:'utf8',timeout:15000}).trim().split('\n');
     assert.equal(rv32.pop(), 'Typed Editor startup, file read, missing file, and grant release passed');
-    assert.deepEqual(rv32.map(line => JSON.parse(line)), original.frames.map(frame => frame.tree));
+    assert.deepEqual(rv32.map(line => JSON.parse(line)).filter(frame => frame.kids[0].s !== 'Saving...'),
+        original.frames.map(frame => frame.tree));
     console.log(JSON.stringify({inputBytes:Buffer.byteLength(contents), matchingWasmFramebuffers:compiled.pixels.length,
         rv32Open:true, wasmBytes:wasm.length, elfBytes:elf.length, wasmTurnBudgetMs:turnBudget}));
 } finally {

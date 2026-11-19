@@ -16,6 +16,7 @@ static struct { int32_t kind, ask, token, ok; } event_info;
 static struct { uint32_t length; uint16_t units[SCREEN_CAP]; } output;
 static struct { uint32_t length; uint16_t units[HINT_CAP]; } hints;
 static char screen_bytes[SCREEN_CAP + 1], hint_bytes[HINT_CAP + 1];
+static char file_bytes[LARGE_CAP + 1];
 
 int typedWorldMeta(int field, void *value);
 int typedWorldEvent(const void *event, void *state, void *screen, void *hints);
@@ -228,7 +229,49 @@ SDK(typedSdkEventHandle) int typedSdkEventHandle(const void *buffer, int length)
     return *p == '}' && handle > 0 ? handle : -1;
 }
 
+SDK(typedSdkEventInt) int typedSdkEventInt(const void *buffer, int length)
+{
+    char key[96];
+    if (!current || event_key(buffer, length, key) < 0) return -1;
+    const char *p = nw_json_find(current->json, key);
+    if (!p || *p < '0' || *p > '9') return -1;
+    int value = 0;
+    do {
+        int digit = *p++ - '0';
+        if (value > (INT32_MAX - digit) / 10) return -1;
+        value = value * 10 + digit;
+    } while (*p >= '0' && *p <= '9');
+    p = nw_json__ws(p);
+    return *p == '}' || *p == ',' ? value : -1;
+}
+
 SDK(typedSdkFileRead) int typedSdkFileRead(int handle) { return nw_fs_read(handle, ""); }
+SDK(typedSdkFileWrite) int typedSdkFileWrite(int handle, const void *buffer, int length)
+{
+    if (length < 0 || length > capacity(buffer) ||
+        utf8(units_at(buffer), length, file_bytes, sizeof file_bytes) < 0) return -1;
+    return nw_fs_write(handle, "", file_bytes);
+}
+
+SDK(typedSdkMove) int typedSdkMove(void *buffer, int destination, int source, int count)
+{
+    int cap = capacity(buffer);
+    if (destination < 0 || source < 0 || count < 0 || destination > cap ||
+        source > cap || count > cap - destination || count > cap - source) return -1;
+    uint16_t *units = (uint16_t *)((uint32_t *)buffer + 1);
+    __builtin_memmove(units + destination, units + source, count * sizeof *units);
+    return 0;
+}
+
+SDK(typedSdkSend) int typedSdkSend(const void *to, int to_len, const void *type, int type_len,
+                                  const void *data, int data_len)
+{
+    char dest[96], message[96];
+    if (event_key(to, to_len, dest) < 0 || event_key(type, type_len, message) < 0 ||
+        data_len < 0 || data_len > capacity(data) ||
+        utf8(units_at(data), data_len, screen_bytes, sizeof screen_bytes) < 0) return -1;
+    return nw_send(dest, message, screen_bytes);
+}
 SDK(typedSdkRelease) int typedSdkRelease(int handle) { return nw_release(handle); }
 SDK(typedSdkYield) int typedSdkYield(void) { return nw_sleep(0); }
 SDK(typedSdkReply) int typedSdkReply(const void *buffer, int length)

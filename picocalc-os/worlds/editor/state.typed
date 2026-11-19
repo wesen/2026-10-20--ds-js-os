@@ -16,4 +16,20 @@ record WorldState {
     sourceLength: i32;
     unitsRead: i32;
     unitsWritten: i32;
+    cursor: i32;
+    top: i32;
+    goal: i32;
+    row: i32;
+    line: i32;
+    rowStart: i32;
+    rowEnd: i32;
+    lineStart: i32;
+    lineEnd: i32;
+    dirty: bool;
+    revision: i32;
+    saveRevision: i32;
+    writeToken: i32;
+    savedBytes: i32;
+    notice: i32;
+    leaveAfterSave: bool;
 }

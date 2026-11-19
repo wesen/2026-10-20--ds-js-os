@@ -37,27 +37,115 @@ function editorLineEnd(text: string, first: i32): i32 {
     return end;
 }
 
-function editorInitialFrame(output: buffer, text: string, name: buffer, nameLength: i32): i32 {
-    const statusEnd = nameLength + name.writeLiteral(nameLength, "  1:1");
-    const status = typedSdkView(name, statusEnd);
+function editorFirstRow(text: string, state: WorldState): i32 {
+    state.row = 0;
+    state.line = 0;
+    state.rowStart = 0;
+    state.lineStart = 0;
+    state.lineEnd = editorLineEnd(text, 0);
+    state.rowEnd = editorWrapEnd(text, 0, state.lineEnd, 49);
+    return 0;
+}
+
+function editorNextRow(text: string, state: WorldState): bool {
+    if (state.rowEnd === text.length) return false;
+    state.rowStart = state.rowEnd;
+    if (state.rowEnd === state.lineEnd) {
+        state.lineStart = state.lineEnd + 1;
+        state.lineEnd = editorLineEnd(text, state.lineStart);
+        state.rowStart = state.lineStart;
+        state.line = state.line + 1;
+    }
+    state.rowEnd = editorWrapEnd(text, state.rowStart, state.lineEnd, 49);
+    state.row = state.row + 1;
+    return true;
+}
+
+function editorLocate(text: string, state: WorldState): i32 {
+    editorFirstRow(text, state);
+    while ((state.cursor > state.rowEnd || (state.cursor === state.rowEnd && state.rowEnd < state.lineEnd)) &&
+        editorNextRow(text, state)) {}
+    return editorColumn(text, state.rowStart, state.cursor);
+}
+
+function editorDigits(output: buffer, start: i32, value: i32): i32 {
+    let divisor = 1;
+    let at = start;
+    while (value / divisor >= 10) { divisor = divisor * 10; }
+    while (divisor > 0) {
+        output.setCharCodeAt(at, 48 + ((value / divisor) % 10));
+        divisor = divisor / 10;
+        at = at + 1;
+    }
+    return at;
+}
+
+function editorSavedStatus(output: buffer, bytes: i32): i32 {
+    const end = editorDigits(output, output.writeLiteral(0, "Saved "), bytes);
+    return end + output.writeLiteral(end, " bytes.");
+}
+
+function editorStatus(output: buffer, text: string, state: WorldState): i32 {
+    if (state.notice === 1) return output.writeLiteral(0, "Saving...");
+    if (state.notice === 2) return editorSavedStatus(output, state.savedBytes);
+    if (state.notice === 3) return output.writeLiteral(0, "Not saved.");
+    if (state.notice === 4) return output.writeLiteral(0, "A line holds at most 4000 characters.");
+    if (state.notice === 5) return output.writeLiteral(0, "Too large to save: a file holds at most 64 KB.");
+    if (state.notice === 6) return output.writeLiteral(0, "Saving; back to Files once it is written.");
+    if (state.notice === 7) return output.writeLiteral(0, "Unsaved changes. F2 saves.");
+    const name = typedSdkBuffer(1);
+    let at = 0;
+    if (state.dirty) { at = output.writeLiteral(0, "* "); }
+    let i = 0;
+    while (i < state.nameLength) {
+        output.setCharCodeAt(at, name.charCodeAt(i));
+        i = i + 1;
+        at = at + 1;
+    }
+    at = at + output.writeLiteral(at, "  ");
+    at = editorDigits(output, at, state.line + 1);
+    output.setCharCodeAt(at, 58);
+    return editorDigits(output, at + 1, editorColumn(text, state.lineStart, state.cursor) + 1);
+}
+
+function editorDocumentFrame(output: buffer, text: string, state: WorldState): i32 {
+    const column = editorLocate(text, state);
+    if (state.row < state.top) { state.top = state.row; }
+    if (state.row >= state.top + 18) { state.top = state.row - 17; }
+    const cursorRow = state.row - state.top;
+    const label = typedSdkBuffer(2);
+    const length = editorStatus(label, text, state);
+    const status = typedSdkView(label, length);
     let at = output.writeLiteral(0, "{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\"text\",\"s\":");
-    at = editorQuote(output, at, status, 0, statusEnd);
-    at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"muted\"},{\"t\":\"textarea\",\"rows\":[");
-    let start = 0;
-    let limit = editorLineEnd(text, 0);
+    at = editorQuote(output, at, status, 0, length);
+    if (state.notice > 0) {
+        at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"accent\"}");
+    }
+    if (state.notice === 0) {
+        at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"muted\"}");
+    }
+    at = at + output.writeLiteral(at, ",{\"t\":\"textarea\",\"rows\":[");
+    editorFirstRow(text, state);
+    while (state.row < state.top && editorNextRow(text, state)) {}
     let rows = 0;
-    while (rows < 18 && start <= text.length) {
+    let more = true;
+    while (rows < 18 && more) {
         if (rows > 0) { at = at + output.writeLiteral(at, ","); }
-        const end = editorWrapEnd(text, start, limit, 49);
         at = at + output.writeLiteral(at, "{\"s\":");
-        at = editorQuote(output, at, text, start, end);
+        at = editorQuote(output, at, text, state.rowStart, state.rowEnd);
         at = at + output.writeLiteral(at, ",\"color\":\"ink\"}");
-        start = end;
-        if (end === limit) {
-            start = end + 1;
-            limit = editorLineEnd(text, start);
-        }
+        more = editorNextRow(text, state);
         rows = rows + 1;
     }
-    return at + output.writeLiteral(at, "],\"cursor\":[0,0],\"marks\":[],\"font\":\"s\",\"lead\":2,\"grow\":1}]}");
+    at = at + output.writeLiteral(at, "],\"cursor\":[");
+    at = editorDigits(output, at, cursorRow);
+    output.setCharCodeAt(at, 44);
+    at = editorDigits(output, at + 1, column);
+    return at + output.writeLiteral(at, "],\"marks\":[],\"font\":\"s\",\"lead\":2,\"grow\":1}]}");
+}
+
+function editorShow(output: buffer, hints: buffer, state: WorldState): i32 {
+    const hintLength = hints.writeLiteral(0, "F2 save F3 find F4 next F6 view Esc back");
+    const text = typedSdkView(typedSdkBuffer(0), state.textLength);
+    return typedSdkScreen(output, editorDocumentFrame(output, text, state), hints, hintLength);
 }

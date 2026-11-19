@@ -11,9 +11,13 @@ int (*fw_entries[16])(int, char **);
 uint32_t fw_sizes[16];
 int fw_nentries;
 static int declarations, frames, reads, replies, released, yields;
+#ifdef TEST_EDIT
+static int writes, sends, testing_race;
+static char race_frame[1024];
+#endif
 
 const struct { const char *name; const void *address; } fw_resolve[] = {
-    {"strlen", strlen}, {"memcpy", memcpy}, {"memset", memset},
+    {"strlen", strlen}, {"memcpy", memcpy}, {"memset", memset}, {"memmove", memmove},
 };
 const int fw_nresolve = sizeof fw_resolve / sizeof *fw_resolve;
 
@@ -38,14 +42,30 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         declarations++;
         return 0;
     case NW_CALL_SCREEN:
-        expect(frames < 3, "typed screen count");
         expect(!strcmp(s1, frames ? "F2 save F3 find F4 next F6 view Esc back" : "Esc Files"), "typed hints");
+#ifdef TEST_EDIT
+        if (testing_race) snprintf(race_frame, sizeof race_frame, "%s", s0);
+        else puts(s0);
+#else
         puts(s0);
+#endif
         frames++;
         return 0;
     case NW_CALL_FS_READ:
         expect(reads < 3 && a == 23 + reads && !*s0, "read the offered file");
         return 100 + reads++;
+#ifdef TEST_EDIT
+    case NW_CALL_FS_WRITE:
+        expect(!*s0, "write the granted file without a path");
+        if (!writes) expect(a == 23 && !strcmp(s1, saved_text), "exact saved file bytes");
+        else expect(a == 24 && !strcmp(s1, writes == 1 ? "z" : "zq"), "the submitted write matches its revision");
+        return 300 + writes++;
+    case NW_CALL_SEND:
+        expect(testing_race && !strcmp(s0, "compositor") && !strcmp(s1, "open") && !strcmp(s2, "{\"app\":\"files\"}"),
+               "returns to Files");
+        sends++;
+        return 0;
+#endif
     case NW_CALL_REPLY:
         expect(!strcmp(s0, replies < 2 ? "{\"ok\":true}" : "{\"ok\":false,\"why\":\"permission denied\"}"),
                "report whether the file opened");
@@ -63,6 +83,23 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
 }
 
 static int no_error(char *out, size_t n) { if (n) *out = 0; return 0; }
+
+#ifdef TEST_EDIT
+static void key(nw_elf_module *world, const char *name, const char *ch)
+{
+    char payload[128];
+    snprintf(payload, sizeof payload, "{\"key\":\"%s\",\"ch\":\"%s\",\"state\":\"down\"}", name, ch);
+    expect(world->event(NW_MESSAGE, 0, 0, 0, "key", payload, strlen(payload), "compositor") == NW_DONE, "key completes");
+}
+
+static void type(nw_elf_module *world, const char *text)
+{
+    for (; *text; text++) {
+        const char chars[] = {*text, 0};
+        key(world, chars, chars);
+    }
+}
+#endif
 
 int main(void)
 {
@@ -85,14 +122,49 @@ int main(void)
         result = world.event(NW_SETTLE, 1, 0, 200 + i, "", "null", 4, "");
     }
     expect(result == NW_DONE && frames == 2 && replies == 1, "read settles and publishes");
+#ifdef TEST_EDIT
+    key(&world, "right", "");
+    key(&world, "right", "");
+    key(&world, "backspace", "");
+    key(&world, "f5", "");
+    key(&world, "f5", "");
+    type(&world, "tail");
+    key(&world, "enter", "");
+    key(&world, "backspace", "");
+    key(&world, "enter", "");
+    type(&world, "new");
+    key(&world, "backspace", "");
+    key(&world, "f2", "");
+    char saved[64];
+    snprintf(saved, sizeof saved, "{\"bytes\":%d}", (int)strlen(saved_text));
+    expect(world.event(NW_SETTLE, 1, 0, 300, "", saved, strlen(saved), "") == NW_DONE, "save settles");
+#endif
+    const int before_fresh = frames;
     expect(world.event(NW_MESSAGE, 1, 0, 0, "open", fresh, strlen(fresh), "files") == NW_LATER && reads == 2, "open another file");
     expect(world.event(NW_SETTLE, 0, 0, 101, "", missing, strlen(missing), "") == NW_DONE &&
-           frames == 3 && replies == 2 && released == 1, "missing file is empty and replaces the old grant");
+           frames == before_fresh + 1 && replies == 2 && released == 1, "missing file is empty and replaces the old grant");
     const char *bad = "{\"file\":{\"$h\":25},\"name\":\"bad.txt\"}";
     const char *denied = "\"permission denied\"";
     expect(world.event(NW_MESSAGE, 1, 0, 0, "open", bad, strlen(bad), "files") == NW_LATER && reads == 3, "open denied file");
     expect(world.event(NW_SETTLE, 0, 0, 102, "", denied, strlen(denied), "") == NW_DONE &&
-           frames == 3 && replies == 3 && released == 2, "refusal preserves the previous document and grant");
+           frames == before_fresh + 1 && replies == 3 && released == 2, "refusal preserves the previous document and grant");
+#ifdef TEST_EDIT
+    testing_race = 1;
+    type(&world, "z");
+    key(&world, "f2", "");
+    type(&world, "q");
+    key(&world, "esc", "");
+    expect(!sends && writes == 2 && strstr(race_frame, "once it is written"), "Esc waits for the pending write");
+    const char one[] = "{\"bytes\":1}", two[] = "{\"bytes\":2}";
+    expect(world.event(NW_SETTLE, 1, 0, 301, "", one, strlen(one), "") == NW_DONE && !sends,
+           "newer edits keep Editor open after the first write");
+    key(&world, "left", "");
+    expect(strstr(race_frame, "* fresh.txt") && strstr(race_frame, "zq"), "newer edits remain dirty");
+    key(&world, "f2", "");
+    key(&world, "esc", "");
+    expect(world.event(NW_SETTLE, 1, 0, 302, "", two, strlen(two), "") == NW_DONE && sends == 1 && writes == 3,
+           "clean completion returns to Files");
+#endif
     puts("Typed Editor startup, file read, missing file, and grant release passed");
     return 0;
 }

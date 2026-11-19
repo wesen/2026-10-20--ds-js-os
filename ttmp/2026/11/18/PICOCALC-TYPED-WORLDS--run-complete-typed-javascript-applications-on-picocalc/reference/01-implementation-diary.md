@@ -249,3 +249,60 @@ Read `worlds/editor/state.typed`, `editor.typed`, and `view.typed`. The shared b
 ### Technical details
 
 The runtime validates the fixed 16-byte event record and allows up to 64 scalar state fields. Its text storage currently provides a 65,536-unit slot and three 256-unit slots. The open handler keeps the ask pending with `NW_LATER`. File and yield settlements use the same token matching. The RV32 reactor reserves 64 KiB of typed code space because the new view and event routines exceed the startup-only slot budget.
+
+## Step 5 — Edit and save the granted document from typed code
+
+Editor now receives compositor keyboard messages, moves the cursor through logical lines and wrapped rows, and edits the UTF-16 document. Its save handler submits the changed text through the existing file grant. A detached write token lets editing continue during a pending save.
+
+The matched simulator fixture now exercises navigation, deletion of a supplementary character, insertion, joining and splitting lines, and an actual write. The RV32 fixture adds a sequence in which the user types after submitting one save and asks to leave while that write is pending.
+
+### Prompt Context
+
+See Step 1 for the full Editor migration goal.
+
+**Commit (preceding checkpoint)** `adfd4f9` — “Open files and render the document in typed Editor.”
+
+### What I did
+
+- Added the typed command, motion, splice, and save code in `worlds/editor/edit.typed`. The app owns key gating, surrogate-pair movement, soft-wrap navigation, line splitting, dirtiness, write tokens, and compositor focus requests.
+- Generalized the typed document view to draw the actual viewport, cursor, status, and hints. The typed code decides which rows and status to present.
+- Bound generic SDK operations for moving a bounded span, submitting a file write, extracting an integer event member, and sending a message. The runtime checks the ranges, transcodes UTF-16 for the file SDK, and preserves the kernel's existing file permission checks.
+- Extended `02-check-editor-world.mjs --edit` and its RV32 driver to compare settled screen states and exact saved bytes. The RV32 driver also verifies that the older write does not clear a more recent edit and that a later clean completion returns to Files.
+
+### Why
+
+The keyboard and save policy belong to the typed application. A bounded shared move primitive keeps raw memory copying separate from Editor's decision about what to insert and delete. Saving must preserve the bytes that were submitted even if new input arrives before the settlement.
+
+### What worked
+
+- The 123-byte fixture matched the original across all observed settled frames and four captured framebuffers at a 50 ms Wasm turn budget. The test deleted the emoji as one character, spliced the lines, and checked the exact normalized saved bytes on disk.
+- The relocated RV32 fixture checked the same screen trees and file bytes. It then held the first of two writes, applied another edit, and verified that the first completion kept the newer content dirty and left Editor focused. The later clean save honored the earlier escape request.
+- The 64 KiB open regression still passed under the experimental 200 ms turn budget. The original Editor's ten reference tests passed separately.
+
+### What didn't work
+
+The first linked RV32 run reported `it links to memmove, which picocalc-os does not give a module`. The local emulator fixture's import table omitted the helper. The P4 resolver already exports it. Adding it to the fixture enabled the linked test.
+
+### What I learned
+
+The filesystem SDK copies the submitted bytes while accepting the write. The typed app can use a document revision to identify whether the visible state has advanced before settlement. Revision comparison is sufficient for the tested sequence. Full parity must also consider edits that reconstruct the exact submitted text and the saved copy needed by confirmed discard.
+
+### What was tricky to build
+
+A logical line-relative status column, display-row cursor column, and document offset have different meanings after soft wrap. The typed renderer uses the same row geometry for status and layout while preserving the preferred column across vertical commands. The generic splice moves overlapping memory, so deleting a Unicode pair and joining adjacent lines retain exact surrounding text.
+
+### What warrants a second pair of eyes
+
+Confirm full save parity with an exact saved snapshot, including edit-back-to-same-content, discard, and permission errors. The current Escape warning covers dirty state and waits during a pending save. Confirmed discard, search, Markdown, saved positions, performance on the physical device, and final installation remain open.
+
+### What should be done in the future
+
+Implement exact snapshot comparison, dirty discard, and durable cursor positions, then search and Markdown. Measure navigation for long inputs whose cursor is near the end. Finish by running all original behaviors against the compiled app and verifying both physical targets.
+
+### Code review instructions
+
+Read `worlds/editor/edit.typed` and check how its functions call `editorLocate` and `editorDocumentFrame` in `view.typed`. Follow `typedSdkFileWrite` to the existing write operation. Build `typed-world-reactor` and run `02-check-editor-world.mjs --edit` with P4 GCC and the CJI emulator. Run `--large` separately.
+
+### Technical details
+
+The visible document is a bounded UTF-16 buffer. Cursor offsets and span copies use UTF-16 units, while status and wrap columns count code points. The kernel copies the UTF-8 snapshot for a write. The current typed state records the document revision at submission and matches the returned write token. The RV32 template slot is 96 KiB for the added command and view routines.

@@ -17,6 +17,10 @@
         ["typedSdkRelease", "i32", "i32"],
         ["typedSdkReply", "buffer,i32", "i32"],
         ["typedSdkYield", "", "i32"],
+        ["typedSdkFileWrite", "i32,buffer,i32", "i32"],
+        ["typedSdkMove", "buffer,i32,i32,i32", "i32"],
+        ["typedSdkEventInt", "buffer,i32", "i32"],
+        ["typedSdkSend", "buffer,i32,buffer,i32,buffer,i32", "i32"],
     ].map(([name, params, result]) => ({name, params: params ? params.split(",") : [], result}));
 
     function validate(program) {
