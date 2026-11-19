@@ -27,8 +27,10 @@ def args_for_run():
     parser.add_argument("--port", required=True)
     for name in ("images", "output", "esptool", "esptool-python"):
         parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument("--final-rv32", type=Path, help="known RV32 application image to leave installed after the run")
     parser.add_argument("--boots", type=int, default=4)
     parser.add_argument("--builds", type=int, default=4)
+    parser.add_argument("--target", choices=("wasm", "rv32"), help="measure one target to resume an interrupted pair")
     parser.add_argument("--timings-only", action="store_true", help="omit the keyboard and Editor workflow")
     args = parser.parse_args()
     if min(args.boots, args.builds) < 1:
@@ -75,6 +77,21 @@ def seed_notes(args, text):
         raise RuntimeError("fixture write failed: " + log)
 
 
+def restore_empty_notes(args):
+    output = console(args, 3, "0.4 ls notes", "1.4 cat notes/todo.txt")
+    size = re.search(r"^\s+todo\.txt +(\d+)\s*$", output, re.M)
+    if not size or "#OK cat" not in output:
+        raise RuntimeError("could not verify the task file before cleanup")
+    length = int(size[1])
+    if length:
+        fixtures = (FIXTURE, TOGGLED, EDITED, DELETED, ADDED, SAVED)
+        if not any(len(text) == length and text + "#OK cat\n" in output for text in fixtures):
+            raise RuntimeError("unexpected task-file contents left intact")
+        seed_notes(args, "")
+    if not empty_notes(args):
+        raise RuntimeError("could not restore the empty notes file")
+
+
 def smoke(args, target):
     output = args.output / target
     output.mkdir()
@@ -109,8 +126,8 @@ def smoke(args, target):
             "framebuffer_crc": crc, "bus_counts": buses}
 
 
-def flash_target(args, target):
-    BENCH["flash"](args, args.images / (target + ".bin"), target, require_hold=True)
+def flash_target(args, target, image=None):
+    BENCH["flash"](args, image or args.images / (target + ".bin"), target, require_hold=True)
     raw = (args.output / (target + "-flash.log")).read_text(errors="replace")
     if "Hash of data verified" not in raw:
         raise RuntimeError(f"{target} image was not verified by the flash writer")
@@ -137,6 +154,8 @@ def main():
     loaded = None
     try:
         for target, engine in (("wasm", 1), ("rv32", 2)):
+            if args.target and args.target != target:
+                continue
             print(f"Installing and qualifying {target}", flush=True)
             loaded = None
             flash_target(args, target)
@@ -158,12 +177,15 @@ def main():
             receipt["targets"][target] = data
             (args.output / f"{target}.json").write_text(json.dumps(data, indent=2) + "\n")
     finally:
-        if loaded != "rv32":
+        if args.final_rv32:
+            print("Returning the board to the chosen RV32 image", flush=True)
+            flash_target(args, "final-rv32", args.final_rv32)
+        elif loaded != "rv32":
             print("Returning the board to the verified RV32 build", flush=True)
             flash_target(args, "rv32")
-        seed_notes(args, "")
-        if not empty_notes(args):
-            raise RuntimeError("could not restore the empty notes file")
+        restore_empty_notes(args)
+    final_image = args.final_rv32 or args.images / "rv32.bin"
+    receipt["installed_rv32_sha256"] = hashlib.sha256(final_image.read_bytes()).hexdigest()
     (args.output / "matched.json").write_text(json.dumps(receipt, indent=2) + "\n")
     if not args.timings_only and not all(row["workflow"]["passed"] for row in receipt["targets"].values()):
         raise SystemExit("At least one device workflow failed; see the retained timing and workflow receipt.")

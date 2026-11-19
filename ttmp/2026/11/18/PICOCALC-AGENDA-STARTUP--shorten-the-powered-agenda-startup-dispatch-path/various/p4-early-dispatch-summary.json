@@ -1,0 +1,124 @@
+{
+  "wasm": {
+    "boots": 3,
+    "healthy_boots": 3,
+    "boots_at_or_below_two_seconds": 3,
+    "cold_compile_us": {
+      "min": 519132,
+      "median": 519456,
+      "max": 519755
+    },
+    "cold_first_response_us": {
+      "min": 1689532,
+      "median": 1701793,
+      "max": 1730628
+    },
+    "init_to_fs_submit_us": {
+      "min": 2174,
+      "median": 2217,
+      "max": 2240
+    },
+    "fs_submit_to_return_us": {
+      "min": 327460,
+      "median": 327523,
+      "max": 327718
+    },
+    "fs_return_to_settle_us": {
+      "min": 1077,
+      "median": 1136,
+      "max": 1232
+    },
+    "cold_publishing_turn_us": {
+      "min": 15001,
+      "median": 15002,
+      "max": 15077
+    },
+    "cold_compiler_peak_bytes": {
+      "min": 630180,
+      "median": 630180,
+      "max": 630180
+    },
+    "cold_world_bytes": {
+      "min": 212992,
+      "median": 212992,
+      "max": 212992
+    },
+    "module_bytes": {
+      "min": 67434,
+      "median": 67434,
+      "max": 67434
+    },
+    "settled_first_response_us": {
+      "min": 945314,
+      "median": 946302.5,
+      "max": 947291
+    },
+    "settled_publishing_turn_us": {
+      "min": 7233,
+      "median": 7627.0,
+      "max": 8021
+    },
+    "workflow_passed": true
+  },
+  "rv32": {
+    "boots": 3,
+    "healthy_boots": 3,
+    "boots_at_or_below_two_seconds": 3,
+    "cold_compile_us": {
+      "min": 721552,
+      "median": 721576,
+      "max": 721863
+    },
+    "cold_first_response_us": {
+      "min": 1784873,
+      "median": 1786761,
+      "max": 1786937
+    },
+    "init_to_fs_submit_us": {
+      "min": 1609,
+      "median": 1631,
+      "max": 1658
+    },
+    "fs_submit_to_return_us": {
+      "min": 328555,
+      "median": 328608,
+      "max": 328870
+    },
+    "fs_return_to_settle_us": {
+      "min": 998,
+      "median": 1010,
+      "max": 1123
+    },
+    "cold_publishing_turn_us": {
+      "min": 9457,
+      "median": 9581,
+      "max": 9587
+    },
+    "cold_compiler_peak_bytes": {
+      "min": 709796,
+      "median": 709796,
+      "max": 709796
+    },
+    "cold_world_bytes": {
+      "min": 185625,
+      "median": 185625,
+      "max": 185625
+    },
+    "module_bytes": {
+      "min": 66348,
+      "median": 66348,
+      "max": 66348
+    },
+    "settled_first_response_us": {
+      "min": 984135,
+      "median": 1001836.0,
+      "max": 1019537
+    },
+    "settled_publishing_turn_us": {
+      "min": 1671,
+      "median": 1688.5,
+      "max": 1706
+    },
+    "workflow_passed": true
+  }
+}

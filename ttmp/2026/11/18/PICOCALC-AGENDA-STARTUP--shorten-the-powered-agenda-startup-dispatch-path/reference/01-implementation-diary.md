@@ -84,7 +84,7 @@ Moving the start turn advances I/O submission. Moving just the corresponding set
 
 ### What worked
 
-The host app suite and 34 native integration tests passed. Both powered candidates built. The healthy Wasm pilot completed all file-state comparisons, including Editor save, and its framebuffer passed CRC. Its three cold trials reported zero I²C errors and pressed the first read into a 2.174–2.240 ms window after Agenda's initialization. RV32 and the full control comparison were still running when I recorded this step.
+The host app suite and 34 native integration tests passed. Both powered candidates built. The healthy Wasm pilot completed all file-state comparisons, including Editor save, and its framebuffer passed CRC. Its three cold trials reported zero I²C errors and submitted the first read in a 2.174–2.240 ms window after Agenda's initialization. RV32 and the full control comparison were still running when I recorded this step.
 
 ### What didn't work
 
@@ -109,3 +109,52 @@ Finish the healthy two-target candidate and controls before deciding whether a b
 ### Code review instructions
 
 Review `pick` in `picocalc-os/nucleus/kernel.c`, the predicate and promise capture in `agenda_p4.c`, and the capture call in `fs_p4.c`. The parent parity ticket builds both targets with `scripts/05-build-powered-targets.sh` and runs the powered fixture with `scripts/06-qualify-powered-targets.py`.
+
+## Step 3 — Qualify the candidate on the powered PicoCalc
+
+The implementation is in `e7abb41`. The healthy dispatch-only variant met the target on all six cold boots. Wasm published in 1.690–1.731 s and RV32 in 1.785–1.787 s. The same fixture passed toggle, edit, confirmed deletion, normalized creation and Editor save on both builds. Each target's real board framebuffer matched the final fixture view and passed CRC.
+
+### Prompt Context
+
+See Step 1. The remaining gaps are the matched unoptimized controls and a visible LCD measurement from a physical key.
+
+### What I did
+
+- Ran the powered qualification with three cold boots and two settled rebuilds per target. Verified I²C and SPI counters per boot, and read back actual notes after each workflow operation.
+- Recovered the interrupted native half without discarding the completed Wasm evidence. Verified the readback matched the disposable 67-byte fixture, cleared it, and reran only RV32 from the same firmware pair using tmux.
+- Combined both candidate receipts and ran `scripts/01-summarize-powered-runs.py`. Stored the two inspected framebuffer pictures in the parity ticket.
+- Enabled the tested option by default for new typed Agenda P4 configurations. The existing control build script passes the disabled value explicitly. Added a video frame-interval calculator and checked its bounds against a synthetic clip.
+
+### Why
+
+A broad boot priority override would affect unrelated worlds. The two-event candidate achieved the cold target using the normal filesystem worker. There is no need to change the worker priority to qualify this build. Physical timing still requires a common clock for key travel and the visible panel.
+
+### What worked
+
+- Wasm median cold first response was 1,701,793 µs and RV32 was 1,786,761 µs. All six boots reported zero I²C and SPI errors. Both workflows passed with zero bus errors and exact byte matches.
+- Median initialization-to-submission was 2,217 µs for Wasm and 1,631 µs for RV32. Submission-to-return was about 328 ms for each target. Earlier submission overlaps remaining instance creation even though the same-core lower-priority worker takes longer to report than in the prior native trace.
+- Compiler allocator peaks were 630,180 bytes for Wasm and 709,796 bytes for RV32. The native ELF was 66,348 bytes and the Wasm module 67,434 bytes. The complete per-boot and per-operation receipts are under this ticket's `various/`.
+
+### What didn't work
+
+The first paired command exited 143 after flashing and booting the candidate RV32 image, and supplied no native trial receipt. Its teardown did not run. A first cleanup check assumed the raw UART was UTF-8 and raised `UnicodeDecodeError` on byte `0xff`. I verified the directory byte count and exact ASCII fixture in the raw bytes before clearing it. The next run used tmux and passed. I added target-specific resume and a cleanup guard so unrelated file contents are preserved.
+
+### What I learned
+
+Early enqueueing and early completion are different. The startup priority moved file submission to within a few milliseconds of initialization. Other boot work still delayed the return, but enough of it overlapped the outstanding operation to get both targets below two seconds. A settled rebuild has no cold startup work to reorder and uses the ordinary lane.
+
+### What was tricky to build
+
+The benchmarking process can terminate while the board is still running normally. Recovery used the verified app flash and fixture bytes, then resumed just the missing target. This also avoided treating the serial interruption as a fault in the new code.
+
+### What warrants a second pair of eyes
+
+Three cold trials per target establish behavior for this fixture and board. They do not bound tail latency across device revisions or larger notes files. Keep the physical measurement distinct from the first publication and kernel turn.
+
+### What should be done in the future
+
+Complete the control comparison and collect the physical video. Keep the tested firmware and restore the empty task file so the physical test starts from a known state.
+
+### Code review instructions
+
+Use the full receipt `p4-early-dispatch-candidate.json` and summary under `various/`. Check the six intermediate file states in each target's workflow. The CRC-checked board frame captures are in the parity ticket's `various/`. Use the video calculator's `--trial KEY_FRAME LCD_FRAME` once those frames are available. A 100 fps synthetic test with frame indices 5 and 9 returned a 30–50 ms interval and a 40 ms midpoint.
