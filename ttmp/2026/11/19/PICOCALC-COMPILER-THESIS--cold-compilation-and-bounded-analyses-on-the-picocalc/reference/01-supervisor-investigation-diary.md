@@ -132,3 +132,57 @@ Run `python3 scripts/supervisor/cold-compiler.py <RV32-GCC> --candidate f0846ba 
 ### Technical details
 
 The Linux adapter uses the original `typed_p4.c`, `editor_p4.c`, `p4.h` and the project's QuickJS objects. The FreeRTOS queue declaration is the only board type supplied at build time. The emitted byte difference lives inside a fixed-size executable slot.
+
+## Step 3: Cross the two compilers and qualify the evidence for review
+
+The authors measured effects at different points in compilation. One reduced the number of generated RV32 words, the other changed how functions arrive at the native backend. I wanted to know what happens when an ordinary boot compile pays for both together. I kept the firmware entry, editor source and prepared reactor fixed and varied two compiler choices independently.
+
+### Prompt Context
+
+**User prompt:** See Step 1.
+**Assistant interpretation:** Supervise implementation, look for interactions the isolated experiments cannot measure, and arrange independent examination.
+**Inferred user intent:** Find compiler changes worth testing on the handheld and preserve enough evidence to question the conclusion.
+**Commit (code):** 3734cd7 provided the cold compiler harness. f0846ba and 88263e0 supplied the implementations under comparison.
+
+### What I did
+
+- Extended the cold compiler harness to transform either pinned backend with the same native streaming prototype. Built four complete Editor modules in each of 16 balanced rounds. Each treatment occupies every position four times.
+- Compared the SHA-256 digest across frontend treatments for each backend, preserved the sample order and receipts, and plotted the cold compiler measurements beside the four guest execution comparisons.
+- Examined the three research articles and their evidence. Commissioned two independent Astra examinations once the three Sol implementation reports were available. Split review by the questions of compiler correctness and measurement validity.
+- Checked the host's USB identity again. The sole serial-by-id entry resolved to ttyUSB0, the bridge that had returned no response to the non-resetting probe.
+
+### Why
+
+Two isolated percentage changes cannot be added to obtain a whole-compiler result. A more compact representation could coexist with fewer emitted words or it could move the allocation high point elsewhere. The correct comparison runs all four combinations through final linking and compares both the high-water mark and module identity.
+
+### What worked
+
+The original measurement was 54.742 ms and 3,910,760 QuickJS allocator bytes. The combination took 42.233 ms and 1,891,168 bytes on this Linux machine. For each backend the buffered frontend and streamed frontend produced exactly the same ELF. The complete register and register-plus-streaming ELFs can therefore use the same execution evidence.
+
+### What didn't work
+
+The workstation had different absolute latency in the earlier 20-pair run. I kept that series intact, avoided comparisons between series and published the raw trial order for both. The currently enumerated USB bridge did not supply a physical P4 comparison.
+
+### What I learned
+
+The changes affect distinct expenses in this program. The combined compiler used 51.6% fewer peak allocator bytes on the Linux compile. The experimental representation alone changes compile-time behavior even when every byte of the generated program stays the same.
+
+### What was tricky to build
+
+Native emission and source checking are interleaved in the streamed experiment. The frozen transformation must apply cleanly to both backend revisions. Verifying only a raw instruction array would miss import relocations and linker differences, so the supervisor harness asserts complete linked ELF equality for each backend.
+
+### What warrants a second pair of eyes
+
+Examine diagnostic order when streamed lowering raises an error before the rest of the source has been checked. Try held-out control flow, clobbering calls and text-header mutations. Determine precisely which expenses a fresh-runtime Linux receipt includes and whether the balanced order supports the direction of the measured effect.
+
+### What should be done in the future
+
+Use the physical P4 with the same source and reactor for a direct board comparison. Revisit the streaming integration after evidence from the independent reviewers. Source-level type preservation and demand-driven proofs need their own measured consumer.
+
+### Code review instructions
+
+Read the ordering table and digest assertions in `scripts/supervisor/cold-compiler.py`. Compare its per-treatment output to `various/supervisor/factorial-editor.json`. Use `scripts/supervisor/plot-results.py` to regenerate the published figure.
+
+### Technical details
+
+The series contains 64 independent Linux processes. The median timings in milliseconds in stock, register, stream, and combined order are 54.7415, 50.552, 46.285 and 42.2325. The corresponding allocator peaks in bytes are 3,910,760, 3,402,944, 2,396,120 and 1,891,168. The full series retains application, frontend, backend, reactor and module hashes.

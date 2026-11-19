@@ -7,6 +7,7 @@ import platform
 import re
 import statistics
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -44,20 +45,31 @@ def measure(tmp, args):
     app = OS/"worlds/editor"
     source = b"".join((app/name).read_bytes() + b"\n" for name in (app/"source.list").read_text().splitlines())
     data = {}
-    for label, rev in (("baseline", args.base), ("candidate", args.candidate)):
+    configurations = [("baseline", args.base, "bytes"), ("candidate", args.candidate, "bytes")]
+    if args.factorial:
+        sys.path.insert(0, str(HERE.parent/"representation"))
+        from variants import frontend, native
+        configurations += [("baseline_stream", args.base, "stream"),
+                           ("candidate_stream", args.candidate, "stream")]
+    for label, rev, lane in configurations:
         work = tmp/label
         (work/"typed").mkdir(parents=True)
         (work/"editor").mkdir()
         for kind in ("wasm", "rv32", "world"):
             path = f"picocalc-os/compiler/typed-{kind}.js"
             content = git("show", f"{rev}:{path}") if rev != "worktree" else (ROOT/path).read_bytes()
+            if lane == "stream" and kind in ("wasm", "rv32"):
+                generate = frontend if kind == "wasm" else native
+                content = generate(content.decode(), lane).encode()
             (work/f"typed/{kind}.js").write_bytes(content)
         (work/"editor/editor.typed").write_bytes(source)
         (work/"editor/reactor.bin").write_bytes(reactor.read_bytes())
         data[label] = {"revision": git("rev-parse", rev).decode().strip() if rev != "worktree" else rev,
-                       "backend_sha256": sha((work/"typed/rv32.js").read_bytes()), "samples": []}
+                       "backend_sha256": sha((work/"typed/rv32.js").read_bytes()),
+                       "frontend_sha256": sha((work/"typed/wasm.js").read_bytes()), "samples": []}
+    schedules = [(0,1),(1,0)] if not args.factorial else [(0,1,3,2),(1,2,0,3),(2,3,1,0),(3,0,2,1)]
     for i in range(args.pairs):
-        order = ("baseline","candidate") if i % 2 == 0 else ("candidate","baseline")
+        order = [configurations[j][0] for j in schedules[i % len(schedules)]]
         for label in order:
             work = tmp/label
             receipt = subprocess.check_output([exe], cwd=work, text=True)
@@ -77,6 +89,10 @@ def measure(tmp, args):
     for record in data.values():
         record["median"] = {key:statistics.median([s[key] for s in record["samples"]])
                             for key in ("us","peak_js_bytes","module_bytes")}
+    if args.factorial:
+        for label in ("baseline","candidate"):
+            if data[label]["module_sha256"] != data[label + "_stream"]["module_sha256"]:
+                raise AssertionError("Streaming changed the linked native module")
     return {"machine":platform.machine(), "system":platform.system(), "quickjs":(qjs/"VERSION").read_text().strip(),
             "gcc":subprocess.check_output([args.gcc, "--version"],text=True).splitlines()[0],
             "source_sha256":sha(source),"reactor_sha256":sha(reactor.read_bytes()),"results":data}
@@ -87,6 +103,7 @@ if __name__ == "__main__":
     p.add_argument("--base",default="dd69a81")
     p.add_argument("--candidate",default="HEAD")
     p.add_argument("--pairs",type=int,default=12)
+    p.add_argument("--factorial",action="store_true",help="cross both backends with the ticket's native-only streamed frontend")
     p.add_argument("--modules-out",type=Path,help="optional directory for replaying the exact timed ELF files")
     a = p.parse_args()
     if a.pairs < 1:
