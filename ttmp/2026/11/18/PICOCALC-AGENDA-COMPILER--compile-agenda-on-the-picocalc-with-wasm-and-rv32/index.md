@@ -27,6 +27,8 @@ See the [feature-parity acceptance criteria](design-doc/01-compiling-a-reminder-
 
 ## Key Links
 
+- [Feature parity implementation](../PICOCALC-AGENDA-PARITY--port-the-complete-agenda-workflow-to-typed-wasm-and-rv32/index.md)
+
 - **Related Files**: See frontmatter RelatedFiles field
 - **External Sources**: See frontmatter ExternalSources field
 
