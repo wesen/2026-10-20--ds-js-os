@@ -11,7 +11,7 @@ import '../../../../../../picocalc-os/compiler/typed-world.js';
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
 const os = resolve('picocalc-os');
-const source = ['state', 'layout', 'empty', 'view', 'find', 'document-view', 'positions', 'edit', 'editor'].map(name =>
+const source = ['state', 'layout', 'empty', 'view', 'find', 'markdown', 'preview', 'document-view', 'positions', 'edit', 'editor'].map(name =>
     readFileSync(join(os, 'worlds/editor', name + '.typed'), 'utf8')).join('\n');
 const wasmReactor = readFileSync(join(os, 'build/typed-world-reactor.wasm'));
 const wasm = compileTypedWorld(source, wasmReactor);
@@ -24,9 +24,13 @@ const large = process.argv.includes('--large');
 const edit = process.argv.includes('--edit');
 const positions = process.argv.includes('--positions');
 const find = process.argv.includes('--find');
-assert([large, edit, positions, find].filter(Boolean).length <= 1, 'select at most one workflow');
+const markdown = process.argv.includes('--markdown');
+assert([large, edit, positions, find, markdown].filter(Boolean).length <= 1, 'select at most one workflow');
 const turnBudget = large && !process.argv.includes('--stock-budget') ? 200 : 50;
-const contents = find ? 'A🙂 BETA beta beta\nKelvin K and İce\nlast BeTa\noverlap ababa\n' :
+const filename = markdown ? 'entry.MD' : 'entry.txt';
+const contents = markdown ? '# Straße **Title**\n- one\n9) numbered\n```\ncode\n\n```\n> quote `text`\n**plain** [link](u)\ncontinued\n\n### Low\n```\n' +
+        'more code\n'.repeat(22) + 'last code' :
+    find ? 'A🙂 BETA beta beta\nKelvin K and İce\nlast BeTa\noverlap ababa\n' :
     large ? ('text '.repeat(15) + '\r\n').repeat(851) + 'x'.repeat(9) :
     'A🙂  long line ' + 'abcd efgh '.repeat(9) + '\r\n\t"hello"\rLast\n';
 const findActions = [
@@ -35,6 +39,11 @@ const findActions = [
     'key f3', 'type k', 'key enter', 'key f4', 'key f3', 'key backspace', 'type ce', 'key enter',
     'key f3', 'key backspace', 'key backspace', 'type zzz', 'key enter',
     'key f3', 'key backspace', 'key backspace', 'key backspace', 'type aba', 'key enter',
+];
+const markdownActions = [
+    'key down', 'key end', 'key enter', 'key enter', 'key down', 'key end', 'key enter',
+    'type ten', 'key f2', 'key f6', 'capture preview.png', 'key down', 'key pgdn', 'key up',
+    'key esc', 'key f6', 'key f6', 'key f5', 'key f5', 'capture fence.png',
 ];
 if (find) {
     // Verify the folding assumptions behind ASCII keyboard queries.
@@ -55,7 +64,7 @@ function run(name, compiled) {
     const store = join(dir, name, 'store'), record = join(store, 'w/editor');
     mkdirSync(js, {recursive:true});
     mkdirSync(fs, {recursive:true});
-    writeFileSync(join(fs, 'entry.txt'), contents);
+    writeFileSync(join(fs, filename), contents);
     if (positions) {
         mkdirSync(dirname(record), {recursive:true});
         writeFileSync(record, JSON.stringify(seed));
@@ -92,6 +101,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         'wait 2000', 'key e', 'wait 1000', 'capture editor.png',
         'key f1', 'wait 530', 'key d', 'wait 530', 'key enter', 'wait 1000', 'capture opened.png',
         ...(find ? findActions.flatMap(action => [action, 'wait 530']) : []),
+        ...(markdown ? markdownActions.flatMap(action => [action, 'wait 530']) : []),
         ...(positions ? ['key right', 'wait 530', 'key esc', 'wait 530'] : []),
         ...(edit ? ['key right', 'wait 530', 'key right', 'wait 530', 'key backspace', 'wait 530',
             'key f5', 'wait 530', 'key f5', 'wait 530', 'type tail', 'wait 530', 'key enter', 'wait 530',
@@ -112,10 +122,11 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         .filter(frame => frame.tree.kids[0].s !== 'Saving...');
     const statuses = frames.map(frame => frame.tree.kids[0].s);
     assert.equal(statuses[0], 'No file open.');
-    assert.equal(statuses[1], positions ? 'entry.txt  1:3' : 'entry.txt  1:1');
+    assert.equal(statuses[1], `${filename}  1:${positions ? 3 : 1}`);
     assert.equal(statuses.at(-1), 'fresh.txt  1:1');
-    const saved = edit ? contents.replace('🙂', '').replace(/\r\n?/g, '\n') + 'tail\nne' : contents;
-    assert.equal(readFileSync(join(fs, 'entry.txt'), 'utf8'), saved);
+    const saved = markdown ? contents.replace('- one\n9) numbered\n', '- one\n\n9) numbered\n10) ten\n') :
+        edit ? contents.replace('🙂', '').replace(/\r\n?/g, '\n') + 'tail\nne' : contents;
+    assert.equal(readFileSync(join(fs, filename), 'utf8'), saved);
     if (edit) {
         assert(statuses.includes(`Saved ${Buffer.byteLength(saved)} bytes.`));
         assert.equal(statuses.at(-2), 'Changes discarded.');
@@ -127,8 +138,20 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         assert.equal(marks?.length, 4);
         const overlaps = frames.find(frame => frame.tree.kids[0].s === 'Find: aba_')?.tree.kids[1].marks;
         assert.deepEqual(overlaps, [[3, 8, 3, 'soft'], [3, 10, 3, 'soft']]);
+    } else if (markdown) {
+        assert.deepEqual(frames[1].tree.kids[1].rows.slice(0, 8).map(row => row.color),
+            ['accent', 'ink', 'ink', 'blue', 'blue', 'blue', 'blue', 'muted']);
+        const preview = frames.find(frame => frame.tree.kids[1]?.t === 'lines').tree.kids[1];
+        assert(preview.items.some(item => item.s === 'STRASSE TITLE'));
+        assert(preview.items.some(item => item.s === 'plain link continued'));
+        assert(preview.items.some(item => item.s === '10) ten'));
+        assert(frames.some(frame => frame.tree.kids[1]?.scroll === 17));
+        const viewport = frames.at(-2).tree.kids[1].rows;
+        assert.equal(viewport.length, 18);
+        assert(viewport.every(row => row.color === 'blue'));
     } else assert.equal(statuses.length, positions ? 4 : 3);
-    const pictures = ['editor', 'opened', ...(edit ? ['saved'] : []), ...(find ? ['found'] : []), 'fresh'];
+    const pictures = ['editor', 'opened', ...(edit ? ['saved'] : []), ...(find ? ['found'] : []),
+        ...(markdown ? ['preview', 'fence'] : []), 'fresh'];
     const pixels = pictures.map(name => readFileSync(join(out, name + '.png')));
     if (!positions) return {frames, pixels, saved};
     const kept = JSON.parse(readFileSync(record, 'utf8')).pos;
@@ -156,18 +179,22 @@ try {
         '-march=rv32imafc_zicsr_zifencei', '-mabi=ilp32f', '-Os', '-fPIC', '-shared', '-nostartfiles',
         '-nostdlib', '-e', 'app_main', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
         '-fvisibility=hidden', '-Wl,--strip-all', '-Wl,-z,max-page-size=16', '-Wno-attributes',
-        '-I', sdk, '-o', reactor, join(runtime, 'world.c'), join(runtime, 'rv32-slot.S'), join(sdk, 'nw_elf.c'),
+        '-I', sdk, '-o', reactor, join(runtime, 'world.c'), join(runtime, 'rv32-slot.S'), join(sdk, 'nw_elf.c'), join(os, 'third_party/quickjs/libunicode.c'),
     ], {stdio:'inherit'});
     const rv32Reactor = readFileSync(reactor);
     const elf = compileTypedWorldRv32(source, rv32Reactor);
     assert.throws(() => compileTypedWorldRv32(wrongCall, rv32Reactor), SyntaxError);
     writeFileSync(app, elf);
     const expected = join(dir, 'expected.h');
-    writeFileSync(expected, `static const char settled[] = ${JSON.stringify(JSON.stringify(contents))};\n` +
-        (edit ? `#define TEST_EDIT\nstatic const char saved_text[] = ${JSON.stringify(original.saved)};\n` : '') +
+    writeFileSync(expected, `#define FIRST_FILE ${JSON.stringify(filename)}\nstatic const char settled[] = ${JSON.stringify(JSON.stringify(contents))};\n` +
+        (edit ? '#define TEST_EDIT\n' : '') +
+        (edit || markdown ? `static const char saved_text[] = ${JSON.stringify(original.saved)};\n` : '') +
         (positions ? `#define TEST_POS\nstatic const char initial_record[] = ${JSON.stringify(JSON.stringify(seed))};\n` : '') +
         (find ? '#define TEST_FIND\nstatic const char *const find_actions[] = {' +
             findActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
+            '};\n' : '') +
+        (markdown ? '#define TEST_MARKDOWN\nstatic const char *const markdown_actions[] = {' +
+            markdownActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
             '};\n' : ''));
     execFileSync(cc, [
         '-march=rv32im', '-mabi=ilp32', '-O2', '-fno-builtin', '-msmall-data-limit=0',

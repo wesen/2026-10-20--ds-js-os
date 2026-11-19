@@ -482,3 +482,61 @@ Start with `find.typed` beside the original `edFindNext`, `edKey`, and `edView`.
 ### Technical details
 
 The prompt stores up to 60 ASCII characters and hides the cursor while editing. The search keeps folded UTF-16 offsets until mapping them back to original code-point columns. The compositor receives its existing `textarea` marks array. The shared RV32 template reserves 160 KiB for the typed module.
+
+## Step 9 — Port Markdown editing and preview
+
+Typed Editor now detects Markdown extensions, colors headings, quotes, and fenced code, and continues bullet or numbered lists. F6 enters and exits preview. The typed preview builds the existing Compositor lines tree from headings, paragraphs, lists, quotes, and fenced blocks.
+
+The matched tests verified real saved file bytes as well as presentation. The fixture used a viewport that starts inside a fence whose opening marker is offscreen, plus a separate preview with inline syntax and a Unicode heading.
+
+### Prompt Context
+
+See Step 1 for the complete typed Editor goal.
+
+**Commit (preceding checkpoint)** `2a4ed8e` — “Port Editor find and match highlighting to typed JavaScript.”
+
+### What I did
+
+- Added `markdown.typed` for extension detection, line classification, list markers, inline token removal, and decimal continuation. Enter continues an indented or numbered list and clears an empty item.
+- Added `preview.typed` for paragraph aggregation, item presentation, fence handling, and preview scrolling. The typed app chooses the syntax, transformation order, text and colors.
+- Exposed a generic UTF-16 uppercase operation using the same vendored QuickJS Unicode mapping tables as the reference. It preserves expansions such as sharp S to SS. No Markdown parser runs in C.
+- Extended the matched host and RV32 fixture with `--markdown`. It saves a document after removing an empty bullet and adding a continued numbered entry. It compares Markdown edit and preview trees and simulator framebuffers.
+
+### Why
+
+The existing Editor combines line-oriented editing and a lightweight reading view. Reusing the Compositor's lines widget preserves the reference viewport and scroll behavior. Sharing the existing Unicode tables avoids a second case-mapping implementation while keeping the choice of when to capitalize a heading in typed source.
+
+### What worked
+
+- The 339-byte Markdown workflow matched the original editor trees and five framebuffer captures in the Wasm simulator at the stock 50 ms virtual turn budget. The RV32 emulator matched the same trees, hints, and exact submitted save bytes.
+- The fixture checked bullet termination, numbered-list carry from 9 to 10, headings, fenced colors when the marker is offscreen, quote and paragraph formatting, link/code/bold stripping, and page scrolling inside preview.
+- Find, edit/save, cursor persistence, and the 64 KiB open check still matched on both backends. The large-open check retained its experimental 200 ms budget.
+- The linked artifacts were 79,746 bytes for Wasm and 239,572 bytes for ELF. The RV32 template reserves 224 KiB for generated instructions.
+
+### What didn't work
+
+The first shared-runtime build failed with `error: use of undeclared identifier 'TRUE'` from the vendored `libunicode.h`. The upstream header relies on definitions in `cutils.h`. Including it in the same order as the existing QuickJS source resolved the build.
+
+### What I learned
+
+Fence state needs to be tracked while skipping offscreen rows. A wrapped line must toggle it once per logical line. Preview inline transformations must run in the original bold, code, and link order because one substitution can expose text consumed by the next.
+
+### What was tricky to build
+
+The preview can wrap several source lines into a single paragraph item. It keeps that item's JSON string open while appending escaped content, then closes it before a new block. A heading or code row uses its own style and does not share the paragraph's accumulator.
+
+### What warrants a second pair of eyes
+
+The preview renderer currently stops adding items when the next line could exceed the fixed output buffer. The native screen budget is also measured in UTF-8 bytes, so very large previews need separate viewport and byte-limit qualification. Extreme numbered markers use decimal carry, which can differ from JavaScript Number rounding. Long-document search and preview timing and the actual firmware builds remain open.
+
+### What should be done in the future
+
+Wire the compiled Editor into both P4 firmware profiles, then verify the complete workflow on the physical device and record source compile and first-use measurements. Exercise large previews and long searches separately.
+
+### Code review instructions
+
+Read `markdown.typed` and `preview.typed` next to `edNewline`, `edColors`, and `edPreview` in the original Editor. Review the viewport's fence transitions in `document-view.typed`. Rebuild `typed-world-reactor` and run `02-check-editor-world.mjs --markdown` with the P4 compiler and CJI emulator.
+
+### Technical details
+
+The typed renderer writes UTF-16 JSON and the shared runtime checks and converts it at the screen SDK boundary. Preview borrows two bounded work buffers, while the shared uppercase primitive maps one scalar at a time. The position parser and preview transformations use their shared scratch at different event stages.

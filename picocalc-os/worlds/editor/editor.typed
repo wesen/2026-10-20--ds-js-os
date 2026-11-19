@@ -95,6 +95,8 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
         n = n + 1;
     }
     state.nameLength = n;
+    state.markdown = editorIsMarkdown(state);
+    state.preview = false;
     typedSdkReply(output, output.writeLiteral(0, "{\"ok\":true}"));
     state.cursor = 0;
     state.top = 0;

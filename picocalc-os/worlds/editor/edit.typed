@@ -23,6 +23,7 @@ function editorKeyCode(key: buffer, len: i32, b: buffer): i32 {
     if (editorEqual(key, len, b, b.writeLiteral(0, "esc"))) return 15;
     if (editorEqual(key, len, b, b.writeLiteral(0, "f3"))) return 16;
     if (editorEqual(key, len, b, b.writeLiteral(0, "f4"))) return 17;
+    if (editorEqual(key, len, b, b.writeLiteral(0, "f6"))) return 18;
     return 0;
 }
 
@@ -53,15 +54,45 @@ function editorInsert(state: WorldState, text: string, unit: i32, count: i32): i
     return 0;
 }
 
-function editorWhitespace(unit: i32): bool {
-    return (unit >= 9 && unit <= 13) || unit === 32 || unit === 160 || unit === 5760 ||
-        (unit >= 8192 && unit <= 8202) || unit === 8232 || unit === 8233 || unit === 8239 ||
-        unit === 8287 || unit === 12288 || unit === 65279;
+function editorDelete(state: WorldState, from: i32, end: i32): i32 {
+    if (end <= from) return 0;
+    typedSdkMove(typedSdkBuffer(0), from, end, state.textLength - end);
+    state.textLength = state.textLength - end + from;
+    state.cursor = from;
+    return editorChange(state);
+}
+
+function editorContinueList(state: WorldState, text: string, first: i32, end: i32): i32 {
+    const body = editorMdSpace(text, end, state.cursor);
+    if (body === state.cursor && state.cursor === state.lineEnd)
+        return editorDelete(state, state.lineStart, state.lineEnd);
+    const indent = first - state.lineStart;
+    const marker = typedSdkBuffer(7);
+    if (end - first >= marker.length - 2) { state.notice = 4; }
+    if (state.notice === 4) return 0;
+    let size = 2;
+    if (end - first === 1) {
+        marker.setCharCodeAt(0, text.charCodeAt(first));
+        marker.setCharCodeAt(1, 32);
+    }
+    if (end - first > 1) { size = editorMdNextMarker(text, first, end, marker); }
+    const doc = typedSdkBuffer(0);
+    if (!editorMakeRoom(doc, state, 1 + indent + size)) return 0;
+    doc.setCharCodeAt(state.cursor, 10);
+    typedSdkMove(doc, state.cursor + 1, state.lineStart, indent);
+    let i = 0;
+    while (i < size) {
+        doc.setCharCodeAt(state.cursor + 1 + indent + i, marker.charCodeAt(i));
+        i = i + 1;
+    }
+    state.cursor = state.cursor + 1 + indent + size;
+    return 0;
 }
 
 function editorSplit(state: WorldState, text: string): i32 {
-    let end = state.lineStart;
-    while (end < state.cursor && editorWhitespace(text.charCodeAt(end))) { end = end + 1; }
+    const end = editorMdSpace(text, state.lineStart, state.cursor);
+    const marker = editorMdListEnd(text, end, state.cursor);
+    if (state.markdown && marker > 0) return editorContinueList(state, text, end, marker);
     const count = end - state.lineStart;
     const doc = typedSdkBuffer(0);
     if (!editorMakeRoom(doc, state, count + 1)) return 0;
@@ -69,14 +100,6 @@ function editorSplit(state: WorldState, text: string): i32 {
     typedSdkMove(doc, state.cursor + 1, state.lineStart, count);
     state.cursor = state.cursor + count + 1;
     return 0;
-}
-
-function editorDelete(state: WorldState, from: i32, end: i32): i32 {
-    if (end <= from) return 0;
-    typedSdkMove(typedSdkBuffer(0), from, end, state.textLength - end);
-    state.textLength = state.textLength - end + from;
-    state.cursor = from;
-    return editorChange(state);
 }
 
 function editorMoveRow(state: WorldState, text: string, column: i32, delta: i32): i32 {
@@ -151,6 +174,7 @@ function editorDiscard(state: WorldState, output: buffer): i32 {
     state.notice = 8;
     state.finding = false;
     state.queryLength = 0;
+    state.preview = false;
     editorRemember(state, output);
     return editorGoFiles(output);
 }
@@ -174,11 +198,13 @@ function editorEscape(state: WorldState, output: buffer): i32 {
 function editorApplyKey(state: WorldState, action: i32, ch: i32, held: bool, output: buffer): i32 {
     if (state.file <= 0 && action === 15 && !held) return editorGoFiles(output);
     if (state.file <= 0) return 0;
+    if (state.preview) return editorPreviewKey(state, action, held);
     if (state.finding) return editorFindInput(state, action, ch, held);
     state.notice = 0;
     if (held && action >= 13) return 0;
     if (action === 16) return editorBeginFind(state);
     if (action === 17) return editorFindNext(state, true);
+    if (action === 18) return editorBeginPreview(state);
     if (action === 13) return editorSave(state);
     if (action === 15) return editorEscape(state, output);
     return editorPlainKey(state, action, ch);

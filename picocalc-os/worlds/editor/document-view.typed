@@ -1,3 +1,10 @@
+function editorRowColor(output: buffer, at: i32, color: i32): i32 {
+    if (color === 1) return at + output.writeLiteral(at, ",\"color\":\"blue\"}");
+    if (color === 2) return at + output.writeLiteral(at, ",\"color\":\"accent\"}");
+    if (color === 3) return at + output.writeLiteral(at, ",\"color\":\"muted\"}");
+    return at + output.writeLiteral(at, ",\"color\":\"ink\"}");
+}
+
 function editorStatus(output: buffer, text: string, state: WorldState): i32 {
     if (state.finding || state.notice === 10) return editorFindStatus(output, state);
     if (state.notice === 9) return output.writeLiteral(0, "F3 to find first.");
@@ -40,16 +47,28 @@ function editorDocumentFrame(output: buffer, text: string, state: WorldState): i
     if (state.notice === 0 && !state.finding) {
         at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"muted\"}");
     }
+    if (state.preview) return editorPreviewFrame(output, at, text, state);
     at = at + output.writeLiteral(at, ",{\"t\":\"textarea\",\"rows\":[");
     editorFirstRow(text, state);
-    while (state.row < state.top && editorNextRow(text, state)) {}
+    let fenced = false;
+    while (state.row < state.top) {
+        if (state.markdown && state.rowStart === state.lineStart && editorMdFence(text, state.lineStart, state.lineEnd)) {
+            fenced = !fenced;
+        }
+        editorNextRow(text, state);
+    }
     let rows = 0;
     let more = true;
     while (rows < 18 && more) {
         if (rows > 0) { at = at + output.writeLiteral(at, ","); }
         at = at + output.writeLiteral(at, "{\"s\":");
         at = editorQuote(output, at, text, state.rowStart, state.rowEnd);
-        at = at + output.writeLiteral(at, ",\"color\":\"ink\"}");
+        let color = 0;
+        if (state.markdown) { color = editorMdColor(text, state.lineStart, state.lineEnd, fenced); }
+        at = editorRowColor(output, at, color);
+        if (state.markdown && state.rowStart === state.lineStart && editorMdFence(text, state.lineStart, state.lineEnd)) {
+            fenced = !fenced;
+        }
         more = editorNextRow(text, state);
         rows = rows + 1;
     }
@@ -69,6 +88,7 @@ function editorDocumentFrame(output: buffer, text: string, state: WorldState): i
 }
 
 function editorHints(hints: buffer, state: WorldState): i32 {
+    if (state.preview) return hints.writeLiteral(0, "Up/Dn scroll  F6 edit");
     if (state.finding) return hints.writeLiteral(0, "type to find  Enter go  Esc cancel");
     return hints.writeLiteral(0, "F2 save F3 find F4 next F6 view Esc back");
 }

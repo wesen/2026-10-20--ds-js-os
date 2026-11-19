@@ -1,0 +1,162 @@
+function editorWhitespace(unit: i32): bool {
+    return (unit >= 9 && unit <= 13) || unit === 32 || unit === 160 || unit === 5760 ||
+        (unit >= 8192 && unit <= 8202) || unit === 8232 || unit === 8233 || unit === 8239 ||
+        unit === 8287 || unit === 12288 || unit === 65279;
+}
+
+function editorMdSpace(text: string, from: i32, end: i32): i32 {
+    let at = from;
+    while (at < end && editorWhitespace(text.charCodeAt(at))) { at = at + 1; }
+    return at;
+}
+
+function editorMdSuffix(text: string, literal: buffer, size: i32): bool {
+    if (text.length < size) return false;
+    const start = text.length - size;
+    let i = 0;
+    while (i < size && text.charCodeAt(start + i) < 128 &&
+        editorFold(text.charCodeAt(start + i)) === literal.charCodeAt(i)) { i = i + 1; }
+    return i === size;
+}
+
+function editorIsMarkdown(state: WorldState): bool {
+    const name = typedSdkView(typedSdkBuffer(1), state.nameLength);
+    const scratch = typedSdkBuffer(7);
+    if (editorMdSuffix(name, scratch, scratch.writeLiteral(0, ".md"))) return true;
+    return editorMdSuffix(name, scratch, scratch.writeLiteral(0, ".markdown"));
+}
+
+function editorMdFence(text: string, first: i32, end: i32): bool {
+    const at = editorMdSpace(text, first, end);
+    return at + 3 <= end && text.charCodeAt(at) === 96 && text.charCodeAt(at + 1) === 96 && text.charCodeAt(at + 2) === 96;
+}
+
+function editorMdHeading(text: string, first: i32, end: i32): i32 {
+    let at = first;
+    while (at < end && text.charCodeAt(at) === 35) { at = at + 1; }
+    if (at === first || at - first > 6 || at >= end || !editorWhitespace(text.charCodeAt(at))) return 0;
+    return at - first;
+}
+
+function editorMdColor(text: string, first: i32, end: i32, fenced: bool): i32 {
+    if (fenced || editorMdFence(text, first, end)) return 1;
+    if (editorMdHeading(text, first, end) > 0) return 2;
+    const at = editorMdSpace(text, first, end);
+    if (at < end && text.charCodeAt(at) === 62) return 3;
+    return 0;
+}
+
+// Return the marker's exclusive end, before the whitespace it requires.
+function editorMdMarker(text: string, start: i32, end: i32): i32 {
+    if (start >= end) return 0;
+    const first = text.charCodeAt(start);
+    if (first === 45 || first === 42 || first === 43) return start + 1;
+    let at = start;
+    while (at < end && text.charCodeAt(at) >= 48 && text.charCodeAt(at) <= 57) { at = at + 1; }
+    if (at === start || at >= end) return 0;
+    const punctuation = text.charCodeAt(at);
+    if (punctuation === 46 || punctuation === 41) return at + 1;
+    return 0;
+}
+
+function editorMdListEnd(text: string, start: i32, end: i32): i32 {
+    const at = editorMdMarker(text, start, end);
+    if (at <= start || at >= end || !editorWhitespace(text.charCodeAt(at))) return 0;
+    return at;
+}
+
+function editorMdNextMarker(text: string, start: i32, end: i32, output: buffer): i32 {
+    let first = start;
+    while (first + 2 < end && text.charCodeAt(first) === 48) { first = first + 1; }
+    let carry = end - 2;
+    while (carry >= first && text.charCodeAt(carry) === 57) { carry = carry - 1; }
+    let at = 0;
+    if (carry < first) {
+        output.setCharCodeAt(0, 49);
+        at = 1;
+    }
+    let i = first;
+    while (i < end - 1) {
+        let unit = text.charCodeAt(i);
+        if (i === carry) { unit = unit + 1; }
+        if (i > carry) { unit = 48; }
+        output.setCharCodeAt(at, unit);
+        at = at + 1;
+        i = i + 1;
+    }
+    output.setCharCodeAt(at, text.charCodeAt(end - 1));
+    output.setCharCodeAt(at + 1, 32);
+    return at + 2;
+}
+
+function editorMdFind(buf: buffer, first: i32, end: i32, unit: i32): i32 {
+    let at = first;
+    while (at < end && !(buf.charCodeAt(at) === unit)) { at = at + 1; }
+    return at;
+}
+
+function editorMdBoldClose(buf: buffer, from: i32, length: i32): i32 {
+    if (from >= length || buf.charCodeAt(from) === 8232 || buf.charCodeAt(from) === 8233) return length;
+    let at = from + 1;
+    while (at + 1 < length && !(buf.charCodeAt(at) === 42 && buf.charCodeAt(at + 1) === 42) &&
+        !(buf.charCodeAt(at) === 8232 || buf.charCodeAt(at) === 8233)) { at = at + 1; }
+    if (at + 1 >= length || !(buf.charCodeAt(at) === 42 && buf.charCodeAt(at + 1) === 42)) return length;
+    return at;
+}
+
+function editorMdStrip(buf: buffer, size: i32, pass: i32): i32 {
+    let from = 0;
+    let at = 0;
+    while (from < size) {
+        const unit = buf.charCodeAt(from);
+        let start = from;
+        let end = from + 1;
+        let next = end;
+        if (pass === 0 && unit === 42 && from + 1 < size && buf.charCodeAt(from + 1) === 42) {
+            const close = editorMdBoldClose(buf, from + 2, size);
+            if (close < size) {
+                start = from + 2;
+                end = close;
+                next = close + 2;
+            }
+        }
+        if (pass === 1 && unit === 96) {
+            const close = editorMdFind(buf, from + 1, size, 96);
+            if (close > from + 1 && close < size) {
+                start = from + 1;
+                end = close;
+                next = close + 1;
+            }
+        }
+        if (pass === 2 && unit === 91) {
+            const close = editorMdFind(buf, from + 1, size, 93);
+            if (close > from + 1 && close + 1 < size && buf.charCodeAt(close + 1) === 40) {
+                const paren = editorMdFind(buf, close + 2, size, 41);
+                if (paren < size) {
+                    start = from + 1;
+                    end = close;
+                    next = paren + 1;
+                }
+            }
+        }
+        if (!(at === start)) { typedSdkMove(buf, at, start, end - start); }
+        at = at + end - start;
+        from = next;
+    }
+    return at;
+}
+
+function editorMdPlain(text: string, first: i32, end: i32, scratch: buffer): i32 {
+    let size = Math.min(end - first, scratch.length);
+    if (first + size < end && size > 0 && editorHighSurrogate(text.charCodeAt(first + size - 1))) {
+        size = size - 1;
+    }
+    let i = 0;
+    while (i < size) {
+        scratch.setCharCodeAt(i, text.charCodeAt(first + i));
+        i = i + 1;
+    }
+    size = editorMdStrip(scratch, size, 0);
+    size = editorMdStrip(scratch, size, 1);
+    return editorMdStrip(scratch, size, 2);
+}

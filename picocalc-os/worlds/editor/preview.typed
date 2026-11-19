@@ -1,0 +1,123 @@
+function editorPreviewItem(out: buffer, offset: i32, state: WorldState): i32 {
+    let at = offset;
+    if (state.previewItems > 0) { at = at + out.writeLiteral(at, ","); }
+    state.previewItems = state.previewItems + 1;
+    return at + out.writeLiteral(at, "{\"s\":\"");
+}
+
+function editorPreviewFlush(out: buffer, at: i32, state: WorldState): i32 {
+    if (!state.previewParagraph) return at;
+    state.previewParagraph = false;
+    return at + out.writeLiteral(at, "\"}");
+}
+
+function editorPreviewBlank(out: buffer, at: i32, state: WorldState): i32 {
+    const start = editorPreviewItem(out, at, state);
+    return start + out.writeLiteral(start, " \"}");
+}
+
+function editorPreviewUpper(out: buffer, at: i32, plain: buffer, size: i32): i32 {
+    const upper = typedSdkBuffer(7);
+    const length = typedSdkUpper(plain, size, upper);
+    if (length < 0) return editorQuoteContent(out, at, typedSdkView(plain, size), 0, size);
+    return editorQuoteContent(out, at, typedSdkView(upper, length), 0, length);
+}
+
+function editorPreviewText(out: buffer, at: i32, text: string, first: i32, end: i32, upper: bool): i32 {
+    const plain = typedSdkBuffer(5);
+    const size = editorMdPlain(text, first, end, plain);
+    if (upper) return editorPreviewUpper(out, at, plain, size);
+    return editorQuoteContent(out, at, typedSdkView(plain, size), 0, size);
+}
+
+function editorPreviewHeading(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
+    const level = editorMdHeading(text, first, end);
+    const lead = editorMdSpace(text, first + level, end);
+    let n = editorPreviewBlank(out, editorPreviewFlush(out, at, state), state);
+    n = editorPreviewItem(out, n, state);
+    n = editorPreviewText(out, n, text, lead, end, true);
+    if (level < 3) return n + out.writeLiteral(n, "\",\"color\":\"accent\"}");
+    return n + out.writeLiteral(n, "\",\"color\":\"ink\"}");
+}
+
+function editorPreviewList(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
+    const mark = editorMdListEnd(text, first, end);
+    let n = editorPreviewItem(out, editorPreviewFlush(out, at, state), state);
+    if (mark - first === 1) { n = n + out.writeLiteral(n, "•"); }
+    if (mark - first > 1) { n = editorQuoteContent(out, n, text, first, mark); }
+    n = n + out.writeLiteral(n, " ");
+    n = editorPreviewText(out, n, text, editorMdSpace(text, mark, end), end, false);
+    return n + out.writeLiteral(n, "\",\"indent\":2}");
+}
+
+function editorPreviewQuote(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
+    let n = editorPreviewItem(out, editorPreviewFlush(out, at, state), state);
+    let from = first + 1;
+    if (from < end && editorWhitespace(text.charCodeAt(from))) { from = from + 1; }
+    n = editorPreviewText(out, n, text, from, end, false);
+    return n + out.writeLiteral(n, "\",\"color\":\"muted\",\"indent\":2}");
+}
+
+function editorPreviewCode(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
+    let n = editorPreviewItem(out, at, state);
+    if (first === end) { n = n + out.writeLiteral(n, " "); }
+    n = editorQuoteContent(out, n, text, first, end);
+    return n + out.writeLiteral(n, "\",\"color\":\"blue\",\"indent\":2}");
+}
+
+function editorPreviewParagraph(out: buffer, at: i32, text: string, first: i32, end: i32, state: WorldState): i32 {
+    let n = at;
+    if (state.previewParagraph) { n = n + out.writeLiteral(n, " "); }
+    if (!state.previewParagraph) { n = editorPreviewItem(out, n, state); }
+    state.previewParagraph = true;
+    let stop = end;
+    while (stop > first && editorWhitespace(text.charCodeAt(stop - 1))) { stop = stop - 1; }
+    return editorPreviewText(out, n, text, first, stop, false);
+}
+
+function editorPreviewLine(out: buffer, at: i32, text: string, state: WorldState, fenced: bool): i32 {
+    const start = state.lineStart;
+    const end = state.lineEnd;
+    if (editorMdFence(text, start, end)) return editorPreviewFlush(out, at, state);
+    if (fenced) return editorPreviewCode(out, at, text, start, end, state);
+    const first = editorMdSpace(text, start, end);
+    if (first === end) return editorPreviewBlank(out, editorPreviewFlush(out, at, state), state);
+    if (editorMdHeading(text, start, end) > 0) return editorPreviewHeading(out, at, text, start, end, state);
+    if (editorMdListEnd(text, first, end) > 0) return editorPreviewList(out, at, text, first, end, state);
+    if (text.charCodeAt(first) === 62) return editorPreviewQuote(out, at, text, first, end, state);
+    return editorPreviewParagraph(out, at, text, first, end, state);
+}
+
+function editorPreviewFrame(out: buffer, prefix: i32, text: string, state: WorldState): i32 {
+    let at = prefix + out.writeLiteral(prefix, ",{\"t\":\"lines\",\"items\":[");
+    state.previewItems = 0;
+    state.previewParagraph = false;
+    state.lineStart = 0;
+    state.lineEnd = editorLineEnd(text, 0);
+    let fenced = false;
+    while (state.lineStart <= text.length && at + (state.lineEnd - state.lineStart) * 6 + 512 < out.length) {
+        at = editorPreviewLine(out, at, text, state, fenced);
+        if (editorMdFence(text, state.lineStart, state.lineEnd)) { fenced = !fenced; }
+        state.lineStart = state.lineEnd + 1;
+        state.lineEnd = editorLineEnd(text, state.lineStart);
+    }
+    at = editorPreviewFlush(out, at, state);
+    at = at + out.writeLiteral(at, "],\"font\":\"s\",\"lead\":2,\"grow\":1,\"scroll\":");
+    at = editorDigits(out, at, state.previewTop);
+    return at + out.writeLiteral(at, "}]}");
+}
+
+function editorBeginPreview(state: WorldState): i32 {
+    state.preview = true;
+    state.previewTop = 0;
+    return 0;
+}
+
+function editorPreviewKey(state: WorldState, action: i32, held: bool): i32 {
+    if ((action === 15 || action === 18) && !held) { state.preview = false; }
+    if (action === 3) { state.previewTop = Math.max(0, state.previewTop - 1); }
+    if (action === 4) { state.previewTop = state.previewTop + 1; }
+    if (action === 5) { state.previewTop = Math.max(0, state.previewTop - 16); }
+    if (action === 6) { state.previewTop = state.previewTop + 16; }
+    return 0;
+}

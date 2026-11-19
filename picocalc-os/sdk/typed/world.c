@@ -6,12 +6,15 @@
 #include "nw.h"
 #include "nw_json.h"
 #include "nw_utf16.h"
+#include "../../third_party/quickjs/cutils.h"
+#include "../../third_party/quickjs/libunicode.h"
 
 enum { SCREEN_CAP = 16384, HINT_CAP = 120, LARGE_CAP = 65536, SMALL_CAP = 256 };
 #define COUNTED(name, capacity) struct name { uint32_t length; uint16_t units[capacity]; }
 static COUNTED(large_text, LARGE_CAP) large;
 static COUNTED(small_text, SMALL_CAP) small[5];
 static COUNTED(record_text, 4096) record_text;
+static struct record_text text_scratch;
 static uint32_t world_state[64];
 static const nw_event *current;
 static struct { int32_t kind, ask, token, ok; } event_info;
@@ -81,6 +84,7 @@ SDK(typedSdkBuffer) void *typedSdkBuffer(int slot)
     static uint32_t empty;
     if (slot == 0) { large.length = LARGE_CAP; return &large; }
     if (slot == 5) { record_text.length = 4096; return &record_text; }
+    if (slot == 7) { text_scratch.length = 4096; return &text_scratch; }
     if (slot > 5) slot--;
     if (slot < 1 || (unsigned)slot > sizeof small / sizeof *small) return &empty;
     small[slot - 1].length = SMALL_CAP;
@@ -93,6 +97,7 @@ static int capacity(const void *buffer)
     if (buffer == &hints) return HINT_CAP;
     if (buffer == &large) return LARGE_CAP;
     if (buffer == &record_text) return 4096;
+    if (buffer == &text_scratch) return 4096;
     for (unsigned i = 0; i < sizeof small / sizeof *small; i++)
         if (buffer == &small[i]) return SMALL_CAP;
     return -1;
@@ -192,6 +197,33 @@ static int json_text(const char *json, const char *end, uint16_t *units, int cap
 static const uint16_t *units_at(const void *buffer)
 {
     return (const uint16_t *)((const uint32_t *)buffer + 1);
+}
+
+SDK(typedSdkUpper) int typedSdkUpper(const void *input, int length, void *output)
+{
+    int cap = capacity(output);
+    if (input == output || cap < 0 || length < 0 || length > capacity(input)) return -1;
+    const uint16_t *source = units_at(input);
+    uint16_t *target = (uint16_t *)((uint32_t *)output + 1);
+    int written = 0;
+    for (int at = 0; at < length; at++) {
+        uint32_t point = source[at], mapped[LRE_CC_RES_LEN_MAX];
+        if (point >= 0xd800 && point <= 0xdbff && at + 1 < length &&
+            source[at + 1] >= 0xdc00 && source[at + 1] <= 0xdfff)
+            point = 0x10000 + ((point - 0xd800) << 10) + source[++at] - 0xdc00;
+        int count = lre_case_conv(mapped, point, 0);
+        for (int i = 0; i < count; i++) {
+            uint32_t c = mapped[i];
+            if (cap - written < (c >= 0x10000 ? 2 : 1)) return -1;
+            if (c >= 0x10000) {
+                c -= 0x10000;
+                target[written++] = 0xd800 + (c >> 10);
+                c = 0xdc00 + (c & 1023);
+            }
+            target[written++] = c;
+        }
+    }
+    return written;
 }
 
 static int event_key(const void *buffer, int length, char key[96])

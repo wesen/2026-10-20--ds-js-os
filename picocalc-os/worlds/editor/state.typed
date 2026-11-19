@@ -40,4 +40,9 @@ record WorldState {
     positionEnd: i32;
     finding: bool;
     queryLength: i32;
+    markdown: bool;
+    preview: bool;
+    previewTop: i32;
+    previewParagraph: bool;
+    previewItems: i32;
 }

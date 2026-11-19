@@ -5,8 +5,8 @@ function editorHex(digit: i32): i32 {
     return 87 + digit;
 }
 
-function editorQuote(output: buffer, offset: i32, text: string, first: i32, end: i32): i32 {
-    let at = offset + output.writeLiteral(offset, "\"");
+function editorQuoteContent(output: buffer, offset: i32, text: string, first: i32, end: i32): i32 {
+    let at = offset;
     let i = first;
     while (i < end) {
         const unit = text.charCodeAt(i);
@@ -23,6 +23,11 @@ function editorQuote(output: buffer, offset: i32, text: string, first: i32, end:
         }
         i = i + 1;
     }
+    return at;
+}
+
+function editorQuote(output: buffer, offset: i32, text: string, first: i32, end: i32): i32 {
+    const at = editorQuoteContent(output, offset + output.writeLiteral(offset, "\""), text, first, end);
     return at + output.writeLiteral(at, "\"");
 }
 

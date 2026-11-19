@@ -15,8 +15,11 @@ static char saved_record[4096];
 #if defined(TEST_EDIT) || defined(TEST_POS)
 static int sends;
 #endif
+#if defined(TEST_EDIT) || defined(TEST_MARKDOWN)
+static int writes;
+#endif
 #ifdef TEST_EDIT
-static int writes, testing_race;
+static int testing_race;
 static char race_frame[1024];
 #endif
 
@@ -49,7 +52,8 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         return 0;
     case NW_CALL_SCREEN:
         expect(!strcmp(s1, !frames ? "Esc Files" : strstr(s0, "\"s\":\"Find: ") ?
-            "type to find  Enter go  Esc cancel" : "F2 save F3 find F4 next F6 view Esc back"), "typed hints");
+            "type to find  Enter go  Esc cancel" : strstr(s0, "\"t\":\"lines\"") ?
+            "Up/Dn scroll  F6 edit" : "F2 save F3 find F4 next F6 view Esc back"), "typed hints");
 #ifdef TEST_EDIT
         if (testing_race) snprintf(race_frame, sizeof race_frame, "%s", s0);
         else puts(s0);
@@ -61,7 +65,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
     case NW_CALL_FS_READ:
         expect(reads < 3 && a == 23 + reads && !*s0, "read the offered file");
         return 100 + reads++;
-#ifdef TEST_EDIT
+#if defined(TEST_EDIT) || defined(TEST_MARKDOWN)
     case NW_CALL_FS_WRITE:
         expect(!*s0, "write the granted file without a path");
         if (!writes) expect(a == 23 && !strcmp(s1, saved_text), "exact saved file bytes");
@@ -106,7 +110,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
 
 static int no_error(char *out, size_t n) { if (n) *out = 0; return 0; }
 
-#if defined(TEST_EDIT) || defined(TEST_POS) || defined(TEST_FIND)
+#if defined(TEST_EDIT) || defined(TEST_POS) || defined(TEST_FIND) || defined(TEST_MARKDOWN)
 static void key(nw_elf_module *world, const char *name, const char *ch)
 {
     char payload[128];
@@ -115,7 +119,7 @@ static void key(nw_elf_module *world, const char *name, const char *ch)
 }
 #endif
 
-#if defined(TEST_EDIT) || defined(TEST_FIND)
+#if defined(TEST_EDIT) || defined(TEST_FIND) || defined(TEST_MARKDOWN)
 static void type(nw_elf_module *world, const char *text)
 {
     for (; *text; text++) {
@@ -138,7 +142,7 @@ int main(void)
     expect(declarations == 5, "all metadata");
     expect(world.event(NW_START, 0, 0, 0, "", "null", 4, "") == NW_DONE && frames == 1, "initial frame");
     expect(world.event(NW_TICK, 0, 0, 0, "", "null", 4, "") == NW_DONE && frames == 1, "no tick frame");
-    const char *initial = "{\"file\":{\"$h\":23},\"name\":\"entry.txt\"}";
+    const char *initial = "{\"file\":{\"$h\":23},\"name\":\"" FIRST_FILE "\"}";
     const char *fresh = "{\"file\":{\"$h\":24},\"name\":\"fresh.txt\"}";
     const char *missing = "\"no file fresh.txt\"";
     expect(world.event(NW_MESSAGE, 1, 0, 0, "open", initial, strlen(initial), "files") == NW_LATER && reads == 1, "open waits");
@@ -154,6 +158,18 @@ int main(void)
         const char *action = find_actions[i];
         if (!strncmp(action, "key ", 4)) key(&world, action + 4, "");
         else type(&world, action + 5);
+    }
+#endif
+#ifdef TEST_MARKDOWN
+    for (unsigned i = 0; i < sizeof markdown_actions / sizeof *markdown_actions; i++) {
+        const char *action = markdown_actions[i];
+        if (!strncmp(action, "key ", 4)) key(&world, action + 4, "");
+        else type(&world, action + 5);
+        if (!strcmp(action, "key f2")) {
+            char saved[64];
+            snprintf(saved, sizeof saved, "{\"bytes\":%d}", (int)strlen(saved_text));
+            expect(world.event(NW_SETTLE, 1, 0, 300, "", saved, strlen(saved), "") == NW_DONE, "Markdown save");
+        }
     }
 #endif
 #ifdef TEST_POS

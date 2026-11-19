@@ -35,3 +35,7 @@ Persist and restore typed Editor positions in the original record format, with i
 ## 2026-11-19
 
 Port Editor search prompts, wraparound, Unicode-aware ASCII queries, and highlights to typed JavaScript.
+
+## 2026-11-19
+
+Port Markdown list editing, fenced colors, inline rendering, and preview scrolling to typed JavaScript.
