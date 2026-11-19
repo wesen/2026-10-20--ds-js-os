@@ -4,7 +4,7 @@ set -euo pipefail
 here=$(dirname "$0")
 work=$(realpath "$1")
 idf_export=$2
-python3 -B "$here/p4-trial-build.py" "$work/tree"
+python3 -B "$here/p4-trial-build.py" "$work/tree" "${@:3}"
 set +u
 source "$idf_export"
 set -u

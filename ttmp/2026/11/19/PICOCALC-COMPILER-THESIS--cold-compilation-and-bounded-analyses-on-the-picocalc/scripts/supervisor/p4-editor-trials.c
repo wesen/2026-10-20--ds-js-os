@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include "mbedtls/sha256.h"
 #include "p4.h"
+#ifndef TRIAL_FIRST
+#define TRIAL_FIRST "original"
+#endif
 
 static const p4_compile_limits limits = {.heap_bytes = 4 * 1024 * 1024, .duration_us = 6000000};
 
@@ -26,7 +29,7 @@ char *p4_editor_compile(size_t *length) {
     static bool started_trials;
     if (!started_trials) {
         started_trials = true;
-        const char *lanes[] = {"original", "register", "packed", "stream"};
+        const char *lanes[] = {TRIAL_FIRST, "register", "packed", "stream"};
         const unsigned orders[][4] = {{0,1,3,2}, {1,2,0,3}, {2,3,1,0}, {3,0,2,1}};
         for (unsigned block = 0; block < 4; ++block) {
             for (unsigned pos = 0; pos < 4; ++pos) {

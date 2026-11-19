@@ -34,7 +34,14 @@ typed = main / "typed_p4.c"
 core = typed.read_text()
 front, back = [], []
 entries = []
-for name, rev, lane in [("original","dd69a81","bytes"), ("register","f0846ba","bytes"),
+ablation = sys.argv[2:] == ["--ablation"]
+if sys.argv[2:] and not ablation:
+    raise SystemExit("optional argument must be --ablation")
+first = ("unframed","f0846ba","unframed") if ablation else ("original","dd69a81","bytes")
+if ablation:
+    flag = 'target_compile_definitions(${COMPONENT_LIB} PRIVATE TRIAL_FIRST="unframed")'
+    entries.append(flag)
+for name, rev, lane in [first, ("register","f0846ba","bytes"),
                          ("packed","f0846ba","packed"), ("stream","f0846ba","stream")]:
     for kind, transform, paths in [("wasm",frontend,front), ("rv32",native,back)]:
         source = subprocess.check_output(["git","-C",root,"show",f"{rev}:picocalc-os/compiler/typed-{kind}.js"],text=True)

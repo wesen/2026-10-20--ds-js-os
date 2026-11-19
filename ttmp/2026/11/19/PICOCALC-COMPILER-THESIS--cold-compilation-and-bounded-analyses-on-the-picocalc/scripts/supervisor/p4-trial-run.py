@@ -14,13 +14,15 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("work", type=Path)
 parser.add_argument("port")
 parser.add_argument("esptool", type=Path)
+parser.add_argument("--ablation", action="store_true", help="measure unframed encoded operands in the first lane")
 a = parser.parse_args()
 work, port = a.work.resolve(), a.port
 original = work / "original/factory-original.bin"
 build = work / "build"
 app = build / "picocalc-os-p4.bin"
 reference = json.loads((ticket / "various/supervisor/fresh-factorial-editor.json").read_text())
-oracle = json.loads(subprocess.check_output(["node",Path(__file__).with_name("p4-bundle-oracle.mjs"),work],text=True))
+first = "unframed" if a.ablation else "original"
+oracle = json.loads(subprocess.check_output(["node",Path(__file__).with_name("p4-bundle-oracle.mjs"),work,first],text=True))
 onboard = (work / "original/partition-table.bin").read_bytes()
 table = (build / "partition_table/partition-table.bin").read_bytes()
 assert len(onboard) == 4096 and table.ljust(4096, b"\xff") == onboard
@@ -53,7 +55,7 @@ def flash(label, image):
         raise ValueError("esptool did not verify the application")
 
 def parse(log):
-    rx = r"^(original|register|packed|stream) compile source=bundle status=ok us=(\d+) peak_js_bytes=(\d+) module_bytes=(\d+)$"
+    rx = rf"^({first}|register|packed|stream) compile source=bundle status=ok us=(\d+) peak_js_bytes=(\d+) module_bytes=(\d+)$"
     timings = re.findall(rx, log, re.M)
     hashes = re.findall(r"^thesis digest (\d+) (\d+) (\w+) ([a-f0-9]{64})$",log,re.M)
     if len(timings) != 16 or len(hashes) != 16 or "thesis trials complete" not in log:

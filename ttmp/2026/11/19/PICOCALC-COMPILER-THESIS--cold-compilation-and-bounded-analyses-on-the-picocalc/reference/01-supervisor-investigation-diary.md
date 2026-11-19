@@ -349,3 +349,57 @@ Use the ticket's `scripts/supervisor/p4-backup.sh`, `p4-trial-build.sh` and `p4-
 ### Technical details
 
 The on-board compiler uses the normal Editor limit of 4 MiB and 6 seconds per compilation. The source digest begins f37f60f3 and the production reactor digest begins 16660a8a. The reserved linked Editor file occupies 240,452 bytes.
+
+## Step 7: Measure the physical P4 and replay the compiled Editor
+
+Four complete, balanced blocks ran on one physical ESP32-P4. Buffered native operands gave the lowest time and streaming gave the lowest tracked allocation. The source, reactor and engine stayed fixed, and the three compiler configurations with the register backend returned interchangeable native programs.
+
+### Prompt Context
+
+**User prompt:** See Step 6.
+**Assistant interpretation:** Determine whether the two proposed compiler changes warrant integration.
+**Inferred user intent:** Prefer a change that reduces handheld compile time and can be understood and validated independently.
+**Commit (code):** 756393b records the physical measurement harness.
+
+### What I did
+
+- Collected 16 compiler receipts, each with a fresh runtime, firmware clock interval, peak allocator bytes and a post-timing SHA-256 of the linked module.
+- Compared all digests with the host oracle operating on IDF's actual linked reactor. The two hashes were 73376013… and aaf6a214… for the stack-slot and register backends.
+- Ran the existing 65,536-byte formatted Markdown fixture, including a Page Down key, two physical framebuffer captures and scratch cleanup. Compared both decoded PNGs with the earlier reference pixel by pixel.
+- Restored the full original factory application, checked the flash hash verification and queried its live native Editor. Saved the first trial receipt and illustrative figures in the ticket.
+
+### Why
+
+Changing how a checked integer travels between compiler stages should preserve the emitted machine code. Changing the native backend is expected to change those bytes. Both claims can be tested separately while also exercising the loaded file with its actual peripherals.
+
+### What worked
+
+The original, register, packed and streamed configurations took median times of 3.139, 2.863, 2.318 and 2.422 seconds. Packed beat the register backend and streaming in each of four matched blocks. The two physical screenshots differed from the earlier reference only inside the status clock rectangle. The temporary fixture was removed.
+
+### What didn't work
+
+Whole screenshot PNG hashes differed across qualification dates. Comparing the decoded images located the difference at x=548…625 and y=10…29 on the doubled 640×640 capture. The rendered document content matched exactly. I saved both the pixel verifier and the bounded difference receipt.
+
+### What I learned
+
+The physical result reproduces the host ordering of buffered and streamed numeric operands. Editor's existing heap budget leaves room for buffering. The first four treatments bundle together removal of Wasm framing and integer encode/decode; the recorded 544 ms saving cannot be attributed to operand passing alone.
+
+### What was tricky to build
+
+The device test has to restore an application partition that is longer than the installed executable. Reading the complete 8 MiB range and checking the original on-board image prefix against the prior physical qualification protects both the executable and the original partition tail. The user filesystem and credential partitions are separate and were not read or flashed.
+
+### What warrants a second pair of eyes
+
+Check the extra control that removes unused Wasm framing but still encodes and decodes integer operands. That control isolates the specific implementation choice the user asked about.
+
+### What should be done in the future
+
+Keep the first production numeric frontend compatible with both typed world entry points, and qualify accepted and rejected source for both targets. Revisit text-check removal only with generated-program time measurements in Files or Agenda.
+
+### Code review instructions
+
+Start with `various/supervisor/physical-editor.json`. Each trial records its position, block and linked digest. Run `scripts/supervisor/p4-verify-preview.py` against the output directory of the existing hardware replay for an independent content comparison.
+
+### Technical details
+
+The median tracked peaks were 2,454,968, 2,154,834, 1,735,524 and 1,387,004 bytes. Relative to the integrated register backend, buffered native compilation saves 419,310 peak bytes. Streaming saves another 348,520 bytes relative to buffering.
