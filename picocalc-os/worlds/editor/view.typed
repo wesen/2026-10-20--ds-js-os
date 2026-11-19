@@ -32,9 +32,8 @@ function editorQuote(output: buffer, offset: i32, text: string, first: i32, end:
 }
 
 function editorLineEnd(text: string, first: i32): i32 {
-    let end = first;
-    while (end < text.length && !(text.charCodeAt(end) === 10)) { end = end + 1; }
-    return end;
+    if (first >= text.length) return first;
+    return typedSdkSeek(text, first, text.length, 10, 10, 10, 10);
 }
 
 function editorFirstRow(text: string, state: WorldState): i32 {

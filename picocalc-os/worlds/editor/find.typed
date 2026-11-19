@@ -17,15 +17,23 @@ function editorFindMatch(text: string, at: i32, end: i32, query: buffer, size: i
 }
 
 function editorFindSpan(text: string, start: i32, end: i32, query: buffer, size: i32, from: i32): i32 {
+    const low = editorFold(query.charCodeAt(0));
+    let upper = low;
+    if (low >= 97 && low <= 122) { upper = low - 32; }
+    let alternate = low;
+    if (low === 107) { alternate = 8490; }
     let at = start;
     let folded = 0;
-    while (at < end && !(folded >= from && editorFindMatch(text, at, end, query, size))) {
-        if (text.charCodeAt(at) === 304) { folded = folded + 1; }
-        at = at + 1;
+    while (at < end) {
+        const candidate = typedSdkSeek(text, at, end, low, upper, alternate, 304);
+        folded = folded + candidate - at;
+        if (candidate === end) return -1;
+        if (folded >= from && editorFindMatch(text, candidate, end, query, size)) return folded;
+        if (text.charCodeAt(candidate) === 304) { folded = folded + 1; }
+        at = candidate + 1;
         folded = folded + 1;
     }
-    if (at >= end) return -1;
-    return folded;
+    return -1;
 }
 
 function editorSetFound(state: WorldState, text: string, first: i32, end: i32, found: i32): i32 {

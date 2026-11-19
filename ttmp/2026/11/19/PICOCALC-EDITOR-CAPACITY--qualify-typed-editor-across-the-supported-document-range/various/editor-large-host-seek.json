@@ -1,0 +1,38 @@
+{
+  "js/save": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "js/find": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "js/preview": {
+    "input_bytes": 21614,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/save": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/find": {
+    "input_bytes": 65536,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/preview": {
+    "input_bytes": 21614,
+    "finished": false,
+    "file_bytes_match": true,
+    "faults": []
+  }
+}

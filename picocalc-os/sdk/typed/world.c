@@ -111,6 +111,19 @@ SDK(typedSdkView) const void *typedSdkView(void *buffer, int length)
     return buffer;
 }
 
+// Search a live string view for any of four exact UTF-16 units.
+SDK(typedSdkSeek) int typedSdkSeek(const void *view, int start, int end, int a, int b, int c, int d)
+{
+    if (start < 0 || end < start || end > capacity(view) ||
+        (uint32_t)end > *(const uint32_t *)view) return end;
+    const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
+    for (int i = start; i < end; i++) {
+        int unit = units[i];
+        if (unit == a || unit == b || unit == c || unit == d) return i;
+    }
+    return end;
+}
+
 static int hex4(const unsigned char **input)
 {
     const unsigned char *p = *input;
