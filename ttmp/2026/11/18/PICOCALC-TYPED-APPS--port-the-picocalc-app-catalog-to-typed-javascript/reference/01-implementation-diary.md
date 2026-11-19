@@ -184,3 +184,59 @@ Read `worlds/editor/layout.h` and compare `editorWrapEnd` with `edWrap` in the o
 ### Technical details
 
 The layout ABI is a little-endian 32-bit count, followed by UTF-16 units. `editorWrapEnd` accepts the row's start, the logical line's end, and a width. `editorOffset` clamps a desired display column to that row. All bounds passed to those functions are absolute in the containing document. The test assembles the emitted RV32 instruction bytes directly into a firmware driver, so this checkpoint tests the typed calling convention without requiring an Editor ELF reactor.
+
+## Step 4 — Qualify both Files engines on the powered PicoCalc
+
+The physical console was present at `/dev/ttyACM0`. The sandbox omitted the device node, while a host-side `p4cap.py --no-reset` query returned `#OK help`. Hardware qualification used that console to run the same isolated file and key workflow on the Wasm and RV32 images from Step 2.
+
+### Prompt Context
+
+**User prompt (verbatim)** “the device is plugged in? what port is missing?”
+
+**Assistant interpretation:** Recheck the physical device outside the sandbox and use it to complete the board portion of the app catalog work.
+
+**Commit (firmware)** `f51e00b` — “Compile typed Files from source in PicoCalc P4 firmware.”
+
+### What I did
+
+- Confirmed the running firmware's console and healthy panel buses. Held the keyboard bus and read the active flash table. It matched the generated table byte for byte. Backed up the complete 8 MiB factory app range before flashing.
+- Used `scripts/06-qualify-files-on-p4.py` to write only the application at `0x10000` for each backend. The fixture creates its own directory and replays keys through the firmware console, keyboard and compositor. It asks the existing Editor to save a newly opened file, renames it in Files, confirms the first delete did nothing, and checks absence after confirmed deletion and directory removal.
+- Retained scoped receipt and framebuffer artifacts in `various/`. The serial transcripts and original application image are outside the repository in `/tmp/typed-files-powered` and `/tmp/typed-files-board-backup`.
+
+### Why
+
+The host test verified real filesystem contracts in the simulator. The board test exercises the actual P4 compiler, engine loader, constricted Files-to-Editor grant, FAT worker and compositor together. A reserved fixture directory protects existing file contents during the test.
+
+### What worked
+
+- The board held the keyboard bus before each flash, and esptool reported `Hash of data verified.` for both images. The test checked boot compiler records and the Files engine reported by the kernel's startup profile.
+- Both images produced exact readback after save and rename and after the first F5 press. The second F5 removed the file, and the test removed its temporary directory. Both screenshots passed CRC. Both buses showed transfers with zero errors.
+- Files compiled in 194,948–195,265 µs with Wasm and 245,990–247,177 µs with RV32 in these UART captures. Wasm linked to 49,089 bytes and RV32 linked to 24,400 bytes. The compiler peak was about 430 KB for Wasm and 360 KB for RV32. The recorded Files world loader segment took 91.3 ms for Wasm and 2.6 ms for RV32.
+
+### What didn't work
+
+The restricted environment reported `unable to initialize libusb: -99` and did not expose `/dev/ttyACM0`. Sysfs showed the registered ACM interface. The authorized outside-sandbox read-only query reached the console. No workflow failures followed.
+
+### What I learned
+
+The faster compiler phase here is Wasm, while the RV32 loader takes less time. These timestamps identify separately instrumented work. They do not establish key-to-display latency. The existing Agenda first-frame metric was about 2.9 seconds in both combined firmware captures. This paired run varied the Files backend and cannot attribute the difference from the previous Agenda-only run to a particular cause.
+
+### What was tricky to build
+
+The serial device exposes two USB serial adapters. The earlier Agenda log and the responding console identify `ttyACM0` as the application UART. Holding I²C before reset kept the PicoCalc keyboard controller available across the flash and cold boot.
+
+### What warrants a second pair of eyes
+
+The screenshot is the compositor framebuffer sent over UART, rather than an optical measurement of the LCD. The keyboard sequence was injected by console through the live driver path. The board run tests representative actions. The broader 26-screen differential fixture remains the simulator comparison.
+
+### What should be done in the future
+
+Use these verified images as a baseline while porting Editor and repeat the physical Files-to-Editor closeout with typed code on both ends. For suite-wide startup, compare the time contributed by synchronous compiles in manifest loading with the other boot and first-frame work.
+
+### Code review instructions
+
+Apply `03-build-files-firmware.sh` and `04-compare-files-firmware.py` to matched builds before using `05-back-up-files-test-board.sh` and `06-qualify-files-on-p4.py`. Check the recorded image SHA-256s and panel screenshot CRCs. `08-summarize-files-p4.py` extracts the scoped receipt from the captured logs.
+
+### Technical details
+
+The test writes the 8 MiB app partition whose first byte is at `0x10000`. The partition table starts at `0x8000`. Backup and comparison happen before testing, and failure recovery flashes the original app if the bus can be held. The measured module sizes are the linked outputs, distinct from the full ESP32 firmware images. The compiled RV32 Files image is left on the board after both tests pass.

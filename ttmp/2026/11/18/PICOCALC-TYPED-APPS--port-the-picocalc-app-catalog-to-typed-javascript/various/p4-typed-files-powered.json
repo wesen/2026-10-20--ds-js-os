@@ -1,0 +1,80 @@
+{
+  "camera_samples": 0,
+  "targets": {
+    "wasm": {
+      "image_sha256": "fe888c18add9af6d0b78337086b98823e8bf3eaf52bf01bc2ab7e72fec038efe",
+      "compiles_in_uart_capture": [
+        {
+          "microseconds": 195265,
+          "peak_js_bytes": 429872,
+          "module_bytes": 49089
+        },
+        {
+          "microseconds": 194948,
+          "peak_js_bytes": 430080,
+          "module_bytes": 49089
+        }
+      ],
+      "load_logged_by_agenda": [
+        {
+          "engine": 1,
+          "start_us_relative_to_agenda_compile": 1960527,
+          "loader_us": 91336
+        }
+      ],
+      "agenda_first_frame_us": [
+        2933139
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": {
+          "transfers": 1620,
+          "errors": 0
+        },
+        "spi2": {
+          "transfers": 474,
+          "errors": 0
+        }
+      },
+      "screenshot_sha256": "6c08223f4e9ee83d4decd322b3d31f0d21a3e82a76208b600afdf782d5ddf1f4"
+    },
+    "rv32": {
+      "image_sha256": "bffee7e833a0adfa858fb4c6cd5557ccc05500b210864d33a4e3fada10046826",
+      "compiles_in_uart_capture": [
+        {
+          "microseconds": 245990,
+          "peak_js_bytes": 360464,
+          "module_bytes": 24400
+        },
+        {
+          "microseconds": 247177,
+          "peak_js_bytes": 360468,
+          "module_bytes": 24400
+        }
+      ],
+      "load_logged_by_agenda": [
+        {
+          "engine": 2,
+          "start_us_relative_to_agenda_compile": 2018998,
+          "loader_us": 2604
+        }
+      ],
+      "agenda_first_frame_us": [
+        2902543
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": {
+          "transfers": 1633,
+          "errors": 0
+        },
+        "spi2": {
+          "transfers": 474,
+          "errors": 0
+        }
+      },
+      "screenshot_sha256": "f2ea88f5108a191b8afd0ca50185879db08e745781accd45a42e379879ca618c"
+    }
+  },
+  "original_application_sha256": "e67cadc3535297e460f4c5a7185cd98eadfa21734e6d75a39ba19346a4ec765a"
+}
