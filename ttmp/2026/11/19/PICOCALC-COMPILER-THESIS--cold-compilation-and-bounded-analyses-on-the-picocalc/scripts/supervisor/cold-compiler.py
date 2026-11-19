@@ -30,11 +30,20 @@ def measure(tmp, args):
     (headers / "FreeRTOS.h").write_text("")
     (headers / "queue.h").write_text("typedef void *QueueHandle_t;\n")
     qjs = OS / "third_party/quickjs"
+    build = tmp / "host-build"
+    units = ("quickjs", "libregexp", "libunicode", "cutils", "dtoa")
+    objects = [build / "eng" / (unit + ".o") for unit in units]
+    subprocess.run(["make", "-C", OS, "-j4", f"BUILD={build}", *objects],
+                   stdout=sys.stderr, check=True)
+    engine = {"source_tree_sha1": git("rev-parse", "HEAD:picocalc-os/third_party/quickjs").decode().strip(),
+              "makefile_sha256": sha((OS / "Makefile").read_bytes()),
+              "cc": subprocess.check_output(["cc", "--version"], text=True).splitlines()[0],
+              "object_sha256": {obj.name: sha(obj.read_bytes()) for obj in objects}}
     exe = tmp / "compile"
     subprocess.run(["cc", "-O2", "-D_POSIX_C_SOURCE=200809L", "-DPICOCALC_TYPED_EDITOR=1",
                     "-DPICOCALC_RV32_EDITOR=1", "-I", tmp, "-I", P4, "-I", OS/"nucleus",
                     "-I", qjs, HERE/"cold-entry.c", P4/"typed_p4.c", P4/"editor_p4.c",
-                    *sorted((OS/"build/qjs").glob("*.o")), "-lm", "-lpthread", "-o", exe], check=True)
+                    *objects, "-lm", "-lpthread", "-o", exe], check=True)
     reactor = tmp/"reactor.elf"
     subprocess.run([args.gcc, "-march=rv32imafc_zicsr_zifencei", "-mabi=ilp32f", "-Os",
                     "-fPIC", "-shared", "-nostartfiles", "-nostdlib", "-e", "app_main",
@@ -93,7 +102,7 @@ def measure(tmp, args):
         for label in ("baseline","candidate"):
             if data[label]["module_sha256"] != data[label + "_stream"]["module_sha256"]:
                 raise AssertionError("Streaming changed the linked native module")
-    return {"machine":platform.machine(), "system":platform.system(), "quickjs":(qjs/"VERSION").read_text().strip(),
+    return {"host_engine_build":engine, "machine":platform.machine(), "system":platform.system(), "quickjs":(qjs/"VERSION").read_text().strip(),
             "gcc":subprocess.check_output([args.gcc, "--version"],text=True).splitlines()[0],
             "source_sha256":sha(source),"reactor_sha256":sha(reactor.read_bytes()),"results":data}
 

@@ -1,0 +1,49 @@
+{
+  "meaning": "qjs are the existing object inputs used by the original cold and factorial runs. eng is the working host build at audit time. The qualified series uses a new temporary build.",
+  "objects": {
+    "qjs": {
+      "cutils.o": {
+        "sha256": "e3ea02214242903789775af237d245620b0d2000f1a59a4ad3e5b98b0fb3f330",
+        "without_debug_sha256": "265d5ea05ec4459b702bc9289006095d70d6979d2210888d15db6a24fb252451"
+      },
+      "dtoa.o": {
+        "sha256": "ce0f44931cdab5fbc0b565af9de6fc993042ca79b196d0893832908026620e6a",
+        "without_debug_sha256": "67ee2416dc9254a7965889eaeea2ae8ffc67ef033cf01b2c391a42a12c7e8c9b"
+      },
+      "libregexp.o": {
+        "sha256": "140e957e7402333469f0db4e0e7345c5e4c31a792053a0738183fa63e60f6428",
+        "without_debug_sha256": "3a2e64e7e80f21444f4b09e4ed53a19b9713fd5b3e5ad20928e937707ea26b70"
+      },
+      "libunicode.o": {
+        "sha256": "850856d73094e1bff207336ffee71be0fed2af273bd748fe0a9fbdd7baa22f34",
+        "without_debug_sha256": "16d110fa94057eae3b061ab4f864f0564503538fec6cab91aaaa902dd435f191"
+      },
+      "quickjs.o": {
+        "sha256": "e6a9ff95a3534e672bba758e2df80b9e7f048cc10563dc045db88c311a84a11d",
+        "without_debug_sha256": "a4bf6a0fd50ecb897100cffcbfe5fd15ec4050595eb4425e3b34aa1892966177"
+      }
+    },
+    "eng": {
+      "cutils.o": {
+        "sha256": "e3ea02214242903789775af237d245620b0d2000f1a59a4ad3e5b98b0fb3f330",
+        "without_debug_sha256": "265d5ea05ec4459b702bc9289006095d70d6979d2210888d15db6a24fb252451"
+      },
+      "dtoa.o": {
+        "sha256": "ce0f44931cdab5fbc0b565af9de6fc993042ca79b196d0893832908026620e6a",
+        "without_debug_sha256": "67ee2416dc9254a7965889eaeea2ae8ffc67ef033cf01b2c391a42a12c7e8c9b"
+      },
+      "libregexp.o": {
+        "sha256": "140e957e7402333469f0db4e0e7345c5e4c31a792053a0738183fa63e60f6428",
+        "without_debug_sha256": "3a2e64e7e80f21444f4b09e4ed53a19b9713fd5b3e5ad20928e937707ea26b70"
+      },
+      "libunicode.o": {
+        "sha256": "850856d73094e1bff207336ffee71be0fed2af273bd748fe0a9fbdd7baa22f34",
+        "without_debug_sha256": "16d110fa94057eae3b061ab4f864f0564503538fec6cab91aaaa902dd435f191"
+      },
+      "quickjs.o": {
+        "sha256": "aedf6248a0b8df28b43e14b17df49a2f51cf89c9039116b67a8c4de442e36afe",
+        "without_debug_sha256": "08d612ca0652b113a69cf17251464e9661964253f6c23dab76870c2a022d21bc"
+      }
+    }
+  }
+}

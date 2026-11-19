@@ -186,3 +186,57 @@ Read the ordering table and digest assertions in `scripts/supervisor/cold-compil
 ### Technical details
 
 The series contains 64 independent Linux processes. The median timings in milliseconds in stock, register, stream, and combined order are 54.7415, 50.552, 46.285 and 42.2325. The corresponding allocator peaks in bytes are 3,910,760, 3,402,944, 2,396,120 and 1,891,168. The full series retains application, frontend, backend, reactor and module hashes.
+
+## Step 4: Audit the engine build and test the disputed claims independently
+
+The methods examination identified the difference between the resident QuickJS benchmark and the firmware's compiler allocator. When tracing build prerequisites for a fresh checkout, I found that my own Linux harness used an older object directory. I compared both directories before interpreting additional timings. Four objects were identical. The fifth, quickjs.o, differed even after stripping debug information. I kept the original series in the ticket and repeated the entire experiment from a new build.
+
+### Prompt Context
+
+**User prompt:** See Step 1.
+**Assistant interpretation:** Use stronger independent review to challenge the evidence and repair consequential reproducibility issues.
+**Inferred user intent:** A later reader should be able to repeat the investigation from source and distinguish robust conclusions from measurements that depend on an old workspace.
+**Commit (code):** d9631db recorded the first factorial series, before this audit. 07ae1c6 records the examiner's independent bounds tests.
+
+### What I did
+
+- Wrote an object fingerprint script, including a second digest after stripping debug data. Updated the supervisor harness to ask the project Makefile to build the five host QuickJS objects in a new temporary directory. The receipt includes object hashes, the source-tree identifier, the Makefile digest and compiler version.
+- Repeated all 64 Editor compiles. Compared the new linked ELF digest with the earlier digest for each treatment. Regenerated the experimental figure from the new series.
+- Read the two allocator implementations and the firmware world-compiler entry. Documented that the native-only prototype drops the shared Wasm linker export, and that garbage collection and peak accounting differ between the research harnesses.
+- Collected the examiners' evidence about adversarial live values across calls, proof rollback, source order and peak overlap. Added the independent five-treatment results to the synthesis.
+
+### Why
+
+A hash on an output module establishes generated program identity. It cannot identify the executable that spent time generating it. Both are needed here because the scientific claim concerns the cost of compilation.
+
+### What worked
+
+The fresh Makefile objects matched the current build/eng objects exactly. All 16 blocks favored the combination; median paired savings were 12.9815 ms. The four median times were 54.891, 50.112, 46.333 and 41.849 ms. Both ELF digests and all four measured peak-byte values repeated exactly from the earlier series.
+
+### What didn't work
+
+The first visual replay rerun hit `spawnSync .../picocalc-host EPERM` under the sandbox. I retried using the existing project replay with permission to spawn the host simulator. The rerun completed; its full JSON receipt matched the historical four-workflow receipt byte for byte. The earlier assumption that the old cached QuickJS objects identified the current engine build was incorrect; the historical evidence and the repaired comparison are labeled separately.
+
+### What I learned
+
+The two examiners answered questions the original experiments could not settle. Scratch-register poisoning and varied argument counts test the ABI directly. The five-treatment experiment separates dropping unused Wasm writers, removing framing, packing operands and consuming functions early. With the register backend, streaming saves 697,496 peak bytes over packed buffering, which is slightly faster on this host. Program shape changes how long a large function's operation data overlaps the already-emitted native image.
+
+### What was tricky to build
+
+The fresh host engine must use the same flags as the maintained simulator, including the integer-overflow and aliasing flags. Requesting explicit object targets from the existing Makefile reuses that policy and keeps unrelated simulator dependencies out of the timed path. Make output goes to stderr so stdout remains a valid JSON receipt.
+
+### What warrants a second pair of eyes
+
+Check the distinction between cold runtime creation and a cold OS file cache, and between the paired time difference and the difference of treatment medians. An eventual shared frontend must continue to support the Wasm linker and preserve source diagnostic order.
+
+### What should be done in the future
+
+Qualify a shared production implementation of packed operation emission on the P4. Compare buffering and streaming as separate configurations, check both compiler entry points and collect the device's own receipt before choosing the default.
+
+### Code review instructions
+
+Recreate the historical environment audit with `scripts/supervisor/audit-host-objects.py` if the same object directories are still present. For a current reproduction use the cold compiler script and compare against `various/supervisor/fresh-factorial-editor.json`. Review the independent manuscripts for the held-out tests and five-way attribution.
+
+### Technical details
+
+The checked-in QuickJS tree is 1cabf1dfb35d373e4bcad26cf622af05857386d3. The audited older quickjs.o begins e6a9ff95a353; the fresh object begins aedf6248a0b8. Static counts and ELF hashes do not depend on the timing series. The four compiler treatments use the same firmware allocator and clock boundary within each trial.

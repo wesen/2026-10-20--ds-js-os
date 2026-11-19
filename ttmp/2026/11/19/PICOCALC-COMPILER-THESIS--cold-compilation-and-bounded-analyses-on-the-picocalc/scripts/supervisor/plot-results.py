@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 ticket = Path(__file__).resolve().parents[2]
 data = ticket / "various/supervisor"
-compile_data = json.loads((data / "factorial-editor.json").read_text())["results"]
+compile_data = json.loads((data / "fresh-factorial-editor.json").read_text())["results"]
 guest_data = json.loads((data / "editor-steps.json").read_text())["workloads"]
 lanes = ["baseline", "candidate", "baseline_stream", "candidate_stream"]
 labels = ["Stack slots · byte bodies", "Registers · byte bodies", "Stack slots · streaming", "Registers · streaming"]

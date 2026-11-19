@@ -1,3 +1,12 @@
+---
+Title: "Supervisor research notes"
+Ticket: PICOCALC-COMPILER-THESIS
+Status: active
+DocType: reference
+Topics: [picocalc, native, performance]
+Intent: long-term
+---
+
 # Supervisor's research notes
 
 ## Questions, evidence and decisions
@@ -18,3 +27,10 @@
 ## Artifact provenance
 
 Use the scripts under this ticket to trace the host measurements. Three implementation leads and two independent examiners own separate notes and diaries. The supervisor diary records when the hardware was probed, how the four compiler treatments were assembled and how the reviewed reports reached the vault.
+
+## Dispositions after independent examination
+
+- The call ABI retained the caller's live prefix across all tested combinations of zero through eight arguments and zero through eight live operands. Both backends matched the Wasm oracle when native imports overwrote every scratch register.
+- The bounded proof preserved observable results, traps and the full memory page in 760 examiner invocations. On event 50,001 the pass discarded an earlier accepted elimination and emitted the original Wasm bytes. Chained inference still has no additional winner in the unchanged application corpus.
+- The cold five-treatment ablation separates code pruning and framing from packing and early release. Packed buffering was fastest in the reviewer trial. Streaming lowered the peak further. A large function arriving late can raise the streamed peak even with the same input size, largest function size and output length.
+- The most recent supervisor series builds its engine freshly with the checked-in Makefile. Earlier workspace object inputs and their receipts remain named historical controls.

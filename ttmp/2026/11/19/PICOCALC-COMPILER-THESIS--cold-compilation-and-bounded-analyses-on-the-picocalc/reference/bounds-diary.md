@@ -1,3 +1,12 @@
+---
+Title: "Bounds proofs investigation diary"
+Ticket: PICOCALC-COMPILER-THESIS
+Status: active
+DocType: reference
+Topics: [picocalc, native, performance]
+Intent: long-term
+---
+
 # Bounds proofs investigation diary
 
 ## Step 1 · Trace the current check before choosing an experiment

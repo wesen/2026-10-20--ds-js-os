@@ -17,7 +17,7 @@ Three researchers examined where the compiler spends those resources. One change
 > [!summary]
 > The register change is integrated in the project compiler. It roughly halved the emitted code of three workloads. Four matched Editor replays used 36–42% fewer total guest instructions.
 >
-> Combining the register backend with an experimental streamed native frontend reduced a full Editor compile on Linux QuickJS from 54.74 to 42.23 ms in the same experiment. Its peak went from 3.91 to 1.89 million Linux allocator bytes. These figures are host measurements.
+> Combining the register backend with an experimental streamed native frontend reduced a full Editor compile on Linux QuickJS from 54.89 to 41.85 ms in the same experiment. Its peak went from 3.91 to 1.89 million Linux allocator bytes. These figures are host measurements.
 >
 > Bounded relational search succeeded on constructed chains. In the unmodified corpus, three sites qualified for direct proofs and longer chains contributed zero additional removals.
 
@@ -58,14 +58,20 @@ I crossed two representations with the two backends. For each of 16 blocks, four
 
 | Compiler used for a cold Editor build | Median elapsed | Peak QuickJS allocator bytes on Linux |
 | --- | ---: | ---: |
-| Original frontend and stack slots | 54.742 ms | 3,910,760 |
-| Original frontend and register homes | 50.552 ms | 3,402,944 |
-| Experimental streaming and stack slots | 46.285 ms | 2,396,120 |
-| Experimental streaming and register homes | 42.233 ms | 1,891,168 |
+| Original frontend and stack slots | 54.891 ms | 3,910,760 |
+| Original frontend and register homes | 50.112 ms | 3,402,944 |
+| Experimental streaming and stack slots | 46.333 ms | 2,396,120 |
+| Experimental streaming and register homes | 41.849 ms | 1,891,168 |
 
-For a given backend, both representations produced byte-identical linked ELF files. Across backends, the expected difference is the compiled code inside the slot. Every repeat of a given treatment produced the same output hash. The combined experiment measures the entire native-only frontend treatment, including changes to how much compiler JavaScript it loads. The researcher's separate four-way prepared-input experiment provides finer attribution. A representation which uses numeric cells can still discard source types. The prototype's local Boolean-versus-integer example demonstrates exactly that.
+All 16 blocks favored the combination over the original compiler. The median within-block saving was 12.982 ms. Comparing the two treatment medians gives a 23.8% reduction in elapsed time and a 51.6% reduction in peak bytes. For a given backend, both representations produced byte-identical linked ELF files. Across backends, the expected difference is the compiled code inside the slot. Every repeat of a given treatment produced the same output hash. The combined experiment measures the entire native-only frontend treatment, including changes to how much compiler JavaScript it loads. The researcher's separate four-way prepared-input experiment provides finer attribution. A representation which uses numeric cells can still discard source types. The prototype's local Boolean-versus-integer example demonstrates exactly that.
 
 ![Fresh compiler runs on Linux and guest instruction counts for four Editor replays](_assets/picocalc-compiler-thesis-experiments.png)
+
+### What production integration must preserve
+
+The firmware loads `typed/wasm.js` before choosing the final target. Its regular Wasm world compiler calls `typedWasm.linkWorld`. The experimental frontend exports a narrower interface for the native lane. Installing its generated file under the shared firmware name would break Wasm compilation. A production frontend can reuse the parser and type checker and give each target a consumer for completed functions. The Wasm consumer encodes sections. The native consumer emits instructions and retains the signatures and fixups that linking still requires. Both consumers must preserve the current rejection order when an early function exceeds a backend limit and a later function contains a source error.
+
+The resident representation benchmark and the cold firmware harness also use different accounting. The resident program's memory probe maintains the QuickJS allocation state, includes its allocation overhead and resets the high-water point after forced collection. The firmware allocator keeps a separate live-byte counter. QuickJS consults its own allocation state to trigger automatic cycle collection. Absolute peaks and timings across those two harnesses therefore include differences in collection behavior as well as the scope of the timed work. The four cold treatments use the same firmware allocator. Their within-series comparison remains interpretable.
 
 ## Counting work in a running application
 
@@ -78,7 +84,9 @@ A change to static code size alone permits many possible runtime outcomes. In a 
 | Preview dense inline Markdown | 35,693,419 | 22,853,317 | 36.0% |
 | Navigate near the end of the file | 73,408,388 | 42,316,056 | 42.4% |
 
-A guest instruction has no fixed duration on the physical processor. Cache state, branches and the behavior of the memory system affect timing. The distinction also matters for the host compiler. A separate alternating 20-pair trial produced higher absolute median compile times, 82.68 ms and 74.70 ms for the original frontend with the two backends. All twenty pairs favored the register backend. Relative comparisons in this report use variants timed within the same series. The P4 figure in the opening paragraph comes from an earlier physical run of the original compiler. The previously qualified serial port was absent during this experiment and a read-only console probe on the available bridge returned no bytes.
+An independent examiner tested all 81 combinations of zero through eight call arguments and zero through eight live operands with five input pairs per combination. Actual RV32 call targets overwrote scratch registers and checked stack alignment. Both backends agreed with the Wasm oracle across the 405 invocations each. This artificial, deliberately call-heavy workload reduced image size by about 25%, which illustrates how the benefit varies with the operations an application uses.
+
+A guest instruction has no fixed duration on the physical processor. Cache state, branches and the behavior of the memory system affect timing. The distinction also matters for the host compiler. Two earlier host trials used prebuilt Linux QuickJS objects. A subsequent object audit found a different `quickjs.o` from the version produced by the current Makefile. Rebuilding the engine in a fresh directory gave the four-way figures in the table and exactly repeated the earlier ELF hashes and peak byte counts. An earlier 16-block trial measured 54.74 ms and 42.23 ms at the two extremes. A separate alternating 20-pair trial produced higher absolute median compile times, 82.68 ms and 74.70 ms for the original frontend with the two backends. All twenty pairs favored the register backend. Relative comparisons in this report use variants timed within the same series. The P4 figure in the opening paragraph comes from an earlier physical run of the original compiler. The previously qualified serial port was absent during this experiment and a read-only console probe on the available bridge returned no bytes.
 
 ## Which text accesses can a bounded proof remove?
 
@@ -86,7 +94,7 @@ A text buffer supplies a length in code units. A bounds check requires the index
 
 The bounds researcher used a budgeted search over strict and non-strict inequality edges. If the compiler exhausts its budget, the original check remains in place. This is an application of demand-driven bounds reasoning. The experiment distinguishes a syntactic opportunity, a valid proof, an eliminated machine-level check and a dynamically avoided check. The corpus contains loops with a suggestive guard for which a local proof lacks a necessary lower bound or a relation to the length of the same buffer. [Bodík, Gupta and Sarkar, *ABCD*](https://doi.org/10.1145/349299.349342)
 
-The three workloads contained 419 check sites in the experimental census. Two sites in Files and one in Agenda qualified for direct elimination. The longer search succeeded on constructed examples but added zero corpus sites in this experiment. The direct Files sites accounted for a large fraction of executed checks in the selected helper replay. Wider search alone is therefore a poor next use of compile time on the evidence here. A more informative experiment would collect frequently executed surviving checks and identify the missing fact for each one.
+The three workloads contained 419 check sites in the experimental census. Two sites in Files and one in Agenda qualified for direct elimination. The longer search succeeded on constructed examples but added zero corpus sites in this experiment. The measured Files helpers went from 225 executed checks to 29. The Agenda helpers went from 43 to 34. Editor stayed at 22. Each count is for the fixed input set in the bounds study. The examiner then retained scalar-to-scalar facts across memory effects while discarding header facts and invalidated locals. This removed a check on a held-out example. Corpus removals stayed at three while chained edge inspections rose from 151 to 191. Wider search alone is therefore a poor next use of compile time on the evidence here. A more informative experiment would collect frequently executed surviving checks and identify the missing fact for each one.
 
 ## Reproduction and next experiment
 
@@ -98,6 +106,8 @@ python3 -B "$TICKET/scripts/supervisor/cold-compiler.py" "$RV32_GCC" \
 python3 "$TICKET/scripts/supervisor/editor-steps.py" "$RV32_GCC" "$RV32_EMU" "$OUT"
 ```
 
-Set `TICKET` to the lab path above, `OUT` to a scratch directory, and the two executable paths to the Espressif RV32 GCC and project RV32 emulator. Run the commands from the repository root with the project's host QuickJS objects and typed reactor build dependencies available. Detailed receipts include checksums and per-trial values.
+Set `TICKET` to the lab path above, `OUT` to a scratch directory, and the two executable paths to the Espressif RV32 GCC and project RV32 emulator. Run the commands from the repository root with the typed reactor build dependencies available. The harness runs the project's Makefile to compile the five vendored Linux QuickJS objects in a temporary directory; the receipt identifies their SHA-256 hashes. Detailed receipts include checksums and per-trial values.
 
-The experiment supports testing a native frontend that avoids constructing unused Wasm bodies and progressively releases per-function data. Its next qualification is a matched fresh build on the physical P4, followed by semantic comparison of the resulting modules and measurements of peak compiler memory. The budgeted proof should stay experimental until a measurement of frequently executed checks shows which additional relationships justify their inference cost.
+The experiment supports testing a native frontend that avoids constructing unused Wasm bodies and progressively releases per-function data. Its next qualification is a matched fresh build on the physical P4, followed by semantic comparison of the resulting modules and measurements of peak compiler memory. An independent five-way experiment further separated three changes bundled together in the stream treatment. With the register backend fixed, removing unused Wasm-writing code saved 34,736 peak bytes; skipping framing saved a further 751,656; and consuming packed functions incrementally saved a further 697,496 over packed buffering. These are differences between consecutive variants (the packing step also changed peak memory). Packed buffering was the fastest of the five in that trial. The streamed version traded about a millisecond against substantially lower peak use. The proof researcher and both independent examiners give the exact invariants, instrumented controls and held-out workloads in their individual reports.
+
+The budgeted proof should stay experimental until a measurement of frequently executed checks shows which additional relationships justify their inference cost.

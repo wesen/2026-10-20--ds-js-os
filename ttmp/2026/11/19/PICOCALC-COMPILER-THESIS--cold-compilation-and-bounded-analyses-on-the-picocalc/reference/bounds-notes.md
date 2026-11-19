@@ -1,3 +1,12 @@
+---
+Title: "Bounded text access proof notes"
+Ticket: PICOCALC-COMPILER-THESIS
+Status: active
+DocType: reference
+Topics: [picocalc, native, performance]
+Intent: long-term
+---
+
 # Bounds-check investigation notes
 
 The bounded proofs assignment came from the PICOCALC-COMPILER-THESIS supervisor. The user request appears verbatim in [the supervisor diary](01-supervisor-investigation-diary.md#step-1-commission-three-controlled-compiler-experiments). The code and evidence checkpoint is `c1e3777`. The measurements use the original typed emitter from the `dd69a81` baseline. Its SHA-256 and the linked reactors' digests are in the receipt.
