@@ -212,6 +212,14 @@ $(BUILD)/files-reactor.wasm: $(FILES_SRC) worlds/files/slots.h $(WASM_SDK)
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(FILES_SRC) sdk/nw_wasm.c
 
+TYPED_WORLD_SRC := sdk/typed/world.c sdk/typed/wasm-slot.c
+.PHONY: typed-world-reactor
+typed-world-reactor: $(BUILD)/typed-world-reactor.wasm
+
+$(BUILD)/typed-world-reactor.wasm: $(TYPED_WORLD_SRC) $(WASM_SDK)
+	@mkdir -p $(dir $@)
+	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(TYPED_WORLD_SRC) sdk/nw_wasm.c
+
 $(BUILD)/natives/%.wasm: natives/%.c $(WASM_SDK)
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $< sdk/nw_wasm.c

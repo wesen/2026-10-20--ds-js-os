@@ -77,3 +77,60 @@ Start at `worlds/editor/view.typed`, the literal token and `bufferLiteral` in `c
 ### Technical details
 
 The `buffer` header contains the writable capacity in UTF-16 units. `writeLiteral` returns the unit count and leaves the capacity unchanged. Empty literals return zero and store no bytes. The screen is a JSON UI tree matching the original Editor screen before it receives a file handle. The test's synthetic C driver passes data to the generated function under RV32 emulation and is absent from application builds.
+
+## Step 2 — Run Editor startup through a shared world reactor
+
+The standalone typed screen now runs as a PicoCalc world. Its startup metadata, shortcut, icon and empty view are written in `worlds/editor/editor.typed` and `view.typed`. The shared runtime transfers those strings to the existing SDK.
+
+I loaded the Wasm world through the same host manifest path used by other PicoCalc apps. The original and generated Editor produced the same compositor JSON and pixel output. The linked RV32 module exercised the same runtime source under the emulator.
+
+### Prompt Context
+
+See Step 1 for the active Editor goal and source boundary.
+
+**Commit (preceding checkpoint)** `616a50e` — “Start the complete typed Editor port with its original empty view.”
+
+### What I did
+
+- Added `sdk/typed/world.c` and template slots for Wasm and RV32. The shared reactor invokes the typed metadata and event entry points. It validates UTF-16 output, converts it to UTF-8, and uses the existing native presentation and screen calls.
+- Added `compiler/typed-world.js` to check the app entry signatures and use the appropriate existing linker.
+- Added a typed Editor bootstrap with the original kind, title, shortcut, icon, about text, and startup view and hints.
+- Added `scripts/02-check-editor-world.mjs` and its RV32 driver. The host script starts the original Editor and the compiled Editor in matched manifests, presses the actual Editor shortcut, and compares both the screen tree and framebuffer image.
+
+### Why
+
+The earlier experiment compiled a function and checked its bytes. Running the typed source as a world tests the ABI, launcher entry, lifecycle, compositor, and target loader together. The shared source makes metadata and screen transport reusable by a separate app without copying C.
+
+### What worked
+
+- `make -C picocalc-os typed-world-reactor build/picocalc-host` succeeded.
+- `scripts/02-check-editor-world.mjs` passed with the P4 GCC and CJI emulator. The Wasm package was 15,972 bytes and the P4 ELF was 27,332 bytes. The RV32 driver checked the complete metadata, start frame and absence of an extra tick frame. The Wasm test checked exact frame JSON, hint text and framebuffer bytes against the original.
+- The Wasm test linked the compiled Editor to the same generic reactor used for the RV32 source build. Neither target used an Editor-specific C implementation.
+
+### What didn't work
+
+No command failed in this checkpoint. The user-facing Editor remains the original app in the stock manifest. The validated fixture exercises startup and the launcher shortcut.
+
+### What I learned
+
+The runtime can cover basic view output with two entry points and no Editor knowledge. A complete Editor needs richer kernel input and an SDK operation path. The existing `NW_DONE` and `NW_LATER` turn contract must remain visible to the typed program for file-open sequencing.
+
+### What was tricky to build
+
+The same typed source has to fit the SDK's byte limits on both targets. The reactor validates surrogate pairs and the output buffer size before sending a UTF-8 view. The actual `nw_screen` syscall still checks the combined screen and hints limit. The startup comparison loads the real compositor, so identical screenshots also cover launcher activation.
+
+### What warrants a second pair of eyes
+
+Treat the two entry points as an initial ABI. The current event entry receives the event kind. The rest of the event envelope and a checked effect API still need to be wired into typed code. Avoid encoding Editor decisions in the reactor as that interface grows.
+
+### What should be done in the future
+
+Add kernel message and settlement input and the checked SDK call boundary. Exercise a real Files handoff and read settlement with the typed Editor. Run the reference Editor scenarios for editing, saves, search, Markdown, and positions before a hardware install.
+
+### Code review instructions
+
+Trace `compiler/typed-world.js` through the existing `linkWorld` and `linkSlot` functions. Read `sdk/typed/world.c` beside the typed Editor entry points. Build the reactor with make and run the ticket's startup fixture from the project repository root with the P4 compiler and emulator.
+
+### Technical details
+
+`typedWorldMeta(field, buffer)` returns a UTF-16 count for kind, title, shortcut, help text or icon. `typedWorldEvent(kind, screen, hints)` returns the screen count. A zero return means that the typed world has no frame to publish for that event. The current shared runtime is a bootstrap and rendering path. File I/O and interactive keys still need runtime hooks and typed Editor handlers.

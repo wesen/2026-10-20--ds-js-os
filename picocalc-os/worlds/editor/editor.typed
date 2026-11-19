@@ -1,0 +1,17 @@
+// Fields follow the shared typed runtime's metadata contract.
+function typedWorldMeta(field: i32, output: buffer): i32 {
+    if (field === 0) return output.writeLiteral(0, "app");
+    if (field === 1) return output.writeLiteral(0, "Editor");
+    if (field === 2) return output.writeLiteral(0, "e");
+    if (field === 3) return output.writeLiteral(0, "Plain text and Markdown, with find, soft wrap and a preview.");
+    if (field === 4) return output.writeLiteral(0, "[[\"rect\",8,0,24,30],[\"fill\",12,6,16,2],[\"fill\",12,12,16,2],[\"fill\",12,18,9,2],[\"fill\",23,16,2,7,\"accent\"]]");
+    return 0;
+}
+
+// Render on NW_START. Later events will update the application state.
+function typedWorldEvent(kind: i32, output: buffer, hints: buffer): i32 {
+    if (!(kind === 2)) return 0;
+    const hintLength = hints.writeLiteral(0, "Esc Files");
+    hints.setCharCodeAt(hintLength, 0);
+    return editorEmptyFrame(output);
+}
