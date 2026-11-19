@@ -11,7 +11,7 @@ import '../../../../../../picocalc-os/compiler/typed-rv32.js';
 const [cc, emulator] = process.argv.slice(2);
 assert(cc && emulator, 'pass the RV32 GCC and repository rv32emu paths');
 const app = readFileSync('picocalc-os/js/apps/agenda.js', 'utf8');
-const oracle = vm.runInNewContext(app.slice(0, app.indexOf('// ---- grouping')) + '\n({agDateWord, agTimeWord})');
+const oracle = vm.runInNewContext(app.slice(0, app.indexOf('// ---- grouping')) + '\n({agDateWord, agTimeWord, agExpand})');
 const source = ['reminder', 'entry'].map(
     name => readFileSync('picocalc-os/worlds/agenda/' + name + '.typed', 'utf8')
 ).join('\n');
@@ -65,17 +65,74 @@ for (const today of days) {
     }
 }
 
+const examples = [
+    '', '  ', ' words ', 'dentist @tue 2pm !15m', 'notes\t@today 12am',
+    'snow 🙂\u00a0@+1W 07:30 !2h', 'rain @9999-12-31 14:30', 'only @9999-12-31',
+    '@11-15 02pm', 'x @2028-2-29 noon', 'x @tue 13pm', 'x @tue 12:60',
+    'x @tue 6:4pm', 'x @tue 7o', 'x @tue 2 3', 'x @tue @tom 2pm',
+    'x @yesterday', 'x @1-3-05', 'x @2100-2-29', 'x @0004-2-29',
+    '@0004-2-29', '@2026-13-01', 'x !9999d', 'x !10000d', 'x !15M',
+    '!15m', '!0d !1h', '@today !15m', '@today !15m !1h', '@ !',
+    'x\n\r\u2028y', '  x '.repeat(30),
+];
+const statuses = [
+    'one date per task', 'the clock is not set', 'unknown date',
+    'not a time', 'a reminder is like', 'a task needs',
+];
+const capacity = 160, stride = 4 + capacity * 2;
+const promptRows = [];
+function addPrompt(input, today, limit) {
+    let expected = '', result;
+    try {
+        expected = oracle.agExpand(input, today);
+        result = expected.length > limit ? -7 : expected.length;
+    } catch (error) {
+        result = -1 - statuses.findIndex(prefix => error.message.startsWith(prefix));
+        assert(result < 0, error.message);
+    }
+    const row = Buffer.alloc(stride * 2 + 12);
+    const output = 4096;
+    row.writeUInt32LE(input.length, 0);
+    row.writeUInt32LE(expected.length, stride);
+    view.setUint32(0, input.length, true);
+    view.setUint32(output, limit, true);
+    for (let i = 0; i < input.length; i++) {
+        view.setUint16(4 + i * 2, input.charCodeAt(i), true);
+        row.writeUInt16LE(input.charCodeAt(i), 4 + i * 2);
+    }
+    for (let i = 0; i < expected.length; i++) row.writeUInt16LE(expected.charCodeAt(i), stride + 4 + i * 2);
+    row.writeInt32LE(encode(today), stride * 2);
+    row.writeInt32LE(result, stride * 2 + 4);
+    row.writeInt32LE(limit, stride * 2 + 8);
+    const label = JSON.stringify([input, today, limit]);
+    assert.equal(exports.normalizeEntry(0, encode(today), output), result, label);
+    if (result >= 0) {
+        let actual = '';
+        for (let i = 0; i < result; i++) actual += String.fromCharCode(view.getUint16(output + 4 + i * 2, true));
+        assert.equal(actual, expected, label);
+    }
+    promptRows.push(row);
+}
+for (const today of days) for (const example of examples) addPrompt(example, today, capacity);
+addPrompt('hello world', days[4], 11);
+addPrompt('hello world', days[4], 10);
+addPrompt('x @tue 2pm', days[4], 6);
+addPrompt('x', days[4], 0);
+
 const work = mkdtempSync(join(tmpdir(), 'agenda-entry-'));
 try {
     const file = name => join(work, name);
     writeFileSync(file('program.bin'), image);
     writeFileSync(file('fixtures.bin'), fixtures);
+    writeFileSync(file('prompts.bin'), Buffer.concat(promptRows));
     writeFileSync(file('program.S'), [
         '.section .text.agenda,"ax"', '.balign 4', 'program:',
         '.incbin "' + file('program.bin') + '"',
-        ...['entryDate','entryTime'].flatMap(name => ['.global ' + name, '.set ' + name + ', program + ' + entries[name]]),
+        ...['entryDate','entryTime','normalizeEntry'].flatMap(name => ['.global ' + name, '.set ' + name + ', program + ' + entries[name]]),
         '.section .rodata,"a"', '.balign 4', '.global cases_start,cases_end', 'cases_start:',
         '.incbin "' + file('fixtures.bin') + '"', 'cases_end:',
+        '.global prompts_start,prompts_end', 'prompts_start:',
+        '.incbin "' + file('prompts.bin') + '"', 'prompts_end:',
     ].join('\n') + '\n');
     const runner = fileURLToPath(new URL('15-rv32-entry-runner.c', import.meta.url));
     execFileSync(cc, ['-march=rv32im', '-mabi=ilp32', '-Os', '-nostdlib', '-fno-builtin',
@@ -84,7 +141,8 @@ try {
     const run = spawnSync(emulator, [file('entry.elf')], {timeout:30000});
     assert.equal(run.status, 0, 'RV32 witness ' + run.stdout.toString('hex') + ' ' + run.stderr);
     assert.equal(run.stdout.readUInt32LE(0), words.length * days.length);
-    console.log(JSON.stringify({cases: words.length * days.length, targets: ['wasm','rv32'],
+    assert.equal(run.stdout.readUInt32LE(4), promptRows.length);
+    console.log(JSON.stringify({cases: words.length * days.length, prompts: promptRows.length, targets: ['wasm','rv32'],
         machineBytes: image.length, includesReminder: true}));
 } finally {
     rmSync(work, {recursive: true, force: true});

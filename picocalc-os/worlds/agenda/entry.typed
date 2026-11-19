@@ -5,30 +5,35 @@ function entryLower(code: i32): i32 {
     return code;
 }
 
-// Return minutes since midnight, or -1 for an invalid time token.
-function entryTime(word: string): i32 {
-    let end = word.length;
+// Minutes since midnight, -1 for a non-time word, -2 for a time-shaped error.
+function entryClock(word: string, start: i32, end: i32): i32 {
+    let limit = end;
     let suffix = 0;
-    if (end >= 3 && entryLower(word.charCodeAt(end - 1)) === 109) {
-        suffix = entryLower(word.charCodeAt(end - 2));
+    if (limit - start >= 3 && entryLower(word.charCodeAt(limit - 1)) === 109) {
+        suffix = entryLower(word.charCodeAt(limit - 2));
         if (!(suffix === 97 || suffix === 112)) return -1;
-        end = end - 2;
+        limit = limit - 2;
     }
-    let width = end;
+    let width = limit - start;
     let minute = 0;
-    if (end >= 4 && word.charCodeAt(end - 3) === 58) {
-        width = end - 3;
-        minute = decimal(word, end - 2, 2);
+    if (width >= 4 && word.charCodeAt(limit - 3) === 58) {
+        width = width - 3;
+        minute = decimal(word, limit - 2, 2);
     }
-    if (width < 1 || width > 2 || minute < 0 || minute > 59) return -1;
-    let hour = decimal(word, 0, width);
-    if (hour < 0 || hour > 23) return -1;
+    if (width < 1 || width > 2 || minute < 0) return -1;
+    let hour = decimal(word, start, width);
+    if (hour < 0) return -1;
+    if (hour > 23 || minute > 59) return -2;
     if (suffix > 0) {
-        if (hour < 1 || hour > 12) return -1;
+        if (hour < 1 || hour > 12) return -2;
         hour = hour % 12;
         if (suffix === 112) { hour = hour + 12; }
     }
     return hour * 60 + minute;
+}
+
+function entryTime(word: string): i32 {
+    return Math.max(-1, entryClock(word, 0, word.length));
 }
 
 function entryMonthLength(year: i32, month: i32): i32 {
@@ -82,9 +87,9 @@ function entryLetters(word: string, start: i32, end: i32): i32 {
     return packed;
 }
 
-function entryRelative(word: string, today: i32): i32 {
-    const first = entryLetters(word, 0, Math.min(word.length, 6));
-    const rest = entryLetters(word, 6, word.length);
+function entryRelative(word: string, start: i32, end: i32, today: i32): i32 {
+    const first = entryLetters(word, start, Math.min(end, start + 6));
+    const rest = entryLetters(word, start + 6, end);
     if (first === 21467193 || first === 20964) return today; // today, tod
     if (first === 20973 || first === 20914 ||
         (first === 687259218 && rest === 503)) return entryAddDays(today, 1); // tom, tmr, tomorrow
@@ -97,42 +102,147 @@ function entryRelative(word: string, today: i32): i32 {
     if (first === 6729 || (first === 220500025 && rest === 0)) { weekday = 5; } // fri, friday
     if (first === 19508 || (first === 639260228 && rest === 57)) { weekday = 6; } // sat, saturday
     if (weekday >= 0) return entryAddDays(today, (weekday - entryWeekday(today) + 6) % 7 + 1);
-    if (word.length < 3 || word.length > 5 || !(word.charCodeAt(0) === 43)) return -1;
-    const count = decimal(word, 1, word.length - 2);
+    if (end - start < 3 || end - start > 5 || !(word.charCodeAt(start) === 43)) return -1;
+    const count = decimal(word, start + 1, end - start - 2);
     if (count < 0) return -1;
-    const unit = entryLower(word.charCodeAt(word.length - 1));
+    const unit = entryLower(word.charCodeAt(end - 1));
     if (unit === 100) return entryAddDays(today, count);
     if (unit === 119) return entryAddDays(today, count * 7);
     return -1;
 }
 
-function entryCalendar(word: string, today: i32, separator: i32): i32 {
+function entryCalendar(word: string, start: i32, end: i32, today: i32, separator: i32): i32 {
     let at = separator;
     let year = today / 10000;
-    let monthStart = 0;
-    if (separator === 4) {
-        year = decimal(word, 0, 4);
-        monthStart = 5;
+    let monthStart = start;
+    if (separator - start === 4) {
+        year = decimal(word, start, 4);
+        monthStart = separator + 1;
         at = monthStart;
-        while (at < word.length && !(word.charCodeAt(at) === 45)) { at = at + 1; }
+        while (at < end && !(word.charCodeAt(at) === 45)) { at = at + 1; }
     }
     const width = at - monthStart;
-    const dayWidth = word.length - at - 1;
+    const dayWidth = end - at - 1;
     if (year < 0 || width < 1 || width > 2 || dayWidth < 1 || dayWidth > 2) return -1;
     const month = decimal(word, monthStart, width);
     const day = decimal(word, at + 1, dayWidth);
-    if (monthStart === 0 && month * 100 + day < today % 10000) { year = year + 1; }
+    if (monthStart === start && month * 100 + day < today % 10000) { year = year + 1; }
     if (!validDate(year, month, day)) return -1;
     return year * 10000 + month * 100 + day;
 }
 
+function entryDateAt(word: string, start: i32, end: i32, today: i32): i32 {
+    if (end - start < 1 || end - start > 10) return -1;
+    let at = start;
+    while (at < end && !(word.charCodeAt(at) === 45)) { at = at + 1; }
+    if (at - start === 4 && at < end) return entryCalendar(word, start, end, today, at);
+    if (today < 0) return -1;
+    if (at > start && at - start <= 2 && at < end) return entryCalendar(word, start, end, today, at);
+    return entryRelative(word, start, end, today);
+}
+
 // Input omits '@'. Today and the result use YYYYMMDD; -1 is invalid/unset.
 function entryDate(word: string, today: i32): i32 {
-    if (word.length < 1 || word.length > 10) return -1;
-    let at = 0;
-    while (at < word.length && !(word.charCodeAt(at) === 45)) { at = at + 1; }
-    if (at === 4 && at < word.length) return entryCalendar(word, today, at);
-    if (today < 0) return -1;
-    if (at > 0 && at <= 2 && at < word.length) return entryCalendar(word, today, at);
-    return entryRelative(word, today);
+    return entryDateAt(word, 0, word.length, today);
+}
+
+function entryWordEnd(input: string, start: i32): i32 {
+    let at = start;
+    while (at < input.length && !space(input.charCodeAt(at))) { at = at + 1; }
+    return at;
+}
+
+function entryYmdShape(input: string, start: i32, end: i32): bool {
+    if (end - start < 8 || end - start > 10 || decimal(input, start, 4) < 0 ||
+        !(input.charCodeAt(start + 4) === 45)) return false;
+    let split = start + 6;
+    if (!(input.charCodeAt(split) === 45)) { split = split + 1; }
+    if (!(input.charCodeAt(split) === 45) || end - split < 2 || end - split > 3) return false;
+    return decimal(input, start + 5, split - start - 5) >= 0 &&
+        decimal(input, split + 1, end - split - 1) >= 0;
+}
+
+function entryPut(output: buffer, at: i32, code: i32): i32 {
+    if (at < 0 || at >= output.length) return -7;
+    output.setCharCodeAt(at, code);
+    return at + 1;
+}
+
+function entryNumber(output: buffer, at: i32, value: i32, divider: i32): i32 {
+    let pos = at;
+    let scale = divider;
+    while (value / scale >= 10) { scale = scale * 10; }
+    while (scale > 0) {
+        pos = entryPut(output, pos, 48 + value / scale % 10);
+        scale = scale / 10;
+    }
+    return pos;
+}
+
+function entryCopy(input: string, start: i32, end: i32, output: buffer, at: i32): i32 {
+    let from = start;
+    let pos = at;
+    while (from < end && pos >= 0) {
+        pos = entryPut(output, pos, input.charCodeAt(from));
+        from = from + 1;
+    }
+    return pos;
+}
+
+function entryWriteDate(output: buffer, at: i32, date: i32): i32 {
+    let pos = entryPut(output, at, 64);
+    pos = entryNumber(output, pos, date / 10000, 1);
+    pos = entryPut(output, pos, 45);
+    pos = entryNumber(output, pos, date / 100 % 100, 10);
+    pos = entryPut(output, pos, 45);
+    return entryNumber(output, pos, date % 100, 10);
+}
+
+// On success return the canonical prompt length in code units. On failure:
+// -1 duplicate date, -2 clock unset, -3 bad date, -4 bad time,
+// -5 bad lead, -6 no title, -7 output capacity. Ignore output on failure.
+function normalizeEntry(input: string, today: i32, output: buffer): i32 {
+    let at = skipSpace(input, 0);
+    let written = 0;
+    let hasDate = false;
+    let hasLead = false;
+    let hasTitle = false;
+    while (at < input.length) {
+        let end = entryWordEnd(input, at);
+        const code = input.charCodeAt(at);
+        const dateWord = code === 64 && end - at > 1;
+        if (written > 0) { written = entryPut(output, written, 32); }
+        if (dateWord) {
+            if (hasDate) return -1;
+            if (today < 0 && !entryYmdShape(input, at + 1, end)) return -2;
+            const date = entryDateAt(input, at + 1, end, today);
+            if (date < 0) return -3;
+            hasDate = true;
+            // The original title check only strips dates with four-digit years.
+            if (date / 10000 < 1000 || date / 10000 > 9999) { hasTitle = true; }
+            written = entryWriteDate(output, written, date);
+            const next = skipSpace(input, end);
+            const nextEnd = entryWordEnd(input, next);
+            const time = entryClock(input, next, nextEnd);
+            if (time === -2) return -4;
+            if (time >= 0) {
+                written = entryPut(output, written, 32);
+                written = entryNumber(output, written, time / 60, 10);
+                written = entryPut(output, written, 58);
+                written = entryNumber(output, written, time % 60, 10);
+                end = nextEnd;
+            }
+        }
+        if (!dateWord) {
+            const leadWord = code === 33 && end - at > 1;
+            if (leadWord && leadValue(input, at, end) < 0) return -5;
+            if (!leadWord || hasLead) { hasTitle = true; }
+            if (leadWord) { hasLead = true; }
+            written = entryCopy(input, at, end, output, written);
+        }
+        if (written < 0) return written;
+        at = skipSpace(input, end);
+    }
+    if (!hasTitle) return -6;
+    return written;
 }
