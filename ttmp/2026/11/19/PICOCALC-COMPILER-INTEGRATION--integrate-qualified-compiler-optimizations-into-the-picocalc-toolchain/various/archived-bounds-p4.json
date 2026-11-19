@@ -1,0 +1,127 @@
+{
+  "revision": "e082ec3",
+  "firmware_sha256": "524099f3e6b5914c99a2a43d3c4930c79426cb507467979a8c8159e0ecaf5526",
+  "compiler_sha256": {
+    "typed-wasm": "a6d3c21d32c7355bb6a6db534290646d5a8b4a6be9d0c24ccd13f901d02dbbe4",
+    "typed-rv32": "4403533997d66ef49bb536249cc70caafc8420b0afa7d027213d9345514d0bce"
+  },
+  "original_partition_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "boots": [
+    {
+      "files": {
+        "us": 264715,
+        "peak_js_bytes": 395684,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 688015,
+        "peak_js_bytes": 648484,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2467267,
+        "peak_js_bytes": 1794472,
+        "module_bytes": 240452
+      }
+    },
+    {
+      "files": {
+        "us": 266400,
+        "peak_js_bytes": 395684,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 687098,
+        "peak_js_bytes": 648484,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2462634,
+        "peak_js_bytes": 1794476,
+        "module_bytes": 240452
+      }
+    },
+    {
+      "files": {
+        "us": 264140,
+        "peak_js_bytes": 395684,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 688392,
+        "peak_js_bytes": 648484,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2468177,
+        "peak_js_bytes": 1794472,
+        "module_bytes": 240452
+      }
+    },
+    {
+      "files": {
+        "us": 265676,
+        "peak_js_bytes": 395672,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 687863,
+        "peak_js_bytes": 648484,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2475744,
+        "peak_js_bytes": 1794472,
+        "module_bytes": 240452
+      }
+    }
+  ],
+  "medians": {
+    "files": {
+      "us": 265195.5,
+      "peak_js_bytes": 395684.0,
+      "module_bytes": 24424.0
+    },
+    "agenda": {
+      "us": 687939.0,
+      "peak_js_bytes": 648484.0,
+      "module_bytes": 66364.0
+    },
+    "editor": {
+      "us": 2467722.0,
+      "peak_js_bytes": 1794472.0,
+      "module_bytes": 240452.0
+    }
+  },
+  "pixel_comparison": {
+    "changed_pixel_bounds": {
+      "shot-1.png": [
+        548,
+        10,
+        626,
+        30
+      ],
+      "shot-2.png": [
+        548,
+        10,
+        626,
+        30
+      ]
+    },
+    "all_pixels_outside_clock_match": true
+  },
+  "workflow": {
+    "input_bytes": 65536,
+    "engine": "native",
+    "page_down_keys": 1,
+    "editor_mem_kb_at_start": 710.1,
+    "editor_limit_kb": 768,
+    "faults": [],
+    "scratch_removed": true,
+    "screenshots": {
+      "shot-1.png": "2c72056393d7561067fa992471bda368a72eb1d680de547c780edd54ce68f334",
+      "shot-2.png": "2c72056393d7561067fa992471bda368a72eb1d680de547c780edd54ce68f334"
+    }
+  },
+  "original_restored": true
+}

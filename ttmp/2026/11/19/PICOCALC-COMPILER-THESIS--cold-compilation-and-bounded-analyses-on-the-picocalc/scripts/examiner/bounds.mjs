@@ -1,8 +1,7 @@
 // Run from the repository root. All storage is private to a fresh Wasm instance.
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {readFileSync} from 'node:fs';
-import {compiler} from '../bounds/emitter.mjs';
+import {compiler, referenceFrontend} from '../bounds/emitter.mjs';
 import {analyze} from '../bounds/proof.mjs';
 
 const source = `
@@ -153,6 +152,6 @@ assert.equal(limited.traces[0].reasons[0], 'analysis limit');
 assert.deepEqual(limited.bytes, clean.bytes);
 const digest = data => createHash('sha256').update(data).digest('hex');
 console.log(JSON.stringify({node: process.version, sourceSHA256: digest(source),
-    compilerSHA256: digest(readFileSync('picocalc-os/compiler/typed-wasm.js')), inputs: cases.length, traps,
+    compilerSHA256: digest(referenceFrontend), inputs: cases.length, traps,
     counts, traces: m, rollback: {sourceBytes: high.length, nearEntryProofInShortFunction: low.traces[0].removed,
         ...limited.traces[0], byteIdentical: true, moduleSHA256: digest(clean.bytes)}}, null, 2));

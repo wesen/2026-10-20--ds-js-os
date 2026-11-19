@@ -1,7 +1,9 @@
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import vm from 'node:vm';
 
-export const compilerPath = 'picocalc-os/compiler/typed-wasm.js';
+const compilerPath = 'picocalc-os/compiler/typed-wasm.js';
+// The instrumentation matches the exact frontend used to derive the published results.
+export const referenceFrontend = execFileSync('git', ['show', 'e202e94:' + compilerPath], {encoding: 'utf8'});
 
 const opaque = (...children) => ({ kind: 'opaque', children });
 const binary = (op, left, right) => ({ kind: 'binary', op, left, right });
@@ -147,7 +149,7 @@ function instrument(original) {
 }
 
 export function compiler({ analyze, instrumentCounts = false } = {}) {
-    const original = readFileSync(compilerPath, 'utf8');
+    const original = referenceFrontend;
     if (!analyze && instrumentCounts) throw new Error('counter instrumentation needs the lab analyzer');
     const lab = {
         Trace, opaque, binary, local, length, integer, effects,

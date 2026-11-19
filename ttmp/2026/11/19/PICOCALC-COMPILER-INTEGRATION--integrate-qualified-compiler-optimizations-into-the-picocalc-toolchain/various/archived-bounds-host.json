@@ -1,0 +1,160 @@
+{
+  "host_engine_build": {
+    "source_tree_sha1": "1cabf1dfb35d373e4bcad26cf622af05857386d3",
+    "makefile_sha256": "2e0459db6aa45382c98c4d93f8f28d80278bb9becf9c001cc04e7e9ab4757708",
+    "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "object_sha256": {
+      "quickjs.o": "aedf6248a0b8df28b43e14b17df49a2f51cf89c9039116b67a8c4de442e36afe",
+      "libregexp.o": "140e957e7402333469f0db4e0e7345c5e4c31a792053a0738183fa63e60f6428",
+      "libunicode.o": "850856d73094e1bff207336ffee71be0fed2af273bd748fe0a9fbdd7baa22f34",
+      "cutils.o": "e3ea02214242903789775af237d245620b0d2000f1a59a4ad3e5b98b0fb3f330",
+      "dtoa.o": "ce0f44931cdab5fbc0b565af9de6fc993042ca79b196d0893832908026620e6a"
+    }
+  },
+  "machine": "x86_64",
+  "system": "Linux",
+  "quickjs": "2026-06-04",
+  "gcc": "riscv32-esp-elf-gcc (crosstool-NG esp-12.2.0_20230208) 12.2.0",
+  "source_sha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+  "reactor_sha256": "13a21c3db7d3f9ae49f37a103fa486126f4dc4caa362493799a8cc911d593cd9",
+  "results": {
+    "baseline": {
+      "revision": "4452064b52c8033ac15a9c0c3341ec51822b8bba",
+      "backend_sha256": "4403533997d66ef49bb536249cc70caafc8420b0afa7d027213d9345514d0bce",
+      "frontend_sha256": "e2b1a7e86e254fb737db736fa1838644903e348db78d3b38e95e7742ab7ba4d0",
+      "samples": [
+        {
+          "pair": 1,
+          "order": 1,
+          "us": 62994,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 2,
+          "order": 2,
+          "us": 68917,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 3,
+          "order": 1,
+          "us": 67102,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 4,
+          "order": 2,
+          "us": 57211,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 5,
+          "order": 1,
+          "us": 56015,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 6,
+          "order": 2,
+          "us": 54105,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 7,
+          "order": 1,
+          "us": 53402,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 8,
+          "order": 2,
+          "us": 52653,
+          "peak_js_bytes": 2621336,
+          "module_bytes": 240408
+        }
+      ],
+      "module_sha256": "0f8732b80a8e5a41c7cd5b2e9a4fa80ffbdca18631e297e4fd779ad73c05541b",
+      "median": {
+        "us": 56613.0,
+        "peak_js_bytes": 2621336.0,
+        "module_bytes": 240408.0
+      }
+    },
+    "candidate": {
+      "revision": "e082ec3ad58010785504d3cc47ef11e38bbe21cd",
+      "backend_sha256": "4403533997d66ef49bb536249cc70caafc8420b0afa7d027213d9345514d0bce",
+      "frontend_sha256": "a6d3c21d32c7355bb6a6db534290646d5a8b4a6be9d0c24ccd13f901d02dbbe4",
+      "samples": [
+        {
+          "pair": 1,
+          "order": 2,
+          "us": 63737,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 2,
+          "order": 1,
+          "us": 66206,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 3,
+          "order": 2,
+          "us": 63215,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 4,
+          "order": 1,
+          "us": 61835,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 5,
+          "order": 2,
+          "us": 58733,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 6,
+          "order": 1,
+          "us": 57905,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 7,
+          "order": 2,
+          "us": 55843,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        },
+        {
+          "pair": 8,
+          "order": 1,
+          "us": 54955,
+          "peak_js_bytes": 2652048,
+          "module_bytes": 240408
+        }
+      ],
+      "module_sha256": "0f8732b80a8e5a41c7cd5b2e9a4fa80ffbdca18631e297e4fd779ad73c05541b",
+      "median": {
+        "us": 60284.0,
+        "peak_js_bytes": 2652048.0,
+        "module_bytes": 240408.0
+      }
+    }
+  }
+}

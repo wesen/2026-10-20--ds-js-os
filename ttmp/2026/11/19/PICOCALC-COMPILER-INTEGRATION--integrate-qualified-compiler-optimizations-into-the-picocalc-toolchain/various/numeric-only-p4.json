@@ -1,0 +1,97 @@
+{
+  "revision": "4452064",
+  "firmware_sha256": "3efb639f0e3eae6cb698f77ba37fe2567ba76f047ce4dc7ade8bfc751f34a218",
+  "compiler_sha256": {
+    "typed-wasm": "e2b1a7e86e254fb737db736fa1838644903e348db78d3b38e95e7742ab7ba4d0",
+    "typed-rv32": "4403533997d66ef49bb536249cc70caafc8420b0afa7d027213d9345514d0bce"
+  },
+  "original_partition_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "boots": [
+    {
+      "files": {
+        "us": 248438,
+        "peak_js_bytes": 365340,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 637417,
+        "peak_js_bytes": 622892,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2356139,
+        "peak_js_bytes": 1768616,
+        "module_bytes": 240452
+      }
+    },
+    {
+      "files": {
+        "us": 248809,
+        "peak_js_bytes": 365340,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 637397,
+        "peak_js_bytes": 622892,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2357123,
+        "peak_js_bytes": 1768616,
+        "module_bytes": 240452
+      }
+    },
+    {
+      "files": {
+        "us": 248685,
+        "peak_js_bytes": 365340,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 637695,
+        "peak_js_bytes": 622892,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2356707,
+        "peak_js_bytes": 1768616,
+        "module_bytes": 240452
+      }
+    },
+    {
+      "files": {
+        "us": 249283,
+        "peak_js_bytes": 365340,
+        "module_bytes": 24424
+      },
+      "agenda": {
+        "us": 636923,
+        "peak_js_bytes": 622892,
+        "module_bytes": 66364
+      },
+      "editor": {
+        "us": 2356298,
+        "peak_js_bytes": 1768616,
+        "module_bytes": 240452
+      }
+    }
+  ],
+  "medians": {
+    "files": {
+      "us": 248747.0,
+      "peak_js_bytes": 365340.0,
+      "module_bytes": 24424.0
+    },
+    "agenda": {
+      "us": 637407.0,
+      "peak_js_bytes": 622892.0,
+      "module_bytes": 66364.0
+    },
+    "editor": {
+      "us": 2356502.5,
+      "peak_js_bytes": 1768616.0,
+      "module_bytes": 240452.0
+    }
+  },
+  "original_restored": true
+}

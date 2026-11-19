@@ -21,36 +21,12 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+This ticket moves two experiments into the compiler that the PicoCalc runs during boot. The first changes how the frontend hands operands to the RV32 backend. The second lets the native backend consume one function at a time to reduce peak compiler allocation. Files, Agenda and Editor use the same frontend and provide different workloads for measuring the tradeoff.
 
-## Key Links
+- [Production integration and intern guide](design-doc/01-production-integration-of-the-typed-compiler-optimizations.md)
+- [Supervisor’s implementation diary](reference/01-compiler-integration-diary.md)
+- [Hardware qualification script](scripts/qualify-production.py)
+- [Numeric transition receipt](various/numeric-parity.json)
+- [Task list](tasks.md) and [changelog](changelog.md)
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-- native
-- performance
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+The experimental articles, original measurements and independent examination are in the sibling PICOCALC-COMPILER-THESIS ticket. The articles for each requested change are also in the go-go-parc vault, under Projects/2026/11/19.

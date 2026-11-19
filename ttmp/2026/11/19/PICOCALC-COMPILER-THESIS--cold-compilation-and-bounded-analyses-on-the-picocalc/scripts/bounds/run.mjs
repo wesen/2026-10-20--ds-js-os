@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-import { compiler, compilerPath } from './emitter.mjs';
+import { compiler, referenceFrontend } from './emitter.mjs';
 import { analyze } from './proof.mjs';
 
 const modes = ['baseline', 'direct', 'chained'];
@@ -369,7 +369,7 @@ assert.ok(dynamic.fixtures.byFunction.overflow.chained > 0);
 console.log(JSON.stringify({
     node: process.version,
     v8: process.versions.v8,
-    compilerSHA256: sha256(text(compilerPath)),
+    compilerSHA256: sha256(referenceFrontend),
     linked,
     workloadSeed: '0x5da3c007',
     budgets,
