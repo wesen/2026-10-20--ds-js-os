@@ -1,0 +1,71 @@
+{
+  "command": "restart calc",
+  "before": [
+    {
+      "name": "chat",
+      "engine": "js",
+      "state": "idle",
+      "restarts": 0,
+      "mem_kb": 246.7,
+      "last_error": ""
+    },
+    {
+      "name": "launcher",
+      "engine": "js",
+      "state": "idle",
+      "restarts": 0,
+      "mem_kb": 256.7,
+      "last_error": ""
+    },
+    {
+      "name": "calc",
+      "engine": "js",
+      "state": "idle",
+      "restarts": 0,
+      "mem_kb": 638.1,
+      "last_error": ""
+    },
+    {
+      "name": "agenda",
+      "engine": "native",
+      "state": "idle",
+      "restarts": 0,
+      "mem_kb": 121.7,
+      "last_error": ""
+    }
+  ],
+  "after": [
+    {
+      "name": "chat",
+      "engine": "js",
+      "state": "idle",
+      "restarts": 0,
+      "mem_kb": 246.7,
+      "last_error": ""
+    },
+    {
+      "name": "launcher",
+      "engine": "js",
+      "state": "idle",
+      "restarts": 0,
+      "mem_kb": 256.7,
+      "last_error": ""
+    },
+    {
+      "name": "calc",
+      "engine": "js",
+      "state": "idle",
+      "restarts": 1,
+      "mem_kb": 638.1,
+      "last_error": "restarted by an administrator"
+    },
+    {
+      "name": "agenda",
+      "engine": "native",
+      "state": "idle",
+      "restarts": 0,
+      "mem_kb": 121.7,
+      "last_error": ""
+    }
+  ]
+}

@@ -40,6 +40,9 @@ def capture(port, world_profile):
         if match is None:
             raise SystemExit(f"missing {name} in cold boot serial output")
         trial[name] = int(match.group(1))
+    cache = re.search(r"quickjs prelude cache bytes=(\d+) build_us=(\d+)", log)
+    if cache:
+        trial["prelude_cache"] = {"bytes": int(cache[1]), "build_us": int(cache[2])}
     if world_profile:
         worlds = {}
         for line in log.splitlines():

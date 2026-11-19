@@ -489,3 +489,39 @@ Prelude evaluation includes both compilation and execution. Only the first part 
 ### Code review instructions
 
 Rebuild the headless RV32 profile and run scripts/10-measure-agenda-boot.py with --world-profile. Inspect the returned world objects and their four QuickJS stage intervals. Reconcile the per-world sum with the top-level before-dispatch and file-submitted timestamps.
+
+## Step 17 — Reuse the compiled QuickJS prelude and verify native Agenda on the board
+
+### What I did
+
+The typed Agenda firmware now compiles the trusted bundled prelude once, into a temporary QuickJS realm with a memory limit. It serializes the compilation result into one read-only-by-convention buffer in the port heap. Every QuickJS world still creates its own runtime, decodes the bytecode into local allocations, and evaluates it with that world's own host functions and globals. The buffer is rebuilt at boot and released on VM reset. If the one-time compile, serialization, or allocation fails, worlds evaluate the packaged source through the existing path. The firmware reads no external cached executable.
+
+I repeated the headless RV32 boot measurement three times with the prelude cache, leaving the Agenda source, firmware configuration, notes file and CJI installation in place. The tested firmware hash was 6c348ce69444b7474c36448cf8243d789e8a5fde3dd2cabdadccbb9584fb577c. I verified that Calc, Chat, Launcher and native Agenda were idle on the board, restarted Calc, and checked that it returned to idle with its restart counter incremented. The host app and native test targets also passed, including all 34 native and Wasm integration tests.
+
+### Why
+
+The baseline attributed about 627 ms to evaluation of the same trusted prelude in 11 worlds. Reusing its compiled representation avoids repeated JavaScript parsing while preserving independent evaluation and memory ownership. Measuring an ordinary Calc restart verifies that a receiving world can load the cached bytes again after its prior QuickJS heap is released.
+
+### What worked
+
+Median Agenda source-to-publication improved from 2.733 s to 2.162 s, a decrease of 572 ms, or 21 percent. Total prelude work across QuickJS worlds fell from a median of 627 ms to 198 ms, including the one-time compile and serialization. The cache took 44,544 bytes; creating it took about 95 ms. Cold median file submission moved from 2.551 s to 1.864 s. The parser itself stayed near 449 ms. The unaggregated measurements, world restart receipt, and plotted comparison are in the ticket's various folder.
+
+### What didn't work
+
+Only one of the three cold boots met two seconds, with measurements of 1.995 s, 2.162 s and 2.163 s. File return was near 1.919 s in all three, so the two slower samples also waited about 240 ms between arrival and settlement. The sample is too small to estimate a tail percentile. The measurement ends at publication on a headless P4 and does not establish physical input-to-panel timing.
+
+### What I learned
+
+Cache benefits appear even when compilation occurs during the measured boot. The first QuickJS world pays for building the cache, and later worlds amortize it. The critical path moved from repeated parse/compile work toward ready-settlement latency. Comparing file arrival with settlement is now more informative than timing only the Agenda compiler or benchmarking interpreter instruction throughput.
+
+### What was tricky to build
+
+The serialized result must outlive the temporary compiling context but must not share that runtime's objects. The buffer is copied before the compiling context is destroyed. Each decode runs with the receiving world's capped allocator. The source fallback runs only if producing the shared buffer fails.
+
+### What warrants a second pair of eyes
+
+The exact memory tradeoff includes one shared 44,544-byte buffer and temporary compilation allocations. A world still needs its decoded function bodies and constant pool. The per-world status checks and normal host suite are useful evidence, and a broader rollout would benefit from matching per-app startup behavior on both Agenda targets and the physical devices.
+
+### Code review instructions
+
+Inspect `eval_prelude`, `build_prelude_cache`, and `vm_reset` in nucleus/vm.c. Build with PICOCALC_RV32_AGENDA=ON, run scripts/10-measure-agenda-boot.py with --world-profile, and compare the 23-world receipts. scripts/11-plot-agenda-boot.py renders the before/after measurements. Issue `worlds`, `restart calc`, then `worlds` over the P4 console to check the restart path.

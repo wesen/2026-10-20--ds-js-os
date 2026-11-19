@@ -39,3 +39,7 @@ Compiled the typed Agenda parser to RV32 on the P4, verified the relocated remin
 ## 2026-11-18
 
 Measured full-boot stages and reduced median headless RV32 source-to-first-frame latency by 339 ms through bounded CJI relocation deferral.
+
+## 2026-11-18
+
+Measured the repeated QuickJS prelude initialization cost and reduced median headless RV32 cold response by 572 ms with an in-memory compiled prelude.

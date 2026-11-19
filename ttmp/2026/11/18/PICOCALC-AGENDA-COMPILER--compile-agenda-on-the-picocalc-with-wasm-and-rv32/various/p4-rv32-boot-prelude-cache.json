@@ -1,0 +1,751 @@
+{
+  "trials": [
+    {
+      "compile_us": 449306,
+      "first_response_us": 2163136,
+      "world_bytes": 124588,
+      "frame_turn_us": 2182,
+      "before_cji_restore_us": 585632,
+      "before_dispatch_us": 595568,
+      "world_init_us": 1241957,
+      "world_init_done_us": 1246925,
+      "file_submitted_us": 1864376,
+      "file_returned_us": 1918991,
+      "settle_us": 2160973,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 95253
+      },
+      "worlds": {
+        "agent": {
+          "engine": 2,
+          "first_us": 596352,
+          "total_us": 51028,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "chat": {
+          "engine": 0,
+          "first_us": 647725,
+          "total_us": 177871,
+          "attempts": 1,
+          "js_setup_us": 11480,
+          "js_prelude_us": 108607,
+          "js_source_us": 53695,
+          "js_init_us": 3914
+        },
+        "launcher": {
+          "engine": 0,
+          "first_us": 826228,
+          "total_us": 59671,
+          "attempts": 1,
+          "js_setup_us": 11072,
+          "js_prelude_us": 12332,
+          "js_source_us": 32669,
+          "js_init_us": 3420
+        },
+        "files": {
+          "engine": 2,
+          "first_us": 886274,
+          "total_us": 27327,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "editor": {
+          "engine": 2,
+          "first_us": 913870,
+          "total_us": 32970,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "calc": {
+          "engine": 0,
+          "first_us": 947123,
+          "total_us": 294496,
+          "attempts": 1,
+          "js_setup_us": 10682,
+          "js_prelude_us": 12205,
+          "js_source_us": 267270,
+          "js_init_us": 4206
+        },
+        "agenda": {
+          "engine": 2,
+          "first_us": 1241952,
+          "total_us": 5771,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "settings": {
+          "engine": 2,
+          "first_us": 1248042,
+          "total_us": 20758,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "logs": {
+          "engine": 0,
+          "first_us": 1269079,
+          "total_us": 32386,
+          "attempts": 1,
+          "js_setup_us": 7092,
+          "js_prelude_us": 8227,
+          "js_source_us": 14357,
+          "js_init_us": 2594
+        },
+        "loader": {
+          "engine": 0,
+          "first_us": 1301750,
+          "total_us": 38967,
+          "attempts": 1,
+          "js_setup_us": 6743,
+          "js_prelude_us": 8158,
+          "js_source_us": 21159,
+          "js_init_us": 2771
+        },
+        "sysmon": {
+          "engine": 0,
+          "first_us": 1341007,
+          "total_us": 38578,
+          "attempts": 1,
+          "js_setup_us": 6826,
+          "js_prelude_us": 8202,
+          "js_source_us": 20697,
+          "js_init_us": 2721
+        },
+        "repl": {
+          "engine": 0,
+          "first_us": 1379919,
+          "total_us": 27447,
+          "attempts": 1,
+          "js_setup_us": 6888,
+          "js_prelude_us": 8163,
+          "js_source_us": 9671,
+          "js_init_us": 2617
+        },
+        "sandbox": {
+          "engine": 0,
+          "first_us": 1407637,
+          "total_us": 23903,
+          "attempts": 1,
+          "js_setup_us": 6968,
+          "js_prelude_us": 8297,
+          "js_source_us": 6389,
+          "js_init_us": 2139
+        },
+        "snake": {
+          "engine": 2,
+          "first_us": 1431810,
+          "total_us": 14777,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "faults": {
+          "engine": 0,
+          "first_us": 1446863,
+          "total_us": 30501,
+          "attempts": 1,
+          "js_setup_us": 7246,
+          "js_prelude_us": 8334,
+          "js_source_us": 12240,
+          "js_init_us": 2536
+        },
+        "flaky": {
+          "engine": 2,
+          "first_us": 1477711,
+          "total_us": 8583,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "keys": {
+          "engine": 0,
+          "first_us": 1486541,
+          "total_us": 26957,
+          "attempts": 1,
+          "js_setup_us": 7111,
+          "js_prelude_us": 8109,
+          "js_source_us": 9356,
+          "js_init_us": 2237
+        },
+        "about": {
+          "engine": 0,
+          "first_us": 1513815,
+          "total_us": 25382,
+          "attempts": 1,
+          "js_setup_us": 6768,
+          "js_prelude_us": 8285,
+          "js_source_us": 7824,
+          "js_init_us": 2388
+        },
+        "toplog": {
+          "engine": 2,
+          "first_us": 1539496,
+          "total_us": 8747,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-echo": {
+          "engine": 2,
+          "first_us": 1548532,
+          "total_us": 25407,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-bench": {
+          "engine": 2,
+          "first_us": 1574080,
+          "total_us": 255,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-import": {
+          "engine": 2,
+          "first_us": 1574353,
+          "total_us": 7709,
+          "attempts": 3,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-dial": {
+          "engine": 2,
+          "first_us": 1604901,
+          "total_us": 568,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        }
+      }
+    },
+    {
+      "compile_us": 448873,
+      "first_response_us": 2161567,
+      "world_bytes": 124588,
+      "frame_turn_us": 2182,
+      "before_cji_restore_us": 585208,
+      "before_dispatch_us": 594741,
+      "world_init_us": 1241236,
+      "world_init_done_us": 1246160,
+      "file_submitted_us": 1863403,
+      "file_returned_us": 1917831,
+      "settle_us": 2159406,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94512
+      },
+      "worlds": {
+        "agent": {
+          "engine": 2,
+          "first_us": 595555,
+          "total_us": 50996,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "chat": {
+          "engine": 0,
+          "first_us": 646890,
+          "total_us": 177297,
+          "attempts": 1,
+          "js_setup_us": 11551,
+          "js_prelude_us": 107954,
+          "js_source_us": 53700,
+          "js_init_us": 3908
+        },
+        "launcher": {
+          "engine": 0,
+          "first_us": 824582,
+          "total_us": 60036,
+          "attempts": 1,
+          "js_setup_us": 11331,
+          "js_prelude_us": 12221,
+          "js_source_us": 32859,
+          "js_init_us": 3448
+        },
+        "files": {
+          "engine": 2,
+          "first_us": 884973,
+          "total_us": 27584,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "editor": {
+          "engine": 2,
+          "first_us": 912833,
+          "total_us": 32928,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "calc": {
+          "engine": 0,
+          "first_us": 946036,
+          "total_us": 294858,
+          "attempts": 1,
+          "js_setup_us": 10727,
+          "js_prelude_us": 11686,
+          "js_source_us": 268095,
+          "js_init_us": 4217
+        },
+        "agenda": {
+          "engine": 2,
+          "first_us": 1241231,
+          "total_us": 5734,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "settings": {
+          "engine": 2,
+          "first_us": 1247286,
+          "total_us": 20733,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "logs": {
+          "engine": 0,
+          "first_us": 1268289,
+          "total_us": 32518,
+          "attempts": 1,
+          "js_setup_us": 7180,
+          "js_prelude_us": 8314,
+          "js_source_us": 14302,
+          "js_init_us": 2608
+        },
+        "loader": {
+          "engine": 0,
+          "first_us": 1301091,
+          "total_us": 39243,
+          "attempts": 1,
+          "js_setup_us": 6743,
+          "js_prelude_us": 8150,
+          "js_source_us": 21451,
+          "js_init_us": 2765
+        },
+        "sysmon": {
+          "engine": 0,
+          "first_us": 1340619,
+          "total_us": 38481,
+          "attempts": 1,
+          "js_setup_us": 6822,
+          "js_prelude_us": 8224,
+          "js_source_us": 20590,
+          "js_init_us": 2711
+        },
+        "repl": {
+          "engine": 0,
+          "first_us": 1379432,
+          "total_us": 27671,
+          "attempts": 1,
+          "js_setup_us": 6873,
+          "js_prelude_us": 8219,
+          "js_source_us": 9802,
+          "js_init_us": 2673
+        },
+        "sandbox": {
+          "engine": 0,
+          "first_us": 1407371,
+          "total_us": 23827,
+          "attempts": 1,
+          "js_setup_us": 6832,
+          "js_prelude_us": 8200,
+          "js_source_us": 6505,
+          "js_init_us": 2178
+        },
+        "snake": {
+          "engine": 2,
+          "first_us": 1431466,
+          "total_us": 14726,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "faults": {
+          "engine": 0,
+          "first_us": 1446467,
+          "total_us": 30478,
+          "attempts": 1,
+          "js_setup_us": 7155,
+          "js_prelude_us": 8331,
+          "js_source_us": 12306,
+          "js_init_us": 2541
+        },
+        "flaky": {
+          "engine": 2,
+          "first_us": 1477301,
+          "total_us": 8560,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "keys": {
+          "engine": 0,
+          "first_us": 1486099,
+          "total_us": 27097,
+          "attempts": 1,
+          "js_setup_us": 7104,
+          "js_prelude_us": 8219,
+          "js_source_us": 9373,
+          "js_init_us": 2256
+        },
+        "about": {
+          "engine": 0,
+          "first_us": 1513516,
+          "total_us": 25217,
+          "attempts": 1,
+          "js_setup_us": 6783,
+          "js_prelude_us": 8154,
+          "js_source_us": 7809,
+          "js_init_us": 2354
+        },
+        "toplog": {
+          "engine": 2,
+          "first_us": 1539030,
+          "total_us": 8754,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-echo": {
+          "engine": 2,
+          "first_us": 1548064,
+          "total_us": 25425,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-bench": {
+          "engine": 2,
+          "first_us": 1573620,
+          "total_us": 250,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-import": {
+          "engine": 2,
+          "first_us": 1573889,
+          "total_us": 7727,
+          "attempts": 3,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-dial": {
+          "engine": 2,
+          "first_us": 1604451,
+          "total_us": 589,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        }
+      }
+    },
+    {
+      "compile_us": 449563,
+      "first_response_us": 1995155,
+      "world_bytes": 124588,
+      "frame_turn_us": 1108,
+      "before_cji_restore_us": 585943,
+      "before_dispatch_us": 595941,
+      "world_init_us": 1241500,
+      "world_init_done_us": 1246463,
+      "file_submitted_us": 1865213,
+      "file_returned_us": 1919812,
+      "settle_us": 1994053,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94853
+      },
+      "worlds": {
+        "agent": {
+          "engine": 2,
+          "first_us": 600363,
+          "total_us": 50253,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "chat": {
+          "engine": 0,
+          "first_us": 650967,
+          "total_us": 177564,
+          "attempts": 1,
+          "js_setup_us": 11653,
+          "js_prelude_us": 108202,
+          "js_source_us": 53327,
+          "js_init_us": 4197
+        },
+        "launcher": {
+          "engine": 0,
+          "first_us": 828922,
+          "total_us": 59908,
+          "attempts": 1,
+          "js_setup_us": 11007,
+          "js_prelude_us": 11952,
+          "js_source_us": 33495,
+          "js_init_us": 3279
+        },
+        "files": {
+          "engine": 2,
+          "first_us": 889198,
+          "total_us": 27615,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "editor": {
+          "engine": 2,
+          "first_us": 917096,
+          "total_us": 32916,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "calc": {
+          "engine": 0,
+          "first_us": 950285,
+          "total_us": 290876,
+          "attempts": 1,
+          "js_setup_us": 10638,
+          "js_prelude_us": 11836,
+          "js_source_us": 264035,
+          "js_init_us": 4234
+        },
+        "agenda": {
+          "engine": 2,
+          "first_us": 1241495,
+          "total_us": 5760,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "settings": {
+          "engine": 2,
+          "first_us": 1247529,
+          "total_us": 20785,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "logs": {
+          "engine": 0,
+          "first_us": 1268637,
+          "total_us": 32474,
+          "attempts": 1,
+          "js_setup_us": 7113,
+          "js_prelude_us": 8316,
+          "js_source_us": 14322,
+          "js_init_us": 2611
+        },
+        "loader": {
+          "engine": 0,
+          "first_us": 1301398,
+          "total_us": 39029,
+          "attempts": 1,
+          "js_setup_us": 6769,
+          "js_prelude_us": 8193,
+          "js_source_us": 21135,
+          "js_init_us": 2800
+        },
+        "sysmon": {
+          "engine": 0,
+          "first_us": 1340712,
+          "total_us": 37988,
+          "attempts": 1,
+          "js_setup_us": 6813,
+          "js_prelude_us": 8093,
+          "js_source_us": 20264,
+          "js_init_us": 2684
+        },
+        "repl": {
+          "engine": 0,
+          "first_us": 1379037,
+          "total_us": 27498,
+          "attempts": 1,
+          "js_setup_us": 6894,
+          "js_prelude_us": 8178,
+          "js_source_us": 9678,
+          "js_init_us": 2644
+        },
+        "sandbox": {
+          "engine": 0,
+          "first_us": 1406800,
+          "total_us": 23827,
+          "attempts": 1,
+          "js_setup_us": 6917,
+          "js_prelude_us": 8284,
+          "js_source_us": 6380,
+          "js_init_us": 2136
+        },
+        "snake": {
+          "engine": 2,
+          "first_us": 1430896,
+          "total_us": 14762,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "faults": {
+          "engine": 0,
+          "first_us": 1445933,
+          "total_us": 30521,
+          "attempts": 1,
+          "js_setup_us": 7286,
+          "js_prelude_us": 8300,
+          "js_source_us": 12263,
+          "js_init_us": 2521
+        },
+        "flaky": {
+          "engine": 2,
+          "first_us": 1476801,
+          "total_us": 8565,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "keys": {
+          "engine": 0,
+          "first_us": 1485609,
+          "total_us": 27010,
+          "attempts": 1,
+          "js_setup_us": 7138,
+          "js_prelude_us": 8117,
+          "js_source_us": 9385,
+          "js_init_us": 2226
+        },
+        "about": {
+          "engine": 0,
+          "first_us": 1512941,
+          "total_us": 25454,
+          "attempts": 1,
+          "js_setup_us": 6820,
+          "js_prelude_us": 8223,
+          "js_source_us": 7878,
+          "js_init_us": 2411
+        },
+        "toplog": {
+          "engine": 2,
+          "first_us": 1538690,
+          "total_us": 8742,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-echo": {
+          "engine": 2,
+          "first_us": 1547662,
+          "total_us": 28206,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-bench": {
+          "engine": 2,
+          "first_us": 1576040,
+          "total_us": 531,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-import": {
+          "engine": 2,
+          "first_us": 1576590,
+          "total_us": 7692,
+          "attempts": 3,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        },
+        "nat-dial": {
+          "engine": 2,
+          "first_us": 1606895,
+          "total_us": 658,
+          "attempts": 1,
+          "js_setup_us": 0,
+          "js_prelude_us": 0,
+          "js_source_us": 0,
+          "js_init_us": 0
+        }
+      }
+    }
+  ]
+}

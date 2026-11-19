@@ -939,6 +939,57 @@ static int read_meta(world_t *W, JSValue meta) {
   return 0;
 }
 
+#if PICOCALC_TYPED_AGENDA
+static uint8_t *prelude_bytecode;
+static size_t prelude_bytecode_len;
+static bool prelude_cache_tried;
+
+static void build_prelude_cache(void) {
+  prelude_cache_tried = true;
+  vtime_t start = port_clock();
+  JSRuntime *rt = JS_NewRuntime();
+  if (!rt) return;
+  JS_SetMaxStackSize(rt, port_js_stack());
+  JS_SetMemoryLimit(rt, 512 * 1024);
+  JSContext *ctx = JS_NewContext(rt);
+  if (ctx) {
+    JSValue script = JS_Eval(ctx, K.prelude, K.prelude_len, "prelude.js",
+                             JS_EVAL_TYPE_GLOBAL | JS_EVAL_FLAG_COMPILE_ONLY);
+    if (!JS_IsException(script)) {
+      size_t length = 0;
+      uint8_t *bytes = JS_WriteObject(ctx, &length, script, JS_WRITE_OBJ_BYTECODE);
+      if (bytes) {
+        prelude_bytecode = port_heap_malloc(length);
+        if (prelude_bytecode) {
+          memcpy(prelude_bytecode, bytes, length);
+          prelude_bytecode_len = length;
+        }
+        js_free(ctx, bytes);
+      }
+    }
+    JS_FreeValue(ctx, script);
+    JS_FreeContext(ctx);
+  }
+  JS_FreeRuntime(rt);
+  printf("quickjs prelude cache bytes=%zu build_us=%lld\n",
+         prelude_bytecode_len, (long long)(port_clock() - start));
+}
+#endif
+
+static JSValue eval_prelude(JSContext *ctx) {
+#if PICOCALC_TYPED_AGENDA
+  if (!prelude_cache_tried) build_prelude_cache();
+  if (prelude_bytecode) {
+    // This is a copy of a firmware script compiled by this same QuickJS build.
+    // Decode a fresh function and constants in the destination runtime.
+    JSValue script = JS_ReadObject(ctx, prelude_bytecode, prelude_bytecode_len, JS_READ_OBJ_BYTECODE);
+    if (JS_IsException(script)) return script;
+    return JS_EvalFunction(ctx, script);
+  }
+#endif
+  return JS_Eval(ctx, K.prelude, K.prelude_len, "prelude.js", JS_EVAL_TYPE_GLOBAL);
+}
+
 int vm_create(world_t *W) {
 #if PICOCALC_TYPED_AGENDA
   extern void p4_agenda_js_boot(const world_t *, const vtime_t *);
@@ -964,7 +1015,7 @@ int vm_create(world_t *W) {
 #if PICOCALC_TYPED_AGENDA
   stages[1] = port_clock();
 #endif
-  JSValue r = JS_Eval(ctx, K.prelude, K.prelude_len, "prelude.js", JS_EVAL_TYPE_GLOBAL);
+  JSValue r = eval_prelude(ctx);
   if (JS_IsException(r)) { set_error(W); rc = -1; }
   JS_FreeValue(ctx, r);
 #if PICOCALC_TYPED_AGENDA
@@ -1135,6 +1186,12 @@ static int64_t count_steps(const char *src, double *real_ms) {
 }
 double vm_fib20_ms;
 void vm_reset(void) {
+#if PICOCALC_TYPED_AGENDA
+  port_heap_free(prelude_bytecode);
+  prelude_bytecode = NULL;
+  prelude_bytecode_len = 0;
+  prelude_cache_tried = false;
+#endif
   agent_reset();
 }
 
