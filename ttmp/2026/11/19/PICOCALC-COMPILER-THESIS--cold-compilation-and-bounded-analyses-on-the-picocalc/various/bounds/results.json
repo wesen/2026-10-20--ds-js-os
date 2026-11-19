@@ -1,0 +1,1321 @@
+{
+  "node": "v24.18.0",
+  "v8": "13.6.233.17-node.50",
+  "compilerSHA256": "8ad276d678c20ceecc797e3564552453547f343e5354f6c069c2153eaf404885",
+  "linked": true,
+  "workloadSeed": "0x5da3c007",
+  "budgets": {
+    "0": {
+      "retained": 27,
+      "work": {
+        "queries": 23,
+        "inspectedEdges": 0,
+        "maxInspectedEdges": 0,
+        "acceptedInspectedEdges": 0,
+        "acceptedMax": 0,
+        "budgetsReached": 17
+      },
+      "accepted": [],
+      "longChainExecutedChecks": 1
+    },
+    "4": {
+      "retained": 26,
+      "work": {
+        "queries": 23,
+        "inspectedEdges": 60,
+        "maxInspectedEdges": 4,
+        "acceptedInspectedEdges": 3,
+        "acceptedMax": 3,
+        "budgetsReached": 12
+      },
+      "accepted": [
+        "direct"
+      ],
+      "longChainExecutedChecks": 1
+    },
+    "16": {
+      "retained": 21,
+      "work": {
+        "queries": 23,
+        "inspectedEdges": 101,
+        "maxInspectedEdges": 16,
+        "acceptedInspectedEdges": 36,
+        "acceptedMax": 9,
+        "budgetsReached": 1
+      },
+      "accepted": [
+        "direct",
+        "chained",
+        "minimum",
+        "writeOrder",
+        "rightAnd",
+        "rightOr"
+      ],
+      "longChainExecutedChecks": 1
+    },
+    "32": {
+      "retained": 21,
+      "work": {
+        "queries": 23,
+        "inspectedEdges": 117,
+        "maxInspectedEdges": 32,
+        "acceptedInspectedEdges": 36,
+        "acceptedMax": 9,
+        "budgetsReached": 1
+      },
+      "accepted": [
+        "direct",
+        "chained",
+        "minimum",
+        "writeOrder",
+        "rightAnd",
+        "rightOr"
+      ],
+      "longChainExecutedChecks": 1
+    },
+    "64": {
+      "retained": 20,
+      "work": {
+        "queries": 23,
+        "inspectedEdges": 128,
+        "maxInspectedEdges": 43,
+        "acceptedInspectedEdges": 79,
+        "acceptedMax": 43,
+        "budgetsReached": 0
+      },
+      "accepted": [
+        "direct",
+        "chained",
+        "minimum",
+        "longChain",
+        "writeOrder",
+        "rightAnd",
+        "rightOr"
+      ],
+      "longChainExecutedChecks": 0
+    },
+    "128": {
+      "retained": 20,
+      "work": {
+        "queries": 23,
+        "inspectedEdges": 128,
+        "maxInspectedEdges": 43,
+        "acceptedInspectedEdges": 79,
+        "acceptedMax": 43,
+        "budgetsReached": 0
+      },
+      "accepted": [
+        "direct",
+        "chained",
+        "minimum",
+        "longChain",
+        "writeOrder",
+        "rightAnd",
+        "rightOr"
+      ],
+      "longChainExecutedChecks": 0
+    }
+  },
+  "corpus": {
+    "Files": {
+      "sources": [
+        {
+          "path": "picocalc-os/worlds/files/files.typed",
+          "expandedFirstLine": 1,
+          "sha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26"
+        }
+      ],
+      "scope": "linked world Wasm",
+      "reactor": "files-reactor.wasm",
+      "reactorSHA256": "f1415095c60135fe29d1043be74023a1fadae92b2f625459b79a70c8566b3420",
+      "baseline": {
+        "emittedBytes": 49089,
+        "functions": 7,
+        "loops": 4,
+        "directGuardLoops": 1,
+        "localUpperGuardLoops": 3,
+        "checks": 8,
+        "plainChecks": 5,
+        "retained": 8,
+        "removedBytes": 0,
+        "queryWork": {
+          "queries": 0,
+          "inspectedEdges": 0,
+          "maxInspectedEdges": 0,
+          "acceptedInspectedEdges": 0,
+          "acceptedMax": 0,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "baseline": 5,
+          "non-local index": 3
+        },
+        "witnesses": []
+      },
+      "direct": {
+        "emittedBytes": 49065,
+        "functions": 7,
+        "loops": 4,
+        "directGuardLoops": 1,
+        "localUpperGuardLoops": 3,
+        "checks": 8,
+        "plainChecks": 5,
+        "retained": 6,
+        "removedBytes": 24,
+        "queryWork": {
+          "queries": 5,
+          "inspectedEdges": 11,
+          "maxInspectedEdges": 4,
+          "acceptedInspectedEdges": 7,
+          "acceptedMax": 4,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "direct upper": 2,
+          "no nonnegative lower": 2,
+          "no strict upper": 1,
+          "non-local index": 3
+        },
+        "witnesses": [
+          {
+            "fn": "filesCompare",
+            "line": 37,
+            "reason": "direct upper",
+            "work": 3,
+            "proof": {
+              "lower": [
+                {
+                  "from": "0",
+                  "to": "i4",
+                  "strict": false
+                }
+              ],
+              "upper": [
+                {
+                  "from": "i4",
+                  "to": "l0",
+                  "strict": true
+                }
+              ]
+            }
+          },
+          {
+            "fn": "filesCompare",
+            "line": 37,
+            "reason": "direct upper",
+            "work": 4,
+            "proof": {
+              "lower": [
+                {
+                  "from": "0",
+                  "to": "i4",
+                  "strict": false
+                }
+              ],
+              "upper": [
+                {
+                  "from": "i4",
+                  "to": "l2",
+                  "strict": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "chained": {
+        "emittedBytes": 49065,
+        "functions": 7,
+        "loops": 4,
+        "directGuardLoops": 1,
+        "localUpperGuardLoops": 3,
+        "checks": 8,
+        "plainChecks": 5,
+        "retained": 6,
+        "removedBytes": 24,
+        "queryWork": {
+          "queries": 5,
+          "inspectedEdges": 13,
+          "maxInspectedEdges": 5,
+          "acceptedInspectedEdges": 7,
+          "acceptedMax": 4,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "direct upper": 2,
+          "no nonnegative lower": 2,
+          "no strict upper": 1,
+          "non-local index": 3
+        },
+        "witnesses": [
+          {
+            "fn": "filesCompare",
+            "line": 37,
+            "reason": "direct upper",
+            "work": 3,
+            "proof": {
+              "lower": [
+                {
+                  "from": "0",
+                  "to": "i4",
+                  "strict": false
+                }
+              ],
+              "upper": [
+                {
+                  "from": "i4",
+                  "to": "l0",
+                  "strict": true
+                }
+              ]
+            }
+          },
+          {
+            "fn": "filesCompare",
+            "line": 37,
+            "reason": "direct upper",
+            "work": 4,
+            "proof": {
+              "lower": [
+                {
+                  "from": "0",
+                  "to": "i4",
+                  "strict": false
+                }
+              ],
+              "upper": [
+                {
+                  "from": "i4",
+                  "to": "l2",
+                  "strict": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "Agenda": {
+      "sources": [
+        {
+          "path": "picocalc-os/worlds/agenda/reminder.typed",
+          "expandedFirstLine": 1,
+          "sha256": "3a87219d048c63151bdd9e15109d9f09c72b2c5e64bfa7405665c8a2e30d6460"
+        },
+        {
+          "path": "picocalc-os/worlds/agenda/entry.typed",
+          "expandedFirstLine": 203,
+          "sha256": "ff7ee79b7cab4300544bf8bc544819eba316ba336f5e7b7222357291f91269a6"
+        }
+      ],
+      "scope": "linked world Wasm",
+      "reactor": "agenda-reactor.wasm",
+      "reactorSHA256": "35f3bc71177f4310e07cbb1a74f2f7f2c938a0cf409f49c554107019f1e996f6",
+      "baseline": {
+        "emittedBytes": 67429,
+        "functions": 34,
+        "loops": 16,
+        "directGuardLoops": 6,
+        "localUpperGuardLoops": 5,
+        "checks": 35,
+        "plainChecks": 22,
+        "retained": 35,
+        "removedBytes": 0,
+        "queryWork": {
+          "queries": 0,
+          "inspectedEdges": 0,
+          "maxInspectedEdges": 0,
+          "acceptedInspectedEdges": 0,
+          "acceptedMax": 0,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "baseline": 22,
+          "non-local index": 13
+        },
+        "witnesses": []
+      },
+      "direct": {
+        "emittedBytes": 67417,
+        "functions": 34,
+        "loops": 16,
+        "directGuardLoops": 6,
+        "localUpperGuardLoops": 5,
+        "checks": 35,
+        "plainChecks": 22,
+        "retained": 34,
+        "removedBytes": 12,
+        "queryWork": {
+          "queries": 22,
+          "inspectedEdges": 16,
+          "maxInspectedEdges": 3,
+          "acceptedInspectedEdges": 3,
+          "acceptedMax": 3,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "direct upper": 1,
+          "no nonnegative lower": 20,
+          "no strict upper": 1,
+          "non-local index": 13
+        },
+        "witnesses": [
+          {
+            "fn": "entryPut",
+            "line": 381,
+            "reason": "direct upper",
+            "work": 3,
+            "proof": {
+              "lower": [
+                {
+                  "from": "0",
+                  "to": "i1",
+                  "strict": false
+                }
+              ],
+              "upper": [
+                {
+                  "from": "i1",
+                  "to": "l0",
+                  "strict": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "chained": {
+        "emittedBytes": 67417,
+        "functions": 34,
+        "loops": 16,
+        "directGuardLoops": 6,
+        "localUpperGuardLoops": 5,
+        "checks": 35,
+        "plainChecks": 22,
+        "retained": 34,
+        "removedBytes": 12,
+        "queryWork": {
+          "queries": 22,
+          "inspectedEdges": 18,
+          "maxInspectedEdges": 4,
+          "acceptedInspectedEdges": 3,
+          "acceptedMax": 3,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "direct upper": 1,
+          "no nonnegative lower": 20,
+          "no strict upper": 1,
+          "non-local index": 13
+        },
+        "witnesses": [
+          {
+            "fn": "entryPut",
+            "line": 381,
+            "reason": "direct upper",
+            "work": 3,
+            "proof": {
+              "lower": [
+                {
+                  "from": "0",
+                  "to": "i1",
+                  "strict": false
+                }
+              ],
+              "upper": [
+                {
+                  "from": "i1",
+                  "to": "l0",
+                  "strict": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "Editor": {
+      "sources": [
+        {
+          "path": "picocalc-os/worlds/editor/state.typed",
+          "expandedFirstLine": 1,
+          "sha256": "b75ad91664dfa0827f209ff4c85417f5f721bb75a45241e8173e6f189eb558cd"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/layout.typed",
+          "expandedFirstLine": 82,
+          "sha256": "da4b3c83b044b06017a9fa0db9ddcc5a9372669de760e9bb28a1dae1981c1804"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/empty.typed",
+          "expandedFirstLine": 157,
+          "sha256": "498ed0b078638d1aa898a70ca6fe3b918aedd110011ea33339f95a81750f49bc"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/markdown.typed",
+          "expandedFirstLine": 162,
+          "sha256": "b575c284ed8c6d2a4f511cdee41cb4e8b29d0c1ecc29b7864e68503dfb88b8ca"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/view.typed",
+          "expandedFirstLine": 346,
+          "sha256": "c6520f86266845dd61be09b8b5fd91d03bd112c79dd694953fcb2d2a30479180"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/find.typed",
+          "expandedFirstLine": 540,
+          "sha256": "b303165d13d41896007eb4d88337e148770a1dad1a76a2efd79aeafc5d455125"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/preview.typed",
+          "expandedFirstLine": 713,
+          "sha256": "8e30e2468aa3d5f6b2df63b7963a5ec19bbc6fc63be18c21e9f2f7804e980926"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/document-view.typed",
+          "expandedFirstLine": 974,
+          "sha256": "01680a8b83d51cc328a7b6729938eeed65335152ce09f6eb3c28733ed96d9793"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/positions.typed",
+          "expandedFirstLine": 1074,
+          "sha256": "9157db1d160d8198dee26a2aa7564372ea05b0942d3d62ef509d5faf3c50e6de"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/edit.typed",
+          "expandedFirstLine": 1260,
+          "sha256": "b645fb45579d40d0793d9ff5120e5a6b7dea7294f681dc1ea0e5c10ad6197f37"
+        },
+        {
+          "path": "picocalc-os/worlds/editor/editor.typed",
+          "expandedFirstLine": 1536,
+          "sha256": "3e10b9a1bac36219ff6cda91eb37f0400d6f1cf81aadd61d7ace3272b7799c55"
+        }
+      ],
+      "scope": "linked world Wasm",
+      "reactor": "typed-world-reactor.wasm",
+      "reactorSHA256": "b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f",
+      "baseline": {
+        "emittedBytes": 88255,
+        "functions": 120,
+        "loops": 46,
+        "directGuardLoops": 3,
+        "localUpperGuardLoops": 22,
+        "checks": 376,
+        "plainChecks": 78,
+        "retained": 376,
+        "removedBytes": 0,
+        "queryWork": {
+          "queries": 0,
+          "inspectedEdges": 0,
+          "maxInspectedEdges": 0,
+          "acceptedInspectedEdges": 0,
+          "acceptedMax": 0,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "baseline": 78,
+          "literal check": 210,
+          "non-local index": 88
+        },
+        "witnesses": []
+      },
+      "direct": {
+        "emittedBytes": 88255,
+        "functions": 120,
+        "loops": 46,
+        "directGuardLoops": 3,
+        "localUpperGuardLoops": 22,
+        "checks": 376,
+        "plainChecks": 78,
+        "retained": 376,
+        "removedBytes": 0,
+        "queryWork": {
+          "queries": 78,
+          "inspectedEdges": 76,
+          "maxInspectedEdges": 7,
+          "acceptedInspectedEdges": 0,
+          "acceptedMax": 0,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "literal check": 210,
+          "no nonnegative lower": 72,
+          "no strict upper": 6,
+          "non-local index": 88
+        },
+        "witnesses": []
+      },
+      "chained": {
+        "emittedBytes": 88255,
+        "functions": 120,
+        "loops": 46,
+        "directGuardLoops": 3,
+        "localUpperGuardLoops": 22,
+        "checks": 376,
+        "plainChecks": 78,
+        "retained": 376,
+        "removedBytes": 0,
+        "queryWork": {
+          "queries": 78,
+          "inspectedEdges": 120,
+          "maxInspectedEdges": 15,
+          "acceptedInspectedEdges": 0,
+          "acceptedMax": 0,
+          "budgetsReached": 0
+        },
+        "reasons": {
+          "literal check": 210,
+          "no nonnegative lower": 72,
+          "no strict upper": 6,
+          "non-local index": 88
+        },
+        "witnesses": []
+      }
+    }
+  },
+  "dynamic": {
+    "fixtures": {
+      "cases": 1071,
+      "successfulReturns": 1052,
+      "trapped": 19,
+      "executedChecks": {
+        "baseline": 2710,
+        "direct": 2570,
+        "chained": 27
+      },
+      "byFunction": {
+        "longChain": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 0
+        },
+        "noLower": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "noUpper": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "nonStrict": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "wrongReceiver": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "rebound": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "assigned": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "loopAssignment": {
+          "cases": 1,
+          "baseline": 4,
+          "direct": 4,
+          "chained": 4
+        },
+        "overflow": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "overflowExpression": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "recordAlias": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "bufferAlias": {
+          "cases": 1,
+          "baseline": 2,
+          "direct": 2,
+          "chained": 2
+        },
+        "callAlias": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "callInGuard": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "loopAlias": {
+          "cases": 1,
+          "baseline": 2,
+          "direct": 2,
+          "chained": 2
+        },
+        "writeOrder": {
+          "cases": 3,
+          "baseline": 2,
+          "direct": 2,
+          "chained": 0
+        },
+        "trappingWrite": {
+          "cases": 1,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "rightAnd": {
+          "cases": 514,
+          "baseline": 57,
+          "direct": 57,
+          "chained": 0
+        },
+        "rightOr": {
+          "cases": 2,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 0
+        },
+        "either": {
+          "cases": 2,
+          "baseline": 1,
+          "direct": 1,
+          "chained": 1
+        },
+        "twoPaths": {
+          "cases": 2,
+          "baseline": 2,
+          "direct": 2,
+          "chained": 2
+        },
+        "literalWrite": {
+          "cases": 2,
+          "baseline": 4,
+          "direct": 4,
+          "chained": 4
+        },
+        "chained": {
+          "cases": 519,
+          "baseline": 2342,
+          "direct": 2342,
+          "chained": 0
+        },
+        "direct": {
+          "cases": 6,
+          "baseline": 140,
+          "direct": 0,
+          "chained": 0
+        },
+        "minimum": {
+          "cases": 5,
+          "baseline": 140,
+          "direct": 140,
+          "chained": 0
+        }
+      },
+      "static": {
+        "baseline": {
+          "functions": 26,
+          "loops": 5,
+          "directGuardLoops": 1,
+          "localUpperGuardLoops": 4,
+          "checks": 27,
+          "plainChecks": 23,
+          "retained": 27,
+          "removedBytes": 0,
+          "queryWork": {
+            "queries": 0,
+            "inspectedEdges": 0,
+            "maxInspectedEdges": 0,
+            "acceptedInspectedEdges": 0,
+            "acceptedMax": 0,
+            "budgetsReached": 0
+          },
+          "reasons": {
+            "baseline": 23,
+            "literal check": 2,
+            "non-local index": 2
+          },
+          "witnesses": []
+        },
+        "direct": {
+          "functions": 26,
+          "loops": 5,
+          "directGuardLoops": 1,
+          "localUpperGuardLoops": 4,
+          "checks": 27,
+          "plainChecks": 23,
+          "retained": 26,
+          "removedBytes": 12,
+          "queryWork": {
+            "queries": 23,
+            "inspectedEdges": 64,
+            "maxInspectedEdges": 8,
+            "acceptedInspectedEdges": 3,
+            "acceptedMax": 3,
+            "budgetsReached": 0
+          },
+          "reasons": {
+            "direct upper": 1,
+            "literal check": 2,
+            "no nonnegative lower": 10,
+            "no strict upper": 12,
+            "non-local index": 2
+          },
+          "witnesses": [
+            {
+              "fn": "direct",
+              "line": 13,
+              "reason": "direct upper",
+              "work": 3,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i1",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i1",
+                    "to": "l0",
+                    "strict": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "chained": {
+          "functions": 26,
+          "loops": 5,
+          "directGuardLoops": 1,
+          "localUpperGuardLoops": 4,
+          "checks": 27,
+          "plainChecks": 23,
+          "retained": 20,
+          "removedBytes": 84,
+          "queryWork": {
+            "queries": 23,
+            "inspectedEdges": 128,
+            "maxInspectedEdges": 43,
+            "acceptedInspectedEdges": 79,
+            "acceptedMax": 43,
+            "budgetsReached": 0
+          },
+          "reasons": {
+            "chained upper": 6,
+            "direct upper": 1,
+            "literal check": 2,
+            "no nonnegative lower": 10,
+            "no strict upper": 6,
+            "non-local index": 2
+          },
+          "witnesses": [
+            {
+              "fn": "direct",
+              "line": 13,
+              "reason": "direct upper",
+              "work": 3,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i1",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i1",
+                    "to": "l0",
+                    "strict": true
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "chained",
+              "line": 24,
+              "reason": "chained upper",
+              "work": 6,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i2",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i2",
+                    "to": "i1",
+                    "strict": true
+                  },
+                  {
+                    "from": "i1",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "minimum",
+              "line": 35,
+              "reason": "chained upper",
+              "work": 9,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i5",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i5",
+                    "to": "i4",
+                    "strict": true
+                  },
+                  {
+                    "from": "i4",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "longChain",
+              "line": 43,
+              "reason": "chained upper",
+              "work": 43,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i1",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i1",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "i3",
+                    "strict": false
+                  },
+                  {
+                    "from": "i3",
+                    "to": "i4",
+                    "strict": false
+                  },
+                  {
+                    "from": "i4",
+                    "to": "i5",
+                    "strict": false
+                  },
+                  {
+                    "from": "i5",
+                    "to": "i6",
+                    "strict": false
+                  },
+                  {
+                    "from": "i6",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "writeOrder",
+              "line": 125,
+              "reason": "chained upper",
+              "work": 6,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i1",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i1",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "rightAnd",
+              "line": 136,
+              "reason": "chained upper",
+              "work": 6,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i1",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i1",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "rightOr",
+              "line": 140,
+              "reason": "chained upper",
+              "work": 6,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i1",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i1",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Files": {
+      "cases": 5,
+      "successfulReturns": 5,
+      "trapped": 0,
+      "executedChecks": {
+        "baseline": 225,
+        "direct": 29,
+        "chained": 29
+      },
+      "byFunction": {
+        "filesCompare": {
+          "cases": 3,
+          "baseline": 196,
+          "direct": 0,
+          "chained": 0
+        },
+        "filesName": {
+          "cases": 2,
+          "baseline": 29,
+          "direct": 29,
+          "chained": 29
+        }
+      }
+    },
+    "Agenda": {
+      "cases": 5,
+      "successfulReturns": 4,
+      "trapped": 1,
+      "executedChecks": {
+        "baseline": 43,
+        "direct": 34,
+        "chained": 34
+      },
+      "byFunction": {
+        "skipSpace": {
+          "cases": 2,
+          "baseline": 5,
+          "direct": 5,
+          "chained": 5
+        },
+        "entryWordEnd": {
+          "cases": 2,
+          "baseline": 7,
+          "direct": 7,
+          "chained": 7
+        },
+        "normalizeEntry": {
+          "cases": 1,
+          "baseline": 31,
+          "direct": 22,
+          "chained": 22
+        }
+      }
+    },
+    "Editor": {
+      "cases": 5,
+      "successfulReturns": 2,
+      "trapped": 3,
+      "executedChecks": {
+        "baseline": 22,
+        "direct": 22,
+        "chained": 22
+      },
+      "byFunction": {
+        "editorWrapEnd": {
+          "cases": 2,
+          "baseline": 10,
+          "direct": 10,
+          "chained": 10
+        },
+        "editorMdSpace": {
+          "cases": 3,
+          "baseline": 12,
+          "direct": 12,
+          "chained": 12
+        }
+      }
+    },
+    "EditorMarkerContract": {
+      "cases": 5,
+      "successfulReturns": 5,
+      "trapped": 0,
+      "executedChecks": {
+        "baseline": 45,
+        "direct": 45,
+        "chained": 0
+      },
+      "byFunction": {
+        "editorMdMarker": {
+          "cases": 5,
+          "baseline": 45,
+          "direct": 45,
+          "chained": 0
+        }
+      },
+      "static": {
+        "baseline": {
+          "functions": 1,
+          "loops": 1,
+          "directGuardLoops": 0,
+          "localUpperGuardLoops": 1,
+          "checks": 4,
+          "plainChecks": 4,
+          "retained": 4,
+          "removedBytes": 0,
+          "queryWork": {
+            "queries": 0,
+            "inspectedEdges": 0,
+            "maxInspectedEdges": 0,
+            "acceptedInspectedEdges": 0,
+            "acceptedMax": 0,
+            "budgetsReached": 0
+          },
+          "reasons": {
+            "baseline": 4
+          },
+          "witnesses": []
+        },
+        "direct": {
+          "functions": 1,
+          "loops": 1,
+          "directGuardLoops": 0,
+          "localUpperGuardLoops": 1,
+          "checks": 4,
+          "plainChecks": 4,
+          "retained": 4,
+          "removedBytes": 0,
+          "queryWork": {
+            "queries": 4,
+            "inspectedEdges": 31,
+            "maxInspectedEdges": 9,
+            "acceptedInspectedEdges": 0,
+            "acceptedMax": 0,
+            "budgetsReached": 0
+          },
+          "reasons": {
+            "no strict upper": 4
+          },
+          "witnesses": []
+        },
+        "chained": {
+          "functions": 1,
+          "loops": 1,
+          "directGuardLoops": 0,
+          "localUpperGuardLoops": 1,
+          "checks": 4,
+          "plainChecks": 4,
+          "retained": 0,
+          "removedBytes": 48,
+          "queryWork": {
+            "queries": 4,
+            "inspectedEdges": 39,
+            "maxInspectedEdges": 11,
+            "acceptedInspectedEdges": 39,
+            "acceptedMax": 11,
+            "budgetsReached": 0
+          },
+          "reasons": {
+            "chained upper": 4
+          },
+          "witnesses": [
+            {
+              "fn": "editorMdMarker",
+              "line": 4,
+              "reason": "chained upper",
+              "work": 6,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i1",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i1",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "editorMdMarker",
+              "line": 7,
+              "reason": "chained upper",
+              "work": 11,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i5",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i5",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "editorMdMarker",
+              "line": 7,
+              "reason": "chained upper",
+              "work": 11,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i5",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i5",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            },
+            {
+              "fn": "editorMdMarker",
+              "line": 9,
+              "reason": "chained upper",
+              "work": 11,
+              "proof": {
+                "lower": [
+                  {
+                    "from": "0",
+                    "to": "i5",
+                    "strict": false
+                  }
+                ],
+                "upper": [
+                  {
+                    "from": "i5",
+                    "to": "i2",
+                    "strict": true
+                  },
+                  {
+                    "from": "i2",
+                    "to": "l0",
+                    "strict": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

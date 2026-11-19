@@ -1,0 +1,174 @@
+// Synthetic functions use the repository's typed syntax and Wasm layout.
+record Header { value: i32; }
+
+function clearHeader(alias: Header): i32 {
+    alias.value = 0;
+    return 65;
+}
+
+function direct(text: string): i32 {
+    let at = 0;
+    let total = 0;
+    while (at < text.length) {
+        total = total + text.charCodeAt(at);
+        at = at + 1;
+    }
+    return total;
+}
+
+function chained(text: string, end: i32): i32 {
+    let at = 0;
+    let total = 0;
+    if (end > text.length) return -1;
+    while (at < end) {
+        total = total + text.charCodeAt(at);
+        at = at + 1;
+    }
+    return total;
+}
+
+function minimum(text: string, stop: i32): i32 {
+    const end = Math.min(stop, text.length);
+    let at = 0;
+    let total = 0;
+    while (at < end) {
+        total = total + text.charCodeAt(at);
+        at = at + 1;
+    }
+    return total;
+}
+
+function longChain(text: string, at: i32, end: i32, a: i32, b: i32, c: i32, d: i32): i32 {
+    if (at < 0 || at >= end || end > a || a > b || b > c || c > d || d > text.length) return -1;
+    return text.charCodeAt(at);
+}
+
+function noLower(text: string, at: i32, end: i32): i32 {
+    if (at < end && end <= text.length) return text.charCodeAt(at);
+    return -1;
+}
+
+function noUpper(text: string, at: i32, end: i32): i32 {
+    if (at >= 0 && at < end) return text.charCodeAt(at);
+    return -1;
+}
+
+function nonStrict(text: string, at: i32, end: i32): i32 {
+    if (at >= 0 && at <= end && end <= text.length) return text.charCodeAt(at);
+    return -1;
+}
+
+function wrongReceiver(text: string, other: string, at: i32, end: i32): i32 {
+    if (at >= 0 && at < end && end <= text.length) return other.charCodeAt(at);
+    return -1;
+}
+
+function rebound(text: string, other: string, at: i32, end: i32): i32 {
+    let view = text;
+    if (at < 0 || at >= end || end > view.length) return -1;
+    view = other;
+    return view.charCodeAt(at);
+}
+
+function assigned(text: string, start: i32, end: i32): i32 {
+    let at = start;
+    if (at < 0 || at >= end || end > text.length) return -1;
+    at = end;
+    return text.charCodeAt(at);
+}
+
+function loopAssignment(text: string): i32 {
+    let at = 0;
+    let end = text.length;
+    let total = 0;
+    while (at < end) {
+        total = total + text.charCodeAt(at);
+        end = end + 1;
+        at = at + 1;
+    }
+    return total;
+}
+
+function overflow(text: string, end: i32): i32 {
+    let at = 2147483647;
+    at = at + 1;
+    if (at < end && end <= text.length) return text.charCodeAt(at);
+    return -1;
+}
+
+function overflowExpression(text: string, at: i32): i32 {
+    if (at >= 0 && at < text.length) return text.charCodeAt(at + 2147483647);
+    return -1;
+}
+
+function recordAlias(text: string, at: i32, end: i32, alias: Header): i32 {
+    if (at < 0 || at >= end || end > text.length) return -1;
+    alias.value = 0;
+    return text.charCodeAt(at);
+}
+
+function bufferAlias(text: string, at: i32, end: i32, alias: buffer): i32 {
+    if (at < 0 || at >= end || end > text.length) return -1;
+    alias.setCharCodeAt(0, 0);
+    return text.charCodeAt(at);
+}
+
+function callAlias(text: string, at: i32, end: i32, alias: Header): i32 {
+    if (at < 0 || at >= end || end > text.length) return -1;
+    clearHeader(alias);
+    return text.charCodeAt(at);
+}
+
+function writeOrder(output: buffer, at: i32, end: i32, marker: Header): i32 {
+    if (at < 0 || end > output.length) return -1;
+    if (at < end) {
+        output.setCharCodeAt(at, clearHeader(marker));
+    }
+    return 7;
+}
+
+function trappingWrite(output: buffer, at: i32, marker: Header): i32 {
+    output.setCharCodeAt(at, clearHeader(marker));
+    return 7;
+}
+
+function rightAnd(text: string, at: i32, end: i32): bool {
+    return at >= 0 && end <= text.length && at < end && text.charCodeAt(at) === 65;
+}
+
+function rightOr(text: string, at: i32, end: i32): bool {
+    return at < 0 || end > text.length || at >= end || text.charCodeAt(at) === 65;
+}
+
+function either(text: string, at: i32, end: i32, choose: bool): i32 {
+    if ((at >= 0 && at < end && end <= text.length) || choose) return text.charCodeAt(at);
+    return -1;
+}
+
+function twoPaths(text: string, start: i32, end: i32, choose: bool): i32 {
+    let at = start;
+    if (at < 0 || at >= end || end > text.length) return -1;
+    if (choose) { at = end; }
+    return text.charCodeAt(at);
+}
+
+function literalWrite(output: buffer, at: i32): i32 {
+    return output.writeLiteral(at, "ok");
+}
+
+function callInGuard(text: string, at: i32, end: i32, alias: Header): i32 {
+    if (at >= 0 && at < end && end <= text.length && clearHeader(alias) > 0) return text.charCodeAt(at);
+    return -1;
+}
+
+function loopAlias(text: string, end: i32, alias: Header): i32 {
+    if (end > text.length) return -1;
+    let at = 0;
+    let total = 0;
+    while (at < end) {
+        total = total + text.charCodeAt(at);
+        alias.value = 0;
+        at = at + 1;
+    }
+    return total;
+}
