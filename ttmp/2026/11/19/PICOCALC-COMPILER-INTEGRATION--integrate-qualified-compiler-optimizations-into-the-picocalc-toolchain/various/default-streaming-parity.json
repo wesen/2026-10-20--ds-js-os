@@ -1,0 +1,51 @@
+{
+  "control": "4452064",
+  "candidate": "7677932",
+  "worlds": [
+    {
+      "directory": "files",
+      "functionsConsumed": 7,
+      "imageBytes": 3216,
+      "imageSha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+      "elfBytes": 24424,
+      "elfSha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+      "metadataSha256": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+      "wasmSha256": "c7f8892cd99ed86d9282582cc8c6d797a58cbe39623e8a9512a3bc0fbe90b07a"
+    },
+    {
+      "directory": "agenda",
+      "functionsConsumed": 34,
+      "imageBytes": 16232,
+      "imageSha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+      "elfBytes": 66364,
+      "elfSha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+      "metadataSha256": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+      "wasmSha256": "1d7f6ecbaaa629e40fe69b67fab9ed62dd596c667f0ab364641ee5cc311ef46a"
+    },
+    {
+      "directory": "editor",
+      "functionsConsumed": 120,
+      "imageBytes": 87544,
+      "imageSha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+      "elfBytes": 240452,
+      "elfSha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "metadataSha256": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+      "wasmSha256": "274946940de536b018952c29fd6b9d786d42a13e1961c83ff54a668116745d82"
+    }
+  ],
+  "wide": {
+    "functions": 136,
+    "imageBytes": 4992,
+    "relocations": 1
+  },
+  "diagnostics": [
+    "RV32 supports up to eight register arguments",
+    "RV32 function frame exceeds the instruction range",
+    "RV32 supports up to eight register arguments",
+    "RV32 function frame exceeds the instruction range",
+    "2:32: expected i32, got bool",
+    "1:187: duplicate function nine",
+    "1:27: unknown function g",
+    "input limit exceeded"
+  ]
+}

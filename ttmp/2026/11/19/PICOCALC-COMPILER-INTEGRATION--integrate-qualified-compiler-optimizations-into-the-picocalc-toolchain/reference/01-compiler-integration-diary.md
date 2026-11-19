@@ -224,3 +224,61 @@ Read `various/production-report.md` next to `various/production-p4.json` and `re
 The source revision in the board receipt refers to the five JS source blobs, while `3c0add0` contains the C wrapper and build switch. All times are elapsed compile-and-link times in microseconds. The alternate app setting supplies the third JS argument only for native worlds. Both configurations use the same application ABI.
 
 The flasher verified the restored app partition. A subsequent serial query confirmed that Files, Agenda and Editor all booted as native worlds from the saved image and reported no last error. The qualification receipt sets `original_restored` to true. Ticket validation reported only filename-prefix warnings on the preserved researcher notes and bench README.
+
+## Step 5: Select streaming as the native default
+
+The director chose the lower-memory configuration after reviewing the physical comparison. I changed the default for native compilation on the host and in new firmware builds. The application can still explicitly select buffering. This changes which already-qualified implementation is selected when the caller omits the option.
+
+### Prompt Context
+
+**User prompt (verbatim)**
+
+> ok, keep streaming as default for now, the memory is worth it.
+>
+> what's next in the big picture, what do we say as the research lab director?
+
+**Assistant interpretation** Set streaming as the normal native path and recommend the next compiler research experiment using the measured P4 baseline.
+
+**Commit (code)** `7677932` — Stream typed native functions by default on the host and PicoCalc.
+
+### What I did
+
+Changed the JavaScript mode selector and ESP-IDF option. The normal native firmware path uses the JS default; the OFF build supplies an explicit false value. The C entry prints the actual selection. Updated the intern guide with both controls and the CMake cache behavior.
+
+### Why
+
+Across the prior four cold Editor boots per mode, streaming traded 94.343 ms for 357,528 bytes less peak QuickJS allocation. On the P4 that is a 20.2% reduction in the measured compiler heap. The policy reflects the value placed on this working memory.
+
+### What worked
+
+The mode probe observed 7, 34 and 120 completed function bodies for default Files, Agenda and Editor. Omitting options or supplying an empty object streamed every body. Explicit buffering installed no streaming consumer. Both choices matched the frozen native images, metadata and full ELF files; the Wasm outputs validated and the eight diagnostic fixtures matched. The real firmware C entry, run on Linux through QuickJS, produced an identical 240,452-byte Editor ELF in both modes (SHA-256 `aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50`).
+
+### What didn't work
+
+No release validation failure. An existing ESP-IDF cache already contained an explicit ON selection. I removed that single cached option before the default build so the experiment could verify the default as declared in the project.
+
+### What I learned
+
+Changing only the JavaScript default would cause the firmware OFF build's old two-argument call to silently select streaming. The C compile option now issues the explicit opt-out. The previous physical measurements still characterize the two algorithms; this change was qualified by cross-building and replaying them, without reflashing the board.
+
+### What was tricky to build
+
+The two configurations share the same JS file in the firmware bundle. I checked the C mode markers in the two built images to distinguish their call paths. The default image contained only the streamed C marker and the OFF image only the buffered marker.
+
+### What warrants a second pair of eyes
+
+CMake preserves user choices between builds. Compare a cache with the option unset against one explicitly set to OFF. Check through the world wrappers rather than only calling the low-level compiler.
+
+### What should be done in the future
+
+Measure phase time and high-water allocation on the streamed physical compiler. The first candidate is the lifetime of output: today each lowered function keeps a JS array of native words, assembly creates a contiguous program image, and the linker copies that image into the reactor. An experiment can write to a compact destination and record call-site offsets for later patching. Accept or reject it using the measured phase contribution, peak heap, identical executable and behavior. This remains a research proposal.
+
+### Code review instructions
+
+Use `scripts/check-streaming.mjs REACTOR_DIR 7677932 --check-streaming-default` with Node and run `bash scripts/check-default-entry.sh REACTOR_DIR` from the repository root with ticket-relative script paths. The latter uses the built host QuickJS objects and ESP-IDF's Editor reactor. Review the CMake option, the call in `typed_p4.c`, and the JS default together.
+
+### Technical details
+
+The explicit controls are `{streamFunctions: false}` on the native JS API and `-D PICOCALC_RV32_STREAM_FUNCTIONS=OFF` in ESP-IDF. `various/default-streaming-parity.json` pins the test to the new code revision. Fresh configuration yielded `PICOCALC_RV32_STREAM_FUNCTIONS:BOOL=ON` in the CMake cache.
+
+The existing 24 host application workflows passed on the new default (zero failures), including the Wasm and RV32 Editor large-document, preview, search and navigation replays.
