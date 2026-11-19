@@ -188,3 +188,64 @@ Compare the import handling in both compiler backends and follow `typedSdkScreen
 ### Technical details
 
 Wasm binds the runtime function's existing index. RV32 stores the relocation offset and the import-table index, then patches a four-byte JAL to its template trampoline. The original two typed entry slots are still patched as tail jumps into the generated program. The screen API takes two explicit lengths in UTF-16 units and returns the kernel SDK result as an i32.
+
+## Step 4 — Open files through typed Editor and the shared SDK
+
+The file-open workflow now lives in typed source. Editor reads the offered handle, waits for its token, normalizes the loaded document, replies to Files, and renders the first viewport. The runtime provides generic state and text storage, JSON event decoding, and checked SDK calls. It does not select the app's filename, file ownership transition, or screen.
+
+The normal workflow passed through the PicoCalc simulator with the original Files app and actual file capabilities. A separate RV32 driver loaded the linked ELF and replayed a corresponding SDK sequence. A 64 KiB fixture also rendered identically with an experimental Wasm budget. The stock Wasm turn budget remains a limit for that case.
+
+### Prompt Context
+
+See Step 1 for the complete typed Editor goal.
+
+**Commit (preceding checkpoint)** `1e26184` — “Bind shared SDK calls from typed worlds on Wasm and RV32.”
+
+### What I did
+
+- Added a fixed `WorldEvent` and scalar `WorldState` contract and validated the layouts in `compiler/typed-world.js`. The shared runtime owns the allocations. Editor declares its own field meanings and tracks both the active and offered file handles.
+- Added generic SDK helpers for event strings, named handles, file reads, replies, releases, and yielding. Moved the strict single-code-point UTF-8 decoder to a helper shared with the existing native apps.
+- Added Editor's typed token-matching state machine, newline normalization and JSON viewport rendering. Retained the previous grant until the new read was accepted, and released a refused grant without clearing the old frame.
+- Extended `scripts/02-check-editor-world.mjs` and its RV32 driver for existing and missing files, a Unicode and mixed-newline payload, stale settlement tokens, and rejected reads. Used the original JS Editor as reference for three screen trees and three simulator framebuffer captures.
+
+### Why
+
+A file arrives as a capability inside an ask. The app has to keep that ask pending until the read settles and manage the capability lifetime itself. The SDK hands it the result and enforces authority. A full-size input also needs bounded work per event so a file open does not monopolize the kernel lane.
+
+### What worked
+
+- The normal fixture passed at the stock Wasm quota and 50 ms budget and through RV32 emulation. It matched three screens and their simulator framebuffers. The first file contained an emoji, a wrapped row, a tab and mixed newlines. The missing file opened empty.
+- The RV32 fixture confirmed that a stale token produces no reply, a successful replacement releases the previous grant, and an ordinary read failure releases only the refused grant.
+- With `--large`, a 65,536-byte mixed-line-ending ASCII file matched the original view. The typed Wasm fixture used 512 KiB and a 200 ms virtual turn budget. The original QuickJS Editor used 2 MiB for this comparison. The RV32 driver also exercised the normalized result and the explicit yield tokens for this file.
+- The linked Editor artifacts were 27,441 bytes for Wasm and 70,856 bytes for ELF. The Files Wasm regression still matched its 26 screens after factoring the UTF-8 decoder.
+
+### What didn't work
+
+- Appending record declarations behind the layout functions produced `SyntaxError: 130:1: expected function`. The typed grammar requires records at the beginning. The test now concatenates `state.typed` before the functions.
+- The first RV32 driver compared the JSON source strings and reported `failed: typed screen`. The test uses parsed trees because the typed writer escapes the tab as `\\u0009` and the reference can use `\\t`.
+- The original Editor's 512 KiB fixture reported `ran out of memory (its limit is 512 KB)`. The first large-frame collector also hit `SyntaxError: Unterminated string in JSON at position 1003` from the logger's per-record limit. The reference now uses a larger world memory quota in the stress case, and the collector writes short chunks.
+- The typed path exceeded `50 virtual ms` on the 64 KiB fixture. Before optimizing the shared decoder, it also exceeded `200 virtual ms`. The generic decoder now widens groups of eight plain ASCII bytes and handles escapes or non-ASCII through the scalar path. Combined with separating decoding and normalization and yielding every 4,096 UTF-16 units, the fixture passes at 200 ms. It still fails at 50 ms.
+
+### What I learned
+
+The app's normalization and runtime JSON conversion contribute separately to the meter. Yielding only inside the typed normalization loop did not fix the first segment. The original and typed implementations also have different memory use when handling the same large input, so the stress comparison explicitly records separate quotas.
+
+### What was tricky to build
+
+The runtime uses a counted buffer capacity during writing and a counted string length during reading. The typed code obtains a fresh writable view by slot before writing again. The normalization loop also handles a CR LF pair split across chunk boundaries by comparing the next unit against the actual source length.
+
+### What warrants a second pair of eyes
+
+The 64 KiB case uses representative mostly-ASCII data, and the 50 ms limit remains unresolved. Check long unbroken lines and heavy escape expansion separately. The native test stubs file effects, while the simulator exercises real grants. Hardware, saved positions, editing, saving, Markdown, and search still require qualification.
+
+### What should be done in the future
+
+Port keyboard input and document mutations, then implement write snapshots and save completion. Retain the same grant and view evidence while adding positions, dirty-state refusal, search, and Markdown. Profile long opens before selecting the production budget. Then build and qualify the complete world on both handheld engines.
+
+### Code review instructions
+
+Read `worlds/editor/state.typed`, `editor.typed`, and `view.typed`. The shared bridge is `sdk/typed/world.c`, with import signatures in `compiler/typed-world.js`. Rebuild `typed-world-reactor`, then run `02-check-editor-world.mjs` with P4 GCC and the CJI emulator. Add `--large` for the 64 KiB case or `--large --stock-budget` to reproduce the current stock-budget limit.
+
+### Technical details
+
+The runtime validates the fixed 16-byte event record and allows up to 64 scalar state fields. Its text storage currently provides a 65,536-unit slot and three 256-unit slots. The open handler keeps the ask pending with `NW_LATER`. File and yield settlements use the same token matching. The RV32 reactor reserves 64 KiB of typed code space because the new view and event routines exceed the startup-only slot budget.

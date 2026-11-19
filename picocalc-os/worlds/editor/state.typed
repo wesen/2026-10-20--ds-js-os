@@ -1,0 +1,19 @@
+record WorldEvent {
+    kind: i32;
+    ask: bool;
+    token: i32;
+    ok: bool;
+}
+
+record WorldState {
+    file: i32;
+    offered: i32;
+    offeredNameLength: i32;
+    readToken: i32;
+    nameLength: i32;
+    textLength: i32;
+    reading: bool;
+    sourceLength: i32;
+    unitsRead: i32;
+    unitsWritten: i32;
+}

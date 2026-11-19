@@ -8,10 +8,139 @@ function typedWorldMeta(field: i32, output: buffer): i32 {
     return 0;
 }
 
-// Render on NW_START. Later events will update the application state.
-function typedWorldEvent(kind: i32, output: buffer, hints: buffer): i32 {
-    if (!(kind === 2)) return 0;
-    const hintLength = hints.writeLiteral(0, "Esc Files");
-    typedSdkScreen(output, editorEmptyFrame(output), hints, hintLength);
+
+// Normalize at most one bounded slice per kernel segment. The app keeps the
+// open ask pending until every slice has reached the same document buffer.
+function editorNormalize(text: buffer, state: WorldState): i32 {
+    let read = state.unitsRead;
+    let written = state.unitsWritten;
+    const stop = Math.min(state.sourceLength, read + 4096);
+    while (read < stop) {
+        let unit = text.charCodeAt(read);
+        read = read + 1;
+        if (unit === 13) {
+            unit = 10;
+            if (read < state.sourceLength && text.charCodeAt(read) === 10) { read = read + 1; }
+        }
+        text.setCharCodeAt(written, unit);
+        written = written + 1;
+    }
+    state.unitsRead = read;
+    state.unitsWritten = written;
+    return written;
+}
+
+function editorReplyError(output: buffer, error: string): i32 {
+    let at = output.writeLiteral(0, "{\"ok\":false,\"why\":");
+    at = editorQuote(output, at, error, 0, error.length);
+    return typedSdkReply(output, at + output.writeLiteral(at, "}"));
+}
+
+function editorOpen(state: WorldState, output: buffer): i32 {
+    const scratch = typedSdkBuffer(3);
+    let n = typedSdkEventText(0, scratch, 0, scratch);
+    if (!(n === 4)) return 0;
+    if (!(scratch.charCodeAt(0) === 111 && scratch.charCodeAt(1) === 112 &&
+        scratch.charCodeAt(2) === 101 && scratch.charCodeAt(3) === 110)) return 0;
+    n = scratch.writeLiteral(0, "file");
+    const handle = typedSdkEventHandle(scratch, n);
+    if (handle <= 0) {
+        typedSdkReply(output, output.writeLiteral(0, "{\"ok\":false,\"why\":\"No file handle.\"}"));
+    }
+    if (handle <= 0) return 0;
+    const pending = typedSdkBuffer(2);
+    n = scratch.writeLiteral(0, "name");
+    let size = typedSdkEventText(3, scratch, n, pending);
+    if (size < 1 || size > 95) { size = pending.writeLiteral(0, "untitled"); }
+    const token = typedSdkFileRead(handle);
+    if (token <= 0) {
+        typedSdkRelease(handle);
+        typedSdkReply(output, output.writeLiteral(0, "{\"ok\":false,\"why\":\"Cannot read file.\"}"));
+    }
+    if (token <= 0) return 0;
+    state.offered = handle;
+    state.offeredNameLength = size;
+    state.readToken = token;
+    return 1;
+}
+
+function editorOpened(state: WorldState, size: i32, doc: buffer, output: buffer, hints: buffer): i32 {
+    if (state.file > 0 && !(state.file === state.offered)) { typedSdkRelease(state.file); }
+    state.file = state.offered;
+    state.offered = 0;
+    state.textLength = size;
+    const pending = typedSdkBuffer(2);
+    const name = typedSdkBuffer(1);
+    let n = 0;
+    while (n < state.offeredNameLength) {
+        name.setCharCodeAt(n, pending.charCodeAt(n));
+        n = n + 1;
+    }
+    state.nameLength = n;
+    typedSdkReply(output, output.writeLiteral(0, "{\"ok\":true}"));
+    const text = typedSdkView(doc, state.textLength);
+    const hintLength = hints.writeLiteral(0, "F2 save F3 find F4 next F6 view Esc back");
+    return typedSdkScreen(output, editorInitialFrame(output, text, name, state.nameLength), hints, hintLength);
+}
+
+function editorOpenFailed(state: WorldState, scratch: buffer, length: i32, output: buffer): i32 {
+    typedSdkRelease(state.offered);
+    state.offered = 0;
+    if (length < 0) return typedSdkReply(output, output.writeLiteral(0, "{\"ok\":false,\"why\":\"Invalid file response.\"}"));
+    return editorReplyError(output, typedSdkView(scratch, length));
+}
+
+function editorDeferRead(state: WorldState, output: buffer): i32 {
+    state.readToken = typedSdkYield();
+    state.reading = state.readToken > 0;
+    if (state.reading) return 0;
+    state.readToken = 0;
+    return editorOpenFailed(state, output, -1, output);
+}
+
+function editorContinueRead(state: WorldState, doc: buffer, output: buffer, hints: buffer): i32 {
+    const size = editorNormalize(doc, state);
+    if (state.unitsRead < state.sourceLength) return editorDeferRead(state, output);
+    return editorOpened(state, size, doc, output, hints);
+}
+
+function editorReadSuccess(state: WorldState, doc: buffer, output: buffer, hints: buffer): i32 {
+    const size = typedSdkEventText(2, output, 0, doc);
+    if (size < 0) return editorOpenFailed(state, output, -1, output);
+    state.sourceLength = size;
+    state.unitsRead = 0;
+    state.unitsWritten = 0;
+    if (size > 4096) return editorDeferRead(state, output);
+    return editorContinueRead(state, doc, output, hints);
+}
+
+function editorResumeRead(state: WorldState, doc: buffer, output: buffer, hints: buffer): i32 {
+    state.reading = false;
+    return editorContinueRead(state, doc, output, hints);
+}
+
+function editorReadDone(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    state.readToken = 0;
+    const doc = typedSdkBuffer(0);
+    if (state.reading) return editorResumeRead(state, doc, output, hints);
+    if (event.ok) return editorReadSuccess(state, doc, output, hints);
+    const error = typedSdkBuffer(3);
+    const size = typedSdkEventText(2, output, 0, error);
+    if (size >= 7 && error.charCodeAt(0) === 110 && error.charCodeAt(1) === 111 &&
+        error.charCodeAt(2) === 32 && error.charCodeAt(3) === 102 && error.charCodeAt(4) === 105 &&
+        error.charCodeAt(5) === 108 && error.charCodeAt(6) === 101) return editorOpened(state, 0, doc, output, hints);
+    return editorOpenFailed(state, error, size, output);
+}
+
+function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    if (event.kind === 0 && event.ask) return editorOpen(state, output);
+    if (event.kind === 4 && state.readToken > 0 && event.token === state.readToken) {
+        editorReadDone(event, state, output, hints);
+    }
+    if (event.kind === 2) {
+        const hintLength = hints.writeLiteral(0, "Esc Files");
+        typedSdkScreen(output, editorEmptyFrame(output), hints, hintLength);
+    }
+    if (state.readToken > 0) return 1;
     return 0;
 }

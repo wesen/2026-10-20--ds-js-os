@@ -2,3 +2,62 @@
 function editorEmptyFrame(output: buffer): i32 {
     return output.writeLiteral(0, "{\"t\":\"col\",\"gap\":8,\"kids\":[{\"t\":\"text\",\"s\":\"No file open.\",\"font\":\"m\"},{\"t\":\"text\",\"s\":\"Open one from Files (d on the home screen). The editor can only touch files you open there.\",\"wrap\":true,\"font\":\"s\",\"color\":\"muted\"}]}");
 }
+
+// Append a JSON string from a UTF-16 span. This also handles filenames and
+// text containing control characters without leaking them into the UI tree.
+function editorHex(digit: i32): i32 {
+    if (digit < 10) return 48 + digit;
+    return 87 + digit;
+}
+
+function editorQuote(output: buffer, offset: i32, text: string, first: i32, end: i32): i32 {
+    let at = offset + output.writeLiteral(offset, "\"");
+    let i = first;
+    while (i < end) {
+        const unit = text.charCodeAt(i);
+        if (unit < 32) {
+            at = at + output.writeLiteral(at, "\\u00");
+            output.setCharCodeAt(at, editorHex(unit / 16));
+            output.setCharCodeAt(at + 1, editorHex(unit % 16));
+            at = at + 2;
+        }
+        if (unit >= 32) {
+            if (unit === 34 || unit === 92) { at = at + output.writeLiteral(at, "\\"); }
+            output.setCharCodeAt(at, unit);
+            at = at + 1;
+        }
+        i = i + 1;
+    }
+    return at + output.writeLiteral(at, "\"");
+}
+
+function editorLineEnd(text: string, first: i32): i32 {
+    let end = first;
+    while (end < text.length && !(text.charCodeAt(end) === 10)) { end = end + 1; }
+    return end;
+}
+
+function editorInitialFrame(output: buffer, text: string, name: buffer, nameLength: i32): i32 {
+    const statusEnd = nameLength + name.writeLiteral(nameLength, "  1:1");
+    const status = typedSdkView(name, statusEnd);
+    let at = output.writeLiteral(0, "{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\"text\",\"s\":");
+    at = editorQuote(output, at, status, 0, statusEnd);
+    at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"muted\"},{\"t\":\"textarea\",\"rows\":[");
+    let start = 0;
+    let limit = editorLineEnd(text, 0);
+    let rows = 0;
+    while (rows < 18 && start <= text.length) {
+        if (rows > 0) { at = at + output.writeLiteral(at, ","); }
+        const end = editorWrapEnd(text, start, limit, 49);
+        at = at + output.writeLiteral(at, "{\"s\":");
+        at = editorQuote(output, at, text, start, end);
+        at = at + output.writeLiteral(at, ",\"color\":\"ink\"}");
+        start = end;
+        if (end === limit) {
+            start = end + 1;
+            limit = editorLineEnd(text, start);
+        }
+        rows = rows + 1;
+    }
+    return at + output.writeLiteral(at, "],\"cursor\":[0,0],\"marks\":[],\"font\":\"s\",\"lead\":2,\"grow\":1}]}");
+}

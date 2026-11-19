@@ -15,3 +15,7 @@ Boot the typed Editor view through the shared reactor and match the original fra
 ## 2026-11-18
 
 Bind shared typed SDK functions on Wasm and RV32 and move Editor's frame request into typed source.
+
+## 2026-11-19
+
+Implement typed Editor file-open, first viewport rendering, and grant lifetime checks on both backends.
