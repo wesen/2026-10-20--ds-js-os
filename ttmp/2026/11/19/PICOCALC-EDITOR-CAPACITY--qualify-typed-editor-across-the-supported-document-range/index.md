@@ -19,13 +19,14 @@ WhenToUse: ""
 
 ## Overview
 
-Editor application logic is in typed JavaScript. This ticket addresses two large-document regressions identified after the port. The initial Wasm stress comparison confirms that the full-size absent search now completes. The typed preview now reaches EOF and matches reference screenshots on the host. The updated Wasm and RV32 builds passed the standard Editor workflow on the board. Dense and late-match searches now pass the long simulator replays. Late-document edit traversal and long imported lines with inline markup remain open.
+Editor application logic is in typed JavaScript. This ticket addresses two large-document regressions identified after the port. The initial Wasm stress comparison confirms that the full-size absent search now completes. The typed preview now reaches EOF and matches reference screenshots on the host. The updated Wasm and RV32 builds passed the standard Editor workflow on the board. Dense and late-match searches pass the long simulator replays and the physical RV32 test. The LCD still clips the 18th edit row, which can hide a late match even as its status shows the correct position. Late-document edit traversal and long imported lines with inline markup remain open.
 
 - [Design and implementation guide](design-doc/01-bounded-search-and-preview-for-large-picocalc-documents.md)
 - [Implementation diary](reference/01-implementation-diary.md)
 - [Full-size host stress results](various/editor-large-host-windowed.json)
 - [Dense and late search result](various/editor-search-traversal-after.json)
-- [Paired hardware receipt](various/p4-preview-build-workflow.json)
+- [Current paired hardware receipt](various/p4-search-build-workflow.json)
+- [RV32 handheld full-size search receipt](various/p4-full-search-rv32.json)
 - [RV32 handheld capture at preview EOF](various/p4-preview-end-rv32.png)
 
 ## Key Links

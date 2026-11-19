@@ -19,3 +19,7 @@ Requalified the standard typed Editor workflow on physical Wasm and RV32. Captur
 ## 2026-11-19
 
 Segmented typed search and viewport preparation, and verified both 64 KiB search scenarios across Wasm and RV32.
+
+## 2026-11-19
+
+Verified both updated hardware builds and the physical RV32 full-file search. Recorded post-match navigation faults and the LCD row mismatch.

@@ -17,15 +17,15 @@ DIRECTORY = "typed-preview-window-check"
 FILE = f"{DIRECTORY}/entry.md"
 FIXTURE = b"A reading paragraph, followed by a blank line.\n\n" * 450 + b"END OF PREVIEW"
 
-def stage_document(port, log):
+def stage_document(port, log, file=FILE, fixture=FIXTURE):
     # Pace each command and validate its offset before writing the next.
     # A missed UART fragment would otherwise make the remaining offsets wrong.
     with Serial(port, 115200, timeout=0.1) as uart:
         uart.reset_input_buffer()
-        for offset in range(-560, len(FIXTURE), 560):
-            chunk = FIXTURE[offset:offset + 560] if offset >= 0 else b""
+        for offset in range(-560, len(fixture), 560):
+            chunk = fixture[offset:offset + 560] if offset >= 0 else b""
             suffix = b" " + base64.b64encode(chunk) if chunk else b""
-            command = b"\nput " + FILE.encode("ascii") + suffix + b"\n"
+            command = b"\nput " + file.encode("ascii") + suffix + b"\n"
             for start in range(0, len(command), 48):
                 uart.write(command[start:start + 48])
                 uart.flush()
@@ -37,7 +37,7 @@ def stage_document(port, log):
             log.write(receipt)
             log.flush()
             expected = max(0, offset + len(chunk))
-            if f"put {FILE}: {expected} bytes".encode("ascii") not in receipt:
+            if f"put {file}: {expected} bytes".encode("ascii") not in receipt:
                 raise RuntimeError(f"scratch upload failed at byte {expected}")
 
 

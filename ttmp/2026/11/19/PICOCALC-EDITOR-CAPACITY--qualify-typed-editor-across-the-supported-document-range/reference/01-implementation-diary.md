@@ -383,3 +383,61 @@ Run `05-measure-large-editor.mjs FIXTURE OUTPUT --after-match` against a retaine
 ### Technical details
 
 The simulator uses a 200 virtual ms per-segment budget. The two failures are independent of the successful search investigation. The status frame after the search contains 852:1 before the next input overrun.
+
+## Step 7: Qualify full-file search on the handheld
+
+The rebuilt PicoCalc images passed standard Editor workflows on Wasm and RV32. The installed RV32 image also searched a 65,536-byte file on the physical device. The first capture shows the dense query miss and the second shows the cursor status at 852:1.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Verify the new search implementation with the real on-device compiler and device workflow.
+
+**Inferred user intent:** Keep the installed image usable and preserve a reproducible hardware record.
+
+### What I did
+
+- Rebuilt both profiles from the same 65,482-byte source payload. Its SHA-256 is `fbd3e3bc4be0e742241e7d491a3e5b186ec3fb10cea9037509c84f390fe6bcba`.
+- Ran the paired hardware qualifier on `/dev/ttyACM0`. The structured receipt is `various/p4-search-build-workflow.json`.
+- Added `scripts/05-check-large-search-on-p4.py`, reusing the offset-checked transfer routine from the preview qualifier. Staged a full-size fixture, exercised the dense miss, tail hit, and F4, then deleted only the test directory.
+- Replayed the host full-size save and preview checks and the cross-backend Markdown preview suite with the final source.
+
+### Why
+
+The Wasm simulator measures virtual budgets and the emulator verifies RV32 results. The physical workflow additionally checks serial staging, the bundled compiler, kernel timers, the runtime, and the device display.
+
+### What worked
+
+- The board compiled Editor in 1.87 s for Wasm and 3.00 s for RV32 in the recorded reboot. Loading took 167 ms and 12.5 ms respectively. Both standard tests passed with zero I²C and SPI errors.
+- The full-size RV32 run acknowledged exactly 65,536 bytes. The dense miss and EOF position are visible in CRC-verified captures. The run logged zero Editor faults, and the cleanup confirmed the scratch directory was gone.
+- The device retains the verified RV32 image. The receipt is `various/p4-full-search-rv32.json`.
+- The latest host regressions still pass 65,536-byte save and absent search, 21,614-byte preview, and the 18,047-byte Unicode single-line preview.
+
+### What didn't work
+
+The final LCD screenshot shows source position 852:1 but the match and cursor are below the visible area. The JS and Wasm frame traces both place `needlezzz` at index 17 with a cursor at `[17,0]`. `drawTextarea` draws only the first 17 rows at this geometry, so it clips index 17. This display mismatch exists with the reference behavior too.
+
+### What I learned
+
+A correct source coordinate and a correct supplied frame do not prove a visible match. The scroll policy must match the actual line capacity of the compositor.
+
+### What was tricky to build
+
+The fixture transfer appends paced chunks and verifies the byte offset after each command. The final search state is verified from framebuffer content after checking its capture CRC, separately from the UART fault check.
+
+### What warrants a second pair of eyes
+
+Compare the physical hit screenshot, the host frame's cursor index, and the usable textarea height. Verify visibility for the last row of any viewport when aligning these two paths.
+
+### What should be done in the future
+
+Close the post-match navigation regressions, align the edit viewport with the LCD, and qualify formatted output on long imported Markdown lines.
+
+### Code review instructions
+
+Read the paired build receipt and both hardware screenshots. Run `scripts/05-check-large-search-on-p4.py --port /dev/ttyACM0 --engine native --output NEW_OUTPUT_DIRECTORY` after installing the matching image.
+
+### Technical details
+
+The RV32 firmware is 4,455,168 bytes and Wasm is 4,262,512 bytes. Both use the existing 8 MiB factory partition layout. The search deposits at most one small frame per completed key and leaves the prior frame on screen while searching or preparing rows.

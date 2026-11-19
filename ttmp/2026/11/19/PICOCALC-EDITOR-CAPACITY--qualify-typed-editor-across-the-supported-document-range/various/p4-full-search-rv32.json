@@ -1,0 +1,10 @@
+{
+  "input_bytes": 65536,
+  "engine": "native",
+  "faults": [],
+  "scratch_removed": true,
+  "screenshots": {
+    "shot-1.png": "cb3c9e01ebac8c61492b07cd73f3998742ba55e388892f877f30e8cf982401c9",
+    "shot-2.png": "e0b6fd8ba0f58a50d39d3e65f21d71c3523fa56392b094b2cde0eb1f433e8b7a"
+  }
+}
