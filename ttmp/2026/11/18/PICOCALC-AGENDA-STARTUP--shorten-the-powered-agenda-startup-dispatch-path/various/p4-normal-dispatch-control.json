@@ -1,0 +1,2324 @@
+{
+  "configuration": "Same powered ESP32-P4, panel and keyboard, 8 MiB app partition, and matching system manifests",
+  "manifest_worlds": 22,
+  "fixture": "- [x] completed\n- [ ] dated @2030-05-01 14:30 !15m\n- board fixture\n",
+  "sources": [
+    "3a87219d048c63151bdd9e15109d9f09c72b2c5e64bfa7405665c8a2e30d6460  picocalc-os/worlds/agenda/reminder.typed",
+    "ff7ee79b7cab4300544bf8bc544819eba316ba336f5e7b7222357291f91269a6  picocalc-os/worlds/agenda/entry.typed",
+    "a5725f6b8a4e13f2aed6f4ef41d479d25f91137a0d3979a96732b1d4ca82613b  picocalc-os/worlds/agenda/compile.js"
+  ],
+  "endpoint": "Source capture to first file-backed Agenda publication",
+  "targets": {
+    "wasm": {
+      "firmware_sha256": "9bbe7c155493c882f57b8228dd8e440f851a19daffa7b9f70cfe03312cc77f61",
+      "cold": [
+        {
+          "compile_us": 512926,
+          "peak_js_bytes": 630180,
+          "module_bytes": 67434,
+          "first_response_us": 2034708,
+          "world_bytes": 212992,
+          "frame_turn_us": 7569,
+          "before_cji_restore_us": 676295,
+          "before_dispatch_us": 676921,
+          "world_init_us": 1215989,
+          "world_init_done_us": 1337485,
+          "file_submitted_us": 1866656,
+          "file_returned_us": 1989360,
+          "settle_us": 2027141,
+          "buses": {
+            "i2c0": {
+              "transfers": 104,
+              "errors": 0
+            },
+            "spi2": {
+              "transfers": 54,
+              "errors": 0
+            }
+          },
+          "prelude_cache": {
+            "bytes": 44544,
+            "build_us": 61528
+          },
+          "worlds": {
+            "keyboard": {
+              "engine": 2,
+              "first_us": 677377,
+              "total_us": 10702,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 6798,
+              "reply_wait_segments": 4
+            },
+            "power": {
+              "engine": 2,
+              "first_us": 688366,
+              "total_us": 11109,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "display": {
+              "engine": 2,
+              "first_us": 699754,
+              "total_us": 9975,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "compositor": {
+              "engine": 2,
+              "first_us": 710044,
+              "total_us": 25092,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agent": {
+              "engine": 2,
+              "first_us": 735486,
+              "total_us": 46798,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 133,
+              "reply_wait_segments": 1
+            },
+            "chat": {
+              "engine": 0,
+              "first_us": 782636,
+              "total_us": 111460,
+              "attempts": 1,
+              "js_setup_us": 8964,
+              "js_prelude_us": 72299,
+              "js_source_us": 26841,
+              "js_init_us": 3174,
+              "reply_wait_us": 3004,
+              "reply_wait_segments": 1
+            },
+            "launcher": {
+              "engine": 0,
+              "first_us": 894508,
+              "total_us": 36419,
+              "attempts": 1,
+              "js_setup_us": 6923,
+              "js_prelude_us": 8830,
+              "js_source_us": 18220,
+              "js_init_us": 2301,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "files": {
+              "engine": 2,
+              "first_us": 931268,
+              "total_us": 23686,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "editor": {
+              "engine": 2,
+              "first_us": 955271,
+              "total_us": 24439,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "calc": {
+              "engine": 0,
+              "first_us": 980026,
+              "total_us": 235490,
+              "attempts": 1,
+              "js_setup_us": 7134,
+              "js_prelude_us": 8208,
+              "js_source_us": 215620,
+              "js_init_us": 4391,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agenda": {
+              "engine": 1,
+              "first_us": 1215979,
+              "total_us": 122325,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "settings": {
+              "engine": 2,
+              "first_us": 1338730,
+              "total_us": 20905,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "logs": {
+              "engine": 0,
+              "first_us": 1359967,
+              "total_us": 32417,
+              "attempts": 1,
+              "js_setup_us": 7126,
+              "js_prelude_us": 8273,
+              "js_source_us": 14336,
+              "js_init_us": 2567,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "loader": {
+              "engine": 0,
+              "first_us": 1392754,
+              "total_us": 39141,
+              "attempts": 1,
+              "js_setup_us": 6847,
+              "js_prelude_us": 8222,
+              "js_source_us": 21190,
+              "js_init_us": 2743,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sysmon": {
+              "engine": 0,
+              "first_us": 1432251,
+              "total_us": 38059,
+              "attempts": 1,
+              "js_setup_us": 6625,
+              "js_prelude_us": 8290,
+              "js_source_us": 20282,
+              "js_init_us": 2726,
+              "reply_wait_us": 5098,
+              "reply_wait_segments": 1
+            },
+            "repl": {
+              "engine": 0,
+              "first_us": 1470678,
+              "total_us": 27274,
+              "attempts": 1,
+              "js_setup_us": 6638,
+              "js_prelude_us": 8254,
+              "js_source_us": 9530,
+              "js_init_us": 2743,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sandbox": {
+              "engine": 0,
+              "first_us": 1498300,
+              "total_us": 23657,
+              "attempts": 1,
+              "js_setup_us": 6731,
+              "js_prelude_us": 8230,
+              "js_source_us": 6429,
+              "js_init_us": 2157,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "snake": {
+              "engine": 2,
+              "first_us": 1522296,
+              "total_us": 14756,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 6561,
+              "reply_wait_segments": 1
+            },
+            "faults": {
+              "engine": 0,
+              "first_us": 1537395,
+              "total_us": 30555,
+              "attempts": 1,
+              "js_setup_us": 7213,
+              "js_prelude_us": 8307,
+              "js_source_us": 12360,
+              "js_init_us": 2534,
+              "reply_wait_us": 5399,
+              "reply_wait_segments": 1
+            },
+            "flaky": {
+              "engine": 2,
+              "first_us": 1568318,
+              "total_us": 8433,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "keys": {
+              "engine": 0,
+              "first_us": 1577053,
+              "total_us": 27083,
+              "attempts": 1,
+              "js_setup_us": 7037,
+              "js_prelude_us": 8247,
+              "js_source_us": 9407,
+              "js_init_us": 2245,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "about": {
+              "engine": 0,
+              "first_us": 1604549,
+              "total_us": 25643,
+              "attempts": 1,
+              "js_setup_us": 6841,
+              "js_prelude_us": 8479,
+              "js_source_us": 7902,
+              "js_init_us": 2314,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "toplog": {
+              "engine": 2,
+              "first_us": 1630570,
+              "total_us": 8629,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-echo": {
+              "engine": 2,
+              "first_us": 1639421,
+              "total_us": 25497,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-bench": {
+              "engine": 2,
+              "first_us": 1665152,
+              "total_us": 350,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-import": {
+              "engine": 2,
+              "first_us": 1665530,
+              "total_us": 7585,
+              "attempts": 3,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-dial": {
+              "engine": 2,
+              "first_us": 1695963,
+              "total_us": 735,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          },
+          "compositor": {
+            "draw": {
+              "total_us": 16879,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "worlds.status": {
+              "total_us": 2004,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "other": {
+              "total_us": 19068,
+              "segments": 2,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          }
+        },
+        {
+          "compile_us": 513861,
+          "peak_js_bytes": 630180,
+          "module_bytes": 67434,
+          "first_response_us": 2040929,
+          "world_bytes": 212992,
+          "frame_turn_us": 7331,
+          "before_cji_restore_us": 677107,
+          "before_dispatch_us": 677724,
+          "world_init_us": 1222677,
+          "world_init_done_us": 1344197,
+          "file_submitted_us": 1876186,
+          "file_returned_us": 2033064,
+          "settle_us": 2033600,
+          "buses": {
+            "i2c0": {
+              "transfers": 106,
+              "errors": 0
+            },
+            "spi2": {
+              "transfers": 54,
+              "errors": 0
+            }
+          },
+          "prelude_cache": {
+            "bytes": 44544,
+            "build_us": 63288
+          },
+          "worlds": {
+            "keyboard": {
+              "engine": 2,
+              "first_us": 678189,
+              "total_us": 10701,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "power": {
+              "engine": 2,
+              "first_us": 689181,
+              "total_us": 11085,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "display": {
+              "engine": 2,
+              "first_us": 700539,
+              "total_us": 9936,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "compositor": {
+              "engine": 2,
+              "first_us": 710801,
+              "total_us": 25215,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agent": {
+              "engine": 2,
+              "first_us": 736366,
+              "total_us": 45844,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "chat": {
+              "engine": 0,
+              "first_us": 782538,
+              "total_us": 117595,
+              "attempts": 1,
+              "js_setup_us": 7813,
+              "js_prelude_us": 80129,
+              "js_source_us": 26891,
+              "js_init_us": 2590,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "launcher": {
+              "engine": 0,
+              "first_us": 900549,
+              "total_us": 38566,
+              "attempts": 1,
+              "js_setup_us": 7577,
+              "js_prelude_us": 8966,
+              "js_source_us": 18135,
+              "js_init_us": 3738,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "files": {
+              "engine": 2,
+              "first_us": 939449,
+              "total_us": 22187,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "editor": {
+              "engine": 2,
+              "first_us": 961948,
+              "total_us": 24537,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "calc": {
+              "engine": 0,
+              "first_us": 986810,
+              "total_us": 235415,
+              "attempts": 1,
+              "js_setup_us": 7104,
+              "js_prelude_us": 8209,
+              "js_source_us": 215579,
+              "js_init_us": 4386,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agenda": {
+              "engine": 1,
+              "first_us": 1222668,
+              "total_us": 122341,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "settings": {
+              "engine": 2,
+              "first_us": 1345436,
+              "total_us": 20967,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "logs": {
+              "engine": 0,
+              "first_us": 1366735,
+              "total_us": 32445,
+              "attempts": 1,
+              "js_setup_us": 7123,
+              "js_prelude_us": 8253,
+              "js_source_us": 14404,
+              "js_init_us": 2548,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "loader": {
+              "engine": 0,
+              "first_us": 1399547,
+              "total_us": 39134,
+              "attempts": 1,
+              "js_setup_us": 6815,
+              "js_prelude_us": 8242,
+              "js_source_us": 21202,
+              "js_init_us": 2736,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sysmon": {
+              "engine": 0,
+              "first_us": 1439041,
+              "total_us": 38021,
+              "attempts": 1,
+              "js_setup_us": 6643,
+              "js_prelude_us": 8283,
+              "js_source_us": 20215,
+              "js_init_us": 2739,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "repl": {
+              "engine": 0,
+              "first_us": 1477424,
+              "total_us": 27186,
+              "attempts": 1,
+              "js_setup_us": 6646,
+              "js_prelude_us": 8227,
+              "js_source_us": 9477,
+              "js_init_us": 2726,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sandbox": {
+              "engine": 0,
+              "first_us": 1504960,
+              "total_us": 23638,
+              "attempts": 1,
+              "js_setup_us": 6756,
+              "js_prelude_us": 8229,
+              "js_source_us": 6407,
+              "js_init_us": 2136,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "snake": {
+              "engine": 2,
+              "first_us": 1528936,
+              "total_us": 14771,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "faults": {
+              "engine": 0,
+              "first_us": 1544054,
+              "total_us": 30530,
+              "attempts": 1,
+              "js_setup_us": 7244,
+              "js_prelude_us": 8287,
+              "js_source_us": 12338,
+              "js_init_us": 2519,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "flaky": {
+              "engine": 2,
+              "first_us": 1574972,
+              "total_us": 8411,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "keys": {
+              "engine": 0,
+              "first_us": 1583696,
+              "total_us": 27106,
+              "attempts": 1,
+              "js_setup_us": 7045,
+              "js_prelude_us": 8266,
+              "js_source_us": 9409,
+              "js_init_us": 2239,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "about": {
+              "engine": 0,
+              "first_us": 1611219,
+              "total_us": 25672,
+              "attempts": 1,
+              "js_setup_us": 7082,
+              "js_prelude_us": 8273,
+              "js_source_us": 7880,
+              "js_init_us": 2330,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "toplog": {
+              "engine": 2,
+              "first_us": 1637254,
+              "total_us": 8762,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-echo": {
+              "engine": 2,
+              "first_us": 1646238,
+              "total_us": 23868,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-bench": {
+              "engine": 2,
+              "first_us": 1670329,
+              "total_us": 483,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-import": {
+              "engine": 2,
+              "first_us": 1670836,
+              "total_us": 14262,
+              "attempts": 3,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-dial": {
+              "engine": 2,
+              "first_us": 1701175,
+              "total_us": 668,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          },
+          "compositor": {
+            "draw": {
+              "total_us": 16880,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "worlds.status": {
+              "total_us": 2009,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "other": {
+              "total_us": 20515,
+              "segments": 2,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          }
+        },
+        {
+          "compile_us": 513173,
+          "peak_js_bytes": 630180,
+          "module_bytes": 67434,
+          "first_response_us": 2040561,
+          "world_bytes": 212992,
+          "frame_turn_us": 7814,
+          "before_cji_restore_us": 676396,
+          "before_dispatch_us": 677021,
+          "world_init_us": 1220496,
+          "world_init_done_us": 1341981,
+          "file_submitted_us": 1877105,
+          "file_returned_us": 1999801,
+          "settle_us": 2032758,
+          "buses": {
+            "i2c0": {
+              "transfers": 106,
+              "errors": 0
+            },
+            "spi2": {
+              "transfers": 54,
+              "errors": 0
+            }
+          },
+          "prelude_cache": {
+            "bytes": 44544,
+            "build_us": 62354
+          },
+          "worlds": {
+            "keyboard": {
+              "engine": 2,
+              "first_us": 677482,
+              "total_us": 10692,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 9475,
+              "reply_wait_segments": 6
+            },
+            "power": {
+              "engine": 2,
+              "first_us": 688461,
+              "total_us": 11081,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "display": {
+              "engine": 2,
+              "first_us": 699820,
+              "total_us": 9939,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "compositor": {
+              "engine": 2,
+              "first_us": 710082,
+              "total_us": 25216,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agent": {
+              "engine": 2,
+              "first_us": 735650,
+              "total_us": 46570,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 285,
+              "reply_wait_segments": 1
+            },
+            "chat": {
+              "engine": 0,
+              "first_us": 782560,
+              "total_us": 115810,
+              "attempts": 1,
+              "js_setup_us": 8384,
+              "js_prelude_us": 77248,
+              "js_source_us": 26919,
+              "js_init_us": 3098,
+              "reply_wait_us": 5463,
+              "reply_wait_segments": 1
+            },
+            "launcher": {
+              "engine": 0,
+              "first_us": 898892,
+              "total_us": 36597,
+              "attempts": 1,
+              "js_setup_us": 6911,
+              "js_prelude_us": 9441,
+              "js_source_us": 17773,
+              "js_init_us": 2327,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "files": {
+              "engine": 2,
+              "first_us": 935833,
+              "total_us": 23538,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "editor": {
+              "engine": 2,
+              "first_us": 959691,
+              "total_us": 24409,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "calc": {
+              "engine": 0,
+              "first_us": 984423,
+              "total_us": 235619,
+              "attempts": 1,
+              "js_setup_us": 7099,
+              "js_prelude_us": 8205,
+              "js_source_us": 215754,
+              "js_init_us": 4423,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agenda": {
+              "engine": 1,
+              "first_us": 1220487,
+              "total_us": 122308,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "settings": {
+              "engine": 2,
+              "first_us": 1343220,
+              "total_us": 20878,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "logs": {
+              "engine": 0,
+              "first_us": 1364432,
+              "total_us": 32470,
+              "attempts": 1,
+              "js_setup_us": 7115,
+              "js_prelude_us": 8277,
+              "js_source_us": 14409,
+              "js_init_us": 2553,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "loader": {
+              "engine": 0,
+              "first_us": 1397270,
+              "total_us": 39209,
+              "attempts": 1,
+              "js_setup_us": 6815,
+              "js_prelude_us": 8249,
+              "js_source_us": 21284,
+              "js_init_us": 2722,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sysmon": {
+              "engine": 0,
+              "first_us": 1436841,
+              "total_us": 38073,
+              "attempts": 1,
+              "js_setup_us": 6658,
+              "js_prelude_us": 8292,
+              "js_source_us": 20255,
+              "js_init_us": 2732,
+              "reply_wait_us": 5205,
+              "reply_wait_segments": 1
+            },
+            "repl": {
+              "engine": 0,
+              "first_us": 1475277,
+              "total_us": 27259,
+              "attempts": 1,
+              "js_setup_us": 6664,
+              "js_prelude_us": 8267,
+              "js_source_us": 9475,
+              "js_init_us": 2744,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sandbox": {
+              "engine": 0,
+              "first_us": 1502887,
+              "total_us": 23737,
+              "attempts": 1,
+              "js_setup_us": 6749,
+              "js_prelude_us": 8255,
+              "js_source_us": 6423,
+              "js_init_us": 2196,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "snake": {
+              "engine": 2,
+              "first_us": 1526961,
+              "total_us": 14747,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 6268,
+              "reply_wait_segments": 1
+            },
+            "faults": {
+              "engine": 0,
+              "first_us": 1542051,
+              "total_us": 30560,
+              "attempts": 1,
+              "js_setup_us": 7228,
+              "js_prelude_us": 8315,
+              "js_source_us": 12353,
+              "js_init_us": 2517,
+              "reply_wait_us": 3976,
+              "reply_wait_segments": 1
+            },
+            "flaky": {
+              "engine": 2,
+              "first_us": 1573001,
+              "total_us": 8417,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "keys": {
+              "engine": 0,
+              "first_us": 1581674,
+              "total_us": 27141,
+              "attempts": 1,
+              "js_setup_us": 7065,
+              "js_prelude_us": 8281,
+              "js_source_us": 9412,
+              "js_init_us": 2234,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "about": {
+              "engine": 0,
+              "first_us": 1609239,
+              "total_us": 25649,
+              "attempts": 1,
+              "js_setup_us": 7039,
+              "js_prelude_us": 8268,
+              "js_source_us": 7901,
+              "js_init_us": 2335,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "toplog": {
+              "engine": 2,
+              "first_us": 1635248,
+              "total_us": 8643,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-echo": {
+              "engine": 2,
+              "first_us": 1644116,
+              "total_us": 25485,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-bench": {
+              "engine": 2,
+              "first_us": 1669820,
+              "total_us": 488,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-import": {
+              "engine": 2,
+              "first_us": 1670333,
+              "total_us": 7264,
+              "attempts": 3,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-dial": {
+              "engine": 2,
+              "first_us": 1700677,
+              "total_us": 647,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          },
+          "compositor": {
+            "draw": {
+              "total_us": 16854,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "worlds.status": {
+              "total_us": 2006,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "other": {
+              "total_us": 20527,
+              "segments": 2,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          }
+        }
+      ],
+      "cold_median_response_us": 2040561,
+      "settled": {
+        "source": "baseline",
+        "trials": [
+          {
+            "compile_us": 514032,
+            "peak_js_bytes": 630500,
+            "module_bytes": 67434,
+            "first_response_us": 849469,
+            "world_bytes": 212992,
+            "frame_turn_us": 7080
+          },
+          {
+            "compile_us": 514178,
+            "peak_js_bytes": 630188,
+            "module_bytes": 67434,
+            "first_response_us": 952950,
+            "world_bytes": 212992,
+            "frame_turn_us": 7219
+          }
+        ],
+        "median_response_us": 901209.5,
+        "p95_response_us": 952950,
+        "max_response_us": 952950
+      }
+    },
+    "rv32": {
+      "firmware_sha256": "5188f9e62f502dfe5627b5ee8f52a9734c26e5c4b7afc8e478f4870f51b20bd4",
+      "cold": [
+        {
+          "compile_us": 723488,
+          "peak_js_bytes": 709796,
+          "module_bytes": 66348,
+          "first_response_us": 2133684,
+          "world_bytes": 185625,
+          "frame_turn_us": 2093,
+          "before_cji_restore_us": 915556,
+          "before_dispatch_us": 916165,
+          "world_init_us": 1436838,
+          "world_init_done_us": 1444040,
+          "file_submitted_us": 1983153,
+          "file_returned_us": 2104004,
+          "settle_us": 2131611,
+          "buses": {
+            "i2c0": {
+              "transfers": 101,
+              "errors": 0
+            },
+            "spi2": {
+              "transfers": 54,
+              "errors": 0
+            }
+          },
+          "prelude_cache": {
+            "bytes": 44544,
+            "build_us": 56366
+          },
+          "worlds": {
+            "keyboard": {
+              "engine": 2,
+              "first_us": 916621,
+              "total_us": 10849,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 8159,
+              "reply_wait_segments": 5
+            },
+            "power": {
+              "engine": 2,
+              "first_us": 927746,
+              "total_us": 12600,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "display": {
+              "engine": 2,
+              "first_us": 940626,
+              "total_us": 9900,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "compositor": {
+              "engine": 2,
+              "first_us": 950853,
+              "total_us": 25111,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agent": {
+              "engine": 2,
+              "first_us": 976315,
+              "total_us": 40267,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 1097,
+              "reply_wait_segments": 1
+            },
+            "chat": {
+              "engine": 0,
+              "first_us": 1016908,
+              "total_us": 100544,
+              "attempts": 1,
+              "js_setup_us": 7179,
+              "js_prelude_us": 65686,
+              "js_source_us": 24944,
+              "js_init_us": 2564,
+              "reply_wait_us": 5495,
+              "reply_wait_segments": 1
+            },
+            "launcher": {
+              "engine": 0,
+              "first_us": 1117857,
+              "total_us": 34996,
+              "attempts": 1,
+              "js_setup_us": 6766,
+              "js_prelude_us": 8184,
+              "js_source_us": 17572,
+              "js_init_us": 2325,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "files": {
+              "engine": 2,
+              "first_us": 1153190,
+              "total_us": 21953,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "editor": {
+              "engine": 2,
+              "first_us": 1175459,
+              "total_us": 24465,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "calc": {
+              "engine": 0,
+              "first_us": 1200239,
+              "total_us": 236121,
+              "attempts": 1,
+              "js_setup_us": 7195,
+              "js_prelude_us": 8222,
+              "js_source_us": 216213,
+              "js_init_us": 4352,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agenda": {
+              "engine": 2,
+              "first_us": 1436829,
+              "total_us": 8039,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "settings": {
+              "engine": 2,
+              "first_us": 1445149,
+              "total_us": 20989,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "logs": {
+              "engine": 0,
+              "first_us": 1466474,
+              "total_us": 32513,
+              "attempts": 1,
+              "js_setup_us": 7269,
+              "js_prelude_us": 8328,
+              "js_source_us": 14155,
+              "js_init_us": 2645,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "loader": {
+              "engine": 0,
+              "first_us": 1499388,
+              "total_us": 39111,
+              "attempts": 1,
+              "js_setup_us": 6765,
+              "js_prelude_us": 8174,
+              "js_source_us": 21263,
+              "js_init_us": 2760,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sysmon": {
+              "engine": 0,
+              "first_us": 1538863,
+              "total_us": 38169,
+              "attempts": 1,
+              "js_setup_us": 6729,
+              "js_prelude_us": 8298,
+              "js_source_us": 20295,
+              "js_init_us": 2705,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "repl": {
+              "engine": 0,
+              "first_us": 1577390,
+              "total_us": 27358,
+              "attempts": 1,
+              "js_setup_us": 6766,
+              "js_prelude_us": 8158,
+              "js_source_us": 9610,
+              "js_init_us": 2715,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sandbox": {
+              "engine": 0,
+              "first_us": 1605077,
+              "total_us": 23678,
+              "attempts": 1,
+              "js_setup_us": 6732,
+              "js_prelude_us": 8227,
+              "js_source_us": 6445,
+              "js_init_us": 2164,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "snake": {
+              "engine": 2,
+              "first_us": 1629119,
+              "total_us": 14901,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 5756,
+              "reply_wait_segments": 1
+            },
+            "faults": {
+              "engine": 0,
+              "first_us": 1644315,
+              "total_us": 30234,
+              "attempts": 1,
+              "js_setup_us": 7226,
+              "js_prelude_us": 8303,
+              "js_source_us": 12015,
+              "js_init_us": 2535,
+              "reply_wait_us": 5010,
+              "reply_wait_segments": 1
+            },
+            "flaky": {
+              "engine": 2,
+              "first_us": 1674937,
+              "total_us": 8466,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "keys": {
+              "engine": 0,
+              "first_us": 1683662,
+              "total_us": 27040,
+              "attempts": 1,
+              "js_setup_us": 7035,
+              "js_prelude_us": 8251,
+              "js_source_us": 9362,
+              "js_init_us": 2244,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "about": {
+              "engine": 0,
+              "first_us": 1711104,
+              "total_us": 26926,
+              "attempts": 1,
+              "js_setup_us": 6893,
+              "js_prelude_us": 9701,
+              "js_source_us": 7878,
+              "js_init_us": 2344,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "toplog": {
+              "engine": 2,
+              "first_us": 1738403,
+              "total_us": 8708,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-echo": {
+              "engine": 2,
+              "first_us": 1747330,
+              "total_us": 24448,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-bench": {
+              "engine": 2,
+              "first_us": 1771968,
+              "total_us": 315,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-import": {
+              "engine": 2,
+              "first_us": 1772305,
+              "total_us": 7595,
+              "attempts": 3,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-dial": {
+              "engine": 2,
+              "first_us": 1802786,
+              "total_us": 706,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          },
+          "compositor": {
+            "draw": {
+              "total_us": 20386,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "worlds.status": {
+              "total_us": 1975,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "other": {
+              "total_us": 20865,
+              "segments": 2,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          }
+        },
+        {
+          "compile_us": 723987,
+          "peak_js_bytes": 709796,
+          "module_bytes": 66348,
+          "first_response_us": 2136317,
+          "world_bytes": 185625,
+          "frame_turn_us": 2112,
+          "before_cji_restore_us": 919885,
+          "before_dispatch_us": 920487,
+          "world_init_us": 1444394,
+          "world_init_done_us": 1451592,
+          "file_submitted_us": 1990540,
+          "file_returned_us": 2116440,
+          "settle_us": 2134229,
+          "buses": {
+            "i2c0": {
+              "transfers": 100,
+              "errors": 0
+            },
+            "spi2": {
+              "transfers": 54,
+              "errors": 0
+            }
+          },
+          "prelude_cache": {
+            "bytes": 44544,
+            "build_us": 56347
+          },
+          "worlds": {
+            "keyboard": {
+              "engine": 2,
+              "first_us": 924398,
+              "total_us": 10766,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 4236,
+              "reply_wait_segments": 3
+            },
+            "power": {
+              "engine": 2,
+              "first_us": 935449,
+              "total_us": 12409,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "display": {
+              "engine": 2,
+              "first_us": 948130,
+              "total_us": 9740,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "compositor": {
+              "engine": 2,
+              "first_us": 958199,
+              "total_us": 25144,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agent": {
+              "engine": 2,
+              "first_us": 983695,
+              "total_us": 40395,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 1042,
+              "reply_wait_segments": 1
+            },
+            "chat": {
+              "engine": 0,
+              "first_us": 1024419,
+              "total_us": 100508,
+              "attempts": 1,
+              "js_setup_us": 7127,
+              "js_prelude_us": 65707,
+              "js_source_us": 24972,
+              "js_init_us": 2539,
+              "reply_wait_us": 5308,
+              "reply_wait_segments": 1
+            },
+            "launcher": {
+              "engine": 0,
+              "first_us": 1125334,
+              "total_us": 35175,
+              "attempts": 1,
+              "js_setup_us": 6744,
+              "js_prelude_us": 8272,
+              "js_source_us": 17662,
+              "js_init_us": 2341,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "files": {
+              "engine": 2,
+              "first_us": 1160850,
+              "total_us": 21941,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "editor": {
+              "engine": 2,
+              "first_us": 1183106,
+              "total_us": 24524,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "calc": {
+              "engine": 0,
+              "first_us": 1207944,
+              "total_us": 235976,
+              "attempts": 1,
+              "js_setup_us": 7190,
+              "js_prelude_us": 8258,
+              "js_source_us": 216085,
+              "js_init_us": 4304,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agenda": {
+              "engine": 2,
+              "first_us": 1444385,
+              "total_us": 8039,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "settings": {
+              "engine": 2,
+              "first_us": 1452701,
+              "total_us": 20916,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "logs": {
+              "engine": 0,
+              "first_us": 1473945,
+              "total_us": 32661,
+              "attempts": 1,
+              "js_setup_us": 7217,
+              "js_prelude_us": 8412,
+              "js_source_us": 14312,
+              "js_init_us": 2602,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "loader": {
+              "engine": 0,
+              "first_us": 1507005,
+              "total_us": 38968,
+              "attempts": 1,
+              "js_setup_us": 6787,
+              "js_prelude_us": 8171,
+              "js_source_us": 21153,
+              "js_init_us": 2715,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sysmon": {
+              "engine": 0,
+              "first_us": 1546346,
+              "total_us": 38319,
+              "attempts": 1,
+              "js_setup_us": 6755,
+              "js_prelude_us": 8234,
+              "js_source_us": 20471,
+              "js_init_us": 2718,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "repl": {
+              "engine": 0,
+              "first_us": 1585020,
+              "total_us": 27334,
+              "attempts": 1,
+              "js_setup_us": 6676,
+              "js_prelude_us": 8230,
+              "js_source_us": 9599,
+              "js_init_us": 2719,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sandbox": {
+              "engine": 0,
+              "first_us": 1612688,
+              "total_us": 23699,
+              "attempts": 1,
+              "js_setup_us": 6906,
+              "js_prelude_us": 8089,
+              "js_source_us": 6442,
+              "js_init_us": 2149,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "snake": {
+              "engine": 2,
+              "first_us": 1636758,
+              "total_us": 14766,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "faults": {
+              "engine": 0,
+              "first_us": 1651815,
+              "total_us": 30111,
+              "attempts": 1,
+              "js_setup_us": 7125,
+              "js_prelude_us": 8268,
+              "js_source_us": 12059,
+              "js_init_us": 2516,
+              "reply_wait_us": 5595,
+              "reply_wait_segments": 1
+            },
+            "flaky": {
+              "engine": 2,
+              "first_us": 1682310,
+              "total_us": 8487,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "keys": {
+              "engine": 0,
+              "first_us": 1691051,
+              "total_us": 26961,
+              "attempts": 1,
+              "js_setup_us": 7005,
+              "js_prelude_us": 8253,
+              "js_source_us": 9289,
+              "js_init_us": 2262,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "about": {
+              "engine": 0,
+              "first_us": 1718411,
+              "total_us": 26893,
+              "attempts": 1,
+              "js_setup_us": 8276,
+              "js_prelude_us": 8255,
+              "js_source_us": 7932,
+              "js_init_us": 2312,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "toplog": {
+              "engine": 2,
+              "first_us": 1745683,
+              "total_us": 8685,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-echo": {
+              "engine": 2,
+              "first_us": 1754562,
+              "total_us": 25468,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-bench": {
+              "engine": 2,
+              "first_us": 1780240,
+              "total_us": 323,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-import": {
+              "engine": 2,
+              "first_us": 1780587,
+              "total_us": 7752,
+              "attempts": 3,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-dial": {
+              "engine": 2,
+              "first_us": 1811050,
+              "total_us": 716,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          },
+          "compositor": {
+            "draw": {
+              "total_us": 18774,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "worlds.status": {
+              "total_us": 2005,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "other": {
+              "total_us": 19288,
+              "segments": 2,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          }
+        },
+        {
+          "compile_us": 722832,
+          "peak_js_bytes": 709796,
+          "module_bytes": 66348,
+          "first_response_us": 2124335,
+          "world_bytes": 185625,
+          "frame_turn_us": 2184,
+          "before_cji_restore_us": 910056,
+          "before_dispatch_us": 910657,
+          "world_init_us": 1431814,
+          "world_init_done_us": 1439021,
+          "file_submitted_us": 1973280,
+          "file_returned_us": 2104737,
+          "settle_us": 2122164,
+          "buses": {
+            "i2c0": {
+              "transfers": 98,
+              "errors": 0
+            },
+            "spi2": {
+              "transfers": 54,
+              "errors": 0
+            }
+          },
+          "prelude_cache": {
+            "bytes": 44544,
+            "build_us": 56301
+          },
+          "worlds": {
+            "keyboard": {
+              "engine": 2,
+              "first_us": 911119,
+              "total_us": 11234,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 4238,
+              "reply_wait_segments": 3
+            },
+            "power": {
+              "engine": 2,
+              "first_us": 922636,
+              "total_us": 11102,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "display": {
+              "engine": 2,
+              "first_us": 934012,
+              "total_us": 11093,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "compositor": {
+              "engine": 2,
+              "first_us": 945432,
+              "total_us": 25246,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agent": {
+              "engine": 2,
+              "first_us": 971026,
+              "total_us": 40393,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 996,
+              "reply_wait_segments": 1
+            },
+            "chat": {
+              "engine": 0,
+              "first_us": 1011753,
+              "total_us": 100461,
+              "attempts": 1,
+              "js_setup_us": 7194,
+              "js_prelude_us": 65619,
+              "js_source_us": 24911,
+              "js_init_us": 2570,
+              "reply_wait_us": 5297,
+              "reply_wait_segments": 1
+            },
+            "launcher": {
+              "engine": 0,
+              "first_us": 1112623,
+              "total_us": 35005,
+              "attempts": 1,
+              "js_setup_us": 6742,
+              "js_prelude_us": 8194,
+              "js_source_us": 17607,
+              "js_init_us": 2315,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "files": {
+              "engine": 2,
+              "first_us": 1147978,
+              "total_us": 21970,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "editor": {
+              "engine": 2,
+              "first_us": 1170259,
+              "total_us": 24613,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "calc": {
+              "engine": 0,
+              "first_us": 1195183,
+              "total_us": 236159,
+              "attempts": 1,
+              "js_setup_us": 7201,
+              "js_prelude_us": 8201,
+              "js_source_us": 216307,
+              "js_init_us": 4310,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "agenda": {
+              "engine": 2,
+              "first_us": 1431805,
+              "total_us": 8044,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "settings": {
+              "engine": 2,
+              "first_us": 1440126,
+              "total_us": 21029,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "logs": {
+              "engine": 0,
+              "first_us": 1461490,
+              "total_us": 32541,
+              "attempts": 1,
+              "js_setup_us": 7280,
+              "js_prelude_us": 8328,
+              "js_source_us": 14175,
+              "js_init_us": 2642,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "loader": {
+              "engine": 0,
+              "first_us": 1494428,
+              "total_us": 39116,
+              "attempts": 1,
+              "js_setup_us": 6778,
+              "js_prelude_us": 8228,
+              "js_source_us": 21200,
+              "js_init_us": 2768,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sysmon": {
+              "engine": 0,
+              "first_us": 1533913,
+              "total_us": 38194,
+              "attempts": 1,
+              "js_setup_us": 6721,
+              "js_prelude_us": 8283,
+              "js_source_us": 20336,
+              "js_init_us": 2712,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "repl": {
+              "engine": 0,
+              "first_us": 1572465,
+              "total_us": 27333,
+              "attempts": 1,
+              "js_setup_us": 6777,
+              "js_prelude_us": 8159,
+              "js_source_us": 9567,
+              "js_init_us": 2720,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "sandbox": {
+              "engine": 0,
+              "first_us": 1600126,
+              "total_us": 23809,
+              "attempts": 1,
+              "js_setup_us": 6737,
+              "js_prelude_us": 8097,
+              "js_source_us": 6702,
+              "js_init_us": 2164,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "snake": {
+              "engine": 2,
+              "first_us": 1624297,
+              "total_us": 14791,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "faults": {
+              "engine": 0,
+              "first_us": 1639378,
+              "total_us": 30242,
+              "attempts": 1,
+              "js_setup_us": 7208,
+              "js_prelude_us": 8289,
+              "js_source_us": 12056,
+              "js_init_us": 2540,
+              "reply_wait_us": 5417,
+              "reply_wait_segments": 1
+            },
+            "flaky": {
+              "engine": 2,
+              "first_us": 1670012,
+              "total_us": 8465,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "keys": {
+              "engine": 0,
+              "first_us": 1678737,
+              "total_us": 27033,
+              "attempts": 1,
+              "js_setup_us": 7020,
+              "js_prelude_us": 8259,
+              "js_source_us": 9338,
+              "js_init_us": 2264,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "about": {
+              "engine": 0,
+              "first_us": 1706170,
+              "total_us": 27133,
+              "attempts": 1,
+              "js_setup_us": 6922,
+              "js_prelude_us": 8496,
+              "js_source_us": 9247,
+              "js_init_us": 2358,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "toplog": {
+              "engine": 2,
+              "first_us": 1733682,
+              "total_us": 8715,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-echo": {
+              "engine": 2,
+              "first_us": 1742662,
+              "total_us": 25435,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-bench": {
+              "engine": 2,
+              "first_us": 1768247,
+              "total_us": 289,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-import": {
+              "engine": 2,
+              "first_us": 1768557,
+              "total_us": 7665,
+              "attempts": 3,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "nat-dial": {
+              "engine": 2,
+              "first_us": 1799107,
+              "total_us": 738,
+              "attempts": 1,
+              "js_setup_us": 0,
+              "js_prelude_us": 0,
+              "js_source_us": 0,
+              "js_init_us": 0,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          },
+          "compositor": {
+            "draw": {
+              "total_us": 18969,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "worlds.status": {
+              "total_us": 2068,
+              "segments": 1,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            },
+            "other": {
+              "total_us": 19106,
+              "segments": 2,
+              "reply_wait_us": 0,
+              "reply_wait_segments": 0
+            }
+          }
+        }
+      ],
+      "cold_median_response_us": 2133684,
+      "settled": {
+        "source": "baseline",
+        "trials": [
+          {
+            "compile_us": 716918,
+            "peak_js_bytes": 710084,
+            "module_bytes": 66348,
+            "first_response_us": 1026977,
+            "world_bytes": 185625,
+            "frame_turn_us": 1585
+          },
+          {
+            "compile_us": 730866,
+            "peak_js_bytes": 710108,
+            "module_bytes": 66348,
+            "first_response_us": 1038952,
+            "world_bytes": 185625,
+            "frame_turn_us": 1575
+          }
+        ],
+        "median_response_us": 1032964.5,
+        "p95_response_us": 1038952,
+        "max_response_us": 1038952
+      }
+    }
+  },
+  "installed_rv32_sha256": "dbde03d957f11cc101ebde710e15f997a81f01914cbdd8ee7aba3831896c618d"
+}

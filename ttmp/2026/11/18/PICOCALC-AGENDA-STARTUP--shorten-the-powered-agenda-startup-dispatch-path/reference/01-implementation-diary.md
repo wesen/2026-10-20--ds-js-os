@@ -158,3 +158,11 @@ Complete the control comparison and collect the physical video. Keep the tested 
 ### Code review instructions
 
 Use the full receipt `p4-early-dispatch-candidate.json` and summary under `various/`. Check the six intermediate file states in each target's workflow. The CRC-checked board frame captures are in the parity ticket's `various/`. Use the video calculator's `--trial KEY_FRAME LCD_FRAME` once those frames are available. A 100 fps synthetic test with frame indices 5 and 9 returned a 30–50 ms interval and a 40 ms midpoint.
+
+## Step 4 — Compare the matched controls and publish the milestone
+
+I ran the control pair in tmux after the candidate run released serial. The control and candidate builds used the same power state, SDK configuration, typed source, manifest, 8 MiB partition table and three-task fixture. The only build-policy change was the Agenda early-dispatch flag. All six control boots had zero bus errors. The runner then reflashed and verified the early-dispatch RV32 image, received `#OK cji`, and verified the task file was restored to zero bytes. The final restored cold boot responded in 1.797 s.
+
+The Wasm control median was 2,040,561 µs and its candidate was 1,701,793 µs, a reduction of 338,768 µs. The RV32 control median was 2,133,684 µs and its candidate was 1,786,761 µs, a reduction of 346,923 µs. The controls passed zero of six runs at two seconds and the candidate passed all six. Median native compilation stayed near 722–723 ms and Wasm near 513–519 ms. The candidate's faster publication comes from advancing the read and settlement, although the read is outstanding longer and the measured publishing turn is longer in the earlier boot window. The receipt and summary for the control are `various/p4-normal-dispatch-control.json` and `various/p4-normal-dispatch-summary.json`.
+
+The candidate qualification and default change are in `8f28b5e`. I pushed “PicoCalc Agenda — Scheduling its first notes read during boot” to go-go-parc main at `db0b490`. I requested a short physical-key and LCD video once the board was free. That independent measurement remains open.

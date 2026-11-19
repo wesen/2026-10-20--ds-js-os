@@ -35,3 +35,7 @@ Match the original prompt errors, midnight grouping, cached reminder tick, and f
 ## 2026-11-18
 
 Build the matched powered profiles and add a paired cold and workflow harness. Record the partial Wasm run and keyboard-controller fault; restore RV32 and the empty notes file.
+
+## 2026-11-18
+
+Verify the same full notes and Editor workflow with working peripherals on both compiled targets and push the paired technical report.

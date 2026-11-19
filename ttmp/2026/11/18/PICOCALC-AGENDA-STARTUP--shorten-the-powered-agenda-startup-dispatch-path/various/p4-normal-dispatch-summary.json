@@ -1,0 +1,122 @@
+{
+  "wasm": {
+    "boots": 3,
+    "healthy_boots": 3,
+    "boots_at_or_below_two_seconds": 0,
+    "cold_compile_us": {
+      "min": 512926,
+      "median": 513173,
+      "max": 513861
+    },
+    "cold_first_response_us": {
+      "min": 2034708,
+      "median": 2040561,
+      "max": 2040929
+    },
+    "init_to_fs_submit_us": {
+      "min": 529171,
+      "median": 531989,
+      "max": 535124
+    },
+    "fs_submit_to_return_us": {
+      "min": 122696,
+      "median": 122704,
+      "max": 156878
+    },
+    "fs_return_to_settle_us": {
+      "min": 536,
+      "median": 32957,
+      "max": 37781
+    },
+    "cold_publishing_turn_us": {
+      "min": 7331,
+      "median": 7569,
+      "max": 7814
+    },
+    "cold_compiler_peak_bytes": {
+      "min": 630180,
+      "median": 630180,
+      "max": 630180
+    },
+    "cold_world_bytes": {
+      "min": 212992,
+      "median": 212992,
+      "max": 212992
+    },
+    "module_bytes": {
+      "min": 67434,
+      "median": 67434,
+      "max": 67434
+    },
+    "settled_first_response_us": {
+      "min": 849469,
+      "median": 901209.5,
+      "max": 952950
+    },
+    "settled_publishing_turn_us": {
+      "min": 7080,
+      "median": 7149.5,
+      "max": 7219
+    }
+  },
+  "rv32": {
+    "boots": 3,
+    "healthy_boots": 3,
+    "boots_at_or_below_two_seconds": 0,
+    "cold_compile_us": {
+      "min": 722832,
+      "median": 723488,
+      "max": 723987
+    },
+    "cold_first_response_us": {
+      "min": 2124335,
+      "median": 2133684,
+      "max": 2136317
+    },
+    "init_to_fs_submit_us": {
+      "min": 534259,
+      "median": 538948,
+      "max": 539113
+    },
+    "fs_submit_to_return_us": {
+      "min": 120851,
+      "median": 125900,
+      "max": 131457
+    },
+    "fs_return_to_settle_us": {
+      "min": 17427,
+      "median": 17789,
+      "max": 27607
+    },
+    "cold_publishing_turn_us": {
+      "min": 2093,
+      "median": 2112,
+      "max": 2184
+    },
+    "cold_compiler_peak_bytes": {
+      "min": 709796,
+      "median": 709796,
+      "max": 709796
+    },
+    "cold_world_bytes": {
+      "min": 185625,
+      "median": 185625,
+      "max": 185625
+    },
+    "module_bytes": {
+      "min": 66348,
+      "median": 66348,
+      "max": 66348
+    },
+    "settled_first_response_us": {
+      "min": 1026977,
+      "median": 1032964.5,
+      "max": 1038952
+    },
+    "settled_publishing_turn_us": {
+      "min": 1575,
+      "median": 1580.0,
+      "max": 1585
+    }
+  }
+}

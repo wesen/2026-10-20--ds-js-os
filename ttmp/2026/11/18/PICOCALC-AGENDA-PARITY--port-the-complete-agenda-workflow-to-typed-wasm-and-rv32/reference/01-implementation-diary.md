@@ -456,3 +456,9 @@ Retry with the keyboard controller responding. Retain the actual powered workflo
 ### Code review instructions
 
 Read `scripts/05-build-powered-targets.sh`, `scripts/06-qualify-powered-targets.py`, and the parent compiler ticket's `scripts/10-measure-agenda-boot.py`. Use the 8 MiB layout and verify a zero-byte fixture before running either profile.
+
+## Step 15 — Qualify both reactors with working peripherals
+
+After the keyboard resumed acknowledging I²C, I ran the complete disposable workflow on the same powered Wasm and RV32 candidate source. Both traces matched all six file reads during toggle, edit, delete confirmation, deletion, task creation and Editor save. Both framebuffer CRC checks passed and the two images show the same final groups and task labels. Both peripheral buses returned zero errors during the complete run. The pictures are `various/p4-qualified-wasm-agenda.png` and `various/p4-qualified-rv32-agenda.png`. The candidate code, device probe and pictures are in `8f28b5e`.
+
+The startup optimization and matched control results are in the `PICOCALC-AGENDA-STARTUP` ticket, and the vault report was pushed at `db0b490`. This closes the powered functional parity and reports milestone. The retained native candidate is active and the original empty task file is restored. Physical key-to-visible-panel latency still requires the optical source.
