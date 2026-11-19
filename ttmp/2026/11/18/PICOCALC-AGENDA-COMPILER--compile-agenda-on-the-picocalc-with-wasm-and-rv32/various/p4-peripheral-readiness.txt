@@ -1,0 +1,23 @@
+ESP32-P4 RV32 Agenda with peripheral worlds enabled. Single nine-second boot capture.
+App SHA-256 f287addba826d494489d3a6eacb1cf006d7a1633907111bd7e5055ab385bfe3b.
+agenda compile source=bundle status=ok us=354447 peak_js_bytes=433496 module_bytes=24304
+agenda boot source_start_us=163232
+agenda stage before-cji-restore us=517835
+agenda stage before-dispatch us=527843
+agenda stage world-init us=1221908
+agenda stage world-init-done us=1227169
+[  1925.055] keyboard: i2c: i2c0 0x1f: ESP_ERR_INVALID_STATE
+[  1933.337] power: i2c: i2c0 0x1f: ESP_ERR_INVALID_STATE
+agenda stage file-submitted us=1954930
+cji: loader start_us=2169043 end_us=2316855
+agenda stage file-returned us=2810671
+agenda stage settle us=2820804
+agenda response us=2822412 world_bytes=124588
+agenda frame turn_us=1639 world_bytes=124588
+I2C NACK lines during capture: 191
+Host capture inventory exposed the serial bridge and no video, media or USB test-and-measurement endpoint.
+Physical keypress to visible LCD: unmeasured.
+Restore verification:
+Hash of data verified.
+I (2174) bus: headless: keyboard/power I2C and display SPI offline
+#OK cji

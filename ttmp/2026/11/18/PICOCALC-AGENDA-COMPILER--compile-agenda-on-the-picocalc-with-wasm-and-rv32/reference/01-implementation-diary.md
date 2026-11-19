@@ -633,3 +633,29 @@ The verified restore ran in the sampler's cleanup path. The flash writer verifie
 ## Step 24 — Publish the matched-target milestone
 
 The matched comparison and memory-accounting explanation were pushed to go-go-parc main at 428f595. The ticket contains the raw headless measurements and both peripheral-enabled build recipes. The requested milestone publications are complete for the implemented and measured work. The assembled hardware task remains open pending real keyboard-to-LCD evidence.
+
+## Step 25 — Check the assembled-device gate against the current hardware
+
+### What I did
+
+I checked the connected host endpoints and found the PicoCalc serial bridge, with no video or USB test-instrument device exposed. I booted the saved peripheral-enabled RV32 application at offset 0x10000 using scripts/13-probe-assembled-agenda.sh. The script checks the restore image against the saved partition and restores it even if the boot probe fails. I preserved the Agenda and I²C lines in various/p4-peripheral-readiness.txt, leaving unrelated serial output outside the ticket.
+
+### What worked
+
+The peripheral-enabled image compiled native Agenda in 354 ms and published a kernel frame after 2.822 s. Its compiler allocator peaked at 433,496 B and the native world counter was 124,588 B. The frame-producing turn took 1.639 ms. The earlier matched headless work still has six cold samples per target under two seconds. This single peripheral-enabled boot used a failing STM32 bus and cannot establish the timings of healthy assembled hardware.
+
+### What didn't work
+
+The keyboard and power worlds reported ESP_ERR_INVALID_STATE on i2c0 address 0x1f. The capture included 191 I²C NACK diagnostics across the boot window. The attached board could produce kernel frames, but no real keyboard-to-LCD timing was captured.
+
+### What I learned
+
+The long interval in this boot was after the notes read was submitted and before its result reached the kernel. The 856 ms interval includes filesystem worker scheduling, kernel queue drain and concurrent system startup. CJI relocation overlapped it. With the STM32 failing, this is evidence about the current probe configuration.
+
+### What should be done in the future
+
+The physical qualification needs a working STM32 keyboard and LCD, then a capture of the physical T keypress and visible Agenda frame. Use the assembled procedure in the design guide. Once the hardware responds, repeat cold, memory and turn measurements on that configuration separately from the input-to-LCD test.
+
+### Code review instructions
+
+Verify the app hash, current STM32 error, and capture boundary in the compact probe receipt. The flasher verified the previous app image at 0x10000 after the probe, and the restored system answered cji status. No task was closed on the strength of this failed-bus boot.

@@ -51,3 +51,7 @@ Recorded eight full headless RV32 boots under two seconds after linker optimizat
 ## 2026-11-18
 
 Measured matched Wasm and RV32 cold boots and source rebuilds on the P4. All twelve cold boots passed two seconds. Preserved both peripheral-enabled builds for the separate physical test.
+
+## 2026-11-18
+
+Booted the peripheral-enabled RV32 image and recorded Agenda publication alongside the nonresponsive STM32 keyboard bus. Restored and verified the prior app.
