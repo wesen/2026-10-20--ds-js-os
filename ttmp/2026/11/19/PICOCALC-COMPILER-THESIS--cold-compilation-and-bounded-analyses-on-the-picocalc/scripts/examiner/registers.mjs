@@ -68,10 +68,13 @@ const handlers = Object.fromEntries(imports.map(fn => [fn.name, (...args) => {
 }]));
 const oracle = new WebAssembly.Instance(wasm, {guest: handlers}).exports;
 const expected = Buffer.alloc(samples.length * 8);
+let workedExample;
 for (const [i, sample] of samples.entries()) {
     state = seed;
     expected.writeInt32LE(oracle[sample.name](...sample.args), 8 * i);
     expected.writeInt32LE(state, 8 * i + 4);
+    if (sample.name === 'depth6arity2' && sample.args[0] === 3)
+        workedExample = {...sample, result: expected.readInt32LE(8*i), digest: state};
 }
 
 function assembly(program) {
@@ -127,6 +130,6 @@ try {
 }
 console.log(JSON.stringify({node: process.version, gcc: execFileSync(cc, ['-dumpfullversion'], {encoding: 'utf8'}).trim(),
     emulatorSHA256: hash(readFileSync(emu)), sourceSHA256: hash(source), programs: lines.length - 1,
-    scalarInputPairsPerProgram: 5, callsPerImplementation: calls, inputs: samples.length,
+    scalarInputPairsPerProgram: 5, oracleImportCalls: calls, workedExample, inputs: samples.length,
     liveDepths: ids(9), arities: ids(9), outputBytesPerImplementation: expected.length,
     oracleSHA256: hash(expected), results}, null, 2));

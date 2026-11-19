@@ -5,7 +5,16 @@
   "sourceSHA256": "9b87b0e210a73c80381881f52c0b1f6056050b9eac1d8061583cdbe12549a92a",
   "programs": 81,
   "scalarInputPairsPerProgram": 5,
-  "callsPerImplementation": 1170,
+  "oracleImportCalls": 1170,
+  "workedExample": {
+    "name": "depth6arity2",
+    "args": [
+      3,
+      -5
+    ],
+    "result": -1900357695,
+    "digest": -1244347106
+  },
   "inputs": 405,
   "liveDepths": [
     0,

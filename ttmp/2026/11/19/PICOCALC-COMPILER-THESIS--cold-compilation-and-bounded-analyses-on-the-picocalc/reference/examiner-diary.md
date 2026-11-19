@@ -162,3 +162,24 @@ Review the three small source transformations in the examiner script. Compare `c
 ### Technical details
 
 The original query budget of 128 and six-hop chained limit were held fixed. The corpus scan operated over emitted typed function bodies. The dynamic control runs used complete standalone Wasm functions and private 64 KiB memories. These are proposal measurements with an independently stored proof variant.
+
+## Step 4. Reconcile the article with independently replayed outputs
+
+The final article follows one nested call through its register and frame homes, then follows two almost identical bounds tests to different legal outcomes. The notes record the first draft's comprehension issues. I revised the account of the seventh live value in the nested call and distinguished a 32-bit digest from a complete ordered call log.
+
+The native and scalar-experiment checkpoint is `3ebfcab`. The two Wasm experiment scripts reproduced their JSON receipts byte for byte. A final native rebuild confirmed the worked example's exact return and digest, which the updated receipt now also reports directly.
+
+### Prompt and outcome
+
+See Step 1. The report is `various/reports/examiner.md`; evidence and the reproduction commands are in `reference/examiner-notes.md`. The supervisor owns vault publication. This handoff supplies the vault-ready source and project evidence.
+
+### Verification
+
+- `node "$ticket/scripts/examiner/bounds.mjs" | cmp - "$ticket/various/examiner/bounds.json"` exited 0.
+- `node "$ticket/scripts/examiner/scalar-facts.mjs" | cmp - "$ticket/various/examiner/scalar-facts.json"` exited 0.
+- The final `node "$ticket/scripts/examiner/registers.mjs" "$gcc" "$emu"` exited 0. Both guest output streams still matched the oracle digest. `depth6arity2(3,-5)` returned −1900357695, with final digest −1244347106.
+- Checked the article against the per-app source positions, proof counts and cost columns, and reported the distinction between emulator, host, and target evidence.
+
+### Remaining questions
+
+A device run is needed to measure target economics. A site-weighted Editor workload could locate a hot missing relation that motivates a targeted extension. Neither issue is a demonstrated behavioral defect in the register change or in the observed proof decisions.
