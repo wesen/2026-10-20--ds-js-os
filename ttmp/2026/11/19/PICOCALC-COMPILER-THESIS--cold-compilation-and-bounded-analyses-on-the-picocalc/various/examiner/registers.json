@@ -1,0 +1,50 @@
+{
+  "node": "v24.18.0",
+  "gcc": "14.2.0",
+  "emulatorSHA256": "ea32f0af6dae46cd1b12bf94300e08dee4c38c3b79d05e3d4190518c248afb31",
+  "sourceSHA256": "9b87b0e210a73c80381881f52c0b1f6056050b9eac1d8061583cdbe12549a92a",
+  "programs": 81,
+  "scalarInputPairsPerProgram": 5,
+  "callsPerImplementation": 1170,
+  "inputs": 405,
+  "liveDepths": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "arities": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "outputBytesPerImplementation": 3240,
+  "oracleSHA256": "0a77bee1a843d079d7754df0621e08fa6d957b088fe0deb015f2278307c777e6",
+  "results": {
+    "baseline": {
+      "revision": "dd69a81",
+      "imageBytes": 80056,
+      "relocations": 83,
+      "imageSHA256": "4a61a502c80876f93f1a39ca20819469284b3bf6f3651e95b082bb69d89e638a",
+      "resultSHA256": "0a77bee1a843d079d7754df0621e08fa6d957b088fe0deb015f2278307c777e6"
+    },
+    "candidate": {
+      "revision": "f0846ba",
+      "imageBytes": 60024,
+      "relocations": 83,
+      "imageSHA256": "c6e2c92e8b765653c460e1640c9565e9c1a84de6de33a6b2a1511e85e61cd1a6",
+      "resultSHA256": "0a77bee1a843d079d7754df0621e08fa6d957b088fe0deb015f2278307c777e6"
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "node": "v24.18.0",
+  "originalSHA256": "cefae460ff490ecfba7a18b14f09a47fd3c0b18fc392b339bea39b7e765fccc5",
+  "treatmentSHA256": "fa29b3bbd1fee5c9b6a7587c0db67a120a763cebe9f45b672c36b4a89edf1505",
+  "controls": {
+    "original": {
+      "checks": 3,
+      "sites": [],
+      "edgeInspections": 2,
+      "cases": 24,
+      "traps": 8
+    },
+    "scalar": {
+      "checks": 3,
+      "sites": [
+        "fresh@7#187"
+      ],
+      "edgeInspections": 7,
+      "cases": 24,
+      "traps": 8
+    }
+  },
+  "corpus": {
+    "files": {
+      "sourceSHA256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+      "original_direct": {
+        "checks": 8,
+        "sites": [
+          "filesCompare@37#1526",
+          "filesCompare@37#1548"
+        ],
+        "edgeInspections": 11
+      },
+      "original_chained": {
+        "checks": 8,
+        "sites": [
+          "filesCompare@37#1526",
+          "filesCompare@37#1548"
+        ],
+        "edgeInspections": 13
+      },
+      "scalar_direct": {
+        "checks": 8,
+        "sites": [
+          "filesCompare@37#1526",
+          "filesCompare@37#1548"
+        ],
+        "edgeInspections": 18
+      },
+      "scalar_chained": {
+        "checks": 8,
+        "sites": [
+          "filesCompare@37#1526",
+          "filesCompare@37#1548"
+        ],
+        "edgeInspections": 23
+      }
+    },
+    "agenda": {
+      "sourceSHA256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+      "original_direct": {
+        "checks": 35,
+        "sites": [
+          "entryPut@381#14068"
+        ],
+        "edgeInspections": 16
+      },
+      "original_chained": {
+        "checks": 35,
+        "sites": [
+          "entryPut@381#14068"
+        ],
+        "edgeInspections": 18
+      },
+      "scalar_direct": {
+        "checks": 35,
+        "sites": [
+          "entryPut@381#14068"
+        ],
+        "edgeInspections": 16
+      },
+      "scalar_chained": {
+        "checks": 35,
+        "sites": [
+          "entryPut@381#14068"
+        ],
+        "edgeInspections": 18
+      }
+    },
+    "editor": {
+      "sourceSHA256": "e0e0c968327bd1d2d5b39b993b093002f0e7d1753cddc9c92cd91acb1afada20",
+      "original_direct": {
+        "checks": 376,
+        "sites": [],
+        "edgeInspections": 76
+      },
+      "original_chained": {
+        "checks": 376,
+        "sites": [],
+        "edgeInspections": 120
+      },
+      "scalar_direct": {
+        "checks": 376,
+        "sites": [],
+        "edgeInspections": 93
+      },
+      "scalar_chained": {
+        "checks": 376,
+        "sites": [],
+        "edgeInspections": 150
+      }
+    }
+  }
+}
