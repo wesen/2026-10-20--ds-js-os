@@ -29,6 +29,8 @@ WhenToUse: ""
 
 This ticket moves two experiments into the compiler that the PicoCalc runs during boot. The first changes how the frontend hands operands to the RV32 backend. The second lets the native backend consume one function at a time to reduce peak compiler allocation. Files, Agenda and Editor use the same frontend and provide different workloads for measuring the tradeoff.
 
+Native builds now stream by default. The dated production report describes the A/B experiment made before this policy decision. The guide gives the current settings.
+
 - [Production integration and intern guide](design-doc/01-production-integration-of-the-typed-compiler-optimizations.md)
 - [Supervisor’s implementation diary](reference/01-compiler-integration-diary.md)
 - [Hardware qualification script](scripts/qualify-production.py)

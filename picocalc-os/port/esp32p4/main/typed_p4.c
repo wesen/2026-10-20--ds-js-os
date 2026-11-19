@@ -95,14 +95,16 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   int argc = 2;
   JSValue result = JS_EXCEPTION;
   bool ready = !JS_IsException(args[0]) && !JS_IsException(args[1]);
-#ifdef PICOCALC_RV32_STREAM_FUNCTIONS
   if (ready && engine == ENG_NATIVE) {
+#ifdef PICOCALC_RV32_BUFFER_FUNCTIONS
     args[2] = JS_NewObject(ctx);
-    ready = !JS_IsException(args[2]) && JS_SetPropertyStr(ctx, args[2], "streamFunctions", JS_TRUE) >= 0;
+    ready = !JS_IsException(args[2]) && JS_SetPropertyStr(ctx, args[2], "streamFunctions", JS_FALSE) >= 0;
     argc = 3;
-    if (ready) printf("%s native compiler functions=streamed\n", app);
-  }
+    if (ready) printf("%s native compiler functions=buffered\n", app);
+#else
+    printf("%s native compiler functions=streamed\n", app);
 #endif
+  }
   if (ready) result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);
   JS_FreeValue(ctx, args[2]);
   JS_FreeValue(ctx, args[1]); JS_FreeValue(ctx, args[0]);

@@ -46,7 +46,7 @@ Typed source -> shared parser and type checker
 
 ## Native operand contract
 
-`typedRv32.compile` selects numeric operations when calling `typedWasm.compileFunctions`. The mode applies once to an entire compilation. Every immediate occupies one number in the native function's intermediate operation array, including constants, call and local indices, memory alignment and offsets. Each function still has a parameter list, result type and local count. The default buffered compiler retains completed functions until it has checked all the source, so a type error in a later function retains its existing precedence over an earlier backend limit.
+`typedRv32.compile` selects numeric operations when calling `typedWasm.compileFunctions`. The mode applies once to an entire compilation. Every immediate occupies one number in the native function's intermediate operation array, including constants, call and local indices, memory alignment and offsets. Each function still has a parameter list, result type and local count. The optional buffered compiler retains completed functions until it has checked all the source, so a type error in a later function retains its existing precedence over an earlier backend limit.
 
 The shared frontend still exports the public standalone Wasm compiler and `linkWorld` for the firmware's Wasm worlds. Code generation for other targets goes through the same source-language checks. Native bodies omit the duplicate Wasm body array and length prefix. The world manifest, import ordering, reactor slot, and loader contract have no reason to change.
 
@@ -104,16 +104,16 @@ after the frontend has checked the last declaration:
 | Interface | Purpose |
 | --- | --- |
 | `typedWasm.compileFunctions(source, functionBase, imported, maxSourceLength, numericOperands, onFunction)` | Type-checks the program and invokes the optional consumer after each accepted function declaration. The compiler’s ordinary Wasm writer uses encoded operations. |
-| `typedRv32.compile(source, imports, maxSourceLength, options)` | Always uses numeric operands. `options.streamFunctions` selects per-function lowering. Omitting it uses buffered lowering. |
+| `typedRv32.compile(source, imports, maxSourceLength, options)` | Always uses numeric operands. `options.streamFunctions` selects per-function lowering. Omitting the setting selects streaming. Pass `{streamFunctions: false}` to buffer all functions. |
 | `compileFilesRv32(source, reactor, options)`, `compileAgendaRv32(...)`, `compileTypedWorldRv32(...)` | Application-level compile-and-link entry points. Each forwards the optional native setting. |
 | `typedRv32.linkSlot(program, reactor, entries)` | Places the native instructions in the reserved executable slot and applies relocations. The linked ELF can retain the same size even when the compiler's working set changes. |
-| `PICOCALC_RV32_STREAM_FUNCTIONS` | ESP-IDF build configuration. The default is OFF. ON passes the streaming option when compiling a native typed world and records a mode marker before its compile receipt. |
+| `PICOCALC_RV32_STREAM_FUNCTIONS` | ESP-IDF build configuration. The default is ON. OFF explicitly requests buffering for native typed worlds. Both modes identify themselves on the serial console. |
 
-A host can select the mode per compile. The handheld selects it at firmware build time for native typed worlds. No application source or manifest edit is required. In the existing configured IDF build add `-D PICOCALC_RV32_STREAM_FUNCTIONS=ON` to select streaming. The ticket's `scripts/build-production.sh` builds either setting with the same application, device and compiler configuration.
+A host can select the mode per compile. The handheld selects it at firmware build time for native typed worlds. No application source or manifest edit is required. Fresh ESP-IDF builds select streaming. CMake preserves prior explicit choices in the build cache. Use `-D PICOCALC_RV32_STREAM_FUNCTIONS=ON` to switch a previously buffered build, or `OFF` to select buffering. The ticket's `scripts/build-production.sh` builds either setting with the same application, device and compiler configuration.
 
 ```javascript
-const ordinary = compileFilesRv32(source, reactor);
-const economical = compileFilesRv32(source, reactor, {streamFunctions: true});
+const streamed = compileFilesRv32(source, reactor);
+const buffered = compileFilesRv32(source, reactor, {streamFunctions: false});
 // Both Uint8Arrays contain the same linked ELF when the inputs are identical.
 ```
 

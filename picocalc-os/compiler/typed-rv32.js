@@ -268,7 +268,7 @@ function compile(source, imports = [], maxSourceLength, options) {
         fn.code = null;
     }
 
-    const stream = options?.streamFunctions;
+    const stream = options?.streamFunctions ?? true;
     const {functions, records} = typedWasm.compileFunctions(source, imported.length, imported,
         maxSourceLength, true, stream ? consume : undefined);
     if (lowerError) throw lowerError;

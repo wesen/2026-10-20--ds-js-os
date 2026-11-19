@@ -6,7 +6,10 @@ import {readFileSync} from "node:fs";
 import {join} from "node:path";
 import vm from "node:vm";
 
-const [reactors, candidateRevision] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const checkDefault = args.at(-1) === "--check-streaming-default";
+if (checkDefault) args.pop();
+const [reactors, candidateRevision] = args;
 assert(reactors, "pass the ESP-IDF build/esp-idf/main directory with the three native reactors");
 const controlRevision = "4452064";
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
@@ -77,10 +80,17 @@ for (const [directory, names, binary, entry] of [
     const reactor = readFileSync(join(reactors, binary + ".elf"));
     const expected = world(control, entry, source, reactor);
     observed = 0;
-    assert.deepEqual(world(candidate, entry, source, reactor), expected);
+    assert.deepEqual(world(candidate, entry, source, reactor, {streamFunctions: false}), expected);
     assert.equal(observed, 0);
     assert.deepEqual(world(candidate, entry, source, reactor, options), expected);
     assert.equal(observed, expected.metadata.signatures.length);
+    if (checkDefault) {
+        for (const omitted of [undefined, {}]) {
+            observed = 0;
+            assert.deepEqual(world(candidate, entry, source, reactor, omitted), expected);
+            assert.equal(observed, expected.metadata.signatures.length);
+        }
+    }
     const wasm = read("build/" + binary + ".wasm");
     const expectedWasm = Buffer.from(control[entry](source, wasm));
     assert.deepEqual(Buffer.from(candidate[entry](source, wasm)), expectedWasm);
@@ -127,6 +137,7 @@ for (const [source, limit, text] of rejects) {
     assert(baseline.message.includes(text));
     assert.deepEqual(rejected(() => candidate.typedRv32.compile(source, [], limit)), baseline);
     assert.deepEqual(rejected(() => candidate.typedRv32.compile(source, [], limit, options)), baseline);
+    assert.deepEqual(rejected(() => candidate.typedRv32.compile(source, [], limit, {streamFunctions: false})), baseline);
     diagnostics.push(baseline.message);
 }
 console.log(JSON.stringify({control: controlRevision, candidate: candidateRevision ?? "worktree", worlds,
