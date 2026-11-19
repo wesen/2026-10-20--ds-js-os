@@ -1,9 +1,9 @@
 ---
 Title: Independent review of the production operand and bounds integration
 Ticket: PICOCALC-COMPILER-INTEGRATION
-Status: reviewed
+Status: complete
 DocType: reference
-Topics: [picocalc, compilers, correctness]
+Topics: [picocalc, native, performance]
 ---
 
 # Independent review of the production operand and bounds integration

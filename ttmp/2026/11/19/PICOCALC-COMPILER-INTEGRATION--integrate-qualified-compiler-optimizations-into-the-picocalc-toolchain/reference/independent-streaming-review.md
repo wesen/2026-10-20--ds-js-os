@@ -1,9 +1,9 @@
 ---
 Title: Independent review of per-function native compilation
 Ticket: PICOCALC-COMPILER-INTEGRATION
-Status: reviewed
+Status: complete
 DocType: reference
-Topics: [picocalc, compilers, streaming]
+Topics: [picocalc, native, performance]
 ---
 
 # Independent review of per-function native compilation

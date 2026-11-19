@@ -1,0 +1,224 @@
+{
+  "revision": "2317696",
+  "compiler_sha256": {
+    "compiler/typed-wasm.js": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+    "compiler/typed-rv32.js": "ef78d928985ff7b014a60688fa97e9a14a378d3086bd2fe3a3a9e82e755505b0",
+    "compiler/typed-world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3",
+    "worlds/files/compile.js": "dc82ece5c9c6f65b4ed3db2b9c742e14463fafc7a6df528c15e356021611103a",
+    "worlds/agenda/compile.js": "52a85f626fc93e33641d7ef3a7452c2b7d94b0163edcb7fca6fdef1c270fcecd"
+  },
+  "original_partition_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "modes": {
+    "buffered": {
+      "firmware_sha256": "9deebb64abf091ddf5574c99f7662de8477fcdf25c66483d0f897304eab5a9fd",
+      "boots": [
+        {
+          "files": {
+            "us": 249661,
+            "peak_js_bytes": 366164,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 641288,
+            "peak_js_bytes": 623812,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2358321,
+            "peak_js_bytes": 1768372,
+            "module_bytes": 240452
+          }
+        },
+        {
+          "files": {
+            "us": 246822,
+            "peak_js_bytes": 366164,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 641745,
+            "peak_js_bytes": 623812,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2357749,
+            "peak_js_bytes": 1768372,
+            "module_bytes": 240452
+          }
+        },
+        {
+          "files": {
+            "us": 248288,
+            "peak_js_bytes": 366164,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 641953,
+            "peak_js_bytes": 623812,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2358714,
+            "peak_js_bytes": 1768372,
+            "module_bytes": 240452
+          }
+        },
+        {
+          "files": {
+            "us": 248624,
+            "peak_js_bytes": 366164,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 641810,
+            "peak_js_bytes": 623812,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2357490,
+            "peak_js_bytes": 1768372,
+            "module_bytes": 240452
+          }
+        }
+      ],
+      "medians": {
+        "files": {
+          "us": 248456.0,
+          "peak_js_bytes": 366164.0,
+          "module_bytes": 24424.0
+        },
+        "agenda": {
+          "us": 641777.5,
+          "peak_js_bytes": 623812.0,
+          "module_bytes": 66364.0
+        },
+        "editor": {
+          "us": 2358035.0,
+          "peak_js_bytes": 1768372.0,
+          "module_bytes": 240452.0
+        }
+      }
+    },
+    "streamed": {
+      "firmware_sha256": "9cc038f3b73b2835572bcdf5add99e79b889fa5d7e344647761b5e272ab8eb6b",
+      "boots": [
+        {
+          "files": {
+            "us": 250764,
+            "peak_js_bytes": 362596,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 656450,
+            "peak_js_bytes": 578920,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2450647,
+            "peak_js_bytes": 1410840,
+            "module_bytes": 240452
+          }
+        },
+        {
+          "files": {
+            "us": 269863,
+            "peak_js_bytes": 362596,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 655412,
+            "peak_js_bytes": 578920,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2453458,
+            "peak_js_bytes": 1410848,
+            "module_bytes": 240452
+          }
+        },
+        {
+          "files": {
+            "us": 268801,
+            "peak_js_bytes": 362596,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 656120,
+            "peak_js_bytes": 578920,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2454466,
+            "peak_js_bytes": 1410848,
+            "module_bytes": 240452
+          }
+        },
+        {
+          "files": {
+            "us": 251190,
+            "peak_js_bytes": 362596,
+            "module_bytes": 24424
+          },
+          "agenda": {
+            "us": 656118,
+            "peak_js_bytes": 578920,
+            "module_bytes": 66364
+          },
+          "editor": {
+            "us": 2451298,
+            "peak_js_bytes": 1410840,
+            "module_bytes": 240452
+          }
+        }
+      ],
+      "medians": {
+        "files": {
+          "us": 259995.5,
+          "peak_js_bytes": 362596.0,
+          "module_bytes": 24424.0
+        },
+        "agenda": {
+          "us": 656119.0,
+          "peak_js_bytes": 578920.0,
+          "module_bytes": 66364.0
+        },
+        "editor": {
+          "us": 2452378.0,
+          "peak_js_bytes": 1410844.0,
+          "module_bytes": 240452.0
+        }
+      },
+      "pixel_comparison": {
+        "changed_pixel_bounds": {
+          "shot-1.png": [
+            548,
+            10,
+            626,
+            30
+          ],
+          "shot-2.png": [
+            548,
+            10,
+            626,
+            30
+          ]
+        },
+        "all_pixels_outside_clock_match": true
+      },
+      "workflow": {
+        "input_bytes": 65536,
+        "engine": "native",
+        "page_down_keys": 1,
+        "editor_mem_kb_at_start": 710.1,
+        "editor_limit_kb": 768,
+        "faults": [],
+        "scratch_removed": true,
+        "screenshots": {
+          "shot-1.png": "ef7af78898714caabeee2f19b6d7c07d9a2b7f4c93a58e516fd72039482557b9",
+          "shot-2.png": "ef7af78898714caabeee2f19b6d7c07d9a2b7f4c93a58e516fd72039482557b9"
+        }
+      }
+    }
+  },
+  "original_restored": true
+}

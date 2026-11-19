@@ -1,3 +1,11 @@
+---
+Title: "Direct bounds proofs integration diary"
+Ticket: PICOCALC-COMPILER-INTEGRATION
+DocType: reference
+Status: complete
+Topics: [picocalc, native, performance]
+---
+
 # Direct bounds proofs integration diary
 
 ## Step 1 · Put the direct proof in the shared function emitter

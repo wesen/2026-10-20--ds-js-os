@@ -172,3 +172,55 @@ See `reference/streaming-implementation-diary.md`, the integration tests in `scr
 ### Technical details
 
 The archived four-boot Editor comparison was 2.357 s with numeric operands alone versus 2.468 s with the direct proof enabled, despite an unchanged Editor executable. The isolated Files runtime experiment was canceled before flashing. These results concern the archived bounds candidate and are not evidence for a streaming speedup.
+
+## Step 4: Measure both shipping configurations on the board and publish their tradeoff
+
+I built the buffered and streamed configurations with the same compiler and exercised the native Files, Agenda and Editor world entry points across eight cold boots. I measured actual compiler allocation and elapsed time, then ran the large Editor preview as a behavioral control.
+
+### Prompt Context
+
+See Step 1 and the clarification in Step 3. The goal is to merge the two changes with individual reports and a reproducible production comparison.
+
+**Commits** JS implementation `2317696`, firmware selection `3c0add0`, independent streaming review `b55ad5f`, vault article `b40a951`.
+
+### What I did
+
+Built with `scripts/build-production.sh` in buffered and streamed modes. Ran `scripts/qualify-production.py` with the previously verified 8 MiB factory app backup, the physical USB serial port, both image directories and JS source revision `2317696`. Ran all 24 default host workflows. Used `scripts/publish-report.py` to add the article and its 640 × 640 framebuffer capture to the go-go-parc vault, then committed and pushed the two paths.
+
+### Why
+
+A lower JavaScript heap peak can make a compiler viable under a tighter limit even when it takes more time. Physical measurements determine whether the tradeoff is large enough to matter on this system. Fixed inputs, use of the normal world loaders, the per-world mode markers and exact host comparison control different sources of measurement error.
+
+### What worked
+
+The buffered Editor median was 2,358,035 μs and 1,768,372 bytes peak. The streamed median was 2,452,378 μs and 1,410,844 bytes peak. All 24 physical application compiles succeeded (three apps on each of eight boots). The 65,536-byte fixture opened and rendered on the physical streamed Editor, both screenshot CRCs passed and pixel comparisons matched the reference outside the clock. The workflow removed its scratch data. The vault push advanced main from `f4b3202` to `b40a951`.
+
+### What didn't work
+
+The initial reMarkable upload could not resolve `webapp-prod.cloud.remarkable.engineering` from the sandbox. Automatic approval review then rejected the retry because it could not establish permission for this exact guide and external cloud destination in the delivery context. I requested that specific permission in the parent conversation. I also rendered a four-page local PDF for immediate access.
+
+### What I learned
+
+The streamed mode recovered 357,528 bytes for Editor and 44,892 bytes for Agenda. Files recovered 3,568 bytes. The result depends on function sizes and order, as earlier host experiments predicted. Buffering was faster for each physical application in this experiment.
+
+### What was tricky to build
+
+The two images need the same checked-in JavaScript source, a measurable difference in callback selection and matching linked output. The runner verified the five embedded source blobs and checked each streamed-mode marker. The independent oracle separately compared the complete linked ELF on a fixed reactor. Matching module length alone would miss a bad relocation.
+
+### What warrants a second pair of eyes
+
+Check the scope of the allocator and timer in `typed_p4.c`. The board runs for each firmware were grouped. Treat the differences measured here as workload-specific. Before adapting the results to other source, look at function-body size distribution and the reactor being linked.
+
+### What should be done in the future
+
+If an app approaches its compiler memory budget, use its actual source and reactor with this runner and compare both settings. The existing guide identifies the public option on the host and the firmware build switch.
+
+### Code review instructions
+
+Read `various/production-report.md` next to `various/production-p4.json` and `reference/independent-streaming-review.md`. The checked-in list `various/production-world-replays.txt` records the application-level host tests. For the hardware setup and command-line arguments, see the intern guide.
+
+### Technical details
+
+The source revision in the board receipt refers to the five JS source blobs, while `3c0add0` contains the C wrapper and build switch. All times are elapsed compile-and-link times in microseconds. The alternate app setting supplies the third JS argument only for native worlds. Both configurations use the same application ABI.
+
+The flasher verified the restored app partition. A subsequent serial query confirmed that Files, Agenda and Editor all booted as native worlds from the saved image and reported no last error. The qualification receipt sets `original_restored` to true. Ticket validation reported only filename-prefix warnings on the preserved researcher notes and bench README.

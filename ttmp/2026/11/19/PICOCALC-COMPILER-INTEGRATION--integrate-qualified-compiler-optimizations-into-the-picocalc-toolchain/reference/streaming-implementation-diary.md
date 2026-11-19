@@ -2,8 +2,8 @@
 Title: Production per-function streaming integration diary
 Ticket: PICOCALC-COMPILER-INTEGRATION
 DocType: reference
-Status: active
-Topics: [compiler, picocalc, streaming]
+Status: complete
+Topics: [picocalc, native, performance]
 ---
 
 # Production native per-function streaming

@@ -3,7 +3,7 @@ Title: Independent diary for the production streaming review
 Ticket: PICOCALC-COMPILER-INTEGRATION
 DocType: reference
 Status: complete
-Topics: [picocalc, compilers, streaming]
+Topics: [picocalc, native, performance]
 ---
 
 # Independent streaming integration diary

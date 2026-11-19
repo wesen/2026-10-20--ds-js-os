@@ -9,7 +9,13 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: Numeric instruction selection and optional per-function lowering
+    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+      Note: Device option forwarding and physical compiler measurements
+    - Path: repo://ttmp/2026/11/19/PICOCALC-COMPILER-INTEGRATION--integrate-qualified-compiler-optimizations-into-the-picocalc-toolchain/various/production-report.md
+      Note: Production A/B results and executable parity
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-19T17:20:46.761232059-05:00
@@ -26,6 +32,8 @@ This ticket moves two experiments into the compiler that the PicoCalc runs durin
 - [Production integration and intern guide](design-doc/01-production-integration-of-the-typed-compiler-optimizations.md)
 - [Supervisor’s implementation diary](reference/01-compiler-integration-diary.md)
 - [Hardware qualification script](scripts/qualify-production.py)
+- [Production performance report](various/production-report.md) and [board measurements](various/production-p4.json)
+- [Independent streaming review](reference/independent-streaming-review.md) and [streaming parity](various/streaming-parity.json)
 - [Numeric transition receipt](various/numeric-parity.json)
 - [Task list](tasks.md) and [changelog](changelog.md)
 

@@ -3,7 +3,7 @@ Title: Independent integration examiner diary
 Ticket: PICOCALC-COMPILER-INTEGRATION
 DocType: reference
 Status: complete
-Topics: [picocalc, compilers]
+Topics: [picocalc, native, performance]
 ---
 
 # Independent integration examiner diary

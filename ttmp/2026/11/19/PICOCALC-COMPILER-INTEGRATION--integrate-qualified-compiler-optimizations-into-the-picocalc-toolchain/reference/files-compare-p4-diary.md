@@ -2,8 +2,8 @@
 Title: Files comparison P4 microbenchmark investigation diary
 Ticket: PICOCALC-COMPILER-INTEGRATION
 DocType: reference
-Status: active
-Topics: [compiler, picocalc, performance]
+Status: complete
+Topics: [picocalc, native, performance]
 ---
 
 # Files comparison P4 microbenchmark investigation diary

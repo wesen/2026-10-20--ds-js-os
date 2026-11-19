@@ -1,3 +1,11 @@
+---
+Title: "A paired P4 cycle benchmark for generated Files code"
+Ticket: PICOCALC-COMPILER-INTEGRATION
+DocType: reference
+Status: complete
+Topics: [picocalc, native, performance]
+---
+
 # A paired P4 cycle benchmark for generated Files code
 
 This ESP-IDF v5.4.2 application executes the RISC-V code for the real typed `filesCompare` function from two production compilers in one boot. It calls the public `typedRv32.compile` entry for the complete, identical Files source, extracts the function, and verifies that its PC-relative branches remain within its extent. The harness uses the Files ABI from the two matching source revisions. Every input string starts with its 32-bit length followed by UTF-16 code units. Boolean directory flags and both pointers occupy the ordinary RV32 argument registers.
