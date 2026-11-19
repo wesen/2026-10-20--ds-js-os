@@ -240,3 +240,56 @@ Recreate the historical environment audit with `scripts/supervisor/audit-host-ob
 ### Technical details
 
 The checked-in QuickJS tree is 1cabf1dfb35d373e4bcad26cf622af05857386d3. The audited older quickjs.o begins e6a9ff95a353; the fresh object begins aedf6248a0b8. Static counts and ELF hashes do not depend on the timing series. The four compiler treatments use the same firmware allocator and clock boundary within each trial.
+
+## Step 5: Publish the reviewed series and verify it against the research record
+
+The source ticket now contains one report, a chronological diary and separate notes for each of the three implementers, the two independent examiners and the supervisor. I prepared the vault edition after the authors' texts were complete, incorporated the independent qualifications into each implementation paper, and linked the studies through the synthesis.
+
+### Prompt Context
+
+**User prompt:** See Step 1.
+**Assistant interpretation:** Commit and push every completed report in the go-go-parc vault, with an auditable source trail.
+**Inferred user intent:** Make the evidence and decisions accessible to the supervisor and a new researcher without requiring them to reconstruct the chat.
+**Commits (code and examination):** f0846ba, c1e3777 and 88263e0 implement the three experiments. The examiners completed their work at c5c111f and 9b3c1f3. 6418393 records the fresh-engine comparison.
+
+### What I did
+
+- Read the six final articles and cross-checked the figures used in the synthesis against the research receipts. Added the independent qualifiers to the three implementation articles.
+- Wrote `scripts/supervisor/prepare-vault.py` to reproduce the portable edition. Validated frontmatter, code fences, local links and the figure in staging. The dated directory contains six new articles and one PNG.
+- Verified the vault had no outgoing changes and its remote was at a5ac12b. Staged exactly seven new paths and ran the staged whitespace check. Committed and pushed. A fresh rendering of the final ticket texts matched every published byte.
+
+### Why
+
+The repository hosts the experiment scripts and receipts. Vault readers need the study navigation and figure to work in an independent checkout. Retaining ticket-relative evidence paths as text preserves their origin when a reader moves between the two repositories.
+
+### What worked
+
+The six rendered texts total 16,054 whitespace-delimited words including code and metadata. Git reported `a5ac12b..f2a26ab main -> main`. A separate remote query returned f2a26ab97c7f56627d2dcb128cea9160cbd7beb8 for refs/heads/main. The vault working tree was clean and synchronized after publication.
+
+### What didn't work
+
+Ticket-relative links in the first lowering manuscript pointed outside the vault when copied literally. The publication script validates each target in the source ticket and renders its evidence path in the vault edition. The source version retains clickable ticket links.
+
+### What I learned
+
+The project has one integrated code-generation change, two isolated compiler prototypes and independently reproduced Linux evidence. The negative bounds result also survived a separate attempt to retain more scalar facts. Board qualification is the outstanding experiment that can change the production decision about the frontend.
+
+### What was tricky to build
+
+The shared checkout received independent research commits while the vault had a separate publication history. Path-limited source commits and a single reviewed vault commit preserved provenance across the two histories. Comparing a fresh rendering against published bytes after the final examiner commit caught any potential difference in manuscript versions.
+
+### What warrants a second pair of eyes
+
+A reader evaluating the next hardware trial should start with the fresh four-treatment receipt and the independent five-treatment receipt. They differ in their choice of experimental controls. The recommendation to test both packed buffering and streaming follows from those controls.
+
+### What should be done in the future
+
+Run the same source and reactor on a confirmed physical P4. Collect target-side elapsed time and allocator peak, validate the resulting ELF and repeat the Editor behavior replays. The remaining docmgr task records that qualification explicitly.
+
+### Code review instructions
+
+Start in the ticket index for all six reports, notes and diaries. To reproduce the vault layout, run `python3 -B scripts/supervisor/prepare-vault.py <empty-directory>` using the ticket script path. Compare the result to `Projects/2026/11/19/` in go-go-parc at f2a26ab.
+
+### Technical details
+
+The vault contains the final six articles and the generated `_assets/picocalc-compiler-thesis-experiments.png` figure. The original experiment guide was delivered to the reMarkable folder recorded in Step 2. Raw compiler objects, binary executables and temporary device data were excluded from publication.

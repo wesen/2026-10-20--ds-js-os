@@ -150,3 +150,7 @@ node "$ticket/scripts/bounds/run.mjs" --linked
 ```
 
 Run the first command for the self-contained host comparison. Its Editor survey uses assigned placeholder SDK function indices. The second links the whole corpus using `picocalc-os/build/{files-reactor,agenda-reactor,typed-world-reactor}.wasm`. The linked reference receipt is `various/bounds/results.json` in the ticket directory.
+
+## Independent qualification
+
+A separate examiner compared returns, traps and complete linear memory across 760 invocations that varied signed values, aliasing and expression evaluation order. Exceeding the analysis budget reverted a previously accepted removal in the same function and produced byte-identical original Wasm. A follow-up preserved ordinary scalar relationships across calls and stores while invalidating header-dependent facts. The richer rules removed a check in a constructed function. They still removed three sites across the unchanged apps, and chained edge inspections rose from 151 to 191. This makes the missing object or span relationship a more informative subject for the next experiment than indiscriminately retaining scalar facts.

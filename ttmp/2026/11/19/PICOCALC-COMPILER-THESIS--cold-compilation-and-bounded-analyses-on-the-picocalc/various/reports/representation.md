@@ -139,3 +139,9 @@ python3 -B "$ticket/scripts/representation/run.py" \
 ```
 
 The ticket's `various/representation/quickjs-results.json` includes per-call measurements, first-call samples, compiler and source hashes, allocator endpoints and the digests of native images and metadata. The first step in checking the equivalence claims is to run the same command with `--verify-only`. The source is reconstructed from immutable Git objects, so uncommitted changes to the production backend do not affect the result.
+
+## Independent qualification
+
+A second researcher varied function order while holding constant the operation count, number of functions, maximum function size and total emitted image length. Placing the large function last increased the median incremental streaming peak from 601,344 to 766,624 bytes. The buffered packed peak was 899,640 bytes in both orders. The compiler retains the native bytes of previously compiled functions. Their lifetime can overlap with a large input body, so maximum function size alone cannot predict the streaming peak.
+
+The reviewer also repeated a full native Editor compile through the firmware entry with five freshly built configurations. At a fixed register backend, the packed-buffered and packed-streamed compilers produced the same ELF. Buffered took a median of 41.007 ms and 2,588,664 peak allocator bytes. Streamed took 41.823 ms and 1,891,168 bytes. Those peaks cover the cold Linux firmware-allocator interval. The phase measurements in the preceding sections use the resident harness with its own allocation accounting. A production integration also needs to retain the shared Wasm loader's `typedWasm.linkWorld` entry point.
