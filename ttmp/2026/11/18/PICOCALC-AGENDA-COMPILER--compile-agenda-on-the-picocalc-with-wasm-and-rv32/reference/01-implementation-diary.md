@@ -709,3 +709,7 @@ The 29.6 ms remainder includes event-loop, queue, logging, and other work outsid
 ### Code review instructions
 
 Review the bounded record collection in `agenda_p4.c` and the completed-segment timestamp in `nucleus/kernel.c`. Run scripts/10-measure-agenda-boot.py with --world-profile and compare file_returned_us, settle_us, reply_wait_us, and reply_wait_segments. The physical T-key to LCD experiment remains a separate capture.
+
+## Step 28 — Publish the powered startup profile and verify restoration
+
+The go-go-parc report was pushed on main at d1ce869. The flash writer verified the original app image after the profiling run and the console answered cji status. The profiling firmware remains available for reproducing the powered boot trace. The keyboard-to-LCD measurement still needs a physical press and capture.
