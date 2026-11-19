@@ -55,3 +55,7 @@ Measured matched Wasm and RV32 cold boots and source rebuilds on the P4. All twe
 ## 2026-11-18
 
 Booted the peripheral-enabled RV32 image and recorded Agenda publication alongside the nonresponsive STM32 keyboard bus. Restored and verified the prior app.
+
+## 2026-11-18
+
+Confirmed the powered keyboard and display buses complete transfers without errors. Measured a 667 ms editable Agenda build and two slower full boots.

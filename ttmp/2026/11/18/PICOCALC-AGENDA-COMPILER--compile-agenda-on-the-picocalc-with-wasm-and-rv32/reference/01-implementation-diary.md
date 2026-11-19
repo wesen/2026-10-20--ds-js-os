@@ -659,3 +659,25 @@ The physical qualification needs a working STM32 keyboard and LCD, then a captur
 ### Code review instructions
 
 Verify the app hash, current STM32 error, and capture boundary in the compact probe receipt. The flasher verified the previous app image at 0x10000 after the probe, and the restored system answered cji status. No task was closed on the strength of this failed-bus boot.
+
+## Step 26 — Verify that the keyboard and panel buses work after power was connected
+
+### What I did
+
+The user connected power and asked me to retry. I booted the same peripheral-enabled RV32 application as Step 25. That removed the previously observed STM32 errors. I then repeated the probe with two serial stats snapshots and an ordinary editable Agenda build from notes/agenda.typed. The probe driver now accepts capture options so the console operations can be reproduced without running a second serial reader.
+
+### What worked
+
+The second snapshot reported 540 I²C transfers and 82 SPI transfers, both with zero errors. These are bus completions. The first and second monitored boots published the Agenda frame after 2.910 s and 2.786 s. The normal editable build published in 667 ms with a 369 ms compile, a 433,732-byte compiler allocator peak, and a 1.022 ms frame-producing turn. The native module remained 24,304 B. Both cold samples missed the two-second target in this powered configuration. The compact receipt is various/p4-powered-peripheral-retry.txt.
+
+### What I learned
+
+Power changed the observable peripheral state. Agenda can still compile and publish promptly on a running system. Full startup differs from the matched headless runs. In the second boot the file arrived at the kernel around 2.330 s but the Agenda settlement started around 2.784 s. The CJI loader finished before the file arrived in both powered boots. The next useful trace counts which worlds run during that interval.
+
+### What was tricky to build
+
+Successful SPI transactions establish that the P4 sent display data. They cannot show the first visible pixel transition. The user stepped away before a physical press or video could be captured. This is a powered-device startup result and still leaves the separate keyboard-to-LCD test open.
+
+### Code review instructions
+
+Read the two `bus i2c0` and `bus spi2` rows in the powered receipt. Reproduce with the Step 25 script and capture arguments `-s 20 -c '8 stats' -c '11 agenda build' -c '17 stats'`. The original application was restored and verified after both probes.

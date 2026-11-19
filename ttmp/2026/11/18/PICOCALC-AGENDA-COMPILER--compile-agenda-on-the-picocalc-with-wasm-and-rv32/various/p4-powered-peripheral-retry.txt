@@ -1,0 +1,42 @@
+Peripheral-enabled ESP32-P4 RV32 Agenda after the user connected power.
+App SHA-256 f287addba826d494489d3a6eacb1cf006d7a1633907111bd7e5055ab385bfe3b.
+First power-on retry:
+agenda compile source=bundle status=ok us=354581 peak_js_bytes=433496 module_bytes=24304
+agenda boot source_start_us=162913
+agenda stage before-cji-restore us=517824
+agenda stage before-dispatch us=527902
+agenda stage world-init us=1221013
+agenda stage world-init-done us=1226298
+agenda stage file-submitted us=1936333
+cji: loader start_us=2163041 end_us=2304040
+agenda stage file-returned us=2343797
+agenda stage settle us=2908411
+agenda response us=2909928 world_bytes=124588
+agenda frame turn_us=1519 world_bytes=124588
+I2C NACK lines in first capture: 0
+Second boot, transfer counters and editable build:
+agenda compile source=bundle status=ok us=354396 peak_js_bytes=433496 module_bytes=24304
+agenda boot source_start_us=163196
+agenda stage before-cji-restore us=517642
+agenda stage before-dispatch us=527704
+agenda stage world-init us=1223598
+agenda stage world-init-done us=1228868
+agenda stage file-submitted us=1942144
+cji: loader start_us=2164344 end_us=2305118
+agenda stage file-returned us=2329611
+agenda stage settle us=2784437
+agenda response us=2786011 world_bytes=124588
+agenda frame turn_us=1584 world_bytes=124588
+  bus i2c0  busy   949.85 ms, 149 transfers, 598 bytes, 0 errors
+  bus spi2  busy   103.14 ms, 62 transfers, 363818 bytes, 0 errors
+agenda compile source=edit status=ok us=369064 peak_js_bytes=433732 module_bytes=24304
+agenda stage world-init us=471491
+agenda stage world-init-done us=476799
+agenda stage file-submitted us=615200
+agenda stage file-returned us=665526
+agenda stage settle us=666385
+agenda response us=667397 world_bytes=124588
+agenda frame turn_us=1022 world_bytes=124588
+  bus i2c0  busy  3165.11 ms, 540 transfers, 2164 bytes, 0 errors
+  bus spi2  busy   127.49 ms, 82 transfers, 437021 bytes, 0 errors
+Bus counters record transactions on the two buses. Physical keypress and visible LCD change were not observed.
