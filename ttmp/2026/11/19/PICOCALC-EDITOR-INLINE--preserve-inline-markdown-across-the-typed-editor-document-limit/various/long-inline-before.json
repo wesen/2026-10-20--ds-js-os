@@ -1,0 +1,42 @@
+{
+  "js/inline-heading": {
+    "input_bytes": 4917,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "js/inline-paragraph": {
+    "input_bytes": 4915,
+    "finished": true,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "js/unclosed-links": {
+    "input_bytes": 4911,
+    "finished": false,
+    "file_bytes_match": true,
+    "faults": [
+      "editor crashed handling key: ran past its turn budget of 200 virtual ms"
+    ]
+  },
+  "wasm/inline-heading": {
+    "input_bytes": 4917,
+    "finished": false,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/inline-paragraph": {
+    "input_bytes": 4915,
+    "finished": false,
+    "file_bytes_match": true,
+    "faults": []
+  },
+  "wasm/unclosed-links": {
+    "input_bytes": 4911,
+    "finished": false,
+    "file_bytes_match": true,
+    "faults": [
+      "editor crashed handling key: ran past its turn budget of 200 virtual ms"
+    ]
+  }
+}
