@@ -21,46 +21,6 @@ const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer"]);
 
-const NO_BOUNDS = [];
-// Nonnegative terms are scalar local indices. Length terms encode the
-// receiver local below the reserved literal and unknown term values.
-const UNKNOWN_TERM = -1, ZERO = -2, ONE = -3, POSITIVE = -4, LENGTH_BASE = -5;
-const MAX_BOUNDS = 8;
-const MAX_DEFERRED_CHECKS = 16;
-
-function commonBounds(a, b) {
-    if (a === b) return a;
-    if (!a.length || !b.length) return NO_BOUNDS;
-    let common = NO_BOUNDS;
-    for (const left of a) {
-        if (b.some(right => left.index === right.index && left.receiver === right.receiver &&
-            left.induction === right.induction)) {
-            if (common === NO_BOUNDS) common = [];
-            common.push(left);
-        }
-    }
-    return common;
-}
-
-// Each fact is either a signed lower bound (receiver = -1) or an upper
-// bound tied to the current length of one receiver local.
-function addBound(facts, index, receiver = -1, induction = null) {
-    const at = facts.findIndex(fact => fact.index === index && fact.receiver === receiver);
-    if (at < 0) return facts.length < MAX_BOUNDS ? [...facts, {index, receiver, induction}] : facts;
-    if (facts[at].induction && !induction) {
-        const updated = facts.slice();
-        updated[at] = {index, receiver, induction};
-        return updated;
-    }
-    return facts;
-}
-
-function signedBound(facts, left, right, strict) {
-    if (left === ZERO && right >= 0) return addBound(facts, right);
-    if (strict && left >= 0 && right <= LENGTH_BASE) return addBound(facts, left, LENGTH_BASE - right);
-    return facts;
-}
-
 function unsigned(value) {
     const bytes = [];
     do {
@@ -153,72 +113,6 @@ class FunctionEmitter {
         this.code = [];
         this.nextLocal = 0;
         this.depth = 0;
-        this.facts = NO_BOUNDS;
-        this.loop = null;
-        this.deferredChecks = null;
-        this.unknownValue();
-    }
-
-    unknownValue() {
-        this.term = UNKNOWN_TERM;
-        this.increment = UNKNOWN_TERM;
-        this.whenTrue = null;
-        this.whenFalse = null;
-    }
-
-    condition(yes, no) {
-        this.whenTrue = yes;
-        this.whenFalse = no;
-        this.facts = commonBounds(yes, no);
-    }
-
-    compareBounds(op, left, right) {
-        if (left < 0 && right < 0 || left >= 0 && right >= 0) return;
-        const strict = op === "<" || op === ">";
-        if (op === ">" || op === ">=") {
-            const temp = left;
-            left = right;
-            right = temp;
-        }
-        const facts = this.facts;
-        const yes = signedBound(facts, left, right, strict);
-        const no = signedBound(facts, right, left, !strict);
-        if (yes !== no) this.condition(yes, no);
-    }
-
-    assignBounds(index) {
-        if (this.facts.some(fact => fact.index === index || fact.receiver === index)) {
-            this.facts = this.facts.filter(fact => fact.index !== index && fact.receiver !== index);
-        }
-        for (let loop = this.loop; loop; loop = loop.outer) {
-            const candidate = loop.candidates.find(candidate => candidate.index === index);
-            if (!candidate) continue;
-            if (candidate.incremented || this.depth !== loop.depth || this.increment !== index) candidate.valid = false;
-            candidate.incremented = true;
-        }
-        this.initializeBounds(index);
-    }
-
-    initializeBounds(index) {
-        if (this.term === ZERO || this.term === ONE || this.term === POSITIVE) {
-            this.facts = addBound(this.facts, index);
-        }
-    }
-
-    beginLoop(incoming) {
-        if (!incoming.length || !this.facts.length) return;
-        let candidates;
-        for (const upper of this.facts) {
-            if (upper.receiver < 0 || candidates?.some(candidate => candidate.index === upper.index)) continue;
-            if (!incoming.some(lower => lower.index === upper.index && lower.receiver === -1 && !lower.induction)) continue;
-            // A true signed i < length implies i <= INT32_MAX - 1.
-            // Starting nonnegative, i remains so if the body never changes
-            // it or performs only one top-level i = i + 1.
-            const candidate = {index: upper.index, valid: true, incremented: false};
-            this.facts = addBound(this.facts, upper.index, -1, candidate);
-            (candidates ??= []).push(candidate);
-        }
-        if (candidates) this.loop = {candidates, depth: this.depth + 1, outer: this.loop};
     }
 
     local(name, type, mutable = false) {
@@ -269,7 +163,6 @@ class FunctionEmitter {
 
     prefix() {
         const lex = this.lex;
-        this.unknownValue();
         if (lex.accept("(")) {
             const type = this.expr();
             lex.expect(")");
@@ -278,9 +171,6 @@ class FunctionEmitter {
         if (lex.accept("!")) {
             this.want(this.expr(8), "bool");
             this.code.push(OP.eqz);
-            const yes = this.whenTrue;
-            this.whenTrue = this.whenFalse;
-            this.whenFalse = yes;
             return "bool";
         }
         if (lex.accept("-")) {
@@ -292,14 +182,12 @@ class FunctionEmitter {
                 this.want(this.expr(8), "i32");
                 this.code.push(OP.sub);
             }
-            this.unknownValue();
             return "i32";
         }
         if (lex.token.kind === "int") {
             const value = Number(lex.token.value);
             if (value > 2147483647) lex.fail("i32 literal out of range");
             this.emitConst(value);
-            this.term = value === 0 ? ZERO : value === 1 ? ONE : POSITIVE;
             lex.next();
             return "i32";
         }
@@ -313,7 +201,6 @@ class FunctionEmitter {
         }
         if (lex.accept("Math")) {
             this.minmax();
-            this.unknownValue();
             return "i32";
         }
         const name = lex.ident();
@@ -329,13 +216,11 @@ class FunctionEmitter {
         if ((binding.type === "string" || binding.type === "buffer") && lex.accept(".")) {
             if (binding.type === "buffer" && lex.accept("writeLiteral")) {
                 this.emitConst(this.bufferLiteral(binding.index));
-                this.unknownValue();
                 return "i32";
             }
             if (lex.accept("length")) {
                 this.emitIndex(OP.get, binding.index);
                 this.code.push(0x28, 2, 0);
-                this.term = LENGTH_BASE - binding.index;
                 return "i32";
             }
             lex.expect("charCodeAt");
@@ -344,13 +229,11 @@ class FunctionEmitter {
             this.want(this.expr(), "i32");
             lex.expect(")");
             this.emitIndex(OP.set, pos);
-            this.codeUnitAddress(binding.index, pos, this.term);
+            this.codeUnitAddress(binding.index, pos);
             this.code.push(0x2f, 1, 4);
-            this.unknownValue();
             return "i32";
         }
         this.emitIndex(OP.get, binding.index);
-        if (binding.type === "i32") this.term = binding.index;
         return binding.type;
     }
 
@@ -367,31 +250,20 @@ class FunctionEmitter {
             this.want(type, expected);
             this.lex.next();
             if (op === "&&" || op === "||") {
-                const yes = this.whenTrue ?? this.facts;
-                const no = this.whenFalse ?? this.facts;
                 this.code.push(OP.if, I32);
                 if (op === "&&") {
-                    this.facts = yes;
                     this.want(this.expr(precedence + 1), "bool");
-                    this.condition(this.whenTrue ?? this.facts, commonBounds(no, this.whenFalse ?? this.facts));
                     this.code.push(OP.else);
                     this.emitConst(0);
                 } else {
                     this.emitConst(1);
                     this.code.push(OP.else);
-                    this.facts = no;
                     this.want(this.expr(precedence + 1), "bool");
-                    this.condition(commonBounds(yes, this.whenTrue ?? this.facts), this.whenFalse ?? this.facts);
                 }
                 this.code.push(OP.end);
             } else {
-                const left = this.term;
                 this.want(this.expr(precedence + 1), expected);
                 this.code.push(opcode);
-                const right = this.term;
-                this.unknownValue();
-                if (op === "+" && left >= 0 && right === ONE) this.increment = left;
-                if (op === "<" || op === ">" || op === "<=" || op === ">=") this.compareBounds(op, left, right);
             }
             type = result;
         }
@@ -406,25 +278,10 @@ class FunctionEmitter {
         if (branch) this.code.push(OP.return);
     }
 
-    codeUnitAddress(receiver, position, sourceLocal = UNKNOWN_TERM) {
-        let lower;
-        let upper = false;
-        if (sourceLocal >= 0) {
-            for (const fact of this.facts) {
-                if (fact.index !== sourceLocal) continue;
-                if (fact.receiver === -1) lower = fact;
-                if (fact.receiver === receiver) upper = true;
-            }
-        }
-        if (!upper || !lower || lower.induction) {
-            const start = this.code.length;
-            this.emitIndex(OP.get, position);
-            this.emitIndex(OP.get, receiver);
-            this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
-            if (upper && lower && (this.deferredChecks?.length ?? 0) < MAX_DEFERRED_CHECKS) {
-                (this.deferredChecks ??= []).push({start, end: this.code.length, induction: lower.induction});
-            }
-        }
+    codeUnitAddress(receiver, position) {
+        this.emitIndex(OP.get, position);
+        this.emitIndex(OP.get, receiver);
+        this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
         this.emitIndex(OP.get, receiver);
         this.emitIndex(OP.get, position);
         this.emitConst(1);
@@ -443,11 +300,10 @@ class FunctionEmitter {
         this.want(this.expr(), "i32");
         this.emitIndex(OP.set, position);
         lex.expect(",");
-        this.codeUnitAddress(receiver, position, this.term);
+        this.codeUnitAddress(receiver, position);
         this.want(this.expr(), "i32");
         lex.expect(")");
         this.code.push(0x3b, 1, 4); // i32.store16 into the buffer's data after its capacity
-        this.facts = NO_BOUNDS;
     }
 
     bufferLiteral(receiver) {
@@ -477,7 +333,6 @@ class FunctionEmitter {
             this.emitConst(value.charCodeAt(i));
             this.emitMemory(0x3b, 1, 4 + 2 * i);
         }
-        this.facts = NO_BOUNDS;
         return value.length;
     }
 
@@ -491,8 +346,6 @@ class FunctionEmitter {
         }
         lex.expect(")");
         this.emitIndex(0x10, callee.index);
-        this.facts = NO_BOUNDS;
-        this.unknownValue();
         return callee.result;
     }
 
@@ -519,36 +372,19 @@ class FunctionEmitter {
             lex.expect("(");
             this.want(this.expr(), "bool");
             lex.expect(")");
-            const no = this.whenFalse ?? this.facts;
-            this.facts = this.whenTrue ?? this.facts;
             this.code.push(OP.if, VOID);
-            if (lex.token.value === "{") {
-                this.block(result);
-                this.facts = commonBounds(this.facts, no);
-            } else {
-                this.result(result, true);
-                this.facts = no;
-            }
+            if (lex.token.value === "{") this.block(result);
+            else this.result(result, true);
             this.code.push(OP.end);
             return;
         }
         if (lex.accept("while")) {
-            const incoming = this.facts;
-            const outer = this.loop;
-            // The preceding facts describe the first entry, while this
-            // condition and its body also run after arbitrary backedges.
-            this.facts = NO_BOUNDS;
             lex.expect("(");
             this.code.push(0x02, VOID, 0x03, VOID);
             this.want(this.expr(), "bool");
             lex.expect(")");
-            const no = this.whenFalse ?? this.facts;
-            this.facts = this.whenTrue ?? this.facts;
-            this.beginLoop(incoming);
             this.code.push(OP.eqz, 0x0d, 1);
             this.block(result);
-            this.loop = outer;
-            this.facts = no;
             this.code.push(0x0c, 0, OP.end, OP.end);
             return;
         }
@@ -560,9 +396,7 @@ class FunctionEmitter {
             lex.expect("=");
             const type = this.expr();
             if (annotation !== null) this.want(type, annotation);
-            const index = this.local(id, type, mutable);
-            this.emitIndex(OP.set, index);
-            if (type === "i32") this.initializeBounds(index);
+            this.emitIndex(OP.set, this.local(id, type, mutable));
         } else {
             const id = lex.ident();
             if (lex.accept("(")) {
@@ -582,14 +416,12 @@ class FunctionEmitter {
                     lex.expect("=");
                     this.want(this.expr(), field.type);
                     this.emitMemory(0x36, 2, field.offset);
-                    this.facts = NO_BOUNDS;
                 }
             } else {
                 if (!local.mutable) lex.fail("expected mutable local " + id);
                 lex.expect("=");
                 this.want(this.expr(), local.type);
                 this.emitIndex(OP.set, local.index);
-                this.assignBounds(local.index);
             }
         }
         lex.expect(";");
@@ -618,18 +450,6 @@ class FunctionEmitter {
         this.result(result, false);
         lex.expect("}");
         this.code.push(OP.end);
-        if (this.deferredChecks) {
-            // Keep the original checks until the full loop body has confirmed
-            // its induction candidate. Both operand formats use local ranges.
-            let read = 0, write = 0;
-            for (const {start, end, induction} of this.deferredChecks) {
-                if (!induction.valid) continue;
-                while (read < start) this.code[write++] = this.code[read++];
-                read = end;
-            }
-            while (read < this.code.length) this.code[write++] = this.code[read++];
-            this.code.length = write;
-        }
         const nlocals = this.nextLocal - params.length;
         return this.finish({ name, params, result, code: this.code, nlocals });
     }
