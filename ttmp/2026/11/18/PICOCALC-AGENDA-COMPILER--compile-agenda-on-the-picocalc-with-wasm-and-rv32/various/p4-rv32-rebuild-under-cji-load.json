@@ -1,0 +1,48 @@
+{
+  "source": "build",
+  "trials": [
+    {
+      "compile_us": 498896,
+      "peak_js_bytes": 433664,
+      "module_bytes": 24304,
+      "first_response_us": 635796,
+      "world_bytes": 124588,
+      "frame_turn_us": 1101
+    },
+    {
+      "compile_us": 498163,
+      "peak_js_bytes": 433500,
+      "module_bytes": 24304,
+      "first_response_us": 629220,
+      "world_bytes": 124588,
+      "frame_turn_us": 1124
+    },
+    {
+      "compile_us": 674832,
+      "peak_js_bytes": 433492,
+      "module_bytes": 24304,
+      "first_response_us": 807621,
+      "world_bytes": 124588,
+      "frame_turn_us": 1287
+    },
+    {
+      "compile_us": 614916,
+      "peak_js_bytes": 433504,
+      "module_bytes": 24304,
+      "first_response_us": 749047,
+      "world_bytes": 124588,
+      "frame_turn_us": 1101
+    },
+    {
+      "compile_us": 510742,
+      "peak_js_bytes": 433732,
+      "module_bytes": 24304,
+      "first_response_us": 1320382,
+      "world_bytes": 124588,
+      "frame_turn_us": 1090
+    }
+  ],
+  "median_response_us": 749047,
+  "p95_response_us": 1320382,
+  "max_response_us": 1320382
+}

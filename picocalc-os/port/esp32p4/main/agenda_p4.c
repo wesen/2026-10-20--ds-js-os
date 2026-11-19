@@ -9,6 +9,7 @@
 #define COMPILER_LIMIT (2 * 1024 * 1024)
 #define COMPILER_US 1700000
 #define FIRST_FRAME_TARGET_US 2000000
+#define READY_REPLY_GRACE_US 50000
 
 #if PICOCALC_RV32_AGENDA
 #define AGENDA_ENGINE ENG_NATIVE
@@ -27,6 +28,7 @@ static unsigned char *startup_module;
 static size_t startup_length;
 static vtime_t first_response;
 static vtime_t boot_frame_deadline;
+static bool boot_reply_arrived;
 
 // Buffer the timing data because UART writes would compete with the startup turns.
 typedef struct {
@@ -200,8 +202,20 @@ bool p4_agenda_prepare(void) {
   return startup_module != NULL;
 }
 
+static bool is_typed_agenda(const world_t *world) {
+  return !strcmp(world->name, "agenda") && world->engine == AGENDA_ENGINE;
+}
+
+void p4_agenda_boot_file_ready(const world_t *world) {
+  if (boot_frame_deadline && is_typed_agenda(world) && port_clock() < boot_frame_deadline)
+    boot_reply_arrived = true;
+}
+
 bool p4_agenda_boot_frame_pending(void) {
-  return boot_frame_deadline && port_clock() < boot_frame_deadline;
+  // Allow a reply already on the kernel's queue to settle before unrelated
+  // relocation blocks the lane. Bound the extra delay if rendering fails.
+  return boot_frame_deadline &&
+         port_clock() < boot_frame_deadline + (boot_reply_arrived ? READY_REPLY_GRACE_US : 0);
 }
 
 char *p4_agenda_take_module(size_t *length) {
@@ -236,7 +250,7 @@ void p4_agenda_console(const char *command) {
 
 void p4_agenda_stage(const world_t *world, const char *stage) {
   if (!first_response) return;
-  if (world && (strcmp(world->name, "agenda") || world->engine != AGENDA_ENGINE)) return;
+  if (world && !is_typed_agenda(world)) return;
   printf("agenda stage %s us=%lld\n", stage, (long long)(port_clock() - first_response));
 }
 
@@ -273,7 +287,7 @@ void p4_agenda_report_boot(void) {
 }
 
 void p4_agenda_frame(world_t *world, vtime_t segment_start) {
-  if (strcmp(world->name, "agenda") || world->engine != AGENDA_ENGINE) return;
+  if (!is_typed_agenda(world)) return;
   vtime_t now = port_clock();
   if (first_response) {
     printf("agenda response us=%lld world_bytes=%zu\n",
@@ -281,6 +295,7 @@ void p4_agenda_frame(world_t *world, vtime_t segment_start) {
     first_response = 0;
   }
   boot_frame_deadline = 0;
+  boot_reply_arrived = false;
   printf("agenda frame turn_us=%lld world_bytes=%zu\n",
          (long long)(now - segment_start), world->mem_used);
   if (recording_boot) {

@@ -1,0 +1,172 @@
+{
+  "trials": [
+    {
+      "compile_us": 360607,
+      "first_response_us": 1909587,
+      "world_bytes": 124588,
+      "frame_turn_us": 1102,
+      "before_cji_restore_us": 497180,
+      "before_dispatch_us": 506798,
+      "world_init_us": 1145092,
+      "world_init_done_us": 1151353,
+      "file_submitted_us": 1766201,
+      "file_returned_us": 1819043,
+      "settle_us": 1908491,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94211
+      },
+      "cji_loader": {
+        "start_us": 2197809,
+        "end_us": 2339457
+      }
+    },
+    {
+      "compile_us": 360713,
+      "first_response_us": 1898976,
+      "world_bytes": 124588,
+      "frame_turn_us": 1104,
+      "before_cji_restore_us": 497157,
+      "before_dispatch_us": 506765,
+      "world_init_us": 1144920,
+      "world_init_done_us": 1151321,
+      "file_submitted_us": 1762115,
+      "file_returned_us": 1817313,
+      "settle_us": 1897877,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94378
+      },
+      "cji_loader": {
+        "start_us": 2187268,
+        "end_us": 2332838
+      }
+    },
+    {
+      "compile_us": 360398,
+      "first_response_us": 1895111,
+      "world_bytes": 124588,
+      "frame_turn_us": 1093,
+      "before_cji_restore_us": 496961,
+      "before_dispatch_us": 506884,
+      "world_init_us": 1144193,
+      "world_init_done_us": 1150613,
+      "file_submitted_us": 1768732,
+      "file_returned_us": 1822988,
+      "settle_us": 1894023,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94884
+      },
+      "cji_loader": {
+        "start_us": 2183403,
+        "end_us": 2329767
+      }
+    },
+    {
+      "compile_us": 360816,
+      "first_response_us": 1896056,
+      "world_bytes": 124588,
+      "frame_turn_us": 1105,
+      "before_cji_restore_us": 497356,
+      "before_dispatch_us": 506956,
+      "world_init_us": 1143712,
+      "world_init_done_us": 1150157,
+      "file_submitted_us": 1769841,
+      "file_returned_us": 1819674,
+      "settle_us": 1894957,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 93705
+      },
+      "cji_loader": {
+        "start_us": 2184338,
+        "end_us": 2330604
+      }
+    },
+    {
+      "compile_us": 360675,
+      "first_response_us": 1897370,
+      "world_bytes": 124588,
+      "frame_turn_us": 1092,
+      "before_cji_restore_us": 497185,
+      "before_dispatch_us": 506661,
+      "world_init_us": 1141690,
+      "world_init_done_us": 1146920,
+      "file_submitted_us": 1761787,
+      "file_returned_us": 1814837,
+      "settle_us": 1896284,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94320
+      },
+      "cji_loader": {
+        "start_us": 2185288,
+        "end_us": 2336199
+      }
+    },
+    {
+      "compile_us": 360880,
+      "first_response_us": 1902313,
+      "world_bytes": 124588,
+      "frame_turn_us": 1099,
+      "before_cji_restore_us": 497298,
+      "before_dispatch_us": 506885,
+      "world_init_us": 1145926,
+      "world_init_done_us": 1152269,
+      "file_submitted_us": 1766823,
+      "file_returned_us": 1820179,
+      "settle_us": 1901220,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94382
+      },
+      "cji_loader": {
+        "start_us": 2190611,
+        "end_us": 2336144
+      }
+    },
+    {
+      "compile_us": 360632,
+      "first_response_us": 1894431,
+      "world_bytes": 124588,
+      "frame_turn_us": 1095,
+      "before_cji_restore_us": 497105,
+      "before_dispatch_us": 506702,
+      "world_init_us": 1144656,
+      "world_init_done_us": 1150943,
+      "file_submitted_us": 1758278,
+      "file_returned_us": 1813517,
+      "settle_us": 1893342,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94252
+      },
+      "cji_loader": {
+        "start_us": 2182665,
+        "end_us": 2329009
+      }
+    },
+    {
+      "compile_us": 360637,
+      "first_response_us": 1897369,
+      "world_bytes": 124588,
+      "frame_turn_us": 1095,
+      "before_cji_restore_us": 497123,
+      "before_dispatch_us": 506723,
+      "world_init_us": 1143542,
+      "world_init_done_us": 1149817,
+      "file_submitted_us": 1761019,
+      "file_returned_us": 1815442,
+      "settle_us": 1896280,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94085
+      },
+      "cji_loader": {
+        "start_us": 2185595,
+        "end_us": 2331196
+      }
+    }
+  ]
+}

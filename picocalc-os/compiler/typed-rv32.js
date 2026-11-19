@@ -277,13 +277,14 @@ function linkSlot(program, runtime, entry) {
         const end = start + view.getUint32(header + 16, true);
         if (end > runtime.length) throw new SyntaxError("truncated RV32 reactor code segment");
         for (let at = (start + 3) & -4; at + capacity <= end; at += 4) {
-            if (!magic.every((word, j) => view.getUint32(at + j * 4, true) === word)) continue;
+            if (view.getUint32(at, true) !== magic[0] || view.getUint32(at + 4, true) !== magic[1] ||
+                view.getUint32(at + 8, true) !== magic[2] || view.getUint32(at + 12, true) !== magic[3]) continue;
             if (slot >= 0) throw new SyntaxError("ambiguous RV32 reactor slot");
             slot = at;
         }
     }
     if (slot < 0) throw new SyntaxError("missing RV32 reactor slot");
-    const bytes = Uint8Array.from(runtime);
+    const bytes = new Uint8Array(runtime);
     new DataView(bytes.buffer).setUint32(slot, instruction.j(ZERO, offset + 4), true);
     bytes.set(program.image, slot + 4);
     return bytes;

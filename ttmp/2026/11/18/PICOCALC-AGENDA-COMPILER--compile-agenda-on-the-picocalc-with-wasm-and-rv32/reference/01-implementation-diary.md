@@ -563,3 +563,33 @@ The fresh configuration and complete build succeeded. The resulting app image SH
 ### What should be done in the future
 
 The physical peripherals still need to be powered and observed. I built the enabled profile and left the physical run unclaimed. The eight-run timing experiment uses the headless firmware with the same scheduling and linker changes.
+
+## Step 21 — Remove linker overhead and keep ready file results ahead of relocation
+
+### What I did
+
+I changed the RV32 reactor scan to check the four marker words directly, stopping at the first mismatch, and switched the module copy to the typed-array constructor. The scan still checks every aligned candidate in each executable segment and requires a unique slot. I also added up to 50 ms of relocation deferral after the existing boot deadline when a successful Agenda read from the current world epoch has already returned before that deadline. A missing, failed or late read does not qualify. Publication ends the deferral immediately.
+
+I ran eight independent reboots on the same headless P4 profile. I also compiled the existing editable notes/agenda.typed five times with the installed CJI compiler active. The tested headless firmware SHA-256 was 2b75a3fe92700384ddf5cd4fe0b1c2b57949edb5c8cf7c985c09fc0a760af176.
+
+### Why
+
+Most candidate offsets fail on the first word. Using an array callback for each aligned offset and constructing the output via the generic iterable path cost time in the on-device QuickJS linker. Earlier traces also showed that relocation can start while a successful file result is already queued. A short grace keeps that race from adding a long non-preemptible relocation to the remainder of an otherwise ready boot.
+
+### What worked
+
+Cold source-to-publication ranged from 1.894 to 1.910 s with a median of 1.897 s. All eight boots met the two-second target and completed before CJI relocation. The compile median in the matched headless comparison went from 449.150 ms to 360.656 ms. The CJI loader still ran after publication and took roughly 142–151 ms. The native machine and ELF hashes were identical to the existing emulator receipts, and the emulator repeated the parser differential and durable reminder restart. The host application tests, 34 native/Wasm integration tests, and the full Wasm reminder workflow also passed.
+
+The five editable builds had median first response 749 ms and maximum 1.320 s while CJI was compiling in the background. The compiler allocator peak had a median of 433,504 B, and the native module and live-world counters were 24,304 B and 124,588 B respectively. These editable runs use a different background load from the original settled measurements. They verify responsiveness under that load rather than estimating its cost in an A/B comparison.
+
+### What didn't work
+
+None of the eight optimized boots needed the 50 ms extension. The measured improvement therefore does not prove a response-time benefit from the extension itself. The original collision and the post-frame relocation in the optimized runs are separately visible in the raw receipts. The physical panel remained unavailable for this series.
+
+### What warrants a second pair of eyes
+
+Review the upper bound and epoch check around relocation deferral. Check that the marker comparisons, little-endian reads, and typed-array copy preserve the validation contract, including the uniqueness requirement for the reserved executable slot.
+
+### Code review instructions
+
+Compare scripts/10-measure-agenda-boot.py against the loader-baseline and under-two-seconds receipts. Re-run scripts/05-measure-agenda-p4.py with --source build for editable-source behavior. Use scripts/07-check-rv32-parser.mjs and scripts/09-check-rv32-world.mjs to compare the emitted artifacts and the reminder/restart behavior.

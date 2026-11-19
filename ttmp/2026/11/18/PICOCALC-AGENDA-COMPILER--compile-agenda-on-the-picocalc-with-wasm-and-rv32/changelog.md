@@ -43,3 +43,7 @@ Measured full-boot stages and reduced median headless RV32 source-to-first-frame
 ## 2026-11-18
 
 Measured the repeated QuickJS prelude initialization cost and reduced median headless RV32 cold response by 572 ms with an in-memory compiled prelude.
+
+## 2026-11-18
+
+Recorded eight full headless RV32 boots under two seconds after linker optimization. Measured CJI relocation and built a clean peripheral-enabled image for the distinct physical test.
