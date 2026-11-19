@@ -1,0 +1,240 @@
+{
+  "node": "v24.18.0",
+  "sourceSHA256": "6de96dfdd6b402daf9196a6bf5ea541a8513f0165ec88b88c304dcceba2e6700",
+  "compilerSHA256": "8ad276d678c20ceecc797e3564552453547f343e5354f6c069c2153eaf404885",
+  "inputs": 760,
+  "traps": 16,
+  "counts": {
+    "highHeader": {
+      "calls": 30,
+      "traps": 0
+    },
+    "mirror": {
+      "calls": 120,
+      "traps": 0
+    },
+    "strictLast": {
+      "calls": 120,
+      "traps": 0
+    },
+    "mutatingMin": {
+      "calls": 60,
+      "traps": 2
+    },
+    "emptyLiteral": {
+      "calls": 60,
+      "traps": 3
+    },
+    "shortCircuitEffect": {
+      "calls": 120,
+      "traps": 3
+    },
+    "shortCircuitFresh": {
+      "calls": 120,
+      "traps": 0
+    },
+    "nestedEffect": {
+      "calls": 120,
+      "traps": 3
+    },
+    "inclusiveWrap": {
+      "calls": 10,
+      "traps": 5
+    }
+  },
+  "traces": {
+    "direct": [
+      {
+        "name": "change",
+        "checks": 0,
+        "removed": 0,
+        "reasons": [],
+        "events": 5
+      },
+      {
+        "name": "mutatingMin",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no strict upper"
+        ],
+        "events": 20
+      },
+      {
+        "name": "emptyLiteral",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 19
+      },
+      {
+        "name": "shortCircuitEffect",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 24
+      },
+      {
+        "name": "shortCircuitFresh",
+        "checks": 1,
+        "removed": 1,
+        "reasons": [
+          "direct upper"
+        ],
+        "events": 24
+      },
+      {
+        "name": "nestedEffect",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 97
+      },
+      {
+        "name": "inclusiveWrap",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 36
+      },
+      {
+        "name": "strictLast",
+        "checks": 1,
+        "removed": 1,
+        "reasons": [
+          "direct upper"
+        ],
+        "events": 58
+      },
+      {
+        "name": "highHeader",
+        "checks": 1,
+        "removed": 1,
+        "reasons": [
+          "direct upper"
+        ],
+        "events": 15
+      },
+      {
+        "name": "mirror",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no strict upper"
+        ],
+        "events": 21
+      }
+    ],
+    "chained": [
+      {
+        "name": "change",
+        "checks": 0,
+        "removed": 0,
+        "reasons": [],
+        "events": 5
+      },
+      {
+        "name": "mutatingMin",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no strict upper"
+        ],
+        "events": 20
+      },
+      {
+        "name": "emptyLiteral",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 19
+      },
+      {
+        "name": "shortCircuitEffect",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 24
+      },
+      {
+        "name": "shortCircuitFresh",
+        "checks": 1,
+        "removed": 1,
+        "reasons": [
+          "direct upper"
+        ],
+        "events": 24
+      },
+      {
+        "name": "nestedEffect",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 97
+      },
+      {
+        "name": "inclusiveWrap",
+        "checks": 1,
+        "removed": 0,
+        "reasons": [
+          "no nonnegative lower"
+        ],
+        "events": 36
+      },
+      {
+        "name": "strictLast",
+        "checks": 1,
+        "removed": 1,
+        "reasons": [
+          "direct upper"
+        ],
+        "events": 58
+      },
+      {
+        "name": "highHeader",
+        "checks": 1,
+        "removed": 1,
+        "reasons": [
+          "direct upper"
+        ],
+        "events": 15
+      },
+      {
+        "name": "mirror",
+        "checks": 1,
+        "removed": 1,
+        "reasons": [
+          "chained upper"
+        ],
+        "events": 21
+      }
+    ]
+  },
+  "rollback": {
+    "sourceBytes": 58954,
+    "nearEntryProofInShortFunction": 1,
+    "name": "budget",
+    "checks": 1,
+    "removed": 0,
+    "reasons": [
+      "analysis limit"
+    ],
+    "events": 50001,
+    "byteIdentical": true,
+    "moduleSHA256": "a207749bd5536718d8868ecff07826e0d3a2a170fdef15f33dcb543e9acc386f"
+  }
+}
