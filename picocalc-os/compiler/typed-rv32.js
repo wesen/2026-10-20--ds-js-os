@@ -3,7 +3,8 @@
 (() => {
 "use strict";
 
-const ZERO = 0, RA = 1, SP = 2, T0 = 5, T1 = 6, T2 = 7, A0 = 10;
+const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
+const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
 const instruction = {
     r: (op, rd, f3, a, b, f7 = 0) => (f7 << 25) | (b << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,
     i: (op, rd, f3, a, imm) => (imm << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,
@@ -28,7 +29,7 @@ class FunctionCode {
         this.words = [];
         this.calls = [];
         this.control = [];
-        this.depth = this.peak = this.at = 0;
+        this.depth = this.spillDepth = this.at = 0;
         this.exit = {};
     }
 
@@ -63,15 +64,34 @@ class FunctionCode {
         this.emit(instruction.i(0x13, reg, 0, n === lo ? ZERO : reg, lo));
     }
 
-    pop(reg) {
+    move(to, from) {
+        if (to !== from) this.emit(instruction.i(0x13, to, 0, from, 0));
+    }
+
+    slot(depth) { return 4 * (this.locals + depth); }
+
+    spill(depth, reg) {
+        this.store(reg, this.slot(depth));
+        this.spillDepth = Math.max(this.spillDepth, depth + 1);
+    }
+
+    pop(scratch) {
         if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
-        this.load(reg, 4 * (this.locals + --this.depth));
+        const depth = --this.depth;
+        const reg = STACK_REGISTERS[depth];
+        if (reg !== undefined) return reg;
+        this.load(scratch, this.slot(depth));
+        return scratch;
     }
 
     push(reg) {
-        this.store(reg, 4 * (this.locals + this.depth++));
-        this.peak = Math.max(this.peak, this.depth);
+        const depth = this.depth++;
+        const home = STACK_REGISTERS[depth];
+        if (home === undefined) this.spill(depth, reg);
+        else this.move(home, reg);
     }
+
+    resultRegister() { return STACK_REGISTERS[this.depth] ?? T5; }
 
     // A conditional branch skips the fixed-width jump when the predicate is false.
     branch(kind, a, b, target) {
@@ -87,59 +107,77 @@ class FunctionCode {
     mark(label) { label.at = this.words.length; }
 
     binary(op) {
-        this.pop(T1);
-        this.pop(T0);
+        const b = this.pop(T6);
+        const a = this.pop(T5);
+        const out = this.resultRegister();
         const alu = ALU.get(op);
         if (alu) {
             if (op === 0x6d || op === 0x6f) {
-                this.emit(instruction.b(1, T1, ZERO, 8));
+                this.emit(instruction.b(1, b, ZERO, 8));
                 this.emit(0x00100073);
             }
             if (op === 0x6d) {
                 const safe = {};
-                this.constant(T2, -1);
-                this.branch(1, T1, T2, safe);
-                this.constant(T2, -2147483648);
-                this.emit(instruction.b(1, T0, T2, 8));
+                // No operand lives in an argument register between operations.
+                this.constant(A0, -1);
+                this.branch(1, b, A0, safe);
+                this.constant(A0, -2147483648);
+                this.emit(instruction.b(1, a, A0, 8));
                 this.emit(0x00100073);
                 this.mark(safe);
             }
-            this.emit(instruction.r(0x33, T0, alu[0], T0, T1, alu[1]));
+            this.emit(instruction.r(0x33, out, alu[0], a, b, alu[1]));
         } else if (op === 0x46) {
-            this.emit(instruction.r(0x33, T0, 4, T0, T1)); // xor
-            this.emit(instruction.i(0x13, T0, 3, T0, 1)); // seqz
+            this.emit(instruction.r(0x33, out, 4, a, b)); // xor
+            this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
         } else {
             const unsigned = op === 0x4f;
             if (![0x48, 0x4a, 0x4c, 0x4e, 0x4f].includes(op))
                 throw new SyntaxError("unsupported RV32 operator " + op);
             const swap = op === 0x4a || op === 0x4c;
-            this.emit(instruction.r(0x33, T0, unsigned ? 3 : 2, swap ? T1 : T0, swap ? T0 : T1));
+            this.emit(instruction.r(0x33, out, unsigned ? 3 : 2, swap ? b : a, swap ? a : b));
             if (op === 0x4c || op === 0x4e || unsigned)
-                this.emit(instruction.i(0x13, T0, 4, T0, 1));
+                this.emit(instruction.i(0x13, out, 4, out, 1));
         }
-        this.push(T0);
+        this.push(out);
     }
 
     begin(op) {
         const type = this.byte();
         if (type !== 0x40 && type !== 0x7f) throw new SyntaxError("unsupported RV32 control result");
-        if (op === 0x04) this.pop(T0);
+        const condition = op === 0x04 ? this.pop(T5) : ZERO;
         const block = {op, depth: this.depth, value: type === 0x7f, start: {}, alternate: {}, end: {}};
         this.control.push(block);
         this.mark(block.start);
-        if (op === 0x04) this.branch(0, T0, ZERO, block.alternate);
+        if (op === 0x04) this.branch(0, condition, ZERO, block.alternate);
     }
 
     end() {
         const block = this.control.pop();
         if (!block) {
-            this.pop(A0);
+            this.move(A0, this.pop(A0));
             return true;
         }
         if (block.alternate.at === undefined) this.mark(block.alternate);
         this.mark(block.end);
+        // Both arms put a result in the same home at the block's entry depth.
         this.depth = block.depth + Number(block.value);
         return false;
+    }
+
+    call(index) {
+        const count = this.functions[index].params.length;
+        if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+        for (let i = count - 1; i >= 0; i--) {
+            const arg = A0 + i;
+            this.move(arg, this.pop(arg));
+        }
+        // Only the values below the arguments survive the call.
+        const live = Math.min(this.depth, STACK_REGISTERS.length);
+        for (let d = 0; d < live; d++) this.spill(d, STACK_REGISTERS[d]);
+        this.jump(this.starts[index], RA);
+        for (let d = 0; d < live; d++) this.load(STACK_REGISTERS[d], this.slot(d));
+        this.push(A0);
     }
 
     step(op) {
@@ -156,47 +194,49 @@ class FunctionCode {
         case 0x0b: return this.end();
         case 0x0c: case 0x0d: {
             const block = this.control.at(-1 - this.leb());
-            const destination = block.op === 0x03 ? block.start : block.end;
-            if (op === 0x0d) {
-                this.pop(T0);
-                this.branch(1, T0, ZERO, destination);
-            } else this.jump(destination);
+            const target = block.op === 0x03 ? block.start : block.end;
+            if (op === 0x0d) this.branch(1, this.pop(T5), ZERO, target);
+            else this.jump(target);
             break;
         }
-        case 0x0f: this.pop(A0); this.jump(this.exit); break;
-        case 0x10: {
-            const index = this.leb();
-            const count = this.functions[index].params.length;
-            if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
-            for (let i = count - 1; i >= 0; i--) this.pop(A0 + i);
-            this.jump(this.starts[index], RA);
-            this.push(A0);
-            break;
-        }
+        case 0x0f: this.move(A0, this.pop(A0)); this.jump(this.exit); break;
+        case 0x10: this.call(this.leb()); break;
         case 0x1a: this.depth--; break;
-        case 0x20: this.load(T0, 4 * this.leb()); this.push(T0); break;
-        case 0x21: this.pop(T0); this.store(T0, 4 * this.leb()); break;
+        case 0x20: {
+            const out = this.resultRegister();
+            this.load(out, 4 * this.leb());
+            this.push(out);
+            break;
+        }
+        case 0x21: this.store(this.pop(T5), 4 * this.leb()); break;
         case 0x28: case 0x2f: case 0x36: case 0x3b: {
             this.leb(); // alignment hint
             const offset = this.leb();
             if (offset > 2047) throw new SyntaxError("RV32 field offset exceeds the instruction range");
             if (op === 0x28 || op === 0x2f) {
-                this.pop(T0);
-                this.load(T0, offset, T0, op === 0x28 ? 2 : 5); // lw or lhu
-                this.push(T0);
+                const base = this.pop(T5);
+                const out = this.resultRegister();
+                this.load(out, offset, base, op === 0x28 ? 2 : 5); // lw or lhu
+                this.push(out);
             } else {
-                this.pop(T1);
-                this.pop(T0);
-                this.store(T1, offset, T0, op === 0x36 ? 2 : 1); // sw or sh
+                const value = this.pop(T6);
+                this.store(value, offset, this.pop(T5), op === 0x36 ? 2 : 1); // sw or sh
             }
             break;
         }
-        case 0x41: this.constant(T0, this.leb(true)); this.push(T0); break;
-        case 0x45:
-            this.pop(T0);
-            this.emit(instruction.i(0x13, T0, 3, T0, 1));
-            this.push(T0);
+        case 0x41: {
+            const out = this.resultRegister();
+            this.constant(out, this.leb(true));
+            this.push(out);
             break;
+        }
+        case 0x45: {
+            const value = this.pop(T5);
+            const out = this.resultRegister();
+            this.emit(instruction.i(0x13, out, 3, value, 1));
+            this.push(out);
+            break;
+        }
         default: this.binary(op);
         }
         return false;
@@ -209,7 +249,7 @@ class FunctionCode {
         this.emit(0);
         for (let i = 0; i < count; i++) this.store(A0 + i, 4 * i);
         while (this.at < this.program.code.length && !this.step(this.byte())) {}
-        const frame = (4 * (this.locals + this.peak + 1) + 15) & -16;
+        const frame = (4 * (this.locals + this.spillDepth + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
