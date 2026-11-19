@@ -402,7 +402,14 @@ void compiler_tick(bool defer_relocation) {
         if (!tool_image || !job.exports) {
             if (!job.error[0]) snprintf(job.error,sizeof job.error,"compiler bundle allocation");
         } else {
+#if PICOCALC_TYPED_AGENDA
+            vtime_t relocation_start = port_clock();
+#endif
             int rc=esp_elf_relocate(&tool,(const uint8_t *)tool_image,tool_size);
+#if PICOCALC_TYPED_AGENDA
+            printf("cji: loader start_us=%lld end_us=%lld\n",
+                   (long long)relocation_start, (long long)port_clock());
+#endif
             if (rc) snprintf(job.error,sizeof job.error,"compiler relocation %d",rc);
         }
         if (!job.frontend_heap) free(tool_image);

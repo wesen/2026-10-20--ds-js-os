@@ -195,6 +195,7 @@ bool p4_agenda_prepare(void) {
   if (startup_module) {
     boot_frame_deadline = first_response + FIRST_FRAME_TARGET_US;
     recording_boot = true;
+    printf("agenda boot source_start_us=%lld\n", (long long)first_response);
   }
   return startup_module != NULL;
 }

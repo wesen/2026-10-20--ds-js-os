@@ -531,3 +531,21 @@ Inspect `eval_prelude`, `build_prelude_cache`, and `vm_reset` in nucleus/vm.c. B
 I pushed the technical deep dive and generated comparison figure to go-go-parc main at a1f3854. The flash writer verified the prior app image at 0x10000, and the restored headless firmware loaded both manifests and answered cji status. The source, notes and installation were left on the device. The profiler and physical measurement protocol remain available for the next assembled run.
 
 In the cache receipt all 23 worlds had already made their first boot attempt by the time the notes result returned. The two slower trials had a roughly 242 ms gap from file return to settlement and the faster trial had a 74 ms gap. The next trace should report the actual CJI relocation interval and work taken ahead of the ready Agenda settlement. The remaining physical gate still requires a powered keyboard and panel.
+
+## Step 19 — Time CJI relocation against the pending Agenda file result
+
+### What I did
+
+I captured the beginning and end of the actual esp_elf_relocate call on the same monotonic clock as the Agenda stages. The serial sampler subtracts the source-capture origin from both loader timestamps. I tested three reboots on the unchanged cached-prelude RV32 headless profile. The firmware SHA-256 was 54f5ec891dc6b94795b117d31317038c5a6dfc75bf4698845eb7684bd3eaaae2.
+
+### What worked
+
+File replies reached the kernel between 1.915 and 1.917 s. In the slow boot, CJI relocation started at 2.001 s and held the kernel task until 2.147 s. Agenda started to handle the file result about 1.2 ms later and published at 2.150 s. In the other two boots Agenda began to handle the file result before the deadline and CJI relocation ran after publication. The raw timings are in various/p4-rv32-boot-loader-baseline.json.
+
+### What I learned
+
+The slow boot was a race between the expiration of the fixed startup interval and a result already on the dispatch lane. Removing the CJI operation from that window can recover its blocking time. It still needs a finite bound for the case where the initial file read cannot produce a usable frame.
+
+### Code review instructions
+
+Build the same headless RV32 profile as the prior milestone. Run scripts/10-measure-agenda-boot.py and compare file-returned, cji_loader.start_us, cji_loader.end_us, settle, and first_response for each independent reboot.

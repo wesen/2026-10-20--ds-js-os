@@ -43,6 +43,13 @@ def capture(port, world_profile):
     cache = re.search(r"quickjs prelude cache bytes=(\d+) build_us=(\d+)", log)
     if cache:
         trial["prelude_cache"] = {"bytes": int(cache[1]), "build_us": int(cache[2])}
+    origin = re.search(r"agenda boot source_start_us=(\d+)", log)
+    relocation = re.search(r"cji: loader start_us=(\d+) end_us=(\d+)", log)
+    if origin and relocation:
+        trial["cji_loader"] = {
+            "start_us": int(relocation[1]) - int(origin[1]),
+            "end_us": int(relocation[2]) - int(origin[1]),
+        }
     if world_profile:
         worlds = {}
         for line in log.splitlines():

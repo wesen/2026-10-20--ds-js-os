@@ -1,0 +1,67 @@
+{
+  "trials": [
+    {
+      "compile_us": 449380,
+      "first_response_us": 2000751,
+      "world_bytes": 124588,
+      "frame_turn_us": 1099,
+      "before_cji_restore_us": 586154,
+      "before_dispatch_us": 596091,
+      "world_init_us": 1243205,
+      "world_init_done_us": 1248187,
+      "file_submitted_us": 1862371,
+      "file_returned_us": 1916684,
+      "settle_us": 1999657,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94973
+      },
+      "cji_loader": {
+        "start_us": 2288748,
+        "end_us": 2439807
+      }
+    },
+    {
+      "compile_us": 449150,
+      "first_response_us": 2150391,
+      "world_bytes": 124588,
+      "frame_turn_us": 1794,
+      "before_cji_restore_us": 585892,
+      "before_dispatch_us": 595564,
+      "world_init_us": 1242854,
+      "world_init_done_us": 1247820,
+      "file_submitted_us": 1863125,
+      "file_returned_us": 1917304,
+      "settle_us": 2148617,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94206
+      },
+      "cji_loader": {
+        "start_us": 2000615,
+        "end_us": 2147424
+      }
+    },
+    {
+      "compile_us": 449084,
+      "first_response_us": 1999475,
+      "world_bytes": 124588,
+      "frame_turn_us": 1083,
+      "before_cji_restore_us": 585864,
+      "before_dispatch_us": 595453,
+      "world_init_us": 1242399,
+      "world_init_done_us": 1247366,
+      "file_submitted_us": 1861925,
+      "file_returned_us": 1915165,
+      "settle_us": 1998398,
+      "prelude_cache": {
+        "bytes": 44544,
+        "build_us": 94903
+      },
+      "cji_loader": {
+        "start_us": 2287780,
+        "end_us": 2438852
+      }
+    }
+  ]
+}
