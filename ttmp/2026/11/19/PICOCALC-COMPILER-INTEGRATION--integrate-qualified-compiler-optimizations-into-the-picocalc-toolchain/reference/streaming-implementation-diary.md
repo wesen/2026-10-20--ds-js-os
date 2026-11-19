@@ -60,3 +60,9 @@ A 136-function source tests a call to function 134, an imported call with a relo
 ### What remains outside this checkpoint
 
 The test uses Linux Node to run ordinary JavaScript and existing reactor inputs. Cold compiler memory and latency must be measured using the integrated firmware selection on the physical P4. The supervisor handles the board and the independent examiner reviews the production change.
+
+## Step 3. Pin the qualification receipt
+
+The production JavaScript, test and initial diary were committed as `2317696`, “Allow native PicoCalc compiles to consume one function at a time.” I reran the entire parity fixture with `2317696` as its explicit source argument. The resulting [streaming parity receipt](../various/streaming-parity.json) records the native and linked ELF hashes and the corresponding Wasm module hashes for all three worlds.
+
+The independent examiner also reported that the working implementation passed its diagnostic, fixup, artifact and retained-heap probes. I supplied the committed revision for its separate final qualification. The supervisor owns the report of physical firmware behavior.
