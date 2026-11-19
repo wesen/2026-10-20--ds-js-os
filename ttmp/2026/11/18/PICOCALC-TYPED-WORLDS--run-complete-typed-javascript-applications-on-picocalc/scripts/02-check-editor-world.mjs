@@ -13,7 +13,10 @@ assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
 const os = resolve('picocalc-os');
 const source = ['layout', 'view', 'editor'].map(name =>
     readFileSync(join(os, 'worlds/editor', name + '.typed'), 'utf8')).join('\n');
-const wasm = compileTypedWorld(source, readFileSync(join(os, 'build/typed-world-reactor.wasm')));
+const wasmReactor = readFileSync(join(os, 'build/typed-world-reactor.wasm'));
+const wasm = compileTypedWorld(source, wasmReactor);
+const wrongCall = source.replace('typedSdkScreen(output,', 'typedSdkScreen(0,');
+assert.throws(() => compileTypedWorld(wrongCall, wasmReactor), SyntaxError);
 const dir = mkdtempSync(join(tmpdir(), 'typed-editor-reactor-'));
 const system = JSON.parse(readFileSync(join(os, 'js/system.json'), 'utf8'));
 const worlds = system.worlds.filter(w => ['display', 'keyboard', 'compositor', 'launcher', 'editor'].includes(w.name));
@@ -61,7 +64,9 @@ try {
         '-fvisibility=hidden', '-Wl,--strip-all', '-Wl,-z,max-page-size=16', '-Wno-attributes',
         '-I', sdk, '-o', reactor, join(runtime, 'world.c'), join(runtime, 'rv32-slot.S'), join(sdk, 'nw_elf.c'),
     ], {stdio:'inherit'});
-    const elf = compileTypedWorldRv32(source, readFileSync(reactor));
+    const rv32Reactor = readFileSync(reactor);
+    const elf = compileTypedWorldRv32(source, rv32Reactor);
+    assert.throws(() => compileTypedWorldRv32(wrongCall, rv32Reactor), SyntaxError);
     writeFileSync(app, elf);
     const expected = join(dir, 'expected.h');
     writeFileSync(expected, 'static const char screen[] = ' + JSON.stringify(JSON.stringify(original.frame.tree)) + ';\n');

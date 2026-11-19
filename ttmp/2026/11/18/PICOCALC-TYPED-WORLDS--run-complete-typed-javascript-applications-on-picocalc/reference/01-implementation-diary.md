@@ -134,3 +134,57 @@ Trace `compiler/typed-world.js` through the existing `linkWorld` and `linkSlot` 
 ### Technical details
 
 `typedWorldMeta(field, buffer)` returns a UTF-16 count for kind, title, shortcut, help text or icon. `typedWorldEvent(kind, screen, hints)` returns the screen count. A zero return means that the typed world has no frame to publish for that event. The current shared runtime is a bootstrap and rendering path. File I/O and interactive keys still need runtime hooks and typed Editor handlers.
+
+## Step 3 — Let typed Editor call the shared SDK
+
+Editor now explicitly requests its start frame through `typedSdkScreen`. The runtime validates the two output spans and forwards the existing screen call. The typed event's return value can carry the kernel's done-or-wait status independently of a frame length.
+
+### Prompt Context
+
+See Step 1 for the full Editor goal. This advances the shared runtime needed to keep application policy in typed source.
+
+**Commit (preceding checkpoint)** `766e12b` — “Boot typed Editor through a shared PicoCalc world reactor.”
+
+### What I did
+
+- Passed typed SDK signatures into the existing function resolver in `compiler/typed-wasm.js`. The Wasm linker binds those names to exported reactor functions and compares their machine-level signatures.
+- Added RV32 fixups for calls to the runtime and a table of tail jumps in `sdk/typed/rv32-slot.S`. The slot encodes the number of typed entries and runtime imports. Old reactors use zero runtime imports and retain their existing header value.
+- Moved the screen publication request into `editor.typed`. The generic C function checks the buffer identities and counts, transcodes the UTF-16 strings, and calls `nw_screen`.
+
+### Why
+
+A typed world needs to choose the timing and order of its effects. Separating SDK calls from the event result preserves that control. The runtime still uses the existing checked kernel entry.
+
+### What worked
+
+- The Wasm simulator comparison still matched the original Editor frame and screenshot. The linked RV32 startup and metadata tests still passed. The updated artifacts were 15,819 bytes for Wasm and 27,284 bytes for ELF.
+- Both linkers rejected a screen call with an integer where the typed signature requires a buffer.
+- Existing Files passed its Wasm and RV32 fixtures. Editor's standalone layout still passed 107,776 vectors.
+
+### What didn't work
+
+No failures occurred in this checkpoint. The runtime still only exposes the screen SDK call, and the event entrance currently carries only the event kind.
+
+### What I learned
+
+The existing Wasm index mechanism already fits direct typed calls into a trusted reactor. The RV32 backend can preserve position independence by emitting a relative call to a fixed-size template trampoline. The trampoline jumps directly to the SDK wrapper with the original return address retained.
+
+### What was tricky to build
+
+The runtime SDK functions must resolve before the typed functions are checked. RV32 generates the typed code separately and learns the relative position of its trampoline at ELF linking. The template linker checks the declared import count and validates that each trampoline begins with the intended jump encoding.
+
+### What warrants a second pair of eyes
+
+Keep the shared SDK signature order aligned with the assembly trampoline order as more operations become available. Check that every writable range is validated locally and that the kernel remains responsible for authority checks.
+
+### What should be done in the future
+
+Deliver the structured message and settlement data to the typed app, keep per-instance state across turns, and add checked file-open, read, reply, and grant-release calls. Drive the original Files-to-Editor open workflow through both targets.
+
+### Code review instructions
+
+Compare the import handling in both compiler backends and follow `typedSdkScreen` from typed Editor through the runtime and `nw_screen`. Run `02-check-editor-world.mjs` with P4 GCC and the CJI emulator after rebuilding `typed-world-reactor`.
+
+### Technical details
+
+Wasm binds the runtime function's existing index. RV32 stores the relocation offset and the import-table index, then patches a four-byte JAL to its template trampoline. The original two typed entry slots are still patched as tail jumps into the generated program. The screen API takes two explicit lengths in UTF-16 units and returns the kernel SDK result as an i32.

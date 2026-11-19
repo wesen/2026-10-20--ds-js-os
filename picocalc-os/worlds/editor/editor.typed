@@ -12,6 +12,6 @@ function typedWorldMeta(field: i32, output: buffer): i32 {
 function typedWorldEvent(kind: i32, output: buffer, hints: buffer): i32 {
     if (!(kind === 2)) return 0;
     const hintLength = hints.writeLiteral(0, "Esc Files");
-    hints.setCharCodeAt(hintLength, 0);
-    return editorEmptyFrame(output);
+    typedSdkScreen(output, editorEmptyFrame(output), hints, hintLength);
+    return 0;
 }

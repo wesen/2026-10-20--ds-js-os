@@ -221,10 +221,13 @@ class FunctionCode {
     }
 }
 
-function compile(source) {
-    const {functions, records} = typedWasm.compileFunctions(source, 0);
+function compile(source, imports = []) {
+    const imported = imports.map((fn, index) => ({...fn, index}));
+    const {functions, records} = typedWasm.compileFunctions(source, imports.length, imported);
     const starts = functions.map(() => ({global: true}));
-    const code = functions.map(fn => new FunctionCode(fn, functions, starts).lower());
+    const targets = [...imported.map(fn => ({importIndex: fn.index})), ...starts];
+    const callables = [...imported, ...functions];
+    const code = functions.map(fn => new FunctionCode(fn, callables, targets).lower());
     let words = 0;
     for (let i = 0; i < code.length; i++) {
         starts[i].at = words;
@@ -233,11 +236,16 @@ function compile(source) {
     const image = new Uint8Array(words * 4);
     const view = new DataView(image.buffer);
     const entries = Object.create(null);
+    const relocations = [];
     for (let i = 0; i < code.length; i++) {
         const start = starts[i].at;
         const fn = code[i];
         entries[functions[i].name] = start * 4;
         for (const {from, target, rd} of fn.calls) {
+            if (target.importIndex !== undefined) {
+                relocations.push({offset: 4 * (start + from), index: target.importIndex});
+                continue;
+            }
             const delta = 4 * (target.at - from - (target.global ? start : 0));
             if (!Number.isInteger(delta) || delta < -1048576 || delta > 1048574)
                 throw new SyntaxError("RV32 jump exceeds the instruction range");
@@ -246,7 +254,8 @@ function compile(source) {
         for (let j = 0; j < fn.words.length; j++) view.setUint32(4 * (start + j), fn.words[j], true);
     }
     const layouts = Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)]));
-    return {image, entries, records: layouts, signatures: functions.map(({name, params, result}) => ({name, params, result}))};
+    return {image, entries, records: layouts, relocations, importCount: imports.length,
+        signatures: functions.map(({name, params, result}) => ({name, params, result}))};
 }
 
 // The bundled, already linked SDK reactor reserves this area in executable
@@ -254,7 +263,8 @@ function compile(source) {
 function linkSlot(program, runtime, entries) {
     const magic = [0x4147454e, 0x44415256, 0x3332534c];
     const headerBytes = 20;
-    const codeOffset = headerBytes + 4 * entries.length;
+    const importOffset = headerBytes + 4 * entries.length;
+    const codeOffset = importOffset + 4 * program.importCount;
     const view = new DataView(runtime.buffer, runtime.byteOffset, runtime.byteLength);
     if (runtime.length < 52 || view.getUint32(0, true) !== 0x464c457f ||
         view.getUint8(4) !== 1 || view.getUint8(5) !== 1 ||
@@ -279,12 +289,16 @@ function linkSlot(program, runtime, entries) {
                 view.getUint32(at + 8, true) !== magic[2]) continue;
             if (slot >= 0) throw new SyntaxError("ambiguous RV32 reactor slot");
             capacity = view.getUint32(at + 12, true);
-            if (view.getUint32(at + 16, true) !== entries.length || capacity < codeOffset ||
+            if (view.getUint32(at + 16, true) !== entries.length + 65536 * program.importCount || capacity < codeOffset ||
                 capacity > end - at || capacity > 1048576 || capacity % 4)
                 throw new SyntaxError("invalid RV32 reactor slot header");
-            for (let entry = at + headerBytes; entry < at + codeOffset; entry += 4) {
+            for (let entry = at + headerBytes; entry < at + importOffset; entry += 4) {
                 if (view.getUint32(entry, true) !== 0x00100073)
                     throw new SyntaxError("invalid RV32 reactor entry stub");
+            }
+            for (let entry = at + importOffset; entry < at + codeOffset; entry += 4) {
+                if ((view.getUint32(entry, true) & 0xfff) !== 0x6f)
+                    throw new SyntaxError("invalid RV32 runtime import trampoline");
             }
             slot = at;
             at += capacity - 4;
@@ -302,6 +316,10 @@ function linkSlot(program, runtime, entries) {
         patched.setUint32(slot + stub, instruction.j(ZERO, codeOffset + offset - stub), true);
     }
     bytes.set(program.image, slot + codeOffset);
+    for (const {offset, index} of program.relocations) {
+        const call = codeOffset + offset;
+        patched.setUint32(slot + call, instruction.j(RA, importOffset + 4 * index - call), true);
+    }
     return bytes;
 }
 

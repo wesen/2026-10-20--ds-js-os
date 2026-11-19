@@ -47,17 +47,21 @@ void nw_init(void)
     }
 }
 
+#ifdef __wasm__
+__attribute__((export_name("typedSdkScreen")))
+#endif
+int typedSdkScreen(const void *screen, int length, const void *hint, int hint_length)
+{
+    if (screen != &output || hint != &hints || length <= 0 || length > SCREEN_CAP ||
+        hint_length < 0 || hint_length > HINT_CAP ||
+        utf8(output.units, length, screen_bytes, sizeof screen_bytes) < 0 ||
+        utf8(hints.units, hint_length, hint_bytes, sizeof hint_bytes) < 0) return -1;
+    return nw_screen(screen_bytes, hint_bytes);
+}
+
 int nw_on_event(const nw_event *event)
 {
     output.length = SCREEN_CAP;
     hints.length = HINT_CAP;
-    hints.units[0] = 0;
-    int length = typedWorldEvent(event->kind, &output, &hints);
-    if (length <= 0) return NW_DONE;
-    int hint_length = 0;
-    while (hint_length < HINT_CAP && hints.units[hint_length]) hint_length++;
-    if (length > SCREEN_CAP || utf8(output.units, length, screen_bytes, sizeof screen_bytes) < 0 ||
-        utf8(hints.units, hint_length, hint_bytes, sizeof hint_bytes) < 0 ||
-        nw_screen(screen_bytes, hint_bytes) < 0) nw_log("typed world screen rejected");
-    return NW_DONE;
+    return typedWorldEvent(event->kind, &output, &hints);
 }

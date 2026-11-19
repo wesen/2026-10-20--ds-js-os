@@ -453,10 +453,10 @@ class FunctionEmitter {
     }
 }
 
-function compileFunctions(source, functionBase) {
+function compileFunctions(source, functionBase, imported = []) {
     if (source.length > 64 * 1024) throw new SyntaxError("input limit exceeded");
     const lex = new Lexer(source);
-    const declared = new Map();
+    const declared = new Map(imported.map(fn => [fn.name, fn]));
     const records = new Map();
     while (lex.accept("record")) {
         const name = lex.ident();
@@ -590,7 +590,7 @@ function encodeByteVector(elements) {
 
 // The trusted runtime owns memory, host imports, and world exports. Its
 // direct calls to the exported slot keep their original function index.
-function linkWorld(source, runtime, entries) {
+function linkWorld(source, runtime, entries, imports = []) {
     const reader = new WasmReader(runtime);
     const header = reader.take(8);
     if (header.join(",") !== "0,97,115,109,1,0,0,0") throw new SyntaxError("invalid Wasm runtime header");
@@ -622,7 +622,15 @@ function linkWorld(source, runtime, entries) {
     }));
     if (bodies.length !== definitions.length) throw new SyntaxError("mismatched Wasm runtime code and function counts");
     const base = importCount + definitions.length;
-    const {functions, records} = compileFunctions(source, base);
+    const imported = imports.map(fn => {
+        const name = Array.from(fn.name, ch => ch.charCodeAt(0)).join(",");
+        const index = exports.find(item => item.name === name && item.kind === 0)?.index;
+        if (!Number.isInteger(index) || index < importCount ||
+            signature(fn).join(",") !== types[definitions[index - importCount]]?.join(","))
+            throw new SyntaxError("Wasm runtime import signature mismatch for " + fn.name);
+        return {...fn, index};
+    });
+    const {functions, records} = compileFunctions(source, base, imported);
     for (const entry of entries) {
         const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
         const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
