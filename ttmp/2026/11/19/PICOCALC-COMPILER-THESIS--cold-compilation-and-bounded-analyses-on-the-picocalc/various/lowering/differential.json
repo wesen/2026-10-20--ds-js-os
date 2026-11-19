@@ -1,0 +1,137 @@
+{
+  "cases": 78,
+  "traps": 12,
+  "imports": 15,
+  "executedWords": {
+    "baseline": 4594,
+    "variant": 3138
+  },
+  "examples": [
+    {
+      "name": "bump",
+      "args": [
+        2,
+        3
+      ],
+      "result": 6,
+      "trap": false,
+      "baseline": 40,
+      "variant": 21
+    },
+    {
+      "name": "bump",
+      "args": [
+        -6,
+        2
+      ],
+      "result": -4,
+      "trap": false,
+      "baseline": 31,
+      "variant": 18
+    },
+    {
+      "name": "callMixed",
+      "args": [
+        -9
+      ],
+      "result": 638,
+      "trap": false,
+      "baseline": 80,
+      "variant": 65
+    },
+    {
+      "name": "callFull",
+      "args": [
+        -9
+      ],
+      "result": 601,
+      "trap": false,
+      "baseline": 110,
+      "variant": 100
+    },
+    {
+      "name": "callMixed",
+      "args": [
+        0
+      ],
+      "result": 512,
+      "trap": false,
+      "baseline": 80,
+      "variant": 65
+    },
+    {
+      "name": "callFull",
+      "args": [
+        0
+      ],
+      "result": 475,
+      "trap": false,
+      "baseline": 110,
+      "variant": 100
+    },
+    {
+      "name": "callMixed",
+      "args": [
+        48
+      ],
+      "result": 656,
+      "trap": false,
+      "baseline": 80,
+      "variant": 65
+    },
+    {
+      "name": "callFull",
+      "args": [
+        48
+      ],
+      "result": 619,
+      "trap": false,
+      "baseline": 110,
+      "variant": 100
+    },
+    {
+      "name": "deepJoin",
+      "args": [
+        7,
+        2
+      ],
+      "result": 70,
+      "trap": false,
+      "baseline": 65,
+      "variant": 46
+    },
+    {
+      "name": "deepJoin",
+      "args": [
+        2,
+        7
+      ],
+      "result": 70,
+      "trap": false,
+      "baseline": 65,
+      "variant": 46
+    },
+    {
+      "name": "deepJoin",
+      "args": [
+        7,
+        7
+      ],
+      "result": 70,
+      "trap": false,
+      "baseline": 65,
+      "variant": 46
+    },
+    {
+      "name": "deepJoin",
+      "args": [
+        -5,
+        -2
+      ],
+      "result": 61,
+      "trap": false,
+      "baseline": 65,
+      "variant": 46
+    }
+  ]
+}
