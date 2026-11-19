@@ -1,0 +1,402 @@
+{
+  "revision": "f0846ba342e6b64d5350b1a6e49dfd37a2e33fc3",
+  "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "tools": {
+    "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "gcc": "riscv32-esp-elf-gcc (crosstool-NG esp-14.2.0_20260121) 14.2.0",
+    "ccFlags": [
+      "-O2",
+      "-std=gnu11",
+      "-D_GNU_SOURCE",
+      "-DCONFIG_VERSION=\"2026-06-04\"",
+      "-DPICOCALC_TYPED_EDITOR=1",
+      "-DPICOCALC_RV32_EDITOR=1"
+    ],
+    "targetFlags": [
+      "-march=rv32imafc_zicsr_zifencei",
+      "-mabi=ilp32f",
+      "-Os",
+      "-fPIC",
+      "-shared",
+      "-nostartfiles",
+      "-nostdlib",
+      "-e",
+      "app_main",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wl,--gc-sections",
+      "-fvisibility=hidden",
+      "-Wl,--strip-all",
+      "-Wl,-z,max-page-size=16",
+      "-Wno-attributes"
+    ],
+    "archiveSha256": "9a9960bb92f763390a03ab4a08be9ff53ceccfd5b79dea09922bfabec443e67e",
+    "shimSha256": "80a343f9bb522edf34e18f0b1776b7f0158113efc11e6d59dfbc9cc45e7ca8c0",
+    "quickjsVersion": "2026-06-04",
+    "generatorSha256": "e824538d4d4907f9fe7d6eac70fad4053a9a72e4dd762f72ae9d4ed1d07ab147"
+  },
+  "cpu": 6,
+  "seed": 1927,
+  "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+  "reactorSha256": "7af700966b46c6efbec0ffb993eb5452cf4ba11ba4b63f15d3f182435072b4e6",
+  "linkerSha256": "b959c3443976b27afa201ee95b81d50e683eafb34dc374a175eca8d4e4cb108e",
+  "treatments": {
+    "production": {
+      "frontendBytes": 25347,
+      "frontendSha256": "8ad276d678c20ceecc797e3564552453547f343e5354f6c069c2153eaf404885",
+      "backendSha256": "6f312e42fb873f5c6a676434880eec67ea54bd39a1249d26783d9f66bbe3e26e",
+      "samples": [
+        {
+          "block": 1,
+          "position": 4,
+          "us": 50532,
+          "peak": 3402944
+        },
+        {
+          "block": 2,
+          "position": 3,
+          "us": 49957,
+          "peak": 3402944
+        },
+        {
+          "block": 3,
+          "position": 3,
+          "us": 50126,
+          "peak": 3402944
+        },
+        {
+          "block": 4,
+          "position": 5,
+          "us": 50163,
+          "peak": 3402944
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "us": 50654,
+          "peak": 3402944
+        },
+        {
+          "block": 6,
+          "position": 1,
+          "us": 54153,
+          "peak": 3402944
+        },
+        {
+          "block": 7,
+          "position": 1,
+          "us": 50269,
+          "peak": 3402944
+        },
+        {
+          "block": 8,
+          "position": 4,
+          "us": 50284,
+          "peak": 3402944
+        },
+        {
+          "block": 9,
+          "position": 2,
+          "us": 50092,
+          "peak": 3402944
+        },
+        {
+          "block": 10,
+          "position": 5,
+          "us": 54202,
+          "peak": 3402944
+        }
+      ],
+      "medians": {
+        "us": 50276.5,
+        "peak": 3402944.0
+      }
+    },
+    "pruned": {
+      "frontendBytes": 17262,
+      "frontendSha256": "6715e39898257b7ab11f3199bf16b9a00edeab5afbb4f390bda61f6c11688570",
+      "backendSha256": "6f312e42fb873f5c6a676434880eec67ea54bd39a1249d26783d9f66bbe3e26e",
+      "samples": [
+        {
+          "block": 1,
+          "position": 2,
+          "us": 48846,
+          "peak": 3368208
+        },
+        {
+          "block": 2,
+          "position": 5,
+          "us": 49557,
+          "peak": 3368208
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "us": 49542,
+          "peak": 3368208
+        },
+        {
+          "block": 4,
+          "position": 4,
+          "us": 49629,
+          "peak": 3368208
+        },
+        {
+          "block": 5,
+          "position": 4,
+          "us": 49913,
+          "peak": 3368208
+        },
+        {
+          "block": 6,
+          "position": 2,
+          "us": 50365,
+          "peak": 3368208
+        },
+        {
+          "block": 7,
+          "position": 3,
+          "us": 49950,
+          "peak": 3368208
+        },
+        {
+          "block": 8,
+          "position": 5,
+          "us": 50213,
+          "peak": 3368208
+        },
+        {
+          "block": 9,
+          "position": 1,
+          "us": 50294,
+          "peak": 3368208
+        },
+        {
+          "block": 10,
+          "position": 3,
+          "us": 57289,
+          "peak": 3368208
+        }
+      ],
+      "medians": {
+        "us": 49931.5,
+        "peak": 3368208.0
+      }
+    },
+    "unframed": {
+      "frontendBytes": 17100,
+      "frontendSha256": "20ba35ddaf64e88c5067bfa9df2a8767f5667206dc3b7f0328aedc224028bdda",
+      "backendSha256": "6f312e42fb873f5c6a676434880eec67ea54bd39a1249d26783d9f66bbe3e26e",
+      "samples": [
+        {
+          "block": 1,
+          "position": 1,
+          "us": 51614,
+          "peak": 2616552
+        },
+        {
+          "block": 2,
+          "position": 4,
+          "us": 48045,
+          "peak": 2616552
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "us": 48173,
+          "peak": 2616552
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "us": 48689,
+          "peak": 2616552
+        },
+        {
+          "block": 5,
+          "position": 5,
+          "us": 48768,
+          "peak": 2616552
+        },
+        {
+          "block": 6,
+          "position": 4,
+          "us": 47878,
+          "peak": 2616552
+        },
+        {
+          "block": 7,
+          "position": 5,
+          "us": 48407,
+          "peak": 2616552
+        },
+        {
+          "block": 8,
+          "position": 3,
+          "us": 48222,
+          "peak": 2616552
+        },
+        {
+          "block": 9,
+          "position": 3,
+          "us": 48155,
+          "peak": 2616552
+        },
+        {
+          "block": 10,
+          "position": 1,
+          "us": 52392,
+          "peak": 2616552
+        }
+      ],
+      "medians": {
+        "us": 48314.5,
+        "peak": 2616552.0
+      }
+    },
+    "packed": {
+      "frontendBytes": 16353,
+      "frontendSha256": "0a2ffb13e8c7423af9fb6b00ceed087dbf8b93bfba68731e2dd7192f2fb27be2",
+      "backendSha256": "69c0d644df452cd4df0f180ab615ae0192759f2ba8d7ed5a66795824b7081c9d",
+      "samples": [
+        {
+          "block": 1,
+          "position": 3,
+          "us": 40559,
+          "peak": 2588664
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "us": 40915,
+          "peak": 2588664
+        },
+        {
+          "block": 3,
+          "position": 4,
+          "us": 40228,
+          "peak": 2588664
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "us": 40570,
+          "peak": 2588664
+        },
+        {
+          "block": 5,
+          "position": 3,
+          "us": 40546,
+          "peak": 2588664
+        },
+        {
+          "block": 6,
+          "position": 5,
+          "us": 42994,
+          "peak": 2588664
+        },
+        {
+          "block": 7,
+          "position": 4,
+          "us": 41098,
+          "peak": 2588664
+        },
+        {
+          "block": 8,
+          "position": 1,
+          "us": 41377,
+          "peak": 2588664
+        },
+        {
+          "block": 9,
+          "position": 5,
+          "us": 44551,
+          "peak": 2588664
+        },
+        {
+          "block": 10,
+          "position": 2,
+          "us": 45372,
+          "peak": 2588664
+        }
+      ],
+      "medians": {
+        "us": 41006.5,
+        "peak": 2588664.0
+      }
+    },
+    "stream": {
+      "frontendBytes": 16407,
+      "frontendSha256": "885f143b55529ddff138c0fef91959a80f4ed71ca090d44062205335d1692ded",
+      "backendSha256": "4d369452641ac94c5abbaa2fc5ba4353ca8289bf0785356728793034072a07ea",
+      "samples": [
+        {
+          "block": 1,
+          "position": 5,
+          "us": 41721,
+          "peak": 1891168
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "us": 41893,
+          "peak": 1891168
+        },
+        {
+          "block": 3,
+          "position": 5,
+          "us": 41828,
+          "peak": 1891168
+        },
+        {
+          "block": 4,
+          "position": 3,
+          "us": 41818,
+          "peak": 1891168
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "us": 41538,
+          "peak": 1891168
+        },
+        {
+          "block": 6,
+          "position": 3,
+          "us": 41936,
+          "peak": 1891168
+        },
+        {
+          "block": 7,
+          "position": 2,
+          "us": 41675,
+          "peak": 1891168
+        },
+        {
+          "block": 8,
+          "position": 2,
+          "us": 42835,
+          "peak": 1891168
+        },
+        {
+          "block": 9,
+          "position": 4,
+          "us": 41784,
+          "peak": 1891168
+        },
+        {
+          "block": 10,
+          "position": 4,
+          "us": 45133,
+          "peak": 1891168
+        }
+      ],
+      "medians": {
+        "us": 41823.0,
+        "peak": 1891168.0
+      }
+    }
+  },
+  "moduleSha256": "caad5e2d704f3dd363cfd1833a43616d33574e3fee9bdb75514cddebd7939bf9",
+  "moduleBytes": 240452
+}

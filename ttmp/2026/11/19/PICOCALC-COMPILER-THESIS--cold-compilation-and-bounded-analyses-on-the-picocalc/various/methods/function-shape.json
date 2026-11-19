@@ -1,0 +1,572 @@
+{
+  "revision": "dd69a81cbf91ebf00e1f527bcbbf785697b1c9a4",
+  "engine": {
+    "quickjsVersion": "2026-06-04",
+    "quickjsTree": "1cabf1dfb35d373e4bcad26cf622af05857386d3",
+    "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "ccFlags": [
+      "-O2",
+      "-D_GNU_SOURCE",
+      "-DCONFIG_VERSION=\"2026-06-04\""
+    ],
+    "originalCompilerSha256": {
+      "typed-wasm.js": "8ad276d678c20ceecc797e3564552453547f343e5354f6c069c2153eaf404885",
+      "typed-rv32.js": "cf4ea4db4f3a4ba57b614b0c9af513e48a9a28343061c640b1991a4dd552ae85"
+    },
+    "generatedCompilerSha256": {
+      "bytes": "3a6f98ae6ce2889d77df09089d9260ffdd854391a5cf36011a34300485b10856",
+      "unframed": "7c0c5905f99cf7044dcd33920e0f3f1a5580ac683667de49a595aa1bc80c6369",
+      "packed": "4f07d48d137946ca60475f16ff78c431e8ac2e8cd84ac069b76a5001a4ea2912",
+      "stream": "bc81e84e9f0a37315cce51eeabbb5ce3fa72e3f396a4d6748387237894f9a0fd"
+    },
+    "replayCompilerSha256": {
+      "bytes": "88214f8b2c889060051eafce10a6f42608124960be0cee136af31d0cf8cb79df",
+      "unframed": "149dfac8bf7f791f8bde4539fc2fdc7d84e9d5281d6e74208e51291502c27332",
+      "packed": "162847726f9916ff237a584506c17ea065a2e915a0eefc3736e03770aedcabb7",
+      "stream": "bc81e84e9f0a37315cce51eeabbb5ce3fa72e3f396a4d6748387237894f9a0fd"
+    }
+  },
+  "shapes": {
+    "one": {
+      "partition": [
+        2048
+      ],
+      "statements": 2048,
+      "verification": {
+        "sourceBytes": 14382,
+        "sourceSha256": "30952d67d500eb22ec76356d7d368b2fdb871ea54cc7d5fe44cfddf473200698",
+        "imageBytes": 81972,
+        "imageSha256": "683a4deec9cc37931944ca89e153999728398d79969ae2541cd53174fd913269",
+        "metadataSha256": "9ca2927b86c928eb758061e24be567335c2c030d95eb4484b6edae97a65d3b9c",
+        "relocationCount": 0,
+        "importCount": 0,
+        "recordCount": 0,
+        "entryCount": 1,
+        "verifiedLanes": [
+          "bytes",
+          "unframed",
+          "packed",
+          "stream"
+        ],
+        "frontend": {
+          "bytes": {
+            "codeCells": 14343,
+            "maxFunctionCells": 14343,
+            "framedCells": 14348,
+            "functionCount": 1
+          },
+          "unframed": {
+            "codeCells": 14343,
+            "maxFunctionCells": 14343,
+            "framedCells": 0,
+            "functionCount": 1
+          },
+          "packed": {
+            "codeCells": 14343,
+            "maxFunctionCells": 14343,
+            "framedCells": 0,
+            "functionCount": 1
+          }
+        }
+      },
+      "extraPeakBytesByOrder": [
+        {
+          "bytes": 1151032,
+          "unframed": 836720,
+          "packed": 843008,
+          "stream": 750640
+        },
+        {
+          "unframed": 860208,
+          "packed": 843008,
+          "stream": 750640,
+          "bytes": 1135360
+        },
+        {
+          "packed": 860208,
+          "stream": 750640,
+          "bytes": 1135360,
+          "unframed": 836720
+        },
+        {
+          "stream": 774128,
+          "bytes": 1135360,
+          "unframed": 836720,
+          "packed": 836720
+        }
+      ]
+    },
+    "eight": {
+      "partition": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "statements": 2048,
+      "verification": {
+        "sourceBytes": 14704,
+        "sourceSha256": "7e4adde74355e1baed59672bd32b3d0fc002476accab5be1fea806289cd125b7",
+        "imageBytes": 82336,
+        "imageSha256": "8d36942daf920a5d7d5c8452ea468c989b9c3f7d88de7d281e6667883ec127ad",
+        "metadataSha256": "10e17864d8d099e84e2a934c366e6566cd3ba85d3792560831a822a75c86f6f1",
+        "relocationCount": 0,
+        "importCount": 0,
+        "recordCount": 0,
+        "entryCount": 8,
+        "verifiedLanes": [
+          "bytes",
+          "unframed",
+          "packed",
+          "stream"
+        ],
+        "frontend": {
+          "bytes": {
+            "codeCells": 14392,
+            "maxFunctionCells": 1799,
+            "framedCells": 14432,
+            "functionCount": 8
+          },
+          "unframed": {
+            "codeCells": 14392,
+            "maxFunctionCells": 1799,
+            "framedCells": 0,
+            "functionCount": 8
+          },
+          "packed": {
+            "codeCells": 14392,
+            "maxFunctionCells": 1799,
+            "framedCells": 0,
+            "functionCount": 8
+          }
+        }
+      },
+      "extraPeakBytesByOrder": [
+        {
+          "bytes": 1200272,
+          "unframed": 889616,
+          "packed": 891536,
+          "stream": 574864
+        },
+        {
+          "unframed": 889616,
+          "packed": 889616,
+          "stream": 578832,
+          "bytes": 1200272
+        },
+        {
+          "packed": 889616,
+          "stream": 574864,
+          "bytes": 1200272,
+          "unframed": 889616
+        },
+        {
+          "stream": 574864,
+          "bytes": 1200272,
+          "unframed": 889616,
+          "packed": 889616
+        }
+      ]
+    },
+    "sixty-four": {
+      "partition": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "statements": 2048,
+      "verification": {
+        "sourceBytes": 17334,
+        "sourceSha256": "043915199f265b787fb66e7ce2ca39da121a1554cdbd1f81937f286b9998ffdf",
+        "imageBytes": 85248,
+        "imageSha256": "37331ff685fb3e675098765467fdb5279514776bdfd77f56faa9cbdbc8562e30",
+        "metadataSha256": "02978110ff9db3563da88d836afe09f7d70346283dee4a32d3001b20a1d8823e",
+        "relocationCount": 0,
+        "importCount": 0,
+        "recordCount": 0,
+        "entryCount": 64,
+        "verifiedLanes": [
+          "bytes",
+          "unframed",
+          "packed",
+          "stream"
+        ],
+        "frontend": {
+          "bytes": {
+            "codeCells": 14784,
+            "maxFunctionCells": 231,
+            "framedCells": 15104,
+            "functionCount": 64
+          },
+          "unframed": {
+            "codeCells": 14784,
+            "maxFunctionCells": 231,
+            "framedCells": 0,
+            "functionCount": 64
+          },
+          "packed": {
+            "codeCells": 14784,
+            "maxFunctionCells": 231,
+            "framedCells": 0,
+            "functionCount": 64
+          }
+        }
+      },
+      "extraPeakBytesByOrder": [
+        {
+          "bytes": 1360864,
+          "unframed": 1028800,
+          "packed": 1024000,
+          "stream": 687088
+        },
+        {
+          "unframed": 1028080,
+          "packed": 1024000,
+          "stream": 687104,
+          "bytes": 1360880
+        },
+        {
+          "packed": 1024000,
+          "stream": 687088,
+          "bytes": 1360880,
+          "unframed": 1028096
+        },
+        {
+          "stream": 687104,
+          "bytes": 1360864,
+          "unframed": 1028080,
+          "packed": 1024000
+        }
+      ]
+    },
+    "large-first": {
+      "partition": [
+        1796,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "statements": 2048,
+      "verification": {
+        "sourceBytes": 17334,
+        "sourceSha256": "ce7f14f71bbe318c70f4ef87a701b91dd4e5928d7549dc77bad8cd2ccdaf63ff",
+        "imageBytes": 85248,
+        "imageSha256": "265c186a9f686abd3d1822600d1f14cd7a8eb1e7b687933a4c0aba1af8704110",
+        "metadataSha256": "90660f30549e8027dfa342fad336268568f5a45956357122353c7a0d3692e2e8",
+        "relocationCount": 0,
+        "importCount": 0,
+        "recordCount": 0,
+        "entryCount": 64,
+        "verifiedLanes": [
+          "bytes",
+          "unframed",
+          "packed",
+          "stream"
+        ],
+        "frontend": {
+          "bytes": {
+            "codeCells": 14784,
+            "maxFunctionCells": 12579,
+            "framedCells": 15041,
+            "functionCount": 64
+          },
+          "unframed": {
+            "codeCells": 14784,
+            "maxFunctionCells": 12579,
+            "framedCells": 0,
+            "functionCount": 64
+          },
+          "packed": {
+            "codeCells": 14784,
+            "maxFunctionCells": 12579,
+            "framedCells": 0,
+            "functionCount": 64
+          }
+        }
+      },
+      "extraPeakBytesByOrder": [
+        {
+          "bytes": 1255616,
+          "unframed": 903712,
+          "packed": 899648,
+          "stream": 601344
+        },
+        {
+          "unframed": 810256,
+          "packed": 899632,
+          "stream": 602496,
+          "bytes": 1246688
+        },
+        {
+          "packed": 806176,
+          "stream": 601344,
+          "bytes": 1246704,
+          "unframed": 903712
+        },
+        {
+          "stream": 561112,
+          "bytes": 1246672,
+          "unframed": 904288,
+          "packed": 900224
+        }
+      ]
+    },
+    "large-last": {
+      "partition": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        1796
+      ],
+      "statements": 2048,
+      "verification": {
+        "sourceBytes": 17334,
+        "sourceSha256": "f31d37f574869cb2a1edda64111c3daba5056b63c7e491261f26181b6ea2ad7b",
+        "imageBytes": 85248,
+        "imageSha256": "e8b9dcf9b3ab10259598f75ca3e83d5a76017e298f4d4eee6084fbfa3e89c65c",
+        "metadataSha256": "4849032e85d1dcf9050103b25ae3efbb10d86633773ed40983493a9730e6a267",
+        "relocationCount": 0,
+        "importCount": 0,
+        "recordCount": 0,
+        "entryCount": 64,
+        "verifiedLanes": [
+          "bytes",
+          "unframed",
+          "packed",
+          "stream"
+        ],
+        "frontend": {
+          "bytes": {
+            "codeCells": 14784,
+            "maxFunctionCells": 12579,
+            "framedCells": 15041,
+            "functionCount": 64
+          },
+          "unframed": {
+            "codeCells": 14784,
+            "maxFunctionCells": 12579,
+            "framedCells": 0,
+            "functionCount": 64
+          },
+          "packed": {
+            "codeCells": 14784,
+            "maxFunctionCells": 12579,
+            "framedCells": 0,
+            "functionCount": 64
+          }
+        }
+      },
+      "extraPeakBytesByOrder": [
+        {
+          "bytes": 1059008,
+          "unframed": 904088,
+          "packed": 899648,
+          "stream": 766608
+        },
+        {
+          "unframed": 908560,
+          "packed": 899632,
+          "stream": 766608,
+          "bytes": 1246688
+        },
+        {
+          "packed": 904480,
+          "stream": 766640,
+          "bytes": 1246688,
+          "unframed": 903728
+        },
+        {
+          "stream": 775552,
+          "bytes": 1246688,
+          "unframed": 903712,
+          "packed": 899632
+        }
+      ]
+    }
+  }
+}
