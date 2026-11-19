@@ -558,7 +558,7 @@ I configured a fresh ESP-IDF 5.4.2 build for typed RV32 Agenda with the keyboard
 
 ### What worked
 
-The fresh configuration and complete build succeeded. The resulting app image SHA-256 was f287addba826d494489d3a6eacb1cf006d7a1633907111bd7e5055ab385bfe3b and the app partition had 0x10850 bytes free. Checking both generated manifests showed identical world names and entries except for the expected Agenda file and budget change. The 22 entries include the native keyboard, power, compositor and display. The clean-build reproduction is in the design guide.
+The fresh configuration and complete build succeeded. The resulting app image SHA-256 was f287addba826d494489d3a6eacb1cf006d7a1633907111bd7e5055ab385bfe3b and the app partition had 0x10850 bytes free. Checking both generated manifests showed identical world names and entries except for the expected Agenda file, engine, and budget changes. The 22 entries include the native keyboard, power, compositor and display. The clean-build reproduction is in the design guide.
 
 ### What should be done in the future
 
@@ -593,3 +593,7 @@ Review the upper bound and epoch check around relocation deferral. Check that th
 ### Code review instructions
 
 Compare scripts/10-measure-agenda-boot.py against the loader-baseline and under-two-seconds receipts. Re-run scripts/05-measure-agenda-p4.py with --source build for editable-source behavior. Use scripts/07-check-rv32-parser.mjs and scripts/09-check-rv32-world.mjs to compare the emitted artifacts and the reminder/restart behavior.
+
+## Step 22 — Publish the cold-start milestone and verify restoration
+
+The go-go-parc report was pushed on main at d3b9f2e. After the cold and editable trials I restored the exact previous application at 0x10000. The flash writer verified its hash, the restored boot loaded both CJI manifests, and the console responded to cji status. The peripheral-enabled test image was built and remains available in the clean build directory. The separate physical test stays open.
