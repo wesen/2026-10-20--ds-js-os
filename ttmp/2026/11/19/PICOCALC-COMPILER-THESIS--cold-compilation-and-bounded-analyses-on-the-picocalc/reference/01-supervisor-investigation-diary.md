@@ -78,3 +78,57 @@ Start with the experiment design in this ticket and the prior NATIVE-NEXT Scope 
 ### Technical details
 
 The corpus comprises 7 Files, 34 Agenda and 120 Editor functions. Scope A static counts refer to RV32 words in the app, excluding reactor padding. A measured peak must name the allocator and the machine.
+
+## Step 2: Compare cold compilations and execute both modules with one guest driver
+
+The code-size change in f0846ba was large enough to test through the complete native link. I compiled the original ESP32-P4 Editor entry on Linux and supplied the four host services it actually uses. This reuses the firmware's parsing, lowering, linking, allocator accounting, copy-out and teardown paths. The host supplies a monotonic clock, Linux allocation, a JS stack limit and directory-backed bundle reads.
+
+### Prompt Context
+
+**User prompt:** See Step 1.
+**Assistant interpretation:** Test each worker's central claim against independent evidence.
+**Inferred user intent:** Determine what is credible about handheld compiler architecture while explicitly tracking device availability.
+**Commit (code):** f0846ba — Keep shallow typed RV32 operands in registers. Supervisor design milestone b1e128e.
+
+### What I did
+
+- Wrote `scripts/supervisor/cold-entry.c` and `cold-compiler.py`; built the same real RV32 Editor reactor as the existing replay. Alternated the two compiler revisions across 20 pairs, each invocation in a fresh OS process. Checked repeatable ELF hashes per compiler.
+- Wrote `scripts/supervisor/editor-steps.py`. For each of four workflows the original replay generates one driver and checks JS/Wasm and RV32 outputs. Reused each driver and the same module pathname across two link products. Used the emulator's built-in RV32_STEPS counter, compared full stdout hashes and checked that the fresh candidate ELF exactly matched the replay's.
+- The research guide upload returned `OK: uploaded PicoCalc - Experiments in Bounded Compiler Construction.pdf -> /ai/2026/11/19/PICOCALC-COMPILER-THESIS`.
+
+### Why
+
+Instruction counts in a file weight a cold branch as highly as a loop that executes thousands of times. Guest instruction counts include traffic from both the app and its reactor. Complete-compile measurements account for allocations or work that a backend-only benchmark can omit.
+
+### What worked
+
+- All 20 timing pairs favored the integrated change. The baseline median was 82.678 ms and the candidate 74.701 ms. Median paired savings were 7.660 ms. The Linux allocator peaks were 3,910,760 and 3,402,944 bytes.
+- Four guest-driver outputs matched. Late navigation took 73,408,388 and 42,316,056 guest instructions respectively. Occupied code shrank while the resulting ELF remained 240,452 bytes.
+
+### What didn't work
+
+No supported P4 console answered on the host's USB UART. The older 3.14-second Editor board result describes the baseline only. An early two-pair host pilot ran substantially faster than the recorded 20-pair series. I retained all formal samples and used paired comparisons. The onboarding commit's whitespace check flagged spaces copied literally from the user prompt; following entries omit incidental trailing spaces.
+
+### What I learned
+
+Instruction reduction directly changes guest workload cost in these four fixtures. A host allocator counts glibc usable bytes on a 64-bit machine; it cannot supply the P4 compiler heap peak. Neither an emulator step nor a guest instruction predicts a fixed number of ESP32-P4 clock cycles.
+
+### What was tricky to build
+
+The `editor.so` loaded by a fixture must be byte-identical to the ELF produced by the timed compiler in the candidate lane. Fixed reactor inputs, complete output hashes and an identical guest pathname prevent differences between the timing artifact and the replay artifact.
+
+### What warrants a second pair of eyes
+
+Check the timing interval in `p4_editor_compile`, including runtime cleanup, and the guest interval that counts driver setup as well as app and reactor execution. Every run uses a new JS runtime with existing Linux page cache state.
+
+### What should be done in the future
+
+Repeat the same source-and-reactor A/B on identified hardware and report the device's own receipt and allocator totals.
+
+### Code review instructions
+
+Run `python3 scripts/supervisor/cold-compiler.py <RV32-GCC> --candidate f0846ba --pairs 20 --modules-out <tmp>` using the ticket script path from the repository root, then `python3 scripts/supervisor/editor-steps.py <RV32-GCC> <rv32emu> <tmp>`. Compare both receipts in `various/supervisor/`.
+
+### Technical details
+
+The Linux adapter uses the original `typed_p4.c`, `editor_p4.c`, `p4.h` and the project's QuickJS objects. The FreeRTOS queue declaration is the only board type supplied at build time. The emitted byte difference lives inside a fixed-size executable slot.

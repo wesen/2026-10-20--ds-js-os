@@ -1,0 +1,93 @@
+{
+  "metric": "all guest instructions from process start to exit; includes static driver, reactor and app",
+  "modules": {
+    "baseline": "23ab36c348166586422fbce7f9435010e733f004d3cb804ea9e91e11b4aef4e3",
+    "candidate": "caad5e2d704f3dd363cfd1833a43616d33574e3fee9bdb75514cddebd7939bf9"
+  },
+  "workloads": {
+    "--edit": {
+      "driver_sha256": "1f4329a9b309ebecf1f58c47dc050fa09c76fc3a03bd6febddfdda267217007e",
+      "fixture": {
+        "inputBytes": 123,
+        "matchingWasmFramebuffers": 4,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 50
+      },
+      "measurements": {
+        "baseline": {
+          "instructions": 4047796,
+          "output_sha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34"
+        },
+        "candidate": {
+          "instructions": 2543239,
+          "output_sha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34"
+        }
+      }
+    },
+    "--large": {
+      "driver_sha256": "eb3ae6162f86845d9fa0565056e50fca4dc077318c8b9c33cb816a5825945e2a",
+      "fixture": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 3,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200
+      },
+      "measurements": {
+        "baseline": {
+          "instructions": 12359858,
+          "output_sha256": "6a6c89e5a4045e4bc2aee9f885436a9b145ae12d5e825c8e6a1df78b4a7d052c"
+        },
+        "candidate": {
+          "instructions": 7621786,
+          "output_sha256": "6a6c89e5a4045e4bc2aee9f885436a9b145ae12d5e825c8e6a1df78b4a7d052c"
+        }
+      }
+    },
+    "--preview-dense-inline": {
+      "driver_sha256": "1f7e64ea3c7c3fb55f7b92e1254b65e5b7fc2f568cec50d127d0e9be66fda362",
+      "fixture": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 5,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200
+      },
+      "measurements": {
+        "baseline": {
+          "instructions": 35693419,
+          "output_sha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+        },
+        "candidate": {
+          "instructions": 22853317,
+          "output_sha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+        }
+      }
+    },
+    "--late-navigation": {
+      "driver_sha256": "b7cca768d5fc0f17e5e7ce70d12fd0ccf9497b4f1325e00bc0bdd17586c79707",
+      "fixture": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 6,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200
+      },
+      "measurements": {
+        "baseline": {
+          "instructions": 73408388,
+          "output_sha256": "84514793e4b3a35d8d34c09c4b36afc627262e221014960fc56624460d44465f"
+        },
+        "candidate": {
+          "instructions": 42316056,
+          "output_sha256": "84514793e4b3a35d8d34c09c4b36afc627262e221014960fc56624460d44465f"
+        }
+      }
+    }
+  }
+}
