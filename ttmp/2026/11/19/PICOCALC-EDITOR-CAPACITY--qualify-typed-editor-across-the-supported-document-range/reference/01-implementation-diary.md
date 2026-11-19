@@ -31,9 +31,11 @@ I wrote the capacity design before implementing the bulk scan. The Wasm fixture 
 
 **Inferred user intent:** Make typed application source sufficient to maintain and build the real Editor for the device.
 
+**Commit (code):** `3b355cc` — "Accelerate full-size typed Editor searches with bounded UTF-16 scans"
+
 ### What I did
 
-- Created `PICOCALC-EDITOR-CAPACITY` and wrote the analysis and implementation guide.
+- Created `PICOCALC-EDITOR-CAPACITY` and wrote the analysis and implementation guide. The reMarkable upload returned `OK: uploaded PicoCalc Editor Full Size Search and Preview.pdf -> /ai/2026/11/19/PICOCALC-EDITOR-CAPACITY`. A second check reported that the document already existed.
 - Added `typedSdkSeek` and registered it in the compiler signatures and RV32 import table.
 - Replaced per-unit newline traversal and sparse candidate traversal with bounded range seeking. The typed find implementation still owns folding, interval order, matching, highlighting, and cursor placement.
 - Ran `make -C picocalc-os typed-world-reactor` and the existing three-way workflow driver with `--find`, `--markdown`, and `--large --keep-fixture`.
