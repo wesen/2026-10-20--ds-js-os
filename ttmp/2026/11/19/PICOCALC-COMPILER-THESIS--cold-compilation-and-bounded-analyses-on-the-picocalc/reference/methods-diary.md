@@ -112,3 +112,39 @@ The median of paired differences need not equal the difference between treatment
 ### Future work and review instructions
 
 Run `python3 -B "$TICKET/scripts/methods/cold-stages.py" "$RV32_GCC" /tmp/methods-cold.json --cpu 6` with an available CPU and Espressif GCC. Match output hashes and inspect per-block times before interpreting timing differences. These are host-conditional causal comparisons over one frozen Editor workload. Selected settings, such as the ordering seed and local 64-bit compiler, appear in the receipt.
+
+## Step 4. Reconcile the measurements with the rebuilt factorial and publish the review
+
+The experiments, receipt files and first three entries are committed at `bb54a6e`, “Independently test PicoCalc compiler phase costs and function order.” I drafted a standalone article for the supervisor to publish. The notes retain the exact treatment definitions, matched estimates and reproducibility limits.
+
+### Prompt context
+
+See step 1. The requested independent report must let a reader reproduce the result and distinguish production behavior, experimental behavior and proposed changes.
+
+### What I did and why
+
+I reread the article as a reader encountering the compiler for the first time. The word “packed” needed a concrete example because it could otherwise suggest a fixed-width packed byte format. I added the instruction encoding for 130 and defined a cell as an ordinary JavaScript array element. The shape test needed a distinction between equality within each source and equality across two different synthetic sources. I added the exact output checklist and a discussion of the mixed-error case.
+
+I parsed both Python sources with the standard library AST reader and checked the JSON receipts together. All shared treatment peaks, the independent reactor and source digests, and the complete linked register-backend ELF agree. I recomputed both sets of paired contrasts. The rebuilt supervisor factorial put the combined change ahead in all 16 blocks with median paired savings of 12.9815 ms. The within-block estimate of how much register savings change with frontend configuration had mixed signs.
+
+### What worked
+
+The two independent cold compiles converge on the same ELF and exact Linux allocation peaks for overlapping treatments. The shape study supplies a counterexample to predicting the entire compiler peak from maximum input-body size. The article includes the command sequence, host toolchain, interpretation limits and complete ELF digest.
+
+### What didn't work and corrections
+
+My first human summary and step 2 reported 766,608 bytes for the large-last median. This was an individual observation. The four samples are 766,608, 766,608, 766,640 and 775,552 bytes, whose median is **766,624**. The large-first median is 601,344. The percentage difference still rounds to 27.5%. The article, notes and supervisor correction use the recomputed value. The raw receipt is unchanged.
+
+An initial normal sandbox invocation of `git add -- "$TICKET/scripts/methods" "$TICKET/various/methods" "$TICKET/reference/methods-diary.md"` failed with `Unable to create '/home/manuel/code/wesen/2026-10-20--ds-js-os/.git/index.lock': Read-only file system`. Scoped approval for staging and committing the intended files succeeded.
+
+### What I learned and what was tricky
+
+A median in four observations often lies between two actual readings. The firmware's absolute memory figures happened to coincide exactly across two host builds while individual wall-clock timings varied. A cold host benchmark still includes the pinned runtime, compiler and memory configuration, and cannot predict the board's cycle count or process-wide allocation.
+
+### What warrants another pair of eyes and what comes next
+
+The next production question is how the firmware selects a compiler bundle in a mixed Wasm/native build and how that choice affects target memory. A stage-tagged peak trace would test the overlap mechanism in the last-function examples. Target qualification remains the supervisor's separate future experiment.
+
+### Review instructions
+
+Start with `various/reports/methods.md` and its reproduction section. Check the raw per-treatment samples in `various/methods/cold-stages.json`, then the paired cases `large-first` and `large-last` in `various/methods/function-shape.json`. The separate `reference/methods-notes.md` catalogs phase boundaries, measurement controls and excluded observables.
