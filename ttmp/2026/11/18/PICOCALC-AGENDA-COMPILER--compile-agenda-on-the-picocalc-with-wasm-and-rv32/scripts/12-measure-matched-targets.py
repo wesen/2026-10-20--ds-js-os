@@ -57,8 +57,10 @@ def capture(port, *args):
     )
 
 
-def flash(args, image, label):
-    capture(args.port, "--no-reset", "-s", "1", "-c", "0.1 hold")
+def flash(args, image, label, *, require_hold=False):
+    held = capture(args.port, "--no-reset", "-s", "1.5", "-c", "0.2 hold")
+    if require_hold and ("i2c0 held between transactions" not in held or "#OK hold" not in held):
+        raise RuntimeError("keyboard bus did not acknowledge hold before flashing")
     with (args.output / (label + "-flash.log")).open("wb") as log:
         subprocess.run(
             [args.esptool_python, args.esptool, "--chip", "esp32p4", "--port", args.port,

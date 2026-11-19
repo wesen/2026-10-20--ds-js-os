@@ -1,0 +1,28 @@
+{
+  "status": "incomplete, the keyboard controller stopped responding during the run",
+  "firmware_sha256": "9bbe7c155493c882f57b8228dd8e440f851a19daffa7b9f70cfe03312cc77f61",
+  "cold_measurements_us": [
+    2048485,
+    2035030,
+    2040003,
+    2039306
+  ],
+  "cold_i2c_health": "not sampled for each reboot; these data cannot establish a healthy control",
+  "settled_measurements_us": [
+    882827,
+    964895,
+    888833,
+    981433
+  ],
+  "workflow_bus_counters": [
+    "  bus i2c0  busy 21188.09 ms, 1231 transfers, 4932 bytes, 1231 errors",
+    "  bus spi2  busy   179.84 ms, 98 transfers, 518979 bytes, 0 errors"
+  ],
+  "workflow_framebuffer": "- (BAD: 45839 px)",
+  "workflow_result": "all six reads matched the unchanged fixture; no keyboard-driven action took effect",
+  "restored": {
+    "engine": "rv32",
+    "console": true,
+    "notes": "verified zero bytes"
+  }
+}

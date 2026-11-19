@@ -18,10 +18,18 @@ WORLD_FIELDS = {
 REPLY_WAIT_FIELDS = {"reply_wait_us", "reply_wait_segments"}
 
 
-def capture(port, world_profile):
+def capture(port, world_profile, bus_profile=False):
     repo = Path(__file__).resolve().parents[6]
+    launcher = [sys.executable, repo / "picocalc-os/tools/p4cap.py", "-p", port]
+    if bus_profile:
+        held = subprocess.check_output(
+            [*launcher, "--no-reset", "-s", "1.5", "-c", "0.2 hold"], text=True, errors="replace",
+        )
+        if "i2c0 held between transactions" not in held or "#OK hold" not in held:
+            raise SystemExit("keyboard bus did not acknowledge hold before reboot")
+    options = ["-s", "9.0", "-c", "7 stats"] if bus_profile else ["-s", "7.5"]
     log = subprocess.check_output(
-        [sys.executable, repo / "picocalc-os/tools/p4cap.py", "-p", port, "-s", "7.5"],
+        [*launcher, *options],
         text=True,
         errors="replace",
     )
@@ -43,6 +51,13 @@ def capture(port, world_profile):
         if match is None:
             raise SystemExit(f"missing {name} in cold boot serial output")
         trial[name] = int(match.group(1))
+    if bus_profile:
+        trial["buses"] = {
+            name: {"transfers": int(transfers), "errors": int(errors)}
+            for name, transfers, errors in re.findall(r"^  bus (\S+).*?, (\d+) transfers, \d+ bytes, (\d+) errors", log, re.M)
+        }
+        if not {"i2c0", "spi2"} <= trial["buses"].keys():
+            raise SystemExit("missing I2C or SPI counters in powered cold boot serial output")
     cache = re.search(r"quickjs prelude cache bytes=(\d+) build_us=(\d+)", log)
     if cache:
         trial["prelude_cache"] = {"bytes": int(cache[1]), "build_us": int(cache[2])}
@@ -89,10 +104,11 @@ def main():
     parser.add_argument("--port", required=True)
     parser.add_argument("--trials", type=int, default=3)
     parser.add_argument("--world-profile", action="store_true")
+    parser.add_argument("--bus-profile", action="store_true", help="record the I2C and SPI counters with each boot")
     args = parser.parse_args()
     if args.trials < 1:
         parser.error("--trials must be positive")
-    print(json.dumps({"trials": [capture(args.port, args.world_profile) for _ in range(args.trials)]}, indent=2))
+    print(json.dumps({"trials": [capture(args.port, args.world_profile, args.bus_profile) for _ in range(args.trials)]}, indent=2))
 
 
 if __name__ == "__main__":

@@ -408,3 +408,51 @@ The linked Wasm world is 67,434 bytes and the RV32 ELF is 66,348 bytes. The RV32
 The implementation checkpoint is `88f9e63`. I rebooted the installed image three times using the parent ticket's `scripts/10-measure-agenda-boot.py --port /dev/ttyACM0 --trials 3 --world-profile`. Cold first response was 2,141,472 µs, 2,130,166 µs and 2,138,179 µs. The compile median was 723,693 µs and the compiler peak was 709,796 bytes in all three runs. The first response reported 185,519 world bytes each time. The raw per-world timing is in `various/p4-prompt-refresh-cold-rv32.json`.
 
 The first file request followed Agenda initialization by 539,078–539,581 µs. Sixteen world startup attempts that began inside that interval account for about 332 ms of measured execution. The notes request itself took 113–126 ms to return. This separates the compiler from a specific post-initialization delay for future comparison. The report “PicoCalc Agenda — Keeping prompt errors and reminder refresh consistent” includes the typed record contract, the timer flow and the observed boot profile. The vault push advanced go-go-parc main to `4b91803`.
+
+## Step 14 — Prepare the identical powered images and diagnose the keyboard fault
+
+I built the full typed Agenda application into two powered P4 images with the same source, SDK configuration and 8 MiB partition table. The matching manifest check permits only the Agenda engine to differ. The first full hardware comparison reached the Wasm workload, then the keyboard controller stopped acknowledging I²C. The harness restored RV32 and the original zero-byte notes file.
+
+### Prompt Context
+
+The active goal asks for powered Wasm and RV32 measurements, feature parity and an independent physical keypress-to-panel measurement. This attempt uses the same nonempty disposal fixture and checks each resulting file state.
+
+### What I did
+
+- Added `scripts/05-build-powered-targets.sh` to build and retain both variants from one configured ESP-IDF tree and compare the emitted SDK configurations and partition tables.
+- Added `scripts/06-qualify-powered-targets.py` to assert equal manifests, require an existing empty task file, seed the same three tasks, sample cold startup and settled rebuilds, and exercise toggle, edit, two-step deletion, creation and Editor save. It records the results and preserves the final RV32 configuration and empty notes file.
+- Added per-trial I²C and SPI counters to the parent boot harness, and changed the workflow harness to retain timings even when the keyboard phase fails.
+
+### Why
+
+A common fixture and power state are needed to compare compile and publication times across targets. A working keyboard and framebuffer capture are stronger evidence for workflow acceptance than simply observing that the compiled module booted. Recording the bus health with each trial distinguishes those conditions.
+
+### What worked
+
+The two images built and matched on their SDK configuration and world inventory. Wasm completed four cold and four settled compilation/publication runs. The initial Wasm flash probe answered `cji status`. Recovery flashed a verified RV32 image, obtained the same console response, and confirmed the empty task file. The failed attempt's measurements and observed bus errors are in `various/powered-wasm-peripheral-fault.json`.
+
+### What didn't work
+
+- The first qualification invocation stopped with `This fixture requires an existing empty notes/todo.txt.` The independent serial `ls notes` and `cat notes/todo.txt` confirmed a zero-byte file. I changed the guard to match the named zero-byte directory entry and its successful response.
+- The Wasm workflow emitted `I2C transaction unexpected nack detected` and all 1,231 observed I²C transfers failed. No keyboard action changed the file. The framebuffer capture reported `BAD: 45839 px` amid serial output interleaving. The hardware fault also appeared on the subsequent RV32 boot, so the Wasm timings alone cannot establish a healthy powered comparison.
+- I requested a full PicoCalc power cycle. The ESP32 was still reachable over serial and no user data was overwritten. The device bus source documents that the attached keyboard controller can remain stuck across an ESP32-only reset.
+
+### What I learned
+
+A successful compile and Agenda publication can coexist with an unresponsive keyboard controller. A console reply confirms the processor link, and the bus counters and actual notes writes establish separate parts of the acceptance test.
+
+### What was tricky to build
+
+The normal cleanup must run after a failed workflow without treating the failure as a programming or timing result. The updated harness retains both the requested timing evidence and a per-target workflow verdict even when input is unavailable.
+
+### What warrants a second pair of eyes
+
+Watch the boot buses across the full reset series. The existing `hold` command reduces the risk of resetting mid-transaction, and a full handheld power cycle may still be required. Treat any trial with bus errors as a different hardware condition.
+
+### What should be done in the future
+
+Retry with the keyboard controller responding. Retain the actual powered workflow comparison and repeat the cold series for the scheduler candidate. Obtain a camera sequence for physical latency.
+
+### Code review instructions
+
+Read `scripts/05-build-powered-targets.sh`, `scripts/06-qualify-powered-targets.py`, and the parent compiler ticket's `scripts/10-measure-agenda-boot.py`. Use the 8 MiB layout and verify a zero-byte fixture before running either profile.

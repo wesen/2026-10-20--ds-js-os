@@ -31,3 +31,7 @@ Implement F6 through a narrowed file capability, verify refusal, timeout and suc
 ## 2026-11-18
 
 Match the original prompt errors, midnight grouping, cached reminder tick, and five-minute external refresh. Verify typed error spans on both targets and capture the displayed diagnostics on the PicoCalc.
+
+## 2026-11-18
+
+Build the matched powered profiles and add a paired cold and workflow harness. Record the partial Wasm run and keyboard-controller fault; restore RV32 and the empty notes file.
