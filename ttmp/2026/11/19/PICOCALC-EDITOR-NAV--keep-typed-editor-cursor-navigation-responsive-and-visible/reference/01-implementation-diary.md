@@ -92,6 +92,8 @@ The new board images passed the ordinary workflows on both Wasm and RV32. The RV
 
 **Inferred user intent:** Use the handheld's real edit path with a predictable build and reproducible results.
 
+**Commit (backfilled from Git):** `1690c1f` — "Qualify full-size typed Editor navigation on the PicoCalc"
+
 ### What I did
 
 - Built both matched firmware variants. The shared typed source SHA-256 is `073e2690f1c0f76d35914be2c5fb17f5d150b6bbd793774909206c045368d620`.

@@ -608,6 +608,8 @@ See Step 1 for the full Editor goal.
 
 **Commit (firmware)** `f5f824d` — “Build typed Editor from source on both PicoCalc P4 engines.”
 
+**Commit (backfilled from Git):** `93f2d66` — "Qualify typed Editor Wasm and RV32 on the physical PicoCalc"
+
 ### What I did
 
 - Ran `04-qualify-editor-on-p4.py` against the matched images on `/dev/ttyACM0`. Verified the partition table, held the keyboard bus before flashing, and required esptool's flash hash verification.
@@ -663,6 +665,8 @@ I used the host simulator to exercise three operations above the short powered f
 See Step 1 for the full Editor goal. This is the capacity check identified before closing the device migration.
 
 **Commit (baseline measurement)** `f5f824d` — “Build typed Editor from source on both PicoCalc P4 engines.”
+
+**Commit (backfilled from Git):** `208076a` — "Finish full-size Editor saves without rescanning unchanged snapshots"
 
 ### What I did
 

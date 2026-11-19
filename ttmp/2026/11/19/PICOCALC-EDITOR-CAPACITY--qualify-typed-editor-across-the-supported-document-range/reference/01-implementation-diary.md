@@ -161,6 +161,8 @@ The full-size absent query passed after the UTF-16 scan change because the first
 
 **Inferred user intent:** Editor should remain responsive to realistic searches across an entire supported document.
 
+**Commit (backfilled from Git):** `fd0abf6` — "Reproduce dense and late-match typed Editor search overruns"
+
 ### What I did
 
 - Added `--adversarial` to `PICOCALC-TYPED-WORLDS/scripts/05-measure-large-editor.mjs`. It preserves exact input size and runs both variants with the same navigation sequence.
@@ -214,6 +216,8 @@ I built matched PicoCalc firmware with source SHA-256 `7c9d1b7bfdf78678354cf023b
 **Assistant interpretation:** Verify that the preview work runs on the handheld through the actual compiler, keyboard path, display, and filesystem.
 
 **Inferred user intent:** Maintain a working device image and keep repeatable evidence for later iterations.
+
+**Commit (backfilled from Git):** `690bcb3` — "Qualify typed Editor preview on the physical PicoCalc"
 
 ### What I did
 
@@ -342,6 +346,8 @@ The passing find workflow does not cover the very next editing key. I ran the sa
 
 **Inferred user intent:** Keep existing Editor workflows usable end to end, including navigation after find.
 
+**Commit (backfilled from Git):** `3d1eceb` — "Measure Editor navigation after a successful EOF match"
+
 ### What I did
 
 - Added the `--after-match` trial to the typed-worlds ticket's routine stress runner.
@@ -395,6 +401,8 @@ The rebuilt PicoCalc images passed standard Editor workflows on Wasm and RV32. T
 **Assistant interpretation:** Verify the new search implementation with the real on-device compiler and device workflow.
 
 **Inferred user intent:** Keep the installed image usable and preserve a reproducible hardware record.
+
+**Commit (backfilled from Git):** `f1d9ed9` — "Qualify full-size typed Editor search on the PicoCalc"
 
 ### What I did
 

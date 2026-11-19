@@ -29,6 +29,8 @@ The preview viewport can stream many rows, but its inline path still copies one 
 
 **Inferred user intent:** Keep complete preview behavior without delegating Markdown policy to another language.
 
+**Commit (backfilled from Git):** `44dcbf9` — "Measure and design full-line typed Markdown formatting"
+
 ### What I did
 
 - Added the `--long-inline` group to the existing full-size Editor stress script.
@@ -149,6 +151,8 @@ The final Wasm and RV32 firmware both passed the physical standard workflow. I t
 **Assistant interpretation:** Validate the complete typed Editor on its real hardware entry point and preserve evidence that connects the firmware to source and behavior.
 
 **Inferred user intent:** maintain a real PicoCalc Editor whose application logic is typed JavaScript.
+
+**Commit (backfilled from Git):** `60a38f0` — "Qualify the complete typed Editor on the physical PicoCalc"
 
 ### What I did
 
