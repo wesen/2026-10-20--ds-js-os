@@ -33,7 +33,7 @@ function editorMdFence(text: string, first: i32, end: i32): bool {
 
 function editorMdHeading(text: string, first: i32, end: i32): i32 {
     let at = first;
-    while (at < end && text.charCodeAt(at) === 35) { at = at + 1; }
+    while (at < end && at - first <= 6 && text.charCodeAt(at) === 35) { at = at + 1; }
     if (at === first || at - first > 6 || at >= end || !editorWhitespace(text.charCodeAt(at))) return 0;
     return at - first;
 }
@@ -89,74 +89,95 @@ function editorMdNextMarker(text: string, start: i32, end: i32, output: buffer):
     return at + 2;
 }
 
-function editorMdFind(buf: buffer, first: i32, end: i32, unit: i32): i32 {
-    let at = first;
-    while (at < end && !(buf.charCodeAt(at) === unit)) { at = at + 1; }
-    return at;
+// Passes compact their input in place. A negative probe means that the
+// next step searches for an opener. The closer search retains its cursor.
+function editorMdEmit(state: WorldState, out: buffer, first: i32, end: i32, next: i32): i32 {
+    if (!(state.mdWrite === first)) { typedSdkMove(out, state.mdWrite, first, end - first); }
+    state.mdWrite = state.mdWrite + end - first;
+    state.mdRead = next;
+    state.mdProbe = -1;
+    state.mdClose = -1;
+    return 0;
 }
 
-function editorMdBoldClose(buf: buffer, from: i32, length: i32): i32 {
-    if (from >= length || buf.charCodeAt(from) === 8232 || buf.charCodeAt(from) === 8233) return length;
-    let at = from + 1;
-    while (at + 1 < length && !(buf.charCodeAt(at) === 42 && buf.charCodeAt(at + 1) === 42) &&
-        !(buf.charCodeAt(at) === 8232 || buf.charCodeAt(at) === 8233)) { at = at + 1; }
-    if (at + 1 >= length || !(buf.charCodeAt(at) === 42 && buf.charCodeAt(at + 1) === 42)) return length;
-    return at;
+function editorMdOpen(state: WorldState, out: buffer, text: string): i32 {
+    let unit = 42;
+    if (state.mdPass === 2) { unit = 96; }
+    if (state.mdPass === 3) { unit = 91; }
+    const limit = Math.min(state.mdSize, state.mdRead + 1024);
+    const start = typedSdkSeek(text, state.mdRead, limit, unit, unit, unit, unit);
+    editorMdEmit(state, out, state.mdRead, start, start);
+    if (start === limit) return 0;
+    if (!(state.mdPass === 1)) { state.mdProbe = start + 1; }
+    if (!(state.mdPass === 1)) return 0;
+    if (start + 2 >= state.mdSize || !(text.charCodeAt(start + 1) === 42) ||
+        text.charCodeAt(start + 2) === 8232 || text.charCodeAt(start + 2) === 8233)
+        return editorMdEmit(state, out, start, start + 1, start + 1);
+    state.mdProbe = start + 3;
+    return 0;
 }
 
-function editorMdStrip(buf: buffer, size: i32, pass: i32): i32 {
-    let from = 0;
-    let at = 0;
-    while (from < size) {
-        const unit = buf.charCodeAt(from);
-        let start = from;
-        let end = from + 1;
-        let next = end;
-        if (pass === 0 && unit === 42 && from + 1 < size && buf.charCodeAt(from + 1) === 42) {
-            const close = editorMdBoldClose(buf, from + 2, size);
-            if (close < size) {
-                start = from + 2;
-                end = close;
-                next = close + 2;
-            }
-        }
-        if (pass === 1 && unit === 96) {
-            const close = editorMdFind(buf, from + 1, size, 96);
-            if (close > from + 1 && close < size) {
-                start = from + 1;
-                end = close;
-                next = close + 1;
-            }
-        }
-        if (pass === 2 && unit === 91) {
-            const close = editorMdFind(buf, from + 1, size, 93);
-            if (close > from + 1 && close + 1 < size && buf.charCodeAt(close + 1) === 40) {
-                const paren = editorMdFind(buf, close + 2, size, 41);
-                if (paren < size) {
-                    start = from + 1;
-                    end = close;
-                    next = paren + 1;
-                }
-            }
-        }
-        if (!(at === start)) { typedSdkMove(buf, at, start, end - start); }
-        at = at + end - start;
-        from = next;
-    }
-    return at;
+function editorMdBold(state: WorldState, out: buffer, text: string, limit: i32): i32 {
+    const start = state.mdRead;
+    const close = typedSdkSeek(text, state.mdProbe, limit, 42, 8232, 8233, 42);
+    if (close === state.mdSize) return editorMdEmit(state, out, start, close, close);
+    if (close < limit && !(text.charCodeAt(close) === 42))
+        return editorMdEmit(state, out, start, close + 1, close + 1);
+    if (close < limit && close + 1 < state.mdSize && text.charCodeAt(close + 1) === 42)
+        return editorMdEmit(state, out, start + 2, close, close + 2);
+    state.mdProbe = Math.min(limit, close + 1);
+    return 0;
 }
 
-function editorMdPlain(text: string, first: i32, end: i32, scratch: buffer): i32 {
-    let size = Math.min(end - first, scratch.length);
-    if (first + size < end && size > 0 && editorHighSurrogate(text.charCodeAt(first + size - 1))) {
-        size = size - 1;
-    }
-    let i = 0;
-    while (i < size) {
-        scratch.setCharCodeAt(i, text.charCodeAt(first + i));
-        i = i + 1;
-    }
-    size = editorMdStrip(scratch, size, 0);
-    size = editorMdStrip(scratch, size, 1);
-    return editorMdStrip(scratch, size, 2);
+function editorMdCode(state: WorldState, out: buffer, text: string, limit: i32): i32 {
+    const start = state.mdRead;
+    const close = typedSdkSeek(text, state.mdProbe, limit, 96, 96, 96, 96);
+    if (close === state.mdSize) return editorMdEmit(state, out, start, close, close);
+    if (close < limit && close === start + 1)
+        return editorMdEmit(state, out, start, close, close);
+    if (close < limit) return editorMdEmit(state, out, start + 1, close, close + 1);
+    state.mdProbe = limit;
+    return 0;
+}
+
+function editorMdLink(state: WorldState, out: buffer, text: string, limit: i32): i32 {
+    const start = state.mdRead;
+    let unit = 93;
+    if (state.mdClose >= 0) { unit = 41; }
+    const stop = typedSdkSeek(text, state.mdProbe, limit, unit, unit, unit, unit);
+    if (stop === state.mdSize) return editorMdEmit(state, out, start, stop, stop);
+    if (stop === limit) { state.mdProbe = limit; }
+    if (stop === limit) return 0;
+    if (state.mdClose >= 0) return editorMdEmit(state, out, start + 1, state.mdClose, stop + 1);
+    // Openers through this bracket share the same failed ending.
+    if (stop === start + 1 || stop + 1 >= state.mdSize || !(text.charCodeAt(stop + 1) === 40))
+        return editorMdEmit(state, out, start, stop + 1, stop + 1);
+    state.mdClose = stop;
+    state.mdProbe = stop + 2;
+    return 0;
+}
+
+function editorMdMatch(state: WorldState, scratch: buffer, text: string): i32 {
+    if (state.mdProbe < 0) return editorMdOpen(state, scratch, text);
+    const limit = Math.min(state.mdSize, state.mdProbe + 1024);
+    if (state.mdPass === 1) return editorMdBold(state, scratch, text, limit);
+    if (state.mdPass === 2) return editorMdCode(state, scratch, text, limit);
+    return editorMdLink(state, scratch, text, limit);
+}
+
+function editorMdStep(state: WorldState): i32 {
+    const scratch = typedSdkBuffer(10);
+    const text = typedSdkView(scratch, state.mdSize);
+    if (state.mdRead < state.mdSize) { editorMdMatch(state, scratch, text); }
+    if (state.mdRead < state.mdSize) return 0;
+    state.mdSize = state.mdWrite;
+    state.mdRead = state.mdStart;
+    state.mdWrite = state.mdStart;
+    state.mdPass = state.mdPass + 1;
+    if (state.mdPass < 4) return 0;
+    state.mdPass = 0;
+    state.mdRead = 0;
+    state.previewEnd = state.mdSize;
+    if (state.previewKind === 1 || state.previewKind === 5) { state.previewEnd = 0; }
+    return 0;
 }

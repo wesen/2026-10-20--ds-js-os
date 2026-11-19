@@ -1,0 +1,58 @@
+{
+  "full-open": {
+    "inputBytes": 65536,
+    "matchingWasmFramebuffers": 3,
+    "rv32Open": true,
+    "wasmBytes": 88255,
+    "elfBytes": 240452,
+    "wasmTurnBudgetMs": 200
+  },
+  "markdown": {
+    "inputBytes": 571,
+    "matchingWasmFramebuffers": 5,
+    "rv32Open": true,
+    "wasmBytes": 88255,
+    "elfBytes": 240452,
+    "wasmTurnBudgetMs": 50
+  },
+  "full-inline-heading": {
+    "inputBytes": 65536,
+    "matchingWasmFramebuffers": 4,
+    "rv32Open": true,
+    "wasmBytes": 88255,
+    "elfBytes": 240452,
+    "wasmTurnBudgetMs": 200
+  },
+  "full-inline-dense": {
+    "inputBytes": 65536,
+    "matchingWasmFramebuffers": 5,
+    "rv32Open": true,
+    "wasmBytes": 88255,
+    "elfBytes": 240452,
+    "wasmTurnBudgetMs": 200
+  },
+  "unicode-line": {
+    "inputBytes": 18047,
+    "matchingWasmFramebuffers": 6,
+    "rv32Open": true,
+    "wasmBytes": 88255,
+    "elfBytes": 240452,
+    "wasmTurnBudgetMs": 200
+  },
+  "large-preview": {
+    "inputBytes": 21614,
+    "matchingWasmFramebuffers": 6,
+    "rv32Open": true,
+    "wasmBytes": 88255,
+    "elfBytes": 240452,
+    "wasmTurnBudgetMs": 50
+  },
+  "late-navigation": {
+    "inputBytes": 65536,
+    "matchingWasmFramebuffers": 6,
+    "rv32Open": true,
+    "wasmBytes": 88255,
+    "elfBytes": 240452,
+    "wasmTurnBudgetMs": 200
+  }
+}

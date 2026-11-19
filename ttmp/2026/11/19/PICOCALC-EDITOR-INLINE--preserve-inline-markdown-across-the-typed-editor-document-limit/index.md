@@ -19,11 +19,13 @@ WhenToUse: ""
 
 ## Overview
 
-Typed preview truncates formatted physical lines after its 4,096-unit scratch capacity. A malformed long line can also overrun while seeking closers. Both baseline behaviors are reproducible.
+The typed formatter now preserves full-size inline Markdown and bounds malformed delimiter handling. The original staging and scheduler regressions are reproduced and fixed in the host replay.
 
 - [Design guide](design-doc/01-bounded-typed-markdown-inline-formatting-for-imported-lines.md)
 - [Implementation diary](reference/01-implementation-diary.md)
 - [Matched host baseline](various/long-inline-before.json)
+- [Replay after the fix](various/long-inline-after.json)
+- [Cross-target parity](various/full-inline-parity.json)
 
 ## Key Links
 

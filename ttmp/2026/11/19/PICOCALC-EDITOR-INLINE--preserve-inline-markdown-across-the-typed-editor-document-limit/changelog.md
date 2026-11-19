@@ -7,3 +7,7 @@
 ## 2026-11-19
 
 Measured both inline truncation and malformed delimiter overruns and drafted the full-line typed formatting design.
+
+## 2026-11-19
+
+Implemented full-line typed compaction, streamed Unicode heading expansion, and verified maximum-line preview, cancellation and cold cursor restore.

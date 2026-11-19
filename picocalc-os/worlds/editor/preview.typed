@@ -63,40 +63,61 @@ function editorPreviewWord(rows: buffer, text: string, state: WorldState): i32 {
     return 0;
 }
 
-function editorPreviewCopy(out: buffer, at: i32, text: string, start: i32, end: i32): i32 {
-    let i = start;
-    let n = at;
-    let stop = Math.min(end, start + out.length - at);
-    if (stop > start && stop < end && editorHighSurrogate(text.charCodeAt(stop - 1))) { stop = stop - 1; }
-    while (i < stop) {
-        out.setCharCodeAt(n, text.charCodeAt(i));
-        i = i + 1;
-        n = n + 1;
-    }
-    return n;
-}
-
 function editorPreviewStage(text: string, first: i32, end: i32, list: i32, state: WorldState): i32 {
-    const scratch = typedSdkBuffer(5);
-    const length = editorMdPlain(text, first, end, scratch);
-    const out = typedSdkBuffer(7);
-    state.previewAt = 0;
-    let upper = -1;
-    if (state.previewKind === 1 || state.previewKind === 5) { upper = typedSdkUpper(scratch, length, out); }
-    if (upper >= 0) { state.previewEnd = upper; }
-    if (upper >= 0) return 0;
+    const out = typedSdkBuffer(10);
     let at = 0;
     if (state.previewKind === 4) {
         const start = editorMdSpace(text, state.previewOffset, list);
         if (list - start === 1) { at = out.writeLiteral(0, "•"); }
-        if (list - start > 1) {
-            at = editorPreviewCopy(out, 0, text, start, Math.min(list, start + out.length - length - 1));
-        }
+        if (list - start > 1) { at = typedSdkCopySpan(text, start, list, out, 0); }
         out.setCharCodeAt(at, 32);
         at = at + 1;
     }
-    state.previewEnd = editorPreviewCopy(out, at, typedSdkView(scratch, length), 0, length);
+    state.mdStart = at;
+    state.mdSize = typedSdkCopySpan(text, first, end, out, at);
+    state.mdRead = at;
+    state.mdWrite = at;
+    state.mdProbe = -1;
+    state.mdClose = -1;
+    state.mdPass = 1;
+    state.previewAt = 0;
+    state.previewEnd = 0;
     return 0;
+}
+
+// Retain the unconsumed expansion and keep enough lookahead for 50 code
+// points. This lets the word wrapper distinguish a full row from a long word
+// even when the conversion boundary falls inside a word or an expansion.
+function editorPreviewUpper(state: WorldState): i32 {
+    const remaining = state.previewEnd - state.previewAt;
+    if (remaining >= 100 || state.mdRead >= state.mdSize) return 0;
+    const text = typedSdkView(typedSdkBuffer(10), state.mdSize);
+    const out = typedSdkBuffer(7);
+    if (remaining > 0) { typedSdkMove(out, 0, state.previewAt, remaining); }
+    let at = Math.max(0, remaining);
+    while (at < 100 && state.mdRead < state.mdSize) {
+        let end = Math.min(state.mdSize, state.mdRead + 32);
+        if (end < state.mdSize && editorHighSurrogate(text.charCodeAt(end - 1))) { end = end - 1; }
+        at = typedSdkUpper(text, state.mdRead, end, out, at);
+        state.mdRead = end;
+    }
+    state.previewAt = 0;
+    state.previewEnd = at;
+    return 0;
+}
+
+function editorPreviewCooked(rows: buffer, text: string, state: WorldState): i32 {
+    const kind = state.previewKind;
+    if (kind === 1 || kind === 5) { editorPreviewUpper(state); }
+    if (state.previewAt > state.previewEnd) {
+        if (!(kind === 0)) { editorPreviewFinish(rows, state, kind); }
+        state.previewKind = -1;
+    }
+    if (state.previewAt > state.previewEnd) return 0;
+    if (state.previewFromDocument) return editorPreviewWord(rows, text, state);
+    let slot = 10;
+    if (kind === 1 || kind === 5) { slot = 7; }
+    return editorPreviewWord(rows, typedSdkView(typedSdkBuffer(slot), state.previewEnd), state);
 }
 
 function editorPreviewSource(rows: buffer, text: string, state: WorldState): i32 {
@@ -159,7 +180,7 @@ function editorPreviewSource(rows: buffer, text: string, state: WorldState): i32
         state.previewAt = first;
         state.previewEnd = stop;
     }
-    if (stage) return (stop - first) / 16;
+    if (stage) return (stop - first) / 1024;
     return 0;
 }
 
@@ -172,6 +193,7 @@ function editorPreviewReset(state: WorldState): i32 {
     state.previewParagraph = false;
     state.previewFence = false;
     state.previewToken = 0;
+    state.mdPass = 0;
     return 0;
 }
 
@@ -185,17 +207,11 @@ function editorPreviewReady(text: string, state: WorldState): bool {
     while (!(state.previewKind === -2) && state.previewRows < state.previewTop + 17 && steps < 96) {
         const kind = state.previewKind;
         if (kind === -1) { steps = steps + editorPreviewSource(rows, text, state); }
-        if (kind >= 0 && state.previewAt > state.previewEnd) {
-            if (!(kind === 0)) { editorPreviewFinish(rows, state, kind); }
-            state.previewKind = -1;
+        if (state.mdPass > 0) {
+            editorMdStep(state);
+            steps = steps + 8;
         }
-        if (kind >= 0 && state.previewFromDocument && state.previewAt <= state.previewEnd) {
-            editorPreviewWord(rows, text, state);
-        }
-        if (kind >= 0 && !state.previewFromDocument && state.previewAt <= state.previewEnd) {
-            const staged = typedSdkView(typedSdkBuffer(7), state.previewEnd);
-            editorPreviewWord(rows, staged, state);
-        }
+        if (kind >= 0 && state.mdPass === 0) { editorPreviewCooked(rows, text, state); }
         steps = steps + 1;
     }
     if (state.previewKind === -2 || state.previewRows >= state.previewTop + 17) return true;

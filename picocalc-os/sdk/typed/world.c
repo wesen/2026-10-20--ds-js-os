@@ -13,11 +13,12 @@ enum { SCREEN_CAP = 16384, HINT_CAP = 120, LARGE_CAP = 65536, SMALL_CAP = 256 };
 #define COUNTED(name, capacity) struct name { uint32_t length; uint16_t units[capacity]; }
 static COUNTED(large_text, LARGE_CAP) large;
 static COUNTED(small_text, SMALL_CAP) small[5];
-static struct small_text frame_scratch;
+static COUNTED(frame_text, 384) frame_scratch;
 static COUNTED(record_text, 4096) record_text;
 static COUNTED(expanded_text, 12288) text_scratch;
 static struct record_text row_scratch;
-static uint32_t world_state[64];
+static struct large_text large_scratch;
+static uint32_t world_state[80];
 static const nw_event *current;
 static struct { int32_t kind, ask, token, ok; } event_info;
 static struct { uint32_t length; uint16_t units[SCREEN_CAP]; } output;
@@ -88,7 +89,8 @@ SDK(typedSdkBuffer) void *typedSdkBuffer(int slot)
     if (slot == 5) { record_text.length = 4096; return &record_text; }
     if (slot == 7) { text_scratch.length = 12288; return &text_scratch; }
     if (slot == 8) { row_scratch.length = 4096; return &row_scratch; }
-    if (slot == 9) { frame_scratch.length = SMALL_CAP; return &frame_scratch; }
+    if (slot == 9) { frame_scratch.length = 384; return &frame_scratch; }
+    if (slot == 10) { large_scratch.length = LARGE_CAP; return &large_scratch; }
     if (slot > 5) slot--;
     if (slot < 1 || (unsigned)slot > sizeof small / sizeof *small) return &empty;
     small[slot - 1].length = SMALL_CAP;
@@ -103,7 +105,8 @@ static int capacity(const void *buffer)
     if (buffer == &record_text) return 4096;
     if (buffer == &text_scratch) return 12288;
     if (buffer == &row_scratch) return 4096;
-    if (buffer == &frame_scratch) return SMALL_CAP;
+    if (buffer == &frame_scratch) return 384;
+    if (buffer == &large_scratch) return LARGE_CAP;
     for (unsigned i = 0; i < sizeof small / sizeof *small; i++)
         if (buffer == &small[i]) return SMALL_CAP;
     return -1;
@@ -128,6 +131,10 @@ SDK(typedSdkSeek) int typedSdkSeek(const void *view, int start, int end, int a, 
 {
     if (!valid_span(view, start, end)) return end;
     const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
+    if (a == b && a == c && a == d) {
+        for (int i = start; i < end; i++) if (units[i] == a) return i;
+        return end;
+    }
     for (int i = start; i < end; i++) {
         int unit = units[i];
         if (unit == a || unit == b || unit == c || unit == d) return i;
@@ -165,6 +172,35 @@ int typedSdkNthIndex(const void *view, int start, int end, int unit, int occurre
         if (units[i] == unit && --occurrence == 0) return i;
     }
     return end;
+}
+
+static int next_point(const uint16_t *units, int at, int end)
+{
+    if (at + 1 < end && units[at] >= 0xd800 && units[at] <= 0xdbff &&
+        units[at + 1] >= 0xdc00 && units[at + 1] <= 0xdfff) return at + 2;
+    return at + 1;
+}
+
+SDK(typedSdkCodePoints)
+int typedSdkCodePoints(const void *view, int start, int end)
+{
+    if (!valid_span(view, start, end)) return 0;
+    const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
+    int count = 0;
+    for (int at = start; at < end; at = next_point(units, at, end)) count++;
+    return count;
+}
+
+SDK(typedSdkPointIndex)
+int typedSdkPointIndex(const void *view, int start, int end, int count)
+{
+    if (!valid_span(view, start, end)) return start;
+    const uint16_t *units = (const uint16_t *)((const uint32_t *)view + 1);
+    while (start < end && count > 0) {
+        start = next_point(units, start, end);
+        count--;
+    }
+    return start;
 }
 
 static int hex4(const unsigned char **input)
@@ -255,16 +291,17 @@ static const uint16_t *units_at(const void *buffer)
     return (const uint16_t *)((const uint32_t *)buffer + 1);
 }
 
-SDK(typedSdkUpper) int typedSdkUpper(const void *input, int length, void *output)
+SDK(typedSdkUpper)
+int typedSdkUpper(const void *input, int start, int end, void *output, int offset)
 {
     int cap = capacity(output);
-    if (input == output || cap < 0 || length < 0 || length > capacity(input)) return -1;
+    if (input == output || offset < 0 || offset > cap || !valid_span(input, start, end)) return -1;
     const uint16_t *source = units_at(input);
     uint16_t *target = (uint16_t *)((uint32_t *)output + 1);
-    int written = 0;
-    for (int at = 0; at < length; at++) {
+    int written = offset;
+    for (int at = start; at < end; at++) {
         uint32_t point = source[at], mapped[LRE_CC_RES_LEN_MAX];
-        if (point >= 0xd800 && point <= 0xdbff && at + 1 < length &&
+        if (point >= 0xd800 && point <= 0xdbff && at + 1 < end &&
             source[at + 1] >= 0xdc00 && source[at + 1] <= 0xdfff)
             point = 0x10000 + ((point - 0xd800) << 10) + source[++at] - 0xdc00;
         int count = lre_case_conv(mapped, point, 0);
@@ -280,6 +317,17 @@ SDK(typedSdkUpper) int typedSdkUpper(const void *input, int length, void *output
         }
     }
     return written;
+}
+
+SDK(typedSdkCopySpan)
+int typedSdkCopySpan(const void *input, int start, int end, void *output, int offset)
+{
+    int cap = capacity(output);
+    if (offset < 0 || offset > cap || !valid_span(input, start, end) || end - start > cap - offset)
+        return -1;
+    uint16_t *target = (uint16_t *)((uint32_t *)output + 1);
+    __builtin_memmove(target + offset, units_at(input) + start, (end - start) * sizeof *target);
+    return offset + end - start;
 }
 
 static int event_key(const void *buffer, int length, char key[96])

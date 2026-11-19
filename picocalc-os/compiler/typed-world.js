@@ -29,11 +29,14 @@
         ["typedSdkStoreLoad", "buffer", "i32"],
         ["typedSdkStoreSave", "buffer,i32", "i32"],
         ["typedSdkTimestamp", "buffer,i32", "i32"],
-        ["typedSdkUpper", "buffer,i32,buffer", "i32"],
+        ["typedSdkUpper", "string,i32,i32,buffer,i32", "i32"],
         ["typedSdkSeek", "string,i32,i32,i32,i32,i32,i32", "i32"],
         ["typedSdkLastIndex", "string,i32,i32,i32", "i32"],
         ["typedSdkCountUnit", "string,i32,i32,i32", "i32"],
         ["typedSdkNthIndex", "string,i32,i32,i32,i32", "i32"],
+        ["typedSdkCopySpan", "string,i32,i32,buffer,i32", "i32"],
+        ["typedSdkCodePoints", "string,i32,i32", "i32"],
+        ["typedSdkPointIndex", "string,i32,i32,i32", "i32"],
     ].map(([name, params, result]) => ({name, params: params ? params.split(",") : [], result}));
 
     function validate(program) {
@@ -43,8 +46,8 @@
             name !== expected[i][0] || field.type !== expected[i][1] || field.offset !== i * 4))
             throw new SyntaxError("Typed world requires the shared WorldEvent record");
         const state = Object.values(program.records.WorldState ?? {});
-        if (state.length > 64 || state.some(field => field.type !== "i32" && field.type !== "bool"))
-            throw new SyntaxError("WorldState supports up to 64 scalar fields");
+        if (state.length > 80 || state.some(field => field.type !== "i32" && field.type !== "bool"))
+            throw new SyntaxError("WorldState supports up to 80 scalar fields");
         for (const [name, params] of signatures) {
             const entry = program.signatures.find(fn => fn.name === name);
             if (!entry || entry.result !== "i32" || entry.params.join(",") !== params)

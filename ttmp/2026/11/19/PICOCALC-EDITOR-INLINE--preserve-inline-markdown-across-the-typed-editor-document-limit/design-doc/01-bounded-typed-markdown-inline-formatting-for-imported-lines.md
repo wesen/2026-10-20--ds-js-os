@@ -38,7 +38,7 @@ flowchart LR
 
 `editorPreviewSource` establishes the style and text interval, including block prefixes. `editorMdPlain` applies three inline replacements in order. The JavaScript reference uses consecutive regular expression replacements. Compaction must finish each pass before starting the next, since deleting one delimiter can make earlier-separated characters adjacent for a later pass. The compositor receives finished rows with color and indentation. It has no knowledge of these Markdown rules.
 
-The plan leaves the document buffer at SDK slot 0 intact. Give formatting one 65,536-unit scratch buffer. A generic `typedSdkCopySpan` can stage the selected source range. Validate the source and destination windows in the SDK and use the existing same-buffer move for in-place spans. The scratch content is active only while its matching preview job owns it. Preserve preview detachment rules across F6 and a successful file replacement.
+The formatter leaves the document buffer at SDK slot 0 intact and uses the 65,536-unit buffer at slot 10. `typedSdkCopySpan(text,start,end,destination,offset)` stages the selected source range with checked source and destination intervals. The typed compaction uses the existing same-buffer move. The scratch content is active only while its matching preview job owns it. Preserve preview detachment rules across F6 and a successful file replacement.
 
 ## Bound matching and compaction by work
 
@@ -67,13 +67,21 @@ The typed code decides how to recognize matches.
 - Inline code takes the next backtick after a nonempty body. Adjacent delimiters need a one-unit retry because the second delimiter may begin a valid longer span. When there is no following delimiter, copy the rest of the physical line in bulk.
 - A link uses the next close bracket, an immediately following open parenthesis, and the next close parenthesis. If that close bracket lacks the parenthesis, intervening opening brackets cannot make the same ending valid. Preserving this whole literal prefix avoids one full-tail scan per unmatched opener. The destination syntax remains the reference's simple delimiter rule.
 
-Use the existing checked `typedSdkSeek` for common delimiter scans and `typedSdkMove` for contiguous spans. If an operation can exceed the scheduler budget on observed content, cap the scanned interval and retain its lookahead position across a settle. Measure unmatched and dense delimiters separately from a long string of ordinary letters.
+Use the existing checked `typedSdkSeek` for common delimiter scans and `typedSdkMove` for contiguous spans. Each opener or closer probe scans at most 1,024 units. An unfinished probe retains its position across settles. A formatting step costs eight of the preview loop’s 96 work units, so a segment makes at most 12 probes. The measured cases exercise unmatched markers, denser nested replacements, and a long literal destination.
 
 ## Preserve bounded heading expansion
 
-The reference uppercases heading text after the three formatting passes and before wrapping. Some Unicode characters expand to multiple code points, so source widths cannot stand in for rendered widths. Extend the generic uppercase service to accept a checked source interval. Keep the next width-limited group and any remainder in the existing small preview staging buffer. A long word can cross conversion chunks. Keep a separate word-boundary flag so a chunk edge does not introduce a space, a short row, or a second match. Verify case expansion from the same Unicode tables already used by the device.
+The reference uppercases heading text after the three formatting passes and before wrapping. `typedSdkUpper(text,start,end,output,offset)` appends the Unicode expansion of a checked interval. The typed code submits up to 32 source units at a time and excludes a surrogate half from a chunk boundary. It keeps the unconsumed expansion at the start of scratch slot 7 and refills to at least 100 UTF-16 units when input remains. That gives the existing wrapper at least 50 code points of lookahead, enough to decide whether a 49-column word ends at the width boundary. Real spaces and EOF remain the only word boundaries.
 
-The extra full-size scratch is about 128 KiB. Measure the actual Wasm memory pages and RV32 mapped-world size against the 768 KiB Editor profile. Dedicated small counters, a record-size change, or a reserved metadata range are all implementation choices. The current typed Editor uses all 64 state fields, so any extra state needs an explicit layout and a test of the compiler/runtime agreement.
+The full-size scratch adds about 128 KiB. The state fields `mdPass`, `mdStart`, `mdSize`, `mdRead`, `mdWrite`, `mdProbe`, and `mdClose` hold continuation state between events. The compiler and runtime agree on a ceiling of 80 scalar words. Editor uses 71. The existing 768 KiB runtime profile applies to both compiled targets.
+
+## Opening and restoring one full-size line
+
+The physical line end used to be recomputed each time a wrapped-row checkpoint was loaded. A file composed of one long line made each restoration rescan nearly 64 KiB. Checkpoints now carry both logical line boundaries, so restoring a known row only recomputes its short wrapped width. A common exact-unit path in `typedSdkSeek` also reduces overhead for newline scans.
+
+The long-file open captures its saved snapshot before yielding to cursor restoration and viewport preparation. `typedSdkCodePoints(text,start,end)` counts code points, and `typedSdkPointIndex(text,start,end,count)` converts a count back into a UTF-16 offset. Typed code decides the logical line, persisted cursor format, limits and exact view. A clean exit records the cursor and signals Files. Capturing a new Editor view at that point would perform another whole-line count just before switching away.
+
+![A full-line preview in the Wasm simulator](../various/full-inline-host.png)
 
 ## APIs, files, and gates
 
@@ -87,4 +95,4 @@ The extra full-size scratch is about 128 KiB. Measure the actual Wasm memory pag
 | `picocalc-os/sdk/typed/rv32-slot.S` | Ordered RV32 runtime entry jumps |
 | `PICOCALC-TYPED-WORLDS/scripts/05-measure-large-editor.mjs` | Reproducible `--long-inline` cases |
 
-Begin with the existing small Markdown fixture. Compare final rows for the two imported long lines and malformed delimiters. Then add marker-density cases across the full supported input length, expansion and chunk-boundary cases, preview cancellation, and backward navigation. Use Wasm simulator and RV32 emulator comparisons before the physical check. Verify file bytes and the visible viewport separately. Keep scripts, memory evidence, results, and the implementation diary here.
+`scripts/02-check-full-inline.sh` compares both target backends and archived reference behavior for small Markdown, the two 65,536-byte formatted inputs, a long plain Unicode line, the long preview, and late navigation. `scripts/03-measure-line-end.sh` checks persisted position 1:65473 after a cold reopen of the same full-size heading. `scripts/04-check-preview-cancel.sh` cancels a dense preview, restarts it, and checks both screenshots and the final formatted marker. Keep the physical receipts alongside the simulator evidence.

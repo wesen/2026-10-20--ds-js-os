@@ -29,7 +29,7 @@ function editorStatus(output: buffer, text: string, state: WorldState): i32 {
     at = at + output.writeLiteral(at, "  ");
     at = editorDigits(output, at, state.line + 1);
     output.setCharCodeAt(at, 58);
-    return editorDigits(output, at + 1, editorColumn(text, state.lineStart, state.cursor) + 1);
+    return editorDigits(output, at + 1, typedSdkCodePoints(text, state.lineStart, state.cursor) + 1);
 }
 
 function editorDocumentFrame(output: buffer, text: string, state: WorldState): i32 {

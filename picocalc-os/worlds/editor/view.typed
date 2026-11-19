@@ -65,15 +65,17 @@ function editorNextRow(text: string, state: WorldState): bool {
 }
 
 function editorStoreRow(rows: buffer, state: WorldState): i32 {
-    const slot = (state.row % 36) * 7;
+    const slot = (state.row % 36) * 9;
     rows.setCharCodeAt(slot, state.rowStart % 65536);
     rows.setCharCodeAt(slot + 1, state.rowStart / 65536);
     rows.setCharCodeAt(slot + 2, state.lineStart % 65536);
     rows.setCharCodeAt(slot + 3, state.lineStart / 65536);
     rows.setCharCodeAt(slot + 4, state.line % 65536);
     rows.setCharCodeAt(slot + 5, state.line / 65536);
-    rows.setCharCodeAt(slot + 6, 0);
-    if (state.fenced) { rows.setCharCodeAt(slot + 6, 1); }
+    rows.setCharCodeAt(slot + 6, state.lineEnd % 65536);
+    rows.setCharCodeAt(slot + 7, state.lineEnd / 65536);
+    rows.setCharCodeAt(slot + 8, 0);
+    if (state.fenced) { rows.setCharCodeAt(slot + 8, 1); }
     state.frameLast = Math.max(state.frameLast, state.row);
     state.frameFirst = Math.max(state.frameFirst, state.frameLast - 35);
     return 0;
@@ -82,12 +84,12 @@ function editorStoreRow(rows: buffer, state: WorldState): i32 {
 function editorFrameRow(text: string, state: WorldState, row: i32): i32 {
     const rows = typedSdkBuffer(9);
     state.row = row;
-    const slot = (state.row % 36) * 7;
+    const slot = (state.row % 36) * 9;
     state.rowStart = rows.charCodeAt(slot) + rows.charCodeAt(slot + 1) * 65536;
     state.lineStart = rows.charCodeAt(slot + 2) + rows.charCodeAt(slot + 3) * 65536;
     state.line = rows.charCodeAt(slot + 4) + rows.charCodeAt(slot + 5) * 65536;
-    state.fenced = rows.charCodeAt(slot + 6) === 1;
-    state.lineEnd = editorLineEnd(text, state.lineStart);
+    state.lineEnd = rows.charCodeAt(slot + 6) + rows.charCodeAt(slot + 7) * 65536;
+    state.fenced = rows.charCodeAt(slot + 8) === 1;
     state.rowEnd = editorWrapEnd(text, state.rowStart, state.lineEnd, 49);
     return 0;
 }
@@ -103,7 +105,7 @@ function editorInvalidateRows(state: WorldState, lineStart: i32): i32 {
     const rows = typedSdkBuffer(9);
     let last = state.frameLast;
     while (last >= state.frameFirst) {
-        const slot = (last % 36) * 7 + 2;
+        const slot = (last % 36) * 9 + 2;
         const start = rows.charCodeAt(slot) + rows.charCodeAt(slot + 1) * 65536;
         if (start < lineStart) return last;
         last = last - 1;

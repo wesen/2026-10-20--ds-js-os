@@ -70,4 +70,11 @@ record WorldState {
     previewFromDocument: bool;
     previewAt: i32;
     previewEnd: i32;
+    mdPass: i32;
+    mdStart: i32;
+    mdSize: i32;
+    mdRead: i32;
+    mdWrite: i32;
+    mdProbe: i32;
+    mdClose: i32;
 }

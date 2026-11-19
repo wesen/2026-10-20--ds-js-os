@@ -46,7 +46,7 @@ function editorMakeRoom(doc: buffer, state: WorldState, count: i32): bool {
 }
 
 function editorInsert(state: WorldState, text: string, unit: i32, count: i32): i32 {
-    if (editorColumn(text, state.lineStart, state.lineEnd) + count > 4000) { state.notice = 4; }
+    if (typedSdkCodePoints(text, state.lineStart, state.lineEnd) + count > 4000) { state.notice = 4; }
     if (state.notice === 4) return 0;
     const doc = typedSdkBuffer(0);
     if (!editorMakeRoom(doc, state, count)) return 0;
@@ -248,6 +248,8 @@ function editorInput(state: WorldState, output: buffer, hints: buffer): i32 {
         state.frameRow = 0;
         state.moveTarget = 0;
     }
+    if (action === 15 && !held && !state.preview && !state.finding && !state.dirty && state.writeToken === 0)
+        return editorEscape(state, output);
     editorApplyKey(state, action, ch, held, output);
     if (state.file > 0) return editorShow(output, hints, state);
     return 0;

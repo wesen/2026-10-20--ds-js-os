@@ -70,3 +70,67 @@ Read `editorMdPlain` and `editorMdStrip` in `worlds/editor/markdown.typed`, then
 ### Technical details
 
 The heading has 4,917 input bytes, the paragraph has 4,915 and the unmatched-link line has 4,911. All use 7 Page Down presses after entering preview. The UART frame marker checks output content separately from file preservation and faults.
+
+## Step 2: Compact complete lines and stream heading expansion
+
+The inline formatter now uses one full-size staging buffer and three resumable passes. It identifies complete replacements in typed code and copies the selected spans toward the beginning of the same buffer. The former truncation and unmatched-link overrun fixtures now pass on Wasm. The two 65,536-byte valid inputs also match the original Editor's visible rows on both compiled backends.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Carry the existing formatted preview through the supported file size and keep application decisions in typed JavaScript.
+
+**Inferred user intent:** Run the real Editor on PicoCalc with predictable memory and faithful output.
+
+### What I did
+
+- Added a generic 65,536-unit scratch slot, a checked cross-buffer copy, and ranged uppercase conversion to the shared typed SDK. Registered matching imports in both linkers.
+- Replaced whole-line inline matching in `markdown.typed` with bounded opener and closer probes. Kept bold, code, and link passes in the same order as the JavaScript reference.
+- Kept only the next word-length heading expansion and residual text in the small preview buffer. `preview.typed` continues to publish the existing visible row window.
+- Stored line endings in the row checkpoint cache and optimized equality-only SDK seeking, eliminating repeated raw scans for a 64 KiB physical line.
+- Used generic code-point counting and indexing for the logical cursor. Split the long-open snapshot work from its restore and frame step. A clean Esc records the current cursor and switches to Files without producing an additional Editor frame.
+- Added a full-size expanding heading fixture, a full-size nested-markup fixture, and explicit cancel and cold-open scripts.
+
+### Why
+
+Formatting and row wrapping operate at different boundaries. The formatter needs a source line and a fixed semantic pass order. Row wrapping only needs a small window into the resulting text. Chunked formatting and bounded lookahead keep those lifetimes separate.
+
+### What worked
+
+- The 4,917-byte heading, 4,915-byte paragraph, and 4,911-byte unmatched opener fixture all complete in the Wasm 200 virtual ms profile, with exact input bytes and zero faults.
+- The maximum-size heading includes Unicode expansions, a surrogate pair, nested bold and code inside a link, and its marker beyond a long link destination. The maximum-size dense input exercises repeated valid replacements. Wasm matches four and five reference framebuffers respectively, and RV32 reproduces both frame traces.
+- The final preview regression also passes the 571-byte mixed Markdown example, the 18,047-byte plain Unicode line, the 21,614-byte preview, and the full-file late navigation workflow.
+- Cancelling and reopening the dense preview produced matching edit and final-preview framebuffers. The cold-open test persisted and restored 1:65473 on the maximum-size physical line and matched the reference framebuffer.
+- The final typed outputs measure 88,255 bytes for Wasm and 240,452 bytes for RV32 ELF. The test's Wasm world uses the board profile's 768 KiB limit.
+
+### What didn't work
+
+- The full-line JavaScript reference initially logged `editor crashed handling open: ran out of memory (its limit is 2048 KB)`. The differential harness uses 8 MiB and 1,000 virtual ms for the reference alone on its two maximum-line workloads.
+- The initial typed full-line open logged `editor crashed handling open: ran past its turn budget of 200 virtual ms`. Caching the line end and using a cheaper exact-unit scan fixed that open.
+- The cold-open extension initially logged `editor crashed handling key: ran past its turn budget of 200 virtual ms` during clean Esc. The new Unicode scan by itself still left the redundant Editor frame. Avoiding that frame completed the close and exposed a separate open overrun when restoring the far column. Splitting snapshot capture and restore across receipts completed the cold open.
+- The first cancellation harness searched UART text for a contiguous `EOF INLINE` phrase. The matched framebuffer showed the phrase across two rows. The harness now decodes the frame and joins its row text before checking the phrase.
+
+### What I learned
+
+Input staging, delimiter matching, uppercasing and viewport wrapping have separate bounds. Malformed link openers can share a failed ending and be preserved together. A Unicode uppercase expansion can outgrow its source width, so the wrapper needs converted text and real whitespace lookahead.
+
+### What was tricky to build
+
+The in-place write cursor cannot advance beyond unread input. A pass completes before its shortened length becomes the next pass's input. Heading conversion carries the unconsumed expansion across chunks, including while wrapping a single long word. UTF-16 cursor persistence counts supplementary characters as one position.
+
+### What warrants a second pair of eyes
+
+Review malformed closer handling and stream output at width 49, particularly adjacent backticks, delimiters at a 1,024-unit probe boundary, and expansions involving supplementary characters. Review cache invalidation of both saved line boundaries and the frame receipt that resumes a long-file open.
+
+### What should be done in the future
+
+Finish the physical memory and full-inline replay gates for these artifacts.
+
+### Code review instructions
+
+Start with `editorMdEmit`, `editorMdMatch`, `editorMdStep` and `editorPreviewUpper`. Run the ticket's `02-check-full-inline.sh`, then its cold-open and cancellation scripts using the indicated retained fixtures.
+
+### Technical details
+
+The formatting scratch uses 128 KiB of counted UTF-16. Each probe inspects up to 1,024 units, and a preview iteration charges eight work units for one probe. The typed-world record supports 80 scalar words and Editor uses 71. The row cache holds 36 records of nine UTF-16 units each.

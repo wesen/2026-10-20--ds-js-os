@@ -48,7 +48,14 @@ def main():
     parser.add_argument("--engine", choices=("native", "wasm"), required=True)
     parser.add_argument("--resume-staging", action="store_true",
                         help="retry upload after a staging failure with the same clean scratch Editor open")
+    parser.add_argument("--long-inline", action="store_true", help="use the 64 KiB formatted heading fixture")
     args = parser.parse_args()
+    fixture = FIXTURE
+    if args.long_inline:
+        prefix = ("# Straße [**" + "ΐ" * 60 + "🙂`c`**](").encode()
+        suffix = b") `END` EOF INLINE"
+        fixture = prefix + b"d" * (65536 - len(prefix) - len(suffix)) + suffix
+
     args.output.mkdir()
 
     def capture(label, duration, commands, shots=False):
@@ -73,12 +80,22 @@ def main():
             raise RuntimeError("scratch directory was not created by Files")
 
     with (args.output / "stage.log").open("wb") as log:
-        stage_document(args.port, log)
+        stage_document(args.port, log, FILE, fixture)
 
-    run = capture("preview", 43, [
+    pages = 57
+    duration = 43
+    commands = [
         "0.3 key esc", "1.2 key enter", "3 key f6", "4.5 shot",
-        *(f"{8 + 0.51 * i:.2f} key pgdn" for i in range(57)), "38.4 shot", "42 stats",
-    ], shots=True)
+        *(f"{8 + 0.51 * i:.2f} key pgdn" for i in range(pages)), "38.4 shot", "42 stats",
+    ]
+    if args.long_inline:
+        pages = 1
+        duration = 25
+        commands = [
+            "0.3 key esc", "1.2 key enter", "4.5 key f6", "9 shot",
+            "15 key pgdn", "17 shot", "23 stats",
+        ]
+    run = capture("preview", duration, commands, shots=True)
     if any("editor crashed" in line or ("typed world" in line and "rejected" in line)
            for line in run.splitlines()):
         raise RuntimeError("Editor reported a runtime failure")
@@ -93,9 +110,11 @@ def main():
     if missing not in cleaned:
         raise RuntimeError("scratch cleanup did not remove the test directory")
     result = {
-        "input_bytes": len(FIXTURE),
+        "input_bytes": len(fixture),
         "engine": editor["engine"],
-        "page_down_keys": 57,
+        "page_down_keys": pages,
+        "editor_mem_kb_at_start": editor["mem_kb"],
+        "editor_limit_kb": editor["limit_kb"],
         "faults": [],
         "scratch_removed": True,
         "screenshots": {

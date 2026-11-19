@@ -75,7 +75,7 @@ function editorPositionApply(state: WorldState): i32 {
         if (newline < doc.length) { start = newline + 1; }
     }
     const end = editorLineEnd(doc, start);
-    state.cursor = editorOffset(doc, start, end, end, state.positionColumn);
+    state.cursor = typedSdkPointIndex(doc, start, end, state.positionColumn);
     state.top = state.positionTop;
     return 0;
 }
@@ -170,7 +170,7 @@ function editorRemember(state: WorldState, out: buffer): i32 {
     at = at + out.writeLiteral(at, ":[");
     at = editorDigits(out, at, typedSdkCountUnit(doc, 0, state.cursor, 10));
     out.setCharCodeAt(at, 44);
-    at = editorDigits(out, at + 1, editorColumn(doc, newline + 1, state.cursor));
+    at = editorDigits(out, at + 1, typedSdkCodePoints(doc, newline + 1, state.cursor));
     out.setCharCodeAt(at, 44);
     at = editorDigits(out, at + 1, state.top);
     out.setCharCodeAt(at, 44);

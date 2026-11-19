@@ -33,12 +33,22 @@ const find = process.argv.includes('--find');
 const markdown = process.argv.includes('--markdown');
 const previewLarge = process.argv.includes('--preview-large');
 const previewLine = process.argv.includes('--preview-line');
-const capacity = previewLarge || previewLine;
+const previewInline = process.argv.includes('--preview-inline');
+const previewDenseInline = process.argv.includes('--preview-dense-inline');
+const fullInline = previewInline || previewDenseInline;
+const capacity = previewLarge || previewLine || fullInline;
 const preview = markdown || capacity;
-assert([large, edit, positions, find, markdown, previewLarge, previewLine, denseSearch, tailSearch, navigation].filter(Boolean).length <= 1, 'select at most one workflow');
-const turnBudget = (large || previewLine || longSearch) && !process.argv.includes('--stock-budget') ? 200 : 50;
+assert([large, edit, positions, find, markdown, previewLarge, previewLine, previewInline, previewDenseInline, denseSearch, tailSearch, navigation].filter(Boolean).length <= 1, 'select at most one workflow');
+const turnBudget = (large || previewLine || fullInline || longSearch) && !process.argv.includes('--stock-budget') ? 200 : 50;
 const filename = preview ? 'entry.MD' : 'entry.txt';
-const contents = previewLarge ?
+const inlinePrefix = '# Straße [**' + 'ΐ'.repeat(60) + '🙂`c`**](';
+const inlineSuffix = ') `END` EOF INLINE';
+const inline = inlinePrefix + 'd'.repeat(65536 - Buffer.byteLength(inlinePrefix + inlineSuffix)) + inlineSuffix;
+const denseWord = '[**x**](destination) ';
+const denseLength = 65536 - Buffer.byteLength('EOF INLINE');
+const denseInline = ' '.repeat(denseLength % denseWord.length) +
+    denseWord.repeat(Math.floor(denseLength / denseWord.length)) + 'EOF INLINE';
+const contents = previewDenseInline ? denseInline : previewInline ? inline : previewLarge ?
     ('A reading paragraph, followed by a blank line.\n\n').repeat(450) + 'END OF PREVIEW' :
     previewLine ? '🙂'.repeat(4508) + ' END OF PREVIEW' :
     markdown ? '# Straße **Title**\n- one\n9) numbered\n```\ncode\n\n```\n> quote `text`\n**plain** [link](u)\ncontinued\n\n### Low\n```\n' +
@@ -70,7 +80,14 @@ const previewLargeActions = [
     ...Array(previewLine ? 7 : 57).fill('key pgdn'), 'capture preview-end.png',
     ...Array(4).fill('key pgup'), 'capture preview-back.png', 'key esc',
 ];
-const previewActions = capacity ? previewLargeActions : markdownActions;
+const previewInlineActions = [
+    'key f6', 'wait 2500', 'capture preview.png', 'key pgdn', 'key pgup', 'key esc',
+];
+const previewDenseActions = [
+    'key f6', 'wait 6000', 'capture preview.png',
+    ...Array(8).fill('key pgdn'), 'capture preview-end.png', 'key esc',
+];
+const previewActions = previewDenseInline ? previewDenseActions : previewInline ? previewInlineActions : capacity ? previewLargeActions : markdownActions;
 
 // Compare the compositor's visual row model for each captured frame.
 const compositor = readFileSync(join(os, 'js/system/compositor.js'), 'utf8');
@@ -114,11 +131,13 @@ function run(name, compiled) {
     const entries = worlds.map(w => {
         if (w.name === 'editor' && compiled) {
             writeFileSync(join(js, 'editor.wasm'), wasm);
-            return {...w, file:'editor.wasm', engine:'wasm', budget_ms:turnBudget};
+            return {...w, file:'editor.wasm', engine:'wasm', budget_ms:turnBudget, mem_kb:768};
         }
         mkdirSync(dirname(join(js, w.file)), {recursive:true});
         copyFileSync(join(os, 'js', w.file), join(js, w.file));
-        if ((large || capacity || longSearch) && w.name === 'editor') return {...w, mem_kb:2048};
+        if ((large || capacity || longSearch) && w.name === 'editor') {
+            return {...w, mem_kb:fullInline ? 8192 : 2048, ...(fullInline ? {budget_ms:1000} : {})};
+        }
         return w;
     });
     entries.push({name:'probe',file:'probe.js',claims:['frames.read'],mem_kb:capacity ? 2048 : 384});
@@ -205,6 +224,18 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         const viewport = frames.at(-2).tree.kids[1].rows;
         assert.equal(viewport.length, 17);
         assert(viewport.every(row => row.color === 'blue'));
+    } else if (previewInline) {
+        const first = frames.find(frame => frame.tree.kids[1]?.t === 'lines');
+        const rows = visualFrame(first.tree).kids[1].map(row => row.s).join(' ');
+        assert(rows.includes('STRASSE'));
+        assert(rows.includes('END EOF INLINE'));
+        assert(rows.includes('Ϊ́'));
+        assert(!rows.includes(']('));
+    } else if (previewDenseInline) {
+        const windows = frames.filter(frame => frame.tree.kids[1]?.t === 'lines');
+        const rows = visualFrame(windows.at(-1).tree).kids[1].map(row => row.s).join(' ');
+        assert(rows.includes('EOF INLINE'));
+        assert(!rows.includes('destination'));
     } else if (capacity) {
         const windows = frames.filter(frame => frame.tree.kids[1]?.t === 'lines');
         assert(windows.some(frame => visualFrame(frame.tree).kids[1].some(row => row.s === 'END OF PREVIEW')));
@@ -213,7 +244,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
     } else if (!edit && !find && !longSearch) assert.equal(statuses.length, positions ? 4 : 3);
     const pictures = ['editor', 'opened', ...(edit || navigation ? ['saved'] : []), ...(find || longSearch ? ['found'] : []),
         ...(markdown ? ['preview', 'fence'] : []),
-        ...(capacity ? ['preview', 'preview-end', 'preview-back'] : []), 'fresh'];
+        ...(previewInline ? ['preview'] : previewDenseInline ? ['preview', 'preview-end'] : capacity ? ['preview', 'preview-end', 'preview-back'] : []), 'fresh'];
     const pixels = pictures.map(name => readFileSync(join(out, name + '.png')));
     if (navigation) {
         const restarted = join(dir, name, 'restart'), scenario = join(dir, name + '-restart.txt');
@@ -270,7 +301,7 @@ try {
             findActions.filter(action => action.startsWith('key ') || action.startsWith('type ')).map(action => JSON.stringify(action)).join(',') +
             '};\n' : '') +
         (preview ? (markdown ? '#define TEST_MARKDOWN\n' : '') + '#define TEST_PREVIEW\nstatic const char *const markdown_actions[] = {' +
-            previewActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
+            previewActions.filter(action => action.startsWith('key ') || action.startsWith('type ')).map(action => JSON.stringify(action)).join(',') +
             '};\n' : ''));
     execFileSync(cc, [
         '-march=rv32im', '-mabi=ilp32', '-O2', '-fno-builtin', '-msmall-data-limit=0',

@@ -110,6 +110,8 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.finding = false;
     state.queryLength = 0;
     state.notice = 0;
+    if (size > 4096) { state.frameToken = typedSdkYield(); }
+    if (state.frameToken > 0) return 0;
     editorRestorePosition(state);
     return editorShow(output, hints, state);
 }
@@ -190,6 +192,7 @@ function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, h
     }
     if (event.kind === 4 && state.frameToken > 0 && event.token === state.frameToken) {
         state.frameToken = 0;
+        if (state.openFrame && state.frameRow === 0) { editorRestorePosition(state); }
         editorShow(output, hints, state);
     }
     if (event.kind === 2) {
