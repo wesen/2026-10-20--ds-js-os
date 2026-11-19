@@ -597,3 +597,59 @@ Read the typed Editor block in `port/esp32p4/main/CMakeLists.txt`, the bundle di
 ### Technical details
 
 The optional firmware mode keeps all Editor state and policy in the eleven typed source files. Its P4 adapter only acquires the source and reactor and invokes the compiler. The paired test writes the application at `0x10000`. The backup and output images remain under `/tmp/typed-editor-board-backup` and `/tmp/typed-editor-firmware`.
+
+## Step 11 — Run both typed Editor backends on the physical PicoCalc
+
+Both images compiled the Editor source at boot and passed the same workflow on the powered PicoCalc. The test used an isolated directory and created a Markdown document from the keyboard, saved it, found text, displayed the preview, and discarded a later unsaved edit. The test then removed both scratch directories and left the verified RV32 image active.
+
+### Prompt Context
+
+See Step 1 for the full Editor goal.
+
+**Commit (firmware)** `f5f824d` — “Build typed Editor from source on both PicoCalc P4 engines.”
+
+### What I did
+
+- Ran `04-qualify-editor-on-p4.py` against the matched images on `/dev/ttyACM0`. Verified the partition table, held the keyboard bus before flashing, and required esptool's flash hash verification.
+- Captured the cold source compilation, module size, heap high-water mark, and world load lines from UART. Used Files to narrow and pass a file grant to Editor.
+- Compared FAT readback before and after discard. The test verified the exact 20-byte document, including the lack of a trailing LF, and required both temporary directories to be removed.
+- Inspected both CRC-checked search and preview framebuffers from each target. Saved the receipt and four framebuffer captures under `various/`.
+
+### Why
+
+The host had verified behavior at the shared runtime boundary. This run checks source compilation within actual ESP32-P4 limits, the device's two module loaders, and the keyboard-to-Files-to-Editor workflow using the real filesystem worker and compositor.
+
+### What worked
+
+- Wasm compiled in 1.678–1.684 s, with approximately 1.34 MB peak compiler JS allocation. Its linked module was 79,746 bytes and the measured load segment took 156.1 ms.
+- RV32 compiled in 2.723–2.733 s, with approximately 2.23 MB peak compiler JS allocation. Its linked ELF was 239,572 bytes and the measured load segment took 12.4 ms.
+- Both images rendered a highlighted “two” in the editor and the same Markdown bullets under “SAMPLE” in the preview. The saved bytes matched before and after discard. The I²C and SPI counters reported no errors on either run.
+- After the run the console still answered on the RV32 firmware. The root listing showed the original `notes/` and `apps/` directories and neither fixture directory.
+
+### What didn't work
+
+No powered workflow failures occurred. The workflow uses a short file. Full-size stress cases are recorded separately.
+
+### What I learned
+
+Wasm compiled faster in this run. RV32 loaded faster and used less Editor CPU in the matched workflow. Kernel statistics reported 290.61 CPU ms for Wasm and 52.85 CPU ms for RV32 across 33 reported Editor turns. This measures accumulated on-device execution, not elapsed time from a keypress to the LCD.
+
+### What was tricky to build
+
+The console's `cat` adds a display newline for an unterminated file. The workflow checked both output text and the directory entry's byte count to distinguish actual stored bytes from console formatting. The screenshot routine adds no application code and verifies the checksum over the captured framebuffer.
+
+### What warrants a second pair of eyes
+
+The receipt binds the test to the two actual image hashes and the source build checkpoint. The emulator and short powered case do not establish latency or correctness over every possible document size.
+
+### What should be done in the future
+
+Close the long-document gaps measured in the host capacity tests and then rerun both physical profiles. A final installed image should include those fixes if the goal is evaluated against the full supported file range.
+
+### Code review instructions
+
+See `various/p4-editor-powered.json` for the compile, load, bus, and image data. Compare the target-specific `p4-editor-*-find.png` and `p4-editor-*-preview.png` capture pairs. To repeat the test, use the build and hardware scripts given in Step 10.
+
+### Technical details
+
+The host used console-injected keys through the PicoCalc's keyboard world and captured the compositor framebuffer over UART. The physical flash writes targeted only the factory app at `0x10000` using the previously verified 8 MiB configuration. The console captures remain in `/tmp/typed-editor-powered`.

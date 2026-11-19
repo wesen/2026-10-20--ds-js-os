@@ -43,3 +43,7 @@ Port Markdown list editing, fenced colors, inline rendering, and preview scrolli
 ## 2026-11-19
 
 Bundle complete typed Editor source in matched ESP32-P4 Wasm and RV32 firmware profiles.
+
+## 2026-11-19
+
+Qualify the matched typed Editor Wasm and RV32 workflows on the physical PicoCalc and record compiler timings.
