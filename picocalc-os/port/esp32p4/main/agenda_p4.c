@@ -29,6 +29,9 @@ static size_t startup_length;
 static vtime_t first_response;
 static vtime_t boot_frame_deadline;
 static vtime_t boot_reply_received;
+#if PICOCALC_AGENDA_EARLY_BOOT
+static int boot_notes_token;
+#endif
 
 // Buffer the timing data because UART writes would compete with the startup turns.
 typedef struct {
@@ -245,6 +248,19 @@ bool p4_agenda_boot_frame_pending(void) {
   return boot_frame_deadline &&
          port_clock() < boot_frame_deadline + (reply_arrived_in_time ? READY_REPLY_GRACE_US : 0);
 }
+
+#if PICOCALC_AGENDA_EARLY_BOOT
+bool p4_agenda_boot_dispatch(const world_t *world, int promise) {
+  return recording_boot && !world->epoch && promise == boot_notes_token &&
+         is_typed_agenda(world) && p4_agenda_boot_frame_pending();
+}
+
+void p4_agenda_boot_track_read(const world_t *world, const fs_job_t *job) {
+  if (!boot_notes_token && job->op == FS_READ && !strcmp(job->path, "notes/todo.txt") &&
+      p4_agenda_boot_dispatch(world, 0))
+    boot_notes_token = job->promise;
+}
+#endif
 
 char *p4_agenda_take_module(size_t *length) {
   char *module = (char *)startup_module;

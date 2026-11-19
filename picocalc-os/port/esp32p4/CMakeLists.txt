@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.16)
 # Use a separate build/config: idf.py -B build-agent -D PICOCALC_AGENT_WIFI=ON
 #   -D SDKCONFIG=sdkconfig.agent -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.agent-wifi" build
 option(PICOCALC_TYPED_AGENDA "Compile Agenda from typed source on the handheld" OFF)
+option(PICOCALC_AGENDA_EARLY_BOOT "Prioritize the typed Agenda's initial notes read and settlement" OFF)
 option(PICOCALC_AGENT_WIFI "Build the direct HTTPS agent transport over the onboard C6" OFF)
 if(PICOCALC_AGENT_WIFI)
     list(APPEND EXTRA_COMPONENT_DIRS "${CMAKE_CURRENT_LIST_DIR}/optional/agent_wifi")

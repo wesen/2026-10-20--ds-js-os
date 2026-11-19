@@ -204,6 +204,9 @@ set_source_files_properties(
     PROPERTIES COMPILE_OPTIONS "-w;-Wno-error=incompatible-pointer-types;-fwrapv;-fno-strict-aliasing")
 
 if(PICOCALC_TYPED_AGENDA)
+    if(PICOCALC_AGENDA_EARLY_BOOT)
+        target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_AGENDA_EARLY_BOOT=1)
+    endif()
     if(PICOCALC_RV32_AGENDA)
         set(agenda_reactor "${CMAKE_CURRENT_BINARY_DIR}/agenda-reactor.elf")
         set(agenda_sources "${OS}/worlds/agenda/wasm-world.c" "${OS}/worlds/agenda/rv32-slot.S")

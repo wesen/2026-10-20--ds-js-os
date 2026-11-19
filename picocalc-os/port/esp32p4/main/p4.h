@@ -46,6 +46,10 @@ void p4_agent_console(const char *args); // secret values are accepted but never
 #if PICOCALC_TYPED_AGENDA
 bool p4_agenda_prepare(void);
 bool p4_agenda_boot_frame_pending(void);
+#if PICOCALC_AGENDA_EARLY_BOOT
+bool p4_agenda_boot_dispatch(const world_t *world, int promise);  // zero for the start message
+void p4_agenda_boot_track_read(const world_t *world, const fs_job_t *job);
+#endif
 void p4_agenda_boot_file_ready(const world_t *world);
 void p4_agenda_report_boot(void);
 void p4_agenda_stage(const world_t *world, const char *stage);

@@ -34,7 +34,12 @@ void port_fs_submit(fs_job_t *j, vtime_t at) {
   (void)at;
 #if PICOCALC_TYPED_AGENDA
   world_t *world = world_by_id(j->w);
-  if (world) p4_agenda_stage(world, "file-submitted");
+  if (world && world->epoch == j->epoch) {
+    p4_agenda_stage(world, "file-submitted");
+#if PICOCALC_AGENDA_EARLY_BOOT
+    p4_agenda_boot_track_read(world, j);
+#endif
+  }
 #endif
   xQueueSend(q_fs, &j, portMAX_DELAY);
 }

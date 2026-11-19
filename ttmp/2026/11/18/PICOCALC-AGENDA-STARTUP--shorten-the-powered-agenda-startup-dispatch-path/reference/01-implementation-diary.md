@@ -62,3 +62,50 @@ Run a matched powered control and dispatch-only candidate. Inspect the worker in
 ### Code review instructions
 
 Review the design's selected event criteria against `pick` in `picocalc-os/nucleus/kernel.c`, the actual read token in `picocalc-os/port/esp32p4/main/fs_p4.c`, and the existing deadline in `agenda_p4.c`.
+
+## Step 2 — Implement the dispatch-only candidate for both backends
+
+The guide and its upload are in `bdaaf54`. I added an opt-in P4 experiment that advances Agenda's initial start message and its exact first notes settlement. It keeps the original FIFO selection within each world, the normal per-world priority outside the two events, and the existing FAT worker.
+
+### Prompt Context
+
+See Step 1 for the user goal and the guide required before implementation. This is the first, dispatch-only alternative described there.
+
+### What I did
+
+- Added `PICOCALC_AGENDA_EARLY_BOOT` in the P4 build and attached the definition only to the typed Agenda firmware.
+- In `kernel.c`, `pick` first selects the existing candidate for each world. The early gate can raise that candidate to priority 11 only for a start message or settlement. The ordinary creation priority is 10.
+- In `agenda_p4.c`, the eligibility check requires the initially compiled Agenda, the original world epoch, the first publication still pending, and the existing startup deadline. The zero token represents its initial start. `fs_p4.c` records the first actual read token only for `notes/todo.txt` from that world, with the job's epoch checked at submission.
+- Built the powered Wasm and RV32 variants with the single flag enabled. Manifest, SDK and partition artifacts matched the corresponding control images. Symbol inspection of the P4 ELF verified both new gate functions. The candidate does not alter the SDK bridge or the application's typed source.
+
+### Why
+
+Moving the start turn advances I/O submission. Moving just the corresponding settlement lets the reactor publish once the file is ready, while preserving the other worlds' work and the scheduler's normal order everywhere else. This isolates dispatch from changes to FreeRTOS priority, core placement or queue service.
+
+### What worked
+
+The host app suite and 34 native integration tests passed. Both powered candidates built. The healthy Wasm pilot completed all file-state comparisons, including Editor save, and its framebuffer passed CRC. Its three cold trials reported zero I²C errors and pressed the first read into a 2.174–2.240 ms window after Agenda's initialization. RV32 and the full control comparison were still running when I recorded this step.
+
+### What didn't work
+
+The preceding control attempt encountered a keyboard-controller NACK fault. After the user returned, two console samples showed the historical error count held at 7,112 while 142 additional transfers succeeded. I resumed the paired experiment after that check. The probe now confirms the `hold` response before each flash or reboot and reports I²C and SPI counters for every cold trial.
+
+### What I learned
+
+The priority gate can reuse the actual read promise rather than depend on approximate state such as the next settlement being for startup. At the filesystem boundary, both the epoch and the target path are available. The first notes read is identified there.
+
+### What was tricky to build
+
+The scheduler picks a candidate for each world before comparing their priorities. The new condition checks that chosen candidate. It cannot skip an earlier event from the same world. An expired deadline or later epoch simply returns to the normal policy.
+
+### What warrants a second pair of eyes
+
+Check that a missing file still becomes a usable empty Agenda view. The read promise is attached at FIFO submission before its I/O has started. A late or failed completion must remain dispatchable at normal priority after the gate expires.
+
+### What should be done in the future
+
+Finish the healthy two-target candidate and controls before deciding whether a bounded worker opportunity is needed. Keep the optical latency experiment independent.
+
+### Code review instructions
+
+Review `pick` in `picocalc-os/nucleus/kernel.c`, the predicate and promise capture in `agenda_p4.c`, and the capture call in `fs_p4.c`. The parent parity ticket builds both targets with `scripts/05-build-powered-targets.sh` and runs the powered fixture with `scripts/06-qualify-powered-targets.py`.

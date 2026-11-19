@@ -663,6 +663,12 @@ static world_t *pick(bool *is_settle) {
       if (!W->in_turn && W->mbox && (!ok || W->mbox->t < t || (W->mbox->t == t && W->mbox->seq < s))) { t = W->mbox->t; s = W->mbox->seq; ok = true; set = false; }
     }
     int pr = W->boot_ready ? 10 : W->prio;   // starting a world comes first, in manifest order
+#if PICOCALC_AGENDA_EARLY_BOOT
+    if (ok && !W->boot_ready && (set || W->mbox->kind == M_START)) {
+      extern bool p4_agenda_boot_dispatch(const world_t *, int);
+      if (p4_agenda_boot_dispatch(W, set ? W->settles->promise : 0)) pr = 11;
+    }
+#endif
     if (ok && (!best || pr > bp || (pr == bp && (t < bt || (t == bt && s < bs))))) { best = W; bt = t; bs = s; bset = set; bp = pr; }
   }
   *is_settle = bset;
