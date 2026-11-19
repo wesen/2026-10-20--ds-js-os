@@ -629,3 +629,7 @@ The matched image manifests verify the application catalog and notes claims, not
 Run scripts/12-measure-matched-targets.py with each image's corresponding generated manifest. Review its raw JSON and restore probe, plus scripts/10-measure-agenda-boot.py and scripts/05-measure-agenda-p4.py for the phase boundaries. The design guide now includes the source ABI, kernel event sequence, test APIs, and peripheral-enabled profiles for both engines.
 
 The verified restore ran in the sampler's cleanup path. The flash writer verified the old application, and boot loaded the two normal manifests and answered cji status. I returned the local build-elf profile to its prior RV32 flags and checked that the regenerated typed manifest exactly matched the tested RV32 manifest.
+
+## Step 24 — Publish the matched-target milestone
+
+The matched comparison and memory-accounting explanation were pushed to go-go-parc main at 428f595. The ticket contains the raw headless measurements and both peripheral-enabled build recipes. The requested milestone publications are complete for the implemented and measured work. The assembled hardware task remains open pending real keyboard-to-LCD evidence.
