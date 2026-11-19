@@ -47,3 +47,7 @@ Measured the repeated QuickJS prelude initialization cost and reduced median hea
 ## 2026-11-18
 
 Recorded eight full headless RV32 boots under two seconds after linker optimization. Measured CJI relocation and built a clean peripheral-enabled image for the distinct physical test.
+
+## 2026-11-18
+
+Measured matched Wasm and RV32 cold boots and source rebuilds on the P4. All twelve cold boots passed two seconds. Preserved both peripheral-enabled builds for the separate physical test.

@@ -1,0 +1,538 @@
+{
+  "configuration": "Same ESP32-P4, headless native system catalog, typed Agenda, and installed CJI slot",
+  "manifest_worlds": 18,
+  "endpoint": "Source capture through first file-backed frame publication",
+  "restored_firmware_sha256": "2b9e8371ee8e3a4e2ea5cabd43d74cb539806607947d47fa242f77174ca1dfbf",
+  "targets": {
+    "rv32": {
+      "firmware_sha256": "2b75a3fe92700384ddf5cd4fe0b1c2b57949edb5c8cf7c985c09fc0a760af176",
+      "cold": {
+        "trials": [
+          {
+            "compile_us": 360580,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 1904034,
+            "world_bytes": 124588,
+            "frame_turn_us": 1091,
+            "before_cji_restore_us": 496999,
+            "before_dispatch_us": 506562,
+            "world_init_us": 1145865,
+            "world_init_done_us": 1152160,
+            "file_submitted_us": 1769004,
+            "file_returned_us": 1822088,
+            "settle_us": 1902949,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94061
+            },
+            "cji_loader": {
+              "start_us": 2192177,
+              "end_us": 2337712
+            }
+          },
+          {
+            "compile_us": 360835,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 1900585,
+            "world_bytes": 124588,
+            "frame_turn_us": 1093,
+            "before_cji_restore_us": 497352,
+            "before_dispatch_us": 507224,
+            "world_init_us": 1142371,
+            "world_init_done_us": 1148554,
+            "file_submitted_us": 1763986,
+            "file_returned_us": 1818252,
+            "settle_us": 1899498,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 93861
+            },
+            "cji_loader": {
+              "start_us": 2188812,
+              "end_us": 2329957
+            }
+          },
+          {
+            "compile_us": 360574,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 1898300,
+            "world_bytes": 124588,
+            "frame_turn_us": 1098,
+            "before_cji_restore_us": 497102,
+            "before_dispatch_us": 506701,
+            "world_init_us": 1143876,
+            "world_init_done_us": 1150307,
+            "file_submitted_us": 1762258,
+            "file_returned_us": 1816328,
+            "settle_us": 1897207,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 93954
+            },
+            "cji_loader": {
+              "start_us": 2186361,
+              "end_us": 2331904
+            }
+          },
+          {
+            "compile_us": 360816,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 1894330,
+            "world_bytes": 124588,
+            "frame_turn_us": 1091,
+            "before_cji_restore_us": 497313,
+            "before_dispatch_us": 507319,
+            "world_init_us": 1144299,
+            "world_init_done_us": 1150615,
+            "file_submitted_us": 1768633,
+            "file_returned_us": 1821968,
+            "settle_us": 1893244,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94460
+            },
+            "cji_loader": {
+              "start_us": 2182227,
+              "end_us": 2329166
+            }
+          },
+          {
+            "compile_us": 360768,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 1904229,
+            "world_bytes": 124588,
+            "frame_turn_us": 1105,
+            "before_cji_restore_us": 497268,
+            "before_dispatch_us": 506866,
+            "world_init_us": 1146250,
+            "world_init_done_us": 1152369,
+            "file_submitted_us": 1767985,
+            "file_returned_us": 1822177,
+            "settle_us": 1903129,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94120
+            },
+            "cji_loader": {
+              "start_us": 2192531,
+              "end_us": 2338011
+            }
+          },
+          {
+            "compile_us": 360885,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 1905206,
+            "world_bytes": 124588,
+            "frame_turn_us": 1106,
+            "before_cji_restore_us": 497395,
+            "before_dispatch_us": 507006,
+            "world_init_us": 1147315,
+            "world_init_done_us": 1152202,
+            "file_submitted_us": 1769117,
+            "file_returned_us": 1823417,
+            "settle_us": 1904106,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94232
+            },
+            "cji_loader": {
+              "start_us": 2193427,
+              "end_us": 2339032
+            }
+          }
+        ]
+      },
+      "bundled": {
+        "source": "baseline",
+        "trials": [
+          {
+            "compile_us": 506308,
+            "peak_js_bytes": 433500,
+            "module_bytes": 24304,
+            "first_response_us": 640280,
+            "world_bytes": 124588,
+            "frame_turn_us": 1126
+          },
+          {
+            "compile_us": 521190,
+            "peak_js_bytes": 433488,
+            "module_bytes": 24304,
+            "first_response_us": 651489,
+            "world_bytes": 124588,
+            "frame_turn_us": 1137
+          },
+          {
+            "compile_us": 687939,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 829346,
+            "world_bytes": 124588,
+            "frame_turn_us": 1155
+          },
+          {
+            "compile_us": 616309,
+            "peak_js_bytes": 433492,
+            "module_bytes": 24304,
+            "first_response_us": 750262,
+            "world_bytes": 124588,
+            "frame_turn_us": 1117
+          },
+          {
+            "compile_us": 493549,
+            "peak_js_bytes": 433500,
+            "module_bytes": 24304,
+            "first_response_us": 1302347,
+            "world_bytes": 124588,
+            "frame_turn_us": 972
+          },
+          {
+            "compile_us": 361532,
+            "peak_js_bytes": 433492,
+            "module_bytes": 24304,
+            "first_response_us": 488455,
+            "world_bytes": 124588,
+            "frame_turn_us": 999
+          },
+          {
+            "compile_us": 359298,
+            "peak_js_bytes": 433512,
+            "module_bytes": 24304,
+            "first_response_us": 487185,
+            "world_bytes": 124588,
+            "frame_turn_us": 1004
+          },
+          {
+            "compile_us": 358576,
+            "peak_js_bytes": 433496,
+            "module_bytes": 24304,
+            "first_response_us": 491209,
+            "world_bytes": 124588,
+            "frame_turn_us": 981
+          }
+        ],
+        "median_response_us": 645884.5,
+        "p95_response_us": 1302347,
+        "max_response_us": 1302347
+      },
+      "editable": {
+        "source": "build",
+        "trials": [
+          {
+            "compile_us": 362616,
+            "peak_js_bytes": 433508,
+            "module_bytes": 24304,
+            "first_response_us": 492907,
+            "world_bytes": 124588,
+            "frame_turn_us": 1017
+          },
+          {
+            "compile_us": 359887,
+            "peak_js_bytes": 433488,
+            "module_bytes": 24304,
+            "first_response_us": 489208,
+            "world_bytes": 124588,
+            "frame_turn_us": 1045
+          },
+          {
+            "compile_us": 362974,
+            "peak_js_bytes": 433488,
+            "module_bytes": 24304,
+            "first_response_us": 491083,
+            "world_bytes": 124588,
+            "frame_turn_us": 1009
+          },
+          {
+            "compile_us": 366794,
+            "peak_js_bytes": 433492,
+            "module_bytes": 24304,
+            "first_response_us": 495092,
+            "world_bytes": 124588,
+            "frame_turn_us": 954
+          },
+          {
+            "compile_us": 360636,
+            "peak_js_bytes": 433520,
+            "module_bytes": 24304,
+            "first_response_us": 492795,
+            "world_bytes": 124588,
+            "frame_turn_us": 951
+          }
+        ],
+        "median_response_us": 492795,
+        "p95_response_us": 495092,
+        "max_response_us": 495092
+      }
+    },
+    "wasm": {
+      "firmware_sha256": "c00854bd08e2b779c1483d485842775992a75b9726f3c1366f60a575db10067b",
+      "cold": {
+        "trials": [
+          {
+            "compile_us": 258303,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 1876820,
+            "world_bytes": 147456,
+            "frame_turn_us": 2916,
+            "before_cji_restore_us": 394740,
+            "before_dispatch_us": 404369,
+            "world_init_us": 1032522,
+            "world_init_done_us": 1122464,
+            "file_submitted_us": 1737801,
+            "file_returned_us": 1789043,
+            "settle_us": 1873910,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94554
+            },
+            "cji_loader": {
+              "start_us": 2165227,
+              "end_us": 2314316
+            }
+          },
+          {
+            "compile_us": 258403,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 1878477,
+            "world_bytes": 147456,
+            "frame_turn_us": 2912,
+            "before_cji_restore_us": 394801,
+            "before_dispatch_us": 404828,
+            "world_init_us": 1032865,
+            "world_init_done_us": 1124859,
+            "file_submitted_us": 1739121,
+            "file_returned_us": 1794669,
+            "settle_us": 1875571,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94721
+            },
+            "cji_loader": {
+              "start_us": 2160339,
+              "end_us": 2311662
+            }
+          },
+          {
+            "compile_us": 258297,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 1878199,
+            "world_bytes": 147456,
+            "frame_turn_us": 2914,
+            "before_cji_restore_us": 394679,
+            "before_dispatch_us": 404688,
+            "world_init_us": 1032320,
+            "world_init_done_us": 1121727,
+            "file_submitted_us": 1738073,
+            "file_returned_us": 1794000,
+            "settle_us": 1875291,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94472
+            },
+            "cji_loader": {
+              "start_us": 2166146,
+              "end_us": 2315293
+            }
+          },
+          {
+            "compile_us": 258320,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 1877085,
+            "world_bytes": 147456,
+            "frame_turn_us": 2982,
+            "before_cji_restore_us": 394686,
+            "before_dispatch_us": 404291,
+            "world_init_us": 1032664,
+            "world_init_done_us": 1121349,
+            "file_submitted_us": 1736876,
+            "file_returned_us": 1792557,
+            "settle_us": 1874105,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 94442
+            },
+            "cji_loader": {
+              "start_us": 2158007,
+              "end_us": 2309573
+            }
+          },
+          {
+            "compile_us": 258218,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 1876638,
+            "world_bytes": 147456,
+            "frame_turn_us": 2882,
+            "before_cji_restore_us": 394661,
+            "before_dispatch_us": 404260,
+            "world_init_us": 1032445,
+            "world_init_done_us": 1115668,
+            "file_submitted_us": 1737011,
+            "file_returned_us": 1792591,
+            "settle_us": 1873761,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 95061
+            },
+            "cji_loader": {
+              "start_us": 2157588,
+              "end_us": 2308930
+            }
+          },
+          {
+            "compile_us": 258248,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 1875708,
+            "world_bytes": 147456,
+            "frame_turn_us": 2958,
+            "before_cji_restore_us": 394683,
+            "before_dispatch_us": 404299,
+            "world_init_us": 1032423,
+            "world_init_done_us": 1122008,
+            "file_submitted_us": 1735413,
+            "file_returned_us": 1791381,
+            "settle_us": 1872752,
+            "prelude_cache": {
+              "bytes": 44544,
+              "build_us": 95111
+            },
+            "cji_loader": {
+              "start_us": 2158373,
+              "end_us": 2309616
+            }
+          }
+        ]
+      },
+      "bundled": {
+        "source": "baseline",
+        "trials": [
+          {
+            "compile_us": 373145,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 614137,
+            "world_bytes": 147456,
+            "frame_turn_us": 2820
+          },
+          {
+            "compile_us": 373163,
+            "peak_js_bytes": 428712,
+            "module_bytes": 42201,
+            "first_response_us": 603932,
+            "world_bytes": 147456,
+            "frame_turn_us": 2916
+          },
+          {
+            "compile_us": 498598,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 746020,
+            "world_bytes": 147456,
+            "frame_turn_us": 2785
+          },
+          {
+            "compile_us": 459821,
+            "peak_js_bytes": 428540,
+            "module_bytes": 42201,
+            "first_response_us": 712868,
+            "world_bytes": 147456,
+            "frame_turn_us": 3036
+          },
+          {
+            "compile_us": 420689,
+            "peak_js_bytes": 428524,
+            "module_bytes": 42201,
+            "first_response_us": 1395347,
+            "world_bytes": 147456,
+            "frame_turn_us": 2654
+          },
+          {
+            "compile_us": 259522,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 490179,
+            "world_bytes": 147456,
+            "frame_turn_us": 2656
+          },
+          {
+            "compile_us": 261050,
+            "peak_js_bytes": 428548,
+            "module_bytes": 42201,
+            "first_response_us": 490944,
+            "world_bytes": 147456,
+            "frame_turn_us": 2661
+          },
+          {
+            "compile_us": 262862,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 483734,
+            "world_bytes": 147456,
+            "frame_turn_us": 2689
+          }
+        ],
+        "median_response_us": 609034.5,
+        "p95_response_us": 1395347,
+        "max_response_us": 1395347
+      },
+      "editable": {
+        "source": "build",
+        "trials": [
+          {
+            "compile_us": 263593,
+            "peak_js_bytes": 428524,
+            "module_bytes": 42201,
+            "first_response_us": 480764,
+            "world_bytes": 147456,
+            "frame_turn_us": 2685
+          },
+          {
+            "compile_us": 266578,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 490237,
+            "world_bytes": 147456,
+            "frame_turn_us": 2699
+          },
+          {
+            "compile_us": 261111,
+            "peak_js_bytes": 428524,
+            "module_bytes": 42201,
+            "first_response_us": 492767,
+            "world_bytes": 147456,
+            "frame_turn_us": 2665
+          },
+          {
+            "compile_us": 270385,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 483516,
+            "world_bytes": 147456,
+            "frame_turn_us": 2682
+          },
+          {
+            "compile_us": 270806,
+            "peak_js_bytes": 428512,
+            "module_bytes": 42201,
+            "first_response_us": 487899,
+            "world_bytes": 147456,
+            "frame_turn_us": 2674
+          }
+        ],
+        "median_response_us": 487899,
+        "p95_response_us": 492767,
+        "max_response_us": 492767
+      }
+    }
+  }
+}

@@ -597,3 +597,35 @@ Compare scripts/10-measure-agenda-boot.py against the loader-baseline and under-
 ## Step 22 — Publish the cold-start milestone and verify restoration
 
 The go-go-parc report was pushed on main at d3b9f2e. After the cold and editable trials I restored the exact previous application at 0x10000. The flash writer verified its hash, the restored boot loaded both CJI manifests, and the console responded to cji status. The peripheral-enabled test image was built and remains available in the clean build directory. The separate physical test stays open.
+
+## Step 23 — Measure Wasm and RV32 with a matched P4 configuration
+
+### What I did
+
+I built the Wasm and native typed Agenda variants with the same headless native catalog, ESP-IDF configuration, radio settings, and operator compiler. The sampler checked the ordered system manifests field by field after removing Agenda's expected engine difference. It preserved the device's existing notes and editable source. It sampled six cold resets, eight bundled rebuilds, and five editable rebuilds for each backend, in that order. The boot sampler now also records compiler heap and artifact bytes, and the comparison script validates the original app image against the saved partition before flashing.
+
+### Why
+
+The first comparison mixed a headless native profile with a Wasm profile that included the peripheral drivers. A matched profile identifies the effects of compilation, engine initialization and running the frame-producing turn with substantially fewer confounders.
+
+### What worked
+
+All 12 cold boots reached publication within two seconds. The six Wasm boots had a 1.877 s median and a 1.878 s maximum. RV32 had a 1.902 s median and a 1.905 s maximum. Wasm's compiler median was 258.3 ms, compared with 360.8 ms for RV32. The median engine-init interval was 89.5 ms for Wasm and 6.2 ms for RV32, and the frame-producing turn medians were 2.92 ms and 1.10 ms respectively. CJI relocation began after the frame in every cold sample.
+
+The cold compiler allocator peak was 428,512 B for Wasm and 433,496 B for RV32. The modules measured 42,201 B and 24,304 B respectively. At publication, the world counters read 147,456 B for Wasm and 124,588 B for RV32. Those counters cover different parts of each runtime. They do not measure whole-device RAM.
+
+The bundled rebuilds had 609 ms and 646 ms median responses for Wasm and RV32. The later editable batches had 488 ms and 493 ms medians. The background compiler can be in a different phase even with the same saved installation and test order, so the comparison does not isolate a source-path cost or establish a runtime tail distribution.
+
+### What was tricky to build
+
+I retained both tested images separately before reconfiguring the ESP-IDF build. The panel-enabled Wasm build also passed and fit the app partition with 0xfb90 bytes of headroom. Its SHA-256 is 1f9d7a62beb58e92bb0a5874775a41e55a9b8365f65109063718b69fc614cbd7. The peripheral-enabled RV32 image from Step 20 has the same 22 primary manifest worlds as that Wasm image. The two physical images differ only in Agenda's engine at the manifest level.
+
+### What warrants a second pair of eyes
+
+The matched image manifests verify the application catalog and notes claims, not the instantaneous CPU load. Separate the cold compile allocator counter from engine accounting and compare stage measurements with the same start and end definitions. The headless results stop at kernel publication. The keyboard and panel stay outside the experiment.
+
+### Code review instructions
+
+Run scripts/12-measure-matched-targets.py with each image's corresponding generated manifest. Review its raw JSON and restore probe, plus scripts/10-measure-agenda-boot.py and scripts/05-measure-agenda-p4.py for the phase boundaries. The design guide now includes the source ABI, kernel event sequence, test APIs, and peripheral-enabled profiles for both engines.
+
+The verified restore ran in the sampler's cleanup path. The flash writer verified the old application, and boot loaded the two normal manifests and answered cji status. I returned the local build-elf profile to its prior RV32 flags and checked that the regenerated typed manifest exactly matched the tested RV32 manifest.

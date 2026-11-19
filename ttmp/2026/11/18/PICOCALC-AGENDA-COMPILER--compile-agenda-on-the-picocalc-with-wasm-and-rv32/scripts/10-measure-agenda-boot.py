@@ -26,6 +26,8 @@ def capture(port, world_profile):
     )
     fields = {
         "compile_us": r"agenda compile source=bundle status=ok us=(\d+)",
+        "peak_js_bytes": r"agenda compile source=bundle status=ok us=\d+ peak_js_bytes=(\d+)",
+        "module_bytes": r"agenda compile source=bundle status=ok us=\d+ peak_js_bytes=\d+ module_bytes=(\d+)",
         "first_response_us": r"agenda response us=(\d+)",
         "world_bytes": r"agenda response us=\d+ world_bytes=(\d+)",
         "frame_turn_us": r"agenda frame turn_us=(\d+)",

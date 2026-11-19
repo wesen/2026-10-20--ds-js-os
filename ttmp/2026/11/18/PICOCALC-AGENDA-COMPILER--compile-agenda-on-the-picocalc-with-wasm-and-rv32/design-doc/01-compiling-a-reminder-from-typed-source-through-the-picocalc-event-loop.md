@@ -7,7 +7,19 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: RV32 lowering and reserved executable region in the ELF reactor
+    - Path: repo://picocalc-os/compiler/typed-wasm.js
+      Note: Typed frontend, Wasm emission and module linking
+    - Path: repo://picocalc-os/port/esp32p4/main/agenda_p4.c
+      Note: Compiler realm, module replacement and the hardware benchmark boundaries
+    - Path: repo://picocalc-os/worlds/agenda/compile.js
+      Note: Source-level checks for the parser and record ABI on both targets
+    - Path: repo://picocalc-os/worlds/agenda/reminder.typed
+      Note: Editable source for task records, title cooking, dates and lead times
+    - Path: repo://picocalc-os/worlds/agenda/wasm-world.c
+      Note: Shared SDK reactor for storage, clock reminders and frame publication
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-18T17:49:07.530552217-05:00
@@ -26,6 +38,45 @@ A stored line such as `- [ ] dentist @2026-11-03 14:30 !15m` identifies a task, 
 3. On the P4, time cold source capture through the first real response. Record compile, validation/load, dispatch, peak memory and turn latency independently. On the assembled handheld measure the physical keypress through the changed frame. Record instrumentation endpoints and hardware configuration for each result.
 4. After the Wasm path works, compile the same application to RV32 for the trusted operator path. Use the same behavioral oracle, input and measurement definitions. Compare the two-second cold-response target with the measured distributions.
 5. Publish reproducible milestone reports to the go-go-parc vault with code references, hardware receipts and limitations.
+
+## Source, module, and world interfaces
+
+The editable language program is `picocalc-os/worlds/agenda/reminder.typed`. The compiler accepts typed text and lays out the fields of `Task`. The exported entry point `parseTask(line: string, title: buffer, task: Task): bool` writes the cooked task title and record to buffers supplied by the reactor. The return flag tells the caller whether a line was a task. String input and output use explicit UTF-16 lengths and spans. Date and lead-time routines operate on integer fields so the same test oracle can compare both targets.
+
+`picocalc-os/worlds/agenda/compile.js` owns the source-level ABI check. It checks the parameter and result types, then checks the names, types, and offsets of all eleven fields. This protects the reactor even though differently typed source values can lower to the same machine representation. For Wasm, `typed-wasm.js` combines the generated functions with the prebuilt reactor. For RV32, `typed-rv32.js` generates machine instructions and patches a reserved executable slot in the shared ELF assembled with `rv32-slot.S`. The checked Wasm module uses offsets in linear memory. The trusted native module uses pointers and the board calling convention.
+
+The shared reactor in `picocalc-os/worlds/agenda/wasm-world.c` implements the world SDK interface for both targets. Its `nw_init` declares Agenda and acquires the notes capability with `nw_fs_open`. Its `nw_on_event` starts a read through `nw_fs_read`, retains the operation token, and accepts only the matching settlement. It iterates over the bounded file and parses each line. The typed workflow here reads the notes file and persists fired reminder identities in its own store. Editing the task file itself remains the responsibility of the normal editor.
+
+```text
+initialize:
+    open notes capability
+    register 15-second timer
+
+on startup:
+    load fired identities
+    request todo.txt
+
+on timer, if no read is pending:
+    request todo.txt
+
+on matching successful file settlement:
+    for each task line:
+        decode the title and typed task record
+        calculate the configured-zone fire time
+        if the reminder is due and its identity is new:
+            persist the identity and send its notification
+    publish the task view
+```
+
+The kernel queues settlement, dispatches the world and publishes the changed frame. The compositor owns focus and transfers the appropriate frame to the display world. On the P4, `port/esp32p4/main/agenda_p4.c` compiles the bundled source at boot or the existing `notes/agenda.typed` through `agenda build`. It installs a newly compiled module under Agenda's manifest entry once compilation succeeds. This keeps the same note authority and app identity between compiler runs.
+
+## Reproducing backend measurements
+
+Use `scripts/03-check-task-records.mjs` to compare the typed parser with the existing Agenda JavaScript. `scripts/04-check-wasm-world.mjs` exercises the real simulator kernel, a seeded notes filesystem, timezone behavior, and a durable reminder restart. `scripts/07-check-rv32-parser.mjs` runs machine instructions for the same parser fixtures; `scripts/09-check-rv32-world.mjs` executes the relocated native reactor with deterministic SDK stubs. These tests establish different parts of the workflow and have separate receipts in `various/`.
+
+For a hardware comparison, build both targets with the same ESP-IDF configuration and the same headless setting, CJI development compiler and native catalog. Build the Wasm reactor first with `make -C picocalc-os agenda-reactor`. Use `PICOCALC_TYPED_AGENDA=ON`, `PICOCALC_RV32_AGENDA=OFF`, and `PICOCALC_NATIVE_ELF=ON` for the Wasm target. Switch `PICOCALC_RV32_AGENDA` on for the native target. Keep copies of each image and its generated typed Agenda manifest. The matched sampler `scripts/12-measure-matched-targets.py` checks that the manifests agree except for Agenda's engine, measures cold boot and both source paths, and restores the verified original app partition.
+
+Use the compiler allocator peak to compare compiler heap use on both targets. Compare module bytes separately. The world counter covers mapped segments plus live managed heap for RV32 and linear memory plus interpreter stack for Wasm. Both are useful within an engine. System-wide peak RAM would require a separate whole-device measurement.
 
 ## Measuring physical input through a panel change
 
@@ -71,3 +122,5 @@ idf.py -B "$panel_build" \
 ```
 
 Check `esp-idf/main/system.typed-agenda.json` under the build directory. It should include `keyboard`, `display`, `power`, and `compositor`. Agenda should point to `agenda/compiled.bin` with the `native` engine and the existing `fs:/notes` claim. This manifest is derived from the same configured JSON as `system.cji.json`; a previously generated manifest is unnecessary. The image is `picocalc-os-p4.bin` under the build directory. Follow the existing application-partition restore procedure from the diary when testing on the device.
+
+To prepare a Wasm image for the same physical test, first build the Wasm reactor from the repository root. Save the native image and its manifest, then rebuild the same peripheral-enabled configuration with `PICOCALC_RV32_AGENDA=OFF`, `PICOCALC_TYPED_AGENDA=ON`, and `PICOCALC_NATIVE_ELF=ON`. The Wasm Agenda entry changes to engine `wasm`. Keep the physical world list, SDK config, and note fixture fixed when comparing the two targets.
