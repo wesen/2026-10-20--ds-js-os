@@ -340,3 +340,7 @@ Match the original status text for invalid prompt tokens and check timer and ref
 ### Technical details
 
 The ask uses a three-second timeout and sends the same `{file, name}` payload that the original Editor receives. The wire additions are appended after the existing public operation numbers. No typed parser signature or executable slot size changed in this checkpoint.
+
+## Step 11 — Publish the Editor handoff milestone
+
+The SDK and reactor changes, simulator and emulator checks, and powered board evidence are in `39ebfa7`. I pushed “PicoCalc Agenda — Passing a single file to Editor” to go-go-parc main at `4b946f1`. The report explains the file scope, kernel authorization, request and grant lifetimes, and the verification boundary of the two framebuffer captures.
