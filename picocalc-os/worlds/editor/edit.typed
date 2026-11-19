@@ -21,6 +21,8 @@ function editorKeyCode(key: buffer, len: i32, b: buffer): i32 {
     if (editorEqual(key, len, b, b.writeLiteral(0, "f2"))) return 13;
     if (editorEqual(key, len, b, b.writeLiteral(0, "f5"))) return 14;
     if (editorEqual(key, len, b, b.writeLiteral(0, "esc"))) return 15;
+    if (editorEqual(key, len, b, b.writeLiteral(0, "f3"))) return 16;
+    if (editorEqual(key, len, b, b.writeLiteral(0, "f4"))) return 17;
     return 0;
 }
 
@@ -147,6 +149,8 @@ function editorDiscard(state: WorldState, output: buffer): i32 {
     state.dirty = false;
     state.discardArmed = false;
     state.notice = 8;
+    state.finding = false;
+    state.queryLength = 0;
     editorRemember(state, output);
     return editorGoFiles(output);
 }
@@ -170,8 +174,11 @@ function editorEscape(state: WorldState, output: buffer): i32 {
 function editorApplyKey(state: WorldState, action: i32, ch: i32, held: bool, output: buffer): i32 {
     if (state.file <= 0 && action === 15 && !held) return editorGoFiles(output);
     if (state.file <= 0) return 0;
+    if (state.finding) return editorFindInput(state, action, ch, held);
     state.notice = 0;
     if (held && action >= 13) return 0;
+    if (action === 16) return editorBeginFind(state);
+    if (action === 17) return editorFindNext(state, true);
     if (action === 13) return editorSave(state);
     if (action === 15) return editorEscape(state, output);
     return editorPlainKey(state, action, ch);

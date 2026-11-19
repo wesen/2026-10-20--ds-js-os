@@ -48,7 +48,8 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         declarations++;
         return 0;
     case NW_CALL_SCREEN:
-        expect(!strcmp(s1, frames ? "F2 save F3 find F4 next F6 view Esc back" : "Esc Files"), "typed hints");
+        expect(!strcmp(s1, !frames ? "Esc Files" : strstr(s0, "\"s\":\"Find: ") ?
+            "type to find  Enter go  Esc cancel" : "F2 save F3 find F4 next F6 view Esc back"), "typed hints");
 #ifdef TEST_EDIT
         if (testing_race) snprintf(race_frame, sizeof race_frame, "%s", s0);
         else puts(s0);
@@ -105,7 +106,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
 
 static int no_error(char *out, size_t n) { if (n) *out = 0; return 0; }
 
-#if defined(TEST_EDIT) || defined(TEST_POS)
+#if defined(TEST_EDIT) || defined(TEST_POS) || defined(TEST_FIND)
 static void key(nw_elf_module *world, const char *name, const char *ch)
 {
     char payload[128];
@@ -114,7 +115,7 @@ static void key(nw_elf_module *world, const char *name, const char *ch)
 }
 #endif
 
-#ifdef TEST_EDIT
+#if defined(TEST_EDIT) || defined(TEST_FIND)
 static void type(nw_elf_module *world, const char *text)
 {
     for (; *text; text++) {
@@ -148,6 +149,13 @@ int main(void)
         result = world.event(NW_SETTLE, 1, 0, 200 + i, "", "null", 4, "");
     }
     expect(result == NW_DONE && frames == 2 && replies == 1, "read settles and publishes");
+#ifdef TEST_FIND
+    for (unsigned i = 0; i < sizeof find_actions / sizeof *find_actions; i++) {
+        const char *action = find_actions[i];
+        if (!strncmp(action, "key ", 4)) key(&world, action + 4, "");
+        else type(&world, action + 5);
+    }
+#endif
 #ifdef TEST_POS
     key(&world, "right", "");
     key(&world, "esc", "");

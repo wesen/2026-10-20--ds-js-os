@@ -1,0 +1,80 @@
+function editorStatus(output: buffer, text: string, state: WorldState): i32 {
+    if (state.finding || state.notice === 10) return editorFindStatus(output, state);
+    if (state.notice === 9) return output.writeLiteral(0, "F3 to find first.");
+    if (state.notice === 1) return output.writeLiteral(0, "Saving...");
+    if (state.notice === 2) return editorSavedStatus(output, state.savedBytes);
+    if (state.notice === 3) return editorSaveError(output, state.errorLength);
+    if (state.notice === 4) return output.writeLiteral(0, "A line holds at most 4000 characters.");
+    if (state.notice === 5) return output.writeLiteral(0, "Too large to save: a file holds at most 64 KB.");
+    if (state.notice === 6) return output.writeLiteral(0, "Saving; back to Files once it is written.");
+    if (state.notice === 7) return output.writeLiteral(0, "Unsaved changes. F2 saves; Esc again discards them.");
+    if (state.notice === 8) return output.writeLiteral(0, "Changes discarded.");
+    const name = typedSdkBuffer(1);
+    let at = 0;
+    if (state.dirty) { at = output.writeLiteral(0, "* "); }
+    let i = 0;
+    while (i < state.nameLength) {
+        output.setCharCodeAt(at, name.charCodeAt(i));
+        i = i + 1;
+        at = at + 1;
+    }
+    at = at + output.writeLiteral(at, "  ");
+    at = editorDigits(output, at, state.line + 1);
+    output.setCharCodeAt(at, 58);
+    return editorDigits(output, at + 1, editorColumn(text, state.lineStart, state.cursor) + 1);
+}
+
+function editorDocumentFrame(output: buffer, text: string, state: WorldState): i32 {
+    const column = editorLocate(text, state);
+    if (state.row < state.top) { state.top = state.row; }
+    if (state.row >= state.top + 18) { state.top = state.row - 17; }
+    const cursorRow = state.row - state.top;
+    const label = typedSdkBuffer(2);
+    const length = editorStatus(label, text, state);
+    const status = typedSdkView(label, length);
+    let at = output.writeLiteral(0, "{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\"text\",\"s\":");
+    at = editorQuote(output, at, status, 0, length);
+    if (state.notice > 0 || state.finding) {
+        at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"accent\"}");
+    }
+    if (state.notice === 0 && !state.finding) {
+        at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"muted\"}");
+    }
+    at = at + output.writeLiteral(at, ",{\"t\":\"textarea\",\"rows\":[");
+    editorFirstRow(text, state);
+    while (state.row < state.top && editorNextRow(text, state)) {}
+    let rows = 0;
+    let more = true;
+    while (rows < 18 && more) {
+        if (rows > 0) { at = at + output.writeLiteral(at, ","); }
+        at = at + output.writeLiteral(at, "{\"s\":");
+        at = editorQuote(output, at, text, state.rowStart, state.rowEnd);
+        at = at + output.writeLiteral(at, ",\"color\":\"ink\"}");
+        more = editorNextRow(text, state);
+        rows = rows + 1;
+    }
+    at = at + output.writeLiteral(at, "],\"cursor\":");
+    if (state.finding) { at = at + output.writeLiteral(at, "null"); }
+    if (!state.finding) {
+        at = at + output.writeLiteral(at, "[");
+        at = editorDigits(output, at, cursorRow);
+        output.setCharCodeAt(at, 44);
+        at = editorDigits(output, at + 1, column);
+        output.setCharCodeAt(at, 93);
+        at = at + 1;
+    }
+    at = at + output.writeLiteral(at, ",\"marks\":[");
+    at = editorFindMarks(output, at, text, state);
+    return at + output.writeLiteral(at, "],\"font\":\"s\",\"lead\":2,\"grow\":1}]}");
+}
+
+function editorHints(hints: buffer, state: WorldState): i32 {
+    if (state.finding) return hints.writeLiteral(0, "type to find  Enter go  Esc cancel");
+    return hints.writeLiteral(0, "F2 save F3 find F4 next F6 view Esc back");
+}
+
+function editorShow(output: buffer, hints: buffer, state: WorldState): i32 {
+    const hintLength = editorHints(hints, state);
+    const text = typedSdkView(typedSdkBuffer(0), state.textLength);
+    return typedSdkScreen(output, editorDocumentFrame(output, text, state), hints, hintLength);
+}

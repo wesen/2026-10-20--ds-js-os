@@ -38,4 +38,6 @@ record WorldState {
     positionTop: i32;
     positionTime: i32;
     positionEnd: i32;
+    finding: bool;
+    queryLength: i32;
 }

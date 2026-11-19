@@ -38,5 +38,5 @@
     j typedSdkStoreSave
     j typedSdkTimestamp
     .option pop
-    .space 131072 - (.-.Lprogram)
+    .space 163840 - (.-.Lprogram)
 .Lend:

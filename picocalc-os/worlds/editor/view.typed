@@ -1,8 +1,3 @@
-// An unopened Editor shows this view before it receives a file grant.
-function editorEmptyFrame(output: buffer): i32 {
-    return output.writeLiteral(0, "{\"t\":\"col\",\"gap\":8,\"kids\":[{\"t\":\"text\",\"s\":\"No file open.\",\"font\":\"m\"},{\"t\":\"text\",\"s\":\"Open one from Files (d on the home screen). The editor can only touch files you open there.\",\"wrap\":true,\"font\":\"s\",\"color\":\"muted\"}]}");
-}
-
 // Append a JSON string from a UTF-16 span. This also handles filenames and
 // text containing control characters without leaking them into the UI tree.
 function editorHex(digit: i32): i32 {
@@ -99,70 +94,4 @@ function editorSaveError(output: buffer, size: i32): i32 {
         i = i + 1;
     }
     return start + count;
-}
-
-function editorStatus(output: buffer, text: string, state: WorldState): i32 {
-    if (state.notice === 1) return output.writeLiteral(0, "Saving...");
-    if (state.notice === 2) return editorSavedStatus(output, state.savedBytes);
-    if (state.notice === 3) return editorSaveError(output, state.errorLength);
-    if (state.notice === 4) return output.writeLiteral(0, "A line holds at most 4000 characters.");
-    if (state.notice === 5) return output.writeLiteral(0, "Too large to save: a file holds at most 64 KB.");
-    if (state.notice === 6) return output.writeLiteral(0, "Saving; back to Files once it is written.");
-    if (state.notice === 7) return output.writeLiteral(0, "Unsaved changes. F2 saves; Esc again discards them.");
-    if (state.notice === 8) return output.writeLiteral(0, "Changes discarded.");
-    const name = typedSdkBuffer(1);
-    let at = 0;
-    if (state.dirty) { at = output.writeLiteral(0, "* "); }
-    let i = 0;
-    while (i < state.nameLength) {
-        output.setCharCodeAt(at, name.charCodeAt(i));
-        i = i + 1;
-        at = at + 1;
-    }
-    at = at + output.writeLiteral(at, "  ");
-    at = editorDigits(output, at, state.line + 1);
-    output.setCharCodeAt(at, 58);
-    return editorDigits(output, at + 1, editorColumn(text, state.lineStart, state.cursor) + 1);
-}
-
-function editorDocumentFrame(output: buffer, text: string, state: WorldState): i32 {
-    const column = editorLocate(text, state);
-    if (state.row < state.top) { state.top = state.row; }
-    if (state.row >= state.top + 18) { state.top = state.row - 17; }
-    const cursorRow = state.row - state.top;
-    const label = typedSdkBuffer(2);
-    const length = editorStatus(label, text, state);
-    const status = typedSdkView(label, length);
-    let at = output.writeLiteral(0, "{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\"text\",\"s\":");
-    at = editorQuote(output, at, status, 0, length);
-    if (state.notice > 0) {
-        at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"accent\"}");
-    }
-    if (state.notice === 0) {
-        at = at + output.writeLiteral(at, ",\"font\":\"s\",\"color\":\"muted\"}");
-    }
-    at = at + output.writeLiteral(at, ",{\"t\":\"textarea\",\"rows\":[");
-    editorFirstRow(text, state);
-    while (state.row < state.top && editorNextRow(text, state)) {}
-    let rows = 0;
-    let more = true;
-    while (rows < 18 && more) {
-        if (rows > 0) { at = at + output.writeLiteral(at, ","); }
-        at = at + output.writeLiteral(at, "{\"s\":");
-        at = editorQuote(output, at, text, state.rowStart, state.rowEnd);
-        at = at + output.writeLiteral(at, ",\"color\":\"ink\"}");
-        more = editorNextRow(text, state);
-        rows = rows + 1;
-    }
-    at = at + output.writeLiteral(at, "],\"cursor\":[");
-    at = editorDigits(output, at, cursorRow);
-    output.setCharCodeAt(at, 44);
-    at = editorDigits(output, at + 1, column);
-    return at + output.writeLiteral(at, "],\"marks\":[],\"font\":\"s\",\"lead\":2,\"grow\":1}]}");
-}
-
-function editorShow(output: buffer, hints: buffer, state: WorldState): i32 {
-    const hintLength = hints.writeLiteral(0, "F2 save F3 find F4 next F6 view Esc back");
-    const text = typedSdkView(typedSdkBuffer(0), state.textLength);
-    return typedSdkScreen(output, editorDocumentFrame(output, text, state), hints, hintLength);
 }

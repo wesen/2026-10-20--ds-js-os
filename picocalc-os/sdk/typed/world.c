@@ -10,7 +10,7 @@
 enum { SCREEN_CAP = 16384, HINT_CAP = 120, LARGE_CAP = 65536, SMALL_CAP = 256 };
 #define COUNTED(name, capacity) struct name { uint32_t length; uint16_t units[capacity]; }
 static COUNTED(large_text, LARGE_CAP) large;
-static COUNTED(small_text, SMALL_CAP) small[4];
+static COUNTED(small_text, SMALL_CAP) small[5];
 static COUNTED(record_text, 4096) record_text;
 static uint32_t world_state[64];
 static const nw_event *current;
@@ -81,6 +81,7 @@ SDK(typedSdkBuffer) void *typedSdkBuffer(int slot)
     static uint32_t empty;
     if (slot == 0) { large.length = LARGE_CAP; return &large; }
     if (slot == 5) { record_text.length = 4096; return &record_text; }
+    if (slot > 5) slot--;
     if (slot < 1 || (unsigned)slot > sizeof small / sizeof *small) return &empty;
     small[slot - 1].length = SMALL_CAP;
     return &small[slot - 1];

@@ -1,0 +1,155 @@
+// Queries admit ASCII printable keys. The only lowercase conversions from
+// outside ASCII that can match such a query are Kelvin sign and dotted I.
+// Dotted I produces an extra unit, so offsets into the folded line differ.
+function editorFold(unit: i32): i32 {
+    if (unit >= 65 && unit <= 90) return unit + 32;
+    if (unit === 8490) return 107;
+    if (unit === 304) return 105;
+    return unit;
+}
+
+function editorFindMatch(text: string, at: i32, end: i32, query: buffer, size: i32): bool {
+    if (end - at < size) return false;
+    let i = 0;
+    while (i < size && editorFold(text.charCodeAt(at + i)) === editorFold(query.charCodeAt(i)) &&
+        (!(text.charCodeAt(at + i) === 304) || i + 1 === size)) { i = i + 1; }
+    return i === size;
+}
+
+function editorFindSpan(text: string, start: i32, end: i32, query: buffer, size: i32, from: i32): i32 {
+    let at = start;
+    let folded = 0;
+    while (at < end && !(folded >= from && editorFindMatch(text, at, end, query, size))) {
+        if (text.charCodeAt(at) === 304) { folded = folded + 1; }
+        at = at + 1;
+        folded = folded + 1;
+    }
+    if (at >= end) return -1;
+    return folded;
+}
+
+function editorSetFound(state: WorldState, text: string, first: i32, end: i32, found: i32): i32 {
+    let at = Math.min(end, first + found);
+    if (at > first && at < end && editorLowSurrogate(text.charCodeAt(at)) &&
+        editorHighSurrogate(text.charCodeAt(at - 1))) { at = at + 1; }
+    state.cursor = at;
+    state.goal = -1;
+    state.notice = 0;
+    return 0;
+}
+
+function editorFindOtherLines(state: WorldState, text: string, query: buffer, from: i32, stop: i32): bool {
+    let start = from;
+    let end = editorLineEnd(text, start);
+    let found = -1;
+    while (start < stop && found < 0) {
+        found = editorFindSpan(text, start, end, query, state.queryLength, 0);
+        if (found < 0) {
+            start = end + 1;
+            end = editorLineEnd(text, start);
+        }
+    }
+    if (found < 0) return false;
+    editorSetFound(state, text, start, end, found);
+    return true;
+}
+
+function editorFindNext(state: WorldState, advance: bool): i32 {
+    if (state.queryLength <= 0 && advance) { state.notice = 9; }
+    if (state.queryLength <= 0) return 0;
+    const text = typedSdkView(typedSdkBuffer(0), state.textLength);
+    editorLocate(text, state);
+    const first = state.lineStart;
+    const end = state.lineEnd;
+    const query = typedSdkBuffer(6);
+    let from = state.cursor - first;
+    if (advance) { from = Math.min(end, editorNext(text, state.cursor)) - first; }
+    let found = editorFindSpan(text, first, end, query, state.queryLength, from);
+    if (found >= 0) return editorSetFound(state, text, first, end, found);
+    if (editorFindOtherLines(state, text, query, end + 1, text.length)) return 0;
+    if (editorFindOtherLines(state, text, query, 0, first)) return 0;
+    found = editorFindSpan(text, first, end, query, state.queryLength, 0);
+    if (found >= 0 && found < from) return editorSetFound(state, text, first, end, found);
+    state.notice = 10;
+    return 0;
+}
+
+function editorFindInput(state: WorldState, key: i32, ch: i32, held: bool): i32 {
+    if (key === 15 && !held) {
+        state.finding = false;
+        state.queryLength = 0;
+        state.notice = 0;
+    }
+    if (!state.finding) return 0;
+    if (key === 11 && !held) {
+        state.finding = false;
+        state.notice = 0;
+    }
+    if (!state.finding) return editorFindNext(state, false);
+    if (key === 9) {
+        state.queryLength = Math.max(0, state.queryLength - 1);
+    }
+    if (key === 9 || ch < 32 || ch > 126 || state.queryLength >= 60) return 0;
+    const query = typedSdkBuffer(6);
+    query.setCharCodeAt(state.queryLength, ch);
+    state.queryLength = state.queryLength + 1;
+    return 0;
+}
+
+function editorBeginFind(state: WorldState): i32 {
+    state.finding = true;
+    return 0;
+}
+
+function editorFindStatus(buf: buffer, state: WorldState): i32 {
+    let at = 0;
+    if (state.finding) { at = buf.writeLiteral(0, "Find: "); }
+    if (!state.finding) { at = buf.writeLiteral(0, "Not found: "); }
+    const query = typedSdkBuffer(6);
+    let i = 0;
+    while (i < state.queryLength) {
+        buf.setCharCodeAt(at, query.charCodeAt(i));
+        at = at + 1;
+        i = i + 1;
+    }
+    if (state.finding) { at = at + buf.writeLiteral(at, "_"); }
+    return at;
+}
+
+function editorFindMark(out: buffer, offset: i32, row: i32, col: i32, size: i32): i32 {
+    let at = offset + out.writeLiteral(offset, "[");
+    at = editorDigits(out, at, row);
+    out.setCharCodeAt(at, 44);
+    at = editorDigits(out, at + 1, col);
+    out.setCharCodeAt(at, 44);
+    at = editorDigits(out, at + 1, size);
+    return at + out.writeLiteral(at, ",\"soft\"]");
+}
+
+function editorFindMarks(out: buffer, offset: i32, text: string, state: WorldState): i32 {
+    if (state.queryLength <= 0) return offset;
+    let at = offset;
+    const query = typedSdkBuffer(6);
+    editorFirstRow(text, state);
+    while (state.row < state.top && editorNextRow(text, state)) {}
+    let row = 0;
+    let more = true;
+    while (row < 18 && more) {
+        const start = state.rowStart;
+        const end = state.rowEnd;
+        let pos = start;
+        let folded = 0;
+        while (pos < end) {
+            if (editorFindMatch(text, pos, end, query, state.queryLength)) {
+                if (at > offset) { at = at + out.writeLiteral(at, ","); }
+                at = editorFindMark(out, at, row, editorColumn(text, start, Math.min(end, start + folded)), state.queryLength);
+            }
+            if (text.charCodeAt(pos) === 304) { folded = folded + 1; }
+            pos = pos + 1;
+            folded = folded + 1;
+        }
+        more = editorNextRow(text, state);
+        row = row + 1;
+    }
+    return at;
+}

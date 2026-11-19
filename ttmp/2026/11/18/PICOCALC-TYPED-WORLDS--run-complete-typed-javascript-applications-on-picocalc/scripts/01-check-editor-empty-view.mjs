@@ -9,7 +9,7 @@ import '../../../../../../picocalc-os/compiler/typed-rv32.js';
 
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
-const editor = readFileSync('picocalc-os/worlds/editor/view.typed', 'utf8');
+const editor = readFileSync('picocalc-os/worlds/editor/empty.typed', 'utf8');
 const original = readFileSync('picocalc-os/js/apps/editor.js', 'utf8');
 let view;
 const app = {

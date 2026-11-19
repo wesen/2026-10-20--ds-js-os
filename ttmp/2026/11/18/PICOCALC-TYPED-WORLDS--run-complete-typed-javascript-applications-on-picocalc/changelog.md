@@ -31,3 +31,7 @@ Preserve exact typed Editor snapshots across saves and qualify confirmed discard
 ## 2026-11-19
 
 Persist and restore typed Editor positions in the original record format, with independent restart and eviction checks.
+
+## 2026-11-19
+
+Port Editor search prompts, wraparound, Unicode-aware ASCII queries, and highlights to typed JavaScript.

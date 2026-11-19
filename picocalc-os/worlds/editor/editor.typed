@@ -101,6 +101,8 @@ function editorOpened(state: WorldState, size: i32, output: buffer, hints: buffe
     state.goal = -1;
     state.dirty = false;
     state.discardArmed = false;
+    state.finding = false;
+    state.queryLength = 0;
     state.notice = 0;
     editorRestorePosition(state);
     return editorShow(output, hints, state);

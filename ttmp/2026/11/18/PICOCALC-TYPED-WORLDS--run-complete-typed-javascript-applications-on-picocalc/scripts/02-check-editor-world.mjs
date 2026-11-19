@@ -11,7 +11,7 @@ import '../../../../../../picocalc-os/compiler/typed-world.js';
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
 const os = resolve('picocalc-os');
-const source = ['state', 'layout', 'view', 'positions', 'edit', 'editor'].map(name =>
+const source = ['state', 'layout', 'empty', 'view', 'find', 'document-view', 'positions', 'edit', 'editor'].map(name =>
     readFileSync(join(os, 'worlds/editor', name + '.typed'), 'utf8')).join('\n');
 const wasmReactor = readFileSync(join(os, 'build/typed-world-reactor.wasm'));
 const wasm = compileTypedWorld(source, wasmReactor);
@@ -23,10 +23,30 @@ const worlds = system.worlds.filter(w => ['display', 'keyboard', 'compositor', '
 const large = process.argv.includes('--large');
 const edit = process.argv.includes('--edit');
 const positions = process.argv.includes('--positions');
-assert(Number(large) + Number(edit) + Number(positions) <= 1, 'run the capacity, mutation and position scenarios separately');
+const find = process.argv.includes('--find');
+assert([large, edit, positions, find].filter(Boolean).length <= 1, 'select at most one workflow');
 const turnBudget = large && !process.argv.includes('--stock-budget') ? 200 : 50;
-const contents = large ? ('text '.repeat(15) + '\r\n').repeat(851) + 'x'.repeat(9) :
+const contents = find ? 'A🙂 BETA beta beta\nKelvin K and İce\nlast BeTa\noverlap ababa\n' :
+    large ? ('text '.repeat(15) + '\r\n').repeat(851) + 'x'.repeat(9) :
     'A🙂  long line ' + 'abcd efgh '.repeat(9) + '\r\n\t"hello"\rLast\n';
+const findActions = [
+    'key f4', 'key f3', 'type BeTx', 'key backspace', 'type A', 'key enter',
+    'key f4', 'key f4', 'key f4', 'key f4', 'capture found.png', 'key f3', 'key esc',
+    'key f3', 'type k', 'key enter', 'key f4', 'key f3', 'key backspace', 'type ce', 'key enter',
+    'key f3', 'key backspace', 'key backspace', 'type zzz', 'key enter',
+    'key f3', 'key backspace', 'key backspace', 'key backspace', 'type aba', 'key enter',
+];
+if (find) {
+    // Verify the folding assumptions behind ASCII keyboard queries.
+    const asciiFolds = [], expandingFolds = [];
+    for (let cp = 128; cp <= 0x10ffff; cp++) {
+        const input = String.fromCodePoint(cp), lower = input.toLowerCase();
+        if (/[\x20-\x7e]/.test(lower)) asciiFolds.push(cp);
+        if (input.length !== lower.length) expandingFolds.push(cp);
+    }
+    assert.deepEqual(asciiFolds, [304, 8490]);
+    assert.deepEqual(expandingFolds, [304]);
+}
 const seed = {pos: {'entry.txt':[0, 2, 0, 1792662000000]}};
 for (let i = 0; i < 19; i++) seed.pos['prior-' + i] = [0, 0, 0, 1792662000001 + i];
 
@@ -71,6 +91,7 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
     writeFileSync(scenario, [
         'wait 2000', 'key e', 'wait 1000', 'capture editor.png',
         'key f1', 'wait 530', 'key d', 'wait 530', 'key enter', 'wait 1000', 'capture opened.png',
+        ...(find ? findActions.flatMap(action => [action, 'wait 530']) : []),
         ...(positions ? ['key right', 'wait 530', 'key esc', 'wait 530'] : []),
         ...(edit ? ['key right', 'wait 530', 'key right', 'wait 530', 'key backspace', 'wait 530',
             'key f5', 'wait 530', 'key f5', 'wait 530', 'type tail', 'wait 530', 'key enter', 'wait 530',
@@ -99,8 +120,15 @@ service("probe").needs("frames").on("frames", (s, m, msg) => {
         assert(statuses.includes(`Saved ${Buffer.byteLength(saved)} bytes.`));
         assert.equal(statuses.at(-2), 'Changes discarded.');
     }
-    else assert.equal(statuses.length, positions ? 4 : 3);
-    const pictures = edit ? ['editor', 'opened', 'saved', 'fresh'] : ['editor', 'opened', 'fresh'];
+    else if (find) {
+        assert(statuses.includes('F3 to find first.'));
+        assert(statuses.includes('Not found: zzz'));
+        const marks = frames.find(frame => frame.tree.kids[0].s === 'Find: BeTA_')?.tree.kids[1].marks;
+        assert.equal(marks?.length, 4);
+        const overlaps = frames.find(frame => frame.tree.kids[0].s === 'Find: aba_')?.tree.kids[1].marks;
+        assert.deepEqual(overlaps, [[3, 8, 3, 'soft'], [3, 10, 3, 'soft']]);
+    } else assert.equal(statuses.length, positions ? 4 : 3);
+    const pictures = ['editor', 'opened', ...(edit ? ['saved'] : []), ...(find ? ['found'] : []), 'fresh'];
     const pixels = pictures.map(name => readFileSync(join(out, name + '.png')));
     if (!positions) return {frames, pixels, saved};
     const kept = JSON.parse(readFileSync(record, 'utf8')).pos;
@@ -137,7 +165,10 @@ try {
     const expected = join(dir, 'expected.h');
     writeFileSync(expected, `static const char settled[] = ${JSON.stringify(JSON.stringify(contents))};\n` +
         (edit ? `#define TEST_EDIT\nstatic const char saved_text[] = ${JSON.stringify(original.saved)};\n` : '') +
-        (positions ? `#define TEST_POS\nstatic const char initial_record[] = ${JSON.stringify(JSON.stringify(seed))};\n` : ''));
+        (positions ? `#define TEST_POS\nstatic const char initial_record[] = ${JSON.stringify(JSON.stringify(seed))};\n` : '') +
+        (find ? '#define TEST_FIND\nstatic const char *const find_actions[] = {' +
+            findActions.filter(action => !action.startsWith('capture ')).map(action => JSON.stringify(action)).join(',') +
+            '};\n' : ''));
     execFileSync(cc, [
         '-march=rv32im', '-mabi=ilp32', '-O2', '-fno-builtin', '-msmall-data-limit=0',
         '-mno-relax', '-nostdlib', '-Wl,-Ttext=0x10000', '-Wl,-e,_start', '-I', sdk, '-I', dir,

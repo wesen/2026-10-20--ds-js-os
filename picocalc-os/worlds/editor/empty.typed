@@ -1,0 +1,4 @@
+// An unopened Editor shows this view before it receives a file grant.
+function editorEmptyFrame(output: buffer): i32 {
+    return output.writeLiteral(0, "{\"t\":\"col\",\"gap\":8,\"kids\":[{\"t\":\"text\",\"s\":\"No file open.\",\"font\":\"m\"},{\"t\":\"text\",\"s\":\"Open one from Files (d on the home screen). The editor can only touch files you open there.\",\"wrap\":true,\"font\":\"s\",\"color\":\"muted\"}]}");
+}
