@@ -166,3 +166,7 @@ Use the selected line to implement Enter/Space toggling, F3 editing and F5 confi
 ### Technical details
 
 The renderer clips labels after 80 UTF-8 code points, beyond what fits on the 320-pixel-wide screen. The retained text is available at its original line widths. The SDK's clock-zone wrapper uses the existing wire operation. The RV32 slot stays at 48 KiB with five entry jumps instead of two.
+
+## Step 6 — Publish the grouped-view milestone
+
+The grouped view implementation, differential fixtures, and screenshot are in `4f4ebf6`. I added the technical walkthrough “PicoCalc Agenda — Grouping and scrolling a file-backed task list” at `Projects/2026/11/18/PROJ - PicoCalc Agenda - Grouping and scrolling a file-backed task list.md` in go-go-parc. The vault push advanced `origin/main` to `08e95e1`. The report relates file offsets, logical rows and window-local indices through a concrete example, and records the simulator, emulator and firmware build evidence.
