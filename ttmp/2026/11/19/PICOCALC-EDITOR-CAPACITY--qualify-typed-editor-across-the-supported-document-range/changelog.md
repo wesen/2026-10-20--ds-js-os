@@ -11,3 +11,7 @@ Documented capacity failures and verified a shared exact-unit scan fixes the 64 
 ## 2026-11-19
 
 Implemented typed preview row streaming and verified EOF navigation, backward rescanning, and visual parity on both backends.
+
+## 2026-11-19
+
+Requalified the standard typed Editor workflow on physical Wasm and RV32. Captured the last row of a 21,614-byte preview on RV32.

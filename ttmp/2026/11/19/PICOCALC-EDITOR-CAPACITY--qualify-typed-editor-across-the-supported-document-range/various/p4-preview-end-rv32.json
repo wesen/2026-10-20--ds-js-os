@@ -1,0 +1,11 @@
+{
+  "input_bytes": 21614,
+  "engine": "native",
+  "page_down_keys": 57,
+  "faults": [],
+  "scratch_removed": true,
+  "screenshots": {
+    "shot-1.png": "b5be732d0e3fd003e02b6211c44d61185458022bffd89c58a1f4d7614cd56b86",
+    "shot-2.png": "9c4e6a79873587f256c31cb95e8765b8f88a629ce86ec95916f2a6dc2fea5659"
+  }
+}

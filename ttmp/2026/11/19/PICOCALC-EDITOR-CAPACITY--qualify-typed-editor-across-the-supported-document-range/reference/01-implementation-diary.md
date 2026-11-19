@@ -202,3 +202,65 @@ Build the usual `--large --keep-fixture` cross-target fixture, then run `05-meas
 ### Technical details
 
 Each file has 65,536 bytes. Source position 852:1 identifies the final nine-byte line after carriage-return normalization. The dense absent query has a repeated prefix that matches at multiple positions per physical line.
+
+## Step 4: Rebuild and qualify both Editor backends on the physical PicoCalc
+
+I built matched PicoCalc firmware with source SHA-256 `7c9d1b7bfdf78678354cf023b31d59acec28b24054c60cb52f1761d5508a4837`. The standard edit, save, find, preview and discard workflow passed on Wasm and RV32. The board compiled the source from its bundle during each boot.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Verify that the preview work runs on the handheld through the actual compiler, keyboard path, display, and filesystem.
+
+**Inferred user intent:** Maintain a working device image and keep repeatable evidence for later iterations.
+
+### What I did
+
+- Ran the typed-worlds ticket's `03-build-editor-firmware.sh` for both targets with `/home/manuel/esp/esp-idf-5.4.2/export.sh` and the existing matched profile.
+- Compared the application manifests and confirmed that only the expected Editor engine entry differs. The hardware runner matched each partition table with the saved board table, used app-only flashing, and checked flash hashes.
+- Ran `04-qualify-editor-on-p4.py --port /dev/ttyACM0` against the paired artifacts. Saved the structured receipt in `various/p4-preview-build-workflow.json`.
+- Added a separate physical long-preview fixture using the installed RV32 build and the console file-transfer path.
+
+### Why
+
+Host Wasm framebuffer comparisons and an RV32 emulator establish functional parity at their respective test boundaries. The board run also exercises bundle generation, local compilation, native or Wasm loading, the P4 scheduler, storage, keyboard driver, and RGB565 framebuffer.
+
+### What worked
+
+- The paired images were 4,257,360 bytes for Wasm and 4,450,848 bytes for RV32. Their app partition is 8 MiB.
+- Wasm compiled in about 1.78 s and loaded in 161 ms. RV32 compiled in about 2.86 s and loaded in 12.7 ms. Compiled modules measured 81,773 and 239,732 bytes respectively.
+- Both standard runs preserved the exact 20 saved bytes, discarded a later edit, removed the test directory, and produced two CRC-verified screenshots apiece. I visually inspected the preview screenshots. Both display the heading and two list items.
+- Both standard runs reported zero I²C and SPI errors. The final installed profile is RV32.
+- The paced transfer acknowledged all 21,614 bytes. The RV32 preview accepted 57 Page Down events and produced two verified framebuffers with no Editor faults. I inspected the final PNG and verified that it shows `END OF PREVIEW` on the last displayed row. The scratch work directory was deleted after the run.
+- The long hardware result and visual evidence are in `various/p4-preview-end-rv32.json` and `various/p4-preview-end-rv32.png`.
+
+### What didn't work
+
+- The sandbox hid the serial device nodes. A tool invocation outside the sandbox confirmed `/dev/ttyACM0` and the expected USB serial adapter. The board had remained connected.
+- The first long-preview preflight stopped with `RuntimeError: scratch document was not created by Files`. The captured Editor showed the correct path. Opening a missing file yields a clean buffer, and the file is written only after save. I removed the empty scratch directory and changed the script to create the fixture via `put`.
+- The first bulk stage ended at 20,494 bytes instead of 21,614. The console twice logged `unknown command putsYW5rIGxpbmUuCgpBIHJlYWRpbmc (try help)`. I changed the transport to pace writes within each console command and wait for the exact acknowledged offset before proceeding.
+
+### What I learned
+
+A missing-file capability can open Editor with an empty document before the corresponding filesystem entry exists. The board's console accepts append chunks, but application-level offset receipts are required to catch UART input loss from back-to-back larger writes.
+
+### What was tricky to build
+
+The test keeps firmware flashing separate from fixture staging and only operates on its own scratch directory. The main standard workflow uses a backup for recovery. The long run reuses the current RV32 firmware and avoids a third flash.
+
+### What warrants a second pair of eyes
+
+Review the exact-byte checks, the clean Editor precondition for `--resume-staging`, and the ordering of navigation and cleanup. Compare the CRC-verified screenshots with the source marker. The script checks transport and capture integrity, and the diary records the visual check of the final row.
+
+### What should be done in the future
+
+Keep the hardware profile and source hash paired with the next search and viewport changes. The dense and late-match regressions from Step 3 remain open.
+
+### Code review instructions
+
+Read the structured paired receipt and the test entry points `03-build-editor-firmware.sh`, `04-qualify-editor-on-p4.py`, and `scripts/03-check-large-preview-on-p4.py`. The last script expects one known typed backend already running.
+
+### Technical details
+
+The firmware application starts at `0x10000`. The generated board bundles contain typed source and a generic reactor. The Editor compiler fills that reactor on boot. The standard profile selects a 200 ms Editor turn budget and a 768 KiB world memory limit.
