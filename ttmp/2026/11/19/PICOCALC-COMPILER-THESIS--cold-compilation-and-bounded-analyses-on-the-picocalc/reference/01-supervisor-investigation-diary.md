@@ -293,3 +293,59 @@ Start in the ticket index for all six reports, notes and diaries. To reproduce t
 ### Technical details
 
 The vault contains the final six articles and the generated `_assets/picocalc-compiler-thesis-experiments.png` figure. The original experiment guide was delivered to the reMarkable folder recorded in Step 2. Raw compiler objects, binary executables and temporary device data were excluded from publication.
+
+## Step 6: Restore the physical console and prepare a matched compiler trial
+
+The USB troubleshooting changed my interpretation of the previous device check. The PicoCalc bridge was present in the host USB inventory even when its serial device was absent. The operator loaded the CDC ACM module and the firmware acknowledged a world query. I prepared an application-only trial that uses the regular firmware compile function and preserves the installed image for restoration.
+
+### Prompt Context
+
+**User prompt (verbatim):** “ok board is connected. Should we then merge the numeric operands directly passing? and text access removal? or what do you think”
+
+**User follow-up (verbatim):** “I modprobbed”
+
+**Assistant interpretation:** Use the available P4 to evaluate the host recommendation and distinguish the native operand representation decision from the bounds-elimination decision.
+
+**Inferred user intent:** Find a simple compiler improvement worth merging for on-device compilation with real application evidence.
+
+### What I did
+
+- Matched bridge serial 5B61091051 against the project's p4cap default. Checked USB interface binding with `lsusb -t`. After the driver loaded I verified the by-id link to ttyACM0 and a `#OK worlds` reply.
+- Held the keyboard bus and backed up the 8 MiB factory app. Read the partition table separately and verified the app offset and length. Kept both binaries in private temporary storage. The first 4,461,472 bytes of the app matched SHA-256 b2a6ab3fcfcfd161eb184ac7e2fb9802a8e6fb15bc64a007bceb916fb118459b from the earlier physical qualification.
+- Built a disposable ESP-IDF 5.4.2 firmware with four pinned compiler configurations and the same production runtime, application source and native reactor for all sixteen invocations. Other worlds use the normal compiler. Added an independent host linker oracle for the exact firmware reactor.
+
+### Why
+
+The merge choice depends on cold compile time, peak heap and output identity. Runtime and context creation, compiler evaluation, linking and teardown belong in that interval. SHA-256 and serial reporting for each linked image run outside it.
+
+### What worked
+
+The isolated build reused the vendored compiler runtime and the downloaded IDF components. The original image prefix matched the previous receipt. The host oracle produced one hash for the original stack-slot backend and an identical second hash for the three register-backend variants.
+
+### What didn't work
+
+The initial `sudo -n modprobe cdc_acm` returned `sudo: a password is required`. The user loaded the module locally. A second check caught an important difference in the earlier host harness: its experimental reactor used a different Espressif toolchain build and link input order. I used the production firmware recipe and generated new host expectations for that reactor. Their bytes and hashes are pinned in the device receipt.
+
+### What I learned
+
+Project hardware identity comes from USB enumeration and the bridge serial as well as its current Linux tty. Matching application source and file size cannot establish native module identity across different reactor builds.
+
+### What was tricky to build
+
+Measuring all variants in a single diagnostic image avoids changing the app partition between treatments. Each treatment nevertheless constructs its own compiler runtime and re-reads its inputs. A balanced four-order schedule puts each compiler in every ordinal position, including first. The heap high-water counter is private to each compilation.
+
+### What warrants a second pair of eyes
+
+Inspect the trial timing boundary and the distinction between a fresh QuickJS compiler runtime and a power-cycled board. Review the independent host hashes and recorded restoration before interpreting the result.
+
+### What should be done in the future
+
+Select a production native frontend using the physical interval and heap results. Keep the direct bounds optimization a separate decision, evaluated against dynamic application costs.
+
+### Code review instructions
+
+Use the ticket's `scripts/supervisor/p4-backup.sh`, `p4-trial-build.sh` and `p4-trial-run.py` from the repository root. The build script takes a disposable workspace and the IDF export script. The runner takes the workspace, the device's serial path and the IDF esptool executable.
+
+### Technical details
+
+The on-board compiler uses the normal Editor limit of 4 MiB and 6 seconds per compilation. The source digest begins f37f60f3 and the production reactor digest begins 16660a8a. The reserved linked Editor file occupies 240,452 bytes.
