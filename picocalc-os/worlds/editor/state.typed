@@ -29,6 +29,7 @@ record WorldState {
     savedSlot: i32;
     discardArmed: bool;
     writeToken: i32;
+    changedSinceSave: bool;
     savedBytes: i32;
     errorLength: i32;
     notice: i32;

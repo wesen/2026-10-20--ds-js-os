@@ -653,3 +653,58 @@ See `various/p4-editor-powered.json` for the compile, load, bus, and image data.
 ### Technical details
 
 The host used console-injected keys through the PicoCalc's keyboard world and captured the compositor framebuffer over UART. The physical flash writes targeted only the factory app at `0x10000` using the previously verified 8 MiB configuration. The console captures remain in `/tmp/typed-editor-powered`.
+
+## Step 12 — Measure large workflows and remove the redundant save comparison
+
+I used the host simulator to exercise three operations above the short powered fixture's scale. This identified a write-settlement overrun despite correct stored bytes, a no-match search overrun, and a preview that dropped the end of its input. I fixed the write settlement in typed source and reran the comparison.
+
+### Prompt Context
+
+See Step 1 for the full Editor goal. This is the capacity check identified before closing the device migration.
+
+**Commit (baseline measurement)** `f5f824d` — “Build typed Editor from source on both PicoCalc P4 engines.”
+
+### What I did
+
+- Added `05-measure-large-editor.mjs` to reuse the generated large matched host fixture. It runs isolated 65,536-byte save and no-match find cases and a 21,614-byte preview with a final marker.
+- Recorded the pre-change and post-change results as `various/editor-large-host-before.json` and `various/editor-large-host-after.json`.
+- Added a typed flag that tracks mutations after submission. On successful settlement, a save that saw no edits can become clean immediately. When edits occurred, the typed app still uses exact snapshot comparison. The existing write-race and restoration tests cover both different-text and edit-back-to-same-text cases.
+
+### Why
+
+The synchronous write submission already copied the snapshot. With no intervening edit, rescanning all submitted text during settlement repeats work. Keeping the exact comparison only for the conditional case preserves the behavior that replaced revision-only dirtiness.
+
+### What worked
+
+- The full-size plain save now reported successful completion at a 200 ms virtual turn budget and left exactly the expected bytes on disk. The linked Editor still passed the dual-backend large open and editing / save-race replays.
+- The larger observer captured the complete reference preview, including the end marker. The source fixture still ran the reference Editor with the separately documented 2 MiB quota.
+
+### What didn't work
+
+- The initial reference preview observer failed with `probe crashed handling frames: ran out of memory (its limit is 384 KB)`. The measurement script now gives the observer 2 MiB on both variants and writes independent trial manifests.
+- Before the save fix, the typed path reported `editor crashed: ran past its turn budget of 200 virtual ms` after the filesystem wrote the correct bytes.
+- The no-match find continues to report `editor crashed handling key: ran past its turn budget of 200 virtual ms`. The typed preview returns a valid initial frame without the final marker at 21,614 bytes. These defects keep full-file-range qualification open.
+
+### What I learned
+
+The file result can be durable even if the application faults processing settlement. The correct disk bytes do not imply the application finished saving. Similarly, a valid preview frame does not imply it contains the entire scrollable document.
+
+### What was tricky to build
+
+The save fast path must be based on user mutations after submission. The explicit flag is cleared when a write begins and set only when an edit changes the live document before settlement. The exact comparison still handles editing back to the same bytes.
+
+### What warrants a second pair of eyes
+
+The new host-only save fix has not been flashed. A full-size save followed by concurrent edits may still need a chunked or faster exact comparison. The baseline device timing in Step 11 refers to the prior source build, so keep its measurements distinct from this host result.
+
+### What should be done in the future
+
+Bound or accelerate full-file search so it cannot exceed one turn. Implement a preview that exposes the end of a long document within the native screen budget. Then rebuild and rerun the physical profiles.
+
+### Code review instructions
+
+Read `editorChange`, `editorSave`, and `editorWriteDone` in `worlds/editor/edit.typed`. Rebuild the shared reactor and run `02-check-editor-world.mjs --large --keep-fixture`; pass its retained path to `05-measure-large-editor.mjs`. Run `02-check-editor-world.mjs --edit` to verify per-file write behavior, exact dirty checks, and discard.
+
+### Technical details
+
+The large Wasm fixture uses the existing typed program's stock 512 KiB host memory quota and a 200 ms metered budget. Its observer runs separately from the edited world. The physical profiles use a 768 KiB quota. The comparison stores application faults and output completeness independently of exact file bytes.

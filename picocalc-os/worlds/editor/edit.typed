@@ -29,6 +29,7 @@ function editorKeyCode(key: buffer, len: i32, b: buffer): i32 {
 
 function editorChange(state: WorldState): i32 {
     state.dirty = true;
+    if (state.writeToken > 0) { state.changedSinceSave = true; }
     state.discardArmed = false;
     state.goal = -1;
     return 0;
@@ -152,6 +153,7 @@ function editorSave(state: WorldState): i32 {
     }
     if (token <= 0) return 0;
     state.writeToken = token;
+    state.changedSinceSave = false;
     return 0;
 }
 
@@ -237,7 +239,8 @@ function editorWriteDone(event: WorldEvent, state: WorldState, output: buffer, h
     if (!event.ok) { state.errorLength = typedSdkEventText(2, scratch, 0, typedSdkBuffer(4)); }
     if (event.ok) {
         state.savedSlot = 1 - state.savedSlot;
-        state.dirty = typedSdkMatches(state.savedSlot, typedSdkBuffer(0), state.textLength) === 0;
+        state.dirty = state.changedSinceSave &&
+            typedSdkMatches(state.savedSlot, typedSdkBuffer(0), state.textLength) === 0;
         if (!state.dirty) { state.discardArmed = false; }
         state.savedBytes = Math.max(0, typedSdkEventInt(scratch, scratch.writeLiteral(0, "bytes")));
         state.notice = 2;

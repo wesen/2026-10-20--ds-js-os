@@ -47,3 +47,7 @@ Bundle complete typed Editor source in matched ESP32-P4 Wasm and RV32 firmware p
 ## 2026-11-19
 
 Qualify the matched typed Editor Wasm and RV32 workflows on the physical PicoCalc and record compiler timings.
+
+## 2026-11-19
+
+Measure full-size Editor workflows and skip redundant save comparisons without changing dirty-state semantics.
