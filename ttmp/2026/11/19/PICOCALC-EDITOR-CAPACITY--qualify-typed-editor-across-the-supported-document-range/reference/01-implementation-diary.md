@@ -94,6 +94,8 @@ Preview could only show the prefix that fit in one frame. I moved wrapping to th
 
 **Inferred user intent:** Keep the Editor feature usable under the PicoCalc display and runtime constraints.
 
+**Commit (code):** `3d98d20` — "Stream typed Editor Markdown previews as bounded display rows"
+
 ### What I did
 
 - Replaced the preview serializer in `preview.typed` with a typed source cursor, word wrapper, 36-row ring, and 17-row frame window.
@@ -146,3 +148,57 @@ Read `editorPreviewSource`, `editorPreviewWord`, `editorPreviewReady`, and `edit
 ### Technical details
 
 The ring uses 3,600 UTF-16 units. Each of 36 entries holds one length unit, one style unit, and space for 49 surrogate pairs. The generic compositor receives at most 17 already wrapped row items. The frame bounds therefore depend on viewport geometry rather than document length.
+
+## Step 3: Separate the two remaining large search workloads
+
+The full-size absent query passed after the UTF-16 scan change because the first query code unit was also rare. I added two fixtures to isolate a search with thousands of first-unit candidates and a successful search whose cursor lands at the end of the file. Both reproduce a turn overrun under the device's simulation profile.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Verify full-file operation before calling the typed port qualified.
+
+**Inferred user intent:** Editor should remain responsive to realistic searches across an entire supported document.
+
+### What I did
+
+- Added `--adversarial` to `PICOCALC-TYPED-WORLDS/scripts/05-measure-large-editor.mjs`. It preserves exact input size and runs both variants with the same navigation sequence.
+- Used a repeated `text ` document with the absent query `text text z`. For the late-hit case, replaced the final nine bytes with `needlezzz` and searched for `needle`.
+- Preserved the fault summaries in `various/editor-search-traversal-host.json`.
+
+### Why
+
+Candidate comparison and late viewport construction affect different execution paths. The original `zzz` fixture skipped most repeated input after the bulk seek change. It was too narrow to detect either of these costs.
+
+### What worked
+
+Both JavaScript runs completed. The dense query produced the expected miss status. The sparse query moved to line 852, column 1. All four test runs preserved exact file bytes.
+
+### What didn't work
+
+Both Wasm runs logged `editor crashed handling key: ran past its turn budget of 200 virtual ms`. The marker was missing in each final frame. The fault identifies the event but does not distinguish matching from frame generation.
+
+### What I learned
+
+A case where the first query unit is rare does not qualify full-document search. A successful sparse query also requires positioning, viewport generation and highlights to finish within the turn budget.
+
+### What was tricky to build
+
+The late-hit test keeps the same file size as the absent-query tests, and the expected marker is a source coordinate rather than the presence of the token in the input. This avoids treating a preexisting row or an unchanged screenshot as a successful match.
+
+### What warrants a second pair of eyes
+
+Check `editorFindNext` and `editorDocumentFrame` independently before attributing all cost to either path. `editorLocate` and `editorFindMarks` can each repeat a walk over preceding display rows.
+
+### What should be done in the future
+
+Slice typed search on a matching completion token and keep enough row position metadata for a late viewport. The kernel starts a fresh budget per segment in `nucleus/kernel.c:run_segment`. An `NW_LATER` search can keep later keyboard events ordered while allowing other worlds to run. Handle unrelated settles without prematurely finishing the pending keyboard turn.
+
+### Code review instructions
+
+Build the usual `--large --keep-fixture` cross-target fixture, then run `05-measure-large-editor.mjs FIXTURE OUTPUT --adversarial`. Inspect `wasm-find-tail/out/uart.log` and `wasm-find-dense/out/uart.log` under that output.
+
+### Technical details
+
+Each file has 65,536 bytes. Source position 852:1 identifies the final nine-byte line after carriage-return normalization. The dense absent query has a repeated prefix that matches at multiple positions per physical line.

@@ -4,15 +4,23 @@ import {mkdirSync, readdirSync, readFileSync, symlinkSync, writeFileSync} from '
 import {join, resolve} from 'node:path';
 
 // Use the retained fixture from 02-check-editor-world.mjs --large --keep-fixture.
-const [fixture, output] = process.argv.slice(2).map(path => resolve(path));
+const [fixture, output] = process.argv.slice(2, 4).map(path => resolve(path));
+const adversarial = process.argv.includes('--adversarial');
 assert(fixture && output, 'pass the retained large fixture directory and an output directory');
 mkdirSync(output);
 
 const full = ('text '.repeat(15) + '\r\n').repeat(851) + 'x'.repeat(9);
 const preview = ('A reading paragraph, followed by a blank line.\n\n').repeat(450) + 'END OF PREVIEW';
-const trials = {
+function query(value) {
+    return ['key f3', 'wait 530', 'type ' + value, 'wait 530', 'key enter', 'wait 1800'];
+}
+
+const trials = adversarial ? {
+    'find-dense': {text:full, commands:query('text text z'), marker:'Not found: text text z'},
+    'find-tail': {text:full.slice(0, -9) + 'needlezzz', commands:query('needle'), marker:'entry.txt  852:1'},
+} : {
     save: {text:full, commands:['key f2', 'wait 1800'], marker:'Saved 64685 bytes.'},
-    find: {text:full, commands:['key f3', 'wait 530', 'type zzz', 'wait 530', 'key enter', 'wait 1800'],
+    find: {text:full, commands:query('zzz'),
         marker:'Not found: zzz'},
     preview: {text:preview, commands:['key f6', 'wait 530',
         ...Array.from({length:57}, () => ['key pgdn', 'wait 530']).flat(), 'wait 1800'],
