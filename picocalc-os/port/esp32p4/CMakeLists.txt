@@ -17,6 +17,7 @@ option(PICOCALC_NATIVE_ELF "Run manifest native worlds as ELF modules (trusted d
 option(PICOCALC_RV32_AGENDA "Compile trusted Agenda source to RV32" OFF)
 option(PICOCALC_RV32_FILES "Compile trusted Files source to RV32" OFF)
 option(PICOCALC_RV32_EDITOR "Compile trusted Editor source to RV32" OFF)
+option(PICOCALC_RV32_STREAM_FUNCTIONS "Lower each typed function immediately to reduce native compiler peak memory" OFF)
 if(PICOCALC_RV32_AGENDA)
     set(PICOCALC_TYPED_AGENDA ON)
     set(PICOCALC_NATIVE_ELF ON)

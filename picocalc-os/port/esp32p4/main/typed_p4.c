@@ -91,9 +91,20 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   JSValue reactor_view = JS_IsException(reactor_buffer) ? JS_EXCEPTION
       : JS_NewTypedArray(ctx, 3, view_args, JS_TYPED_ARRAY_UINT8);
   JS_FreeValue(ctx, reactor_buffer);
-  JSValue args[] = {JS_NewStringLen(ctx, source, source_length), reactor_view};
+  JSValue args[] = {JS_NewStringLen(ctx, source, source_length), reactor_view, JS_UNDEFINED};
+  int argc = 2;
   JSValue result = JS_EXCEPTION;
-  if (!JS_IsException(args[0]) && !JS_IsException(args[1])) result = JS_Call(ctx, function, JS_UNDEFINED, 2, args);
+  bool ready = !JS_IsException(args[0]) && !JS_IsException(args[1]);
+#ifdef PICOCALC_RV32_STREAM_FUNCTIONS
+  if (ready && engine == ENG_NATIVE) {
+    args[2] = JS_NewObject(ctx);
+    ready = !JS_IsException(args[2]) && JS_SetPropertyStr(ctx, args[2], "streamFunctions", JS_TRUE) >= 0;
+    argc = 3;
+    if (ready) printf("%s native compiler functions=streamed\n", app);
+  }
+#endif
+  if (ready) result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);
+  JS_FreeValue(ctx, args[2]);
   JS_FreeValue(ctx, args[1]); JS_FreeValue(ctx, args[0]);
   JS_FreeValue(ctx, function); JS_FreeValue(ctx, global);
   if (JS_IsException(result)) goto rejected;
