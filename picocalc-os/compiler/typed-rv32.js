@@ -247,16 +247,37 @@ class FunctionCode {
     }
 }
 
-function compile(source, imports = [], maxSourceLength) {
+function compile(source, imports = [], maxSourceLength, options) {
     const imported = imports.map((fn, index) => ({...fn, index}));
-    const {functions, records} = typedWasm.compileFunctions(source, imports.length, imported, maxSourceLength, true);
-    const starts = functions.map(() => ({global: true}));
-    const targets = [...imported.map(fn => ({importIndex: fn.index})), ...starts];
-    const callables = [...imported, ...functions];
-    const code = functions.map(fn => new FunctionCode(fn, callables, targets).lower());
+    const targets = imported.map(fn => ({importIndex: fn.index}));
+    const callables = imported.slice();
+    const code = [];
+    function lower(fn) {
+        targets.push({global: true});
+        callables.push(fn);
+        code.push(new FunctionCode(fn, callables, targets).lower());
+    }
+
+    let lowerError;
+    function consume(fn) {
+        // Buffered compilation checks the entire source before reporting a backend error.
+        if (!lowerError) {
+            try { lower(fn); } catch (error) { lowerError = error; }
+        }
+        // FunctionCode retains the function descriptor until assembly.
+        fn.code = null;
+    }
+
+    const stream = options?.streamFunctions;
+    const {functions, records} = typedWasm.compileFunctions(source, imported.length, imported,
+        maxSourceLength, true, stream ? consume : undefined);
+    if (lowerError) throw lowerError;
+    if (!stream) {
+        for (const fn of functions) lower(fn);
+    }
     let words = 0;
     for (let i = 0; i < code.length; i++) {
-        starts[i].at = words;
+        targets[imported.length + i].at = words;
         words += code[i].words.length;
     }
     const image = new Uint8Array(words * 4);
@@ -264,7 +285,7 @@ function compile(source, imports = [], maxSourceLength) {
     const entries = Object.create(null);
     const relocations = [];
     for (let i = 0; i < code.length; i++) {
-        const start = starts[i].at;
+        const start = targets[imported.length + i].at;
         const fn = code[i];
         entries[functions[i].name] = start * 4;
         for (const {from, target, rd} of fn.calls) {

@@ -24,8 +24,8 @@
         return bytes;
     };
 
-    globalThis.compileFilesRv32 = function compileFilesRv32(source, reactor) {
-        const program = typedRv32.compile(source);
+    globalThis.compileFilesRv32 = function compileFilesRv32(source, reactor, options) {
+        const program = typedRv32.compile(source, undefined, undefined, options);
         validate(program.signatures);
         return typedRv32.linkSlot(program, reactor, entries);
     };

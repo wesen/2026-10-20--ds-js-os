@@ -40,8 +40,8 @@ globalThis.compileAgenda = function compileAgenda(source, reactor) {
     return bytes;
 };
 
-globalThis.compileAgendaRv32 = function compileAgendaRv32(source, reactor) {
-    const program = typedRv32.compile(source);
+globalThis.compileAgendaRv32 = function compileAgendaRv32(source, reactor, options) {
+    const program = typedRv32.compile(source, undefined, undefined, options);
     validateAgenda(program.records, program.signatures);
     return typedRv32.linkSlot(program, reactor, entries);
 };

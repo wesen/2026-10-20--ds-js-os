@@ -471,7 +471,7 @@ class NumericFunctionEmitter extends FunctionEmitter {
     finish(fn) { return fn; }
 }
 
-function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false) {
+function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction) {
     const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
     const lex = new Lexer(source);
@@ -499,6 +499,7 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
         if (declared.has(fn.name)) lex.fail("duplicate function " + fn.name);
         declared.set(fn.name, {index: functionBase + functions.length, params: fn.params, result: fn.result});
         functions.push(fn);
+        if (onFunction) onFunction(fn);
     }
     if (!functions.length) lex.fail("expected a function");
 

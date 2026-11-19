@@ -61,8 +61,8 @@
         return program.bytes;
     };
 
-    globalThis.compileTypedWorldRv32 = function(source, reactor) {
-        const program = typedRv32.compile(source, imports, maxSourceLength);
+    globalThis.compileTypedWorldRv32 = function(source, reactor, options) {
+        const program = typedRv32.compile(source, imports, maxSourceLength, options);
         validate(program);
         return typedRv32.linkSlot(program, reactor, entries);
     };
