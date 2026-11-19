@@ -1,0 +1,13 @@
+{
+  "input_bytes": 65536,
+  "engine": "native",
+  "faults": [],
+  "scratch_removed": true,
+  "screenshots": {
+    "shot-1.png": "a0e6af3bb361e4019bcb9fb17a64f3549833606ef9f763099abaa25be3192492",
+    "shot-2.png": "2d156cdbede4e8d1578187c3bb99ef41ffe9d95174c7dc0caf705be19990e945",
+    "shot-3.png": "3717e9930e0a4a23130c7ae21c73474835175bda8e48858a4c77246ead9caaaa",
+    "shot-4.png": "8b6312ade62d6a780c4f982c894e32ea3c8474b6954c1896bebe25c05a5da36a"
+  },
+  "saved_bytes": 64686
+}

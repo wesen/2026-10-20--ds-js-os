@@ -1,7 +1,7 @@
 ---
 Title: Keep typed Editor cursor navigation responsive and visible
 Ticket: PICOCALC-EDITOR-NAV
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T01:33:22.928180003-05:00
+LastUpdated: 2026-11-19T01:49:11.213961595-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -24,6 +24,9 @@ The typed Editor's row checkpoints now support late cursor moves, page navigatio
 - [Design guide](design-doc/01-typed-editor-row-checkpoints-and-cursor-navigation.md)
 - [Implementation diary](reference/01-implementation-diary.md)
 - [Host EOF screenshot](various/eof-visible-wasm.png)
+- [Handheld EOF search](various/p4-eof-visible.png)
+- [Handheld reopened at EOF](various/p4-reopened-eof.png)
+- [Physical navigation receipt](various/p4-navigation-full-file.json)
 
 ## Key Links
 
@@ -32,7 +35,7 @@ The typed Editor's row checkpoints now support late cursor moves, page navigatio
 
 ## Status
 
-Current status: **active**
+Current status: **complete**
 
 ## Topics
 

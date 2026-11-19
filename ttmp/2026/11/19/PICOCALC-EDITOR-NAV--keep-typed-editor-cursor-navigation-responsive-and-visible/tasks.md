@@ -4,4 +4,4 @@
 - [x] Reuse valid row checkpoints and slice deeper lookups.
 - [x] Align the edit viewport to 17 drawable rows.
 - [x] Verify full-size navigation, exact save bytes and cursor restore in the host replay.
-- [ ] Confirm the updated builds and visible EOF highlight on the handheld.
+- [x] Confirm the updated builds and visible EOF highlight on the handheld.

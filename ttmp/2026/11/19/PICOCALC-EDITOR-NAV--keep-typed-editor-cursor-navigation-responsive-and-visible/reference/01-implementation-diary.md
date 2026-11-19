@@ -29,6 +29,8 @@ After a successful full-size find, the following Right or Up could overrun while
 
 **Inferred user intent:** Keep the real Editor usable on the PicoCalc, with its application logic in typed JavaScript.
 
+**Commit (code):** `08fbae8` — "Keep typed Editor navigation bounded and the cursor visible"
+
 ### What I did
 
 - Created `PICOCALC-EDITOR-NAV`, documented the row cache and scheduler design, and uploaded `PicoCalc Typed Editor Cursor Navigation.pdf` to `/ai/2026/11/19/PICOCALC-EDITOR-NAV`.
@@ -77,3 +79,60 @@ Start with `editorInvalidateRows`, `editorRowAnchor`, `editorFrameLocate`, and `
 ### Technical details
 
 The 36-entry ring consumes 252 UTF-16 units out of the existing 256-unit slot. Cursor and scan offsets use two units per coordinate. The textarea publishes and searches highlights across 17 rows. The compositor draws the same 17 rows at the current 320 by 320 geometry.
+
+## Step 2: Verify full-size navigation, save and reopen on the handheld
+
+The new board images passed the ordinary workflows on both Wasm and RV32. The RV32 trial then staged the exact 65,536-byte fixture, photographed the visible match, edited after paging backward, saved 64,686 bytes, and reopened with the cursor at 852:11. I inspected both physical screenshots and verified the highlighted result and cursor stay inside the LCD area.
+
+### Prompt Context
+
+**User prompt (verbatim):** See Step 1.
+
+**Assistant interpretation:** Verify the typed implementation on the actual PicoCalc and preserve the build and workflow evidence.
+
+**Inferred user intent:** Use the handheld's real edit path with a predictable build and reproducible results.
+
+### What I did
+
+- Built both matched firmware variants. The shared typed source SHA-256 is `073e2690f1c0f76d35914be2c5fb17f5d150b6bbd793774909206c045368d620`.
+- Ran the paired firmware qualifier on `/dev/ttyACM0` with byte-matched partition tables. Both flashed application images passed the hash check and standard workflow.
+- Ran the capacity ticket's `scripts/05-check-large-search-on-p4.py --navigation --engine native`. The script acknowledges every UART write offset, tests late movement and file replacement, then checks scratch cleanup.
+- Archived the two structured receipts and physical screenshots under `various/`.
+
+### Why
+
+Frame parity in the simulator establishes semantics and visible rows. The board replay also exercises the bundled compiler, real display, keyboard, serial transfer, and storage.
+
+### What worked
+
+- The standard board workflows reported zero I²C and SPI errors. The reboot receipts show compilation in 1.93 seconds for Wasm and 3.09 seconds for RV32, with loader times of 170 ms and 12.9 ms respectively.
+- The long RV32 run logged zero Editor faults. Its filesystem listing reports the expected 64,686 saved bytes. The four framebuffer captures passed CRC checks and the scratch directory was removed.
+- `various/p4-eof-visible.png` shows the match highlighted on the last visible row. `various/p4-reopened-eof.png` shows the appended exclamation point and position 852:11. The board retains this RV32 image.
+
+### What didn't work
+
+No failures occurred in the final hardware replay. The navigation change leaves the separate inline formatting capacity issues described in `PICOCALC-EDITOR-INLINE`.
+
+### What I learned
+
+The correct 17-row geometry verifies the last match visually. The host replay verifies byte identity, while the console provides exact total file length on hardware. The two checks complement the saved cursor screenshot.
+
+### What was tricky to build
+
+The physical script spaces capture and keyboard commands so the UART transfers a full framebuffer before the next capture. It separately opens the saved document before inspecting its persisted cursor state.
+
+### What warrants a second pair of eyes
+
+Review the first match and reopened screenshots against the command sequence and source hash. The long workflow uses the RV32 image, and the paired standard smoke used both images.
+
+### What should be done in the future
+
+Implement full-line inline Markdown compaction from the separate ticket and run the same preview capacity checks.
+
+### Code review instructions
+
+Use `various/p4-navigation-builds.json`, `various/p4-navigation-full-file.json`, and the two screenshots. The host replay entry is `scripts/01-check-late-navigation.sh`.
+
+### Technical details
+
+Image sizes are 4,265,584 bytes for Wasm and 4,457,968 bytes for RV32. Compilation produced an 85,549-byte Wasm module and a 240,056-byte RV32 ELF. No firmware partition changes were needed.

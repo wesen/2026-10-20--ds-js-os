@@ -1,0 +1,74 @@
+{
+  "wasm": {
+    "image_sha256": "b9b6bc9707b34cdb7ebf864b667fbd99785fdd652a04819d8b2281ec41ddc384",
+    "compiles": [
+      {
+        "us": 1929643,
+        "peak_js_bytes": 1438520,
+        "module_bytes": 85549
+      },
+      {
+        "us": 1931462,
+        "peak_js_bytes": 1438520,
+        "module_bytes": 85549
+      }
+    ],
+    "loads": [
+      {
+        "start_after_agenda_compile_us": 3334012,
+        "loader_us": 169895
+      }
+    ],
+    "workflow": "pass",
+    "buses": {
+      "i2c0": [
+        2329,
+        0
+      ],
+      "spi2": [
+        598,
+        0
+      ]
+    },
+    "shots": {
+      "shot-1.png": "da23ba0b8e971aae3a1f0c1fb42d070744529ced6adf531d5fe970ba9d32c334",
+      "shot-2.png": "1b50ba2ba1172ddb4e36ab6d83ead5f9faa4ef10c8c03c37484421ed1f136bb6"
+    }
+  },
+  "rv32": {
+    "image_sha256": "375593f6b2b4ff531297dd7a3fccbeec88bd4a77145dd29de3d6e268c4c50d34",
+    "compiles": [
+      {
+        "us": 3085719,
+        "peak_js_bytes": 2409272,
+        "module_bytes": 240056
+      },
+      {
+        "us": 3086722,
+        "peak_js_bytes": 2409272,
+        "module_bytes": 240056
+      }
+    ],
+    "loads": [
+      {
+        "start_after_agenda_compile_us": 4490754,
+        "loader_us": 12871
+      }
+    ],
+    "workflow": "pass",
+    "buses": {
+      "i2c0": [
+        2245,
+        0
+      ],
+      "spi2": [
+        594,
+        0
+      ]
+    },
+    "shots": {
+      "shot-1.png": "15c359159a1451f148c5b49b46496630313eae4900149d150783d8eccbdac303",
+      "shot-2.png": "51d34553726217d3ac5fd8710c25db0d7a2921d2fbe69daea4b4efbe6451bff3"
+    }
+  }
+}

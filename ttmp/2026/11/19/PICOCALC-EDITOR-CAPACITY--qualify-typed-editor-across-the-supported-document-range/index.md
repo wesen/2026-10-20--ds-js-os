@@ -19,7 +19,7 @@ WhenToUse: ""
 
 ## Overview
 
-Editor application logic is in typed JavaScript. This ticket addresses two large-document regressions identified after the port. The initial Wasm stress comparison confirms that the full-size absent search now completes. The typed preview now reaches EOF and matches reference screenshots on the host. The updated Wasm and RV32 builds passed the standard Editor workflow on the board. Dense and late-match searches pass the long simulator replays and the physical RV32 test. The LCD still clips the 18th edit row, which can hide a late match even as its status shows the correct position. Late-document edit traversal and long imported lines with inline markup remain open.
+Editor application logic is in typed JavaScript. This ticket addresses two large-document regressions identified after the port. The initial Wasm stress comparison confirms that the full-size absent search now completes. The typed preview now reaches EOF and matches reference screenshots on the host. The updated Wasm and RV32 builds passed the standard Editor workflow on the board. Dense and late-match searches pass the long simulator replays and the physical RV32 test. Late-document traversal and the clipped match row were fixed in [PICOCALC-EDITOR-NAV](../PICOCALC-EDITOR-NAV--keep-typed-editor-cursor-navigation-responsive-and-visible/index.md). [PICOCALC-EDITOR-INLINE](../PICOCALC-EDITOR-INLINE--preserve-inline-markdown-across-the-typed-editor-document-limit/index.md) tracks long imported lines with inline markup.
 
 - [Design and implementation guide](design-doc/01-bounded-search-and-preview-for-large-picocalc-documents.md)
 - [Implementation diary](reference/01-implementation-diary.md)
