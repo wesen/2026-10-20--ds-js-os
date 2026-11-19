@@ -402,3 +402,9 @@ Run the same powered cold series on Wasm and RV32 with equivalent notes. Measure
 ### Technical details
 
 The linked Wasm world is 67,434 bytes and the RV32 ELF is 66,348 bytes. The RV32 reservation remains 48 KiB. A powered diagnostic smoke boot measured 723.799 ms for compilation, 709,796 peak compiler bytes and 2.136 s through first publication with 185,519 world bytes. Its first publication turn took 1.496 ms. The assembled firmware is 4,183,824 bytes in the 8 MiB partition.
+
+## Step 13 — Record the powered native baseline and publish the report
+
+The implementation checkpoint is `88f9e63`. I rebooted the installed image three times using the parent ticket's `scripts/10-measure-agenda-boot.py --port /dev/ttyACM0 --trials 3 --world-profile`. Cold first response was 2,141,472 µs, 2,130,166 µs and 2,138,179 µs. The compile median was 723,693 µs and the compiler peak was 709,796 bytes in all three runs. The first response reported 185,519 world bytes each time. The raw per-world timing is in `various/p4-prompt-refresh-cold-rv32.json`.
+
+The first file request followed Agenda initialization by 539,078–539,581 µs. Sixteen world startup attempts that began inside that interval account for about 332 ms of measured execution. The notes request itself took 113–126 ms to return. This separates the compiler from a specific post-initialization delay for future comparison. The report “PicoCalc Agenda — Keeping prompt errors and reminder refresh consistent” includes the typed record contract, the timer flow and the observed boot profile. The vault push advanced go-go-parc main to `4b91803`.
