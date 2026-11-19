@@ -13,6 +13,9 @@ const taskFields = [
 const signatures = [
     ["parseTask", "bool", "string,buffer,Task"],
     ["normalizeEntry", "i32", "string,i32,buffer"],
+    ["agendaDateKey", "i32", "i32,bool"],
+    ["entryAddDays", "i32", "i32,i32"],
+    ["entryWeekday", "i32", "i32"],
 ];
 const entries = signatures.map(([name]) => name);
 

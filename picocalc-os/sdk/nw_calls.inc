@@ -44,6 +44,7 @@ int nw_fs_open(const char *claim) { return (int)call(NW_CALL_FS_OPEN, 0, 0, 0, S
 int nw_fs_read(int handle, const char *path) { return (int)call(NW_CALL_FS_READ, handle, 0, 0, S(path), NONE, NONE, NULL, 0); }
 int nw_fs_write(int handle, const char *path, const char *text) { return (int)call(NW_CALL_FS_WRITE, handle, 0, 0, S(path), S(text), NONE, NULL, 0); }
 int nw_clock_today(void) { return (int)call(NW_CALL_CLOCK_TODAY, 0, 0, 0, NONE, NONE, NONE, NULL, 0); }
+int nw_clock_zone(char *buf, int n) { return (int)call(NW_CALL_CLOCK_ZONE, 0, 0, 0, NONE, NONE, NONE, buf, n); }
 int nw_i2c_open(const char *claim, int hz) { return (int)call(NW_CALL_I2C_OPEN, hz, 0, 0, S(claim), NONE, NONE, NULL, 0); }
 int nw_i2c(int handle, const unsigned char *wr, int nwr, int nrd, int gap_ms) {
   return (int)call(NW_CALL_I2C, handle, nrd, (int64_t)gap_ms * 1000, (const char *)wr, nwr > 0 ? (size_t)nwr : 0, NONE, NONE, NULL, 0);

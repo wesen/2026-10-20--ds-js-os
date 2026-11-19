@@ -57,7 +57,7 @@ service("peer")
     } catch (e) { log("AGENDA_REJECT " + e.message); }
   });
 `);
-execFileSync(host, ['-vv', '-j', scratch, '-o', out, '-f', fsRoot, '-t', '1000'],
+execFileSync(host, ['-vv', '-j', scratch, '-o', out, '-f', fsRoot, '-w', 'unset', '-t', '1000'],
     {stdio:['ignore','pipe','pipe'],timeout:15000});
 const log = readFileSync(join(out, 'uart.log'), 'utf8');
 const manifest = JSON.parse(readFileSync(join(scratch, 'system.json'), 'utf8'));
@@ -73,7 +73,10 @@ assert.doesNotMatch(log, /crashed/);
 const jsonLine = key => JSON.parse(log.match(new RegExp(key + ' (.+)$','m'))[1]);
 assert.deepEqual(jsonLine('AGENDA_REPLY'),
     {title:'dentist 🦷',done:false,dateValid:true,timeValid:true,leadMinutes:15});
-assert.deepEqual(jsonLine('AGENDA_FRAME'), {t:'col',kids:[{t:'text',s:'dentist 🦷'},{t:'text',s:'book a train'}]});
+const initialList = jsonLine('AGENDA_FRAME').kids[0];
+assert.deepEqual(initialList.items.map(item => item.label),
+    ['TUE 3 NOV 2026', '14:30  dentist 🦷', 'NO DATE', 'book a train']);
+assert.equal(initialList.sel, 1);
 assert.match(log, /agenda-wasm: \d+ WebAssembly instructions \(event 4\)/);
 assert.deepEqual(jsonLine('AGENDA_ENGINE'), ['wasm','idle','app']);
 assert.match(log, /AGENDA_REJECT expected a bounded Agenda line/);
@@ -158,6 +161,59 @@ const fresh = join(scratch, 'empty-fs');
 mkdirSync(join(fresh, 'notes'), {recursive:true});
 submit(fresh, 'first task');
 assert.equal(readFileSync(join(fresh, 'notes/todo.txt'), 'utf8'), '- [ ] first task\n');
+// Drive the same keys through the real compositor in separate original/typed runs.
+const groupFixture = [
+    '- [ ] first undated', '- [x] first done', '- [ ] later @2027-01-03',
+    '- [ ] timed @2026-11-01 15:30 !15m', '- [ ] untimed @2026-11-01',
+    '- [ ] time tie @2026-11-01 15:30 !0m', '- [ ] earlier time @2026-11-01 12:00',
+    '- [ ] tomato @2026-11-02', '- [ ] yesterday @2026-10-31 09:00',
+    '- [X] second done @2026-11-01', '- [ ] last undated', '',
+].join('\n');
+writeFileSync(join(scratch, 'agenda.js'), readFileSync(join(os, 'js/apps/agenda.js')));
+const groupFrames = (name, text, keys, compact = false) => {
+    const world = name === 'agenda' ? {...manifest.worlds[0], name, file:'agenda.js', engine:'js'} : manifest.worlds[0];
+    writeFileSync(join(scratch, 'focus.js'), `
+service("focus").needs("frames").on("frames", (s, frame, msg) => {
+    if (msg.from !== "${name}") return;
+    const list = frame.frame.tree.kids[0];
+    if (list.t !== "list") return;
+    const rows = list.items.map(i => [i.label, i.icon, i.right, i.color, i.rightColor, i.iconColor]);
+    log("AGENDA_GROUP " + JSON.stringify(${compact ? 'list.items[list.sel].label' : '[list.sel, rows]'}));
+}).onStart(async () => {
+    await sleep(600);
+    send("compositor", "open", {app:"${name}"});
+});
+`);
+    writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds:[
+        ...displayWorlds, {...world, claims:['fs:/notes']},
+        {name:'focus', file:'focus.js', claims:['frames.read'], mem_kb:384},
+    ]}));
+    writeFileSync(join(fsRoot, 'notes/todo.txt'), text);
+    const captureGroup = name === 'agenda-wasm' && text === groupFixture && process.argv[4];
+    const steps = keys.map((key, i) => `key ${key}\nwait 220\n` +
+        (captureGroup && i === 7 ? 'capture grouped-agenda.png\n' : ''));
+    writeFileSync(displayScript, 'wait 1700\n' + steps.join(''));
+    const output = join(scratch, 'group-' + name + (compact ? '-long' : ''));
+    execFileSync(host, ['-j', scratch, '-o', output, '-f', fsRoot, '-w', '2026-11-01T09:41:00', '-z', zone, displayScript],
+        {stdio:['ignore','pipe','pipe'],timeout:15000});
+    if (captureGroup) writeFileSync(resolve(process.argv[4]), readFileSync(join(output, 'grouped-agenda.png')));
+    const uart = readFileSync(join(output, 'uart.log'), 'utf8');
+    assert.doesNotMatch(uart, /crashed/);
+    const frames = [...uart.matchAll(/AGENDA_GROUP (.+)$/gm)].map(row => JSON.parse(row[1]));
+    return frames.filter((frame, i) => !i || JSON.stringify(frame) !== JSON.stringify(frames[i - 1]));
+};
+const keys = ['up', 'down', 'down', 'down', 'down', 'down', 'down', 'f4', 'down', 'down', 'down', 'down', 'f4', 'up'];
+const groups = groupFrames('agenda-wasm', groupFixture, keys);
+assert(groups.length >= 12, 'keyboard actions produced distinct frames');
+assert.deepEqual(groups, groupFrames('agenda', groupFixture, keys));
+const doneOnly = '- [x] finished\n';
+const doneKeys = ['f4', 'down', 'up', 'f4', 'f4', 'up'];
+const doneFrames = groupFrames('agenda-wasm', doneOnly, doneKeys);
+assert.deepEqual(doneFrames, groupFrames('agenda', doneOnly, doneKeys));
+assert.deepEqual(doneFrames.map(frame => frame[0]), [-1, 1, -1, 1]);
+const manyTasks = Array.from({length: 48}, (_, i) => '- task ' + (i + 1)).join('\n');
+const manySelected = groupFrames('agenda-wasm', manyTasks, Array(52).fill('down'), true);
+assert.deepEqual(manySelected, Array.from({length:48}, (_, i) => 'task ' + (i + 1)));
 const instructions = [...log.matchAll(/agenda-wasm: (\d+) WebAssembly instructions \(event 0, agenda.parse\)/g)]
     .map(match => Number(match[1]));
 assert.equal(instructions.length, 2);
@@ -166,4 +222,6 @@ console.log(JSON.stringify({linkedBytes:bytes.length, sourceSha:sha(source), run
     engine:jsonLine('AGENDA_ENGINE'), deniedWithoutNotesClaim:true, perMessageInstructions:instructions,
     screenshot:{sha256:sha(screenshot), bytes:screenshot.length},
     taskEntry:{savedNotes, invalidPromptUnchanged:true, createsMissingFile:true},
+    taskView:{matchesOriginalGroupedFrames:groups.length, matchesOriginalDoneOnlyFrames:doneFrames.length,
+        scrollableTasks:manySelected.length},
     reminder:{notice, sender, scheduled, firedAt, persisted:firedRecord, restartSuppressed:true, unsetSuppressed:true, zone, transitionScheduled, transitionFiredAt:transition[0][2]}}, null, 2));

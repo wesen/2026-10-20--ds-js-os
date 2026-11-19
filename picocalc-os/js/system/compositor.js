@@ -241,7 +241,8 @@ function scrollStart(sel, count, visible) {
 
 function drawList(fb, n, x, y, w, h) {
   const f = n.font || "m", rh = rowH(n), vis = Math.max(1, Math.floor(h / rh)), items = n.items;
-  const first = scrollStart(n.sel, items.length, vis);
+  const start = n.windowStart || 0, total = n.totalItems ?? items.length;
+  const first = Math.max(0, Math.min(items.length - vis, scrollStart(n.sel < 0 ? -1 : n.sel + start, total, vis) - start));
   for (let i = first; i < Math.min(items.length, first + vis); i++) {
     const it = typeof items[i] === "string" ? { label: items[i] } : items[i];
     const ry = y + (i - first) * rh, sel = i === n.sel;
@@ -256,8 +257,8 @@ function drawList(fb, n, x, y, w, h) {
     if (it.detail) fb.text(tx + (len(it.label) + 1) * fw(f), ty + fh(f) - fh("s") - 1, it.detail, "s", sel ? C.barMuted : C.muted, w - (tx - x) - (len(it.label) + 1) * fw(f) - rw - 6);
     if (right) fb.text(x + w - rw, ty + fh(f) - fh("s") - 1, right, "s", sel ? C.selInk : color(it.rightColor, C.muted));
   }
-  if (items.length > vis) {   // a scroll thumb
-    const th = Math.max(8, Math.floor(h * vis / items.length)), ty = y + Math.floor((h - th) * first / (items.length - vis));
+  if (total > vis) {   // a scroll thumb
+    const th = Math.max(8, Math.floor(h * vis / total)), ty = y + Math.floor((h - th) * (start + first) / (total - vis));
     fb.fill(x + w - 2, ty, 2, th, C.faint);
   }
 }

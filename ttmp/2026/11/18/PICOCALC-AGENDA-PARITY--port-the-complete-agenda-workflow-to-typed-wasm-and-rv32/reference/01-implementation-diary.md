@@ -106,3 +106,63 @@ Run the parent ticket's scripts/04-check-wasm-world.mjs for the real simulator a
 The newly linked native image loaded and published the real notes view after 3.277 s on full boot. Its compile took 719 ms and peaked at 695,364 B. The following editable build published after 2.158 s with 1.128 s in its compiler. The native world counter was 160,328 bytes. The I²C and SPI counters had no errors. These are single read-only boot and rebuild samples. They do not certify a real keypress, note write, or visible LCD timing. The new complete source exceeds two seconds in this powered session. Compare like-for-like activity before assigning that change to code size alone.
 
 The original application was restored and verified by the flash writer and cji status. The milestone report was pushed to go-go-parc main at 5641c3f.
+
+## Step 5 — Port the grouped view and selection to both reactors
+
+The parser and task-entry work had reached both targets, but the running app still displayed only the first twelve open items. I replaced that view with a compact index of the parsed file. The keyboard now moves among task rows and F4 exposes completed tasks. The original app and the Wasm reactor produced the same ordered rows and selection changes on the comparison fixtures.
+
+### Prompt Context
+
+- See Step 1 for the feature parity request. This checkpoint addresses the original grouped screen and the selection that upcoming edit actions will consume.
+- The intended outcome is the same visible task ordering and keyboard behavior on typed Wasm and native RV32.
+
+### What I did
+
+- Extended the Agenda entry contract in `worlds/agenda/compile.js`. The typed source supplies the date ordering key and exposes its existing civil-calendar helpers to both reactors. The five entry points use the same function ordering in the Wasm and ELF templates.
+- Kept a notes snapshot and a compact array of tasks in `wasm-world.c`. Each entry stores a byte offset, date ordering key, time and logical row. The sort compares date and time for dated open tasks, then uses the byte offset for file-order ties. Dated tasks precede the undated and completed buckets.
+- Assigned group headers and selection positions after sorting. Up and Down operate on task entries, so headers are never selectable. F4 toggles the visible range and preserves the original app's row-position rules, including an unselected list when a previously empty view reveals completed tasks.
+- Kept the selected task and its neighbors in a bounded 25-row frame. The PicoCalc compositor receives the window start and full list count to draw its scrollbar against the whole list. The F2 input uses the same screen as the list.
+- Ran the original app and the Wasm reactor with identical notes fixtures, simulated key presses, wall clock, zone and compositor. Extended the native harness to check selection and both states of F4 through the loaded P4 ELF.
+
+### Why
+
+Keeping the index separate from screen serialization gives the keyboard access to all indexed tasks while respecting the 16 KiB screen-message limit. Retaining each line by byte offset also gives the upcoming edit operation the exact selection text for its reread-and-match check. The same C reactor and typed calendar code serve both targets.
+
+### What worked
+
+- Wasm matched 14 grouped frames and four completed-only frames against the original. The comparison covers row labels, adornments, selection, stable equal-time ordering and F4. The 48-task fixture navigated every task, including the last, using the real simulator keyboard and compositor. The existing create, reminder and restart cases passed.
+- The native harness passed grouping and navigation alongside task creation and durable reminder restart. The final Wasm world is 60,615 bytes. The loaded RV32 ELF is 63,076 bytes and the assembled firmware is 0x3fc360 bytes, leaving 0x3ca0 bytes (15,520) in its app partition.
+- `make -C picocalc-os test-apps test-native` passed outside the sandbox, including 34 native integration tests. The simulator screenshot and both linked-world receipts are in this ticket's `various/` directory.
+
+### What didn't work
+
+- `node "$n/scripts/04-check-wasm-world.mjs"` initially expected an unset wall clock while the simulator defaulted to a set clock. The clock-off fixture now passes `-w unset`. The first comparative monitor also crashed with `the channel "frames" takes the claim frames.read, which the manifest does not give focus`. Its fixture manifest now grants the already-established read claim.
+- The first frame comparison shifted the serialized window as soon as selection passed its midpoint, even when the entire list fit. It exposed a difference in the near-end window calculation. Clamping the window to the full list bounds keeps the whole short list in the payload.
+- The RV32 emulator reported `it links to strcpy, which picocalc-os does not give a module`. The P4 already exposes that libc symbol and GCC emitted the call, so I added it to the emulator's import fixture. Node also reported `spawnSync … EPERM` after the emulator printed a pass. The final emulator test used an approved run outside the sandbox.
+- I found no USB serial interface for the board during this checkpoint. The hardware test remains open.
+
+### What I learned
+
+The display position needs a logical row index that counts headers. The selection needs a task index that skips them. Keeping both preserves the original keyboard behavior when F4 changes the list and lets the compositor calculate the same scrollbar while receiving a bounded window.
+
+### What was tricky to build
+
+A window can end on a group header before that group's first task. The serializer includes that header without adding the task outside the window. Selection after an empty view also required keeping the original unselected state until the next navigation key.
+
+### What warrants a second pair of eyes
+
+Review the reload peak, where the retained index and notes text coexist with the replacement. Large notes files remain bounded by the app's per-world memory and time budgets. The Wasm check exercises 48 tasks, and the native harness resolves SDK calls through local stubs. Neither measures peak memory or input-to-panel latency on the assembled board.
+
+### What should be done in the future
+
+Use the selected line to implement Enter/Space toggling, F3 editing and F5 confirmed deletion, with a conflicting file edit in the regression fixture. The F6 Editor handoff, exact free-form prompt diagnostics, powered board timings and physical keypress-to-visible-panel timing are still open.
+
+### Code review instructions
+
+- Start in `worlds/agenda/wasm-world.c` at `layout_items`, `render_file`, and `publish_view`. The typed date key is in `worlds/agenda/entry.typed` and window placement is in `js/system/compositor.js` at `drawList`.
+- Run the parent ticket's `scripts/04-check-wasm-world.mjs` with the host simulator and optional screenshot outputs. Run `scripts/09-check-rv32-world.mjs` with the ESP RV32 GCC, the CJI emulator and the newly built `esp-idf/main/agenda-reactor.elf`.
+- Inspect `various/grouped-agenda-simulator.png` for the real simulator capture and `wasm-grouped-view.json` and `rv32-grouped-view.json` for the validation boundaries and binary identities.
+
+### Technical details
+
+The renderer clips labels after 80 UTF-8 code points, beyond what fits on the 320-pixel-wide screen. The retained text is available at its original line widths. The SDK's clock-zone wrapper uses the existing wire operation. The RV32 slot stays at 48 KiB with five entry jumps instead of two.

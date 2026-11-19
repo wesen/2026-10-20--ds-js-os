@@ -14,6 +14,7 @@ static char saved[16385];
 static int frames, notifications, reads, offsets;
 static int64_t wall = 1793733299000LL;
 static int writes;
+static int navigation;
 
 static void expect(int ok, const char *where)
 {
@@ -37,7 +38,7 @@ const struct {
 #define IMPORT(name) {#name, (void (*)(void))name}
     IMPORT(free), IMPORT(malloc), IMPORT(memcpy), IMPORT(memset),
     IMPORT(snprintf), IMPORT(strcat), IMPORT(strchr), IMPORT(strcmp),
-    IMPORT(strlen), IMPORT(strncmp), IMPORT(strtoll),
+    IMPORT(strlen), IMPORT(strncmp), IMPORT(strtoll), IMPORT(strstr), IMPORT(strcpy), IMPORT(qsort),
 #undef IMPORT
 };
 const int fw_nresolve = sizeof fw_resolve / sizeof fw_resolve[0];
@@ -63,6 +64,7 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         return 100;
     case NW_CALL_CLOCK_WALL: return wall;
     case NW_CALL_CLOCK_TODAY: return 20261101;
+    case NW_CALL_CLOCK_ZONE: return snprintf(out, out_n, "EST5EDT,M3.2.0/2,M11.1.0/2");
     case NW_CALL_CLOCK_OFFSET:
         expect(c == 1793716200000LL || c == 1793800800000LL, "nominal civil epoch");
         offsets++;
@@ -78,6 +80,14 @@ static int64_t kernel_call(int op, int a, int b, int64_t c, const char *s0, size
         return 0;
     case NW_CALL_SCREEN:
         if (strstr(s0, "New:")) return 0;
+        if (navigation) {
+            const char *order[] = {"\"sel\":3", "\"sel\":3", "\"sel\":5", "\"sel\":3", "\"sel\":1", "\"sel\":1"};
+            expect(strstr(s0, order[navigation - 1]) != NULL, "selection skips group headers");
+            expect((strstr(s0, "\"label\":\"DONE\"") != NULL) == (navigation >= 2 && navigation <= 5),
+                   "F4 shows completed tasks");
+            navigation++;
+            return 0;
+        }
         expect(strstr(s0, "dentist") && strstr(s0, "book a train") && !strstr(s0, "completed"),
                "compiled task frame");
         frames++;
@@ -144,6 +154,19 @@ int main(void)
         }
     }
     expect(reads == 5 && frames == 4 && offsets == 5 && notifications == 1, "restart and reminder");
-    printf("frames=%d reminders=%d writes=%d durable_restart=pass\n", frames, notifications, writes);
+    // Reopen the first reactor without another file read. Its dated/open/no-date
+    // layout is still the original two open tasks and one hidden done task.
+    nw_elf_module first = {0};
+    char *args[] = {(char *)&kernel, (char *)&first};
+    expect(!fw_entries[0](2, args), "re-enter first ELF instance");
+    navigation = 1;
+    key(&first, "down", "");
+    key(&first, "f4", "");
+    key(&first, "down", "");
+    key(&first, "up", "");
+    key(&first, "up", "");
+    key(&first, "f4", "");
+    expect(navigation == 7, "all navigation frames");
+    printf("frames=%d reminders=%d writes=%d durable_restart=pass grouped_navigation=pass\n", frames, notifications, writes);
     return 0;
 }

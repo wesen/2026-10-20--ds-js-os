@@ -105,6 +105,7 @@ static const struct { const char *name; void *addr; } SYMS[] = {
   { "strstr", strstr }, { "strcat", strcat }, { "strcpy", strcpy }, { "strncpy", strncpy },
   { "strtol", strtol }, { "strtoll", strtoll }, { "strtoul", strtoul }, { "strtod", strtod }, { "atoi", atoi },
   { "snprintf", snprintf }, { "vsnprintf", vsnprintf },
+  { "qsort", qsort },
   { "malloc", m_malloc }, { "calloc", m_calloc }, { "realloc", m_realloc }, { "free", m_free },
 #define ENTRY(f) { #f, f },
   HELPERS(ENTRY)

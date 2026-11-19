@@ -72,6 +72,13 @@ function entryWeekday(today: i32): i32 {
     return days % 7;
 }
 
+// Every four-digit date sorts before undated and completed tasks.
+function agendaDateKey(date: i32, done: bool): i32 {
+    if (done) return 100000001;
+    if (date < 0) return 100000000;
+    return date;
+}
+
 // Pack at most six letters into an i32, using a=1 through z=26 in base 32.
 // Positive digits make the spelling and length unambiguous. Longer names
 // split after six letters so neither chunk can overflow.

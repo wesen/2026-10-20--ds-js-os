@@ -21,6 +21,9 @@ typedef struct {
 
 int parseTask(const void *line, void *title, void *task);
 int normalizeEntry(const void *line, int32_t local_date, void *output);
+int agendaDateKey(int32_t date, bool done);
+int entryAddDays(int32_t date, int32_t count);
+int entryWeekday(int32_t date);
 
 static text_buffer line_buffer, title_buffer;
 static char input[UTF8_BYTES], title[UTF8_BYTES];
@@ -34,6 +37,19 @@ enum { INPUT_KEYS = 120, ENTRY_UNITS = 160, FILE_LIMIT = 65536 };
 static char prompt[INPUT_KEYS + 1], new_task[ENTRY_UNITS * 3 + 1];
 static bool entering;
 static int edit_read, edit_write;
+enum { UNDATED = 100000000, COMPLETED, OVERDUE = -1, VIEW_ROWS = 25, VIEW_CHARS = 80 };
+typedef struct {
+    int32_t date_key;
+    int16_t minute;
+    uint16_t offset, row;
+} agenda_item;
+static char *snapshot;
+static agenda_item *items;
+static int item_count, open_count, visible_count, selected = -1, today = -1, tomorrow = -1;
+static bool show_done;
+static char view_note[128], view_error[128];
+
+static void publish_view(void);
 
 // Strict UTF-8 decoding. Offsets in the compiled record count UTF-16 units.
 static int decode(const char *text, text_buffer *out)
@@ -111,6 +127,13 @@ static int decimal_at(unsigned start, unsigned count)
     int value = 0;
     for (unsigned i = 0; i < count; i++) value = value * 10 + line_buffer.units[start + i] - '0';
     return value;
+}
+
+static int task_date(const task_record *task)
+{
+    if (!task->date_valid) return -1;
+    int at = task->due_start;
+    return decimal_at(at + 1, 4) * 10000 + decimal_at(at + 6, 2) * 100 + decimal_at(at + 9, 2);
 }
 
 static int64_t days_before_year(int year)
@@ -228,63 +251,237 @@ static bool file_missing(const nw_event *event)
            !strncmp(error, "no file ", 8);
 }
 
+static int compare_items(const void *a, const void *b)
+{
+    const agenda_item *left = a, *right = b;
+    if (left->date_key != right->date_key) return left->date_key - right->date_key;
+    if (left->date_key < UNDATED && left->minute != right->minute) return left->minute - right->minute;
+    return (int)left->offset - (int)right->offset;
+}
+
+static int group_of(const agenda_item *item)
+{
+    return item->date_key < today ? OVERDUE : item->date_key;
+}
+
+static int selected_row(void)
+{
+    return selected >= 0 ? items[selected].row : snapshot ? -1 : 0;
+}
+
+static void layout_items(int old_row)
+{
+    int date = nw_clock_today();
+    if (date != today) {
+        today = date;
+        tomorrow = today < 0 ? -1 : entryAddDays(today, 1);
+    }
+    visible_count = show_done ? item_count : open_count;
+    int group = 0, row = 0;
+    selected = -1;
+    for (int i = 0; i < visible_count; i++) {
+        int next_group = group_of(&items[i]);
+        if (i == 0 || next_group != group) row++;
+        group = next_group;
+        items[i].row = row++;
+        if (old_row >= 0 && selected < 0 && items[i].row >= old_row) selected = i;
+    }
+    if (old_row >= 0 && selected < 0) selected = visible_count - 1;
+}
+
+static void short_date(char *out, size_t size, int date, bool upper, bool full_day)
+{
+    static const char *const short_days[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    static const char *const long_days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    static const char *const months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    int weekday = entryWeekday(date);
+    snprintf(out, size, "%s %d %s", (full_day ? long_days : short_days)[weekday], date % 100,
+             months[date / 100 % 100 - 1]);
+    if (upper) for (char *p = out; *p; p++) if (*p >= 'a' && *p <= 'z') *p -= 'a' - 'A';
+}
+
+static void render_header(nw_ui *ui, int group)
+{
+    char day[32], label[64];
+    const char *name = label;
+    if (group == OVERDUE) name = "OVERDUE";
+    else if (group == UNDATED) name = "NO DATE";
+    else if (group == COMPLETED) name = "DONE";
+    else {
+        short_date(day, sizeof day, group, true, group == today);
+        if (group == today) snprintf(label, sizeof label, "TODAY · %s", day);
+        else if (group == tomorrow) snprintf(label, sizeof label, "TOMORROW · %s", day);
+        else if (today < 0 || group / 10000 != today / 10000) snprintf(label, sizeof label, "%s %d", day, group / 10000);
+        else snprintf(label, sizeof label, "%s", day);
+    }
+    nw_ui__raw(ui, "{\"label\":");
+    nw_ui_str(ui, name);
+    nw_ui__raw(ui, ",\"color\":\"accent\"}");
+}
+
+// The panel clips at fewer than VIEW_CHARS glyphs. Truncate on a UTF-8 boundary
+// so the visible window always fits the kernel's screen-message buffer.
+static void clip_label(char *label)
+{
+    unsigned count = 0;
+    for (unsigned char *p = (unsigned char *)label; *p; p++) {
+        if ((*p & 0xc0) != 0x80 && count++ == VIEW_CHARS) { *p = 0; return; }
+    }
+}
+
+static void render_item(nw_ui *ui, const agenda_item *item)
+{
+    task_record task;
+    if (parse_line(snapshot + item->offset, &task) != 1) return;
+    const char *label = task.title_length ? title : "(untitled)";
+    clip_label(title);
+    char right[32] = "";
+    int date = task_date(&task);
+    bool overdue = today >= 0 && date >= 0 && date < today;
+    if (overdue) short_date(right, sizeof right, date, false, false);
+    else if (task.lead_start >= 0 && task.lead_end - task.lead_start < (int)sizeof right) {
+        int len = task.lead_end - task.lead_start;
+        for (int i = 0; i < len; i++) right[i] = (char)line_buffer.units[task.lead_start + i];
+    }
+    char timed[4 * VIEW_CHARS + 16];
+    if (item->minute >= 0) {
+        int prefix = snprintf(timed, sizeof timed, "%02d:%02d  ", item->minute / 60, item->minute % 60);
+        memcpy(timed + prefix, label, strlen(label) + 1);
+    }
+    nw_ui__raw(ui, "{\"label\":");
+    nw_ui_str(ui, item->minute >= 0 ? timed : label);
+    nw_ui__raw(ui, task.done ? ",\"icon\":\"✓\",\"iconColor\":\"muted\",\"color\":\"muted\"" :
+                              ",\"icon\":\"·\",\"iconColor\":\"ink\",\"color\":\"\"");
+    nw_ui__raw(ui, ",\"right\":");
+    nw_ui_str(ui, right);
+    nw_ui__raw(ui, overdue ? ",\"rightColor\":\"accent\"}" : ",\"rightColor\":\"muted\"}");
+}
+
+static void publish_view(void)
+{
+    nw_ui ui;
+    nw_ui_begin(&ui, screen, sizeof screen);
+    nw_ui_open(&ui, "col", "\"gap\":4");
+    if (visible_count) {
+        int total = items[visible_count - 1].row + 1;
+        int row = selected >= 0 ? items[selected].row : -1;
+        int first = row - VIEW_ROWS / 2;
+        if (first > total - VIEW_ROWS) first = total - VIEW_ROWS;
+        if (first < 0) first = 0;
+        int last = first + VIEW_ROWS - 1;
+        int index = selected < 0 ? 0 : selected;
+        while (index > 0 && items[index - 1].row >= first) index--;
+        char list[160];
+        snprintf(list, sizeof list, "{\"t\":\"list\",\"font\":\"s\",\"lead\":6,\"grow\":1,\"sel\":%d,"
+                 "\"windowStart\":%d,\"totalItems\":%d,\"items\":[", row - first, first, total);
+        nw_ui_node(&ui, list);
+        for (int i = index; i < visible_count && items[i].row <= last + 1; i++) {
+            const agenda_item *item = &items[i];
+            bool header = item->row > first && (i == 0 || item->row > items[i - 1].row + 1);
+            if (item->row > last && !header) break;
+            if (i != index) nw_ui__raw(&ui, ",");
+            if (header) {
+                render_header(&ui, group_of(item));
+                if (item->row > last) break;
+                nw_ui__raw(&ui, ",");
+            }
+            render_item(&ui, item);
+        }
+        nw_ui__raw(&ui, "]}");
+    } else {
+        nw_ui_text(&ui, view_error[0] ? "" : "No tasks. F2 adds one, like: dentist @tue 14:30 !15m",
+                   "\"font\":\"s\",\"color\":\"muted\",\"wrap\":true,\"grow\":1");
+    }
+    if (entering) {
+        nw_ui_node(&ui, "{\"t\":\"input\",\"prompt\":\"New: \",\"font\":\"s\",\"value\":");
+        nw_ui_str(&ui, prompt);
+        nw_ui__raw(&ui, "}");
+    } else nw_ui_node(&ui, "{\"t\":\"gap\",\"h\":0}");
+    char status[160];
+    char zone[64] = "clock not set: reminders wait";
+    if (today >= 0 && nw_clock_zone(zone, sizeof zone) >= 0) {
+        char *rule = strchr(zone, ',');
+        if (rule) *rule = 0;
+    }
+    snprintf(status, sizeof status, "%s · %d open · %d done", zone, open_count, item_count - open_count);
+    nw_ui_text(&ui, view_note[0] ? view_note : view_error[0] ? view_error : status,
+               view_note[0] || view_error[0] ? "\"font\":\"s\",\"color\":\"accent\"" : "\"font\":\"s\",\"color\":\"muted\"");
+    nw_ui_close(&ui);
+    if (nw_ui_end(&ui) >= 0) nw_screen(screen, entering ? "Enter ok  Esc cancel" : "↑↓ select F2 add F4 all");
+}
+
 static void render_file(const nw_event *event)
 {
     bool absent = file_missing(event);
     if (!event->ok && !absent) {
         nw_log("Agenda could not read notes/todo.txt");
+        snprintf(view_error, sizeof view_error, "Could not read notes/todo.txt");
+        publish_view();
         return;
     }
-    char *text = malloc((size_t)event->json_len + 1);
+    int capacity = absent ? 1 : event->json_len + 1;
+    if (capacity > FILE_LIMIT + 2) capacity = FILE_LIMIT + 2;
+    char *text = malloc(capacity);
     if (!text) {
         nw_log("Agenda could not allocate its file buffer");
         return;
     }
     if (absent) text[0] = 0;
-    else if (nw_json_string(event->json, text, event->json_len + 1) < 0) {
-        nw_log("Agenda got a malformed file read");
+    else {
+        int length = nw_json_string(event->json, text, capacity);
+        if (length < 0 || length > FILE_LIMIT) {
+            nw_log("Agenda got a malformed file read");
+            free(text);
+            return;
+        }
+    }
+    // Count candidates before allocating. Ordinary notes lines consume no item
+    // entries, and the retained text gives edits a byte-exact source line.
+    int candidates = 0;
+    int64_t wall = nw_clock_wall();
+    for (const char *p = text; (p = strstr(p, "- ")); ) {
+        candidates++;
+        p = strchr(p, '\n');
+        if (!p) break;
+        p++;
+    }
+    agenda_item *parsed = candidates ? malloc((size_t)candidates * sizeof *parsed) : NULL;
+    if (candidates && !parsed) {
+        nw_log("Agenda could not allocate its task list");
         free(text);
         return;
     }
-    nw_ui ui;
-    nw_ui_begin(&ui, screen, sizeof screen - 2); // leave space to close the column
-    nw_ui_open(&ui, "col", NULL);
-    unsigned shown = 0;
-    int64_t wall = nw_clock_wall();
-    for (char *line = text; line; ) {
-        char *next = strchr(line, '\n');
-        if (next) *next++ = '\0';
+    int count = 0, open = 0;
+    for (char *line = text, *next; line; line = next) {
+        next = strchr(line, '\n');
+        if (next) *next++ = 0;
         task_record task;
-        if (parse_line(line, &task) > 0 && !task.done) {
-            const char *label = task.title_length ? title : "(untitled)";
-            remind(&task, label, wall);
-            if (shown < 12) {
-                nw_ui row = ui;
-                nw_ui_text(&row, label, NULL);
-                if (row.bad) shown = 12;
-                else { ui = row; shown++; }
-            }
+        if (parse_line(line, &task) != 1) continue;
+        int date = task_date(&task);
+        int minute = task.time_valid ? decimal_at(task.time_start, 2) * 60 + decimal_at(task.time_start + 3, 2) : -1;
+        parsed[count++] = (agenda_item){agendaDateKey(date, task.done), minute, (uint16_t)(line - text), 0};
+        if (!task.done) {
+            open++;
+            remind(&task, task.title_length ? title : "(untitled)", wall);
         }
-        line = next;
     }
-    free(text);
-    ui.n = sizeof screen;
-    if (!shown) nw_ui_text(&ui, "No tasks. F2 adds one.", NULL);
-    nw_ui_close(&ui);
-    if (nw_ui_end(&ui) >= 0 && !entering) nw_screen(screen, "F2 add task");
+    if (count > 1) qsort(parsed, count, sizeof *parsed, compare_items);
+    int old_row = selected_row();
+    free(items);
+    free(snapshot);
+    snapshot = text;
+    items = parsed;
+    item_count = count;
+    open_count = open;
+    layout_items(old_row);
+    view_error[0] = 0;
+    publish_view();
 }
 
 static void prompt_view(const char *status)
 {
-    char frame[1024], label[INPUT_KEYS + 8];
-    snprintf(label, sizeof label, "New: %s", prompt);
-    nw_ui ui;
-    nw_ui_begin(&ui, frame, sizeof frame);
-    nw_ui_open(&ui, "col", NULL);
-    nw_ui_text(&ui, label, NULL);
-    nw_ui_text(&ui, status, "\"font\":\"s\"");
-    nw_ui_close(&ui);
-    if (nw_ui_end(&ui) >= 0) nw_screen(frame, "Enter save   Esc cancel");
+    snprintf(view_note, sizeof view_note, "%s", status);
+    publish_view();
 }
 
 static void request_file(void)
@@ -365,18 +562,30 @@ static void key_event(const char *json)
     if (nw_json_str(json, "key", key, sizeof key) < 0 ||
         nw_json_str(json, "state", state, sizeof state) < 0 || !strcmp(state, "up")) return;
     bool once = strcmp(state, "hold") != 0;
+    const char *help = "@today @tue @+3d @11-15  14:30 or 2pm  !15m before";
     if (!entering) {
+        view_note[0] = 0;
         if (once && !strcmp(key, "f2")) {
             entering = true;
             prompt[0] = 0;
-            prompt_view("@today @tue @+3d   14:30 or 2pm   !15m");
+            prompt_view(help);
+        } else if (once && !strcmp(key, "f4")) {
+            show_done = !show_done;
+            layout_items(selected_row());
+            publish_view();
+        } else if (!strcmp(key, "up")) {
+            if (selected > 0) selected--;
+            else if (selected < 0 && visible_count) selected = 0;
+            publish_view();
+        } else if (!strcmp(key, "down")) {
+            if (selected + 1 < visible_count) selected++;
+            publish_view();
         }
         return;
     }
     if (once && !strcmp(key, "esc")) {
         entering = false;
-        if (screen[0]) nw_screen(screen, "F2 add task");
-        else request_file();
+        prompt_view("");
         return;
     }
     if (once && !strcmp(key, "enter")) { start_save(); return; }
@@ -388,7 +597,7 @@ static void key_event(const char *json)
         prompt[len] = ch[0];
         prompt[len + 1] = 0;
     } else return;
-    prompt_view("@today @tue @+3d   14:30 or 2pm   !15m");
+    prompt_view(help);
 }
 
 void nw_init(void)
@@ -411,7 +620,11 @@ int nw_on_event(const nw_event *event)
     }
     if (event->kind == NW_SETTLE && edit_write && event->token == edit_write) {
         edit_write = 0;
-        if (event->ok) { entering = false; request_file(); }
+        if (event->ok) {
+            entering = false;
+            snprintf(view_note, sizeof view_note, "Added.");
+            request_file();
+        }
         else prompt_view("Could not save notes/todo.txt");
         return NW_DONE;
     }
