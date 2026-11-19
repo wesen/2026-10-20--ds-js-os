@@ -72,3 +72,5 @@ The combined parser, calendar helpers, and prompt normalizer emit 30,388 RV32 by
 ### Code review instructions
 
 Read normalizeEntry in worlds/agenda/entry.typed alongside agExpand in js/apps/agenda.js. Run scripts/16-check-entry-tokens.mjs from the parent Agenda compiler ticket with the ESP RV32 GCC and rv32emu. The C runner checks the return value and every output code unit.
+
+The companion milestone write-up, “PicoCalc Agenda — Normalizing typed task entry,” was pushed to go-go-parc main at d88b30a.
