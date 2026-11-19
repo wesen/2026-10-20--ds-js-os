@@ -281,3 +281,7 @@ Finish the F6 Editor capability handoff and exact prompt diagnostic text. Retest
 ### Technical details
 
 The filesystem writes cross the existing notes directory capability. Write and read tokens are distinct and the reactor ignores invalidated refresh responses. No ELF slot capacity increase was needed for the sixth typed entry jump. The 8 MiB flash partition leaves 4,208,400 bytes for this firmware's future system and app changes.
+
+## Step 9 — Publish the task-mutation and flash-layout milestone
+
+The implementation and powered PicoCalc evidence are in `09bee0c`. The technical report “PicoCalc Agenda — Editing a task in a shared text file” explains the byte-level splices, read/write conflict boundary, typed runtime contract and powered measurements. Its push advanced go-go-parc `origin/main` to `a7714a2`. The resized board remains on the verified panel-enabled native Agenda image.
