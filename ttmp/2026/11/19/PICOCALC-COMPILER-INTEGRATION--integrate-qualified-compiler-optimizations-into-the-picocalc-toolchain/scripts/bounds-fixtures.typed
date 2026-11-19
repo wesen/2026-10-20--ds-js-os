@@ -1,0 +1,205 @@
+record Header { value: i32; }
+
+function clear(alias: Header): i32 {
+    alias.value = 0;
+    return 65;
+}
+
+function scan(text: string): i32 {
+    let i = 0;
+    let sum = 0;
+    while (i < text.length) {
+        sum = sum + text.charCodeAt(i);
+        i = i + 1;
+    }
+    return sum;
+}
+
+function guardLoop(text: string, start: i32): i32 {
+    let i = start;
+    let sum = 0;
+    while (i >= 0 && i < text.length) {
+        sum = sum + text.charCodeAt(i);
+        i = i + 1;
+    }
+    return sum;
+}
+
+function shortAnd(text: string, i: i32): bool {
+    return !(i < 0) && text.length > i && text.charCodeAt(i) === 65;
+}
+
+function shortOr(text: string, i: i32): bool {
+    return i < 0 || i >= text.length || text.charCodeAt(i) === 65;
+}
+
+function guardedWrite(output: buffer, i: i32, marker: Header): i32 {
+    if (i < 0 || i >= output.length) return -1;
+    output.setCharCodeAt(i, clear(marker));
+    return 7;
+}
+
+function guardedReturn(text: string, i: i32, marker: Header): i32 {
+    if (i < 0 || i >= text.length) return clear(marker);
+    return text.charCodeAt(i);
+}
+
+function trappingWrite(output: buffer, i: i32, marker: Header): i32 {
+    output.setCharCodeAt(i, clear(marker));
+    return 7;
+}
+
+function negative(text: string, i: i32): i32 {
+    if (i < text.length) return text.charCodeAt(i);
+    return -1;
+}
+
+function chain(text: string, i: i32, end: i32): i32 {
+    if (i >= 0 && i < end && end <= text.length) return text.charCodeAt(i);
+    return -1;
+}
+
+function nonStrict(text: string, i: i32): i32 {
+    if (i >= 0 && i <= text.length) return text.charCodeAt(i);
+    return -1;
+}
+
+function wrongReceiver(text: string, other: string, i: i32): i32 {
+    if (i >= 0 && i < text.length) return other.charCodeAt(i);
+    return -1;
+}
+
+function rebound(text: string, other: string, i: i32): i32 {
+    let view = text;
+    if (i < 0 || i >= view.length) return -1;
+    view = other;
+    return view.charCodeAt(i);
+}
+
+function fieldIndex(text: string, i: i32, r: Header): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    return text.charCodeAt(r.value);
+}
+
+function mathIndex(text: string, i: i32, j: i32): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    return text.charCodeAt(Math.min(j, i));
+}
+
+function overflow(text: string, i: i32): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    return text.charCodeAt(i + 2147483647);
+}
+
+function assigned(text: string, start: i32): i32 {
+    let i = start;
+    if (i < 0 || i >= text.length) return -1;
+    i = text.length;
+    return text.charCodeAt(i);
+}
+
+function callBarrier(text: string, i: i32, alias: Header): i32 {
+    if (i >= 0 && i < text.length && clear(alias) > 0) return text.charCodeAt(i);
+    return -1;
+}
+
+function recordAlias(text: string, i: i32, alias: Header): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    alias.value = 0;
+    return text.charCodeAt(i);
+}
+
+function bufferAlias(text: string, i: i32, alias: buffer): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    alias.setCharCodeAt(0, 0);
+    return text.charCodeAt(i);
+}
+
+function literalAlias(text: string, i: i32, alias: buffer): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    alias.writeLiteral(0, "\u0000");
+    return text.charCodeAt(i);
+}
+
+function alternate(text: string, i: i32, pick: bool): i32 {
+    if ((i >= 0 && i < text.length) || pick) return text.charCodeAt(i);
+    return -1;
+}
+
+function branchStore(text: string, i: i32, pick: bool, alias: Header): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    if (pick) { alias.value = 0; }
+    return text.charCodeAt(i);
+}
+
+function boolEquality(text: string, i: i32): i32 {
+    if ((i >= 0 && i < text.length) === false) return text.charCodeAt(i);
+    return -1;
+}
+
+function nestedAssignment(text: string, pick: bool): i32 {
+    let i = 0;
+    let sum = 0;
+    while (i < text.length) {
+        sum = sum + text.charCodeAt(i);
+        if (pick) { i = -2; }
+        i = i + 1;
+    }
+    return sum;
+}
+
+function multipleWrites(text: string): i32 {
+    let i = 2147483646;
+    let sum = 0;
+    while (i < text.length) {
+        sum = sum + text.charCodeAt(i);
+        i = i + 1;
+        i = i + 1;
+    }
+    return sum;
+}
+
+function mixedLoops(first: string, second: string): i32 {
+    let i = 0;
+    let sum = 0;
+    while (i < first.length) {
+        sum = sum + first.charCodeAt(i);
+        i = i + 2;
+    }
+    let j = 0;
+    while (j < second.length) {
+        sum = sum + second.charCodeAt(j);
+        j = j + 1;
+    }
+    return sum;
+}
+
+function loopHeaderChanges(text: string, alias: Header): i32 {
+    let i = 0;
+    let sum = 0;
+    while (i < text.length) {
+        sum = sum + text.charCodeAt(i);
+        alias.value = 0;
+        i = i + 1;
+    }
+    return sum;
+}
+
+function loopBoundFromBefore(text: string, i: i32, alias: Header): i32 {
+    if (i < 0 || i >= text.length) return -1;
+    let n = 0;
+    let sum = 0;
+    while (n < 2) {
+        sum = sum + text.charCodeAt(i);
+        alias.value = 0;
+        n = n + 1;
+    }
+    return sum;
+}
+
+function leaveLoop(text: string, i: i32): i32 {
+    while (i >= 0 && i < text.length) {
+        if (true) return text.charCodeAt(i);
+    }
+    return text.charCodeAt(i);
+}
