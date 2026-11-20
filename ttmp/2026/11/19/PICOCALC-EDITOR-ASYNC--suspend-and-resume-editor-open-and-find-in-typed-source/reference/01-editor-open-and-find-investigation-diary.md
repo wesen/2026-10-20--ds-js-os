@@ -240,3 +240,53 @@ Trace `editorFindNext` to `editorFindTask`, then `typedWorldEvent` and `editorSh
 ### Technical details
 
 The final Open frame has two control fields and saves one value at the read or four at a timer. The final Find frame has two control fields and saves `at`, `end`, `anchor`, `foldedAt` and `phase`. Editor's static C reactor still reserves 80 slots. The result changes used slots, from 71 to 70.
+
+## Step 5 — Review the device observer and recheck the final host modules
+
+The physical observer records elapsed time beginning in the Editor segment that handles Enter and stops after Editor publishes the expected retained status. I followed that event from the P4 keyboard injection through the compositor and the native renderer before the board run. I also rechecked all five direct host receipts after the final continuation optimizer changed compiler execution.
+
+### Prompt context
+
+See Step 1. The user asked for independent Opus High research. The [independent design](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/opus/editor-design.json) proposed deterministic early hit, late hit and miss cases with frame-size and time measurements.
+
+### What I did
+
+- Read the Opus design and applied its three outcome classes to the production Editor workload. The proposed synthetic 512-byte budget and pointer-based interface do not describe the application's 1,024-work-unit limit and native world ABI.
+- Checked the observer against `run_segment` and the compositor. The compositor sends mail of type `key`, with a JSON `key` of `enter`. The retained frame is updated before the observer's final hook, which runs after the Editor CPU counter increments.
+- Ran the five direct fixtures against the compiler at `2e4fee1` or newer and compared the resulting JSONL bytes with the [earlier receipt](../various/04-combined-event-fixtures.jsonl).
+
+### Why
+
+A time bracket based on command issuance includes the serial console and compositor's work before the app receives Enter. Starting at the actual Editor segment removes that latency. The end boundary includes the renderer's necessary traversal for a late hit, which is part of when the completed result becomes available to the user.
+
+### What worked
+
+The five direct receipts matched byte for byte. The continuation author independently compared G4's linked Wasm and RV32 outputs against compiler revision `9fd1744` and found both byte-identical. The stage that opens the document establishes the expected status for the first `ext` match at column 2 and the tail `needle` match at line 852, column 1.
+
+### What didn't work
+
+The device script originally derived the trial's name prefix from `args.kind[0]`. Both `control` and `candidate` start with `c`. This defeats the stated isolation of persisted position records even when the previous trial removes its temporary file. I reported the collision to the device owner.
+
+### What I learned
+
+There are two independent timing units for late Find. Search uses a count of eligible candidates and lines. The renderer needs to walk rows once that cursor position changes. The observer deliberately includes both when the result is published.
+
+### What was tricky to build
+
+The retained frame holds the raw serialized screen. A completion match can check only the status expected for the search class. The fixture text has neither the complete status labels nor the file name, so the matched text identifies the app's status field in this workload.
+
+### What warrants a second pair of eyes
+
+Confirm that the device receipt records the distinct filenames actually used. When reporting wall time, distinguish the first Editor segment from the earlier physical key injection and the later panel transfer.
+
+### What should be done in the future
+
+Use the observer output to compare the same handler and retained-frame interval across both targets.
+
+### Code review instructions
+
+Read `05-find-observer.inc` and `07-time-find.py` in the [qualification scripts](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/scripts). Follow their hooks against `run_segment` in `picocalc-os/nucleus/kernel.c`.
+
+### Technical details
+
+Each direct fixture passes through a linked reactor. The physical observer runs in separate images to avoid including its matching and serial printing in the uninstrumented full-workflow timing.
