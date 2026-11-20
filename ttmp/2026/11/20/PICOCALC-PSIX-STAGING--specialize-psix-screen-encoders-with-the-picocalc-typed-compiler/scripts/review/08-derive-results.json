@@ -1,0 +1,50 @@
+{
+  "experiment": "Typed compiler record metadata to flat PSIX v1 encoder",
+  "fullI32": true,
+  "executed": "Node WebAssembly",
+  "rv32": "compiled",
+  "totalWasmExact": 231,
+  "rows": [
+    {
+      "file": "picocalc-os/worlds/chess/state.typed",
+      "name": "WorldEvent",
+      "fields": 4,
+      "bools": 2,
+      "basePacketBytes": 59,
+      "wasmExact": 25,
+      "capacityRejections": 25,
+      "rv32ImageBytes": 5348
+    },
+    {
+      "file": "picocalc-os/worlds/chess/state.typed",
+      "name": "WorldState",
+      "fields": 18,
+      "bools": 3,
+      "basePacketBytes": 261,
+      "wasmExact": 117,
+      "capacityRejections": 117,
+      "rv32ImageBytes": 8188,
+      "collisionLine": "cursor = deriveInteger(out, 193, cursor, row.cursor);"
+    },
+    {
+      "file": "picocalc-os/worlds/agenda/reminder.typed",
+      "name": "Task",
+      "fields": 11,
+      "bools": 3,
+      "basePacketBytes": 186,
+      "wasmExact": 68,
+      "capacityRejections": 68,
+      "rv32ImageBytes": 13248
+    },
+    {
+      "file": "picocalc-os/worlds/agenda/reminder.typed",
+      "name": "EntryError",
+      "fields": 2,
+      "bools": 0,
+      "basePacketBytes": 39,
+      "wasmExact": 21,
+      "capacityRejections": 21,
+      "rv32ImageBytes": 11324
+    }
+  ]
+}

@@ -89,3 +89,20 @@ node scripts/static/05-replay.mjs /tmp/psix-independent-static-review \
 The trace contributed 47 recorded frames from 127 events. Across all 121 qualifying vectors, generated Wasm, emulated generated RV32, the JavaScript writer and a separate C producer agreed byte for byte. The default source was 16,680 bytes, Wasm 6,514 bytes and the RV32 image 16,116 bytes. The median recorded frame took 21,496 emulated instructions. These instruction counts measure the standalone serialization call under the harness. The [bounded receipt](../scripts/review/06-independent-static-replay.json) includes artifact digests, cases, sizes and the independently repeated host medians. The direct comparison with a C plan interpreter on real silicon belongs to the director’s device study.
 
 The first review deliverables are in `3ddc866`. The initial sandboxed `git add` reported `fatal: Unable to create '/home/manuel/code/wesen/2026-10-20--ds-js-os/.git/index.lock': Read-only file system`. The scoped approved git action succeeded. All three docmgr frontmatters and all repository-relative links validated, and both differential scripts reproduced the checked-in JSON.
+
+## Step 7. Derive from real source declarations
+
+The director posed a narrower follow-up about obtaining a schema from the compiler automatically. I verified that `typedWasm.compile(source).records` already exposes record names and field types/offsets. A smoke check of the unmodified project source files, appending a single dummy function for the declarations-only Chess unit, returned `WorldEvent`, `WorldState`, `Task` and `EntryError`. I used all four instead of inventing a declaration. The project sources own their field definitions. The reviewed generator owns one wire rule for `i32` and one for `bool`.
+
+The script calculates the fixed sorted key dictionary from field metadata and emits a direct field access for every slot. Before writing, the generated program adds eight to its required size for each wide integer. The common integer primitive from the Chess experiment excludes −2147483648 because that specific Chess profile excludes it. Negating that value in two’s-complement i32 arithmetic cannot produce a positive magnitude. The derive writer handles that one value explicitly by emitting its exact little-endian binary64 representation, with high halfword 0xc1e0. It retains the existing primitive for all other values. No project source changed.
+
+I deliberately left the emitted local named `cursor` because Chess `WorldState` contains that member. Uses of `row.cursor` bind to the record. Uses of the bare identifier name the output position. All independently varied values survived reader lookup. This tests ordinary field/local namespaces, without claiming that arbitrary source-splicing is hygienic.
+
+| Validation | Result |
+| --- | --- |
+| Compiler metadata to generated executable | Four Wasm modules executed on Node and four RV32 images compiled from actual Typed sources. |
+| Canonical bytes and reader field lookups | 25 WorldEvent, 117 WorldState, 68 Task and 21 EntryError cases passed. |
+| Failure before first store | Each of the 231 inputs gave −2 and preserved every poisoned destination byte when the caller offered one byte too few. |
+| Full i32 | Per-field isolated probes cover both extrema, both sides of the signed 20-bit transition, zero and minus one. Multi-field probes exercise sums of several wide tails. |
+
+Run `node scripts/review/07-derive-typed-record.mjs` from the ticket and compare stdout to [the receipt](../scripts/review/08-derive-results.json). Image sizes in that receipt include the rest of the compiled unit and shared helper source. The trial assumes a valid, stable record and disjoint input/output buffers. The four new RV32 images were compiled only. This small experiment measures feasibility and exactness, with no runtime-speed claim. The [report](../analysis/04-staging-and-binding.md) now distinguishes deriving from a source declaration from hand-authoring the more expressive Chess wire profile.

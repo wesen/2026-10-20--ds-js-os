@@ -94,6 +94,21 @@ I also repeated the teams’ larger trace runs. For the declared writer, the sam
 
 For a next measurement, execute the same residual operations twice, once through a plan interpreter that dispatches on operation kinds and once as compiled direct writes. Charge both for obtaining input values, checking the same guards and delivering the same owned bytes. Those two runs isolate the saving from compilation. Compare the winner to the generic encoder, including one-time compilation cost over the actual number of frames. A gain after hundreds of hits could matter to a game repainting repeatedly and be irrelevant to an infrequently opened settings panel.
 
+## Deriving a writer from the compiler’s own declarations
+
+Can an application author simply declare a record and get a serializer? For records containing only `i32` and `bool`, we implemented that step. The existing compiler already returns `records`, a table of names, field types and byte offsets. We compiled two ordinary project source files and passed each record in that table to the same generator. The generator sorts the field names once, builds the constant packet prefix and emits Typed code that reads the declared members. No second list of field definitions is needed. With no string-valued fields, the packet’s dictionary is exactly the set of declared field names. Each boolean changes only its tag. Each i32 can still require the extra eight bytes, so the generated function measures the total before its first store. [Chess declarations](../../../../../../picocalc-os/worlds/chess/state.typed) · [Agenda declarations](../../../../../../picocalc-os/worlds/agenda/reminder.typed) · [Derivation code](../scripts/review/07-derive-typed-record.mjs)
+
+| Application record | Fields | Accepted Wasm cases matching every oracle byte |
+| --- | ---: | ---: |
+| Chess `WorldEvent` | 4 | 25 |
+| Chess `WorldState` | 18 | 117 |
+| Agenda `Task` | 11 | 68 |
+| Agenda `EntryError` | 2 | 21 |
+
+A naming collision illustrates how little macro machinery this version needs. Chess names one member `cursor`. The generator also names its next output position `cursor`. In the generated Typed source the statement is `cursor = deriveInteger(out, 193, cursor, row.cursor);`. The first two uses name a local variable, while the field selection names an entry in `WorldState`. The compiler resolves both through its ordinary binding rules. Tests varied the field independently and read it back from the admitted packet.
+
+The 231 executions included −2147483648, 2147483647 and the immediate-range boundaries. Every case also received a one-byte-short buffer allowance, which left the poisoned destination unchanged. All four generated programs compiled to RV32. The derivation test executed Wasm on the host. Its input is a stable typed record and a separate output buffer. For records carrying strings, optional fields or nested containers, the earlier dictionary and offset dependencies return. [Recorded derive results](../scripts/review/08-derive-results.json)
+
 ## Try the boundary
 
 From the repository root, Node 24 can reproduce the table and all assertions with the following command.
