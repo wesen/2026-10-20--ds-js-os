@@ -4,7 +4,7 @@ from pathlib import Path
 import serial
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('scratch',type=Path);p.add_argument('--preflight',action='store_true');p.add_argument('--port',default='/dev/ttyACM0')
-p.add_argument('--original',type=Path,default=Path('/tmp/p4-system-fix-final/build'))
+p.add_argument('--binary',action='store_true',help='indexed binary study without any installation file writes');p.add_argument('--latency',action='store_true',help='independent replay and interactive installation follow-up');p.add_argument('--original',type=Path,default=Path('/tmp/p4-system-fix-final/build'))
 p.add_argument('--candidate',type=Path,default=Path('/tmp/pico-render-study-board/build'))
 p.add_argument('--esptool',default='/home/manuel/.espressif/python_env/idf5.4_py3.11_env/bin/esptool.py')
 args=p.parse_args(); out=args.scratch;out.mkdir(exist_ok=True,parents=True)
@@ -64,34 +64,70 @@ wrote=False;own_files=False
 try:
     hold();wrote=True;esp('install','write_flash','0x10000',image)
     info['experimentWorlds']=wait_console();record()
-    base='rlab1120'
-    if 'no directory '+base not in console('ls '+base): raise RuntimeError('fixture directory already exists')
-    own_files=True
-    for suffix in ['wasm','typed']:
-        f=Path('/tmp/pico-render-study-board/tree/picocalc-os/port/esp32p4/main')/('study_view.'+suffix)
-        t=time.monotonic()
-        subprocess.run([sys.executable,'picocalc-os/tools/p4put.py',str(f),base+'/view.'+suffix,'-p',args.port],check=True,timeout=90)
-        info.setdefault('serialUploadMs',{})[suffix]=(time.monotonic()-t)*1000
-    for app,shortcut,move in [('sysmon','m','down'),('chess','h','left'),('snake','s','p'),('editor','e','f6')]:
-        key('f1');key(shortcut);time.sleep(.8); console('renderlab trace start')
-        key(move);time.sleep(.3)
-        lines=console('renderlab trace stop').splitlines()
-        dump('trace-'+app+'.json',[l for l in lines if l.startswith('LAB TRACE')])
-        raw=console('renderlab capture '+app)
-        for l in raw.splitlines():
-            if l.startswith('LAB FRAME '):dump('frame-'+app+'.json',json.loads(l.split(' ',3)[3]))
-    key('f1')
-    for b in range(5):
-        groups=[('snake',['J','SJ','T'],2),('sysmon',['G','M','A'],1),('view',['resident','module','source'],1),
-                ('chess',['generic','semantic'],4),('producer',['generic','semantic'],4)]
-        for name,arms,n in groups:
-            j=b%len(arms);ordered=arms[j:]+arms[:j]
-            if b%2:ordered.reverse()
-            for arm in ordered:trial(name,arm,n,b)
-        for app in ['sysmon','snake','chess']:
-            arms=['native','index','both','key','sparse']
-            j=b%len(arms)
-            for arm in arms[j:]+arms[:j]:trial('reader',app+'-'+arm,2,b)
+    if not args.binary:
+        base='rlab1120'
+        if 'no directory '+base not in console('ls '+base): raise RuntimeError('fixture directory already exists')
+        own_files=True
+        for suffix in ['wasm','typed']:
+            f=Path('/tmp/pico-render-study-board/tree/picocalc-os/port/esp32p4/main')/('study_view.'+suffix)
+            t=time.monotonic()
+            subprocess.run([sys.executable,'picocalc-os/tools/p4put.py',str(f),base+'/view.'+suffix,'-p',args.port],check=True,timeout=90)
+            info.setdefault('serialUploadMs',{})[suffix]=(time.monotonic()-t)*1000
+    if args.binary:
+        names=['sysmon','chess','snake','editor']
+        for b in range(7):
+            for n,app in enumerate(names[b%4:]+names[:b%4]):
+                arms=['G','B'] if (b+n)%2==0 else ['B','G']
+                for arm in arms:trial('binary',app+'-'+arm,1,b)
+    elif args.latency:
+        key('f1')
+        def latency(arm):
+            # Send from a single serial producer. Timestamp when the independent key line is sent,
+            # stop once its console acknowledgement arrives. The earlier job's output is a separate line.
+            with serial.Serial(args.port,115200,timeout=.003) as ser:
+                ser.reset_input_buffer()
+                if arm!='idle': ser.write(('\nrenderlab install '+arm+' 1\n').encode());ser.flush()
+                time.sleep(.003)
+                at=time.monotonic_ns();ser.write(b'\nkey f1\n');ser.flush()
+                received=b''
+                while time.monotonic_ns()-at<4_000_000_000 and b'#OK key' not in received:
+                    received+=ser.read(128)
+                dt=(time.monotonic_ns()-at)/1e6
+                assert b'#OK key' in received
+                stage=None
+                if arm!='idle':
+                    lines=received.decode(errors='replace').splitlines()
+                    line=next(l for l in lines if l.startswith('LAB VIEW '))
+                    stage=json.loads(line[line.index('{'):]);assert stage['frames']==1
+                return dict(arm=arm,hostAckMs=dt,stage=stage)
+        for b in range(5):
+            order=['idle','resident','module','source'];order=order[b%4:]+order[:b%4]
+            for arm in order:
+                info.setdefault('keyAdmission',[]).append(latency(arm));record();time.sleep(.32)
+        for name,arms,n in [('sysmon',['M','G'],1),('snake',['SJ','J'],2),('producer',['semantic','generic'],4),
+                            ('reader',['chess-index','chess-native'],2)]:
+            for arm in arms:trial(name,arm,n,5)
+    else:
+        for app,shortcut,move in [('sysmon','m','down'),('chess','h','left'),('snake','s','p'),('editor','e','f6')]:
+            key('f1');key(shortcut);time.sleep(.8); console('renderlab trace start')
+            key(move);time.sleep(.3)
+            lines=console('renderlab trace stop').splitlines()
+            dump('trace-'+app+'.json',[l for l in lines if l.startswith('LAB TRACE')])
+            raw=console('renderlab capture '+app)
+            for l in raw.splitlines():
+                if l.startswith('LAB FRAME '):dump('frame-'+app+'.json',json.loads(l.split(' ',3)[3]))
+        key('f1')
+        for b in range(5):
+            groups=[('snake',['J','SJ','T'],2),('sysmon',['G','M','A'],1),('view',['resident','module','source'],1),
+                    ('chess',['generic','semantic'],4),('producer',['generic','semantic'],4)]
+            for name,arms,n in groups:
+                j=b%len(arms);ordered=arms[j:]+arms[:j]
+                if b%2:ordered.reverse()
+                for arm in ordered:trial(name,arm,n,b)
+            for app in ['sysmon','snake','chess']:
+                arms=['native','index','both','key','sparse']
+                j=b%len(arms)
+                for arm in arms[j:]+arms[:j]:trial('reader',app+'-'+arm,2,b)
     record()
 finally:
     if wrote:

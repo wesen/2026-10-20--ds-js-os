@@ -1,0 +1,23 @@
+{
+  "workload": "four publishers, one private candidate and at most one outstanding draw",
+  "slots": 6,
+  "maximumOccupied": 6,
+  "tokenIndexReserved": 196608,
+  "encodedByteCapEach": 16384,
+  "checks": {
+    "previousPinned": true,
+    "restartShowsA": true,
+    "nextShowsC": true,
+    "replacedNotifications": 160,
+    "epochAndOwner": true,
+    "rejected": [
+      "bytes",
+      "tokens",
+      "syntax",
+      "depth",
+      "string",
+      "schema"
+    ]
+  },
+  "limit": "Encoded-byte caps apply to material already received as JS strings. VM heap, wire ingress, schema-specific work and other subscribers are outside this prototype."
+}

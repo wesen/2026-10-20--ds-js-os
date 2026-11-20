@@ -24,7 +24,7 @@ if not a.update:
         elif src.exists(): shutil.copy(src,dest)
     def replace(file,old,new):
         data=file.read_text(); assert data.count(old)==1,(file,old);file.write_text(data.replace(old,new))
-    replace(main/'main_p4.c','  if (!strcmp(cmd, "stats"))','  extern void render_lab(const char *);\n  if (!strcmp(cmd, "renderlab")) { render_lab(rest); return; }\n  if (!strcmp(cmd, "stats"))')
+    replace(main/'main_p4.c','  if (!strcmp(cmd, "stats"))','  extern void render_lab(const char *);\n  if (!strcmp(cmd, "renderlab")) { render_lab(rest); puts("#OK renderlab"); return; }\n  if (!strcmp(cmd, "stats"))')
     with (osdir/'nucleus/native_wasm.c').open('a') as f:
         f.write('\n#if NUCLEUS_WASM\nbool lab_wamr_ready(char *why, size_t n) { return runtime_ready(why, n); }\n#endif\n')
     replace(main/'CMakeLists.txt','"main_p4.c" "port_p4.c"','"main_p4.c" "render_lab.c" "port_p4.c"')
@@ -42,7 +42,7 @@ shutil.copyfile(a.fixtures,main/'chess_fixtures.h')
 assets={'view.wasm':a.wasm,'view.typed':a.source}
 for pair in a.capsule:
     key,path=pair.split('=',1)
-    if key not in ('snake','sysmon','reader','chess'): raise ValueError(key)
+    if key not in ('snake','sysmon','reader','chess','binary'): raise ValueError(key)
     assets[key+'.js']=Path(path)
 lines=[]
 for name,src in assets.items():

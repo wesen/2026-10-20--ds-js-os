@@ -118,3 +118,49 @@ Read scripts 10–12, inspect reader-layout-host.json, then compare stage bounda
 ### Technical details
 
 The fixed matrix uses three renderers, plus the independently frozen Keys workload. SHA-256 covers the ordered sequence of graphics calls. Pixel equality for each original recording is independently measured by the child tickets.
+
+## Step 3: Qualify the stage measurements on the physical machine
+
+### Prompt Context
+
+The user wanted the two renderer proposals researched on Chess, Snake and System. They commissioned an additional independent binary-format group after the first physical results and asked that it keep the same diary and publication record.
+
+### What I did
+
+Restored the historical CJI inputs that match the experimental OS and verified the installed app and partition table with esptool. Ran all 140 physical comparisons across five blocks. Captured duration-only events in the production compositor, kernel, framebuffer and SPI paths. Ran 20 competing key trials and eight independent replay cells on another boot. Verified the restored image and the health of the target worlds after both successful sessions. Extracted 44 screens from an existing 64 KiB typed Editor event replay, ran both painters through the actual font and raster code, and compared all final buffers.
+
+### Why
+
+The five physical arms for the reader charge conversion, not just scanning. The Chess producer runs a complete game in a measured WAMR world. A trace of the shipped RV32 game shows how different its actual event budget is. Queuing an unrelated F1 while installing a view makes the cost to the event dispatcher observable.
+
+### What worked
+
+The same checksums and frame lengths survived all 140 cells. Raw pixels, retained-generation tests and independently compiled firmware provided separate checks. A second session reproduced the direction of the System, Snake, Chess producer and Chess reader results. First-frame source installation delayed admission of an unrelated key to a median of 398.8 ms. The original app and partition table matched their flash digests on restoration.
+
+### What didn't work
+
+The first physical fixture upload succeeded but the temporary console command returned before its normal completion marker. The operator timed out, cleaned the fixtures, and restored the original image. I corrected the command and repeated the run. Editor had no changed publication in its live F6 interval. The text-editor claim in the study instead rests on the separate actual typed guest replay. I corrected the host comparison to read the real font widths from the production font table. The first combined request to the external representation investigator for article and diary returned a provider refusal. A request for a public engineering article and factual experiment log succeeded, followed by the physical addendum.
+
+### What I learned
+
+One native Chess update spent 44.984 ms in the compositor's frames event. The complete draw including a graphics commit took 26.794 ms. Only 1.019 ms was spent transmitting its changed pixel data. The deterministic WAMR producer and QuickJS receiver controls help identify which stage to change; an integrated RV32/CJI trial is required for the actual product latency.
+
+### What was tricky to build
+
+Keeping the board playable required a single serial owner, matching app and partition-table digests, a uniqueness check on disposable filesystem paths, a cleanup limited to known fixture contents, and a restoration guard. The trace records nested and concurrent durations. The comparison script associates transfers with committed rectangles and refuses a trace that drops entries.
+
+### What warrants a second pair of eyes
+
+The timed QuickJS reader excludes the preallocated record array. Simulated last-good admission bounds work at a proposed protocol boundary; the production kernel and all subscribers do not yet use those slots. The physical key measurement ends at a UART acknowledgment. The renderer studies do not claim a complete end-user latency distribution.
+
+### What should be done in the future
+
+Finish the independently commissioned binary comparison, send its actual API to application researchers if it clears the qualification gate, and integrate the complete set of results in a director report.
+
+### Code review instructions
+
+Start with the stage boundaries in scripts 08, 13, 14 and 20. Compare the reports to various/physical-blocks.json, physical-summary.json and physical-followup.json. Scripts 15–17 and 23 reproduce the Editor holdout, memory budget and public representation report. Compare the commissioned binary gate against the ordinary and held-out workloads.
+
+### Technical details
+
+Four researcher articles and two figures were published to the go-go-parc vault. Git confirmed remote main at f6350ad094cf91cf98224cffa9e3029ab32e078f and resolved all six paths in that commit. The separate binary article and director synthesis follow after that department returns.

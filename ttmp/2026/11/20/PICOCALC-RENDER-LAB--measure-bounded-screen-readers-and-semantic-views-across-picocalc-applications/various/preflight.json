@@ -1,0 +1,118 @@
+{
+  "firmwareSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "worlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "esptool": "verify_flash app and partition table"
+}

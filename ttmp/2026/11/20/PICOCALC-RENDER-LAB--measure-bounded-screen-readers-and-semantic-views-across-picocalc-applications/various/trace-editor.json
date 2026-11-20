@@ -1,0 +1,17 @@
+[
+  "LAB TRACE 24019851 4175 0 sysmon every 500 ms",
+  "LAB TRACE 24067435 1370 0 compositor keys",
+  "LAB TRACE 24076862 5719 0 snake every 110 ms",
+  "LAB TRACE 24141144 1100 0 compositor keys",
+  "LAB TRACE 24186033 5669 0 snake every 110 ms",
+  "LAB TRACE 24296788 4789 0 snake every 110 ms",
+  "LAB TRACE 24411910 5200 0 snake every 110 ms",
+  "LAB TRACE 24447102 340 0 compositor every 500 ms",
+  "LAB TRACE 24516799 5414 0 snake every 110 ms",
+  "LAB TRACE 24524411 4379 0 sysmon every 500 ms",
+  "LAB TRACE 24626032 5889 0 snake every 110 ms",
+  "LAB TRACE 24736795 5384 0 snake every 110 ms",
+  "LAB TRACE 24760986 204 1186 nat-dial render+publish",
+  "LAB TRACE 24761276 10014 0 compositor frames",
+  "LAB TRACE_END 14 0"
+]

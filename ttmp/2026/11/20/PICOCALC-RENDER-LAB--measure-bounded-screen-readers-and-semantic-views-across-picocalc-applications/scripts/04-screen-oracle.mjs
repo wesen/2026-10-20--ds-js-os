@@ -7,7 +7,9 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 
-const [input, output, flag, index] = process.argv.slice(2);
+const args=process.argv.slice(2);
+const indexed=args.includes('--indexed');
+const [input,output,flag,index]=args.filter(x=>x!=='--indexed');
 if (!input || !output || (flag && flag !== '--skip-frame')) throw Error('Expected frames.ndjson output-directory [--skip-frame N]');
 const scripts = dirname(fileURLToPath(import.meta.url));
 const root = execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();
@@ -26,6 +28,7 @@ try {
     if (checkedCompositor === compositor) throw Error("compositor draw error hook changed");
     const paint = vm.runInNewContext(checkedCompositor+'\nF=fonts; paint;', {service:()=>builder, fonts, clock:{set:()=>false}});
     const rgb = c=> String(c).replace(/^#/,'').replace(/^([0-9a-f])([0-9a-f])([0-9a-f])$/i,'$1$1$2$2$3$3');
+    const reader=indexed?vm.runInThisContext('(function(){'+readFileSync(join(scripts,'10-index-reader.js'),'utf8')+';return indexScreen})()'):null;
     const records=[];
     let previous;
     for (const [i,row] of frames.entries()) {
@@ -35,7 +38,7 @@ try {
         };
         for(const [key,op] of [['fill','F'],['line','L'],['rect','R']])
             fb[key]=(a,b,c,d,color)=>ops.push(op+' '+[a|0,b|0,c|0,d|0,rgb(color)].join(' '));
-        paint({apps:{[row.app]:{tree:row.tree,hints:row.hints||'',title:row.title||row.app}},focus:row.app,
+        paint({apps:{[row.app]:{tree:reader?reader(JSON.stringify(row.tree)).view():row.tree,hints:row.hints||'',title:row.title||row.app}},focus:row.app,
             battery:row.battery??null,banner:row.banner??null,crashed:{},fb});
         const count=ops.length;
         // Run each transition as a two-frame replay, with the preceding state already on the virtual panel.

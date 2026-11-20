@@ -7,7 +7,9 @@ const index=vm.runInThisContext('(function(){'+reader+';return indexScreen})()')
 const source=fs.readFileSync('picocalc-os/js/system/compositor.js','utf8');
 const builder=new Proxy({}, {get:()=>()=>builder});
 const metrics={};
-const fonts={s:[6,12],m:[8,16],mb:[8,16],l:[12,24],lb:[12,24],sb:[6,12],xl:[16,32]};
+const fontData=fs.readFileSync('picocalc-os/nucleus/font_data.h','utf8');
+const fonts=Object.fromEntries(Array.from(fontData.matchAll(/\{ "(\w+)", (\d+), (\d+), font_/g),m=>[m[1],[+m[2],+m[3]]]));
+assert.equal(Object.keys(fonts).length,5);
 const layout=`
 let seenN=[],seenW=[],seenR=[],calls=0,hits=0;
 function measure(n,w){

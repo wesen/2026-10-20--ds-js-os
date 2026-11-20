@@ -1,0 +1,398 @@
+[
+  {
+    "id": "guard-open/initial view",
+    "app": "editor",
+    "filename": "00000.rgb565",
+    "commands": 13,
+    "changedPixels": null,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5"
+  },
+  {
+    "id": "guard-open/draw old file",
+    "app": "editor",
+    "filename": "00001.rgb565",
+    "commands": 13,
+    "changedPixels": 2017,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e0a183a67e6340d3c6b61246e327ffaf41d5370cd35c4a33ee56938fc676f8f6"
+  },
+  {
+    "id": "guard-open/draw large file",
+    "app": "editor",
+    "filename": "00002.rgb565",
+    "commands": 29,
+    "changedPixels": 6422,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39"
+  },
+  {
+    "id": "guard-open/save normalized bytes",
+    "app": "editor",
+    "filename": "00003.rgb565",
+    "commands": 29,
+    "changedPixels": 183,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "00e5454110839e04d41e3d7cf95e15ab1b0298d93ec13dd8a04f1bcec74457d9"
+  },
+  {
+    "id": "guard-open/save completes",
+    "app": "editor",
+    "filename": "00004.rgb565",
+    "commands": 29,
+    "changedPixels": 213,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "b82c37e64abbbc9b6202778ab15197d123188f376af3c5172f82291acf188c10"
+  },
+  {
+    "id": "read-failures/initial view",
+    "app": "editor",
+    "filename": "00005.rgb565",
+    "commands": 13,
+    "changedPixels": 8076,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5"
+  },
+  {
+    "id": "read-failures/missing file opens empty",
+    "app": "editor",
+    "filename": "00006.rgb565",
+    "commands": 13,
+    "changedPixels": 1864,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "0ed7a0ad258fa23bd12a3145d973c38d00a34f4c6bd84ead4c99094db122b20a"
+  },
+  {
+    "id": "replace-search/initial view",
+    "app": "editor",
+    "filename": "00007.rgb565",
+    "commands": 13,
+    "changedPixels": 1864,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5"
+  },
+  {
+    "id": "replace-search/draw large file",
+    "app": "editor",
+    "filename": "00008.rgb565",
+    "commands": 29,
+    "changedPixels": 7984,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39"
+  },
+  {
+    "id": "replace-search/open Find",
+    "app": "editor",
+    "filename": "00009.rgb565",
+    "commands": 28,
+    "changedPixels": 735,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "983cf0e5129d561b33df6d63ac32cc4aae22e34f13e9b74c0218a1d51297c1b9"
+  },
+  {
+    "id": "replace-search/query unit 0",
+    "app": "editor",
+    "filename": "00010.rgb565",
+    "commands": 286,
+    "changedPixels": 18855,
+    "recoveredSkippedFlush": true,
+    "pixelSha256": "1bf6fc643b5d0262e1bc92d51d0722974a193efc58bfbbea6d9ba2bd780dcc44"
+  },
+  {
+    "id": "replace-search/query unit 1",
+    "app": "editor",
+    "filename": "00011.rgb565",
+    "commands": 157,
+    "changedPixels": 18215,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "b2946cd38301be1575a412db0a187a53213bca80362729ae71ea90b509134fd3"
+  },
+  {
+    "id": "replace-search/query unit 2",
+    "app": "editor",
+    "filename": "00012.rgb565",
+    "commands": 157,
+    "changedPixels": 9566,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "083af224ab3eff3f95665e18642da47e59b01f828f601a21266ffd230eaaf954"
+  },
+  {
+    "id": "replace-search/query unit 3",
+    "app": "editor",
+    "filename": "00013.rgb565",
+    "commands": 157,
+    "changedPixels": 9438,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "5f7527b98ed3609f4852d9221bb8facebefaff075e457acd215857c7f3915451"
+  },
+  {
+    "id": "replace-search/query unit 4",
+    "app": "editor",
+    "filename": "00014.rgb565",
+    "commands": 157,
+    "changedPixels": 10846,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "dbf3ca98d6da49c2c5dab553987ba1fef8d317e2b2899b0b086ae7891f85507d"
+  },
+  {
+    "id": "replace-search/query unit 5",
+    "app": "editor",
+    "filename": "00015.rgb565",
+    "commands": 140,
+    "changedPixels": 5104,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ff2ba4c9b57c188dbb4c16a7612ee4574ea2533438a4527945814aab566a6ce4"
+  },
+  {
+    "id": "replace-search/query unit 6",
+    "app": "editor",
+    "filename": "00016.rgb565",
+    "commands": 140,
+    "changedPixels": 1182,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "23f2f30dab27c72f088d1782f714bd207585bc75260846c17500f334704f602f"
+  },
+  {
+    "id": "replace-search/query unit 7",
+    "app": "editor",
+    "filename": "00017.rgb565",
+    "commands": 140,
+    "changedPixels": 1278,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ceb0f00c6472cb53f12039ba097f159c0b87b45e844651747d515a287869f35c"
+  },
+  {
+    "id": "replace-search/query unit 8",
+    "app": "editor",
+    "filename": "00018.rgb565",
+    "commands": 140,
+    "changedPixels": 1262,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "0c8569cb47dfc25d7eb98a3396d989f0aa73da0fe6bacff7311cbfe683a9fb62"
+  },
+  {
+    "id": "replace-search/query unit 9",
+    "app": "editor",
+    "filename": "00019.rgb565",
+    "commands": 140,
+    "changedPixels": 1438,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "cd649f573d3d4f0171b6350102d23193237610f290631313cbc2c33944b7b817"
+  },
+  {
+    "id": "replace-search/query unit 10",
+    "app": "editor",
+    "filename": "00020.rgb565",
+    "commands": 28,
+    "changedPixels": 48012,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f14b57cc1bb4efbff66474e5291486c593fc953bb3798c76ea2e92ac825ccafe"
+  },
+  {
+    "id": "replace-search/draw replacement",
+    "app": "editor",
+    "filename": "00021.rgb565",
+    "commands": 13,
+    "changedPixels": 7093,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "54b74b340848ba8ae00315deb49deddd77b10ed808a682ea5671f465527ad392"
+  },
+  {
+    "id": "replace-control/initial view",
+    "app": "editor",
+    "filename": "00022.rgb565",
+    "commands": 13,
+    "changedPixels": 2101,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5"
+  },
+  {
+    "id": "replace-control/draw large file",
+    "app": "editor",
+    "filename": "00023.rgb565",
+    "commands": 29,
+    "changedPixels": 7984,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39"
+  },
+  {
+    "id": "replace-control/draw replacement",
+    "app": "editor",
+    "filename": "00024.rgb565",
+    "commands": 13,
+    "changedPixels": 6431,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "54b74b340848ba8ae00315deb49deddd77b10ed808a682ea5671f465527ad392"
+  },
+  {
+    "id": "replace-query/initial view",
+    "app": "editor",
+    "filename": "00025.rgb565",
+    "commands": 13,
+    "changedPixels": 2101,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5"
+  },
+  {
+    "id": "replace-query/draw large file",
+    "app": "editor",
+    "filename": "00026.rgb565",
+    "commands": 29,
+    "changedPixels": 7984,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39"
+  },
+  {
+    "id": "replace-query/open Find",
+    "app": "editor",
+    "filename": "00027.rgb565",
+    "commands": 28,
+    "changedPixels": 735,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "983cf0e5129d561b33df6d63ac32cc4aae22e34f13e9b74c0218a1d51297c1b9"
+  },
+  {
+    "id": "replace-query/query unit 0",
+    "app": "editor",
+    "filename": "00028.rgb565",
+    "commands": 286,
+    "changedPixels": 18855,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "1bf6fc643b5d0262e1bc92d51d0722974a193efc58bfbbea6d9ba2bd780dcc44"
+  },
+  {
+    "id": "replace-query/query unit 1",
+    "app": "editor",
+    "filename": "00029.rgb565",
+    "commands": 157,
+    "changedPixels": 18215,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "b2946cd38301be1575a412db0a187a53213bca80362729ae71ea90b509134fd3"
+  },
+  {
+    "id": "replace-query/query unit 2",
+    "app": "editor",
+    "filename": "00030.rgb565",
+    "commands": 157,
+    "changedPixels": 9566,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "083af224ab3eff3f95665e18642da47e59b01f828f601a21266ffd230eaaf954"
+  },
+  {
+    "id": "replace-query/query unit 3",
+    "app": "editor",
+    "filename": "00031.rgb565",
+    "commands": 157,
+    "changedPixels": 9438,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "5f7527b98ed3609f4852d9221bb8facebefaff075e457acd215857c7f3915451"
+  },
+  {
+    "id": "replace-query/query unit 4",
+    "app": "editor",
+    "filename": "00032.rgb565",
+    "commands": 157,
+    "changedPixels": 10846,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "dbf3ca98d6da49c2c5dab553987ba1fef8d317e2b2899b0b086ae7891f85507d"
+  },
+  {
+    "id": "replace-query/query unit 5",
+    "app": "editor",
+    "filename": "00033.rgb565",
+    "commands": 140,
+    "changedPixels": 5104,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ff2ba4c9b57c188dbb4c16a7612ee4574ea2533438a4527945814aab566a6ce4"
+  },
+  {
+    "id": "replace-query/query unit 6",
+    "app": "editor",
+    "filename": "00034.rgb565",
+    "commands": 140,
+    "changedPixels": 1182,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "23f2f30dab27c72f088d1782f714bd207585bc75260846c17500f334704f602f"
+  },
+  {
+    "id": "replace-query/query unit 7",
+    "app": "editor",
+    "filename": "00035.rgb565",
+    "commands": 140,
+    "changedPixels": 1278,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ceb0f00c6472cb53f12039ba097f159c0b87b45e844651747d515a287869f35c"
+  },
+  {
+    "id": "replace-query/query unit 8",
+    "app": "editor",
+    "filename": "00036.rgb565",
+    "commands": 140,
+    "changedPixels": 1262,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "0c8569cb47dfc25d7eb98a3396d989f0aa73da0fe6bacff7311cbfe683a9fb62"
+  },
+  {
+    "id": "replace-query/query unit 9",
+    "app": "editor",
+    "filename": "00037.rgb565",
+    "commands": 140,
+    "changedPixels": 1438,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "cd649f573d3d4f0171b6350102d23193237610f290631313cbc2c33944b7b817"
+  },
+  {
+    "id": "replace-query/query unit 10",
+    "app": "editor",
+    "filename": "00038.rgb565",
+    "commands": 28,
+    "changedPixels": 48012,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f14b57cc1bb4efbff66474e5291486c593fc953bb3798c76ea2e92ac825ccafe"
+  },
+  {
+    "id": "replace-query/begin replacement query",
+    "app": "editor",
+    "filename": "00039.rgb565",
+    "commands": 28,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f14b57cc1bb4efbff66474e5291486c593fc953bb3798c76ea2e92ac825ccafe"
+  },
+  {
+    "id": "replace-query/clear previous query",
+    "app": "editor",
+    "filename": "00040.rgb565",
+    "commands": 29,
+    "changedPixels": 817,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39"
+  },
+  {
+    "id": "replace-query/enter new query",
+    "app": "editor",
+    "filename": "00041.rgb565",
+    "commands": 28,
+    "changedPixels": 735,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "983cf0e5129d561b33df6d63ac32cc4aae22e34f13e9b74c0218a1d51297c1b9"
+  },
+  {
+    "id": "replace-query/type new query",
+    "app": "editor",
+    "filename": "00042.rgb565",
+    "commands": 157,
+    "changedPixels": 9566,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "664fd4652f72e734e671edef252efe4c2797973ad94c878549e53afc28b4dc3c"
+  },
+  {
+    "id": "replace-query/find replacement query",
+    "app": "editor",
+    "filename": "00043.rgb565",
+    "commands": 158,
+    "changedPixels": 746,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "c3f952dcb0548bc0e606f21a1314155b8f590f33a7c447e8fcc78fa0b7a91a66"
+  }
+]

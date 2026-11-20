@@ -1,0 +1,147 @@
+{
+  "sysmon": {
+    "base": {
+      "resident": 209392,
+      "peakAboveStart": 27504,
+      "liveAboveStart": 17872,
+      "value": {
+        "bytes": 1845,
+        "type": "col"
+      }
+    },
+    "ix": {
+      "resident": 209392,
+      "peakAboveStart": 45056,
+      "liveAboveStart": 45056,
+      "value": {
+        "bytes": 1845,
+        "type": "col"
+      }
+    },
+    "used": {
+      "resident": 209392,
+      "peakAboveStart": 47792,
+      "liveAboveStart": 15008,
+      "value": {
+        "bytes": 1845,
+        "type": "col"
+      }
+    }
+  },
+  "snake": {
+    "base": {
+      "resident": 209392,
+      "peakAboveStart": 13104,
+      "liveAboveStart": 8176,
+      "value": {
+        "bytes": 803,
+        "type": "col"
+      }
+    },
+    "ix": {
+      "resident": 209392,
+      "peakAboveStart": 45056,
+      "liveAboveStart": 45056,
+      "value": {
+        "bytes": 803,
+        "type": "col"
+      }
+    },
+    "used": {
+      "resident": 209392,
+      "peakAboveStart": 46512,
+      "liveAboveStart": 13728,
+      "value": {
+        "bytes": 803,
+        "type": "col"
+      }
+    }
+  },
+  "chess": {
+    "base": {
+      "resident": 209392,
+      "peakAboveStart": 64864,
+      "liveAboveStart": 60768,
+      "value": {
+        "bytes": 4848,
+        "type": "col"
+      }
+    },
+    "ix": {
+      "resident": 209392,
+      "peakAboveStart": 45056,
+      "liveAboveStart": 45056,
+      "value": {
+        "bytes": 4848,
+        "type": "col"
+      }
+    },
+    "used": {
+      "resident": 209392,
+      "peakAboveStart": 53456,
+      "liveAboveStart": 20672,
+      "value": {
+        "bytes": 4848,
+        "type": "col"
+      }
+    }
+  },
+  "keys": {
+    "base": {
+      "resident": 209392,
+      "peakAboveStart": 20960,
+      "liveAboveStart": 16864,
+      "value": {
+        "bytes": 1294,
+        "type": "col"
+      }
+    },
+    "ix": {
+      "resident": 209392,
+      "peakAboveStart": 45056,
+      "liveAboveStart": 45056,
+      "value": {
+        "bytes": 1294,
+        "type": "col"
+      }
+    },
+    "used": {
+      "resident": 209392,
+      "peakAboveStart": 47040,
+      "liveAboveStart": 14256,
+      "value": {
+        "bytes": 1294,
+        "type": "col"
+      }
+    }
+  },
+  "editor": {
+    "base": {
+      "resident": 209392,
+      "peakAboveStart": 43184,
+      "liveAboveStart": 39088,
+      "value": {
+        "bytes": 3284,
+        "type": "col"
+      }
+    },
+    "ix": {
+      "resident": 209392,
+      "peakAboveStart": 45056,
+      "liveAboveStart": 45056,
+      "value": {
+        "bytes": 3284,
+        "type": "col"
+      }
+    },
+    "used": {
+      "resident": 209392,
+      "peakAboveStart": 51168,
+      "liveAboveStart": 18384,
+      "value": {
+        "bytes": 3284,
+        "type": "col"
+      }
+    }
+  }
+}

@@ -93,6 +93,7 @@ static uint8_t *read_fixture(const char *name,size_t len) {
     if(p && (fread(p,1,len+1,fp)!=len || ferror(fp))) {free(p);p=NULL;}
     fclose(fp);return p;
 }
+static bool first_only;
 static void chess_trial(const char *arm, int reps) {
     size_t n=0,length=0,nsource=0;
     char error[128]="";
@@ -124,7 +125,7 @@ static void chess_trial(const char *arm, int reps) {
     uint8_t *mem=wasm_runtime_addr_app_to_native(instance,0);
     vtime_t installed=port_clock(),reset_us=0,guest_us=0,check_us=0;
     size_t checked=0;
-    for(int r=0;r<reps;r++)for(size_t i=0;i<sizeof chess_fixtures/sizeof *chess_fixtures;i++){
+    for(int r=0;r<reps;r++)for(size_t i=0;i<(first_only?1:sizeof chess_fixtures/sizeof *chess_fixtures);i++){
         const uint8_t *board=chess_fixtures[i].board;
         uint32_t in[4]={0,160,224,16616};
         vtime_t a=port_clock();
@@ -193,7 +194,8 @@ void render_lab(const char *rest) {
     char name[16]="",arm[32]="";int reps=1;
     if(sscanf(rest,"%15s %31s %d",name,arm,&reps)<2 || reps<1 || reps>64) {puts("LAB ERROR args");return;}
     if(!strcmp(name,"view"))chess_trial(arm,reps);
-    else if(!strcmp(name,"snake") || !strcmp(name,"sysmon") || !strcmp(name,"reader") || !strcmp(name,"chess"))js_trial(name,arm,reps);
+    else if(!strcmp(name,"snake") || !strcmp(name,"sysmon") || !strcmp(name,"reader") || !strcmp(name,"binary") || !strcmp(name,"chess"))js_trial(name,arm,reps);
+    else if(!strcmp(name,"install")){first_only=true;chess_trial(arm,1);first_only=false;}
     else if(!strcmp(name,"trace"))trace(arm);
     else if(!strcmp(name,"cleanup") && !strcmp(arm,"fixtures"))cleanup();
     else if(!strcmp(name,"capture") && (!strcmp(arm,"editor") || !strcmp(arm,"chess") || !strcmp(arm,"snake") || !strcmp(arm,"sysmon"))) {

@@ -1,0 +1,712 @@
+{
+  "firmwareSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "experimentSha256": "a9dee66f59bbbf31e55ac00c30f7845b397e7589828a0df0f4ee2f843e42f6b5",
+  "startWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "runs": [
+    {
+      "block": 5,
+      "name": "sysmon",
+      "arm": "M",
+      "reps": 1,
+      "data": {
+        "arm": "M",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 8002,
+        "producerUs": 39427,
+        "receiverUs": 32919,
+        "maxProducer": 3761,
+        "maxReceiver": 2665,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 5,
+      "name": "sysmon",
+      "arm": "G",
+      "reps": 1,
+      "data": {
+        "arm": "G",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 22072,
+        "producerUs": 81138,
+        "receiverUs": 21725,
+        "maxProducer": 6595,
+        "maxReceiver": 1907,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 5,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6219,
+        "receiverUs": 8535,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 5,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 26758,
+        "receiverUs": 14450,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 5,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1346,
+          5471,
+          5356,
+          21466,
+          21247,
+          21292,
+          5357
+        ]
+      }
+    },
+    {
+      "block": 5,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15897,
+          62905,
+          62789,
+          79711,
+          79481,
+          79466,
+          62824
+        ]
+      }
+    },
+    {
+      "block": 5,
+      "name": "reader",
+      "arm": "chess-index",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 141988,
+        "accessUs": 38001,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 5,
+      "name": "reader",
+      "arm": "chess-native",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15247,
+        "accessUs": 17341,
+        "sum": 75882,
+        "reps": 2
+      }
+    }
+  ],
+  "failures": [],
+  "experimentWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "serialUploadMs": {
+    "wasm": 3222.238506990834,
+    "typed": 2269.8377890046686
+  },
+  "keyAdmission": [
+    {
+      "arm": "idle",
+      "hostAckMs": 6.300298,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.890982,
+      "stage": {
+        "acquireUs": 167,
+        "installUs": 16877,
+        "resetUs": 110,
+        "guestUs": 4734,
+        "checkUs": 86,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 45.400892,
+      "stage": {
+        "acquireUs": 5151,
+        "installUs": 16627,
+        "resetUs": 110,
+        "guestUs": 4726,
+        "checkUs": 94,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 398.81223,
+      "stage": {
+        "acquireUs": 358063,
+        "installUs": 16658,
+        "resetUs": 108,
+        "guestUs": 4760,
+        "checkUs": 90,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.394228,
+      "stage": {
+        "acquireUs": 155,
+        "installUs": 16682,
+        "resetUs": 109,
+        "guestUs": 4729,
+        "checkUs": 86,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 43.561837,
+      "stage": {
+        "acquireUs": 5075,
+        "installUs": 16564,
+        "resetUs": 107,
+        "guestUs": 4717,
+        "checkUs": 90,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 400.327076,
+      "stage": {
+        "acquireUs": 360106,
+        "installUs": 16601,
+        "resetUs": 109,
+        "guestUs": 4752,
+        "checkUs": 84,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 6.508881,
+      "stage": null
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 45.25006,
+      "stage": {
+        "acquireUs": 5134,
+        "installUs": 16550,
+        "resetUs": 108,
+        "guestUs": 4706,
+        "checkUs": 97,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 396.630186,
+      "stage": {
+        "acquireUs": 357877,
+        "installUs": 16646,
+        "resetUs": 109,
+        "guestUs": 4736,
+        "checkUs": 94,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 6.314913,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.193787,
+      "stage": {
+        "acquireUs": 145,
+        "installUs": 16738,
+        "resetUs": 109,
+        "guestUs": 4725,
+        "checkUs": 95,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 400.965417,
+      "stage": {
+        "acquireUs": 360607,
+        "installUs": 16630,
+        "resetUs": 109,
+        "guestUs": 4739,
+        "checkUs": 94,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 6.348991,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.791348,
+      "stage": {
+        "acquireUs": 117,
+        "installUs": 16870,
+        "resetUs": 108,
+        "guestUs": 4751,
+        "checkUs": 95,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 43.765263,
+      "stage": {
+        "acquireUs": 5095,
+        "installUs": 16576,
+        "resetUs": 110,
+        "guestUs": 4728,
+        "checkUs": 93,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 5.630066,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.595002,
+      "stage": {
+        "acquireUs": 190,
+        "installUs": 16694,
+        "resetUs": 113,
+        "guestUs": 4720,
+        "checkUs": 88,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 44.157148,
+      "stage": {
+        "acquireUs": 5128,
+        "installUs": 16579,
+        "resetUs": 112,
+        "guestUs": 4719,
+        "checkUs": 96,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 398.553675,
+      "stage": {
+        "acquireUs": 358211,
+        "installUs": 16609,
+        "resetUs": 110,
+        "guestUs": 4744,
+        "checkUs": 90,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    }
+  ],
+  "restoredWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "restored": true
+}

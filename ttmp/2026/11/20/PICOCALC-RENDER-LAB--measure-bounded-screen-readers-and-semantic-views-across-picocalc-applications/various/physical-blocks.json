@@ -1,0 +1,2459 @@
+{
+  "firmwareSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "experimentSha256": "5172a38b98f5c3eed57bc4b6a7a1c33950ea955749e9cb099a0971dd6f67368a",
+  "startWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "runs": [
+    {
+      "block": 0,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 26693,
+        "receiverUs": 14771,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 0,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6243,
+        "receiverUs": 8666,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 0,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5975,
+        "receiverUs": 12034,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 0,
+      "name": "sysmon",
+      "arm": "G",
+      "reps": 1,
+      "data": {
+        "arm": "G",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 22072,
+        "producerUs": 78969,
+        "receiverUs": 20145,
+        "maxProducer": 6370,
+        "maxReceiver": 1757,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 0,
+      "name": "sysmon",
+      "arm": "M",
+      "reps": 1,
+      "data": {
+        "arm": "M",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 8002,
+        "producerUs": 39118,
+        "receiverUs": 34227,
+        "maxProducer": 3693,
+        "maxReceiver": 2802,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 0,
+      "name": "sysmon",
+      "arm": "A",
+      "reps": 1,
+      "data": {
+        "arm": "A",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 18980,
+        "producerUs": 221628,
+        "receiverUs": 95573,
+        "maxProducer": 16139,
+        "maxReceiver": 9184,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 0,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 145,
+        "installUs": 16671,
+        "resetUs": 4270,
+        "guestUs": 164431,
+        "checkUs": 2627,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 0,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5048,
+        "installUs": 16575,
+        "resetUs": 4206,
+        "guestUs": 163240,
+        "checkUs": 2649,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 0,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 364433,
+        "installUs": 16620,
+        "resetUs": 4376,
+        "guestUs": 164633,
+        "checkUs": 2628,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 0,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54518,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 0,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2165,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 0,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15927,
+          63133,
+          63019,
+          79907,
+          79711,
+          79805,
+          63062
+        ]
+      }
+    },
+    {
+      "block": 0,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1335,
+          5488,
+          5361,
+          21488,
+          21329,
+          21360,
+          5346
+        ]
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "sysmon-native",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3937,
+        "accessUs": 6671,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "sysmon-index",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 49591,
+        "accessUs": 11903,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "sysmon-both",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 51239,
+        "accessUs": 21480,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "sysmon-key",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3836,
+        "accessUs": 219,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "sysmon-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 46943,
+        "accessUs": 431,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "snake-native",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3155,
+        "accessUs": 3808,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "snake-index",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24509,
+        "accessUs": 6901,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "snake-both",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 26017,
+        "accessUs": 14755,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "snake-key",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3111,
+        "accessUs": 171,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "snake-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24454,
+        "accessUs": 411,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "chess-native",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15343,
+        "accessUs": 17265,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "chess-index",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 138722,
+        "accessUs": 37598,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "chess-both",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 140628,
+        "accessUs": 69878,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "chess-key",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15448,
+        "accessUs": 284,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 0,
+      "name": "reader",
+      "arm": "chess-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 138011,
+        "accessUs": 395,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 26728,
+        "receiverUs": 14789,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 1,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5699,
+        "receiverUs": 12026,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 1,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6271,
+        "receiverUs": 8677,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 1,
+      "name": "sysmon",
+      "arm": "G",
+      "reps": 1,
+      "data": {
+        "arm": "G",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 22072,
+        "producerUs": 81457,
+        "receiverUs": 21559,
+        "maxProducer": 6483,
+        "maxReceiver": 1831,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 1,
+      "name": "sysmon",
+      "arm": "A",
+      "reps": 1,
+      "data": {
+        "arm": "A",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 18980,
+        "producerUs": 223783,
+        "receiverUs": 96761,
+        "maxProducer": 16214,
+        "maxReceiver": 9268,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 1,
+      "name": "sysmon",
+      "arm": "M",
+      "reps": 1,
+      "data": {
+        "arm": "M",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 8002,
+        "producerUs": 39144,
+        "receiverUs": 31962,
+        "maxProducer": 3763,
+        "maxReceiver": 2513,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 1,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 142,
+        "installUs": 16870,
+        "resetUs": 4284,
+        "guestUs": 163723,
+        "checkUs": 2630,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 1,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 361020,
+        "installUs": 16679,
+        "resetUs": 4235,
+        "guestUs": 164459,
+        "checkUs": 2648,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 1,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5026,
+        "installUs": 16583,
+        "resetUs": 4243,
+        "guestUs": 164296,
+        "checkUs": 2628,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 1,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54790,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 1,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2205,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 1,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15925,
+          63007,
+          62901,
+          79817,
+          79652,
+          79699,
+          62883
+        ]
+      }
+    },
+    {
+      "block": 1,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1351,
+          5483,
+          5382,
+          21501,
+          21309,
+          21361,
+          5344
+        ]
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "sysmon-index",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 49789,
+        "accessUs": 11909,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "sysmon-both",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 51093,
+        "accessUs": 21263,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "sysmon-key",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3890,
+        "accessUs": 219,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "sysmon-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 46863,
+        "accessUs": 416,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "sysmon-native",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3902,
+        "accessUs": 6595,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "snake-index",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24379,
+        "accessUs": 6946,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "snake-both",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 26085,
+        "accessUs": 14835,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "snake-key",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3133,
+        "accessUs": 148,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "snake-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24443,
+        "accessUs": 403,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "snake-native",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3096,
+        "accessUs": 3786,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "chess-index",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 138531,
+        "accessUs": 37587,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "chess-both",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 140650,
+        "accessUs": 69841,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "chess-key",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15267,
+        "accessUs": 281,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "chess-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 138415,
+        "accessUs": 405,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 1,
+      "name": "reader",
+      "arm": "chess-native",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15460,
+        "accessUs": 17266,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5642,
+        "receiverUs": 12063,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 2,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 26901,
+        "receiverUs": 14724,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 2,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6254,
+        "receiverUs": 8634,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 2,
+      "name": "sysmon",
+      "arm": "A",
+      "reps": 1,
+      "data": {
+        "arm": "A",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 18980,
+        "producerUs": 221626,
+        "receiverUs": 96103,
+        "maxProducer": 16093,
+        "maxReceiver": 9232,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 2,
+      "name": "sysmon",
+      "arm": "G",
+      "reps": 1,
+      "data": {
+        "arm": "G",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 22072,
+        "producerUs": 80663,
+        "receiverUs": 21958,
+        "maxProducer": 6460,
+        "maxReceiver": 1864,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 2,
+      "name": "sysmon",
+      "arm": "M",
+      "reps": 1,
+      "data": {
+        "arm": "M",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 8002,
+        "producerUs": 39395,
+        "receiverUs": 32199,
+        "maxProducer": 3793,
+        "maxReceiver": 2661,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 2,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 359677,
+        "installUs": 16664,
+        "resetUs": 4287,
+        "guestUs": 163592,
+        "checkUs": 2609,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 2,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 160,
+        "installUs": 16768,
+        "resetUs": 4240,
+        "guestUs": 163771,
+        "checkUs": 2646,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 2,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5105,
+        "installUs": 16602,
+        "resetUs": 4284,
+        "guestUs": 164048,
+        "checkUs": 2628,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 2,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54756,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 2,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2179,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 2,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15923,
+          63006,
+          62810,
+          79769,
+          79540,
+          79573,
+          62803
+        ]
+      }
+    },
+    {
+      "block": 2,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1340,
+          5468,
+          5356,
+          21514,
+          21291,
+          21340,
+          5354
+        ]
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "sysmon-both",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 51242,
+        "accessUs": 21515,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "sysmon-key",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3928,
+        "accessUs": 229,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "sysmon-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 46652,
+        "accessUs": 415,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "sysmon-native",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3918,
+        "accessUs": 6507,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "sysmon-index",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 49737,
+        "accessUs": 11962,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "snake-both",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 26061,
+        "accessUs": 14757,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "snake-key",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3155,
+        "accessUs": 186,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "snake-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24433,
+        "accessUs": 414,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "snake-native",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3164,
+        "accessUs": 3784,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "snake-index",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24349,
+        "accessUs": 6899,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "chess-both",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 140304,
+        "accessUs": 69697,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "chess-key",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15383,
+        "accessUs": 256,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "chess-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 137880,
+        "accessUs": 404,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "chess-native",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15418,
+        "accessUs": 17776,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 2,
+      "name": "reader",
+      "arm": "chess-index",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 137876,
+        "accessUs": 37468,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5699,
+        "receiverUs": 11998,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 3,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6337,
+        "receiverUs": 8662,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 3,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 27090,
+        "receiverUs": 14890,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 3,
+      "name": "sysmon",
+      "arm": "A",
+      "reps": 1,
+      "data": {
+        "arm": "A",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 18980,
+        "producerUs": 224372,
+        "receiverUs": 97282,
+        "maxProducer": 16417,
+        "maxReceiver": 9264,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 3,
+      "name": "sysmon",
+      "arm": "M",
+      "reps": 1,
+      "data": {
+        "arm": "M",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 8002,
+        "producerUs": 39453,
+        "receiverUs": 34300,
+        "maxProducer": 3695,
+        "maxReceiver": 2730,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 3,
+      "name": "sysmon",
+      "arm": "G",
+      "reps": 1,
+      "data": {
+        "arm": "G",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 22072,
+        "producerUs": 79046,
+        "receiverUs": 20627,
+        "maxProducer": 6391,
+        "maxReceiver": 1797,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 3,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 359816,
+        "installUs": 16674,
+        "resetUs": 4255,
+        "guestUs": 163878,
+        "checkUs": 2631,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 3,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5213,
+        "installUs": 16600,
+        "resetUs": 4204,
+        "guestUs": 163512,
+        "checkUs": 2637,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 3,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 185,
+        "installUs": 16893,
+        "resetUs": 4268,
+        "guestUs": 164163,
+        "checkUs": 2643,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 3,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54516,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 3,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2207,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 3,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15960,
+          63144,
+          62996,
+          79937,
+          79781,
+          79790,
+          62974
+        ]
+      }
+    },
+    {
+      "block": 3,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1349,
+          5470,
+          5370,
+          21487,
+          21297,
+          21343,
+          5337
+        ]
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "sysmon-key",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3819,
+        "accessUs": 199,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "sysmon-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 46790,
+        "accessUs": 420,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "sysmon-native",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3890,
+        "accessUs": 6621,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "sysmon-index",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 49871,
+        "accessUs": 11911,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "sysmon-both",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 51570,
+        "accessUs": 21624,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "snake-key",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3158,
+        "accessUs": 150,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "snake-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24467,
+        "accessUs": 428,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "snake-native",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3088,
+        "accessUs": 3883,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "snake-index",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24384,
+        "accessUs": 6875,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "snake-both",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 25959,
+        "accessUs": 14745,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "chess-key",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15309,
+        "accessUs": 303,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "chess-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 138002,
+        "accessUs": 401,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "chess-native",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15375,
+        "accessUs": 17309,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "chess-index",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 137942,
+        "accessUs": 37600,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 3,
+      "name": "reader",
+      "arm": "chess-both",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 140463,
+        "accessUs": 70024,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6265,
+        "receiverUs": 8588,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 4,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5800,
+        "receiverUs": 11950,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 4,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 27274,
+        "receiverUs": 14737,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 4,
+      "name": "sysmon",
+      "arm": "M",
+      "reps": 1,
+      "data": {
+        "arm": "M",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 8002,
+        "producerUs": 39935,
+        "receiverUs": 34149,
+        "maxProducer": 3671,
+        "maxReceiver": 2789,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 4,
+      "name": "sysmon",
+      "arm": "A",
+      "reps": 1,
+      "data": {
+        "arm": "A",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 18980,
+        "producerUs": 223504,
+        "receiverUs": 96011,
+        "maxProducer": 16169,
+        "maxReceiver": 9040,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 4,
+      "name": "sysmon",
+      "arm": "G",
+      "reps": 1,
+      "data": {
+        "arm": "G",
+        "reps": 1,
+        "frames": 20,
+        "packets": 17,
+        "bytes": 22072,
+        "producerUs": 80003,
+        "receiverUs": 21957,
+        "maxProducer": 6370,
+        "maxReceiver": 1870,
+        "checksum": 2164593678
+      }
+    },
+    {
+      "block": 4,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5076,
+        "installUs": 16590,
+        "resetUs": 4217,
+        "guestUs": 163791,
+        "checkUs": 2625,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 4,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 361606,
+        "installUs": 16617,
+        "resetUs": 4236,
+        "guestUs": 164333,
+        "checkUs": 2642,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 4,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 197,
+        "installUs": 16796,
+        "resetUs": 4343,
+        "guestUs": 164013,
+        "checkUs": 2631,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 4,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54708,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 4,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2185,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 4,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15915,
+          62967,
+          62904,
+          79701,
+          79494,
+          79522,
+          62841
+        ]
+      }
+    },
+    {
+      "block": 4,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1331,
+          5484,
+          5370,
+          21499,
+          21294,
+          21344,
+          5360
+        ]
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "sysmon-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 46807,
+        "accessUs": 422,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "sysmon-native",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3878,
+        "accessUs": 6593,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "sysmon-index",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 49885,
+        "accessUs": 11926,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "sysmon-both",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 340,
+        "buildUs": 51328,
+        "accessUs": 21802,
+        "sum": 4668,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "sysmon-key",
+      "reps": 2,
+      "data": {
+        "bytes": 1845,
+        "tokens": 0,
+        "buildUs": 3859,
+        "accessUs": 205,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "snake-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24456,
+        "accessUs": 417,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "snake-native",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3146,
+        "accessUs": 3907,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "snake-index",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 24363,
+        "accessUs": 6859,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "snake-both",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 180,
+        "buildUs": 26037,
+        "accessUs": 14796,
+        "sum": 10640,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "snake-key",
+      "reps": 2,
+      "data": {
+        "bytes": 803,
+        "tokens": 0,
+        "buildUs": 3136,
+        "accessUs": 161,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "chess-sparse",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 138027,
+        "accessUs": 410,
+        "sum": 8,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "chess-native",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15503,
+        "accessUs": 17726,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "chess-index",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 138229,
+        "accessUs": 37420,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "chess-both",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 1047,
+        "buildUs": 141128,
+        "accessUs": 70126,
+        "sum": 75882,
+        "reps": 2
+      }
+    },
+    {
+      "block": 4,
+      "name": "reader",
+      "arm": "chess-key",
+      "reps": 2,
+      "data": {
+        "bytes": 4848,
+        "tokens": 0,
+        "buildUs": 15365,
+        "accessUs": 242,
+        "sum": 8,
+        "reps": 2
+      }
+    }
+  ],
+  "failures": [],
+  "experimentWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "serialUploadMs": {
+    "wasm": 3224.989069000003,
+    "typed": 2221.734523001942
+  },
+  "restoredWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "restored": true
+}
