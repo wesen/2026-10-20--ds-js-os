@@ -47,7 +47,8 @@ mobile_painter_image mobile_painter_compile(const char *source, size_t length,
   size_t reactor_length = 0;
   char *reactor = p4_bundle_read("painter/slot.elf", &reactor_length, NULL, 0);
   if (!reactor) return image;
-  const p4_compile_limits limits = {.heap_bytes = 2 * 1024 * 1024, .duration_us = 1700000};
+  // Wall time includes intervals when higher-priority UI work preempts the worker.
+  const p4_compile_limits limits = {.heap_bytes = 2 * 1024 * 1024, .duration_us = 8000000};
   vtime_t started = port_clock();
   // Compile the bytes delivered by Chess. The firmware copy only authorizes them.
   image.bytes = p4_typed_compile("mobile-painter", "screen-message", source, length,

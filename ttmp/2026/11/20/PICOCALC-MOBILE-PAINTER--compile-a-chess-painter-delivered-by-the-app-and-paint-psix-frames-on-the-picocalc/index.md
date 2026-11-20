@@ -23,36 +23,14 @@ WhenToUse: ""
 
 # Compile a Chess painter delivered by the app and paint PSIX frames on the PicoCalc
 
-## Overview
+## The experiment
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+Chess sends the UTF-8 text of its painter at startup and publishes counted PSIX snapshots as positions change. The compositor's installation service compiles the delivered text to RV32. It invokes the resulting entry on a decoded position, checks the complete list of drawing commands, and presents through the ordinary framebuffer and SPI display path.
 
-## Key Links
+## Reading order
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
+1. Begin with the [director’s technical report](analysis/01-from-a-delivered-program-to-a-painted-chess-position.md) and the [implementation guide](design-doc/01-a-chess-app-that-installs-its-own-native-painter.md).
+2. Follow the [compiler](analysis/02-compiler.md), [message transport](analysis/03-transport.md), and [physical qualification](analysis/04-device.md) from source to visible output. Each chapter has an implementation guide and detailed researcher diary under design-doc and reference.
+3. Read the [compiler-service proposal](design-doc/05-an-asynchronous-compiler-service-and-the-lifetime-of-a-painter-handle.md) for the proposed job and executable handle lifecycle.
 
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+The [director diary](reference/01-director-implementation-and-qualification-diary.md) records integration decisions and failures. Reproduction scripts live in scripts/compiler, scripts/transport, scripts/device, and scripts/director. Machine-readable checks and compact images live in various. See [tasks](tasks.md) and the [changelog](changelog.md) for delivery status.

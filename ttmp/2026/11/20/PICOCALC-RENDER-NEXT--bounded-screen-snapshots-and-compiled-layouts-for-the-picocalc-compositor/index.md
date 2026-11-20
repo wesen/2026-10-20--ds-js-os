@@ -41,3 +41,7 @@ The [PSIX specialization experiment](../PICOCALC-PSIX-STAGING--specialize-psix-s
 ## Integrating the Snake result
 
 The production [Snake integration](../PICOCALC-SNAKE-INTEGRATION--ship-semantic-snake-snapshots-and-changed-cell-painting-on-the-picocalc/index.md) follows a complete game position through native publication, compositor validation, changed-cell painting and the display driver. Its independent correctness and device reports distinguish serialized size, CPU time and display transfer. The game uses semantic JSON.
+
+## Delivering a Chess painter to the running compositor
+
+The [mobile painter study](../PICOCALC-MOBILE-PAINTER--compile-a-chess-painter-delivered-by-the-app-and-paint-psix-frames-on-the-picocalc/index.md) follows the app-sent Typed source, counted PSIX snapshots, runtime RV32 compilation, validated draw commands and physical display observations. It includes the compiler-service design and the differences between host and hardware verification.

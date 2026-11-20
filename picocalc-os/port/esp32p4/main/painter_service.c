@@ -53,8 +53,10 @@ static bool start_compile(const uint8_t *data, size_t n) {
   job->length = n;
   memcpy(job->bytes, data, n);
   job->bytes[n] = 0;
+  // Run in the kernel's idle time. Competing from the other core can push a
+  // cold launcher draw past its deadline under PSRAM and instruction-cache load.
   if (xTaskCreatePinnedToCoreWithCaps(compile_worker, "painter-build", 80 * 1024, job,
-        2, NULL, 0, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT) != pdPASS) {
+        2, NULL, 1, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT) != pdPASS) {
     free(job);
     return false;
   }
