@@ -1,0 +1,224 @@
+wasm matched the historical Editor normalizer after all four settlements
+wasm handled 29 events and normalized 10000 units
+rv32 matched the historical Editor normalizer after all four settlements
+rv32 handled 29 events and normalized 10000 units
+rv32 buffered matched the historical Editor normalizer after all four settlements
+rv32 buffered handled 29 events and normalized 10000 units
+{
+  "declaredFields": 2,
+  "totalFields": 7,
+  "tasks": {
+    "openFile": [
+      {
+        "function": "openFile",
+        "fields": [
+          "__typed_async_1_openFile_openFile_state",
+          "__typed_async_1_openFile_openFile_token",
+          "__typed_async_1_openFile_openFile_v3_length",
+          "__typed_async_1_openFile_openFile_v4_read",
+          "__typed_async_1_openFile_openFile_v5_written"
+        ],
+        "waits": [
+          {
+            "id": 1,
+            "line": 3,
+            "callee": "typedSdkFileRead",
+            "saved": []
+          },
+          {
+            "id": 2,
+            "line": 12,
+            "callee": "typedSdkYield",
+            "saved": [
+              "length",
+              "read",
+              "written"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+12:9: text is live across the wait at line 12; obtain it again after the wait
+both targets reject invalid awaits, illegal references, cycles, and frame overflow
+both targets preserve the original diagnostic location after replacing pending()
+{
+  "declaredFields": 57,
+  "totalFields": 70,
+  "tasks": {
+    "editorFindTask": [
+      {
+        "function": "editorFindTask",
+        "fields": [
+          "__typed_async_1_editorFindTask_editorFindTask_state",
+          "__typed_async_1_editorFindTask_editorFindTask_token",
+          "__typed_async_1_editorFindTask_editorFindTask_v4_at",
+          "__typed_async_1_editorFindTask_editorFindTask_v5_end",
+          "__typed_async_1_editorFindTask_editorFindTask_v6_anchor",
+          "__typed_async_1_editorFindTask_editorFindTask_v7_foldedAt",
+          "__typed_async_1_editorFindTask_editorFindTask_v8_phase"
+        ],
+        "waits": [
+          {
+            "id": 1,
+            "line": 621,
+            "callee": "typedSdkYield",
+            "saved": [
+              "at",
+              "end",
+              "anchor",
+              "foldedAt",
+              "phase"
+            ]
+          }
+        ]
+      }
+    ],
+    "editorOpenTask": [
+      {
+        "function": "editorOpenTask",
+        "fields": [
+          "__typed_async_2_editorOpenTask_editorOpenTask_state",
+          "__typed_async_2_editorOpenTask_editorOpenTask_token",
+          "__typed_async_2_editorOpenTask_editorOpenTask_v4_handle",
+          "__typed_async_2_editorOpenTask_editorOpenTask_v9_length",
+          "__typed_async_2_editorOpenTask_editorOpenTask_v10_read",
+          "__typed_async_2_editorOpenTask_editorOpenTask_v11_written"
+        ],
+        "waits": [
+          {
+            "id": 1,
+            "line": 1650,
+            "callee": "typedSdkFileRead",
+            "saved": [
+              "handle"
+            ]
+          },
+          {
+            "id": 2,
+            "line": 1674,
+            "callee": "typedSdkYield",
+            "saved": [
+              "handle",
+              "length",
+              "read",
+              "written"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+Files is byte-identical to the supplied baseline on Wasm and RV32
+Agenda is byte-identical to the supplied baseline on Wasm and RV32
+Editor is byte-identical to the supplied baseline on Wasm and RV32
+
+Fresh frozen host replays
+PASS 0.3s node 01-check-files-wasm.mjs
+PASS 0.8s node 02-check-files-rv32.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu
+PASS 2.1s node 07-check-editor-layout.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu
+PASS 0.3s node 01-check-calendar.mjs
+PASS 0.1s node 02-check-leads.mjs
+PASS 0.1s node 03-check-task-records.mjs
+PASS 1.8s node 04-check-wasm-world.mjs
+PASS 0.5s node 07-check-rv32-parser.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu
+PASS 0.1s node 14-check-local-inference.mjs
+PASS 0.3s node 16-check-entry-tokens.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu
+PASS 0.1s node 01-check-editor-empty-view.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu
+PASS 1.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu
+PASS 1.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --large
+PASS 1.4s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --edit
+PASS 1.4s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --positions
+PASS 1.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --find
+PASS 1.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --markdown
+PASS 3.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --preview-large
+PASS 2.3s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --preview-line
+PASS 1.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --preview-inline
+PASS 1.9s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --preview-dense-inline
+PASS 2.1s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --dense-search
+PASS 1.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --tail-search
+PASS 2.1s node 02-check-editor-world.mjs riscv32-esp-elf-gcc ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/build/rv32/rv32emu --late-navigation
+
+Direct Editor event fixtures
+{"fixture":"guard-open","targets":["wasm","rv32"],"events":27,"timers":17,"screens":5,"examinedSavedBytes":64685}
+{"fixture":"read-failures","targets":["wasm","rv32"],"events":9,"timers":0,"screens":2,"examinedSavedBytes":0}
+{"fixture":"replace-search","targets":["wasm","rv32"],"events":37,"timers":18,"screens":15,"examinedSavedBytes":0}
+{"fixture":"replace-control","targets":["wasm","rv32"],"events":24,"timers":17,"screens":3,"examinedSavedBytes":0}
+{"fixture":"replace-query","targets":["wasm","rv32"],"events":39,"timers":18,"screens":19,"examinedSavedBytes":0}
+
+Matched linked Editor bytes from QuickJS
+{
+  "qjsSHA256": "3609d3e53410f5dcc90780861755a50fdda8aedda76d0d78e52ac10d36623a0b",
+  "sourceSHA256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+  "compilers": {
+    "candidate-final": {
+      "indexMode": "REFERENCE",
+      "sources": {
+        "typed-wasm.js": "b8b607f0539e42f76909edc9621cdb21c115c24cb8a0fc672c98922d00dbcea4",
+        "typed-async.js": "2e3dd185ef667065702d9882e528fce0e84240d73387972a0384f1c6a7650bfb",
+        "typed-rv32.js": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5",
+        "typed-world.js": "cea8f10247351416a3616fa83e16ff664730c2c3fc2c3de73207eb5ab07f3a43"
+      },
+      "output": {
+        "rv32": {
+          "bytes": 240452,
+          "SHA256": "7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd",
+          "stateFields": 70
+        },
+        "wasm": {
+          "bytes": 88969,
+          "SHA256": "5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65",
+          "stateFields": 70
+        }
+      }
+    },
+    "host-rehearsal-span": {
+      "indexMode": "INDEX",
+      "sources": {
+        "typed-wasm.js": "f5d2ea51472a4616ebea62dee54ae8f60e1dcae8e9908c08c043f016ebb024d5",
+        "typed-async.js": "7a0524cf89f6f3766cb8b265146d41975eae91a11f34fecacf19e09c922b9f17",
+        "typed-rv32.js": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5",
+        "typed-world.js": "cea8f10247351416a3616fa83e16ff664730c2c3fc2c3de73207eb5ab07f3a43"
+      },
+      "output": {
+        "rv32": {
+          "bytes": 240452,
+          "SHA256": "7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd",
+          "stateFields": 70
+        },
+        "wasm": {
+          "bytes": 88969,
+          "SHA256": "5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65",
+          "stateFields": 70
+        }
+      }
+    },
+    "host-rehearsal-portable": {
+      "indexMode": "INDEX",
+      "sources": {
+        "typed-wasm.js": "d6dc04692d29596a43b6c15414745023aaa8fa4280353a434b8820e65dab9a0b",
+        "typed-async.js": "7a0524cf89f6f3766cb8b265146d41975eae91a11f34fecacf19e09c922b9f17",
+        "typed-rv32.js": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5",
+        "typed-world.js": "cea8f10247351416a3616fa83e16ff664730c2c3fc2c3de73207eb5ab07f3a43"
+      },
+      "output": {
+        "rv32": {
+          "bytes": 240452,
+          "SHA256": "7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd",
+          "stateFields": 70
+        },
+        "wasm": {
+          "bytes": 88969,
+          "SHA256": "5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65",
+          "stateFields": 70
+        }
+      }
+    }
+  },
+  "reactorSHA256": {
+    "rv32": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+    "wasm": "b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f"
+  }
+}

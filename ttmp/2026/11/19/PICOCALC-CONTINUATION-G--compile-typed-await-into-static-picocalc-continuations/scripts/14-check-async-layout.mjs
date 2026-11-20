@@ -47,6 +47,25 @@ async function openFile(handle: i32, state: WorldState): i32 {
     return 1;
 }
 `;
+const professorOpen = `
+async function openFile(handle: i32, state: WorldState): i32 {
+    const ok = await typedSdkFileRead(handle);
+    if (!ok) return 0;
+    const length = state.sourceLength;
+    let read = 0;
+    let written = 0;
+    while (read < length) {
+        const text = typedSdkBuffer(0);
+        const stop = Math.min(length, read + 4096);
+        while (read < stop) { text.setCharCodeAt(written, text.charCodeAt(read)); read = read + 1; written = written + 1; }
+        await typedSdkYield();
+    }
+    state.textLength = written;
+    return 1;
+}
+`.trimStart();
+const professorRecord = "record WorldState { sourceLength: i32; textLength: i32; }\n";
+const professorStart = "\nfunction begin(state: WorldState): i32 { start openFile(17, state); return 0; }";
 const source = preamble + `
 enum Phase { Ready = -8, Complete = 11 }
 type Unit = distinct i32;
@@ -195,6 +214,18 @@ const addresses = {event: 32, state: 128, output: 640, hints: 768, text: 1024};
 const mixed = ("a\r\nb\rc\n".repeat(1429)).slice(0, 10000);
 const recordLength = 4 * typedAsync.analyze(source, imports).totalFields;
 
+function writeFixtureText(view) {
+    view.setInt32(addresses.text, mixed.length, true);
+    for (let i = 0; i < mixed.length; i++) {
+        view.setUint16(addresses.text + 4 + i * 2, mixed.charCodeAt(i), true);
+    }
+}
+
+function readFixtureText(view, length) {
+    return Array.from({length}, (_, i) =>
+        String.fromCharCode(view.getUint16(addresses.text + 4 + i * 2, true))).join("");
+}
+
 function makeHarness(engine) {
     const mock = miniatureReactor();
     let image = new Uint8Array(24576);
@@ -229,20 +260,59 @@ function makeHarness(engine) {
         return call([at, addresses.state, output, addresses.hints]);
     }
     word(addresses.state, mixed.length);
-    word(addresses.text, mixed.length);
     word(addresses.output, 16);
     word(addresses.hints, 16);
-    for (let i = 0; i < mixed.length; i++) view().setUint16(addresses.text + 4 + i * 2, mixed.charCodeAt(i), true);
+    writeFixtureText(view());
     return {event, mock, layout, lowered,
         record: () => image.slice(addresses.state, addresses.state + recordLength),
         scalar: offset => view().getInt32(addresses.state + offset, true),
         unit: at => view().getUint16(at, true),
-        text(length) {
-            return Array.from({length}, (_, i) => String.fromCharCode(view().getUint16(addresses.text + 4 + i * 2, true))).join("");
-        },
+        text: length => readFixtureText(view(), length),
     };
 }
 
+// Drive the professor's four successful settlements through the original
+// Editor's slice function. The miniature reactor accepts the initial read
+// and each timer, so the callback here follows the same three slices.
+function replayOriginalNormalizer(directory, engine) {
+    const editor = join(directory, "picocalc-os/worlds/editor");
+    const original = readFileSync(join(editor, "editor.typed"), "utf8");
+    const first = original.indexOf("function editorNormalize(");
+    const end = original.indexOf("\nfunction editorReplyError(", first);
+    assert(first >= 0 && end > first, "the baseline contains its original Open normalizer");
+    const reference = readFileSync(join(editor, "state.typed"), "utf8") + "\n" + original.slice(first, end);
+    const prog = engine === "wasm" ? typedWasm.compile(reference) :
+        typedRv32.compile(reference, [], undefined, {streamFunctions: engine !== "rv32 buffered"});
+    const fields = prog.records.WorldState;
+    let image = new Uint8Array(24576);
+    let normalize;
+    if (engine === "wasm") {
+        const {exports} = new WebAssembly.Instance(new WebAssembly.Module(prog.bytes));
+        image = new Uint8Array(exports.memory.buffer, 0, image.length);
+        normalize = () => exports.editorNormalize(addresses.text, addresses.state);
+    } else {
+        normalize = () => {
+            const run = runRv32(prog, "editorNormalize", [addresses.text, addresses.state], [], {}, image);
+            assert.equal(run.trap, false);
+            image = run.bytes;
+            return run.result;
+        };
+    }
+    const view = () => new DataView(image.buffer, image.byteOffset, image.byteLength);
+    view().setInt32(addresses.state + fields.sourceLength.offset, mixed.length, true);
+    writeFixtureText(view());
+    const read = () => view().getInt32(addresses.state + fields.unitsRead.offset, true);
+    let length = 0;
+    const slices = [];
+    for (const token of [1, 2, 3, 4]) {
+        assert.equal(read() < mixed.length, token < 4, "the original ends after three slices");
+        if (read() < mixed.length) length = normalize();
+        slices.push(readFixtureText(view(), mixed.length));
+    }
+    return {slices, length};
+}
+
+const baseline = process.argv[2];
 const expected = mixed.replace(/\r\n|\r/g, "\n");
 for (const engine of ["wasm", "rv32", "rv32 buffered"]) {
     const h = makeHarness(engine);
@@ -256,11 +326,20 @@ for (const engine of ["wasm", "rv32", "rv32 buffered"]) {
     check(102, 0);
     assert.equal(h.scalar(16), 1, "a busy start skips effectful arguments");
     const waiting = h.record();
-    check(105, 4, 99);
-    check(105, 5, 1);
-    check(105, 4, 0);
-    assert.deepEqual(h.record(), waiting);
-    for (const token of [1, 2, 3, 4]) check(104, 4, token);
+    for (const [kind, token] of [[4, 99], [5, 1], [4, 0]]) {
+        check(105, kind, token);
+        assert.deepEqual(h.record(), waiting);
+    }
+    const original = baseline && replayOriginalNormalizer(baseline, engine);
+    for (const token of [1, 2, 3, 4]) {
+        check(104, 4, token);
+        if (original) assert.equal(h.text(mixed.length), original.slices[token - 1],
+            engine + " entire buffer equals historical normalizer after token " + token);
+    }
+    if (original) {
+        assert.equal(h.scalar(4), original.length);
+        console.log(engine + " matched the historical Editor normalizer after all four settlements");
+    }
     assert.equal(h.scalar(4), expected.length);
     assert.equal(h.text(expected.length), expected);
     assert.deepEqual(h.mock.trace, [
@@ -313,8 +392,20 @@ for (const engine of ["wasm", "rv32", "rv32 buffered"]) {
     assert.notEqual(nestedHelper.fields[0], otherHelper.fields[0]);
     console.log(engine + " handled " + events.length + " events and normalized " + mixed.length + " units");
 }
-console.log(JSON.stringify(typedAsync.analyze(preamble + asyncOpen + handlerMeta + "\n" + handlerSignature +
-    " { start openFile(17, state); return 0; }", imports), null, 2));
+const professorLayout = typedAsync.analyze(professorRecord + professorOpen + professorStart, imports);
+const [professorFrame] = professorLayout.tasks.openFile;
+assert.deepEqual(professorFrame.waits.map(wait => wait.saved), [[], ["length", "read", "written"]]);
+assert.equal(professorFrame.fields.length, 5);
+console.log(JSON.stringify(professorLayout, null, 2));
+const illegalBorrow = professorOpen.replace(
+    '    while (read < length) {\n        const text = typedSdkBuffer(0);',
+    '    const text = typedSdkBuffer(0);\n    while (read < length) {');
+assert.throws(() => typedAsync.analyze(professorRecord + illegalBorrow + professorStart, imports), error => {
+    // The sole declaration prepended to the professor's body shifts line 11 to 12.
+    assert.equal(error.message, "12:9: text is live across the wait at line 12; obtain it again after the wait");
+    console.log(error.message);
+    return true;
+});
 
 const overlap = typedAsync.analyze(preamble + `
 async function overlap(state: WorldState, limit: i32, pre: i32): i32 {
@@ -377,7 +468,27 @@ const standaloneWorld = new WebAssembly.Instance(new WebAssembly.Module(standalo
 assert.equal(standaloneWorld.exports.begin(128), 1);
 assert.equal(new DataView(standaloneWorld.exports.memory.buffer).getInt32(132, true), 5);
 
-const baseline = process.argv[2];
+const invalidAfterRewrite = `record WorldState { value: i32; }
+async function work(state: WorldState): i32 { return 0; }
+function begin(state: WorldState): i32 { start work(state); return 0; }
+function invalid(state: WorldState): i32 {
+    if (pending()) return state.missing;
+    return 0;
+}
+`;
+for (const compile of [compileTyped, typedRv32.compile])
+    assert.throws(() => compile(invalidAfterRewrite), {message: "5:40: unknown field WorldState.missing"});
+console.log("both targets preserve the original diagnostic location after replacing pending()");
+
+const editorDirectory = new URL("../../../../../../picocalc-os/worlds/editor/", import.meta.url);
+const editorSource = readFileSync(new URL("source.list", editorDirectory), "utf8").trim().split("\n")
+    .filter(line => line && !line.startsWith("#"))
+    .map(file => readFileSync(new URL(file, editorDirectory), "utf8") + "\n").join("");
+const editorLayout = typedRv32.compile(editorSource, imports, 96 * 1024).asyncLayout;
+assert(editorLayout.totalFields <= 71, 'Editor fits the professor’s 71-field limit');
+assert.deepEqual(compileTypedWorld(editorSource, wasmReactor()).asyncLayout, editorLayout);
+console.log(JSON.stringify(editorLayout, null, 2));
+
 if (baseline) checkBaseline(baseline);
 
 function checkBaseline(directory) {

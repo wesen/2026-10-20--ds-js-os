@@ -441,3 +441,61 @@ Read the [source article](../analysis/01-what-editor-keeps-across-a-file-read-an
 ### Technical details
 
 The published note is in `Projects/2026/11/20`. Its sole new figure is `_assets/editor-physical-tail.png`.
+
+## Step 9 — Audit the original G1–G4 acceptance criteria
+
+I mapped the professor's four sets of acceptance criteria to the compiler and Editor tests and the recorded board results. The original host harness already exercised the cross-target dispatch and failure cases. I added the literal worked layout example, the exact diagnostic, and a comparison with the original Editor's normalization routine. The prescribed host commands are now available from a clean checkout.
+
+### Prompt context
+
+See Step 1 for the original request. The supervising agent requested an independent audit of G1–G4 and authorized remaining host checks. This audit used the existing physical receipts and serial logs.
+
+### What I did
+
+- Extended the [canonical continuation fixtures](../../PICOCALC-CONTINUATION-G--compile-typed-await-into-static-picocalc-continuations/scripts/14-check-async-layout.mjs). The exact G1 example emits a five-field frame with no saved scalar at the initial read and `length`, `read` and `written` at the timer. The illegal-buffer variant reports `12:9: text is live across the wait at line 12; obtain it again after the wait`. Its single prepended record moves the example's relative wait line 11 to file line 12.
+- With an original checkout pinned to `289281c`, loaded `editorNormalize` and the original state layout from the Editor source files. Invoked the historical slice routine for the three copies and verified equality of all 10,000 UTF-16 units after each expected token `1, 2, 3, 4`, including the final normalized length. This supplements the fixture's separate expected-text oracle.
+- Verified the original-source location of a diagnostic at `5:40` after rewriting `pending()`. Ran the original 29 event sequence, whole-record comparisons, busy and failed starts, frame overflow, rejected await and lifetime cases, and synchronous Files, Agenda and Editor byte identity on the baseline source. Both linked target paths report the same Editor layout.
+- Confirmed that the frozen `01-run-host-replays.sh` hashes to `21551108d25fff0b4a6390dbb25b27773f675a1cfece45458d7f6076b4080d29`, the recorded digest at the historical checkpoints. Ran it again and observed 24 passes, including all thirteen Editor cases. Placed the same layout command under the professor's requested path with one shared fixture implementation.
+
+### Why
+
+The old G2 fixture compared the completed buffer with a JavaScript normalization expression. That verifies the expected content. The professor explicitly required an additional comparison against the hand-written routine under the fixture's exact settlement sequence. Checking the whole buffer immediately after each token also catches lost progress at a slice boundary.
+
+### What worked
+
+| Scope | Acceptance evidence |
+| --- | --- |
+| G1 | The exact example, diagnostic and two waits now print. The existing tests cover dead-before-wait values, values used only in the loop condition, waits inside branches and loops, overlapping saved sets, independent shared-helper frames and malformed programs. Original synchronous applications emit identical bytes on both targets. |
+| G2 | The mini reactor issues tokens `1, 2, 3, 4`; the historical and generated buffers agree after each one. The existing tests run nested awaits, out-of-order roots, busy starts, failed requests, cancellation, unrelated tokens and the 80-field rejection on both targets. |
+| G3 | The archived Open checkpoint `eb4ef81` passed 24 checks, including the thirteen original Editor workflows, and reduced the entry file from 204 to 177 lines. It uses 71 fields and adds 264 native instructions from the pre-Open checkpoint. The direct fixture protects a 64 KiB document and observes the full normalized save at the actual SDK call. |
+| G4 | The combined app uses 70 fields and passes the historical replays. Replacement Open and replacement query tests ignore stale search timers. The fixed-clock `2e4fee1` device images passed all six workflows with byte-identical matching Find and preview captures within each engine. Native CPU remained within tolerance. Both physical targets reproduced the 64 KiB tail match at line 852, column 1. The early, miss and late logs for all four version/engine combinations contain no `crashed`, `timed out`, budget rejection or observer error lines in the search interval. |
+
+### What didn't work
+
+- The unoptimized `2e4fee1` native cold build took 3,816,925 µs against the before-G median of 2,645,557 µs and a 2,910,113 µs ceiling. The later composed source-span candidate's screening median of 2.725 s clears that ceiling. The screening boots alone do not qualify the exact final production images for the full paired workflow. This audit leaves that device campaign to the supervising agent.
+- The planned G3 50 ms and G4 100 ms interleavings are covered by forced delivery phase in the direct reactor fixtures. The supplied test has no literal wall-clock delay. At `picocalc-os/nucleus/kernel.c:663`, a pending Editor turn only accepts settlements; ordinary keys and Open requests queue. The direct fixtures deliver the conflicting events at the exact states that the acceptance examples intend to probe.
+- The supplied roadmap documents were initially untracked. Commit `5d7e0e0` preserved the plan, task list, all scope documents and baseline evidence. The Issue articles referenced by G were also initially outside Git. Commit `65129c7` preserved the companion course, including Articles 08 and 10.
+
+### What I learned
+
+There are two useful equivalence checks for a rewrite. Final-content comparison verifies normalization. A snapshot after every settlement verifies that the rewrite stores progress at the correct time. Both checks can run against the old routine even though the production Open workflow has additional timers to prepare its initial frame.
+
+### What was tricky to build
+
+The professor's illustrative normalizer copies its first slice when the read settles. The historical Editor's application dispatcher uses an initial timer before the first slice of a large read. The G2 comparison invokes the original slice function on the illustrative sequence. G3's production fixture checks the separate application timer ordering and the reply after the first frame.
+
+### What warrants a second pair of eyes
+
+The final integration validator at `PICOCALC-EG-QUAL/scripts/28-check-qualified-integration.py:22–42` gates source hashes, 24 workflows, clock limits, matching frames and restoration. It does not independently assert the compile-time state count or bind the full-size EOF receipt to new module bytes. For a promoted compiler, run the original 14-check command on the final production sources and compare the complete linked Wasm and RV32 outputs with the physically checked `2e4fee1` modules. If those bytes differ, rerun the EOF case on the changed image.
+
+### What should be done in the future
+
+Finish recording the exact optimized physical workflow and preserve its distinct receipt.
+
+### Code review instructions
+
+Run `node "$NEXT/scripts/14-check-async-layout.mjs" /path/to/289281c-checkout` from the project root and inspect the [audit output](../various/08-professor-g-host-audit.txt). The path argument enables the historical-normalizer comparison and baseline byte-identity checks. Running without it still exercises the shared compiler tests and prints the G1 and Editor layouts.
+
+### Technical details
+
+The expanded fixture receipts agree under the shipped compiler and the composed compiler's JavaScript fallback. I then used the C-backed QuickJS compiler used by the span study to compare the actual bundled Editor source and linked module bytes. The reference ran the physically qualified `2e4fee1` compiler without the index. The source-span and portable-parser rehearsal directories ran with the installed lexical index. The Wasm module, RV32 ELF and each layout are byte-identical on the common inputs. The audit receipt records the compiler source, reactor and output hashes. This establishes a host artifact identity bridge to the physical EOF test for those compiler inputs. It does not replace the supervisor's measurement of cold compile and workflow timings on new images.
