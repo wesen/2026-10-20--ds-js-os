@@ -1,0 +1,938 @@
+{
+  "frozenSha256": "d6c2dc3a6858dbf1571409a534f63c27d0d5ab116dd466fafbd7701fca7a81a4",
+  "candidateSha256": "27620f6de0cab545c37ca565fd0cfc2ad1808b1b1575c76c8aef311abf54c458",
+  "fixtureSha256": "671c9195036f361080b2831952b7c60b1b74b0925dfd2efe820f111c5e9f5ec2",
+  "images": {
+    "stock": {
+      "bytes": 10884,
+      "sha256": "2f97a12d70045ab1bda34e6ac7b55765c5c12f0c078cb8a18ca5a1961f9a9953"
+    },
+    "guarded": {
+      "bytes": 11672,
+      "sha256": "5e0d399ea4af2edcc77c90d3f24eea7585035ff202da44c273bb33076fd36a07"
+    },
+    "pie": {
+      "bytes": 11640,
+      "sha256": "54f516f5639e0688185b792ec3a0b475dd7ee60da8702f7e4d2992c62e8472c9"
+    }
+  },
+  "staticPie": {
+    "project": 20
+  },
+  "results": [
+    {
+      "id": "game-0",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-1",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-2",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "01681e17d18a6cbd853b699e32ca92c2fd62cd624c4545486416320db0259437",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-3",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "01681e17d18a6cbd853b699e32ca92c2fd62cd624c4545486416320db0259437",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-4",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-5",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "c6070d8c6a525dc71b382bb0893731fb26657475cba70b576505af0719e3569e",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129820,
+        "stock": 152195,
+        "guarded": 145027,
+        "pie": 142120
+      }
+    },
+    {
+      "id": "game-6",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-7",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "c6070d8c6a525dc71b382bb0893731fb26657475cba70b576505af0719e3569e",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129820,
+        "stock": 152195,
+        "guarded": 145027,
+        "pie": 142120
+      }
+    },
+    {
+      "id": "game-8",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "f65118522e7890de1e1045709e024b7dbb25c26f6460b1fa2ffd3cabf05ae8e3",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129820,
+        "stock": 152195,
+        "guarded": 145027,
+        "pie": 142120
+      }
+    },
+    {
+      "id": "game-9",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "612d87bb96f996b83b5d8ff3ea86979b82fa0cbf214bd3cab17dc9d83200eb77",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129820,
+        "stock": 152195,
+        "guarded": 145027,
+        "pie": 142120
+      }
+    },
+    {
+      "id": "game-10",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "0af7fca2967ded77473c9d5fe9b6861f7b3201b5c8605f344f603ada1491413a",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129815,
+        "stock": 152190,
+        "guarded": 145022,
+        "pie": 142115
+      }
+    },
+    {
+      "id": "game-11",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "63a2fbd803aa6864d5f94317be9721bbb4b46dad711f202ba84762b7c12d4abd",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129815,
+        "stock": 152190,
+        "guarded": 145022,
+        "pie": 142115
+      }
+    },
+    {
+      "id": "game-12",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "ee07dfe604545fe700206d030b426d74c31285df5142b949064b883330cef046",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129815,
+        "stock": 152190,
+        "guarded": 145022,
+        "pie": 142115
+      }
+    },
+    {
+      "id": "game-13",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-14",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "c6070d8c6a525dc71b382bb0893731fb26657475cba70b576505af0719e3569e",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129820,
+        "stock": 152195,
+        "guarded": 145027,
+        "pie": 142120
+      }
+    },
+    {
+      "id": "game-15",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "f65118522e7890de1e1045709e024b7dbb25c26f6460b1fa2ffd3cabf05ae8e3",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129820,
+        "stock": 152195,
+        "guarded": 145027,
+        "pie": 142120
+      }
+    },
+    {
+      "id": "game-16",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "612d87bb96f996b83b5d8ff3ea86979b82fa0cbf214bd3cab17dc9d83200eb77",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129820,
+        "stock": 152195,
+        "guarded": 145027,
+        "pie": 142120
+      }
+    },
+    {
+      "id": "game-17",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "0af7fca2967ded77473c9d5fe9b6861f7b3201b5c8605f344f603ada1491413a",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129815,
+        "stock": 152190,
+        "guarded": 145022,
+        "pie": 142115
+      }
+    },
+    {
+      "id": "game-18",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "game-19",
+      "pitch": 5,
+      "words": 1329,
+      "sha256": "1fede34e37cc399d919684b89e794b1687530a1d598ebb16b1c9d8714cda13ea",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60228,
+        "stock": 82603,
+        "guarded": 75435,
+        "pie": 72528
+      }
+    },
+    {
+      "id": "game-20",
+      "pitch": 5,
+      "words": 1329,
+      "sha256": "a547c9348b7f7aed579c96d6859f28aa3bd9a92d34cf011a4e3f9ae64e97a05e",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60232,
+        "stock": 82607,
+        "guarded": 75439,
+        "pie": 72532
+      }
+    },
+    {
+      "id": "game-21",
+      "pitch": 5,
+      "words": 1329,
+      "sha256": "fbe6f7663d5d41aa9f115895eb6f46438c3d51d51c212522beecb49f83fbe5c9",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60232,
+        "stock": 82607,
+        "guarded": 75439,
+        "pie": 72532
+      }
+    },
+    {
+      "id": "game-22",
+      "pitch": 5,
+      "words": 1316,
+      "sha256": "2ef6cb7cb808fb6727e264297bff01f7924aa5395fe7a0964c643822cf92963f",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60193,
+        "stock": 82568,
+        "guarded": 75400,
+        "pie": 72493
+      }
+    },
+    {
+      "id": "game-23",
+      "pitch": 5,
+      "words": 1329,
+      "sha256": "fbe6f7663d5d41aa9f115895eb6f46438c3d51d51c212522beecb49f83fbe5c9",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60232,
+        "stock": 82607,
+        "guarded": 75439,
+        "pie": 72532
+      }
+    },
+    {
+      "id": "game-24",
+      "pitch": 5,
+      "words": 1316,
+      "sha256": "2ef6cb7cb808fb6727e264297bff01f7924aa5395fe7a0964c643822cf92963f",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60193,
+        "stock": 82568,
+        "guarded": 75400,
+        "pie": 72493
+      }
+    },
+    {
+      "id": "game-25",
+      "pitch": 5,
+      "words": 1329,
+      "sha256": "c459ae095a387d1dd3d9f1b21633b6788d270df037858384854e2f5ff1361bcf",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60291,
+        "stock": 82666,
+        "guarded": 75498,
+        "pie": 72591
+      }
+    },
+    {
+      "id": "game-26",
+      "pitch": 5,
+      "words": 1345,
+      "sha256": "f4e764707924ca1a9303e013c227a1ad8a2b8dd52aee095c8aba40ff5d3bb5c8",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60942,
+        "stock": 83317,
+        "guarded": 76149,
+        "pie": 73242
+      }
+    },
+    {
+      "id": "game-27",
+      "pitch": 5,
+      "words": 1345,
+      "sha256": "86c6e1211f94b8ee0ed58b6a51ce5820cffffb180bafe6383da5c6efe9d58c72",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60941,
+        "stock": 83316,
+        "guarded": 76148,
+        "pie": 73241
+      }
+    },
+    {
+      "id": "game-28",
+      "pitch": 5,
+      "words": 1345,
+      "sha256": "1fb076f3549fd5814aa24b17094482ec004eab2e505c95abc23bfe318324f36f",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60952,
+        "stock": 83327,
+        "guarded": 76159,
+        "pie": 73252
+      }
+    },
+    {
+      "id": "game-29",
+      "pitch": 5,
+      "words": 1345,
+      "sha256": "190fd425994d88f180af51131c944ad16b78ecef71b3e5eb72424f09b5ffbed0",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60941,
+        "stock": 83316,
+        "guarded": 76148,
+        "pie": 73241
+      }
+    },
+    {
+      "id": "game-30",
+      "pitch": 5,
+      "words": 1265,
+      "sha256": "71da074f7b51216d005b7ece85b15b91877af854190de247d9bcd9b84d6ac236",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 57997,
+        "stock": 80372,
+        "guarded": 73204,
+        "pie": 70297
+      }
+    },
+    {
+      "id": "game-31",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "05ce9f28798152d77674998fc9435c337889bd9224271466616ccb99cf9de403",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69755,
+        "stock": 92130,
+        "guarded": 84962,
+        "pie": 82055
+      }
+    },
+    {
+      "id": "game-32",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "5bd226cc3f940362b6e6cf763ea522aa24dc4aecdf104e6e283dcbbcdc568e98",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69771,
+        "stock": 92146,
+        "guarded": 84978,
+        "pie": 82071
+      }
+    },
+    {
+      "id": "game-33",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "ea5126546982bb99a1d026fd4c628fc9340041e962f871a21a357400d986bee0",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69771,
+        "stock": 92146,
+        "guarded": 84978,
+        "pie": 82071
+      }
+    },
+    {
+      "id": "game-34",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "d1496262472569740a200f064bc1e8de48779a21a2f26bddc8455bf8efe3bed3",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69771,
+        "stock": 92146,
+        "guarded": 84978,
+        "pie": 82071
+      }
+    },
+    {
+      "id": "game-35",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "2ddb16a2c73b095af4ad830f4ce809bae05ce0a6f02c6b7a24999bf97f1dd7db",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69756,
+        "stock": 92131,
+        "guarded": 84963,
+        "pie": 82056
+      }
+    },
+    {
+      "id": "game-36",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "05ce9f28798152d77674998fc9435c337889bd9224271466616ccb99cf9de403",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69755,
+        "stock": 92130,
+        "guarded": 84962,
+        "pie": 82055
+      }
+    },
+    {
+      "id": "game-37",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "5bd226cc3f940362b6e6cf763ea522aa24dc4aecdf104e6e283dcbbcdc568e98",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69771,
+        "stock": 92146,
+        "guarded": 84978,
+        "pie": 82071
+      }
+    },
+    {
+      "id": "game-38",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "91e3687f8ec5d171af7a9baea4462c75687b0203b81af8e8336e2a7fcdeede13",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69771,
+        "stock": 92146,
+        "guarded": 84978,
+        "pie": 82071
+      }
+    },
+    {
+      "id": "game-39",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "46bc61de1f54b58c1cb9feb4e9f5650fd08dcc0e12cde327d0395ed7e3ee5acb",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69771,
+        "stock": 92146,
+        "guarded": 84978,
+        "pie": 82071
+      }
+    },
+    {
+      "id": "game-40",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "d51f9383d78cb5edb5baed93310fab430f11373cf4401bd607767f20e11c6506",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69756,
+        "stock": 92131,
+        "guarded": 84963,
+        "pie": 82056
+      }
+    },
+    {
+      "id": "game-41",
+      "pitch": 5,
+      "words": 1393,
+      "sha256": "5636af22a67633d729540e4f556bccf3a69ca567832d1338d83934805d07d7b5",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 62470,
+        "stock": 84845,
+        "guarded": 77677,
+        "pie": 74770
+      }
+    },
+    {
+      "id": "game-42",
+      "pitch": 5,
+      "words": 1393,
+      "sha256": "1e8dd21381c8227159da4060dffb33bafa0d6b96a8266ff55dfb1c805b26dba8",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 62476,
+        "stock": 84851,
+        "guarded": 77683,
+        "pie": 74776
+      }
+    },
+    {
+      "id": "game-43",
+      "pitch": 5,
+      "words": 1393,
+      "sha256": "35731f99df0e513f6dc72018c77975138c2f4978ad14b23688ab787fdc8f6651",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 62476,
+        "stock": 84851,
+        "guarded": 77683,
+        "pie": 74776
+      }
+    },
+    {
+      "id": "game-44",
+      "pitch": 5,
+      "words": 1393,
+      "sha256": "0d81b7b832cd0ee5a42f9df743616bd49cce76ec45b47ba316d880df96353c94",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 62476,
+        "stock": 84851,
+        "guarded": 77683,
+        "pie": 74776
+      }
+    },
+    {
+      "id": "game-45",
+      "pitch": 5,
+      "words": 1329,
+      "sha256": "437e33855b5593457f6b4e24e1e25b78021a9692d1618f91d8045cf032df16c6",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 60229,
+        "stock": 82604,
+        "guarded": 75436,
+        "pie": 72529
+      }
+    },
+    {
+      "id": "game-46",
+      "pitch": 5,
+      "words": 1585,
+      "sha256": "8e9833d32a725feb9768689d52a47c735d39e94241cc5b3fbe5dfbd653055a6d",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 69756,
+        "stock": 92131,
+        "guarded": 84963,
+        "pie": 82056
+      }
+    },
+    {
+      "id": "low",
+      "pitch": 3,
+      "words": 3281,
+      "sha256": "fc166306092a044ee186b1887846b0642228dedbfae4646f03ec568b75a72a24",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129798,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "high",
+      "pitch": 7,
+      "words": 3281,
+      "sha256": "b042fc72997471839a7da5dc42658c68fa700af002543b21df91dcfffeac1b79",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129798,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "e3",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "01681e17d18a6cbd853b699e32ca92c2fd62cd624c4545486416320db0259437",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "f3",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "ebd2d954192472f7569c560be74720a593084cb0cbd8e7577a42a83a9cf21464",
+      "packedStores": 30,
+      "packedByFunction": {
+        "project": 200
+      },
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 145021,
+        "pie": 142114
+      }
+    },
+    {
+      "id": "misalign-0",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 0,
+      "packedByFunction": {},
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 152203,
+        "pie": 152203
+      }
+    },
+    {
+      "id": "misalign-1",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 0,
+      "packedByFunction": {},
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 152211,
+        "pie": 152211
+      }
+    },
+    {
+      "id": "misalign-2",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 0,
+      "packedByFunction": {},
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 152219,
+        "pie": 152219
+      }
+    },
+    {
+      "id": "misalign-3",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 0,
+      "packedByFunction": {},
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 152227,
+        "pie": 152227
+      }
+    },
+    {
+      "id": "misalign-4",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 0,
+      "packedByFunction": {},
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 152235,
+        "pie": 152235
+      }
+    },
+    {
+      "id": "misalign-5",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 0,
+      "packedByFunction": {},
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 152243,
+        "pie": 152243
+      }
+    },
+    {
+      "id": "alias-input-output",
+      "pitch": 5,
+      "words": 3281,
+      "sha256": "4247091695b3c5643573cf7aa4edc4abab2387ec13f6f1c3f724d7558f0b6c10",
+      "packedStores": 0,
+      "packedByFunction": {},
+      "instructions": {
+        "frozen": 129814,
+        "stock": 152189,
+        "guarded": 152250,
+        "pie": 152250
+      }
+    }
+  ]
+}
