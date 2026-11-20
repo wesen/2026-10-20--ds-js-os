@@ -106,3 +106,7 @@ The reply clock includes about 214 ms of elapsed time outside the measured Chess
 ![The physical RV32 Chess world after e2–e4 and b8–c6](../various/chess-physical-reply.png)
 
 The first attempt observed two successful native compiles around 1.897 seconds, then stopped because its UART world-list capture ended mid-JSON. The retry separated the world-list and screenshot traffic from boot and gameplay. The operator flashed the original app partition at the end and verified its digest and world catalog. [Physical receipt](../various/physical-rv32.json) · [First attempt](../various/physical-first-attempt.json)
+
+## Independent interpretation
+
+Claude Opus 4.6 High, which supplied the independent engine design, received that design and the frozen results in a fresh Claude Code invocation. Its follow-up compares the predictions with the observed rules, tactics and runtime. The implementation team's evidence notes correct the fixture descriptions and distinguish the measured app exchange from speculative pure-search rates and branching factors. The independent text and its dated diary remain verbatim after their editorial notes. [Independent interpretation](02-claude-opus-46-high-interpretation.md) · [Independent diary](../reference/04-claude-opus-46-high-diary.md) · [Author receipt](../various/opus-interpretation.json)

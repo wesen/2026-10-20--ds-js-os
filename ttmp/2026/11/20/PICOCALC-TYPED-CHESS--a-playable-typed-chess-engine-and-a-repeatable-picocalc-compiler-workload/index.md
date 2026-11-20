@@ -35,6 +35,7 @@ Typed Chess is a launcher app and a fourth PicoCalc compiler workload. The engin
 - [Newcomer design](./design-doc/01-a-bounded-orthodox-chess-engine-and-typed-world.md)
 - [Technical article](./analysis/01-chess-search-without-recursion-on-the-picocalc.md)
 - [Independent Opus High design receipt](./various/opus-search-design.json)
+- [Independent Opus High interpretation](./analysis/02-claude-opus-46-high-interpretation.md) · [Dated independent diary](./reference/04-claude-opus-46-high-diary.md) · [Raw author receipt](./various/opus-interpretation.json)
 - [Engine and world qualification](./various/engine-oracle.json) · [Linked world transcript](./various/world-oracle.json)
 - [Host performance](./various/host-measurements.json) · [Reproduction guide](./reference/03-reproduce-chess.md)
 - [Physical RV32 run and restoration](./various/physical-rv32.json) · [Serial timing records](./various/physical-rv32-clock.txt)
