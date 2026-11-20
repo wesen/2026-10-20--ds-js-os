@@ -84,6 +84,27 @@ The device compiler reports microseconds from the cold compile call, peak QuickJ
 
 Whole-document Find uses three queries. An early match ends at 1:2. A dense miss compares many candidates across several slices. The unique late hit ends at 852:1. A native SDK seek can skip an entire line, so a physically late hit can consume fewer slices than a miss. We start at delivery of the final Enter key to the active prompt and stop once the Editor returns a frame with the expected status. Separate counters measure elapsed time, CPU charged to all Editor segments, and time spent in its engine and reactor. Display refresh and the later serial transfer of the captured screenshot fall outside this interval.
 
+### Cold build and application execution on the ESP32-P4
+
+Each cell below is the median of three physical trials. Each pair uses the same target, reactor and UI workflow. The starting Editor has handwritten Open and Find handlers. Its successor expresses both operations with `await`.
+
+| Measurement | Handwritten | Generated | Change |
+| --- | ---: | ---: | ---: |
+| RV32 cold compilation | 2.646 s | 3.817 s | +44.28% |
+| RV32 CPU charged to Editor during the workflow | 35.03 ms | 34.80 ms | −0.66% |
+| Wasm cold compilation | 2.028 s | 3.121 s | +53.90% |
+| Wasm CPU charged to Editor during the workflow | 144.35 ms | 144.30 ms | −0.03% |
+
+Both captured frames matched across all runs within each engine. The CPU differences fall within the spread of the three runs. An editor user who repeatedly edits and recompiles the source would pay an additional 1.171 s on the native target in this comparison. The ten-percent acceptance threshold permits an additional 0.265 s. [Matched physical measurements](../various/workflow-comparison.json)
+
+![Compiler time and Editor CPU time on both targets](../various/workflow-clocks.png)
+
+### Where the additional compiler time goes
+
+The phase experiment times each operation on the device and pauses the enclosing phase clock when a nested phase starts. Summing the disjoint durations reproduces the outer compiler stopwatch for every sample. Each firmware produced three explicit reboots. In the instrumented comparison, generating synchronous code from asynchronous source accounted for 896.5 ms of the 1,179.7 ms increase, or 76.0%. The ordinary typed frontend added 127.5 ms, and loading the compiler and setting up its arguments added 115.5 ms. Native lowering, assembly, validation and linking together added 15.4 ms. [Paired phase measurements](../various/g4-compile-phases.json)
+
+Within the asynchronous rewrite, reading the source program took 440.8 ms, scanning for operations took 181.4 ms, and analyzing tasks took 160.7 ms. Constructing the rewritten text took 57.1 ms. Even eliminating text construction entirely would recover only about 6% of the outstanding 906.8 ms. A representation that lets several passes reuse tokens or skip ordinary function bodies can address larger measured costs. Its value depends on cold trials that include constructing and reclaiming that representation.
+
 ## Reproduce the stages
 
 | Source or script | Responsibility |
