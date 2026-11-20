@@ -1,0 +1,46 @@
+  ### Round 1 — Four studies that can start independently
+ 
+   #      Study                                                           Experiment and finish line                                                                                                        
+  ━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   1      Find a faster frontend that fits the existing heap.             Cross two choices on the P4: regex versus cursor scanning, and fresh versus reused token records. That gives four builds and
+                                                                          identifies which change saves time and which raises the peak. Then test whether the parser can read token kind and source offsets
+                                                                          directly, materializing text only when needed. Require identical diagnostics and app output.
+  ─────  ──────────────────────────────────────────────────────────────  ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   2      Compile conditions directly to their destinations. Scope A6.    For if (ready && hasData()), generate the branches directly. For let flag = ready && hasData(), produce a Boolean value. Verify
+                                                                          that calls and traps on the right side occur only when required. Run both backends and test the professor’s ceilings of 547 /
+                                                                          2,611 / 16,210 native instructions for Files, Agenda and Editor.
+  ─────  ──────────────────────────────────────────────────────────────  ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   3      Preserve useful typed operations until native lowering.         Build a minimal, one-function-at-a-time representation that preserves operations such as “read a text code unit” and “branch on
+                                                                          this comparison.” First make it emit the same RV32 bytes as the staged baseline. Measuring that version tells us the time and
+                                                                          memory cost of carrying the information before we credit it with any optimization. Then let the backend consume one operation
+                                                                          directly and measure what disappears.
+  ─────  ──────────────────────────────────────────────────────────────  ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   4      Run real incremental Editor builds on the handheld.             Files went from 107 ms to 43–44 ms after a real edit. Repeat that experiment on the 120-function Editor with a body edit, a
+                                                                          signature change and a record-field change. Put a ceiling on retained fragments, measure edit-to-native-return, and compare every
+                                                                          accepted ELF with a clean build. The field change is especially valuable: on the host it rebuilt 77 functions, and 70 produced
+                                                                          identical linked instructions.
+ 
+  ### Round 2 — Four studies that use those results
+ 
+   #      Study                                                  Experiment and finish line                                                                                                                 
+  ━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   5      Keep profitable locals in registers. Scope A7.         Start from the qualified A6 backend. Compare a cheap local-use count with a policy that also considers loops and calls. Count the loads
+                                                                 removed and the save/restore instructions introduced. Judge the result on physical guest cycles, cold compile time and peak heap. The
+                                                                 professor’s Editor ceiling is 14,581 instructions.
+  ─────  ─────────────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   6      Prove bounds through more than one guard. Scope E8.    Give the compiler the real Editor case 0 <= i, i < end, and end <= text.length. Can it prove text[i] safe before its fixed search budget
+                                                                 runs out? Compare existing checks, direct guard recognition and bounded proof search. Exercise reassignment and control-flow joins. Count
+                                                                 checks executed during the 64 KiB preview, alongside emitted bytes and compile cost.
+  ─────  ─────────────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   7      Predict which functions deserve analysis.              The previous selector saved 720 words or zero when we changed only declaration order. Compare source-order selection, a cheap literal-only
+                                                                 rule, and a predictor of benefit per unit of analysis work. Freeze each policy before testing it on unseen programs and reordered variants
+                                                                 where the budget actually binds. This is the strongest candidate for an original research result.
+  ─────  ─────────────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   8      Compile one real await end to end. Scope G.            Take Editor Open from typed source through suspension and native resumption. Determine which locals must survive the wait, generate the
+                                                                 continuation, then compare it with the hand-written implementation on success, failure and cancellation. Record saved fields, frame bytes,
+                                                                 code size and compile time. One complete workflow is a substantial result; Find supplies a later independent test.
+ 
+  I’d give #1 first access to the board, #3 the architectural lead, and #6–7 the research lead. Before the backend studies, the supervisor should qualify the staged candidate against the professor’s full
+  24-replay suite and freeze it as the comparison point. At the end, build and measure one combined compiler on the P4. That final run decides whether the individual improvements add up to a better
+  compiler for the device. Professor’s task list and acceptance gates (ttmp/2026/11/19/PICOCALC-NATIVE-NEXT--a-smaller-rv32-backend-a-module-cache-safety-checks-and-await-for-typed-picocalc-worlds/
+  tasks.md)
