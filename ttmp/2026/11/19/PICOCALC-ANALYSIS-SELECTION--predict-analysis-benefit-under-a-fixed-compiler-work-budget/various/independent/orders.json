@@ -1,0 +1,17 @@
+{
+  "clustered": {
+    "bytes": 55294,
+    "sha256": "42af41dc2bf8a9144af497613159778f4755132f8adee25b08b1882d81e3302b",
+    "functions": 72
+  },
+  "reversed": {
+    "bytes": 55294,
+    "sha256": "835281ff0eed0d11a2a1f2a75ddb265bf3a6a4b186771fe315f1624573919b87",
+    "functions": 72
+  },
+  "shuffled": {
+    "bytes": 55294,
+    "sha256": "f6e28680afe48309e6d14046eda49d01c61832ab4c490a6137c5e317afedeef1",
+    "functions": 72
+  }
+}

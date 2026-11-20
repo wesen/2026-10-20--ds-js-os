@@ -22,5 +22,7 @@ WhenToUse: ""
 Study 7 compares source-order, literal-only and estimated-benefit admission for the existing bounded divisor analysis. This ticket records the preregistered split before any new held-out compiler invocation.
 
 - [Preregistered design](design-doc/01-a-preregistered-comparison-of-bounded-function-selectors.md)
+- [Newcomer article and figure](analysis/01-which-functions-deserve-limited-compiler-analysis.md)
+- [Reproduction guide](README.md)
 - [Investigation diary](reference/01-analysis-selection-investigation-diary.md)
 - [Tasks](tasks.md)

@@ -1,0 +1,473 @@
+{
+  "emulator": "ea32f0af6dae46cd1b12bf94300e08dee4c38c3b79d05e3d4190518c248afb31",
+  "results": {
+    "none": {
+      "source": "b9cbd3286e1a7f74bf8f73d56283b2da597759ee7326326ca0bd815376174fd3",
+      "raw": "828344d598751a0b8c9f8da498ccde245418d3ea7cde0e737b32a1f408e8e5c5",
+      "budget": 256,
+      "words": 473,
+      "admitted": [],
+      "returns": 987,
+      "retired_including_harness": 27703,
+      "expected_traps": [
+        {
+          "name": "minusOneDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "zeroDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "zeroRem",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "parameterRem",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "nestedLocal",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "foldedZero",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        }
+      ],
+      "results_sha256": "7c012ae4e2ecc9a399dadfb9d98ecea91f3896c11b3dc8591abaed5a010ceafa"
+    },
+    "source": {
+      "source": "b9cbd3286e1a7f74bf8f73d56283b2da597759ee7326326ca0bd815376174fd3",
+      "raw": "31936dc8180de7dadc37388ef61dd1d2d944a6787ff7b78b94888903ce6adbbe",
+      "budget": 256,
+      "words": 413,
+      "admitted": [
+        "fixedDiv",
+        "fixedRem",
+        "minusOneDiv",
+        "minusOneRem",
+        "minDiv",
+        "zeroDiv",
+        "zeroRem",
+        "parameterDiv",
+        "parameterRem",
+        "localDiv",
+        "negativeLocal",
+        "singleWriteLet",
+        "parameterThenConst",
+        "unknownCall",
+        "foldedZero"
+      ],
+      "returns": 987,
+      "retired_including_harness": 26019,
+      "expected_traps": [
+        {
+          "name": "minusOneDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "zeroDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "zeroRem",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "parameterRem",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "nestedLocal",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "foldedZero",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        }
+      ],
+      "results_sha256": "7c012ae4e2ecc9a399dadfb9d98ecea91f3896c11b3dc8591abaed5a010ceafa"
+    },
+    "literal": {
+      "source": "b9cbd3286e1a7f74bf8f73d56283b2da597759ee7326326ca0bd815376174fd3",
+      "raw": "17b18469d154cdf6018a2d3c9b21c2b65358971d8a0db81da56947dcaa3ed48c",
+      "budget": 256,
+      "words": 431,
+      "admitted": [
+        "fixedDiv",
+        "fixedRem",
+        "minusOneDiv",
+        "minusOneRem",
+        "minDiv",
+        "parameterThenConst",
+        "wrappedDivisor"
+      ],
+      "returns": 987,
+      "retired_including_harness": 26531,
+      "expected_traps": [
+        {
+          "name": "minusOneDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "zeroDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "zeroRem",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "parameterRem",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "nestedLocal",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "foldedZero",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        }
+      ],
+      "results_sha256": "7c012ae4e2ecc9a399dadfb9d98ecea91f3896c11b3dc8591abaed5a010ceafa"
+    },
+    "density": {
+      "source": "b9cbd3286e1a7f74bf8f73d56283b2da597759ee7326326ca0bd815376174fd3",
+      "raw": "2659b71e4e09630d34c93c9711916aec2ba1e82062ed0c789df9144b7b055f76",
+      "budget": 256,
+      "words": 395,
+      "admitted": [
+        "fixedDiv",
+        "fixedRem",
+        "minusOneDiv",
+        "minusOneRem",
+        "minDiv",
+        "localDiv",
+        "negativeLocal",
+        "singleWriteLet",
+        "parameterThenConst",
+        "nestedLocal",
+        "wrappedDivisor"
+      ],
+      "returns": 987,
+      "retired_including_harness": 25667,
+      "expected_traps": [
+        {
+          "name": "minusOneDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "zeroDiv",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "zeroRem",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterDiv",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "parameterRem",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "parameterThenConst",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "conditionalWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "loopWrite",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "nestedLocal",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": -1,
+          "kind": "overflow"
+        },
+        {
+          "name": "unknownCall",
+          "a": -2147483648,
+          "b": 0,
+          "kind": "zero"
+        },
+        {
+          "name": "foldedZero",
+          "a": -2147483648,
+          "b": -2147483648,
+          "kind": "zero"
+        }
+      ],
+      "results_sha256": "7c012ae4e2ecc9a399dadfb9d98ecea91f3896c11b3dc8591abaed5a010ceafa"
+    }
+  }
+}

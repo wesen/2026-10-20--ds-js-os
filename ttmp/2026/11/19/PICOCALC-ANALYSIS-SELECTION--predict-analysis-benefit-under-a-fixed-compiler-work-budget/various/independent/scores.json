@@ -1,0 +1,3031 @@
+{
+  "phase": "custom",
+  "freeze": "70c85541957a32e0f0764ab5e40f88608c62b5711827fa92332da269457eb7e1",
+  "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+  "modules": [
+    {
+      "name": "clustered.typed",
+      "sourceSha256": "42af41dc2bf8a9144af497613159778f4755132f8adee25b08b1882d81e3302b",
+      "orderSha256": [
+        "2b356a86370efdf7f85e21853d5d76bd04e4f1324811da2ce5d2c432d2cb9b05"
+      ],
+      "eligibleCost": 38016,
+      "selectorVisits": 19008,
+      "rows": [
+        {
+          "name": "raster0",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster4",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster8",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster12",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster16",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster20",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster24",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster28",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster32",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster36",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster40",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster44",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster48",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster52",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster56",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster60",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster64",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster68",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster1",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster5",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster9",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster13",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster17",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster21",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster25",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster29",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster33",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster37",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster41",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster45",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster49",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster53",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster57",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster61",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster65",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster69",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster2",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster6",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster10",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster14",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster18",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster22",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster26",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster30",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster34",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster38",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster42",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster46",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster50",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster54",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster58",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster62",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster66",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster70",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster3",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster7",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster11",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster15",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster19",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster23",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster27",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster31",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster35",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster39",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster43",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster47",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster51",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster55",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster59",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster63",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster67",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster71",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        }
+      ],
+      "budgets": [
+        {
+          "budget": 32768,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                32478
+              ],
+              "wasted": [
+                24882
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            }
+          }
+        },
+        {
+          "budget": 9504,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                9412
+              ],
+              "wasted": [
+                1816
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            }
+          }
+        },
+        {
+          "budget": 19008,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                18904
+              ],
+              "wasted": [
+                11308
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            }
+          }
+        },
+        {
+          "budget": 38016,
+          "binding": false,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                38016
+              ],
+              "wasted": [
+                30420
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            }
+          }
+        }
+      ],
+      "compiledChecks": [
+        {
+          "order": 0,
+          "source": {
+            "removed": 1386,
+            "raw": "74ef02bbed1b3e945b081401a59b3fd6015a669114e9b17fae6679444dd02db2",
+            "linked": "74ef02bbed1b3e945b081401a59b3fd6015a669114e9b17fae6679444dd02db2",
+            "charge": 32478,
+            "plannerCells": 0,
+            "comparisons": 0,
+            "elapsedNs": 64250982,
+            "planNs": 0
+          },
+          "literal": {
+            "removed": 1386,
+            "raw": "74ef02bbed1b3e945b081401a59b3fd6015a669114e9b17fae6679444dd02db2",
+            "linked": "74ef02bbed1b3e945b081401a59b3fd6015a669114e9b17fae6679444dd02db2",
+            "charge": 7596,
+            "plannerCells": 19008,
+            "comparisons": 53,
+            "elapsedNs": 88949145,
+            "planNs": 44789155
+          },
+          "density": {
+            "removed": 1386,
+            "raw": "74ef02bbed1b3e945b081401a59b3fd6015a669114e9b17fae6679444dd02db2",
+            "linked": "74ef02bbed1b3e945b081401a59b3fd6015a669114e9b17fae6679444dd02db2",
+            "charge": 7596,
+            "plannerCells": 19008,
+            "comparisons": 51,
+            "elapsedNs": 88032913,
+            "planNs": 43598324
+          }
+        }
+      ],
+      "timings": [
+        {
+          "order": [
+            "source",
+            "literal",
+            "density"
+          ],
+          "source": {
+            "elapsedNs": 61784975,
+            "planNs": 0
+          },
+          "literal": {
+            "elapsedNs": 95503760,
+            "planNs": 43890875
+          },
+          "density": {
+            "elapsedNs": 118363506,
+            "planNs": 68359087
+          }
+        },
+        {
+          "order": [
+            "literal",
+            "density",
+            "source"
+          ],
+          "literal": {
+            "elapsedNs": 87952358,
+            "planNs": 33557446
+          },
+          "density": {
+            "elapsedNs": 76477118,
+            "planNs": 32906014
+          },
+          "source": {
+            "elapsedNs": 53715838,
+            "planNs": 0
+          }
+        },
+        {
+          "order": [
+            "density",
+            "source",
+            "literal"
+          ],
+          "density": {
+            "elapsedNs": 89382839,
+            "planNs": 41055983
+          },
+          "source": {
+            "elapsedNs": 57961901,
+            "planNs": 0
+          },
+          "literal": {
+            "elapsedNs": 89780202,
+            "planNs": 32770666
+          }
+        },
+        {
+          "order": [
+            "source",
+            "density",
+            "literal"
+          ],
+          "source": {
+            "elapsedNs": 58575295,
+            "planNs": 0
+          },
+          "density": {
+            "elapsedNs": 68264312,
+            "planNs": 32331921
+          },
+          "literal": {
+            "elapsedNs": 67542471,
+            "planNs": 28160998
+          }
+        },
+        {
+          "order": [
+            "literal",
+            "source",
+            "density"
+          ],
+          "literal": {
+            "elapsedNs": 74636236,
+            "planNs": 29134615
+          },
+          "source": {
+            "elapsedNs": 47882020,
+            "planNs": 0
+          },
+          "density": {
+            "elapsedNs": 67282033,
+            "planNs": 24770729
+          }
+        },
+        {
+          "order": [
+            "density",
+            "literal",
+            "source"
+          ],
+          "density": {
+            "elapsedNs": 88278142,
+            "planNs": 41466768
+          },
+          "literal": {
+            "elapsedNs": 82753719,
+            "planNs": 30308237
+          },
+          "source": {
+            "elapsedNs": 46522730,
+            "planNs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "reversed.typed",
+      "sourceSha256": "835281ff0eed0d11a2a1f2a75ddb265bf3a6a4b186771fe315f1624573919b87",
+      "orderSha256": [
+        "acb1538cc10f252f6f82fb3b40fdfd2b5c1f401d0dfe8c9e77a84b4ad9662c0d"
+      ],
+      "eligibleCost": 38016,
+      "selectorVisits": 19008,
+      "rows": [
+        {
+          "name": "raster71",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster67",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster63",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster59",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster55",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster51",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster47",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster43",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster39",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster35",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster31",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster27",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster23",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster19",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster15",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster11",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster7",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster3",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster70",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster66",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster62",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster58",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster54",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster50",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster46",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster42",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster38",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster34",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster30",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster26",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster22",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster18",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster14",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster10",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster6",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster2",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster69",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster65",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster61",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster57",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster53",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster49",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster45",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster41",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster37",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster33",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster29",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster25",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster21",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster17",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster13",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster9",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster5",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster1",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster68",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster64",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster60",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster56",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster52",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster48",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster44",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster40",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster36",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster32",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster28",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster24",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster20",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster16",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster12",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster8",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster4",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster0",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        }
+      ],
+      "budgets": [
+        {
+          "budget": 32768,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                407
+              ],
+              "charge": [
+                32650
+              ],
+              "wasted": [
+                30420
+              ],
+              "plannerChargedWords": [
+                407
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            }
+          }
+        },
+        {
+          "budget": 9504,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                55
+              ],
+              "charge": [
+                9452
+              ],
+              "wasted": [
+                9150
+              ],
+              "plannerChargedWords": [
+                55
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            }
+          }
+        },
+        {
+          "budget": 19008,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                0
+              ],
+              "charge": [
+                18872
+              ],
+              "wasted": [
+                18872
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            }
+          }
+        },
+        {
+          "budget": 38016,
+          "binding": false,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                38016
+              ],
+              "wasted": [
+                30420
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            }
+          }
+        }
+      ],
+      "compiledChecks": [
+        {
+          "order": 0,
+          "source": {
+            "removed": 407,
+            "raw": "0839971e9c6127ccd224e3d1f997b1cc593a859dd8a9cb5cf3a96113100113dc",
+            "linked": "0839971e9c6127ccd224e3d1f997b1cc593a859dd8a9cb5cf3a96113100113dc",
+            "charge": 32650,
+            "plannerCells": 0,
+            "comparisons": 0,
+            "elapsedNs": 57800517,
+            "planNs": 0
+          },
+          "literal": {
+            "removed": 1386,
+            "raw": "00b64d01ce06c68b69696c204b27537d2e8b6ca0c402f961cffeb0439df729c3",
+            "linked": "00b64d01ce06c68b69696c204b27537d2e8b6ca0c402f961cffeb0439df729c3",
+            "charge": 7596,
+            "plannerCells": 19008,
+            "comparisons": 28,
+            "elapsedNs": 80357653,
+            "planNs": 37243587
+          },
+          "density": {
+            "removed": 1386,
+            "raw": "00b64d01ce06c68b69696c204b27537d2e8b6ca0c402f961cffeb0439df729c3",
+            "linked": "00b64d01ce06c68b69696c204b27537d2e8b6ca0c402f961cffeb0439df729c3",
+            "charge": 7596,
+            "plannerCells": 19008,
+            "comparisons": 59,
+            "elapsedNs": 82884542,
+            "planNs": 36601010
+          }
+        }
+      ],
+      "timings": [
+        {
+          "order": [
+            "source",
+            "literal",
+            "density"
+          ],
+          "source": {
+            "elapsedNs": 54381856,
+            "planNs": 0
+          },
+          "literal": {
+            "elapsedNs": 79548557,
+            "planNs": 35228261
+          },
+          "density": {
+            "elapsedNs": 84389370,
+            "planNs": 36450710
+          }
+        },
+        {
+          "order": [
+            "literal",
+            "density",
+            "source"
+          ],
+          "literal": {
+            "elapsedNs": 99390857,
+            "planNs": 44128528
+          },
+          "density": {
+            "elapsedNs": 97676349,
+            "planNs": 46863664
+          },
+          "source": {
+            "elapsedNs": 93838242,
+            "planNs": 0
+          }
+        },
+        {
+          "order": [
+            "density",
+            "source",
+            "literal"
+          ],
+          "density": {
+            "elapsedNs": 121203125,
+            "planNs": 51249713
+          },
+          "source": {
+            "elapsedNs": 86245093,
+            "planNs": 0
+          },
+          "literal": {
+            "elapsedNs": 89385736,
+            "planNs": 42492376
+          }
+        },
+        {
+          "order": [
+            "source",
+            "density",
+            "literal"
+          ],
+          "source": {
+            "elapsedNs": 72898913,
+            "planNs": 0
+          },
+          "density": {
+            "elapsedNs": 108974616,
+            "planNs": 46244620
+          },
+          "literal": {
+            "elapsedNs": 125200204,
+            "planNs": 65374512
+          }
+        },
+        {
+          "order": [
+            "literal",
+            "source",
+            "density"
+          ],
+          "literal": {
+            "elapsedNs": 129100257,
+            "planNs": 49597956
+          },
+          "source": {
+            "elapsedNs": 58155371,
+            "planNs": 0
+          },
+          "density": {
+            "elapsedNs": 135398226,
+            "planNs": 69883567
+          }
+        },
+        {
+          "order": [
+            "density",
+            "literal",
+            "source"
+          ],
+          "density": {
+            "elapsedNs": 108205343,
+            "planNs": 49938458
+          },
+          "literal": {
+            "elapsedNs": 132529995,
+            "planNs": 72335756
+          },
+          "source": {
+            "elapsedNs": 67559530,
+            "planNs": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "shuffled.typed",
+      "sourceSha256": "f6e28680afe48309e6d14046eda49d01c61832ab4c490a6137c5e317afedeef1",
+      "orderSha256": [
+        "fc06af2a2c901ec3d6e83cea2b4b508b913945f85f0dd590c315876cb0215e99"
+      ],
+      "eligibleCost": 38016,
+      "selectorVisits": 19008,
+      "rows": [
+        {
+          "name": "raster58",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster30",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster52",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster62",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster22",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster64",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster39",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster12",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster29",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster17",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster1",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster42",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster69",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster41",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster23",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster40",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster36",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster21",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster61",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster37",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster10",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster13",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster38",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster57",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster43",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster11",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster33",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster67",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster9",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster28",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster66",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster59",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster20",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster8",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster54",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster44",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster56",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster4",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster3",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster7",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster32",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster19",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster15",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster45",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster24",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster60",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster6",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster34",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster65",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster55",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster26",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster0",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster53",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster51",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster71",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster16",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster63",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster2",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster25",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster49",
+          "charge": 394,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 197,
+          "benefit": 0
+        },
+        {
+          "name": "raster31",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster14",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster68",
+          "charge": 542,
+          "candidate": true,
+          "literal": 99,
+          "local": 0,
+          "visits": 271,
+          "benefit": 99
+        },
+        {
+          "name": "raster48",
+          "charge": 302,
+          "candidate": true,
+          "literal": 55,
+          "local": 0,
+          "visits": 151,
+          "benefit": 55
+        },
+        {
+          "name": "raster27",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster18",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster50",
+          "charge": 454,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 227,
+          "benefit": 0
+        },
+        {
+          "name": "raster46",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        },
+        {
+          "name": "raster47",
+          "charge": 722,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 361,
+          "benefit": 0
+        },
+        {
+          "name": "raster35",
+          "charge": 482,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 241,
+          "benefit": 0
+        },
+        {
+          "name": "raster5",
+          "charge": 634,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 317,
+          "benefit": 0
+        },
+        {
+          "name": "raster70",
+          "charge": 694,
+          "candidate": true,
+          "literal": 0,
+          "local": 0,
+          "visits": 347,
+          "benefit": 0
+        }
+      ],
+      "budgets": [
+        {
+          "budget": 32768,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                1232
+              ],
+              "charge": [
+                32556
+              ],
+              "wasted": [
+                25804
+              ],
+              "plannerChargedWords": [
+                1232
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            }
+          }
+        },
+        {
+          "budget": 9504,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                462
+              ],
+              "charge": [
+                9416
+              ],
+              "wasted": [
+                6884
+              ],
+              "plannerChargedWords": [
+                462
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            }
+          }
+        },
+        {
+          "budget": 19008,
+          "binding": true,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                759
+              ],
+              "charge": [
+                18984
+              ],
+              "wasted": [
+                14826
+              ],
+              "plannerChargedWords": [
+                759
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                0
+              ]
+            }
+          }
+        },
+        {
+          "budget": 38016,
+          "binding": false,
+          "oracle": 1386,
+          "comparisons": {
+            "source": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                38016
+              ],
+              "wasted": [
+                30420
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "literal": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            },
+            "density": {
+              "words": [
+                1386
+              ],
+              "charge": [
+                7596
+              ],
+              "wasted": [
+                0
+              ],
+              "plannerChargedWords": [
+                1386
+              ]
+            }
+          }
+        }
+      ],
+      "compiledChecks": [
+        {
+          "order": 0,
+          "source": {
+            "removed": 1232,
+            "raw": "595d3a9b90d1d6d40e917827616de1923323c5386f686e766c71d64c84f91fe3",
+            "linked": "595d3a9b90d1d6d40e917827616de1923323c5386f686e766c71d64c84f91fe3",
+            "charge": 32556,
+            "plannerCells": 0,
+            "comparisons": 0,
+            "elapsedNs": 55365864,
+            "planNs": 0
+          },
+          "literal": {
+            "removed": 1386,
+            "raw": "1d5c6aad1d5c0a09fe955eee587f8a06bfd9bcccd0322d1b9d19ad9dbae14544",
+            "linked": "1d5c6aad1d5c0a09fe955eee587f8a06bfd9bcccd0322d1b9d19ad9dbae14544",
+            "charge": 7596,
+            "plannerCells": 19008,
+            "comparisons": 56,
+            "elapsedNs": 73705151,
+            "planNs": 33400892
+          },
+          "density": {
+            "removed": 1386,
+            "raw": "1d5c6aad1d5c0a09fe955eee587f8a06bfd9bcccd0322d1b9d19ad9dbae14544",
+            "linked": "1d5c6aad1d5c0a09fe955eee587f8a06bfd9bcccd0322d1b9d19ad9dbae14544",
+            "charge": 7596,
+            "plannerCells": 19008,
+            "comparisons": 56,
+            "elapsedNs": 70387109,
+            "planNs": 33367640
+          }
+        }
+      ],
+      "timings": [
+        {
+          "order": [
+            "source",
+            "literal",
+            "density"
+          ],
+          "source": {
+            "elapsedNs": 50584145,
+            "planNs": 0
+          },
+          "literal": {
+            "elapsedNs": 71377728,
+            "planNs": 31483271
+          },
+          "density": {
+            "elapsedNs": 77729094,
+            "planNs": 31977136
+          }
+        },
+        {
+          "order": [
+            "literal",
+            "density",
+            "source"
+          ],
+          "literal": {
+            "elapsedNs": 80422653,
+            "planNs": 34559824
+          },
+          "density": {
+            "elapsedNs": 77123133,
+            "planNs": 26944283
+          },
+          "source": {
+            "elapsedNs": 57117581,
+            "planNs": 0
+          }
+        },
+        {
+          "order": [
+            "density",
+            "source",
+            "literal"
+          ],
+          "density": {
+            "elapsedNs": 72293495,
+            "planNs": 33073115
+          },
+          "source": {
+            "elapsedNs": 55278585,
+            "planNs": 0
+          },
+          "literal": {
+            "elapsedNs": 79486211,
+            "planNs": 31962155
+          }
+        },
+        {
+          "order": [
+            "source",
+            "density",
+            "literal"
+          ],
+          "source": {
+            "elapsedNs": 60601771,
+            "planNs": 0
+          },
+          "density": {
+            "elapsedNs": 73197097,
+            "planNs": 30507066
+          },
+          "literal": {
+            "elapsedNs": 82144966,
+            "planNs": 39533425
+          }
+        },
+        {
+          "order": [
+            "literal",
+            "source",
+            "density"
+          ],
+          "literal": {
+            "elapsedNs": 78050324,
+            "planNs": 27959069
+          },
+          "source": {
+            "elapsedNs": 63346041,
+            "planNs": 0
+          },
+          "density": {
+            "elapsedNs": 69436151,
+            "planNs": 29022100
+          }
+        },
+        {
+          "order": [
+            "density",
+            "literal",
+            "source"
+          ],
+          "density": {
+            "elapsedNs": 74421078,
+            "planNs": 25903132
+          },
+          "literal": {
+            "elapsedNs": 70093753,
+            "planNs": 36785354
+          },
+          "source": {
+            "elapsedNs": 61551098,
+            "planNs": 0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -185,3 +185,59 @@ Inspect the one decoy string in `scripts/03-generate.mjs` and the input-digest d
 ### Technical details
 
 Commit `5c2806c` is the initial lock. The successor changes only the reserved generator's invalid return spelling.
+
+## Step 4. Evaluate the frozen rules and execute the emitted arithmetic
+
+The revised lock opened Editor and 60 generated modules. All generated modules saturated the primary proof budget. Equal-proof ranking greatly improved the recovered word count and eliminated permutation spread. When feature visits were debited, the distributed family favored source order. An independently authored raster workload supported the concentrated-case interpretation.
+
+### Prompt context
+
+See Step 1. The supervisor delivered three independent permutations of a 72-function workload after the policy freeze and requested its inclusion as a distinct cross-check.
+
+### What I did
+
+- Ran the committed held-out lock and preserved every module, order, budget, selected word count and charged-cost comparison. [Complete held-out receipt](../various/held-out.json.gz).
+- Verified the supervisor’s compressed inputs and exact hashes. The three files contain identical sets of 72 function bodies. Each saturates the primary proof budget. [Independent checks](../various/independent/scores.json).
+- Compiled original, reverse and shuffled representatives through the actual native backend and checked predicted and actual function names, proof visits and raw word totals.
+- Reused the earlier arithmetic fixture to exercise 20 functions through the no-proof and three selected program images. Checked native results against a separate Wasm instance. [Guest evidence](../various/guest-results.json).
+- Generated and reviewed the figure. Wrote the [article](../analysis/01-which-functions-deserve-limited-compiler-analysis.md) and [reproduction guide](../README.md).
+
+### Why
+
+The exact knapsack upper bound uses the true word difference from analysis-disabled and analyze-all compilations. It establishes attainable savings. The chooser reads only its fixed features. The planning debit confronts the ranker with the same work ceiling and keeps the oracle denominator fixed.
+
+### What worked
+
+The freeze **`70c85541957a32e0f0764ab5e40f88608c62b5711827fa92332da269457eb7e1`** yielded 1,320 saturated synthetic orderings, 440 in each family. Under equal proof budgets, the density medians were 100%, 100% and 99.91% of the oracle in concentrated, decoy and distributed cohorts. Charging the feature count gave 100%, 91.13% and 32.38%. Source order retained 75.15% median oracle recovery under distributed workloads. The independently authored variants produced 1,386/407/1,232 words saved at source order and 1,386 in all orders with both ranked policies.
+
+Editor used 4,278 eligible visits and all three policies saved 83 words. The free-budget ranker took about 34 ms longer than source order in the six matched fresh Node contexts. The compiler and linker scripts were precompiled before timing. This is host evidence for the extra parse's cost.
+
+All four arithmetic lanes returned the same 987 values and trapped for all 16 isolated inputs where Wasm required it. The density-selected image removed 78 raw words relative to no proof. The native interpreter distinguishes breakpoint occurrence, while the Wasm oracle records division-by-zero or arithmetic-overflow intent.
+
+### What did not work
+
+An initial invocation of `python3 -B scripts/06-run-guests.py "$riscv_gcc" "$slas" "$work/guests"` gave `AssertionError: slas: run.elf:1: instruction outside a function`. The build-tree `slas-rv32` binary assembles source and does not execute that ELF. Building the repository’s `tools/rv32/emu.c` as `rv32emu` and passing it to the same runner succeeded.
+
+### What I learned
+
+Stable ranking addresses order sensitivity if a few functions supply most of the value. A planner can incur a substantial overhead even if it predicts exact per-function benefit. The difference between 99.91% and 32.38% on distributed inputs shows how a work-accounting boundary can change the conclusion.
+
+### What was tricky to build
+
+An all-proofs pass counts the real code change after backend lowering. Its per-function word deltas equal twice the number of removed zero guards plus seven times the overflow guards. The replayed three orders confirm that the model applies to the independent leaf functions despite shifted function positions. Host app linking uses the actual Editor source and SDK import descriptors.
+
+### What warrants a second pair of eyes
+
+Inspect the equal-proof denominator in the charged plots and verify that the figures separate workload families. Review the independent sources and the policy lock comparison. The experiment does not physically time the extra planner on the PicoCalc.
+
+### What should be done in the future
+
+Investigate collecting a partial score during ordinary frontend emission if another workload runs out of proof budget. The present Editor has no demonstrated need for the two-pass planner.
+
+### Code review instructions
+
+Follow `README.md` for host evaluation and the independent arithmetic emulation. The frozen `04-evaluate.mjs` emits all static and timing evidence. Decompress `various/held-out.json.gz` to audit the exact per-function analysis, order hashes, admission costs and per-order savings.
+
+### Technical details
+
+The frozen chooser source had SHA-256 `65c6cd926b08b3170df79a5eab305a3da229def01e3e353300005ac2da234bd0`. The summary cap test retained 256 summaries across 257 functions and produced a raw image byte-identical to ordinary source-order admission. Every cohort ran comparisons at 32,768 and at one-quarter, one-half and the full eligible proof cost, with coincident budgets represented once.
