@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
 
 HERE=Path(__file__).resolve().parent
 REPO=HERE.parents[5]
@@ -21,6 +22,7 @@ def main():
     parser.add_argument("tree",type=Path)
     parser.add_argument("--reuse-token", action="store_true", help="reuse tokens only at non-retaining compiler call sites")
     parser.add_argument("--indexed-prepass",action="store_true",help="use exact token records when scanning for asynchronous operations")
+    parser.add_argument("--source-spans",action="store_true",help="retain ordinary body spans in the composed indexed prepass")
     args=parser.parse_args()
     tree=args.tree.resolve()
     if tree.is_relative_to(REPO): raise ValueError("use a detached checkout outside the product tree")
@@ -37,6 +39,11 @@ def main():
     subprocess.run(["node",HERE/"02-index-overlay.mjs",compiler],check=True)
     if args.reuse_token:
         subprocess.run(["node",HERE/"10-reuse-token-overlay.mjs",compiler.parent],check=True)
+    if args.source_spans:
+        if not args.indexed_prepass:
+            raise ValueError("the composed study requires the indexed prepass")
+        span, = (REPO/"ttmp/2026/11/19").glob("PICOCALC-LANGUAGE-E--*/scripts/13-stage-span-reuse.py")
+        subprocess.run([sys.executable,span,compiler.parent,"--apply-existing"],check=True)
     if args.indexed_prepass:
         if not args.reuse_token:
             raise ValueError("the qualified prepass arm includes internal token reuse")

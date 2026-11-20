@@ -165,3 +165,51 @@ Run scripts/12-run-professor-frontend.sh with the prepared qualification directo
 ### Technical details
 
 The three arms ran consecutively. Each reports one warm-up and fifteen timed compilations. The complete source, timer construction and runtime setup are reproducible from the checked-in script.
+
+## Step 4: Measure two index representations on the physical compiler
+
+Both qualified implementations compiled the identical async Editor on three fresh ESP32-P4 boots. The index recovered 685.7 ms of the earlier regression. Reusing the current token at two internal call sites recovered another 136.6 ms.
+
+### Prompt Context
+
+See Step 1. The unchanged acceptance question is whether the complete native application compiles within 10% of the pre-G Editor while preserving its generated behavior.
+
+### What I did
+
+I built each firmware from 2e4fee1 in a separate checkout, verified the partition and SDK configuration, and scheduled both on the serial bus. I retained the explicit reboot's compile record for each sample. I prepared two follow-up images, one using the index for the async prepass and one also retaining original source spans for ordinary bodies.
+
+### Why
+
+An index can reduce scanning work while still creating a JavaScript token object for each occurrence. Changing the lifetime of the returned token in two known non-retaining consumers isolates that cost. Reusing a single object in consumers that retain tokens would be incorrect.
+
+### What worked
+
+Native cold time with the index was 3.132429, 3.131194 and 3.131202 s. With additional token reuse it was 2.995217, 2.993614 and 2.994557 s. The two medians are 3.131202 and 2.994557 s. Every run emitted the 240,452-byte fixed-slot module. The earlier unchanged async compiler median was 3.816925 s.
+
+### What didn't work
+
+The second median still exceeded the 2.910113 s cold limit by 84.4 ms. A wholly separate measurement of the full-sized Find fixture obtained its expected native early result, but its first serial screenshot stopped before the CRC footer. The search driver now captures the screenshot after the timed segment in a separate 22-second window.
+
+### What I learned
+
+The two index changes together reduced cold time by 21.5%. The remaining distance to the gate is smaller than the 181 ms spent scanning for operations in the reference async rewrite. An indexed prepass has a sufficiently large measurable target even if some of its work remains necessary.
+
+### What was tricky to build
+
+The C producer and JavaScript cursor are a matched pair. I staged each candidate with source digests. The partial board data are readable during capture, so the final comparator waits for a successful factory restore, verifies image hashes and checks the count, module size and timings of every candidate.
+
+### What warrants a second pair of eyes
+
+The figures measure three consecutive fresh reboots per image. They describe this Editor and firmware. The experiment does not characterize unrelated larger apps or deliberate thermal variation.
+
+### What should be done in the future
+
+Run the indexed async prepass and source-span composition after the Find series. Re-run the entire physical workflow on the best candidate that clears the cold threshold, then compare pixels, execution costs and fresh compile times before integration.
+
+### Code review instructions
+
+Read scripts/13-compare-physical-index.py to see how the manual and generated controls are matched. Scripts/15-screen-composed-candidates.sh and 16-qualify-fastest-editor.sh specify the follow-up measurements.
+
+### Technical details
+
+The clock includes launching QuickJS, loading the source compiler, emitting instructions, linking and teardown. Native module size includes the reserved slot. Host differential fixtures provide the stronger byte-for-byte content check.
