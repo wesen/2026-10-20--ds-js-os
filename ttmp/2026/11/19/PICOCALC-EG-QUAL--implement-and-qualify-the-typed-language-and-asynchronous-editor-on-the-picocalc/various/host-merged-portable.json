@@ -1,0 +1,31 @@
+{
+  "revision": "e0ad43baead46689fe4e7df8c1e019e1fe47a62c",
+  "script_sha256": "21551108d25fff0b4a6390dbb25b27773f675a1cfece45458d7f6076b4080d29",
+  "exit": 0,
+  "rows": [
+    "PASS 0.2s node 01-check-files-wasm.mjs",
+    "PASS 0.4s node 02-check-files-rv32.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 1.2s node 07-check-editor-layout.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.2s node 01-check-calendar.mjs",
+    "PASS 0.1s node 02-check-leads.mjs",
+    "PASS 0.1s node 03-check-task-records.mjs",
+    "PASS 1.1s node 04-check-wasm-world.mjs",
+    "PASS 0.3s node 07-check-rv32-parser.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.0s node 14-check-local-inference.mjs",
+    "PASS 0.1s node 16-check-entry-tokens.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.1s node 01-check-editor-empty-view.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 1.0s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 1.2s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --large",
+    "PASS 1.2s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --edit",
+    "PASS 1.3s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --positions",
+    "PASS 1.3s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --find",
+    "PASS 1.1s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --markdown",
+    "PASS 2.7s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-large",
+    "PASS 1.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-line",
+    "PASS 1.2s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-inline",
+    "PASS 1.4s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-dense-inline",
+    "PASS 1.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --dense-search",
+    "PASS 1.2s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --tail-search",
+    "PASS 1.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --late-navigation"
+  ]
+}
