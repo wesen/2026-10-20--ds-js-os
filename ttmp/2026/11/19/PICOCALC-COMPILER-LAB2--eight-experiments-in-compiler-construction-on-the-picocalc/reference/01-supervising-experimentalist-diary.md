@@ -128,3 +128,59 @@ Check `various/staged-replays.json`, `various/combined-host-replays.json`, and `
 ### Technical details
 
 The device factory digest begins `6b0e3ba4`. Code for the native-only and fully combined Editor is 12,444 RV32 words in the raw-use policy, against 16,541 staged and 21,886 production. These are static measures; the physical integrated cold times and guest cycles remain separate open observations.
+
+## Step 3: Execute the Editor change and separate bit-identical output from useful work
+
+The four-way scanner trial and its lazy alternative restored the device. Conditions and typed operations then ran through independent physical boots. The Editor fragment image reached a genuine native return, so we can now distinguish a source change that affects runtime behavior from a change whose final ELF merely differs in its layout.
+
+### Prompt Context
+
+**User prompt (verbatim)** “and files?” followed the request for Editor’s current and best compile time.
+
+**Assistant interpretation.** Answer the direct numerical question while continuing the research. **Inferred user intent.** Keep denominators comparable. A new editing session, an already-warm session and a cold boot have different costs.
+
+**Commit (code).** `08ba013` added the pipeline figure and vault renderer. `e351ca6` recorded native execution for the original and all four edited Editor revisions.
+
+### What I did
+
+- Gave the user the verified device cold times for Files and Editor, and the previous 43–44 ms Files edit result. Corrected an incorrect link to the original report.
+- Ran the combined compiler on the host. The examiner separately ran the preceding ELF with the new data layout as an independent correctness control. The wrong field assignment was observably different. The upstream data and call sequence remained the actual Editor preview function.
+- Checked physical A6 rows against the staged oracle, confirmed both restorations, and submitted the bounded-fragment Editor test to the same board. First body edit generated the expected full ELF, native return and buffer change.
+- Retrieved the scanner, condition and selection vault publication receipts. Queued the A7, E8, await, planner transfer, and integrated measurements behind per-study restoration. On the integrated host, all three APIs generated the expected native text and all 24 historical replays passed.
+- Uploaded all eight intern guides plus the supervisor protocol onto reMarkable. The provider acknowledged the nine-document bundle in the new ticket folder.
+
+### Why
+
+The native-only and combined arms share the same compiled text. A faster scanner changes the cold build interval, while native execution times for those exact bytes supply a machine/measurement noise check. The matched production and staged arms answer different comparisons. Each is preserved in the integrated firmware.
+
+### What worked
+
+Independent verification confirms the original 120-function Editor body edit can run on the board. The first physical pair measured 2.293 s for a warm full build and 0.487 s with full fragment retention. An independent examiner regenerated all five clean ELFs and validated first-boot mutation effects. A new 72-function selection module exposed proof-budget order sensitivity and the cost of charging the screening pass.
+
+### What didn't work
+
+The lazy scanner produced fewer lexeme slices yet took longer. Two successful techniques can also conflict economically: direct typed reads produced smaller Editor code but paid roughly 0.1 s of additional cold work against staged. The original three study apps cannot by themselves validate general prediction across outside workloads.
+
+### What I learned
+
+An end-to-end delay can fall even with higher resident memory. The cached full-source spelling is unbounded by the separate retained-word cap. The independent negative control enlarged retained text by 8,192 units without changing emitted instructions.
+
+### What was tricky to build
+
+The port is shared between firmware images whose boot-time instrumentation differs. Reusing the same operating-system endpoints, expected image digests and a single serial lock allows different metrics to run without sharing a single benchmark program or corrupting the source of a measurement.
+
+### What warrants a second pair of eyes
+
+For each class of edit distinguish the public artifact parity test from the internal guest procedure. Preview does not refer to the first file-handle fields, so the additional preview-field edit supplies the stronger layout witness. The native workload probes only its specified inputs.
+
+### What should be done in the future
+
+Verify the remaining board intervals and final restoration; complete the relative-versus-absolute comparisons, report all negative results and publish the supervisor synthesis.
+
+### Code review instructions
+
+Inspect the loop ordering in `scripts/03-board-queue.py`, the specialized study drivers invoked in `scripts/04-next-device-studies.sh`, and the gates in `scripts/08-after-bounds.sh` and `scripts/11-final-device.sh`. Each terminal measurement needs two valid boots and a restoration receipt.
+
+### Technical details
+
+Editor’s integrated host output is 12,444 RV32 instructions (−43.14% relative to the 21,886-word production control). Files is 380 (−52.74%) and Agenda’s parser and reminders occupy 2,044 (−49.63%). Their cold times are measured independently. The design delivery record is `various/remarkable-guides.json`.
