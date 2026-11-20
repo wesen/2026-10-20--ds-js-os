@@ -1,0 +1,14 @@
+{"app":"editor","engine":"rv32","ms":90.54450699999998,"bytes":240452,"lane":"reference","trial":1}
+{"app":"editor","engine":"rv32","ms":76.33392900000001,"bytes":240452,"lane":"index","trial":1}
+{"app":"editor","engine":"rv32","ms":91.185845,"bytes":240452,"lane":"reference","trial":2}
+{"app":"editor","engine":"rv32","ms":73.23270000000001,"bytes":240452,"lane":"index","trial":2}
+{"app":"editor","engine":"rv32","ms":88.584415,"bytes":240452,"lane":"reference","trial":3}
+{"app":"editor","engine":"rv32","ms":72.03242499999999,"bytes":240452,"lane":"index","trial":3}
+{"app":"editor","engine":"rv32","ms":91.60393299999998,"bytes":240452,"lane":"reference","trial":4}
+{"app":"editor","engine":"rv32","ms":74.249267,"bytes":240452,"lane":"index","trial":4}
+{"app":"editor","engine":"rv32","ms":91.41191700000002,"bytes":240452,"lane":"reference","trial":5}
+{"app":"editor","engine":"rv32","ms":74.001961,"bytes":240452,"lane":"index","trial":5}
+{"app":"editor","engine":"rv32","ms":90.927337,"bytes":240452,"lane":"reference","trial":6}
+{"app":"editor","engine":"rv32","ms":72.451225,"bytes":240452,"lane":"index","trial":6}
+{"app":"editor","engine":"rv32","ms":91.697845,"bytes":240452,"lane":"reference","trial":7}
+{"app":"editor","engine":"rv32","ms":74.561759,"bytes":240452,"lane":"index","trial":7}
