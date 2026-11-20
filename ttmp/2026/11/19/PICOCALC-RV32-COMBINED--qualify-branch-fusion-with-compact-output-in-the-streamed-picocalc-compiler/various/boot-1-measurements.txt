@@ -1,0 +1,199 @@
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=647233 peak_js_bytes=597420 module_bytes=66364
+files native compiler functions=streamed
+files compile source=bundle status=ok us=263267 peak_js_bytes=381940 module_bytes=24424
+JOINT begin 0 0 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=240680 peak_js_bytes=362624 module_bytes=24424
+JOINT end base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 0 0 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=676517 peak_js_bytes=578948 module_bytes=66364
+JOINT end base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 0 0 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2453981 peak_js_bytes=1410860 module_bytes=240452
+JOINT end base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 0 1 branch files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237060 peak_js_bytes=372696 module_bytes=24424
+JOINT end branch files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 0 1 branch agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=668110 peak_js_bytes=584144 module_bytes=66364
+JOINT end branch agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 0 1 branch editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2471640 peak_js_bytes=1394740 module_bytes=240452
+JOINT end branch editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT begin 0 2 both files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238924 peak_js_bytes=381928 module_bytes=24424
+JOINT end both files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 0 2 both agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=649755 peak_js_bytes=597420 module_bytes=66364
+JOINT end both agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 0 2 both editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2371041 peak_js_bytes=1407980 module_bytes=240452
+JOINT end both editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT begin 0 3 compact files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=242204 peak_js_bytes=375900 module_bytes=24424
+JOINT end compact files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 0 3 compact agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=652058 peak_js_bytes=592224 module_bytes=66364
+JOINT end compact agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 0 3 compact editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2378036 peak_js_bytes=1399088 module_bytes=240452
+JOINT end compact editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 1 0 branch files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238040 peak_js_bytes=372732 module_bytes=24424
+JOINT end branch files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 1 0 branch agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=663762 peak_js_bytes=584144 module_bytes=66364
+JOINT end branch agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 1 0 branch editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2462145 peak_js_bytes=1394880 module_bytes=240452
+JOINT end branch editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT begin 1 1 compact files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237348 peak_js_bytes=375900 module_bytes=24424
+JOINT end compact files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 1 1 compact agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=647974 peak_js_bytes=592236 module_bytes=66364
+JOINT end compact agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 1 1 compact editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2379820 peak_js_bytes=1399096 module_bytes=240452
+JOINT end compact editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 1 2 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=240878 peak_js_bytes=362612 module_bytes=24424
+JOINT end base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 1 2 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=665441 peak_js_bytes=578936 module_bytes=66364
+JOINT end base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 1 2 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2455478 peak_js_bytes=1410644 module_bytes=240452
+JOINT end base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 1 3 both files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238056 peak_js_bytes=381940 module_bytes=24424
+JOINT end both files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 1 3 both agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=647387 peak_js_bytes=597432 module_bytes=66364
+JOINT end both agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 1 3 both editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2360819 peak_js_bytes=1407980 module_bytes=240452
+JOINT end both editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT begin 2 0 compact files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=235167 peak_js_bytes=375924 module_bytes=24424
+JOINT end compact files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 2 0 compact agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=646333 peak_js_bytes=592248 module_bytes=66364
+JOINT end compact agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 2 0 compact editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2375497 peak_js_bytes=1399096 module_bytes=240452
+JOINT end compact editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 2 1 both files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238217 peak_js_bytes=381940 module_bytes=24424
+JOINT end both files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 2 1 both agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=647511 peak_js_bytes=597432 module_bytes=66364
+JOINT end both agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 2 1 both editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2360343 peak_js_bytes=1407980 module_bytes=240452
+JOINT end both editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT begin 2 2 branch files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237146 peak_js_bytes=372700 module_bytes=24424
+JOINT end branch files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 2 2 branch agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=662643 peak_js_bytes=584144 module_bytes=66364
+JOINT end branch agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 2 2 branch editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2465783 peak_js_bytes=1394760 module_bytes=240452
+JOINT end branch editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT begin 2 3 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=241067 peak_js_bytes=362612 module_bytes=24424
+JOINT end base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 2 3 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=665136 peak_js_bytes=578936 module_bytes=66364
+JOINT end base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 2 3 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2455936 peak_js_bytes=1410644 module_bytes=240452
+JOINT end base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 3 0 both files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238165 peak_js_bytes=381940 module_bytes=24424
+JOINT end both files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 3 0 both agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=647269 peak_js_bytes=597432 module_bytes=66364
+JOINT end both agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 3 0 both editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2360910 peak_js_bytes=1407980 module_bytes=240452
+JOINT end both editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT begin 3 1 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=241010 peak_js_bytes=362612 module_bytes=24424
+JOINT end base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 3 1 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=664060 peak_js_bytes=578936 module_bytes=66364
+JOINT end base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 3 1 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2460899 peak_js_bytes=1410852 module_bytes=240452
+JOINT end base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 3 2 compact files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=235495 peak_js_bytes=375908 module_bytes=24424
+JOINT end compact files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+JOINT begin 3 2 compact agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=643081 peak_js_bytes=592224 module_bytes=66364
+JOINT end compact agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+JOINT begin 3 2 compact editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2386639 peak_js_bytes=1399100 module_bytes=240452
+JOINT end compact editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+JOINT begin 3 3 branch files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=239952 peak_js_bytes=372696 module_bytes=24424
+JOINT end branch files 93cc912255b314759a59b777c9f22a27e5ecf255ebc6af00845f90138717c5b7
+JOINT begin 3 3 branch agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=666640 peak_js_bytes=584132 module_bytes=66364
+JOINT end branch agenda 3630850579783be06cb77b12ba10feae38b58e816033bae5e455bad87a34e66a
+JOINT begin 3 3 branch editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2438450 peak_js_bytes=1394728 module_bytes=240452
+JOINT end branch editor 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+JOINT complete
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2388235 peak_js_bytes=1407976 module_bytes=240452

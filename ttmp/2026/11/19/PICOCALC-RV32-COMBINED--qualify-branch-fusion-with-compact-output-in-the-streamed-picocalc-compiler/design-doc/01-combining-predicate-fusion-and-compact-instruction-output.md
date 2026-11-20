@@ -1,7 +1,7 @@
 ---
 Title: Combining predicate fusion and compact instruction output
 Ticket: PICOCALC-RV32-COMBINED
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -11,7 +11,7 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
+Summary: Semantics, artifact identity and physical protocol for the combined streamed compiler trial.
 LastUpdated: 2026-11-19T20:00:41.531534815-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -82,3 +82,31 @@ For each application and block, calculate `both − branch − compact + base` s
 - The branch and output tickets contain the original design, validation and adverse cases. `scripts/` in this ticket contains only the joint trial and reproduction procedure.
 
 A candidate for production review must preserve its two artifact equivalences, execute the expected application behaviors, and fit each existing app budget. Record device results separately for all applications, including regressions on a smaller program.
+
+## Reproduction
+
+Use a new scratch directory and run from the project root. The explicit device backup and final restore operate on the factory application. The fresh ELF reactor inputs and packaged JS bundles come from the isolated IDF build. The esptool path in this example uses the installed IDF 5.4 environment.
+
+```bash
+day=ttmp/2026/11/19
+ticket=$(find "$day" -maxdepth 1 -name 'PICOCALC-RV32-COMBINED--*')
+previous=$(find "$day" -maxdepth 1 -name 'PICOCALC-COMPILER-THESIS--*')
+scratch=$(mktemp -d /tmp/p4-combined.XXXXXXXX)
+port=/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00
+flasher=/home/manuel/.espressif/python_env/idf5.4_py3.13_env/bin/esptool.py
+bash "$previous/scripts/supervisor/p4-backup.sh" "$port" "$scratch/original" "$flasher"
+bash "$ticket/scripts/03-build.sh" "$scratch" /home/manuel/esp/esp-idf-5.4.2/export.sh
+bash "$ticket/scripts/04-host.sh" "$scratch" "$rv32_gcc" "$rv32_emulator"
+python3 -B "$ticket/scripts/07-boundaries.py" "$scratch"
+node "$ticket/scripts/05-oracle.mjs" "$scratch"
+python3 -B "$ticket/scripts/06-board.py" "$scratch" "$port" "$flasher"
+python3 -B "$ticket/scripts/08-summarize.py" "$scratch/physical.json"
+```
+
+Set `rv32_gcc` to the ESP GCC 14.2.0 (20260121) RISC-V binary, and `rv32_emulator` to the imported CJI `sources/cji/build/rv32/rv32emu` executable. The host workflow driver uses its neighboring support objects. The board receipt records each app, configuration, order, elapsed time, peak, returned length and SHA-256, along with the two native-world checks and restore outcome.
+
+## Integration outcome
+
+The joint trial passed the byte, metadata, diagnostics and behavior checks. Every one of the 96 measured builds succeeded with its existing app budget. Across two P4 boots the combined compiler saved 88–95 ms for Editor, 5–18 ms for Agenda and 3–5 ms for Files at the within-block medians. Editor’s peak fell by approximately 2.8 KB. Agenda and Files used about 18.5 KB and 19.3 KB more peak QuickJS memory respectively.
+
+The [project report](../analysis/01-what-happens-when-two-native-compiler-optimizations-share-the-same-output.md) works through the interaction and recommended integration decision. The storage equivalence means the combined compiler returns the same native executable as fusion alone for these inputs. For a memory-first production decision, distinguish maximum peak over the entire catalog from the peak of each application. Those objectives lead to different tradeoffs.
