@@ -31,13 +31,28 @@ def exercise(args, engine, trial, out):
     leaf=tag+".txt"
     path=directory+"/"+leaf
     missing="no directory "+directory+"\n#OK ls"
-    if missing not in capture("preflight",1.5,["0.3 ls "+directory]):
-        raise ValueError("benchmark directory already exists")
-    setup=capture("setup",11,["0.4 key f1","1.1 key d","1.9 key f3","2.5 type "+directory,"4.7 key enter",
-                             "5.8 key enter","6.7 key f2","7.4 type "+leaf,"8.7 key enter","10 ls "+directory])
-    if leaf not in setup or "#OK ls" not in setup: raise ValueError("Files did not create the test document")
+    found=capture("preflight",1.5,["0.3 ls "+directory])
+    if missing in found:
+        setup=capture("setup",7,["0.4 key f1","1.1 key d","1.9 key f3","2.5 type "+directory,
+                                "4.7 key enter","6 ls "+directory])
+        if missing in setup or "#OK ls" not in setup: raise ValueError("Files did not create the scratch directory")
+    else:
+        # Recover only the empty directory which an earlier, recorded trial created.
+        prior=args.resume_empty
+        if not prior or found.strip()!="#OK ls" or missing not in (prior/"preflight.log").read_text() or (
+                "fs: op 5 on "+directory+" took ") not in (prior/"setup.log").read_text():
+            raise ValueError("benchmark directory already exists")
+        listing=capture("root",3,["0.3 key f1","0.8 key d","2 ls"])
+        folders=sorted(re.findall(r"^  ([^/\n]+)/$",listing,re.M))
+        position=folders.index(directory)
+        # Fresh Files selects row zero. Directories come first, sorted by code unit.
+        if position>=25 or not all(name.isascii() for name in folders): raise ValueError("unexpected root ordering")
+        if position:
+            capture("select",position*0.4+1,[f"{0.3+i*0.4:.2f} key down" for i in range(position)])
     with (out/"put.log").open("wb") as log: UPLOAD(args.port,log,path,DOC)
-    opened=capture("open",6,["0.3 key esc","1.2 key enter","5 worlds"])
+    listing=capture("staged",2,["0.3 ls "+directory])
+    if not re.search(rf"^  {re.escape(leaf)}\s+65536$",listing,re.M): raise ValueError("staged file length differs")
+    opened=capture("open",7,["0.3 key enter","1.8 key enter","6 worlds"])
     if "editor crashed" in opened: raise ValueError("Editor failed to open the document")
     rows=[]
     for index,(case,query) in enumerate(QUERIES):
@@ -71,6 +86,7 @@ def main():
     for n in ("images","output","backup","esptool"):p.add_argument("--"+n,type=Path,required=True)
     p.add_argument("--port",default="/dev/ttyACM0");p.add_argument("--kind",choices=["control","candidate"],required=True)
     p.add_argument("--repetitions",type=int,default=1,choices=range(1,4))
+    p.add_argument("--resume-empty",type=Path,help="prior trial with proof it created an empty scratch directory")
     a=p.parse_args()
     a.esptool_python=a.esptool.parent/"python"
     original=MATCHED["validate"](a)

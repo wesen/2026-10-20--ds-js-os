@@ -200,3 +200,51 @@ Start at `scripts/11-compare-workflows.py` for the standard workflow, `14-edit-i
 ### Technical details
 
 The final production Editor has the frozen Wasm module digest `5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65`. The linked RV32 digest for the fixed reactor used by the compiler researcher is `7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd`. Each digest identifies a particular reactor as well as the typed program.
+
+## Step 4: Separate the physical Editor regression into compiler passes
+
+The matched small Editor workflow finished across twelve boots, six for each source and compiler pair. A second firmware series measures the time each compiler pass takes. We can now identify the part of the compiler that accounts for most of the additional time.
+
+### Prompt Context
+
+**User prompt (verbatim).** See Step 1. The user also asked “what about measuring the performance of teh generated code, are we covering any of it?” **Assistant interpretation.** Measure execution on the board separately from compilation and investigate the addition to compile time. **Inferred user intent.** A compiler change must leave the resulting Editor practical to use on the PicoCalc.
+
+### What I did
+
+I matched the ordinary workflow counters and screenshot hashes with `scripts/11-compare-workflows.py`. I ran the compiler-phase firmware on three explicit cold boots per arm, then replayed `scripts/20-summarize-phases.py --last-per-log` against the corresponding `boot-[123].log` files. I started two independently tested lexical-index hardware builds and a separate measurement of the complete 64 KiB search.
+
+### Why
+
+Equal behavior on the host cannot predict device compilation or execution time. The instrumented compiler gives elapsed microseconds for all passes. The separate, ordinary firmware supplies the actual qualification times.
+
+### What worked
+
+Native workflow CPU changed from 35.03 to 34.80 ms. Wasm changed from 144.35 to 144.30 ms. Both screenshots matched within each target across arms. Native cold compilation rose from 2.646 to 3.817 s. In the instrumented run, 896.5 ms of the 1,179.7 ms difference was inside the asynchronous source rewrite, about 76%. Reading the original program consumed 440.8 ms, scanning operations 181.4 ms and analyzing tasks 160.7 ms. The ordinary frontend added 127.5 ms and runtime setup added 115.5 ms. The eager JavaScript cursor alone reduced native compile time to a 3.503 s median, above the 2.910 s gate.
+
+### What didn't work
+
+The initial whole-document Find setup stopped before uploading the fixture. The Files app's F2 action opened a new unsaved Editor document. Its directory listing correctly contained no file. I replaced the setup with a verified empty directory, a paced serial upload and a separate listing that checks the file's exact size. The first failed trial was restored and archived. The collector now checks the number of completed trials as well as the restore flag.
+
+### What I learned
+
+Printed source generation itself accounted for 57.1 ms. Improving that stage alone could recover only a small fraction of the 906.8 ms needed to satisfy the qualification threshold. The measured cost of reading, revisiting and analyzing the source makes those earlier operations worth studying.
+
+### What was tricky to build
+
+The first capture after flashing can contain an automatic boot immediately before our explicit reboot. I retained the final paired compiler row in each separate capture and verified that the phase durations sum to the normal stopwatch. The host terminal's capture-status logs do not contain serial measurements.
+
+### What warrants a second pair of eyes
+
+Review exact app frame correspondence per target in `various/workflow-comparison.json`. Review the phase call-site boundaries and whether alternate firmware reproduces the same configuration. The short workflow's CPU changes are smaller than the spread of the measurements.
+
+### What should be done in the future
+
+Complete the full Find clocks, compare both tested lexical-index arms on hardware and qualify the selected compiler with the complete app workflows. The chess research ticket now holds separate, independently checked inputs for a fourth app.
+
+### Code review instructions
+
+Start with `various/g4-compile-phases.json`, then read `scripts/20-phase-qualification.md` for where the probe executes, and `scripts/07-time-find.py` for the three complete Find cases. The raw standard physical receipts are `various/physical-before-g.json` and `various/physical-final.json`.
+
+### Technical details
+
+Native peak compiler heap rose from 1,493,644 bytes to 2,256,776 bytes in the clean comparison. Wasm peak rose from 1,545,892 to 2,263,468 bytes. These are compilation allocations. The combined app's 70 persistent state fields refer to its execution-time frame.

@@ -25,7 +25,7 @@ def need(condition, message):
         raise ValueError(message)
 
 
-def lane(manifest, files, variant):
+def lane(manifest, files, variant, last_per_log=False):
     manifest = json.loads(manifest.read_text())
     need(manifest["variant"] == variant, f"expected {variant} manifest")
     need(manifest["firmware"], f"no firmware metadata in {variant} manifest")
@@ -66,6 +66,10 @@ def lane(manifest, files, variant):
             previous = None
         need(previous is None, f"{log}: last Editor compile was missing its phase row")
         need(len(samples) > count_before, f"{log}: no measured Editor compile")
+        if last_per_log:
+            # Flash can auto-boot before the scheduled explicit reboot in boot-1.
+            # The stock cold matrix takes the final completed compile in each capture.
+            samples[count_before:] = [samples[-1]]
     return {
         "revision": manifest["revision"], "firmware": manifest["firmware"], "samples": samples,
         "total_median_us": median(r["total_us"] for r in samples),
@@ -78,12 +82,13 @@ def lane(manifest, files, variant):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--last-per-log", action="store_true", help="use the explicit reboot in each capture")
     for key in ("pre-g", "g4"):
         parser.add_argument(f"--{key}-manifest", type=Path, required=True)
         parser.add_argument(f"--{key}-logs", type=Path, nargs="+", required=True)
     args = parser.parse_args()
-    before = lane(args.pre_g_manifest, args.pre_g_logs, "pre-g")
-    after = lane(args.g4_manifest, args.g4_logs, "g4")
+    before = lane(args.pre_g_manifest, args.pre_g_logs, "pre-g", args.last_per_log)
+    after = lane(args.g4_manifest, args.g4_logs, "g4", args.last_per_log)
     need(before["firmware"]["reactorSha256"] == after["firmware"]["reactorSha256"], "reactor differs")
     matched_artifacts = set(before["firmware"]["artifacts"]) - {"picocalc-os-p4.bin"}
     need(all(before["firmware"]["artifacts"][key] == after["firmware"]["artifacts"][key] for key in matched_artifacts),
