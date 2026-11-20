@@ -1,0 +1,280 @@
+{
+  "metric": "all guest instructions from entry to exit, including driver, reactor and typed app",
+  "ordering": [
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline"
+  ],
+  "gcc": "riscv32-esp-elf-gcc (crosstool-NG esp-14.2.0_20260121) 14.2.0",
+  "emulatorSha256": "ea32f0af6dae46cd1b12bf94300e08dee4c38c3b79d05e3d4190518c248afb31",
+  "supportObjects": {
+    "libc.o": "4c3f12f2bcf8018a86760d3174fdb5f0a4ed7e2e38c40eb3fb79f028fb17d918",
+    "hostcalls.o": "7ee7df63fa926a4743d3b88f985ef72a479362d40e7dc3fe5ad38a774dc58ed6",
+    "softfloat.o": "1f3559dc814565973392ed1b357040f24a4943892ede7b077128ee5667133236"
+  },
+  "linked": {
+    "files": {
+      "app": "files",
+      "entry": "compileFilesRv32",
+      "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+      "reactorSha256": "677aa14f4dd9b874ea57a39b969828afa4089e90a235e470e198c8284852f474",
+      "modules": {
+        "baseline": {
+          "bytes": 24424,
+          "sha256": "26787cd22bccc3be7a343057c1073158797343e7a447883a6303773582f444a7"
+        },
+        "candidate": {
+          "bytes": 24424,
+          "sha256": "ed63624f58404ce22bd67236d96884c24255959da3dcc957717df8f664589c23"
+        }
+      }
+    },
+    "agenda": {
+      "app": "agenda",
+      "entry": "compileAgendaRv32",
+      "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+      "reactorSha256": "b61490558325759c9d0416323bbe833be9291a5aed8461f6826cb5ea5df9e9eb",
+      "modules": {
+        "baseline": {
+          "bytes": 66364,
+          "sha256": "f561d24ffeca81fab2a6684e7d8cba1cc4a5fddb8862fe2aa1d6e94df8188231"
+        },
+        "candidate": {
+          "bytes": 66364,
+          "sha256": "3fdce72ca2add1f398568b14c7b2ee82c4701eceaf1d0a89e80fbd1731237626"
+        }
+      }
+    },
+    "editor": {
+      "app": "editor",
+      "entry": "compileTypedWorldRv32",
+      "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+      "reactorSha256": "7af700966b46c6efbec0ffb993eb5452cf4ba11ba4b63f15d3f182435072b4e6",
+      "modules": {
+        "baseline": {
+          "bytes": 240452,
+          "sha256": "caad5e2d704f3dd363cfd1833a43616d33574e3fee9bdb75514cddebd7939bf9"
+        },
+        "candidate": {
+          "bytes": 240452,
+          "sha256": "aa847cf3afdfc4ee2d4b06a96d6b185c67aa6662761410349170bb7d96b4ea22"
+        }
+      }
+    }
+  },
+  "workloads": {
+    "files": {
+      "driverSha256": "88d9883294b9c08823d744e3267558444ec5ba4227ada845f9fec5cd1e51b5bd",
+      "runs": [
+        {
+          "lane": "baseline",
+          "instructions": 88823,
+          "stdoutBytes": 66,
+          "stdoutSha256": "6f6a80958ab8006da1416f24eda4acb9b2b927e766db9a346aa916f7ddd7f79d"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 88750,
+          "stdoutBytes": 66,
+          "stdoutSha256": "6f6a80958ab8006da1416f24eda4acb9b2b927e766db9a346aa916f7ddd7f79d"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 88750,
+          "stdoutBytes": 66,
+          "stdoutSha256": "6f6a80958ab8006da1416f24eda4acb9b2b927e766db9a346aa916f7ddd7f79d"
+        },
+        {
+          "lane": "baseline",
+          "instructions": 88823,
+          "stdoutBytes": 66,
+          "stdoutSha256": "6f6a80958ab8006da1416f24eda4acb9b2b927e766db9a346aa916f7ddd7f79d"
+        }
+      ],
+      "finalLine": "Files RV32 startup, directory sorting, rounding, and mkdir passed"
+    },
+    "agenda": {
+      "driverSha256": "58c7c2925a870aada11ebb5cbbfbe9ae973a9cf6045e4821cbd007bbfe002aca",
+      "runs": [
+        {
+          "lane": "baseline",
+          "instructions": 2193310,
+          "stdoutBytes": 132,
+          "stdoutSha256": "916b8b2bd802bc19f2fe013840fea5e6fd5864aca5e834821045e574b7c6b3df"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 2132824,
+          "stdoutBytes": 132,
+          "stdoutSha256": "916b8b2bd802bc19f2fe013840fea5e6fd5864aca5e834821045e574b7c6b3df"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 2132824,
+          "stdoutBytes": 132,
+          "stdoutSha256": "916b8b2bd802bc19f2fe013840fea5e6fd5864aca5e834821045e574b7c6b3df"
+        },
+        {
+          "lane": "baseline",
+          "instructions": 2193310,
+          "stdoutBytes": 132,
+          "stdoutSha256": "916b8b2bd802bc19f2fe013840fea5e6fd5864aca5e834821045e574b7c6b3df"
+        }
+      ],
+      "finalLine": "frames=3 reminders=1 writes=4 durable_restart=pass grouped_navigation=pass mutations=pass editor=pass diagnostics=pass refresh=pass"
+    },
+    "editor/edit": {
+      "driverSha256": "1f4329a9b309ebecf1f58c47dc050fa09c76fc3a03bd6febddfdda267217007e",
+      "runs": [
+        {
+          "lane": "baseline",
+          "instructions": 2543239,
+          "stdoutBytes": 10386,
+          "stdoutSha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 2376228,
+          "stdoutBytes": 10386,
+          "stdoutSha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 2376228,
+          "stdoutBytes": 10386,
+          "stdoutSha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34"
+        },
+        {
+          "lane": "baseline",
+          "instructions": 2543239,
+          "stdoutBytes": 10386,
+          "stdoutSha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34"
+        }
+      ],
+      "finalLine": "Typed Editor startup, file read, missing file, and grant release passed",
+      "fixture": {
+        "inputBytes": 123,
+        "matchingWasmFramebuffers": 4,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 50
+      }
+    },
+    "editor/large": {
+      "driverSha256": "eb3ae6162f86845d9fa0565056e50fca4dc077318c8b9c33cb816a5825945e2a",
+      "runs": [
+        {
+          "lane": "baseline",
+          "instructions": 7621786,
+          "stdoutBytes": 1696,
+          "stdoutSha256": "6a6c89e5a4045e4bc2aee9f885436a9b145ae12d5e825c8e6a1df78b4a7d052c"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 7081589,
+          "stdoutBytes": 1696,
+          "stdoutSha256": "6a6c89e5a4045e4bc2aee9f885436a9b145ae12d5e825c8e6a1df78b4a7d052c"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 7081589,
+          "stdoutBytes": 1696,
+          "stdoutSha256": "6a6c89e5a4045e4bc2aee9f885436a9b145ae12d5e825c8e6a1df78b4a7d052c"
+        },
+        {
+          "lane": "baseline",
+          "instructions": 7621786,
+          "stdoutBytes": 1696,
+          "stdoutSha256": "6a6c89e5a4045e4bc2aee9f885436a9b145ae12d5e825c8e6a1df78b4a7d052c"
+        }
+      ],
+      "finalLine": "Typed Editor startup, file read, missing file, and grant release passed",
+      "fixture": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 3,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200
+      }
+    },
+    "editor/preview-dense-inline": {
+      "driverSha256": "1f7e64ea3c7c3fb55f7b92e1254b65e5b7fc2f568cec50d127d0e9be66fda362",
+      "runs": [
+        {
+          "lane": "baseline",
+          "instructions": 22853317,
+          "stdoutBytes": 13240,
+          "stdoutSha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 21519713,
+          "stdoutBytes": 13240,
+          "stdoutSha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 21519713,
+          "stdoutBytes": 13240,
+          "stdoutSha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+        },
+        {
+          "lane": "baseline",
+          "instructions": 22853317,
+          "stdoutBytes": 13240,
+          "stdoutSha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+        }
+      ],
+      "finalLine": "Typed Editor startup, file read, missing file, and grant release passed",
+      "fixture": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 5,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200
+      }
+    },
+    "editor/late-navigation": {
+      "driverSha256": "b7cca768d5fc0f17e5e7ce70d12fd0ccf9497b4f1325e00bc0bdd17586c79707",
+      "runs": [
+        {
+          "lane": "baseline",
+          "instructions": 42316056,
+          "stdoutBytes": 26775,
+          "stdoutSha256": "84514793e4b3a35d8d34c09c4b36afc627262e221014960fc56624460d44465f"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 38662647,
+          "stdoutBytes": 26775,
+          "stdoutSha256": "84514793e4b3a35d8d34c09c4b36afc627262e221014960fc56624460d44465f"
+        },
+        {
+          "lane": "candidate",
+          "instructions": 38662647,
+          "stdoutBytes": 26775,
+          "stdoutSha256": "84514793e4b3a35d8d34c09c4b36afc627262e221014960fc56624460d44465f"
+        },
+        {
+          "lane": "baseline",
+          "instructions": 42316056,
+          "stdoutBytes": 26775,
+          "stdoutSha256": "84514793e4b3a35d8d34c09c4b36afc627262e221014960fc56624460d44465f"
+        }
+      ],
+      "finalLine": "Typed Editor startup, file read, missing file, and grant release passed",
+      "fixture": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 6,
+        "rv32Open": true,
+        "wasmBytes": 88255,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200
+      }
+    }
+  }
+}

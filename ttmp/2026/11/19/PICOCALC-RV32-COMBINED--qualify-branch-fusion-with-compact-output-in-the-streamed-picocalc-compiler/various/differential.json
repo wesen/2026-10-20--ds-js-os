@@ -1,0 +1,211 @@
+{
+  "cases": 1343,
+  "traps": 24,
+  "normal": 1319,
+  "sourceSha256": "0fff449ccdb2e62bd15860eae6941b146016205df77b954bdf86d0aca1595201",
+  "wasmSha256": "794e599c936213893245edca0182cc47c8d47f076c8e8bf9871a11be01389961",
+  "imageSha256": {
+    "baseline": "b969a8d54f16d4522a746f5c92dc6b193f2ac3d55afd008c10f16e59289f12c9",
+    "candidate": "7d0439b9fead191b3e5b36da8939c76ad3bc3c6644c385b942bd2c3c0d944ddf"
+  },
+  "steps": {
+    "baseline": 37445,
+    "candidate": 34526
+  },
+  "bitPatterns": "signed i32 extrema, zero, negative bounds, unsigned UTF-16",
+  "depths": [
+    0,
+    4,
+    5,
+    6,
+    8
+  ],
+  "farArmJumpBytes": 12004,
+  "examples": [
+    {
+      "name": "eqz_if",
+      "args": [
+        0
+      ],
+      "expected": 1,
+      "trap": false,
+      "steps": {
+        "baseline": 12,
+        "candidate": 11
+      }
+    },
+    {
+      "name": "eqz_if",
+      "args": [
+        1
+      ],
+      "expected": 2,
+      "trap": false,
+      "steps": {
+        "baseline": 12,
+        "candidate": 11
+      }
+    },
+    {
+      "name": "call_order",
+      "args": [
+        32,
+        1,
+        2
+      ],
+      "expected": 7,
+      "trap": false,
+      "steps": {
+        "baseline": 88,
+        "candidate": 87
+      }
+    },
+    {
+      "name": "call_order",
+      "args": [
+        32,
+        2,
+        1
+      ],
+      "expected": 11,
+      "trap": false,
+      "steps": {
+        "baseline": 64,
+        "candidate": 63
+      }
+    },
+    {
+      "name": "call_order",
+      "args": [
+        32,
+        1,
+        1
+      ],
+      "expected": 11,
+      "trap": false,
+      "steps": {
+        "baseline": 64,
+        "candidate": 63
+      }
+    },
+    {
+      "name": "bound_6",
+      "args": [
+        64,
+        -2147483648,
+        65244
+      ],
+      "trap": true,
+      "steps": {
+        "baseline": 14,
+        "candidate": 12
+      }
+    },
+    {
+      "name": "bound_6",
+      "args": [
+        64,
+        -1,
+        65244
+      ],
+      "trap": true,
+      "steps": {
+        "baseline": 14,
+        "candidate": 12
+      }
+    },
+    {
+      "name": "bound_6",
+      "args": [
+        64,
+        0,
+        65244
+      ],
+      "expected": 65265,
+      "trap": false,
+      "steps": {
+        "baseline": 78,
+        "candidate": 72
+      }
+    },
+    {
+      "name": "bound_6",
+      "args": [
+        64,
+        1,
+        65244
+      ],
+      "expected": 65265,
+      "trap": false,
+      "steps": {
+        "baseline": 78,
+        "candidate": 72
+      }
+    },
+    {
+      "name": "bound_6",
+      "args": [
+        64,
+        2,
+        65244
+      ],
+      "trap": true,
+      "steps": {
+        "baseline": 14,
+        "candidate": 12
+      }
+    },
+    {
+      "name": "bound_6",
+      "args": [
+        64,
+        2147483647,
+        65244
+      ],
+      "trap": true,
+      "steps": {
+        "baseline": 14,
+        "candidate": 12
+      }
+    },
+    {
+      "name": "wide",
+      "args": [
+        0,
+        1
+      ],
+      "expected": 7407000,
+      "trap": false,
+      "steps": {
+        "baseline": 3016,
+        "candidate": 3014
+      }
+    },
+    {
+      "name": "wide",
+      "args": [
+        1,
+        1
+      ],
+      "expected": 7407000,
+      "trap": false,
+      "steps": {
+        "baseline": 3016,
+        "candidate": 3014
+      }
+    },
+    {
+      "name": "wide",
+      "args": [
+        1,
+        0
+      ],
+      "expected": 0,
+      "trap": false,
+      "steps": {
+        "baseline": 17,
+        "candidate": 15
+      }
+    }
+  ]
+}
