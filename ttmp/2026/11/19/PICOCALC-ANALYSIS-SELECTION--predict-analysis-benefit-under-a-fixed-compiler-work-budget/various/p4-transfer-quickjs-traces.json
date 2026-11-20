@@ -1,0 +1,94 @@
+{
+  "base": {
+    "editor": {
+      "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+      "phases": [
+        4
+      ],
+      "work": {
+        "cells": 0,
+        "comparisons": 0,
+        "retained": 0,
+        "proof": 4278
+      },
+      "bytes": 240452
+    },
+    "synthetic": {
+      "sha256": "bd1930b860bd09f9423565be4083e7651d2ec189154c590123c8b32bd7760d90",
+      "phases": [
+        4
+      ],
+      "work": {
+        "cells": 0,
+        "comparisons": 0,
+        "retained": 0,
+        "proof": 32166
+      },
+      "bytes": 116428
+    }
+  },
+  "literal": {
+    "editor": {
+      "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+      "phases": [
+        2,
+        3,
+        4
+      ],
+      "work": {
+        "cells": 2139,
+        "comparisons": 16,
+        "retained": 120,
+        "proof": 4278
+      },
+      "bytes": 240452
+    },
+    "synthetic": {
+      "sha256": "98401a96cf6cd28a841ccf0b4bf59618815e72d7ded843cd6ef8a0f77849a544",
+      "phases": [
+        2,
+        3,
+        4
+      ],
+      "work": {
+        "cells": 24692,
+        "comparisons": 152,
+        "retained": 52,
+        "proof": 32226
+      },
+      "bytes": 117796
+    }
+  },
+  "density": {
+    "editor": {
+      "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+      "phases": [
+        2,
+        3,
+        4
+      ],
+      "work": {
+        "cells": 2139,
+        "comparisons": 14,
+        "retained": 120,
+        "proof": 4278
+      },
+      "bytes": 240452
+    },
+    "synthetic": {
+      "sha256": "f10fdd4e921f14e1052a587b0d32dbb2f2a01d470c56533b269b1dfa51e99b58",
+      "phases": [
+        2,
+        3,
+        4
+      ],
+      "work": {
+        "cells": 24692,
+        "comparisons": 253,
+        "retained": 52,
+        "proof": 32088
+      },
+      "bytes": 106996
+    }
+  }
+}

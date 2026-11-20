@@ -297,3 +297,5 @@ Run `08-stage-p4.py WORK`, build with the former frontend study’s `05-build.sh
 ### Technical details
 
 The physical-transfer image SHA-256 is `dac35e2bca871ea6e7d3a389659bd9ab79443e56e6341cd640f8aab71aca4ac7`. The density ranked arm uses the exact 32,768 proof-visit budget. Planning is timed independently and does not debit that physical budget.
+
+I also replayed the emitted phase and work callbacks in vendored QuickJS. Editor used 16 comparison calls under the literal rule and 14 under the density rule. Node reported 15 and 14. The synthetic QuickJS counts were 152 and 253, versus Node’s 40 and 229. Feature cells, retained summaries, proof visits and all output digests matched. Sorting API semantics fix the selected set and permit different comparator traffic. The device summarizer checks phase order and the portable work counters and records the physical comparator count separately. [QuickJS phase replay](../various/p4-transfer-quickjs-traces.json).
