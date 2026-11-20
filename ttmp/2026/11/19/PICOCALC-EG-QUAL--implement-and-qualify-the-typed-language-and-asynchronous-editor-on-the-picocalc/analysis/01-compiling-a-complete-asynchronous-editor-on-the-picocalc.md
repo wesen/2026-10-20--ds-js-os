@@ -1,7 +1,7 @@
 ---
 Title: Compiling a complete asynchronous Editor on the PicoCalc
 Ticket: PICOCALC-EG-QUAL
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -12,8 +12,8 @@ RelatedFiles: []
 ExternalSources: []
 Summary: "How a typed Editor suspends and resumes on Wasm and RV32, with separate clocks for cold compilation, guest CPU and complete search."
 LastUpdated: 2026-11-19T23:29:26.570362707-05:00
-WhatFor: ""
-WhenToUse: ""
+WhatFor: Explain the implementation, the two independent clocks, and the evidence used to select the production compiler.
+WhenToUse: When onboarding a compiler engineer or reproducing the E1–E7 and G1–G4 device results.
 ---
 
 # Compiling a complete asynchronous Editor on the PicoCalc
@@ -222,6 +222,12 @@ The integrated production revision is `e0ad43b`. A detached checkout of that com
 Editor is a strong test of suspension and resumption because the original implementation exposes the state that a human programmer chose to keep. Its 64 KiB search stresses long cooperative operations, but the SDK can skip a line in a single call. A native loop that does most of its own integer arithmetic can spend a different fraction of its time in emitted guest code. Compiler speed, native instruction quality and application responsiveness therefore need separate observations even when the application source is identical.
 
 The lab added a typed chess world as a complementary workload. Its iterative-deepening alpha–beta search generates, makes, and undoes moves, and extends captures to avoid evaluating an unfinished exchange. Because typed call graphs exclude recursion, the program keeps search frames in an explicit stack. A fixed search budget gives each compiler the same work. Record the position, move, score, completed depth and number of examined nodes before comparing engine time per node. A changed move or search tree demands an explanation before the timing ratio can represent a code-generation improvement. Chess played no role in selecting the Editor parser parameters. [Chess engine and workload design](../../../20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/analysis/01-chess-search-without-recursion-on-the-picocalc.md)
+
+The first physical Chess measurement used its own native firmware and compiler revision. Chess compiled on the P4 in **1.898 s**, with 1,298,116 bytes of peak compiler allocation. White played e2–e4. Black replied Nb8–c6 after examining 1,600 nodes and completing depth three, with a score of +12 in the engine's centipawn scale. The host replay produced the same move, score, depth, node count and 78 timer settlements. The board accepted the user's move and produced a retained frame in 3.147 ms. Enter to the retained reply frame took 472.922 ms, of which 258.777 ms was charged to Chess across 79 segments. The narrower engine clock read 250.684 ms. It includes reactor work as well as search. Those distinct measurements let a future code-generation experiment check that it searched the same tree and distinguish guest work from scheduling and rendering. One native trial cannot supply a physical Wasm comparison or a distribution of response times.
+
+The Chess run restored the reference firmware and verified all three original worlds. This was a native execution test on the physical board; the prebuilt Wasm Chess image has host replay coverage.
+
+![Physical PicoCalc showing the chess position after the engine reply](../../../20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/various/chess-physical-reply.png)
 
 ## Reproduce the stages
 

@@ -1,0 +1,5 @@
+Remote collection: /ai/2026/11/19/PICOCALC-EG-QUAL
+2026-11-20: uploaded PicoCalc - Language and Continuation Research Reports.pdf
+Contents: revised intern guide and the independent language, continuation, and physical search reports.
+2026-11-20: uploaded PicoCalc - Compiling a Complete Asynchronous Editor.pdf
+Contents: supervisor synthesis, physical search comparisons, production compiler measurements, and independent chess workload.
