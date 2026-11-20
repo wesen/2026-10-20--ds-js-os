@@ -1,0 +1,3873 @@
+{
+  "firmware": "0f52cef2134fe143ccae2ba59790efc1564a0397b9018ef917c78777d6bd9ad3",
+  "table": "1e67efde107bf6b3b9ee582350256b0bead1f1f88605cc6b13a5216beefe07f8",
+  "original": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "compilers": {
+    "base": {
+      "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+      "rv32": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b"
+    },
+    "uses": {
+      "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+      "rv32": "9e92e999d37ad0ad8bf138cfb7c7b5fb989b17c4ec18841dbe5ae07f9f37e152"
+    },
+    "loops": {
+      "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+      "rv32": "dc7fe2c83db8f633f549608b186b954f8075501704c8cbc02bdafec6701a0e2c"
+    }
+  },
+  "oracle": {
+    "base": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+        "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3",
+        "bytes": 24424,
+        "raw": "92a20ec1ea061e35fa5fcac52317b52cd3a12670601ff3bb4617810e20a45f0d",
+        "words": 516,
+        "guestFirmwareOffset": 3582168
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+        "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43",
+        "bytes": 66364,
+        "raw": "a6a5d9dcdc3df1bec2787d5e6b187b745a3500c6f2cc874e129ce67bc25d6c39",
+        "words": 2496,
+        "guestFirmwareOffset": 3584232
+      },
+      "editor": {
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+        "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf",
+        "bytes": 240452,
+        "raw": "1adfa63f253e495ebf2fe46c01f06f83997c3efb3b02f9c9cdc6a1cf1e064ebc",
+        "words": 15954
+      }
+    },
+    "uses": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+        "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8",
+        "bytes": 24424,
+        "raw": "0651731be362161c522adfa21e8f2c7eb24ed7544b87b51c67d77cbd23b08534",
+        "words": 395,
+        "guestFirmwareOffset": 3594216
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+        "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609",
+        "bytes": 66364,
+        "raw": "7c82f9f88c62ce49e58da7a449f478a8008283c8c6cae6ee5c23d71b267d8d2e",
+        "words": 2130,
+        "guestFirmwareOffset": 3595796
+      },
+      "editor": {
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+        "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e",
+        "bytes": 240452,
+        "raw": "fec1c033cf9e577811a8f8a448be37e2186d46658e8f187265fd699588429a61",
+        "words": 12725
+      }
+    },
+    "loops": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+        "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48",
+        "bytes": 24424,
+        "raw": "edf8571bf261c5a81be61a3651f87dff0fee8e282c767af3dc19b91982375289",
+        "words": 392,
+        "guestFirmwareOffset": 3604316
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+        "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780",
+        "bytes": 66364,
+        "raw": "3c545492c25a43d26ffb2c1f91529caf281bb75ac252d1b6ecc8f276b6a1c843",
+        "words": 2099,
+        "guestFirmwareOffset": 3605884
+      },
+      "editor": {
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+        "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e",
+        "bytes": 240452,
+        "raw": "e6f2851df8eb113d63b397429f9280ed4d720ce3c63efaffe05f0fefd9089b6c",
+        "words": 12748
+      }
+    }
+  },
+  "guest_inputs": {
+    "base": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "words": 516,
+        "raw": "92a20ec1ea061e35fa5fcac52317b52cd3a12670601ff3bb4617810e20a45f0d",
+        "entryOffset": 1200
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "words": 2496,
+        "raw": "a6a5d9dcdc3df1bec2787d5e6b187b745a3500c6f2cc874e129ce67bc25d6c39",
+        "entryOffset": 5252
+      }
+    },
+    "uses": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "words": 395,
+        "raw": "0651731be362161c522adfa21e8f2c7eb24ed7544b87b51c67d77cbd23b08534",
+        "entryOffset": 964
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "words": 2130,
+        "raw": "7c82f9f88c62ce49e58da7a449f478a8008283c8c6cae6ee5c23d71b267d8d2e",
+        "entryOffset": 4304
+      }
+    },
+    "loops": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "words": 392,
+        "raw": "edf8571bf261c5a81be61a3651f87dff0fee8e282c767af3dc19b91982375289",
+        "entryOffset": 964
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "words": 2099,
+        "raw": "3c545492c25a43d26ffb2c1f91529caf281bb75ac252d1b6ecc8f276b6a1c843",
+        "entryOffset": 4244
+      }
+    }
+  },
+  "boots": [
+    {
+      "rows": [
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 285028,
+          "peak": 395912,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 801130,
+          "peak": 594932,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2940808,
+          "peak": 1416572,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 303802,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 848601,
+          "peak": 557756,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3152568,
+          "peak": 1219752,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 305453,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 846923,
+          "peak": 557656,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3174495,
+          "peak": 1219852,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 299736,
+          "peak": 411352,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 842225,
+          "peak": 557768,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3145996,
+          "peak": 1219760,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 304189,
+          "peak": 411376,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 846607,
+          "peak": 557652,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3144870,
+          "peak": 1219844,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 285640,
+          "peak": 395908,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 789650,
+          "peak": 594924,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2945942,
+          "peak": 1416572,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 304297,
+          "peak": 411368,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 839750,
+          "peak": 557644,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3169570,
+          "peak": 1219840,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 285996,
+          "peak": 395900,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 785349,
+          "peak": 594952,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2947044,
+          "peak": 1416560,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 302780,
+          "peak": 411352,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 843106,
+          "peak": 557764,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3153686,
+          "peak": 1219752,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 284913,
+          "peak": 395908,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 791146,
+          "peak": 594936,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2981150,
+          "peak": 1416572,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 300362,
+          "peak": 411368,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 840309,
+          "peak": 557652,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3164676,
+          "peak": 1219856,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 302983,
+          "peak": 411360,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 840236,
+          "peak": 557768,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3130951,
+          "peak": 1219760,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 304497,
+          "peak": 411352,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 837496,
+          "peak": 557752,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3132529,
+          "peak": 1219760,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 286297,
+          "peak": 395920,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 783099,
+          "peak": 594968,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2951740,
+          "peak": 1416564,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 305443,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 842566,
+          "peak": 557660,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3164176,
+          "peak": 1219864,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 301638,
+          "peak": 411372,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 847375,
+          "peak": 557636,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3184177,
+          "peak": 1219868,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 303249,
+          "peak": 411372,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 847619,
+          "peak": 557760,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3168682,
+          "peak": 1219776,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 283486,
+          "peak": 395904,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 784682,
+          "peak": 594924,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2970425,
+          "peak": 1416596,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        }
+      ],
+      "guest": [
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587469,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260195,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260183,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588786,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260146,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258877,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588724,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260112,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258842,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587483,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260106,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260156,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588709,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260137,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258842,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587441,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260127,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260136,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588720,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260106,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260114,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587480,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260112,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260137,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588726,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 258830,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260140,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588739,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260114,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258830,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587474,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260118,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260158,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588759,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260150,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258842,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587429,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260125,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260168,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588736,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260137,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258842,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587433,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260156,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260125,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587466,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260125,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260094,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 62317,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52950,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51671,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60959,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 53035,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51676,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 62337,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52917,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 52005,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61067,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52831,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51579,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61031,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52517,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 53017,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61040,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52805,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51556,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61030,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 54115,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51269,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61039,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52929,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51269,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61039,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52838,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51269,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60481,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52962,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 52968,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60404,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52905,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51690,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60481,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 54315,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51690,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60475,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52905,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51657,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60481,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52950,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 53170,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60484,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52917,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51657,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60481,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 54274,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51676,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250554,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 0,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 736110,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 0,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734974,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250662,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 1,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734520,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 1,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734729,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1255248,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 2,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734839,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 2,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734771,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250661,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 3,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734496,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 3,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734781,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1258803,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 4,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734588,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 4,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734693,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1253674,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 5,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734525,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 5,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734490,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251624,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 6,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734965,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 6,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734722,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250501,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 7,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734621,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 7,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734757,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250260,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 8,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 736469,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 8,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734726,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1258228,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 9,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734764,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 9,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734753,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250560,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 10,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 735024,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 10,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734774,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251903,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 11,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734919,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 11,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734655,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250333,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 12,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 735100,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 12,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734520,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251698,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 13,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734714,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 13,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734557,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1253865,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 14,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734787,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 14,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734694,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251974,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 15,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734846,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 15,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734735,
+          "clock_hz": 360000000
+        }
+      ],
+      "worlds": {
+        "files": {
+          "engine": "native",
+          "file": "files/compiled.bin",
+          "last_error": ""
+        },
+        "agenda": {
+          "engine": "native",
+          "file": "agenda/compiled.bin",
+          "last_error": ""
+        },
+        "editor": {
+          "engine": "native",
+          "file": "editor/compiled.bin",
+          "last_error": ""
+        }
+      },
+      "editor_guest": {
+        "base": {
+          "reachable": [
+            "editorFindMatch",
+            "editorFold"
+          ],
+          "entry": 15228,
+          "words": 15954,
+          "sha256": "1adfa63f253e495ebf2fe46c01f06f83997c3efb3b02f9c9cdc6a1cf1e064ebc"
+        },
+        "uses": {
+          "reachable": [
+            "editorFindMatch",
+            "editorFold"
+          ],
+          "entry": 12204,
+          "words": 12725,
+          "sha256": "fec1c033cf9e577811a8f8a448be37e2186d46658e8f187265fd699588429a61"
+        },
+        "loops": {
+          "reachable": [
+            "editorFindMatch",
+            "editorFold"
+          ],
+          "entry": 12084,
+          "words": 12748,
+          "sha256": "e6f2851df8eb113d63b397429f9280ed4d720ce3c63efaffe05f0fefd9089b6c"
+        }
+      }
+    },
+    {
+      "rows": [
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 284116,
+          "peak": 395900,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 799187,
+          "peak": 594936,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2945260,
+          "peak": 1416556,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 303045,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 856585,
+          "peak": 557764,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3145790,
+          "peak": 1219748,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 301517,
+          "peak": 411352,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 848607,
+          "peak": 557644,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3186088,
+          "peak": 1219296,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 301279,
+          "peak": 411352,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 852833,
+          "peak": 557756,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3149488,
+          "peak": 1219752,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 299700,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 857762,
+          "peak": 557640,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3175658,
+          "peak": 1219844,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 283832,
+          "peak": 395904,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 793298,
+          "peak": 594932,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2968172,
+          "peak": 1416556,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 302254,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 855739,
+          "peak": 557648,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3181071,
+          "peak": 1219840,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 287752,
+          "peak": 395908,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 796400,
+          "peak": 594924,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2959860,
+          "peak": 1416576,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 301884,
+          "peak": 411352,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 837595,
+          "peak": 557764,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3178454,
+          "peak": 1219756,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 283954,
+          "peak": 395900,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 789651,
+          "peak": 594924,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2958701,
+          "peak": 1416560,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 305838,
+          "peak": 411352,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 839404,
+          "peak": 557640,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3173574,
+          "peak": 1219852,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 304525,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 847329,
+          "peak": 557756,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3158467,
+          "peak": 1219752,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 303409,
+          "peak": 411364,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 854781,
+          "peak": 557752,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3186370,
+          "peak": 1219760,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 286237,
+          "peak": 395900,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 781965,
+          "peak": 594932,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2964176,
+          "peak": 1416556,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 306707,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 842439,
+          "peak": 557628,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3183186,
+          "peak": 1219852,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "loops",
+          "app": "files",
+          "streamed": true,
+          "us": 300962,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 392,
+          "sha256": "48d464725f6c53c747971c4b81c9c8a91c61ee4b76b462b2080203906a76ec48"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "loops",
+          "app": "agenda",
+          "streamed": true,
+          "us": 838060,
+          "peak": 557632,
+          "bytes": 66364,
+          "words": 2099,
+          "sha256": "b5b9bb2fa5c60bfd382a262cfd0651e6550b5a20b75b6d14889d36aa09c8e780"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "loops",
+          "app": "editor",
+          "streamed": true,
+          "us": 3162928,
+          "peak": 1219852,
+          "bytes": 240452,
+          "words": 12748,
+          "sha256": "892119ff4d3fc4d190d978b138dba1e7c1b19dfe73f0222d38766c9747adb59e"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "uses",
+          "app": "files",
+          "streamed": true,
+          "us": 301032,
+          "peak": 411356,
+          "bytes": 24424,
+          "words": 395,
+          "sha256": "1b4177bd10be7632b4c9a751ba7e0a147afb8c14eb699df3c694ecda070ff0c8"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "uses",
+          "app": "agenda",
+          "streamed": true,
+          "us": 842730,
+          "peak": 557768,
+          "bytes": 66364,
+          "words": 2130,
+          "sha256": "265da8fccdf9699a1effa55bf845ca219246070451cba163d9b9449e2d199609"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "uses",
+          "app": "editor",
+          "streamed": true,
+          "us": 3156664,
+          "peak": 1219756,
+          "bytes": 240452,
+          "words": 12725,
+          "sha256": "f09eec32871221b988563c018eb26968d7790bfa119411c13e4ecaa68889146e"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 287008,
+          "peak": 395904,
+          "bytes": 24424,
+          "words": 516,
+          "sha256": "e4a40ed2282088920d3de212e6e54bef020b0775eaa8b86ad7bbdcb500a57df3"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 790380,
+          "peak": 594924,
+          "bytes": 66364,
+          "words": 2496,
+          "sha256": "7408b45d4e67d11366b3430fd6dfcc3dd2f7804264c583dd71ff268d129ccf43"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 2956064,
+          "peak": 1416560,
+          "bytes": 240452,
+          "words": 15954,
+          "sha256": "c20ae11eb7ffb801edeb79f161e0c78e3a6e0f9d043ee8bbf904cedb2286e1bf"
+        }
+      ],
+      "guest": [
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588774,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260186,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260181,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587466,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260144,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260149,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588736,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 258844,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260122,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588672,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260119,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258830,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587509,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260158,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260152,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588787,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260140,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258842,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 594928,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260138,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260168,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588687,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260124,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258842,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587444,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260130,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260142,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587432,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260154,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260110,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588728,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260113,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258842,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587498,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260152,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260115,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588674,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260117,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260128,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 587441,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260119,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260119,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588724,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 258830,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 260132,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 588662,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 260115,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 258830,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61000,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52990,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51695,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60999,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52976,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 52992,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61196,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52920,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51664,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 62306,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52984,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51655,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61061,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52517,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51681,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 62283,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52786,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51556,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61109,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52541,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 52048,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61030,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52929,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51269,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61039,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 54144,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51269,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61039,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52929,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51237,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61998,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52931,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51690,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60481,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52939,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51690,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61871,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52905,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51657,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 60481,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52938,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51659,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 62116,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52925,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51269,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 61041,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 52952,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 51236,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1258619,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 0,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734734,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 0,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734854,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250650,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 1,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734615,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 1,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734839,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251936,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 2,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734943,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 2,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734455,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1252121,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 3,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734743,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 3,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734878,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1252128,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 4,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 735078,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 4,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734819,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251896,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 5,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734613,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 5,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734967,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1252887,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 6,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 735155,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 6,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734583,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1256135,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 7,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734537,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 7,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734807,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250284,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 8,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734649,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 8,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734566,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1255517,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 9,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734796,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 9,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734597,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250576,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 10,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 735213,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 10,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 735132,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250548,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 11,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734953,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 11,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 735936,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251706,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 12,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734835,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 12,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734793,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250708,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 13,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734777,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 13,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734960,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1251991,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 14,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734731,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 14,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734809,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 1250559,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 15,
+          "lane": "uses",
+          "count": 128,
+          "cycles": 734643,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "findmatch",
+          "block": 15,
+          "lane": "loops",
+          "count": 128,
+          "cycles": 734776,
+          "clock_hz": 360000000
+        }
+      ],
+      "worlds": {
+        "files": {
+          "engine": "native",
+          "file": "files/compiled.bin",
+          "last_error": ""
+        },
+        "agenda": {
+          "engine": "native",
+          "file": "agenda/compiled.bin",
+          "last_error": ""
+        },
+        "editor": {
+          "engine": "native",
+          "file": "editor/compiled.bin",
+          "last_error": ""
+        }
+      },
+      "editor_guest": {
+        "base": {
+          "reachable": [
+            "editorFindMatch",
+            "editorFold"
+          ],
+          "entry": 15228,
+          "words": 15954,
+          "sha256": "1adfa63f253e495ebf2fe46c01f06f83997c3efb3b02f9c9cdc6a1cf1e064ebc"
+        },
+        "uses": {
+          "reachable": [
+            "editorFindMatch",
+            "editorFold"
+          ],
+          "entry": 12204,
+          "words": 12725,
+          "sha256": "fec1c033cf9e577811a8f8a448be37e2186d46658e8f187265fd699588429a61"
+        },
+        "loops": {
+          "reachable": [
+            "editorFindMatch",
+            "editorFold"
+          ],
+          "entry": 12084,
+          "words": 12748,
+          "sha256": "e6f2851df8eb113d63b397429f9280ed4d720ce3c63efaffe05f0fefd9089b6c"
+        }
+      }
+    }
+  ],
+  "restored": true,
+  "restored_worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    }
+  }
+}

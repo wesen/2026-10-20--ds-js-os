@@ -5,7 +5,7 @@ Status: active
 Topics:
     - picocalc
     - native
-    - compiler
+    - performance
 DocType: analysis
 Intent: long-term
 Owners: []
@@ -71,9 +71,31 @@ An instrumented frame-only lane emitted the exact same native image, entry offse
 
 A save and a restore each count as one instruction. Editor's frame-only compiler emitted 5,489 stack loads and 1,292 stack stores. The use-count policy emitted 1,246 and 988, and loop weighting emitted 1,434 and 987. The maximum individual Editor frame stayed at 192 bytes. Twenty-two functions in each candidate needed no frame. All native totals fell within ten percent of the historical model rerun on the A6 operations. The `countUnit` fixture produced 17 instructions. [Per-function code accounts and guest traces](../various/host-account.json)
 
+One focused loop with a call executes 134 stack loads under A6. The use-count version executes 24 and the loop-weighted version executes 19 on the same input. The loop-weighted result still takes 237 total instructions against 234 for use counts in that example. The counters distinguish an instruction present in the image from one executed on a repeated path.
+
 The native interpreter initialized callee-saved registers with sentinel values and checked them and the stack pointer after every return. An imported function deliberately clobbered caller-saved registers except its result. The checks compared returned values and observable memory with Wasm, including two signed-division traps. The original 24 application checks passed on each policy. [Use-count replay](../various/host-replays-uses.json) · [Loop-weighted replay](../various/host-replays-loops.json)
 
-<!-- physical_results -->
+## Guest performance and cold compiler cost
+
+The P4 compared A6 with both placement policies in one firmware. Each of the six blocks on each of two boots compiled Files, Agenda and Editor with all three policies. The order rotated within a boot. The device produced the matching host ELF hash on all 108 cold builds. The active normal-world lane was the loop-weighted candidate, which loaded successfully on both boots.
+
+| Workload | Use-count cold change | Loop-weighted cold change | Use-count peak change | Loop-weighted peak change |
+| --- | ---: | ---: | ---: | ---: |
+| Files | +17.31 to +18.14 ms | +16.63 to +18.43 ms | +15,448 to +15,454 B | +15,452 to +15,464 B |
+| Agenda | +53.49 to +57.54 ms | +54.55 to +55.68 ms | −37,172 to −37,170 B | −37,292 to −37,286 B |
+| Editor | +199.16 to +200.57 ms | +213.09 to +216.94 ms | −196,812 to −196,806 B | −196,720 to −196,710 B |
+
+The ranges are the two per-boot medians of paired comparisons with A6. Editor's A6 cold boot medians were 2.949 and 2.959 seconds. The use-count candidate took 3.149 and 3.158 seconds, and the loop-weighted candidate took 3.167 and 3.178 seconds. QuickJS peak allocation fell about 192 KiB in both Editor candidates. Files used about 15 KiB more during cold compilation.
+
+The firmware timed three native kernels in checked batches of 128 calls at 360 MHz. For Editor, the fixture copies the app's exact instruction image into the firmware. Its native `editorFindMatch` entry can call only `editorFold` and issues no reactor import. The two inputs test a case-insensitive match or a mismatch on the last of 96 code units. Both exercise the entire scan. The receipt checks that the measured machine code appears byte for byte in the physical firmware and matches the independently counted app image.
+
+| Native function | Use-count cycles reduction | Loop-weighted cycles reduction |
+| --- | ---: | ---: |
+| Files name comparison | 55.77% to 55.81% | 55.77% to 55.81% |
+| Agenda weekday computation | 12.76% to 13.41% | 14.91% to 16.00% |
+| Editor's 96-unit search match | 41.29% on both boots | 41.30% to 41.31% |
+
+The Editor comparison used about 9,780 A6 cycles per call and about 5,740 cycles with either policy. The slow path loads each code unit and folds its case before comparing. The two policies allocate the hot loop locals in registers. The weighted policy leaves the rarely accessed `end` parameter on the frame and saves one fewer register. The change had little effect on this workload. The Agenda timing advantage for loop weighting concerns the checked weekday kernel. The use-count policy gave the smaller Editor image and lower cold time, with closely matching Editor guest cycles. The results come from three deterministic workloads on one P4. The board returned to its saved app image after the trials. [P4 cold and guest receipt](../various/physical.json) · [Paired results](../various/physical-summary.json) · [Editor guest call closure and identity](../various/editor-guest-oracle.json)
 
 ## Reproduce the comparison
 

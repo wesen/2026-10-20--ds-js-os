@@ -5,7 +5,7 @@ Status: active
 Topics:
     - picocalc
     - native
-    - compiler
+    - performance
 DocType: reference
 Intent: long-term
 Owners: []
@@ -129,3 +129,56 @@ Run `node scripts/03-verify.mjs <A7-stage-root>`. Compare the instrumented `fram
 ### Technical details
 
 The static Files, Agenda and Editor counts were 395, 2,130 and 12,725 with use counts, and 392, 2,099 and 12,748 with loop weighting. The emitted register save and restore instructions total 1,278 and 1,112 in Editor.
+
+
+## Step 3: Compare the RAM and cycle results on the same ESP32-P4
+
+The supervisor ran the three-lane firmware after the earlier board studies. Both independent register policies compiled and ran the original Files and Agenda guest functions and the import-free Editor search closure. The ordinary native launcher loaded the loop-weighted Editor lane.
+
+### Prompt Context
+
+**Study specification:** See Step 1.
+
+**Commit (code):** `df67c87` — Compare two RV32 register placement policies against A6.
+
+### What I did
+
+- Validated two boots, 108 cold compiler builds, and 288 checked guest batches using the firmware digests, independent ELF oracles and expected values.
+- Compared the Editor operation's raw app text and the exact embedded firmware payload. The closure is `editorFindMatch` and `editorFold`.
+- Recorded per-boot paired differences for time, QuickJS peak allocation and guest cycles in [the results](../analysis/01-what-register-homes-save-in-a-picocalc-function.md).
+
+### Why
+
+Holding locals in registers has compiler and execution consequences. Both policies were timed against the same A6 source, native reactor and CPU clock.
+
+### What worked
+
+All three guests ran faster under both policies. Editor's checked match went from about 9,780 cycles to 5,740. The use-count compiler added 199–201 ms to cold Editor builds and reduced the peak by 196,806–196,812 bytes. The loop-weighted policy added 213–217 ms with a similar peak reduction. Both policies stayed below all three native ceilings and restored the original app after the board run.
+
+### What didn't work
+
+The loop-weighted policy did not establish a meaningful Editor guest-cycle advantage on the checked operation. Its Agenda weekday cycles fell an additional several percent relative to A6 when compared with the use-count change.
+
+### What I learned
+
+Editor search selected effectively the same repeated locals with both rankings. Most of its gain comes from moving the hot loop's loads and stores into registers. A low-use parameter in the weighted candidate still lives in its frame.
+
+### What was tricky to build
+
+The application image has imported call placeholders, but the selected Editor operation must execute unchanged raw instructions. The host verifier follows its direct call edges and rejects any reached relocation. That permitted retaining all app offsets and emitting only word-aligned exact text.
+
+### What warrants a second pair of eyes
+
+A reader should distinguish matched physical cycle batches from the emulator's instruction and load counts. The Agenda win measures weekday calls on eight fixed dates and should retain that denominator.
+
+### What should be done in the future
+
+Use both the stable Editor code-size result and the measured compile-time difference when selecting the placement policy for a combined compiler.
+
+### Code review instructions
+
+Read `various/physical-summary.json` and check the paired keys against `various/physical.json`. The P4 build wrapper stages data in an isolated tree and `scripts/07-board.py` verifies the embedded Editor bytes before flashing.
+
+### Technical details
+
+Two boots, six three-lane compiler blocks per boot, three 128-call kernels in 16 measured blocks per boot at 360 MHz.
