@@ -1,0 +1,40 @@
+{
+  "base": "9b6a2f2252da31d15f6a137699145849796a41cc",
+  "lane": "native-index-span",
+  "sources": {
+    "picocalc-os/port/esp32p4/main/typed_lex_index.c": "ecd5591e9ee0c8bdfcd2c9b8f9320c24ab02b17eac1722249bfa442d0cecd361",
+    "picocalc-os/port/esp32p4/main/typed_lex_index.h": "ddc8ddef276dca07839b365cca809021558bc96b218a6a2d17c8b8642c41196e",
+    "picocalc-os/port/esp32p4/main/typed_p4.c": "15b2385101b6babb3be5f2c281fc6191c2ef55c928efce624feb8b9582aa4192",
+    "picocalc-os/port/esp32p4/main/CMakeLists.txt": "762ee5b9308973b4ab8411cac4e1ee4ae6fffaece0a631460f0e52edefc8d389",
+    "picocalc-os/compiler/typed-wasm.js": "f5d2ea51472a4616ebea62dee54ae8f60e1dcae8e9908c08c043f016ebb024d5",
+    "picocalc-os/compiler/typed-async.js": "7a0524cf89f6f3766cb8b265146d41975eae91a11f34fecacf19e09c922b9f17"
+  },
+  "patch_sha256": "0862b9a61714ca6992704c8f86cf7ef347b718601ffc3f50ec2e077ddd1b1ddb",
+  "replays": [
+    "PASS 0.2s node 01-check-files-wasm.mjs",
+    "PASS 0.5s node 02-check-files-rv32.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 1.6s node 07-check-editor-layout.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.2s node 01-check-calendar.mjs",
+    "PASS 0.1s node 02-check-leads.mjs",
+    "PASS 0.1s node 03-check-task-records.mjs",
+    "PASS 1.7s node 04-check-wasm-world.mjs",
+    "PASS 0.6s node 07-check-rv32-parser.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.1s node 14-check-local-inference.mjs",
+    "PASS 0.2s node 16-check-entry-tokens.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.1s node 01-check-editor-empty-view.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 1.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 1.7s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --large",
+    "PASS 1.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --edit",
+    "PASS 1.7s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --positions",
+    "PASS 2.1s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --find",
+    "PASS 1.8s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --markdown",
+    "PASS 8.3s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-large",
+    "PASS 4.4s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-line",
+    "PASS 2.1s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-inline",
+    "PASS 2.1s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-dense-inline",
+    "PASS 2.4s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --dense-search",
+    "PASS 1.9s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --tail-search",
+    "PASS 2.2s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --late-navigation"
+  ],
+  "exit": 0
+}

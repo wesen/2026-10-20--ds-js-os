@@ -248,3 +248,51 @@ Start with `various/g4-compile-phases.json`, then read `scripts/20-phase-qualifi
 ### Technical details
 
 Native peak compiler heap rose from 1,493,644 bytes to 2,256,776 bytes in the clean comparison. Wasm peak rose from 1,545,892 to 2,263,468 bytes. These are compilation allocations. The combined app's 70 persistent state fields refer to its execution-time frame.
+
+## Step 5: Rehearse each faster compiler against the current application catalog
+
+The physical index study recovered 822 ms of the native cold-build regression. Two subsequent host candidates then reduced repeated work in asynchronous compilation. I verified that each candidate can be applied to the current shared project without overwriting the intervening Chess integration.
+
+### Prompt Context
+
+See Step 1 for the E/G objective. The user also requested a substantial typed Chess workload to exercise generated code. I interpreted this as a requirement to preserve the new catalog configuration when integrating compiler work measured on the earlier Editor firmware. The separate Chess ticket holds its own implementation and evidence.
+
+### What I did
+
+I created a clean checkout at 9b6a2f2 for each candidate, staged its measured source changes and compared hashes with the firmware input manifests. I reviewed the CMake change separately because the current file also registers Chess. The only required change was to add the scanner source to the existing typed compiler target. I ran all 24 historical host workflows in each checkout, started both integrated firmware builds, and changed the scheduled acceptance replay to use those builds. I indexed the studies and added the independent device article to the go-go-parc vault.
+
+### Why
+
+The benchmark firmware was based on the earlier G4 checkpoint. Copying its CMake file into the shared tree would remove later catalog work. Reapplying the single build-system change to the newer file preserves both features.
+
+### What worked
+
+All 24 application replays passed twice. The native scanner C source, its header, the compiler port and both modified JavaScript files matched the benchmark source digests. The source-span patch has SHA-256 0862b9a61714ca6992704c8f86cf7ef347b718601ffc3f50ec2e077ddd1b1ddb. The narrow prepass patch has SHA-256 5df3e5876bbbe7d2c26abb5b8ba12c90c00f472ccd665cc961afb3a245bad12a. Vault commit daad20e published the physical index study; f75a58f published the implementer's separate source-span study.
+
+### What didn't work
+
+The first sandbox clone with git clone --local failed to hardlink an object across mounts, reporting “Invalid cross-device link”. A shared local object store worked. The sandbox then denied running picocalc-host with EPERM from Node's spawnSync. Running the same integration workflow in a fresh checkout under authorized host execution produced the successful receipts.
+
+### What I learned
+
+The manual native search on the 65,536-byte fixture completed the early, miss and late cases in 4.516, 183.880 and 54.230 ms. The corresponding Wasm times were 41.515, 1,762.060 and 732.409 ms. The dense miss took 297 editor segments on both engines. Program progress across yields can agree exactly even when each segment has a very different execution cost.
+
+### What was tricky to build
+
+The host replay, physical compiler benchmark and final workflow exercise three different paths. The ordinary replays check the fallback compiler and apps in the shared checkout. The QuickJS native oracle checks token records, diagnostics and emitted bytes. The physical workflow will measure the integrated firmware in a fresh context with the real allocator and event loop.
+
+### What warrants a second pair of eyes
+
+Verify the two receipts against the staged physical manifests. Review the spelling index and source-span lifetimes, especially when parsing fails. Compare the winning physical candidate against the unchanged pre-G manual control.
+
+### What should be done in the future
+
+Complete the generated 64 KiB search series. Select a candidate by the prespecified native cold threshold, then run all six integrated firmware workflows and preserve the verified restore. Complete the final report and publish only the compiler configuration supported by those results.
+
+### Code review instructions
+
+Start with scripts/25-rehearse-integration.py, then read the source digests and the 24 replay results in various/host-integration-prepass.json and various/host-integration-spans.json. The physical index controls are archived in the lexical-index ticket.
+
+### Technical details
+
+Chess remains an opt-in firmware world. Its physical bench has a reserved serial-bus slot after the Editor validation jobs. The separate parser-dispatch experiment kept the language and artifacts intact but did not establish the historical 31.4 ms host gate.

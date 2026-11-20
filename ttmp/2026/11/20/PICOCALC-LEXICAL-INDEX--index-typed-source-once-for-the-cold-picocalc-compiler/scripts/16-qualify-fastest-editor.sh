@@ -20,10 +20,11 @@ for ((i=0;i<1440;i++)); do
             exit 0
         fi
         case "$selected" in
-            indexed-prepass) lane=native-index-prepass ;;
-            indexed-spans) lane=native-index-span ;;
+            indexed-prepass) lane=host-rehearsal-prepass ;;
+            indexed-spans) lane=host-rehearsal-span ;;
             *) exit 2 ;;
         esac
+        if [[ ! -s "$work/$lane/fixed-wall/rv32/sdkconfig" ]]; then sleep 5; continue; fi
         flock "$lock" python3 -B "${q[0]}/03-board-qualification.py" --kind candidate \
             --images "$work/$lane/fixed-wall" --output "$work/$lane/board" --backup "$work/original" \
             --port /dev/ttyACM0 --esptool "$esptool"
