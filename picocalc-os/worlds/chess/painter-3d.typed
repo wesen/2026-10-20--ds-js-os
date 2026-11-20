@@ -1,0 +1,402 @@
+// The 90 PSIX cells are followed by receiver-local rotation phase 0..31.
+function sine(phase: i32): i32 {
+    const half = phase % 16;
+    let step = half;
+    if (step > 8) { step = 16 - step; }
+    let value = 0;
+    if (step === 1) { value = 50; }
+    if (step === 2) { value = 98; }
+    if (step === 3) { value = 142; }
+    if (step === 4) { value = 181; }
+    if (step === 5) { value = 213; }
+    if (step === 6) { value = 237; }
+    if (step === 7) { value = 251; }
+    if (step === 8) { value = 256; }
+    if (phase >= 16) { return -value; }
+    return value;
+}
+
+function projectPoint(x: i32, y: i32, z: i32, camera: i32): i32 {
+    const depthX = camera / 1024 - 512;
+    const depthZ = camera % 1024 - 512;
+    const dx = x - 64;
+    const dz = z - 64;
+    const u = 160 + (depthZ * dx - depthX * dz) / 256;
+    const v = 140 + (depthX * dx + depthZ * dz) * 5 / 2048 - y;
+    return v * 512 + u;
+}
+
+function triangle(out: buffer, at: i32, a: i32, b: i32, c: i32, color: i32): i32 {
+    out.setCharCodeAt(at, 5);
+    out.setCharCodeAt(at + 1, a % 512);
+    out.setCharCodeAt(at + 2, a / 512);
+    out.setCharCodeAt(at + 3, b % 512);
+    out.setCharCodeAt(at + 4, b / 512);
+    out.setCharCodeAt(at + 5, c % 512);
+    out.setCharCodeAt(at + 6, c / 512);
+    out.setCharCodeAt(at + 7, color);
+    return at + 8;
+}
+
+function quad(out: buffer, at: i32, a: i32, b: i32, c: i32, d: i32, color: i32): i32 {
+    return triangle(out, triangle(out, at, a, b, c, color), a, c, d, color);
+}
+
+function wall(out: buffer, at: i32, a: i32, b: i32, c: i32, d: i32, color: i32): i32 {
+    if (front(a, b, c) || front(a, c, d)) { return quad(out, at, a, b, c, d, color); }
+    return at;
+}
+
+function tile(out: buffer, at: i32, x: i32, z: i32, span: i32, color: i32, camera: i32): i32 {
+    return quad(out, at, projectPoint(x, 0, z, camera), projectPoint(x + span, 0, z, camera),
+                projectPoint(x + span, 0, z + span, camera), projectPoint(x, 0, z + span, camera), color);
+}
+
+function meshColor(encoded: i32, light: i32): i32 {
+    if (encoded >= 8) {
+        if (light === 4) { return 36279; }
+        if (light === 3) { return 21523; }
+        if (light === 2) { return 12620; }
+        if (light === 1) { return 10504; }
+        return 8455;
+    }
+    if (light === 4) { return 65401; }
+    if (light === 3) { return 63157; }
+    if (light === 2) { return 54672; }
+    if (light === 1) { return 44108; }
+    return 29384;
+}
+
+// A ring packs its height and half width as height*8+radius.
+function frustum(out: buffer, start: i32, x: i32, z: i32, low: i32, high: i32, piece: i32, camera: i32): i32 {
+    const r = low % 8;
+    const s = high % 8;
+    const a = projectPoint(x - r, low / 8, z - r, camera);
+    const b = projectPoint(x + r, low / 8, z - r, camera);
+    const c = projectPoint(x + r, low / 8, z + r, camera);
+    const d = projectPoint(x - r, low / 8, z + r, camera);
+    const e = projectPoint(x - s, high / 8, z - s, camera);
+    const f = projectPoint(x + s, high / 8, z - s, camera);
+    const g = projectPoint(x + s, high / 8, z + s, camera);
+    const h = projectPoint(x - s, high / 8, z + s, camera);
+    let at = start;
+    if (s === 0) {
+        if (front(a, e, b)) { at = triangle(out, at, a, e, b, meshColor(piece, 2)); }
+        if (front(b, e, c)) { at = triangle(out, at, b, e, c, meshColor(piece, 1)); }
+        if (front(c, e, d)) { at = triangle(out, at, c, e, d, meshColor(piece, 3)); }
+        if (front(d, e, a)) { at = triangle(out, at, d, e, a, meshColor(piece, 3)); }
+        return at;
+    }
+    at = wall(out, at, a, e, f, b, meshColor(piece, 2));
+    at = wall(out, at, b, f, g, c, meshColor(piece, 1));
+    at = wall(out, at, c, g, h, d, meshColor(piece, 3));
+    return wall(out, at, d, h, e, a, meshColor(piece, 3));
+}
+
+function cap(out: buffer, at: i32, x: i32, z: i32, ring: i32, piece: i32, camera: i32): i32 {
+    const r = ring % 8;
+    const y = ring / 8;
+    return quad(out, at, projectPoint(x - r, y, z - r, camera), projectPoint(x + r, y, z - r, camera),
+                projectPoint(x + r, y, z + r, camera), projectPoint(x - r, y, z + r, camera), meshColor(piece, 4));
+}
+
+function outlinePoint(kind: i32, i: i32): i32 {
+    const packed = outlineTable(kind, i / 3);
+    const part = i % 3;
+    if (part === 2) { return packed / 262144; }
+    if (part === 1) { return (packed / 512) % 512; }
+    return packed % 512;
+}
+
+function capFace(kind: i32, i: i32): i32 {
+    const packed = capTable(kind, i / 2);
+    if (i % 2 === 0) { return packed % 4096; }
+    return packed / 4096;
+}
+
+function silhouettePoint(code: i32, thickness: i32, x: i32, z: i32, axes: i32, camera: i32): i32 {
+    const along = code % 16 - 7;
+    const y = code / 16;
+    if (axes === 1) { return projectPoint(x + along, y, z + thickness, camera); }
+    if (axes === 2) { return projectPoint(x - thickness, y, z - along, camera); }
+    return projectPoint(x + thickness, y, z + along, camera);
+}
+
+function front(a: i32, b: i32, c: i32): bool {
+    const ux = b % 512 - a % 512;
+    const uy = b / 512 - a / 512;
+    const vx = c % 512 - a % 512;
+    const vy = c / 512 - a / 512;
+    return ux * vy < vx * uy;
+}
+
+function extrusion(out: buffer, start: i32, x: i32, z: i32, encoded: i32, camera: i32): i32 {
+    const kind = encoded % 8;
+    let bodyDepth = camera / 1024 - 512;
+    let axes = 0;
+    let count = 9;
+    let top = -2;
+    if (kind === 2 && encoded >= 8) { axes = 2; bodyDepth = -bodyDepth; }
+    if (kind === 3) { count = 8; }
+    if (kind === 6) { count = 12; axes = 1; top = 1; bodyDepth = camera % 1024 - 512; }
+    let near = 2;
+    if (kind === 6) { near = 1; }
+    if (bodyDepth < 0) { near = -near; }
+    let at = start;
+    let first = outlinePoint(kind, count - 1);
+    for (let i = 0; i < count; i = i + 1) {
+        const second = outlinePoint(kind, i);
+        const a = silhouettePoint(first, -top, x, z, axes, camera);
+        const b = silhouettePoint(second, -top, x, z, axes, camera);
+        const c = silhouettePoint(second, top, x, z, axes, camera);
+        const d = silhouettePoint(first, top, x, z, axes, camera);
+        if (front(a, b, c) || front(a, c, d)) {
+            let shade = 2;
+            if (second % 16 < first % 16) { shade = 4; }
+            at = quad(out, at, a, b, c, d, meshColor(encoded, shade));
+        }
+        first = second;
+    }
+    let light = 3;
+    if (bodyDepth < 0) { light = 1; }
+    const color = meshColor(encoded, light);
+    for (let j = 0; j < count - 2; j = j + 1) {
+        const ids = capFace(kind, j);
+        const a = silhouettePoint(outlinePoint(kind, ids % 16), near, x, z, axes, camera);
+        const b = silhouettePoint(outlinePoint(kind, (ids / 16) % 16), near, x, z, axes, camera);
+        const c = silhouettePoint(outlinePoint(kind, ids / 256), near, x, z, axes, camera);
+        at = triangle(out, at, a, b, c, color);
+    }
+    return at;
+}
+
+function merlon(out: buffer, start: i32, x: i32, z: i32, piece: i32, camera: i32): i32 {
+    return cap(out, frustum(out, start, x, z, 121, 161, piece, camera), x, z, 161, piece, camera);
+}
+
+function crownPoint(out: buffer, at: i32, x: i32, z: i32, piece: i32, camera: i32): i32 {
+    return frustum(out, at, x, z, 145, 200, piece, camera);
+}
+
+function paintPiece(out: buffer, start: i32, x: i32, z: i32, encoded: i32, camera: i32): i32 {
+    const kind = encoded % 8;
+    let at = start;
+    if (kind === 1) {
+        at = frustum(out, at, x, z, 5, 21, encoded, camera);
+        at = frustum(out, at, x, z, 21, 50, encoded, camera);
+        at = frustum(out, at, x, z, 50, 74, encoded, camera);
+        at = frustum(out, at, x, z, 74, 92, encoded, camera);
+        at = frustum(out, at, x, z, 92, 123, encoded, camera);
+        return frustum(out, at, x, z, 123, 136, encoded, camera);
+    }
+    if (kind === 2) {
+        at = frustum(out, at, x, z, 5, 21, encoded, camera);
+        at = frustum(out, at, x, z, 21, 43, encoded, camera);
+        at = cap(out, at, x, z, 43, encoded, camera);
+        return extrusion(out, at, x, z, encoded, camera);
+    }
+    if (kind === 3) {
+        at = frustum(out, at, x, z, 5, 21, encoded, camera);
+        at = frustum(out, at, x, z, 21, 58, encoded, camera);
+        at = frustum(out, at, x, z, 58, 106, encoded, camera);
+        at = cap(out, at, x, z, 106, encoded, camera);
+        return extrusion(out, at, x, z, encoded, camera);
+    }
+    if (kind === 4) {
+        at = frustum(out, at, x, z, 5, 91, encoded, camera);
+        at = frustum(out, at, x, z, 91, 125, encoded, camera);
+        at = cap(out, at, x, z, 125, encoded, camera);
+        at = merlon(out, at, x - 4, z - 4, encoded, camera);
+        at = merlon(out, at, x + 4, z - 4, encoded, camera);
+        at = merlon(out, at, x - 4, z + 4, encoded, camera);
+        return merlon(out, at, x + 4, z + 4, encoded, camera);
+    }
+    if (kind === 5) {
+        at = frustum(out, at, x, z, 5, 21, encoded, camera);
+        at = frustum(out, at, x, z, 21, 50, encoded, camera);
+        at = frustum(out, at, x, z, 50, 98, encoded, camera);
+        at = frustum(out, at, x, z, 98, 149, encoded, camera);
+        at = cap(out, at, x, z, 149, encoded, camera);
+        at = crownPoint(out, at, x - 3, z - 3, encoded, camera);
+        at = crownPoint(out, at, x + 3, z - 3, encoded, camera);
+        at = crownPoint(out, at, x - 3, z + 3, encoded, camera);
+        at = frustum(out, at, x, z, 145, 194, encoded, camera);
+        at = frustum(out, at, x, z, 194, 224, encoded, camera);
+        return crownPoint(out, at, x + 3, z + 3, encoded, camera);
+    }
+    at = frustum(out, at, x, z, 5, 35, encoded, camera);
+    at = frustum(out, at, x, z, 35, 107, encoded, camera);
+    at = frustum(out, at, x, z, 107, 148, encoded, camera);
+    at = cap(out, at, x, z, 148, encoded, camera);
+    return extrusion(out, at, x, z, encoded, camera);
+}
+
+function text(out: buffer, at: i32, x: i32, y: i32, color: i32, width: i32, length: i32): i32 {
+    out.setCharCodeAt(at, 3);
+    out.setCharCodeAt(at + 1, x);
+    out.setCharCodeAt(at + 2, y);
+    out.setCharCodeAt(at + 3, 0);
+    out.setCharCodeAt(at + 4, color);
+    out.setCharCodeAt(at + 5, width);
+    out.setCharCodeAt(at + 6, length);
+    return at + 7 + length;
+}
+
+function label(out: buffer, at: i32, point: i32, letter: i32): i32 {
+    out.setCharCodeAt(at + 7, letter);
+    return text(out, at, point % 512 - 3, point / 512 - 3, 23372, 6, 1);
+}
+
+function statusText(out: buffer, at: i32, status: i32): i32 {
+    if (status === 1) { return out.writeLiteral(at, "Checkmate - White wins"); }
+    if (status === 2) { return out.writeLiteral(at, "Checkmate - Black wins"); }
+    if (status === 3) { return out.writeLiteral(at, "Draw - stalemate"); }
+    if (status === 4) { return out.writeLiteral(at, "Draw - dead material"); }
+    if (status === 5) { return out.writeLiteral(at, "Promote to Q, R, B or N"); }
+    if (status === 6) { return out.writeLiteral(at, "Black is thinking"); }
+    if (status === 7) { return out.writeLiteral(at, "Please choose a legal move"); }
+    if (status === 8) { return out.writeLiteral(at, "White to move - check"); }
+    return out.writeLiteral(at, "White to move");
+}
+
+function slab(out: buffer, start: i32, camera: i32): i32 {
+    const a = projectPoint(0, 0, 0, camera);
+    const b = projectPoint(128, 0, 0, camera);
+    const c = projectPoint(128, 0, 128, camera);
+    const d = projectPoint(0, 0, 128, camera);
+    const e = projectPoint(0, -5, 0, camera);
+    const f = projectPoint(128, -5, 0, camera);
+    const g = projectPoint(128, -5, 128, camera);
+    const h = projectPoint(0, -5, 128, camera);
+    let at = wall(out, start, e, a, b, f, 16936);
+    at = wall(out, at, f, b, c, g, 14920);
+    at = wall(out, at, g, c, d, h, 21227);
+    return wall(out, at, h, d, a, e, 19051);
+}
+
+function paintChess(state: buffer, out: buffer): i32 {
+    const phase = state.charCodeAt(90) % 32;
+    const c = sine((phase + 8) % 32);
+    const s = sine(phase);
+    const depthX = c + s;
+    const depthZ = c - s;
+    const camera = (depthX + 512) * 1024 + depthZ + 512;
+    let pieces = 0;
+    for (let i = 0; i < 64; i = i + 1) {
+        if (state.charCodeAt(i) !== 0) { pieces = pieces + 1; }
+    }
+    if (pieces > 32) { return 0; }
+    out.setCharCodeAt(0, 1);
+    out.setCharCodeAt(1, 0);
+    out.setCharCodeAt(2, 0);
+    out.setCharCodeAt(3, 320);
+    out.setCharCodeAt(4, 280);
+    out.setCharCodeAt(5, 61242);
+    let at = slab(out, 6, camera);
+
+    const cursor = state.charCodeAt(72);
+    const selected = state.charCodeAt(74);
+    const from = state.charCodeAt(76);
+    const to = state.charCodeAt(78);
+    for (let square = 0; square < 64; square = square + 1) {
+        const file = square % 8;
+        const rank = square / 8;
+        const x = file * 16;
+        const z = rank * 16;
+        let color = 19277;
+        if ((file + rank) % 2 === 0) { color = 36116; }
+        if (square === from || square === to) { color = 40177; }
+        let bit = 1;
+        for (let i = 0; i < file; i = i + 1) { bit = bit * 2; }
+        if ((state.charCodeAt(64 + rank) / bit) % 2 === 1) { color = 44403; }
+        if (square === selected) { color = 60970; }
+        if (square === cursor) {
+            at = tile(out, at, x, z, 16, 54819, camera);
+            at = tile(out, at, x + 2, z + 2, 12, color, camera);
+        } else {
+            at = tile(out, at, x, z, 16, color, camera);
+        }
+    }
+
+    let edgeX = 135;
+    let edgeZ = 135;
+    if (depthX < 0) { edgeX = -7; }
+    if (depthZ < 0) { edgeZ = -7; }
+    for (let i = 0; i < 8; i = i + 1) {
+        at = label(out, at, projectPoint(8 + i * 16, 0, edgeZ, camera), 97 + i);
+        at = label(out, at, projectPoint(edgeX, 0, 8 + i * 16, camera), 56 - i);
+    }
+
+    // Select occupied squares by depth, breaking ties by index.
+    let previous = -1;
+    for (let i = 0; i < 64; i = i + 1) {
+        let best = 1048576;
+        let chosen = 64;
+        for (let square = 0; square < 64; square = square + 1) {
+            if (state.charCodeAt(square) !== 0) {
+                const depth = (8192 + depthX * (square % 8) + depthZ * (square / 8)) * 64 + square;
+                if (depth > previous && depth < best) { best = depth; chosen = square; }
+            }
+        }
+        if (chosen === 64) { break; }
+        const encoded = state.charCodeAt(chosen);
+        at = paintPiece(out, at, (chosen % 8) * 16 + 8, (chosen / 8) * 16 + 8, encoded, camera);
+        previous = best;
+    }
+
+    const n = statusText(out, at + 7, state.charCodeAt(80));
+    at = text(out, at, 12, 253, 23372, 150, n);
+    if (from < 64 && to < 64) {
+        out.writeLiteral(at + 7, "Last ");
+        out.setCharCodeAt(at + 12, 97 + from % 8);
+        out.setCharCodeAt(at + 13, 56 - from / 8);
+        out.setCharCodeAt(at + 14, 45);
+        out.setCharCodeAt(at + 15, 97 + to % 8);
+        out.setCharCodeAt(at + 16, 56 - to / 8);
+        at = text(out, at, 248, 253, 23372, 60, 10);
+    }
+
+    out.setCharCodeAt(at, 4);
+    let length = 0;
+    if (state.charCodeAt(82) === 1) { length = out.writeLiteral(at + 2, "Q R B N promote   Esc cancel"); }
+    else { length = out.writeLiteral(at + 2, "F3/F4 turn  Arrows  Enter  F2 new  Esc"); }
+    out.setCharCodeAt(at + 1, length);
+    return at + 2 + length;
+}
+
+// Generated extrusion tables follow. Run tools/generate-chess-meshes.py.
+function outlineTable(kind: i32, slot: i32): i32 {
+    if (kind === 2) {
+        if (slot === 0) { return 86365787; }
+        if (slot === 1) { return 75673481; }
+        return 22678241;
+    }
+    if (kind === 3) {
+        if (slot === 0) { return 85874394; }
+        if (slot === 1) { return 93548379; }
+        return 108835;
+    }
+    if (slot === 0) { return 102912294; }
+    if (slot === 1) { return 111368588; }
+    if (slot === 2) { return 110874088; }
+    return 102434210;
+}
+
+function capTable(kind: i32, slot: i32): i32 {
+    if (kind === 2) {
+        if (slot === 0) { return 2195720; }
+        if (slot === 1) { return 4424488; }
+        if (slot === 2) { return 7751252; }
+        return 2164;
+    }
+    if (kind === 3) {
+        if (slot === 0) { return 2191623; }
+        if (slot === 1) { return 4355122; }
+        return 7755079;
+    }
+    if (slot === 0) { return 2208011; }
+    if (slot === 1) { return 4371506; }
+    if (slot === 2) { return 6665547; }
+    if (slot === 3) { return 8829046; }
+    return 12229003;
+}

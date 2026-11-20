@@ -95,3 +95,6 @@ A subsequent packed scene experiment can rearrange the input to a batch of proje
 ## Reproducing the study
 
 Start with `projectPoint` and `paintPose` in the Typed painter. Derive the first diamond at each pitch, then run the host replay and pixel comparison. The first diamond tests the projection's signs and offsets. The full-frame comparisons test the composition of hundreds of later primitives. Use the physical receipt to follow the e2 packet through compilation, retained paint, and completed SPI alongside the matching screenshot. [Implementation and reproduction guide](../design-doc/02-implement-and-qualify-the-scalar-scene.md)
+
+
+The maintained renderer's solid models and rotating view have their own geometry study. [Six Chess solids and a rotating camera](05-six-chess-solids-and-a-rotating-camera.md)

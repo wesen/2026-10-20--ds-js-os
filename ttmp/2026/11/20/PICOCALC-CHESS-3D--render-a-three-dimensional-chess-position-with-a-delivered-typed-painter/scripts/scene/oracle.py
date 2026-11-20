@@ -83,9 +83,10 @@ def raster(payload, font):
             at += 8
         elif op == 3:
             x, y, size, color, width, count = words[at + 1:at + 7]
-            assert size == 0 and count == 1
-            draw_small(pixels, font, x, y, chr(words[at + 7]), color, width)
-            at += 8
+            assert size == 0 and count > 0
+            text = "".join(chr(c) for c in words[at + 7:at + 7 + count])
+            draw_small(pixels, font, x, y, text, color, width or WIDTH - x)
+            at += 7 + count
         elif op == 4:
             assert words[at + 1] == len(words) - at - 2
             hints = "".join(chr(c) for c in words[at + 2:])
