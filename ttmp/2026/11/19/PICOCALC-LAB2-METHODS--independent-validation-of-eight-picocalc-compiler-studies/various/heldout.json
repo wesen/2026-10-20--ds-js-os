@@ -1,0 +1,77 @@
+{
+  "lock": "70c85541957a32e0f0764ab5e40f88608c62b5711827fa92332da269457eb7e1",
+  "modules": {
+    "clustered.typed": {
+      "functions": 72,
+      "productive": 18,
+      "oracle": 1386,
+      "optimalFeasibleCharge": 7596,
+      "plannerCellVisits": 19008,
+      "choices": {
+        "source": {
+          "charge": 32478,
+          "gain": 1386,
+          "count": 63
+        },
+        "literal": {
+          "charge": 7596,
+          "gain": 1386,
+          "count": 18
+        },
+        "density": {
+          "charge": 7596,
+          "gain": 1386,
+          "count": 18
+        }
+      }
+    },
+    "reversed.typed": {
+      "functions": 72,
+      "productive": 18,
+      "oracle": 1386,
+      "optimalFeasibleCharge": 7596,
+      "plannerCellVisits": 19008,
+      "choices": {
+        "source": {
+          "charge": 32650,
+          "gain": 407,
+          "count": 59
+        },
+        "literal": {
+          "charge": 7596,
+          "gain": 1386,
+          "count": 18
+        },
+        "density": {
+          "charge": 7596,
+          "gain": 1386,
+          "count": 18
+        }
+      }
+    },
+    "shuffled.typed": {
+      "functions": 72,
+      "productive": 18,
+      "oracle": 1386,
+      "optimalFeasibleCharge": 7596,
+      "plannerCellVisits": 19008,
+      "choices": {
+        "source": {
+          "charge": 32556,
+          "gain": 1232,
+          "count": 62
+        },
+        "literal": {
+          "charge": 7596,
+          "gain": 1386,
+          "count": 18
+        },
+        "density": {
+          "charge": 7596,
+          "gain": 1386,
+          "count": 18
+        }
+      }
+    }
+  }
+}

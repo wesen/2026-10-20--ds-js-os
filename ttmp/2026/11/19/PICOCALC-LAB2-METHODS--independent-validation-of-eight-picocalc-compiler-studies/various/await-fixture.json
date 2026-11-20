@@ -1,0 +1,78 @@
+{
+  "returns": {
+    "synchronousFailure": -5,
+    "start": 1,
+    "wrongToken": 0,
+    "wrongKind": 0,
+    "pending": 1,
+    "cancel": 21,
+    "late": 0,
+    "reopen": 1,
+    "stale": 0,
+    "success": 13,
+    "duplicate": 0
+  },
+  "linked": {
+    "native": "bf83615181dcec144b34dd69302042587cabb7f53e09c7203db2d849368e6c1d",
+    "wasm": "04c97d74a9db3f56c161bd77b420bdd3c49778c0148af92bec39fcc124c88656"
+  },
+  "smallFrame": {
+    "task": "sample",
+    "wait": "typedSdkFileRead",
+    "saved": [
+      {
+        "name": "value",
+        "type": "i32"
+      }
+    ],
+    "owned": "handle",
+    "frameBytes": 12,
+    "fields": [
+      {
+        "name": "__await_sample_token",
+        "type": "i32"
+      },
+      {
+        "name": "__await_sample_handle",
+        "type": "i32"
+      },
+      {
+        "name": "__await_sample_value",
+        "type": "i32"
+      }
+    ]
+  },
+  "editorFrame": {
+    "task": "editorReadTask",
+    "wait": "typedSdkFileRead",
+    "saved": [
+      {
+        "name": "handle",
+        "type": "i32"
+      },
+      {
+        "name": "size",
+        "type": "i32"
+      }
+    ],
+    "owned": "handle",
+    "frameBytes": 12,
+    "fields": [
+      {
+        "name": "__await_editorReadTask_token",
+        "type": "i32"
+      },
+      {
+        "name": "__await_editorReadTask_handle",
+        "type": "i32"
+      },
+      {
+        "name": "__await_editorReadTask_size",
+        "type": "i32"
+      }
+    ]
+  },
+  "originalOutput": 0,
+  "resumeOutput": 7,
+  "rejection": "1695:5: reference scratch is live across await, obtain it again after the wait"
+}

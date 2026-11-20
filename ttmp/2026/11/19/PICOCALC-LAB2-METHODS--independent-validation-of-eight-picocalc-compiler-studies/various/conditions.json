@@ -1,0 +1,116 @@
+{
+  "captures": {
+    "boot-1.log": "fc39ce7d69514773ca16c18641444a2191155b2da12518341b82e127ebd13743",
+    "boot-2.log": "586f50f62e6f28d3bfb67273866969cb2cdb7a3ce4b4bad6a305fcab15f1e08a"
+  },
+  "rows": 48,
+  "oracleSha256": "d1ed3e8a646485bfd6e9fdb2771573b7796494359263b98622878d25ed0a843d",
+  "comparisons": {
+    "files": {
+      "conditions": {
+        "us": {
+          "pairs": 8,
+          "median": -9183.5,
+          "min": -11179,
+          "max": -3526,
+          "positive": 0,
+          "negative": 8,
+          "bootMedians": [
+            -8415.5,
+            -9373.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 8,
+          "median": -3190.0,
+          "min": -3208,
+          "max": -3176,
+          "positive": 0,
+          "negative": 8,
+          "bootMedians": [
+            -3184.0,
+            -3194.0
+          ]
+        }
+      }
+    },
+    "agenda": {
+      "conditions": {
+        "us": {
+          "pairs": 8,
+          "median": -4968.5,
+          "min": -24419,
+          "max": 24695,
+          "positive": 4,
+          "negative": 4,
+          "bootMedians": [
+            -14005.0,
+            5921.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 8,
+          "median": 9888.0,
+          "min": 9864,
+          "max": 9916,
+          "positive": 8,
+          "negative": 0,
+          "bootMedians": [
+            9882.0,
+            9902.0
+          ]
+        }
+      }
+    },
+    "editor": {
+      "conditions": {
+        "us": {
+          "pairs": 8,
+          "median": -35895.5,
+          "min": -77160,
+          "max": -15559,
+          "positive": 0,
+          "negative": 8,
+          "bootMedians": [
+            -34402.0,
+            -45337.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 8,
+          "median": 23246.0,
+          "min": 22680,
+          "max": 23256,
+          "positive": 8,
+          "negative": 0,
+          "bootMedians": [
+            23246.0,
+            23246.0
+          ]
+        }
+      }
+    }
+  },
+  "guestBatchCycleSavings": {
+    "compare": {
+      "conditions": {
+        "pairs": 32,
+        "median": 35736.5,
+        "min": 34336,
+        "max": 37060,
+        "positive": 32,
+        "negative": 0
+      }
+    },
+    "weekday": {
+      "conditions": {
+        "pairs": 32,
+        "median": 7878.5,
+        "min": 6620,
+        "max": 9371,
+        "positive": 32,
+        "negative": 0
+      }
+    }
+  }
+}

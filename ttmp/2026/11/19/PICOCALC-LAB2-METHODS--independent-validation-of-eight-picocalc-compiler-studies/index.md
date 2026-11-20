@@ -1,9 +1,9 @@
 ---
 Title: Independent validation of eight PicoCalc compiler studies
 Ticket: PICOCALC-LAB2-METHODS
-Status: active
+Status: complete
 Topics:
-    - compiler
+    - performance
     - picocalc
 DocType: index
 Intent: long-term
@@ -11,44 +11,16 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T22:20:33.186671937-05:00
+LastUpdated: 2026-11-19T22:37:29.38285055-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
 
-# Independent validation of eight PicoCalc compiler studies
 
-## Overview
+# Independent methods review of the second compiler wave
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+The [report](analysis/01-what-a-compiler-experiment-on-one-handheld-can-establish.md) follows an Editor edit from source through native return. It explains four physical compilation comparisons, the scope of the fragment cap and the held-out selector result. [Prospective guide](design-doc/01-checking-a-handheld-compiler-experiment-independently.md) · [Investigation diary](reference/01-independent-methods-examiner-diary.md) · [Reproduction commands](scripts/07-reproduction.md)
 
-## Key Links
+The [supervisor's program](../PICOCALC-COMPILER-LAB2--eight-experiments-in-compiler-construction-on-the-picocalc/index.md) maps the eight implementation tickets and tracks physical results released after the review cutoff.
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- compiler
-- picocalc
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+The [published vault report](https://github.com/go-go-golems/go-go-parc/blob/147f625caee4dfb493eb48f694f07f66cdf185c6/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20What%20a%20Compiler%20Experiment%20on%20One%20Handheld%20Can%20Establish.md) includes both complete Editor edit boots and the explicitly conditional break-even calculations.

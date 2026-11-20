@@ -1,0 +1,119 @@
+{
+  "probes": [
+    {
+      "trap": false,
+      "ret": 0,
+      "cells": [
+        0,
+        0,
+        5,
+        4
+      ],
+      "fields": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "trap": false,
+      "ret": 0,
+      "cells": [
+        5,
+        4,
+        0,
+        0
+      ],
+      "fields": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "trap": false,
+      "ret": 0,
+      "cells": [
+        5,
+        4,
+        0,
+        0
+      ],
+      "fields": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "trap": false,
+      "ret": 0,
+      "cells": [
+        5,
+        4,
+        0,
+        0
+      ],
+      "fields": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "trap": false,
+      "ret": 0,
+      "cells": [
+        5,
+        4,
+        0,
+        0
+      ],
+      "fields": [
+        3,
+        0,
+        0
+      ]
+    }
+  ],
+  "staleLayout": {
+    "trap": true,
+    "cells": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "fields": [
+      2,
+      5,
+      7
+    ]
+  },
+  "secondWriteTrap": {
+    "trap": true,
+    "cells": [
+      5,
+      0,
+      0,
+      0
+    ],
+    "fields": [
+      2,
+      5,
+      7
+    ]
+  },
+  "ordinary": {
+    "count": 72,
+    "bytes": 40892,
+    "retainedSourceUnits": 34431,
+    "elf": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+  },
+  "enlarged": {
+    "count": 72,
+    "bytes": 40892,
+    "retainedSourceUnits": 42623,
+    "elf": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+  }
+}

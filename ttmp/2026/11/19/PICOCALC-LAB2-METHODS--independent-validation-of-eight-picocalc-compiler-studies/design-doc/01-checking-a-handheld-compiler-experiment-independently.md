@@ -3,7 +3,7 @@ Title: Checking a handheld compiler experiment independently
 Ticket: PICOCALC-LAB2-METHODS
 Status: active
 Topics:
-    - compiler
+    - performance
     - picocalc
 DocType: design-doc
 Intent: long-term

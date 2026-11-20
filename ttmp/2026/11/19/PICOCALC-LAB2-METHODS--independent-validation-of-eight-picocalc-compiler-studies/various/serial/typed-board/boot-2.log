@@ -1,0 +1,319 @@
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=778651 peak_js_bytes=604824 module_bytes=66364
+files native compiler functions=streamed
+files compile source=bundle status=ok us=304253 peak_js_bytes=392716 module_bytes=24424
+LABRUN 0 0 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=278367 peak_js_bytes=392716 module_bytes=24424
+LABHASH base files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 0 0 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=804865 peak_js_bytes=604824 module_bytes=66364
+LABHASH base agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 0 0 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2933758 peak_js_bytes=1439812 module_bytes=240452
+LABHASH base editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 0 1 observe files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=293480 peak_js_bytes=402844 module_bytes=24424
+LABHASH observe files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 0 1 observe agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=828058 peak_js_bytes=610872 module_bytes=66364
+LABHASH observe agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 0 1 observe editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3133257 peak_js_bytes=1445848 module_bytes=240452
+LABHASH observe editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 0 2 direct files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=288036 peak_js_bytes=402760 module_bytes=24424
+LABHASH direct files b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32
+LABRUN 0 2 direct agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=816638 peak_js_bytes=610472 module_bytes=66364
+LABHASH direct agenda da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8
+LABRUN 0 2 direct editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3100650 peak_js_bytes=1424108 module_bytes=240452
+LABHASH direct editor c5effef885c988cf00648aae79f2459a3650b0540959ce49736f1c20d66d7ff2
+LABRUN 1 0 observe files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=294134 peak_js_bytes=402852 module_bytes=24424
+LABHASH observe files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 1 0 observe agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=837140 peak_js_bytes=610872 module_bytes=66364
+LABHASH observe agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 1 0 observe editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3113607 peak_js_bytes=1445856 module_bytes=240452
+LABHASH observe editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 1 1 direct files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=286215 peak_js_bytes=402768 module_bytes=24424
+LABHASH direct files b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32
+LABRUN 1 1 direct agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=807426 peak_js_bytes=610480 module_bytes=66364
+LABHASH direct agenda da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8
+LABRUN 1 1 direct editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3044328 peak_js_bytes=1424116 module_bytes=240452
+LABHASH direct editor c5effef885c988cf00648aae79f2459a3650b0540959ce49736f1c20d66d7ff2
+LABRUN 1 2 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=276902 peak_js_bytes=392724 module_bytes=24424
+LABHASH base files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 1 2 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=797868 peak_js_bytes=604828 module_bytes=66364
+LABHASH base agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 1 2 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2900677 peak_js_bytes=1439824 module_bytes=240452
+LABHASH base editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 2 0 direct files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=289028 peak_js_bytes=402768 module_bytes=24424
+LABHASH direct files b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32
+LABRUN 2 0 direct agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=808753 peak_js_bytes=610480 module_bytes=66364
+LABHASH direct agenda da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8
+LABRUN 2 0 direct editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3045595 peak_js_bytes=1424116 module_bytes=240452
+LABHASH direct editor c5effef885c988cf00648aae79f2459a3650b0540959ce49736f1c20d66d7ff2
+LABRUN 2 1 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=278457 peak_js_bytes=392716 module_bytes=24424
+LABHASH base files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 2 1 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=784725 peak_js_bytes=604832 module_bytes=66364
+LABHASH base agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 2 1 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2919587 peak_js_bytes=1439808 module_bytes=240452
+LABHASH base editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 2 2 observe files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=294440 peak_js_bytes=402852 module_bytes=24424
+LABHASH observe files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 2 2 observe agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=828437 peak_js_bytes=610864 module_bytes=66364
+LABHASH observe agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 2 2 observe editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3108790 peak_js_bytes=1445856 module_bytes=240452
+LABHASH observe editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 3 0 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=275233 peak_js_bytes=392720 module_bytes=24424
+LABHASH base files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 3 0 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=778342 peak_js_bytes=604812 module_bytes=66364
+LABHASH base agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 3 0 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2915688 peak_js_bytes=1439800 module_bytes=240452
+LABHASH base editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 3 1 direct files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=288655 peak_js_bytes=402760 module_bytes=24424
+LABHASH direct files b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32
+LABRUN 3 1 direct agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=805834 peak_js_bytes=610472 module_bytes=66364
+LABHASH direct agenda da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8
+LABRUN 3 1 direct editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3030382 peak_js_bytes=1424108 module_bytes=240452
+LABHASH direct editor c5effef885c988cf00648aae79f2459a3650b0540959ce49736f1c20d66d7ff2
+LABRUN 3 2 observe files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=294097 peak_js_bytes=402844 module_bytes=24424
+LABHASH observe files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 3 2 observe agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=821551 peak_js_bytes=610864 module_bytes=66364
+LABHASH observe agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 3 2 observe editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3124703 peak_js_bytes=1445856 module_bytes=240452
+LABHASH observe editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 4 0 observe files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=291915 peak_js_bytes=402844 module_bytes=24424
+LABHASH observe files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 4 0 observe agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=826601 peak_js_bytes=610864 module_bytes=66364
+LABHASH observe agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 4 0 observe editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3118094 peak_js_bytes=1445848 module_bytes=240452
+LABHASH observe editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 4 1 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=276210 peak_js_bytes=392724 module_bytes=24424
+LABHASH base files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 4 1 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=789934 peak_js_bytes=604828 module_bytes=66364
+LABHASH base agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 4 1 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2961471 peak_js_bytes=1439812 module_bytes=240452
+LABHASH base editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 4 2 direct files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=288476 peak_js_bytes=402768 module_bytes=24424
+LABHASH direct files b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32
+LABRUN 4 2 direct agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=803242 peak_js_bytes=610480 module_bytes=66364
+LABHASH direct agenda da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8
+LABRUN 4 2 direct editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3036612 peak_js_bytes=1424108 module_bytes=240452
+LABHASH direct editor c5effef885c988cf00648aae79f2459a3650b0540959ce49736f1c20d66d7ff2
+LABRUN 5 0 direct files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=288329 peak_js_bytes=402760 module_bytes=24424
+LABHASH direct files b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32
+LABRUN 5 0 direct agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=808800 peak_js_bytes=610472 module_bytes=66364
+LABHASH direct agenda da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8
+LABRUN 5 0 direct editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3032874 peak_js_bytes=1424108 module_bytes=240452
+LABHASH direct editor c5effef885c988cf00648aae79f2459a3650b0540959ce49736f1c20d66d7ff2
+LABRUN 5 1 observe files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=293653 peak_js_bytes=402844 module_bytes=24424
+LABHASH observe files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 5 1 observe agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=825485 peak_js_bytes=610864 module_bytes=66364
+LABHASH observe agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 5 1 observe editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3132084 peak_js_bytes=1445848 module_bytes=240452
+LABHASH observe editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABRUN 5 2 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=279324 peak_js_bytes=392716 module_bytes=24424
+LABHASH base files c69b09373e8a71993aa872301a02512eda25aa6c6df765010b171e3899d75db8
+LABRUN 5 2 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=782944 peak_js_bytes=604812 module_bytes=66364
+LABHASH base agenda 43a9ebfc24940c010fbac1156e4be079de6f045133bdc0e04393fa5561d00dcb
+LABRUN 5 2 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2933000 peak_js_bytes=1439796 module_bytes=240452
+LABHASH base editor c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439
+LABGUEST compare 0 base 128 624502 360000000
+LABGUEST compare 0 observe 128 623202 360000000
+LABGUEST compare 0 direct 128 508001 360000000
+LABGUEST compare 1 base 128 624500 360000000
+LABGUEST compare 1 observe 128 624444 360000000
+LABGUEST compare 1 direct 128 506701 360000000
+LABGUEST compare 2 base 128 624438 360000000
+LABGUEST compare 2 observe 128 624465 360000000
+LABGUEST compare 2 direct 128 506698 360000000
+LABGUEST compare 3 base 128 624461 360000000
+LABGUEST compare 3 observe 128 624428 360000000
+LABGUEST compare 3 direct 128 506664 360000000
+LABGUEST compare 4 base 128 624461 360000000
+LABGUEST compare 4 observe 128 623130 360000000
+LABGUEST compare 4 direct 128 508014 360000000
+LABGUEST compare 5 base 128 624478 360000000
+LABGUEST compare 5 observe 128 624516 360000000
+LABGUEST compare 5 direct 128 506696 360000000
+LABGUEST compare 6 base 128 624466 360000000
+LABGUEST compare 6 observe 128 624447 360000000
+LABGUEST compare 6 direct 128 506697 360000000
+LABGUEST compare 7 base 128 623161 360000000
+LABGUEST compare 7 observe 128 623177 360000000
+LABGUEST compare 7 direct 128 507991 360000000
+LABGUEST compare 8 base 128 624429 360000000
+LABGUEST compare 8 observe 128 624424 360000000
+LABGUEST compare 8 direct 128 506685 360000000
+LABGUEST compare 9 base 128 624472 360000000
+LABGUEST compare 9 observe 128 623123 360000000
+LABGUEST compare 9 direct 128 507990 360000000
+LABGUEST compare 10 base 128 624468 360000000
+LABGUEST compare 10 observe 128 624438 360000000
+LABGUEST compare 10 direct 128 506696 360000000
+LABGUEST compare 11 base 128 624424 360000000
+LABGUEST compare 11 observe 128 624470 360000000
+LABGUEST compare 11 direct 128 506685 360000000
+LABGUEST compare 12 base 128 624441 360000000
+LABGUEST compare 12 observe 128 624457 360000000
+LABGUEST compare 12 direct 128 506645 360000000
+LABGUEST compare 13 base 128 624460 360000000
+LABGUEST compare 13 observe 128 624435 360000000
+LABGUEST compare 13 direct 128 506683 360000000
+LABGUEST compare 14 base 128 624475 360000000
+LABGUEST compare 14 observe 128 623161 360000000
+LABGUEST compare 14 direct 128 507951 360000000
+LABGUEST compare 15 base 128 623159 360000000
+LABGUEST compare 15 observe 128 624442 360000000
+LABGUEST compare 15 direct 128 506664 360000000
+LABGUEST weekday 0 base 128 68865 360000000
+LABGUEST weekday 0 observe 128 68831 360000000
+LABGUEST weekday 0 direct 128 68860 360000000
+LABGUEST weekday 1 base 128 70187 360000000
+LABGUEST weekday 1 observe 128 68860 360000000
+LABGUEST weekday 1 direct 128 68835 360000000
+LABGUEST weekday 2 base 128 68850 360000000
+LABGUEST weekday 2 observe 128 68833 360000000
+LABGUEST weekday 2 direct 128 68850 360000000
+LABGUEST weekday 3 base 128 68852 360000000
+LABGUEST weekday 3 observe 128 68890 360000000
+LABGUEST weekday 3 direct 128 70077 360000000
+LABGUEST weekday 4 base 128 68827 360000000
+LABGUEST weekday 4 observe 128 68850 360000000
+LABGUEST weekday 4 direct 128 70148 360000000
+LABGUEST weekday 5 base 128 68850 360000000
+LABGUEST weekday 5 observe 128 68878 360000000
+LABGUEST weekday 5 direct 128 68891 360000000
+LABGUEST weekday 6 base 128 70157 360000000
+LABGUEST weekday 6 observe 128 68890 360000000
+LABGUEST weekday 6 direct 128 68850 360000000
+LABGUEST weekday 7 base 128 68850 360000000
+LABGUEST weekday 7 observe 128 68850 360000000
+LABGUEST weekday 7 direct 128 68852 360000000
+LABGUEST weekday 8 base 128 68706 360000000
+LABGUEST weekday 8 observe 128 70154 360000000
+LABGUEST weekday 8 direct 128 68760 360000000
+LABGUEST weekday 9 base 128 70033 360000000
+LABGUEST weekday 9 observe 128 68762 360000000
+LABGUEST weekday 9 direct 128 68657 360000000
+LABGUEST weekday 10 base 128 68693 360000000
+LABGUEST weekday 10 observe 128 68826 360000000
+LABGUEST weekday 10 direct 128 68827 360000000
+LABGUEST weekday 11 base 128 70010 360000000
+LABGUEST weekday 11 observe 128 68827 360000000
+LABGUEST weekday 11 direct 128 68826 360000000
+LABGUEST weekday 12 base 128 68760 360000000
+LABGUEST weekday 12 observe 128 68762 360000000
+LABGUEST weekday 12 direct 128 68706 360000000
+LABGUEST weekday 13 base 128 68762 360000000
+LABGUEST weekday 13 observe 128 68863 360000000
+LABGUEST weekday 13 direct 128 70113 360000000
+LABGUEST weekday 14 base 128 68880 360000000
+LABGUEST weekday 14 observe 128 68880 360000000
+LABGUEST weekday 14 direct 128 68879 360000000
+LABGUEST weekday 15 base 128 68879 360000000
+LABGUEST weekday 15 observe 128 68863 360000000
+LABGUEST weekday 15 direct 128 70180 360000000
+LABDONE
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2930667 peak_js_bytes=1439808 module_bytes=240452

@@ -1,0 +1,10 @@
+{
+  "boot-1.log": {
+    "sourceSha256": "cf7478e75836f4d740ab965febcf981b7ed464d85db5b6999d9b50de06f8693e",
+    "extractSha256": "dd488fecb488874c99c40a0512f684c5836f71edbba523a76f8e5388e2f0621a"
+  },
+  "boot-2.log": {
+    "sourceSha256": "cee2fe13d96e577526a8a31c1561c5169481937cbfdf495552fecdc20ed50a6d",
+    "extractSha256": "7a2f637724c7ca2deee0a19ee702409175a0029e3d68e24e4d418073dbae3699"
+  }
+}

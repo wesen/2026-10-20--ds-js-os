@@ -1,0 +1,27 @@
+{
+  "CONDITION-TARGETS": {
+    "repeatedSha256": "8faa45f79690e3748a632776e2f770461a5b7486df0d2a6527d60372e83c0622",
+    "comparedWith": "ttmp/2026/11/19/PICOCALC-CONDITION-TARGETS--compile-typed-conditions-directly-to-branch-destinations/various/host-account.json",
+    "byteIdentical": true
+  },
+  "REGISTER-LOCALS": {
+    "repeatedSha256": "711cefe2cd92ef48a36f818aa7cb5c2a19a88a566ff5b5b2840d418fc1c30460",
+    "comparedWith": "ttmp/2026/11/19/PICOCALC-REGISTER-LOCALS--measure-register-homes-for-profitable-rv32-locals/various/host-account.json",
+    "byteIdentical": true
+  },
+  "STREAMED-TYPED-OPS": {
+    "repeatedSha256": "2afd20b986041fb4b79da5e7e3445af3bf301eb1366c6c94bcb91daae61585de",
+    "comparedWith": "ttmp/2026/11/19/PICOCALC-STREAMED-TYPED-OPS--preserve-typed-reads-and-predicates-through-streamed-native-lowering/various/host.json",
+    "byteIdentical": true
+  },
+  "BOUNDED-INDEX": {
+    "repeatedSha256": "48c0b02f358aab06cf8f0f8c6b7eefec1aa4e7f4128ced0ed23997f0b29e258b",
+    "comparedWith": "ttmp/2026/11/19/PICOCALC-BOUNDED-INDEX--prove-editor-text-bounds-through-two-guards-with-bounded-search/various/host.json",
+    "byteIdentical": true
+  },
+  "EDITOR-FRAGMENTS": {
+    "repeatedSha256": "e7be85ea334fde1c2b331f3bd10b0169b8638463a31edd09e550b86bb9196260",
+    "comparedWith": "ttmp/2026/11/19/PICOCALC-EDITOR-FRAGMENTS--bound-native-function-fragments-and-time-real-picocalc-editor-edits/various/host-oracle.json",
+    "byteIdentical": true
+  }
+}

@@ -1,0 +1,538 @@
+{
+  "captures": {
+    "boot-1.log": "cf7478e75836f4d740ab965febcf981b7ed464d85db5b6999d9b50de06f8693e",
+    "boot-2.log": "cee2fe13d96e577526a8a31c1561c5169481937cbfdf495552fecdc20ed50a6d"
+  },
+  "rows": 192,
+  "oracleSha256": "03be00ec4824f27007e3bd5c7784cb1836d7107414c80e9a0307f946f3c82e29",
+  "comparisons": {
+    "files": {
+      "regex_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 466.5,
+          "min": -5439,
+          "max": 2025,
+          "positive": 9,
+          "negative": 7,
+          "bootMedians": [
+            706.5,
+            -1169.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -220.0,
+          "min": -256,
+          "max": -204,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -220.0,
+            -232.0
+          ]
+        }
+      },
+      "cursor_fresh": {
+        "us": {
+          "pairs": 16,
+          "median": -1310.0,
+          "min": -4372,
+          "max": 2022,
+          "positive": 6,
+          "negative": 10,
+          "bootMedians": [
+            105.0,
+            -2009.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -17016.0,
+          "min": -17032,
+          "max": -16988,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -17016.0,
+            -17012.0
+          ]
+        }
+      },
+      "cursor_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 3983.5,
+          "min": 517,
+          "max": 8137,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            5092.0,
+            3804.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -17330.0,
+          "min": -17344,
+          "max": -17312,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -17332.0,
+            -17330.0
+          ]
+        }
+      },
+      "scanner_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 5060.0,
+          "min": 1497,
+          "max": 8471,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            5060.0,
+            5188.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -17106.0,
+          "min": -17128,
+          "max": -17076,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -17108.0,
+            -17100.0
+          ]
+        }
+      },
+      "lifetime_cursor": {
+        "us": {
+          "pairs": 16,
+          "median": 5372.5,
+          "min": 3754,
+          "max": 7627,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            4860.5,
+            5755.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -312.0,
+          "min": -332,
+          "max": -296,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -312.0,
+            -318.0
+          ]
+        }
+      },
+      "interaction": {
+        "us": {
+          "pairs": 16,
+          "median": 5747.5,
+          "min": 2979,
+          "max": 11330,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            4486.0,
+            7320.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -90.0,
+          "min": -116,
+          "max": -48,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -92.0,
+            -86.0
+          ]
+        }
+      }
+    },
+    "agenda": {
+      "regex_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 22423.5,
+          "min": 12198,
+          "max": 39781,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            21646.0,
+            24567.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -230.0,
+          "min": -256,
+          "max": -200,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -228.0,
+            -230.0
+          ]
+        }
+      },
+      "cursor_fresh": {
+        "us": {
+          "pairs": 16,
+          "median": 27648.5,
+          "min": 15288,
+          "max": 34405,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            25141.0,
+            29095.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -12958.0,
+          "min": -12976,
+          "max": -12936,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -12962.0,
+            -12956.0
+          ]
+        }
+      },
+      "cursor_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 61311.5,
+          "min": 55416,
+          "max": 71293,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            59079.5,
+            63131.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -13280.0,
+          "min": -13304,
+          "max": -13256,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -13282.0,
+            -13278.0
+          ]
+        }
+      },
+      "scanner_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 37545.5,
+          "min": 29231,
+          "max": 49884,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            36234.0,
+            38480.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -13052.0,
+          "min": -13076,
+          "max": -13032,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -13052.0,
+            -13050.0
+          ]
+        }
+      },
+      "lifetime_cursor": {
+        "us": {
+          "pairs": 16,
+          "median": 35663.5,
+          "min": 28720,
+          "max": 41878,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            35663.5,
+            35225.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -318.0,
+          "min": -340,
+          "max": -296,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -320.0,
+            -318.0
+          ]
+        }
+      },
+      "interaction": {
+        "us": {
+          "pairs": 16,
+          "median": 11572.0,
+          "min": -3422,
+          "max": 27930,
+          "positive": 14,
+          "negative": 2,
+          "bootMedians": [
+            11015.0,
+            11780.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -90.0,
+          "min": -116,
+          "max": -64,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -92.0,
+            -90.0
+          ]
+        }
+      }
+    },
+    "editor": {
+      "regex_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 115302.5,
+          "min": 73857,
+          "max": 139396,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            122416.0,
+            114035.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -224.0,
+          "min": -580,
+          "max": 68,
+          "positive": 1,
+          "negative": 15,
+          "bootMedians": [
+            -214.0,
+            -226.0
+          ]
+        }
+      },
+      "cursor_fresh": {
+        "us": {
+          "pairs": 16,
+          "median": 151655.5,
+          "min": 134796,
+          "max": 190473,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            152553.0,
+            149499.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -8894.0,
+          "min": -9124,
+          "max": -8524,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -8904.0,
+            -8886.0
+          ]
+        }
+      },
+      "cursor_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 306791.0,
+          "min": 269286,
+          "max": 346474,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            308495.0,
+            304557.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -9194.0,
+          "min": -9644,
+          "max": -8880,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -9052.0,
+            -9206.0
+          ]
+        }
+      },
+      "scanner_reuse": {
+        "us": {
+          "pairs": 16,
+          "median": 187382.0,
+          "min": 157692,
+          "max": 263684,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            194571.0,
+            179112.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -8918.0,
+          "min": -9420,
+          "max": -8628,
+          "positive": 0,
+          "negative": 16,
+          "bootMedians": [
+            -8766.0,
+            -8988.0
+          ]
+        }
+      },
+      "lifetime_cursor": {
+        "us": {
+          "pairs": 16,
+          "median": 152425.0,
+          "min": 134490,
+          "max": 166690,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            156564.5,
+            147508.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -296.0,
+          "min": -752,
+          "max": 32,
+          "positive": 1,
+          "negative": 15,
+          "bootMedians": [
+            -170.0,
+            -378.0
+          ]
+        }
+      },
+      "interaction": {
+        "us": {
+          "pairs": 16,
+          "median": 32470.5,
+          "min": 16605,
+          "max": 73828,
+          "positive": 16,
+          "negative": 0,
+          "bootMedians": [
+            33833.0,
+            29767.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 16,
+          "median": -52.0,
+          "min": -528,
+          "max": 356,
+          "positive": 7,
+          "negative": 9,
+          "bootMedians": [
+            148.0,
+            -154.0
+          ]
+        }
+      }
+    }
+  },
+  "guestBatchCycleSavings": {
+    "compare": {
+      "regex_reuse": {
+        "pairs": 32,
+        "median": 22.5,
+        "min": -1301,
+        "max": 1388,
+        "positive": 17,
+        "negative": 15
+      },
+      "cursor_fresh": {
+        "pairs": 32,
+        "median": -28.0,
+        "min": -1331,
+        "max": 1389,
+        "positive": 14,
+        "negative": 18
+      },
+      "cursor_reuse": {
+        "pairs": 32,
+        "median": -14.0,
+        "min": -7310,
+        "max": 1309,
+        "positive": 15,
+        "negative": 17
+      }
+    },
+    "weekday": {
+      "regex_reuse": {
+        "pairs": 32,
+        "median": 1.5,
+        "min": -1396,
+        "max": 1379,
+        "positive": 17,
+        "negative": 15
+      },
+      "cursor_fresh": {
+        "pairs": 32,
+        "median": 8.5,
+        "min": -2077,
+        "max": 1398,
+        "positive": 17,
+        "negative": 12
+      },
+      "cursor_reuse": {
+        "pairs": 32,
+        "median": 13.5,
+        "min": -1391,
+        "max": 1390,
+        "positive": 20,
+        "negative": 12
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "fragments-1.log": {
+    "sourceSha256": "7c9c044aa5bec567582407bd2e1c66f11bd2c36cefee5158b12fbfd3383b10f1",
+    "extractSha256": "0fd5b5cfc8d4a3be09478b0ef75ee72ed98e48aafe786f133395e2471605c763"
+  },
+  "fragments-2.log": {
+    "sourceSha256": "dfb57a1d313bcb90dc780017b1551e71e5a291461fdcbe173a74413dc9f72a22",
+    "extractSha256": "2d2cb96e00369d5320c3000831de82b020385791c62dc0eb45533fc40accbad4"
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "captures": {
+    "boot-1.log": "3f1313ed5aecd5ef33459abc2d76cc00dc7d0f0329231db2982f89069aa780ee",
+    "boot-2.log": "382ec600338bb632bad62a2f1c96b597a9948e9a5e52f772cebdab3c0892cd0b"
+  },
+  "rows": 108,
+  "oracleSha256": "bdd8cb9b2e261bd544b676421b6beee915eb7fb2f0ce0059f20c1b3902e90562",
+  "comparisons": {
+    "files": {
+      "cursor_reuse": {
+        "us": {
+          "pairs": 12,
+          "median": 4563.5,
+          "min": 2023,
+          "max": 9449,
+          "positive": 12,
+          "negative": 0,
+          "bootMedians": [
+            4042.5,
+            4615.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -17338.0,
+          "min": -17356,
+          "max": -17312,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -17342.0,
+            -17334.0
+          ]
+        }
+      },
+      "cursor_lazy": {
+        "us": {
+          "pairs": 12,
+          "median": -7526.0,
+          "min": -9831,
+          "max": -647,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -7978.5,
+            -6582.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -23406.0,
+          "min": -23424,
+          "max": -23384,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -23408.0,
+            -23400.0
+          ]
+        }
+      },
+      "lazy_added": {
+        "us": {
+          "pairs": 12,
+          "median": -11731.0,
+          "min": -14117,
+          "max": -10096,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -12006.5,
+            -10918.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -6068.0,
+          "min": -6092,
+          "max": -6052,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -6064.0,
+            -6072.0
+          ]
+        }
+      }
+    },
+    "agenda": {
+      "cursor_reuse": {
+        "us": {
+          "pairs": 12,
+          "median": 65210.0,
+          "min": 51864,
+          "max": 69481,
+          "positive": 12,
+          "negative": 0,
+          "bootMedians": [
+            64619.0,
+            65210.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -13282.0,
+          "min": -13304,
+          "max": -13256,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -13284.0,
+            -13278.0
+          ]
+        }
+      },
+      "cursor_lazy": {
+        "us": {
+          "pairs": 12,
+          "median": 6868.0,
+          "min": 706,
+          "max": 16281,
+          "positive": 12,
+          "negative": 0,
+          "bootMedians": [
+            14349.5,
+            5103.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -19344.0,
+          "min": -19364,
+          "max": -19336,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -19344.0,
+            -19346.0
+          ]
+        }
+      },
+      "lazy_added": {
+        "us": {
+          "pairs": 12,
+          "median": -58241.5,
+          "min": -62267,
+          "max": -47238,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -53302.0,
+            -58964.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -6068.0,
+          "min": -6084,
+          "max": -6052,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -6064.0,
+            -6070.0
+          ]
+        }
+      }
+    },
+    "editor": {
+      "cursor_reuse": {
+        "us": {
+          "pairs": 12,
+          "median": 304900.5,
+          "min": 284251,
+          "max": 344660,
+          "positive": 12,
+          "negative": 0,
+          "bootMedians": [
+            304900.5,
+            305558.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -9210.0,
+          "min": -9656,
+          "max": -8948,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -9218.0,
+            -9204.0
+          ]
+        }
+      },
+      "cursor_lazy": {
+        "us": {
+          "pairs": 12,
+          "median": 96271.0,
+          "min": 71254,
+          "max": 130528,
+          "positive": 12,
+          "negative": 0,
+          "bootMedians": [
+            99057.5,
+            95779.0
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -15268.0,
+          "min": -15676,
+          "max": -14632,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -15152.0,
+            -15272.0
+          ]
+        }
+      },
+      "lazy_added": {
+        "us": {
+          "pairs": 12,
+          "median": -213659.0,
+          "min": -226178,
+          "max": -179012,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -213659.0,
+            -213104.5
+          ]
+        },
+        "peakBytes": {
+          "pairs": 12,
+          "median": -6020.0,
+          "min": -6432,
+          "max": -5528,
+          "positive": 0,
+          "negative": 12,
+          "bootMedians": [
+            -5862.0,
+            -6040.0
+          ]
+        }
+      }
+    }
+  },
+  "guestBatchCycleSavings": {
+    "compare": {
+      "cursor_reuse": {
+        "pairs": 32,
+        "median": -8.5,
+        "min": -1290,
+        "max": 1288,
+        "positive": 14,
+        "negative": 18
+      },
+      "cursor_lazy": {
+        "pairs": 32,
+        "median": 11.5,
+        "min": -1350,
+        "max": 1299,
+        "positive": 19,
+        "negative": 13
+      }
+    },
+    "weekday": {
+      "cursor_reuse": {
+        "pairs": 32,
+        "median": -11.0,
+        "min": -1434,
+        "max": 1395,
+        "positive": 13,
+        "negative": 18
+      },
+      "cursor_lazy": {
+        "pairs": 32,
+        "median": 11.5,
+        "min": -1365,
+        "max": 1384,
+        "positive": 21,
+        "negative": 11
+      }
+    }
+  }
+}
