@@ -1,0 +1,2442 @@
+{
+  "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+  "which": "training",
+  "sources": {
+    "files": {
+      "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+      "sourceBytes": 2830,
+      "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93"
+    },
+    "agenda": {
+      "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+      "sourceBytes": 17532,
+      "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a"
+    }
+  },
+  "outputs": {
+    "files": {
+      "control": {
+        "raw": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+        "metadata": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+        "div": 0,
+        "rem": 0,
+        "traps": 8,
+        "words": 804,
+        "functions": {
+          "filesSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "filesAlnum": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 51
+          },
+          "filesName": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 261
+          },
+          "filesCompare": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 107
+          },
+          "filesSelect": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 48
+          },
+          "filesPromptAction": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 46
+          },
+          "filesAction": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 175
+          }
+        },
+        "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+        "bytes": 24424,
+        "stats": [],
+        "admitted": 0,
+        "candidates": 0,
+        "chargedCells": 0,
+        "peakScratchBytes": 0,
+        "analysisNs": 0,
+        "removedZero": 0,
+        "removedOverflow": 0,
+        "localProofs": 0
+      },
+      "always": {
+        "raw": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+        "metadata": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+        "div": 0,
+        "rem": 0,
+        "traps": 8,
+        "words": 804,
+        "functions": {
+          "filesSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "filesAlnum": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 51
+          },
+          "filesName": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 261
+          },
+          "filesCompare": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 107
+          },
+          "filesSelect": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 48
+          },
+          "filesPromptAction": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 46
+          },
+          "filesAction": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 175
+          }
+        },
+        "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+        "bytes": 24424,
+        "stats": [
+          {
+            "name": "filesSpace",
+            "cells": 138,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 276,
+            "scratchBytes": 1280,
+            "analysisNs": 207681,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesAlnum",
+            "cells": 61,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 122,
+            "scratchBytes": 1280,
+            "analysisNs": 24834,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesName",
+            "cells": 406,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 812,
+            "scratchBytes": 1280,
+            "analysisNs": 126249,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesCompare",
+            "cells": 162,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 324,
+            "scratchBytes": 1280,
+            "analysisNs": 19151,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesSelect",
+            "cells": 66,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 132,
+            "scratchBytes": 1280,
+            "analysisNs": 27412,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesPromptAction",
+            "cells": 52,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 104,
+            "scratchBytes": 1280,
+            "analysisNs": 13536,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesAction",
+            "cells": 219,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 438,
+            "scratchBytes": 1280,
+            "analysisNs": 17046,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          }
+        ],
+        "admitted": 7,
+        "candidates": 0,
+        "chargedCells": 2208,
+        "peakScratchBytes": 1280,
+        "analysisNs": 435909,
+        "removedZero": 0,
+        "removedOverflow": 0,
+        "localProofs": 0
+      },
+      "select": {
+        "raw": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+        "metadata": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+        "div": 0,
+        "rem": 0,
+        "traps": 8,
+        "words": 804,
+        "functions": {
+          "filesSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "filesAlnum": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 51
+          },
+          "filesName": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 261
+          },
+          "filesCompare": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 107
+          },
+          "filesSelect": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 48
+          },
+          "filesPromptAction": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 46
+          },
+          "filesAction": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 175
+          }
+        },
+        "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+        "bytes": 24424,
+        "stats": [
+          {
+            "name": "filesSpace",
+            "cells": 138,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesAlnum",
+            "cells": 61,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesName",
+            "cells": 406,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesCompare",
+            "cells": 162,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesSelect",
+            "cells": 66,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesPromptAction",
+            "cells": 52,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "filesAction",
+            "cells": 219,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          }
+        ],
+        "admitted": 0,
+        "candidates": 0,
+        "chargedCells": 0,
+        "peakScratchBytes": 0,
+        "analysisNs": 0,
+        "removedZero": 0,
+        "removedOverflow": 0,
+        "localProofs": 0
+      }
+    },
+    "agenda": {
+      "control": {
+        "raw": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+        "metadata": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+        "div": 16,
+        "rem": 17,
+        "traps": 84,
+        "words": 4058,
+        "functions": {
+          "leap": {
+            "div": 0,
+            "rem": 5,
+            "traps": 5,
+            "words": 68
+          },
+          "validDate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 103
+          },
+          "leadValue": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 169
+          },
+          "leadMinutes": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 16
+          },
+          "space": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "skipSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 46
+          },
+          "decimal": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 82
+          },
+          "boundary": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 36
+          },
+          "readDue": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 281
+          },
+          "readLead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 86
+          },
+          "scanTask": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 393
+          },
+          "writeTitle": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 145
+          },
+          "parseTask": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 34
+          },
+          "entryLower": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 27
+          },
+          "entryClock": {
+            "div": 0,
+            "rem": 1,
+            "traps": 4,
+            "words": 250
+          },
+          "entryTime": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 29
+          },
+          "entryMonthLength": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 68
+          },
+          "entryAddDays": {
+            "div": 2,
+            "rem": 2,
+            "traps": 6,
+            "words": 106
+          },
+          "entryWeekday": {
+            "div": 5,
+            "rem": 3,
+            "traps": 13,
+            "words": 127
+          },
+          "agendaDateKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "agendaMark": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 18
+          },
+          "entryLetters": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 70
+          },
+          "entryRelative": {
+            "div": 0,
+            "rem": 1,
+            "traps": 3,
+            "words": 446
+          },
+          "entryCalendar": {
+            "div": 1,
+            "rem": 1,
+            "traps": 4,
+            "words": 207
+          },
+          "entryDateAt": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 153
+          },
+          "entryDate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "entryWordEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 47
+          },
+          "entryYmdShape": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 179
+          },
+          "entryPut": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 48
+          },
+          "entryNumber": {
+            "div": 3,
+            "rem": 1,
+            "traps": 7,
+            "words": 84
+          },
+          "entryCopy": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 59
+          },
+          "entryWriteDate": {
+            "div": 2,
+            "rem": 2,
+            "traps": 6,
+            "words": 99
+          },
+          "entryFailure": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 17
+          },
+          "normalizeEntry": {
+            "div": 3,
+            "rem": 1,
+            "traps": 8,
+            "words": 405
+          }
+        },
+        "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+        "bytes": 66364,
+        "stats": [],
+        "admitted": 0,
+        "candidates": 0,
+        "chargedCells": 0,
+        "peakScratchBytes": 0,
+        "analysisNs": 0,
+        "removedZero": 0,
+        "removedOverflow": 0,
+        "localProofs": 0
+      },
+      "always": {
+        "raw": "7c99f078f94571803da79d8feb25dc53a0ec5aaeef45e961d391d4abc8a321a0",
+        "metadata": "2f96fb13bb60b223da4bc9527fc409ff3bd39c7d68a6ccc98d38940a292411e8",
+        "div": 16,
+        "rem": 17,
+        "traps": 39,
+        "words": 3898,
+        "functions": {
+          "leap": {
+            "div": 0,
+            "rem": 5,
+            "traps": 0,
+            "words": 58
+          },
+          "validDate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 103
+          },
+          "leadValue": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 169
+          },
+          "leadMinutes": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 16
+          },
+          "space": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "skipSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 46
+          },
+          "decimal": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 82
+          },
+          "boundary": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 36
+          },
+          "readDue": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 281
+          },
+          "readLead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 86
+          },
+          "scanTask": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 393
+          },
+          "writeTitle": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 145
+          },
+          "parseTask": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 34
+          },
+          "entryLower": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 27
+          },
+          "entryClock": {
+            "div": 0,
+            "rem": 1,
+            "traps": 3,
+            "words": 248
+          },
+          "entryTime": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 29
+          },
+          "entryMonthLength": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 68
+          },
+          "entryAddDays": {
+            "div": 2,
+            "rem": 2,
+            "traps": 0,
+            "words": 84
+          },
+          "entryWeekday": {
+            "div": 5,
+            "rem": 3,
+            "traps": 0,
+            "words": 76
+          },
+          "agendaDateKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "agendaMark": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 18
+          },
+          "entryLetters": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 70
+          },
+          "entryRelative": {
+            "div": 0,
+            "rem": 1,
+            "traps": 2,
+            "words": 444
+          },
+          "entryCalendar": {
+            "div": 1,
+            "rem": 1,
+            "traps": 1,
+            "words": 196
+          },
+          "entryDateAt": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 153
+          },
+          "entryDate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "entryWordEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 47
+          },
+          "entryYmdShape": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 179
+          },
+          "entryPut": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 48
+          },
+          "entryNumber": {
+            "div": 3,
+            "rem": 1,
+            "traps": 4,
+            "words": 73
+          },
+          "entryCopy": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 59
+          },
+          "entryWriteDate": {
+            "div": 2,
+            "rem": 2,
+            "traps": 0,
+            "words": 77
+          },
+          "entryFailure": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 17
+          },
+          "normalizeEntry": {
+            "div": 3,
+            "rem": 1,
+            "traps": 1,
+            "words": 376
+          }
+        },
+        "sha256": "e65df4de64642e64392f898a6aba51e652d71484e0673fa773cdd62adedde521",
+        "bytes": 66364,
+        "stats": [
+          {
+            "name": "leap",
+            "cells": 74,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 148,
+            "scratchBytes": 1280,
+            "analysisNs": 81445,
+            "removedZero": 5,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 5
+          },
+          {
+            "name": "validDate",
+            "cells": 129,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 258,
+            "scratchBytes": 1280,
+            "analysisNs": 24323,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "leadValue",
+            "cells": 249,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 498,
+            "scratchBytes": 1280,
+            "analysisNs": 26402,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "leadMinutes",
+            "cells": 12,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 24,
+            "scratchBytes": 1280,
+            "analysisNs": 5142,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "space",
+            "cells": 138,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 276,
+            "scratchBytes": 1280,
+            "analysisNs": 11346,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "skipSpace",
+            "cells": 68,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 136,
+            "scratchBytes": 1280,
+            "analysisNs": 10475,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "decimal",
+            "cells": 124,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 248,
+            "scratchBytes": 1280,
+            "analysisNs": 13398,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "boundary",
+            "cells": 44,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 88,
+            "scratchBytes": 1280,
+            "analysisNs": 7708,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "readDue",
+            "cells": 395,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 790,
+            "scratchBytes": 1280,
+            "analysisNs": 26409,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "readLead",
+            "cells": 128,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 256,
+            "scratchBytes": 1280,
+            "analysisNs": 13179,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "scanTask",
+            "cells": 613,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 1226,
+            "scratchBytes": 1280,
+            "analysisNs": 48213,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "writeTitle",
+            "cells": 239,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 478,
+            "scratchBytes": 1280,
+            "analysisNs": 26925,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "parseTask",
+            "cells": 29,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 58,
+            "scratchBytes": 1280,
+            "analysisNs": 5547,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryLower",
+            "cells": 28,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 56,
+            "scratchBytes": 1280,
+            "analysisNs": 5647,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryClock",
+            "cells": 354,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 708,
+            "scratchBytes": 1280,
+            "analysisNs": 22036,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "entryTime",
+            "cells": 34,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 68,
+            "scratchBytes": 1280,
+            "analysisNs": 8533,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryMonthLength",
+            "cells": 79,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 158,
+            "scratchBytes": 1280,
+            "analysisNs": 7083,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryAddDays",
+            "cells": 122,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 244,
+            "scratchBytes": 1280,
+            "analysisNs": 53831,
+            "removedZero": 4,
+            "removedOverflow": 2,
+            "localProofs": 0,
+            "usedProofs": 4
+          },
+          {
+            "name": "entryWeekday",
+            "cells": 110,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 220,
+            "scratchBytes": 1280,
+            "analysisNs": 22130,
+            "removedZero": 8,
+            "removedOverflow": 5,
+            "localProofs": 0,
+            "usedProofs": 8
+          },
+          {
+            "name": "agendaDateKey",
+            "cells": 22,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 44,
+            "scratchBytes": 1280,
+            "analysisNs": 5866,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "agendaMark",
+            "cells": 14,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 28,
+            "scratchBytes": 1280,
+            "analysisNs": 4335,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryLetters",
+            "cells": 103,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 206,
+            "scratchBytes": 1280,
+            "analysisNs": 10333,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryRelative",
+            "cells": 563,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 1126,
+            "scratchBytes": 1280,
+            "analysisNs": 109843,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "entryCalendar",
+            "cells": 273,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 546,
+            "scratchBytes": 1280,
+            "analysisNs": 19064,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "entryDateAt",
+            "cells": 201,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 402,
+            "scratchBytes": 1280,
+            "analysisNs": 16779,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryDate",
+            "cells": 14,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 28,
+            "scratchBytes": 1280,
+            "analysisNs": 4692,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryWordEnd",
+            "cells": 69,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 138,
+            "scratchBytes": 1280,
+            "analysisNs": 7569,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryYmdShape",
+            "cells": 245,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 490,
+            "scratchBytes": 1280,
+            "analysisNs": 16908,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryPut",
+            "cells": 63,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 126,
+            "scratchBytes": 1280,
+            "analysisNs": 6922,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryNumber",
+            "cells": 79,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 158,
+            "scratchBytes": 1280,
+            "analysisNs": 11249,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "entryCopy",
+            "cells": 80,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 160,
+            "scratchBytes": 1280,
+            "analysisNs": 8870,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryWriteDate",
+            "cells": 77,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 154,
+            "scratchBytes": 1280,
+            "analysisNs": 8011,
+            "removedZero": 4,
+            "removedOverflow": 2,
+            "localProofs": 0,
+            "usedProofs": 4
+          },
+          {
+            "name": "entryFailure",
+            "cells": 17,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 34,
+            "scratchBytes": 1280,
+            "analysisNs": 4382,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "normalizeEntry",
+            "cells": 490,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 980,
+            "scratchBytes": 1280,
+            "analysisNs": 30307,
+            "removedZero": 4,
+            "removedOverflow": 3,
+            "localProofs": 0,
+            "usedProofs": 4
+          }
+        ],
+        "admitted": 34,
+        "candidates": 9,
+        "chargedCells": 10558,
+        "peakScratchBytes": 1280,
+        "analysisNs": 684902,
+        "removedZero": 31,
+        "removedOverflow": 14,
+        "localProofs": 0
+      },
+      "select": {
+        "raw": "7c99f078f94571803da79d8feb25dc53a0ec5aaeef45e961d391d4abc8a321a0",
+        "metadata": "2f96fb13bb60b223da4bc9527fc409ff3bd39c7d68a6ccc98d38940a292411e8",
+        "div": 16,
+        "rem": 17,
+        "traps": 39,
+        "words": 3898,
+        "functions": {
+          "leap": {
+            "div": 0,
+            "rem": 5,
+            "traps": 0,
+            "words": 58
+          },
+          "validDate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 103
+          },
+          "leadValue": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 169
+          },
+          "leadMinutes": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 16
+          },
+          "space": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "skipSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 46
+          },
+          "decimal": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 82
+          },
+          "boundary": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 36
+          },
+          "readDue": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 281
+          },
+          "readLead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 86
+          },
+          "scanTask": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 393
+          },
+          "writeTitle": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 145
+          },
+          "parseTask": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 34
+          },
+          "entryLower": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 27
+          },
+          "entryClock": {
+            "div": 0,
+            "rem": 1,
+            "traps": 3,
+            "words": 248
+          },
+          "entryTime": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 29
+          },
+          "entryMonthLength": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 68
+          },
+          "entryAddDays": {
+            "div": 2,
+            "rem": 2,
+            "traps": 0,
+            "words": 84
+          },
+          "entryWeekday": {
+            "div": 5,
+            "rem": 3,
+            "traps": 0,
+            "words": 76
+          },
+          "agendaDateKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "agendaMark": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 18
+          },
+          "entryLetters": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 70
+          },
+          "entryRelative": {
+            "div": 0,
+            "rem": 1,
+            "traps": 2,
+            "words": 444
+          },
+          "entryCalendar": {
+            "div": 1,
+            "rem": 1,
+            "traps": 1,
+            "words": 196
+          },
+          "entryDateAt": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 153
+          },
+          "entryDate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "entryWordEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 47
+          },
+          "entryYmdShape": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 179
+          },
+          "entryPut": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 48
+          },
+          "entryNumber": {
+            "div": 3,
+            "rem": 1,
+            "traps": 4,
+            "words": 73
+          },
+          "entryCopy": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 59
+          },
+          "entryWriteDate": {
+            "div": 2,
+            "rem": 2,
+            "traps": 0,
+            "words": 77
+          },
+          "entryFailure": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 17
+          },
+          "normalizeEntry": {
+            "div": 3,
+            "rem": 1,
+            "traps": 1,
+            "words": 376
+          }
+        },
+        "sha256": "e65df4de64642e64392f898a6aba51e652d71484e0673fa773cdd62adedde521",
+        "bytes": 66364,
+        "stats": [
+          {
+            "name": "leap",
+            "cells": 74,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 148,
+            "scratchBytes": 1280,
+            "analysisNs": 272848,
+            "removedZero": 5,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 5
+          },
+          {
+            "name": "validDate",
+            "cells": 129,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "leadValue",
+            "cells": 249,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "leadMinutes",
+            "cells": 12,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "space",
+            "cells": 138,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "skipSpace",
+            "cells": 68,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "decimal",
+            "cells": 124,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "boundary",
+            "cells": 44,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "readDue",
+            "cells": 395,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "readLead",
+            "cells": 128,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "scanTask",
+            "cells": 613,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "writeTitle",
+            "cells": 239,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "parseTask",
+            "cells": 29,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryLower",
+            "cells": 28,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryClock",
+            "cells": 354,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 708,
+            "scratchBytes": 1280,
+            "analysisNs": 114245,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "entryTime",
+            "cells": 34,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryMonthLength",
+            "cells": 79,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryAddDays",
+            "cells": 122,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 244,
+            "scratchBytes": 1280,
+            "analysisNs": 26023,
+            "removedZero": 4,
+            "removedOverflow": 2,
+            "localProofs": 0,
+            "usedProofs": 4
+          },
+          {
+            "name": "entryWeekday",
+            "cells": 110,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 220,
+            "scratchBytes": 1280,
+            "analysisNs": 13444,
+            "removedZero": 8,
+            "removedOverflow": 5,
+            "localProofs": 0,
+            "usedProofs": 8
+          },
+          {
+            "name": "agendaDateKey",
+            "cells": 22,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "agendaMark",
+            "cells": 14,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryLetters",
+            "cells": 103,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryRelative",
+            "cells": 563,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 1126,
+            "scratchBytes": 1280,
+            "analysisNs": 130516,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "entryCalendar",
+            "cells": 273,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 546,
+            "scratchBytes": 1280,
+            "analysisNs": 26544,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "entryDateAt",
+            "cells": 201,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryDate",
+            "cells": 14,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryWordEnd",
+            "cells": 69,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryYmdShape",
+            "cells": 245,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryPut",
+            "cells": 63,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryNumber",
+            "cells": 79,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 158,
+            "scratchBytes": 1280,
+            "analysisNs": 25288,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "entryCopy",
+            "cells": 80,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "entryWriteDate",
+            "cells": 77,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 154,
+            "scratchBytes": 1280,
+            "analysisNs": 8530,
+            "removedZero": 4,
+            "removedOverflow": 2,
+            "localProofs": 0,
+            "usedProofs": 4
+          },
+          {
+            "name": "entryFailure",
+            "cells": 17,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "normalizeEntry",
+            "cells": 490,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 980,
+            "scratchBytes": 1280,
+            "analysisNs": 33424,
+            "removedZero": 4,
+            "removedOverflow": 3,
+            "localProofs": 0,
+            "usedProofs": 4
+          }
+        ],
+        "admitted": 9,
+        "candidates": 9,
+        "chargedCells": 4284,
+        "peakScratchBytes": 1280,
+        "analysisNs": 650862,
+        "removedZero": 31,
+        "removedOverflow": 14,
+        "localProofs": 0
+      }
+    }
+  },
+  "samples": {
+    "files": [
+      [
+        {
+          "block": 0,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 2271811
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 2048778
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 1851666
+        }
+      ],
+      [
+        {
+          "block": 1,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 2314112
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 1899386
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 1850170
+        }
+      ],
+      [
+        {
+          "block": 2,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 2155645
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 1859475
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 2619840
+        }
+      ],
+      [
+        {
+          "block": 3,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 1895213
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 2012396
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 1928193
+        }
+      ],
+      [
+        {
+          "block": 4,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 2136776
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 2097046
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 2700652
+        }
+      ],
+      [
+        {
+          "block": 5,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 2035121
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 1885554
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 1975918
+        }
+      ],
+      [
+        {
+          "block": 6,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 2032667
+        },
+        {
+          "block": 6,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 2209802
+        },
+        {
+          "block": 6,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 2534066
+        }
+      ],
+      [
+        {
+          "block": 7,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 2031890
+        },
+        {
+          "block": 7,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 1823747
+        },
+        {
+          "block": 7,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 1889112
+        }
+      ],
+      [
+        {
+          "block": 8,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 1888607
+        },
+        {
+          "block": 8,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 2319943
+        },
+        {
+          "block": 8,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 2441191
+        }
+      ],
+      [
+        {
+          "block": 9,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 2230722
+        },
+        {
+          "block": 9,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 3989363
+        },
+        {
+          "block": 9,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 1868268
+        }
+      ],
+      [
+        {
+          "block": 10,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 1653320
+        },
+        {
+          "block": 10,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 1785737
+        },
+        {
+          "block": 10,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 1991016
+        }
+      ],
+      [
+        {
+          "block": 11,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 1996547
+        },
+        {
+          "block": 11,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 2261665
+        },
+        {
+          "block": 11,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 1725347
+        }
+      ]
+    ],
+    "agenda": [
+      [
+        {
+          "block": 0,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 5527335
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 6392737
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 5624119
+        }
+      ],
+      [
+        {
+          "block": 1,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 5332042
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 5083054
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 5363629
+        }
+      ],
+      [
+        {
+          "block": 2,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 5227929
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 6219413
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 6778971
+        }
+      ],
+      [
+        {
+          "block": 3,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 5113618
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 6242872
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 5088839
+        }
+      ],
+      [
+        {
+          "block": 4,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 5753279
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 8313451
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 8022433
+        }
+      ],
+      [
+        {
+          "block": 5,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 8243348
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 6301679
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 6225011
+        }
+      ],
+      [
+        {
+          "block": 6,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 9853361
+        },
+        {
+          "block": 6,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 9030982
+        },
+        {
+          "block": 6,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 8401240
+        }
+      ],
+      [
+        {
+          "block": 7,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 10703019
+        },
+        {
+          "block": 7,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 9448947
+        },
+        {
+          "block": 7,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 8037127
+        }
+      ],
+      [
+        {
+          "block": 8,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 8660603
+        },
+        {
+          "block": 8,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 7460060
+        },
+        {
+          "block": 8,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 11138298
+        }
+      ],
+      [
+        {
+          "block": 9,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 8669049
+        },
+        {
+          "block": 9,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 9008475
+        },
+        {
+          "block": 9,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 7819566
+        }
+      ],
+      [
+        {
+          "block": 10,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 10100315
+        },
+        {
+          "block": 10,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 9570484
+        },
+        {
+          "block": 10,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 10066187
+        }
+      ],
+      [
+        {
+          "block": 11,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 9651105
+        },
+        {
+          "block": 11,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 8209617
+        },
+        {
+          "block": 11,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 9076384
+        }
+      ]
+    ]
+  }
+}

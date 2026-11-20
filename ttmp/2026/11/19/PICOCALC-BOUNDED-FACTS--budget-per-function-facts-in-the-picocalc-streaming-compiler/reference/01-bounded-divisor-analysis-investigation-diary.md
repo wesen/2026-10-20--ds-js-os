@@ -135,3 +135,62 @@ The approved generic Opus high run returned 23,652 characters of substantive des
 
 - Always and Select both attempt the same two-pass proof after admission. Select charges twice the numeric cell length and may admit a later smaller function after an earlier skip.
 - Two official instruction specifications confirm why guard predicates differ between signed division and signed remainder.
+
+## Step 3. Qualify training builds and commit the prediction
+
+After the study resumed, I ran the three overlays through the real Files and Agenda wrappers and separately counted raw instructions. Files produced identical binaries and selected no functions. Agenda preserved all divide and remainder instructions while dropping 45 guards and 160 total words. Select spent 4,284 charged visits against 10,558 for Always.
+
+### Prompt Context
+
+**User prompt:** See Step 1. The pause preserved the verified design commit and generated overlays. The resumption instruction authorized the named GPT researcher for the remaining experiment.
+
+**Commit (design):** `6d4c512` — Preregister bounded divisor analysis on PicoCalc.
+
+### What I did
+
+- Constructed isolated control, always and select compilers from pinned production bytes with `scripts/01-stage.py`. Added a width-aware two-pass proof and streamed scratch ownership.
+- Isolated control, training and held-out inputs in the harness. The training input invocation copies Files and Agenda only.
+- Validated exact wrapped hashes, observed and clean mode equivalence, streamed and buffered equivalence, static instruction counts, and the charge limit with `scripts/03-qualify.mjs`.
+
+### Why
+
+- The emitted machine word and trap counts independently validate the proof observation callback. The linked ELF verifies the normal linker and wrappers still accept the output.
+- Recording the prediction in a separate commit makes the test date and frozen code independently inspectable.
+
+### What worked
+
+- All three Files hashes were identical. Both proved Agenda images matched and preserved all 33 arithmetic instructions.
+- The static word differences reconciled exactly as two words per zero guard and seven per overflow guard.
+
+### What didn't work
+
+- The first training harness used Node `execFileSync('git', ...)`. The sandbox returned `spawnSync git EPERM` despite an exit status of zero. I moved source extraction into the repository’s existing Python-and-Git staging approach.
+- The optional authorized project-specific Opus follow-up exited 124 at its time limit. The original Opus-derived design commit remained the experiment contract.
+- The default Git sandbox would not create `.git/index.lock` and reported `Read-only file system` when committing the design. The approved retry committed the intended ticket files.
+
+### What I learned
+
+- The workload-independent parser predicate excluded all 25 Agenda functions containing no divide or remainder. Both enabled policies spent proof time on the same nine potentially useful functions.
+- Guard words and run-time instructions have different units. The correct arithmetic still runs at every reached site.
+
+### What was tricky to build
+
+- A previous operation can end at an immediate cell whose numeric value equals an opcode. The candidate advances by decoded width and compares a proof offset to the exact backend cell index.
+- Repeated writes invalidate a slot even when the second write happens in a branch a particular test does not take.
+
+### What warrants a second pair of eyes
+
+- Verify the input extraction matches CMake concatenation.
+- Review the pre-result prediction against the recorded source and compiler hashes.
+
+### What should be done in the future
+
+- Open the held-out workload and hand the separate output hashes to the board supervisor.
+
+### Code review instructions
+
+- Run `scripts/00-inputs.py OUT training`, `scripts/01-stage.py LANES`, then `node scripts/03-qualify.mjs LANES REACTORS OUT training` from the repository root using the ticket-relative paths.
+
+### Technical details
+
+- The arithmetic proof scratch uses 1,280 explicit array bytes per admitted function. The host profile hook records charged cells and elapsed helper time separately.

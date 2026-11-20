@@ -7,3 +7,7 @@
 ## 2026-11-19
 
 Freeze the design, arithmetic facts, selection policy and held-out workload before implementation.
+
+## 2026-11-19
+
+Qualify the frozen training variants and commit the Editor transfer prediction before unblinding.
