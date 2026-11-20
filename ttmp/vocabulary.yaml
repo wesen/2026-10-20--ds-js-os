@@ -55,6 +55,12 @@ topics:
       description: Indexed binary screen snapshots
     - slug: rendering
       description: Screen composition, rasterization, and presentation
+    - slug: compiler
+      description: Language analysis, lowering, code generation, and compilation measurements
+    - slug: graphics
+      description: Geometry, graphics primitives, and pixel representations
+    - slug: testing
+      description: Correctness controls, differential checks, and hardware qualification
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes

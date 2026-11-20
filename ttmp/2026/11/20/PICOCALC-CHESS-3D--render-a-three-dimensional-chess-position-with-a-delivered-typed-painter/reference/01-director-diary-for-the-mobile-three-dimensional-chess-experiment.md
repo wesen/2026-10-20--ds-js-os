@@ -139,3 +139,53 @@ Run scripts/scene/poses.mjs using the earlier compiler replay fixtures and scrip
 ### Technical details
 
 The scalar function packs x and y screen coordinates into an i32 so the face helper can pass three point values, a color, a destination buffer and its offset. RGB565 values remain distinct from vertex encodings. The host screenshot covers only the 320-by-280 body, while the board experiment also observes the composed hints and completed SPI writes.
+
+## Step 3: Isolate the camera from game state and replay four actual turns
+
+The physical fixed-camera research established scalar and packed results on an opening exchange. The next request changes the app's presentation and requires evidence from an asymmetric position. I assigned the maintained geometry to the scene researcher, kept keyboard routing and receiver ownership here, and built a reproducible match with the actual search engine.
+
+### Prompt Context
+
+**User prompt (verbatim):** “can we add a camera rotation keys?” Then “take screenshots a few turns deep as well, when pieces have been moved. Also make proper 3d models for each piece, this is a bit boring, and the letters are meh” and “can you when you test rotating and such, make a little gif (or mutliple) instead of just screenshots?”
+
+**Assistant interpretation:** Ship controls, distinguish all six pieces by geometry and deliver actual gameplay and rotation animations. **Inferred user intent:** See whether the app looks good, remains playable and communicates positions clearly beyond its initial diagram.
+
+### What I did
+
+I passed the yaw through the compositor draw syscall, reserved a receiver-only input cell, mapped arrows through the inverse camera transform and exposed the new board as a P4 build option. Wrote a real four-turn host replay, independent image reference driver, device qualification script and two-animation publisher under scripts/camera. Reviewed both frozen physical studies and measured triangle spans on their archived opening.
+
+### Why
+
+The game already publishes a complete, sufficient PSIX position. Orientation belongs to the local view. Capturing castling and a knight capture gives strongly asymmetric views. Keeping the first experiment's source frozen preserves its published baseline.
+
+### What worked
+
+The host game played e2e4 b8c6, g1f3 g8f6, f1c4 f6e4, e1g1 d7d5. The real compositor callbacks passed the authorization, wraparound, remapped-arrow, focus and key-edge cases. The app tests passed. Physical research checkpoint cafbe29 validated the previous single exchange, and d41dfbc and 3ef0dd5 recorded and reviewed the packed result.
+
+### What didn't work
+
+A search for picocalc-os/tests/chess-world.test.mjs reported “No such file or directory”. The earlier render study has an executable game-world harness in scripts/03-guest.mjs. Reusing it yielded the move list above.
+
+### What I learned
+
+Completed hardware writes for one opening exchange supply a control, but insufficient variety for judging a camera or identifying a piece by its silhouette. The new script settles each actual asynchronous engine search and records the received position before preparing its next input.
+
+### What was tricky to build
+
+A redraw for a turn must invalidate the retained commands even when the game bytes are identical. Reusing the ordinary publisher notification inside an active draw would queue another draw. The service restores that epoch after successful regeneration and keeps the old orientation on a rejected list.
+
+### What warrants a second pair of eyes
+
+Review color parity, asymmetric face visibility, focus transitions, both PSIX and Typed buffer boundaries, and the actual source allowed by the release build.
+
+### What should be done in the future
+
+Complete the model and hardware qualification, publish the game and rotation GIFs, and record the actual installed firmware.
+
+### Code review instructions
+
+Start with design-doc/05, then inspect painter_service.c, compositor.js, scripts/camera/01-match.mjs and scripts/camera/04-device.py. Look at independent panel and full app-pixel comparisons separately.
+
+### Technical details
+
+The search produces a 90-cell position, the compositor appends a separate yaw at cell 90, and the native callback retains its two-buffer signature. The 2D build never adds this cell. GIF intervals describe playback and do not measure raster performance.

@@ -1,0 +1,47 @@
+{
+  "triangles": 372,
+  "triangleSpans": 5580,
+  "spansUnder8": 3916,
+  "medianSpan": 5.0,
+  "trianglePixelsWrittenWithOverdraw": 33150,
+  "triPixelsInAlignedBlocks": 11792,
+  "rectanglePixelsFilled": 89600,
+  "screenDifferences": {
+    "e2 to e3": {
+      "changedPixels": 328,
+      "box": [
+        123,
+        154,
+        158,
+        180
+      ]
+    },
+    "e3 to f3": {
+      "changedPixels": 604,
+      "box": [
+        130,
+        154,
+        174,
+        181
+      ]
+    }
+  },
+  "spanLengthHistogram": {
+    "1": 802,
+    "2": 712,
+    "3": 438,
+    "4": 628,
+    "5": 358,
+    "6": 502,
+    "7": 476,
+    "8": 144,
+    "9": 366,
+    "10": 288,
+    "11": 64,
+    "12": 272,
+    "13": 6,
+    "14": 268,
+    "15": 256
+  },
+  "assumptions": "16-byte aligned framebuffer, 320 RGB565 pixels per row. Potential eight-pixel stores, not measured speed. Counts before dirty-band comparison."
+}

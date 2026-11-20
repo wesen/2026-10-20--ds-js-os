@@ -1,0 +1,43 @@
+{
+  "unit": "P4 CPU cycles per native painter invocation",
+  "samplesPerPosition": 11,
+  "invocationsPerSample": 8,
+  "positions": {
+    "e2": {
+      "scalarMedian": 188920,
+      "pieMedian": 185356,
+      "pairedMedianCyclesSaved": 3568,
+      "pairedMedianPercentSaved": 1.8886301079822148,
+      "pairedMinPercentSaved": 1.7611001715047958,
+      "pairedMaxPercentSaved": 1.9735276542413394,
+      "pieFasterPairs": 11,
+      "commandWords": 3281,
+      "commandFNV": "b8f492e5",
+      "panelCRC": "9bfb0fa8"
+    },
+    "e3": {
+      "scalarMedian": 188936,
+      "pieMedian": 185363,
+      "pairedMedianCyclesSaved": 3585,
+      "pairedMedianPercentSaved": 1.8973574600284735,
+      "pairedMinPercentSaved": 1.8628411106111538,
+      "pairedMaxPercentSaved": 1.976773702246478,
+      "pieFasterPairs": 11,
+      "commandWords": 3281,
+      "commandFNV": "8452161d",
+      "panelCRC": "372bf81b"
+    },
+    "f3": {
+      "scalarMedian": 188923,
+      "pieMedian": 185342,
+      "pairedMedianCyclesSaved": 3559,
+      "pairedMedianPercentSaved": 1.884185337342764,
+      "pairedMinPercentSaved": 1.7544881331166253,
+      "pairedMaxPercentSaved": 2.014263736379929,
+      "pieFasterPairs": 11,
+      "commandWords": 3281,
+      "commandFNV": "4a0b7fa5",
+      "panelCRC": "65a21193"
+    }
+  }
+}
