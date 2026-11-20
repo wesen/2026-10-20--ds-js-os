@@ -12,6 +12,19 @@ native = tree/'picocalc-os/nucleus/native.c'
 bus = main/'bus_p4.c'
 console = main/'main_p4.c'
 
+# A repeat request is harmless only when the entire previous installation is present exactly once.
+markers = ((native, 'camera_painted(W, id, b, arg, camera_begin);'),
+           (native, 'camera_committed(W, id, b, count);'),
+           (bus, 'static void camera_panel_end_window(void)'),
+           (bus, '  camera_panel_end_window();'),
+           (console, 'static void camera_console(const char *cmd)'),
+           (console, 'else if (!strcmp(cmd, "camobs")) camera_console(rest);'))
+counts = [path.read_text().count(marker) for path, marker in markers]
+if all(count == 1 for count in counts):
+    sys.exit(0)
+if any(counts):
+    raise ValueError(f"partial or duplicate private observer hooks: {counts}")
+
 def replace(s, old, new):
     if s.count(old) != 1:
         raise ValueError(f"expected exactly one source anchor: {old}")
