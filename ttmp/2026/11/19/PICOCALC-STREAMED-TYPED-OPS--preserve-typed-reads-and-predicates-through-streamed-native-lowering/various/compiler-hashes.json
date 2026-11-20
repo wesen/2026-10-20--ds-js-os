@@ -1,0 +1,17 @@
+{
+  "staged": {
+    "rv32.js": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+    "wasm.js": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+    "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  },
+  "observe": {
+    "rv32.js": "08aae9ae308d42f44ab046891f65d8f248508cadf300a4c5e8fc037178bc3961",
+    "wasm.js": "638317ffbfb484c175b13361d1cd360e17bfd4cbc76187c473942ce74f2a3639",
+    "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  },
+  "direct": {
+    "rv32.js": "20858a80a4c4ef62870b7ec47f339d338db7d44aa75337fad536e1ef8a821d15",
+    "wasm.js": "b135dc2e14950888478efc9a41e1b397c4bdc13e10e3f4f48c339b1b02addc04",
+    "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  }
+}

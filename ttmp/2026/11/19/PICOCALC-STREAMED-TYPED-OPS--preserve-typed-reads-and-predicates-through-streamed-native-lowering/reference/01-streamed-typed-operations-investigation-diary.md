@@ -1,0 +1,124 @@
+---
+Title: Streamed typed operations investigation diary
+Ticket: PICOCALC-STREAMED-TYPED-OPS
+Status: active
+Topics:
+    - picocalc
+    - compiler
+    - research
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: "Chronological compiler experiment and qualification evidence."
+LastUpdated: 2026-11-19T22:14:06.428893527-05:00
+WhatFor: ""
+WhenToUse: ""
+---
+
+# Streamed typed operations investigation diary
+
+## Step 1. Freeze a three-lane comparison
+
+The staged backend's existing predicate fusion made byte identity a practical control. A representation can preserve a typed operation yet project the same low-level program. That gives a physical experiment whose observation arm isolates the representation and projection cost from any code improvement.
+
+### Prompt context
+
+> Preserve useful typed operations until native lowering. Build a minimal, one-function-at-a-time representation that preserves operations such as “read a text code unit” and “branch on this comparison.” First make it emit the same RV32 bytes as the staged baseline. Measuring that version tells us the time and memory cost of carrying the information before we credit it with any optimization. Then let the backend consume one operation directly and measure what disappears.
+
+The brief's third study supplied this request. I interpreted it as a control, a typed observation arm and one direct lowering, all on the prior staged backend. The design commit is `3a1acc2` and the frozen prior-study repository state is `dbe26be`.
+
+### What I did
+
+- Reconstructed the staged backend using the prior script and patches and verified each staging input against its blob at `dbe26be`.
+- Committed the design before adding executable compiler code.
+- Read the independent Opus High review and preserved the response and receipt. It proposed a transient byte-load example and emphasized observable order. The actual SDK operation requires a checked UTF-16 read and is represented at the front end's output boundary.
+
+### Why
+
+The unchanged output in the observation arm forces any physical compilation difference to come from representation, projection and compiler initialization. The execution difference belongs to the direct candidate.
+
+### What worked
+
+The supervisor's baseline receipt has 24 passing replays. The staged RV32 SHA-256 begins `532c5ed74ac6` and matches this ticket's control.
+
+### What did not work
+
+Git initially returned `fatal: Unable to create '.../.git/index.lock': Read-only file system` after `git add -- <ticket design paths>`. The managed sandbox permits source writes and mounts Git metadata read-only. The design commit succeeded through approved Git access. Implementation began after the commit.
+
+### What I learned
+
+Staged compiler generation starts from an older frozen production backend and applies two research patches. Reading only the production RV32 file would have missed deferred operands and the branch compactor.
+
+### What was tricky to build
+
+The observation lane needs to preserve the order and exact numbering of synthetic locals created before the parser descends into the position expression. That ordering matters for nested reads and stack frame layout.
+
+### What warrants a second pair of eyes
+
+Review the typed predicate consumer and compare its inversion count against the previous compiler's exact branch opcodes.
+
+### What should be done in the future
+
+A typed-operator design for all operations would need a shared opcode specification and direct consumers for its major operations. The scope here stays at two operations.
+
+### Code review instructions
+
+Read the design and then reconstruct the staged lane using `python3 -B scripts/01-stage.py <fresh-directory>`.
+
+### Technical details
+
+The control, observed and direct backend hashes are in the compiler receipt. The staged host replay registration is in the supervisor's baseline ticket.
+
+## Step 2. Project the old program and lower a read directly
+
+The observation variant matched the complete RV32 images of the three programs. The direct-read variant consumes an evaluated index, performs the checked UTF-16 access, and pushes a result. It no longer needs the temporary that the numeric stack program previously required.
+
+### Prompt context
+
+See Step 1. The evaluation compared complete code and metadata, buffered and streamed code, and Wasm semantics.
+
+### What I did
+
+- Added strict staging anchors and option-free compiler bundles for the two treatments.
+- Checked raw images, entry maps, layout, relocation, signatures and Wasm function bodies across Files, Agenda, Editor and fixtures.
+- Compared 126 fixture executions per lane including 46 expected traps, induced mutations, short circuit and stack spilling. Used the prior CJI-derived RV32 instruction interpreter with staged immediate operations.
+- Built the headless P4 firmware in an isolated port. The host oracle hashes its exact linked application ELFs and matches the emitted Files and Agenda timing kernels to firmware bytes.
+- Added an A6 adapter to preserve predicate positions across captured condition fragments and an A7 adapter to use allocator-managed local homes. Both register policy variants preserve the observation control and pass the focused differential.
+
+### Why
+
+An immediate such as 256 can equal an operation tag. Reading at instruction boundaries avoids interpreting a constant as an operation. Replaying the exact legacy operation list also preserves the staged backend's layout choices, including fusion and fallbacks.
+
+### What worked
+
+Editor generated 16,541 words in both the staged and observation lanes. Direct reads lowered that result to 16,174. The observed Editor stream carried 73 string reads, 42 buffer reads and 324 branch predicates. A6 and A7 composition reached 12,430 words with the loop-weighted register policy.
+
+### What did not work
+
+The initial `node scripts/06-verify.mjs /tmp/picocalc-typedops-lanes` called `typedWasm.compile` on full Editor source. The standalone entry raised `SyntaxError: input limit exceeded` because Editor needs the typed-world limit and SDK imports. The verifier now compares ordinary Wasm function bodies under the exact world import and limit contract. Existing linked-Wasm replay remains independent.
+
+### What I learned
+
+In Editor, replacing the stream cells saves 1,910 cells over the whole observed source but only one cell at the largest function. The projected array can coexist with its source array, so cell counts alone cannot predict heap high-water.
+
+### What was tricky to build
+
+A direct read may start with an index returned in `a0`, a deferred local, an existing stack register or a spilled value. The two scratch registers preserve lower stack operands. Under A7 the receiver can occupy an allocated register and the result can be forwarded directly into an assignment's register home.
+
+### What warrants a second pair of eyes
+
+Check that the position is evaluated before receiver loads, and that code-unit loads remain zero extended. Inspect how register planning advances over the typed-read immediate.
+
+### What should be done in the future
+
+A native consumer for branch predicate events could remove the projection pass from functions that carry both operation kinds. The current study directly lowers only the text operation.
+
+### Code review instructions
+
+Run `node scripts/06-verify.mjs <staged-directory>`. Check the compiled guest images against the linked oracle in `various/board-oracle.json`.
+
+### Technical details
+
+The P4 app image SHA-256 is `a537fb102936269ae10d5f8b8fb02fbcd826566c2830a0b545249b27eee2ef90`. The observed Editor ELF SHA-256 equals the staged control, `c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439`.

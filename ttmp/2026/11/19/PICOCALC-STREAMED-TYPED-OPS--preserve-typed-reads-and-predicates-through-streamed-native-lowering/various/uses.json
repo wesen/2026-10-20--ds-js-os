@@ -1,0 +1,141 @@
+{
+  "apps": {
+    "files": {
+      "staged": {
+        "words": 395,
+        "sha256": "0651731be362161c522adfa21e8f2c7eb24ed7544b87b51c67d77cbd23b08534",
+        "functions": 7,
+        "cells": 1077,
+        "maxFunctionCells": 384,
+        "stringReads": 0,
+        "bufferReads": 0,
+        "predicates": 0
+      },
+      "observe": {
+        "words": 395,
+        "sha256": "0651731be362161c522adfa21e8f2c7eb24ed7544b87b51c67d77cbd23b08534",
+        "functions": 7,
+        "cells": 981,
+        "maxFunctionCells": 292,
+        "stringReads": 7,
+        "bufferReads": 0,
+        "predicates": 40
+      },
+      "direct": {
+        "words": 380,
+        "sha256": "6446fed02130782ba49145fddf21b2e245b4c6f96b330d041413857dc8b07fec",
+        "functions": 7,
+        "cells": 974,
+        "maxFunctionCells": 287,
+        "stringReads": 7,
+        "bufferReads": 0,
+        "predicates": 40
+      }
+    },
+    "agenda": {
+      "staged": {
+        "words": 2130,
+        "sha256": "7c82f9f88c62ce49e58da7a449f478a8008283c8c6cae6ee5c23d71b267d8d2e",
+        "functions": 34,
+        "cells": 5185,
+        "maxFunctionCells": 594,
+        "stringReads": 0,
+        "bufferReads": 0,
+        "predicates": 0
+      },
+      "observe": {
+        "words": 2130,
+        "sha256": "7c82f9f88c62ce49e58da7a449f478a8008283c8c6cae6ee5c23d71b267d8d2e",
+        "functions": 34,
+        "cells": 4773,
+        "maxFunctionCells": 556,
+        "stringReads": 32,
+        "bufferReads": 0,
+        "predicates": 186
+      },
+      "direct": {
+        "words": 2044,
+        "sha256": "90232d9c5eec3a392d64e2127ab29885a69a86bb5f0f972cfd5e86053747de29",
+        "functions": 34,
+        "cells": 4741,
+        "maxFunctionCells": 554,
+        "stringReads": 32,
+        "bufferReads": 0,
+        "predicates": 186
+      }
+    },
+    "editor": {
+      "staged": {
+        "words": 12725,
+        "sha256": "fec1c033cf9e577811a8f8a448be37e2186d46658e8f187265fd699588429a61",
+        "functions": 120,
+        "cells": 34903,
+        "maxFunctionCells": 2481,
+        "stringReads": 0,
+        "bufferReads": 0,
+        "predicates": 0
+      },
+      "observe": {
+        "words": 12725,
+        "sha256": "fec1c033cf9e577811a8f8a448be37e2186d46658e8f187265fd699588429a61",
+        "functions": 120,
+        "cells": 33086,
+        "maxFunctionCells": 2481,
+        "stringReads": 73,
+        "bufferReads": 42,
+        "predicates": 448
+      },
+      "direct": {
+        "words": 12444,
+        "sha256": "b9a27acfd253fe15921af8578820ffce7d7a00fe9e966c32fa5d055d65f8315f",
+        "functions": 120,
+        "cells": 32971,
+        "maxFunctionCells": 2480,
+        "stringReads": 73,
+        "bufferReads": 42,
+        "predicates": 448
+      }
+    },
+    "fixtures": {
+      "staged": {
+        "words": 358,
+        "sha256": "33ea697b550cffed57e3a7012d74cce02d35b0a406e6bf1c57dea146bbd00575",
+        "functions": 12,
+        "cells": 508,
+        "maxFunctionCells": 68,
+        "stringReads": 0,
+        "bufferReads": 0,
+        "predicates": 0
+      },
+      "observe": {
+        "words": 358,
+        "sha256": "33ea697b550cffed57e3a7012d74cce02d35b0a406e6bf1c57dea146bbd00575",
+        "functions": 12,
+        "cells": 296,
+        "maxFunctionCells": 48,
+        "stringReads": 5,
+        "bufferReads": 5,
+        "predicates": 6
+      },
+      "direct": {
+        "words": 299,
+        "sha256": "e56486fb9bd4bef8fa7ec4c4aea475a5fc6020144e75ce4aa1f4ccabea0b9b12",
+        "functions": 12,
+        "cells": 286,
+        "maxFunctionCells": 47,
+        "stringReads": 5,
+        "bufferReads": 5,
+        "predicates": 6
+      }
+    }
+  },
+  "differential": {
+    "cases": 126,
+    "traps": 46,
+    "steps": {
+      "staged": 2743,
+      "observe": 2743,
+      "direct": 2273
+    }
+  }
+}

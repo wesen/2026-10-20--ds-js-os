@@ -24,3 +24,7 @@ The staged RV32 compiler is the control for an experiment in retaining text read
 - [Frozen design](design-doc/01-a-per-function-stream-for-text-reads-and-comparison-branches.md)
 - [Tasks](tasks.md)
 - [Changelog](changelog.md)
+- [Intern guide](analysis/01-from-a-typed-text-read-to-rv32-instructions.md)
+- [Investigation diary](reference/01-streamed-typed-operations-investigation-diary.md)
+- [Host qualification](various/host.json)
+- [Firmware compiler oracle](various/board-oracle.json)

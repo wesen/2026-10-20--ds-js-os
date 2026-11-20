@@ -1,0 +1,36 @@
+{
+  "uses": {
+    "staged": {
+      "rv32.js": "9e92e999d37ad0ad8bf138cfb7c7b5fb989b17c4ec18841dbe5ae07f9f37e152",
+      "wasm.js": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "observe": {
+      "rv32.js": "7ba01b3563df6929c6e68214bef6c409d823bac5274ff720bcc0e2e89389b9ef",
+      "wasm.js": "08b67b59eb9abf67f32445fb898597edda59566a8b9996b1bdbc48da08e95639",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "direct": {
+      "rv32.js": "6f6b846dc1f2c9100ba79d87560ad19e13d2f727d1caa80be36bd38fb5450fc8",
+      "wasm.js": "b56534763e6c3fc9d53a6aa47ecb740b2f53fd095389b35cd64996d4a195a6fe",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    }
+  },
+  "loops": {
+    "staged": {
+      "rv32.js": "dc7fe2c83db8f633f549608b186b954f8075501704c8cbc02bdafec6701a0e2c",
+      "wasm.js": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "observe": {
+      "rv32.js": "91a2c4b2f307c53e2d467b3300232eeef5669c2381a803f74890c6973ac3622b",
+      "wasm.js": "08b67b59eb9abf67f32445fb898597edda59566a8b9996b1bdbc48da08e95639",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "direct": {
+      "rv32.js": "9c19ce3e1c50505d18726e045ea704cd3859ef3494688a0225bb56b65d4c4f6e",
+      "wasm.js": "b56534763e6c3fc9d53a6aa47ecb740b2f53fd095389b35cd64996d4a195a6fe",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    }
+  }
+}
