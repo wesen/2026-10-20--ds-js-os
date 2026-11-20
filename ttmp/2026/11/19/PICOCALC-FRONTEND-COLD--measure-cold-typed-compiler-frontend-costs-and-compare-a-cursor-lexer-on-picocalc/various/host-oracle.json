@@ -132,5 +132,22 @@
         "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
       }
     }
+  },
+  "linkedWasm": {
+    "files": {
+      "bytes": 49089,
+      "sha256": "c7f8892cd99ed86d9282582cc8c6d797a58cbe39623e8a9512a3bc0fbe90b07a",
+      "reactorSha256": "f1415095c60135fe29d1043be74023a1fadae92b2f625459b79a70c8566b3420"
+    },
+    "agenda": {
+      "bytes": 67429,
+      "sha256": "1d7f6ecbaaa629e40fe69b67fab9ed62dd596c667f0ab364641ee5cc311ef46a",
+      "reactorSha256": "35f3bc71177f4310e07cbb1a74f2f7f2c938a0cf409f49c554107019f1e996f6"
+    },
+    "editor": {
+      "bytes": 88255,
+      "sha256": "274946940de536b018952c29fd6b9d786d42a13e1961c83ff54a668116745d82",
+      "reactorSha256": "b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f"
+    }
   }
 }

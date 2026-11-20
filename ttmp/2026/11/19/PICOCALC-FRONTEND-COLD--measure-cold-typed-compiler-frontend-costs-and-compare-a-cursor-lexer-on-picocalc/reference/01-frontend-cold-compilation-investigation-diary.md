@@ -183,3 +183,122 @@ Run `scripts/01-stage.py WORK --board-assets PORT_ASSETS` and `bash scripts/05-b
 ### Technical details
 
 Capture 90 seconds per boot and issue `worlds` at 87 seconds. Each complete run has 48 `FRONT begin` and `FRONT end` lines and a `FRONT complete` marker. Firmware and partition digests are in `various/firmware-identities.json`. The supervisor retains authority over the board window and restore.
+
+## Step 4 — Run the actual QuickJS and native guest oracles
+
+The research wave resumed with the production sources, disposable build, and fixed artifact identities from Step 3. I ran the complete serialized diagnostic and compiler fixture in the vendored QuickJS engine and compared the resulting bytes across all three clean variants. I also reused the established application workflow drivers against exact paired guest modules.
+
+### Prompt context
+
+The lab resumed after the user approved the Sol 6.2 High researchers. The supervisor requested a local article and independent host workflow checks while operating the board. See Step 1 for the assignment.
+
+### What I did
+
+- Replayed 71,814 lexical and 535 compile cases in the vendored QuickJS. The three result records shared SHA-256 `ea929440c91d8d7d225a3c038a8fc6766f36cfb415d2f3e6a850c00628834d64`.
+- Verified public Files, Agenda and Editor Wasm link entry points against local Wasm reactor builds. The byte-identical modules passed `WebAssembly.validate`.
+- Ran a cold host comparison using 12 complete orders per app. The follow-up recorded both monotonic wall and process CPU time, and all 108 generated native modules matched the corresponding host oracle digests.
+- Compared six native emulated workflows through the prior driver script. The scratch reuse changes its expected relationship from unequal native outputs for a backend treatment to equal outputs for the frontend treatment.
+
+### Why
+
+The regular expression and memory allocation behavior depend on the JavaScript engine. Node helps detect parser and artifact equivalence, and the vendored QuickJS replay checks the same grammar and errors in the runtime used on the handheld. Executing matched RV32 images verifies the app workflow contracts.
+
+### What worked
+
+All six guest work counts and result digests matched. Editor control and cursor executed 2,543,239 instructions for edit, 7,621,786 for large input, 22,853,317 for dense-inline preview, and 42,316,056 for late navigation. Agenda and Files executed 2,193,310 and 88,823 instructions. The native guest used its local test reactor for Editor, with exact board-reactor identity checked separately.
+
+The paired Editor process CPU medians were −4.62 ms for the cursor with reuse and −1.26 ms for the cursor that creates a fresh object, both relative to the original lexer. Comparing the two cursor variants within each block measured +3.73 ms for the fresh object version.
+
+### What did not work
+
+- The first command `python3 -B /tmp/p4-frontend.20261119/guest/scripts/05-guest.py P4_GCC RV32EMU /tmp/p4-frontend.20261119/guest/pair` returned `Error: spawnSync .../picocalc-os/build/picocalc-host EPERM` while running the Editor simulator. Its subprocess started and produced frames. Repeating under scoped approval reproduced the complete workflows.
+- The initial wall-only host comparison overlapped other builds and had Editor within-block times ranging from −285 ms to +515 ms. I added process CPU timing and repeated the result independently. The first noisy comparison did not drive the conclusions.
+
+### What I learned
+
+The host can attribute part of its own timing to token reuse because it isolates the allocation shape with a third variant. The firmware result changes tokenization and token reuse as one treatment. Quantitative attribution needs the same isolation on the ESP32-P4.
+
+### What was tricky to build
+
+The old guest harness asserts that a meaningful RV32 backend candidate changes the generated image. A frontend study requires byte identity. The scratch wrapper changes that one assertion while retaining the workflow drivers and result checks.
+
+### What warrants a second pair of eyes
+
+Check that host timing boundaries exclude process launch and output writes and that the case test validates per-engine identity. The test intentionally does not require identical engine-specific JavaScript diagnostic internals across Node and QuickJS.
+
+### What should be done in the future
+
+Use a board treatment that separates the changes to match allocation and token object allocation if the remaining lexer time justifies another test.
+
+### Code review instructions
+
+Inspect `scripts/08-quickjs.c` and follow `scripts/09-host.py` for the two host clocks. The scratch guest harness is created by `scripts/10-guest.py`. The evidence is in `various/quickjs-cold.json`, `various/host-oracle.json`, and `various/guest-workflows.json`.
+
+### Technical details
+
+The process CPU clock removes scheduler wait time. The monotonic clock covers the same inputs and QuickJS lifecycle so its relative differences can be compared. Neither includes the ELF write used for fingerprinting.
+
+## Step 5 — Close the paired P4 result and write the report
+
+The supervisor acquired and qualified two full boots of the phase experiment. I replayed the capture parser against its serial logs and reproduced the physical receipt byte for byte. I preserved the parsed records in the ticket and prepared the measured article and figure for the vault.
+
+### Prompt context
+
+See Step 1 for the requested physical attribution and half-second target. The supervisor's independent follow-on replay remains tracked in the wave rather than claimed as an extra observation in this article.
+
+### What I did
+
+- Compared cold time and maximum retained heap using the clean base and cursor arms, with four balanced blocks in each boot.
+- Verified that each of the 48 marked app runs reconciled every exclusive duration and the largest phase peak to the outer reported figures. All 96 clean and marked linked images matched their app oracle SHA-256.
+- Compared the Files effect with the supervisor's byte-identical control calibration and preserved the relevant matched samples.
+- Plotted clean medians and mean exclusive phase totals and regenerated the standalone vault article with the same figure.
+
+### Why
+
+The clean arms quantify how much quicker the actual entry point becomes. The marked arms partition its work and expose observer overhead. The maximum heap across each boot establishes whether the candidate can fit under the exact control high-water budget.
+
+### What worked
+
+The Editor cursor reduced clean compile time by 289.8 and 297.9 ms in the two boots and increased paired peak by 9,036 and 9,020 bytes. Agenda saved 66.0 and 62.3 ms and the Files effect overlapped the calibration. Boot two's marked Editor lexer went from 1.021 s to 0.720 s for match and token handling together. Every Editor run visited the lexer 16,793 times and lowered 120 streamed functions.
+
+### What did not work
+
+The cursor missed the 500 ms improvement target and exceeded the clean control heap maxima. It remains an experimental option. Phase timings do not isolate which scanner or allocator subchange causes the global peak growth.
+
+### What I learned
+
+The control spent roughly 167 ms on marked input reads and setup. The major change was in token handling, about 372 to 141 ms in the second marked boot, and matching declined from about 649 to 579 ms. The typed compiler load's marked heap peak increased from 313,156 to 333,644 bytes before lexing, while the argument-stage Editor peak increased by about 5.2 KB. These early readings support testing the additional scanner code footprint separately from later allocation changes.
+
+### What was tricky to build
+
+The marked timings include 139–171 ms of trace overhead per Editor variant. The overhead difference changes the marked speedup by about 26 ms. The clean matched result remains the time estimate. Using mean phase totals in the chart lets their sum equal the mean whole duration exactly, while the result table preserves paired medians.
+
+### What warrants a second pair of eyes
+
+Verify the release decision against both clean maxima and compare the scanner result with the supervisor's separate independent replay. Publication must preserve the relative asset link beside the vault note.
+
+### What should be done in the future
+
+Consider a plain capture layout, independently reusable token, and compact fallback in a separate factorial comparison, with the completed lexical corpus held fixed.
+
+### Code review instructions
+
+Read the measured article and `various/board-phases.json`. Recompute evidence with `scripts/07-board-receipt.py` and regenerate the figure with `scripts/11-figure.py`. Compare the identity-control time and heap deltas in `various/aa-calibration.json`.
+
+### Technical details
+
+The article reports wall-clock changes in milliseconds and peak heap changes in bytes. Trace groups include phase timestamps from the same ESP timer and hash only returned app images after the timed sample. The firmware SHA matches the frozen checkpoint in Step 3.
+
+## Step 6 — Publish the report and finish the frontend lane
+
+The supervisor published the standalone article and its chart to `go-go-parc/main` at `0f27aa9`. I checked that the commit contains both the Markdown note and the colocated plot, and replayed the documented host workflow script. The replay was byte-identical to the saved guest receipt.
+
+### Evidence
+
+- Vault note `Projects/2026/11/19/ARTICLE - PicoCalc Compiler - Where Cold Typed Compilation Time Goes.md`.
+- Vault figure `Projects/2026/11/19/_assets/picocalc-frontend-editor-timings.png`.
+- Two acquisition boots, 96 validated native builds, and six emulated workflows complete the frontend lane. The supervisor separately owns the wave's independent replay.
+
+### Review
+
+Read the article for the measured result and the phase limits. Start at `various/board-phases.json` for a paired timing review and at `various/guest-workflows.json` for execution identity.

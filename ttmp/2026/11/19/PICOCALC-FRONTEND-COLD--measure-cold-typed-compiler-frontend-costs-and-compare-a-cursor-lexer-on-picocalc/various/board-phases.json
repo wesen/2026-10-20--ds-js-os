@@ -1,0 +1,5568 @@
+{
+  "firmware_sha256": "07d98dee8dbacc4fe261629eed338c322ea8ae42eb896be5ed2ebe6f755aef8a",
+  "compilers": {
+    "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+    "variants": {
+      "base": {
+        "typed/wasm.js": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+        "typed/rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+      },
+      "cursor": {
+        "typed/wasm.js": "d0fdd090764f4bf189f753f059e847d34808dbb1d813ec9598b2245fabbda601",
+        "typed/rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+      },
+      "base_trace": {
+        "typed/wasm.js": "893b12137582e4c58bbe12861d4e08483a24795dcf40e08c1df7d64efb251568",
+        "typed/rv32.js": "e0668872202354c8d512a4fd617cef01aed95545b91dbdee92226194f99464d9"
+      },
+      "cursor_trace": {
+        "typed/wasm.js": "4222b6a693fd56dbb7740e8d1833a0846ec5dc7870930403b46283d5fd44994a",
+        "typed/rv32.js": "e0668872202354c8d512a4fd617cef01aed95545b91dbdee92226194f99464d9"
+      },
+      "cursor_fresh": {
+        "typed/wasm.js": "3e5447a770b9fccba3d81f15e5fd97505d3f77291f8103f6d5496a737bb2d11d",
+        "typed/rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+      }
+    }
+  },
+  "oracle": {
+    "lexicalCases": 71814,
+    "compilationCases": 535,
+    "wasmValid": 19,
+    "rv32Valid": 19,
+    "inputs": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+        "sourceBytes": 2830
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+        "sourceBytes": 17532
+      },
+      "editor": {
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+        "sourceBytes": 70859
+      }
+    },
+    "outputs": {
+      "files": {
+        "base": {
+          "instructionBytes": 3216,
+          "rawSha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+          "metadataSha256": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8"
+        },
+        "cursor": {
+          "instructionBytes": 3216,
+          "rawSha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+          "metadataSha256": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8"
+        },
+        "base_trace": {
+          "instructionBytes": 3216,
+          "rawSha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+          "metadataSha256": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8"
+        },
+        "cursor_trace": {
+          "instructionBytes": 3216,
+          "rawSha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+          "metadataSha256": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8"
+        },
+        "cursor_fresh": {
+          "instructionBytes": 3216,
+          "rawSha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+          "metadataSha256": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8"
+        }
+      },
+      "agenda": {
+        "base": {
+          "instructionBytes": 16232,
+          "rawSha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+          "metadataSha256": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454"
+        },
+        "cursor": {
+          "instructionBytes": 16232,
+          "rawSha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+          "metadataSha256": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454"
+        },
+        "base_trace": {
+          "instructionBytes": 16232,
+          "rawSha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+          "metadataSha256": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454"
+        },
+        "cursor_trace": {
+          "instructionBytes": 16232,
+          "rawSha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+          "metadataSha256": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454"
+        },
+        "cursor_fresh": {
+          "instructionBytes": 16232,
+          "rawSha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+          "metadataSha256": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454"
+        }
+      },
+      "editor": {
+        "base": {
+          "instructionBytes": 87544,
+          "rawSha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+          "metadataSha256": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+        },
+        "cursor": {
+          "instructionBytes": 87544,
+          "rawSha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+          "metadataSha256": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+        },
+        "base_trace": {
+          "instructionBytes": 87544,
+          "rawSha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+          "metadataSha256": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+        },
+        "cursor_trace": {
+          "instructionBytes": 87544,
+          "rawSha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+          "metadataSha256": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+        },
+        "cursor_fresh": {
+          "instructionBytes": 87544,
+          "rawSha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+          "metadataSha256": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+        }
+      }
+    }
+  },
+  "boots": [
+    {
+      "rows": [
+        {
+          "block": 0,
+          "position": 0,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 235180,
+          "peak": 362612,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 670317,
+          "peak": 578936,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2479914,
+          "peak": 1410960,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 232254,
+          "peak": 375768,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 600724,
+          "peak": 592080,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2165792,
+          "peak": 1419912,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 1981,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7173,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74038,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41866,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7153,
+              "peak": 301648
+            },
+            "args": {
+              "visits": 1,
+              "us": 1504,
+              "peak": 327784
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2404,
+              "peak": 380352
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24894,
+              "peak": 361776
+            },
+            "match": {
+              "visits": 701,
+              "us": 23203,
+              "peak": 361776
+            },
+            "token": {
+              "visits": 701,
+              "us": 5951,
+              "peak": 361776
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27541,
+              "peak": 363512
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6545,
+              "peak": 364136
+            },
+            "link": {
+              "visits": 1,
+              "us": 11057,
+              "peak": 380352
+            },
+            "copy": {
+              "visits": 1,
+              "us": 334,
+              "peak": 373040
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4457,
+              "peak": 321324
+            }
+          },
+          "us": 240101,
+          "peak": 380352,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6375,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7347,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74473,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41963,
+              "peak": 334972
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9810,
+              "peak": 304804
+            },
+            "args": {
+              "visits": 1,
+              "us": 4302,
+              "peak": 403292
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8239,
+              "peak": 592616
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 134826,
+              "peak": 557364
+            },
+            "match": {
+              "visits": 4159,
+              "us": 141893,
+              "peak": 556844
+            },
+            "token": {
+              "visits": 4159,
+              "us": 35251,
+              "peak": 556844
+            },
+            "lower": {
+              "visits": 34,
+              "us": 127869,
+              "peak": 563204
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 29041,
+              "peak": 578332
+            },
+            "link": {
+              "visits": 1,
+              "us": 18097,
+              "peak": 592616
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1118,
+              "peak": 502680
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4625,
+              "peak": 334852
+            }
+          },
+          "us": 645229,
+          "peak": 592616,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21877,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7249,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74184,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41673,
+              "peak": 334972
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13878,
+              "peak": 318668
+            },
+            "args": {
+              "visits": 1,
+              "us": 16130,
+              "peak": 696512
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20450,
+              "peak": 1419948
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 529699,
+              "peak": 1316900
+            },
+            "match": {
+              "visits": 16793,
+              "us": 575325,
+              "peak": 1313396
+            },
+            "token": {
+              "visits": 16793,
+              "us": 139696,
+              "peak": 1313396
+            },
+            "lower": {
+              "visits": 120,
+              "us": 681328,
+              "peak": 1321876
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 135328,
+              "peak": 1419588
+            },
+            "link": {
+              "visits": 1,
+              "us": 22510,
+              "peak": 1407012
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4995,
+              "peak": 1002608
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4981,
+              "peak": 379948
+            }
+          },
+          "us": 2289303,
+          "peak": 1419948,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 0,
+          "position": 3,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 1995,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7261,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66246,
+              "peak": 313148
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41874,
+              "peak": 325244
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7090,
+              "peak": 292300
+            },
+            "args": {
+              "visits": 1,
+              "us": 1532,
+              "peak": 314372
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2522,
+              "peak": 375092
+            },
+            "parse": {
+              "visits": 709,
+              "us": 26860,
+              "peak": 356544
+            },
+            "match": {
+              "visits": 701,
+              "us": 30112,
+              "peak": 356544
+            },
+            "token": {
+              "visits": 701,
+              "us": 17396,
+              "peak": 356544
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27886,
+              "peak": 358280
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6602,
+              "peak": 358904
+            },
+            "link": {
+              "visits": 1,
+              "us": 11077,
+              "peak": 375092
+            },
+            "copy": {
+              "visits": 1,
+              "us": 192,
+              "peak": 359636
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4285,
+              "peak": 303856
+            }
+          },
+          "us": 252930,
+          "peak": 375092,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 3,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6313,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7336,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66690,
+              "peak": 313148
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41465,
+              "peak": 325252
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9745,
+              "peak": 294588
+            },
+            "args": {
+              "visits": 1,
+              "us": 4308,
+              "peak": 389892
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8124,
+              "peak": 583440
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 137442,
+              "peak": 552116
+            },
+            "match": {
+              "visits": 4159,
+              "us": 154589,
+              "peak": 551596
+            },
+            "token": {
+              "visits": 4159,
+              "us": 89042,
+              "peak": 551596
+            },
+            "lower": {
+              "visits": 34,
+              "us": 129288,
+              "peak": 557956
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28858,
+              "peak": 568996
+            },
+            "link": {
+              "visits": 1,
+              "us": 18026,
+              "peak": 583440
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1310,
+              "peak": 493344
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4394,
+              "peak": 321452
+            }
+          },
+          "us": 706930,
+          "peak": 583440,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 3,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21161,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7288,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66727,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41582,
+              "peak": 325252
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13661,
+              "peak": 313420
+            },
+            "args": {
+              "visits": 1,
+              "us": 16686,
+              "peak": 691264
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20440,
+              "peak": 1415244
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 560002,
+              "peak": 1311636
+            },
+            "match": {
+              "visits": 16793,
+              "us": 645545,
+              "peak": 1304100
+            },
+            "token": {
+              "visits": 16793,
+              "us": 374799,
+              "peak": 1304100
+            },
+            "lower": {
+              "visits": 120,
+              "us": 690659,
+              "peak": 1316660
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 136213,
+              "peak": 1414892
+            },
+            "link": {
+              "visits": 1,
+              "us": 22934,
+              "peak": 1394188
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4416,
+              "peak": 985200
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4762,
+              "peak": 362540
+            }
+          },
+          "us": 2626875,
+          "peak": 1415244,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 231677,
+          "peak": 375768,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 597262,
+          "peak": 592092,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2166281,
+          "peak": 1419924,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2043,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7204,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66345,
+              "peak": 313136
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41734,
+              "peak": 325236
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7082,
+              "peak": 292292
+            },
+            "args": {
+              "visits": 1,
+              "us": 1539,
+              "peak": 314364
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2449,
+              "peak": 375084
+            },
+            "parse": {
+              "visits": 709,
+              "us": 28601,
+              "peak": 356508
+            },
+            "match": {
+              "visits": 701,
+              "us": 30355,
+              "peak": 356508
+            },
+            "token": {
+              "visits": 701,
+              "us": 17667,
+              "peak": 356508
+            },
+            "lower": {
+              "visits": 7,
+              "us": 28101,
+              "peak": 358244
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6589,
+              "peak": 358868
+            },
+            "link": {
+              "visits": 1,
+              "us": 10802,
+              "peak": 375084
+            },
+            "copy": {
+              "visits": 1,
+              "us": 168,
+              "peak": 359628
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4272,
+              "peak": 303848
+            }
+          },
+          "us": 254951,
+          "peak": 375084,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6268,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7341,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66350,
+              "peak": 313136
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41705,
+              "peak": 325248
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9624,
+              "peak": 294572
+            },
+            "args": {
+              "visits": 1,
+              "us": 4293,
+              "peak": 389876
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8161,
+              "peak": 583424
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 136019,
+              "peak": 552104
+            },
+            "match": {
+              "visits": 4159,
+              "us": 152727,
+              "peak": 551584
+            },
+            "token": {
+              "visits": 4159,
+              "us": 87595,
+              "peak": 551584
+            },
+            "lower": {
+              "visits": 34,
+              "us": 127413,
+              "peak": 557944
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 29011,
+              "peak": 568984
+            },
+            "link": {
+              "visits": 1,
+              "us": 18106,
+              "peak": 583424
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1249,
+              "peak": 493328
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4438,
+              "peak": 321436
+            }
+          },
+          "us": 700300,
+          "peak": 583424,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21768,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7071,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66038,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41556,
+              "peak": 325256
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13704,
+              "peak": 313424
+            },
+            "args": {
+              "visits": 1,
+              "us": 15941,
+              "peak": 691268
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20537,
+              "peak": 1415232
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 563001,
+              "peak": 1311636
+            },
+            "match": {
+              "visits": 16793,
+              "us": 649433,
+              "peak": 1304100
+            },
+            "token": {
+              "visits": 16793,
+              "us": 373768,
+              "peak": 1304100
+            },
+            "lower": {
+              "visits": 120,
+              "us": 694061,
+              "peak": 1316660
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 136130,
+              "peak": 1414880
+            },
+            "link": {
+              "visits": 1,
+              "us": 23004,
+              "peak": 1394172
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4441,
+              "peak": 985196
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4849,
+              "peak": 362536
+            }
+          },
+          "us": 2635302,
+          "peak": 1415232,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 238607,
+          "peak": 362620,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 658481,
+          "peak": 578952,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2460737,
+          "peak": 1410892,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 3,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2079,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7109,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74124,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42134,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7205,
+              "peak": 301636
+            },
+            "args": {
+              "visits": 1,
+              "us": 1494,
+              "peak": 327772
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2456,
+              "peak": 380340
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24196,
+              "peak": 361764
+            },
+            "match": {
+              "visits": 701,
+              "us": 23183,
+              "peak": 361764
+            },
+            "token": {
+              "visits": 701,
+              "us": 5913,
+              "peak": 361764
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27207,
+              "peak": 363500
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6511,
+              "peak": 364124
+            },
+            "link": {
+              "visits": 1,
+              "us": 11112,
+              "peak": 380340
+            },
+            "copy": {
+              "visits": 1,
+              "us": 343,
+              "peak": 373028
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4445,
+              "peak": 321312
+            }
+          },
+          "us": 239511,
+          "peak": 380340,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 3,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6323,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7303,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 73673,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41521,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9831,
+              "peak": 304796
+            },
+            "args": {
+              "visits": 1,
+              "us": 4276,
+              "peak": 403284
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8129,
+              "peak": 592608
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 130475,
+              "peak": 557356
+            },
+            "match": {
+              "visits": 4159,
+              "us": 139813,
+              "peak": 556836
+            },
+            "token": {
+              "visits": 4159,
+              "us": 34495,
+              "peak": 556836
+            },
+            "lower": {
+              "visits": 34,
+              "us": 126427,
+              "peak": 563196
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28798,
+              "peak": 578324
+            },
+            "link": {
+              "visits": 1,
+              "us": 17804,
+              "peak": 592608
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1233,
+              "peak": 502672
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4549,
+              "peak": 334844
+            }
+          },
+          "us": 634650,
+          "peak": 592608,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 3,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21847,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7241,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74389,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41949,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13899,
+              "peak": 318664
+            },
+            "args": {
+              "visits": 1,
+              "us": 15919,
+              "peak": 696508
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20367,
+              "peak": 1420500
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 540573,
+              "peak": 1316900
+            },
+            "match": {
+              "visits": 16793,
+              "us": 578594,
+              "peak": 1313404
+            },
+            "token": {
+              "visits": 16793,
+              "us": 142745,
+              "peak": 1313404
+            },
+            "lower": {
+              "visits": 120,
+              "us": 682829,
+              "peak": 1321876
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 135516,
+              "peak": 1420148
+            },
+            "link": {
+              "visits": 1,
+              "us": 22369,
+              "peak": 1407564
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4972,
+              "peak": 1002608
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4978,
+              "peak": 379948
+            }
+          },
+          "us": 2308187,
+          "peak": 1420500,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2013,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7120,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66249,
+              "peak": 313148
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41423,
+              "peak": 325244
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7110,
+              "peak": 292300
+            },
+            "args": {
+              "visits": 1,
+              "us": 1525,
+              "peak": 314372
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2509,
+              "peak": 375092
+            },
+            "parse": {
+              "visits": 709,
+              "us": 28184,
+              "peak": 356516
+            },
+            "match": {
+              "visits": 701,
+              "us": 30085,
+              "peak": 356516
+            },
+            "token": {
+              "visits": 701,
+              "us": 17297,
+              "peak": 356516
+            },
+            "lower": {
+              "visits": 7,
+              "us": 28267,
+              "peak": 358252
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6650,
+              "peak": 358876
+            },
+            "link": {
+              "visits": 1,
+              "us": 10852,
+              "peak": 375092
+            },
+            "copy": {
+              "visits": 1,
+              "us": 345,
+              "peak": 359636
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4248,
+              "peak": 303856
+            }
+          },
+          "us": 253877,
+          "peak": 375092,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6312,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7268,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66093,
+              "peak": 313148
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41539,
+              "peak": 325248
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9619,
+              "peak": 294584
+            },
+            "args": {
+              "visits": 1,
+              "us": 4303,
+              "peak": 389888
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8122,
+              "peak": 583436
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 138339,
+              "peak": 552112
+            },
+            "match": {
+              "visits": 4159,
+              "us": 153547,
+              "peak": 551592
+            },
+            "token": {
+              "visits": 4159,
+              "us": 86981,
+              "peak": 551592
+            },
+            "lower": {
+              "visits": 34,
+              "us": 126823,
+              "peak": 557952
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28658,
+              "peak": 568992
+            },
+            "link": {
+              "visits": 1,
+              "us": 17670,
+              "peak": 583436
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1185,
+              "peak": 493340
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4455,
+              "peak": 321448
+            }
+          },
+          "us": 700914,
+          "peak": 583436,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21870,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7183,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66443,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41791,
+              "peak": 325252
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13701,
+              "peak": 313420
+            },
+            "args": {
+              "visits": 1,
+              "us": 15946,
+              "peak": 691264
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20699,
+              "peak": 1415248
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 566563,
+              "peak": 1311652
+            },
+            "match": {
+              "visits": 16793,
+              "us": 640957,
+              "peak": 1304068
+            },
+            "token": {
+              "visits": 16793,
+              "us": 370886,
+              "peak": 1304068
+            },
+            "lower": {
+              "visits": 120,
+              "us": 681435,
+              "peak": 1316628
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 136637,
+              "peak": 1414896
+            },
+            "link": {
+              "visits": 1,
+              "us": 22790,
+              "peak": 1394168
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4510,
+              "peak": 985192
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4821,
+              "peak": 362532
+            }
+          },
+          "us": 2616232,
+          "peak": 1415248,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2000,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7145,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74224,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42148,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7193,
+              "peak": 301636
+            },
+            "args": {
+              "visits": 1,
+              "us": 1497,
+              "peak": 327772
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2447,
+              "peak": 380340
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24327,
+              "peak": 361764
+            },
+            "match": {
+              "visits": 701,
+              "us": 23131,
+              "peak": 361764
+            },
+            "token": {
+              "visits": 701,
+              "us": 5923,
+              "peak": 361764
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27145,
+              "peak": 363500
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6513,
+              "peak": 364124
+            },
+            "link": {
+              "visits": 1,
+              "us": 11083,
+              "peak": 380340
+            },
+            "copy": {
+              "visits": 1,
+              "us": 353,
+              "peak": 373028
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4438,
+              "peak": 321312
+            }
+          },
+          "us": 239567,
+          "peak": 380340,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6336,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7250,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 73480,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41503,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9827,
+              "peak": 304796
+            },
+            "args": {
+              "visits": 1,
+              "us": 4281,
+              "peak": 403284
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8122,
+              "peak": 592608
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 130698,
+              "peak": 557356
+            },
+            "match": {
+              "visits": 4159,
+              "us": 139891,
+              "peak": 556836
+            },
+            "token": {
+              "visits": 4159,
+              "us": 34457,
+              "peak": 556836
+            },
+            "lower": {
+              "visits": 34,
+              "us": 126529,
+              "peak": 563196
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28763,
+              "peak": 578324
+            },
+            "link": {
+              "visits": 1,
+              "us": 18050,
+              "peak": 592608
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1241,
+              "peak": 502672
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4547,
+              "peak": 334844
+            }
+          },
+          "us": 634975,
+          "peak": 592608,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21856,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7153,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74389,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41961,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13848,
+              "peak": 318664
+            },
+            "args": {
+              "visits": 1,
+              "us": 15895,
+              "peak": 696508
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20421,
+              "peak": 1420500
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 540404,
+              "peak": 1316900
+            },
+            "match": {
+              "visits": 16793,
+              "us": 578835,
+              "peak": 1313404
+            },
+            "token": {
+              "visits": 16793,
+              "us": 142685,
+              "peak": 1313404
+            },
+            "lower": {
+              "visits": 120,
+              "us": 682903,
+              "peak": 1321876
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 135227,
+              "peak": 1420148
+            },
+            "link": {
+              "visits": 1,
+              "us": 22347,
+              "peak": 1407564
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4961,
+              "peak": 1002608
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4981,
+              "peak": 379948
+            }
+          },
+          "us": 2307866,
+          "peak": 1420500,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 231884,
+          "peak": 375772,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 597370,
+          "peak": 592092,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2160687,
+          "peak": 1419912,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 3,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 237223,
+          "peak": 362628,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 3,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 663594,
+          "peak": 578936,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 3,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2445467,
+          "peak": 1410872,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2019,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7180,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74017,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42203,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7214,
+              "peak": 301636
+            },
+            "args": {
+              "visits": 1,
+              "us": 1502,
+              "peak": 327772
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2369,
+              "peak": 380340
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24241,
+              "peak": 361764
+            },
+            "match": {
+              "visits": 701,
+              "us": 23199,
+              "peak": 361764
+            },
+            "token": {
+              "visits": 701,
+              "us": 5939,
+              "peak": 361764
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27194,
+              "peak": 363500
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6536,
+              "peak": 364124
+            },
+            "link": {
+              "visits": 1,
+              "us": 11128,
+              "peak": 380340
+            },
+            "copy": {
+              "visits": 1,
+              "us": 348,
+              "peak": 373028
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4419,
+              "peak": 321312
+            }
+          },
+          "us": 239508,
+          "peak": 380340,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6354,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7240,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 73634,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41507,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9831,
+              "peak": 304796
+            },
+            "args": {
+              "visits": 1,
+              "us": 4269,
+              "peak": 403284
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8159,
+              "peak": 592608
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 130537,
+              "peak": 557356
+            },
+            "match": {
+              "visits": 4159,
+              "us": 139851,
+              "peak": 556836
+            },
+            "token": {
+              "visits": 4159,
+              "us": 34556,
+              "peak": 556836
+            },
+            "lower": {
+              "visits": 34,
+              "us": 126454,
+              "peak": 563196
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28713,
+              "peak": 578324
+            },
+            "link": {
+              "visits": 1,
+              "us": 18038,
+              "peak": 592608
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1243,
+              "peak": 502672
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4537,
+              "peak": 334844
+            }
+          },
+          "us": 634923,
+          "peak": 592608,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21859,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7148,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74342,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41971,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13881,
+              "peak": 318664
+            },
+            "args": {
+              "visits": 1,
+              "us": 15884,
+              "peak": 696508
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20500,
+              "peak": 1420500
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 539760,
+              "peak": 1316900
+            },
+            "match": {
+              "visits": 16793,
+              "us": 578678,
+              "peak": 1313404
+            },
+            "token": {
+              "visits": 16793,
+              "us": 142526,
+              "peak": 1313404
+            },
+            "lower": {
+              "visits": 120,
+              "us": 682657,
+              "peak": 1321876
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 135575,
+              "peak": 1420148
+            },
+            "link": {
+              "visits": 1,
+              "us": 22266,
+              "peak": 1407564
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4966,
+              "peak": 1002608
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4967,
+              "peak": 379948
+            }
+          },
+          "us": 2306980,
+          "peak": 1420500,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 237268,
+          "peak": 362628,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 663398,
+          "peak": 578936,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2444580,
+          "peak": 1410872,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2015,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7172,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66257,
+              "peak": 313148
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41449,
+              "peak": 325244
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7120,
+              "peak": 292300
+            },
+            "args": {
+              "visits": 1,
+              "us": 1507,
+              "peak": 314372
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2485,
+              "peak": 375092
+            },
+            "parse": {
+              "visits": 709,
+              "us": 27898,
+              "peak": 356516
+            },
+            "match": {
+              "visits": 701,
+              "us": 30106,
+              "peak": 356516
+            },
+            "token": {
+              "visits": 701,
+              "us": 17213,
+              "peak": 356516
+            },
+            "lower": {
+              "visits": 7,
+              "us": 28263,
+              "peak": 358252
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6666,
+              "peak": 358876
+            },
+            "link": {
+              "visits": 1,
+              "us": 10879,
+              "peak": 375092
+            },
+            "copy": {
+              "visits": 1,
+              "us": 351,
+              "peak": 359636
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4248,
+              "peak": 303856
+            }
+          },
+          "us": 253629,
+          "peak": 375092,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6312,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7286,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66073,
+              "peak": 313148
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41649,
+              "peak": 325248
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9634,
+              "peak": 294584
+            },
+            "args": {
+              "visits": 1,
+              "us": 4310,
+              "peak": 389888
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8069,
+              "peak": 583436
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 138237,
+              "peak": 552112
+            },
+            "match": {
+              "visits": 4159,
+              "us": 153579,
+              "peak": 551592
+            },
+            "token": {
+              "visits": 4159,
+              "us": 86979,
+              "peak": 551592
+            },
+            "lower": {
+              "visits": 34,
+              "us": 127005,
+              "peak": 557952
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28642,
+              "peak": 568992
+            },
+            "link": {
+              "visits": 1,
+              "us": 18040,
+              "peak": 583436
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1192,
+              "peak": 493340
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4456,
+              "peak": 321448
+            }
+          },
+          "us": 701463,
+          "peak": 583436,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21876,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7166,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66522,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41767,
+              "peak": 325252
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13702,
+              "peak": 313420
+            },
+            "args": {
+              "visits": 1,
+              "us": 15957,
+              "peak": 691264
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20653,
+              "peak": 1415248
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 565788,
+              "peak": 1311652
+            },
+            "match": {
+              "visits": 16793,
+              "us": 640716,
+              "peak": 1304068
+            },
+            "token": {
+              "visits": 16793,
+              "us": 370907,
+              "peak": 1304068
+            },
+            "lower": {
+              "visits": 120,
+              "us": 681684,
+              "peak": 1316628
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 137927,
+              "peak": 1414896
+            },
+            "link": {
+              "visits": 1,
+              "us": 22852,
+              "peak": 1394168
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4403,
+              "peak": 985192
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4829,
+              "peak": 362532
+            }
+          },
+          "us": 2616749,
+          "peak": 1415248,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 3,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 231511,
+          "peak": 375772,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 3,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 597699,
+          "peak": 592092,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 3,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2159389,
+          "peak": 1419912,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        }
+      ],
+      "worlds": {
+        "files": {
+          "file": "files/compiled.bin",
+          "last_error": "",
+          "engine": "native"
+        },
+        "agenda": {
+          "file": "agenda/compiled.bin",
+          "last_error": "",
+          "engine": "native"
+        },
+        "editor": {
+          "file": "editor/compiled.bin",
+          "last_error": "",
+          "engine": "native"
+        }
+      },
+      "log": "boot-1.log",
+      "sha256": "bad848cea81efa5f8d3b4e9dd8cbdc408bfee77bd689f24bce10b80d143270ac",
+      "summary": {
+        "files": {
+          "cursor_minus_base_us": {
+            "samples": [
+              -2926,
+              -6930,
+              -5339,
+              -5757
+            ],
+            "median": -5548.0
+          },
+          "cursor_minus_base_peak": {
+            "samples": [
+              13156,
+              13148,
+              13144,
+              13144
+            ],
+            "median": 13146.0
+          },
+          "base_trace_overhead_us": {
+            "samples": [
+              17750,
+              16344,
+              16654,
+              16361
+            ],
+            "median": 16507.5
+          },
+          "cursor_trace_overhead_us": {
+            "samples": [
+              7847,
+              7834,
+              7683,
+              7997
+            ],
+            "median": 7840.5
+          },
+          "variants": {
+            "base": {
+              "median_us": 237245.5,
+              "max_peak": 362628,
+              "phases_median_us": {}
+            },
+            "cursor": {
+              "median_us": 231780.5,
+              "max_peak": 375772,
+              "phases_median_us": {}
+            },
+            "base_trace": {
+              "median_us": 253753.0,
+              "max_peak": 375092,
+              "phases_median_us": {
+                "read": 2014.0,
+                "realm": 7188.0,
+                "eval_wasm": 66253.0,
+                "eval_rv32": 41591.5,
+                "eval_linker": 7100.0,
+                "args": 1528.5,
+                "dispatch": 2497.0,
+                "parse": 28041.0,
+                "match": 30109.0,
+                "token": 17346.5,
+                "lower": 28182.0,
+                "assemble": 6626.0,
+                "link": 10865.5,
+                "copy": 268.5,
+                "teardown": 4260.0
+              }
+            },
+            "cursor_trace": {
+              "median_us": 239539.0,
+              "max_peak": 380352,
+              "phases_median_us": {
+                "read": 2009.5,
+                "realm": 7159.0,
+                "eval_wasm": 74081.0,
+                "eval_rv32": 42141.0,
+                "eval_linker": 7199.0,
+                "args": 1499.5,
+                "dispatch": 2425.5,
+                "parse": 24284.0,
+                "match": 23191.0,
+                "token": 5931.0,
+                "lower": 27200.5,
+                "assemble": 6524.5,
+                "link": 11097.5,
+                "copy": 345.5,
+                "teardown": 4441.5
+              }
+            }
+          }
+        },
+        "agenda": {
+          "cursor_minus_base_us": {
+            "samples": [
+              -69593,
+              -61219,
+              -66224,
+              -65699
+            ],
+            "median": -65961.5
+          },
+          "cursor_minus_base_peak": {
+            "samples": [
+              13144,
+              13140,
+              13156,
+              13156
+            ],
+            "median": 13150.0
+          },
+          "base_trace_overhead_us": {
+            "samples": [
+              36613,
+              41819,
+              37320,
+              38065
+            ],
+            "median": 37692.5
+          },
+          "cursor_trace_overhead_us": {
+            "samples": [
+              44505,
+              37388,
+              37605,
+              37224
+            ],
+            "median": 37496.5
+          },
+          "variants": {
+            "base": {
+              "median_us": 663496.0,
+              "max_peak": 578952,
+              "phases_median_us": {}
+            },
+            "cursor": {
+              "median_us": 597534.5,
+              "max_peak": 592092,
+              "phases_median_us": {}
+            },
+            "base_trace": {
+              "median_us": 701188.5,
+              "max_peak": 583440,
+              "phases_median_us": {
+                "read": 6312.0,
+                "realm": 7311.0,
+                "eval_wasm": 66221.5,
+                "eval_rv32": 41594.0,
+                "eval_linker": 9629.0,
+                "args": 4305.5,
+                "dispatch": 8123.0,
+                "parse": 137839.5,
+                "match": 153563.0,
+                "token": 87288.0,
+                "lower": 127209.0,
+                "assemble": 28758.0,
+                "link": 18033.0,
+                "copy": 1220.5,
+                "teardown": 4446.5
+              }
+            },
+            "cursor_trace": {
+              "median_us": 634949.0,
+              "max_peak": 592616,
+              "phases_median_us": {
+                "read": 6345.0,
+                "realm": 7276.5,
+                "eval_wasm": 73653.5,
+                "eval_rv32": 41514.0,
+                "eval_linker": 9829.0,
+                "args": 4278.5,
+                "dispatch": 8144.0,
+                "parse": 130617.5,
+                "match": 139871.0,
+                "token": 34525.5,
+                "lower": 126491.5,
+                "assemble": 28780.5,
+                "link": 18044.0,
+                "copy": 1237.0,
+                "teardown": 4548.0
+              }
+            }
+          }
+        },
+        "editor": {
+          "cursor_minus_base_us": {
+            "samples": [
+              -314122,
+              -294456,
+              -284780,
+              -285191
+            ],
+            "median": -289823.5
+          },
+          "cursor_minus_base_peak": {
+            "samples": [
+              8952,
+              9032,
+              9040,
+              9040
+            ],
+            "median": 9036.0
+          },
+          "base_trace_overhead_us": {
+            "samples": [
+              146961,
+              174565,
+              170765,
+              172169
+            ],
+            "median": 171467.0
+          },
+          "cursor_trace_overhead_us": {
+            "samples": [
+              123511,
+              141906,
+              147179,
+              147591
+            ],
+            "median": 144542.5
+          },
+          "variants": {
+            "base": {
+              "median_us": 2453102.0,
+              "max_peak": 1410960,
+              "phases_median_us": {}
+            },
+            "cursor": {
+              "median_us": 2163239.5,
+              "max_peak": 1419924,
+              "phases_median_us": {}
+            },
+            "base_trace": {
+              "median_us": 2621812.0,
+              "max_peak": 1415248,
+              "phases_median_us": {
+                "read": 21819.0,
+                "realm": 7174.5,
+                "eval_wasm": 66482.5,
+                "eval_rv32": 41674.5,
+                "eval_linker": 13701.5,
+                "args": 15951.5,
+                "dispatch": 20595.0,
+                "parse": 564394.5,
+                "match": 643251.0,
+                "token": 372337.5,
+                "lower": 686171.5,
+                "assemble": 136425.0,
+                "link": 22893.0,
+                "copy": 4428.5,
+                "teardown": 4825.0
+              }
+            },
+            "cursor_trace": {
+              "median_us": 2307423.0,
+              "max_peak": 1420500,
+              "phases_median_us": {
+                "read": 21857.5,
+                "realm": 7197.0,
+                "eval_wasm": 74365.5,
+                "eval_rv32": 41955.0,
+                "eval_linker": 13879.5,
+                "args": 15907.0,
+                "dispatch": 20435.5,
+                "parse": 540082.0,
+                "match": 578636.0,
+                "token": 142605.5,
+                "lower": 682743.0,
+                "assemble": 135422.0,
+                "link": 22358.0,
+                "copy": 4969.0,
+                "teardown": 4979.5
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "rows": [
+        {
+          "block": 0,
+          "position": 0,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 235458,
+          "peak": 362612,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 670654,
+          "peak": 578936,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2473623,
+          "peak": 1410864,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 232228,
+          "peak": 375768,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 609267,
+          "peak": 592080,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2172212,
+          "peak": 1419600,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2086,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7204,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 75055,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41963,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7194,
+              "peak": 301636
+            },
+            "args": {
+              "visits": 1,
+              "us": 1524,
+              "peak": 327772
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2522,
+              "peak": 380340
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24374,
+              "peak": 361764
+            },
+            "match": {
+              "visits": 701,
+              "us": 23223,
+              "peak": 361764
+            },
+            "token": {
+              "visits": 701,
+              "us": 5920,
+              "peak": 361764
+            },
+            "lower": {
+              "visits": 7,
+              "us": 28217,
+              "peak": 363500
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6556,
+              "peak": 364124
+            },
+            "link": {
+              "visits": 1,
+              "us": 10898,
+              "peak": 380340
+            },
+            "copy": {
+              "visits": 1,
+              "us": 173,
+              "peak": 373028
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4421,
+              "peak": 321312
+            }
+          },
+          "us": 241330,
+          "peak": 380340,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6315,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7272,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74225,
+              "peak": 333640
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42539,
+              "peak": 334952
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9763,
+              "peak": 304784
+            },
+            "args": {
+              "visits": 1,
+              "us": 4379,
+              "peak": 403272
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8211,
+              "peak": 592604
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 130612,
+              "peak": 556796
+            },
+            "match": {
+              "visits": 4159,
+              "us": 140353,
+              "peak": 556276
+            },
+            "token": {
+              "visits": 4159,
+              "us": 35319,
+              "peak": 556276
+            },
+            "lower": {
+              "visits": 34,
+              "us": 127430,
+              "peak": 562636
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28882,
+              "peak": 577764
+            },
+            "link": {
+              "visits": 1,
+              "us": 18163,
+              "peak": 592604
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1327,
+              "peak": 502668
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4579,
+              "peak": 334840
+            }
+          },
+          "us": 639369,
+          "peak": 592604,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21971,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7162,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 73676,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41514,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13956,
+              "peak": 318660
+            },
+            "args": {
+              "visits": 1,
+              "us": 16241,
+              "peak": 696504
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20563,
+              "peak": 1420888
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 542740,
+              "peak": 1317292
+            },
+            "match": {
+              "visits": 16793,
+              "us": 579418,
+              "peak": 1313796
+            },
+            "token": {
+              "visits": 16793,
+              "us": 141284,
+              "peak": 1313796
+            },
+            "lower": {
+              "visits": 120,
+              "us": 685555,
+              "peak": 1322268
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 136745,
+              "peak": 1420536
+            },
+            "link": {
+              "visits": 1,
+              "us": 23152,
+              "peak": 1407552
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4855,
+              "peak": 1002600
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4940,
+              "peak": 379940
+            }
+          },
+          "us": 2313772,
+          "peak": 1420888,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 0,
+          "position": 3,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2060,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7938,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66377,
+              "peak": 313180
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42357,
+              "peak": 325256
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7123,
+              "peak": 292312
+            },
+            "args": {
+              "visits": 1,
+              "us": 1518,
+              "peak": 314384
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2464,
+              "peak": 375116
+            },
+            "parse": {
+              "visits": 709,
+              "us": 26623,
+              "peak": 356576
+            },
+            "match": {
+              "visits": 701,
+              "us": 29011,
+              "peak": 356576
+            },
+            "token": {
+              "visits": 701,
+              "us": 17186,
+              "peak": 356576
+            },
+            "lower": {
+              "visits": 7,
+              "us": 28784,
+              "peak": 358312
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6653,
+              "peak": 358936
+            },
+            "link": {
+              "visits": 1,
+              "us": 10936,
+              "peak": 375116
+            },
+            "copy": {
+              "visits": 1,
+              "us": 347,
+              "peak": 359660
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4209,
+              "peak": 303868
+            }
+          },
+          "us": 253586,
+          "peak": 375116,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 0,
+          "position": 3,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6257,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7259,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 65717,
+              "peak": 313148
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41981,
+              "peak": 325248
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9748,
+              "peak": 294584
+            },
+            "args": {
+              "visits": 1,
+              "us": 4402,
+              "peak": 389888
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8174,
+              "peak": 583436
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 137284,
+              "peak": 552156
+            },
+            "match": {
+              "visits": 4159,
+              "us": 153638,
+              "peak": 551636
+            },
+            "token": {
+              "visits": 4159,
+              "us": 88289,
+              "peak": 551636
+            },
+            "lower": {
+              "visits": 34,
+              "us": 128456,
+              "peak": 557996
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28856,
+              "peak": 569036
+            },
+            "link": {
+              "visits": 1,
+              "us": 17705,
+              "peak": 583436
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1181,
+              "peak": 493340
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4444,
+              "peak": 321448
+            }
+          },
+          "us": 703391,
+          "peak": 583436,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 0,
+          "position": 3,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21999,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7177,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66949,
+              "peak": 313160
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41354,
+              "peak": 325244
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13617,
+              "peak": 313416
+            },
+            "args": {
+              "visits": 1,
+              "us": 16458,
+              "peak": 691260
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20529,
+              "peak": 1415240
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 573965,
+              "peak": 1311632
+            },
+            "match": {
+              "visits": 16793,
+              "us": 646121,
+              "peak": 1304048
+            },
+            "token": {
+              "visits": 16793,
+              "us": 372104,
+              "peak": 1304048
+            },
+            "lower": {
+              "visits": 120,
+              "us": 687055,
+              "peak": 1316608
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 137747,
+              "peak": 1414888
+            },
+            "link": {
+              "visits": 1,
+              "us": 23098,
+              "peak": 1394176
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4528,
+              "peak": 985188
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4844,
+              "peak": 362528
+            }
+          },
+          "us": 2637545,
+          "peak": 1415240,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 232842,
+          "peak": 375780,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 603346,
+          "peak": 592092,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2177188,
+          "peak": 1419744,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2072,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7139,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66370,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41717,
+              "peak": 325252
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7237,
+              "peak": 292308
+            },
+            "args": {
+              "visits": 1,
+              "us": 1462,
+              "peak": 314380
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2455,
+              "peak": 375112
+            },
+            "parse": {
+              "visits": 709,
+              "us": 26936,
+              "peak": 356536
+            },
+            "match": {
+              "visits": 701,
+              "us": 29149,
+              "peak": 356536
+            },
+            "token": {
+              "visits": 701,
+              "us": 17288,
+              "peak": 356536
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27980,
+              "peak": 358272
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6569,
+              "peak": 358896
+            },
+            "link": {
+              "visits": 1,
+              "us": 10948,
+              "peak": 375112
+            },
+            "copy": {
+              "visits": 1,
+              "us": 185,
+              "peak": 359656
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4287,
+              "peak": 303864
+            }
+          },
+          "us": 251794,
+          "peak": 375112,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6332,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7235,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66228,
+              "peak": 313136
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42890,
+              "peak": 325232
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9598,
+              "peak": 294568
+            },
+            "args": {
+              "visits": 1,
+              "us": 4298,
+              "peak": 389872
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8144,
+              "peak": 583420
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 137563,
+              "peak": 552096
+            },
+            "match": {
+              "visits": 4159,
+              "us": 154370,
+              "peak": 551576
+            },
+            "token": {
+              "visits": 4159,
+              "us": 87504,
+              "peak": 551576
+            },
+            "lower": {
+              "visits": 34,
+              "us": 128078,
+              "peak": 557936
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28791,
+              "peak": 568976
+            },
+            "link": {
+              "visits": 1,
+              "us": 18051,
+              "peak": 583420
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1292,
+              "peak": 493324
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4460,
+              "peak": 321432
+            }
+          },
+          "us": 704834,
+          "peak": 583420,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 22178,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7217,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66072,
+              "peak": 313136
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41283,
+              "peak": 325232
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13690,
+              "peak": 313400
+            },
+            "args": {
+              "visits": 1,
+              "us": 16238,
+              "peak": 691244
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20515,
+              "peak": 1415212
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 567528,
+              "peak": 1311616
+            },
+            "match": {
+              "visits": 16793,
+              "us": 652030,
+              "peak": 1304032
+            },
+            "token": {
+              "visits": 16793,
+              "us": 374600,
+              "peak": 1304032
+            },
+            "lower": {
+              "visits": 120,
+              "us": 688081,
+              "peak": 1316592
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 137294,
+              "peak": 1414860
+            },
+            "link": {
+              "visits": 1,
+              "us": 22531,
+              "peak": 1394148
+            },
+            "copy": {
+              "visits": 1,
+              "us": 5114,
+              "peak": 985172
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4762,
+              "peak": 362512
+            }
+          },
+          "us": 2639133,
+          "peak": 1415212,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 236890,
+          "peak": 362620,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 660898,
+          "peak": 578948,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2461828,
+          "peak": 1410056,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 1,
+          "position": 3,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2032,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7104,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74300,
+              "peak": 333640
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41560,
+              "peak": 334956
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7116,
+              "peak": 301628
+            },
+            "args": {
+              "visits": 1,
+              "us": 1503,
+              "peak": 327764
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2582,
+              "peak": 380340
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24619,
+              "peak": 361764
+            },
+            "match": {
+              "visits": 701,
+              "us": 23192,
+              "peak": 361764
+            },
+            "token": {
+              "visits": 701,
+              "us": 5944,
+              "peak": 361764
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27928,
+              "peak": 363500
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6683,
+              "peak": 364124
+            },
+            "link": {
+              "visits": 1,
+              "us": 11014,
+              "peak": 380340
+            },
+            "copy": {
+              "visits": 1,
+              "us": 333,
+              "peak": 373028
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4466,
+              "peak": 321312
+            }
+          },
+          "us": 240376,
+          "peak": 380340,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 1,
+          "position": 3,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6197,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7227,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 73539,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41402,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9773,
+              "peak": 304796
+            },
+            "args": {
+              "visits": 1,
+              "us": 4346,
+              "peak": 403284
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8197,
+              "peak": 592608
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 132268,
+              "peak": 557356
+            },
+            "match": {
+              "visits": 4159,
+              "us": 139794,
+              "peak": 556836
+            },
+            "token": {
+              "visits": 4159,
+              "us": 34839,
+              "peak": 556836
+            },
+            "lower": {
+              "visits": 34,
+              "us": 128557,
+              "peak": 563196
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28721,
+              "peak": 578324
+            },
+            "link": {
+              "visits": 1,
+              "us": 17696,
+              "peak": 592608
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1185,
+              "peak": 502672
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4653,
+              "peak": 334844
+            }
+          },
+          "us": 638394,
+          "peak": 592608,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 1,
+          "position": 3,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21937,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7116,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74762,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41669,
+              "peak": 334972
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13937,
+              "peak": 318668
+            },
+            "args": {
+              "visits": 1,
+              "us": 16295,
+              "peak": 696512
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20458,
+              "peak": 1420096
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 531704,
+              "peak": 1316500
+            },
+            "match": {
+              "visits": 16793,
+              "us": 578682,
+              "peak": 1313004
+            },
+            "token": {
+              "visits": 16793,
+              "us": 141857,
+              "peak": 1313004
+            },
+            "lower": {
+              "visits": 120,
+              "us": 691694,
+              "peak": 1321476
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 136462,
+              "peak": 1419744
+            },
+            "link": {
+              "visits": 1,
+              "us": 22467,
+              "peak": 1407560
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4426,
+              "peak": 1002608
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 5014,
+              "peak": 379948
+            }
+          },
+          "us": 2308480,
+          "peak": 1420096,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2056,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7089,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 65885,
+              "peak": 313152
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41452,
+              "peak": 325244
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7129,
+              "peak": 292300
+            },
+            "args": {
+              "visits": 1,
+              "us": 1499,
+              "peak": 314372
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2389,
+              "peak": 375100
+            },
+            "parse": {
+              "visits": 709,
+              "us": 26935,
+              "peak": 356524
+            },
+            "match": {
+              "visits": 701,
+              "us": 29223,
+              "peak": 356524
+            },
+            "token": {
+              "visits": 701,
+              "us": 17226,
+              "peak": 356524
+            },
+            "lower": {
+              "visits": 7,
+              "us": 28058,
+              "peak": 358260
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6665,
+              "peak": 358884
+            },
+            "link": {
+              "visits": 1,
+              "us": 10889,
+              "peak": 375100
+            },
+            "copy": {
+              "visits": 1,
+              "us": 351,
+              "peak": 359644
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4289,
+              "peak": 303864
+            }
+          },
+          "us": 251135,
+          "peak": 375100,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6176,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7235,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 65909,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42383,
+              "peak": 325256
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9646,
+              "peak": 294592
+            },
+            "args": {
+              "visits": 1,
+              "us": 4353,
+              "peak": 389896
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8155,
+              "peak": 583456
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 139405,
+              "peak": 552156
+            },
+            "match": {
+              "visits": 4159,
+              "us": 155069,
+              "peak": 551636
+            },
+            "token": {
+              "visits": 4159,
+              "us": 88358,
+              "peak": 551636
+            },
+            "lower": {
+              "visits": 34,
+              "us": 128802,
+              "peak": 557996
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28897,
+              "peak": 569036
+            },
+            "link": {
+              "visits": 1,
+              "us": 18021,
+              "peak": 583456
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1272,
+              "peak": 493360
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4458,
+              "peak": 321468
+            }
+          },
+          "us": 708139,
+          "peak": 583456,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21918,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7135,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66277,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41594,
+              "peak": 325256
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 14639,
+              "peak": 313424
+            },
+            "args": {
+              "visits": 1,
+              "us": 16249,
+              "peak": 691268
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20528,
+              "peak": 1415244
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 560496,
+              "peak": 1311644
+            },
+            "match": {
+              "visits": 16793,
+              "us": 649023,
+              "peak": 1304060
+            },
+            "token": {
+              "visits": 16793,
+              "us": 372339,
+              "peak": 1304060
+            },
+            "lower": {
+              "visits": 120,
+              "us": 684729,
+              "peak": 1316620
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 138382,
+              "peak": 1414892
+            },
+            "link": {
+              "visits": 1,
+              "us": 23556,
+              "peak": 1394176
+            },
+            "copy": {
+              "visits": 1,
+              "us": 5045,
+              "peak": 985196
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4791,
+              "peak": 362536
+            }
+          },
+          "us": 2626701,
+          "peak": 1415244,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2047,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7136,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 75121,
+              "peak": 333640
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41554,
+              "peak": 334956
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 8120,
+              "peak": 301628
+            },
+            "args": {
+              "visits": 1,
+              "us": 1509,
+              "peak": 327764
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2570,
+              "peak": 380340
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24542,
+              "peak": 361764
+            },
+            "match": {
+              "visits": 701,
+              "us": 23206,
+              "peak": 361764
+            },
+            "token": {
+              "visits": 701,
+              "us": 5949,
+              "peak": 361764
+            },
+            "lower": {
+              "visits": 7,
+              "us": 28020,
+              "peak": 363500
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6618,
+              "peak": 364124
+            },
+            "link": {
+              "visits": 1,
+              "us": 11894,
+              "peak": 380340
+            },
+            "copy": {
+              "visits": 1,
+              "us": 331,
+              "peak": 373028
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4456,
+              "peak": 321312
+            }
+          },
+          "us": 243073,
+          "peak": 380340,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6195,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7221,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 73634,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41461,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9772,
+              "peak": 304796
+            },
+            "args": {
+              "visits": 1,
+              "us": 4368,
+              "peak": 403284
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8182,
+              "peak": 592608
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 132101,
+              "peak": 557356
+            },
+            "match": {
+              "visits": 4159,
+              "us": 139795,
+              "peak": 556836
+            },
+            "token": {
+              "visits": 4159,
+              "us": 34766,
+              "peak": 556836
+            },
+            "lower": {
+              "visits": 34,
+              "us": 127817,
+              "peak": 563196
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28823,
+              "peak": 578324
+            },
+            "link": {
+              "visits": 1,
+              "us": 18113,
+              "peak": 592608
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1182,
+              "peak": 502672
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4631,
+              "peak": 334844
+            }
+          },
+          "us": 638061,
+          "peak": 592608,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21955,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7133,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74096,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41668,
+              "peak": 334972
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13918,
+              "peak": 318668
+            },
+            "args": {
+              "visits": 1,
+              "us": 16254,
+              "peak": 696512
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20462,
+              "peak": 1420096
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 531464,
+              "peak": 1316500
+            },
+            "match": {
+              "visits": 16793,
+              "us": 578128,
+              "peak": 1313004
+            },
+            "token": {
+              "visits": 16793,
+              "us": 140989,
+              "peak": 1313004
+            },
+            "lower": {
+              "visits": 120,
+              "us": 692212,
+              "peak": 1321476
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 136536,
+              "peak": 1419744
+            },
+            "link": {
+              "visits": 1,
+              "us": 22585,
+              "peak": 1407560
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4406,
+              "peak": 1002608
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 5005,
+              "peak": 379948
+            }
+          },
+          "us": 2306811,
+          "peak": 1420096,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 232435,
+          "peak": 375768,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 601093,
+          "peak": 592092,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2169910,
+          "peak": 1419920,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 2,
+          "position": 3,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 241320,
+          "peak": 362616,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 2,
+          "position": 3,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 664227,
+          "peak": 578952,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 2,
+          "position": 3,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2464240,
+          "peak": 1410884,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "variant": "cursor_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2007,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7168,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74387,
+              "peak": 333632
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41971,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7280,
+              "peak": 301640
+            },
+            "args": {
+              "visits": 1,
+              "us": 1524,
+              "peak": 327776
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2521,
+              "peak": 380344
+            },
+            "parse": {
+              "visits": 709,
+              "us": 24134,
+              "peak": 361768
+            },
+            "match": {
+              "visits": 701,
+              "us": 23178,
+              "peak": 361768
+            },
+            "token": {
+              "visits": 701,
+              "us": 5946,
+              "peak": 361768
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27437,
+              "peak": 363504
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6600,
+              "peak": 364128
+            },
+            "link": {
+              "visits": 1,
+              "us": 10978,
+              "peak": 380344
+            },
+            "copy": {
+              "visits": 1,
+              "us": 346,
+              "peak": 373032
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4468,
+              "peak": 321316
+            }
+          },
+          "us": 239945,
+          "peak": 380344,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "variant": "cursor_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6281,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7324,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 73677,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41890,
+              "peak": 334964
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 10696,
+              "peak": 304796
+            },
+            "args": {
+              "visits": 1,
+              "us": 4278,
+              "peak": 403284
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8315,
+              "peak": 592608
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 132114,
+              "peak": 557356
+            },
+            "match": {
+              "visits": 4159,
+              "us": 139289,
+              "peak": 556836
+            },
+            "token": {
+              "visits": 4159,
+              "us": 34755,
+              "peak": 556836
+            },
+            "lower": {
+              "visits": 34,
+              "us": 128203,
+              "peak": 563196
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28891,
+              "peak": 578324
+            },
+            "link": {
+              "visits": 1,
+              "us": 18092,
+              "peak": 592608
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1206,
+              "peak": 502672
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4604,
+              "peak": 334844
+            }
+          },
+          "us": 639615,
+          "peak": 592608,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "variant": "cursor_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 22102,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7143,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 74337,
+              "peak": 333644
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42219,
+              "peak": 334968
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13979,
+              "peak": 318664
+            },
+            "args": {
+              "visits": 1,
+              "us": 16347,
+              "peak": 696508
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20686,
+              "peak": 1420580
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 538467,
+              "peak": 1316984
+            },
+            "match": {
+              "visits": 16793,
+              "us": 578608,
+              "peak": 1313480
+            },
+            "token": {
+              "visits": 16793,
+              "us": 140179,
+              "peak": 1313480
+            },
+            "lower": {
+              "visits": 120,
+              "us": 684001,
+              "peak": 1321960
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 135304,
+              "peak": 1420228
+            },
+            "link": {
+              "visits": 1,
+              "us": 22573,
+              "peak": 1407556
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4382,
+              "peak": 1002604
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4977,
+              "peak": 379944
+            }
+          },
+          "us": 2305304,
+          "peak": 1420580,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "variant": "base",
+          "app": "files",
+          "phases": {},
+          "us": 236318,
+          "peak": 362628,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "variant": "base",
+          "app": "agenda",
+          "phases": {},
+          "us": 665228,
+          "peak": 578952,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "variant": "base",
+          "app": "editor",
+          "phases": {},
+          "us": 2458584,
+          "peak": 1410904,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "variant": "base_trace",
+          "app": "files",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 2074,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7154,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66672,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41543,
+              "peak": 325252
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 7103,
+              "peak": 292308
+            },
+            "args": {
+              "visits": 1,
+              "us": 1522,
+              "peak": 314380
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 2414,
+              "peak": 375112
+            },
+            "parse": {
+              "visits": 709,
+              "us": 26873,
+              "peak": 356552
+            },
+            "match": {
+              "visits": 701,
+              "us": 29398,
+              "peak": 356552
+            },
+            "token": {
+              "visits": 701,
+              "us": 17239,
+              "peak": 356552
+            },
+            "lower": {
+              "visits": 7,
+              "us": 27991,
+              "peak": 358296
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 6528,
+              "peak": 358912
+            },
+            "link": {
+              "visits": 1,
+              "us": 11192,
+              "peak": 375112
+            },
+            "copy": {
+              "visits": 1,
+              "us": 349,
+              "peak": 359656
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4300,
+              "peak": 303864
+            }
+          },
+          "us": 252352,
+          "peak": 375112,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "variant": "base_trace",
+          "app": "agenda",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 6291,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7169,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66545,
+              "peak": 313136
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 42058,
+              "peak": 325232
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 9600,
+              "peak": 294580
+            },
+            "args": {
+              "visits": 1,
+              "us": 4261,
+              "peak": 389884
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 8161,
+              "peak": 583432
+            },
+            "parse": {
+              "visits": 4194,
+              "us": 143052,
+              "peak": 552108
+            },
+            "match": {
+              "visits": 4159,
+              "us": 157002,
+              "peak": 551588
+            },
+            "token": {
+              "visits": 4159,
+              "us": 87203,
+              "peak": 551588
+            },
+            "lower": {
+              "visits": 34,
+              "us": 129287,
+              "peak": 557948
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 28782,
+              "peak": 568988
+            },
+            "link": {
+              "visits": 1,
+              "us": 18149,
+              "peak": 583432
+            },
+            "copy": {
+              "visits": 1,
+              "us": 1121,
+              "peak": 493336
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4444,
+              "peak": 321444
+            }
+          },
+          "us": 713125,
+          "peak": 583432,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "variant": "base_trace",
+          "app": "editor",
+          "phases": {
+            "read": {
+              "visits": 1,
+              "us": 21742,
+              "peak": 0
+            },
+            "realm": {
+              "visits": 1,
+              "us": 7219,
+              "peak": 147076
+            },
+            "eval_wasm": {
+              "visits": 1,
+              "us": 66117,
+              "peak": 313156
+            },
+            "eval_rv32": {
+              "visits": 1,
+              "us": 41459,
+              "peak": 325260
+            },
+            "eval_linker": {
+              "visits": 1,
+              "us": 13705,
+              "peak": 313428
+            },
+            "args": {
+              "visits": 1,
+              "us": 15843,
+              "peak": 691272
+            },
+            "dispatch": {
+              "visits": 3,
+              "us": 20602,
+              "peak": 1415268
+            },
+            "parse": {
+              "visits": 16914,
+              "us": 565296,
+              "peak": 1311660
+            },
+            "match": {
+              "visits": 16793,
+              "us": 648103,
+              "peak": 1304076
+            },
+            "token": {
+              "visits": 16793,
+              "us": 371691,
+              "peak": 1304076
+            },
+            "lower": {
+              "visits": 120,
+              "us": 683242,
+              "peak": 1316636
+            },
+            "assemble": {
+              "visits": 1,
+              "us": 136185,
+              "peak": 1414916
+            },
+            "link": {
+              "visits": 1,
+              "us": 22791,
+              "peak": 1394196
+            },
+            "copy": {
+              "visits": 1,
+              "us": 4652,
+              "peak": 985208
+            },
+            "teardown": {
+              "visits": 1,
+              "us": 4869,
+              "peak": 362548
+            }
+          },
+          "us": 2623516,
+          "peak": 1415268,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        },
+        {
+          "block": 3,
+          "position": 3,
+          "variant": "cursor",
+          "app": "files",
+          "phases": {},
+          "us": 232882,
+          "peak": 375768,
+          "bytes": 24424,
+          "sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+          "instruction_bytes": 3216
+        },
+        {
+          "block": 3,
+          "position": 3,
+          "variant": "cursor",
+          "app": "agenda",
+          "phases": {},
+          "us": 602074,
+          "peak": 592112,
+          "bytes": 66364,
+          "sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+          "instruction_bytes": 16232
+        },
+        {
+          "block": 3,
+          "position": 3,
+          "variant": "cursor",
+          "app": "editor",
+          "phases": {},
+          "us": 2155975,
+          "peak": 1419908,
+          "bytes": 240452,
+          "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+          "instruction_bytes": 87544
+        }
+      ],
+      "worlds": {
+        "files": {
+          "file": "files/compiled.bin",
+          "last_error": "",
+          "engine": "native"
+        },
+        "agenda": {
+          "file": "agenda/compiled.bin",
+          "last_error": "",
+          "engine": "native"
+        },
+        "editor": {
+          "file": "editor/compiled.bin",
+          "last_error": "",
+          "engine": "native"
+        }
+      },
+      "log": "boot-2.log",
+      "sha256": "253f8f6bf0facac1615858cfc208103e0185546ab955340a09a142065f1d8b38",
+      "summary": {
+        "files": {
+          "cursor_minus_base_us": {
+            "samples": [
+              -3230,
+              -4048,
+              -8885,
+              -3436
+            ],
+            "median": -3742.0
+          },
+          "cursor_minus_base_peak": {
+            "samples": [
+              13156,
+              13160,
+              13152,
+              13140
+            ],
+            "median": 13154.0
+          },
+          "base_trace_overhead_us": {
+            "samples": [
+              18128,
+              14904,
+              9815,
+              16034
+            ],
+            "median": 15469.0
+          },
+          "cursor_trace_overhead_us": {
+            "samples": [
+              9102,
+              7534,
+              10638,
+              7063
+            ],
+            "median": 8318.0
+          },
+          "variants": {
+            "base": {
+              "median_us": 236604.0,
+              "max_peak": 362628,
+              "phases_median_us": {}
+            },
+            "cursor": {
+              "median_us": 232638.5,
+              "max_peak": 375780,
+              "phases_median_us": {}
+            },
+            "base_trace": {
+              "median_us": 252073.0,
+              "max_peak": 375116,
+              "phases_median_us": {
+                "read": 2066.0,
+                "realm": 7146.5,
+                "eval_wasm": 66373.5,
+                "eval_rv32": 41630.0,
+                "eval_linker": 7126.0,
+                "args": 1508.5,
+                "dispatch": 2434.5,
+                "parse": 26904.0,
+                "match": 29186.0,
+                "token": 17232.5,
+                "lower": 28024.5,
+                "assemble": 6611.0,
+                "link": 10942.0,
+                "copy": 348.0,
+                "teardown": 4288.0
+              }
+            },
+            "cursor_trace": {
+              "median_us": 240853.0,
+              "max_peak": 380344,
+              "phases_median_us": {
+                "read": 2039.5,
+                "realm": 7152.0,
+                "eval_wasm": 74721.0,
+                "eval_rv32": 41761.5,
+                "eval_linker": 7237.0,
+                "args": 1516.5,
+                "dispatch": 2546.0,
+                "parse": 24458.0,
+                "match": 23199.0,
+                "token": 5945.0,
+                "lower": 27974.0,
+                "assemble": 6609.0,
+                "link": 10996.0,
+                "copy": 332.0,
+                "teardown": 4461.0
+              }
+            }
+          }
+        },
+        "agenda": {
+          "cursor_minus_base_us": {
+            "samples": [
+              -61387,
+              -57552,
+              -63134,
+              -63154
+            ],
+            "median": -62260.5
+          },
+          "cursor_minus_base_peak": {
+            "samples": [
+              13144,
+              13144,
+              13140,
+              13160
+            ],
+            "median": 13144.0
+          },
+          "base_trace_overhead_us": {
+            "samples": [
+              32737,
+              43936,
+              43912,
+              47897
+            ],
+            "median": 43924.0
+          },
+          "cursor_trace_overhead_us": {
+            "samples": [
+              30102,
+              35048,
+              36968,
+              37541
+            ],
+            "median": 36008.0
+          },
+          "variants": {
+            "base": {
+              "median_us": 664727.5,
+              "max_peak": 578952,
+              "phases_median_us": {}
+            },
+            "cursor": {
+              "median_us": 602710.0,
+              "max_peak": 592112,
+              "phases_median_us": {}
+            },
+            "base_trace": {
+              "median_us": 706486.5,
+              "max_peak": 583456,
+              "phases_median_us": {
+                "read": 6274.0,
+                "realm": 7235.0,
+                "eval_wasm": 66068.5,
+                "eval_rv32": 42220.5,
+                "eval_linker": 9623.0,
+                "args": 4325.5,
+                "dispatch": 8158.0,
+                "parse": 138484.0,
+                "match": 154719.5,
+                "token": 87896.5,
+                "lower": 128629.0,
+                "assemble": 28823.5,
+                "link": 18036.0,
+                "copy": 1226.5,
+                "teardown": 4451.0
+              }
+            },
+            "cursor_trace": {
+              "median_us": 638881.5,
+              "max_peak": 592608,
+              "phases_median_us": {
+                "read": 6239.0,
+                "realm": 7249.5,
+                "eval_wasm": 73655.5,
+                "eval_rv32": 41675.5,
+                "eval_linker": 9772.5,
+                "args": 4357.0,
+                "dispatch": 8204.0,
+                "parse": 132107.5,
+                "match": 139794.5,
+                "token": 34802.5,
+                "lower": 128010.0,
+                "assemble": 28852.5,
+                "link": 18102.5,
+                "copy": 1195.5,
+                "teardown": 4617.5
+              }
+            }
+          }
+        },
+        "editor": {
+          "cursor_minus_base_us": {
+            "samples": [
+              -301411,
+              -284640,
+              -294330,
+              -302609
+            ],
+            "median": -297870.5
+          },
+          "cursor_minus_base_peak": {
+            "samples": [
+              8736,
+              9688,
+              9036,
+              9004
+            ],
+            "median": 9020.0
+          },
+          "base_trace_overhead_us": {
+            "samples": [
+              163922,
+              177305,
+              162461,
+              164932
+            ],
+            "median": 164427.0
+          },
+          "cursor_trace_overhead_us": {
+            "samples": [
+              141560,
+              131292,
+              136901,
+              149329
+            ],
+            "median": 139230.5
+          },
+          "variants": {
+            "base": {
+              "median_us": 2463034.0,
+              "max_peak": 1410904,
+              "phases_median_us": {}
+            },
+            "cursor": {
+              "median_us": 2171061.0,
+              "max_peak": 1419920,
+              "phases_median_us": {}
+            },
+            "base_trace": {
+              "median_us": 2632123.0,
+              "max_peak": 1415268,
+              "phases_median_us": {
+                "read": 21958.5,
+                "realm": 7197.0,
+                "eval_wasm": 66197.0,
+                "eval_rv32": 41406.5,
+                "eval_linker": 13697.5,
+                "args": 16243.5,
+                "dispatch": 20528.5,
+                "parse": 566412.0,
+                "match": 648563.0,
+                "token": 372221.5,
+                "lower": 685892.0,
+                "assemble": 137520.5,
+                "link": 22944.5,
+                "copy": 4848.5,
+                "teardown": 4817.5
+              }
+            },
+            "cursor_trace": {
+              "median_us": 2307645.5,
+              "max_peak": 1420888,
+              "phases_median_us": {
+                "read": 21963.0,
+                "realm": 7138.0,
+                "eval_wasm": 74216.5,
+                "eval_rv32": 41668.5,
+                "eval_linker": 13946.5,
+                "args": 16274.5,
+                "dispatch": 20512.5,
+                "parse": 535085.5,
+                "match": 578645.0,
+                "token": 141136.5,
+                "lower": 688624.5,
+                "assemble": 136499.0,
+                "link": 22579.0,
+                "copy": 4416.0,
+                "teardown": 4991.0
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

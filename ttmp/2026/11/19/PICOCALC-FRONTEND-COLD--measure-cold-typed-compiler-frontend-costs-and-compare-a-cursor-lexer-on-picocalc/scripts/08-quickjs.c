@@ -7,9 +7,9 @@
 
 #include "quickjs.h"
 
-static int64_t micros(void) {
+static int64_t micros(clockid_t clock) {
     struct timespec time;
-    clock_gettime(CLOCK_MONOTONIC, &time);
+    clock_gettime(clock, &time);
     return (int64_t)time.tv_sec * 1000000 + time.tv_nsec / 1000;
 }
 
@@ -72,7 +72,7 @@ static JSValue evaluate(JSContext *ctx, const char *path, int export_lexer) {
     return result;
 }
 
-static int64_t compile(JSRuntime *rt, JSContext *ctx, char **args, int64_t start) {
+static void compile(JSRuntime *rt, JSContext *ctx, char **args, int64_t start, int64_t cpu_start) {
     for (unsigned i = 0; i < 3; i++) JS_FreeValue(ctx, evaluate(ctx, args[i], 0));
 
     size_t source_length, reactor_length;
@@ -104,10 +104,11 @@ static int64_t compile(JSRuntime *rt, JSContext *ctx, char **args, int64_t start
     JS_FreeValue(ctx, result);
     JS_FreeContext(ctx);
     JS_FreeRuntime(rt);
-    int64_t elapsed = micros() - start;
+    int64_t elapsed = micros(CLOCK_MONOTONIC) - start;
+    int64_t cpu_elapsed = micros(CLOCK_PROCESS_CPUTIME_ID) - cpu_start;
     write_file(args[6], copy, size);
     free(copy);
-    return elapsed;
+    printf("%lld %lld\n", (long long)elapsed, (long long)cpu_elapsed);
 }
 
 static void lex(JSRuntime *rt, JSContext *ctx, char **args) {
@@ -128,14 +129,15 @@ int main(int argc, char **argv) {
     int compiling = argc == 9 && !strcmp(argv[1], "compile");
     check(compiling || (argc == 6 && !strcmp(argv[1], "lex")),
           "usage: quickjs compile wasm rv32 linker source reactor entry output | quickjs lex wasm rv32 fixture output");
-    int64_t start = micros();
+    int64_t start = micros(CLOCK_MONOTONIC);
+    int64_t cpu_start = micros(CLOCK_PROCESS_CPUTIME_ID);
     JSRuntime *rt = JS_NewRuntime();
     check(rt != NULL, "runtime allocation");
     JS_SetMaxStackSize(rt, 8 * 1024 * 1024);
     JSContext *ctx = JS_NewContext(rt);
     check(ctx != NULL, "context allocation");
     if (compiling) {
-        printf("%lld\n", (long long)compile(rt, ctx, argv + 2, start));
+        compile(rt, ctx, argv + 2, start, cpu_start);
     } else {
         lex(rt, ctx, argv + 2);
     }

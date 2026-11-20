@@ -5,7 +5,7 @@ import {readFileSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import vm from 'node:vm';
 
-const [work, reactorDir = join(work, 'build/esp-idf/main'), fixture] = process.argv.slice(2);
+const [work, reactorDir = join(work, 'build/esp-idf/main'), fixture, wasmReactorDir] = process.argv.slice(2);
 const world = join(work, 'tree/picocalc-os/worlds');
 const sha = data => createHash('sha256').update(data).digest('hex');
 const variants = ['base', 'cursor', 'base_trace', 'cursor_trace', 'cursor_fresh'];
@@ -180,7 +180,26 @@ for (const [app, [source, elf, entry]] of Object.entries(apps)) {
         assert.deepEqual(streamed, outputs[app].base, `${app} ${variant}`);
     }
 }
+const linkedWasm = {};
+if (wasmReactorDir) {
+    const wasm = {
+        files: ['files-reactor.wasm', 'compileFiles'],
+        agenda: ['agenda-reactor.wasm', 'compileAgenda'],
+        editor: ['typed-world-reactor.wasm', 'compileTypedWorld'],
+    };
+    for (const [app, [name, entry]] of Object.entries(wasm)) {
+        const reactor = readFileSync(join(wasmReactorDir, name));
+        const [source] = apps[app];
+        const baseline = Buffer.from(contexts.base[entry](source, new Uint8Array(reactor)));
+        assert.ok(WebAssembly.validate(baseline));
+        for (const variant of variants.slice(1)) {
+            const candidate = Buffer.from(contexts[variant][entry](source, new Uint8Array(reactor)));
+            assert.deepEqual(candidate, baseline, `${app} ${variant} linked Wasm`);
+        }
+        linkedWasm[app] = {bytes: baseline.length, sha256: sha(baseline), reactorSha256: sha(reactor)};
+    }
+}
 console.log(JSON.stringify({
     lexicalCases: lexical.length, compilationCases: compilationCases.length,
-    wasmValid, rv32Valid, inputs, outputs,
+    wasmValid, rv32Valid, inputs, outputs, linkedWasm,
 }, null, 2));

@@ -1,0 +1,704 @@
+{
+  "note": "Host monotonic and process CPU times cover input reads and fresh QuickJS creation through teardown, excluding process launch and file write.",
+  "quickjs": "2026-06-04",
+  "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "lexical_cases": 71814,
+  "compilation_cases": 535,
+  "lexical_and_compiler_result_sha256": {
+    "base": "ea929440c91d8d7d225a3c038a8fc6766f36cfb415d2f3e6a850c00628834d64",
+    "cursor": "ea929440c91d8d7d225a3c038a8fc6766f36cfb415d2f3e6a850c00628834d64",
+    "cursor_fresh": "ea929440c91d8d7d225a3c038a8fc6766f36cfb415d2f3e6a850c00628834d64"
+  },
+  "cold_run_times": {
+    "files": {
+      "samples": [
+        {
+          "order": [
+            "base",
+            "cursor",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "base": 9414,
+            "cursor": 9344,
+            "cursor_fresh": 9614
+          },
+          "cpu_us": {
+            "base": 9414,
+            "cursor": 9317,
+            "cursor_fresh": 9584
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor_fresh",
+            "cursor"
+          ],
+          "wall_us": {
+            "base": 10761,
+            "cursor_fresh": 11222,
+            "cursor": 9835
+          },
+          "cpu_us": {
+            "base": 10742,
+            "cursor_fresh": 10208,
+            "cursor": 9836
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "base",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "cursor": 10363,
+            "base": 9408,
+            "cursor_fresh": 9608
+          },
+          "cpu_us": {
+            "cursor": 10310,
+            "base": 9409,
+            "cursor_fresh": 9608
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "cursor_fresh",
+            "base"
+          ],
+          "wall_us": {
+            "cursor": 9999,
+            "cursor_fresh": 9755,
+            "base": 9406
+          },
+          "cpu_us": {
+            "cursor": 9979,
+            "cursor_fresh": 9692,
+            "base": 9393
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "base",
+            "cursor"
+          ],
+          "wall_us": {
+            "cursor_fresh": 10231,
+            "base": 9551,
+            "cursor": 9398
+          },
+          "cpu_us": {
+            "cursor_fresh": 10202,
+            "base": 9529,
+            "cursor": 9399
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "cursor",
+            "base"
+          ],
+          "wall_us": {
+            "cursor_fresh": 10122,
+            "cursor": 9840,
+            "base": 9479
+          },
+          "cpu_us": {
+            "cursor_fresh": 10041,
+            "cursor": 9618,
+            "base": 9466
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "base": 10274,
+            "cursor": 10103,
+            "cursor_fresh": 9624
+          },
+          "cpu_us": {
+            "base": 10248,
+            "cursor": 10087,
+            "cursor_fresh": 9599
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor_fresh",
+            "cursor"
+          ],
+          "wall_us": {
+            "base": 9325,
+            "cursor_fresh": 10347,
+            "cursor": 9549
+          },
+          "cpu_us": {
+            "base": 9326,
+            "cursor_fresh": 10349,
+            "cursor": 9549
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "base",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "cursor": 9302,
+            "base": 10000,
+            "cursor_fresh": 12952
+          },
+          "cpu_us": {
+            "cursor": 9302,
+            "base": 9971,
+            "cursor_fresh": 12928
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "cursor_fresh",
+            "base"
+          ],
+          "wall_us": {
+            "cursor": 9572,
+            "cursor_fresh": 10642,
+            "base": 9592
+          },
+          "cpu_us": {
+            "cursor": 9557,
+            "cursor_fresh": 10603,
+            "base": 9558
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "base",
+            "cursor"
+          ],
+          "wall_us": {
+            "cursor_fresh": 9658,
+            "base": 9963,
+            "cursor": 13971
+          },
+          "cpu_us": {
+            "cursor_fresh": 9621,
+            "base": 9931,
+            "cursor": 13817
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "cursor",
+            "base"
+          ],
+          "wall_us": {
+            "cursor_fresh": 9203,
+            "cursor": 9908,
+            "base": 9120
+          },
+          "cpu_us": {
+            "cursor_fresh": 9204,
+            "cursor": 9897,
+            "base": 9104
+          }
+        }
+      ],
+      "wall_us": {
+        "medians": {
+          "base": 9515.0,
+          "cursor": 9837.5,
+          "cursor_fresh": 9938.5
+        },
+        "paired_delta_medians": {
+          "cursor": 102.0,
+          "cursor_fresh": 405.0
+        }
+      },
+      "cpu_us": {
+        "medians": {
+          "base": 9497.5,
+          "cursor": 9727.0,
+          "cursor_fresh": 9866.5
+        },
+        "paired_delta_medians": {
+          "cursor": 75.5,
+          "cursor_fresh": 249.0
+        }
+      }
+    },
+    "agenda": {
+      "samples": [
+        {
+          "order": [
+            "base",
+            "cursor",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "base": 25754,
+            "cursor": 23896,
+            "cursor_fresh": 25954
+          },
+          "cpu_us": {
+            "base": 25697,
+            "cursor": 23822,
+            "cursor_fresh": 25884
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor_fresh",
+            "cursor"
+          ],
+          "wall_us": {
+            "base": 25585,
+            "cursor_fresh": 29439,
+            "cursor": 23551
+          },
+          "cpu_us": {
+            "base": 25542,
+            "cursor_fresh": 29346,
+            "cursor": 23483
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "base",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "cursor": 24945,
+            "base": 27815,
+            "cursor_fresh": 27605
+          },
+          "cpu_us": {
+            "cursor": 24866,
+            "base": 27725,
+            "cursor_fresh": 27520
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "cursor_fresh",
+            "base"
+          ],
+          "wall_us": {
+            "cursor": 31614,
+            "cursor_fresh": 40339,
+            "base": 42034
+          },
+          "cpu_us": {
+            "cursor": 31451,
+            "cursor_fresh": 38884,
+            "base": 41931
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "base",
+            "cursor"
+          ],
+          "wall_us": {
+            "cursor_fresh": 36863,
+            "base": 36449,
+            "cursor": 38596
+          },
+          "cpu_us": {
+            "cursor_fresh": 36866,
+            "base": 36450,
+            "cursor": 38597
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "cursor",
+            "base"
+          ],
+          "wall_us": {
+            "cursor_fresh": 36870,
+            "cursor": 38451,
+            "base": 40098
+          },
+          "cpu_us": {
+            "cursor_fresh": 36873,
+            "cursor": 38303,
+            "base": 40079
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "base": 42746,
+            "cursor": 39126,
+            "cursor_fresh": 37010
+          },
+          "cpu_us": {
+            "base": 42707,
+            "cursor": 39062,
+            "cursor_fresh": 36931
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor_fresh",
+            "cursor"
+          ],
+          "wall_us": {
+            "base": 39160,
+            "cursor_fresh": 40826,
+            "cursor": 38037
+          },
+          "cpu_us": {
+            "base": 39161,
+            "cursor_fresh": 40801,
+            "cursor": 38016
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "base",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "cursor": 35255,
+            "base": 36438,
+            "cursor_fresh": 36738
+          },
+          "cpu_us": {
+            "cursor": 35071,
+            "base": 36422,
+            "cursor_fresh": 36623
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "cursor_fresh",
+            "base"
+          ],
+          "wall_us": {
+            "cursor": 35957,
+            "cursor_fresh": 39320,
+            "base": 40500
+          },
+          "cpu_us": {
+            "cursor": 35164,
+            "cursor_fresh": 37313,
+            "base": 40285
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "base",
+            "cursor"
+          ],
+          "wall_us": {
+            "cursor_fresh": 40126,
+            "base": 40839,
+            "cursor": 34952
+          },
+          "cpu_us": {
+            "cursor_fresh": 40052,
+            "base": 39004,
+            "cursor": 34743
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "cursor",
+            "base"
+          ],
+          "wall_us": {
+            "cursor_fresh": 37137,
+            "cursor": 34787,
+            "base": 36607
+          },
+          "cpu_us": {
+            "cursor_fresh": 36984,
+            "cursor": 34633,
+            "base": 36318
+          }
+        }
+      ],
+      "wall_us": {
+        "medians": {
+          "base": 37883.5,
+          "cursor": 35103.5,
+          "cursor_fresh": 36940.0
+        },
+        "paired_delta_medians": {
+          "cursor": -1946.0,
+          "cursor_fresh": -5.0
+        }
+      },
+      "cpu_us": {
+        "medians": {
+          "base": 37727.0,
+          "cursor": 34907.0,
+          "cursor_fresh": 36902.0
+        },
+        "paired_delta_medians": {
+          "cursor": -1967.0,
+          "cursor_fresh": 194.0
+        }
+      }
+    },
+    "editor": {
+      "samples": [
+        {
+          "order": [
+            "base",
+            "cursor",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "base": 149868,
+            "cursor": 84156,
+            "cursor_fresh": 105008
+          },
+          "cpu_us": {
+            "base": 148171,
+            "cursor": 83697,
+            "cursor_fresh": 104816
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor_fresh",
+            "cursor"
+          ],
+          "wall_us": {
+            "base": 112153,
+            "cursor_fresh": 112082,
+            "cursor": 80275
+          },
+          "cpu_us": {
+            "base": 112138,
+            "cursor_fresh": 111388,
+            "cursor": 80163
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "base",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "cursor": 77068,
+            "base": 80902,
+            "cursor_fresh": 77809
+          },
+          "cpu_us": {
+            "cursor": 76981,
+            "base": 80830,
+            "cursor_fresh": 77717
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "cursor_fresh",
+            "base"
+          ],
+          "wall_us": {
+            "cursor": 72379,
+            "cursor_fresh": 76126,
+            "base": 75927
+          },
+          "cpu_us": {
+            "cursor": 72322,
+            "cursor_fresh": 76061,
+            "base": 75830
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "base",
+            "cursor"
+          ],
+          "wall_us": {
+            "cursor_fresh": 74459,
+            "base": 74728,
+            "cursor": 69344
+          },
+          "cpu_us": {
+            "cursor_fresh": 74091,
+            "base": 74729,
+            "cursor": 69202
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "cursor",
+            "base"
+          ],
+          "wall_us": {
+            "cursor_fresh": 69385,
+            "cursor": 63678,
+            "base": 66362
+          },
+          "cpu_us": {
+            "cursor_fresh": 69386,
+            "cursor": 63665,
+            "base": 66350
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "base": 65215,
+            "cursor": 63613,
+            "cursor_fresh": 62014
+          },
+          "cpu_us": {
+            "base": 65207,
+            "cursor": 63615,
+            "cursor_fresh": 62010
+          }
+        },
+        {
+          "order": [
+            "base",
+            "cursor_fresh",
+            "cursor"
+          ],
+          "wall_us": {
+            "base": 63380,
+            "cursor_fresh": 62354,
+            "cursor": 58577
+          },
+          "cpu_us": {
+            "base": 63360,
+            "cursor_fresh": 62270,
+            "cursor": 58540
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "base",
+            "cursor_fresh"
+          ],
+          "wall_us": {
+            "cursor": 57983,
+            "base": 63029,
+            "cursor_fresh": 60998
+          },
+          "cpu_us": {
+            "cursor": 57986,
+            "base": 63022,
+            "cursor_fresh": 60945
+          }
+        },
+        {
+          "order": [
+            "cursor",
+            "cursor_fresh",
+            "base"
+          ],
+          "wall_us": {
+            "cursor": 57879,
+            "cursor_fresh": 62125,
+            "base": 61307
+          },
+          "cpu_us": {
+            "cursor": 57880,
+            "cursor_fresh": 62075,
+            "base": 61309
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "base",
+            "cursor"
+          ],
+          "wall_us": {
+            "cursor_fresh": 59825,
+            "base": 61253,
+            "cursor": 56883
+          },
+          "cpu_us": {
+            "cursor_fresh": 59780,
+            "base": 61254,
+            "cursor": 56843
+          }
+        },
+        {
+          "order": [
+            "cursor_fresh",
+            "cursor",
+            "base"
+          ],
+          "wall_us": {
+            "cursor_fresh": 60332,
+            "cursor": 56699,
+            "base": 61723
+          },
+          "cpu_us": {
+            "cursor_fresh": 60194,
+            "cursor": 56618,
+            "base": 61614
+          }
+        }
+      ],
+      "wall_us": {
+        "medians": {
+          "base": 65788.5,
+          "cursor": 63645.5,
+          "cursor_fresh": 65869.5
+        },
+        "paired_delta_medians": {
+          "cursor": -4586.5,
+          "cursor_fresh": -1208.5
+        }
+      },
+      "cpu_us": {
+        "medians": {
+          "base": 65778.5,
+          "cursor": 63640.0,
+          "cursor_fresh": 65828.0
+        },
+        "paired_delta_medians": {
+          "cursor": -4615.5,
+          "cursor_fresh": -1255.0
+        }
+      }
+    }
+  }
+}
