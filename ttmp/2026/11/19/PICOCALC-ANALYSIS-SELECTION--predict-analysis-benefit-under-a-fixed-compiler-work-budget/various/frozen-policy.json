@@ -1,0 +1,16 @@
+{
+  "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+  "paths": {
+    "01-stage.py": "834423ef430ad2c66c71cd5ead3b7066d52f6f8abee0e21e812ea4495bfadf74",
+    "02-policy.mjs": "65c6cd926b08b3170df79a5eab305a3da229def01e3e353300005ac2da234bd0",
+    "03-generate.mjs": "02b9bfeb68213f9a7473ec57bc5cae5c75b0177b95a181255a1d3e3b33c87a48",
+    "04-evaluate.mjs": "fa38528b5330a39a149c38de5939295819cc2d45bf35e32290c9f7a62a785280"
+  },
+  "staged": {
+    "wasm.js": "b272a48ae1d9bab4b3ee7a4d578701d16ef7738d0c9a7642be6d1d362e9acb50",
+    "rv32.js": "cf5c3b76561c3f63d6df2a1b10ad5e5043adc7d9e52fd6c39d0ff4fee8639dc2",
+    "typed-world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3",
+    "files.js": "dc82ece5c9c6f65b4ed3db2b9c742e14463fafc7a6df528c15e356021611103a",
+    "agenda.js": "52a85f626fc93e33641d7ef3a7452c2b7d94b0163edcb7fca6fdef1c270fcecd"
+  }
+}
