@@ -1,3 +1,21 @@
+---
+Title: Qualify the 80 KiB Editor slot on the P4
+Ticket: PICOCALC-STAGED-RV32
+Status: active
+Topics:
+    - picocalc
+    - native
+    - editor
+DocType: playbook
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: Build and replay both Editor slot capacities and validate cold native boots and restoration.
+WhatFor: Reproduce the physical Editor executable reservation trial.
+WhenToUse: When repeating the staged compiler slot comparison on the ESP32-P4.
+---
+
 # Qualify the 80 KiB Editor slot on the P4
 
 This recipe is for the supervising board operator. It uses the normal native wrappers with the staged compiler and one physically smaller assembly reservation. The general native compilation trial measures all the compiler lanes in a standard reactor. The separate firmware here measures the actual executable allocation change in a running Editor.

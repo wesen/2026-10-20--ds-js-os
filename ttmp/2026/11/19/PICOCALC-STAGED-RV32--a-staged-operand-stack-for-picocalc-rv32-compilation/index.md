@@ -1,17 +1,17 @@
 ---
 Title: A staged operand stack for PicoCalc RV32 compilation
 Ticket: PICOCALC-STAGED-RV32
-Status: active
+Status: complete
 Topics:
     - picocalc
-    - compiler
+    - native
 DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
-LastUpdated: 2026-11-19T20:22:53.400971766-05:00
+Summary: Model calibration and physical qualification of staged RV32 lowering and the 80 KiB Editor reservation.
+LastUpdated: 2026-11-19T21:23:58.125329392-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -20,11 +20,12 @@ WhenToUse: ""
 
 ## Overview
 
-Isolate the remaining native code size reductions after the previous adjacent predicate fusion experiment. Calibrate a count model on Files and publish a forecast before testing it on Agenda. A qualifying result advances to Editor and an 80 KiB reactor slot trial.
+Files reached 593 words and Agenda emitted 2,793 against the prespecified 2,789-word prediction. The staged compiler fit Editor into an 80 KiB reservation, freeing 144 KiB of live world memory in matched native trials. Staging adds about 445 ms to Editor cold compilation with the standard reservation.
 
 ## Key Links
 - [Intern guide](design-doc/01-where-an-rv32-operand-lives-between-instructions.md)
 - [Study and results](analysis/02-how-a-staged-operand-stack-made-room-for-picocalc-editor.md)
+- Vault publication `cd9068343729df710b826c45197ad7b779382238`
 - [Board recipe](playbooks/01-qualify-the-80-kib-editor-slot.md)
 - [Investigation diary](reference/01-staged-rv32-investigation-diary.md)
 
@@ -33,12 +34,12 @@ Isolate the remaining native code size reductions after the previous adjacent pr
 
 ## Status
 
-Current status: **active**
+Current status: **complete**
 
 ## Topics
 
 - picocalc
-- compiler
+- native
 
 ## Tasks
 

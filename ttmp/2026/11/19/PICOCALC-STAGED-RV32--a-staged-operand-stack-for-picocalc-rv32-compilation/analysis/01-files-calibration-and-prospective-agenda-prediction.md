@@ -4,7 +4,7 @@ Ticket: PICOCALC-STAGED-RV32
 Status: active
 Topics:
     - picocalc
-    - compiler
+    - native
 DocType: analysis
 Intent: long-term
 Owners: []

@@ -4,7 +4,7 @@ Ticket: PICOCALC-STAGED-RV32
 Status: active
 Topics:
     - picocalc
-    - compiler
+    - native
 DocType: reference
 Intent: long-term
 Owners: []
@@ -230,3 +230,154 @@ Review `various/behavior.json`, `various/guest-app-workflows.json`, `various/slo
 The built small reactor has one executable PT_LOAD segment of 91,836 bytes and one writable PT_LOAD segment with 487,880 memory bytes. The larger layout has an equivalent writable segment and a 239,292-byte executable segment. Module hashes are fixed in the linker oracle receipt.
 
 The board operator requested the full module hash across cold boots. The staged-only `editor_p4.c` now reads the complete linked module after `p4_typed_compile` publishes its duration and peak heap, then prints a `SLOT80 editor` receipt before loading. CMake includes the same mbedTLS implementation used by the earlier combined study. The incremental firmware build succeeded under `/tmp/picocalc-staged-rv32-lab/slot80/build`. Its binary contains the expected staged backend, actual smaller reactor, and receipt format string. `various/slot-firmware.json` records the complete firmware SHA-256 and expected module hash. The supervisor has the ready artifact and owns flashing and restoration.
+
+## Step 5 — Separate generated-program cycles from compiler cost on the same board
+
+The supervising run sampled the production, fusion, and staged compilers in one firmware with the standard-size slots. Staging adds about 444–445 ms to a cold Editor compile and reduces cycles in both measured guest kernels. A separate firmware with the 80 KiB Editor reactor then booted three times and loaded the exact host-oracle module each time.
+
+### Prompt Context
+
+See Step 1. The operator asked me to finish the native article, diary, ticket and vault publication once the matched normal-world run had completed.
+
+### What I did
+
+- Verified that `native-physical.json` contains 54 fresh app compiles and 96 guest batch rows on each of two boots. Checked the three compiler choices, exact output identities, boot ordering and restoration receipt.
+- Read the supervisor's paired estimator and compared its values with `native-summary.json`. Added the paired peak/time results and physical kernel measurements to the article separately from the emulator section.
+- Compared the three `slot80-physical.json` output hashes with the host oracle. Verified the physical preview's accepted pixel mask and the PNG's digest. The article renderer now carries that asset into the dated vault folder.
+
+### Why
+
+Separate measurements show what startup costs increase, what generated code executes faster, and what an assembled reservation changes when Editor's native world is resident. The 80 KiB change preserves the emitted payload, and the physical effect must be compared with the same staged compiler and normal world path using the original reservation.
+
+### What worked
+
+Editor staging changes compile time by +444.9725 ms and +444.1195 ms, with peak allocation changes of +28,950 and +28,936 bytes across the two paired boots. Files and Agenda kernels show roughly 25.2% and 25.8–26.0% fewer cycles per call. The three ordinary small-slot boots each emitted the same 92,996-byte host-matched ELF and reported 566.1 KiB of live world memory. The preview inputs and outside-clock pixels match the qualified reference.
+
+### What didn't work
+
+The initially saved factory app was built from an earlier revision. Its restoration and display results are useful as comparison receipts. Its compile timing would conflate revision and reservation changes, so the operator scheduled a matched standard-reservation firmware. The project-specific Opus CLI request submitted before the pause yielded no completed review. The source-free worked review returned earlier and is identified separately.
+
+### What I learned
+
+The standard-slot physical experiment establishes the staged backend's compile cost. The small-slot normal-world experiment measures a smaller resident application. Comparing those two builds directly for compile performance would mix launch paths. The matched normal-path experiment resolves the size comparison while keeping the compiler fixed.
+
+### What was tricky to build
+
+The supervisor's `difference` reports the median of candidate minus base within matched blocks. It does not always equal the difference between the two displayed medians. Preserving this distinction keeps the report consistent with its raw evidence.
+
+### What warrants a second pair of eyes
+
+Confirm that the standard and small reservation trials hash the exact expected modules and use the same native compiler. Check that the newly reported working memory comes from world status and the compiler heap comes from the separate QuickJS allocator receipt.
+
+### What should be done in the future
+
+Finish the article with the matched normal-path results, then commit the new vault note and identical shared screenshot asset.
+
+### Code review instructions
+
+Open `PICOCALC-COMPILER-LAB/various/native-physical.json`, `native-summary.json` and `slot80-physical.json` under the sibling lab ticket. The lab's `scripts/05-summarize.py` defines the paired median, and `scripts/02-trials.c` defines both guest workload inputs and the cycle timer.
+
+### Technical details
+
+The Files guest kernel compares two 91-unit names differing at the final unit. The Agenda kernel repeats eight date computations. Each paired batch uses 128 calls, the physical CPU reported 360 MHz, and each operation uses 16 measured blocks per boot. The 80 KiB normal-world run recorded compile time of 2,889.319–2,892.244 ms and a constant QuickJS peak of 1,284,204 bytes.
+
+## Step 6 — Measure the reservation with the staged backend held fixed
+
+The matched normal-world build restored the original 224 KiB reservation while keeping the staged compiler and post-timer full-module hash. On three normal boots it reported 710.1 KiB of world memory and 1,439,808 bytes of peak allocation. The same compiler in the 80 KiB build reported 566.1 KiB and 1,284,204 bytes. Both sets of output hashes match their separately assembled host oracles.
+
+### Prompt Context
+
+See Steps 1 and 5. This normal-world comparison completes the engineering question about releasing memory from Editor without changing the compiler between reservation sizes.
+
+### What I did
+
+- Verified the staged 224 KiB boot rows and compared them with the three 80 KiB rows. Used the module sizes and full digests from `various/slot-oracle.json` as the host oracle.
+- Reported the exact 147,456-byte file and 144.0 KiB world-memory changes, plus the measured 155,604-byte reduction in peak allocator bytes.
+- Added normal-boot timing ranges and clearly identified the 18.741 ms median difference as a descriptive comparison of sequential firmware runs. The earlier rotated common-firmware experiment measures the staged code generator's compiler cost.
+- Re-read the article in order as an intern. Checked that the instruction count, module size, QuickJS peak and world memory are introduced before comparing them. Verified the screenshot asset and the separate provenance of the scoped model requests.
+
+### Why
+
+The memory effect belongs to the assembled slot while the cold-compile increase belongs to changing the lowering rules. Changing both at once would mix these effects. Keeping the compiler fixed in the 224 KiB and 80 KiB normal-world builds also makes the two host-linked payloads a meaningful byte identity check.
+
+### What worked
+
+The standard build's 240,452-byte ELF and small build's 92,996-byte ELF both matched full host digests at boot. The complete executable and world allocation decreased by 144 KiB, while the compilation heap peak decreased by 155,604 bytes. The 80 KiB build also rendered the complete 65,536-byte preview with exact checked pixels outside the clock.
+
+### What didn't work
+
+The ticket doctor found an unregistered `compiler` topic and missing playbook frontmatter. The ticket now uses the existing `native` topic and a valid playbook header. Calibration and preimplementation history remain available at their original commits.
+
+### What I learned
+
+The phase of the experiment determines the interpretation of time. The fixed-reservation staged backend runs slower during cold compilation in the paired comparison. The three normal boots for each reservation had medians of 2,908.296 and 2,889.555 ms. Boot order remains a possible cause of part of that difference. The fixed memory changes independently reproduce on all six boots.
+
+### What was tricky to build
+
+The on-device hash verifies the complete loader input. The two digests should differ because the actual ELF layouts differ. The host oracle separately verifies that the generated instruction payload is identical and that imports and exports fit in both layouts.
+
+### What warrants a second pair of eyes
+
+Check the smaller module's 15,616 bytes of capacity after its entry and import prefix before carrying the reservation to another app. The physical execution timings cover only two app kernels. Full-workflow execution evidence remains the emulator traces and actual screen replay.
+
+### What should be done in the future
+
+Repeat model calibration on different typed programs to test the limits of generalization. Measure separate parts of the staged code generator on the device if cold latency becomes an integration requirement.
+
+### Code review instructions
+
+Read the normal-boot receipts in the lab ticket `various/staged-standard-world.json` and `various/slot80-physical.json` after the common-firmware `native-summary.json`. Compare the ELF hashes against `various/slot-oracle.json` in this ticket. The vault exporter `scripts/11-vault-article.py` turns local source links into repository references and carries the verified preview asset.
+
+### Technical details
+
+Normal-world compile ranges were 2,907.738–2,908.777 ms for 224 KiB and 2,889.319–2,892.244 ms for 80 KiB. The staged backend hash is `532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b`. The full oracle digests are `c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439` at 224 KiB and `81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4` at 80 KiB.
+
+## Step 7 — Verify restoration and publish the native study
+
+Both normal-world receipts record restoration and a healthy native Editor afterward. I rendered and published the completed article as an append-only note, including the physical preview asset whose SHA-256 matches the lab receipt.
+
+### Prompt Context
+
+See Step 1. The supervising operator approved release after the matched normal-world run and restoration. The release includes the article, its asset, the ticket and this diary.
+
+### What I did
+
+- Verified both three-boot receipts against `various/slot-oracle.json`, including exact module bytes and SHA-256 digests, both memory outcomes, preview inputs and restoration.
+- Ran `scripts/11-vault-article.py` and byte-compared the published screenshot with the lab's preview.
+- Staged only the new dated article and screenshot in `go-go-parc`. Pushed `cd9068343729df710b826c45197ad7b779382238` to `main` and verified its remote hash with `git ls-remote`.
+
+### Why
+
+The vault note preserves the experiment in a readable article with access to the original evidence paths. The ticket retains the reproducible scripts, receipts and chronology.
+
+### What worked
+
+The vault remote confirmed `cd9068343729df710b826c45197ad7b779382238` at the end of the push. The published article is `Projects/2026/11/19/ARTICLE - PicoCalc Compiler - How a Staged Operand Stack Made Room for Editor.md`.
+
+### What didn't work
+
+The first `git push origin "$commit:refs/heads/main"` failed with `src refspec cd9068343729df710b826c45197ad7b779382238efs/heads/main does not match any`. zsh consumed `:r` as a parameter modifier. Bracing the variable in `git push origin "${commit}:refs/heads/main"` corrected the refspec.
+
+### What I learned
+
+The complete native module hash establishes byte identity even when two modules have equal sizes. The compiler and native runtime report different memory figures, and both should travel with the bench configuration.
+
+### What was tricky to build
+
+The repository article's links refer to sibling tickets. The vault renderer rewrites them as workspace-relative evidence paths and copies the single image into the dated vault folder.
+
+### What warrants a second pair of eyes
+
+Check the physical measurements against the paired and matched receipts as described in Step 6. The published timing caveat identifies the sequential boot groups.
+
+### What should be done in the future
+
+Study broader held-out workloads and the cold cost of individual lowering stages before integration.
+
+### Code review instructions
+
+First open the completed article under `analysis/`. The vault copy can be resolved through the commit and path above. Both repositories contain the same physical preview pixels.
+
+### Technical details
+
+The published image SHA-256 is `24044f3bf69ac0c391678e0bc29473307629122b92ddb3df34867391fa7f373b`. The standalone rendered article SHA-256 is `2fb68337fc5fa2f9c50402c222ed8f1edc374eeaf4b75c7ff1499a084c3ed61d`.
