@@ -29,6 +29,9 @@ This experiment evaluates direct RV32 conditional branches for adjacent typed in
 - [Static and warm compile measurements](various/static.json), [focused differential test](various/differential.json), and [whole guest workflows](various/guest.json)
 - [Baseline host workflows](various/baseline-replays.txt) and [candidate host workflows](various/candidate-replays.txt)
 
+- [Physical board first boot](../PICOCALC-RV32-STUDIES--independent-picocalc-compiler-studies-of-branch-lowering-and-output-lifetime/various/p4-first-boot.json), [repeat](../PICOCALC-RV32-STUDIES--independent-picocalc-compiler-studies-of-branch-lowering-and-output-lifetime/various/p4-replicate.json), and [Editor preview](../PICOCALC-RV32-STUDIES--independent-picocalc-compiler-studies-of-branch-lowering-and-output-lifetime/various/p4-branch-editor-preview.png)
+- [reMarkable cloud delivery receipt](various/remarkable-upload.txt)
+
 ## Status
 
 Current status: **active**

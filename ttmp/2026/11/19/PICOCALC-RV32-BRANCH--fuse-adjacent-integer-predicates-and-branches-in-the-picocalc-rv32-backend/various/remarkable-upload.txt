@@ -1,0 +1,4 @@
+Cached tree found; checking for remote changes (a full resync may still be needed).
+Synchronizing cloud tree… 0s | 0 HTTP responses, 0 active requests
+Cloud tree synchronized. 0s | 1 HTTP responses
+OK: uploaded PicoCalc RV32 Predicate Fusion Intern Guide.pdf -> /ai/2026/11/19/PICOCALC-RV32-BRANCH

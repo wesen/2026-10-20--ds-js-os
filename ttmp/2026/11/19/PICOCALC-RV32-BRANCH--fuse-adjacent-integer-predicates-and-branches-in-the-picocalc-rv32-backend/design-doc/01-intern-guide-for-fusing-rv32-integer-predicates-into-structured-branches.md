@@ -35,6 +35,36 @@ Use revision `6426798f69c691f5c1979233ebdeb540f8ce7c61`. In `picocalc-os/compile
 
 The previous depth-indexed register study reduced the three application images to 804 words for Files, 4,058 for Agenda, and 21,886 for Editor. It kept comparison results eager. The Scope A2 design proposes delayed comparison entries over a richer virtual stack. This experiment tests a narrower rule using the production depth-indexed implementation and adjacent frontend operations. The Scope A2 model includes lazy operand evaluation and has a different baseline. [Scope A tasks](../../PICOCALC-NATIVE-NEXT--a-smaller-rv32-backend-a-module-cache-safety-checks-and-await-for-typed-picocalc-worlds/design-doc/02-scope-a-an-rv32-backend-with-a-compile-time-operand-stack.md) · [Measured register baseline](../../PICOCALC-COMPILER-THESIS--cold-compilation-and-bounded-analyses-on-the-picocalc/various/reports/lowering.md).
 
+## Follow the compiler call path
+
+```text
+typed source                  shared reactor ELF
+     |                               |
+     v                               |
+typedWasm.compileFunctions           |
+     |                               |
+     v                               |
+FunctionCode.lower                   |
+     |                               |
+     v                               |
+image + entries + relocations        |
+     |                               |
+     +------> typedRv32.linkSlot <---+
+                    |
+                    v
+            loadable native world
+```
+
+| Source file | Entry points and their result |
+| --- | --- |
+| `picocalc-os/compiler/typed-wasm.js` | `typedWasm.compileFunctions(source, functionBase, imported, maxSourceLength, numericOperands, onFunction)` emits validated function descriptors and record layouts. `typedWasm.compile(source)` produces an executable Wasm module for the focused fixtures. |
+| `picocalc-os/compiler/typed-rv32.js` | `typedRv32.compile(source, imports, maxSourceLength, options)` emits an image with entry offsets, imports, relocation records and signatures. `typedRv32.linkSlot(program, reactor, entries)` returns a copy of the reactor ELF with entry stubs, call trampolines and generated code filled in. |
+| `picocalc-os/worlds/files/compile.js` | `compileFilesRv32(source, reactor, options)` validates the four Files exports and fills their reactor slot. |
+| `picocalc-os/worlds/agenda/compile.js` | `compileAgendaRv32(source, reactor, options)` validates the Task and EntryError layouts, checks the six Agenda exports and links the program. |
+| `picocalc-os/compiler/typed-world.js` | `compileTypedWorldRv32(source, reactor, options)` supplies the 28 SDK imports and validates the typed world ABI. Editor uses this entry point. |
+
+Read `FunctionCode.step` first to see the decoded instruction dispatch. Follow `begin`, `end`, and `branchTarget` for structured labels, then `pop` and `push` for layout. The candidate adds `fuseBranch` immediately before ordinary lowering of predicates.
+
 ## The equivalence to implement
 
 A comparison over two integers consumes both and produces one integer with value zero or one. The following conditional consumes that integer. When the two operations are adjacent, a direct RV32 comparison and branch has the same net effect on the operand stack and selects the same successor. For `if` the explicit jump takes the alternate path when the condition is false. For `br_if` it takes the label path when the condition is true. The branch emitter accepts the predicate for taking the jump. It emits the inverse as a local branch over an unconditional `jal zero,target`. This distinction matters because the opcode seen in the image is the inverse of the logical jump predicate. [WebAssembly execution semantics](https://www.w3.org/TR/wasm-core-2/#exec) · [RV32I control transfer](https://docs.riscv.org/reference/isa/unpriv/rv32.html#conditional-branches).
@@ -143,3 +173,31 @@ node "$ticket/scripts/08-worked-example.mjs" "$work/pair" "$P4_OBJDUMP"
 ```
 
 The constructor's expected baseline and candidate lowerer hashes begin `64d5c155` and `8cdf92a2`. Confirm the full [compiler hashes](../various/compiler-sha256.txt) and take a fresh matched measurement if any application source, SDK, reactor, VM support object, or compiler file differs. These checks establish mechanical fusion and application behavior over the captured workloads. A physical run can measure target compile time, peak runtime heap, and cycles separately.
+
+
+## Physical ESP32-P4 result
+
+The supervisor built one temporary firmware with the exact baseline and branch compiler bundles, the same Editor source bundle and reactor, and one fresh QuickJS runtime per cold invocation. Each treatment ran once in each position across four balanced blocks. The first boot produced these medians.
+
+| Measure | Baseline | Candidate | Candidate difference |
+| --- | ---: | ---: | ---: |
+| Cold Editor compile | 2,483,993 µs | 2,450,901.5 µs | −33,091.5 µs |
+| Peak accounted QuickJS heap | 1,410,878 B | 1,394,718 B | −16,160 B |
+| Linked Editor ELF | 240,452 B | 240,452 B | 0 B |
+
+The candidate completed faster in three of four paired blocks. The three winning differences were 31.421, 60.010 and 34.501 ms. The fourth was 12.148 ms slower. The colder compile effect is small relative to the variation in this sample. Timing includes reading the source and reactor, creating the compiler runtime and compiling, linking, and tearing down QuickJS. The allocator peak is the highest sum of accounted live QuickJS allocation sizes. The baseline and candidate hashes match separate host oracles built with the actual board reactor. [First boot receipt](../../PICOCALC-RV32-STUDIES--independent-picocalc-compiler-studies-of-branch-lowering-and-output-lifetime/various/p4-first-boot.json).
+
+The same firmware also executed the two directly linked versions of `filesCompare` on core 1 at 360 MHz. Both returned expected values and identical batch checksums. The exact symbol bytes were independently verified before the run. Each fixture used two warmup blocks followed by 16 alternating pairs of batches. A batch made 128 calls. The emitted function was 428 bytes in the baseline and 392 in the candidate.
+
+| Inputs | Median paired cycle reduction | Faster candidate blocks |
+| --- | ---: | ---: |
+| Two equal 91-unit names | 13.95% | 16/16 |
+| First mismatch at unit 91 | 13.96% | 16/16 |
+| Equal prefix of 71 units | 13.90% | 16/16 |
+| First-unit mismatch | 9.48% | 14/16 |
+| Directory ordering shortcut | 0.04% | 9/16 |
+
+The directory shortcut measured about 30 cycles per call and the baseline-versus-candidate order splits differ in sign. The first and last mismatch patterns exercise different iteration counts. These warm paired calls measure the native comparator on the specified inputs. The Files linked guest workflow has a different denominator that includes startup, other app operations and the reactor. [Independent board audit](../../PICOCALC-RV32-STUDIES--independent-picocalc-compiler-studies-of-branch-lowering-and-output-lifetime/various/examiner/board-first.json).
+
+
+An independent boot repeated the same four clean blocks and comparator batches. The repeat's cold medians were 2,463,364.5 → 2,461,632.5 µs. The median of within-pair savings fell from 32,961 µs on the first boot to 2,977.5 µs on the repeat. The candidate finished sooner in three of four pairs on each boot. Peak accounted QuickJS heap fell by 16,144 B at the median in the repeat. The long comparator reductions repeated at 13.96%, 13.96%, and 13.90% for equal, late mismatch, and equal prefix. The cold runtime effect varies substantially by boot. The roughly 16 KiB accounted peak reduction and approximately 13.9% cycle savings for the long comparator inputs persisted.
