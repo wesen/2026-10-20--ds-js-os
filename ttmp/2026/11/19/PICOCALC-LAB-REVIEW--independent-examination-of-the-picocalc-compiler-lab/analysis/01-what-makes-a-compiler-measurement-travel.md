@@ -1,7 +1,7 @@
 ---
 Title: An independent examination of four PicoCalc compiler experiments
 Ticket: PICOCALC-LAB-REVIEW
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: analysis
@@ -145,6 +145,23 @@ As a final check I changed the order of two required fields in the externally sp
 
 *The left panel holds the set of functions and the analysis budget fixed. The right compares two counts within each Editor edit. The layout edit rebuilt functions whose instructions stayed identical, while the signature edit changed calls in linked functions whose fragments were reused.*
 
+## Timing the first native call after an edit
+
+The on-board edit changed Files to accept a filename beginning with an underscore. The compiler emitted a complete 24,424-byte ELF. The lab used the normal ESP32-P4 ELF relocation code to load it and mapped its first entry stub to a native function pointer. Given the input `_Ab`, the stock Files function returned −1, rejecting the name. The edited function returned 3 and wrote the UTF-16 units 95, 65, 98. That verifies an observable change through the exact ELF whose hash was recorded.
+
+In the first physical protocol, the caller supplied a complete edited source string to an already initialized session. On two boots the median Files body rebuild took 40.73 and 40.56 ms before loading. Warm clean builds of the same revision took 106.16 and 106.49 ms. The four within-block time savings per boot had medians of 65.59 and 65.93 ms. Exact-source hits took about 1.06 ms. Checking and relinking already compiled fragments took about 32 ms. The frozen stock wrapper’s fresh-runtime Files medians were 238.49 and 238.31 ms. These three baselines distinguish retaining an entire ELF, reusing individual functions, and including compiler startup. On an 11-function fixture, repaired signature edits and record-layout edits each took roughly one millisecond longer under incremental compilation than under warm clean compilation. These physical edits and the independent 120-function Editor host audit cover different workloads.
+
+This first protocol times the rebuild, validates against a clean compile, reports a digest over a serial connection, and measures loading and execution separately. Its ELF loading medians of 1.495 and 1.522 ms and its 8.5 and 15 µs entry-call medians describe components. The oracle and logging occupy real elapsed time between them. The heap measurement has another subtlety. On two of four unmarked body builds per boot the clean oracle executes first and keeps its ELF live. Those candidate-peak medians were 533,466 and 533,464 bytes. When the candidate ran first they were 513,098 and 513,108. This approximately 20.4 KB order effect prevents attributing the shared-realm peak directly to the retained cache. [Independent two-boot audit](../various/edit-board.json)
+
+The supplemental protocol used separate, warmed QuickJS realms. Before timing, one arm seeded the fragment cache and the other completed a clean compile of the original source. Both already held the edited string. A single C clock started immediately before passing that string to the compiler and stopped immediately after the mapped native Files entry returned. It included compilation, ELF parsing and relocation, looking up the native entry, and calling it. Hashing, serial output and teardown followed the recorded return time. The same loader and verified edited ELF ran in both arms.
+
+| Continuous Files endpoint | Warm clean median | Incremental median | Median paired saving | Incremental change in request peak |
+| --- | ---: | ---: | ---: | ---: |
+| Boot 1, six paired blocks | 107.40 ms | 44.46 ms | 63.35 ms | +87,826 bytes |
+| Boot 2, six paired blocks | 106.82 ms | 43.43 ms | 63.54 ms | +87,818 bytes |
+
+All 12 pairs favored incremental compilation by 62.16–64.19 ms. Before the edited request, the seeded incremental realms already retained roughly 67.5 KB more QuickJS memory than their warm clean counterparts. The complete request’s live high-water also includes compiler scripts, current source and generated artifacts. The measurement establishes a faster response after a real Files policy edit in a session that pays this memory cost. It starts after the source text is available and stops before any user-facing application dispatch or screen update. There was no equivalent physical edit-to-entry trial on Editor. [Continuous endpoint audit](../various/endpoint.json)
+
 ## Grading a forecast in the right units
 
 The lab also gave two researchers the same numerical packet from a prior compiler study. It showed first-boot measurements of two changes in isolation. The respondents predicted their combined effect on a second boot whose results the supervisor already knew. Their answers were committed before grading. This was a masked retrospective test for the respondents. The scoring rule assigned equal weight to cold time and peak heap on three apps.
@@ -155,6 +172,6 @@ A point prediction and a causal explanation have different tests. The number of 
 
 ## What the experiments identify
 
-The cursor scanner gave the most reproducible clean time gain in the configurations tested. Its largest Editor boot median saved 315 ms and its peak grew on all four measured boots. Staged lowering demonstrated that Editor’s instructions and entry table fit inside 80 KiB, with a substantial standard-slot cold-time penalty. The bounded selector preserved the arithmetic opportunity on one unseen real app at a fraction of the charged work. It needed roughly 15 KB more peak heap than the production policy and lost all opportunity when an equally expensive but unproductive prefix exhausted its allowance. Incremental reuse reproduced the entire executable across real edits and showed where relocation and record-wide invalidation consume work even after parsing can be skipped.
+The cursor scanner gave the most reproducible clean time gain in the configurations tested. Its largest Editor boot median saved 315 ms and its peak grew on all four measured boots. Staged lowering demonstrated that Editor’s instructions and entry table fit inside 80 KiB, with a substantial standard-slot cold-time penalty. The bounded selector preserved the arithmetic opportunity on one unseen real app at a fraction of the charged work. It needed roughly 15 KB more peak heap than the production policy and lost all opportunity when an equally expensive but unproductive prefix exhausted its allowance. On Files the continuous edited-source-to-native-return trial saved 63 ms at about 88 KB greater request peak. The 120-function Editor host audit showed why call relocation and record-wide invalidation still consume work after parsing can be skipped.
 
 Each statement has a defined comparison, an artifact, a unit and an observation that could overturn it. Evaluating a new combination of these changes requires implementing and measuring that combination on the same pinned control. Effects from independent builds include different setup and overlapping live allocations. Adding their stopwatch savings or their peak deltas cannot qualify a joint cold-build target.

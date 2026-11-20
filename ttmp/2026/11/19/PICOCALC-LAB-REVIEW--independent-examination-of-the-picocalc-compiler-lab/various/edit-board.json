@@ -1,0 +1,122 @@
+{
+  "firmware": "cef741f93d6f0322ad8b619ed4d56db62856533fc44464bf463d01b345e9a0b9",
+  "scriptOffsets": {
+    "candidate/cases.js": 379700,
+    "candidate/files.js": 402976,
+    "candidate/incremental.js": 404384,
+    "candidate/rv32.js": 387132,
+    "candidate/wasm.js": 416964,
+    "candidate/world.js": 413264,
+    "stock/files.js": 336644,
+    "stock/files.typed": 558632,
+    "stock/rv32.js": 337872,
+    "stock/wasm.js": 353640,
+    "stock/world.js": 877232
+  },
+  "bootAudits": [
+    {
+      "rawLogSHA256": "5c9c9e80465191bcdf0e9d1fbbf39dd26b7360279b6c59f5f4ba4f6eaa2a4a5c",
+      "rows": 144,
+      "coldFilesUs": 238487.0,
+      "cases": {
+        "files-seed": {
+          "candidateUs": 119410.5,
+          "cleanUs": 105288.0,
+          "pairedSavedUs": -14211.5
+        },
+        "files-exact": {
+          "candidateUs": 1059.5,
+          "cleanUs": 105446.0,
+          "pairedSavedUs": 104436.5
+        },
+        "files-relink": {
+          "candidateUs": 32285.0,
+          "cleanUs": 104736.5,
+          "pairedSavedUs": 72356.0
+        },
+        "files-body": {
+          "candidateUs": 40731.5,
+          "cleanUs": 106159.0,
+          "pairedSavedUs": 65592.0,
+          "cleanFirst": {
+            "live": 501722.0,
+            "peak": 533466.0
+          },
+          "candidateFirst": {
+            "live": 481354.0,
+            "peak": 513098.0
+          },
+          "loaderUs": 1494.5,
+          "entryUs": 8.5
+        },
+        "fixture-body": {
+          "candidateUs": 35706.5,
+          "cleanUs": 36094.5,
+          "pairedSavedUs": 328.0
+        },
+        "fixture-signature": {
+          "candidateUs": 37534.5,
+          "cleanUs": 36234.0,
+          "pairedSavedUs": -1459.5
+        },
+        "fixture-layout": {
+          "candidateUs": 36995.0,
+          "cleanUs": 36244.5,
+          "pairedSavedUs": -800.0
+        }
+      }
+    },
+    {
+      "rawLogSHA256": "794b007804e6ff510f6b4b5cc7d05dfee9e29c5c4de0e881bf07bbcf965c1022",
+      "rows": 144,
+      "coldFilesUs": 238308.0,
+      "cases": {
+        "files-seed": {
+          "candidateUs": 119972.0,
+          "cleanUs": 105495.0,
+          "pairedSavedUs": -14520.5
+        },
+        "files-exact": {
+          "candidateUs": 1070.5,
+          "cleanUs": 105898.5,
+          "pairedSavedUs": 104834.5
+        },
+        "files-relink": {
+          "candidateUs": 32494.5,
+          "cleanUs": 105591.0,
+          "pairedSavedUs": 73096.5
+        },
+        "files-body": {
+          "candidateUs": 40558.0,
+          "cleanUs": 106486.5,
+          "pairedSavedUs": 65928.5,
+          "cleanFirst": {
+            "live": 501720.0,
+            "peak": 533464.0
+          },
+          "candidateFirst": {
+            "live": 481364.0,
+            "peak": 513108.0
+          },
+          "loaderUs": 1522.0,
+          "entryUs": 15.0
+        },
+        "fixture-body": {
+          "candidateUs": 36164.0,
+          "cleanUs": 36251.0,
+          "pairedSavedUs": 98.5
+        },
+        "fixture-signature": {
+          "candidateUs": 37644.0,
+          "cleanUs": 36487.5,
+          "pairedSavedUs": -1083.0
+        },
+        "fixture-layout": {
+          "candidateUs": 37567.0,
+          "cleanUs": 36588.5,
+          "pairedSavedUs": -880.0
+        }
+      }
+    }
+  ]
+}

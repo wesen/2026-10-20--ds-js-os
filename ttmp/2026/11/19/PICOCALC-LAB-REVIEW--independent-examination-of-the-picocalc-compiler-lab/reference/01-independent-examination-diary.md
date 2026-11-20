@@ -1,7 +1,7 @@
 ---
 Title: Independent examination diary
 Ticket: PICOCALC-LAB-REVIEW
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: reference
@@ -91,3 +91,17 @@ The boot series were sequential, so the median 18,741 µs timing change is a com
 The first on-board edit firmware, SHA-256 `72769ef41bf952e4fee37dd5e762404294cc30ec75b78c5e8dd1305d408053af`, compiled the Files seed to the expected 24,424-byte ELF but stopped before executing that seed. In the physical capture the ELF loader printed `Can't find common strcpy`, followed by `REBUILDERROR guest ELF load -88` and `REBUILDFAIL`. The physical receipt had zero accepted boots. I relayed the diagnostic to the supervisor and lane author and excluded the aborted series from timing and behavior claims.
 
 The normal world creates its resolver lazily in `native_elf_p4.c` via `elf_set_symbol_resolver(resolve)`. Reading the production loader’s symbol table showed its entry for `strcpy`. This explains why invoking the loader before the first normal world starts can fail even when the ELF is byte-identical to a healthy host artifact. The remedy belongs in the harness. The scheduled replacement should be identified by its own digest and must supply complete independent guest results. No transfer or board action was taken by the examiner.
+
+## Step 10 · Verify the corrected Files edits
+
+Firmware `cef741f93d6f0322ad8b619ed4d56db62856533fc44464bf463d01b345e9a0b9` used the production symbol resolver before exercising the normal ELF loader. The two restored boot series each supplied 144 case observations. With `scripts/10-edit-board.py` I checked every expected block, variant and fixture identity, revalidated the actual JS inputs and reactor against the firmware, compared diagnostics or ELF identity from each row to the stock oracle, and compared the numbers of rows and guest results against the stored raw logs. All Files edited entry values matched. The separate host-only Editor source and world interface are distinct from the real Files and synthetic-layout measurements on P4.
+
+The four unmarked Files body builds per boot saved medians of 65.592 and 65.929 ms against warm clean. Two clean-first cases on each boot measured roughly 20.4 KB higher peak than the candidate-first cases. The code retains the clean artifact through the candidate in that order. This cannot be subtracted as a precise estimate of retained cache cost. Oracle validation and serialized results lie outside the build stopwatch, and precede the separately measured native entry call. Startup, exact source hit and unchanged fragment relink received their own columns. Review `various/edit-board.json` rather than inferring interactions from individual median absolute times. The full streamed-control and candidate artifacts both generated the initial file hash, and the edited result returned three UTF-16 units for `_Ab`.
+
+## Step 11 · Verify the uninterrupted endpoint and publish the chapter
+
+The supplemental firmware `67773793a4645aaa0063c2dd7532d4222fdaee5b6a9738d67f255a38f17042ae` separates warm clean and incremental compilation into independently initialized realms. A single C timestamp precedes the call supplying the already prepared edited source. It ends immediately after the mapped native function returns, before module teardown, hashing or serial output. The normal resolver and executable-memory configuration are installed before measurement. The incremental branch checks its one rebuilt and six reused functions, and the harness validates the ELF and output after the clock. Realm creation, initial cache seeding, typing a source string, event dispatch and graphical refresh are outside this endpoint.
+
+I checked `scripts/11-endpoint.py` against both restored physical boots. Each boot supplies six complete position-balanced pairs. Every row emitted the independently verified edited ELF and returned 3 with units 95, 65, 98. Warm-clean versus incremental medians were 107.396 vs 44.459 ms, then 106.815 vs 43.435 ms. Median paired savings were 63.346 and 63.538 ms. Across all 12 pairs the saving was 62.157–64.192 ms. The absolute QuickJS peak was larger by 87,826 and 87,818 paired median bytes. Because the timestamps and cases are identical in the two arms this evidence directly addresses edited-source-to-first-call latency. Its target was Files. The actual 120-function Editor correctness experiment remains host-only.
+
+I finalized the independent analysis, generated and visually inspected its two-panel figure, checked relative references and the physical-source hashes, and prepared the self-contained vault edition with a source-reproduction table. Vault commit `d5b3ccc` contains only this article and figure. The vault push returned `cd90683..d5b3ccc  main -> main`. I sent the confirmed hash to the supervisor and incremental researcher. Final review starts with the independent article, then the receipt for each numerical claim. The preregistration, original masked forecasts, rejected seed guest and successful restored firmware remain distinguishable.

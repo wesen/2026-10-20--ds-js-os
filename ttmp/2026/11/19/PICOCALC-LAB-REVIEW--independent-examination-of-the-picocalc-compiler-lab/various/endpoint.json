@@ -1,0 +1,106 @@
+{
+  "firmware": "67773793a4645aaa0063c2dd7532d4222fdaee5b6a9738d67f255a38f17042ae",
+  "elf": "7be267e2787cf2767dc6b94cbc4c4589679d0f2cd5b57fdf11a3f18ca2bed9d9",
+  "boots": [
+    {
+      "logSHA256": "2a7033389dedc824baee9b8ce219324c4bbf542c318787530ba1faabd6e7e58a",
+      "metrics": {
+        "us": {
+          "clean": 107396.0,
+          "rebuild": 44458.5,
+          "pairedChange": -63346.0,
+          "pairRange": [
+            -63983,
+            -62157
+          ]
+        },
+        "before": {
+          "clean": 357272.0,
+          "rebuild": 424752.0,
+          "pairedChange": 67482.0,
+          "pairRange": [
+            67468,
+            67484
+          ]
+        },
+        "peak": {
+          "clean": 389448.0,
+          "rebuild": 477272.0,
+          "pairedChange": 87826.0,
+          "pairRange": [
+            87812,
+            87828
+          ]
+        },
+        "load_us": {
+          "clean": 1545.0,
+          "rebuild": 1635.5,
+          "pairedChange": 92.5,
+          "pairRange": [
+            64,
+            115
+          ]
+        },
+        "run_us": {
+          "clean": 8.0,
+          "rebuild": 6.5,
+          "pairedChange": -1.5,
+          "pairRange": [
+            -4,
+            4
+          ]
+        }
+      }
+    },
+    {
+      "logSHA256": "005f6d02a2a403c768b82b9dc03e089c954ba2f88d88d6d832e8eb09c56c3d36",
+      "metrics": {
+        "us": {
+          "clean": 106815.0,
+          "rebuild": 43434.5,
+          "pairedChange": -63538.0,
+          "pairRange": [
+            -64192,
+            -62647
+          ]
+        },
+        "before": {
+          "clean": 357270.0,
+          "rebuild": 424746.0,
+          "pairedChange": 67474.0,
+          "pairRange": [
+            67468,
+            67488
+          ]
+        },
+        "peak": {
+          "clean": 389446.0,
+          "rebuild": 477266.0,
+          "pairedChange": 87818.0,
+          "pairRange": [
+            87812,
+            87832
+          ]
+        },
+        "load_us": {
+          "clean": 1538.5,
+          "rebuild": 1646.0,
+          "pairedChange": 107.5,
+          "pairRange": [
+            96,
+            259
+          ]
+        },
+        "run_us": {
+          "clean": 7.0,
+          "rebuild": 5.0,
+          "pairedChange": -1.0,
+          "pairRange": [
+            -7,
+            85
+          ]
+        }
+      }
+    }
+  ]
+}
