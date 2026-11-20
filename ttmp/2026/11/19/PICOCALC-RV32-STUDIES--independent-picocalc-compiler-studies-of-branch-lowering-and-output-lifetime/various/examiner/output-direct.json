@@ -1,0 +1,93 @@
+{
+  "mode": "direct",
+  "revision": "6426798f69c691f5c1979233ebdeb540f8ce7c61",
+  "files": {
+    "compiler/typed-wasm.js": {
+      "source": "overlay",
+      "sha256": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2"
+    },
+    "compiler/typed-rv32.js": {
+      "source": "overlay",
+      "sha256": "dea15685d2dcc687269d02875d1a3d830172ad71b7b158ffb95483b501822aad"
+    },
+    "compiler/typed-world.js": {
+      "source": "overlay",
+      "sha256": "e89ab2d1def95c5331557c9e47875debab4a82b155ea31389dfbbfe885b4addf"
+    },
+    "worlds/files/compile.js": {
+      "source": "overlay",
+      "sha256": "cf267b4ad35142ebfc696610a87167cf301c0247b9a57a10efcc8f70f52a5339"
+    },
+    "worlds/agenda/compile.js": {
+      "source": "overlay",
+      "sha256": "8ce1bcd3b01b2666ed457950c7138073c42db734ee1585aa3af328fd44dd575f"
+    }
+  },
+  "apps": {
+    "Files": {
+      "sourceSHA256": "3bbb87fb4ee80409303ec0fd0e532711d374abdb27bc043a3e0ebea5fc73abd8",
+      "reactorSHA256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+      "linkedSHA256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+      "elfBytes": 24424,
+      "imageBytes": 3216,
+      "slabs": 1,
+      "unusedSlabBytes": 880,
+      "rawOutputs": [],
+      "objectArgumentByteArrayConstructions": 2,
+      "selected": "compileForSlot"
+    },
+    "Agenda": {
+      "sourceSHA256": "438502c20e00cc07b408776367317e11ba58f33f6c827b613db4b3094738cf18",
+      "reactorSHA256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+      "linkedSHA256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+      "elfBytes": 66364,
+      "imageBytes": 16232,
+      "slabs": 4,
+      "unusedSlabBytes": 152,
+      "rawOutputs": [],
+      "objectArgumentByteArrayConstructions": 5,
+      "selected": "compileForSlot"
+    },
+    "Editor": {
+      "sourceSHA256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+      "reactorSHA256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+      "linkedSHA256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "elfBytes": 240452,
+      "imageBytes": 87544,
+      "slabs": 22,
+      "unusedSlabBytes": 2568,
+      "rawOutputs": [],
+      "objectArgumentByteArrayConstructions": 23,
+      "selected": "compileForSlot"
+    }
+  },
+  "wide": {
+    "startWord": 1023,
+    "wordBoundary": 1024,
+    "inputSHA256": "ef32fcaf3a435e04b59b2a51e5929adcafb3439b0bd8dd3c4792c266b6a667cd",
+    "imageBytes": 14116,
+    "imageSHA256": "2b0dc2397fd5cdcc742c91d2487010a07eb1f53f2888b38115f414ed79aee9cb",
+    "functions": 143,
+    "imports": 132,
+    "relocations": 139
+  },
+  "fit": {
+    "capacity": 256,
+    "imageBytes": 116,
+    "linkedSHA256": "9657e8b45ada86781f1e02bd71e101e39652433efe26795b72e03bb157fa37cc"
+  },
+  "farSourceCodeUnits": 67847,
+  "diagnostics": {
+    "farOnly": "SyntaxError RV32 jump exceeds the instruction range",
+    "farBeforeABI": "SyntaxError RV32 supports up to eight register arguments",
+    "ABIBeforeFar": "SyntaxError RV32 supports up to eight register arguments",
+    "parseAfterFarAndABI": "SyntaxError 1:67973: expected i32, got bool",
+    "parseAfterABIAndFar": "SyntaxError 1:67973: expected i32, got bool",
+    "shortSlot": "SyntaxError RV32 program does not fit the reactor slot",
+    "lateGrammar": "SyntaxError 3:137: expected i32, got bool",
+    "badSignature": "SyntaxError Typed world requires typedWorldEvent(WorldEvent,WorldState,buffer,buffer): i32",
+    "badLayout": "SyntaxError Typed world requires the shared WorldEvent record",
+    "smallRuntime": "SyntaxError expected an ELF32 RISC-V ilp32f reactor",
+    "invalidFinalImport": "SyntaxError invalid RV32 runtime import trampoline"
+  }
+}

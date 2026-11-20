@@ -1,0 +1,75 @@
+---
+Title: Independent examination diary for branch lowering and output storage
+Ticket: PICOCALC-RV32-STUDIES
+DocType: reference
+Status: active
+Topics: [picocalc, native, performance]
+---
+
+# Independent examination diary
+
+## Step 1. Establish the reference and write the review plan
+
+I inspected both compilers at `6426798f69c691f5c1979233ebdeb540f8ce7c61`. A typed source comparison can produce either a boolean value or an immediate control decision. The existing emitter already uses both forms. A second change to output allocation could preserve both while damaging a call patched during linking. I chose independently observable outputs for each path before seeing the candidate implementations.
+
+### Prompt and scope
+
+The parent commissioned an independent examiner for the two studies, asked for runnable guest semantics and failure checks, and retained ownership of board experiments and synthesis. The authored thesis request is recorded in the [supervisor diary](01-supervisor-investigation-diary.md). I will limit repository changes to examiner files in this ticket.
+
+### Review plan
+
+1. Compile signed relations and boolean negation at comparison boundaries, including expression contexts in which a boolean must survive as a value. Execute at register-resident and spilled depths. Distinguish the return value from the count and order of side effects.
+2. Exercise a real unsigned comparison through string indexing with a negative position and at both sides of the limit. Require an emulator breakpoint for an expected RV32 trap and a RuntimeError for Wasm.
+3. Compare raw native images and metadata for the output experiment, including relocations in later functions and function names that also name JavaScript object properties. Compare complete linked output and caller input bytes through the public world compiler. Exercise exact-fit slots, truncated slots, and overlapping diagnostic categories.
+4. Check the order of frontend, lowerer, assembly, interface and slot diagnostics against the frozen compiler, including a local jump just outside the legal range. Retry a valid module in the same realm. Date/hash generated sources and evidence.
+5. Separate static machine bytes, executed guest instructions, host compilation time, retained representations, linked ELF size and board observations in the report. Reproduce the key performance mechanism using an independent observation wherever a second measurement is practical.
+
+### Why these boundaries
+
+`FunctionEmitter.statement` emits a loop as a block containing a loop, condition, `eqz`, conditional exit and back edge. `codeUnitAddress` emits an unsigned greater-or-equal guard before address calculation. `FunctionCode.branch` places an inverted short branch before a long jump. Neither a source-level truth table alone nor a count of emitted words checks which instruction executes.
+
+The frozen `compile` first parses the whole module, reports the first lowering error if parsing succeeded, then computes and resolves jumps. The complete-world wrapper validates program signatures and records before it asks the ELF slot linker to check its input. An intervention that moves this work forward can expose a different diagnostic on an otherwise identical source.
+
+### Evidence and open checks
+
+I read `picocalc-os/compiler/typed-{wasm,rv32,world}.js`, the previous examination's guest runner and the emulator's syscall handling. System call 10 returns the running guest instruction count. The emulator prints `ebreak at` on a generated trap. I found the locally built emulator and ESP GCC. The simulator and attached hardware remain with the supervisor.
+
+The principal review risks are a test that merely reimplements the lowered state machine and a host-allocation proxy described as a device peak. Real Wasm and compiled RV32 execution address the first. Candidate evidence and host-vs-device accounting will determine the second.
+
+## Step 2. Execute the generated instructions before assessing speed
+
+The guest suite produces one typed source module and uses the frozen Wasm frontend to produce an executable reference. A separate assembly driver calls the actual machine code with the same scalar inputs and equivalent native pointers. The register values used by the harness survive guest calls under the RISC-V calling convention. It checks that the stack pointer returns to its starting value on every normal call.
+
+I ran both implementations of 637 returning calls and six separate trap processes. Every return, record update, checked UTF-16 data word and expected trap agreed with Wasm. Summing identical instruction windows across the successful calls gives 41,051 for the baseline and 39,026 for fusion. The lowerer hashes in the receipts distinguish the implementations.
+
+### What I did and why
+
+The matrix crosses signed extrema, zero and unit values for each source-level comparison. A call in a short-circuit operand updates a count and ordered integer digest even when a subsequent boolean determines the return. The expression-depth cases put a min/max predicate beneath zero, four, five, six or eight live operands. The long conditional body performs 475 record updates on the taken arm. Valid and invalid operations read and write a three-unit buffer, including surrogate code units.
+
+Separate RV32 processes distinguish a generated breakpoint from a timeout or invalid guest access. The harness rejects a success exit from an expected trap and checks for the emulator's breakpoint message. Only returning calls contribute to the instruction sum. Counter system calls delimit the same handler, loads, indirect entry and return bookkeeping per input in both executables.
+
+### What failed and how it was resolved
+
+On the first run, Node 24.18.0 reported `Error: spawnSync git EPERM` while reading `6426798…:picocalc-os/compiler/typed-wasm.js`. The sandbox run exited 1. I reran the same read/compile/execute workload with approval for subprocess execution. Both baseline and candidate completed. I did not use the partial redirected file from the failed run.
+
+### Replay and verification
+
+From the repo root use the compiler driver in `scripts/examiner/guest.mjs`. Pass the ESP GCC executable, the CJI emulator executable, a label and optionally the generated lane directory from the branch ticket. The raw receipts are `various/examiner/guest-{baseline,branch}.json`. The emitted-source fixture and oracle output digests identify the common input and result.
+
+The frame-saving cases depend on an independent Wasm execution of the same source. A frontend mistake shared by both backends can escape this comparison. The test separately demands Wasm runtime traps on the six invalid accesses and checks expected locations of ordinary effects through returned/memory values. Application interactions belong to the application replays. These synthetic inputs were chosen to expose control-flow mistakes.
+
+## Step 3. Cross a slab boundary inside a two-instruction patch
+
+I generated legal source padding until a function began at word 1,023. Its two prologue placeholders land in different 1,024-word slabs. The same module calls local functions and imported functions above index 127. Both output modes matched all original image bytes, function entries, signatures, record fields and relocation offsets under default, explicit streaming and buffered operation. I retained the returned images during subsequent compilations and compared them again afterward.
+
+### Public entry points and diagnostics
+
+Three actual wrappers linked a real Files, Agenda and Editor template with a nonzero input view offset. Both candidates returned identical full ELFs and preserved the caller's entire input including sentinel bytes around the view. Tracking numeric byte-array constructions identified one raw buffer per compact compilation (3,216, 16,232 and 87,544 bytes) and none per direct compilation. Separate word-array tracing counted all 4,096-byte slabs. The observer reports object-argument byte-array constructors separately because some merely create a view over an existing backing store.
+
+A 116-byte two-entry program fit a 256-byte synthetic slot exactly. The next smaller aligned capacity, 252, produced the pinned fit diagnostic. One 67,847-code-unit function expands UTF-16 literal stores into more than a megabyte of control span. I paired its failed jump with a nine-parameter function and a trailing type error to test three error phases in every relevant order. I also combined a short/malformed runtime with invalid application signatures. All 11 selected diagnostics agreed with the frozen compiler, including the late type-error position.
+
+### Replay, uncertainty and review
+
+Use `scripts/examiner/output.mjs compact|direct CANDIDATE_DIR REACTOR_DIR` with the generated variants and all three reactor templates. `output-{compact,direct}.json` names template and result digests. The explicit source allowance in the far-jump test is 128 Ki code units. This is a backend diagnostic exercise using the public limit parameter. The actual app wrappers keep their own limits.
+
+A missing intermediate allocation is directly observable. Whether that allocation overlapped the maximum simultaneous live bytes needs allocator data. The phase and uninstrumented cold-run comparison are the remaining evidence for this question. The real reactor ELF bytes here have their own hashes. A separate reactor build can have a different linked-file hash even for the same raw instruction image.

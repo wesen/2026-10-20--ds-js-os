@@ -1,0 +1,106 @@
+{
+  "label": "baseline",
+  "revision": "6426798f69c691f5c1979233ebdeb540f8ce7c61",
+  "options": {},
+  "files": {
+    "compiler/typed-wasm.js": {
+      "source": "frozen",
+      "sha256": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2"
+    },
+    "compiler/typed-rv32.js": {
+      "source": "frozen",
+      "sha256": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+    },
+    "compiler/typed-world.js": {
+      "source": "frozen",
+      "sha256": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "worlds/files/compile.js": {
+      "source": "frozen",
+      "sha256": "dc82ece5c9c6f65b4ed3db2b9c742e14463fafc7a6df528c15e356021611103a"
+    },
+    "worlds/agenda/compile.js": {
+      "source": "frozen",
+      "sha256": "52a85f626fc93e33641d7ef3a7452c2b7d94b0163edcb7fca6fdef1c270fcecd"
+    }
+  },
+  "sourceSHA256": "e98163c143674711d096510d1fbb2a0042405d3376c305a93029556f14ad892e",
+  "imageBytes": 16140,
+  "imageSHA256": "ce2ea67221b6ad12ea427b17a78f1c5c3169ab66c6a92c9018b31212930ee950",
+  "emulatorSHA256": "ea32f0af6dae46cd1b12bf94300e08dee4c38c3b79d05e3d4190518c248afb31",
+  "gcc": "14.2.0",
+  "returned": 637,
+  "traps": [
+    [
+      "units",
+      -1
+    ],
+    [
+      "units",
+      3
+    ],
+    [
+      "units",
+      -2147483648
+    ],
+    [
+      "shortGuard",
+      3
+    ],
+    [
+      "write",
+      3
+    ],
+    [
+      "write",
+      -1
+    ]
+  ],
+  "resultsSHA256": "b58c59f2d984617d0d2ed0150bcb3b6581b601318492d97da8d5206a8e5e141d",
+  "totals": {
+    "armeq": 690,
+    "loopeq": 1530,
+    "nestedeq": 1830,
+    "valueeq": 920,
+    "armlt": 655,
+    "looplt": 2205,
+    "nestedlt": 1760,
+    "valuelt": 1090,
+    "armgt": 655,
+    "loopgt": 2205,
+    "nestedgt": 1760,
+    "valuegt": 1090,
+    "armle": 670,
+    "loople": 2990,
+    "nestedle": 1790,
+    "valuele": 1310,
+    "armge": 670,
+    "loopge": 2990,
+    "nestedge": 1790,
+    "valuege": 1310,
+    "depth0": 725,
+    "depth4": 1175,
+    "depth5": 1575,
+    "depth6": 1875,
+    "depth8": 2475,
+    "units": 102,
+    "shortGuard": 163,
+    "write": 150,
+    "far": 2901
+  },
+  "example": {
+    "inputs": {
+      "name": "armeq",
+      "x": -2147483648,
+      "y": -2147483648
+    },
+    "output": [
+      19,
+      0,
+      7,
+      3627286593,
+      56606
+    ],
+    "timedInstructionsIncludingHarness": 26
+  }
+}
