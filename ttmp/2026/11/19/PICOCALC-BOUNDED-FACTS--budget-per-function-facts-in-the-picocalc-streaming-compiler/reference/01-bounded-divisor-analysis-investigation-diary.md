@@ -426,3 +426,63 @@ The supervisor ran the physical trials in two boots. I independently validated a
 
 - The physical measurement firmware used native streamed compilation at 360 MHz. Each boot recorded six matched compile blocks and 16 matched guest blocks per operation.
 - `various/board-timing.json` holds the structured supervisor receipt for 108 builds and 192 guest timing rows. It includes compiler and output hashes.
+
+## Step 8. Replay the exact Select Editor and publish
+
+The supervisor selected the candidate for Editor’s normal startup. I checked that the loaded module SHA-256 matched the held-out Select oracle and that the module had the expected 240,452 bytes. Editor opened the 65,536-byte formatted Markdown fixture, moved one page in preview, produced two reference-matching captures outside the clock, and removed the scratch document without a fault. I independently checked that the restored Files, Agenda and Editor were native and reported no errors.
+
+### Prompt Context
+
+**User prompt:** See Step 1. Deliver the complete physical study and a newcomer-facing article in the user’s Obsidian vault.
+
+**Commit (timing):** `bd6fc9e` — Measure bounded-analysis policies on the physical PicoCalc.
+
+### What I did
+
+- Verified the installed module SHA-256 against the held-out record. Cross-checked both screenshot hashes and the live preview result. Preserved the structured receipt in `various/board-preview.json`.
+- Verified restored native status from the structured world report. Kept the one-off replay separate from the two paired timing boots.
+- Published the article under `Projects/2026/11/19/ARTICLE - PicoCalc Compiler - When a Handheld Compiler Needs More Facts.md` in go-go-parc. The vault commit is `16a68eb`, pushed to `main`.
+
+### Why
+
+- Timed compiler success validates emitted bytes. Booting the exact candidate and driving preview validates a runtime path with the ordinary device loader, view buffer and display.
+- The vault article preserves the technical explanation, quantitative results and independent budget counterexample in one place.
+
+### What worked
+
+- The confirmed Select digest was `06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944`.
+- Both framebuffer differences were confined to `[548,10,626,30]` in the status clock, the scratch was removed, and there were zero recorded faults.
+- Git accepted `git push origin 16a68eb:refs/heads/main` in the vault. The push advanced its remote from `0f27aa9`.
+
+### What didn't work
+
+- The first local verification used the wrong restore log filename and raised `FileNotFoundError`. Its actual `restore-health.log` starts with raw UART bytes, so reading the entire file as UTF-8 also raised `UnicodeDecodeError`. I extracted only the structured native status line from the byte stream.
+
+### What I learned
+
+- The preview checks a complete workflow that exercises the modified app under the trusted native loader. The paired compile and calendar-cycle receipts answer separate timing questions.
+- The experiment’s supported transfer claims concern one held-out app, its emitted words, and the particular selector and caps used in the study.
+
+### What was tricky to build
+
+- The same selector and arithmetic proof must be installed for the ordinary application replay. Checking only the candidate filename or the configured policy would leave that unresolved.
+- The report includes the explicit distinction between generation of a smaller instruction stream and the unchanged preallocated ELF size.
+
+### What warrants a second pair of eyes
+
+- Compare the candidate SHA-256 and two screenshot checks to the held-out host and board receipts. Confirm both restores were reported.
+- See the independent source-order fixture before interpreting the held-out result as a general profitability predictor.
+
+### What should be done in the future
+
+- A narrower literal-only comparison would isolate the cost and additional opportunities of keeping local facts. The observed shipped-app proof sites were all literals.
+
+### Code review instructions
+
+- Start with the committed held-out prediction, then compare `various/host-editor.json`, `various/board-summary.json` and `various/board-preview.json`.
+- The vault article lives at `go-go-parc/Projects/2026/11/19/ARTICLE - PicoCalc Compiler - When a Handheld Compiler Needs More Facts.md`.
+
+### Technical details
+
+- Physical preview input was 65,536 bytes with formatted Markdown. The tested native world reported 710.1 KiB of memory under its 768 KiB limit.
+- Both capture checks passed against the opened reference image and the tracked post-restore worlds returned empty error strings.

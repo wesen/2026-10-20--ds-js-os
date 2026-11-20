@@ -19,3 +19,11 @@ Open the held-out Editor app and validate returned arithmetic results, traps, wo
 ## 2026-11-19
 
 Verify physical cold time, QuickJS peak, ELF hashes and guest cycles over two order-balanced boots.
+
+## 2026-11-19
+
+Verify the exact Select Editor image on the full 64 KiB preview and publish the complete article in the vault.
+
+## 2026-11-19
+
+Complete the bounded-analysis experiment, physical qualification and vault publication.
