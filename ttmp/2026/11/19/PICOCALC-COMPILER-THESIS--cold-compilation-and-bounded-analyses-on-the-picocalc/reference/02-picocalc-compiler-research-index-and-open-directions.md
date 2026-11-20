@@ -25,6 +25,8 @@ WhenToUse: Before selecting a compiler research question or interpreting an earl
 
 As of **19 November 2026**, the lab has two lines of compiler work. **CJI** compiles ordinary JavaScript using whole-program inference. The **typed compiler** checks a smaller JS-like language and emits Wasm or RV32 native code. The OS also runs QuickJS, which provides a bytecode baseline and executes the typed compiler itself. A result about one of these compilers does not automatically transfer to another. On the typed native path, streaming is the default at `7677932`. The physical Editor baseline for that algorithm is **2.452 s and 1,410,844 bytes peak QuickJS allocation**. [Production measurements](../../PICOCALC-COMPILER-INTEGRATION--integrate-qualified-compiler-optimizations-into-the-picocalc-toolchain/various/production-p4.json) · [Current compiler contract](../../PICOCALC-COMPILER-INTEGRATION--integrate-qualified-compiler-optimizations-into-the-picocalc-toolchain/design-doc/01-production-integration-of-the-typed-compiler-optimizations.md)
 
+The independent RV32 studies use the streamed production compiler at `6426798` as their control. The program includes a physical compile and execution experiment, instruction selection for adjacent predicates, and memory use during output assembly. [PICOCALC-RV32-STUDIES](../../PICOCALC-RV32-STUDIES--independent-picocalc-compiler-studies-of-branch-lowering-and-output-lifetime/index.md) · [PICOCALC-RV32-BRANCH](../../PICOCALC-RV32-BRANCH--fuse-adjacent-integer-predicates-and-branches-in-the-picocalc-rv32-backend/index.md) · [PICOCALC-RV32-OUTPUT](../../PICOCALC-RV32-OUTPUT--write-streamed-picocalc-rv32-output-into-compact-buffers/index.md)
+
 ## Where to start
 
 | If you want to know… | Open this first |
