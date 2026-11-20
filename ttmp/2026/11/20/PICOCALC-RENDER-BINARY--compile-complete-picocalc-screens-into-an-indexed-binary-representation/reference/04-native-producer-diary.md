@@ -1,7 +1,7 @@
 ---
 Title: Native producer and complete-route investigation diary
 Ticket: PICOCALC-RENDER-BINARY
-Status: active
+Status: complete
 Topics: [picocalc]
 DocType: reference
 Intent: long-term
@@ -114,3 +114,51 @@ Review scripts/producer/heap.c, host.c and summarize.py along with results/alloc
 ### Technical details
 
 The 64-bit host has sizeof(cJSON)=64 and an 8-byte pointer. B’s explicit dictionary and field-array scratch costs in fixture order are 1,176, 608, 640 and 392 bytes. The board's 32-bit pointer width halves those specific requests. Repeated lookup/paint costs and the entire application pipeline are separate endpoints.
+
+## Step 3. Verify the physical end-to-end stage and hand the evidence to Opus
+
+The director supplied seven rotating P4 blocks for all eight arms. I checked the measurements against the already committed host outputs, placed the full native-producer evidence inside the child study, and sent both the positive route result and the sender-only loss to the principal researcher for the joint article.
+
+### Prompt Context
+
+See Step 1. The user asks whether this format can help the other groups skip JSON. The relevant issue is whether the improvement persists after *both* endpoints pay their measured costs.
+
+### What I did
+
+Ran scripts/producer/qualify-board.py against /tmp/pico-render-board-05/physical.json. It checks 56 unique block/arm pairs, eight repetitions per pair, all lengths and wire hashes against independent host records, exact addition of timed stages, and matched late and full scene witnesses. Stored the cells and paired calculations in scripts/producer/results/physical.json. Wrote scripts/producer/physical-appendix.md and sent the conclusion to the director and the group’s Opus author. The existing native source and host commit is 6dbecbb.
+
+### Why
+
+Pairing prevents clock or load changes between blocks from masquerading as representation gains. Distinct source and receiving ownership force the binary trial to pay for its immutable retained copy. Each paint backend still needs an integration experiment.
+
+### What worked
+
+All 56 cells passed and all 448 publications validated. Median total G/B milliseconds per screen were 5.175/1.484 (System), 16.915/2.027 (Chess), 2.619/0.525 (Snake) and 14.021/1.703 (Editor). Across the seven pairs, B/G ranges were 0.286–0.287, 0.119–0.120, 0.193–0.203 and 0.120–0.122 respectively.
+
+### What didn't work
+
+The standalone native binary encoder lost on all four P4 fixtures. For example, System rose from 525 to 1,328 µs per complete encoding. A live production migration based on sender-only savings would fail even on this matched neutral input.
+
+### What I learned
+
+The receiver’s allocation and release change the route result. Binary replaced an expensive materializing parse with validation over one retained buffer. A late lookup can itself become slightly slower and still be consistent with a much faster complete route.
+
+### What was tricky to build
+
+Both a late witness and a full screen witness are verified without secretly parsing again. Only the late access is priced here. The expensive full verification and wire comparison are out-of-band, and the measured release follows them. Each printed route sum equals encode + admit + late lookup + release exactly.
+
+### What warrants a second pair of eyes
+
+Review the endpoint with the application teams: these numbers require an already resident cJSON tree and native receiver; current JS or serialized producers do not satisfy that assumption automatically. The group's independent paint and view data have different timing boundaries.
+
+### What should be done in the future
+
+Use the director's application handoff in PICOCALC-RENDER-LAB/reference/03-how-application-researchers-can-evaluate-the-binary-screen-api.md to select one native integration. Include state construction or direct emission, owned publication, replay, real paint and a complete end-to-end comparison. Keep the JS evidence separate.
+
+### Code review instructions
+
+Read the physical appendix beside results/physical.json and run python3 -B scripts/producer/qualify-board.py on a full director receipt. The group author received the verified medians and scope limits as soon as the last pair arrived.
+
+### Technical details
+
+The experiment firmware SHA-256 is f8af1bbfd4478e569824512b18017d908217672f87c1ce37b342375cb7162e0d. The parent director owns verification and restoration of the everyday firmware. The child has no serial-device access.

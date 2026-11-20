@@ -1,0 +1,1235 @@
+{
+  "sourceFirmwareSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "experimentFirmwareSha256": "f8af1bbfd4478e569824512b18017d908217672f87c1ce37b342375cb7162e0d",
+  "board": "ESP32-P4",
+  "blocks": 7,
+  "repsPerBlock": 8,
+  "summaries": {
+    "sysmon": {
+      "G": {
+        "bytes": 1919,
+        "wireHash": 1035267114,
+        "medianUsPerScreen": {
+          "encodeUs": 525.0,
+          "admitUs": 3660.375,
+          "lookupUs": 16.625,
+          "releaseUs": 972.75,
+          "routeUs": 5174.625
+        }
+      },
+      "B": {
+        "bytes": 1850,
+        "wireHash": 2571018171,
+        "medianUsPerScreen": {
+          "encodeUs": 1328.0,
+          "admitUs": 125.0,
+          "lookupUs": 19.25,
+          "releaseUs": 6.5,
+          "routeUs": 1483.625
+        }
+      },
+      "blocks": 7,
+      "medianPairedRouteBOverG": 0.2865903713361341,
+      "pairedRouteSavingUs": [
+        3691.5,
+        3695.625,
+        3692.125,
+        3693.5,
+        3693.375,
+        3687.125,
+        3693.75
+      ],
+      "medianPairedRouteSavingUs": 3693.375,
+      "rangeBOverG": [
+        0.2855588597954595,
+        0.2874604439935261
+      ]
+    },
+    "snake": {
+      "B": {
+        "bytes": 766,
+        "wireHash": 2766474524,
+        "medianUsPerScreen": {
+          "encodeUs": 445.125,
+          "admitUs": 63.875,
+          "lookupUs": 9.0,
+          "releaseUs": 6.375,
+          "routeUs": 524.625
+        }
+      },
+      "G": {
+        "bytes": 758,
+        "wireHash": 1841395799,
+        "medianUsPerScreen": {
+          "encodeUs": 359.125,
+          "admitUs": 1840.75,
+          "lookupUs": 7.125,
+          "releaseUs": 416.0,
+          "routeUs": 2618.875
+        }
+      },
+      "blocks": 7,
+      "medianPairedRouteBOverG": 0.20044894450281783,
+      "pairedRouteSavingUs": [
+        2093.625,
+        2094.25,
+        2088.625,
+        2119.375,
+        2086.5,
+        2092.625,
+        2106.125
+      ],
+      "medianPairedRouteSavingUs": 2093.625,
+      "rangeBOverG": [
+        0.19277280517996573,
+        0.20288406624785837
+      ]
+    },
+    "chess": {
+      "G": {
+        "bytes": 3443,
+        "wireHash": 1054538192,
+        "medianUsPerScreen": {
+          "encodeUs": 1816.0,
+          "admitUs": 13117.25,
+          "lookupUs": 12.625,
+          "releaseUs": 1968.5,
+          "routeUs": 16914.75
+        }
+      },
+      "B": {
+        "bytes": 2761,
+        "wireHash": 540532891,
+        "medianUsPerScreen": {
+          "encodeUs": 1849.625,
+          "admitUs": 161.5,
+          "lookupUs": 9.375,
+          "releaseUs": 6.875,
+          "routeUs": 2027.375
+        }
+      },
+      "blocks": 7,
+      "medianPairedRouteBOverG": 0.11991854868567198,
+      "pairedRouteSavingUs": [
+        15000.25,
+        14889.5,
+        14895.0,
+        14874.75,
+        14881.5,
+        14856.875,
+        14868.375
+      ],
+      "medianPairedRouteSavingUs": 14881.5,
+      "rangeBOverG": [
+        0.11906387414568972,
+        0.12020573759588525
+      ]
+    },
+    "editor": {
+      "B": {
+        "bytes": 2572,
+        "wireHash": 3886497504,
+        "medianUsPerScreen": {
+          "encodeUs": 1522.375,
+          "admitUs": 148.25,
+          "lookupUs": 21.875,
+          "releaseUs": 6.625,
+          "routeUs": 1703.125
+        }
+      },
+      "G": {
+        "bytes": 3105,
+        "wireHash": 1228237125,
+        "medianUsPerScreen": {
+          "encodeUs": 1438.125,
+          "admitUs": 10858.875,
+          "lookupUs": 19.375,
+          "releaseUs": 1709.25,
+          "routeUs": 14021.125
+        }
+      },
+      "blocks": 7,
+      "medianPairedRouteBOverG": 0.12137219619091735,
+      "pairedRouteSavingUs": [
+        12460.0,
+        12337.875,
+        12324.25,
+        12317.0,
+        12294.625,
+        12329.125,
+        12303.875
+      ],
+      "medianPairedRouteSavingUs": 12324.25,
+      "rangeBOverG": [
+        0.1198311714686846,
+        0.12216401782299736
+      ]
+    }
+  },
+  "runs": [
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "encodeUs": 4223,
+        "admitUs": 29283,
+        "lookupUs": 133,
+        "releaseUs": 7777,
+        "routeUs": 41416,
+        "binaryScratchBytes": 0,
+        "wireHash": 1035267114,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "encodeUs": 10686,
+        "admitUs": 999,
+        "lookupUs": 143,
+        "releaseUs": 56,
+        "routeUs": 11884,
+        "binaryScratchBytes": 588,
+        "wireHash": 2571018171,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "encodeUs": 3621,
+        "admitUs": 517,
+        "lookupUs": 72,
+        "releaseUs": 53,
+        "routeUs": 4263,
+        "binaryScratchBytes": 320,
+        "wireHash": 2766474524,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "encodeUs": 2905,
+        "admitUs": 14726,
+        "lookupUs": 57,
+        "releaseUs": 3324,
+        "routeUs": 21012,
+        "binaryScratchBytes": 0,
+        "wireHash": 1841395799,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "encodeUs": 14547,
+        "admitUs": 105894,
+        "lookupUs": 112,
+        "releaseUs": 15668,
+        "routeUs": 136221,
+        "binaryScratchBytes": 0,
+        "wireHash": 1054538192,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "encodeUs": 14797,
+        "admitUs": 1292,
+        "lookupUs": 75,
+        "releaseUs": 55,
+        "routeUs": 16219,
+        "binaryScratchBytes": 304,
+        "wireHash": 540532891,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "encodeUs": 12175,
+        "admitUs": 1184,
+        "lookupUs": 159,
+        "releaseUs": 53,
+        "routeUs": 13571,
+        "binaryScratchBytes": 196,
+        "wireHash": 3886497504,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativeprod",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "encodeUs": 11581,
+        "admitUs": 87851,
+        "lookupUs": 156,
+        "releaseUs": 13663,
+        "routeUs": 113251,
+        "binaryScratchBytes": 0,
+        "wireHash": 1228237125,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "encodeUs": 3568,
+        "admitUs": 509,
+        "lookupUs": 75,
+        "releaseUs": 45,
+        "routeUs": 4197,
+        "binaryScratchBytes": 320,
+        "wireHash": 2766474524,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "encodeUs": 2894,
+        "admitUs": 14673,
+        "lookupUs": 50,
+        "releaseUs": 3334,
+        "routeUs": 20951,
+        "binaryScratchBytes": 0,
+        "wireHash": 1841395799,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "encodeUs": 14549,
+        "admitUs": 104958,
+        "lookupUs": 118,
+        "releaseUs": 15753,
+        "routeUs": 135378,
+        "binaryScratchBytes": 0,
+        "wireHash": 1054538192,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "encodeUs": 14845,
+        "admitUs": 1289,
+        "lookupUs": 73,
+        "releaseUs": 55,
+        "routeUs": 16262,
+        "binaryScratchBytes": 304,
+        "wireHash": 540532891,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "encodeUs": 12173,
+        "admitUs": 1196,
+        "lookupUs": 314,
+        "releaseUs": 53,
+        "routeUs": 13736,
+        "binaryScratchBytes": 196,
+        "wireHash": 3886497504,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "encodeUs": 11536,
+        "admitUs": 87073,
+        "lookupUs": 156,
+        "releaseUs": 13674,
+        "routeUs": 112439,
+        "binaryScratchBytes": 0,
+        "wireHash": 1228237125,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "encodeUs": 4200,
+        "admitUs": 29288,
+        "lookupUs": 125,
+        "releaseUs": 7782,
+        "routeUs": 41395,
+        "binaryScratchBytes": 0,
+        "wireHash": 1035267114,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativeprod",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "encodeUs": 10625,
+        "admitUs": 1005,
+        "lookupUs": 148,
+        "releaseUs": 52,
+        "routeUs": 11830,
+        "binaryScratchBytes": 588,
+        "wireHash": 2571018171,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "encodeUs": 14553,
+        "admitUs": 104978,
+        "lookupUs": 97,
+        "releaseUs": 15748,
+        "routeUs": 135376,
+        "binaryScratchBytes": 0,
+        "wireHash": 1054538192,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "encodeUs": 14787,
+        "admitUs": 1292,
+        "lookupUs": 78,
+        "releaseUs": 59,
+        "routeUs": 16216,
+        "binaryScratchBytes": 304,
+        "wireHash": 540532891,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "encodeUs": 12154,
+        "admitUs": 1182,
+        "lookupUs": 184,
+        "releaseUs": 55,
+        "routeUs": 13575,
+        "binaryScratchBytes": 196,
+        "wireHash": 3886497504,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "encodeUs": 11505,
+        "admitUs": 86871,
+        "lookupUs": 147,
+        "releaseUs": 13646,
+        "routeUs": 112169,
+        "binaryScratchBytes": 0,
+        "wireHash": 1228237125,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "encodeUs": 4180,
+        "admitUs": 29311,
+        "lookupUs": 136,
+        "releaseUs": 7779,
+        "routeUs": 41406,
+        "binaryScratchBytes": 0,
+        "wireHash": 1035267114,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "encodeUs": 10637,
+        "admitUs": 999,
+        "lookupUs": 183,
+        "releaseUs": 50,
+        "routeUs": 11869,
+        "binaryScratchBytes": 588,
+        "wireHash": 2571018171,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "encodeUs": 3554,
+        "admitUs": 511,
+        "lookupUs": 70,
+        "releaseUs": 55,
+        "routeUs": 4190,
+        "binaryScratchBytes": 320,
+        "wireHash": 2766474524,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativeprod",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "encodeUs": 2819,
+        "admitUs": 14713,
+        "lookupUs": 42,
+        "releaseUs": 3325,
+        "routeUs": 20899,
+        "binaryScratchBytes": 0,
+        "wireHash": 1841395799,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "encodeUs": 12193,
+        "admitUs": 1186,
+        "lookupUs": 162,
+        "releaseUs": 50,
+        "routeUs": 13591,
+        "binaryScratchBytes": 196,
+        "wireHash": 3886497504,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "encodeUs": 11524,
+        "admitUs": 86779,
+        "lookupUs": 160,
+        "releaseUs": 13664,
+        "routeUs": 112127,
+        "binaryScratchBytes": 0,
+        "wireHash": 1228237125,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "encodeUs": 4225,
+        "admitUs": 29278,
+        "lookupUs": 133,
+        "releaseUs": 7782,
+        "routeUs": 41418,
+        "binaryScratchBytes": 0,
+        "wireHash": 1035267114,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "encodeUs": 10607,
+        "admitUs": 995,
+        "lookupUs": 210,
+        "releaseUs": 58,
+        "routeUs": 11870,
+        "binaryScratchBytes": 588,
+        "wireHash": 2571018171,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "encodeUs": 3515,
+        "admitUs": 428,
+        "lookupUs": 56,
+        "releaseUs": 50,
+        "routeUs": 4049,
+        "binaryScratchBytes": 320,
+        "wireHash": 2766474524,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "encodeUs": 2873,
+        "admitUs": 14730,
+        "lookupUs": 63,
+        "releaseUs": 3338,
+        "routeUs": 21004,
+        "binaryScratchBytes": 0,
+        "wireHash": 1841395799,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "encodeUs": 14480,
+        "admitUs": 104872,
+        "lookupUs": 98,
+        "releaseUs": 15733,
+        "routeUs": 135183,
+        "binaryScratchBytes": 0,
+        "wireHash": 1054538192,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativeprod",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "encodeUs": 14758,
+        "admitUs": 1296,
+        "lookupUs": 77,
+        "releaseUs": 54,
+        "routeUs": 16185,
+        "binaryScratchBytes": 304,
+        "wireHash": 540532891,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "encodeUs": 4181,
+        "admitUs": 29270,
+        "lookupUs": 129,
+        "releaseUs": 7785,
+        "routeUs": 41365,
+        "binaryScratchBytes": 0,
+        "wireHash": 1035267114,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "encodeUs": 10620,
+        "admitUs": 1000,
+        "lookupUs": 148,
+        "releaseUs": 50,
+        "routeUs": 11818,
+        "binaryScratchBytes": 588,
+        "wireHash": 2571018171,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "encodeUs": 3558,
+        "admitUs": 516,
+        "lookupUs": 73,
+        "releaseUs": 53,
+        "routeUs": 4200,
+        "binaryScratchBytes": 320,
+        "wireHash": 2766474524,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "encodeUs": 2808,
+        "admitUs": 14731,
+        "lookupUs": 46,
+        "releaseUs": 3307,
+        "routeUs": 20892,
+        "binaryScratchBytes": 0,
+        "wireHash": 1841395799,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "encodeUs": 14528,
+        "admitUs": 104938,
+        "lookupUs": 95,
+        "releaseUs": 15757,
+        "routeUs": 135318,
+        "binaryScratchBytes": 0,
+        "wireHash": 1054538192,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "encodeUs": 14847,
+        "admitUs": 1296,
+        "lookupUs": 67,
+        "releaseUs": 56,
+        "routeUs": 16266,
+        "binaryScratchBytes": 304,
+        "wireHash": 540532891,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "encodeUs": 12245,
+        "admitUs": 1191,
+        "lookupUs": 169,
+        "releaseUs": 55,
+        "routeUs": 13660,
+        "binaryScratchBytes": 196,
+        "wireHash": 3886497504,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativeprod",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "encodeUs": 11503,
+        "admitUs": 86662,
+        "lookupUs": 155,
+        "releaseUs": 13697,
+        "routeUs": 112017,
+        "binaryScratchBytes": 0,
+        "wireHash": 1228237125,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "encodeUs": 3561,
+        "admitUs": 513,
+        "lookupUs": 72,
+        "releaseUs": 51,
+        "routeUs": 4197,
+        "binaryScratchBytes": 320,
+        "wireHash": 2766474524,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "encodeUs": 2817,
+        "admitUs": 14734,
+        "lookupUs": 57,
+        "releaseUs": 3330,
+        "routeUs": 20938,
+        "binaryScratchBytes": 0,
+        "wireHash": 1841395799,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "encodeUs": 14446,
+        "admitUs": 104756,
+        "lookupUs": 101,
+        "releaseUs": 15747,
+        "routeUs": 135050,
+        "binaryScratchBytes": 0,
+        "wireHash": 1054538192,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "encodeUs": 14775,
+        "admitUs": 1292,
+        "lookupUs": 78,
+        "releaseUs": 50,
+        "routeUs": 16195,
+        "binaryScratchBytes": 304,
+        "wireHash": 540532891,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "encodeUs": 12179,
+        "admitUs": 1216,
+        "lookupUs": 175,
+        "releaseUs": 55,
+        "routeUs": 13625,
+        "binaryScratchBytes": 196,
+        "wireHash": 3886497504,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "encodeUs": 11490,
+        "admitUs": 86948,
+        "lookupUs": 143,
+        "releaseUs": 13677,
+        "routeUs": 112258,
+        "binaryScratchBytes": 0,
+        "wireHash": 1228237125,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "encodeUs": 4192,
+        "admitUs": 29286,
+        "lookupUs": 137,
+        "releaseUs": 7782,
+        "routeUs": 41397,
+        "binaryScratchBytes": 0,
+        "wireHash": 1035267114,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativeprod",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "encodeUs": 10624,
+        "admitUs": 1006,
+        "lookupUs": 220,
+        "releaseUs": 50,
+        "routeUs": 11900,
+        "binaryScratchBytes": 588,
+        "wireHash": 2571018171,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "encodeUs": 14486,
+        "admitUs": 104828,
+        "lookupUs": 106,
+        "releaseUs": 15761,
+        "routeUs": 135181,
+        "binaryScratchBytes": 0,
+        "wireHash": 1054538192,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "encodeUs": 14804,
+        "admitUs": 1303,
+        "lookupUs": 75,
+        "releaseUs": 52,
+        "routeUs": 16234,
+        "binaryScratchBytes": 304,
+        "wireHash": 540532891,
+        "lookupHash": 4061638,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "encodeUs": 12233,
+        "admitUs": 1183,
+        "lookupUs": 218,
+        "releaseUs": 51,
+        "routeUs": 13685,
+        "binaryScratchBytes": 196,
+        "wireHash": 3886497504,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "encodeUs": 11490,
+        "admitUs": 86795,
+        "lookupUs": 152,
+        "releaseUs": 13679,
+        "routeUs": 112116,
+        "binaryScratchBytes": 0,
+        "wireHash": 1228237125,
+        "lookupHash": 1728,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "encodeUs": 4205,
+        "admitUs": 29243,
+        "lookupUs": 136,
+        "releaseUs": 7777,
+        "routeUs": 41361,
+        "binaryScratchBytes": 0,
+        "wireHash": 1035267114,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "encodeUs": 10601,
+        "admitUs": 1003,
+        "lookupUs": 154,
+        "releaseUs": 53,
+        "routeUs": 11811,
+        "binaryScratchBytes": 588,
+        "wireHash": 2571018171,
+        "lookupHash": 1725,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "encodeUs": 3562,
+        "admitUs": 449,
+        "lookupUs": 61,
+        "releaseUs": 50,
+        "routeUs": 4122,
+        "binaryScratchBytes": 320,
+        "wireHash": 2766474524,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativeprod",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "encodeUs": 2875,
+        "admitUs": 14707,
+        "lookupUs": 61,
+        "releaseUs": 3328,
+        "routeUs": 20971,
+        "binaryScratchBytes": 0,
+        "wireHash": 1841395799,
+        "lookupHash": 4138057,
+        "walkHash": 1697411594
+      }
+    }
+  ]
+}
