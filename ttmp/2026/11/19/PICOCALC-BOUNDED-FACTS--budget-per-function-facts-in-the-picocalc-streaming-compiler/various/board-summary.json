@@ -1,0 +1,638 @@
+{
+  "firmware_sha256": "68cee6edc8280690fdc616c9cb42eb9ed8bd914933074a024630bdf683d64c89",
+  "restored": true,
+  "restored_worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    }
+  },
+  "compile_rows": 108,
+  "boots": [
+    {
+      "compile": {
+        "files": {
+          "blocks": 6,
+          "absolute": {
+            "control": {
+              "us": {
+                "median": 236752.0,
+                "min": 235046,
+                "max": 240719
+              },
+              "peak": {
+                "median": 362618.0,
+                "min": 362612,
+                "max": 362628
+              }
+            },
+            "always": {
+              "us": {
+                "median": 270396.0,
+                "min": 268935,
+                "max": 272346
+              },
+              "peak": {
+                "median": 379972.0,
+                "min": 379972,
+                "max": 379980
+              }
+            },
+            "select": {
+              "us": {
+                "median": 250128.0,
+                "min": 247740,
+                "max": 250964
+              },
+              "peak": {
+                "median": 379972.0,
+                "min": 379968,
+                "max": 379984
+              }
+            }
+          },
+          "paired": {
+            "always_minus_control": {
+              "us": {
+                "median": 33845.5,
+                "min": 28746,
+                "max": 35597
+              },
+              "peak": {
+                "median": 17354.0,
+                "min": 17344,
+                "max": 17368
+              }
+            },
+            "select_minus_control": {
+              "us": {
+                "median": 12936.5,
+                "min": 9781,
+                "max": 14710
+              },
+              "peak": {
+                "median": 17354.0,
+                "min": 17344,
+                "max": 17364
+              }
+            },
+            "select_minus_always": {
+              "us": {
+                "median": -20968.0,
+                "min": -22968,
+                "max": -18185
+              },
+              "peak": {
+                "median": 0.0,
+                "min": -12,
+                "max": 12
+              }
+            }
+          }
+        },
+        "agenda": {
+          "blocks": 6,
+          "absolute": {
+            "control": {
+              "us": {
+                "median": 664440.5,
+                "min": 660491,
+                "max": 670107
+              },
+              "peak": {
+                "median": 578944.0,
+                "min": 578936,
+                "max": 578960
+              }
+            },
+            "always": {
+              "us": {
+                "median": 774721.0,
+                "min": 771551,
+                "max": 780009
+              },
+              "peak": {
+                "median": 591756.0,
+                "min": 591744,
+                "max": 591760
+              }
+            },
+            "select": {
+              "us": {
+                "median": 721531.0,
+                "min": 715731,
+                "max": 728656
+              },
+              "peak": {
+                "median": 591758.0,
+                "min": 591756,
+                "max": 591768
+              }
+            }
+          },
+          "paired": {
+            "always_minus_control": {
+              "us": {
+                "median": 109826.0,
+                "min": 103023,
+                "max": 119518
+              },
+              "peak": {
+                "median": 12806.0,
+                "min": 12796,
+                "max": 12820
+              }
+            },
+            "select_minus_control": {
+              "us": {
+                "median": 56717.0,
+                "min": 51364,
+                "max": 60832
+              },
+              "peak": {
+                "median": 12818.0,
+                "min": 12796,
+                "max": 12820
+              }
+            },
+            "select_minus_always": {
+              "us": {
+                "median": -54519.0,
+                "min": -63283,
+                "max": -42895
+              },
+              "peak": {
+                "median": 6.0,
+                "min": 0,
+                "max": 16
+              }
+            }
+          }
+        },
+        "editor": {
+          "blocks": 6,
+          "absolute": {
+            "control": {
+              "us": {
+                "median": 2468769.5,
+                "min": 2445454,
+                "max": 2478651
+              },
+              "peak": {
+                "median": 1410876.0,
+                "min": 1410860,
+                "max": 1410888
+              }
+            },
+            "always": {
+              "us": {
+                "median": 2925094.0,
+                "min": 2918452,
+                "max": 2942908
+              },
+              "peak": {
+                "median": 1425780.0,
+                "min": 1425780,
+                "max": 1425796
+              }
+            },
+            "select": {
+              "us": {
+                "median": 2515894.5,
+                "min": 2507295,
+                "max": 2569710
+              },
+              "peak": {
+                "median": 1425796.0,
+                "min": 1425588,
+                "max": 1425964
+              }
+            }
+          },
+          "paired": {
+            "always_minus_control": {
+              "us": {
+                "median": 460409.0,
+                "min": 450022,
+                "max": 476061
+              },
+              "peak": {
+                "median": 14904.0,
+                "min": 14892,
+                "max": 14936
+              }
+            },
+            "select_minus_control": {
+              "us": {
+                "median": 49580.0,
+                "min": 30511,
+                "max": 124256
+              },
+              "peak": {
+                "median": 14920.0,
+                "min": 14704,
+                "max": 15092
+              }
+            },
+            "select_minus_always": {
+              "us": {
+                "median": -403485.0,
+                "min": -435613,
+                "max": -351805
+              },
+              "peak": {
+                "median": 16.0,
+                "min": -196,
+                "max": 184
+              }
+            }
+          }
+        }
+      },
+      "guest": {
+        "compare": {
+          "blocks": 16,
+          "cycles_per_call": {
+            "control": {
+              "median": 6522.3125,
+              "min": 6522.1484375,
+              "max": 6532.3125
+            },
+            "always": {
+              "median": 6522.3203125,
+              "min": 6522.078125,
+              "max": 6532.3515625
+            },
+            "select": {
+              "median": 6522.46875,
+              "min": 6522.1328125,
+              "max": 6532.3125
+            }
+          },
+          "paired_cycles_per_call": {
+            "always_minus_control": {
+              "median": -0.0078125,
+              "min": -10.046875,
+              "max": 9.9375
+            },
+            "select_minus_control": {
+              "median": 0.09375,
+              "min": -10.0546875,
+              "max": 10.1640625
+            }
+          }
+        },
+        "weekday": {
+          "blocks": 16,
+          "cycles_per_call": {
+            "control": {
+              "median": 724.29296875,
+              "min": 724.1640625,
+              "max": 734.515625
+            },
+            "always": {
+              "median": 639.89453125,
+              "min": 639.15625,
+              "max": 651.1796875
+            },
+            "select": {
+              "median": 639.8671875,
+              "min": 639.171875,
+              "max": 654.3203125
+            }
+          },
+          "paired_cycles_per_call": {
+            "always_minus_control": {
+              "median": -84.38671875,
+              "min": -95.03125,
+              "max": -73.1015625
+            },
+            "select_minus_control": {
+              "median": -84.44921875,
+              "min": -95.1953125,
+              "max": -69.96875
+            }
+          }
+        }
+      }
+    },
+    {
+      "compile": {
+        "files": {
+          "blocks": 6,
+          "absolute": {
+            "control": {
+              "us": {
+                "median": 236036.0,
+                "min": 234922,
+                "max": 236421
+              },
+              "peak": {
+                "median": 362624.0,
+                "min": 362612,
+                "max": 362624
+              }
+            },
+            "always": {
+              "us": {
+                "median": 269361.5,
+                "min": 268546,
+                "max": 271053
+              },
+              "peak": {
+                "median": 379972.0,
+                "min": 379960,
+                "max": 379972
+              }
+            },
+            "select": {
+              "us": {
+                "median": 248124.0,
+                "min": 247698,
+                "max": 249184
+              },
+              "peak": {
+                "median": 379972.0,
+                "min": 379964,
+                "max": 379980
+              }
+            }
+          },
+          "paired": {
+            "always_minus_control": {
+              "us": {
+                "median": 33268.0,
+                "min": 32125,
+                "max": 35856
+              },
+              "peak": {
+                "median": 17348.0,
+                "min": 17336,
+                "max": 17360
+              }
+            },
+            "select_minus_control": {
+              "us": {
+                "median": 12367.5,
+                "min": 11826,
+                "max": 13423
+              },
+              "peak": {
+                "median": 17348.0,
+                "min": 17340,
+                "max": 17368
+              }
+            },
+            "select_minus_always": {
+              "us": {
+                "median": -21369.0,
+                "min": -22433,
+                "max": -19362
+              },
+              "peak": {
+                "median": 2.0,
+                "min": 0,
+                "max": 12
+              }
+            }
+          }
+        },
+        "agenda": {
+          "blocks": 6,
+          "absolute": {
+            "control": {
+              "us": {
+                "median": 661605.0,
+                "min": 659009,
+                "max": 669639
+              },
+              "peak": {
+                "median": 578948.0,
+                "min": 578936,
+                "max": 578948
+              }
+            },
+            "always": {
+              "us": {
+                "median": 773959.0,
+                "min": 765862,
+                "max": 774365
+              },
+              "peak": {
+                "median": 591760.0,
+                "min": 591760,
+                "max": 591772
+              }
+            },
+            "select": {
+              "us": {
+                "median": 715210.0,
+                "min": 709192,
+                "max": 715501
+              },
+              "peak": {
+                "median": 591760.0,
+                "min": 591760,
+                "max": 591768
+              }
+            }
+          },
+          "paired": {
+            "always_minus_control": {
+              "us": {
+                "median": 110682.5,
+                "min": 100776,
+                "max": 115356
+              },
+              "peak": {
+                "median": 12812.0,
+                "min": 12812,
+                "max": 12824
+              }
+            },
+            "select_minus_control": {
+              "us": {
+                "median": 50645.5,
+                "min": 45488,
+                "max": 56492
+              },
+              "peak": {
+                "median": 12812.0,
+                "min": 12812,
+                "max": 12828
+              }
+            },
+            "select_minus_always": {
+              "us": {
+                "median": -58899.5,
+                "min": -61074,
+                "max": -54662
+              },
+              "peak": {
+                "median": 0.0,
+                "min": -4,
+                "max": 4
+              }
+            }
+          }
+        },
+        "editor": {
+          "blocks": 6,
+          "absolute": {
+            "control": {
+              "us": {
+                "median": 2456738.0,
+                "min": 2453230,
+                "max": 2476091
+              },
+              "peak": {
+                "median": 1410858.0,
+                "min": 1410388,
+                "max": 1410912
+              }
+            },
+            "always": {
+              "us": {
+                "median": 2907398.0,
+                "min": 2906544,
+                "max": 2915834
+              },
+              "peak": {
+                "median": 1425788.0,
+                "min": 1425440,
+                "max": 1425792
+              }
+            },
+            "select": {
+              "us": {
+                "median": 2508745.0,
+                "min": 2507349,
+                "max": 2525578
+              },
+              "peak": {
+                "median": 1425796.0,
+                "min": 1425784,
+                "max": 1425888
+              }
+            }
+          },
+          "paired": {
+            "always_minus_control": {
+              "us": {
+                "median": 450535.0,
+                "min": 431285,
+                "max": 453535
+              },
+              "peak": {
+                "median": 14932.0,
+                "min": 14540,
+                "max": 15400
+              }
+            },
+            "select_minus_control": {
+              "us": {
+                "median": 54128.0,
+                "min": 33892,
+                "max": 55533
+              },
+              "peak": {
+                "median": 14978.0,
+                "min": 14884,
+                "max": 15408
+              }
+            },
+            "select_minus_always": {
+              "us": {
+                "median": -398347.5,
+                "min": -399282,
+                "max": -390256
+              },
+              "peak": {
+                "median": 8.0,
+                "min": -4,
+                "max": 380
+              }
+            }
+          }
+        }
+      },
+      "guest": {
+        "compare": {
+          "blocks": 16,
+          "cycles_per_call": {
+            "control": {
+              "median": 6522.47265625,
+              "min": 6522.1484375,
+              "max": 6532.5234375
+            },
+            "always": {
+              "median": 6522.41796875,
+              "min": 6522.1796875,
+              "max": 6532.3828125
+            },
+            "select": {
+              "median": 6522.3671875,
+              "min": 6522.125,
+              "max": 6532.40625
+            }
+          },
+          "paired_cycles_per_call": {
+            "always_minus_control": {
+              "median": -0.08984375,
+              "min": -10.0,
+              "max": 9.984375
+            },
+            "select_minus_control": {
+              "median": -0.140625,
+              "min": -10.0703125,
+              "max": 9.9609375
+            }
+          }
+        },
+        "weekday": {
+          "blocks": 16,
+          "cycles_per_call": {
+            "control": {
+              "median": 724.2578125,
+              "min": 724.1328125,
+              "max": 734.640625
+            },
+            "always": {
+              "median": 640.62109375,
+              "min": 639.1953125,
+              "max": 652.4375
+            },
+            "select": {
+              "median": 640.6875,
+              "min": 639.15625,
+              "max": 651.3125
+            }
+          },
+          "paired_cycles_per_call": {
+            "always_minus_control": {
+              "median": -83.66796875,
+              "min": -94.7265625,
+              "max": -71.78125
+            },
+            "select_minus_control": {
+              "median": -84.73046875,
+              "min": -94.1015625,
+              "max": -72.8359375
+            }
+          }
+        }
+      }
+    }
+  ]
+}

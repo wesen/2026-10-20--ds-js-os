@@ -23,7 +23,7 @@ WhenToUse: ""
 ---
 # When does a handheld compiler need more facts?
 
-When the PicoCalc starts Editor, a small compiler on the device translates its typed source into RISC-V instructions. The compiler usually handles one function at a time and releases its intermediate operations when that function has been translated. We tested how much useful information it could compute within that short lifetime. On the held-out Editor app, a policy that screened for division and remainder saved **83 instruction words**, the full reduction from analyzing every eligible function. It used **7% as much charged analysis work**. The reserved code region inside the native module kept its original size.
+When the PicoCalc starts Editor, a small compiler on the device translates its typed source into RISC-V instructions. The compiler usually handles one function at a time and releases its intermediate operations when that function has been translated. We tested how much useful information it could compute within that short lifetime. On the held-out Editor app, a policy that screened for division and remainder saved **83 instruction words**, the full reduction from analyzing every eligible function. It used **7% as much charged analysis work**. On the physical handheld, Select took about **400 ms less** than Always to compile Editor and about **50 ms more** than production. The reserved code region inside the native module kept its original size.
 
 ## What a compiler can learn from a divisor
 
@@ -59,7 +59,7 @@ Files and Agenda were the two training applications. Files has no divide or rema
 | Agenda | 4,058 | 3,898 | 3,898 | 34 / 9 | 10,558 / 4,284 |
 | Editor | 21,886 | 21,803 | 21,803 | 118 / 7 | 60,740 / 4,278 |
 
-Editor had 120 functions. Two exceeded the function cap. Seven contained one of the relevant arithmetic operations, and both candidate policies analyzed those seven. They omitted 17 zero guards and seven overflow guards, which accounts for all 83 words. Agenda omitted 31 zero guards and 14 overflow guards, which accounts for its 160 words. Neither application’s savings required a proof through a local slot. All three apps retained the same counts of hardware divide and remainder instructions. The 332-byte Editor reduction concerns the emitted machine words. Each linked Editor ELF remained 240,452 bytes because its code region is preallocated. [Training oracle](../various/host-training.json) · [Held-out oracle](../various/host-editor.json).
+Editor had 120 functions. Two exceeded the function cap. Seven contained one of the relevant arithmetic operations, and both candidate policies analyzed those seven. Select’s 32,768-cell module budget had headroom in all three apps. They omitted 17 zero guards and seven overflow guards, which accounts for all 83 words. Agenda omitted 31 zero guards and 14 overflow guards, which accounts for its 160 words. Neither application’s savings required a proof through a local slot. All three apps retained the same counts of hardware divide and remainder instructions. The 332-byte Editor reduction concerns the emitted machine words. Each linked Editor ELF remained 240,452 bytes because its code region is preallocated. [Training oracle](../various/host-training.json) · [Held-out oracle](../various/host-editor.json).
 
 ## Did the generated program still behave the same?
 
@@ -69,15 +69,35 @@ Agenda provided an actual application kernel, `entryWeekday(today)`. It calls ca
 
 After unblinding, I added one host check of the held-out app’s generated guest code. Editor’s `editorPreviewSlot(row)` computes `(row % 36) * 100` to locate a row in its preview buffer. The native harness executed the exact function from each full linked app build’s raw image. The arithmetic leaf needs no SDK calls. All eight boundary rows returned the same values as WebAssembly, including row 35 mapping to 3,500 and row 36 wrapping to zero. Retired instructions fell from 160 to 152 across the eight calls, including the harness. This probes one function selected after the static result. The full preview uses that function alongside rendering, editing and SDK calls. [Held-out kernel receipt](../various/rv32-guests.json).
 
-## How to read the compile cost
+## What the handheld paid for the proof
 
-The charged work is a deterministic upper bound on cells in the two scans. The two policies can allocate the same 1,280-byte arrays even when one analyzes far fewer functions. They can also incur the same maximum scratch size by admitting just one function each. The analysis policy can still change allocator high-water through allocation timing or differences in the later code image.
+On the PicoCalc, two boots each completed six order-balanced blocks of cold compiles. Each block compiled all three apps under all three policies in one of the six policy orders. The firmware created a new QuickJS runtime for each compile. Each of the 108 linked ELF digests matched the host oracle, including the paired Always and Select outputs for Agenda and Editor.
 
-One instrumented host build of Editor spent 30.30 ms in the Always helper and 2.84 ms in the Select helper. Those samples come from separate JavaScript contexts. Twelve rotated-order cold builds on the host yielded a median paired Select-minus-Always change of +1.30 ms, with a range of −58.80 to +61.87 ms. This host run leaves end-to-end timing unresolved. The exact work counts and output bytes hold independently of the host timing. [Raw helper and whole-run measurements](../various/host-editor.json).
+| App | Control cold median, boots 1 / 2 | Always minus Control | Select minus Control | Select minus Always |
+|---|---:|---:|---:|---:|
+| Files | 237 / 236 ms | +33.8 / +33.3 ms | +12.9 / +12.4 ms | −21.0 / −21.4 ms |
+| Agenda | 664 / 662 ms | +109.8 / +110.7 ms | +56.7 / +50.6 ms | −54.5 / −58.9 ms |
+| Editor | 2,469 / 2,457 ms | +460.4 / +450.5 ms | +49.6 / +54.1 ms | −403.5 / −398.3 ms |
+
+The differences are medians of within-block pairs, reported separately for the two boots. On Editor, every observed Select compile took less time than its paired Always compile. The smallest reduction was 351.8 ms. Every Select compile also took more time than its paired Control, with a range from +30.5 to +124.3 ms across both boots. Even Files paid about 12–13 ms with Select and zero admitted functions. The candidate compiler still loads and runs the new policy code, so zero charged cells leave some costs in place.
+
+| App | Control peak median, boots 1 / 2 | Always minus Control | Select minus Control |
+|---|---:|---:|---:|
+| Files | 362,618 / 362,624 B | +17,354 / +17,348 B | +17,354 / +17,348 B |
+| Agenda | 578,944 / 578,948 B | +12,806 / +12,812 B | +12,818 / +12,812 B |
+| Editor | 1,410,876 / 1,410,858 B | +14,904 / +14,932 B | +14,920 / +14,978 B |
+
+The whole compiler’s QuickJS allocator peak includes code loading, source handling, lowering and linking. Both analysis policies had almost the same peak even where Select avoided most scans. Files reached a higher peak with Select despite zero proof arrays. The extra compiler code and the changed frontend were present in both candidates. The allocator measurement leaves the sources of the remaining differences unresolved. [Physical paired results](../various/board-summary.json).
+
+The physical cycle harness ran the eight Agenda dates in repeated batches of 128 calls, on the 360 MHz chip. Select saved a paired median of 84.45 and 84.73 cycles per call across the two boots. Always saved 84.39 and 83.67. The Files comparison kernel, whose generated code was identical, differed by less than one cycle per call in either boot’s paired median. These results measure a calendar kernel and an unchanged comparison kernel. Whole-app speed also depends on time outside those functions. [Physical cycle results](../various/board-summary.json).
+
+The hardware trials timed the whole compiler. A separate instrumented Node sample of Editor spent 30.30 ms in the Always helper and 2.84 ms in the Select helper. Those helper times come from separate JavaScript contexts on the host. Twelve rotated-order cold Node builds gave a median paired Select-minus-Always change of +1.30 ms, with a range of −58.80 to +61.87 ms. The spread leaves the host end-to-end timing unresolved. [Raw helper and whole-run measurements](../various/host-editor.json).
 
 ## What the transfer test shows
 
 A parser can tell cheaply whether a function has any operation that consumes a given fact. That decision removed the majority of the proof work in Agenda and Editor while preserving every guard deletion from Always. The benefit was larger in number of words for Agenda than Editor, even though Editor was the larger program. Functions with relevant arithmetic were relatively rare in Editor. The work and value of the analysis thus depend on the distribution of candidate operations, their operands and the location of calls at runtime.
+
+The independent examiner tested what happens when more functions qualify than the budget can cover. The examiner built 37 equal-size functions. Thirty-six divide by a value supplied by the caller. The remaining function divides by 3 at 80 sites. Always saved 720 words in both orders. Select recovered all 720 when the fixed-divisor function came first and zero when it came last. It charged 31,752 cells in both cases. The parser predicate identifies functions with an opportunity to analyze. The ordering example shows how much useful work that predicate can miss once the budget binds. [Independent source-order experiment](../../PICOCALC-LAB-REVIEW--independent-examination-of-the-picocalc-compiler-lab/various/policy.json).
 
 For this corpus, the static results motivate a narrower comparison. The best real-app reductions here came from literal operands, so a direct decoder match during lowering might produce the same images without the local proof table. That comparison would establish the cost of building facts beyond the literal case. The transfer result applies to this proof and the arithmetic distribution of one held-out app.
 

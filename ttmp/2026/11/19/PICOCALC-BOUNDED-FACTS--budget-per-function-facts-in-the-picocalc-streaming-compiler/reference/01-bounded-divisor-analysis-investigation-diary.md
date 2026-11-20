@@ -365,3 +365,64 @@ The preview replay and byte-level compiler check cover different things. I added
 ### Technical details
 
 - The three returning output digests were `3ccab95b8a00d3600191a3f1f065e5c57154d2c0d1ce0bb8a9c514d7a1589219`.
+
+## Step 7. Measure actual compile time, heap peak and guest cycles
+
+The supervisor ran the physical trials in two boots. I independently validated all 108 cold compile rows against the exact host hashes and raw word counts, then computed matching policy differences within each boot and order block. Both analyses increased cold cost relative to production. Select recovered about 400 ms of the cost of Always on Editor and preserved all its guard omissions.
+
+### Prompt Context
+
+**User prompt:** See Step 1. Compare three policies under physical cold settings and measure guest cycles where practical.
+
+### What I did
+
+- Confirmed that the physical build’s three reactor ELFs and Editor concatenation were byte-identical to the runtime inputs used for the host oracle.
+- Ran `scripts/07-summarize-board.py` on the supervisor’s structured timing receipt. The verifier checks compiler assets, linked ELF SHA-256, raw words, streamed mode and restored native app status.
+- Read the independent examiner’s 37-function order test and added its scope to the report.
+
+### Why
+
+- Matched blocks control the run-order comparisons. Reporting each boot separately exposes whether the direction repeats.
+- The whole-compiler allocator peak and per-function scratch limit answer different questions. Keeping both helps interpret the observed cost.
+- The initially preregistered workloads never exhausted the module budget. The independent order test exercises that missing regime without changing the held-out prediction.
+
+### What worked
+
+- All 108 timed compiler images matched, and the supervisor recorded restoration of the original native app state after the timing firmware.
+- Editor Select minus Always was −403.485 ms and −398.348 ms in the two paired medians. Select minus production was +49.580 ms and +54.128 ms.
+- Agenda’s `entryWeekday` repeated its eight expected weekday results and Select saved 84.45 and 84.73 cycles per call over the two boots. The byte-identical Files comparison kernel’s paired medians were within one cycle per call.
+- The examiner’s Select runs both charged 31,752 cells. They saved 720 words with the one useful function first and zero with it last.
+
+### What didn't work
+
+- Select did not beat production cold time. The minimum paired Editor penalty was 30.511 ms.
+- Select’s 1,280-byte scratch cap did not predict a smaller overall allocator peak than Always. Editor’s candidate peaks were about 14.9 KB above production, with a Select-versus-Always paired median difference of 16 and 8 bytes.
+
+### What I learned
+
+- The faster candidate among the two proof policies has the same generated code as Always. That separates compiler savings from guest behavior.
+- The zero-analysis Files build paid roughly 12–13 ms in Select, revealing overhead outside the measured proof body.
+- Function order matters once several arithmetic functions want the same work budget. Admission based on opcode presence cannot distinguish dynamic divisors from constants.
+
+### What was tricky to build
+
+- Files’ branch code and output bytes stay the same, making its guest comparator useful for checking the scale of incidental cycle variation.
+- The physical guest loop repeats fixed dates 16 times per 128-call batch. The emulator records retired instructions, while the board records the core cycle counter.
+
+### What warrants a second pair of eyes
+
+- Reproduce the exact raw word count and paired medians from the structured receipt. Inspect only matched-policy block comparisons in the timing report.
+- Keep the physical timing boot, full Editor replay and post-unblinding emulated leaf clearly identified.
+
+### What should be done in the future
+
+- Confirm the separately selected Editor module digest and its long-document replay.
+
+### Code review instructions
+
+- Run `python3 -B scripts/07-summarize-board.py various/board-timing.json` from the ticket or use its full paths from the repository root. Compare the generated JSON with `various/board-summary.json`.
+
+### Technical details
+
+- The physical measurement firmware used native streamed compilation at 360 MHz. Each boot recorded six matched compile blocks and 16 matched guest blocks per operation.
+- `various/board-timing.json` holds the structured supervisor receipt for 108 builds and 192 guest timing rows. It includes compiler and output hashes.
