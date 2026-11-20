@@ -340,3 +340,54 @@ Inspect the [workflow comparison](../../PICOCALC-EG-QUAL--implement-and-qualify-
 ### Technical details
 
 The native counter meets the 10% workflow CPU ceiling. The application meets the 71-field limit with 70. The native cold compile forecast is a distinct failed performance prediction.
+
+## Step 7 — Observe early, dense-miss and tail searches on the device
+
+The isolated observer completed the three search classes on each physical engine and version. It uses the normal Editor key handler and waits for the app's reported result to enter the kernel's retained frame. A separate serial command transfers the screen after the observer captures that elapsed interval.
+
+### Prompt context
+
+See Step 1. The paired search phase follows the independent experiment's early, late and absent-result classes through the application's actual SDK seek and drawing code.
+
+### What I did
+
+- Reviewed the abandoned setup and shot captures and reported two recoverable harness failures to the supervisor.
+- Verified the restored control and candidate receipts, then incorporated the exact elapsed values and equal segment counts in the Editor article.
+- Distinguished the screen reported at the end of the measured interaction from the subsequent CRC-checked UART screenshot.
+
+### Why
+
+Normal kernel delivery and publication establish that physical application behavior matches the expected status. A serial screenshot transfer can take seconds and serves as visual evidence after the timed operation. The same command window does not need to cover both.
+
+### What worked
+
+The dense physical miss used 297 Editor segments and 296 timer settlements in all four version and engine combinations. The tail hit used 27 segments and reached line 852, column 1 on both targets. The candidate RV32 elapsed intervals were 4.086 ms for the early hit, 171.667 ms for the dense miss and 55.810 ms for the late hit. The candidate Wasm intervals were 41.608 ms, 1,656.603 ms and 738.086 ms. These are single observations per class, separate from the three-trial stock workflow.
+
+### What didn't work
+
+- The first timing attempt asserted that the directory listing contained the leaf immediately after Files opened a missing name. The captured setup ended with `#OK ls` and no leaf. An empty Editor document does not write its path until a save. The recovered harness stages the file in the test directory, verifies exactly 65,536 bytes and opens it through Files.
+- The next attempt observed `EGFIND early 4138 4112 3717 1 0` but `[p4cap] shot 1: - (BAD: 0 px)`. The 19.5-second capture issued the shot at 14 seconds, logged `#SHOT 320 320` and stopped before the footer. The surviving RLE payload decoded to 76,009 pixels. The supervisor moved each CRC-checked shot to its own 22-second capture, after the state and timing receipt.
+
+### What I learned
+
+The work counter can make a dense miss much more expensive than a unique hit near EOF. A late hit also has a display cost. The search observer times the user's result through completion of that display, so segment counts include viewport timers as well as timers used by the scan.
+
+### What was tricky to build
+
+The initial proof of an expected frame comes from the observer's status match. The sample screenshots have different scratch filenames between the control and candidate, which keeps persisted cursor records isolated. Byte-for-byte screenshot comparison belongs to the fixed-name stock workflow.
+
+### What warrants a second pair of eyes
+
+Read the elapsed and Editor CPU measurements from the same row. Avoid treating either clock as the transport time from the serial console to the LCD. Check that the script verifies the expected status and clean scratch removal in each arm.
+
+### What should be done in the future
+
+The cold-compile result motivates the separate source-inspection experiment. Each new compiler optimization can reuse the proven application module outputs and compare the reduction at the compiler stages that make up the 897 ms rewrite mean.
+
+### Code review instructions
+
+Start with the [paired search measurements](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/search-comparison.json), the [physical tail capture](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/editor-physical-tail.png) and the [Editor article](../analysis/01-what-editor-keeps-across-a-file-read-and-a-search-pause.md).
+
+### Technical details
+
+The search classes use `ext`, `text text z`, and `needle` in order. The observer brackets the Editor's Enter handling through the first retained expected status. The initial status check sees `Find: <query>_`. The miss sees `Not found: text text z`. The two hit cases see a file label with coordinates `1:2` and `852:1`.

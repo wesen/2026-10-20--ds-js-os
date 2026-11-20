@@ -79,9 +79,7 @@ Find saves the physical scan position `at`, the folded position `foldedAt`, the 
 
 Each slice spends one work unit per loop iteration and adds the query length when it tests an eligible candidate. The compiled task obtains its document and query buffers at the start of the slice. A paused search leaves the active query available to the view, while the compiler's `pending()` prevents intermediate rendering. Once a match changes the cursor, the view may still need several 64-row passes to locate and draw its viewport. A Find timer resumes the search. A frame timer resumes the renderer. [Find implementation](../../../../../../picocalc-os/worlds/editor/find.typed)
 
-![The tail-search replay shows the match at entry.txt line 852, column 1.](../various/07-editor-tail-search-wasm.png)
-
-The figure is the Wasm host framebuffer for a 65,536-byte file containing one occurrence of `needle` near its end. It matches the original JavaScript Editor's capture byte for byte. The RV32 replay compares the published frame tree with the same reference.
+The host tail-search replay captures the Wasm framebuffer for a 65,536-byte file containing one occurrence of `needle` near its end. It matches the original JavaScript Editor's capture byte for byte. The RV32 replay compares the published frame tree with the same reference. [Host tail-search framebuffer](../various/07-editor-tail-search-wasm.png)
 
 ## Coordinate types and state size at each checkpoint
 
@@ -118,7 +116,26 @@ The device comparison used the same board, SDK, workflow and application reserva
 
 The workflow passed in every trial. Each engine reproduced the control's Find and preview screenshots byte for byte on all three candidate trials. The native workflow CPU met its 10% ceiling. The 44.3% increase for a cold native build exceeded its 10% target.
 
-The two measurements cover different code. The boot receipt covers loading the compiler, analyzing and rewriting the task source, compiling generated functions and linking the module. The workflow counter starts after boot and accumulates only the Editor's turns during the measured interaction. The frame count and code-size comparison describe the resulting program. Those measurements establish that the run fits the state limit and preserves the demonstrated workflow, and the compile measurements show a cost that the instruction count alone cannot predict. [Device comparison](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/workflow-comparison.json) · [Candidate trials](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/physical-final.json)
+The two measurements cover different code. The boot receipt covers loading the compiler, analyzing and rewriting the task source, compiling generated functions and linking the module. The workflow counter starts after boot and sums measured time in the Editor's execution and rendering segments. The frame count and code-size comparison describe the resulting program. Those measurements establish that the run fits the state limit and preserves the demonstrated workflow, and the compile measurements show a cost that the instruction count alone cannot predict. [Device comparison](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/workflow-comparison.json) · [Candidate trials](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/physical-final.json)
+
+A separate native build measured the compiler stages across three more cold boots per version. The mean increase was 1,180 ms. The async rewrite accounted for 897 ms of that increase, including 441 ms to read original declarations and signatures, 181 ms to discover task operations and calls, and 161 ms for analysis. Ordinary frontend work added 128 ms, and native lowering, assembly, validation and linking together added 15 ms. The continuation compiler collects information about the original source before the ordinary compiler receives the generated source. This explains how a small change in emitted instructions can require much more time to compile. [Physical compiler phase evidence](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/g4-compile-phases.json)
+
+## A large search can yield for scanning or for drawing
+
+A second board run used a 65,536-byte document with 851 repeated CRLF lines followed by `needlezzz`. Each version and engine executed an early hit for `ext`, a dense miss for `text text z` and a late hit for `needle`. The observer began at the Editor segment that handled Enter and stopped when the expected result appeared in the kernel's retained frame. It measured the elapsed interval before the independent screenshot capture. The board reached column 2 for the early hit and line 852, column 1 for the late hit on both targets.
+
+| Engine | Search | Before-G elapsed | Generated elapsed | Editor segments in each version |
+| --- | --- | ---: | ---: | ---: |
+| RV32 | Early hit | 4.516 ms | 4.086 ms | 1 |
+| RV32 | Dense miss | 183.880 ms | 171.667 ms | 297 |
+| RV32 | Late hit | 54.230 ms | 55.810 ms | 27 |
+| Wasm | Early hit | 41.515 ms | 41.608 ms | 1 |
+| Wasm | Dense miss | 1,762.060 ms | 1,656.603 ms | 297 |
+| Wasm | Late hit | 732.409 ms | 738.086 ms | 27 |
+
+There is one observation per cell. The early case draws after the initial key segment. In the dense miss, the first letter matches many candidate starts, and each eligible candidate adds the query length to the work total. That case used 296 settlements on both engines for both implementations. In the late-hit case the SDK's character seek skips nonmatching stretches within each line, reaching the tail in relatively little search work. After the match, the renderer must walk the wrapped rows needed to locate the viewport. Fewer than 1,024 loop work units are needed before the unique hit in this corpus. The observer includes the resulting frame timers, so its 26 settlements record the delayed viewport. [Paired search measurements](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/search-comparison.json)
+
+![The physical RV32 Editor shows the tail match on line 852, column 1.](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/editor-physical-tail.png)
 
 ## Reproduce the comparison
 
