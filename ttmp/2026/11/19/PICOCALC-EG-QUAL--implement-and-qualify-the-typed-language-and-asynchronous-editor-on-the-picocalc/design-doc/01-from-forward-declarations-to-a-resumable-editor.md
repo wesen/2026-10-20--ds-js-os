@@ -75,3 +75,18 @@ The primary comparison is canonical hand-written versus generated Open and Find.
 `scripts/02-prepare-images.sh WORK REV IDF_EXPORT LANE` creates a detached clone under WORK, builds both firmware images and validates their manifests. Run each research script from the project root. The control and candidate differ at named source revisions. Physical receipts contain aggregate measurements and frame digests. Full flash backups remain in local scratch storage.
 
 Read the professor's Scope E and G design documents alongside the three implementation tickets for the precise language syntax and state-machine transition rules.
+
+### Run the smallest examples on a development machine
+
+From the repository root, run the six-case language example first. It compiles typed source through the real frontend, instantiates the result as WebAssembly, and calls the exported function with ordinary JavaScript numbers. Then run the continuation harness with a copy of the original compiler and Editor. It compares every UTF-16 unit in the working buffer after each of four settlements, checks cancellation and stale tokens, and compares the layout seen by both targets.
+
+```sh
+node ttmp/2026/11/19/PICOCALC-EG-QUAL--*/scripts/27-check-guide-example.mjs
+baseline_dir=$(mktemp -d)
+git archive 289281c picocalc-os/compiler picocalc-os/worlds | tar -x -C "$baseline_dir"
+node ttmp/2026/11/19/PICOCALC-NATIVE-NEXT--*/scripts/14-check-async-layout.mjs "$baseline_dir"
+```
+
+For the full application suite, pass the absolute paths to the ESP-IDF RISC-V GCC executable and the CJI RV32 emulator as the two arguments to the professor's script. It builds the host runtime and reactor artifacts and reports each of 24 workflows individually. On a fresh checkout, build the emulator from the CJI source first if its executable is absent. The script header names the expected location. [Frozen suite](../../PICOCALC-NATIVE-NEXT--a-smaller-rv32-backend-a-module-cache-safety-checks-and-await-for-typed-picocalc-worlds/scripts/01-run-host-replays.sh)
+
+The physical clock starts earlier than any of these host test functions: it includes creating the runtime and linking the Editor module. The long Find observer instead starts when Enter reaches Editor and stops when a retained frame contains the terminal search status. Comparing these durations answers different questions. [Board workflow](../scripts/03-board-qualification.py) · [Find observer](../scripts/05-find-observer.inc)
