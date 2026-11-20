@@ -320,3 +320,7 @@ Read analysis/01-compiling-programs-and-measuring-chess-search-on-a-handheld.md 
 ### Technical details
 
 The published application SHA-256 starts 134f3a24 and the partition starts 72721dc3. The clean-profile app starts 5a72ae37. The final flash readback identifies the published application. The board was left running that release.
+
+### Publication receipt
+
+The reviewed manuscripts passed the publication tool’s relative-link and figure checks. It staged four articles and two figures, committed them in go-go-parc and verified remote main at c419e4ea768271ad49dbe8bdb2be6472f4a8f1f6. The [publication manifest](../various/publication.json) preserves each file digest. The three design guides reached the reMarkable cloud in the single Study Designs PDF. Both the lab and the rendering roadmap passed docmgr doctor.

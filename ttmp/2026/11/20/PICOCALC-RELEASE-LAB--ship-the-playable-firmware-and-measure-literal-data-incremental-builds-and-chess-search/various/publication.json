@@ -1,0 +1,14 @@
+{
+  "vault": "go-go-golems/go-go-parc",
+  "branch": "main",
+  "commit": "c419e4ea768271ad49dbe8bdb2be6472f4a8f1f6",
+  "files": {
+    "Projects/2026/11/20/_assets/firmware-compiler-lab-release-literal-growth.png": "152b659f72d52674e14c3c04dbf232e0d18a575092c4bdd74d5ae81dd7bcb721",
+    "Projects/2026/11/20/_assets/firmware-compiler-lab-search-cost-per-node.png": "d086be517cbf130971e8287d72da9cdc2897d629b48c64acaf6608a7173cd94a",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Firmware Compiler Lab - What a handheld spends on compiling and running Chess.md": "fdf8d63fc0c0623de2f628339140abfc7b0e61e062f5bde2e3242a9ee5e4f111",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Firmware Compiler Lab - When the Compiler Emits Text as Instructions.md": "e8d19b87b493c380eec561617557d79a933b71867bd866ba9838223819794658",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Firmware Compiler Lab - Which parts of a handheld build survive an edit.md": "c9580fed5e19b61b80f6b049461b1673e045ebe069ef1b10f778e8026a3d35ad",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Firmware Compiler Lab - A Chess Search as a Compiler Benchmark on the PicoCalc.md": "e00cf3f5cb07fd9a8829e6ea6d1fec95e8a7f8d12051fd960040d2e4f298e6c8"
+  },
+  "remarkable": "/ai/2026/11/20/PICOCALC-RELEASE-LAB/PicoCalc Firmware Compiler Lab - Study Designs.pdf"
+}

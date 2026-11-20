@@ -1,7 +1,7 @@
 ---
 Title: Ship the playable firmware and measure literal data, incremental builds and Chess search
 Ticket: PICOCALC-RELEASE-LAB
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T17:55:31.294084591-05:00
+LastUpdated: 2026-11-20T18:28:26.612128013-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -33,9 +33,13 @@ The lab measures three costs separately. Literal lowering concerns the size and 
 - [Chess benchmark](analysis/04-chess-search.md) records the host and board outcomes for seventeen search workloads.
 - [Remaining rendering tasks](../PICOCALC-RENDER-NEXT--bounded-screen-snapshots-and-compiled-layouts-for-the-picocalc-compositor/index.md) group the six original gates still open.
 
+## Publication
+
+Four illustrated studies were [published together in go-go-parc](https://github.com/go-go-golems/go-go-parc/commit/c419e4ea768271ad49dbe8bdb2be6472f4a8f1f6). The [incremental study](analysis/03-incremental-builds.md) contains the P4 RAM and flash checkpoint results. The [literal study](analysis/02-literal-data.md) explains how source becomes instructions or data. The [publication receipt](various/publication.json) identifies all articles, figures and the reMarkable study-design bundle.
+
 ## Status
 
-Current status: **active**
+Current status: **complete**
 
 ## Topics
 

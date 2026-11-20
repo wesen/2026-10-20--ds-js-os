@@ -10,3 +10,7 @@
 - Measured an unchanged native search engine on seventeen physical workloads and used the host emulator for per-function instruction profiles.
 - Tested retained native fragments on local and structural edits to Editor and Chess. Compared the RAM route with checkpoint serialization, flash I/O, validation and relinking.
 - Delivered all three study designs to reMarkable in a single PDF.
+
+## 2026-11-20
+
+Verified ordinary firmware restoration and published four benchmark reports and two figures to go-go-parc at c419e4e. The study guides were delivered to reMarkable.
