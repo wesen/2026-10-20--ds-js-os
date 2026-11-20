@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "digest": "5f99c2b49a2a6a7221ae9574cc8cf8f59db0d427cff7a0bc2d7b5d85a25a0a2d",
+  "request": {
+    "ticket": "PICOCALC-RV32-OUTPUT",
+    "operation_id": "output-host-qualified",
+    "summary": "Recorded isolated output candidates, native identity and matched cold QuickJS host measurements",
+    "phase": "validate",
+    "next": "Interpret the coordinated PicoCalc phase and clean series",
+    "task_ids": [
+      "9p45",
+      "y1u5",
+      "twvf"
+    ],
+    "evidence": [
+      {
+        "kind": "experiment",
+        "path": "doc://various/identity.json",
+        "revision": "bd600d740bc592a482574ed915899d1b8b67221067fb0a69375b44a567c9d4d4",
+        "claim": "Equal raw and linked bytes, metadata, calls and diagnostics"
+      },
+      {
+        "kind": "experiment",
+        "path": "doc://various/host-clean.json",
+        "revision": "0cbde83ee51ec82ddc95605a273672ad3c67657c107ccec1dc5ca1c0ab05bec5",
+        "claim": "Balanced cold Linux QuickJS measurement"
+      },
+      {
+        "kind": "experiment",
+        "path": "doc://various/host-profile.json",
+        "revision": "898082977c4f7f063713766a79ce380b5ea5c7bc7eccb66ad00661e4c7745317",
+        "claim": "Matched host phase time and allocator high water"
+      }
+    ],
+    "expected": null
+  },
+  "receipt": {
+    "sequence": 1,
+    "operation_id": "output-host-qualified",
+    "state": "committed",
+    "created_at": "2026-11-20T00:41:20.187167839Z",
+    "changed_paths": [
+      "tasks.md",
+      "changelog.md"
+    ],
+    "before": {
+      "changelog.md": "553668686de8e9fc8f0fc0100d584922c84c2639c8f4fcbbe57effd35d43f6de",
+      "tasks.md": "a82a67e564697d63d55b4174807cd1f6ade67dd292d55d47842729921d0aca7a"
+    },
+    "after": {
+      "changelog.md": "bc4e413766272d909bf87a157f284eb5a99c620bbefe5240ea42a0db0f15733b",
+      "tasks.md": "7ced97dc40b909082754bc61b2e0f129fa4762b214847d63af9f32634aace0c6"
+    }
+  },
+  "changes": [
+    {
+      "path": "tasks.md",
+      "before": "a82a67e564697d63d55b4174807cd1f6ade67dd292d55d47842729921d0aca7a",
+      "after": "IyBUYXNrcwoKIyMgVE9ETwotIFt4XSBUcmFjZSBwcm9kdWN0aW9uIHN0b3JhZ2UgYW5kIHdyaXRlIHRoZSBkZXNpZ24gZ3VpZGUgPCEtLSB0OjlwNDUgLS0+Ci0gW3hdIEltcGxlbWVudCBpc29sYXRlZCBjb21wYWN0IGFuZCBkaXJlY3Qgb3V0cHV0IHZhcmlhbnRzIDwhLS0gdDp5MXU1IC0tPgotIFt4XSBDb21wYXJlIHJhdyBjb2RlLCByZWxvY2F0aW9ucywgZXJyb3JzLCBFTEYgYnl0ZXMsIGFuZCBjb2xkIFF1aWNrSlMgYWxsb2NhdGlvbiA8IS0tIHQ6dHd2ZiAtLT4KLSBbIF0gQ29vcmRpbmF0ZSBwaHlzaWNhbCBtZWFzdXJlbWVudHMgYW5kIGFjY291bnQgZm9yIHRpbWluZyBhbmQgbGl2ZSBhbGxvY2F0aW9uIDwhLS0gdDp4eTAxIC0tPgotIFsgXSBQdWJsaXNoIHRoZSByZXBvcnQgYW5kIGRlbGl2ZXIgdGhlIGludGVybiBndWlkZSA8IS0tIHQ6N3plbiAtLT4K"
+    },
+    {
+      "path": "changelog.md",
+      "before": "553668686de8e9fc8f0fc0100d584922c84c2639c8f4fcbbe57effd35d43f6de",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTEtMTkKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMS0xOQoKUmVjb3JkZWQgaXNvbGF0ZWQgb3V0cHV0IGNhbmRpZGF0ZXMsIG5hdGl2ZSBpZGVudGl0eSBhbmQgbWF0Y2hlZCBjb2xkIFF1aWNrSlMgaG9zdCBtZWFzdXJlbWVudHMKCk9wZXJhdGlvbjogYG91dHB1dC1ob3N0LXF1YWxpZmllZGAK"
+    }
+  ]
+}

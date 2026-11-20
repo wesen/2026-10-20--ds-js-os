@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "digest": "44e15ff6bf55834a95b05ae399031036cb64574c867d66088bde0ef5865d684b",
+  "request": {
+    "ticket": "PICOCALC-RV32-OUTPUT",
+    "operation_id": "output-device-measured",
+    "summary": "Analyzed two matched PicoCalc captures and located the direct output peak in slot linking",
+    "phase": "validate",
+    "next": "Publish the vault report and deliver the intern guide",
+    "task_ids": [
+      "xy01"
+    ],
+    "evidence": [
+      {
+        "kind": "experiment",
+        "path": "doc://various/board-summary.json",
+        "revision": "d407c8fc119141787778395c88fc7a8a1cde9b244376afe62f276a76e4c78082",
+        "claim": "Summarizes both device capture series and preserves exact SHA256 provenance"
+      }
+    ],
+    "expected": null
+  },
+  "receipt": {
+    "sequence": 2,
+    "operation_id": "output-device-measured",
+    "state": "committed",
+    "created_at": "2026-11-20T00:47:10.785940832Z",
+    "changed_paths": [
+      "tasks.md",
+      "changelog.md"
+    ],
+    "before": {
+      "changelog.md": "bc4e413766272d909bf87a157f284eb5a99c620bbefe5240ea42a0db0f15733b",
+      "tasks.md": "7ced97dc40b909082754bc61b2e0f129fa4762b214847d63af9f32634aace0c6"
+    },
+    "after": {
+      "changelog.md": "8302c1c3b2463bef317849467cedcd4fadb10e93bba4515c55dbb4661aa83b6e",
+      "tasks.md": "40261f9df4232faffd9b26099b61fabc1e09517052a61b2952b0888b8eb386ee"
+    }
+  },
+  "changes": [
+    {
+      "path": "tasks.md",
+      "before": "7ced97dc40b909082754bc61b2e0f129fa4762b214847d63af9f32634aace0c6",
+      "after": "IyBUYXNrcwoKIyMgVE9ETwotIFt4XSBUcmFjZSBwcm9kdWN0aW9uIHN0b3JhZ2UgYW5kIHdyaXRlIHRoZSBkZXNpZ24gZ3VpZGUgPCEtLSB0OjlwNDUgLS0+Ci0gW3hdIEltcGxlbWVudCBpc29sYXRlZCBjb21wYWN0IGFuZCBkaXJlY3Qgb3V0cHV0IHZhcmlhbnRzIDwhLS0gdDp5MXU1IC0tPgotIFt4XSBDb21wYXJlIHJhdyBjb2RlLCByZWxvY2F0aW9ucywgZXJyb3JzLCBFTEYgYnl0ZXMsIGFuZCBjb2xkIFF1aWNrSlMgYWxsb2NhdGlvbiA8IS0tIHQ6dHd2ZiAtLT4KLSBbeF0gQ29vcmRpbmF0ZSBwaHlzaWNhbCBtZWFzdXJlbWVudHMgYW5kIGFjY291bnQgZm9yIHRpbWluZyBhbmQgbGl2ZSBhbGxvY2F0aW9uIDwhLS0gdDp4eTAxIC0tPgotIFsgXSBQdWJsaXNoIHRoZSByZXBvcnQgYW5kIGRlbGl2ZXIgdGhlIGludGVybiBndWlkZSA8IS0tIHQ6N3plbiAtLT4K"
+    },
+    {
+      "path": "changelog.md",
+      "before": "bc4e413766272d909bf87a157f284eb5a99c620bbefe5240ea42a0db0f15733b",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTEtMTkKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMS0xOQoKUmVjb3JkZWQgaXNvbGF0ZWQgb3V0cHV0IGNhbmRpZGF0ZXMsIG5hdGl2ZSBpZGVudGl0eSBhbmQgbWF0Y2hlZCBjb2xkIFF1aWNrSlMgaG9zdCBtZWFzdXJlbWVudHMKCk9wZXJhdGlvbjogYG91dHB1dC1ob3N0LXF1YWxpZmllZGAKCiMjIDIwMjYtMTEtMTkKCkFuYWx5emVkIHR3byBtYXRjaGVkIFBpY29DYWxjIGNhcHR1cmVzIGFuZCBsb2NhdGVkIHRoZSBkaXJlY3Qgb3V0cHV0IHBlYWsgaW4gc2xvdCBsaW5raW5nCgpPcGVyYXRpb246IGBvdXRwdXQtZGV2aWNlLW1lYXN1cmVkYAo="
+    }
+  ]
+}

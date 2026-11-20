@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "digest": "ee3f93d5252d5a055fbbeeeb4f998bd98b0b588f1f997f2ef7b2b05e135f8823",
+  "request": {
+    "ticket": "PICOCALC-RV32-OUTPUT",
+    "operation_id": "output-published",
+    "summary": "Published the vault report and uploaded the PicoCalc RV32 Output Intern Guide",
+    "phase": "close",
+    "next": "",
+    "task_ids": [
+      "7zen"
+    ],
+    "evidence": [
+      {
+        "kind": "publication",
+        "path": "doc://design-doc/01-how-to-emit-picocalc-native-code-into-compact-storage.md",
+        "revision": "e4f00ee30247f3c54ff3e684e30ffe107231ca8ea780d2869fd140fb1404cd39",
+        "claim": "Finalized intern guide uploaded to the authorized reMarkable cloud folder"
+      },
+      {
+        "kind": "publication",
+        "path": "doc://log/01-output-study-investigation-diary.md",
+        "revision": "09318a5c479ffe95091a9949b88fe24d0206af1714047079d3cdb4d56734f0e4",
+        "claim": "Records device evidence and confirmed publication receipts"
+      },
+      {
+        "kind": "publication",
+        "path": "doc://various/compact-native-output-report.md",
+        "revision": "0c913b77d00e822fa8d9f057de63518a8cf92cdb8b31a0f419e17fee59361803",
+        "claim": "Final research report mirrored into the vault and pushed at 9616ac1"
+      }
+    ],
+    "expected": null
+  },
+  "receipt": {
+    "sequence": 3,
+    "operation_id": "output-published",
+    "state": "committed",
+    "created_at": "2026-11-20T00:48:41.202187638Z",
+    "changed_paths": [
+      "tasks.md",
+      "changelog.md"
+    ],
+    "before": {
+      "changelog.md": "8302c1c3b2463bef317849467cedcd4fadb10e93bba4515c55dbb4661aa83b6e",
+      "tasks.md": "40261f9df4232faffd9b26099b61fabc1e09517052a61b2952b0888b8eb386ee"
+    },
+    "after": {
+      "changelog.md": "be0d49381aac6aa1608b866d06cf9046cff7dec74aedf2db3e7c58285b333278",
+      "tasks.md": "f3e489c909e1eae130bfd9fb699d447e408813b5f35b74b614ca5768e8eb057d"
+    }
+  },
+  "changes": [
+    {
+      "path": "tasks.md",
+      "before": "40261f9df4232faffd9b26099b61fabc1e09517052a61b2952b0888b8eb386ee",
+      "after": "IyBUYXNrcwoKIyMgVE9ETwotIFt4XSBUcmFjZSBwcm9kdWN0aW9uIHN0b3JhZ2UgYW5kIHdyaXRlIHRoZSBkZXNpZ24gZ3VpZGUgPCEtLSB0OjlwNDUgLS0+Ci0gW3hdIEltcGxlbWVudCBpc29sYXRlZCBjb21wYWN0IGFuZCBkaXJlY3Qgb3V0cHV0IHZhcmlhbnRzIDwhLS0gdDp5MXU1IC0tPgotIFt4XSBDb21wYXJlIHJhdyBjb2RlLCByZWxvY2F0aW9ucywgZXJyb3JzLCBFTEYgYnl0ZXMsIGFuZCBjb2xkIFF1aWNrSlMgYWxsb2NhdGlvbiA8IS0tIHQ6dHd2ZiAtLT4KLSBbeF0gQ29vcmRpbmF0ZSBwaHlzaWNhbCBtZWFzdXJlbWVudHMgYW5kIGFjY291bnQgZm9yIHRpbWluZyBhbmQgbGl2ZSBhbGxvY2F0aW9uIDwhLS0gdDp4eTAxIC0tPgotIFt4XSBQdWJsaXNoIHRoZSByZXBvcnQgYW5kIGRlbGl2ZXIgdGhlIGludGVybiBndWlkZSA8IS0tIHQ6N3plbiAtLT4K"
+    },
+    {
+      "path": "changelog.md",
+      "before": "8302c1c3b2463bef317849467cedcd4fadb10e93bba4515c55dbb4661aa83b6e",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTEtMTkKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMS0xOQoKUmVjb3JkZWQgaXNvbGF0ZWQgb3V0cHV0IGNhbmRpZGF0ZXMsIG5hdGl2ZSBpZGVudGl0eSBhbmQgbWF0Y2hlZCBjb2xkIFF1aWNrSlMgaG9zdCBtZWFzdXJlbWVudHMKCk9wZXJhdGlvbjogYG91dHB1dC1ob3N0LXF1YWxpZmllZGAKCiMjIDIwMjYtMTEtMTkKCkFuYWx5emVkIHR3byBtYXRjaGVkIFBpY29DYWxjIGNhcHR1cmVzIGFuZCBsb2NhdGVkIHRoZSBkaXJlY3Qgb3V0cHV0IHBlYWsgaW4gc2xvdCBsaW5raW5nCgpPcGVyYXRpb246IGBvdXRwdXQtZGV2aWNlLW1lYXN1cmVkYAoKIyMgMjAyNi0xMS0xOQoKUHVibGlzaGVkIHRoZSB2YXVsdCByZXBvcnQgYW5kIHVwbG9hZGVkIHRoZSBQaWNvQ2FsYyBSVjMyIE91dHB1dCBJbnRlcm4gR3VpZGUKCk9wZXJhdGlvbjogYG91dHB1dC1wdWJsaXNoZWRgCg=="
+    }
+  ]
+}

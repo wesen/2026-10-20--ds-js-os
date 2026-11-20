@@ -1,0 +1,65 @@
+{
+  "worlds": [
+    {
+      "app": "files",
+      "functions": 7,
+      "image_bytes": 3216,
+      "image_sha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+      "metadata_sha256": "fa3868cacaa456b1acdee03a5be069bc3f3ab9176f1ecbfb9e916967892b26dc",
+      "import_relocations": 0,
+      "elf_bytes": 24424,
+      "elf_sha256": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8"
+    },
+    {
+      "app": "agenda",
+      "functions": 34,
+      "image_bytes": 16232,
+      "image_sha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+      "metadata_sha256": "c5c1de979fca5a9139359f21317c7d73ef1854b3c77c20098e8803dae5a3fcb4",
+      "import_relocations": 0,
+      "elf_bytes": 66364,
+      "elf_sha256": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454"
+    },
+    {
+      "app": "editor",
+      "functions": 120,
+      "image_bytes": 87544,
+      "image_sha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+      "metadata_sha256": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+      "import_relocations": 145,
+      "elf_bytes": 240452,
+      "elf_sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    }
+  ],
+  "fixture": {
+    "image_bytes": 31560,
+    "image_sha256": "dcb0ffad3699c8b580253ca86c250770a6409dc45965f36a1ef644a9b26c4a53",
+    "elf_bytes": 31684,
+    "elf_sha256": "46a00141d290778d30a0b97b0b8c1adab2309575bfad4b4edb13ffe8a201091d",
+    "resolved_calls": 1,
+    "loop_back_edges": 1
+  },
+  "options": [
+    "omitted",
+    "streamed",
+    "buffered"
+  ],
+  "simulated_explicit_little_endian_fallback": true,
+  "diagnostics": [
+    "RV32 supports up to eight register arguments",
+    "RV32 function frame exceeds the instruction range",
+    "RV32 supports up to eight register arguments",
+    "RV32 function frame exceeds the instruction range",
+    "1:125: expected i32, got bool",
+    "1:187: duplicate function nine",
+    "1:27: unknown function g",
+    "1:33: unknown function self",
+    "input limit exceeded",
+    "RV32 jump exceeds the instruction range",
+    "RV32 supports up to eight register arguments",
+    "1:141113: expected i32, got bool",
+    "1:29: expected i32, got bool",
+    "Typed world requires the shared WorldEvent record",
+    "expected an ELF32 RISC-V ilp32f reactor"
+  ]
+}

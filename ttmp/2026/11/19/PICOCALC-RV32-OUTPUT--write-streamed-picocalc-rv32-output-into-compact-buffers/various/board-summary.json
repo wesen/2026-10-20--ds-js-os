@@ -1,0 +1,132 @@
+{
+  "primary": {
+    "source_receipt_sha256": "2a05e16b40e62161ba30379f48aafa5dcd184adc274884989703772896a0fc79",
+    "firmware_sha256": "d276c070154de6fbbf380e96ca87f041e00f168a228c9aa83c21a976e569f866",
+    "block_count": 4,
+    "elf_sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+    "elf_bytes": 240452,
+    "clean": {
+      "base": {
+        "us": 2483993.0,
+        "peak": 1410878.0,
+        "paired_us_saved": 0.0,
+        "faster_blocks": 0
+      },
+      "compact": {
+        "us": 2392126.5,
+        "peak": 1403150.0,
+        "paired_us_saved": 78949.0,
+        "faster_blocks": 4
+      },
+      "direct": {
+        "us": 2335968.0,
+        "peak": 1414092.0,
+        "paired_us_saved": 150657.5,
+        "faster_blocks": 4
+      }
+    },
+    "phases": {
+      "base": {
+        "frontend": {
+          "us": 1431471.5,
+          "peak": 1311490.0
+        },
+        "lowering": {
+          "us": 688079.5,
+          "peak": 1316466.0
+        },
+        "assembly": {
+          "us": 149792.0,
+          "peak": 1415086.0
+        },
+        "slot_output": {
+          "us": 13228.0,
+          "peak": 1394058.0
+        }
+      },
+      "direct": {
+        "frontend": {
+          "us": 1380736.5,
+          "peak": 1192582.0
+        },
+        "lowering": {
+          "us": 693572.0,
+          "peak": 1197558.0
+        },
+        "assembly": {
+          "us": 45146.5,
+          "peak": 1208626.0
+        },
+        "slot_output": {
+          "us": 14408.0,
+          "peak": 1414468.0
+        }
+      }
+    }
+  },
+  "replication": {
+    "source_receipt_sha256": "849c454faf08cb261b6382b796871a410a61b99a7addf4cae7da790052730a84",
+    "firmware_sha256": "d276c070154de6fbbf380e96ca87f041e00f168a228c9aa83c21a976e569f866",
+    "block_count": 4,
+    "elf_sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+    "elf_bytes": 240452,
+    "clean": {
+      "base": {
+        "us": 2463364.5,
+        "peak": 1410872.0,
+        "paired_us_saved": 0.0,
+        "faster_blocks": 0
+      },
+      "compact": {
+        "us": 2397348.5,
+        "peak": 1403148.0,
+        "paired_us_saved": 60977.5,
+        "faster_blocks": 4
+      },
+      "direct": {
+        "us": 2330993.0,
+        "peak": 1414090.0,
+        "paired_us_saved": 124543.5,
+        "faster_blocks": 4
+      }
+    },
+    "phases": {
+      "base": {
+        "frontend": {
+          "us": 1428113.0,
+          "peak": 1311504.0
+        },
+        "lowering": {
+          "us": 692037.5,
+          "peak": 1316480.0
+        },
+        "assembly": {
+          "us": 149348.5,
+          "peak": 1415100.0
+        },
+        "slot_output": {
+          "us": 13552.0,
+          "peak": 1394054.0
+        }
+      },
+      "direct": {
+        "frontend": {
+          "us": 1378913.5,
+          "peak": 1192612.0
+        },
+        "lowering": {
+          "us": 698762.0,
+          "peak": 1197588.0
+        },
+        "assembly": {
+          "us": 45461.0,
+          "peak": 1208656.0
+        },
+        "slot_output": {
+          "us": 14161.5,
+          "peak": 1414480.0
+        }
+      }
+    }
+  }
+}
