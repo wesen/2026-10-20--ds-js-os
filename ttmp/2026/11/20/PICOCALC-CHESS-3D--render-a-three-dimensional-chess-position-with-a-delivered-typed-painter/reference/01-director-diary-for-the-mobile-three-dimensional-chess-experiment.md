@@ -328,7 +328,7 @@ No requested gameplay, animation, publishing or firmware step remains. A separat
 
 ### Code review instructions
 
-Begin with various/smooth-device/README.md and its reproduction commands, then analysis/01 and analysis/05. Compare the normal and observed slot receipts in various/camera. Production controls and command validation were committed in 170e90d, mesh geometry in ee4e988 and qualified slot configuration in 7611ade.
+Begin with various/smooth-device/01-replay.md and its reproduction commands, then analysis/01 and analysis/05. Compare the normal and observed slot receipts in various/camera. Production controls and command validation were committed in 170e90d, mesh geometry in ee4e988 and qualified slot configuration in 7611ade.
 
 ### Technical details
 
