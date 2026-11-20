@@ -36,6 +36,29 @@ A module is an ELF that already contains the SDK reactor. The native linker writ
 
 The earlier research candidate tracked where the compiler placed each value on the operand stack. Its native lowerer passed the full set of 24 historical application replays at the start of this wave. The processor executes a regular addition once its inputs are in registers. Materializing both inputs in the function frame between every pair of operations consumes instructions and data accesses. The choice to keep register locations as compiler state is familiar in baseline compiler design. The physical cost depends on the host executing the compiler. Here that host is a handheld executing JavaScript. [V8’s Liftoff implementation](https://v8.dev/blog/liftoff) · [Titzer’s comparison of baseline compilers](https://arxiv.org/abs/2305.13241)
 
+The production path has four useful entry points. The firmware selects the runtime and records elapsed time. The world wrapper supplies the SDK contract for a particular application. The frontend sends each completed function to the selected backend. The native linker knows where the reactor reserved its entry points and generated code.
+
+| Where to read | Contract |
+| --- | --- |
+| `picocalc-os/port/esp32p4/main/typed_p4.c`, `p4_typed_compile` | Creates a QuickJS runtime with an accounting allocator, loads the compiler and returns module bytes. The log records microseconds, allocator high-water mark and output length. |
+| `picocalc-os/compiler/typed-world.js`, `compileTypedWorldRv32(source, reactor, options)` | Selects the native compiler, the world's signatures and its entry points. Its sibling `compileTypedWorld` produces the Wasm module. |
+| `picocalc-os/compiler/typed-wasm.js`, `compileFunctions(…, onFunction)` | Parses functions in declaration order and calls the sink with each completed body in streaming mode. |
+| `picocalc-os/compiler/typed-rv32.js`, `compile` and `linkSlot` | Lower the frontend's stack operations to machine words, resolve calls and place the program in the reactor's executable slot. |
+
+A correctness check can fail at any of these boundaries. For example, an allocator improvement can preserve an ELF byte for byte but take longer because the parser now does more work. A register change can legitimately alter the entire function while preserving its output. Our physical trial checks each candidate against its own complete host-generated artifact and separately executes named kernels with known results.
+
+```text
+for each physical boot:
+    for each balanced comparison block:
+        for each compiler in the block's rotated order:
+            create a fresh compiler runtime
+            compile identical typed source against the same reactor
+            record elapsed microseconds and peak allocated bytes
+            verify the entire ELF against this compiler's reference digest
+    run timed batches of native calls with known inputs and expected results
+    compare candidates within the same boot and comparison block
+```
+
 ## The cost of reading the program
 
 The production lexer ran a regular expression on the input and created a fresh token record. The original fast-scanner experiment changed both decisions at once. In this wave the four-way test varied each decision independently. The scanner had to recognize the same identifiers, numbers, string escapes, comments and punctuation. A reused token record also changes its ownership. A parser that needs a token after advancing the scanner must first copy the relevant data. The host differential covered 69,643 lexical cases as well as successful and unsuccessful program compilations through both targets.
@@ -57,6 +80,10 @@ A source-level operation such as `text.charCodeAt(i)` identifies a receiver, a s
 The P4 measured the cost of observation itself. The byte-identical observation arm increased Editor cold time by 6.18% and 6.79% across its two boots and increased peak heap by 0.42%. Direct consumption reduced the overhead to 3.42% and 4.12% relative to staged, reduced peak heap by about 15.7 kB and removed 367 Editor words. A Files comparison of two 91-unit strings that differ in their last unit took 18.86% fewer cycles on both boots. The Agenda weekday kernel did not consume the changed operation on its measured path and stayed close to its baseline. Transporting typed information has a measurable price even when it produces the same native bytes. Its value depends on which backend optimizations and guest computations use it.
 
 A second experiment follows two guards across a small proof graph. In `0 <= i < end <= text.length`, the index is safe for that receiver once all three inequalities hold for the current values. An assignment to `end`, a new text receiver, a join where only one path established the guard, or possible signed overflow can invalidate the proof. In an edited Editor test harness one static check in the preview copying routine accounted for 202 checks on one 64 KiB workload and 3,129 checks on another. The change in dynamic checks depends on the input even when the machine code is fixed. The source and the control must have the same guards for that comparison. Bodík, Gupta and Sarkar established a more general demand-driven approach using sparse constraints. The present experiment retains a much smaller set of facts and has its own measured coverage. [ABCD](https://homes.cs.washington.edu/~bodik/ucb/research/pldi00.html)
+
+The real copy routine processed exactly 65,536 UTF-16 units on the P4. In boot order, the baseline took 42.391 and 42.393 cycles per unit. Bounded reasoning took 38.378 and 38.379. This was a 9.49% and 9.46% paired improvement. The one-guard rule was nearly indistinguishable from ordinary checks on the same source. The whole native Editor preview replay on the host counted the operations actually executed, while this physical microbenchmark timed the affected routine. These two observations support a performance mechanism. A complete on-device frame comprises additional work, so a 9.5% faster copy does not give a 9.5% faster display update.
+
+The proof had a measurable cost even when it produced no better code. On the guarded Editor source, enabling the direct analysis increased cold compile time by 9.03% and 10.05% across the two boots while preserving every output byte. The bounded analysis added 8.08% and 10.10% to cold compilation and 1.11% to peak compiler heap on both boots. Writing an explicit fast and fallback loop also made the source larger. The original, unmodified direct-read Editor occupied 16,174 words. On the guarded source the ordinary and direct compilers occupied 16,214 and the bounded variant occupied 16,210. Four words saved by one compiler rule and 36 extra words relative to the original application answer different engineering questions.
 
 ## Spend a limited analysis budget
 

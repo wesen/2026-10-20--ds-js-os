@@ -37,7 +37,7 @@ for app,name in zip(apps,names):
     rr=records(app,"base","combined");ss=records(app,"native","combined")
     print("| "+" | ".join([name,pair(rr,"cycles","baseline"),pair(rr,"cycles","candidate"),
                            pair(rr,"cycles","pct"),pair(ss,"us","pct")])+" |")
-print("\nEach guest batch executes 128 checked calls. Files compares a particular pair of names; Agenda evaluates weekday over a fixed date sequence; Editor matches a specific search query. The chart describes those kernels. A keypress, a redraw or a whole application turn exercises more work than a single kernel.\n")
+print("\nEach guest batch executes 128 checked calls. Files compares a particular pair of names. Agenda evaluates weekday over a fixed date sequence. Editor matches a specific search query. The chart describes those kernels. A keypress, a redraw or a whole application turn exercises more work than a single kernel.\n")
 print("A sensitivity calculation gives one interpretation of the additional cold work. Let ΔC be extra microseconds at build time and ΔG be cycles saved per measured guest call at frequency F hertz. If these calls were the only beneficiary, ΔC × F / (1,000,000 × ΔG) calls would repay the extra compilation. Repeated operations, source edit frequency and changes in other functions determine the application's actual break-even.\n")
 for app,name in zip(apps,names):
     rr=records(app,"base","combined")

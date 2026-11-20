@@ -184,3 +184,59 @@ Inspect the loop ordering in `scripts/03-board-queue.py`, the specialized study 
 ### Technical details
 
 Editor’s integrated host output is 12,444 RV32 instructions (−43.14% relative to the 21,886-word production control). Files is 380 (−52.74%) and Agenda’s parser and reminders occupy 2,044 (−49.63%). Their cold times are measured independently. The design delivery record is `various/remarkable-guides.json`.
+
+## Step 4: Validate the physical cost of two guards and publish the negative controls
+
+The research program distinguishes time spent compiling, time spent running the generated program, and time saved between two edits. A candidate can improve one of these measures and worsen another. I checked two studies whose conclusions depend on keeping those clocks and their denominators separate.
+
+### Prompt Context
+
+**User prompt (verbatim).** “what's the editor compile time currently? the best?” and “and files?”
+
+**Assistant interpretation.** Report the best repeatable on-device cold times for both applications. Give the running-session edit measurements separately and identify their full rebuild controls.
+
+**Inferred user intent.** A user choosing a compiler for a physical handheld needs an absolute time and a reproducible configuration. A 43 ms edit and a 232 ms cold compile can both describe Files accurately.
+
+**Commit (code).** Bounded proof measurements and exact kernel verification landed at `c942c3e`, with the completed ticket at `169880c`. The editor edit experiment and its report are at `1ada796`. Register placement receipts and closed study are at `734366a`.
+
+### What I did
+
+- Read the standalone two-guard manuscript against the two-boot results, reviewed the distinction between a full preview replay and the isolated physical copy, and published the exact manuscript in go-go-parc. The remote tip was `31a17a798bc08af9f3a2a0378c561fab6b0a9cbe`. The study author verified the article's byte digest independently.
+- Added the real compiler API boundaries and a short version of the experimental protocol to the newcomer report. Added both compile-cost observations for the direct and bounded analyses and the original-source comparison.
+- Asked the await investigator to validate the boot boundary before accepting the physical data. The flash auto-boot and explicit reboot both wrote valid compile messages into the same serial capture. The restart uses a tagged reboot, the same compiler firmware and the same serial lock.
+
+### Why
+
+The missing bounds check removes work inside a loop. The extra facts must still be built when no check can be removed. The direct candidate emitted exactly the same complete Editor image as ordinary compilation and isolates that overhead. Using the same guarded source for all three lanes measures the compiler rule. Recording the original source separately accounts for the cost of exposing the guards.
+
+### What worked
+
+The bounded candidate removed 202 or 3,129 dynamically executed checks in the two complete host-loaded previews. On hardware it reduced the measured copy cycles per UTF-16 unit by 9.49% and 9.46%, and increased cold compile time by 8.08% and 10.10%. Hardware firmware was restored and all three native worlds booted. The split between compile and guest time also explains the cost of the register experiment.
+
+### What didn't work
+
+The direct-only proof added about 9–10% to compile time and saved zero instructions on this Editor source. A valid await experiment initially failed serial accounting because the first capture also included a preceding automatic boot. Its parser required exactly one compile event and correctly declined to report the mixed interval.
+
+### What I learned
+
+One check can be hot even in an application with few proven sites. Exposing the extra relation in typed source added a fallback loop. The guarded optimized program is 36 words larger than its unmodified direct-read ancestor despite being four words smaller than its guarded control. Reusing the retained fragments of the whole Editor paid for a different class of user action.
+
+### What was tricky to build
+
+Checking a complete ELF establishes artifact identity. It does not prove that a measured routine used that native text or that the application traversed that particular path. The evidence includes separate code-digest verification, expected state, and dynamic count or cycle observations for each corresponding workload.
+
+### What warrants a second pair of eyes
+
+Inspect the normal and fallback loops, and confirm the memory effects that invalidate the receiver-length identity. Recheck the explicit reboot boundary in the original await capture alongside the receipt before accepting the final four-boot result.
+
+### What should be done in the future
+
+Complete the selector transfer and integration clocks after the await comparison releases the board. Present all eight studies together with their different control lanes, and preserve the restoration receipt.
+
+### Code review instructions
+
+Read the bounded proof ticket's design, normal compiler and argument checks, and the full `various/` evidence at `c942c3e`. Review the same-source counters alongside the pre-intervention code size. The supervisor's `scripts/12-integration-table.py` reports paired changes from the device without pooling separate boots.
+
+### Technical details
+
+The copy benchmark uses 65,536 UTF-16 units per pass. The physical evidence contains 108 checked ELF returns. Complete preview dynamic counts are emulator event counts, and the P4 copy measurements are cycles per unit. All eight study design guides had already been delivered in the supervisor bundle.
