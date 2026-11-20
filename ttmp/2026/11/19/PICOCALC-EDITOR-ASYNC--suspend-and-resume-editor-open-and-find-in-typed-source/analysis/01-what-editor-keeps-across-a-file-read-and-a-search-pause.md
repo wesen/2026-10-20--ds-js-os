@@ -107,6 +107,19 @@ The replacement fixture starts a dense miss and receives a positive search timer
 
 These tests distinguish a canceled task from cancellation of the underlying timer. The timer may still arrive from the kernel. Clearing the frame removes the correspondence between that token and any reachable continuation. [Direct-event receipts](../various/04-combined-event-fixtures.jsonl) · [Original Editor replay receipts](../various/05-combined-host-replays.txt) · [Cross-application replay receipt](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/host-find.json)
 
+## Cold compilation and workflow CPU on the PicoCalc
+
+The device comparison used the same board, SDK, workflow and application reservation. The control included the language migrations through `1357545`. The candidate used the generated Open and Find with the continuation compiler at `2e4fee1`. Three trials per engine booted the compiler from the source bundle and replayed a real edit, search, preview and save. Each compile number below is the median of the last boot receipt in each trial.
+
+| Engine | Cold compile before and after | Peak QuickJS heap before and after | Editor CPU during the workflow before and after |
+| --- | ---: | ---: | ---: |
+| RV32 | 2.646 s → 3.817 s (+44.3%) | 1,493,644 B → 2,256,776 B | 35.03 ms → 34.80 ms (−0.7%) |
+| Wasm | 2.028 s → 3.121 s (+53.9%) | 1,545,892 B → 2,263,468 B | 144.35 ms → 144.30 ms (−0.03%) |
+
+The workflow passed in every trial. Each engine reproduced the control's Find and preview screenshots byte for byte on all three candidate trials. The native workflow CPU met its 10% ceiling. The 44.3% increase for a cold native build exceeded its 10% target.
+
+The two measurements cover different code. The boot receipt covers loading the compiler, analyzing and rewriting the task source, compiling generated functions and linking the module. The workflow counter starts after boot and accumulates only the Editor's turns during the measured interaction. The frame count and code-size comparison describe the resulting program. Those measurements establish that the run fits the state limit and preserves the demonstrated workflow, and the compile measurements show a cost that the instruction count alone cannot predict. [Device comparison](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/workflow-comparison.json) · [Candidate trials](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/physical-final.json)
+
 ## Reproduce the comparison
 
 Build the host reactor with `make -C picocalc-os typed-world-reactor`. From the repository root, run the ticket scripts with Node. The first command compiles the five source checkpoints against the current compiler. The second executes the direct event fixtures with the P4 GCC and the CJI `rv32emu` paths.

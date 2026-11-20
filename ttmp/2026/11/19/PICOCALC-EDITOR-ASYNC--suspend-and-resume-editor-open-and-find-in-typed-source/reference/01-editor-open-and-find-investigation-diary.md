@@ -290,3 +290,53 @@ Read `05-find-observer.inc` and `07-time-find.py` in the [qualification scripts]
 ### Technical details
 
 Each direct fixture passes through a linked reactor. The physical observer runs in separate images to avoid including its matching and serial printing in the uninstrumented full-workflow timing.
+
+## Step 6 — Account for the physical cold-compile regression
+
+The fixed-clock device trials reproduced Edit, Find and Preview for each engine. The combined workflow uses nearly the same measured Editor CPU. The native cold compile median exceeds the prospective limit despite fitting the static state and native code reservations.
+
+### Prompt context
+
+See Step 1. The production scope compares the complete Editor with the before-G compiler on the physical PicoCalc. The supervising ticket performed and archived all hardware operations.
+
+### What I did
+
+- Checked three complete trials per engine for each of before-G and generated Editor. Took the median of each trial's final cold bundle compile and compared workflow outcomes, screenshot digests and CPU through the supervisor's receipts.
+- Added the cold time, peak QuickJS heap and workflow CPU comparison to the Editor article.
+- Read `p4_typed_compile` to verify the cold time includes creating the QuickJS context, evaluating compiler sources, executing the compile/link function and releasing the context.
+
+### Why
+
+The generated program and its compiler have different cost limits. Extra compiler work during boot can increase latency even when handler execution remains within its forecast. The full-workflow CPU delta and cold time capture those intervals separately.
+
+### What worked
+
+All six candidate device workflows passed. Every candidate screenshot digest matched its control within the same engine on each trial. Native Editor CPU was 34.80 ms against the before-G value of 35.03 ms. Wasm Editor CPU was 144.30 ms against 144.35 ms. The supervisor confirmed restoration to the starting firmware and original native app world set.
+
+### What didn't work
+
+The predicted native cold compile increase of at most 10% failed. Median cold native time rose from 2,645,557 µs to 3,816,925 µs, an increase of 44.3%. Wasm increased from 2,028,286 µs to 3,121,485 µs. The native QuickJS peak increased from 1,493,644 bytes to 2,256,776 bytes.
+
+### What I learned
+
+A single removed state field and a small increase in emitted instructions say little about the compile pass's own allocation and running time. The device spends time loading and executing the transformation in QuickJS. The aggregate receipt alone does not assign that increase among passes.
+
+### What was tricky to build
+
+The app source checkpoint is `7b321a9`. The tested candidate compiler bundle uses `2e4fee1`, which emits the same app module bytes with reduced compiler work. The before-G comparator is `1357545` with the fixed-clock instrumentation. Comparing cold times directly with the earlier `289281c` receipt answers the wider E plus G question instead.
+
+### What warrants a second pair of eyes
+
+Confirm a displayed frame's digest is compared within its engine and with the fixed wall clock. Use the newer compiler build's own native cold receipt in the 10% comparison.
+
+### What should be done in the future
+
+Use isolated compiler phase timing to attribute the increase. Complete the separate on-device full-size search run and compare the observer's elapsed time with its accumulated Editor CPU.
+
+### Code review instructions
+
+Inspect the [workflow comparison](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/workflow-comparison.json) and the [candidate trial receipts](../../PICOCALC-EG-QUAL--implement-and-qualify-the-typed-language-and-asynchronous-editor-on-the-picocalc/various/physical-final.json).
+
+### Technical details
+
+The native counter meets the 10% workflow CPU ceiling. The application meets the 71-field limit with 70. The native cold compile forecast is a distinct failed performance prediction.
