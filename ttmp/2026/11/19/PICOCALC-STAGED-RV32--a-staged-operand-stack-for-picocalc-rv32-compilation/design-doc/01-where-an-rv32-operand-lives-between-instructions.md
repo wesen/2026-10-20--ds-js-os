@@ -61,3 +61,16 @@ flowchart LR
 ```
 
 The functions in the output image may start at new offsets after lowering. The linker can still read entry offsets and call relocations from the same interface and patch them into the reactor. Re-derive image offsets from the instructions that survived layout, and use the final offsets for host comparisons.
+
+## When a branch edge needs its own code
+
+The Claude Opus 5.5 design review considered a generic WebAssembly block with an `i32` result. Suppose `br_if` must deliver a pending read to a chosen register only when it branches. The compiler can invert the condition and skip over the move plus an unconditional jump. A one-word direct branch would skip the move needed by the receiver unless the compiler first proved that the result already occupied the agreed home.
+
+```text
+if condition is false: jump to fallthrough
+move the pending result to the receiver's agreed register
+jump to the joining label
+fallthrough:
+```
+
+PicoCalc's frontend uses value-producing `if` for short-circuit expressions and emits `br_if` for the exits of statement loops. The two arms of each value-producing `if` can place their outputs before they branch or fall through. Relaxation can then focus on pairs whose removed word is the `jal` alone. If the frontend gains value-producing `br_if` targets, revisit the edge-specific moves before allowing those pairs to shrink.

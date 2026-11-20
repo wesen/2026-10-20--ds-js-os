@@ -71,3 +71,5 @@ Start with `picocalc-os/compiler/typed-rv32.js` at the pinned revision. Review t
 ### Technical details
 
 Instructions count as 32-bit words. Branch distances are signed relative byte offsets. The four-lane host and firmware fixtures are under the sibling `PICOCALC-RV32-COMBINED` ticket.
+
+The first generic design invocation timed out after 220 seconds with status 124 and no response. A narrower 90-second streaming request returned an authenticated `claude-opus-5-5` result. Its worked example identified the need to keep a value-producing branch's conditional materialization on the taken edge. Reviewing `typed-wasm.js` confirmed that the current branch-producing syntax uses `br_if` for statement loops and `if` with `else`/`end` for branch values. The intern guide records where that simpler design would need extension. No repository content went into either generic design request.
