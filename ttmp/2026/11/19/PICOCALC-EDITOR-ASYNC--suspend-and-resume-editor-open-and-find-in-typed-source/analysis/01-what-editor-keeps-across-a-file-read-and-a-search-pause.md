@@ -1,7 +1,7 @@
 ---
 Title: What Editor keeps across a file read and a search pause
 Ticket: PICOCALC-EDITOR-ASYNC
-Status: active
+Status: complete
 Topics:
     - picocalc
     - editor
@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Search state and bounded scheduler slices
 ExternalSources: []
 Summary: Explain the production Editor continuation migration and measure its behavior, code size, and persistent state on both targets.
-LastUpdated: 2026-11-19T23:31:00.895591917-05:00
+LastUpdated: 2026-11-20T01:16:49.164758043-05:00
 WhatFor: Learn how Editor suspends file normalization and text search.
 WhenToUse: When reviewing generated typed tasks or planning an application migration.
 ---

@@ -22,3 +22,7 @@ Completed yielding Find and verified explicit cancellation in both compiled reac
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/worlds/editor/find.typed — Generated Find continuation
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/worlds/editor/state.typed — Shared versus generated state
+
+## 2026-11-20
+
+Completed the Editor migrations and both-target device qualification. Published the reproduced behavior, 70-field layout and measured cold-compile regression in go-go-parc e2cd8bf.

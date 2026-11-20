@@ -391,3 +391,53 @@ Start with the [paired search measurements](../../PICOCALC-EG-QUAL--implement-an
 ### Technical details
 
 The search classes use `ext`, `text text z`, and `needle` in order. The observer brackets the Editor's Enter handling through the first retained expected status. The initial status check sees `Find: <query>_`. The miss sees `Not found: text text z`. The two hit cases see a file label with coordinates `1:2` and `852:1`.
+
+## Step 8 — Publish the tested Editor report and close the app ticket
+
+The Obsidian report includes the complete workflow and full-size search comparisons, the cold-cost attribution and an actual physical capture of the tail match. The source report remains beside the reproduction scripts and receipts.
+
+### Prompt context
+
+See Step 1. The user asked each author for a textbook-style report in the go-go-parc vault and explicitly authorized committing and pushing the vault.
+
+### What I did
+
+- Used the supervisor's `15-publish-note.py` helper to create the dated note and copy the physical tail image. Added the source repository to the vault frontmatter.
+- Verified that the embedded image matched the source capture, staged only the new report and its figure, committed them and pushed `HEAD:main` to the vault's `origin`.
+- Verified the project ticket's Markdown links and ran `docmgr doctor --ticket PICOCALC-EDITOR-ASYNC`.
+
+### Why
+
+The dated note keeps the report readable outside the application workspace. The source revision, exact check commands and device receipts provide a reproducible record of the successful behavioral gates and the native boot-time forecast miss.
+
+### What worked
+
+The push advanced vault `main` from `f75a58f` to `e2cd8bf0d82ce4c92ae4e49d44b3902c8fcaa365`. The vault working tree reported clean and synchronized with `origin/main`. The [published Editor report](https://github.com/go-go-golems/go-go-parc/blob/e2cd8bf0d82ce4c92ae4e49d44b3902c8fcaa365/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20What%20Editor%20Keeps%20Across%20a%20File%20Read%20and%20a%20Search%20Pause.md) includes the physical RV32 tail screenshot, SHA-256 `41b9081dee90df39f2a1bfd73da9de995f89bad02bebbd6a1ef46decb5fa94e1`.
+
+### What didn't work
+
+No publication failures observed.
+
+### What I learned
+
+An embedded capture needs to accompany the standalone report itself. The vault conversion copies it to the dated folder and preserves the separately tracked source references as repository-relative paths.
+
+### What was tricky to build
+
+The report compares fixed-name workflow screenshot bytes across versions. Its full-size search figure uses an isolated trial name, which keeps its state independent of previous measurements.
+
+### What warrants a second pair of eyes
+
+Verify the table's full-size rows against the paired receipt and the 10% prediction against the before-G native medians.
+
+### What should be done in the future
+
+The separate compiler source-inspection study owns work to reduce the measured boot cost.
+
+### Code review instructions
+
+Read the [source article](../analysis/01-what-editor-keeps-across-a-file-read-and-a-search-pause.md) and the published commit. The application checkpoints are `ed86ba9`, `1357545`, `eb4ef81` and `7b321a9`.
+
+### Technical details
+
+The published note is in `Projects/2026/11/20`. Its sole new figure is `_assets/editor-physical-tail.png`.
