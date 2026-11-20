@@ -1,0 +1,4 @@
+agenda compile source=bundle status=ok us=757561 peak_js_bytes=726752 module_bytes=66364
+files compile source=bundle status=ok us=257196 peak_js_bytes=381248 module_bytes=24424
+editor compile source=bundle status=ok us=3171031 peak_js_bytes=2454960 module_bytes=240452
+[{"name":"files","engine":"native","file":"files/compiled.bin","last_error":""},{"name":"editor","engine":"native","file":"editor/compiled.bin","last_error":""},{"name":"agenda","engine":"native","file":"agenda/compiled.bin","last_error":""}]

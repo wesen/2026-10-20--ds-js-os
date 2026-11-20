@@ -18,7 +18,7 @@ def draw(results, output):
         ("lazy", "lazy_delta", "Lazy text with cursor", "#AC5A22"),
     ]
     fig, axes = plt.subplots(len(apps), 2, figsize=(10.7, 8.0))
-    fig.subplots_adjust(left=.24, right=.97, bottom=.1, top=.86, wspace=.25, hspace=.72)
+    fig.subplots_adjust(left=.24, right=.97, bottom=.1, top=.82, wspace=.25, hspace=.72)
     fig.text(.24, .955, "What changed the cost of a cold compile?", fontsize=20,
              color="#172D43", weight="bold", va="top")
     fig.text(.24, .906, "ESP32-P4 · Paired median and interquartile range",

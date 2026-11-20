@@ -1,0 +1,14 @@
+{
+  "boot-1": {
+    "captureSha256": "3f1313ed5aecd5ef33459abc2d76cc00dc7d0f0329231db2982f89069aa780ee",
+    "excerptSha256": "17490e2af84a348560c4bdd94b5c4acf61dda0ef394bc34e8b8e92f8ac578b3e"
+  },
+  "boot-2": {
+    "captureSha256": "382ec600338bb632bad62a2f1c96b597a9948e9a5e52f772cebdab3c0892cd0b",
+    "excerptSha256": "4372a6211e0d02b039ef610f0d662169084291baf51ed5391d0fc5819c4514b0"
+  },
+  "restored": {
+    "captureSha256": "4b36280ed36bcafd0819e8de24d0eeaaaf38a4658149bf9f3897d6a04e5f683e",
+    "excerptSha256": "a4536f9bc4f1bf64b69839dd699511fa2e317f7a1dd0f8049271402fc3b7c77e"
+  }
+}

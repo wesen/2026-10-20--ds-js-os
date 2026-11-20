@@ -151,3 +151,56 @@ The factorial firmware SHA-256 is `b81057334aff0d6790b7759bff634670cd737fb83a8c7
 The checkout check flagged a blank line at the end of the injected lazy include. Moving that line to the stager left the generated sources byte-identical when restaged in a fresh scratch directory. This formatting correction did not require new firmware.
 
 For the app demand probe I ran `node "$ticket/scripts/07-count-text.mjs" "$work"`. The first run stopped on `AssertionError [ERR_ASSERTION]: 3 !== 2` in the instrumentation's substitution because another class also assigns the same offset. Anchoring the end of the cursor method to the following `legacyNext()` definition fixed the probe. It records 700 eager versus 255 lazy source slices for Files, 4,158 versus 1,584 for Agenda, and 16,792 versus 6,496 for Editor. Both copies produced the verified native ELFs. Those host counts measure source-slice operations and do not serve as a board allocation counter. [App token demands](../various/app-text-demands.json).
+
+## Step 3. Verify the physical comparisons and choose the eager cursor
+
+Both images completed two order-balanced boots and restored the original factory binary. Every timed app compiled to the exact expected ELF hash. The cursor and record reuse each reduced Editor time. The demand-driven parser reduced the number of slices and increased both measured whole-compile costs.
+
+### Prompt context
+
+See Step 1. The supervisor managed the only serial session and supplied the completed factory restoration receipts. The accepted tradeoff permits increased peak within the existing budgets.
+
+### What I did
+
+- Checked the signed per-block differences for cold time and peak heap with `05-summarize.py`.
+- Preserved the measurement records with `08-preserve-board-evidence.py` and re-parsed the archived lines against the generic runner’s receipts. The excerpts retain compile and guest measurements plus target application status. Full capture hashes serve as provenance.
+- Generated and reviewed the paired difference figure. Increased spacing above the top panels after reading the first render.
+- Wrote the [newcomer report](../analysis/01-what-made-tokenization-faster-on-the-handheld.md) and [reproduction guide](../README.md).
+
+### Why
+
+The factorial distinguishes the scanner’s resident and temporary cost from record reuse. The lazy build compares the changed parser against the identical eager cursor in one image. Both include the same native backend and existing compile budgets.
+
+### What worked
+
+The 16 matched factorial pairs for Editor showed a −306.791 ms median for cursor with reuse versus regex with fresh records. The paired peak change was +9,194 bytes. The cursor at fixed fresh records saved 151.656 ms. Reusing records under regex saved 115.303 ms. The interaction was −32.471 ms. The maximum peak under the selected lane was 1,420,528 bytes, leaving 2,773,776 bytes below Editor’s 4 MiB limit.
+
+The 12 matched lazy comparisons for Editor slowed by a median +213.659 ms and raised peak by +6,020 bytes relative to eager cursor/reuse. Files and Agenda slowed under lazy text as well. All 300 measured compiles preserved the exact expected output. The trial receipts show healthy native worlds after each restoration.
+
+### What did not work
+
+An early `05-summarize.py` run stopped at `assert physical["restored"]` while the lazy trial’s restoration was still running. I waited for the complete receipt and reran. Both final summaries satisfy the restoration check.
+
+### What I learned
+
+A grammar check can be cheaper with an eager string even when most token spellings go unused. The lazy implementation performs offset loads and span comparisons for parser probes. Its observed wall time includes all other cold compiler work. The number of source slices is a distinct measurement from total allocated heap or allocation high-water.
+
+### What was tricky to build
+
+The board output includes initial app loads and status lines alongside the balanced trials. The archived excerpts keep each structured trial record and trim unrelated lines. The archive command verifies that re-parsing every boot produces exactly the original receipt, including guest checks and positions.
+
+### What warrants a second pair of eyes
+
+Cross-check the article's combined time changes against paired row medians instead of subtracting the rounded per-lane medians. The article's timing claims cover disposable compiler runs with fresh QuickJS runtimes on one device.
+
+### What should be done in the future
+
+Use the eager cursor/reused candidate in the supervisor's combined test and recheck both output and budget after integration. The source-offset result remains available as a measured negative.
+
+### Code review instructions
+
+Run the final commands in `README.md` against the committed measurement receipts. Inspect the two `capture-identities.json` manifests and compare the precise arm identities in `verified-images.json`.
+
+### Technical details
+
+The successful eager candidate is `treatments/cursor_reuse/typed/wasm.js`, SHA-256 `b9c3c3ee18645f0ee0f9b6461eb0406a94c4bde549a3b61e0c7fb12c11fda396`. Both firmware builds used a factory backup with SHA-256 `6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f` and returned to its original app partition.

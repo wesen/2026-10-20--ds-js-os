@@ -1,0 +1,3385 @@
+{
+  "results": {
+    "factorial": {
+      "files": {
+        "us": {
+          "lanes": {
+            "base": {
+              "n": 16,
+              "median": 236476.0,
+              "q25": 235417.25,
+              "q75": 238394.0,
+              "min": 234529,
+              "max": 240184,
+              "negative": 0,
+              "positive": 16
+            },
+            "regex_reuse": {
+              "n": 16,
+              "median": 237215.5,
+              "q25": 235775.25,
+              "q75": 238857.0,
+              "min": 235523,
+              "max": 241582,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_fresh": {
+              "n": 16,
+              "median": 238024.0,
+              "q25": 237629.5,
+              "q75": 238721.75,
+              "min": 236221,
+              "max": 239728,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_reuse": {
+              "n": 16,
+              "median": 232208.5,
+              "q25": 232035.25,
+              "q75": 233298.75,
+              "min": 231364,
+              "max": 234917,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "matched": {
+            "scanner_fresh": {
+              "n": 16,
+              "median": 1310.0,
+              "q25": -789.5,
+              "q75": 2910.0,
+              "min": -2022,
+              "max": 4372,
+              "negative": 6,
+              "positive": 10
+            },
+            "scanner_reuse": {
+              "n": 16,
+              "median": -5060.0,
+              "q25": -6274.0,
+              "q75": -3459.5,
+              "min": -8471,
+              "max": -1497,
+              "negative": 16,
+              "positive": 0
+            },
+            "reuse_regex": {
+              "n": 16,
+              "median": -466.5,
+              "q25": -871.0,
+              "q75": 2050.0,
+              "min": -2025,
+              "max": 5439,
+              "negative": 9,
+              "positive": 7
+            },
+            "reuse_cursor": {
+              "n": 16,
+              "median": -5372.5,
+              "q25": -6225.5,
+              "q75": -4801.0,
+              "min": -7627,
+              "max": -3754,
+              "negative": 16,
+              "positive": 0
+            },
+            "scanner_average": {
+              "n": 16,
+              "median": -2184.0,
+              "q25": -3054.75,
+              "q75": -878.625,
+              "min": -3707.0,
+              "max": 1351.5,
+              "negative": 14,
+              "positive": 2
+            },
+            "reuse_average": {
+              "n": 16,
+              "median": -2563.5,
+              "q25": -3404.125,
+              "q75": -1838.125,
+              "min": -4430.0,
+              "max": -226.0,
+              "negative": 16,
+              "positive": 0
+            },
+            "interaction": {
+              "n": 16,
+              "median": -5747.5,
+              "q25": -7789.75,
+              "q75": -3604.0,
+              "min": -11330,
+              "max": -2979,
+              "negative": 16,
+              "positive": 0
+            },
+            "cursor_combined": {
+              "n": 16,
+              "median": -3983.5,
+              "q25": -5734.75,
+              "q75": -3261.75,
+              "min": -8137,
+              "max": -517,
+              "negative": 16,
+              "positive": 0
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 238582.5,
+                  "q25": 236546.75,
+                  "q75": 239570.25,
+                  "min": 235434,
+                  "max": 240184,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 238285.5,
+                  "q25": 236264.75,
+                  "q75": 239138.5,
+                  "min": 235639,
+                  "max": 241582,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 238322.0,
+                  "q25": 237803.5,
+                  "q75": 239155.5,
+                  "min": 237535,
+                  "max": 239634,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 233325.5,
+                  "q25": 233165.0,
+                  "q75": 233772.0,
+                  "min": 231364,
+                  "max": 234917,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": -105.0,
+                  "q25": -1270.25,
+                  "q75": 1605.75,
+                  "min": -2022,
+                  "max": 4200,
+                  "negative": 4,
+                  "positive": 4
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": -5060.0,
+                  "q25": -6410.25,
+                  "q75": -2451.5,
+                  "min": -8471,
+                  "max": -1497,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": -706.5,
+                  "q25": -1061.25,
+                  "q75": -40.75,
+                  "min": -2025,
+                  "max": 5324,
+                  "negative": 6,
+                  "positive": 2
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": -4860.5,
+                  "q25": -6004.25,
+                  "q75": -4306.0,
+                  "min": -7093,
+                  "max": -3754,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": -3137.75,
+                  "q25": -3612.5,
+                  "q75": -878.625,
+                  "min": -3707.0,
+                  "max": 1351.5,
+                  "negative": 7,
+                  "positive": 1
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": -2456.25,
+                  "q25": -3338.625,
+                  "q75": -2135.125,
+                  "min": -4430.0,
+                  "max": -311.0,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": -4486.0,
+                  "q25": -5722.25,
+                  "q75": -3121.25,
+                  "min": -11270,
+                  "max": -2979,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": -5092.0,
+                  "q25": -6100.5,
+                  "q75": -3234.75,
+                  "min": -8137,
+                  "max": -517,
+                  "negative": 8,
+                  "positive": 0
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 235721.0,
+                  "q25": 235219.25,
+                  "q75": 236536.0,
+                  "min": 234529,
+                  "max": 238025,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 236946.5,
+                  "q25": 235630.0,
+                  "q75": 237667.75,
+                  "min": 235523,
+                  "max": 239968,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 237837.0,
+                  "q25": 237153.0,
+                  "q75": 238594.25,
+                  "min": 236221,
+                  "max": 239728,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 232079.0,
+                  "q25": 231879.75,
+                  "q75": 232142.0,
+                  "min": 231392,
+                  "max": 232224,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": 2009.0,
+                  "q25": 1050.25,
+                  "q75": 3265.25,
+                  "min": -959,
+                  "max": 4372,
+                  "negative": 2,
+                  "positive": 6
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": -5188.0,
+                  "q25": -5912.75,
+                  "q75": -3540.0,
+                  "min": -7998,
+                  "max": -3299,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": 1169.5,
+                  "q25": -665.5,
+                  "q75": 2080.25,
+                  "min": -1647,
+                  "max": 5439,
+                  "negative": 3,
+                  "positive": 5
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": -5755.5,
+                  "q25": -6524.0,
+                  "q75": -5079.0,
+                  "min": -7627,
+                  "max": -4829,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": -1904.5,
+                  "q25": -2342.0,
+                  "q75": -1058.125,
+                  "min": -2926.5,
+                  "max": 411.5,
+                  "negative": 7,
+                  "positive": 1
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": -2725.75,
+                  "q25": -3404.125,
+                  "q75": -1655.75,
+                  "min": -3666.5,
+                  "max": -226.0,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": -7320.0,
+                  "q25": -8202.25,
+                  "q75": -5343.5,
+                  "min": -11330,
+                  "max": -3478,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": -3804.5,
+                  "q25": -4377.0,
+                  "q75": -3376.5,
+                  "min": -5900,
+                  "max": -2559,
+                  "negative": 8,
+                  "positive": 0
+                }
+              }
+            }
+          ]
+        },
+        "peak": {
+          "lanes": {
+            "base": {
+              "n": 16,
+              "median": 362624.0,
+              "q25": 362615.0,
+              "q75": 362625.0,
+              "min": 362612,
+              "max": 362640,
+              "negative": 0,
+              "positive": 16
+            },
+            "regex_reuse": {
+              "n": 16,
+              "median": 362844.0,
+              "q25": 362836.0,
+              "q75": 362857.0,
+              "min": 362832,
+              "max": 362868,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_fresh": {
+              "n": 16,
+              "median": 379640.0,
+              "q25": 379628.0,
+              "q75": 379640.0,
+              "min": 379624,
+              "max": 379648,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_reuse": {
+              "n": 16,
+              "median": 379952.0,
+              "q25": 379951.0,
+              "q75": 379952.0,
+              "min": 379940,
+              "max": 379960,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "matched": {
+            "scanner_fresh": {
+              "n": 16,
+              "median": 17016.0,
+              "q25": 17011.0,
+              "q75": 17020.0,
+              "min": 16988,
+              "max": 17032,
+              "negative": 0,
+              "positive": 16
+            },
+            "scanner_reuse": {
+              "n": 16,
+              "median": 17106.0,
+              "q25": 17095.0,
+              "q75": 17110.0,
+              "min": 17076,
+              "max": 17128,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_regex": {
+              "n": 16,
+              "median": 220.0,
+              "q25": 216.0,
+              "q75": 233.0,
+              "min": 204,
+              "max": 256,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_cursor": {
+              "n": 16,
+              "median": 312.0,
+              "q25": 312.0,
+              "q75": 324.0,
+              "min": 296,
+              "max": 332,
+              "negative": 0,
+              "positive": 16
+            },
+            "scanner_average": {
+              "n": 16,
+              "median": 17060.0,
+              "q25": 17055.0,
+              "q75": 17064.0,
+              "min": 17040.0,
+              "max": 17072.0,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_average": {
+              "n": 16,
+              "median": 272.0,
+              "q25": 265.5,
+              "q75": 276.5,
+              "min": 254.0,
+              "max": 282.0,
+              "negative": 0,
+              "positive": 16
+            },
+            "interaction": {
+              "n": 16,
+              "median": 90.0,
+              "q25": 80.0,
+              "q75": 101.0,
+              "min": 48,
+              "max": 116,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_combined": {
+              "n": 16,
+              "median": 17330.0,
+              "q25": 17327.0,
+              "q75": 17336.0,
+              "min": 17312,
+              "max": 17344,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 362620.0,
+                  "q25": 362615.0,
+                  "q75": 362624.0,
+                  "min": 362612,
+                  "max": 362628,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 362844.0,
+                  "q25": 362835.0,
+                  "q75": 362844.0,
+                  "min": 362832,
+                  "max": 362860,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 379640.0,
+                  "q25": 379637.0,
+                  "q75": 379641.0,
+                  "min": 379628,
+                  "max": 379644,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 379952.0,
+                  "q25": 379951.0,
+                  "q75": 379954.0,
+                  "min": 379940,
+                  "max": 379960,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": 17016.0,
+                  "q25": 17015.0,
+                  "q75": 17021.0,
+                  "min": 17012,
+                  "max": 17032,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": 17108.0,
+                  "q25": 17107.0,
+                  "q75": 17112.0,
+                  "min": 17092,
+                  "max": 17128,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": 220.0,
+                  "q25": 216.0,
+                  "q75": 223.0,
+                  "min": 212,
+                  "max": 244,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": 312.0,
+                  "q25": 312.0,
+                  "q75": 317.0,
+                  "min": 296,
+                  "max": 332,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": 17062.0,
+                  "q25": 17060.0,
+                  "q75": 17070.0,
+                  "min": 17058.0,
+                  "max": 17072.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": 266.0,
+                  "q25": 264.0,
+                  "q75": 274.5,
+                  "min": 258.0,
+                  "max": 278.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": 92.0,
+                  "q25": 85.0,
+                  "q75": 98.0,
+                  "min": 68,
+                  "max": 116,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": 17332.0,
+                  "q25": 17328.0,
+                  "q75": 17336.0,
+                  "min": 17324,
+                  "max": 17344,
+                  "negative": 0,
+                  "positive": 8
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 362624.0,
+                  "q25": 362618.0,
+                  "q75": 362628.0,
+                  "min": 362612,
+                  "max": 362640,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 362852.0,
+                  "q25": 362845.0,
+                  "q75": 362861.0,
+                  "min": 362832,
+                  "max": 362868,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 379630.0,
+                  "q25": 379628.0,
+                  "q75": 379640.0,
+                  "min": 379624,
+                  "max": 379648,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 379952.0,
+                  "q25": 379950.0,
+                  "q75": 379952.0,
+                  "min": 379940,
+                  "max": 379956,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": 17012.0,
+                  "q25": 17003.0,
+                  "q75": 17017.0,
+                  "min": 16988,
+                  "max": 17028,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": 17100.0,
+                  "q25": 17089.0,
+                  "q75": 17107.0,
+                  "min": 17076,
+                  "max": 17120,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": 232.0,
+                  "q25": 214.0,
+                  "q75": 237.0,
+                  "min": 204,
+                  "max": 256,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": 318.0,
+                  "q25": 310.0,
+                  "q75": 324.0,
+                  "min": 304,
+                  "max": 328,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": 17054.0,
+                  "q25": 17049.0,
+                  "q75": 17060.0,
+                  "min": 17040.0,
+                  "max": 17070.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": 272.0,
+                  "q25": 270.5,
+                  "q75": 280.0,
+                  "min": 254.0,
+                  "max": 282.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": 86.0,
+                  "q25": 80.0,
+                  "q75": 103.0,
+                  "min": 48,
+                  "max": 116,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": 17330.0,
+                  "q25": 17321.0,
+                  "q75": 17332.0,
+                  "min": 17312,
+                  "max": 17340,
+                  "negative": 0,
+                  "positive": 8
+                }
+              }
+            }
+          ]
+        },
+        "lowest_heap_headroom": {
+          "base": 1734512,
+          "regex_reuse": 1734284,
+          "cursor_fresh": 1717504,
+          "cursor_reuse": 1717192
+        }
+      },
+      "agenda": {
+        "us": {
+          "lanes": {
+            "base": {
+              "n": 16,
+              "median": 661545.5,
+              "q25": 659683.5,
+              "q75": 665396.5,
+              "min": 656549,
+              "max": 671157,
+              "negative": 0,
+              "positive": 16
+            },
+            "regex_reuse": {
+              "n": 16,
+              "median": 638405.0,
+              "q25": 634457.75,
+              "q75": 642590.5,
+              "min": 630971,
+              "max": 648911,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_fresh": {
+              "n": 16,
+              "median": 635718.5,
+              "q25": 634108.25,
+              "q75": 637766.5,
+              "min": 631343,
+              "max": 641518,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_reuse": {
+              "n": 16,
+              "median": 600857.0,
+              "q25": 598944.75,
+              "q75": 602383.75,
+              "min": 595574,
+              "max": 608610,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "matched": {
+            "scanner_fresh": {
+              "n": 16,
+              "median": -27648.5,
+              "q25": -30360.75,
+              "q75": -22742.25,
+              "min": -34405,
+              "max": -15288,
+              "negative": 16,
+              "positive": 0
+            },
+            "scanner_reuse": {
+              "n": 16,
+              "median": -37545.5,
+              "q25": -41125.5,
+              "q75": -33436.25,
+              "min": -49884,
+              "max": -29231,
+              "negative": 16,
+              "positive": 0
+            },
+            "reuse_regex": {
+              "n": 16,
+              "median": -22423.5,
+              "q25": -27370.25,
+              "q75": -19747.5,
+              "min": -39781,
+              "max": -12198,
+              "negative": 16,
+              "positive": 0
+            },
+            "reuse_cursor": {
+              "n": 16,
+              "median": -35663.5,
+              "q25": -39201.75,
+              "q75": -31429.75,
+              "min": -41878,
+              "max": -28720,
+              "negative": 16,
+              "positive": 0
+            },
+            "scanner_average": {
+              "n": 16,
+              "median": -30585.0,
+              "q25": -34887.25,
+              "q75": -29157.5,
+              "min": -41279.5,
+              "max": -27963.5,
+              "negative": 16,
+              "positive": 0
+            },
+            "reuse_average": {
+              "n": 16,
+              "median": -29028.5,
+              "q25": -31294.25,
+              "q75": -27167.25,
+              "min": -39605.0,
+              "max": -23601.5,
+              "negative": 16,
+              "positive": 0
+            },
+            "interaction": {
+              "n": 16,
+              "median": -11572.0,
+              "q25": -15852.75,
+              "q75": -8616.5,
+              "min": -27930,
+              "max": 3422,
+              "negative": 14,
+              "positive": 2
+            },
+            "cursor_combined": {
+              "n": 16,
+              "median": -61311.5,
+              "q25": -63717.75,
+              "q75": -59206.75,
+              "min": -71293,
+              "max": -55416,
+              "negative": 16,
+              "positive": 0
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 659973.0,
+                  "q25": 657829.75,
+                  "q75": 664274.0,
+                  "min": 656549,
+                  "max": 670048,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 637466.0,
+                  "q25": 636286.0,
+                  "q75": 643141.75,
+                  "min": 630971,
+                  "max": 648639,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 635718.5,
+                  "q25": 634757.0,
+                  "q75": 637717.0,
+                  "min": 631536,
+                  "max": 641341,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 601085.0,
+                  "q25": 599242.5,
+                  "q75": 602685.75,
+                  "min": 598353,
+                  "max": 605633,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": -25141.0,
+                  "q25": -29648.0,
+                  "q75": -22189.25,
+                  "min": -31239,
+                  "max": -15288,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": -36234.0,
+                  "q25": -40839.75,
+                  "q75": -33436.25,
+                  "min": -49884,
+                  "max": -31504,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": -21646.0,
+                  "q25": -27370.25,
+                  "q75": -19909.25,
+                  "min": -27931,
+                  "max": -12198,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": -35663.5,
+                  "q25": -37731.25,
+                  "q75": -32347.0,
+                  "min": -40128,
+                  "max": -28871,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": -30315.25,
+                  "q25": -31783.875,
+                  "q75": -28966.0,
+                  "min": -40561.5,
+                  "max": -27963.5,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": -28563.25,
+                  "q25": -30776.375,
+                  "q75": -27262.125,
+                  "min": -32444.0,
+                  "max": -23601.5,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": -11015.0,
+                  "q25": -16876.5,
+                  "q75": -8616.5,
+                  "min": -27930,
+                  "max": -1436,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": -59079.5,
+                  "q25": -60735.5,
+                  "q75": -57682.25,
+                  "min": -71293,
+                  "max": -55416,
+                  "negative": 8,
+                  "positive": 0
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 662371.0,
+                  "q25": 660319.25,
+                  "q75": 667789.0,
+                  "min": 659944,
+                  "max": 671157,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 639373.0,
+                  "q25": 633818.25,
+                  "q75": 640966.0,
+                  "min": 631320,
+                  "max": 648911,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 636015.0,
+                  "q25": 633150.0,
+                  "q75": 637802.0,
+                  "min": 631343,
+                  "max": 641518,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 600030.0,
+                  "q25": 598524.25,
+                  "q75": 602139.25,
+                  "min": 595574,
+                  "max": 608610,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": -29095.0,
+                  "q25": -31970.75,
+                  "q75": -24906.0,
+                  "min": -34405,
+                  "max": -20993,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": -38480.5,
+                  "q25": -41537.0,
+                  "q75": -33720.0,
+                  "min": -48154,
+                  "max": -29231,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": -24567.0,
+                  "q25": -27912.75,
+                  "q75": -19747.5,
+                  "min": -39781,
+                  "max": -17774,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": -35225.5,
+                  "q25": -39201.75,
+                  "q75": -31429.75,
+                  "min": -41878,
+                  "max": -28720,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": -33274.75,
+                  "q25": -35384.875,
+                  "q75": -29273.0,
+                  "min": -41279.5,
+                  "max": -28847.0,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": -29954.75,
+                  "q25": -32848.75,
+                  "q75": -26957.375,
+                  "min": -39605.0,
+                  "max": -24648.5,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": -11780.5,
+                  "q25": -14238.75,
+                  "q75": -6719.0,
+                  "min": -19295,
+                  "max": 3422,
+                  "negative": 6,
+                  "positive": 2
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": -63131.5,
+                  "q25": -65003.25,
+                  "q75": -62242.25,
+                  "min": -69012,
+                  "max": -59757,
+                  "negative": 8,
+                  "positive": 0
+                }
+              }
+            }
+          ]
+        },
+        "peak": {
+          "lanes": {
+            "base": {
+              "n": 16,
+              "median": 578948.0,
+              "q25": 578936.0,
+              "q75": 578952.0,
+              "min": 578936,
+              "max": 578960,
+              "negative": 0,
+              "positive": 16
+            },
+            "regex_reuse": {
+              "n": 16,
+              "median": 579172.0,
+              "q25": 579166.0,
+              "q75": 579180.0,
+              "min": 579156,
+              "max": 579192,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_fresh": {
+              "n": 16,
+              "median": 591906.0,
+              "q25": 591896.0,
+              "q75": 591909.0,
+              "min": 591892,
+              "max": 591924,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_reuse": {
+              "n": 16,
+              "median": 592220.0,
+              "q25": 592220.0,
+              "q75": 592226.0,
+              "min": 592208,
+              "max": 592244,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "matched": {
+            "scanner_fresh": {
+              "n": 16,
+              "median": 12958.0,
+              "q25": 12951.0,
+              "q75": 12966.0,
+              "min": 12936,
+              "max": 12976,
+              "negative": 0,
+              "positive": 16
+            },
+            "scanner_reuse": {
+              "n": 16,
+              "median": 13052.0,
+              "q25": 13040.0,
+              "q75": 13060.0,
+              "min": 13032,
+              "max": 13076,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_regex": {
+              "n": 16,
+              "median": 230.0,
+              "q25": 218.0,
+              "q75": 233.0,
+              "min": 200,
+              "max": 256,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_cursor": {
+              "n": 16,
+              "median": 318.0,
+              "q25": 311.0,
+              "q75": 328.0,
+              "min": 296,
+              "max": 340,
+              "negative": 0,
+              "positive": 16
+            },
+            "scanner_average": {
+              "n": 16,
+              "median": 13007.0,
+              "q25": 13000.0,
+              "q75": 13009.0,
+              "min": 12990.0,
+              "max": 13024.0,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_average": {
+              "n": 16,
+              "median": 272.0,
+              "q25": 265.5,
+              "q75": 276.0,
+              "min": 252.0,
+              "max": 296.0,
+              "negative": 0,
+              "positive": 16
+            },
+            "interaction": {
+              "n": 16,
+              "median": 90.0,
+              "q25": 80.0,
+              "q75": 104.0,
+              "min": 64,
+              "max": 116,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_combined": {
+              "n": 16,
+              "median": 13280.0,
+              "q25": 13266.0,
+              "q75": 13285.0,
+              "min": 13256,
+              "max": 13304,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 578944.0,
+                  "q25": 578936.0,
+                  "q75": 578949.0,
+                  "min": 578936,
+                  "max": 578960,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 579174.0,
+                  "q25": 579166.0,
+                  "q75": 579180.0,
+                  "min": 579156,
+                  "max": 579192,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 591906.0,
+                  "q25": 591899.0,
+                  "q75": 591908.0,
+                  "min": 591896,
+                  "max": 591924,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 592224.0,
+                  "q25": 592220.0,
+                  "q75": 592232.0,
+                  "min": 592208,
+                  "max": 592244,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": 12962.0,
+                  "q25": 12948.0,
+                  "q75": 12972.0,
+                  "min": 12948,
+                  "max": 12976,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": 13052.0,
+                  "q25": 13040.0,
+                  "q75": 13064.0,
+                  "min": 13032,
+                  "max": 13076,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": 228.0,
+                  "q25": 218.0,
+                  "q75": 237.0,
+                  "min": 208,
+                  "max": 256,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": 320.0,
+                  "q25": 311.0,
+                  "q75": 330.0,
+                  "min": 296,
+                  "max": 340,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": 13007.0,
+                  "q25": 13000.0,
+                  "q75": 13012.5,
+                  "min": 12990.0,
+                  "max": 13024.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": 271.0,
+                  "q25": 265.5,
+                  "q75": 279.5,
+                  "min": 260.0,
+                  "max": 296.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": 92.0,
+                  "q25": 80.0,
+                  "q75": 104.0,
+                  "min": 64,
+                  "max": 116,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": 13282.0,
+                  "q25": 13269.0,
+                  "q75": 13296.0,
+                  "min": 13256,
+                  "max": 13304,
+                  "negative": 0,
+                  "positive": 8
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 578948.0,
+                  "q25": 578936.0,
+                  "q75": 578954.0,
+                  "min": 578936,
+                  "max": 578960,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 579170.0,
+                  "q25": 579166.0,
+                  "q75": 579180.0,
+                  "min": 579160,
+                  "max": 579180,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 591906.0,
+                  "q25": 591895.0,
+                  "q75": 591912.0,
+                  "min": 591892,
+                  "max": 591916,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 592220.0,
+                  "q25": 592220.0,
+                  "q75": 592220.0,
+                  "min": 592216,
+                  "max": 592232,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": 12956.0,
+                  "q25": 12955.0,
+                  "q75": 12961.0,
+                  "min": 12936,
+                  "max": 12976,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": 13050.0,
+                  "q25": 13046.0,
+                  "q75": 13054.0,
+                  "min": 13040,
+                  "max": 13060,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": 230.0,
+                  "q25": 220.0,
+                  "q75": 232.0,
+                  "min": 200,
+                  "max": 236,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": 318.0,
+                  "q25": 311.0,
+                  "q75": 322.0,
+                  "min": 304,
+                  "max": 328,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": 13005.0,
+                  "q25": 12999.0,
+                  "q75": 13008.0,
+                  "min": 12992.0,
+                  "max": 13014.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": 272.0,
+                  "q25": 268.5,
+                  "q75": 276.0,
+                  "min": 252.0,
+                  "max": 282.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": 90.0,
+                  "q25": 86.0,
+                  "q75": 104.0,
+                  "min": 76,
+                  "max": 112,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": 13278.0,
+                  "q25": 13266.0,
+                  "q75": 13284.0,
+                  "min": 13256,
+                  "max": 13284,
+                  "negative": 0,
+                  "positive": 8
+                }
+              }
+            }
+          ]
+        },
+        "lowest_heap_headroom": {
+          "base": 1518192,
+          "regex_reuse": 1517960,
+          "cursor_fresh": 1505228,
+          "cursor_reuse": 1504908
+        }
+      },
+      "editor": {
+        "us": {
+          "lanes": {
+            "base": {
+              "n": 16,
+              "median": 2461251.0,
+              "q25": 2455384.0,
+              "q75": 2476123.5,
+              "min": 2434515,
+              "max": 2497732,
+              "negative": 0,
+              "positive": 16
+            },
+            "regex_reuse": {
+              "n": 16,
+              "median": 2349832.5,
+              "q25": 2331572.25,
+              "q75": 2364323.25,
+              "min": 2322921,
+              "max": 2417236,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_fresh": {
+              "n": 16,
+              "median": 2309512.0,
+              "q25": 2305375.5,
+              "q75": 2316247.0,
+              "min": 2299719,
+              "max": 2323457,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_reuse": {
+              "n": 16,
+              "median": 2157784.5,
+              "q25": 2152783.5,
+              "q75": 2161388.75,
+              "min": 2147703,
+              "max": 2173951,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "matched": {
+            "scanner_fresh": {
+              "n": 16,
+              "median": -151655.5,
+              "q25": -158639.0,
+              "q75": -145040.0,
+              "min": -190473,
+              "max": -134796,
+              "negative": 16,
+              "positive": 0
+            },
+            "scanner_reuse": {
+              "n": 16,
+              "median": -187382.0,
+              "q25": -207958.75,
+              "q75": -176892.25,
+              "min": -263684,
+              "max": -157692,
+              "negative": 16,
+              "positive": 0
+            },
+            "reuse_regex": {
+              "n": 16,
+              "median": -115302.5,
+              "q25": -127912.25,
+              "q75": -106191.75,
+              "min": -139396,
+              "max": -73857,
+              "negative": 16,
+              "positive": 0
+            },
+            "reuse_cursor": {
+              "n": 16,
+              "median": -152425.0,
+              "q25": -158252.0,
+              "q75": -147267.25,
+              "min": -166690,
+              "max": -134490,
+              "negative": 16,
+              "positive": 0
+            },
+            "scanner_average": {
+              "n": 16,
+              "median": -170993.0,
+              "q25": -181507.75,
+              "q75": -161166.375,
+              "min": -227035.5,
+              "max": -146244.0,
+              "negative": 16,
+              "positive": 0
+            },
+            "reuse_average": {
+              "n": 16,
+              "median": -134782.5,
+              "q25": -139674.125,
+              "q75": -128032.0,
+              "min": -149709.5,
+              "max": -110505.5,
+              "negative": 16,
+              "positive": 0
+            },
+            "interaction": {
+              "n": 16,
+              "median": -32470.5,
+              "q25": -50138.0,
+              "q75": -23445.75,
+              "min": -73828,
+              "max": -16605,
+              "negative": 16,
+              "positive": 0
+            },
+            "cursor_combined": {
+              "n": 16,
+              "median": -306791.0,
+              "q25": -313799.75,
+              "q75": -301161.25,
+              "min": -346474,
+              "max": -269286,
+              "negative": 16,
+              "positive": 0
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 2470391.0,
+                  "q25": 2461247.75,
+                  "q75": 2479416.0,
+                  "min": 2459847,
+                  "max": 2497732,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 2351694.5,
+                  "q25": 2347779.5,
+                  "q75": 2359678.5,
+                  "min": 2332500,
+                  "max": 2366175,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 2316595.0,
+                  "q25": 2313875.75,
+                  "q75": 2318937.25,
+                  "min": 2307259,
+                  "max": 2323457,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 2157784.5,
+                  "q25": 2155003.5,
+                  "q75": 2162648.0,
+                  "min": 2151258,
+                  "max": 2173951,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": -152553.0,
+                  "q25": -162185.0,
+                  "q75": -143904.75,
+                  "min": -190473,
+                  "max": -141772,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": -194571.0,
+                  "q25": -203657.25,
+                  "q75": -177608.25,
+                  "min": -210601,
+                  "max": -175733,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": -122416.0,
+                  "q25": -131941.5,
+                  "q75": -110779.0,
+                  "min": -139396,
+                  "max": -95238,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": -156564.5,
+                  "q25": -161803.5,
+                  "q75": -154092.75,
+                  "min": -166690,
+                  "max": -143548,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": -175177.5,
+                  "q25": -179154.75,
+                  "q75": -166770.75,
+                  "min": -198775.5,
+                  "max": -158752.5,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": -138815.75,
+                  "q25": -145215.625,
+                  "q75": -132290.5,
+                  "min": -149709.5,
+                  "max": -126695.5,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": -33833.0,
+                  "q25": -45689.25,
+                  "q75": -23479.75,
+                  "min": -66479,
+                  "max": -16605,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": -308495.0,
+                  "q25": -318823.75,
+                  "q75": -306376.0,
+                  "min": -346474,
+                  "max": -286801,
+                  "negative": 8,
+                  "positive": 0
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 2455166.0,
+                  "q25": 2453915.0,
+                  "q75": 2462213.25,
+                  "min": 2434515,
+                  "max": 2491093,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 2333957.5,
+                  "q25": 2327176.0,
+                  "q75": 2369964.75,
+                  "min": 2322921,
+                  "max": 2417236,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 2304231.0,
+                  "q25": 2301325.5,
+                  "q75": 2308015.5,
+                  "min": 2299719,
+                  "max": 2314879,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 2156850.5,
+                  "q25": 2150250.25,
+                  "q75": 2160889.25,
+                  "min": 2147703,
+                  "max": 2165229,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": -149499.0,
+                  "q25": -154332.5,
+                  "q75": -145763.0,
+                  "min": -190387,
+                  "max": -134796,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": -179112.0,
+                  "q25": -216171.0,
+                  "q75": -173854.5,
+                  "min": -263684,
+                  "max": -157692,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": -114035.0,
+                  "q25": -125958.25,
+                  "q75": -92248.5,
+                  "min": -126982,
+                  "max": -73857,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": -147508.5,
+                  "q25": -151518.0,
+                  "q75": -146864.75,
+                  "min": -166641,
+                  "max": -134490,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": -165908.75,
+                  "q25": -183969.75,
+                  "q75": -159974.875,
+                  "min": -227035.5,
+                  "max": -146244.0,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": -130910.5,
+                  "q25": -136701.75,
+                  "q75": -122014.0,
+                  "min": -140090.0,
+                  "max": -110505.5,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": -29767.0,
+                  "q25": -60886.75,
+                  "q75": -23445.75,
+                  "min": -73828,
+                  "max": -19987,
+                  "negative": 8,
+                  "positive": 0
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": -304557.0,
+                  "q25": -308483.0,
+                  "q75": -293046.25,
+                  "min": -337541,
+                  "max": -269286,
+                  "negative": 8,
+                  "positive": 0
+                }
+              }
+            }
+          ]
+        },
+        "peak": {
+          "lanes": {
+            "base": {
+              "n": 16,
+              "median": 1410872.0,
+              "q25": 1410868.0,
+              "q75": 1410884.0,
+              "min": 1410652,
+              "max": 1410924,
+              "negative": 0,
+              "positive": 16
+            },
+            "regex_reuse": {
+              "n": 16,
+              "median": 1411102.0,
+              "q25": 1411079.0,
+              "q75": 1411108.0,
+              "min": 1410800,
+              "max": 1411452,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_fresh": {
+              "n": 16,
+              "median": 1419764.0,
+              "q25": 1419756.0,
+              "q75": 1419785.0,
+              "min": 1419404,
+              "max": 1419856,
+              "negative": 0,
+              "positive": 16
+            },
+            "cursor_reuse": {
+              "n": 16,
+              "median": 1420070.0,
+              "q25": 1419907.0,
+              "q75": 1420082.0,
+              "min": 1419796,
+              "max": 1420528,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "matched": {
+            "scanner_fresh": {
+              "n": 16,
+              "median": 8894.0,
+              "q25": 8875.0,
+              "q75": 8913.0,
+              "min": 8524,
+              "max": 9124,
+              "negative": 0,
+              "positive": 16
+            },
+            "scanner_reuse": {
+              "n": 16,
+              "median": 8918.0,
+              "q25": 8777.0,
+              "q75": 9004.0,
+              "min": 8628,
+              "max": 9420,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_regex": {
+              "n": 16,
+              "median": 224.0,
+              "q25": 203.0,
+              "q75": 241.0,
+              "min": -68,
+              "max": 580,
+              "negative": 1,
+              "positive": 15
+            },
+            "reuse_cursor": {
+              "n": 16,
+              "median": 296.0,
+              "q25": 146.0,
+              "q75": 363.0,
+              "min": -32,
+              "max": 752,
+              "negative": 1,
+              "positive": 15
+            },
+            "scanner_average": {
+              "n": 16,
+              "median": 8868.0,
+              "q25": 8817.5,
+              "q75": 8956.0,
+              "min": 8692.0,
+              "max": 9156.0,
+              "negative": 0,
+              "positive": 16
+            },
+            "reuse_average": {
+              "n": 16,
+              "median": 255.0,
+              "q25": 181.0,
+              "q75": 361.0,
+              "min": 60.0,
+              "max": 488.0,
+              "negative": 0,
+              "positive": 16
+            },
+            "interaction": {
+              "n": 16,
+              "median": 52.0,
+              "q25": -146.0,
+              "q75": 177.0,
+              "min": -356,
+              "max": 528,
+              "negative": 7,
+              "positive": 9
+            },
+            "cursor_combined": {
+              "n": 16,
+              "median": 9194.0,
+              "q25": 9042.0,
+              "q75": 9211.0,
+              "min": 8880,
+              "max": 9644,
+              "negative": 0,
+              "positive": 16
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 1410870.0,
+                  "q25": 1410868.0,
+                  "q75": 1410880.0,
+                  "min": 1410848,
+                  "max": 1410924,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 1411090.0,
+                  "q25": 1411075.0,
+                  "q75": 1411110.0,
+                  "min": 1410800,
+                  "max": 1411452,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 1419762.0,
+                  "q25": 1419759.0,
+                  "q75": 1419815.0,
+                  "min": 1419756,
+                  "max": 1419856,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 1419938.0,
+                  "q25": 1419855.0,
+                  "q75": 1420077.0,
+                  "min": 1419796,
+                  "max": 1420088,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": 8904.0,
+                  "q25": 8887.0,
+                  "q75": 8919.0,
+                  "min": 8856,
+                  "max": 8984,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": 8766.0,
+                  "q25": 8727.0,
+                  "q75": 8910.0,
+                  "min": 8628,
+                  "max": 9288,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": 214.0,
+                  "q25": 188.0,
+                  "q75": 242.0,
+                  "min": -68,
+                  "max": 580,
+                  "negative": 1,
+                  "positive": 7
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": 170.0,
+                  "q25": 72.0,
+                  "q75": 248.0,
+                  "min": -32,
+                  "max": 324,
+                  "negative": 1,
+                  "positive": 7
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": 8842.0,
+                  "q25": 8817.5,
+                  "q75": 8886.5,
+                  "min": 8806.0,
+                  "max": 9092.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": 174.0,
+                  "q25": 129.5,
+                  "q75": 224.5,
+                  "min": 60.0,
+                  "max": 402.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": -148.0,
+                  "q25": -185.0,
+                  "q75": 47.0,
+                  "min": -356,
+                  "max": 392,
+                  "negative": 5,
+                  "positive": 3
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": 9052.0,
+                  "q25": 8990.0,
+                  "q75": 9205.0,
+                  "min": 8880,
+                  "max": 9220,
+                  "negative": 0,
+                  "positive": 8
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 8,
+                  "median": 1410882.0,
+                  "q25": 1410870.0,
+                  "q75": 1410884.0,
+                  "min": 1410652,
+                  "max": 1410888,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "regex_reuse": {
+                  "n": 8,
+                  "median": 1411102.0,
+                  "q25": 1411095.0,
+                  "q75": 1411108.0,
+                  "min": 1411080,
+                  "max": 1411140,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_fresh": {
+                  "n": 8,
+                  "median": 1419770.0,
+                  "q25": 1419670.0,
+                  "q75": 1419778.0,
+                  "min": 1419404,
+                  "max": 1419788,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "cursor_reuse": {
+                  "n": 8,
+                  "median": 1420078.0,
+                  "q25": 1420033.0,
+                  "q75": 1420115.0,
+                  "min": 1419912,
+                  "max": 1420528,
+                  "negative": 0,
+                  "positive": 8
+                }
+              },
+              "matched": {
+                "scanner_fresh": {
+                  "n": 8,
+                  "median": 8886.0,
+                  "q25": 8788.0,
+                  "q75": 8904.0,
+                  "min": 8524,
+                  "max": 9124,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_reuse": {
+                  "n": 8,
+                  "median": 8988.0,
+                  "q25": 8926.0,
+                  "q75": 9020.0,
+                  "min": 8812,
+                  "max": 9420,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_regex": {
+                  "n": 8,
+                  "median": 226.0,
+                  "q25": 217.0,
+                  "q75": 241.0,
+                  "min": 192,
+                  "max": 448,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_cursor": {
+                  "n": 8,
+                  "median": 378.0,
+                  "q25": 300.0,
+                  "q75": 522.0,
+                  "min": 156,
+                  "max": 752,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "scanner_average": {
+                  "n": 8,
+                  "median": 8947.0,
+                  "q25": 8836.0,
+                  "q75": 8980.0,
+                  "min": 8692.0,
+                  "max": 9156.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "reuse_average": {
+                  "n": 8,
+                  "median": 344.0,
+                  "q25": 264.5,
+                  "q75": 393.0,
+                  "min": 188.0,
+                  "max": 488.0,
+                  "negative": 0,
+                  "positive": 8
+                },
+                "interaction": {
+                  "n": 8,
+                  "median": 154.0,
+                  "q25": 44.0,
+                  "q75": 288.0,
+                  "min": -144,
+                  "max": 528,
+                  "negative": 2,
+                  "positive": 6
+                },
+                "cursor_combined": {
+                  "n": 8,
+                  "median": 9206.0,
+                  "q25": 9152.0,
+                  "q75": 9323.0,
+                  "min": 9048,
+                  "max": 9644,
+                  "negative": 0,
+                  "positive": 8
+                }
+              }
+            }
+          ]
+        },
+        "lowest_heap_headroom": {
+          "base": 2783380,
+          "regex_reuse": 2782852,
+          "cursor_fresh": 2774448,
+          "cursor_reuse": 2773776
+        }
+      }
+    },
+    "lazy": {
+      "files": {
+        "us": {
+          "lanes": {
+            "base": {
+              "n": 12,
+              "median": 237351.5,
+              "q25": 236587.25,
+              "q75": 238449.0,
+              "min": 235641,
+              "max": 242634,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_reuse": {
+              "n": 12,
+              "median": 233230.5,
+              "q25": 232488.0,
+              "q75": 233648.0,
+              "min": 232196,
+              "max": 234340,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_lazy": {
+              "n": 12,
+              "median": 244857.5,
+              "q25": 244464.0,
+              "q75": 245319.75,
+              "min": 243281,
+              "max": 246313,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "matched": {
+            "lazy_delta": {
+              "n": 12,
+              "median": 11731.0,
+              "q25": 10751.75,
+              "q75": 12654.75,
+              "min": 10096,
+              "max": 14117,
+              "negative": 0,
+              "positive": 12
+            },
+            "lazy_combined": {
+              "n": 12,
+              "median": 7526.0,
+              "q25": 6366.0,
+              "q75": 8348.0,
+              "min": 647,
+              "max": 9831,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 236924.0,
+                  "q25": 236157.75,
+                  "q75": 237886.75,
+                  "min": 235916,
+                  "max": 239340,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 233140.0,
+                  "q25": 232337.25,
+                  "q75": 233666.0,
+                  "min": 232196,
+                  "max": 234340,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 245388.0,
+                  "q25": 244753.5,
+                  "q75": 245710.5,
+                  "min": 244287,
+                  "max": 246313,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 12006.5,
+                  "q25": 11615.5,
+                  "q75": 12842.25,
+                  "min": 10273,
+                  "max": 14117,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 7978.5,
+                  "q25": 7383.5,
+                  "q75": 9280.0,
+                  "min": 5835,
+                  "max": 9831,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 237747.0,
+                  "q25": 237230.75,
+                  "q75": 238946.5,
+                  "min": 235641,
+                  "max": 242634,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 233230.5,
+                  "q25": 232725.25,
+                  "q75": 233532.5,
+                  "min": 232197,
+                  "max": 234096,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 244559.0,
+                  "q25": 244232.75,
+                  "q75": 244975.25,
+                  "min": 243281,
+                  "max": 245226,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 10918.5,
+                  "q25": 10535.25,
+                  "q75": 12141.75,
+                  "min": 10096,
+                  "max": 13029,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 6582.5,
+                  "q25": 5991.0,
+                  "q75": 7742.5,
+                  "min": 647,
+                  "max": 8954,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            }
+          ]
+        },
+        "peak": {
+          "lanes": {
+            "base": {
+              "n": 12,
+              "median": 362624.0,
+              "q25": 362615.0,
+              "q75": 362628.0,
+              "min": 362612,
+              "max": 362636,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_reuse": {
+              "n": 12,
+              "median": 379954.0,
+              "q25": 379952.0,
+              "q75": 379964.0,
+              "min": 379940,
+              "max": 379980,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_lazy": {
+              "n": 12,
+              "median": 386028.0,
+              "q25": 386020.0,
+              "q75": 386032.0,
+              "min": 386012,
+              "max": 386036,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "matched": {
+            "lazy_delta": {
+              "n": 12,
+              "median": 6068.0,
+              "q25": 6056.0,
+              "q75": 6073.0,
+              "min": 6052,
+              "max": 6092,
+              "negative": 0,
+              "positive": 12
+            },
+            "lazy_combined": {
+              "n": 12,
+              "median": 23406.0,
+              "q25": 23395.0,
+              "q75": 23413.0,
+              "min": 23384,
+              "max": 23424,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 362620.0,
+                  "q25": 362616.0,
+                  "q75": 362627.0,
+                  "min": 362612,
+                  "max": 362636,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 379960.0,
+                  "q25": 379953.0,
+                  "q75": 379976.0,
+                  "min": 379952,
+                  "max": 379980,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 386032.0,
+                  "q25": 386023.0,
+                  "q75": 386032.0,
+                  "min": 386012,
+                  "max": 386032,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 6064.0,
+                  "q25": 6054.0,
+                  "q75": 6068.0,
+                  "min": 6052,
+                  "max": 6076,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 23408.0,
+                  "q25": 23399.0,
+                  "q75": 23414.0,
+                  "min": 23384,
+                  "max": 23416,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 362626.0,
+                  "q25": 362615.0,
+                  "q75": 362628.0,
+                  "min": 362612,
+                  "max": 362628,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 379952.0,
+                  "q25": 379949.0,
+                  "q75": 379955.0,
+                  "min": 379940,
+                  "max": 379964,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 386024.0,
+                  "q25": 386021.0,
+                  "q75": 386030.0,
+                  "min": 386012,
+                  "max": 386036,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 6072.0,
+                  "q25": 6060.0,
+                  "q75": 6084.0,
+                  "min": 6056,
+                  "max": 6092,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 23400.0,
+                  "q25": 23393.0,
+                  "q75": 23410.0,
+                  "min": 23388,
+                  "max": 23424,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            }
+          ]
+        },
+        "lowest_heap_headroom": {
+          "base": 1734516,
+          "cursor_reuse": 1717172,
+          "cursor_lazy": 1711116
+        }
+      },
+      "agenda": {
+        "us": {
+          "lanes": {
+            "base": {
+              "n": 12,
+              "median": 667623.0,
+              "q25": 662091.75,
+              "q75": 670493.75,
+              "min": 660370,
+              "max": 670733,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_reuse": {
+              "n": 12,
+              "median": 602128.5,
+              "q25": 601232.25,
+              "q75": 602285.75,
+              "min": 597968,
+              "max": 609405,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_lazy": {
+              "n": 12,
+              "median": 658987.5,
+              "q25": 654750.5,
+              "q75": 660629.75,
+              "min": 653782,
+              "max": 663573,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "matched": {
+            "lazy_delta": {
+              "n": 12,
+              "median": 58241.5,
+              "q25": 52377.5,
+              "q75": 58959.25,
+              "min": 47238,
+              "max": 62267,
+              "negative": 0,
+              "positive": 12
+            },
+            "lazy_combined": {
+              "n": 12,
+              "median": -6868.0,
+              "q25": -14309.75,
+              "q75": -3376.25,
+              "min": -16281,
+              "max": -706,
+              "negative": 12,
+              "positive": 0
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 668237.5,
+                  "q25": 663787.5,
+                  "q75": 669972.5,
+                  "min": 660969,
+                  "max": 670508,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 602128.5,
+                  "q25": 601509.0,
+                  "q75": 602285.25,
+                  "min": 601008,
+                  "max": 606989,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 654576.0,
+                  "q25": 654052.25,
+                  "q75": 658928.5,
+                  "min": 653782,
+                  "max": 660477,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 53302.0,
+                  "q25": 51758.5,
+                  "q75": 57090.25,
+                  "min": 47238,
+                  "max": 58335,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": -14349.5,
+                  "q25": -15280.25,
+                  "q75": -4984.25,
+                  "min": -16281,
+                  "max": -706,
+                  "negative": 6,
+                  "positive": 0
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 665850.0,
+                  "q25": 662078.25,
+                  "q75": 669793.5,
+                  "min": 660370,
+                  "max": 670733,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 602055.5,
+                  "q25": 599785.75,
+                  "q75": 602253.0,
+                  "min": 597968,
+                  "max": 609405,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 660714.5,
+                  "q25": 658420.25,
+                  "q75": 661229.75,
+                  "min": 656922,
+                  "max": 663573,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 58964.5,
+                  "q25": 58495.75,
+                  "q75": 60721.0,
+                  "min": 48307,
+                  "max": 62267,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": -5103.0,
+                  "q25": -6977.5,
+                  "q75": -3475.25,
+                  "min": -9849,
+                  "max": -3161,
+                  "negative": 6,
+                  "positive": 0
+                }
+              }
+            }
+          ]
+        },
+        "peak": {
+          "lanes": {
+            "base": {
+              "n": 12,
+              "median": 578950.0,
+              "q25": 578939.0,
+              "q75": 578952.0,
+              "min": 578936,
+              "max": 578956,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_reuse": {
+              "n": 12,
+              "median": 592232.0,
+              "q25": 592220.0,
+              "q75": 592233.0,
+              "min": 592208,
+              "max": 592240,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_lazy": {
+              "n": 12,
+              "median": 598292.0,
+              "q25": 598291.0,
+              "q75": 598300.0,
+              "min": 598280,
+              "max": 598304,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "matched": {
+            "lazy_delta": {
+              "n": 12,
+              "median": 6068.0,
+              "q25": 6059.0,
+              "q75": 6074.0,
+              "min": 6052,
+              "max": 6084,
+              "negative": 0,
+              "positive": 12
+            },
+            "lazy_combined": {
+              "n": 12,
+              "median": 19344.0,
+              "q25": 19340.0,
+              "q75": 19353.0,
+              "min": 19336,
+              "max": 19364,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 578946.0,
+                  "q25": 578937.0,
+                  "q75": 578955.0,
+                  "min": 578936,
+                  "max": 578956,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 592232.0,
+                  "q25": 592223.0,
+                  "q75": 592232.0,
+                  "min": 592220,
+                  "max": 592236,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 598296.0,
+                  "q25": 598292.0,
+                  "q75": 598300.0,
+                  "min": 598280,
+                  "max": 598300,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 6064.0,
+                  "q25": 6060.0,
+                  "q75": 6068.0,
+                  "min": 6056,
+                  "max": 6080,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 19344.0,
+                  "q25": 19344.0,
+                  "q75": 19350.0,
+                  "min": 19340,
+                  "max": 19364,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 578950.0,
+                  "q25": 578945.0,
+                  "q75": 578952.0,
+                  "min": 578936,
+                  "max": 578952,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 592226.0,
+                  "q25": 592220.0,
+                  "q75": 592238.0,
+                  "min": 592208,
+                  "max": 592240,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 598292.0,
+                  "q25": 598289.0,
+                  "q75": 598301.0,
+                  "min": 598288,
+                  "max": 598304,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 6070.0,
+                  "q25": 6056.0,
+                  "q75": 6078.0,
+                  "min": 6052,
+                  "max": 6084,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 19346.0,
+                  "q25": 19340.0,
+                  "q75": 19355.0,
+                  "min": 19336,
+                  "max": 19360,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            }
+          ]
+        },
+        "lowest_heap_headroom": {
+          "base": 1518196,
+          "cursor_reuse": 1504912,
+          "cursor_lazy": 1498848
+        }
+      },
+      "editor": {
+        "us": {
+          "lanes": {
+            "base": {
+              "n": 12,
+              "median": 2470529.5,
+              "q25": 2461102.75,
+              "q75": 2476180.75,
+              "min": 2454671,
+              "max": 2497337,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_reuse": {
+              "n": 12,
+              "median": 2161476.0,
+              "q25": 2156271.0,
+              "q75": 2170555.0,
+              "min": 2149520,
+              "max": 2182518,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_lazy": {
+              "n": 12,
+              "median": 2371473.0,
+              "q25": 2364075.5,
+              "q75": 2381378.25,
+              "min": 2361530,
+              "max": 2397816,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "matched": {
+            "lazy_delta": {
+              "n": 12,
+              "median": 213659.0,
+              "q25": 208898.0,
+              "q75": 218487.0,
+              "min": 179012,
+              "max": 226178,
+              "negative": 0,
+              "positive": 12
+            },
+            "lazy_combined": {
+              "n": 12,
+              "median": -96271.0,
+              "q25": -107089.25,
+              "q75": -87859.0,
+              "min": -130528,
+              "max": -71254,
+              "negative": 12,
+              "positive": 0
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 2470529.5,
+                  "q25": 2463562.75,
+                  "q75": 2474629.0,
+                  "min": 2457751,
+                  "max": 2478181,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 2165051.0,
+                  "q25": 2153065.25,
+                  "q75": 2170334.0,
+                  "min": 2149520,
+                  "max": 2182518,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 2377255.5,
+                  "q25": 2365685.5,
+                  "q75": 2381912.75,
+                  "min": 2361530,
+                  "max": 2382358,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 213659.0,
+                  "q25": 211947.0,
+                  "q75": 218029.75,
+                  "min": 179012,
+                  "max": 223195,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": -99057.5,
+                  "q25": -105006.75,
+                  "q75": -84458.5,
+                  "min": -110444,
+                  "max": -75393,
+                  "negative": 6,
+                  "positive": 0
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 2470808.5,
+                  "q25": 2461701.25,
+                  "q75": 2483359.75,
+                  "min": 2454671,
+                  "max": 2497337,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 2160337.5,
+                  "q25": 2157944.0,
+                  "q75": 2168141.5,
+                  "min": 2152677,
+                  "max": 2171638,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 2368177.5,
+                  "q25": 2364999.25,
+                  "q75": 2375534.0,
+                  "min": 2362704,
+                  "max": 2397816,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 213104.5,
+                  "q25": 204067.75,
+                  "q75": 217153.75,
+                  "min": 193976,
+                  "max": 226178,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": -95779.0,
+                  "q25": -112198.75,
+                  "q75": -91460.5,
+                  "min": -130528,
+                  "max": -71254,
+                  "negative": 6,
+                  "positive": 0
+                }
+              }
+            }
+          ]
+        },
+        "peak": {
+          "lanes": {
+            "base": {
+              "n": 12,
+              "median": 1410880.0,
+              "q25": 1410805.0,
+              "q75": 1410914.0,
+              "min": 1410492,
+              "max": 1411176,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_reuse": {
+              "n": 12,
+              "median": 1420088.0,
+              "q25": 1420076.0,
+              "q75": 1420133.0,
+              "min": 1419712,
+              "max": 1420284,
+              "negative": 0,
+              "positive": 12
+            },
+            "cursor_lazy": {
+              "n": 12,
+              "median": 1426144.0,
+              "q25": 1425910.0,
+              "q75": 1426149.0,
+              "min": 1425808,
+              "max": 1426168,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "matched": {
+            "lazy_delta": {
+              "n": 12,
+              "median": 6020.0,
+              "q25": 5834.0,
+              "q75": 6064.0,
+              "min": 5528,
+              "max": 6432,
+              "negative": 0,
+              "positive": 12
+            },
+            "lazy_combined": {
+              "n": 12,
+              "median": 15268.0,
+              "q25": 15008.0,
+              "q75": 15340.0,
+              "min": 14632,
+              "max": 15676,
+              "negative": 0,
+              "positive": 12
+            }
+          },
+          "by_boot": [
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 1410890.0,
+                  "q25": 1410872.0,
+                  "q75": 1410908.0,
+                  "min": 1410500,
+                  "max": 1411176,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 1420108.0,
+                  "q25": 1420080.0,
+                  "q75": 1420244.0,
+                  "min": 1419712,
+                  "max": 1420284,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 1426038.0,
+                  "q25": 1425842.0,
+                  "q75": 1426144.0,
+                  "min": 1425808,
+                  "max": 1426152,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 5862.0,
+                  "q25": 5727.0,
+                  "q75": 6006.0,
+                  "min": 5528,
+                  "max": 6432,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 15152.0,
+                  "q25": 14934.0,
+                  "q75": 15274.0,
+                  "min": 14632,
+                  "max": 15644,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            },
+            {
+              "lanes": {
+                "base": {
+                  "n": 6,
+                  "median": 1410872.0,
+                  "q25": 1410679.0,
+                  "q75": 1410909.0,
+                  "min": 1410492,
+                  "max": 1410968,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_reuse": {
+                  "n": 6,
+                  "median": 1420082.0,
+                  "q25": 1420077.0,
+                  "q75": 1420117.0,
+                  "min": 1420068,
+                  "max": 1420148,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "cursor_lazy": {
+                  "n": 6,
+                  "median": 1426146.0,
+                  "q25": 1426144.0,
+                  "q75": 1426160.0,
+                  "min": 1425844,
+                  "max": 1426168,
+                  "negative": 0,
+                  "positive": 6
+                }
+              },
+              "matched": {
+                "lazy_delta": {
+                  "n": 6,
+                  "median": 6040.0,
+                  "q25": 6020.0,
+                  "q75": 6072.0,
+                  "min": 5768,
+                  "max": 6084,
+                  "negative": 0,
+                  "positive": 6
+                },
+                "lazy_combined": {
+                  "n": 6,
+                  "median": 15272.0,
+                  "q25": 15214.0,
+                  "q75": 15468.0,
+                  "min": 14924,
+                  "max": 15676,
+                  "negative": 0,
+                  "positive": 6
+                }
+              }
+            }
+          ]
+        },
+        "lowest_heap_headroom": {
+          "base": 2783128,
+          "cursor_reuse": 2774020,
+          "cursor_lazy": 2768136
+        }
+      }
+    }
+  },
+  "control_cross_image_median_difference": {
+    "files": {
+      "us": {
+        "base": 875.5,
+        "cursor_reuse": 1022.0
+      },
+      "peak": {
+        "base": 0.0,
+        "cursor_reuse": 2.0
+      }
+    },
+    "agenda": {
+      "us": {
+        "base": 6077.5,
+        "cursor_reuse": 1271.5
+      },
+      "peak": {
+        "base": 2.0,
+        "cursor_reuse": 12.0
+      }
+    },
+    "editor": {
+      "us": {
+        "base": 9278.5,
+        "cursor_reuse": 3691.5
+      },
+      "peak": {
+        "base": 8.0,
+        "cursor_reuse": 18.0
+      }
+    }
+  }
+}

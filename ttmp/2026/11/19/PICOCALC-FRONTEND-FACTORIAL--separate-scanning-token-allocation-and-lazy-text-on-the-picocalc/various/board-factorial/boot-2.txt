@@ -1,0 +1,520 @@
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=657353 peak_js_bytes=578936 module_bytes=66364
+files native compiler functions=streamed
+files compile source=bundle status=ok us=260996 peak_js_bytes=362612 module_bytes=24424
+LABRUN 0 0 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=235367 peak_js_bytes=362612 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 0 0 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=671157 peak_js_bytes=578936 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 0 0 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2461089 peak_js_bytes=1410872 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 0 1 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237412 peak_js_bytes=362848 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 0 1 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=639015 peak_js_bytes=579172 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 0 1 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2368276 peak_js_bytes=1411080 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 0 2 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238610 peak_js_bytes=379628 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 0 2 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=637330 peak_js_bytes=591892 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 0 2 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2314879 peak_js_bytes=1419788 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 0 3 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=231609 peak_js_bytes=379952 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 0 3 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=608610 peak_js_bytes=592220 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 0 3 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2148238 peak_js_bytes=1420076 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 1 0 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=239968 peak_js_bytes=362836 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 1 0 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=631320 peak_js_bytes=579168 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 1 0 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2327616 peak_js_bytes=1411080 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 1 1 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237861 peak_js_bytes=379624 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 1 1 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=641518 peak_js_bytes=591896 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 1 1 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2301532 peak_js_bytes=1419748 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 1 2 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=231970 peak_js_bytes=379952 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 1 2 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=602089 peak_js_bytes=592216 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 1 2 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2150921 peak_js_bytes=1420096 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 1 3 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=234529 peak_js_bytes=362620 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 1 3 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=671101 peak_js_bytes=578960 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 1 3 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2454598 peak_js_bytes=1410888 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 2 0 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237182 peak_js_bytes=379648 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 2 0 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=638951 peak_js_bytes=591916 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 2 0 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2309700 peak_js_bytes=1419404 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 2 1 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=232057 peak_js_bytes=379952 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 2 1 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=597073 peak_js_bytes=592220 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 2 1 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2161988 peak_js_bytes=1420064 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 2 2 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237217 peak_js_bytes=362628 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 2 2 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=659944 peak_js_bytes=578960 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 2 2 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2455602 peak_js_bytes=1410880 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 2 3 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=235570 peak_js_bytes=362832 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 2 3 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=633774 peak_js_bytes=579160 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 2 3 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2339126 peak_js_bytes=1411108 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 3 0 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=232193 peak_js_bytes=379940 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 3 0 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=595574 peak_js_bytes=592220 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 3 0 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2160523 peak_js_bytes=1419912 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 3 1 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=236309 peak_js_bytes=362628 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 3 1 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=660269 peak_js_bytes=578936 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 3 1 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2451866 peak_js_bytes=1410864 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 3 2 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238435 peak_js_bytes=362860 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 3 2 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=640438 peak_js_bytes=579160 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 3 2 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2325856 peak_js_bytes=1411100 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 3 3 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237813 peak_js_bytes=379628 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 3 3 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=634700 peak_js_bytes=591892 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 3 3 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2306520 peak_js_bytes=1419436 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 4 0 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=234809 peak_js_bytes=362624 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 4 0 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=660336 peak_js_bytes=578936 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 4 0 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2465586 peak_js_bytes=1410884 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 4 1 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=231392 peak_js_bytes=379956 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 4 1 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=599008 peak_js_bytes=592220 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 4 1 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2160149 peak_js_bytes=1420172 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 4 2 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=236221 peak_js_bytes=379632 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 4 2 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=637419 peak_js_bytes=591912 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 4 2 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2307454 peak_js_bytes=1419764 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 4 3 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=236874 peak_js_bytes=362864 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 4 3 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=633833 peak_js_bytes=579168 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 4 3 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2375031 peak_js_bytes=1411140 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 5 0 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237019 peak_js_bytes=362848 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 5 0 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=648911 peak_js_bytes=579180 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 5 0 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2417236 peak_js_bytes=1411104 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 5 1 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238025 peak_js_bytes=362640 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 5 1 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=666685 peak_js_bytes=578948 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 5 1 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2491093 peak_js_bytes=1410884 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 5 2 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=232125 peak_js_bytes=379952 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 5 2 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=600757 peak_js_bytes=592232 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 5 2 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2153552 peak_js_bytes=1419940 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 5 3 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=237066 peak_js_bytes=379628 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 5 3 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=632280 peak_js_bytes=591912 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 5 3 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2300706 peak_js_bytes=1419784 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 6 0 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=239728 peak_js_bytes=379640 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 6 0 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=633440 peak_js_bytes=591904 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 6 0 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2301942 peak_js_bytes=1419776 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 6 1 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=235650 peak_js_bytes=362868 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 6 1 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=642550 peak_js_bytes=579180 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 6 1 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2328789 peak_js_bytes=1411108 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 6 2 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=235356 peak_js_bytes=362612 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 6 2 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=662047 peak_js_bytes=578952 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 6 2 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2454730 peak_js_bytes=1410884 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 6 3 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=232101 peak_js_bytes=379944 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 6 3 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=602290 peak_js_bytes=592220 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 6 3 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2147703 peak_js_bytes=1420528 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 7 0 cursor_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=232224 peak_js_bytes=379952 module_bytes=24424
+LABHASH cursor_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 7 0 cursor_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=599303 peak_js_bytes=592220 module_bytes=66364
+LABHASH cursor_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 7 0 cursor_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2165229 peak_js_bytes=1420080 module_bytes=240452
+LABHASH cursor_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 7 1 cursor_fresh files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=238589 peak_js_bytes=379640 module_bytes=24424
+LABHASH cursor_fresh files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 7 1 cursor_fresh agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=631343 peak_js_bytes=591908 module_bytes=66364
+LABHASH cursor_fresh agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 7 1 cursor_fresh editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2299719 peak_js_bytes=1419776 module_bytes=240452
+LABHASH cursor_fresh editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 7 2 regex_reuse files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=235523 peak_js_bytes=362856 module_bytes=24424
+LABHASH regex_reuse files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 7 2 regex_reuse agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=639731 peak_js_bytes=579180 module_bytes=66364
+LABHASH regex_reuse agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 7 2 regex_reuse editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2322921 peak_js_bytes=1411100 module_bytes=240452
+LABHASH regex_reuse editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABRUN 7 3 base files
+files native compiler functions=streamed
+files compile source=bundle status=ok us=236075 peak_js_bytes=362624 module_bytes=24424
+LABHASH base files 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
+LABRUN 7 3 base agenda
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=662695 peak_js_bytes=578948 module_bytes=66364
+LABHASH base agenda 30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454
+LABRUN 7 3 base editor
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2434515 peak_js_bytes=1410652 module_bytes=240452
+LABHASH base editor aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+LABGUEST compare 0 base 128 836521 360000000
+LABGUEST compare 0 regex_reuse 128 835197 360000000
+LABGUEST compare 0 cursor_fresh 128 835220 360000000
+LABGUEST compare 0 cursor_reuse 128 835265 360000000
+LABGUEST compare 1 base 128 836511 360000000
+LABGUEST compare 1 regex_reuse 128 835213 360000000
+LABGUEST compare 1 cursor_fresh 128 835238 360000000
+LABGUEST compare 1 cursor_reuse 128 835229 360000000
+LABGUEST compare 2 base 128 835218 360000000
+LABGUEST compare 2 regex_reuse 128 835182 360000000
+LABGUEST compare 2 cursor_fresh 128 835273 360000000
+LABGUEST compare 2 cursor_reuse 128 836529 360000000
+LABGUEST compare 3 base 128 835237 360000000
+LABGUEST compare 3 regex_reuse 128 836443 360000000
+LABGUEST compare 3 cursor_fresh 128 836434 360000000
+LABGUEST compare 3 cursor_reuse 128 835207 360000000
+LABGUEST compare 4 base 128 836536 360000000
+LABGUEST compare 4 regex_reuse 128 835148 360000000
+LABGUEST compare 4 cursor_fresh 128 835147 360000000
+LABGUEST compare 4 cursor_reuse 128 835238 360000000
+LABGUEST compare 5 base 128 835193 360000000
+LABGUEST compare 5 regex_reuse 128 835208 360000000
+LABGUEST compare 5 cursor_fresh 128 836484 360000000
+LABGUEST compare 5 cursor_reuse 128 835205 360000000
+LABGUEST compare 6 base 128 836502 360000000
+LABGUEST compare 6 regex_reuse 128 835219 360000000
+LABGUEST compare 6 cursor_fresh 128 835261 360000000
+LABGUEST compare 6 cursor_reuse 128 836485 360000000
+LABGUEST compare 7 base 128 835199 360000000
+LABGUEST compare 7 regex_reuse 128 835239 360000000
+LABGUEST compare 7 cursor_fresh 128 835273 360000000
+LABGUEST compare 7 cursor_reuse 128 836493 360000000
+LABGUEST compare 8 base 128 835116 360000000
+LABGUEST compare 8 regex_reuse 128 835259 360000000
+LABGUEST compare 8 cursor_fresh 128 835246 360000000
+LABGUEST compare 8 cursor_reuse 128 836447 360000000
+LABGUEST compare 9 base 128 836501 360000000
+LABGUEST compare 9 regex_reuse 128 835264 360000000
+LABGUEST compare 9 cursor_fresh 128 835179 360000000
+LABGUEST compare 9 cursor_reuse 128 843811 360000000
+LABGUEST compare 10 base 128 836492 360000000
+LABGUEST compare 10 regex_reuse 128 836512 360000000
+LABGUEST compare 10 cursor_fresh 128 835190 360000000
+LABGUEST compare 10 cursor_reuse 128 835221 360000000
+LABGUEST compare 11 base 128 835152 360000000
+LABGUEST compare 11 regex_reuse 128 835203 360000000
+LABGUEST compare 11 cursor_fresh 128 835165 360000000
+LABGUEST compare 11 cursor_reuse 128 836369 360000000
+LABGUEST compare 12 base 128 835179 360000000
+LABGUEST compare 12 regex_reuse 128 836476 360000000
+LABGUEST compare 12 cursor_fresh 128 835207 360000000
+LABGUEST compare 12 cursor_reuse 128 835250 360000000
+LABGUEST compare 13 base 128 836484 360000000
+LABGUEST compare 13 regex_reuse 128 835220 360000000
+LABGUEST compare 13 cursor_fresh 128 835228 360000000
+LABGUEST compare 13 cursor_reuse 128 836500 360000000
+LABGUEST compare 14 base 128 835131 360000000
+LABGUEST compare 14 regex_reuse 128 835193 360000000
+LABGUEST compare 14 cursor_fresh 128 836448 360000000
+LABGUEST compare 14 cursor_reuse 128 835179 360000000
+LABGUEST compare 15 base 128 835220 360000000
+LABGUEST compare 15 regex_reuse 128 835192 360000000
+LABGUEST compare 15 cursor_fresh 128 836476 360000000
+LABGUEST compare 15 cursor_reuse 128 835191 360000000
+LABGUEST weekday 0 base 128 92749 360000000
+LABGUEST weekday 0 regex_reuse 128 94140 360000000
+LABGUEST weekday 0 cursor_fresh 128 92749 360000000
+LABGUEST weekday 0 cursor_reuse 128 92766 360000000
+LABGUEST weekday 1 base 128 92759 360000000
+LABGUEST weekday 1 regex_reuse 128 92743 360000000
+LABGUEST weekday 1 cursor_fresh 128 94048 360000000
+LABGUEST weekday 1 cursor_reuse 128 92751 360000000
+LABGUEST weekday 2 base 128 92787 360000000
+LABGUEST weekday 2 regex_reuse 128 94073 360000000
+LABGUEST weekday 2 cursor_fresh 128 92756 360000000
+LABGUEST weekday 2 cursor_reuse 128 92782 360000000
+LABGUEST weekday 3 base 128 92761 360000000
+LABGUEST weekday 3 regex_reuse 128 92739 360000000
+LABGUEST weekday 3 cursor_fresh 128 94006 360000000
+LABGUEST weekday 3 cursor_reuse 128 92741 360000000
+LABGUEST weekday 4 base 128 92629 360000000
+LABGUEST weekday 4 regex_reuse 128 92628 360000000
+LABGUEST weekday 4 cursor_fresh 128 92636 360000000
+LABGUEST weekday 4 cursor_reuse 128 93947 360000000
+LABGUEST weekday 5 base 128 93942 360000000
+LABGUEST weekday 5 regex_reuse 128 92629 360000000
+LABGUEST weekday 5 cursor_fresh 128 92614 360000000
+LABGUEST weekday 5 cursor_reuse 128 92625 360000000
+LABGUEST weekday 6 base 128 92638 360000000
+LABGUEST weekday 6 regex_reuse 128 92661 360000000
+LABGUEST weekday 6 cursor_fresh 128 93994 360000000
+LABGUEST weekday 6 cursor_reuse 128 92629 360000000
+LABGUEST weekday 7 base 128 92640 360000000
+LABGUEST weekday 7 regex_reuse 128 92636 360000000
+LABGUEST weekday 7 cursor_fresh 128 92629 360000000
+LABGUEST weekday 7 cursor_reuse 128 93920 360000000
+LABGUEST weekday 8 base 128 93964 360000000
+LABGUEST weekday 8 regex_reuse 128 92651 360000000
+LABGUEST weekday 8 cursor_fresh 128 92638 360000000
+LABGUEST weekday 8 cursor_reuse 128 92629 360000000
+LABGUEST weekday 9 base 128 92629 360000000
+LABGUEST weekday 9 regex_reuse 128 94025 360000000
+LABGUEST weekday 9 cursor_fresh 128 92629 360000000
+LABGUEST weekday 9 cursor_reuse 128 92638 360000000
+LABGUEST weekday 10 base 128 92647 360000000
+LABGUEST weekday 10 regex_reuse 128 92747 360000000
+LABGUEST weekday 10 cursor_fresh 128 94028 360000000
+LABGUEST weekday 10 cursor_reuse 128 92629 360000000
+LABGUEST weekday 11 base 128 92736 360000000
+LABGUEST weekday 11 regex_reuse 128 92724 360000000
+LABGUEST weekday 11 cursor_fresh 128 92725 360000000
+LABGUEST weekday 11 cursor_reuse 128 94064 360000000
+LABGUEST weekday 12 base 128 94080 360000000
+LABGUEST weekday 12 regex_reuse 128 92728 360000000
+LABGUEST weekday 12 cursor_fresh 128 92726 360000000
+LABGUEST weekday 12 cursor_reuse 128 92725 360000000
+LABGUEST weekday 13 base 128 92714 360000000
+LABGUEST weekday 13 regex_reuse 128 94076 360000000
+LABGUEST weekday 13 cursor_fresh 128 92725 360000000
+LABGUEST weekday 13 cursor_reuse 128 92729 360000000
+LABGUEST weekday 14 base 128 92724 360000000
+LABGUEST weekday 14 regex_reuse 128 94072 360000000
+LABGUEST weekday 14 cursor_fresh 128 92728 360000000
+LABGUEST weekday 14 cursor_reuse 128 92738 360000000
+LABGUEST weekday 15 base 128 92748 360000000
+LABGUEST weekday 15 regex_reuse 128 92725 360000000
+LABGUEST weekday 15 cursor_fresh 128 94816 360000000
+LABGUEST weekday 15 cursor_reuse 128 92725 360000000
+LABDONE
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2432942 peak_js_bytes=1410652 module_bytes=240452
+[{"name":"files","engine":"native","file":"files/compiled.bin","last_error":""},{"name":"editor","engine":"native","file":"editor/compiled.bin","last_error":""},{"name":"agenda","engine":"native","file":"agenda/compiled.bin","last_error":""}]
