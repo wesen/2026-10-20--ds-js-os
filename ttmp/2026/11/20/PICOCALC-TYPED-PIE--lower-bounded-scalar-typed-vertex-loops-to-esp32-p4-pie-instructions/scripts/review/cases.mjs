@@ -39,7 +39,7 @@ export function cases() {
         for (const shift of [4,8,12])
             result.push(scenario('misalign-'+p+'-'+shift,25,{misalign:[p,shift],vector:false}));
         for (const cap of [0,1,7,8,9,15,16])
-            result.push(scenario('short-'+p+'-'+cap,17,{short:[p,cap],vector:false}));
+            result.push(scenario('short-'+p+'-'+cap,17,{short:[p,cap],vector:cap===16}));
     }
     for (let a = 0; a < 6; a++) {
         for (let b = 0; b < a; b++) {

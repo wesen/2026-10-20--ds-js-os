@@ -1,0 +1,310 @@
+{
+  "candidateSources": {
+    "../02-pie-lowering.js": "e9cfea0d322bd71ce2ac5bae79e3dd305c79ae70e22743b1f2c858309731be34",
+    "../03-compile.mjs": "d88825e288d1ca5f08ec50130ae3957f2b8e27f61d912b15175c69e33f2b4f03",
+    "./projection.tjs": "14dc9426db07386ca9672385a2dfbbba210600a9a783b95205d4a5dfba88c311"
+  },
+  "images": {
+    "scalar": "503f016c0e6f9d639b8b371fd756ec1203f61f1e8923357a6dd844c10270eace",
+    "portable": "8660f2c6e3d17a0e44b9621051159e369fc3cdc07f31d1bc6a00b956cd8e416f",
+    "candidate": "f1a36cfc38062edb3691859a70f03f4d8dc39280825302c72e49aec9d8156573"
+  },
+  "success": 97,
+  "traps": 48,
+  "cases": 145,
+  "scalarBytes": 772,
+  "candidateBytes": 1528,
+  "vectorCases": 47,
+  "stores": 510,
+  "statics": {
+    "esp.vldbc.16.ip": 3,
+    "esp.vld.128.ip": 3,
+    "esp.andq": 3,
+    "esp.vadd.s16": 6,
+    "esp.vsub.s16": 2,
+    "esp.vst.128.ip": 3
+  },
+  "retired": [
+    [
+      -2147483648,
+      58,
+      62,
+      62
+    ],
+    [
+      -1,
+      58,
+      62,
+      62
+    ],
+    [
+      0,
+      58,
+      62,
+      62
+    ],
+    [
+      1,
+      189,
+      193,
+      193
+    ],
+    [
+      7,
+      975,
+      979,
+      979
+    ],
+    [
+      8,
+      1106,
+      490,
+      202
+    ],
+    [
+      9,
+      1237,
+      621,
+      333
+    ],
+    [
+      15,
+      2023,
+      1407,
+      1119
+    ],
+    [
+      16,
+      2154,
+      810,
+      231
+    ],
+    [
+      17,
+      2285,
+      941,
+      362
+    ],
+    [
+      23,
+      3071,
+      1727,
+      1148
+    ],
+    [
+      24,
+      3202,
+      1130,
+      260
+    ],
+    [
+      25,
+      3333,
+      1261,
+      391
+    ],
+    [
+      31,
+      4119,
+      2047,
+      1177
+    ],
+    [
+      32,
+      4250,
+      1450,
+      289
+    ],
+    [
+      33,
+      4381,
+      1581,
+      420
+    ],
+    [
+      40,
+      5298,
+      1770,
+      318
+    ],
+    [
+      41,
+      5429,
+      1901,
+      449
+    ]
+  ],
+  "portableBytes": 1560,
+  "variants": {
+    "programs": 35,
+    "executions": 420,
+    "outcomes": [
+      [
+        "mul-1",
+        true
+      ],
+      [
+        "mul-2",
+        true
+      ],
+      [
+        "mul-3",
+        true
+      ],
+      [
+        "mul-4",
+        true
+      ],
+      [
+        "mul-5",
+        true
+      ],
+      [
+        "mul-7",
+        true
+      ],
+      [
+        "mul-8",
+        true
+      ],
+      [
+        "mul-9",
+        true
+      ],
+      [
+        "mul-15",
+        true
+      ],
+      [
+        "mul-16",
+        true
+      ],
+      [
+        "mask-2",
+        true
+      ],
+      [
+        "mask-4",
+        true
+      ],
+      [
+        "mask-128",
+        true
+      ],
+      [
+        "mask-256",
+        true
+      ],
+      [
+        "mask-2048",
+        true
+      ],
+      [
+        "mask-4096",
+        true
+      ],
+      [
+        "mask-32768",
+        true
+      ],
+      [
+        "renamed",
+        true
+      ],
+      [
+        "s16-lower-limit",
+        true
+      ],
+      [
+        "s16-upper-limit",
+        true
+      ],
+      [
+        "positive-intermediate-overflow",
+        false
+      ],
+      [
+        "negative-intermediate-overflow",
+        false
+      ],
+      [
+        "i32-narrow-at-store",
+        false
+      ],
+      [
+        "raw-u16",
+        false
+      ],
+      [
+        "nonpower-mod",
+        false
+      ],
+      [
+        "mutable-induction",
+        false
+      ],
+      [
+        "shifted-read",
+        false
+      ],
+      [
+        "shifted-write",
+        false
+      ],
+      [
+        "start-one",
+        false
+      ],
+      [
+        "stride-two",
+        false
+      ],
+      [
+        "prior-iteration",
+        false
+      ],
+      [
+        "early-exit",
+        false
+      ],
+      [
+        "call-in-body",
+        false
+      ],
+      [
+        "count-preserved",
+        true
+      ],
+      [
+        "live-index-after-loop",
+        true
+      ]
+    ],
+    "frame": [
+      [
+        498,
+        4228,
+        4448,
+        4440
+      ],
+      [
+        499,
+        4236,
+        4456,
+        4448
+      ],
+      [
+        500,
+        4244,
+        4464,
+        4456
+      ],
+      [
+        501,
+        "RV32 function frame exceeds the instruction range",
+        "RV32 function frame exceeds the instruction range",
+        "RV32 function frame exceeds the instruction range"
+      ]
+    ]
+  }
+}

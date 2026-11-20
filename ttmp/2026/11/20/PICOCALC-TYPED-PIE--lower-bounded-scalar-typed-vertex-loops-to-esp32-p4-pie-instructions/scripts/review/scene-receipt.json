@@ -1,0 +1,64 @@
+{
+  "sourceSha256": "cb3fdca0a861ce13c5e91e5a4ac3fb015520d225955ba92b941b4efaf593e48c",
+  "nativeSha256": "2861fa26b87ac9d790f8679495941cc1f0de93a4a0fe5e45225c7f46195dfed7",
+  "nativeBytes": 5136,
+  "selected": [],
+  "results": [
+    {
+      "name": "opening",
+      "entry": "paintChess",
+      "pitch": 5,
+      "count": 2081,
+      "retired": 87410,
+      "sha256": "bc7dbfd1dfadcb0fd55fa63be505b15c4f17206373b5370e71876a132b744ec5"
+    },
+    {
+      "name": "cursor",
+      "entry": "paintChess",
+      "pitch": 5,
+      "count": 2081,
+      "retired": 87410,
+      "sha256": "43ffa96e3895d1162b4af34eca1a471e0cdbcbe27ec53477b1610e5f18bdfae6"
+    },
+    {
+      "name": "e4",
+      "entry": "paintChess",
+      "pitch": 5,
+      "count": 2081,
+      "retired": 87410,
+      "sha256": "1543dcb2949ef98c85c86aae457c2fd779b7dc87243e1c7a825ae23f0c2b11e8"
+    },
+    {
+      "name": "empty",
+      "entry": "paintChess",
+      "pitch": 5,
+      "count": 1057,
+      "retired": 47242,
+      "sha256": "d39753afe16404be1a9ed152d55a766a249fc3d0da22f8eaa3b2679599564e8f"
+    },
+    {
+      "name": "sparse",
+      "entry": "paintChess",
+      "pitch": 5,
+      "count": 1185,
+      "retired": 52270,
+      "sha256": "27d402f983f2022c33060016a18399fdbae209e2ee2ab4dec92d68a36e6b9933"
+    },
+    {
+      "name": "low",
+      "entry": "paintPose",
+      "pitch": 3,
+      "count": 2081,
+      "retired": 87394,
+      "sha256": "3d6e305a0e8acc386a536a32f97f055521592143018f912d4ac5fb1291fe6cd2"
+    },
+    {
+      "name": "high",
+      "entry": "paintPose",
+      "pitch": 7,
+      "count": 2081,
+      "retired": 87394,
+      "sha256": "504642a2c0308ca3a8a0277cd2d6348b788bee165abee5fdeafd0f5b9e6a93e0"
+    }
+  ]
+}

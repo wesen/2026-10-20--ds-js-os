@@ -73,3 +73,69 @@ The independent positive cases must require executed packed stores. The ISA deco
 ### Code review instructions and technical details
 
 Inspect scripts/review/cases.mjs for the memory initializers and its reference function for the expected semantics. Run scripts/review/qualify.mjs with Node from any directory. The source checker is Node's actual WebAssembly engine. The ordinary RV32 runner checks the stack pointer, return address and callee-saved general registers at each return.
+
+## Step 3. Exercise the candidate bytes and reject two initial transformations
+
+The first candidate exposed a missing data-dependence check and a compiler acceptance regression. I sent both minimal counterexamples to the implementation author and director. After the fixes I ran four backends against 145 projection states, then ran 35 source variants through both candidate arms against Wasm. I persisted the compiler input and image hashes with the measurements. The first protocol and scalar-instrument checkpoint is af8605e. The implementation checkpoint is bd544af.
+
+### Prompt context and decisions
+
+See Step 1. The experiment now includes a separate ordinary-RV32 version with the packed version's prefix guards. This control attributes some speedup to cheaper scalar addressing and check hoisting. I included its actual executed instruction counts in the independent report.
+
+### What I did and why
+
+I reviewed Matcher.input, VectorPlan and the prologue emitter. The original matcher accepted a checked read whose destination was the induction variable. Running a minimal legal Typed function returned a positive diagnosis of one input and one output and eight lanes. The scalar reference writes element nine only. I requested scalar fallback for this shape. With 499 or 500 declarations after a one-input loop, I also reproduced the candidate-only compiler error “RV32 function frame exceeds the instruction range”. Scalar images were respectively 4236 and 4244 bytes. The author now checks that a read's result is a fresh local and reuses frontend position temporaries for scratch.
+
+I added an instruction semantics model that consumes vendor-decoded operand names. The model performs signed saturation, halfword broadcasts and post-increment. It asserts alignment and absence of q3. The ordinary machine interpreter checks preserved integer registers and returns. A standalone driver runs a nested caller and compares success, trap and all 896 arena bytes.
+
+### What worked
+
+The revised image qualified on 145 projection states, including 48 traps. Forty-seven calls took its packed path and retired 510 packed stores. Source variants confirmed range boundaries, power-of-two masks, multiple multiplication factors, renamed parameters, signed narrowing, scalar fallback for shifted indices and carried dependencies, post-loop index visibility, and the original stack-frame acceptance boundary. There were 420 variant executions. The saved receipt includes exact byte counts and complete image hashes.
+
+### What did not work
+
+Before the fixes, the candidate accepted the induction-changing loop; its positive diagnostic is recorded above. The candidate also rejected the scalar-legal near-limit functions. Executing the vendor assembler as a Node subprocess initially failed with “spawnSync /home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20241119/riscv32-esp-elf/bin/riscv32-esp-elf-as EPERM”. Re-running the same operation with permission succeeded. The first checkpoint's git add also failed with “fatal: Unable to create '/home/manuel/code/wesen/2026-10-20--ds-js-os/.git/index.lock': Read-only file system”; the authorized staging command succeeded.
+
+### What I learned and what was tricky
+
+The final implementation checks capacities for the complete vector prefix. A request for seventeen elements with a sixteen-element buffer legitimately enters the packed block before the last scalar iteration traps. I corrected the test path expectation to require packed stores in this case. The independent gold model had always expressed the correct return, trap and partial writes. The published design discusses runtime state and the report explains the two legal fallback boundaries.
+
+### What warrants review and what comes next
+
+Host instruction counts depend on the small fixture and include its caller. Cold compilation, true P4 cycles and physical interruption are different measurements. The board operator owns device access. Request numbers from that run before concluding about hardware economics.
+
+### Code review instructions and technical details
+
+Run scripts/review/qualify.mjs and compare against scripts/review/receipt.json. The independent code disassembles an architecture-tagged .incbin wrapper. On failure the driver stops at the named case and property. The packed model, unlike the candidate, determines source registers and post-increments from Espressif's objdump output.
+
+## Step 4. Test the first complete delivered scene independently
+
+I inspected the handoff between the separate kernel experiment and the current scalar isometric painter. A first nine-parameter helper could not reach the backend's RV32 entry using eight integer argument registers. I alerted the director. By the time of testing the renderer used a packed screen-point value and a six-argument face helper, and the entire source compiled.
+
+### Prompt context and intent
+
+See Step 1. The director asked me to exercise both the initial and frozen scene. The intended check is whether these actual application bytes enter the packed path and whether they emit the same commands as the Wasm reference.
+
+### What I did and why
+
+I compared the actual stock and PIE-enabled image for the scene. I ran the generated RV32 bytes and Wasm over identical 8960-byte arenas. Test states include a full board with two cursor positions, e4, an empty board, a sparse board and two alternate camera pitches. I independently derived both triangle vertex triples for every board square at each pitch.
+
+### What worked
+
+Source cb3fdca0a861ce13c5e91e5a4ac3fb015520d225955ba92b941b4efaf593e48c produced identical 5136-byte RV32 images in both modes. The selector accepted zero loops. All seven native runs agreed with Wasm, including untouched output cells and all capacity headers. The opening generated 2081 command words and the empty board 1057. Every frame had a different output digest, including the cursor-only change.
+
+### What did not work
+
+No defect appeared in the implemented six-argument version. The earlier nine-argument helper shape was detected by source inspection and replaced before this oracle ran.
+
+### What I learned and what was tricky
+
+The chosen scalar point function returns v*512+u to fit the call ABI. The scene traverses squares, sorts pieces by board diagonal, and projects vertices one at a time. None of these loops satisfy the packed, structure-of-arrays access pattern. Equality of default and PIE-enabled compiled bytes establishes this for the exact source tested.
+
+### What warrants review and what comes next
+
+The director is refining piece silhouettes. Rerun the independent scene driver on the frozen source and qualify the resulting image and command-buffer sizes. Physical draw and panel completion evidence remains the operator's responsibility.
+
+### Code review instructions and technical details
+
+Run scripts/review/scene.mjs from any directory. It reads the 3D ticket's actual isometric.typed and uses the scalar backend plus its default Wasm emitter. The independent repro stores pitches 3, 5 and 7, and tests complete native output including canaries. The scene receipt relates each rendered command stream to the native image hash.
