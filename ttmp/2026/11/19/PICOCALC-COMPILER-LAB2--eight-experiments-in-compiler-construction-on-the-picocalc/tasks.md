@@ -1,6 +1,6 @@
 # Tasks
 
-- [ ] Qualify and freeze staged backend across 24 historical replays
+- [x] Qualify and freeze staged backend across 24 historical replays
 - [ ] 1. Factor scanner and token representation on P4
 - [ ] 2. Compile condition destinations on Wasm and RV32
 - [ ] 3. Compare projection and native consumption of streamed operations

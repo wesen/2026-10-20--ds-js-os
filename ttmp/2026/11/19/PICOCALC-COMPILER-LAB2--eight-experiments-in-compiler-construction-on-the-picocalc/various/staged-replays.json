@@ -1,0 +1,32 @@
+{
+  "checkout": "dbe26be",
+  "compiler": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+  "replay_script_sha256": "21551108d25fff0b4a6390dbb25b27773f675a1cfece45458d7f6076b4080d29",
+  "rows": [
+    "PASS 0.6s node 01-check-files-wasm.mjs",
+    "PASS 1.3s node 02-check-files-rv32.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 7.5s node 07-check-editor-layout.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.7s node 01-check-calendar.mjs",
+    "PASS 0.3s node 02-check-leads.mjs",
+    "PASS 0.3s node 03-check-task-records.mjs",
+    "PASS 4.1s node 04-check-wasm-world.mjs",
+    "PASS 3.0s node 07-check-rv32-parser.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.3s node 14-check-local-inference.mjs",
+    "PASS 1.6s node 16-check-entry-tokens.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 0.6s node 01-check-editor-empty-view.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 5.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu",
+    "PASS 6.4s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --large",
+    "PASS 6.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --edit",
+    "PASS 5.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --positions",
+    "PASS 7.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --find",
+    "PASS 4.6s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --markdown",
+    "PASS 10.7s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-large",
+    "PASS 12.0s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-line",
+    "PASS 10.7s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-inline",
+    "PASS 9.5s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-dense-inline",
+    "PASS 11.7s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --dense-search",
+    "PASS 6.1s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --tail-search",
+    "PASS 20.8s node 02-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --late-navigation"
+  ],
+  "exit": 0
+}
