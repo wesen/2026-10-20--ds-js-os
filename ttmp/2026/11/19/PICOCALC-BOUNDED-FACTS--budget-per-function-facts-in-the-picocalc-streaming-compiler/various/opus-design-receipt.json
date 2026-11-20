@@ -1,0 +1,15 @@
+{
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "tools": [],
+  "scope": "Fictional compiler and public ISA semantics only",
+  "assistant_text_chars": 23652,
+  "cli_terminal_result": {
+    "subtype": "error_during_execution",
+    "duration_ms": 257929,
+    "errors": [
+      "[ede_diagnostic] result_type=user last_content_type=n/a stop_reason=null"
+    ]
+  },
+  "retained": "Technical design sections recovered from the returned assistant text; terminal summary interrupted."
+}
