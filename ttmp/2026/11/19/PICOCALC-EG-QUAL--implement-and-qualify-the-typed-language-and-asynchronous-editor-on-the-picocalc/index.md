@@ -1,7 +1,7 @@
 ---
 Title: Implement and qualify the typed language and asynchronous Editor on the PicoCalc
 Ticket: PICOCALC-EG-QUAL
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -10,8 +10,8 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: "Integration of professor phases E1–E7 and G1–G4, per-researcher reports, device qualification and publication records."
-LastUpdated: 2026-11-19T23:29:25.491737874-05:00
+Summary: Integration of professor phases E1–E7 and G1–G4, per-researcher reports, device qualification and publication records.
+LastUpdated: 2026-11-20T02:20:54.325705908-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -41,6 +41,7 @@ Start with [the integration guide](design-doc/01-from-forward-declarations-to-a-
 
 | Study | Article in go-go-parc |
 | --- | --- |
+| Supervisor synthesis | [Compiling a complete asynchronous Editor on the PicoCalc](https://github.com/go-go-golems/go-go-parc/blob/40faaf53b64d09542f5865c5455cbdb74901264d/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Compiling%20a%20Complete%20Asynchronous%20Editor%20on%20the%20PicoCalc.md) |
 | Language implementation | [Forward Calls and Exhaustive Typed Domains](https://github.com/go-go-golems/go-go-parc/blob/8689108d861bc628cb172488ac232e8b97176dcf/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Forward%20Calls%20and%20Exhaustive%20Typed%20Domains.md) |
 | Independent language study | [Forward Calls and Erased Types in a Two-Target Compiler](https://github.com/go-go-golems/go-go-parc/blob/522f646f027b1ddb4be434af7f26f9792d5628c0/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Forward%20Calls%20and%20Erased%20Types%20in%20a%20Two-Target%20Compiler.md) |
 | Continuation implementation | [How PicoCalc Compiles Await into Static Continuations](https://github.com/go-go-golems/go-go-parc/blob/000fa2a705bebefdf8b5875304759221074f04be/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20How%20PicoCalc%20Compiles%20Await%20into%20Static%20Continuations.md) |
@@ -51,6 +52,9 @@ Start with [the integration guide](design-doc/01-from-forward-declarations-to-a-
 | Independent index measurement | [What Token Indexing Buys on the Physical Board](https://github.com/go-go-golems/go-go-parc/blob/daad20e9598360ed5f44be0c84bc5df1c0f67734/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20What%20Token%20Indexing%20Buys%20on%20the%20Physical%20Board.md) |
 | Reusing original source spans | [Reusing Source Spans in the Asynchronous Compiler](https://github.com/go-go-golems/go-go-parc/blob/f75a58f4ac8d8c2a9f50550bf90573f84a24710c/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Reusing%20Source%20Spans%20in%20the%20Asynchronous%20Compiler.md) |
 | Portable frontend timing | [How the Typed Parser Passed Its Portable Frontend Gate](https://github.com/go-go-golems/go-go-parc/blob/eba16f5b216ffcdc185f85c6de8672743cdda6dc/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Compiler%20-%20How%20the%20Typed%20Parser%20Passed%20Its%20Portable%20Frontend%20Gate.md) |
+| Chess | [Independent Interpretation](https://github.com/go-go-golems/go-go-parc/blob/bff7217ed2cb2f4e099ba85e4d67430dd829a267/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Chess%20-%20Independent%20Interpretation.md) |
+| Chess | [Search Without Recursion](https://github.com/go-go-golems/go-go-parc/blob/bff7217ed2cb2f4e099ba85e4d67430dd829a267/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Chess%20-%20Search%20Without%20Recursion.md) |
+| Chess | [Claude Opus 4.6 High](https://github.com/go-go-golems/go-go-parc/blob/bff7217ed2cb2f4e099ba85e4d67430dd829a267/Projects/2026/11/20/PROJECT%20DIARY%20-%20PicoCalc%20Chess%20-%20Claude%20Opus%204.6%20High.md) |
 
 ## Status
 

@@ -452,3 +452,27 @@ Keep the newly published research articles discoverable. Record the outcome of t
 ### Code review instructions
 
 Read the professor's original 11 E/G task rows, the merged replay at dcbbd78, and the source and firmware identity checks in scripts/28-check-qualified-integration.py. The updated intern walkthrough and three independent reports were delivered to reMarkable as “PicoCalc - Language and Continuation Research Reports” in the ticket folder.
+
+## Step 12 — Publish and audit the complete research package
+
+The supervisor synthesis was pushed to go-go-parc in 40faaf5 with seven embedded figures. The three independent E/G authors and their implementation counterparts published separate articles. The ticket index links those works, the source-span and portable parser studies, and the chess researchers' final articles and diary. I verified that each listed commit is an ancestor of the remote vault main.
+
+### What I did and why
+
+Reviewed the native Chess receipt and independent Opus High interpretation after the physical replay. The board observed the same e2–e4 / Nb8–c6 exchange, score, depth, node count and settlements as the host. The independent report compares the design's predictions with the observed outcomes; fixture corrections and timing-boundary notes accompany the archived interpretation. The supervisor article describes one fixed-work trial. It makes no inference about playing strength or a physical Wasm-versus-native speed ratio.
+
+### What worked
+
+The chess replay archived a CRC-verified screenshot, 472.922 ms to the reply frame, 258.777 ms of world CPU, and a verified restoration. Go-go-parc commit bff7217 publishes the chess implementation report, independent interpretation and dated diary. reMarkable accepted the chess bundle in its own ticket folder. A cloud listing confirmed the E/G design bundle, independent reports bundle and supervisor synthesis.
+
+### What warrants a second pair of eyes
+
+Users comparing the original E5 benchmark to the full Editor cold compilation should check the two source programs and clock boundaries. The 24.89–25.68 ms portable host times use the archived pre-E Editor. The 2.606 s native P4 median corresponds to the full generated Editor. The chess physical measurements use a separate recorded compiler revision.
+
+### What should be done in the future
+
+The professor's remaining E8/E9 and later roadmap items remain separate research. Use the committed compiler and recorded application hashes as the reference when measuring subsequent changes.
+
+### Code review instructions
+
+Start at various/final-acceptance.json, various/host-merged-portable.json and the immutable links in this ticket's publication table. Source changes and study artifacts are committed locally; the explicitly requested remote publication is the go-go-parc vault.
