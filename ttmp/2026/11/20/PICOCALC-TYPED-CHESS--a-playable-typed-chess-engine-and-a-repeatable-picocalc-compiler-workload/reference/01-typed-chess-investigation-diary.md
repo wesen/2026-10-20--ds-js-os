@@ -277,3 +277,54 @@ Start with chessOutcome in chess.typed, then inspect the render mapping in view.
 ### Technical details
 
 The corrected physical firmware SHA-256 is **6b2acb8523eeb874ce94a7f1da33380571c08e2d73f27cf67d57be3ea619e707**. Its source SHA-256 is **871c60f88cd8365e263f057cd68e07a22fb283dea6a53602cb9365994514fff3**. Dry preflight matched the existing backup and partition table. The probe script logs the measured firmware digest in physical.json.
+
+## Step 6: Isolate a UART capture failure from successful physical compilation
+
+The first native physical attempt installed the corrected Chess image and recorded successful source compilation on startup and reboot. The board restored the factory image after the console capture ended mid-JSON before the key replay.
+
+### Prompt Context
+
+See Step 1 and the physical replay handoff in Step 3. The supervisor asked to preserve the partial failure, correct the capture, and queue a retry after the portable Editor workflow and Find runs.
+
+### What I did
+
+- Parsed both Chess compiler records in the first physical boot log and recorded them alongside the actual backup and factory-world restoration proof.
+- Split the boot sampling window from the world-list query in scripts/11-run-board-chess.py.
+- Added bounded retries for the complete world-list response, recorded the compile before querying the list, and moved the restoration query after a separate settling capture.
+- Queued the retry with the same verified firmware and serial lock behind the two reserved Editor sessions.
+
+### Why
+
+The UART bounds are fixture infrastructure. A partial catalog response can hide a working application and shouldn't erase a measured compile that ended earlier. Separate captures also leave the eventual move clock free of unrelated UART writes.
+
+### What worked
+
+The physical native compiler completed at 1,897,047 and 1,897,129 µs. Both boots reported 1,298,116 bytes of peak QuickJS heap and 240,452 bytes of linked module. The operator tool reported the hash of the restored factory app partition verified, and the restored Files, Editor and Agenda worlds returned without startup errors. [First attempt receipt](../various/physical-first-attempt.json)
+
+### What didn't work
+
+Running scripts/11-run-board-chess.py under the existing serial flock sent worlds in the same 19-second capture as reboot. That buffer ended after 5,364 characters of the catalog document. Python reported **json.decoder.JSONDecodeError: Unterminated string starting at: line 1 column 5358 (char 5357)** before the script opened the app. The partial receipt therefore contains no search timing.
+
+### What I learned
+
+An automatic startup and a requested reboot can both arrive in one serial capture. The last compile marker identifies the explicit reboot in this run. The large worlds response belongs in a separate window after the launcher finishes booting.
+
+### What was tricky to build
+
+The restoration path runs when the qualification fails. After flashing the factory image, the runner needs a second independently established world-list response and the flash tool's hash verification before the receipt can set restored.
+
+### What warrants a second pair of eyes
+
+Check that the retry uses the identical firmware SHA-256 and that it records the compile even if a later UART step fails.
+
+### What should be done in the future
+
+Keep world-list and screenshot serialization outside the measured play interval. Respect the existing board lock when repeating the run with a Wasm image.
+
+### Code review instructions
+
+Read complete_world_list and query_worlds in the board runner. Compare the bad response length and both native compile stamps in physical-first-attempt.json against the retained console logs.
+
+### Technical details
+
+The last compile stamp before the failed world-list read was 1,897,129 µs. The retry keeps compile setup and teardown in the same source-to-module clock. Its Enter-to-reply measurement ends before requesting the UART screenshot.

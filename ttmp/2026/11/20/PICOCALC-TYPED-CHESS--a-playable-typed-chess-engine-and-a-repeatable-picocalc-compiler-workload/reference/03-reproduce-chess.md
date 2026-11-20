@@ -45,7 +45,7 @@ python3 -B "$chess_scripts/10-stage-board-chess.py" \
   --idf-export /home/manuel/esp/esp-idf-5.4.2/export.sh --target rv32
 ~~~
 
-The **image** subdirectory contains the application binary, the partition table, the SDK config, the manifest and a build receipt with source and binary digests. The instrumented checkout stays in the same work directory. It can be inspected without modifying the shared source tree.
+The **image** subdirectory contains the application binary, the partition table, the SDK config, the manifest and a build receipt with the firmware, source, compiler scripts and reactor digests. The instrumented checkout stays in the same work directory. It can be inspected without modifying the shared source tree.
 
 ## Run and restore under the board lock
 

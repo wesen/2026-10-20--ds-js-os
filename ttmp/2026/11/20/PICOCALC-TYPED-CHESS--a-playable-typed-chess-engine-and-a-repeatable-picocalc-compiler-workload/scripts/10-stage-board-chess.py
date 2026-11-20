@@ -81,8 +81,17 @@ def main():
     image.mkdir()
     for item in (build / "picocalc-os-p4.bin", build / "partition_table/partition-table.bin", config, manifest):
         shutil.copyfile(item, image / item.name)
+    def digest(path):
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    reactor = (main_dir / "typed-world-reactor.elf" if a.target == "rv32"
+               else os / "build/typed-world-reactor.wasm")
+    compilers = ["typed-wasm.js", "typed-async.js", "typed-world.js"]
+    if a.target == "rv32":
+        compilers.append("typed-rv32.js")
     receipt = {"target": a.target, "sourceBytes": len(source), "sourceSha256": hashlib.sha256(source).hexdigest(),
-               "firmwareSha256": hashlib.sha256((image / "picocalc-os-p4.bin").read_bytes()).hexdigest()}
+               "firmwareSha256": digest(image / "picocalc-os-p4.bin"), "reactorSha256": digest(reactor),
+               "compilerSha256": {name: digest(os / "compiler" / name) for name in compilers}}
     (image / "build.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps(receipt))
 

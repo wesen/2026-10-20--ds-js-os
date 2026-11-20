@@ -60,6 +60,17 @@ def check_inputs(a):
     return original, image, build, engine
 
 
+def complete_world_list(log):
+    # The UART capture can end inside a large response, especially while boot logs are arriving.
+    for line in reversed(log.splitlines()):
+        if line.startswith('[{"name":'):
+            try:
+                return json.loads(line)
+            except json.JSONDecodeError:
+                continue
+    return None
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("image", "output", "backup", "esptool"):
@@ -81,6 +92,13 @@ def main():
     def capture(label, duration, commands, **kwargs):
         return BOARD["capture"](a.port, a.output, label, duration, commands, **kwargs)
 
+    def query_worlds(label):
+        for attempt in range(1, 3):
+            apps = complete_world_list(capture(f"{label}-{attempt}", 9, ["0.3 worlds"]))
+            if apps is not None:
+                return apps
+        raise ValueError("two settled world-list captures had incomplete JSON")
+
     def interrupted(signum, _):
         raise SystemExit(128 + signum)
 
@@ -88,13 +106,18 @@ def main():
     signal.signal(signal.SIGTERM, interrupted)
     try:
         BOARD["flash"](a, a.output, image, "chess")
-        boot = capture("boot", 19, ["0.6 reboot", "16 worlds"])
-        compile_us, peak, size = map(int, COMPILE.findall(boot)[-1])
-        apps = [json.loads(line) for line in boot.splitlines() if line.startswith('[{"name":')][-1]
-        chess, = (w for w in apps if w["name"] == "chess")
+        boot = capture("boot", 25, ["0.6 reboot"])
+        compiles = COMPILE.findall(boot)
+        if not compiles:
+            raise ValueError("missing Chess source compile completion")
+        compile_us, peak, size = map(int, compiles[-1])
+        receipt["compile"] = {"wall_us": compile_us, "peak_js_bytes": peak, "module_bytes": size}
+        save()
+
+        chess, = (w for w in query_worlds("worlds") if w["name"] == "chess")
         if chess["engine"] != engine or chess["last_error"]:
             raise ValueError(f"Chess did not start on {engine}: {chess}")
-        receipt["compile"] = {"wall_us": compile_us, "peak_js_bytes": peak, "module_bytes": size}
+        receipt["worldBeforePlay"] = {k: chess[k] for k in ("engine", "file", "last_error")}
         save()
         play = capture("play", 10, ["0.3 key h", "1.5 key enter", "2.1 key up", "2.7 key up",
                                     "3.3 chessarm", "3.7 key enter"])
@@ -103,7 +126,7 @@ def main():
         # UART screenshots start after the clock and counter windows have stopped.
         for attempt in range(1, 3):
             label = f"reply-{attempt}"
-            capture(label, 15, ["0.3 shot"], screenshots=True)
+            capture(label, 22, ["0.3 shot"], screenshots=True)
             if "crc ok" in (a.output / f"{label}-capture.log").read_text():
                 shot = a.output / "reply.png"
                 (a.output / "shot-1.png").replace(shot)
@@ -114,10 +137,10 @@ def main():
             raise ValueError("reply screenshot did not pass UART CRC")
     finally:
         BOARD["flash"](a, a.output, original, "restore")
-        restored = capture("restored", 18, ["15 worlds"])
-        receipt["worlds"] = METHOD["worlds"](restored)
-        if any(w["name"] == "chess" for line in restored.splitlines() if line.startswith('[{"name":')
-               for w in json.loads(line)):
+        capture("restored-boot", 15, [])
+        restored = query_worlds("restored-worlds")
+        receipt["worlds"] = METHOD["worlds"](json.dumps(restored, separators=(",", ":")))
+        if any(w["name"] == "chess" for w in restored):
             raise ValueError("factory world list still contains Chess")
         receipt["restored"] = True
         save()
