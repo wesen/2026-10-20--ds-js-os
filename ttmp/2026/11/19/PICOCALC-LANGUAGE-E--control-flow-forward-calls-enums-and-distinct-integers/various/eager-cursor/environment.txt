@@ -1,0 +1,16 @@
+2026-11-20T00:11:36-05:00
+Architecture:                            x86_64
+Model name:                              11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+CPU affinity 6
+v24.18.0
+13575450d0cd405db2861a8e6e5fecbcbd9904d6 2026-11-19T23:39:02-05:00 Name Editor Find phases and check every search state
+2e4fee184dd56de92cc090d97128011acdc961c7 2026-11-19T23:59:37-05:00 Check continuation token ranges once and skip busy start arguments
+b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f  picocalc-os/build/typed-world-reactor.wasm
+16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff  /tmp/picocalc-eg-wave/control/build/esp-idf/main/typed-world-reactor.elf
+bf40e1c7d55a5c4786092cbe51d4da09be96f34c9eebe1a9cc1df2c86d170ee1  ttmp/2026/11/19/PICOCALC-LANGUAGE-E--control-flow-forward-calls-enums-and-distinct-integers/scripts/10-stage-eager-cursor.py
+d7e832655abb1f2ca7e31e59f2ff1c781787f36a8141b6645f9f6702dbbfcc7e  ttmp/2026/11/19/PICOCALC-LANGUAGE-E--control-flow-forward-calls-enums-and-distinct-integers/scripts/11-check-eager-cursor.mjs
+943b35feaf5e8b99a882224d979c975e3b3554bd511e548717c506476b953702  ttmp/2026/11/19/PICOCALC-LANGUAGE-E--control-flow-forward-calls-enums-and-distinct-integers/scripts/01-check-functions-differential.mjs
+cbf9301e76a8ea548caa732559b3f39ca9667497a10878bae11eaf05c3f587e8  ttmp/2026/11/19/PICOCALC-CONTINUATION-G--compile-typed-await-into-static-picocalc-continuations/scripts/14-check-async-layout.mjs
+cf45d62d12221123f36f5820292a55d3706a4bd1f86b5c7f9fab944562697146  ttmp/2026/11/19/PICOCALC-COMPILER-THESIS--cold-compilation-and-bounded-analyses-on-the-picocalc/scripts/lowering/rv32.mjs
+08e3e8d92e3aa287565971d1acdadbeae650adb5a8a5541dfd57f9e6bff35555  ttmp/2026/11/19/PICOCALC-EDITOR-ASYNC--suspend-and-resume-editor-open-and-find-in-typed-source/scripts/02-editor-event-driver.c
+33617947b9a2e598a831146c3c589f3e6135690f0585f5e3a57b548859ae4297  ttmp/2026/11/19/PICOCALC-EDITOR-ASYNC--suspend-and-resume-editor-open-and-find-in-typed-source/scripts/03-check-editor-event-interleaving.mjs

@@ -1,0 +1,2 @@
+{"variant":"g4-regex","receipt":{"mode":"rv32","load_ms":12.369,"phase_ms":97.440,"load_peak_bytes":785080,"peak_bytes":2801888,"result":{"bytes":89168,"fields":70}}}
+{"variant":"g4-cursor","receipt":{"mode":"rv32","load_ms":7.606,"phase_ms":82.107,"load_peak_bytes":791504,"peak_bytes":2803576,"result":{"bytes":89168,"fields":70}}}

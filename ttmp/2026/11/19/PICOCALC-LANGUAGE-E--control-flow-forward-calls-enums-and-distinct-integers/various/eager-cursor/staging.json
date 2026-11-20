@@ -1,0 +1,46 @@
+{
+  "sourceScanner": {
+    "revision": "dbe26be",
+    "sha256": "98cc842b0da048ddb19bf745103dceed3c3ae0625ed7b3447134e392b90786fb"
+  },
+  "lanes": {
+    "pre-g-regex": {
+      "revision": "13575450d0cd405db2861a8e6e5fecbcbd9904d6",
+      "files": {
+        "typed-wasm.js": "216ead7cc98305918e6971093e762e75e85921e17ff3ab12b7b472e3577a6033",
+        "typed-rv32.js": "0b7d15d22e31e225eabda34ac4edc59cada68f69876651ecfedea43ec762d503",
+        "typed-world.js": "0255de31812efdaa4683392a65ec903fba8333f58158c322e09ee9fce3806e92",
+        "editor.typed": "9dbf209c137e76ddfb24b7d3de999043a60b59c94dbf768cbb0ce9f702b2736f"
+      }
+    },
+    "pre-g-cursor": {
+      "revision": "13575450d0cd405db2861a8e6e5fecbcbd9904d6",
+      "files": {
+        "typed-wasm.js": "a53ed609e5236a9b9675ae0f404505c17ab888b039efa98a83f674405f1b58e6",
+        "typed-rv32.js": "0b7d15d22e31e225eabda34ac4edc59cada68f69876651ecfedea43ec762d503",
+        "typed-world.js": "0255de31812efdaa4683392a65ec903fba8333f58158c322e09ee9fce3806e92",
+        "editor.typed": "9dbf209c137e76ddfb24b7d3de999043a60b59c94dbf768cbb0ce9f702b2736f"
+      }
+    },
+    "g4-regex": {
+      "revision": "2e4fee184dd56de92cc090d97128011acdc961c7",
+      "files": {
+        "typed-wasm.js": "b8b607f0539e42f76909edc9621cdb21c115c24cb8a0fc672c98922d00dbcea4",
+        "typed-rv32.js": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5",
+        "typed-world.js": "cea8f10247351416a3616fa83e16ff664730c2c3fc2c3de73207eb5ab07f3a43",
+        "typed-async.js": "2e3dd185ef667065702d9882e528fce0e84240d73387972a0384f1c6a7650bfb",
+        "editor.typed": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0"
+      }
+    },
+    "g4-cursor": {
+      "revision": "2e4fee184dd56de92cc090d97128011acdc961c7",
+      "files": {
+        "typed-wasm.js": "497da6b5a24946506eb430d8ced8a041ae844d0e827894220e5226bc6f787ae0",
+        "typed-rv32.js": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5",
+        "typed-world.js": "cea8f10247351416a3616fa83e16ff664730c2c3fc2c3de73207eb5ab07f3a43",
+        "typed-async.js": "56b124c045bf9ee8ce674f7a487b0adb7a63c93adee3a1bdfc91fc94c9cf1a18",
+        "editor.typed": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0"
+      }
+    }
+  }
+}

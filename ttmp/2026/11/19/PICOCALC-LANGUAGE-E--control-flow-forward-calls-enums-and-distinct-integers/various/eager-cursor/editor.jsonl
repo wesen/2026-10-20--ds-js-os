@@ -1,0 +1,5 @@
+{"fixture":"guard-open","targets":["wasm","rv32"],"events":27,"timers":17,"screens":5,"examinedSavedBytes":64685}
+{"fixture":"read-failures","targets":["wasm","rv32"],"events":9,"timers":0,"screens":2,"examinedSavedBytes":0}
+{"fixture":"replace-search","targets":["wasm","rv32"],"events":37,"timers":18,"screens":15,"examinedSavedBytes":0}
+{"fixture":"replace-control","targets":["wasm","rv32"],"events":24,"timers":17,"screens":3,"examinedSavedBytes":0}
+{"fixture":"replace-query","targets":["wasm","rv32"],"events":39,"timers":18,"screens":19,"examinedSavedBytes":0}

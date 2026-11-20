@@ -1,0 +1,31 @@
+{
+  "quickjsChecked": true,
+  "pre-g": {
+    "cases": {
+      "full": 69643,
+      "bounded": 6355,
+      "compiled": 323
+    },
+    "traceSha256": "51417f8270ced80a137209adb9f463432c1aed5edacc326b91c5e19cd17ea41f",
+    "wasmSha256": "238ce25004362ffe15da8023f6472d6d2ac301ef943976a710909a4862f6cd1a",
+    "elfSha256": "762a9496af60a7ad8556da9fffd1d98537ae07792752fbb17d43fcad2b12401e",
+    "rv32Sha256": "879511e8e036643e506f1f605f0461d62a65d872b6aab03e8841dbf4788ddc10",
+    "wasmBytes": 88302,
+    "elfBytes": 240452,
+    "rv32Bytes": 87688
+  },
+  "g4": {
+    "cases": {
+      "full": 69643,
+      "bounded": 6355,
+      "compiled": 323
+    },
+    "traceSha256": "ff07bab581d137c4df0ec29ff94a64db971428d27721cd561f601795dd81b6d2",
+    "wasmSha256": "5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65",
+    "elfSha256": "7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd",
+    "rv32Sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+    "wasmBytes": 88969,
+    "elfBytes": 240452,
+    "rv32Bytes": 89168
+  }
+}

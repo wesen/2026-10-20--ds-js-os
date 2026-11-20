@@ -383,3 +383,57 @@ Open the signature-reuse report, review the two prototype transforms in `scripts
 ### Technical details
 
 Pins were `289281ccf97ebe83196ab3c2c38845b99a24a7be`, `13575450d0cd405db2861a8e6e5fecbcbd9904d6`, and `7b321a9163bf31c87461484edc79b6627147a315`. The three commit times and reactor hashes are in `various/signature-reuse/environment.txt`.
+
+## Step 8: Try the studied eager cursor on final G4 in isolation
+
+The previous P4 factorial study measured a faster eager cursor with reused token records. It ran on a synchronous Editor. I applied the same scanner design to the final G4 pin in detached staging and measured it against both G4 and the exact pre-G reference.
+
+### Prompt Context
+
+See Step 1. The supervisor requested a qualification contingency at `2e4fee1`, including a byte and diagnostic comparison, all language and continuation fixtures, exact pre-G and native host CPU measurement, and reproducible board staging if needed.
+
+### What I did
+
+- Read the historical scanner from `dbe26be` and checked its SHA-256.
+- Adapted `!==`, seeks, bounded reads, and original position reporting. Made the async token collector snapshot the reused token object.
+- Ran the historical lexical corpus, added 6,355 bounded ranges and seeks, and checked the compiler products in both Node and QuickJS.
+- Ran the E1–E7 differential suite, G1/G2 continuation layout and delivery tests, and the five real Editor interleaving cases.
+- Compared stock and cursor treatments under both program pins on a shared reactor, archived two linked CPU timing runs, and measured tracked heap with a 4 MiB host ceiling.
+
+### Why
+
+The async compiler retains some tokens for later checking. Reusing the current token record is safe in the ordinary parser and requires a copy at the particular boundary that keeps tokens beyond the next lexer advance. Preserving the legacy range and fallback rules allows a broader diagnostic comparison than checking only application builds.
+
+### What worked
+
+The staged scanner reproduced stock lexical traces and compiler corpus outputs on both engines. Editor Wasm, linked ELF, raw RV32, async layout and generated source matched across treatments. All targeted language and async suites passed. The scanner saved 2.75–7.24 ms across paired G4 linked CPU blocks, with a host allocation peak increase of 1,688 bytes in the separate raw RV32 experiment.
+
+### What didn't work
+
+The initial corpus comparison returned `AssertionError [ERR_ASSERTION]: pre-g changed lexical, diagnostic or application output`. Comparing saved trace entries found zero differences. The comparison also carried count objects created in different Node realms, which have distinct prototypes under strict equality. Moving the count to one realm and comparing named artifact fields fixed the harness. The first adjustment then exposed `ReferenceError: Cannot access 'count' before initialization` because a later destructuring still declared the name inside the loop. Removing that redeclaration let the complete oracle pass.
+
+The fastest G4 cursor measurement was 80.54 ms. It remained about 16% above the slowest exact pre-G control of 69.44 ms, exceeding the 10% target. The prototype remains isolated and no firmware timing is attributed to it in this step.
+
+### What I learned
+
+The gained time was smaller on this async workload than the earlier P4 result on synchronous Editor. The two experiments differ in workload and platform. The gain is measurable on the linked host path, and an exact board reproduction would be needed to measure its physical contribution.
+
+### What was tricky to build
+
+The final G4 lexer runs the fallback regex against the complete source and rejects a token crossing the supplied bound. The earlier pre-G lexer uses a truncated view. Substituting the wrong rule changes internal seek results even while a stock Editor build could remain byte-identical.
+
+### What warrants a second pair of eyes
+
+Check that the only async token retention site makes stable snapshots and that the original fallback still handles skipped terminal comments and out-of-range operators.
+
+### What should be done in the future
+
+The staged compiler hashes allow a same-reactor firmware A/B if the supervisor schedules one.
+
+### Code review instructions
+
+Open `scripts/10-stage-eager-cursor.py` for the two localized transforms and verify the full replay with `scripts/12-run-eager-cursor-experiment.sh`. The experiment report lists exact pins, paired time medians and evidence paths.
+
+### Technical details
+
+The candidate frontend SHA-256 is `497da6b5a24946506eb430d8ced8a041ae844d0e827894220e5226bc6f787ae0`. The async compiler SHA-256 is `56b124c045bf9ee8ce674f7a487b0adb7a63c93adee3a1bdfc91fc94c9cf1a18`. The linked host reactor's SHA-256 is recorded separately from the program bytes.
