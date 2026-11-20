@@ -133,7 +133,7 @@ function match(fn) {
     }
 }
 
-// Independently assemble these opcode templates using scripts/04-check-isa.mjs.
+// The review harness disassembles emitted opcode words with Espressif objdump.
 const pieMemory = (op, q, base) => op | (q << 10) | ((base - 8) << 15);
 const pieAnd = (dst, a, b) => 0x0004205f | (dst << 7) | (a << 29) | (b << 26);
 const pieArithmetic = (op, dst, a, b) => op | (dst << 20) | (a << 29) | (b << 26);

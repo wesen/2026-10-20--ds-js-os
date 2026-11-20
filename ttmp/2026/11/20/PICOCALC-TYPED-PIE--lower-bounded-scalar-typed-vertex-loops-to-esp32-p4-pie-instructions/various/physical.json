@@ -1,0 +1,858 @@
+{
+  "benchmark": "f83e5e3f294e5602c40d436ae2db35fb96235c4f0ea15846630fdf26484d8308",
+  "playable": "75c94df7b1aa565c8cb7858bea628aa2c9c644ef64cc885b96e1d80088f8af56",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "compiled": {
+    "pie": {
+      "entries": {
+        "project": 0
+      },
+      "bytes": 1384,
+      "pieDiagnostics": [
+        {
+          "function": "project",
+          "lanes": 8,
+          "inputs": [
+            {
+              "buffer": 0,
+              "lo": 0,
+              "hi": 255
+            },
+            {
+              "buffer": 1,
+              "lo": 0,
+              "hi": 255
+            },
+            {
+              "buffer": 2,
+              "lo": 0,
+              "hi": 255
+            }
+          ],
+          "outputs": [
+            {
+              "buffer": 3,
+              "lo": 129,
+              "hi": 639
+            },
+            {
+              "buffer": 4,
+              "lo": 130,
+              "hi": 1150
+            },
+            {
+              "buffer": 5,
+              "lo": 0,
+              "hi": 765
+            }
+          ],
+          "loopWords": 29
+        }
+      ]
+    },
+    "portable": {
+      "entries": {
+        "project": 0
+      },
+      "bytes": 1416,
+      "pieDiagnostics": [
+        {
+          "function": "project",
+          "lanes": 1,
+          "inputs": [
+            {
+              "buffer": 0,
+              "lo": 0,
+              "hi": 255
+            },
+            {
+              "buffer": 1,
+              "lo": 0,
+              "hi": 255
+            },
+            {
+              "buffer": 2,
+              "lo": 0,
+              "hi": 255
+            }
+          ],
+          "outputs": [
+            {
+              "buffer": 3,
+              "lo": 129,
+              "hi": 639
+            },
+            {
+              "buffer": 4,
+              "lo": 130,
+              "hi": 1150
+            },
+            {
+              "buffer": 5,
+              "lo": 0,
+              "hi": 765
+            }
+          ],
+          "loopWords": 40
+        }
+      ]
+    },
+    "stock": {
+      "entries": {
+        "project": 0
+      },
+      "bytes": 628,
+      "pieDiagnostics": []
+    }
+  },
+  "kernelSHA256": {
+    "pie": "0e3d8a4ab666a330c5ec177fe525c687ba450941e3a09a993f8bdbcf13716d3d",
+    "portable": "f467f17081885d0252dec590bbdd560b87603ea99cfd71865d26f468ab1171ad",
+    "stock": "cb6ee22c4574455ab29f944e2869cd0c45c0993cf5410430ebef8c7e3bd61331"
+  },
+  "passed": true,
+  "cases": [
+    {
+      "arm": "pie",
+      "vertices": 1,
+      "variant": 0,
+      "crc32": "68699d3e",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 1,
+      "variant": 1,
+      "crc32": "68699d3e",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 1,
+      "variant": 2,
+      "crc32": "4860046a",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 7,
+      "variant": 0,
+      "crc32": "c42333cf",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 7,
+      "variant": 1,
+      "crc32": "c42333cf",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 7,
+      "variant": 2,
+      "crc32": "2fc033ca",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 8,
+      "variant": 0,
+      "crc32": "22f1a23b",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 8,
+      "variant": 1,
+      "crc32": "22f1a23b",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 8,
+      "variant": 2,
+      "crc32": "42d3ba37",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 9,
+      "variant": 0,
+      "crc32": "edefbbee",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 9,
+      "variant": 1,
+      "crc32": "edefbbee",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 9,
+      "variant": 2,
+      "crc32": "59ae8747",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 17,
+      "variant": 0,
+      "crc32": "a09bdf6a",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 17,
+      "variant": 1,
+      "crc32": "a09bdf6a",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 17,
+      "variant": 2,
+      "crc32": "c1cffbeb",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 64,
+      "variant": 0,
+      "crc32": "df5adaa4",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 64,
+      "variant": 1,
+      "crc32": "df5adaa4",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 64,
+      "variant": 2,
+      "crc32": "3f1dd9f6",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 256,
+      "variant": 0,
+      "crc32": "a75f3098",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 256,
+      "variant": 1,
+      "crc32": "a75f3098",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 256,
+      "variant": 2,
+      "crc32": "a3662aa6",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 1024,
+      "variant": 0,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 1024,
+      "variant": 1,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "pie",
+      "vertices": 1024,
+      "variant": 2,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 1,
+      "variant": 0,
+      "crc32": "68699d3e",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 1,
+      "variant": 1,
+      "crc32": "68699d3e",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 1,
+      "variant": 2,
+      "crc32": "4860046a",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 7,
+      "variant": 0,
+      "crc32": "c42333cf",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 7,
+      "variant": 1,
+      "crc32": "c42333cf",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 7,
+      "variant": 2,
+      "crc32": "2fc033ca",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 8,
+      "variant": 0,
+      "crc32": "22f1a23b",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 8,
+      "variant": 1,
+      "crc32": "22f1a23b",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 8,
+      "variant": 2,
+      "crc32": "42d3ba37",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 9,
+      "variant": 0,
+      "crc32": "edefbbee",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 9,
+      "variant": 1,
+      "crc32": "edefbbee",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 9,
+      "variant": 2,
+      "crc32": "59ae8747",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 17,
+      "variant": 0,
+      "crc32": "a09bdf6a",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 17,
+      "variant": 1,
+      "crc32": "a09bdf6a",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 17,
+      "variant": 2,
+      "crc32": "c1cffbeb",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 64,
+      "variant": 0,
+      "crc32": "df5adaa4",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 64,
+      "variant": 1,
+      "crc32": "df5adaa4",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 64,
+      "variant": 2,
+      "crc32": "3f1dd9f6",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 256,
+      "variant": 0,
+      "crc32": "a75f3098",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 256,
+      "variant": 1,
+      "crc32": "a75f3098",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 256,
+      "variant": 2,
+      "crc32": "a3662aa6",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 1024,
+      "variant": 0,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 1024,
+      "variant": 1,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "portable",
+      "vertices": 1024,
+      "variant": 2,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 1,
+      "variant": 0,
+      "crc32": "68699d3e",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 1,
+      "variant": 1,
+      "crc32": "68699d3e",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 1,
+      "variant": 2,
+      "crc32": "4860046a",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 7,
+      "variant": 0,
+      "crc32": "c42333cf",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 7,
+      "variant": 1,
+      "crc32": "c42333cf",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 7,
+      "variant": 2,
+      "crc32": "2fc033ca",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 8,
+      "variant": 0,
+      "crc32": "22f1a23b",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 8,
+      "variant": 1,
+      "crc32": "22f1a23b",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 8,
+      "variant": 2,
+      "crc32": "42d3ba37",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 9,
+      "variant": 0,
+      "crc32": "edefbbee",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 9,
+      "variant": 1,
+      "crc32": "edefbbee",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 9,
+      "variant": 2,
+      "crc32": "59ae8747",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 17,
+      "variant": 0,
+      "crc32": "a09bdf6a",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 17,
+      "variant": 1,
+      "crc32": "a09bdf6a",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 17,
+      "variant": 2,
+      "crc32": "c1cffbeb",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 64,
+      "variant": 0,
+      "crc32": "df5adaa4",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 64,
+      "variant": 1,
+      "crc32": "df5adaa4",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 64,
+      "variant": 2,
+      "crc32": "3f1dd9f6",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 256,
+      "variant": 0,
+      "crc32": "a75f3098",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 256,
+      "variant": 1,
+      "crc32": "a75f3098",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 256,
+      "variant": 2,
+      "crc32": "a3662aa6",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 1024,
+      "variant": 0,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 1024,
+      "variant": 1,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    },
+    {
+      "arm": "stock",
+      "vertices": 1024,
+      "variant": 2,
+      "crc32": "c16cc6e5",
+      "status": "ok"
+    }
+  ],
+  "cyclesPerCall": [
+    {
+      "arm": "pie",
+      "vertices": 1,
+      "min": 319,
+      "median": 319,
+      "max": 319
+    },
+    {
+      "arm": "pie",
+      "vertices": 7,
+      "min": 1355,
+      "median": 1355,
+      "max": 1355
+    },
+    {
+      "arm": "pie",
+      "vertices": 8,
+      "min": 398,
+      "median": 398,
+      "max": 398
+    },
+    {
+      "arm": "pie",
+      "vertices": 9,
+      "min": 578,
+      "median": 578,
+      "max": 578
+    },
+    {
+      "arm": "pie",
+      "vertices": 17,
+      "min": 617,
+      "median": 617,
+      "max": 617
+    },
+    {
+      "arm": "pie",
+      "vertices": 64,
+      "min": 678,
+      "median": 678,
+      "max": 678
+    },
+    {
+      "arm": "pie",
+      "vertices": 256,
+      "min": 1644,
+      "median": 1644,
+      "max": 1644
+    },
+    {
+      "arm": "pie",
+      "vertices": 1024,
+      "min": 5484,
+      "median": 5484,
+      "max": 5484
+    },
+    {
+      "arm": "portable",
+      "vertices": 1,
+      "min": 319,
+      "median": 319,
+      "max": 319
+    },
+    {
+      "arm": "portable",
+      "vertices": 7,
+      "min": 1355,
+      "median": 1355,
+      "max": 1355
+    },
+    {
+      "arm": "portable",
+      "vertices": 8,
+      "min": 755,
+      "median": 755,
+      "max": 755
+    },
+    {
+      "arm": "portable",
+      "vertices": 9,
+      "min": 932,
+      "median": 932,
+      "max": 932
+    },
+    {
+      "arm": "portable",
+      "vertices": 17,
+      "min": 1340,
+      "median": 1340,
+      "max": 1340
+    },
+    {
+      "arm": "portable",
+      "vertices": 64,
+      "min": 3561,
+      "median": 3561,
+      "max": 3561
+    },
+    {
+      "arm": "portable",
+      "vertices": 256,
+      "min": 13161,
+      "median": 13161,
+      "max": 13161
+    },
+    {
+      "arm": "portable",
+      "vertices": 1024,
+      "min": 51561,
+      "median": 51561,
+      "max": 51562
+    },
+    {
+      "arm": "stock",
+      "vertices": 1,
+      "min": 316,
+      "median": 316,
+      "max": 316
+    },
+    {
+      "arm": "stock",
+      "vertices": 7,
+      "min": 1353,
+      "median": 1353,
+      "max": 1353
+    },
+    {
+      "arm": "stock",
+      "vertices": 8,
+      "min": 1526,
+      "median": 1526,
+      "max": 1527
+    },
+    {
+      "arm": "stock",
+      "vertices": 9,
+      "min": 1699,
+      "median": 1699,
+      "max": 1700
+    },
+    {
+      "arm": "stock",
+      "vertices": 17,
+      "min": 3092,
+      "median": 3092,
+      "max": 3094
+    },
+    {
+      "arm": "stock",
+      "vertices": 64,
+      "min": 11360,
+      "median": 11360,
+      "max": 11369
+    },
+    {
+      "arm": "stock",
+      "vertices": 256,
+      "min": 45675,
+      "median": 45675,
+      "max": 45711
+    },
+    {
+      "arm": "stock",
+      "vertices": 1024,
+      "min": 184004,
+      "median": 184005,
+      "max": 184151
+    }
+  ],
+  "restoreReadback": true,
+  "restoredWorlds": [
+    "about",
+    "agenda",
+    "agent",
+    "calc",
+    "chat",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "faults",
+    "files",
+    "flaky",
+    "keyboard",
+    "keys",
+    "launcher",
+    "loader",
+    "logs",
+    "nat-bench",
+    "nat-dial",
+    "nat-echo",
+    "nat-import",
+    "power",
+    "repl",
+    "sandbox",
+    "settings",
+    "snake",
+    "sysmon",
+    "toplog"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1035851,
+    "relocate_us": 1025,
+    "native_us": 128,
+    "raster_us": 0,
+    "image_bytes": 17456
+  },
+  "method": {
+    "espIdf": "5.4.2",
+    "silicon": "ESP32-P4 revision 1.3",
+    "cpuHz": 360000000,
+    "cpu": 0,
+    "powerManagement": "disabled",
+    "codeSection": ".flash.text",
+    "codeAddresses": {
+      "stock": "0x4000befc",
+      "portable": "0x4000c170",
+      "pie": "0x4000c6f8"
+    },
+    "bufferSection": ".dram0.bss",
+    "bufferAddress": "0x4ff111a0",
+    "samples": 11,
+    "warmupCallsPerSample": 1,
+    "callsPerSample": "floor(16384 / vertices)",
+    "variantLabels": {
+      "0": "aligned disjoint",
+      "1": "unaligned disjoint",
+      "2": "aligned alias"
+    }
+  }
+}
