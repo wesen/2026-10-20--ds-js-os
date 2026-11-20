@@ -22,26 +22,6 @@ WhenToUse: ""
 
 # Bounded parser and portable timing investigation diary
 
-## Goal
-
-<!-- What is the purpose of this reference document? -->
-
-## Context
-
-<!-- Provide background context needed to use this reference -->
-
-## Quick Reference
-
-<!-- Provide copy/paste-ready content, API contracts, or quick-look tables -->
-
-## Usage Examples
-
-<!-- Show how to use this reference in practice -->
-
-## Related
-
-<!-- Link to related documents or resources -->
-
 ## Step 1. Recover the original elapsed-time benchmark
 
 The existing prefix-dispatch study measured a small reduction in JavaScript parser work, but the professor had specified an absolute elapsed-wall threshold. I restored the separate C and JavaScript benchmark, recovered the pre-E Editor in historical source-list order, and compiled the original host C against the local vendored QuickJS object files.
@@ -185,3 +165,11 @@ Review [parity oracle 08](../scripts/08-check-bounded-dispatch.mjs) and [history
 ### Technical details
 
 The parity oracle snapshots token value, kind, start and end after each advance, and compares error type and message if advancing fails. Its full-Editor ELF path runs in a clean VM. The history binary comparison uses the actual RV32 emulator for the Editor behaviors. The host work accessed no serial device.
+
+## Step 4. Publish the independent analysis
+
+The staged compiler and original wall-clock results are committed at `73f8aee7342731fb5895d4bb01885d3c5a83d599`. The complete host parity receipts and timing records are committed at `c2f79c3447098f285920ab8af633b476870ebc8e`. The vault article points to that local source commit and gives worked frontend examples and a reproduction command.
+
+I evaluated the article’s `changed(x: i32): bool` function in two clean Node VM realms. The stock composed and portable compiler both emitted `07 00 20 00 41 07 47 0b`, including the body length and empty locals vector. I checked each article source path at the pinned commit with `git cat-file -e`.
+
+The article was committed and pushed to vault main at `eba16f5b216ffcdc185f85c6de8672743cdda6dc`. The code repository stayed local. [Published article](https://github.com/go-go-golems/go-go-parc/blob/eba16f5b216ffcdc185f85c6de8672743cdda6dc/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Compiler%20-%20How%20the%20Typed%20Parser%20Passed%20Its%20Portable%20Frontend%20Gate.md)

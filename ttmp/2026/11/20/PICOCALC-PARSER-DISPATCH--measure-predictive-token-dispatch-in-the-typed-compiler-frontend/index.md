@@ -1,7 +1,7 @@
 ---
 Title: Measure predictive token dispatch in the typed compiler frontend
 Ticket: PICOCALC-PARSER-DISPATCH
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -11,7 +11,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T00:53:03.813733527-05:00
+LastUpdated: 2026-11-20T01:33:20.539973091-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -27,6 +27,7 @@ The initial predictive-dispatch experiment isolated failed parser lookahead. The
 - [Portable benchmark analysis](analysis/01-qualifying-the-portable-typed-frontend-on-the-historical-editor.md)
 - [Implementation diary](reference/02-bounded-parser-and-portable-timing-investigation-diary.md)
 - [Exact patch](sources/03-parser-and-portable-fallback.patch)
+- [Published portable parser article](https://github.com/go-go-golems/go-go-parc/blob/eba16f5b216ffcdc185f85c6de8672743cdda6dc/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Compiler%20-%20How%20the%20Typed%20Parser%20Passed%20Its%20Portable%20Frontend%20Gate.md)
 - **Related Files**: See frontmatter RelatedFiles field
 - **External Sources**: See frontmatter ExternalSources field
 

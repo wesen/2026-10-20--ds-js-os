@@ -20,11 +20,13 @@ WhatFor: ""
 WhenToUse: ""
 ---
 
+# Qualifying the portable typed frontend on the historical Editor
+
 The portable typed compiler passed the professor’s **31.4 ms frontend-only gate in all six sessions**. The session medians ranged from **24.89 to 25.68 ms** on the archived pre-E Editor. The benchmark used the professor’s unmodified QuickJS C host and JavaScript driver. With that host, the composed source-span and prepass compiler took **34.57 to 35.42 ms** in the same blocks. The portable compiler’s optional lexical index also ran successfully with the existing native producer. [Unchanged-host timing records](../various/professor-bounded/portable-reference-wall.jsonl)
 
 ## What the benchmark measures
 
-The workload is the original Editor from `289281c`, assembled in `source.list` order. It has 70,857 UTF-16 code units and 16,792 tokens according to the benchmark’s tokenizer. The timed line calls `typedWasm.compileFunctions(source, importCount, imports, 96 * 1024)`. This performs signature discovery or lookup, parses and checks function bodies, and emits bytes for ordinary Wasm functions. The historical driver independently times regex tokenization, frontend plus RV32 lowering, and linking a Wasm reactor. The absolute gate applies to only the frontend line, whose clock starts at the call boundary. Benchmark setup, script loading, and optional ELF construction cannot be counted as frontend work.
+The workload is the original Editor from `289281c`, assembled in `source.list` order. It has 70,857 UTF-16 code units and 16,792 tokens according to the benchmark’s tokenizer. The timed line calls `typedWasm.compileFunctions(source, importCount, imports, 96 * 1024)`. This performs signature discovery or lookup, parses and checks function bodies, and emits bytes for ordinary Wasm functions. The historical driver independently times regex tokenization, frontend plus RV32 lowering, and linking a Wasm reactor. The absolute gate applies to only the frontend line, whose clock starts at the call boundary. Benchmark setup, script loading, and optional ELF construction are outside the timed frontend phase.
 
 For every phase the original JavaScript driver performs a warmup, takes 15 measurements, sorts the phase samples, and reports the middle value and the extrema. The C host calls `clock_gettime(CLOCK_MONOTONIC, ...)`. This counts time when the benchmark process has been preempted. It also reflects the CPU frequency of the run. A process CPU clock excludes time spent waiting to be scheduled and still reflects frequency. The process CPU measurements in this study were taken in distinct sessions and cannot be subtracted from the wall measurements to estimate scheduling time. [Staging script and pinned input hashes](../scripts/09-stage-bounded-lanes.sh), [inputs](../various/professor-bounded/inputs.sha256)
 
