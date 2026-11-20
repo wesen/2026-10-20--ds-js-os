@@ -1,0 +1,204 @@
+{
+  "frames": 51,
+  "orderedPairs": 2601,
+  "fullReferenceFrames": 51,
+  "consecutiveApplications": 50,
+  "headerAndHintPixelsPreservedPerPair": 12800,
+  "bodyPixelsComparedPerPair": 89600,
+  "corpusSHA256": "f5c820bf8e3449b43cd214248bf6cfed73248ef8116e34a202f95f314bdc2e9c",
+  "identicalBodies": 115,
+  "none": 115,
+  "partial": 2288,
+  "full": 198,
+  "unchangedBodyWithChangedHintPairs": 8,
+  "matrixSHA256": "72e31e108eea95684da27ceeaebeb686068382919ca095d1ecec4b6191f3549c",
+  "examples": [
+    {
+      "name": "cursor-up",
+      "old": "e2",
+      "new": "e3",
+      "mode": "partial",
+      "area": 2700,
+      "box": [
+        109,
+        132,
+        163,
+        182
+      ],
+      "idealPixels": 328,
+      "idealBBoxArea": 972,
+      "replayed": 96,
+      "hintsChanged": false
+    },
+    {
+      "name": "cursor-right",
+      "old": "e3",
+      "new": "f3",
+      "mode": "partial",
+      "area": 3348,
+      "box": [
+        125,
+        132,
+        179,
+        194
+      ],
+      "idealPixels": 604,
+      "idealBBoxArea": 1260,
+      "replayed": 93,
+      "hintsChanged": false
+    },
+    {
+      "name": "unchanged",
+      "old": "e2",
+      "new": "pos-1",
+      "mode": "none",
+      "area": 0,
+      "box": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "idealPixels": 0,
+      "idealBBoxArea": 0,
+      "replayed": 0,
+      "hintsChanged": false
+    },
+    {
+      "name": "move-e4",
+      "old": "pos-9",
+      "new": "pos-10",
+      "mode": "partial",
+      "area": 30400,
+      "box": [
+        68,
+        42,
+        268,
+        194
+      ],
+      "idealPixels": 760,
+      "idealBBoxArea": 2080,
+      "replayed": 375,
+      "hintsChanged": false
+    },
+    {
+      "name": "engine-knight",
+      "old": "pos-11",
+      "new": "pos-12",
+      "mode": "partial",
+      "area": 17316,
+      "box": [
+        109,
+        38,
+        220,
+        194
+      ],
+      "idealPixels": 1256,
+      "idealBBoxArea": 8107,
+      "replayed": 259,
+      "hintsChanged": false
+    },
+    {
+      "name": "promotion",
+      "old": "pos-24",
+      "new": "pos-25",
+      "mode": "partial",
+      "area": 1936,
+      "box": [
+        128,
+        28,
+        172,
+        72
+      ],
+      "idealPixels": 778,
+      "idealBBoxArea": 1892,
+      "replayed": 16,
+      "hintsChanged": true
+    },
+    {
+      "name": "castle-short",
+      "old": "pos-34",
+      "new": "pos-35",
+      "mode": "partial",
+      "area": 7236,
+      "box": [
+        64,
+        132,
+        172,
+        199
+      ],
+      "idealPixels": 2905,
+      "idealBBoxArea": 7169,
+      "replayed": 58,
+      "hintsChanged": false
+    },
+    {
+      "name": "castle-long",
+      "old": "pos-39",
+      "new": "pos-40",
+      "mode": "partial",
+      "area": 22568,
+      "box": [
+        36,
+        103,
+        284,
+        194
+      ],
+      "idealPixels": 3181,
+      "idealBBoxArea": 10947,
+      "replayed": 142,
+      "hintsChanged": false
+    },
+    {
+      "name": "en-passant",
+      "old": "pos-44",
+      "new": "pos-45",
+      "mode": "partial",
+      "area": 2640,
+      "box": [
+        148,
+        88,
+        208,
+        132
+      ],
+      "idealPixels": 1162,
+      "idealBBoxArea": 2537,
+      "replayed": 36,
+      "hintsChanged": false
+    },
+    {
+      "name": "camera",
+      "old": "e2",
+      "new": "low",
+      "mode": "full",
+      "area": 89600,
+      "box": [
+        0,
+        0,
+        320,
+        280
+      ],
+      "idealPixels": 24074,
+      "idealBBoxArea": 45568,
+      "replayed": null,
+      "hintsChanged": false
+    },
+    {
+      "name": "hint-only",
+      "old": "pos-22",
+      "new": "pos-23",
+      "mode": "none",
+      "area": 0,
+      "box": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "idealPixels": 0,
+      "idealBBoxArea": 0,
+      "replayed": 0,
+      "hintsChanged": true
+    }
+  ]
+}
