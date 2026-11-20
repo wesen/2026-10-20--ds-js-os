@@ -1,0 +1,222 @@
+function typedWorldMeta(field: i32, output: buffer): i32 {
+    if (field === 0) return output.writeLiteral(0, "app");
+    if (field === 1) return output.writeLiteral(0, "Chess");
+    if (field === 2) return output.writeLiteral(0, "h");
+    if (field === 3) return output.writeLiteral(0, "Play White against a bounded chess engine.");
+    if (field === 4) return output.writeLiteral(0, "[[\"rect\",5,0,30,30],[\"fill\",6,1,14,14],[\"fill\",20,15,14,14],[\"text\",22,2,\"N\",\"s\",\"accent\"]]");
+    return 0;
+}
+
+function chessUiEqual(key: buffer, size: i32, word: buffer, length: i32): bool {
+    if (size !== length) return false;
+    for (let i = 0; i < length; i = i + 1) {
+        if (key.charCodeAt(i) !== word.charCodeAt(i)) return false;
+    }
+    return true;
+}
+
+function chessUiKey(key: buffer, size: i32, word: buffer): i32 {
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "left"))) return 1;
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "right"))) return 2;
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "up"))) return 3;
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "down"))) return 4;
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "enter"))) return 5;
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "space"))) return 5;
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "esc"))) return 6;
+    if (chessUiEqual(key, size, word, word.writeLiteral(0, "f2"))) return 7;
+    return 0;
+}
+
+function chessDeadMaterial(board: buffer): bool {
+    let minor = 0;
+    let bishops = 0;
+    let bishopColor = -1;
+    for (let i = 0; i < 64; i = i + 1) {
+        const piece = board.charCodeAt(chessSquare(i));
+        const kind = piece % 8;
+        if (kind === 1 || kind === 4 || kind === 5) return false;
+        if (kind === 2 || kind === 3) { minor = minor + 1; }
+        if (kind === 3) {
+            const color = (i / 8 + i % 8) % 2;
+            if (bishopColor !== color && bishops > 0) return false;
+            bishopColor = color;
+            bishops = bishops + 1;
+        }
+    }
+    return minor <= 1 || bishops === minor;
+}
+
+// Outcomes: ongoing, White won, Black won, stalemate, basic dead material.
+function chessOutcome(board: buffer): i32 {
+    const count = chessPseudoMoves(board, chessList(0));
+    if (chessFirstLegal(board, chessList(0), count, chessUndo(0)) === 0) {
+        if (chessInCheck(board, chessSide(board))) return chessSide(board) + 1;
+        return 3;
+    }
+    if (chessDeadMaterial(board)) return 4;
+    return 0;
+}
+
+function chessNewGame(board: buffer, state: WorldState): i32 {
+    chessResetPosition(board);
+    state.ready = true;
+    state.cursor = 100;
+    state.selected = -1;
+    state.promoteTo = -1;
+    state.lastMove = 0;
+    state.outcome = 0;
+    state.notice = 0;
+    state.timer = 0;
+    state.running = false;
+    state.completed = 0;
+    state.nodes = 0;
+    return 0;
+}
+
+function chessPlay(board: buffer, state: WorldState, move: i32): i32 {
+    chessMake(board, move, chessUndo(0));
+    state.lastMove = move;
+    state.selected = -1;
+    state.promoteTo = -1;
+    state.notice = 0;
+    state.outcome = chessOutcome(board);
+    return state.outcome;
+}
+
+function chessFinishBlack(board: buffer, state: WorldState): i32 {
+    if (state.bestMove !== 0 && chessSide(board) === 1 && state.outcome === 0) {
+        chessPlay(board, state, state.bestMove);
+    }
+    return 0;
+}
+
+function chessSchedule(board: buffer, work: buffer, state: WorldState): i32 {
+    if (!state.running) return chessFinishBlack(board, state);
+    state.timer = typedSdkYield();
+    if (state.timer <= 0) {
+        chessStopSearch(work, state);
+        state.timer = 0;
+        return chessFinishBlack(board, state);
+    }
+    return 1;
+}
+
+function chessPlayWhite(board: buffer, state: WorldState, move: i32): i32 {
+    if (chessPlay(board, state, move) !== 0) return 0;
+    const work = typedSdkBuffer(10);
+    chessCopyPosition(board, work);
+    chessStartSearch(work, state, 4, 1600, true);
+    return chessSchedule(board, work, state);
+}
+
+function chessSelectedMove(board: buffer, from: i32, to: i32, promotion: i32): i32 {
+    const count = chessLegalMoves(board, chessList(0), chessUndo(0));
+    for (let i = 0; i < count; i = i + 1) {
+        const move = board.charCodeAt(chessList(0) + i);
+        if (chessFrom(move) === from && chessTo(move) === to
+                && (promotion === 0 || chessPromotion(move) === promotion)) return move;
+    }
+    return 0;
+}
+
+function chessHome(): i32 {
+    const to = typedSdkBuffer(1);
+    const kind = typedSdkBuffer(2);
+    const value = typedSdkBuffer(3);
+    return typedSdkSend(to, to.writeLiteral(0, "compositor"), kind, kind.writeLiteral(0, "open"),
+        value, value.writeLiteral(0, "{\"app\":\"launcher\"}"));
+}
+
+function chessPromotionKey(unit: i32): i32 {
+    if (unit === 113 || unit === 81) return 1;
+    if (unit === 114 || unit === 82) return 2;
+    if (unit === 98 || unit === 66) return 3;
+    if (unit === 110 || unit === 78) return 4;
+    return 0;
+}
+
+function chessControl(board: buffer, state: WorldState, action: i32, unit: i32): i32 {
+    if (action === 7) return chessNewGame(board, state);
+    if (action === 6) {
+        if (state.promoteTo >= 0) { state.promoteTo = -1; return 0; }
+        if (state.selected >= 0) { state.selected = -1; return 0; }
+        return chessHome();
+    }
+    if (state.promoteTo >= 0) {
+        const code = chessPromotionKey(unit);
+        if (code > 0) {
+            const move = chessSelectedMove(board, state.selected, state.promoteTo, code);
+            if (move !== 0) return chessPlayWhite(board, state, move);
+        }
+        return 0;
+    }
+    let offset = 0;
+    if (action === 1) { offset = -1; }
+    if (action === 2) { offset = 1; }
+    if (action === 3) { offset = -16; }
+    if (action === 4) { offset = 16; }
+    if (offset !== 0 && chessOnBoard(state.cursor + offset)) { state.cursor = state.cursor + offset; }
+    if (action !== 5 || state.running || state.outcome !== 0 || chessSide(board) !== 0) return 0;
+    const piece = board.charCodeAt(state.cursor);
+    if (state.selected === state.cursor) { state.selected = -1; return 0; }
+    if (piece > 0 && piece < 8) {
+        state.selected = state.cursor;
+        state.notice = 0;
+        return 0;
+    }
+    if (state.selected >= 0) {
+        const move = chessSelectedMove(board, state.selected, state.cursor, 0);
+        if (move !== 0) {
+            if (chessPromotion(move) !== 0) { state.promoteTo = state.cursor; return 0; }
+            return chessPlayWhite(board, state, move);
+        }
+    }
+    state.notice = 1;
+    return 0;
+}
+
+function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    const board = typedSdkBuffer(0);
+    if (event.kind === 2 || !state.ready) {
+        chessNewGame(board, state);
+        chessRender(board, state, output, hints);
+    }
+    if (event.kind === 4 && state.timer > 0 && event.token === state.timer) {
+        const work = typedSdkBuffer(10);
+        state.timer = 0;
+        if (event.ok) { chessSearchSlice(work, state, 48); }
+        else { chessStopSearch(work, state); }
+        chessSchedule(board, work, state);
+        if (!state.running) { chessRender(board, state, output, hints); }
+    }
+    if (event.kind === 0 && !event.ask) {
+        const key = typedSdkBuffer(1);
+        const word = typedSdkBuffer(2);
+        let size = typedSdkEventText(0, word, 0, key);
+        if (!chessUiEqual(key, size, word, word.writeLiteral(0, "key"))) {
+            if (state.timer > 0) return 1;
+            return 0;
+        }
+        size = typedSdkEventText(1, word, 0, key);
+        if (!chessUiEqual(key, size, word, word.writeLiteral(0, "compositor"))) {
+            if (state.timer > 0) return 1;
+            return 0;
+        }
+        size = typedSdkEventText(3, word, word.writeLiteral(0, "state"), key);
+        if (chessUiEqual(key, size, word, word.writeLiteral(0, "up"))) {
+            if (state.timer > 0) return 1;
+            return 0;
+        }
+        size = typedSdkEventText(3, word, word.writeLiteral(0, "key"), key);
+        const action = chessUiKey(key, size, word);
+        size = typedSdkEventText(3, word, word.writeLiteral(0, "ch"), key);
+        let unit = 0;
+        if (size === 1) { unit = key.charCodeAt(0); }
+        if (action > 0 || unit > 0) {
+            chessControl(board, state, action, unit);
+            chessRender(board, state, output, hints);
+        }
+    }
+    if (state.timer > 0) return 1;
+    return 0;
+}

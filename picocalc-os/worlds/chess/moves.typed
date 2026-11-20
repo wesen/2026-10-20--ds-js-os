@@ -1,0 +1,171 @@
+// A frame reserves 512 moves. Sixteen pieces with at most 27 moves per piece fit.
+// On overflow return -1 so a partial list cannot be mistaken for all moves.
+function chessAdd(board: buffer, list: i32, count: i32, from: i32, to: i32, promotion: i32): i32 {
+    if (count < 0 || count >= 512) return -1;
+    board.setCharCodeAt(list + count, chessMove(from, to, promotion));
+    return count + 1;
+}
+
+function chessPawnAdd(board: buffer, list: i32, count: i32, from: i32, to: i32): i32 {
+    if (to / 16 !== 0 && to / 16 !== 7) return chessAdd(board, list, count, from, to, 0);
+    let n = count;
+    for (let promotion = 1; promotion < 5; promotion = promotion + 1) {
+        n = chessAdd(board, list, n, from, to, promotion);
+    }
+    return n;
+}
+
+function chessPawnMoves(board: buffer, list: i32, count: i32, from: i32, side: i32): i32 {
+    let n = count;
+    const step = chessPawnStep(side);
+    const next = from + step;
+    if (!chessOnBoard(next)) return n;
+    if (board.charCodeAt(next) === 0) {
+        n = chessPawnAdd(board, list, n, from, next);
+        const startRank = 6 - side * 5;
+        if (from / 16 === startRank && board.charCodeAt(next + step) === 0) {
+            n = chessAdd(board, list, n, from, next + step, 0);
+        }
+    }
+    const ep = board.charCodeAt(130);
+    let to = next - 1;
+    while (to <= next + 1) {
+        if (chessOnBoard(to)) {
+            const target = board.charCodeAt(to);
+            const enemy = target !== 0 && target / 8 !== side && target % 8 !== 6;
+            const passed = to === ep && target === 0 && board.charCodeAt(to - step) === 1 + (1 - side) * 8;
+            if (enemy || passed) { n = chessPawnAdd(board, list, n, from, to); }
+        }
+        to = to + 2;
+    }
+    return n;
+}
+
+function chessCastle(board: buffer, list: i32, count: i32, from: i32, side: i32): i32 {
+    const home = 116 - side * 112;
+    if (from !== home) return count;
+    const rights = board.charCodeAt(129);
+    const mask = 1 + side * 3;
+    if (!chessRight(rights, mask) && !chessRight(rights, mask * 2)) return count;
+    if (chessAttacked(board, from, 1 - side)) return count;
+    let n = count;
+    const rook = 4 + side * 8;
+    if (chessRight(rights, mask) && board.charCodeAt(from + 3) === rook
+            && board.charCodeAt(from + 1) === 0 && board.charCodeAt(from + 2) === 0
+            && !chessAttacked(board, from + 1, 1 - side)) {
+        n = chessAdd(board, list, n, from, from + 2, 0);
+    }
+    if (chessRight(rights, mask * 2) && board.charCodeAt(from - 4) === rook
+            && board.charCodeAt(from - 1) === 0 && board.charCodeAt(from - 2) === 0
+            && board.charCodeAt(from - 3) === 0 && !chessAttacked(board, from - 1, 1 - side)) {
+        n = chessAdd(board, list, n, from, from - 2, 0);
+    }
+    return n;
+}
+
+function chessPieceMoves(board: buffer, list: i32, count: i32, from: i32, piece: i32): i32 {
+    const side = piece / 8;
+    const kind = piece % 8;
+    if (kind === 1) return chessPawnMoves(board, list, count, from, side);
+    let first = 0;
+    let last = 8;
+    if (kind === 3) { first = 4; }
+    if (kind === 4) { last = 4; }
+    let n = count;
+    for (let i = first; i < last; i = i + 1) {
+        let step = chessRay(i);
+        if (kind === 2) { step = chessKnight(i); }
+        let to = from + step;
+        while (chessOnBoard(to)) {
+            const target = board.charCodeAt(to);
+            if (target === 0 || (target / 8 !== side && target % 8 !== 6)) {
+                n = chessAdd(board, list, n, from, to, 0);
+            }
+            if (target !== 0 || kind === 2 || kind === 6) { break; }
+            to = to + step;
+        }
+    }
+    if (kind === 6) { n = chessCastle(board, list, n, from, side); }
+    return n;
+}
+
+function chessPseudoMoves(board: buffer, list: i32): i32 {
+    const side = chessSide(board);
+    let n = 0;
+    for (let dense = 0; dense < 64; dense = dense + 1) {
+        const from = chessSquare(dense);
+        const piece = board.charCodeAt(from);
+        if (piece !== 0 && piece / 8 === side) {
+            n = chessPieceMoves(board, list, n, from, piece);
+        }
+    }
+    return n;
+}
+
+function chessLegal(board: buffer, move: i32, undo: i32): bool {
+    const side = chessSide(board);
+    chessMake(board, move, undo);
+    const allowed = !chessInCheck(board, side);
+    chessUnmake(board, move, undo);
+    return allowed;
+}
+
+function chessLegalMoves(board: buffer, list: i32, undo: i32): i32 {
+    const pseudo = chessPseudoMoves(board, list);
+    if (pseudo < 0) return -1;
+    let count = 0;
+    for (let i = 0; i < pseudo; i = i + 1) {
+        const move = board.charCodeAt(list + i);
+        if (chessLegal(board, move, undo)) {
+            board.setCharCodeAt(list + count, move);
+            count = count + 1;
+        }
+    }
+    return count;
+}
+
+// Acyclic perft uses a per-ply list, a cursor and the incoming undo record.
+function chessPerft(board: buffer, depth: i32): i32 {
+    if (depth < 0 || depth > 6) return -1;
+    if (depth === 0) return 1;
+    let ply = 0;
+    let nodes = 0;
+    board.setCharCodeAt(160, 0);
+    while (ply >= 0) {
+        const frame = 160 + ply * 4;
+        const list = 512 + ply * 512;
+        const undo = 256 + ply * 10;
+        if (board.charCodeAt(frame) === 0) {
+            const count = chessLegalMoves(board, list, undo);
+            if (count < 0) {
+                while (ply > 0) {
+                    ply = ply - 1;
+                    chessUnmake(board, board.charCodeAt(163 + ply * 4), 256 + ply * 10);
+                }
+                return -1;
+            }
+            board.setCharCodeAt(frame, 1);
+            board.setCharCodeAt(frame + 1, count);
+            board.setCharCodeAt(frame + 2, 0);
+            if (ply + 1 === depth) {
+                nodes = nodes + count;
+                board.setCharCodeAt(frame + 2, count);
+            }
+        }
+        const next = board.charCodeAt(frame + 2);
+        if (next < board.charCodeAt(frame + 1)) {
+            const move = board.charCodeAt(list + next);
+            board.setCharCodeAt(frame + 2, next + 1);
+            board.setCharCodeAt(frame + 3, move);
+            chessMake(board, move, undo);
+            ply = ply + 1;
+            board.setCharCodeAt(160 + ply * 4, 0);
+        } else {
+            ply = ply - 1;
+            if (ply >= 0) {
+                chessUnmake(board, board.charCodeAt(163 + ply * 4), 256 + ply * 10);
+            }
+        }
+    }
+    return nodes;
+}

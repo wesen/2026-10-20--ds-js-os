@@ -1,0 +1,297 @@
+function chessValue(kind: i32): i32 {
+    if (kind === 1) return 100;
+    if (kind === 2) return 320;
+    if (kind === 3) return 335;
+    if (kind === 4) return 500;
+    if (kind === 5) return 950;
+    return 0;
+}
+
+function chessAbs(n: i32): i32 {
+    if (n < 0) return 0 - n;
+    return n;
+}
+
+function chessCenter(file: i32, rank: i32): i32 {
+    return 14 - chessAbs(2 * file - 7) - chessAbs(2 * rank - 7);
+}
+
+function chessEvaluate(board: buffer, advanced: bool): i32 {
+    let value = 0;
+    let phase = 0;
+    let bishopsWhite = 0;
+    let bishopsBlack = 0;
+    for (let i = 0; i < 64; i = i + 1) {
+        const piece = board.charCodeAt(chessSquare(i));
+        if (piece !== 0) {
+            const side = piece / 8;
+            const kind = piece % 8;
+            let score = chessValue(kind);
+            if (advanced) {
+                const rank = i / 8;
+                const center = chessCenter(i % 8, rank);
+                if (kind === 1) {
+                    let progress = 6 - rank;
+                    if (side === 1) { progress = rank - 1; }
+                    score = score + progress * 7 + center;
+                } else if (kind === 2) {
+                    score = score + center * 5;
+                } else if (kind === 3) {
+                    score = score + center * 3;
+                    if (side === 0) { bishopsWhite = bishopsWhite + 1; }
+                    else { bishopsBlack = bishopsBlack + 1; }
+                } else if (kind === 4) {
+                    score = score + center;
+                    if (rank === 1 + 5 * side) { score = score + 12; }
+                } else if (kind === 5) {
+                    score = score + center;
+                }
+                if (kind > 1 && kind < 6) { phase = phase + chessValue(kind); }
+            }
+            value = value + score * (1 - side * 2);
+        }
+    }
+    if (advanced) {
+        if (bishopsWhite >= 2) { value = value + 24; }
+        if (bishopsBlack >= 2) { value = value - 24; }
+        const white = board.charCodeAt(131);
+        const black = board.charCodeAt(132);
+        const center = chessCenter(white % 16, white / 16) - chessCenter(black % 16, black / 16);
+        if (phase < 2200) { value = value + center * 4; }
+        else { value = value - center * 3; }
+    }
+    return value * (1 - chessSide(board) * 2);
+}
+
+function chessCapture(board: buffer, move: i32): i32 {
+    const to = chessTo(move);
+    const target = board.charCodeAt(to);
+    if (target !== 0) return target;
+    if (to === board.charCodeAt(130) && board.charCodeAt(chessFrom(move)) % 8 === 1
+            && chessFrom(move) % 16 !== to % 16) {
+        return 1 + (1 - chessSide(board)) * 8;
+    }
+    return 0;
+}
+
+function chessTactical(board: buffer, move: i32): bool {
+    return chessPromotion(move) !== 0 || chessCapture(board, move) !== 0;
+}
+
+function chessPriority(board: buffer, move: i32, previous: i32): i32 {
+    if (move === previous) return 65535;
+    const capture = chessCapture(board, move);
+    const promotion = chessPromotion(move);
+    if (capture === 0 && promotion === 0) return 0;
+    const attacker = chessValue(board.charCodeAt(chessFrom(move)) % 8);
+    let key = 1200 + 8 * chessValue(capture % 8) - attacker;
+    if (promotion !== 0) { key = key + chessValue(chessPromotedKind(promotion)) + 6000; }
+    return key;
+}
+
+function chessTacticalMoves(board: buffer, list: i32, count: i32): i32 {
+    let n = 0;
+    for (let i = 0; i < count; i = i + 1) {
+        const move = board.charCodeAt(list + i);
+        if (chessTactical(board, move)) {
+            board.setCharCodeAt(list + n, move);
+            n = n + 1;
+        }
+    }
+    return n;
+}
+
+function chessOrder(board: buffer, list: i32, count: i32, previous: i32): i32 {
+    for (let i = 0; i < count; i = i + 1) {
+        const move = board.charCodeAt(list + i);
+        const key = chessPriority(board, move, previous);
+        let at = i;
+        while (at > 0 && key > board.charCodeAt(list + 512 + at - 1)) {
+            board.setCharCodeAt(list + at, board.charCodeAt(list + at - 1));
+            board.setCharCodeAt(list + 512 + at, board.charCodeAt(list + 512 + at - 1));
+            at = at - 1;
+        }
+        board.setCharCodeAt(list + at, move);
+        board.setCharCodeAt(list + 512 + at, key);
+    }
+    return 0;
+}
+
+function chessFirstLegal(board: buffer, list: i32, count: i32, undo: i32): i32 {
+    for (let i = 0; i < count; i = i + 1) {
+        const move = board.charCodeAt(list + i);
+        if (chessLegal(board, move, undo)) return move;
+    }
+    return 0;
+}
+
+// Frame offsets: ready, depth, alpha, beta, best, count, cursor, pending,
+// bestMove, inCheck, mode, legal. Signed scores are biased by 32768.
+// Each ply has a disjoint undo record and move/priority list.
+function chessFrame(ply: i32): i32 { return 160 + ply * 16; }
+function chessUndo(ply: i32): i32 { return 384 + ply * 10; }
+function chessList(ply: i32): i32 { return 1024 + ply * 1024; }
+
+function chessInitNode(board: buffer, frame: i32, depth: i32, alpha: i32, beta: i32): i32 {
+    board.setCharCodeAt(frame, 0);
+    board.setCharCodeAt(frame + 1, depth);
+    board.setCharCodeAt(frame + 2, alpha + 32768);
+    board.setCharCodeAt(frame + 3, beta + 32768);
+    board.setCharCodeAt(frame + 8, 0);
+    return 0;
+}
+
+function chessStartSearch(board: buffer, state: WorldState, depth: i32, budget: i32, advanced: bool): i32 {
+    state.running = false;
+    state.ply = 0;
+    state.depth = 1;
+    state.maxDepth = Math.min(6, Math.max(1, depth));
+    state.budget = Math.max(1, budget);
+    state.nodes = 0;
+    state.completed = 0;
+    state.score = 0;
+    state.advanced = advanced;
+    const count = chessPseudoMoves(board, chessList(0));
+    state.bestMove = chessFirstLegal(board, chessList(0), count, chessUndo(0));
+    if (state.bestMove === 0) {
+        if (chessInCheck(board, chessSide(board))) { state.score = -30000; }
+        return 0;
+    }
+    state.running = true;
+    chessInitNode(board, chessFrame(0), state.depth, -32000, 32000);
+    return 1;
+}
+
+function chessStopSearch(board: buffer, state: WorldState): i32 {
+    while (state.ply > 0) {
+        state.ply = state.ply - 1;
+        chessUnmake(board, board.charCodeAt(chessFrame(state.ply) + 7), chessUndo(state.ply));
+    }
+    state.running = false;
+    return 0;
+}
+
+function chessAcceptScore(board: buffer, frame: i32, move: i32, score: i32): i32 {
+    const value = score + 32768;
+    if (value > board.charCodeAt(frame + 4)) {
+        board.setCharCodeAt(frame + 4, value);
+        board.setCharCodeAt(frame + 8, move);
+    }
+    if (value > board.charCodeAt(frame + 2)) { board.setCharCodeAt(frame + 2, value); }
+    if (value >= board.charCodeAt(frame + 3)) {
+        board.setCharCodeAt(frame + 6, board.charCodeAt(frame + 5));
+    }
+    return 0;
+}
+
+function chessCompleteNode(board: buffer, state: WorldState, score: i32): i32 {
+    if (state.ply === 0) {
+        const played = board.charCodeAt(chessFrame(0) + 8);
+        if (played !== 0) { state.bestMove = played; }
+        state.score = score;
+        state.completed = state.depth;
+        if (state.depth >= state.maxDepth || chessAbs(score) >= 29900) {
+            state.running = false;
+        } else {
+            state.depth = state.depth + 1;
+            chessInitNode(board, chessFrame(0), state.depth, -32000, 32000);
+        }
+    } else {
+        state.ply = state.ply - 1;
+        const parent = chessFrame(state.ply);
+        const move = board.charCodeAt(parent + 7);
+        chessUnmake(board, move, chessUndo(state.ply));
+        chessAcceptScore(board, parent, move, 0 - score);
+    }
+    return 0;
+}
+
+function chessPrepareNode(board: buffer, state: WorldState, frame: i32): i32 {
+    if (state.nodes >= state.budget) return chessStopSearch(board, state);
+    state.nodes = state.nodes + 1;
+    const ply = state.ply;
+    const check = chessInCheck(board, chessSide(board));
+    const list = chessList(ply);
+    let count = chessPseudoMoves(board, list);
+    if (count < 0) return chessStopSearch(board, state);
+    let mode = 0;
+    let best = -32000;
+    let legal = 0;
+    if (board.charCodeAt(frame + 1) === 0) {
+        const capped = ply >= state.depth + 4;
+        if (!state.advanced || !check) {
+            if (chessFirstLegal(board, list, count, chessUndo(ply)) === 0) {
+                if (check) return chessCompleteNode(board, state, -30000 + ply);
+                return chessCompleteNode(board, state, 0);
+            }
+            const stand = chessEvaluate(board, state.advanced);
+            if (!state.advanced || capped || stand + 32768 >= board.charCodeAt(frame + 3)) {
+                return chessCompleteNode(board, state, stand);
+            }
+            best = stand;
+            legal = 1;
+            board.setCharCodeAt(frame + 2, Math.max(board.charCodeAt(frame + 2), stand + 32768));
+            count = chessTacticalMoves(board, list, count);
+        } else if (capped) {
+            // At the quiescence cap still evaluate legal evasions; no stand pat in check.
+            mode = 2;
+        }
+    }
+    if (state.advanced) {
+        let previous = 0;
+        if (ply === 0) { previous = state.bestMove; }
+        chessOrder(board, list, count, previous);
+    }
+    board.setCharCodeAt(frame, 1);
+    board.setCharCodeAt(frame + 4, best + 32768);
+    board.setCharCodeAt(frame + 5, count);
+    board.setCharCodeAt(frame + 6, 0);
+    let checked = 0;
+    if (check) { checked = 1; }
+    board.setCharCodeAt(frame + 9, checked);
+    board.setCharCodeAt(frame + 10, mode);
+    board.setCharCodeAt(frame + 11, legal);
+    return 0;
+}
+
+function chessSearchStep(board: buffer, state: WorldState): i32 {
+    const ply = state.ply;
+    const frame = chessFrame(ply);
+    if (board.charCodeAt(frame) === 0) return chessPrepareNode(board, state, frame);
+    const next = board.charCodeAt(frame + 6);
+    if (next >= board.charCodeAt(frame + 5)) {
+        if (board.charCodeAt(frame + 11) === 0) {
+            if (board.charCodeAt(frame + 9) === 1) return chessCompleteNode(board, state, -30000 + ply);
+            return chessCompleteNode(board, state, 0);
+        }
+        return chessCompleteNode(board, state, board.charCodeAt(frame + 4) - 32768);
+    }
+    const move = board.charCodeAt(chessList(ply) + next);
+    board.setCharCodeAt(frame + 6, next + 1);
+    const mode = board.charCodeAt(frame + 10);
+    const side = chessSide(board);
+    const undo = chessUndo(ply);
+    chessMake(board, move, undo);
+    if (chessInCheck(board, side)) return chessUnmake(board, move, undo);
+    board.setCharCodeAt(frame + 11, 1);
+    if (mode === 2) {
+        const score = 0 - chessEvaluate(board, true);
+        chessUnmake(board, move, undo);
+        return chessAcceptScore(board, frame, move, score);
+    }
+    board.setCharCodeAt(frame + 7, move);
+    const alpha = 32768 - board.charCodeAt(frame + 3);
+    const beta = 32768 - board.charCodeAt(frame + 2);
+    chessInitNode(board, chessFrame(ply + 1), Math.max(0, board.charCodeAt(frame + 1) - 1), alpha, beta);
+    state.ply = ply + 1;
+    return 1;
+}
+
+function chessSearchSlice(board: buffer, state: WorldState, steps: i32): i32 {
+    let work = 0;
+    while (state.running && work < steps) {
+        chessSearchStep(board, state);
+        work = work + 1;
+    }
+    return state.nodes;
+}

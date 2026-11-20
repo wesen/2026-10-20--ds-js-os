@@ -1,0 +1,22 @@
+record WorldEvent { kind: i32; ask: bool; token: i32; ok: bool; }
+
+record WorldState {
+    ready: bool;
+    cursor: i32;
+    selected: i32;
+    promoteTo: i32;
+    lastMove: i32;
+    outcome: i32;
+    notice: i32;
+    timer: i32;
+    running: bool;
+    ply: i32;
+    depth: i32;
+    maxDepth: i32;
+    budget: i32;
+    nodes: i32;
+    completed: i32;
+    bestMove: i32;
+    score: i32;
+    advanced: bool;
+}

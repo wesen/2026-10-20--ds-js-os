@@ -1,0 +1,191 @@
+// Each rank occupies 16 units. Files a through h occupy its first eight.
+// Position metadata uses units 128–134. Search and undo storage starts at 160.
+function chessOnBoard(square: i32): bool {
+    return square >= 0 && square < 128 && square % 16 < 8;
+}
+
+function chessSquare(dense: i32): i32 {
+    return dense + (dense / 8) * 8;
+}
+
+function chessDense(square: i32): i32 {
+    return square - (square / 16) * 8;
+}
+
+function chessMove(from: i32, to: i32, promotion: i32): i32 {
+    return promotion * 4096 + chessDense(from) * 64 + chessDense(to);
+}
+
+function chessFrom(move: i32): i32 { return chessSquare((move / 64) % 64); }
+function chessTo(move: i32): i32 { return chessSquare(move % 64); }
+function chessPromotion(move: i32): i32 { return move / 4096; }
+function chessSide(board: buffer): i32 { return board.charCodeAt(128); }
+function chessPawnStep(side: i32): i32 { return side * 32 - 16; }
+
+function chessRearPiece(file: i32): i32 {
+    if (file === 0 || file === 7) return 4;
+    if (file === 1 || file === 6) return 2;
+    if (file === 2 || file === 5) return 3;
+    if (file === 3) return 5;
+    return 6;
+}
+
+function chessResetPosition(board: buffer): i32 {
+    for (let i = 0; i < 128; i = i + 1) { board.setCharCodeAt(i, 0); }
+    for (let file = 0; file < 8; file = file + 1) {
+        const piece = chessRearPiece(file);
+        board.setCharCodeAt(file, piece + 8);
+        board.setCharCodeAt(16 + file, 9);
+        board.setCharCodeAt(96 + file, 1);
+        board.setCharCodeAt(112 + file, piece);
+    }
+    board.setCharCodeAt(128, 0);
+    board.setCharCodeAt(129, 15);
+    board.setCharCodeAt(130, 128);
+    board.setCharCodeAt(131, 116);
+    board.setCharCodeAt(132, 4);
+    board.setCharCodeAt(133, 0);
+    board.setCharCodeAt(134, 1);
+    return 0;
+}
+
+function chessCopyPosition(source: buffer, dest: buffer): i32 {
+    for (let i = 0; i < 135; i = i + 1) { dest.setCharCodeAt(i, source.charCodeAt(i)); }
+    return 0;
+}
+
+function chessRay(direction: i32): i32 {
+    if (direction < 2) return 1 - direction * 2;
+    if (direction < 4) return 16 - (direction - 2) * 32;
+    if (direction < 6) return 15 - (direction - 4) * 30;
+    return 17 - (direction - 6) * 34;
+}
+
+function chessKnight(direction: i32): i32 {
+    if (direction < 2) return 14 - direction * 28;
+    if (direction < 4) return 18 - (direction - 2) * 36;
+    if (direction < 6) return 31 - (direction - 4) * 62;
+    return 33 - (direction - 6) * 66;
+}
+
+function chessIsPiece(board: buffer, square: i32, piece: i32): bool {
+    return chessOnBoard(square) && board.charCodeAt(square) === piece;
+}
+
+function chessAttacked(board: buffer, square: i32, side: i32): bool {
+    const color = side * 8;
+    const pawn = square - chessPawnStep(side);
+    if (chessIsPiece(board, pawn - 1, color + 1) || chessIsPiece(board, pawn + 1, color + 1)) return true;
+    for (let i = 0; i < 8; i = i + 1) {
+        if (chessIsPiece(board, square + chessKnight(i), color + 2)) return true;
+    }
+    for (let i = 0; i < 8; i = i + 1) {
+        const step = chessRay(i);
+        let at = square + step;
+        while (chessOnBoard(at)) {
+            const piece = board.charCodeAt(at);
+            if (piece !== 0) {
+                if (piece / 8 === side) {
+                    const kind = piece % 8;
+                    if (kind === 6 && at === square + step) return true;
+                    if (kind === 5 || (i < 4 && kind === 4) || (i >= 4 && kind === 3)) return true;
+                }
+                break;
+            }
+            at = at + step;
+        }
+    }
+    return false;
+}
+
+function chessInCheck(board: buffer, side: i32): bool {
+    return chessAttacked(board, board.charCodeAt(131 + side), 1 - side);
+}
+
+function chessRight(rights: i32, mask: i32): bool { return (rights / mask) % 2 === 1; }
+function chessRemoveRight(rights: i32, mask: i32): i32 {
+    if (chessRight(rights, mask)) return rights - mask;
+    return rights;
+}
+
+function chessRookRight(rights: i32, square: i32): i32 {
+    if (square === 119) return chessRemoveRight(rights, 1);
+    if (square === 112) return chessRemoveRight(rights, 2);
+    if (square === 7) return chessRemoveRight(rights, 4);
+    if (square === 0) return chessRemoveRight(rights, 8);
+    return rights;
+}
+
+function chessPromotedKind(code: i32): i32 { return 6 - code; }
+
+function chessMake(board: buffer, move: i32, undo: i32): i32 {
+    const from = chessFrom(move);
+    const to = chessTo(move);
+    const side = chessSide(board);
+    const piece = board.charCodeAt(from);
+    const kind = piece % 8;
+    let captureSquare = to;
+    const enPassant = board.charCodeAt(130);
+    if (kind === 1 && to === enPassant && board.charCodeAt(to) === 0 && from % 16 !== to % 16) {
+        captureSquare = to - chessPawnStep(side);
+    }
+    const captured = board.charCodeAt(captureSquare);
+    for (let i = 0; i < 6; i = i + 1) { board.setCharCodeAt(undo + i, board.charCodeAt(129 + i)); }
+    board.setCharCodeAt(undo + 6, piece);
+    board.setCharCodeAt(undo + 7, captured);
+    board.setCharCodeAt(undo + 8, captureSquare);
+    let rights = board.charCodeAt(129);
+    if (kind === 6) {
+        board.setCharCodeAt(131 + side, to);
+        const first = 1 + 3 * side;
+        rights = chessRemoveRight(chessRemoveRight(rights, first), first * 2);
+        if (to - from === 2) {
+            board.setCharCodeAt(from + 1, 4 + side * 8);
+            board.setCharCodeAt(from + 3, 0);
+        } else if (from - to === 2) {
+            board.setCharCodeAt(from - 1, 4 + side * 8);
+            board.setCharCodeAt(from - 4, 0);
+        }
+    }
+    if (kind === 4) { rights = chessRookRight(rights, from); }
+    if (captured % 8 === 4) { rights = chessRookRight(rights, captureSquare); }
+    board.setCharCodeAt(129, rights);
+    board.setCharCodeAt(130, 128);
+    if (kind === 1 && to - from === chessPawnStep(side) * 2) {
+        board.setCharCodeAt(130, (from + to) / 2);
+    }
+    let clock = Math.min(65535, board.charCodeAt(133) + 1);
+    if (kind === 1 || captured !== 0) { clock = 0; }
+    board.setCharCodeAt(133, clock);
+    if (side === 1) { board.setCharCodeAt(134, Math.min(65535, board.charCodeAt(134) + 1)); }
+    board.setCharCodeAt(128, 1 - side);
+    board.setCharCodeAt(from, 0);
+    if (captureSquare !== to) { board.setCharCodeAt(captureSquare, 0); }
+    let moved = piece;
+    const promotion = chessPromotion(move);
+    if (promotion !== 0) { moved = side * 8 + chessPromotedKind(promotion); }
+    board.setCharCodeAt(to, moved);
+    return captured;
+}
+
+function chessUnmake(board: buffer, move: i32, undo: i32): i32 {
+    const from = chessFrom(move);
+    const to = chessTo(move);
+    const side = 1 - chessSide(board);
+    const piece = board.charCodeAt(undo + 6);
+    if (piece % 8 === 6) {
+        if (to - from === 2) {
+            board.setCharCodeAt(from + 3, 4 + side * 8);
+            board.setCharCodeAt(from + 1, 0);
+        } else if (from - to === 2) {
+            board.setCharCodeAt(from - 4, 4 + side * 8);
+            board.setCharCodeAt(from - 1, 0);
+        }
+    }
+    board.setCharCodeAt(from, piece);
+    board.setCharCodeAt(to, 0);
+    board.setCharCodeAt(board.charCodeAt(undo + 8), board.charCodeAt(undo + 7));
+    board.setCharCodeAt(128, side);
+    for (let i = 0; i < 6; i = i + 1) { board.setCharCodeAt(129 + i, board.charCodeAt(undo + i)); }
+    return 0;
+}
