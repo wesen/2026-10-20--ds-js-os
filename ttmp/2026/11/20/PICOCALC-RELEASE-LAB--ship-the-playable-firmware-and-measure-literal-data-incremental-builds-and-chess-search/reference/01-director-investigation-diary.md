@@ -174,3 +174,51 @@ Read scripts/director/03-shipped-code-census.mjs through 05-cross-study-images.m
 ### Technical details
 
 The engine image SHA-256 is d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4. A fresh copy was used by the timed board runner. The three-function fixture stores symbolic address and dependency information on clean success. Its negative edit must leave the prior generation usable.
+
+## Step 4: Reconcile search work with physical time
+
+I checked the Chess researcher's physical outcomes and added a host experiment to measure which generated functions execute most often. I then tested whether a one-position calibration could account for elapsed time on the other positions. This gives the next compiler researcher a practical way to choose trials for the shared board.
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Use the actual Chess engine as a consequential benchmark and examine deeper search where it supplies additional information. **Inferred user intent:** Find compiler work that improves the generated program and distinguish it from work that improves cold build time.
+
+### What I did
+
+Generated ELF function symbols from the compiler's actual entry table, verified the engine SHA-256 against the benchmark, built four individual search trials and ran the existing RV32 emulator with function accounting. Compared modeled instructions and node counts as separate predictors calibrated at opening depth four.
+
+### Why
+
+A 30,000-node opening and 30,000-node tactical position had different elapsed times. Counting the instructions inside each Typed function can distinguish additional game work from device timing variation.
+
+### What worked
+
+All four profiles matched their expected move, score, completed depth, nodes and slices. Timing-interval instruction counts agreed with the multi-case harness to within one instruction. Across thirteen other distinct workloads, median absolute percentage error was 1.0% using instructions and 40.6% using nodes.
+
+### What didn't work
+
+The original assembly exposed only the two callable entry points to the harness. Profiling using those names would misattribute nearly all generated work. Emitting a function-typed ELF symbol for every entry supplied the required boundaries. Generated code and fixtures kept their existing hashes.
+
+### What I learned
+
+The short coordinate helpers collectively consumed 14.7% to 22.5% of Typed instructions in these profiles. A study of leaf inlining or frame elimination can now state precisely what fraction it could plausibly improve.
+
+### What was tricky to build
+
+Kiwipete at requested depths four and five follows an identical budget-limited path. The time-prediction comparison excludes that duplicate so the same path cannot count as two independent successes.
+
+### What warrants a second pair of eyes
+
+The calibration is retrospective, covers one device, and uses the exact same engine build and internal RAM. Read the raw predictions before transferring the calibration to new code generation, clocks or memory placements.
+
+### What should be done in the future
+
+Use the physical and modeled baselines together for candidates that actually change search instructions. Recheck on hardware before drawing a compiler performance conclusion.
+
+### Code review instructions
+
+Run scripts/director/06-profile-search-functions.py with the Chess fixture directory, modeled.json, RV32 GCC and a JSON output path. Run scripts/director/07-predict-search-time.py directly against the committed summary.
+
+### Technical details
+
+The model counts instructions at each guest program counter. Each `chess*` symbol identifies a function entry and its range extends to the next entry. The model attributes exclusive instructions to the function containing the current program counter. Nested callees accumulate their own counts.

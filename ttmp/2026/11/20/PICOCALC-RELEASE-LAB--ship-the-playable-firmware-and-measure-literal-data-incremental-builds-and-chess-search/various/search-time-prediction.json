@@ -1,0 +1,204 @@
+{
+  "anchor": {
+    "position": "opening",
+    "depth": 4,
+    "elapsedMicroseconds": 638433,
+    "instructions": 167379205,
+    "nodes": 4438
+  },
+  "rule": "Exclude opening and repeated identical work within a position. Each other case gets one vote.",
+  "summary": {
+    "nodes": {
+      "medianAbsolutePercentError": 40.56205914605425,
+      "maxAbsolutePercentError": 76.72408419846528
+    },
+    "instructions": {
+      "medianAbsolutePercentError": 1.0029559162272816,
+      "maxAbsolutePercentError": 3.254681103479615
+    }
+  },
+  "predictions": [
+    {
+      "position": "after-e2e4",
+      "depth": 3,
+      "budget": 30000,
+      "observedMicroseconds": 216928,
+      "predictedMicroseconds": {
+        "nodes": 209742.07165389817,
+        "instructions": 217735.42008954458
+      },
+      "signedErrorPercent": {
+        "nodes": -3.3125868242466785,
+        "instructions": 0.3722064876570027
+      }
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 4,
+      "budget": 30000,
+      "observedMicroseconds": 2290074,
+      "predictedMicroseconds": {
+        "nodes": 2138851.2492113565,
+        "instructions": 2286203.295292853
+      },
+      "signedErrorPercent": {
+        "nodes": -6.60340018657229,
+        "instructions": -0.16902094461345302
+      }
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 5,
+      "budget": 30000,
+      "observedMicroseconds": 4613000,
+      "predictedMicroseconds": {
+        "nodes": 4315680.486705723,
+        "instructions": 4612896.548569974
+      },
+      "signedErrorPercent": {
+        "nodes": -6.445252835340923,
+        "instructions": -0.0022426063305103364
+      }
+    },
+    {
+      "position": "kiwipete",
+      "depth": 3,
+      "budget": 30000,
+      "observedMicroseconds": 1334320,
+      "predictedMicroseconds": {
+        "nodes": 1034900.1807120325,
+        "instructions": 1342236.8682497207
+      },
+      "signedErrorPercent": {
+        "nodes": -22.439880934705883,
+        "instructions": 0.5933260574465391
+      }
+    },
+    {
+      "position": "kiwipete",
+      "depth": 4,
+      "budget": 30000,
+      "observedMicroseconds": 5682902,
+      "predictedMicroseconds": {
+        "nodes": 4315680.486705723,
+        "instructions": 5735929.799827434
+      },
+      "signedErrorPercent": {
+        "nodes": -24.0585094251894,
+        "instructions": 0.9331112841191722
+      }
+    },
+    {
+      "position": "rook-ending",
+      "depth": 3,
+      "budget": 30000,
+      "observedMicroseconds": 92383,
+      "predictedMicroseconds": {
+        "nodes": 130189.69468228932,
+        "instructions": 94080.85755005827
+      },
+      "signedErrorPercent": {
+        "nodes": 40.923865518860964,
+        "instructions": 1.837846302954295
+      }
+    },
+    {
+      "position": "rook-ending",
+      "depth": 4,
+      "budget": 30000,
+      "observedMicroseconds": 646094,
+      "predictedMicroseconds": {
+        "nodes": 908163.0304191078,
+        "instructions": 657250.3280030515
+      },
+      "signedErrorPercent": {
+        "nodes": 40.56205914605425,
+        "instructions": 1.7267345004057395
+      }
+    },
+    {
+      "position": "rook-ending",
+      "depth": 5,
+      "budget": 30000,
+      "observedMicroseconds": 3034556,
+      "predictedMicroseconds": {
+        "nodes": 4315680.486705723,
+        "instructions": 3089720.954640745
+      },
+      "signedErrorPercent": {
+        "nodes": 42.21785614454712,
+        "instructions": 1.8178921279009248
+      }
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 3,
+      "budget": 30000,
+      "observedMicroseconds": 12052,
+      "predictedMicroseconds": {
+        "nodes": 21290.690401081567,
+        "instructions": 12444.254166591363
+      },
+      "signedErrorPercent": {
+        "nodes": 76.65690674644513,
+        "instructions": 3.254681103479615
+      }
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 4,
+      "budget": 30000,
+      "observedMicroseconds": 33049,
+      "predictedMicroseconds": {
+        "nodes": 58405.54258675079,
+        "instructions": 33971.7847027891
+      },
+      "signedErrorPercent": {
+        "nodes": 76.72408419846528,
+        "instructions": 2.792171329810574
+      }
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 5,
+      "budget": 30000,
+      "observedMicroseconds": 142179,
+      "predictedMicroseconds": {
+        "nodes": 248727.0520504732,
+        "instructions": 146642.47068179108
+      },
+      "signedErrorPercent": {
+        "nodes": 74.93937364200987,
+        "instructions": 3.1393318857152446
+      }
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 4,
+      "budget": 1600,
+      "observedMicroseconds": 239311,
+      "predictedMicroseconds": {
+        "nodes": 230169.62595763858,
+        "instructions": 239964.2385456724
+      },
+      "signedErrorPercent": {
+        "nodes": -3.819872067043062,
+        "instructions": 0.2729663683125247
+      }
+    },
+    {
+      "position": "mate-in-one",
+      "depth": 5,
+      "budget": 30000,
+      "observedMicroseconds": 1873,
+      "predictedMicroseconds": {
+        "nodes": 3020.9763406940065,
+        "instructions": 1891.785364310937
+      },
+      "signedErrorPercent": {
+        "nodes": 61.290781670795866,
+        "instructions": 1.0029559162272816
+      }
+    }
+  ]
+}

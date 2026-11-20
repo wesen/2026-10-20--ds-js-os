@@ -1,0 +1,983 @@
+{
+  "rv32SHA256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+  "rows": [
+    {
+      "position": "opening",
+      "depth": 4,
+      "budget": 30000,
+      "nodes": 4438,
+      "completed": 4,
+      "originalIntervalInstructions": 167379205,
+      "profileIntervalInstructions": 167379205,
+      "typedInstructions": 167377246,
+      "functions": [
+        {
+          "name": "chessEvaluate",
+          "instructions": 18180520,
+          "calls": 3534
+        },
+        {
+          "name": "chessPieceMoves",
+          "instructions": 17198397,
+          "calls": 70194
+        },
+        {
+          "name": "chessOnBoard",
+          "instructions": 14340697,
+          "calls": 644664
+        },
+        {
+          "name": "chessPseudoMoves",
+          "instructions": 13579670,
+          "calls": 4439
+        },
+        {
+          "name": "chessAttacked",
+          "instructions": 12004284,
+          "calls": 16845
+        },
+        {
+          "name": "chessSquare",
+          "instructions": 10931868,
+          "calls": 607326
+        },
+        {
+          "name": "chessPawnMoves",
+          "instructions": 9041790,
+          "calls": 35246
+        },
+        {
+          "name": "chessRay",
+          "instructions": 8503682,
+          "calls": 343738
+        },
+        {
+          "name": "chessAdd",
+          "instructions": 5367522,
+          "calls": 101274
+        },
+        {
+          "name": "chessMake",
+          "instructions": 5246960,
+          "calls": 7969
+        },
+        {
+          "name": "chessKnight",
+          "instructions": 5025054,
+          "calls": 203042
+        },
+        {
+          "name": "chessIsPiece",
+          "instructions": 4412628,
+          "calls": 168260
+        },
+        {
+          "name": "chessCapture",
+          "instructions": 3936433,
+          "calls": 64207
+        },
+        {
+          "name": "chessValue",
+          "instructions": 3802706,
+          "calls": 162478
+        },
+        {
+          "name": "chessCenter",
+          "instructions": 3687264,
+          "calls": 118944
+        },
+        {
+          "name": "chessDense",
+          "instructions": 3645864,
+          "calls": 202548
+        },
+        {
+          "name": "chessUnmake",
+          "instructions": 3379996,
+          "calls": 7969
+        },
+        {
+          "name": "chessAbs",
+          "instructions": 3322905,
+          "calls": 237891
+        },
+        {
+          "name": "chessMove",
+          "instructions": 2936946,
+          "calls": 101274
+        },
+        {
+          "name": "chessOrder",
+          "instructions": 2423564,
+          "calls": 2771
+        },
+        {
+          "name": "chessSearchStep",
+          "instructions": 1858545,
+          "calls": 11643
+        },
+        {
+          "name": "chessTacticalMoves",
+          "instructions": 1659038,
+          "calls": 1867
+        },
+        {
+          "name": "chessPawnAdd",
+          "instructions": 1644250,
+          "calls": 32885
+        },
+        {
+          "name": "chessPrepareNode",
+          "instructions": 1217186,
+          "calls": 4438
+        },
+        {
+          "name": "chessTactical",
+          "instructions": 1159730,
+          "calls": 44605
+        },
+        {
+          "name": "chessTo",
+          "instructions": 1122030,
+          "calls": 80145
+        },
+        {
+          "name": "chessPromotion",
+          "instructions": 1082640,
+          "calls": 72176
+        },
+        {
+          "name": "chessCastle",
+          "instructions": 874629,
+          "calls": 4439
+        },
+        {
+          "name": "chessPriority",
+          "instructions": 828400,
+          "calls": 19606
+        },
+        {
+          "name": "chessSide",
+          "instructions": 799084,
+          "calls": 36322
+        },
+        {
+          "name": "chessPawnStep",
+          "instructions": 666960,
+          "calls": 55580
+        },
+        {
+          "name": "chessAcceptScore",
+          "instructions": 489013,
+          "calls": 4434
+        },
+        {
+          "name": "chessInitNode",
+          "instructions": 470428,
+          "calls": 4438
+        },
+        {
+          "name": "chessInCheck",
+          "instructions": 421838,
+          "calls": 12407
+        },
+        {
+          "name": "chessFrom",
+          "instructions": 338180,
+          "calls": 16909
+        },
+        {
+          "name": "chessCompleteNode",
+          "instructions": 332914,
+          "calls": 4438
+        },
+        {
+          "name": "chessRight",
+          "instructions": 311346,
+          "calls": 14826
+        },
+        {
+          "name": "chessFrame",
+          "instructions": 246228,
+          "calls": 20519
+        },
+        {
+          "name": "chessSearchSlice",
+          "instructions": 238447,
+          "calls": 243
+        },
+        {
+          "name": "chessFirstLegal",
+          "instructions": 162610,
+          "calls": 3535
+        },
+        {
+          "name": "chessUndo",
+          "instructions": 148836,
+          "calls": 12403
+        },
+        {
+          "name": "chessLegal",
+          "instructions": 137865,
+          "calls": 3535
+        },
+        {
+          "name": "chessList",
+          "instructions": 106488,
+          "calls": 8874
+        },
+        {
+          "name": "chessRookRight",
+          "instructions": 60598,
+          "calls": 1631
+        },
+        {
+          "name": "chessRemoveRight",
+          "instructions": 31071,
+          "calls": 1639
+        },
+        {
+          "name": "chessStartSearch",
+          "instructions": 142,
+          "calls": 1
+        }
+      ]
+    },
+    {
+      "position": "kiwipete",
+      "depth": 4,
+      "budget": 30000,
+      "nodes": 30000,
+      "completed": 3,
+      "originalIntervalInstructions": 1503799725,
+      "profileIntervalInstructions": 1503799725,
+      "typedInstructions": 1503783134,
+      "functions": [
+        {
+          "name": "chessPieceMoves",
+          "instructions": 155390933,
+          "calls": 426450
+        },
+        {
+          "name": "chessOnBoard",
+          "instructions": 141813305,
+          "calls": 6270011
+        },
+        {
+          "name": "chessAttacked",
+          "instructions": 138451066,
+          "calls": 193934
+        },
+        {
+          "name": "chessEvaluate",
+          "instructions": 129780244,
+          "calls": 26871
+        },
+        {
+          "name": "chessOrder",
+          "instructions": 103724302,
+          "calls": 7826
+        },
+        {
+          "name": "chessPseudoMoves",
+          "instructions": 90269653,
+          "calls": 30001
+        },
+        {
+          "name": "chessSquare",
+          "instructions": 79297524,
+          "calls": 4405418
+        },
+        {
+          "name": "chessAdd",
+          "instructions": 70657586,
+          "calls": 1333162
+        },
+        {
+          "name": "chessRay",
+          "instructions": 62933780,
+          "calls": 2552715
+        },
+        {
+          "name": "chessMake",
+          "instructions": 57565611,
+          "calls": 88100
+        },
+        {
+          "name": "chessPawnMoves",
+          "instructions": 49446779,
+          "calls": 210522
+        },
+        {
+          "name": "chessDense",
+          "instructions": 47993832,
+          "calls": 2666324
+        },
+        {
+          "name": "chessIsPiece",
+          "instructions": 44598236,
+          "calls": 1677753
+        },
+        {
+          "name": "chessKnight",
+          "instructions": 42172676,
+          "calls": 1705842
+        },
+        {
+          "name": "chessMove",
+          "instructions": 38661698,
+          "calls": 1333162
+        },
+        {
+          "name": "chessUnmake",
+          "instructions": 37424848,
+          "calls": 88100
+        },
+        {
+          "name": "chessValue",
+          "instructions": 27239244,
+          "calls": 1173354
+        },
+        {
+          "name": "chessCenter",
+          "instructions": 25061950,
+          "calls": 808450
+        },
+        {
+          "name": "chessAbs",
+          "instructions": 22516819,
+          "calls": 1616903
+        },
+        {
+          "name": "chessCapture",
+          "instructions": 20204704,
+          "calls": 359445
+        },
+        {
+          "name": "chessSearchStep",
+          "instructions": 16572922,
+          "calls": 99456
+        },
+        {
+          "name": "chessPriority",
+          "instructions": 9932442,
+          "calls": 186311
+        },
+        {
+          "name": "chessPawnAdd",
+          "instructions": 9613055,
+          "calls": 189961
+        },
+        {
+          "name": "chessCastle",
+          "instructions": 8028336,
+          "calls": 30001
+        },
+        {
+          "name": "chessSide",
+          "instructions": 7726356,
+          "calls": 351198
+        },
+        {
+          "name": "chessTo",
+          "instructions": 7499030,
+          "calls": 535645
+        },
+        {
+          "name": "chessTacticalMoves",
+          "instructions": 6907169,
+          "calls": 4264
+        },
+        {
+          "name": "chessPromotion",
+          "instructions": 6719955,
+          "calls": 447997
+        },
+        {
+          "name": "chessPrepareNode",
+          "instructions": 6311551,
+          "calls": 30001
+        },
+        {
+          "name": "chessPawnStep",
+          "instructions": 5084016,
+          "calls": 423668
+        },
+        {
+          "name": "chessFrom",
+          "instructions": 4599300,
+          "calls": 229965
+        },
+        {
+          "name": "chessTactical",
+          "instructions": 4509724,
+          "calls": 173590
+        },
+        {
+          "name": "chessInCheck",
+          "instructions": 4015400,
+          "calls": 118100
+        },
+        {
+          "name": "chessInitNode",
+          "instructions": 3180106,
+          "calls": 30001
+        },
+        {
+          "name": "chessAcceptScore",
+          "instructions": 2983304,
+          "calls": 30425
+        },
+        {
+          "name": "chessRight",
+          "instructions": 2375898,
+          "calls": 113138
+        },
+        {
+          "name": "chessCompleteNode",
+          "instructions": 2249697,
+          "calls": 29995
+        },
+        {
+          "name": "chessSearchSlice",
+          "instructions": 2036774,
+          "calls": 2072
+        },
+        {
+          "name": "chessFrame",
+          "instructions": 1913484,
+          "calls": 159457
+        },
+        {
+          "name": "chessUndo",
+          "instructions": 1416840,
+          "calls": 118070
+        },
+        {
+          "name": "chessFirstLegal",
+          "instructions": 1217220,
+          "calls": 26439
+        },
+        {
+          "name": "chessList",
+          "instructions": 1099632,
+          "calls": 91636
+        },
+        {
+          "name": "chessLegal",
+          "instructions": 1032174,
+          "calls": 26466
+        },
+        {
+          "name": "chessRookRight",
+          "instructions": 919683,
+          "calls": 25855
+        },
+        {
+          "name": "chessRemoveRight",
+          "instructions": 625410,
+          "calls": 33410
+        },
+        {
+          "name": "chessPromotedKind",
+          "instructions": 8450,
+          "calls": 845
+        },
+        {
+          "name": "chessStopSearch",
+          "instructions": 274,
+          "calls": 1
+        },
+        {
+          "name": "chessStartSearch",
+          "instructions": 142,
+          "calls": 1
+        }
+      ]
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 5,
+      "budget": 30000,
+      "nodes": 1729,
+      "completed": 5,
+      "originalIntervalInstructions": 38445538,
+      "profileIntervalInstructions": 38445538,
+      "typedInstructions": 38444795,
+      "functions": [
+        {
+          "name": "chessAttacked",
+          "instructions": 6154628,
+          "calls": 5149
+        },
+        {
+          "name": "chessOnBoard",
+          "instructions": 4806357,
+          "calls": 205308
+        },
+        {
+          "name": "chessPseudoMoves",
+          "instructions": 4541303,
+          "calls": 1730
+        },
+        {
+          "name": "chessSquare",
+          "instructions": 3848418,
+          "calls": 213801
+        },
+        {
+          "name": "chessEvaluate",
+          "instructions": 3408921,
+          "calls": 1303
+        },
+        {
+          "name": "chessMake",
+          "instructions": 2400998,
+          "calls": 3420
+        },
+        {
+          "name": "chessIsPiece",
+          "instructions": 1516468,
+          "calls": 49198
+        },
+        {
+          "name": "chessUnmake",
+          "instructions": 1497645,
+          "calls": 3420
+        },
+        {
+          "name": "chessPieceMoves",
+          "instructions": 1371365,
+          "calls": 2124
+        },
+        {
+          "name": "chessRay",
+          "instructions": 1297694,
+          "calls": 52491
+        },
+        {
+          "name": "chessKnight",
+          "instructions": 966042,
+          "calls": 39032
+        },
+        {
+          "name": "chessAdd",
+          "instructions": 735905,
+          "calls": 13885
+        },
+        {
+          "name": "chessSearchStep",
+          "instructions": 705572,
+          "calls": 4341
+        },
+        {
+          "name": "chessDense",
+          "instructions": 499860,
+          "calls": 27770
+        },
+        {
+          "name": "chessMove",
+          "instructions": 402665,
+          "calls": 13885
+        },
+        {
+          "name": "chessOrder",
+          "instructions": 399081,
+          "calls": 741
+        },
+        {
+          "name": "chessPrepareNode",
+          "instructions": 394138,
+          "calls": 1729
+        },
+        {
+          "name": "chessCapture",
+          "instructions": 367716,
+          "calls": 5959
+        },
+        {
+          "name": "chessSide",
+          "instructions": 330484,
+          "calls": 15022
+        },
+        {
+          "name": "chessCenter",
+          "instructions": 198493,
+          "calls": 6403
+        },
+        {
+          "name": "chessInitNode",
+          "instructions": 183274,
+          "calls": 1729
+        },
+        {
+          "name": "chessAcceptScore",
+          "instructions": 180600,
+          "calls": 1724
+        },
+        {
+          "name": "chessTo",
+          "instructions": 179186,
+          "calls": 12799
+        },
+        {
+          "name": "chessAbs",
+          "instructions": 175756,
+          "calls": 12810
+        },
+        {
+          "name": "chessInCheck",
+          "instructions": 175066,
+          "calls": 5149
+        },
+        {
+          "name": "chessPriority",
+          "instructions": 141865,
+          "calls": 3492
+        },
+        {
+          "name": "chessPromotion",
+          "instructions": 140685,
+          "calls": 9379
+        },
+        {
+          "name": "chessFrom",
+          "instructions": 137800,
+          "calls": 6890
+        },
+        {
+          "name": "chessRight",
+          "instructions": 133686,
+          "calls": 6366
+        },
+        {
+          "name": "chessCompleteNode",
+          "instructions": 129763,
+          "calls": 1729
+        },
+        {
+          "name": "chessValue",
+          "instructions": 118302,
+          "calls": 3897
+        },
+        {
+          "name": "chessRemoveRight",
+          "instructions": 107814,
+          "calls": 6342
+        },
+        {
+          "name": "chessTacticalMoves",
+          "instructions": 95649,
+          "calls": 315
+        },
+        {
+          "name": "chessFrame",
+          "instructions": 93588,
+          "calls": 7799
+        },
+        {
+          "name": "chessPawnMoves",
+          "instructions": 92738,
+          "calls": 394
+        },
+        {
+          "name": "chessSearchSlice",
+          "instructions": 88911,
+          "calls": 91
+        },
+        {
+          "name": "chessPawnStep",
+          "instructions": 69504,
+          "calls": 5792
+        },
+        {
+          "name": "chessFirstLegal",
+          "instructions": 69294,
+          "calls": 1304
+        },
+        {
+          "name": "chessTactical",
+          "instructions": 64272,
+          "calls": 2472
+        },
+        {
+          "name": "chessLegal",
+          "instructions": 60411,
+          "calls": 1549
+        },
+        {
+          "name": "chessUndo",
+          "instructions": 58788,
+          "calls": 4899
+        },
+        {
+          "name": "chessList",
+          "instructions": 43224,
+          "calls": 3602
+        },
+        {
+          "name": "chessCastle",
+          "instructions": 42024,
+          "calls": 1730
+        },
+        {
+          "name": "chessPawnAdd",
+          "instructions": 18700,
+          "calls": 374
+        },
+        {
+          "name": "chessStartSearch",
+          "instructions": 142,
+          "calls": 1
+        }
+      ]
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 4,
+      "budget": 1600,
+      "nodes": 1600,
+      "completed": 3,
+      "originalIntervalInstructions": 62911885,
+      "profileIntervalInstructions": 62911884,
+      "typedInstructions": 62911246,
+      "functions": [
+        {
+          "name": "chessEvaluate",
+          "instructions": 7471118,
+          "calls": 1452
+        },
+        {
+          "name": "chessPieceMoves",
+          "instructions": 6635430,
+          "calls": 25350
+        },
+        {
+          "name": "chessOnBoard",
+          "instructions": 5677134,
+          "calls": 253568
+        },
+        {
+          "name": "chessPseudoMoves",
+          "instructions": 4897538,
+          "calls": 1601
+        },
+        {
+          "name": "chessAttacked",
+          "instructions": 4774671,
+          "calls": 6254
+        },
+        {
+          "name": "chessSquare",
+          "instructions": 3994200,
+          "calls": 221900
+        },
+        {
+          "name": "chessPawnMoves",
+          "instructions": 3242333,
+          "calls": 12629
+        },
+        {
+          "name": "chessRay",
+          "instructions": 3124316,
+          "calls": 126262
+        },
+        {
+          "name": "chessAdd",
+          "instructions": 2421464,
+          "calls": 45688
+        },
+        {
+          "name": "chessMake",
+          "instructions": 2026050,
+          "calls": 3054
+        },
+        {
+          "name": "chessKnight",
+          "instructions": 1863740,
+          "calls": 75304
+        },
+        {
+          "name": "chessDense",
+          "instructions": 1644768,
+          "calls": 91376
+        },
+        {
+          "name": "chessIsPiece",
+          "instructions": 1639100,
+          "calls": 62532
+        },
+        {
+          "name": "chessValue",
+          "instructions": 1562768,
+          "calls": 66751
+        },
+        {
+          "name": "chessCenter",
+          "instructions": 1514846,
+          "calls": 48866
+        },
+        {
+          "name": "chessAbs",
+          "instructions": 1366403,
+          "calls": 97735
+        },
+        {
+          "name": "chessMove",
+          "instructions": 1324952,
+          "calls": 45688
+        },
+        {
+          "name": "chessUnmake",
+          "instructions": 1295211,
+          "calls": 3054
+        },
+        {
+          "name": "chessCapture",
+          "instructions": 852791,
+          "calls": 13977
+        },
+        {
+          "name": "chessPawnAdd",
+          "instructions": 625350,
+          "calls": 12507
+        },
+        {
+          "name": "chessSearchStep",
+          "instructions": 610804,
+          "calls": 3725
+        },
+        {
+          "name": "chessOrder",
+          "instructions": 534256,
+          "calls": 528
+        },
+        {
+          "name": "chessTacticalMoves",
+          "instructions": 375838,
+          "calls": 380
+        },
+        {
+          "name": "chessPrepareNode",
+          "instructions": 366549,
+          "calls": 1601
+        },
+        {
+          "name": "chessCastle",
+          "instructions": 319125,
+          "calls": 1601
+        },
+        {
+          "name": "chessSide",
+          "instructions": 303974,
+          "calls": 13817
+        },
+        {
+          "name": "chessTo",
+          "instructions": 281190,
+          "calls": 20085
+        },
+        {
+          "name": "chessTactical",
+          "instructions": 262340,
+          "calls": 10090
+        },
+        {
+          "name": "chessPromotion",
+          "instructions": 255465,
+          "calls": 17031
+        },
+        {
+          "name": "chessPawnStep",
+          "instructions": 252624,
+          "calls": 21052
+        },
+        {
+          "name": "chessInitNode",
+          "instructions": 169706,
+          "calls": 1601
+        },
+        {
+          "name": "chessPriority",
+          "instructions": 169532,
+          "calls": 3891
+        },
+        {
+          "name": "chessInCheck",
+          "instructions": 158236,
+          "calls": 4654
+        },
+        {
+          "name": "chessAcceptScore",
+          "instructions": 154750,
+          "calls": 1592
+        },
+        {
+          "name": "chessFrom",
+          "instructions": 128460,
+          "calls": 6423
+        },
+        {
+          "name": "chessCompleteNode",
+          "instructions": 119697,
+          "calls": 1595
+        },
+        {
+          "name": "chessRight",
+          "instructions": 105210,
+          "calls": 5010
+        },
+        {
+          "name": "chessFrame",
+          "instructions": 83112,
+          "calls": 6926
+        },
+        {
+          "name": "chessSearchSlice",
+          "instructions": 76292,
+          "calls": 78
+        },
+        {
+          "name": "chessFirstLegal",
+          "instructions": 66838,
+          "calls": 1453
+        },
+        {
+          "name": "chessLegal",
+          "instructions": 56667,
+          "calls": 1453
+        },
+        {
+          "name": "chessUndo",
+          "instructions": 55812,
+          "calls": 4651
+        },
+        {
+          "name": "chessList",
+          "instructions": 38436,
+          "calls": 3203
+        },
+        {
+          "name": "chessRookRight",
+          "instructions": 7410,
+          "calls": 200
+        },
+        {
+          "name": "chessRemoveRight",
+          "instructions": 4324,
+          "calls": 228
+        },
+        {
+          "name": "chessStopSearch",
+          "instructions": 274,
+          "calls": 1
+        },
+        {
+          "name": "chessStartSearch",
+          "instructions": 142,
+          "calls": 1
+        }
+      ]
+    }
+  ]
+}
