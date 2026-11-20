@@ -1,0 +1,52 @@
+{
+  "candidate": "staged-224",
+  "firmware_sha256": "3038ea64db1620ccb470b31ccf6e33af1c293325898bb3db6f7978682502bbd7",
+  "boots": [
+    {
+      "elapsed_us": 2908296,
+      "peak_js_bytes": 1439808,
+      "module_bytes": 240452,
+      "compiled_sha256": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439",
+      "world_kib": 710.1,
+      "world_limit_kib": 768,
+      "engine": "native"
+    },
+    {
+      "elapsed_us": 2908777,
+      "peak_js_bytes": 1439808,
+      "module_bytes": 240452,
+      "compiled_sha256": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439",
+      "world_kib": 710.1,
+      "world_limit_kib": 768,
+      "engine": "native"
+    },
+    {
+      "elapsed_us": 2907738,
+      "peak_js_bytes": 1439808,
+      "module_bytes": 240452,
+      "compiled_sha256": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439",
+      "world_kib": 710.1,
+      "world_limit_kib": 768,
+      "engine": "native"
+    }
+  ],
+  "restored": true,
+  "control_before": {
+    "elapsed_us": 3138580,
+    "peak_js_bytes": 2454960,
+    "module_bytes": 240452,
+    "compiled_sha256": null,
+    "world_kib": 710.1,
+    "world_limit_kib": 768,
+    "engine": "native"
+  },
+  "control_after": {
+    "elapsed_us": 3137535,
+    "peak_js_bytes": 2454960,
+    "module_bytes": 240452,
+    "compiled_sha256": null,
+    "world_kib": 710.1,
+    "world_limit_kib": 768,
+    "engine": "native"
+  }
+}

@@ -330,3 +330,54 @@ Follow `scripts/10-small-slot-board.py`, `scripts/12-stage-select-editor.py`, an
 ### Technical details
 
 The identity of the normal 80 KiB-slot ELF starts `81718435`. Its firmware starts `0a0da581`. The matched 224 KiB-slot firmware starts `3038ea64`. Select’s normal firmware starts `348e1c87` and its expected Editor ELF starts `06a85ff6`. The original factory partition starts `6b0e3ba4`. The restored physical board and private backup remain distinct from the frozen experimental control.
+
+## Step 7: Establish a matched world-memory result and repair edit-to-run validation
+
+All six normal staged Editor boots returned the expected executable and world status. A first on-device incremental test then exposed a missing runtime dependency in the experimental harness. Its seed compile passed the byte-for-byte comparison. The guest invocation did not run in that attempt.
+
+### Prompt Context
+
+The lab brief proposes “a separate edit-to-run metric so a fast cache hit can’t hide a slow cold build.” **Assistant interpretation:** Execute the actual edited function, preserve the clock around the stable endpoints, and keep an ordinary clean comparison. **Inferred user intent:** Know what a developer would wait for after a real source change and what a resident session costs.
+
+### What I did
+
+- Compared the two matched staged normal firmware images. The three standard boots used 710.1 KiB each. The three smaller-slot boots used 566.1 KiB each. Each boot's reported module length and SHA-256 matched its independently linked module.
+- Sent the matched numbers and receipts to the native author and the examiner. Verified the native and bounded researchers' individual vault commits. Linked the four studies and independent examination in the supervisor ticket.
+- The incremental researcher changed the first guest placement design before its image ever ran. It used the application's normal ESP ELF loader with executable PSRAM. In the resulting first hardware attempt the compiler produced the correct Files seed ELF, but relocation reported an unresolved `strcpy`. The qualifier rejected the run and restored the original.
+- Identified the production native loader's lazy registration at `optional/native_elf/native_elf_p4.c`. The test invokes the compiler early in boot, before the first normal world registers the shared resolver. The repair sets up that same resolver in the isolated benchmark image. A separate control for the editing-session study uses a continuous outer clock and delays hashing and serial output until after the edited guest returns.
+
+### Why
+
+The matched reservation experiment isolates a change with a real effect for the rest of the OS. The physical guest should enter real machine code through a properly relocated image. Adding isolated phase times across receipt hashing and UART traffic can characterize component cost, but a continuously observed edit-to-native-return boundary gives the requested developer metric.
+
+### What worked
+
+The compiler heap of the matched 224 KiB-slot image was 1,439,808 bytes, versus 1,284,204 for the 80 KiB image. The relative reduction was 10.81%. The measured world reduction was 144 KiB, 20.28% of the baseline. The original factory image fully booted its original three native worlds after both tests. Individual papers were published at vault revisions `0f27aa9`, `16a68eb`, and `cd90683`.
+
+### What didn't work
+
+The first physically attempted incremental firmware identified its correct seed ELF (`1f7ce7fa…`) and then reported `Can't find common strcpy`, `REBUILDERROR guest ELF load -88` and `REBUILDFAIL`. Zero trial boots qualified. No result from that image enters the performance table. The necessary repair was loader initialization rather than any change to the generated program.
+
+### What I learned
+
+An application's import list in the typed fragment can be empty while its enclosing ELF reactor still has libc imports. Compiling the source and loading that reactor exercise two different interfaces. The date and size comparisons are also independent of the historical image used to restore the device.
+
+### What was tricky to build
+
+The compiler runs before the ordinary world loader would initialize its resolver. Many application tests run after complete startup and would miss this dependency. Timing code also needs to avoid retaining a clean comparison artifact while it samples a candidate's memory use. The supplemental endpoint uses independently prepared realms and takes its result hash after native execution.
+
+### What warrants a second pair of eyes
+
+Check that the accepted incremental firmware uses the production symbol resolver and the production ELF relocation mechanism. Check that the timed guest returns the changed observable result for `_Ab`, distinguishes a true edit from a whole-source hit, and excludes output, diagnostics and the oracle. Report compilation, loading, and whole endpoint boundaries separately.
+
+### What should be done in the future
+
+Complete both corrected on-device edit comparisons, archive the negative run and verified restoration, and finalize the publications and index.
+
+### Code review instructions
+
+See the committed matched results in `various/staged-standard-world.json`, `various/slot80-physical.json` and `various/select-world.json`. Run `python3 -B scripts/19-audit-wave.py --include-live`. Follow the incremental ticket's preregistered cases and compare its normal native loader call with the source in `picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c`.
+
+### Technical details
+
+The superseded internal-executable-allocation image began `4ec49cf9` and was never flashed. The first physical incremental image began `72769ef4`; its resolver failure followed a 24,424-byte seed. The small/standard staged median normal compile times were 2,889.555 and 2,908.296 ms in sequential groups. For the native lowerer's head-to-head compiler cost, use the rotated same-firmware rows instead.
