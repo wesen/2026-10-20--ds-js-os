@@ -1,0 +1,83 @@
+{
+  "previous": "5e62fa498c37bf5480f2f6c1cf338fc918166916",
+  "tip": "777dcfa4ae32f0b037608a67edf574cb641c2ee6",
+  "reports": [
+    {
+      "title": "How PicoCalc Editor resumes a compiled file read",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - How Editor Resumes a Compiled File Read.md",
+      "commit": "49ab18ebf9fd15474649bd3dddc80e1425ca31d3",
+      "sha256": "9dbdc4f9d13dc475bdf78e8e196eca5533c069f1b604d1b99f7c83f2a384413e",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/49ab18ebf9fd15474649bd3dddc80e1425ca31d3/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20How%20Editor%20Resumes%20a%20Compiled%20File%20Read.md"
+    },
+    {
+      "title": "Preserving checked text reads through native lowering",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - Preserving Checked Text Reads Through Native Lowering.md",
+      "commit": "b8a73faf417a7749514292947dd1f75bd749576c",
+      "sha256": "423b2eeb321b88e2d1cd01905dbfcecf09171a856e7c159fc8c78fd96de11b37",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/b8a73faf417a7749514292947dd1f75bd749576c/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Preserving%20Checked%20Text%20Reads%20Through%20Native%20Lowering.md"
+    },
+    {
+      "title": "The cost of ranking compiler work on the physical PicoCalc",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - The Physical Cost of Ranking Compiler Work.md",
+      "commit": "0e79c9304bae3c2c86f34ab0e30c92e9a9d2815c",
+      "sha256": "50899efb02138b27329afffafc2f2b5833ed26d1beb9f5ae1bf04b5a081fa349",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/0e79c9304bae3c2c86f34ab0e30c92e9a9d2815c/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20The%20Physical%20Cost%20of%20Ranking%20Compiler%20Work.md"
+    },
+    {
+      "title": "Two guards can prove a text read safe",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - Two Guards Can Prove a Text Read Safe.md",
+      "commit": "31a17a798bc08af9f3a2a0378c561fab6b0a9cbe",
+      "sha256": "2f1261cacce6153ddf76aed21021e3c3beba34dd2d03adaf7b42433a6e4e5930",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/31a17a798bc08af9f3a2a0378c561fab6b0a9cbe/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Two%20Guards%20Can%20Prove%20a%20Text%20Read%20Safe.md"
+    },
+    {
+      "title": "What made tokenization faster on the handheld",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - What Made Tokenization Faster on the Handheld.md",
+      "commit": "90d7417ca05104400ee749cfb80a687bca14f0ab",
+      "sha256": "f1f9484f18fa4eaaeeaf6c58117a52ecd91546f450e9b078c6f8046bec376d76",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/90d7417ca05104400ee749cfb80a687bca14f0ab/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20What%20Made%20Tokenization%20Faster%20on%20the%20Handheld.md"
+    },
+    {
+      "title": "What register homes save in a PicoCalc function",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - What Register Homes Save.md",
+      "commit": "713ee66051eb3ca89d89de4ad63eb068be4b2cef",
+      "sha256": "60af75fd675360121422bff321699048f60b0ef64ce5f1d185d403ec47b67ef2",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/713ee66051eb3ca89d89de4ad63eb068be4b2cef/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20What%20Register%20Homes%20Save.md"
+    },
+    {
+      "title": "When a Boolean becomes a branch on the PicoCalc",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - When a Boolean Becomes a Branch.md",
+      "commit": "e536819c57702b434c1db208bdc0dce4fa6d0bc3",
+      "sha256": "866e0c880758c66e1de6d023a2af423c98ac2be1fe7dd681cecd35c91dc2a6b4",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/e536819c57702b434c1db208bdc0dce4fa6d0bc3/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20When%20a%20Boolean%20Becomes%20a%20Branch.md"
+    },
+    {
+      "title": "Which functions deserve limited compiler analysis?",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - Which Functions Deserve Limited Analysis.md",
+      "commit": "450e9267c5ff7c7e99d3eae96d7048c9888fe411",
+      "sha256": "878b8a18b1fbdf01ad054338bdeda53ab2f5c0901a00743691e4a33c575657e1",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/450e9267c5ff7c7e99d3eae96d7048c9888fe411/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Which%20Functions%20Deserve%20Limited%20Analysis.md"
+    },
+    {
+      "title": "What it costs to rebuild the typed Editor after a real edit",
+      "path": "Projects/2026/11/19/PROJECT REPORT - PicoCalc Compiler - What It Costs to Rebuild the Typed Editor After a Real Edit.md",
+      "commit": "a2fe6cd9e914be7216b640fd9b83f42359ae96cc",
+      "sha256": "fe48e867cbf47d02231300521d7ea30b0e9f8eb87d6dce6eaf455651c8e42a8a",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/a2fe6cd9e914be7216b640fd9b83f42359ae96cc/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20What%20It%20Costs%20to%20Rebuild%20the%20Typed%20Editor%20After%20a%20Real%20Edit.md"
+    },
+    {
+      "title": "What a compiler can afford on the PicoCalc",
+      "path": "Projects/2026/11/19/PROJECT REPORT - PicoCalc Compiler - What a Compiler Can Afford on the PicoCalc.md",
+      "commit": "57ea1bcad00326137e3a10a28f56aa7607d1cca4",
+      "sha256": "25e5498b9fc256c3a549ef488785a435c6690a1af9b0e8498ee48558f7f10407",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/57ea1bcad00326137e3a10a28f56aa7607d1cca4/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20What%20a%20Compiler%20Can%20Afford%20on%20the%20PicoCalc.md"
+    },
+    {
+      "title": "What a compiler experiment on one handheld can establish",
+      "path": "Projects/2026/11/19/PROJECT REPORT - PicoCalc Compiler - What a Compiler Experiment on One Handheld Can Establish.md",
+      "commit": "147f625caee4dfb493eb48f694f07f66cdf185c6",
+      "sha256": "671426fbe88e59c58839fd2671d06f7b6611f7a8368c48b2165decb8b702e657",
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/147f625caee4dfb493eb48f694f07f66cdf185c6/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20What%20a%20Compiler%20Experiment%20on%20One%20Handheld%20Can%20Establish.md"
+    }
+  ]
+}

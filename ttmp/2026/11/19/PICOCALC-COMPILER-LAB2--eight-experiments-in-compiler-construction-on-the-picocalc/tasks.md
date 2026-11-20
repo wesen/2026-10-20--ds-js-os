@@ -7,7 +7,7 @@
 - [x] 4. Bound incremental Editor fragments and measure edit to native return
 - [x] 5. Compare two register-local policies using A6
 - [x] 6. Test two-hop text bounds with dynamic counts
-- [ ] 7. Freeze and evaluate analysis selection on held-out programs
+- [x] 7. Freeze and evaluate analysis selection on held-out programs
 - [x] 8. Execute a generated Editor Open continuation on P4
-- [ ] Qualify the combined compiler on the P4, restore firmware and verify apps
-- [ ] Publish all study reports and the newcomer synthesis
+- [x] Qualify the combined compiler on the P4, restore firmware and verify apps
+- [x] Publish all study reports and the newcomer synthesis

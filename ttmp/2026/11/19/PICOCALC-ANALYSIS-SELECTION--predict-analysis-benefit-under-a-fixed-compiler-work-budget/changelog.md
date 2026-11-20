@@ -23,3 +23,5 @@ Preregister the separate physical follow-up and build the three-arm ESP32-P4 fix
 ## 2026-11-19
 
 Verify 144 physical selector compiles and restoration and publish the separate matched phase comparison.
+
+The user authorized publication of the separate physical report and its figure. The vault remote includes both at `777dcfa4ae32f0b037608a67edf574cb641c2ee6`.

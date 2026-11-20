@@ -3,5 +3,14 @@
   "commit": "450e9267c5ff7c7e99d3eae96d7048c9888fe411",
   "article": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - Which Functions Deserve Limited Analysis.md",
   "figure": "Projects/2026/11/19/_assets/picocalc-analysis-selection.png",
-  "verifiedRemoteRef": "refs/heads/main"
+  "verifiedRemoteRef": "refs/heads/main",
+  "supplement": {
+    "title": "The cost of ranking compiler work on the physical PicoCalc",
+    "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - The Physical Cost of Ranking Compiler Work.md",
+    "commit": "0e79c9304bae3c2c86f34ab0e30c92e9a9d2815c",
+    "sha256": "50899efb02138b27329afffafc2f2b5833ed26d1beb9f5ae1bf04b5a081fa349",
+    "url": "https://github.com/go-go-golems/go-go-parc/blob/0e79c9304bae3c2c86f34ab0e30c92e9a9d2815c/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20The%20Physical%20Cost%20of%20Ranking%20Compiler%20Work.md",
+    "figure": "Projects/2026/11/19/_assets/picocalc-selector-physical.png",
+    "verifiedRemoteMain": "777dcfa4ae32f0b037608a67edf574cb641c2ee6"
+  }
 }

@@ -48,9 +48,9 @@ for app,name in zip(apps,names):
         extra=r["us"]["change"]
         saved=-r["cycles"]["change"]
         if saved>0 and extra>0:
-            values.append(f"{extra*hz.pop()/1_000_000/saved:,.0f}")
+            values.append(f"{extra*hz.pop()/1_000_000/saved:,.0f} calls")
         elif saved>0:
             values.append("already ahead on cold time")
         else:
             values.append("no positive savings in this kernel")
-    print(f"- {name} gives {values[0]} / {values[1]} calls or outcomes across the two boots.")
+    print(f"- {name} — boot one, {values[0]}. Boot two, {values[1]}.")

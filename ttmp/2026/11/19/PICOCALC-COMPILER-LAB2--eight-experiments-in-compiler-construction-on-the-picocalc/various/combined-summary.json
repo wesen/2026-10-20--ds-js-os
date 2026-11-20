@@ -1,0 +1,1832 @@
+[
+  {
+    "boot": 1,
+    "app": "files",
+    "baseline": "base",
+    "candidate": "staged",
+    "us": {
+      "n": 8,
+      "baseline": 237601.0,
+      "candidate": 277576.5,
+      "change": 39758.5,
+      "pct": 16.751332235103614,
+      "range": [
+        39215,
+        42155
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 362622.0,
+      "candidate": 392716.0,
+      "change": 30090.0,
+      "pct": 8.297759679484848,
+      "range": [
+        30084,
+        30112
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 804.0,
+      "candidate": 593.0,
+      "change": -211.0,
+      "pct": -26.243781094527364,
+      "range": [
+        -211,
+        -211
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 6525.6328125,
+      "candidate": 4880.76953125,
+      "change": -1645.0234375,
+      "pct": -25.20714806605597,
+      "range": [
+        -1664.625,
+        -1643.984375
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "files",
+    "baseline": "base",
+    "candidate": "native",
+    "us": {
+      "n": 8,
+      "baseline": 237601.0,
+      "candidate": 317777.5,
+      "change": 80008.0,
+      "pct": 33.667552771414044,
+      "range": [
+        78579,
+        83659
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 362622.0,
+      "candidate": 433836.0,
+      "change": 71214.0,
+      "pct": 19.63852364614688,
+      "range": [
+        71204,
+        71236
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 804.0,
+      "candidate": 380.0,
+      "change": -424.0,
+      "pct": -52.7363184079602,
+      "range": [
+        -424,
+        -424
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 6525.6328125,
+      "candidate": 1852.48828125,
+      "change": -4682.7578125,
+      "pct": -71.65128003074103,
+      "range": [
+        -4683.921875,
+        -4672.59375
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "files",
+    "baseline": "base",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 237601.0,
+      "candidate": 313043.5,
+      "change": 75902.0,
+      "pct": 31.93104562141197,
+      "range": [
+        73163,
+        76545
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 362622.0,
+      "candidate": 443244.0,
+      "change": 80622.0,
+      "pct": 22.232823904927685,
+      "range": [
+        80600,
+        80644
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 804.0,
+      "candidate": 380.0,
+      "change": -424.0,
+      "pct": -52.7363184079602,
+      "range": [
+        -424,
+        -424
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 6525.6328125,
+      "candidate": 1852.3984375,
+      "change": -4673.34765625,
+      "pct": -71.61379534795952,
+      "range": [
+        -4693.3125,
+        -4672.484375
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "files",
+    "baseline": "staged",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 277576.5,
+      "candidate": 313043.5,
+      "change": 35461.5,
+      "pct": 12.795084658604054,
+      "range": [
+        32465,
+        37330
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 392716.0,
+      "candidate": 443244.0,
+      "change": 50532.0,
+      "pct": 12.867182726940895,
+      "range": [
+        50508,
+        50540
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 593.0,
+      "candidate": 380.0,
+      "change": -213.0,
+      "pct": -35.919055649241145,
+      "range": [
+        -213,
+        -213
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 4880.76953125,
+      "candidate": 1852.3984375,
+      "change": -3028.4296875,
+      "pct": -62.04665336194117,
+      "range": [
+        -3038.1875,
+        -3018.578125
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "files",
+    "baseline": "native",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 317777.5,
+      "candidate": 313043.5,
+      "change": -5018.0,
+      "pct": -1.5738963768451963,
+      "range": [
+        -7114,
+        -2526
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 433836.0,
+      "candidate": 443244.0,
+      "change": 9406.0,
+      "pct": 2.168100397403328,
+      "range": [
+        9392,
+        9424
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 380.0,
+      "candidate": 380.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 1852.48828125,
+      "candidate": 1852.3984375,
+      "change": -0.13671875,
+      "pct": -0.0073802321150890915,
+      "range": [
+        -10.390625,
+        10.46875
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "agenda",
+    "baseline": "base",
+    "candidate": "staged",
+    "us": {
+      "n": 8,
+      "baseline": 663385.5,
+      "candidate": 785045.5,
+      "change": 118142.0,
+      "pct": 17.75457337629652,
+      "range": [
+        107761,
+        135859
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 578946.0,
+      "candidate": 604822.0,
+      "change": 25878.0,
+      "pct": 4.469846927589053,
+      "range": [
+        25856,
+        25904
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 4058.0,
+      "candidate": 2793.0,
+      "change": -1265.0,
+      "pct": -31.172991621488418,
+      "range": [
+        -1265,
+        -1265
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 725.01953125,
+      "candidate": 537.19140625,
+      "change": -187.953125,
+      "pct": -25.921616165270656,
+      "range": [
+        -198.109375,
+        -176.4921875
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "agenda",
+    "baseline": "base",
+    "candidate": "native",
+    "us": {
+      "n": 8,
+      "baseline": 663385.5,
+      "candidate": 867712.5,
+      "change": 202952.5,
+      "pct": 30.593498957174077,
+      "range": [
+        187957,
+        213802
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 578946.0,
+      "candidate": 580858.0,
+      "change": 1912.0,
+      "pct": 0.33025532606198466,
+      "range": [
+        1884,
+        1936
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 4058.0,
+      "candidate": 2044.0,
+      "change": -2014.0,
+      "pct": -49.63035978314441,
+      "range": [
+        -2014,
+        -2014
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 725.01953125,
+      "candidate": 413.81640625,
+      "change": -311.03125,
+      "pct": -42.909876276429586,
+      "range": [
+        -323.03125,
+        -300.0078125
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "agenda",
+    "baseline": "base",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 663385.5,
+      "candidate": 801251.5,
+      "change": 138019.5,
+      "pct": 20.81356465128411,
+      "range": [
+        130448,
+        140991
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 578946.0,
+      "candidate": 594318.0,
+      "change": 15370.0,
+      "pct": 2.654842800676507,
+      "range": [
+        15360,
+        15396
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 4058.0,
+      "candidate": 2044.0,
+      "change": -2014.0,
+      "pct": -49.63035978314441,
+      "range": [
+        -2014,
+        -2014
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 725.01953125,
+      "candidate": 416.15625,
+      "change": -308.515625,
+      "pct": -42.57028216693169,
+      "range": [
+        -323.6796875,
+        -297.796875
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "agenda",
+    "baseline": "staged",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 785045.5,
+      "candidate": 801251.5,
+      "change": 19574.0,
+      "pct": 2.51015722271673,
+      "range": [
+        5132,
+        25962
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 604822.0,
+      "candidate": 594318.0,
+      "change": -10502.0,
+      "pct": -1.7363901175548437,
+      "range": [
+        -10536,
+        -10488
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 2793.0,
+      "candidate": 2044.0,
+      "change": -749.0,
+      "pct": -26.817042606516292,
+      "range": [
+        -749,
+        -749
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 537.19140625,
+      "candidate": 416.15625,
+      "change": -121.55859375,
+      "pct": -22.628346595257785,
+      "range": [
+        -132.9609375,
+        -109.8359375
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "agenda",
+    "baseline": "native",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 867712.5,
+      "candidate": 801251.5,
+      "change": -64478.0,
+      "pct": -7.447518170371877,
+      "range": [
+        -78477,
+        -51173
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 580858.0,
+      "candidate": 594318.0,
+      "change": 13460.0,
+      "pct": 2.317237760898042,
+      "range": [
+        13432,
+        13480
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 2044.0,
+      "candidate": 2044.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 413.81640625,
+      "candidate": 416.15625,
+      "change": 2.08203125,
+      "pct": 0.5024255905001497,
+      "range": [
+        -11.5703125,
+        14.484375
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "editor",
+    "baseline": "base",
+    "candidate": "staged",
+    "us": {
+      "n": 8,
+      "baseline": 2471172.0,
+      "candidate": 2942233.0,
+      "change": 475669.0,
+      "pct": 19.191163067389844,
+      "range": [
+        443664,
+        508220
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1410858.0,
+      "candidate": 1439806.0,
+      "change": 28948.0,
+      "pct": 2.051789469555179,
+      "range": [
+        28404,
+        29100
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 21886.0,
+      "candidate": 16541.0,
+      "change": -5345.0,
+      "pct": -24.422004934661427,
+      "range": [
+        -5345,
+        -5345
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 16077.2421875,
+      "candidate": 11238.43359375,
+      "change": -4833.24609375,
+      "pct": -30.061665048879597,
+      "range": [
+        -4862.6015625,
+        -4683.515625
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "editor",
+    "baseline": "base",
+    "candidate": "native",
+    "us": {
+      "n": 8,
+      "baseline": 2471172.0,
+      "candidate": 3283209.0,
+      "change": 797091.5,
+      "pct": 32.10786394873716,
+      "range": [
+        779641,
+        882091
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1410858.0,
+      "candidate": 1241848.0,
+      "change": -169014.0,
+      "pct": -11.979450918411196,
+      "range": [
+        -169548,
+        -168840
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 21886.0,
+      "candidate": 12444.0,
+      "change": -9442.0,
+      "pct": -43.14173444210911,
+      "range": [
+        -9442,
+        -9442
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 16077.2421875,
+      "candidate": 5541.8828125,
+      "change": -10537.25390625,
+      "pct": -65.53740993140218,
+      "range": [
+        -10570.5234375,
+        -10516.453125
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "editor",
+    "baseline": "base",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 2471172.0,
+      "candidate": 2995088.5,
+      "change": 522932.0,
+      "pct": 21.21184584852086,
+      "range": [
+        504701,
+        550857
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1410858.0,
+      "candidate": 1251258.0,
+      "change": -159598.0,
+      "pct": -11.312123544099778,
+      "range": [
+        -160152,
+        -159444
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 21886.0,
+      "candidate": 12444.0,
+      "change": -9442.0,
+      "pct": -43.14173444210911,
+      "range": [
+        -9442,
+        -9442
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 16077.2421875,
+      "candidate": 5542.4140625,
+      "change": -10534.83984375,
+      "pct": -65.53191544056278,
+      "range": [
+        -10568.5859375,
+        -10513.9375
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "editor",
+    "baseline": "staged",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 2942233.0,
+      "candidate": 2995088.5,
+      "change": 45990.5,
+      "pct": 1.5631222641779263,
+      "range": [
+        33780,
+        97633
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1439806.0,
+      "candidate": 1251258.0,
+      "change": -188546.0,
+      "pct": -13.095254631595614,
+      "range": [
+        -189096,
+        -187996
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 16541.0,
+      "candidate": 12444.0,
+      "change": -4097.0,
+      "pct": -24.76875642343268,
+      "range": [
+        -4097,
+        -4097
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 11238.43359375,
+      "candidate": 5542.4140625,
+      "change": -5696.7265625,
+      "pct": -50.68614486503717,
+      "range": [
+        -5885.0703125,
+        -5679.8359375
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "app": "editor",
+    "baseline": "native",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 3283209.0,
+      "candidate": 2995088.5,
+      "change": -283142.0,
+      "pct": -8.654695703959849,
+      "range": [
+        -355589,
+        -237013
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1241848.0,
+      "candidate": 1251258.0,
+      "change": 9404.0,
+      "pct": 0.75725609919552,
+      "range": [
+        8872,
+        9956
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 12444.0,
+      "candidate": 12444.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 5541.8828125,
+      "candidate": 5542.4140625,
+      "change": 0.39453125,
+      "pct": 0.007118539962360757,
+      "range": [
+        -3.703125,
+        4.890625
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "files",
+    "baseline": "base",
+    "candidate": "staged",
+    "us": {
+      "n": 8,
+      "baseline": 236354.5,
+      "candidate": 275872.5,
+      "change": 40134.0,
+      "pct": 16.981552220947336,
+      "range": [
+        37128,
+        44128
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 362620.0,
+      "candidate": 392718.0,
+      "change": 30096.0,
+      "pct": 8.299505824214613,
+      "range": [
+        30092,
+        30108
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 804.0,
+      "candidate": 593.0,
+      "change": -211.0,
+      "pct": -26.243781094527364,
+      "range": [
+        -211,
+        -211
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 6525.31640625,
+      "candidate": 4880.7265625,
+      "change": -1644.859375,
+      "pct": -25.207305157675673,
+      "range": [
+        -1664.109375,
+        -1643.3671875
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "files",
+    "baseline": "base",
+    "candidate": "native",
+    "us": {
+      "n": 8,
+      "baseline": 236354.5,
+      "candidate": 315893.0,
+      "change": 79533.0,
+      "pct": 33.79494626932329,
+      "range": [
+        77635,
+        81406
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 362620.0,
+      "candidate": 433840.0,
+      "change": 71216.0,
+      "pct": 19.63907518531592,
+      "range": [
+        71204,
+        71236
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 804.0,
+      "candidate": 380.0,
+      "change": -424.0,
+      "pct": -52.7363184079602,
+      "range": [
+        -424,
+        -424
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 6525.31640625,
+      "candidate": 1852.3984375,
+      "change": -4682.234375,
+      "pct": -71.65028811779368,
+      "range": [
+        -4683.125,
+        -4672.203125
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "files",
+    "baseline": "base",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 236354.5,
+      "candidate": 311298.0,
+      "change": 74323.0,
+      "pct": 31.40821087367943,
+      "range": [
+        73123,
+        77273
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 362620.0,
+      "candidate": 443246.0,
+      "change": 80624.0,
+      "pct": 22.233865947656582,
+      "range": [
+        80612,
+        80636
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 804.0,
+      "candidate": 380.0,
+      "change": -424.0,
+      "pct": -52.7363184079602,
+      "range": [
+        -424,
+        -424
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 6525.31640625,
+      "candidate": 1852.3125,
+      "change": -4672.95703125,
+      "pct": -71.61392204389503,
+      "range": [
+        -4692.96875,
+        -4672.5
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "files",
+    "baseline": "staged",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 275872.5,
+      "candidate": 311298.0,
+      "change": 35916.5,
+      "pct": 13.04246388135934,
+      "range": [
+        29861,
+        36715
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 392718.0,
+      "candidate": 443246.0,
+      "change": 50524.0,
+      "pct": 12.865211164484318,
+      "range": [
+        50516,
+        50544
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 593.0,
+      "candidate": 380.0,
+      "change": -213.0,
+      "pct": -35.919055649241145,
+      "range": [
+        -213,
+        -213
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 4880.7265625,
+      "candidate": 1852.3125,
+      "change": -3028.44140625,
+      "pct": -62.04722999526753,
+      "range": [
+        -3039.140625,
+        -3018.1953125
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "files",
+    "baseline": "native",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 315893.0,
+      "candidate": 311298.0,
+      "change": -4595.0,
+      "pct": -1.4545980523637105,
+      "range": [
+        -7265,
+        -2407
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 433840.0,
+      "candidate": 443246.0,
+      "change": 9408.0,
+      "pct": 2.1685713894714347,
+      "range": [
+        9388,
+        9420
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 380.0,
+      "candidate": 380.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 24424.0,
+      "candidate": 24424.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 1852.3984375,
+      "candidate": 1852.3125,
+      "change": 0.03515625,
+      "pct": 0.0018978426447059226,
+      "range": [
+        -10.34375,
+        10.2265625
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "agenda",
+    "baseline": "base",
+    "candidate": "staged",
+    "us": {
+      "n": 8,
+      "baseline": 664949.5,
+      "candidate": 781290.5,
+      "change": 118914.0,
+      "pct": 17.931813880485517,
+      "range": [
+        102549,
+        130212
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 578948.0,
+      "candidate": 604828.0,
+      "change": 25884.0,
+      "pct": 4.470914192481294,
+      "range": [
+        25876,
+        25908
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 4058.0,
+      "candidate": 2793.0,
+      "change": -1265.0,
+      "pct": -31.172991621488418,
+      "range": [
+        -1265,
+        -1265
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 725.109375,
+      "candidate": 538.44921875,
+      "change": -186.73828125,
+      "pct": -25.75506116705114,
+      "range": [
+        -197.375,
+        -174.625
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "agenda",
+    "baseline": "base",
+    "candidate": "native",
+    "us": {
+      "n": 8,
+      "baseline": 664949.5,
+      "candidate": 863982.0,
+      "change": 197464.5,
+      "pct": 29.719320623996317,
+      "range": [
+        182477,
+        211781
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 578948.0,
+      "candidate": 580860.0,
+      "change": 1912.0,
+      "pct": 0.3302541851772525,
+      "range": [
+        1896,
+        1928
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 4058.0,
+      "candidate": 2044.0,
+      "change": -2014.0,
+      "pct": -49.63035978314441,
+      "range": [
+        -2014,
+        -2014
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 725.109375,
+      "candidate": 414.51171875,
+      "change": -311.83203125,
+      "pct": -43.00482736797545,
+      "range": [
+        -321.90625,
+        -307.9375
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "agenda",
+    "baseline": "base",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 664949.5,
+      "candidate": 799922.0,
+      "change": 132885.5,
+      "pct": 20.0461885048878,
+      "range": [
+        124522,
+        141796
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 578948.0,
+      "candidate": 594332.0,
+      "change": 15386.0,
+      "pct": 2.6575697395444635,
+      "range": [
+        15376,
+        15412
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 4058.0,
+      "candidate": 2044.0,
+      "change": -2014.0,
+      "pct": -49.63035978314441,
+      "range": [
+        -2014,
+        -2014
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 725.109375,
+      "candidate": 417.171875,
+      "change": -308.6484375,
+      "pct": -42.57765260357559,
+      "range": [
+        -323.1171875,
+        -296.71875
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "agenda",
+    "baseline": "staged",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 781290.5,
+      "candidate": 799922.0,
+      "change": 17792.0,
+      "pct": 2.2778759166686027,
+      "range": [
+        6860,
+        21973
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 604828.0,
+      "candidate": 594332.0,
+      "change": -10502.0,
+      "pct": -1.7363556691138675,
+      "range": [
+        -10520,
+        -10476
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 2793.0,
+      "candidate": 2044.0,
+      "change": -749.0,
+      "pct": -26.817042606516292,
+      "range": [
+        -749,
+        -749
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 538.44921875,
+      "candidate": 417.171875,
+      "change": -123.0234375,
+      "pct": -22.85320353527363,
+      "range": [
+        -132.578125,
+        -109.9296875
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "agenda",
+    "baseline": "native",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 863982.0,
+      "candidate": 799922.0,
+      "change": -66081.5,
+      "pct": -7.639765249064131,
+      "range": [
+        -72118,
+        -57955
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 580860.0,
+      "candidate": 594332.0,
+      "change": 13472.0,
+      "pct": 2.3193196295148573,
+      "range": [
+        13460,
+        13488
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 2044.0,
+      "candidate": 2044.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 66364.0,
+      "candidate": 66364.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 414.51171875,
+      "candidate": 417.171875,
+      "change": 2.1328125,
+      "pct": 0.5136557578295133,
+      "range": [
+        -2.546875,
+        14.7734375
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "editor",
+    "baseline": "base",
+    "candidate": "staged",
+    "us": {
+      "n": 8,
+      "baseline": 2459565.5,
+      "candidate": 2927243.0,
+      "change": 468468.0,
+      "pct": 19.05290566012335,
+      "range": [
+        380586,
+        511411
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1410874.0,
+      "candidate": 1439808.0,
+      "change": 28928.0,
+      "pct": 2.0503660865797975,
+      "range": [
+        28400,
+        28972
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 21886.0,
+      "candidate": 16541.0,
+      "change": -5345.0,
+      "pct": -24.422004934661427,
+      "range": [
+        -5345,
+        -5345
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 16071.140625,
+      "candidate": 11239.48046875,
+      "change": -4825.87890625,
+      "pct": -30.04156148727998,
+      "range": [
+        -4864.3671875,
+        -4775.1484375
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "editor",
+    "baseline": "base",
+    "candidate": "native",
+    "us": {
+      "n": 8,
+      "baseline": 2459565.5,
+      "candidate": 3262720.5,
+      "change": 801507.0,
+      "pct": 32.5215210699471,
+      "range": [
+        707681,
+        855903
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1410874.0,
+      "candidate": 1241860.0,
+      "change": -169018.0,
+      "pct": -11.979598576957633,
+      "range": [
+        -169032,
+        -169000
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 21886.0,
+      "candidate": 12444.0,
+      "change": -9442.0,
+      "pct": -43.14173444210911,
+      "range": [
+        -9442,
+        -9442
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 16071.140625,
+      "candidate": 5541.65234375,
+      "change": -10529.16796875,
+      "pct": -65.51768895129169,
+      "range": [
+        -10558.2109375,
+        -10504.3125
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "editor",
+    "baseline": "base",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 2459565.5,
+      "candidate": 3002429.0,
+      "change": 539484.0,
+      "pct": 21.92002102959981,
+      "range": [
+        470602,
+        568764
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1410874.0,
+      "candidate": 1251262.0,
+      "change": -159620.0,
+      "pct": -11.313490426760477,
+      "range": [
+        -160160,
+        -159592
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 21886.0,
+      "candidate": 12444.0,
+      "change": -9442.0,
+      "pct": -43.14173444210911,
+      "range": [
+        -9442,
+        -9442
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 16071.140625,
+      "candidate": 5543.0390625,
+      "change": -10528.390625,
+      "pct": -65.51103639512348,
+      "range": [
+        -10555.0625,
+        -10503.734375
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "editor",
+    "baseline": "staged",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 2927243.0,
+      "candidate": 3002429.0,
+      "change": 66195.5,
+      "pct": 2.270356045093031,
+      "range": [
+        44391,
+        113898
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1439808.0,
+      "candidate": 1251262.0,
+      "change": -188546.0,
+      "pct": -13.095218251322398,
+      "range": [
+        -189100,
+        -188024
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 16541.0,
+      "candidate": 12444.0,
+      "change": -4097.0,
+      "pct": -24.76875642343268,
+      "range": [
+        -4097,
+        -4097
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 11239.48046875,
+      "candidate": 5543.0390625,
+      "change": -5698.9921875,
+      "pct": -50.702693773527486,
+      "range": [
+        -5740.2578125,
+        -5678.3984375
+      ]
+    }
+  },
+  {
+    "boot": 2,
+    "app": "editor",
+    "baseline": "native",
+    "candidate": "combined",
+    "us": {
+      "n": 8,
+      "baseline": 3262720.5,
+      "candidate": 3002429.0,
+      "change": -258529.0,
+      "pct": -7.932618322594997,
+      "range": [
+        -306190,
+        -237079
+      ]
+    },
+    "peak": {
+      "n": 8,
+      "baseline": 1241860.0,
+      "candidate": 1251262.0,
+      "change": 9398.0,
+      "pct": 0.7567656356618415,
+      "range": [
+        8860,
+        9408
+      ]
+    },
+    "words": {
+      "n": 8,
+      "baseline": 12444.0,
+      "candidate": 12444.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "n": 8,
+      "baseline": 240452.0,
+      "candidate": 240452.0,
+      "change": 0.0,
+      "pct": 0.0,
+      "range": [
+        0,
+        0
+      ]
+    },
+    "cycles": {
+      "n": 16,
+      "baseline": 5541.65234375,
+      "candidate": 5543.0390625,
+      "change": 0.55859375,
+      "pct": 0.01008394663266773,
+      "range": [
+        -2.4453125,
+        4.03125
+      ]
+    }
+  }
+]

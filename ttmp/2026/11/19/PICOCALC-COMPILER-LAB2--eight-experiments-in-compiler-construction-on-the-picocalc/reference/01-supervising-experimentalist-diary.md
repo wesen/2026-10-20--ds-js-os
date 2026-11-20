@@ -240,3 +240,60 @@ Read the bounded proof ticket's design, normal compiler and argument checks, and
 ### Technical details
 
 The copy benchmark uses 65,536 UTF-16 units per pass. The physical evidence contains 108 checked ELF returns. Complete preview dynamic counts are emulator event counts, and the P4 copy measurements are cycles per unit. All eight study design guides had already been delivered in the supervisor bundle.
+
+## Step 5: Complete the four-way hardware trial and publish the comparison
+
+The final comparison joined the scanner, condition destinations, direct typed reads and use-count register placement. All eight individual experiments had already completed at their own entry points. The integration measured the price of putting the selected decisions into a single compiler and protected the guest comparison by checking complete ELF identity.
+
+### Prompt Context
+
+**User prompt (verbatim).** “how far have we gotten now?” followed by “since the last time i asked you”. For the separately authored physical selector follow-up the user answered “Publish the extra article and chart”.
+
+**Assistant interpretation.** Identify what changed since the prior timing update, verify the combined measurements, and publish the original set of articles and the additional approved supplement.
+
+**Inferred user intent.** The compiler research should identify which changes make waiting for the device shorter, explain where measurements disagree across workloads, and leave useful reports for new engineers even when an approach costs more than it saves.
+
+**Commit (code).** The receipt checks and reproduction instructions landed at `c50e5f1`. The physical selector report is at `58897c8` in this project. The isolated await retry is at `306a987` and its closed ticket is at `4bc4cfd`.
+
+### What I did
+
+- Supervised the await retry. The researcher preserved a validated explicit-reboot trace, captured the second manual boot and two await boots, then restored all three native worlds. Compared complete native output digests, screens, UTF-8 error, canceled read and reopen.
+- Ran the preregistered selector transfer for two boots. The archive covers 144 cold compiles across the three actual applications and a binding synthetic program. Compared the true setup, summary pass, sorting and peak allocator values against the independent host measurements.
+- Ran the four-arm firmware for two complete boots. Captured 192 cold compiles and 384 batches of 128 native guest calls. Recomputed the paired summaries using `scripts/07-combined-results.py`, compared the files byte for byte, generated the comparison tables via `scripts/12-integration-table.py`, and inspected the chart.
+- Wrote and published the supervisor report with two figures, verified the real vault remote, and uploaded the final report plus revised technical protocol to reMarkable. Regenerated the complete publication ledger using `scripts/13-publications.py`.
+
+### Why
+
+A new backend can increase a cold build's elapsed time even when the generated program contains fewer instructions. The native-only arm and the same backend with a different scanner let us attribute the frontend timing on identical code. Restoration matters because subsequent application experiments use the user's normal firmware.
+
+### What worked
+
+The integrated Editor contained 12,444 words against 21,886, used 155.9 KiB less peak QuickJS heap, and reduced search cycles by 65.5% on both boots. Its cold compiler took 2.995 and 3.002 s. The original image digest matched the saved factory image, and Files, Agenda and Editor each started natively after restoration. All eight individual reports, the independent methods article, the supplementary selector article and the supervisor article are present on the verified vault remote.
+
+### What didn't work
+
+The fully combined compiler took more cold time for all three applications. Files paid 31–32% and Editor paid 21–22%. Editor’s selector ranking cost about 1.29 s for identical output. The first await capture mixed an automatic pre-boot compile with the explicit measured reboot. After the audit was corrected, the extra lines were preserved and excluded by the observed reboot boundary.
+
+### What I learned
+
+The largest measured interactive saving comes from keeping compiler work alive between edits. The strongest cold improvement came from tokenization. The strongest measured native execution improvements came from changes to code generation. Their relative value can only be decided using the actual activity a user repeats. A nominal analysis budget much larger than the program's total proof demand gives a selector no work-allocation choice.
+
+### What was tricky to build
+
+Crossing from the compiler's measured footprint into the running application's memory changes which allocator and reservation one should observe. Static words, file bytes and live memory are three measures. Native and combined ELFs were identical for each app although the scanner changed. The final comparison uses equal reservations.
+
+### What warrants a second pair of eyes
+
+The USB board is one ESP32-P4. Both runs use the same physical unit. Guest kernels test directory comparison, weekday and literal search with specified input. Full end-user operations and token reuse after counter wrap need their own evidence.
+
+### What should be done in the future
+
+For cold builds qualify the eager cursor on the production path. For edits refine dependencies on specific record offsets. For scheduled analysis collect cheap eligibility facts during the first parse and measure every visit before claiming a budget or hardware saving.
+
+### Code review instructions
+
+Start at `analysis/01-what-a-compiler-can-afford-on-the-picocalc.md`. Recompute the two-boot arithmetic from `various/combined-physical.json` following the supervisor guide. Check full outputs, source and reactor hashes, the required number of samples, retained guest calls and restored native worlds. Use `various/vault-publications.json` to locate the eight study articles, the methods review, the selector supplement and this report.
+
+### Technical details
+
+The published supervisor commit is `57ea1bcad00326137e3a10a28f56aa7607d1cca4`. An automatic review held the separate supplemental article. A dedicated worktree based on the actual published main allowed the requested supervisor report to ship independently. After explicit approval, the only new remote content was the supplement and its PNG. The final verified go-go-parc main is `777dcfa4ae32f0b037608a67edf574cb641c2ee6`. The reMarkable service acknowledged the report plus guide under `/ai/2026/11/19/PICOCALC-COMPILER-LAB2`.
