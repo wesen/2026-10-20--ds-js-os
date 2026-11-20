@@ -128,3 +128,59 @@ Run `node scripts/05-verify.mjs <study> <firmware-pair> picocalc-os/build/typed-
 ### Technical details
 
 The state records contain 71 and 74 scalar fields. The full linked Editor ELF occupies 240,452 bytes in each lane. The tested shared compiler is staged A5 and only the candidate typed source contains an async declaration.
+
+
+## Step 3: Check the real await source with the combined compiler
+
+I staged the final program's scanner and native backend with the same raw Editor source from the independent await experiment. The world wrapper runs the one-await source rewrite before it calls either combined emitter.
+
+### Prompt Context
+
+**Study specification:** See Step 1.
+
+**Supervisor steering:** Check that real await still composes with the final combined compiler and run the full workflow suite if practical.
+
+**Commit (code):** `674f1e6` — Generate and qualify a typed continuation for Editor Open.
+
+### What I did
+
+- Added `scripts/08-compose-host.py` to assemble and hash the shared async front end and the final combined compiler.
+- Linked the same physical reactor on the host and counted 12,791 native instructions. The Wasm module was 89,010 bytes.
+- Replayed all 24 original checks through the composed compiler and preserved the selected library fingerprints.
+- Reconstructed the standalone board overlay in a fresh directory and compared the changed native probe, CMake files and loading wrappers byte for byte against the built tree.
+
+### Why
+
+The await pass runs before the shared operation emitter. Running the real continuation through the combined compiler exercises that boundary beyond the isolated A5 comparisons.
+
+### What worked
+
+All 24 checks passed. The generated frame retained two live scalars and the token. The fresh standalone stage exactly reproduced the source overlays used to build the paired P4 images.
+
+### What didn't work
+
+No failures were observed in the composition run.
+
+### What I learned
+
+The source rewriting pass composes with the new scanner and emitter without depending on the numeric operation encoding or register home policy.
+
+### What was tricky to build
+
+The two host targets share the same world wrapper. The check applies only the await driver to the combined wrapper and passes the same raw async Editor source to each backend.
+
+### What warrants a second pair of eyes
+
+Use the attached input hashes to distinguish the independently measured board comparison from this host composition.
+
+### What should be done in the future
+
+Retain the independent board comparison for measured await costs and use this host composition as evidence about the current integration boundary.
+
+### Code review instructions
+
+Inspect `various/combined-inputs.json` and `various/host-replays-combined.json`. The latter includes every Files, Agenda and Editor case from the fixed replay suite.
+
+### Technical details
+
+The composed Editor kept 74 state fields and a 12-byte asynchronous frame. It produced 12,791 native instruction words and the same 240,452-byte native reactor allocation.

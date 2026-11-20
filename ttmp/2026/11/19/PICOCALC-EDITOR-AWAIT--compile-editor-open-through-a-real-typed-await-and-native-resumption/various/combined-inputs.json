@@ -1,0 +1,18 @@
+{
+  "lanes": {
+    "await": {
+      "sourceSha256": "03cd32abee8928594caeccb6e4ef01599aee862782566f923f5749aa8752fb8d",
+      "compiler": {
+        "async": "9f61f2f8c672f1d3e52c481188d4a8989f6c093f5043245f8d3796b3e7f1ca7b",
+        "rv32": "6f6b846dc1f2c9100ba79d87560ad19e13d2f727d1caa80be36bd38fb5450fc8",
+        "wasm": "aae4112e38fbc6476ff6618c10baf117af07a5653a9345af285d7b5b7d20ebaf",
+        "world": "e3772cb7db74dc1d20c8fd45d318372c8af2b105bee7a36f0bffe17da5e50726"
+      }
+    }
+  },
+  "baseCompiler": {
+    "rv32": "6f6b846dc1f2c9100ba79d87560ad19e13d2f727d1caa80be36bd38fb5450fc8",
+    "wasm": "aae4112e38fbc6476ff6618c10baf117af07a5653a9345af285d7b5b7d20ebaf",
+    "world": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  }
+}

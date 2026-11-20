@@ -24,6 +24,13 @@ def replace(text, before, after):
     return text.replace(before, after)
 
 
+def await_linker(text):
+    text = replace(text, "typedWasm.linkWorld(source, reactor, entries, imports, maxSourceLength)",
+                   "typedWasm.linkWorld(typedAsync.lower(source).source, reactor, entries, imports, maxSourceLength)")
+    return replace(text, "typedRv32.compile(source, imports, maxSourceLength, options)",
+                   "typedRv32.compile(typedAsync.lower(source).source, imports, maxSourceLength, options)")
+
+
 def editor_lane(reference, use_await):
     cancel_check = """    if (n === 6 && scratch.charCodeAt(0) === 99 && scratch.charCodeAt(1) === 97 &&
         scratch.charCodeAt(2) === 110 && scratch.charCodeAt(3) === 99 &&
@@ -125,12 +132,7 @@ def stage(output, staged):
         assert sha((lane / "typed/rv32.js").read_bytes()) == BACKEND
         shutil.copyfile(HERE / "02-typed-async.js", lane / "typed/async.js")
         linker = lane / "typed/world.js"
-        text = linker.read_text()
-        text = replace(text, "typedWasm.linkWorld(source, reactor, entries, imports, maxSourceLength)",
-                       "typedWasm.linkWorld(typedAsync.lower(source).source, reactor, entries, imports, maxSourceLength)")
-        text = replace(text, "typedRv32.compile(source, imports, maxSourceLength, options)",
-                       "typedRv32.compile(typedAsync.lower(source).source, imports, maxSourceLength, options)")
-        linker.write_text(text)
+        linker.write_text(await_linker(linker.read_text()))
         editor = editor_lane(reference, candidate)
         (lane / "editor.typed").write_text(editor)
         combined = "".join(frozen(part) + "\n" for part in parts[:-1]) + editor + "\n"

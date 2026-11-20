@@ -89,6 +89,8 @@ The focused Wasm and RV32 tests verified immediate failure, a failed read, succe
 | Linked RV32 ELF bytes | 240,452 | 240,452 |
 | Linked Wasm bytes | 88,884 | 89,275 |
 
+The same await source also passed all 24 host replays when its world linker was paired with the program's combined scanner and native backend. This composition exercised the real Editor source on both targets. It produced 12,791 native instructions and 89,010 linked Wasm bytes, with the same 12-byte inferred frame. The separately flashed study uses the staged compiler so that the physical comparison isolates await. [Combined host replay](../various/host-replays-combined.json) · [Combined compiler input identities](../various/combined-inputs.json)
+
 The manual comparison includes the same cancellation behavior as the candidate so both can be exercised with the same physical stimulus. The compiler rewriter and reactor are also identical between lanes. This isolates the incremental cost of the generated file-read path. The resulting 74 fields fit the runtime's 80-field capacity and exceed the full Scope G goal of at most 71. Removing the remaining hand-written normalization continuation is outside the measured pilot.
 
 <!-- physical_results -->
