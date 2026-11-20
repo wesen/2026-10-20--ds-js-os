@@ -136,3 +136,52 @@ The custom and held-out commands require the committed lock. The primary budget 
 ### Technical details
 
 Freeze receipt SHA-256 `c228d8f90d7154e6cd623713df3331716cd8f44ed2555118ea8254aaecd00f75`. The ranking pass uses three fixed local arrays with 128 slots. Candidate summaries retain cost, predicted guard words and function name until planning finishes. The later proof still decides all actual removals.
+
+## Step 3. Correct the generated trap's typed syntax
+
+The first locked held-out command exited before producing any evaluation output. The decoy generator placed a return inside an ordinary block. The typed parser accepts an immediate conditional return and rejects that statement inside the block. The recovery preserves the predicate, division-by-zero trap, seed split and all three policies.
+
+### Prompt context
+
+See Step 1. The supervisor received the committed policy lock and custom-source runner before the first held-out invocation.
+
+### What I did
+
+- Changed the generated conditional from `if (d === 0) { return x / 0; }` to `if (d === 0) return x / 0;`.
+- Recomputed the lock after changing that single generator string. The original lock remains in commit `5c2806c`. The staging, chooser and evaluator hashes are unchanged.
+
+### Why
+
+Every run needs valid syntax for the intended runtime trap. Discarding the whole decoy cohort would remove the preregistered scenario. The repair keeps the same source condition and divide-by-zero behavior.
+
+### What worked
+
+No held-out case emitted a metric or compiled result before the error. The stdout file was empty. The selector had already been frozen and the unchanged policy file still matches SHA-256 `65c6cd926b08b3170df79a5eab305a3da229def01e3e353300005ac2da234bd0`.
+
+### What did not work
+
+`node scripts/04-evaluate.mjs held-out "$overlay" "$reactors"` stopped at `SyntaxError: 1:69: expected identifier` in `NumericFunctionEmitter.statement` during the first nonempty decoy trap case.
+
+### What I learned
+
+The grammar treats a block as a list of ordinary statements. It supports a branch return through the immediate conditional form, retaining the required trap in generated code.
+
+### What was tricky to build
+
+The freeze includes generator source. A syntactic correction must renew that one hash in a new commit through the same release gate. The correction leaves the scoring rules intact.
+
+### What warrants a second pair of eyes
+
+Compare the two freeze receipts and generator diff. Verify no training or held-out results were used to change ranking.
+
+### What should be done in the future
+
+Run the same held-out command through the renewed lock and preserve the comparison as initially specified.
+
+### Code review instructions
+
+Inspect the one decoy string in `scripts/03-generate.mjs` and the input-digest diff in `various/frozen-policy.json`.
+
+### Technical details
+
+Commit `5c2806c` is the initial lock. The successor changes only the reserved generator's invalid return spelling.

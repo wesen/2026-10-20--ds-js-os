@@ -30,7 +30,7 @@ export function generated(family, seed) {
             : 1 + random(length);
         const body = ['let r = x;', 'let k = 7;'];
         if (decoy) body.push(i % 2 ? 'if (x < 0) { k = d; }' : 'k = d;');
-        if (family === 'decoys' && i % 10 === 0) body.push('if (d === 0) { return x / 0; }');
+        if (family === 'decoys' && i % 10 === 0) body.push('if (d === 0) return x / 0;');
         for (let j = 0; j < length; j++) {
             const op = family === 'decoys' && j % 3 === 0 ? '%' : '/';
             const negative = family === 'decoys' && i % 10 === 0 && j % 7 === 0;
