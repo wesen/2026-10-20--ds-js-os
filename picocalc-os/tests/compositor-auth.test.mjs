@@ -12,10 +12,11 @@ function setup() {
     needs() { return this; }, state(s) { def.state = s; return this; }, onStart() { return this; },
     on(name, fn) { def.handlers[name] = fn; return this; }, every() { return this; },
   };
-  vm.runInNewContext(source, { service: () => builder, self: "compositor",
-    send: (to, type, payload) => sent.push({ to, type, payload }), now: () => 0 });
+  const context = { service: () => builder, self: "compositor",
+    send: (to, type, payload) => sent.push({ to, type, payload }), now: () => 0 };
+  vm.runInNewContext(source, context);
   def.state.focus = "chat";
-  return { def, state: def.state, sent };
+  return { def, state: def.state, sent, advance: context.advanceChessOrbit };
 }
 
 test("only physical keyboard events can reach the focused approval UI", () => {
@@ -53,6 +54,50 @@ test("a native painter becomes visible only after the compositor confirms admiss
   def.handlers["painter.ready"](state, null, { from: "compositor" });
   assert.equal(state.apps.chess.mobile, true);
   assert.equal(sent.at(-1).type, "draw");
+});
+
+test("Chess quarter-turns remap the cursor and leave game actions with the game", () => {
+  const {def, state, sent} = setup();
+  state.focus = "chess";
+  const press = (key, from = "keyboard", edge = "down") =>
+    def.handlers.keys(state, {key, state: edge, ch: ""}, {from});
+  def.handlers["painter.ready"](state, {orbit:true}, {from:"chess"});
+  press("f4");
+  assert.equal(state.chessYaw, 0);
+  def.handlers["painter.ready"](state, {orbit:true}, {from:"compositor"});
+  for (const arrow of ["right", "up", "left", "down"]) {
+    press("right");
+    assert.equal(sent.at(-1).payload.key, arrow);
+    press("enter");
+    assert.equal(sent.at(-1).payload.key, "enter");
+    const turns = sent.filter(m => m.to === "chess").length;
+    press("f4");
+    assert.equal(sent.filter(m => m.to === "chess").length, turns);
+    def.handlers["painter.ready"](state, {orbit:true}, {from:"compositor"});
+  }
+  assert.equal(state.chessYaw, 0);
+  press("f3", "keyboard", "up"); press("f3", "keyboard", "repeat"); press("f3", "chat");
+  assert.equal(state.chessYaw, 0);
+  press("f3"); assert.equal(state.chessYaw, 3);
+  press("f4"); assert.equal(state.chessYaw, 0);
+  def.handlers["painter.ready"](state, null, {from:"compositor"});
+  press("f4"); assert.equal(sent.at(-1).payload.key, "f4");
+});
+
+test("each Chess quarter-turn visits eight poses and reverses from its current angle", () => {
+  const {def, state, advance} = setup();
+  state.focus = "chess";
+  def.handlers["painter.ready"](state, {orbit:true}, {from:"compositor"});
+  const press = key => def.handlers.keys(state, {key, state:"down"}, {from:"keyboard"});
+  const next = () => { advance(state); return state.chessPhase; };
+  press("f4");
+  assert.deepEqual(Array.from({length:8}, next), [1,2,3,4,5,6,7,8]);
+  assert.equal(next(), 8);
+  press("f3"); assert.equal(next(), 7); assert.equal(next(), 6);
+  press("f4"); assert.equal(next(), 7); assert.equal(next(), 8);
+  press("f3"); press("f3");
+  assert.deepEqual(Array.from({length:16},next), [7,6,5,4,3,2,1,0,31,30,29,28,27,26,25,24]);
+  state.focus = "launcher"; press("f4"); assert.equal(next(),24);
 });
 
 test("a malformed Snake position preserves the last admitted screen", () => {

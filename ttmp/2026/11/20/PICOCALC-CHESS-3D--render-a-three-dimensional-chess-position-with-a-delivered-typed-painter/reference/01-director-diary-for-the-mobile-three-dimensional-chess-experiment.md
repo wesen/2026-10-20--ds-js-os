@@ -189,3 +189,51 @@ Start with design-doc/05, then inspect painter_service.c, compositor.js, scripts
 ### Technical details
 
 The search produces a 90-cell position, the compositor appends a separate yaw at cell 90, and the native callback retains its two-buffer signature. The 2D build never adds this cell. GIF intervals describe playback and do not measure raster performance.
+
+## Step 4: Replace the quarter-turn jump with 32 real camera poses
+
+The first cardinal GIF showed the changed board. In response to the request below, I had the mesh researcher implement intermediate-angle geometry and the independent supervisor build a device frame recorder. I implemented display-paced scheduling so each camera step can be measured at the SPI completion boundary.
+
+### Prompt Context
+
+**User prompt (verbatim):** “let me know when a gif is ready and print out the abs path” and “can it be like a smooth rotation?” **Assistant interpretation:** Provide a usable smooth result and share its path immediately. **Inferred user intent:** Judge the board in motion and see the real display behavior.
+
+### What I did
+
+Delivered the two initial host GIFs with absolute paths. Changed the compositor to advance from its current pose toward the target after each display flush and reverse when an opposite key arrives. Added tests for all eight intermediate poses, wraparound, halfway reversal and a two-turn tie. Commissioned a real front-buffer and completed-SPI recorder and asked a separate researcher to qualify the Chess game and painter link sizes.
+
+### Why
+
+A screenshot dissolve cannot establish whether the board, pieces, occlusion and labels are correct at intermediate angles. Serial screenshots sampled after each key cannot establish whether the compositor skipped an intermediate frame.
+
+### What worked
+
+The smooth host preview draws 32 distinct views from the same game after four player moves. All four cardinal endpoints match their corresponding quarter-turn references. I sent the absolute smooth-host/smooth-rotation.gif path as soon as it was ready. The researcher froze 16,316 bytes of source at SHA-256 6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214.
+
+### What didn't work
+
+The first mesh design compiled to 70,136 native bytes because Typed expands literal writes. Procedural solids produce 23,848 bytes. The old 16 KiB painter slot cannot contain those instructions. The composed game's own 229,376-byte slot also fails because it carries the source inside generated literal-writing instructions. The firmware researcher measured 256,548 bytes including the header and imports. Both new reservations are specific to this Chess profile.
+
+### What I learned
+
+A direction and a target are different pieces of state. Choosing the shortest path with the last pressed direction as the half-turn tie breaker produces a deterministic reversal. Arrow remapping depends on the chosen board-facing endpoint.
+
+### What was tricky to build
+
+The UART link can take longer to transmit a picture than the device needs to render the next one. The private observer saves one unmodified front framebuffer for each phase, compares to completed SPI payloads, then exports them after the rotation. Its large capture allocation is restricted to the measured image.
+
+### What warrants a second pair of eyes
+
+Review capture ordering, state identity across the full turn, actual ordinary firmware deadlines, and whether the final phase lands on the same board pixels when the status clock changes.
+
+### What should be done in the future
+
+Qualify the physical animation and publish the final articles and images.
+
+### Code review instructions
+
+Review compositor.js, scripts/camera/02-paint.mjs, the model authoring tools, and scripts/camera/06-animation-observer.py and 07-physical-animation.py. The director annotated both preview and physical artifacts with their origin.
+
+### Technical details
+
+A quarter-turn consists of eight 11.25-degree intervals. In the cardinal draft only cell values 0–3 were meaningful. The smooth build uses the same receiver-owned cell for phases 0–31. Both formats are internal to their own firmware and separate from the PSIX wire schema.

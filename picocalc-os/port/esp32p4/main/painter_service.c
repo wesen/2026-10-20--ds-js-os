@@ -29,7 +29,7 @@ typedef struct {
 static QueueHandle_t completed;
 static bool compiling, authorized, have_state;
 static int publisher_epoch = -1, announced_epoch = -1, requested_epoch = -1;
-static uint16_t state[MOBILE_PAINTER_STATE_CELLS];
+static uint16_t state[MOBILE_PAINTER_INPUT_CELLS];
 static display_list *current, *scratch;
 static mobile_painter *program;
 static mobile_painter_install_stats install_stats;
@@ -103,7 +103,10 @@ void p4_painter_receive(world_t *receiver, world_t *sender, bool source, const u
   }
 
   packets++;
-  uint16_t candidate[MOBILE_PAINTER_STATE_CELLS];
+  uint16_t candidate[MOBILE_PAINTER_INPUT_CELLS];
+#if PICOCALC_CHESS_3D
+  candidate[MOBILE_PAINTER_STATE_CELLS] = state[MOBILE_PAINTER_STATE_CELLS];
+#endif
   if (!chess_psix_decode(data, length, candidate)) { rejects++; return; }
   if (have_state && !memcmp(state, candidate, sizeof(state))) return;
   if (authorized && program && !render(candidate)) { rejects++; return; }
@@ -134,14 +137,37 @@ void p4_painter_poll(void) {
     requested_epoch = view->epoch;
   }
   if (current && current->count && announced_epoch != view->epoch) {
-    defer_deliver(view, new_msg(M_ON, "painter.ready", "null", view->id));
+#if PICOCALC_CHESS_3D
+    const char *features = "{\"orbit\":true}";
+#else
+    const char *features = "null";
+#endif
+    defer_deliver(view, new_msg(M_ON, "painter.ready", features, view->id));
     announced_epoch = view->epoch;
   }
 }
 
-bool p4_painter_draw(dmabuf_t *fb, char *hints, size_t capacity) {
+bool p4_painter_draw(dmabuf_t *fb, int yaw, char *hints, size_t capacity) {
   if (!fb || !current || !current->count || fb->w != PAINTER_WIDTH || fb->h != 320 ||
-      !hints || strlen(current->hints) >= capacity) return false;
+      !hints) return false;
+#if PICOCALC_CHESS_3D
+  if (yaw < 0 || yaw > 31) return false;
+  if (state[MOBILE_PAINTER_STATE_CELLS] != yaw) {
+    const int previous_yaw = state[MOBILE_PAINTER_STATE_CELLS];
+    state[MOBILE_PAINTER_STATE_CELLS] = yaw;
+    const int epoch = announced_epoch;
+    if (!render(state)) {
+      state[MOBILE_PAINTER_STATE_CELLS] = previous_yaw;
+      rejects++;
+      return false;
+    }
+    // The compositor is already drawing this change.
+    announced_epoch = epoch;
+  }
+#else
+  (void)yaw;
+#endif
+  if (strlen(current->hints) >= capacity) return false;
   vtime_t begin = port_clock();
   painter_commands_draw(fb, current->words, current->count);
   last_draw_us = port_clock() - begin;

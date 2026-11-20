@@ -433,7 +433,7 @@ function paint(s) {
   // the app
   if (app && (app.tree || app.mobile)) {
     try {
-      if (app.mobile) app.hints = fb.paintView();
+      if (app.mobile) app.hints = fb.paintView(s.chessPhase);
       else if (snake) {
         drawSnake(fb, app.tree);
         if (!s.banner) { s.paintedSnake = app; s.snakeClock = time; }
@@ -474,6 +474,18 @@ function nextNote(s) {
   dirty(s);
 }
 
+// Eight displayed poses separate adjacent quarter-turns. Each following pose
+// is scheduled after the display flush returns, so a slow panel can keep up.
+function chessOrbitPending(s) {
+  return s.focus === "chess" && s.apps.chess && s.apps.chess.orbit && s.chessPhase !== 8 * s.chessYaw;
+}
+function advanceChessOrbit(s) {
+  if (!chessOrbitPending(s)) return;
+  const distance = (8 * s.chessYaw - s.chessPhase + 32) % 32;
+  const direction = distance === 16 ? s.chessDirection : (distance < 16 ? 1 : -1);
+  s.chessPhase = (s.chessPhase + direction + 32) % 32;
+}
+
 function dirty(s, snakeFrame) {
   // Any change to chrome, focus or the drawing surface requires a full composition.
   if (!snakeFrame) s.paintedSnake = null;
@@ -498,7 +510,7 @@ function attach(s) {
 
 service("compositor")
   .needs("frames", "keys", "power", "worlds.status")
-  .state({ focus: "launcher", apps: {}, battery: null, banner: null, notes: [], queued: false, frames: 0, flushes: 0, pixels: 0, clock: "", crashed: {}, flushError: "" })
+  .state({ focus: "launcher", chessYaw: 0, chessPhase: 0, chessDirection: 1, apps: {}, battery: null, banner: null, notes: [], queued: false, frames: 0, flushes: 0, pixels: 0, clock: "", crashed: {}, flushError: "" })
   .onStart((s) => {
     F = gfx.fonts();
     s.fb = dma.alloc(W, H);
@@ -507,9 +519,10 @@ service("compositor")
   .on("draw", async (s, _, msg) => {
     if (!msg || msg.from !== self) return;   // its own reminder to paint; from anyone else, a way to keep it busy
     s.queued = false;
+    advanceChessOrbit(s);
     paint(s);
     const rects = s.fb.commit();
-    if (!rects.length) return;
+    if (!rects.length) { if (chessOrbitPending(s)) dirty(s); return; }
     s.flushes++;
     s.pixels += rects.reduce((a, r) => a + r[2] * r[3], 0);
     try {
@@ -517,11 +530,12 @@ service("compositor")
       if (r.skipped) s.fb.invalidate();   // the panel did not get these pixels: send everything next time
       s.flushError = "";
     } catch (e) { s.flushError = e.message; s.fb.invalidate(); }
+    if (chessOrbitPending(s)) dirty(s);
   })
-  .on("painter.ready", (s, _, msg) => {
+  .on("painter.ready", (s, features, msg) => {
     // Only the compositor-side service posts this self-message after admission.
     if (!msg || msg.from !== self) return;
-    s.apps.chess = { title: "Chess", mobile: true, hints: "" };
+    s.apps.chess = { title: "Chess", mobile: true, orbit: !!(features && features.orbit), hints: "" };
     s.frames++;
     delete s.crashed.chess;
     if (s.focus === "chess") dirty(s);
@@ -543,6 +557,20 @@ service("compositor")
     if (e.state === "up") return;
     if (e.key === "f1") return focus(s, "launcher");
     if (e.key === "power") { if (e.state === "down") send("power", "screen", {}); return; }
+    if (s.focus === "chess" && s.apps.chess && s.apps.chess.orbit) {
+      if (e.key === "f3" || e.key === "f4") {
+        if (e.state === "down") {
+          s.chessDirection = e.key === "f3" ? -1 : 1;
+          s.chessYaw = (s.chessYaw + s.chessDirection + 4) % 4;
+          dirty(s);
+        }
+        return;
+      }
+      // Convert view-relative arrows to the game board's fixed file and rank axes.
+      const arrows = ["up", "right", "down", "left"];
+      const direction = arrows.indexOf(e.key);
+      if (s.chessYaw && direction >= 0) e.key = arrows[(direction + 4 - s.chessYaw) % 4];
+    }
     send(s.focus, "key", e);
   })
   // Apps loaded from storage (worlds named u-...) may not bring anything to the front: one that could would take the

@@ -21,9 +21,6 @@ cp "$original/sdkconfig.agent-elf" "$out/sdkconfig"
 cp "$lock" "$port/dependencies.elf.lock"
 if [[ "$profile" == observe ]]; then
     python3 -B "$here"/../../../PICOCALC-MOBILE-PAINTER--*/scripts/device/stage-observer.py "$tree"
-    if [[ -f "$here/06-animation-observer.py" ]]; then
-        python3 -B "$here/06-animation-observer.py" "$tree"
-    fi
     python3 -B "$here/06-animation-observer.py" "$tree"
 fi
 source /home/manuel/esp/esp-idf-5.4.2/export.sh

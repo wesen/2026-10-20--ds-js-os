@@ -224,7 +224,7 @@ function $handle(h /*: Any */, type /*: Any */, rights /*: Any */, path /*: Any 
       $coords(x, y, maxw || 0, 0); $hostArg(1, String(t)); $hostArg(2, font || 'm');
       return $check($hostCall(${CJI.TEXT}, h, $ink(c)));
     },
-    paintView: () => $check($call(${CJI.PAINTER_DRAW}, h, 0, undefined, undefined, undefined)),
+    paintView: (yaw /*: Any */) => $check($call(${CJI.PAINTER_DRAW}, h, yaw | 0, undefined, undefined, undefined)),
     commit: () => JSON.parse($check($call(${CJI.COMMIT}, h, 0, undefined, undefined, undefined))),
     invalidate: () => $check($call(${CJI.INVALIDATE}, h, 0, undefined, undefined, undefined)) };
   if (type === 'fs') return { id: h, type: type, rights: rights, path: path, file: file,

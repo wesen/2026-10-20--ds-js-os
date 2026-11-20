@@ -12,7 +12,7 @@ typedef int (*paint_entry)(const void *state, void *out);
 // The typed buffer ABI starts with a u32 capacity, followed by u16 cells.
 typedef struct {
   uint32_t capacity;
-  uint16_t cells[MOBILE_PAINTER_STATE_CELLS];
+  uint16_t cells[MOBILE_PAINTER_INPUT_CELLS];
 } state_buffer;
 
 typedef struct {
@@ -93,11 +93,11 @@ void mobile_painter_free(mobile_painter *painter) {
   port_big_free(painter);
 }
 
-int mobile_painter_run(mobile_painter *painter, const uint16_t cells[MOBILE_PAINTER_STATE_CELLS],
+int mobile_painter_run(mobile_painter *painter, const uint16_t cells[MOBILE_PAINTER_INPUT_CELLS],
                        uint16_t words[MOBILE_PAINTER_MAX_WORDS], int64_t *native_us) {
   if (native_us) *native_us = 0;
   if (!painter || !cells || !words) return -1;
-  state_buffer input = {.capacity = MOBILE_PAINTER_STATE_CELLS};
+  state_buffer input = {.capacity = MOBILE_PAINTER_INPUT_CELLS};
   memcpy(input.cells, cells, sizeof(input.cells));
   vtime_t started = port_clock();
   int count = painter->entry(&input, &painter->draw);

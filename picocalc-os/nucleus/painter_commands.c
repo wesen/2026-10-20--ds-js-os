@@ -1,4 +1,7 @@
 #include "painter_commands.h"
+#if PICOCALC_CHESS_3D
+#include "painter_triangle.h"
+#endif
 
 static bool read_text(const uint16_t *src, size_t n, char *out) {
   for (size_t i = 0; i < n; i++) {
@@ -19,6 +22,15 @@ bool painter_commands_valid(const uint16_t *words, size_t count, char hints[MOBI
     size_t left = count - at;
     if (op == MOBILE_PAINTER_HINTS)
       return left && p[0] <= MOBILE_PAINTER_MAX_TEXT && left == (size_t)1 + p[0] && read_text(p + 1, p[0], hints);
+#if PICOCALC_CHESS_3D
+    if (op == MOBILE_PAINTER_TRIANGLE) {
+      if (left < 7) return false;
+      for (int i = 0; i < 3; ++i)
+        if (p[2*i] >= PAINTER_WIDTH || p[2*i+1] >= PAINTER_HEIGHT) return false;
+      at += 7;
+      continue;
+    }
+#endif
     if (op == MOBILE_PAINTER_RECT || op == MOBILE_PAINTER_FILL) {
       if (left < 5 || !p[2] || !p[3] || p[0] + p[2] > PAINTER_WIDTH || p[1] + p[3] > PAINTER_HEIGHT) return false;
       at += 5;
@@ -41,6 +53,13 @@ void painter_commands_draw(dmabuf_t *buffer, const uint16_t *words, size_t count
     uint16_t op = words[at++];
     const uint16_t *p = words + at;
     if (op == MOBILE_PAINTER_HINTS) return;
+#if PICOCALC_CHESS_3D
+    if (op == MOBILE_PAINTER_TRIANGLE) {
+      painter_triangle(buffer, p);
+      at += 7;
+      continue;
+    }
+#endif
     int x = p[0], y = PAINTER_TOP + p[1];
     if (op == MOBILE_PAINTER_TEXT) {
       char text[MOBILE_PAINTER_MAX_TEXT + 1];

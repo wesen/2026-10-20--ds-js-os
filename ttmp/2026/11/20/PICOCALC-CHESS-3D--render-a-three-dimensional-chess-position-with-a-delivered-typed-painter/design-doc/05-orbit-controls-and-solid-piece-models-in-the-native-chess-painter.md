@@ -22,13 +22,13 @@ The board stores a piece on one of 64 squares. A camera turn changes where the r
 
 ## Follow one key from the keyboard to a pixel
 
-Press F4 while Chess has focus and the service has admitted a rotatable painter. The native keyboard world sends the compositor a down event. The compositor increments its quarter-turn counter, wraps it modulo four, and schedules a draw. F3 takes one step in the opposite direction. Key release is ignored. Non-Chess views receive their usual events. The trusted service advertises the camera through its authenticated `painter.ready` message. Selecting a flat painter produces the standard key routing. The compositor stores the current orientation across subsequent frames and focus changes. A compositor restart starts a new view at its default orientation.
+Press F4 while Chess has focus and the service has admitted a rotatable painter. The native keyboard world sends the compositor a down event. The compositor increments its target quarter-turn, wraps it modulo four, and schedules a draw. A full revolution has 32 discrete poses. Each draw advances one pose toward the target and schedules its successor after the display flush returns. Firing F3 during a clockwise move can reverse it from its current pose. F3 takes one step in the opposite direction. Key release is ignored. Non-Chess views receive their usual events. The trusted service advertises the camera through its authenticated `painter.ready` message. Selecting a flat painter produces the standard key routing. The compositor stores the current orientation across subsequent frames and focus changes. A compositor restart starts a new view at its default orientation.
 
 ```text
-keyboard ── F4 ──> compositor.chessYaw ──> fb.paintView(yaw)
+keyboard ── F4 ──> target yaw → displayed phase ──> fb.paintView(phase)
                           │                       │
                           │                       ├─ retained 90-cell position
-                          │                       ├─ append receiver-owned yaw
+                          │                       ├─ append receiver-owned phase
 Chess rules <── arrow translated into board axes  └─ run installed paintChess
                                                        │
 Chess position ── complete PSIX ──> service            ▼
@@ -37,7 +37,7 @@ Chess position ── complete PSIX ──> service            ▼
                                                 framebuffer → panel
 ```
 
-The API boundary has two useful properties. First, the sender never needs to resend the static painter source for a camera change. Second, a selected square and its legal destination masks can be used at every orientation. A source frame cannot smuggle its own direction into the keyboard router. The receiver decodes the 90 PSIX cells first. The renderer's native input adds a 91st unsigned 16-bit cell, at offset 184 from the start of the Typed buffer. The unsigned capacity occupies bytes 0–3 and cell zero starts at byte four. A public caller still supplies two Typed buffers to `paintChess(state,out)`.
+The API boundary has two useful properties. First, the sender never needs to resend the static painter source for a camera change. Second, a selected square and its legal destination masks can be used at every orientation. A source frame cannot smuggle its own direction into the keyboard router. The receiver decodes the 90 PSIX cells first. The renderer's native input adds a 91st unsigned 16-bit cell, containing phase 0 through 31, at offset 184 from the start of the Typed buffer. The unsigned capacity occupies bytes 0–3 and cell zero starts at byte four. A public caller still supplies two Typed buffers to `paintChess(state,out)`.
 
 ## Derive the screen and keyboard transforms together
 
@@ -50,11 +50,11 @@ Let `u,v` name a column and row of the board in the view before isometric projec
 | 2 | 7 − u | 7 − v | Left |
 | 3 | 7 − v | u | Down |
 
-Iterating cells in view order keeps the far squares ahead of the near squares in the drawing stream. After the lookup, use the game square for checkerboard parity, the cursor, selection, move markers, piece identity and the legal mask bit. An asymmetric piece such as a knight provides an additional visual test of model orientation.
+Iterating cells in view order keeps the far squares ahead of the near squares in the drawing stream. After the lookup, use the game square for checkerboard parity, the cursor, selection, move markers, piece identity and the legal mask bit. An asymmetric piece such as a knight provides an additional visual test of model orientation. The four rows describe settled phases 0, 8, 16 and 24. For an intermediate frame the painter rotates the actual three-coordinate vertices, calculates camera depth for occupied squares, and applies back-face culling. No image-space transition or interpolation of screenshots participates. The arrow key targets the selected quarter-turn even if a frame is still in flight.
 
 ## Validating a candidate before showing it
 
-The live service keeps the most recently validated display list. A candidate is written into a separate command buffer while the old one remains available. The camera compares the requested yaw with the orientation already used to generate that list. An ordinary clock or battery redraw can replay the same commands. A camera change reruns the native painter with the retained game state and validates the new list. The request itself is already inside a compositor draw, so successful replacement consumes the previous notification state without queuing a duplicate draw.
+The live service keeps the most recently validated display list. A candidate is written into a separate command buffer while the old one remains available. The camera compares the requested yaw with the orientation already used to generate that list. An ordinary clock or battery redraw can replay the same commands. Each intermediate camera change reruns the native painter with the retained game state and validates the new list. The request itself is already inside a compositor draw, so successful replacement consumes the previous notification state without queuing a duplicate draw.
 
 ```text
 if requested orientation differs:
@@ -84,3 +84,22 @@ The tests specifically cover an inverse key, four quarter-turns with identical o
 - `picocalc-os/port/esp32p4/main/painter_service.c` owns the installed program, the last decoded PSIX state, and the pair of display lists. `mobile_painter_p4.c` constructs the counted two-buffer ABI.
 - `picocalc-os/worlds/chess/painter-3d.typed` is the source delivered by the app. `mobile-view.typed` publishes the normal Chess position after an event. The build records the identical source as its admission reference.
 - `picocalc-os/nucleus/painter_commands.c` validates the stream. `painter_triangle.h` implements the shared-edge raster convention. `picocalc-os/tests/compositor-auth.test.mjs` exercises the actual key and admission callbacks.
+
+
+## How a piece survives an intermediate view
+
+An author describes each piece as solids. Frusta connect two rings, cap triangles close their tips, and an extruded outline supplies features that need direction, including the muzzle of the knight and the cross of the king. The white and black knights face opposite ways along the board. Each piece has bright and shadow faces, and the board uses contrasting blue-gray squares to keep the ivory pieces legible. On the near edges, small file and rank labels identify squares. The pieces themselves have no identifying letters.
+
+For phase θ, let C and S be the cosine and sine scaled by 256. Subtract the board center from the horizontal coordinates of every vertex to obtain dx and dz. With A = C + S and B = C − S, the projection is:
+
+```text
+u = 160 + (B × dx − A × dz) / 256
+v = 140 + (A × dx + B × dz) × 5 / 2048 − height
+depth of a square is proportional to A × file + B × rank
+```
+
+The firmware uses integer arithmetic with a small table of trigonometric values. Rotating an app buffer through 32 phases costs 32 real native calls if each pose is drawn. The camera can reverse halfway through a key command, and the compositor coalesces pending draws. In the device study a separate observer records the front buffer at commit, tracks the matching completed panel payload, and exports all 33 witnesses for a full revolution including the return to zero. This avoids trying to take eight serial screenshots faster than the display can draw them.
+
+The team rendered 160 combinations formed from five game states and 32 angles. A separate enumeration checked 24,576 model placements. The worst piece contributed 38 visible triangles. The conservative full game bound is 1,370 commands and 11,022 words. The chosen arena holds 12,288 words and the validator admits at most 1,536 commands. A game-state packet has the same wire size regardless of the number of triangles. The 16,316-byte source translates to 23,848 RV32 code bytes. It fits the dedicated 32 KiB painter reserve. The authorized source ceiling is 16,384 bytes.
+
+To reproduce the smooth preview, scripts/camera/02-paint.mjs emits phase-00 through phase-31 in addition to the move snapshots. After creating the independent references, run scripts/camera/02-preview.py and scripts/camera/05-gallery.py with the reference and PNG directories. For direct evidence use scripts/camera/04-device.py and its observer helpers instead. The host animation uses an illustrative frame interval. Hardware timings come from commits and completed panel writes, with the time between separate user presses reported separately.

@@ -357,9 +357,9 @@ static int64_t cji_graphics(world_t *W, const nw_call_t *c, char *out, size_t ca
   if (!b) return fail(W, "framebuffer is gone");
 #if PICOCALC_MOBILE_PAINTER
   if (op == CJI_PAINTER_DRAW) {
-    extern bool p4_painter_draw(dmabuf_t *, char *, size_t);
+    extern bool p4_painter_draw(dmabuf_t *, int, char *, size_t);
     if (strcmp(W->name, "compositor")) return fail(W, "painter requires the compositor");
-    if (!p4_painter_draw(b, out, cap)) return fail(W, "no accepted painter output");
+    if (!p4_painter_draw(b, arg, out, cap)) return fail(W, "no accepted painter output");
     return strlen(out);
   }
 #endif

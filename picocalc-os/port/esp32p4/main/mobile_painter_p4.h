@@ -28,5 +28,5 @@ void mobile_painter_free(mobile_painter *painter);
 
 // One owner per handle. On success returns the number of words written to the
 // caller's scratch. The consumer validates every record before drawing.
-int mobile_painter_run(mobile_painter *painter, const uint16_t cells[MOBILE_PAINTER_STATE_CELLS],
+int mobile_painter_run(mobile_painter *painter, const uint16_t cells[MOBILE_PAINTER_INPUT_CELLS],
                        uint16_t words[MOBILE_PAINTER_MAX_WORDS], int64_t *native_us);
