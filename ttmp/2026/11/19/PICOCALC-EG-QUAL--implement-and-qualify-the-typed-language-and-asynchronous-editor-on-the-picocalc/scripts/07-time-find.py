@@ -1,0 +1,90 @@
+"""Time three complete searches through the real Editor reactor on each physical engine."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import runpy
+
+HERE=Path(__file__).resolve().parent
+MATCHED=runpy.run_path(str(HERE/"03-board-qualification.py"))
+BOARD=MATCHED["BOARD"]
+CAPACITY,=HERE.parent.parent.glob("PICOCALC-EDITOR-CAPACITY--*/scripts/03-check-large-preview-on-p4.py")
+UPLOAD=runpy.run_path(str(CAPACITY))["stage_document"]
+DOC=(b"text "*15+b"\r\n")*851+b"needlezzz"
+QUERIES=(("early","ext"),("miss","text text z"),("late","needle"))
+
+
+def exercise(args, engine, trial, out):
+    image=args.images/engine/"picocalc-os-p4.bin"
+    BOARD["flash"](args,out,image,"find")
+    def capture(name,seconds,commands,shots=False):
+        return BOARD["capture"](args.port,out,name,seconds,commands,screenshots=shots)
+    boot=capture("boot",18,["1 reboot","15 worlds"])
+    expected_engine="native" if engine=="rv32" else "wasm"
+    app,=(w for w in json.loads(next(x for x in boot.splitlines() if x.startswith('[{"name":'))) if w["name"]=="editor")
+    if app["engine"]!=expected_engine or app["last_error"]: raise ValueError("benchmark boot failed")
+    # Unique names prevent a saved cursor from giving an earlier trial's position to the next one.
+    tag=f"{args.kind[0]}{engine[0]}{trial}"
+    directory="eg-find-"+tag
+    leaf=tag+".txt"
+    path=directory+"/"+leaf
+    missing="no directory "+directory+"\n#OK ls"
+    if missing not in capture("preflight",1.5,["0.3 ls "+directory]):
+        raise ValueError("benchmark directory already exists")
+    setup=capture("setup",11,["0.4 key f1","1.1 key d","1.9 key f3","2.5 type "+directory,"4.7 key enter",
+                             "5.8 key enter","6.7 key f2","7.4 type "+leaf,"8.7 key enter","10 ls "+directory])
+    if leaf not in setup or "#OK ls" not in setup: raise ValueError("Files did not create the test document")
+    with (out/"put.log").open("wb") as log: UPLOAD(args.port,log,path,DOC)
+    opened=capture("open",6,["0.3 key esc","1.2 key enter","5 worlds"])
+    if "editor crashed" in opened: raise ValueError("Editor failed to open the document")
+    rows=[]
+    for index,(case,query) in enumerate(QUERIES):
+        # F3, Escape cancels the existing query and empties its buffer. Reopen the prompt when needed.
+        commands=(["0.25 key f3","0.9 key esc","1.6 key f3"] if index else ["1.6 key f3"])
+        commands += ["2.35 type "+query,"4.1 egfind "+case+" "+leaf,"4.5 key enter","14 shot","18 worlds"]
+        result=capture(case,19.5,commands,True)
+        observation=re.findall(r"^EGFIND (\w+) (\d+) (\d+) (\d+) (\d+) (\d+)$",result,re.M)
+        if len(observation)!=1 or observation[0][0]!=case or "EGBAD" in result or "editor crashed" in result:
+            raise ValueError(f"{case}: did not observe the expected prompt, Enter and completed status")
+        _,wall,cpu,execution,segments,settlements=observation[0]
+        # The capture tool numbers images from one per command invocation.
+        shot=out/f"{case}.png"
+        (out/"shot-1.png").replace(shot)
+        if "crc ok" not in (out/f"{case}-capture.log").read_text(): raise ValueError("unverified screenshot")
+        values=dict(wall_us=int(wall),editor_cpu_us=int(cpu),engine_us=int(execution),
+                    editor_segments=int(segments),settlements=int(settlements))
+        if not 0<values["engine_us"]<=values["editor_cpu_us"]<=values["wall_us"] or (case!="early" and values["settlements"]<1):
+            raise ValueError(f"{case}: impossible time accounting or missing yields: {values}")
+        rows.append(dict(case=case,query=query,frame=hashlib.sha256(shot.read_bytes()).hexdigest(),**values))
+    clean=capture("cleanup",9,["0.4 key esc","1.2 key f5","2 key f5","3.3 key backspace",
+                              "4.1 key f5","4.9 key f5","7 ls "+directory])
+    if missing not in clean: raise ValueError("scratch cleanup failed")
+    return dict(engine=engine,trial=trial,document=leaf,image=hashlib.sha256(image.read_bytes()).hexdigest(),rows=rows)
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    for n in ("images","output","backup","esptool"):p.add_argument("--"+n,type=Path,required=True)
+    p.add_argument("--port",default="/dev/ttyACM0");p.add_argument("--kind",choices=["control","candidate"],required=True)
+    p.add_argument("--repetitions",type=int,default=1,choices=range(1,4))
+    a=p.parse_args()
+    a.esptool_python=a.esptool.parent/"python"
+    original=MATCHED["validate"](a)
+    a.output.mkdir(parents=True,exist_ok=False)
+    result=dict(kind=a.kind,input_bytes=len(DOC),sha256=hashlib.sha256(DOC).hexdigest(),trials=[],restored=False)
+    def save(): MATCHED["write_json"](a.output/"physical.json",result)
+    save()
+    try:
+        for trial in range(1,a.repetitions+1):
+            engines=["rv32","wasm"] if (a.kind=="control")==(trial%2==1) else ["wasm","rv32"]
+            for engine in engines:
+                sub=a.output/(engine+str(trial));sub.mkdir()
+                result["trials"].append(exercise(a,engine,trial,sub));save()
+    finally:
+        BOARD["flash"](a,a.output,original,"restore")
+        result["worlds"]=MATCHED["worlds"](BOARD["capture"](a.port,a.output,"restored",18,["14 worlds"]))
+        result["restored"]=True;save()
+
+
+if __name__=="__main__":main()

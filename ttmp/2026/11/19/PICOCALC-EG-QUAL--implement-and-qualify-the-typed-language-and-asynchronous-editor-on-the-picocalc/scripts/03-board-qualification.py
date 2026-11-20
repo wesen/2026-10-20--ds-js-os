@@ -58,7 +58,7 @@ def main():
     for name in ("images","output","backup","esptool"):
         parser.add_argument("--"+name,type=Path,required=True)
     parser.add_argument("--port",default="/dev/ttyACM0")
-    parser.add_argument("--kind",choices=["control","candidate","e5"],required=True)
+    parser.add_argument("--kind",choices=["control","before-g","candidate","e5"],required=True)
     args=parser.parse_args()
     args.esptool_python=args.esptool.parent/"python"
     original=validate(args)
