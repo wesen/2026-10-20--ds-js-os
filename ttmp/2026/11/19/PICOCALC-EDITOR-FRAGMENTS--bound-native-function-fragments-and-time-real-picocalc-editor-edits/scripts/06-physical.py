@@ -125,7 +125,16 @@ def main():
                 res["boots"].append(parse(log,oracle))
                 save()
         finally:
-            shared["flash"](args,work,original,"restore")
+            # A failed preboot probe may still be starting the ordinary worlds.
+            # Wait for the firmware's own hold acknowledgement before writing.
+            for attempt in range(6):
+                try:
+                    shared["flash"](args,work,original,"restore")
+                    break
+                except RuntimeError as error:
+                    if "did not acknowledge hold" not in str(error) or attempt==5:
+                        raise
+                    time.sleep(4)
             res["restored_worlds"]=worlds(shared["capture"](args.port,work,"restored",17,["14 worlds"]))
             res["restored"]=True
             save()

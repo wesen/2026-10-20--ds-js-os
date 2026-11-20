@@ -119,3 +119,57 @@ Read scripts 01–04 and compare the physical offsets with the per-revision tabl
 ### Technical details
 
 Cap units are bytes of retained `Uint32Array` payload. All matching source and dependency records for omitted fragments become unavailable at the next build. The isolated firmware uses a 6 MiB emergency QuickJS ceiling; actual high-water and pre-edit live counts are recorded for each lane.
+
+## Step 3: Run the exact native function bodies before taking the serial slot
+
+The device firmware compiled successfully for the ESP32-P4. I independently executed the linked preview function from every required ELF in the project’s RV32 emulator, including the original and both layout variants.
+
+### Prompt Context
+
+**User prompt (verbatim)** “our main goal is being able to cmpie things in a reasonable amount of time on the device, btw.”
+
+**Assistant interpretation.** Prove correctness and discover address or layout bugs on the host before interpreting a physical edit clock. **Inferred user intent.** Keep scarce board time for the measurements that specifically require the hardware.
+
+**Commit (code).** `47f895b` adds the device validator and reporting tool.
+
+### What I did
+
+- Built the isolated ESP-IDF firmware, fixed the C logger for the target's 32-bit integer typedefs, and checked the digest and complete ELF size.
+- Added a separate freestanding native driver that embeds each clean linked ELF unchanged, enters the internal Editor preview function at its clean offset, and checks return, written buffer units and post-call state.
+- Queued the firmware behind the scanner and native backend physical trials. Added acknowledgement-based retry on restoration if a failed preboot study is still starting the ordinary worlds.
+
+### Why
+
+A preboot function pointer has no type information at run time. Independent execution exercises the native calling convention and the semantic witness before interpreting a bench result. The physical and emulated ELF loaders have different roles.
+
+### What worked
+
+All five native revisions returned zero, wrote header units 5 and 4, advanced the row from 2 to 3, and cleared the pending unit and column counts. The original stride wrote at index 200; all edited versions wrote at 198. The final variant exchanged the field word indices from 56/57 to 57/56.
+
+### What didn't work
+
+ESP-IDF identifies `uint32_t` as unsigned long on this target, while the initial logging format used unsigned int. The compiler rejected the mismatch. The initial emulator driver tried the Linux syscall convention and the CJI emulator reported an unknown host call. Disassembly of its supplied startup object identified CJI exit host-call number 1.
+
+### What I learned
+
+Calling a linked body's address and checking a return plus state effects tests more than an ordinary body-to-body byte comparison. Firmware relocation and board behavior still need their own evidence.
+
+### What was tricky to build
+
+The guest function is private to the compiled text. The emulator wrapper embeds the already linked ELF contents in executable storage, so its internal PC-relative calls preserve the original distance. The board uses the actual ESP-IDF ELF loader and executable mapping.
+
+### What warrants a second pair of eyes
+
+Check the chosen offsets against the executable segment and the resource limits against the large source; inspect whole-ELF hashes before interpreting timings.
+
+### What should be done in the future
+
+Collect the paired physical rotations, including file-handle and preview-state layout changes.
+
+### Code review instructions
+
+Run `scripts/08-replay-native.mjs WORK GCC EMULATOR` and compare its five native observations with `various/emulated-preview.json`.
+
+### Technical details
+
+Clean ELF size was 240,452 bytes on this reactor. The preview helper file offset is 33,416 for the first body edit and 33,420 after changing its callee signature. The P4 receives these offsets from an independently generated clean header.
