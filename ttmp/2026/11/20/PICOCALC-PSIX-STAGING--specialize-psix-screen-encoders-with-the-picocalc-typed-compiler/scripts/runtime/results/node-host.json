@@ -1,0 +1,4176 @@
+{
+  "engine": "v24.18.0",
+  "environment": {
+    "host": "linux/x64",
+    "cpu": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+    "node": "v24.18.0",
+    "referenceSha256": "5c66f321edfc30154ffa63d68a3ee65e29280a7432c238525ea2cff9b5c25a2d"
+  },
+  "limits": {
+    "entries": 8,
+    "bytes": 98304,
+    "planBytes": 49152,
+    "probes": 4
+  },
+  "splits": {
+    "sysmon": {
+      "rows": 100,
+      "prefix": 55,
+      "holdout": 45,
+      "sourceSha256": "24c2b4017acc237977ae929cbfb18cc2aa1b48b7a1b6fdb0237937e24ab7a5b4",
+      "holdoutDistinct": 33,
+      "holdoutUpdatesWithNewPayload": 40,
+      "firstHoldout": "refresh-35",
+      "lastHoldout": "switch-4"
+    },
+    "chess": {
+      "rows": 47,
+      "prefix": 23,
+      "holdout": 24,
+      "sourceSha256": "095bb5644ba2a786d185f1470391a32a8a19460ee2447554309571d6b6e14746",
+      "holdoutDistinct": 22,
+      "holdoutUpdatesWithNewPayload": 22,
+      "firstHoldout": "promotion/004 esc",
+      "lastHoldout": "signed-statistics/000 launch"
+    },
+    "snake": {
+      "rows": 236,
+      "prefix": 118,
+      "holdout": 118,
+      "sourceSha256": "3cfec02e7078600c58068e65248adaf9f5d97725233f4dd8c7fde13eadaad64e",
+      "holdoutDistinct": 118,
+      "holdoutUpdatesWithNewPayload": 118,
+      "firstHoldout": "auto-86",
+      "lastHoldout": "fixture-395"
+    },
+    "editor": {
+      "rows": 44,
+      "prefix": 22,
+      "holdout": 22,
+      "sourceSha256": "39b3b7f8b513a3734225dfe103c61d9061a1d28f0e1082651a7a6537e48edf37",
+      "holdoutDistinct": 17,
+      "holdoutUpdatesWithNewPayload": 2,
+      "firstHoldout": "replace-control/initial view",
+      "lastHoldout": "replace-query/find replacement query"
+    },
+    "keys": {
+      "rows": 26,
+      "prefix": 0,
+      "holdout": 26,
+      "sourceSha256": "4aedb5507e4c5f75506f75dd208f674d0c741a8b8204fc85eee902484117e1bc",
+      "holdoutDistinct": 25,
+      "holdoutUpdatesWithNewPayload": 26,
+      "firstHoldout": "start-0",
+      "lastHoldout": "focus-25"
+    }
+  },
+  "complete": {
+    "counts": {
+      "fixed": {
+        "hits": 0,
+        "fallback": 427,
+        "writerRejections": 0,
+        "compileAttempts": 0,
+        "compiled": 0,
+        "compileDeclines": 0,
+        "evictions": 0,
+        "guardAttempts": 0,
+        "peakBytes": 0,
+        "peakEntries": 0,
+        "dispatchGuardUs": 0,
+        "hitWriterUs": 0,
+        "fallbackEncoderUs": 0,
+        "compileInstallUs": 0,
+        "residentBytes": 0,
+        "residentEntries": 0
+      },
+      "adaptive-cold": {
+        "hits": 341,
+        "fallback": 86,
+        "writerRejections": 0,
+        "compileAttempts": 86,
+        "compiled": 86,
+        "compileDeclines": 0,
+        "evictions": 82,
+        "guardAttempts": 650,
+        "peakBytes": 97891,
+        "peakEntries": 8,
+        "dispatchGuardUs": 0,
+        "hitWriterUs": 0,
+        "fallbackEncoderUs": 0,
+        "compileInstallUs": 0,
+        "residentBytes": 29620,
+        "residentEntries": 4
+      },
+      "adaptive-prefix": {
+        "hits": 341,
+        "fallback": 86,
+        "writerRejections": 0,
+        "compileAttempts": 86,
+        "compiled": 86,
+        "compileDeclines": 0,
+        "evictions": 82,
+        "guardAttempts": 650,
+        "peakBytes": 97891,
+        "peakEntries": 8,
+        "dispatchGuardUs": 0,
+        "hitWriterUs": 0,
+        "fallbackEncoderUs": 0,
+        "compileInstallUs": 0,
+        "residentBytes": 29620,
+        "residentEntries": 4
+      }
+    },
+    "frames": 427,
+    "bytes": 581602,
+    "wireFNV32": "c1df42ab"
+  },
+  "failures": {
+    "variants": {
+      "counts": {
+        "fixed": {
+          "hits": 2,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 9,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 5,
+          "writerRejections": 0,
+          "compileAttempts": 5,
+          "compiled": 5,
+          "compileDeclines": 0,
+          "evictions": 1,
+          "guardAttempts": 10,
+          "peakBytes": 2853,
+          "peakEntries": 4,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 2853,
+          "residentEntries": 4
+        },
+        "adaptive-prefix": {
+          "hits": 1,
+          "fallback": 4,
+          "writerRejections": 0,
+          "compileAttempts": 4,
+          "compiled": 4,
+          "compileDeclines": 0,
+          "evictions": 2,
+          "guardAttempts": 15,
+          "peakBytes": 2853,
+          "peakEntries": 4,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 2853,
+          "residentEntries": 4
+        }
+      },
+      "frames": 5,
+      "bytes": 872,
+      "wireFNV32": "1881d88c"
+    },
+    "decline": {
+      "counts": {
+        "fixed": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 3,
+          "compiled": 0,
+          "compileDeclines": 3,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-prefix": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 3,
+          "compiled": 0,
+          "compileDeclines": 3,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        }
+      },
+      "frames": 3,
+      "bytes": 438,
+      "wireFNV32": "16bc290c"
+    },
+    "errors": {
+      "bad-utf8": {
+        "generic": {},
+        "fixed": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 1,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 1,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-prefix": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 1,
+          "compileAttempts": 2,
+          "compiled": 2,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 3,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        }
+      },
+      "bad-string-cap": {
+        "generic": {},
+        "fixed": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 1,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 1,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-prefix": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 1,
+          "compileAttempts": 2,
+          "compiled": 2,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 3,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        }
+      },
+      "bad-number": {
+        "generic": {},
+        "fixed": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 2,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-prefix": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 2,
+          "compiled": 2,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 3,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        }
+      },
+      "large-array-cap": {
+        "generic": {},
+        "fixed": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 2,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-prefix": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 2,
+          "compiled": 2,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 3,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        }
+      },
+      "wide-object-field-cap": {
+        "generic": {},
+        "fixed": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 2,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-prefix": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 2,
+          "compiled": 2,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 3,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        }
+      },
+      "wide-wire-byte-cap": {
+        "generic": {},
+        "fixed": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 2,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        },
+        "adaptive-cold": {
+          "hits": 0,
+          "fallback": 1,
+          "writerRejections": 0,
+          "compileAttempts": 0,
+          "compiled": 0,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "peakBytes": 0,
+          "peakEntries": 0,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 0,
+          "residentEntries": 0
+        },
+        "adaptive-prefix": {
+          "hits": 0,
+          "fallback": 3,
+          "writerRejections": 0,
+          "compileAttempts": 2,
+          "compiled": 2,
+          "compileDeclines": 0,
+          "evictions": 0,
+          "guardAttempts": 3,
+          "peakBytes": 1491,
+          "peakEntries": 2,
+          "dispatchGuardUs": 0,
+          "hitWriterUs": 0,
+          "fallbackEncoderUs": 0,
+          "compileInstallUs": 0,
+          "residentBytes": 1491,
+          "residentEntries": 2
+        }
+      }
+    }
+  },
+  "results": {
+    "sysmon-holdout": {
+      "frames": 45,
+      "trainingFrames": 55,
+      "trainingUs": 1078.6080000000075,
+      "shapesTrained": 14,
+      "fixedPlans": [
+        15,
+        13,
+        11,
+        4,
+        2,
+        2,
+        1,
+        1
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 42,
+            "fallback": 3,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 77,
+            "peakBytes": 33326,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 33326,
+            "residentEntries": 8
+          },
+          "adaptive-cold": {
+            "hits": 39,
+            "fallback": 6,
+            "writerRejections": 0,
+            "compileAttempts": 6,
+            "compiled": 6,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 43,
+            "peakBytes": 31398,
+            "peakEntries": 6,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 31398,
+            "residentEntries": 6
+          },
+          "adaptive-prefix": {
+            "hits": 43,
+            "fallback": 2,
+            "writerRejections": 0,
+            "compileAttempts": 2,
+            "compiled": 2,
+            "compileDeclines": 0,
+            "evictions": 2,
+            "guardAttempts": 48,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 33559,
+            "residentEntries": 8
+          }
+        },
+        "frames": 45,
+        "bytes": 79271,
+        "wireFNV32": "dca8344d"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 42,
+            "fallback": 3,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 77,
+            "peakBytes": 33326,
+            "peakEntries": 8,
+            "dispatchGuardUs": 324.5899999999674,
+            "hitWriterUs": 1697.2870000000694,
+            "fallbackEncoderUs": 179.86799999995856,
+            "compileInstallUs": 10.755999999993946,
+            "residentBytes": 33326,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 42,
+              "genericUs": 2756.380000000063,
+              "observedUs": 2040.7069999998203
+            },
+            "misses": {
+              "n": 3,
+              "genericUs": 157.7829999999958,
+              "observedUs": 219.42499999993015
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 39,
+            "fallback": 6,
+            "writerRejections": 0,
+            "compileAttempts": 6,
+            "compiled": 6,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 43,
+            "peakBytes": 31398,
+            "peakEntries": 6,
+            "dispatchGuardUs": 238.22099999984493,
+            "hitWriterUs": 1486.8510000001406,
+            "fallbackEncoderUs": 347.1339999999618,
+            "compileInstallUs": 194.29000000003725,
+            "residentBytes": 31398,
+            "residentEntries": 6
+          },
+          "matched": {
+            "hits": {
+              "n": 39,
+              "genericUs": 2335.576999999699,
+              "observedUs": 1728.1680000000051
+            },
+            "misses": {
+              "n": 6,
+              "genericUs": 316.1050000000396,
+              "observedUs": 559.0409999998519
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 43,
+            "fallback": 2,
+            "writerRejections": 0,
+            "compileAttempts": 2,
+            "compiled": 2,
+            "compileDeclines": 0,
+            "evictions": 2,
+            "guardAttempts": 48,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 270.146999999939,
+            "hitWriterUs": 1590.7240000000456,
+            "fallbackEncoderUs": 123.73899999994319,
+            "compileInstallUs": 62.51499999995576,
+            "residentBytes": 33559,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 43,
+              "genericUs": 2666.559999999823,
+              "observedUs": 1870.5539999997127
+            },
+            "misses": {
+              "n": 2,
+              "genericUs": 111.58700000005774,
+              "observedUs": 196.25500000000466
+            }
+          }
+        }
+      },
+      "checksum": 2653347,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 2320.8439999999828,
+            "median": 2551.0409999999974,
+            "max": 4106.574999999953,
+            "samples": [
+              2551.0409999999974,
+              2320.8439999999828,
+              2389.322999999975,
+              2646.3910000000324,
+              2601.402999999991,
+              2358.3580000000075,
+              4106.574999999953
+            ]
+          },
+          "setupUs": {
+            "min": 0.4980000000214204,
+            "median": 0.6699999999254942,
+            "max": 0.9310000000114087,
+            "samples": [
+              0.4980000000214204,
+              0.661999999982072,
+              0.9310000000114087,
+              0.6020000000135042,
+              0.7080000000132713,
+              0.6850000000558794,
+              0.6699999999254942
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 1942.4349999999686,
+            "median": 2156.3710000000137,
+            "max": 3242.3089999999793,
+            "samples": [
+              2156.3710000000137,
+              1942.4349999999686,
+              2106.5039999999863,
+              3242.3089999999793,
+              1959.9400000000023,
+              2351.8820000000123,
+              2270.50900000002
+            ]
+          },
+          "setupUs": {
+            "min": 2.048000000009779,
+            "median": 2.576999999990221,
+            "max": 3.941999999980908,
+            "samples": [
+              2.510999999998603,
+              3.941999999980908,
+              2.573999999964144,
+              3.256999999983236,
+              2.576999999990221,
+              2.048000000009779,
+              3.180999999982305
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 2086.173999999999,
+            "median": 2152.3119999999763,
+            "max": 2518.7419999999984,
+            "samples": [
+              2111.5199999999895,
+              2381.1820000000007,
+              2275.274999999994,
+              2518.7419999999984,
+              2112.813999999984,
+              2086.173999999999,
+              2152.3119999999763
+            ]
+          },
+          "setupUs": {
+            "min": 1.3330000000132713,
+            "median": 1.8180000000284053,
+            "max": 3.533999999955995,
+            "samples": [
+              1.6319999999832362,
+              1.6349999999802094,
+              1.8509999999951106,
+              3.533999999955995,
+              1.3330000000132713,
+              1.8180000000284053,
+              1.871999999973923
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 1970.752999999997,
+            "median": 2024.987999999954,
+            "max": 2113.7030000000086,
+            "samples": [
+              1970.752999999997,
+              2113.7030000000086,
+              1998.0230000000156,
+              2091.4129999999714,
+              2044.7569999999832,
+              2017.9539999999688,
+              2024.987999999954
+            ]
+          },
+          "setupUs": {
+            "min": 2463.542000000016,
+            "median": 2559.0400000000373,
+            "max": 4463.619999999995,
+            "samples": [
+              4463.619999999995,
+              2559.0400000000373,
+              2463.542000000016,
+              2524.8330000000133,
+              2799.99099999998,
+              2520.497000000032,
+              2576.445999999938
+            ]
+          }
+        }
+      }
+    },
+    "chess-holdout": {
+      "frames": 24,
+      "trainingFrames": 23,
+      "trainingUs": 552.774000000034,
+      "shapesTrained": 10,
+      "fixedPlans": [
+        6,
+        3,
+        3,
+        2,
+        2
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 0,
+            "fallback": 24,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 81,
+            "peakBytes": 87218,
+            "peakEntries": 5,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 87218,
+            "residentEntries": 5
+          },
+          "adaptive-cold": {
+            "hits": 6,
+            "fallback": 18,
+            "writerRejections": 0,
+            "compileAttempts": 18,
+            "compiled": 18,
+            "compileDeclines": 0,
+            "evictions": 10,
+            "guardAttempts": 60,
+            "peakBytes": 90868,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 90868,
+            "residentEntries": 8
+          },
+          "adaptive-prefix": {
+            "hits": 7,
+            "fallback": 17,
+            "writerRejections": 0,
+            "compileAttempts": 17,
+            "compiled": 17,
+            "compileDeclines": 0,
+            "evictions": 14,
+            "guardAttempts": 70,
+            "peakBytes": 90868,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 90868,
+            "residentEntries": 8
+          }
+        },
+        "frames": 24,
+        "bytes": 62006,
+        "wireFNV32": "054230de"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 0,
+            "fallback": 24,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 81,
+            "peakBytes": 87218,
+            "peakEntries": 5,
+            "dispatchGuardUs": 43.5779999999213,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 925.045999999973,
+            "compileInstallUs": 2.769999999902211,
+            "residentBytes": 87218,
+            "residentEntries": 5
+          },
+          "matched": {
+            "hits": {
+              "n": 0,
+              "genericUs": 0,
+              "observedUs": 0
+            },
+            "misses": {
+              "n": 24,
+              "genericUs": 885.3519999998971,
+              "observedUs": 976.6590000002761
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 6,
+            "fallback": 18,
+            "writerRejections": 0,
+            "compileAttempts": 18,
+            "compiled": 18,
+            "compileDeclines": 0,
+            "evictions": 10,
+            "guardAttempts": 60,
+            "peakBytes": 90868,
+            "peakEntries": 8,
+            "dispatchGuardUs": 148.54400000011083,
+            "hitWriterUs": 164.62099999998463,
+            "fallbackEncoderUs": 664.1019999999553,
+            "compileInstallUs": 418.88400000007823,
+            "residentBytes": 90868,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 6,
+              "genericUs": 409.91399999998976,
+              "observedUs": 234.98500000004424
+            },
+            "misses": {
+              "n": 18,
+              "genericUs": 662.0290000000969,
+              "observedUs": 1167.9660000001313
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 7,
+            "fallback": 17,
+            "writerRejections": 0,
+            "compileAttempts": 17,
+            "compiled": 17,
+            "compileDeclines": 0,
+            "evictions": 14,
+            "guardAttempts": 70,
+            "peakBytes": 90868,
+            "peakEntries": 8,
+            "dispatchGuardUs": 171.1600000000326,
+            "hitWriterUs": 184.75500000017928,
+            "fallbackEncoderUs": 651.6259999999311,
+            "compileInstallUs": 412.64100000000326,
+            "residentBytes": 90868,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 7,
+              "genericUs": 533.1909999999916,
+              "observedUs": 267.36699999991106
+            },
+            "misses": {
+              "n": 17,
+              "genericUs": 641.3039999998873,
+              "observedUs": 1159.5629999999073
+            }
+          }
+        }
+      },
+      "checksum": 2045344,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 858.5020000000368,
+            "median": 941.6360000000568,
+            "max": 1122.1909999999916,
+            "samples": [
+              858.5020000000368,
+              957.6879999999655,
+              922.0320000000065,
+              975.8260000000591,
+              926.1889999999548,
+              941.6360000000568,
+              1122.1909999999916
+            ]
+          },
+          "setupUs": {
+            "min": 0.3979999999864958,
+            "median": 0.5129999999771826,
+            "max": 0.5769999999902211,
+            "samples": [
+              0.5560000000405125,
+              0.4949999999953434,
+              0.4770000000135042,
+              0.5129999999771826,
+              0.3979999999864958,
+              0.5649999999441206,
+              0.5769999999902211
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 917.6449999999604,
+            "median": 1008.6289999999572,
+            "max": 1466.4459999999963,
+            "samples": [
+              917.6449999999604,
+              1110.255999999994,
+              1060.8270000000484,
+              979.130999999994,
+              1466.4459999999963,
+              1008.6289999999572,
+              942.1039999999921
+            ]
+          },
+          "setupUs": {
+            "min": 1.4390000000130385,
+            "median": 2.1190000000060536,
+            "max": 3.3210000000544824,
+            "samples": [
+              2.6959999999962747,
+              1.8360000000102445,
+              2.1190000000060536,
+              2.01500000001397,
+              1.4390000000130385,
+              3.3210000000544824,
+              2.224000000045635
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 1349.6179999999586,
+            "median": 1483.823000000033,
+            "max": 2767.247000000032,
+            "samples": [
+              1485.3379999999888,
+              1483.823000000033,
+              1349.6179999999586,
+              1392.8240000000224,
+              2767.247000000032,
+              1383.887999999919,
+              1583.1380000000354
+            ]
+          },
+          "setupUs": {
+            "min": 0.970000000030268,
+            "median": 1.6300000000628643,
+            "max": 2.3730000000214204,
+            "samples": [
+              1.4929999999585561,
+              1.7989999999990687,
+              1.6300000000628643,
+              0.970000000030268,
+              2.209999999962747,
+              1.2770000000600703,
+              2.3730000000214204
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 1328.4469999999856,
+            "median": 1395.926999999967,
+            "max": 1705.1509999999544,
+            "samples": [
+              1395.926999999967,
+              1557.5520000000251,
+              1392.9979999999632,
+              1328.4469999999856,
+              1705.1509999999544,
+              1410.3859999999986,
+              1354.719999999972
+            ]
+          },
+          "setupUs": {
+            "min": 1726.5089999999618,
+            "median": 1781.125,
+            "max": 1963.469000000041,
+            "samples": [
+              1781.125,
+              1741.3879999999772,
+              1883.1770000000251,
+              1877.628000000026,
+              1764.871999999974,
+              1963.469000000041,
+              1726.5089999999618
+            ]
+          }
+        }
+      }
+    },
+    "snake-holdout": {
+      "frames": 118,
+      "trainingFrames": 118,
+      "trainingUs": 690.8620000000228,
+      "shapesTrained": 11,
+      "fixedPlans": [
+        36,
+        26,
+        15,
+        12
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 0,
+            "fallback": 118,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 472,
+            "peakBytes": 9564,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 9564,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 106,
+            "fallback": 12,
+            "writerRejections": 0,
+            "compileAttempts": 12,
+            "compiled": 12,
+            "compileDeclines": 0,
+            "evictions": 8,
+            "guardAttempts": 144,
+            "peakBytes": 88860,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 88860,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 107,
+            "fallback": 11,
+            "writerRejections": 0,
+            "compileAttempts": 11,
+            "compiled": 11,
+            "compileDeclines": 0,
+            "evictions": 11,
+            "guardAttempts": 151,
+            "peakBytes": 88860,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 88860,
+            "residentEntries": 4
+          }
+        },
+        "frames": 118,
+        "bytes": 118878,
+        "wireFNV32": "15118422"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 0,
+            "fallback": 118,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 472,
+            "peakBytes": 9564,
+            "peakEntries": 4,
+            "dispatchGuardUs": 417.8059999999241,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 2689.3329999997513,
+            "compileInstallUs": 12.759000000951346,
+            "residentBytes": 9564,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 0,
+              "genericUs": 0,
+              "observedUs": 0
+            },
+            "misses": {
+              "n": 118,
+              "genericUs": 2539.758999999962,
+              "observedUs": 3145.2370000001392
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 106,
+            "fallback": 12,
+            "writerRejections": 0,
+            "compileAttempts": 12,
+            "compiled": 12,
+            "compileDeclines": 0,
+            "evictions": 8,
+            "guardAttempts": 144,
+            "peakBytes": 88860,
+            "peakEntries": 4,
+            "dispatchGuardUs": 397.636999999173,
+            "hitWriterUs": 1207.1130000003031,
+            "fallbackEncoderUs": 381.4240000000573,
+            "compileInstallUs": 332.2960000000312,
+            "residentBytes": 88860,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 106,
+              "genericUs": 2237.324999999837,
+              "observedUs": 1599.058999999892
+            },
+            "misses": {
+              "n": 12,
+              "genericUs": 369.4790000001085,
+              "observedUs": 757.848999999871
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 107,
+            "fallback": 11,
+            "writerRejections": 0,
+            "compileAttempts": 11,
+            "compiled": 11,
+            "compileDeclines": 0,
+            "evictions": 11,
+            "guardAttempts": 151,
+            "peakBytes": 88860,
+            "peakEntries": 4,
+            "dispatchGuardUs": 472.9480000003241,
+            "hitWriterUs": 1313.3039999997127,
+            "fallbackEncoderUs": 395.4529999999795,
+            "compileInstallUs": 529.8370000000577,
+            "residentBytes": 88860,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 107,
+              "genericUs": 2376.232999999891,
+              "observedUs": 1762.2870000001276
+            },
+            "misses": {
+              "n": 11,
+              "genericUs": 376.52799999993294,
+              "observedUs": 984.3479999997653
+            }
+          }
+        }
+      },
+      "checksum": 4104122,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 2339.5939999999828,
+            "median": 2453.011999999988,
+            "max": 4167.133999999962,
+            "samples": [
+              2449.128000000026,
+              2339.5939999999828,
+              2453.011999999988,
+              2444.085999999952,
+              4167.133999999962,
+              2539.759999999951,
+              2695.8159999999916
+            ]
+          },
+          "setupUs": {
+            "min": 0.4419999999227002,
+            "median": 0.6300000000046566,
+            "max": 1.6600000000325963,
+            "samples": [
+              0.6300000000046566,
+              0.5609999999869615,
+              0.5349999999743886,
+              0.4419999999227002,
+              0.7019999999902211,
+              0.9180000000051223,
+              1.6600000000325963
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 2685.1560000000172,
+            "median": 2929.542000000016,
+            "max": 4046.6530000000494,
+            "samples": [
+              2685.1560000000172,
+              4046.6530000000494,
+              2739.49099999998,
+              2929.542000000016,
+              2855.1999999999534,
+              3582.503000000026,
+              3223.530000000028
+            ]
+          },
+          "setupUs": {
+            "min": 1.9770000000135042,
+            "median": 2.438999999954831,
+            "max": 6.019999999960419,
+            "samples": [
+              2.1120000000228174,
+              4.026000000012573,
+              1.9770000000135042,
+              2.438999999954831,
+              4.6920000000391155,
+              2.15300000004936,
+              6.019999999960419
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 2219.668000000005,
+            "median": 2249.777000000002,
+            "max": 2646.9070000000065,
+            "samples": [
+              2229.2390000000014,
+              2372.405999999959,
+              2219.668000000005,
+              2249.777000000002,
+              2646.9070000000065,
+              2346.3059999999823,
+              2233.862000000023
+            ]
+          },
+          "setupUs": {
+            "min": 1.1539999999804422,
+            "median": 2.5939999999827705,
+            "max": 4.615999999979977,
+            "samples": [
+              1.1539999999804422,
+              2.959999999962747,
+              2.0640000000130385,
+              1.7079999999841675,
+              2.5939999999827705,
+              4.615999999979977,
+              4.112000000022817
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 2020.6590000000433,
+            "median": 2253.3680000000168,
+            "max": 2796.2720000000554,
+            "samples": [
+              2796.2720000000554,
+              2107.328999999969,
+              2050.012000000046,
+              2020.6590000000433,
+              2253.3680000000168,
+              2352.231000000029,
+              2286.0169999999925
+            ]
+          },
+          "setupUs": {
+            "min": 1575.2849999999744,
+            "median": 1649.5819999999949,
+            "max": 1900.1089999999385,
+            "samples": [
+              1678.7729999999865,
+              1575.2849999999744,
+              1649.5819999999949,
+              1598.670000000042,
+              1583.969999999972,
+              1664.594999999972,
+              1900.1089999999385
+            ]
+          }
+        }
+      }
+    },
+    "editor-holdout": {
+      "frames": 22,
+      "trainingFrames": 22,
+      "trainingUs": 410.62900000001537,
+      "shapesTrained": 7,
+      "fixedPlans": [
+        5,
+        4,
+        4,
+        3
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 15,
+            "fallback": 7,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 62,
+            "peakBytes": 26915,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 26915,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 13,
+            "fallback": 9,
+            "writerRejections": 0,
+            "compileAttempts": 9,
+            "compiled": 9,
+            "compileDeclines": 0,
+            "evictions": 5,
+            "guardAttempts": 50,
+            "peakBytes": 48836,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 29620,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 15,
+            "fallback": 7,
+            "writerRejections": 0,
+            "compileAttempts": 7,
+            "compiled": 7,
+            "compileDeclines": 0,
+            "evictions": 7,
+            "guardAttempts": 59,
+            "peakBytes": 48836,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 29620,
+            "residentEntries": 4
+          }
+        },
+        "frames": 22,
+        "bytes": 40813,
+        "wireFNV32": "2526c67c"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 15,
+            "fallback": 7,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 62,
+            "peakBytes": 26915,
+            "peakEntries": 4,
+            "dispatchGuardUs": 143.20300000009593,
+            "hitWriterUs": 211.4670000000624,
+            "fallbackEncoderUs": 192.13299999991432,
+            "compileInstallUs": 0.8950000001350418,
+            "residentBytes": 26915,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 15,
+              "genericUs": 537.4030000000494,
+              "observedUs": 344.25599999993574
+            },
+            "misses": {
+              "n": 7,
+              "genericUs": 186.18000000005122,
+              "observedUs": 209.38700000022072
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 13,
+            "fallback": 9,
+            "writerRejections": 0,
+            "compileAttempts": 9,
+            "compiled": 9,
+            "compileDeclines": 0,
+            "evictions": 5,
+            "guardAttempts": 50,
+            "peakBytes": 48836,
+            "peakEntries": 4,
+            "dispatchGuardUs": 142.92500000016298,
+            "hitWriterUs": 182.07499999995343,
+            "fallbackEncoderUs": 241.5069999997504,
+            "compileInstallUs": 200.82700000028126,
+            "residentBytes": 29620,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 13,
+              "genericUs": 367.8110000004526,
+              "observedUs": 313.0510000004433
+            },
+            "misses": {
+              "n": 9,
+              "genericUs": 250.96999999985565,
+              "observedUs": 461.7029999998631
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 15,
+            "fallback": 7,
+            "writerRejections": 0,
+            "compileAttempts": 7,
+            "compiled": 7,
+            "compileDeclines": 0,
+            "evictions": 7,
+            "guardAttempts": 59,
+            "peakBytes": 48836,
+            "peakEntries": 4,
+            "dispatchGuardUs": 127.1549999996787,
+            "hitWriterUs": 187.63400000042748,
+            "fallbackEncoderUs": 203.3520000000717,
+            "compileInstallUs": 177.77800000004936,
+            "residentBytes": 29620,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 15,
+              "genericUs": 398.74299999920186,
+              "observedUs": 305.0610000001034
+            },
+            "misses": {
+              "n": 7,
+              "genericUs": 351.69499999983236,
+              "observedUs": 397.55600000021514
+            }
+          }
+        }
+      },
+      "checksum": 1353671,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 584.3449999999721,
+            "median": 603.1030000000028,
+            "max": 668.5139999999665,
+            "samples": [
+              593.7509999999893,
+              622.8519999999553,
+              603.1030000000028,
+              584.3449999999721,
+              642.8540000000503,
+              595.2090000000317,
+              668.5139999999665
+            ]
+          },
+          "setupUs": {
+            "min": 0.2110000000684522,
+            "median": 0.26500000001396984,
+            "max": 0.35200000007171184,
+            "samples": [
+              0.2110000000684522,
+              0.306999999913387,
+              0.22900000005029142,
+              0.22099999990314245,
+              0.26500000001396984,
+              0.35200000007171184,
+              0.3060000000987202
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 456.4700000000885,
+            "median": 516.9150000000373,
+            "max": 557.170999999973,
+            "samples": [
+              505.9169999999576,
+              516.9150000000373,
+              557.170999999973,
+              536.0659999999916,
+              505.70699999993667,
+              538.5949999999721,
+              456.4700000000885
+            ]
+          },
+          "setupUs": {
+            "min": 1.3900000000139698,
+            "median": 2.062999999965541,
+            "max": 2.6769999999087304,
+            "samples": [
+              1.7259999999660067,
+              1.3900000000139698,
+              1.6539999999804422,
+              2.062999999965541,
+              2.325999999884516,
+              2.194999999832362,
+              2.6769999999087304
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 726.5920000000624,
+            "median": 778.1050000000978,
+            "max": 1149.64300000004,
+            "samples": [
+              972.2199999999721,
+              770.2439999999478,
+              778.1050000000978,
+              1149.64300000004,
+              895.2720000001136,
+              726.5920000000624,
+              771.2460000000428
+            ]
+          },
+          "setupUs": {
+            "min": 0.8320000000530854,
+            "median": 1.1850000000558794,
+            "max": 2.5459999999729916,
+            "samples": [
+              0.847999999881722,
+              0.8320000000530854,
+              2.5459999999729916,
+              1.7119999999413267,
+              1.084000000031665,
+              1.1850000000558794,
+              1.9429999999701977
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 625.780999999959,
+            "median": 691.7689999999711,
+            "max": 894.3310000000056,
+            "samples": [
+              676.2410000000382,
+              862.4950000001118,
+              679.5779999999795,
+              691.7689999999711,
+              625.780999999959,
+              894.3310000000056,
+              706.0140000000829
+            ]
+          },
+          "setupUs": {
+            "min": 626.1560000000754,
+            "median": 653.5239999998594,
+            "max": 881.1259999999311,
+            "samples": [
+              644.4969999999739,
+              683.0439999999944,
+              626.1560000000754,
+              836.4790000000503,
+              645.8029999999562,
+              881.1259999999311,
+              653.5239999998594
+            ]
+          }
+        }
+      }
+    },
+    "system-complete-replay": {
+      "frames": 100,
+      "trainingFrames": 0,
+      "trainingUs": 4.831000000005588,
+      "shapesTrained": 0,
+      "fixedPlans": [],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 0,
+            "fallback": 100,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 0,
+            "peakBytes": 0,
+            "peakEntries": 0,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 0,
+            "residentEntries": 0
+          },
+          "adaptive-cold": {
+            "hits": 83,
+            "fallback": 17,
+            "writerRejections": 0,
+            "compileAttempts": 17,
+            "compiled": 17,
+            "compileDeclines": 0,
+            "evictions": 9,
+            "guardAttempts": 106,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 33559,
+            "residentEntries": 8
+          },
+          "adaptive-prefix": {
+            "hits": 83,
+            "fallback": 17,
+            "writerRejections": 0,
+            "compileAttempts": 17,
+            "compiled": 17,
+            "compileDeclines": 0,
+            "evictions": 9,
+            "guardAttempts": 106,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 33559,
+            "residentEntries": 8
+          }
+        },
+        "frames": 100,
+        "bytes": 163672,
+        "wireFNV32": "b6f7d431"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 0,
+            "fallback": 100,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 0,
+            "peakBytes": 0,
+            "peakEntries": 0,
+            "dispatchGuardUs": 26.69799999962561,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 4827.534000000218,
+            "compileInstallUs": 10.489999999292195,
+            "residentBytes": 0,
+            "residentEntries": 0
+          },
+          "matched": {
+            "hits": {
+              "n": 0,
+              "genericUs": 0,
+              "observedUs": 0
+            },
+            "misses": {
+              "n": 100,
+              "genericUs": 4762.680999999866,
+              "observedUs": 4885.666000000783
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 83,
+            "fallback": 17,
+            "writerRejections": 0,
+            "compileAttempts": 17,
+            "compiled": 17,
+            "compileDeclines": 0,
+            "evictions": 9,
+            "guardAttempts": 106,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 562.9099999996834,
+            "hitWriterUs": 2981.8430000002263,
+            "fallbackEncoderUs": 724.9320000002626,
+            "compileInstallUs": 362.916999999783,
+            "residentBytes": 33559,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 83,
+              "genericUs": 4533.560000000289,
+              "observedUs": 3513.9949999995297
+            },
+            "misses": {
+              "n": 17,
+              "genericUs": 654.1659999998519,
+              "observedUs": 1153.2629999996861
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 83,
+            "fallback": 17,
+            "writerRejections": 0,
+            "compileAttempts": 17,
+            "compiled": 17,
+            "compileDeclines": 0,
+            "evictions": 9,
+            "guardAttempts": 106,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 999.3280000003288,
+            "hitWriterUs": 4887.597999999882,
+            "fallbackEncoderUs": 914.1809999999823,
+            "compileInstallUs": 432.9869999997318,
+            "residentBytes": 33559,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 83,
+              "genericUs": 8224.147999999928,
+              "observedUs": 5862.673999999301
+            },
+            "misses": {
+              "n": 17,
+              "genericUs": 871.6990000000224,
+              "observedUs": 1433.4729999998817
+            }
+          }
+        }
+      },
+      "checksum": 5489080,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 5154.635000000009,
+            "median": 5318.912999999942,
+            "max": 6510.267999999924,
+            "samples": [
+              5277.142999999924,
+              5207.913000000059,
+              5348.460999999894,
+              6510.267999999924,
+              6031.648999999976,
+              5318.912999999942,
+              5154.635000000009
+            ]
+          },
+          "setupUs": {
+            "min": 0.915999999968335,
+            "median": 1.3219999999273568,
+            "max": 1.5940000000409782,
+            "samples": [
+              1.3219999999273568,
+              1.0239999999757856,
+              0.915999999968335,
+              1.5940000000409782,
+              1.5869999999413267,
+              1.5080000000307336,
+              0.9609999998938292
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 4888.96399999992,
+            "median": 5132.446999999927,
+            "max": 7239.882999999914,
+            "samples": [
+              5548.572000000044,
+              4990.061999999918,
+              6314.882999999798,
+              7239.882999999914,
+              4888.96399999992,
+              5132.446999999927,
+              5117.488999999943
+            ]
+          },
+          "setupUs": {
+            "min": 3.5950000000884756,
+            "median": 5.8519999999552965,
+            "max": 18.00199999997858,
+            "samples": [
+              5.407999999937601,
+              18.00199999997858,
+              3.847999999881722,
+              5.8519999999552965,
+              5.8519999999552965,
+              3.5950000000884756,
+              7.872000000090338
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 4310.594000000041,
+            "median": 4619.06799999997,
+            "max": 5333.893999999971,
+            "samples": [
+              4397.482999999891,
+              4607.790000000037,
+              4619.06799999997,
+              5333.893999999971,
+              4310.594000000041,
+              4847.983000000007,
+              4931.45000000007
+            ]
+          },
+          "setupUs": {
+            "min": 3.821999999927357,
+            "median": 5.109000000171363,
+            "max": 6.4359999999869615,
+            "samples": [
+              5.109000000171363,
+              4.338999999919906,
+              5.2269999999552965,
+              5.46999999997206,
+              3.821999999927357,
+              6.4359999999869615,
+              5.0480000000679865
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 4282.082000000053,
+            "median": 4551.058999999892,
+            "max": 5393.130999999936,
+            "samples": [
+              4492.091999999946,
+              4551.058999999892,
+              4282.082000000053,
+              5393.130999999936,
+              4291.177000000025,
+              4818.398999999976,
+              4673.620000000112
+            ]
+          },
+          "setupUs": {
+            "min": 3.202999999979511,
+            "median": 4.422000000020489,
+            "max": 6.528999999980442,
+            "samples": [
+              4.128000000026077,
+              3.202999999979511,
+              4.422000000020489,
+              6.114000000059605,
+              4.1049999999813735,
+              6.528999999980442,
+              5.547000000020489
+            ]
+          }
+        }
+      }
+    },
+    "all-application-holdouts": {
+      "frames": 209,
+      "trainingFrames": 218,
+      "trainingUs": 4917.468999999925,
+      "shapesTrained": 42,
+      "fixedPlans": [
+        36,
+        26,
+        15,
+        15,
+        13,
+        12,
+        11,
+        4
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 42,
+            "fallback": 167,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 709,
+            "peakBytes": 30513,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 30513,
+            "residentEntries": 8
+          },
+          "adaptive-cold": {
+            "hits": 157,
+            "fallback": 52,
+            "writerRejections": 0,
+            "compileAttempts": 52,
+            "compiled": 52,
+            "compileDeclines": 0,
+            "evictions": 47,
+            "guardAttempts": 371,
+            "peakBytes": 93471,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          },
+          "adaptive-prefix": {
+            "hits": 161,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 48,
+            "compiled": 48,
+            "compileDeclines": 0,
+            "evictions": 51,
+            "guardAttempts": 382,
+            "peakBytes": 94236,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          }
+        },
+        "frames": 209,
+        "bytes": 300968,
+        "wireFNV32": "d5b788fa"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 42,
+            "fallback": 167,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 709,
+            "peakBytes": 30513,
+            "peakEntries": 8,
+            "dispatchGuardUs": 1036.7169999962207,
+            "hitWriterUs": 1852.1909999994095,
+            "fallbackEncoderUs": 5689.346000003628,
+            "compileInstallUs": 21.70999999786727,
+            "residentBytes": 30513,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 42,
+              "genericUs": 2745.6140000002924,
+              "observedUs": 2248.203000000911
+            },
+            "misses": {
+              "n": 167,
+              "genericUs": 5439.341000000481,
+              "observedUs": 6413.819999999134
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 157,
+            "fallback": 52,
+            "writerRejections": 0,
+            "compileAttempts": 52,
+            "compiled": 52,
+            "compileDeclines": 0,
+            "evictions": 47,
+            "guardAttempts": 371,
+            "peakBytes": 93471,
+            "peakEntries": 8,
+            "dispatchGuardUs": 1228.1950000000652,
+            "hitWriterUs": 3552.6670000022277,
+            "fallbackEncoderUs": 2753.3789999994915,
+            "compileInstallUs": 1662.628000001656,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          },
+          "matched": {
+            "hits": {
+              "n": 157,
+              "genericUs": 6007.088000000687,
+              "observedUs": 4633.381999998819
+            },
+            "misses": {
+              "n": 52,
+              "genericUs": 2553.285000000149,
+              "observedUs": 4665.549999999115
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 161,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 48,
+            "compiled": 48,
+            "compileDeclines": 0,
+            "evictions": 51,
+            "guardAttempts": 382,
+            "peakBytes": 94236,
+            "peakEntries": 8,
+            "dispatchGuardUs": 1167.6340000000782,
+            "hitWriterUs": 3236.691999997711,
+            "fallbackEncoderUs": 2100.634999997914,
+            "compileInstallUs": 1246.3960000025108,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          },
+          "matched": {
+            "hits": {
+              "n": 161,
+              "genericUs": 5453.10000000312,
+              "observedUs": 4275.660000000615
+            },
+            "misses": {
+              "n": 48,
+              "genericUs": 1678.100000000326,
+              "observedUs": 3535.2920000012964
+            }
+          }
+        }
+      },
+      "checksum": 10172478,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 6579.864999999991,
+            "median": 6674.6460000001825,
+            "max": 6861.435999999987,
+            "samples": [
+              6861.435999999987,
+              6680.271999999881,
+              6642.189000000013,
+              6809.362999999896,
+              6595.099999999977,
+              6674.6460000001825,
+              6579.864999999991
+            ]
+          },
+          "setupUs": {
+            "min": 1.04300000006333,
+            "median": 1.198999999789521,
+            "max": 1.6239999999525025,
+            "samples": [
+              1.6239999999525025,
+              1.04300000006333,
+              1.1300000000046566,
+              1.3630000000121072,
+              1.0960000000195578,
+              1.198999999789521,
+              1.4720000000670552
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 6254.802999999956,
+            "median": 6664.236999999965,
+            "max": 6761.386999999988,
+            "samples": [
+              6761.386999999988,
+              6664.236999999965,
+              6386.207999999984,
+              6254.802999999956,
+              6759.351999999955,
+              6429.991999999853,
+              6686.030999999959
+            ]
+          },
+          "setupUs": {
+            "min": 4.307999999844469,
+            "median": 5.361000000033528,
+            "max": 6.341000000014901,
+            "samples": [
+              5.925000000046566,
+              6.341000000014901,
+              5.361000000033528,
+              5.672999999951571,
+              4.7950000000419095,
+              4.307999999844469,
+              5.270000000251457
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 6744.841999999946,
+            "median": 6928.670999999973,
+            "max": 7613.297999999952,
+            "samples": [
+              6744.841999999946,
+              7313.455999999889,
+              6774.339000000036,
+              6928.670999999973,
+              7387.429999999935,
+              7613.297999999952,
+              6756.142999999924
+            ]
+          },
+          "setupUs": {
+            "min": 2.986000000149943,
+            "median": 4.671000000089407,
+            "max": 11.632999999914318,
+            "samples": [
+              11.632999999914318,
+              4.4170000000158325,
+              4.898999999975786,
+              3.8769999999785796,
+              4.671000000089407,
+              2.986000000149943,
+              4.8980000000447035
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 6771.841999999946,
+            "median": 7007.255000000121,
+            "max": 7419.90800000017,
+            "samples": [
+              7419.90800000017,
+              6771.841999999946,
+              6954.314000000013,
+              7076.3120000000345,
+              7151.840999999782,
+              7007.255000000121,
+              6899.251000000164
+            ]
+          },
+          "setupUs": {
+            "min": 7005.469000000157,
+            "median": 7386.452000000048,
+            "max": 8342.72100000002,
+            "samples": [
+              8342.72100000002,
+              7386.452000000048,
+              7702.410999999964,
+              7005.469000000157,
+              7334.199999999953,
+              7380.784999999916,
+              7498.925999999978
+            ]
+          }
+        }
+      }
+    },
+    "independent-keys": {
+      "frames": 26,
+      "trainingFrames": 55,
+      "trainingUs": 726.6159999999218,
+      "shapesTrained": 14,
+      "fixedPlans": [
+        15,
+        13,
+        11,
+        4,
+        2,
+        2,
+        1,
+        1
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 2,
+            "fallback": 24,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 2,
+            "peakBytes": 33326,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 33326,
+            "residentEntries": 8
+          },
+          "adaptive-cold": {
+            "hits": 4,
+            "fallback": 22,
+            "writerRejections": 0,
+            "compileAttempts": 22,
+            "compiled": 22,
+            "compileDeclines": 0,
+            "evictions": 17,
+            "guardAttempts": 78,
+            "peakBytes": 19116,
+            "peakEntries": 5,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 19116,
+            "residentEntries": 5
+          },
+          "adaptive-prefix": {
+            "hits": 5,
+            "fallback": 21,
+            "writerRejections": 0,
+            "compileAttempts": 21,
+            "compiled": 21,
+            "compileDeclines": 0,
+            "evictions": 21,
+            "guardAttempts": 82,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 34227,
+            "residentEntries": 8
+          }
+        },
+        "frames": 26,
+        "bytes": 26705,
+        "wireFNV32": "38dc754f"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 2,
+            "fallback": 24,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 2,
+            "peakBytes": 33326,
+            "peakEntries": 8,
+            "dispatchGuardUs": 5.826999999815598,
+            "hitWriterUs": 8.572999999858439,
+            "fallbackEncoderUs": 787.5109999997076,
+            "compileInstallUs": 1.4110000000800937,
+            "residentBytes": 33326,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 2,
+              "genericUs": 12.56000000028871,
+              "observedUs": 10.592000000178814
+            },
+            "misses": {
+              "n": 24,
+              "genericUs": 766.1510000000708,
+              "observedUs": 796.063000000082
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 4,
+            "fallback": 22,
+            "writerRejections": 0,
+            "compileAttempts": 22,
+            "compiled": 22,
+            "compileDeclines": 0,
+            "evictions": 17,
+            "guardAttempts": 78,
+            "peakBytes": 19116,
+            "peakEntries": 5,
+            "dispatchGuardUs": 122.42500000004657,
+            "hitWriterUs": 81.62000000011176,
+            "fallbackEncoderUs": 860.4889999998268,
+            "compileInstallUs": 396.65899999975227,
+            "residentBytes": 19116,
+            "residentEntries": 5
+          },
+          "matched": {
+            "hits": {
+              "n": 4,
+              "genericUs": 108.91299999994226,
+              "observedUs": 95.53899999987334
+            },
+            "misses": {
+              "n": 22,
+              "genericUs": 676.5129999993369,
+              "observedUs": 1369.7869999997783
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 5,
+            "fallback": 21,
+            "writerRejections": 0,
+            "compileAttempts": 21,
+            "compiled": 21,
+            "compileDeclines": 0,
+            "evictions": 21,
+            "guardAttempts": 82,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 125.22699999809265,
+            "hitWriterUs": 89.9680000001099,
+            "fallbackEncoderUs": 693.080000000773,
+            "compileInstallUs": 351.69799999985844,
+            "residentBytes": 34227,
+            "residentEntries": 8
+          },
+          "matched": {
+            "hits": {
+              "n": 5,
+              "genericUs": 119.43399999989197,
+              "observedUs": 104.46700000041164
+            },
+            "misses": {
+              "n": 21,
+              "genericUs": 671.0159999995958,
+              "observedUs": 1159.7110000001267
+            }
+          }
+        }
+      },
+      "checksum": 916067,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 763.1410000000615,
+            "median": 790.8349999999627,
+            "max": 960.1180000000168,
+            "samples": [
+              790.8349999999627,
+              960.1180000000168,
+              788.1449999997858,
+              787.2360000000335,
+              918.9439999999013,
+              834.5879999999888,
+              763.1410000000615
+            ]
+          },
+          "setupUs": {
+            "min": 0.3089999998919666,
+            "median": 0.546000000089407,
+            "max": 1.1510000000707805,
+            "samples": [
+              0.5500000000465661,
+              0.7669999999925494,
+              0.3189999999012798,
+              0.546000000089407,
+              0.3089999998919666,
+              1.1510000000707805,
+              0.4599999999627471
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 754.8139999997802,
+            "median": 827.6959999999963,
+            "max": 943.5329999998212,
+            "samples": [
+              905.8359999998938,
+              943.5329999998212,
+              770.3880000000354,
+              827.6959999999963,
+              794.1499999999069,
+              840.1730000001844,
+              754.8139999997802
+            ]
+          },
+          "setupUs": {
+            "min": 1.7779999999329448,
+            "median": 2.237999999895692,
+            "max": 3.79300000006333,
+            "samples": [
+              1.7779999999329448,
+              3.79300000006333,
+              1.9990000000689179,
+              2.237999999895692,
+              2.33600000012666,
+              2.117999999783933,
+              3.1089999999385327
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 1255.8669999998529,
+            "median": 1401.3930000001565,
+            "max": 1505.1170000003185,
+            "samples": [
+              1501.4129999999423,
+              1401.3930000001565,
+              1305.2099999999627,
+              1326.1830000001937,
+              1255.8669999998529,
+              1505.1170000003185,
+              1477.8929999999236
+            ]
+          },
+          "setupUs": {
+            "min": 1,
+            "median": 1.2600000000093132,
+            "max": 3.155999999959022,
+            "samples": [
+              1.1010000000242144,
+              2.1839999998919666,
+              2.290999999968335,
+              1,
+              1.1149999999906868,
+              1.2600000000093132,
+              3.155999999959022
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 1281.5139999999665,
+            "median": 1392.2970000000205,
+            "max": 1708.163000000175,
+            "samples": [
+              1708.163000000175,
+              1392.2970000000205,
+              1281.5139999999665,
+              1303.8870000001043,
+              1438.3639999998268,
+              1449.4360000002198,
+              1330.7890000001062
+            ]
+          },
+          "setupUs": {
+            "min": 2397.69299999997,
+            "median": 2666.4250000000466,
+            "max": 2804.4910000001546,
+            "samples": [
+              2722.1790000000037,
+              2673.8269999998156,
+              2397.69299999997,
+              2463.2299999999814,
+              2431.585999999894,
+              2666.4250000000466,
+              2804.4910000001546
+            ]
+          }
+        }
+      }
+    },
+    "fixed-shape-control": {
+      "frames": 40,
+      "trainingFrames": 1,
+      "trainingUs": 84.0449999999255,
+      "shapesTrained": 1,
+      "fixedPlans": [
+        1
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 40,
+            "fallback": 0,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 40,
+            "peakBytes": 1422,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1422,
+            "residentEntries": 1
+          },
+          "adaptive-cold": {
+            "hits": 39,
+            "fallback": 1,
+            "writerRejections": 0,
+            "compileAttempts": 1,
+            "compiled": 1,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 39,
+            "peakBytes": 1422,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1422,
+            "residentEntries": 1
+          },
+          "adaptive-prefix": {
+            "hits": 40,
+            "fallback": 0,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 40,
+            "peakBytes": 1422,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1422,
+            "residentEntries": 1
+          }
+        },
+        "frames": 40,
+        "bytes": 27910,
+        "wireFNV32": "7b95c9d3"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 40,
+            "fallback": 0,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 40,
+            "peakBytes": 1422,
+            "peakEntries": 1,
+            "dispatchGuardUs": 55.25199999916367,
+            "hitWriterUs": 196.52500000153668,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1422,
+            "residentEntries": 1
+          },
+          "matched": {
+            "hits": {
+              "n": 40,
+              "genericUs": 347.7880000004079,
+              "observedUs": 259.5299999995623
+            },
+            "misses": {
+              "n": 0,
+              "genericUs": 0,
+              "observedUs": 0
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 39,
+            "fallback": 1,
+            "writerRejections": 0,
+            "compileAttempts": 1,
+            "compiled": 1,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 39,
+            "peakBytes": 1422,
+            "peakEntries": 1,
+            "dispatchGuardUs": 50.49299999931827,
+            "hitWriterUs": 169.34400000004098,
+            "fallbackEncoderUs": 9.037999999942258,
+            "compileInstallUs": 11.497999999905005,
+            "residentBytes": 1422,
+            "residentEntries": 1
+          },
+          "matched": {
+            "hits": {
+              "n": 39,
+              "genericUs": 311.13500000024214,
+              "observedUs": 227.0100000000093
+            },
+            "misses": {
+              "n": 1,
+              "genericUs": 8.22400000016205,
+              "observedUs": 20.958000000100583
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 40,
+            "fallback": 0,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 40,
+            "peakBytes": 1422,
+            "peakEntries": 1,
+            "dispatchGuardUs": 54.420000000623986,
+            "hitWriterUs": 450.85700000054203,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1422,
+            "residentEntries": 1
+          },
+          "matched": {
+            "hits": {
+              "n": 40,
+              "genericUs": 367.39100000052713,
+              "observedUs": 513.3440000002738
+            },
+            "misses": {
+              "n": 0,
+              "genericUs": 0,
+              "observedUs": 0
+            }
+          }
+        }
+      },
+      "checksum": 975040,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 285.7379999998957,
+            "median": 291.3650000002235,
+            "max": 328.469000000041,
+            "samples": [
+              285.7379999998957,
+              291.3650000002235,
+              292.8149999999441,
+              286.2039999999106,
+              290.9210000000894,
+              326.50600000005215,
+              328.469000000041
+            ]
+          },
+          "setupUs": {
+            "min": 0.14199999999254942,
+            "median": 0.16199999977834523,
+            "max": 0.24600000004284084,
+            "samples": [
+              0.24600000004284084,
+              0.23099999991245568,
+              0.14199999999254942,
+              0.14599999994970858,
+              0.14800000004470348,
+              0.16400000010617077,
+              0.16199999977834523
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 200.73400000017136,
+            "median": 209.15800000005402,
+            "max": 257.46200000005774,
+            "samples": [
+              209.15800000005402,
+              203.14700000011362,
+              200.73400000017136,
+              213.5659999998752,
+              207.63899999996647,
+              230.94599999999627,
+              257.46200000005774
+            ]
+          },
+          "setupUs": {
+            "min": 0.6469999998807907,
+            "median": 0.7519999998621643,
+            "max": 1.0839999997988343,
+            "samples": [
+              1.0839999997988343,
+              0.7519999998621643,
+              0.9949999998789281,
+              0.7220000000670552,
+              0.6469999998807907,
+              0.671000000089407,
+              0.9290000000037253
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 211.6030000001192,
+            "median": 220.38400000007823,
+            "max": 232.08299999986775,
+            "samples": [
+              225.12400000006892,
+              220.38400000007823,
+              213.79699999978766,
+              211.6030000001192,
+              220.34899999992922,
+              232.08299999986775,
+              229.34700000006706
+            ]
+          },
+          "setupUs": {
+            "min": 0.49900000006891787,
+            "median": 0.6509999998379499,
+            "max": 4.363999999826774,
+            "samples": [
+              4.363999999826774,
+              0.49900000006891787,
+              0.9820000000763685,
+              0.6509999998379499,
+              0.6089999999385327,
+              0.5849999999627471,
+              0.9010000000707805
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 201.94699999992736,
+            "median": 211.42399999988265,
+            "max": 237.40100000007078,
+            "samples": [
+              203.7390000000596,
+              237.40100000007078,
+              203.65200000000186,
+              201.94699999992736,
+              211.42399999988265,
+              220.52700000000186,
+              218.87000000011176
+            ]
+          },
+          "setupUs": {
+            "min": 15.449999999720603,
+            "median": 16.566999999806285,
+            "max": 39.74900000006892,
+            "samples": [
+              39.74900000006892,
+              21.19800000009127,
+              15.832999999867752,
+              15.449999999720603,
+              15.613999999826774,
+              16.566999999806285,
+              16.916999999899417
+            ]
+          }
+        }
+      }
+    },
+    "shape-churn-control": {
+      "frames": 72,
+      "trainingFrames": 12,
+      "trainingUs": 274.5619999996852,
+      "shapesTrained": 12,
+      "fixedPlans": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "validation": {
+        "counts": {
+          "fixed": {
+            "hits": 24,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 252,
+            "peakBytes": 2712,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 2712,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 68,
+            "guardAttempts": 278,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 72,
+            "guardAttempts": 288,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          }
+        },
+        "frames": 72,
+        "bytes": 15288,
+        "wireFNV32": "66f2da61"
+      },
+      "profiles": {
+        "fixed": {
+          "stream": {
+            "hits": 24,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 252,
+            "peakBytes": 2712,
+            "peakEntries": 4,
+            "dispatchGuardUs": 111.00599999842234,
+            "hitWriterUs": 111.1610000000801,
+            "fallbackEncoderUs": 278.7160000000149,
+            "compileInstallUs": 2.551999999443069,
+            "residentBytes": 2712,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 24,
+              "genericUs": 144.0049999996554,
+              "observedUs": 141.55699999956414
+            },
+            "misses": {
+              "n": 48,
+              "genericUs": 288.6020000001881,
+              "observedUs": 371.80599999963306
+            }
+          }
+        },
+        "adaptive-cold": {
+          "stream": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 68,
+            "guardAttempts": 278,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 107.89300000085495,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 419.04799999971874,
+            "compileInstallUs": 324.679999998305,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 0,
+              "genericUs": 0,
+              "observedUs": 0
+            },
+            "misses": {
+              "n": 72,
+              "genericUs": 431.26399999763817,
+              "observedUs": 859.5630000003148
+            }
+          }
+        },
+        "adaptive-prefix": {
+          "stream": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 72,
+            "guardAttempts": 288,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 121.0649999983143,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 459.8560000024736,
+            "compileInstallUs": 341.0739999972284,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          },
+          "matched": {
+            "hits": {
+              "n": 0,
+              "genericUs": 0,
+              "observedUs": 0
+            },
+            "misses": {
+              "n": 72,
+              "genericUs": 482.533000002848,
+              "observedUs": 931.5100000011735
+            }
+          }
+        }
+      },
+      "checksum": 619392,
+      "trials": {
+        "generic": {
+          "streamUs": {
+            "min": 412.30300000007264,
+            "median": 449.86899999994785,
+            "max": 1168.3619999999646,
+            "samples": [
+              1168.3619999999646,
+              449.86899999994785,
+              477.6629999997094,
+              455.36400000029244,
+              438.95799999986775,
+              412.30300000007264,
+              431.5549999999348
+            ]
+          },
+          "setupUs": {
+            "min": 0.2750000001396984,
+            "median": 0.42700000014156103,
+            "max": 0.6790000000037253,
+            "samples": [
+              0.6790000000037253,
+              0.3779999997932464,
+              0.4550000000745058,
+              0.42700000014156103,
+              0.2750000001396984,
+              0.2800000000279397,
+              0.48699999996460974
+            ]
+          }
+        },
+        "fixed": {
+          "streamUs": {
+            "min": 450.56099999975413,
+            "median": 510.0720000001602,
+            "max": 657.4030000001658,
+            "samples": [
+              510.0720000001602,
+              566.591999999946,
+              493.26099999970756,
+              485.82400000002235,
+              657.4030000001658,
+              450.56099999975413,
+              542.4520000000484
+            ]
+          },
+          "setupUs": {
+            "min": 0.9420000000391155,
+            "median": 1.3580000000074506,
+            "max": 2.533999999985099,
+            "samples": [
+              2.533999999985099,
+              1.3580000000074506,
+              1.6039999998174608,
+              1.2030000002123415,
+              1.1580000000540167,
+              0.9420000000391155,
+              1.9050000000279397
+            ]
+          }
+        },
+        "adaptive-cold": {
+          "streamUs": {
+            "min": 808.9860000000335,
+            "median": 916.6019999999553,
+            "max": 1219.6689999999944,
+            "samples": [
+              916.6019999999553,
+              1042.3479999999981,
+              1219.6689999999944,
+              925.4420000000391,
+              865.8970000003465,
+              808.9860000000335,
+              810.846000000136
+            ]
+          },
+          "setupUs": {
+            "min": 0.7779999999329448,
+            "median": 1.2330000000074506,
+            "max": 2.3559999999124557,
+            "samples": [
+              1.2330000000074506,
+              2.3559999999124557,
+              1.4629999999888241,
+              1.0449999999254942,
+              1.6970000001601875,
+              0.7779999999329448,
+              0.9339999998919666
+            ]
+          }
+        },
+        "adaptive-prefix": {
+          "streamUs": {
+            "min": 810.5759999998845,
+            "median": 973.1650000000373,
+            "max": 1057.589999999851,
+            "samples": [
+              983.2489999998361,
+              1022.4629999999888,
+              957.9050000000279,
+              973.1650000000373,
+              851.6429999999236,
+              810.5759999998845,
+              1057.589999999851
+            ]
+          },
+          "setupUs": {
+            "min": 130.9110000000801,
+            "median": 154.17700000014156,
+            "max": 176.4299999999348,
+            "samples": [
+              161.4749999998603,
+              175.03599999984726,
+              176.4299999999348,
+              154.17700000014156,
+              139.5810000000056,
+              130.9110000000801,
+              133.0140000001993
+            ]
+          }
+        }
+      }
+    }
+  },
+  "sensitivity": {
+    "1": {
+      "sysmon-holdout": {
+        "counts": {
+          "fixed": {
+            "hits": 5,
+            "fallback": 40,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 7,
+            "peakBytes": 4611,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 4611,
+            "residentEntries": 1
+          },
+          "adaptive-cold": {
+            "hits": 25,
+            "fallback": 20,
+            "writerRejections": 0,
+            "compileAttempts": 20,
+            "compiled": 20,
+            "compileDeclines": 0,
+            "evictions": 19,
+            "guardAttempts": 25,
+            "peakBytes": 5838,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 4611,
+            "residentEntries": 1
+          },
+          "adaptive-prefix": {
+            "hits": 25,
+            "fallback": 20,
+            "writerRejections": 0,
+            "compileAttempts": 20,
+            "compiled": 20,
+            "compileDeclines": 0,
+            "evictions": 20,
+            "guardAttempts": 25,
+            "peakBytes": 5838,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 4611,
+            "residentEntries": 1
+          }
+        },
+        "frames": 45,
+        "bytes": 79271,
+        "wireFNV32": "dca8344d"
+      },
+      "all-application-holdouts": {
+        "counts": {
+          "fixed": {
+            "hits": 0,
+            "fallback": 209,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 159,
+            "peakBytes": 2055,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 2055,
+            "residentEntries": 1
+          },
+          "adaptive-cold": {
+            "hits": 66,
+            "fallback": 143,
+            "writerRejections": 0,
+            "compileAttempts": 143,
+            "compiled": 143,
+            "compileDeclines": 0,
+            "evictions": 142,
+            "guardAttempts": 114,
+            "peakBytes": 45847,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 45847,
+            "residentEntries": 1
+          },
+          "adaptive-prefix": {
+            "hits": 66,
+            "fallback": 143,
+            "writerRejections": 0,
+            "compileAttempts": 143,
+            "compiled": 143,
+            "compileDeclines": 0,
+            "evictions": 143,
+            "guardAttempts": 114,
+            "peakBytes": 45847,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 45847,
+            "residentEntries": 1
+          }
+        },
+        "frames": 209,
+        "bytes": 300968,
+        "wireFNV32": "d5b788fa"
+      },
+      "shape-churn-control": {
+        "counts": {
+          "fixed": {
+            "hits": 6,
+            "fallback": 66,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 72,
+            "peakBytes": 654,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 654,
+            "residentEntries": 1
+          },
+          "adaptive-cold": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 71,
+            "guardAttempts": 71,
+            "peakBytes": 830,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 830,
+            "residentEntries": 1
+          },
+          "adaptive-prefix": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 72,
+            "guardAttempts": 72,
+            "peakBytes": 830,
+            "peakEntries": 1,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 830,
+            "residentEntries": 1
+          }
+        },
+        "frames": 72,
+        "bytes": 15288,
+        "wireFNV32": "66f2da61"
+      }
+    },
+    "2": {
+      "sysmon-holdout": {
+        "counts": {
+          "fixed": {
+            "hits": 11,
+            "fallback": 34,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 13,
+            "peakBytes": 9273,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 9273,
+            "residentEntries": 2
+          },
+          "adaptive-cold": {
+            "hits": 25,
+            "fallback": 20,
+            "writerRejections": 0,
+            "compileAttempts": 20,
+            "compiled": 20,
+            "compileDeclines": 0,
+            "evictions": 18,
+            "guardAttempts": 27,
+            "peakBytes": 10500,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 10449,
+            "residentEntries": 2
+          },
+          "adaptive-prefix": {
+            "hits": 25,
+            "fallback": 20,
+            "writerRejections": 0,
+            "compileAttempts": 20,
+            "compiled": 20,
+            "compileDeclines": 0,
+            "evictions": 20,
+            "guardAttempts": 27,
+            "peakBytes": 11676,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 10449,
+            "residentEntries": 2
+          }
+        },
+        "frames": 45,
+        "bytes": 79271,
+        "wireFNV32": "dca8344d"
+      },
+      "all-application-holdouts": {
+        "counts": {
+          "fixed": {
+            "hits": 0,
+            "fallback": 209,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 318,
+            "peakBytes": 4894,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 4894,
+            "residentEntries": 2
+          },
+          "adaptive-cold": {
+            "hits": 102,
+            "fallback": 107,
+            "writerRejections": 0,
+            "compileAttempts": 107,
+            "compiled": 107,
+            "compileDeclines": 0,
+            "evictions": 105,
+            "guardAttempts": 194,
+            "peakBytes": 81054,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 81054,
+            "residentEntries": 2
+          },
+          "adaptive-prefix": {
+            "hits": 102,
+            "fallback": 107,
+            "writerRejections": 0,
+            "compileAttempts": 107,
+            "compiled": 107,
+            "compileDeclines": 0,
+            "evictions": 107,
+            "guardAttempts": 195,
+            "peakBytes": 81054,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 81054,
+            "residentEntries": 2
+          }
+        },
+        "frames": 209,
+        "bytes": 300968,
+        "wireFNV32": "d5b788fa"
+      },
+      "shape-churn-control": {
+        "counts": {
+          "fixed": {
+            "hits": 12,
+            "fallback": 60,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 138,
+            "peakBytes": 1324,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1324,
+            "residentEntries": 2
+          },
+          "adaptive-cold": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 70,
+            "guardAttempts": 141,
+            "peakBytes": 1644,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1644,
+            "residentEntries": 2
+          },
+          "adaptive-prefix": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 72,
+            "guardAttempts": 144,
+            "peakBytes": 1644,
+            "peakEntries": 2,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 1644,
+            "residentEntries": 2
+          }
+        },
+        "frames": 72,
+        "bytes": 15288,
+        "wireFNV32": "66f2da61"
+      }
+    },
+    "4": {
+      "sysmon-holdout": {
+        "counts": {
+          "fixed": {
+            "hits": 42,
+            "fallback": 3,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 73,
+            "peakBytes": 20949,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 20949,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 38,
+            "fallback": 7,
+            "writerRejections": 0,
+            "compileAttempts": 7,
+            "compiled": 7,
+            "compileDeclines": 0,
+            "evictions": 3,
+            "guardAttempts": 42,
+            "peakBytes": 20949,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 19722,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 42,
+            "fallback": 3,
+            "writerRejections": 0,
+            "compileAttempts": 3,
+            "compiled": 3,
+            "compileDeclines": 0,
+            "evictions": 3,
+            "guardAttempts": 46,
+            "peakBytes": 20949,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 19722,
+            "residentEntries": 4
+          }
+        },
+        "frames": 45,
+        "bytes": 79271,
+        "wireFNV32": "dca8344d"
+      },
+      "all-application-holdouts": {
+        "counts": {
+          "fixed": {
+            "hits": 5,
+            "fallback": 204,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 484,
+            "peakBytes": 11672,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 11672,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 145,
+            "fallback": 64,
+            "writerRejections": 0,
+            "compileAttempts": 64,
+            "compiled": 64,
+            "compileDeclines": 0,
+            "evictions": 60,
+            "guardAttempts": 314,
+            "peakBytes": 88860,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 88860,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 146,
+            "fallback": 63,
+            "writerRejections": 0,
+            "compileAttempts": 63,
+            "compiled": 63,
+            "compileDeclines": 0,
+            "evictions": 63,
+            "guardAttempts": 319,
+            "peakBytes": 88860,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 88860,
+            "residentEntries": 4
+          }
+        },
+        "frames": 209,
+        "bytes": 300968,
+        "wireFNV32": "d5b788fa"
+      },
+      "shape-churn-control": {
+        "counts": {
+          "fixed": {
+            "hits": 24,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 252,
+            "peakBytes": 2712,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 2712,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 68,
+            "guardAttempts": 278,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 72,
+            "guardAttempts": 288,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          }
+        },
+        "frames": 72,
+        "bytes": 15288,
+        "wireFNV32": "66f2da61"
+      }
+    },
+    "8": {
+      "sysmon-holdout": {
+        "counts": {
+          "fixed": {
+            "hits": 42,
+            "fallback": 3,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 77,
+            "peakBytes": 33326,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 33326,
+            "residentEntries": 8
+          },
+          "adaptive-cold": {
+            "hits": 39,
+            "fallback": 6,
+            "writerRejections": 0,
+            "compileAttempts": 6,
+            "compiled": 6,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 43,
+            "peakBytes": 31398,
+            "peakEntries": 6,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 31398,
+            "residentEntries": 6
+          },
+          "adaptive-prefix": {
+            "hits": 43,
+            "fallback": 2,
+            "writerRejections": 0,
+            "compileAttempts": 2,
+            "compiled": 2,
+            "compileDeclines": 0,
+            "evictions": 2,
+            "guardAttempts": 48,
+            "peakBytes": 37149,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 33559,
+            "residentEntries": 8
+          }
+        },
+        "frames": 45,
+        "bytes": 79271,
+        "wireFNV32": "dca8344d"
+      },
+      "all-application-holdouts": {
+        "counts": {
+          "fixed": {
+            "hits": 42,
+            "fallback": 167,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 709,
+            "peakBytes": 30513,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 30513,
+            "residentEntries": 8
+          },
+          "adaptive-cold": {
+            "hits": 157,
+            "fallback": 52,
+            "writerRejections": 0,
+            "compileAttempts": 52,
+            "compiled": 52,
+            "compileDeclines": 0,
+            "evictions": 47,
+            "guardAttempts": 371,
+            "peakBytes": 93471,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          },
+          "adaptive-prefix": {
+            "hits": 161,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 48,
+            "compiled": 48,
+            "compileDeclines": 0,
+            "evictions": 51,
+            "guardAttempts": 382,
+            "peakBytes": 94236,
+            "peakEntries": 8,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          }
+        },
+        "frames": 209,
+        "bytes": 300968,
+        "wireFNV32": "d5b788fa"
+      },
+      "shape-churn-control": {
+        "counts": {
+          "fixed": {
+            "hits": 24,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 252,
+            "peakBytes": 2712,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 2712,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 68,
+            "guardAttempts": 278,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 72,
+            "guardAttempts": 288,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          }
+        },
+        "frames": 72,
+        "bytes": 15288,
+        "wireFNV32": "66f2da61"
+      }
+    },
+    "16": {
+      "sysmon-holdout": {
+        "counts": {
+          "fixed": {
+            "hits": 44,
+            "fallback": 1,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 81,
+            "peakBytes": 42701,
+            "peakEntries": 11,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 42701,
+            "residentEntries": 11
+          },
+          "adaptive-cold": {
+            "hits": 39,
+            "fallback": 6,
+            "writerRejections": 0,
+            "compileAttempts": 6,
+            "compiled": 6,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 43,
+            "peakBytes": 31398,
+            "peakEntries": 6,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 31398,
+            "residentEntries": 6
+          },
+          "adaptive-prefix": {
+            "hits": 44,
+            "fallback": 1,
+            "writerRejections": 0,
+            "compileAttempts": 1,
+            "compiled": 1,
+            "compileDeclines": 0,
+            "evictions": 1,
+            "guardAttempts": 51,
+            "peakBytes": 46379,
+            "peakEntries": 11,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 46379,
+            "residentEntries": 11
+          }
+        },
+        "frames": 45,
+        "bytes": 79271,
+        "wireFNV32": "dca8344d"
+      },
+      "all-application-holdouts": {
+        "counts": {
+          "fixed": {
+            "hits": 44,
+            "fallback": 165,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 727,
+            "peakBytes": 85580,
+            "peakEntries": 16,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 85580,
+            "residentEntries": 16
+          },
+          "adaptive-cold": {
+            "hits": 157,
+            "fallback": 52,
+            "writerRejections": 0,
+            "compileAttempts": 52,
+            "compiled": 52,
+            "compileDeclines": 0,
+            "evictions": 47,
+            "guardAttempts": 378,
+            "peakBytes": 96197,
+            "peakEntries": 12,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          },
+          "adaptive-prefix": {
+            "hits": 162,
+            "fallback": 47,
+            "writerRejections": 0,
+            "compileAttempts": 47,
+            "compiled": 47,
+            "compileDeclines": 0,
+            "evictions": 54,
+            "guardAttempts": 392,
+            "peakBytes": 97659,
+            "peakEntries": 14,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 93471,
+            "residentEntries": 5
+          }
+        },
+        "frames": 209,
+        "bytes": 300968,
+        "wireFNV32": "d5b788fa"
+      },
+      "shape-churn-control": {
+        "counts": {
+          "fixed": {
+            "hits": 24,
+            "fallback": 48,
+            "writerRejections": 0,
+            "compileAttempts": 0,
+            "compiled": 0,
+            "compileDeclines": 0,
+            "evictions": 0,
+            "guardAttempts": 252,
+            "peakBytes": 2712,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 2712,
+            "residentEntries": 4
+          },
+          "adaptive-cold": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 68,
+            "guardAttempts": 278,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          },
+          "adaptive-prefix": {
+            "hits": 0,
+            "fallback": 72,
+            "writerRejections": 0,
+            "compileAttempts": 72,
+            "compiled": 72,
+            "compileDeclines": 0,
+            "evictions": 72,
+            "guardAttempts": 288,
+            "peakBytes": 3224,
+            "peakEntries": 4,
+            "dispatchGuardUs": 0,
+            "hitWriterUs": 0,
+            "fallbackEncoderUs": 0,
+            "compileInstallUs": 0,
+            "residentBytes": 3224,
+            "residentEntries": 4
+          }
+        },
+        "frames": 72,
+        "bytes": 15288,
+        "wireFNV32": "66f2da61"
+      }
+    }
+  }
+}

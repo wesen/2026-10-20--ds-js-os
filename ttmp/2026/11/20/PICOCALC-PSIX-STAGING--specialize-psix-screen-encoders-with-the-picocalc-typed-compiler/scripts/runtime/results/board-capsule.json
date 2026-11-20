@@ -1,0 +1,51 @@
+{
+  "sourceBytes": 77269,
+  "sourceSha256": "8693f28f2c1b5f5c6917b777a74f2aafa241e14f40e97da1a52a9c29a7dff8e2",
+  "training": [
+    "worlds-first",
+    "worlds-selection",
+    "handles-first",
+    "handles-last",
+    "buses-first",
+    "refresh-0",
+    "refresh-1",
+    "refresh-2"
+  ],
+  "tests": {
+    "system": {
+      "validation": {
+        "count": 9,
+        "bytes": 15074,
+        "wireHash": "3e515422",
+        "verified": 3
+      },
+      "frames": [
+        "refresh-35",
+        "refresh-36",
+        "refresh-37",
+        "refresh-38",
+        "refresh-39",
+        "refresh-40",
+        "select-0",
+        "title-4",
+        "switch-1"
+      ]
+    },
+    "keys": {
+      "validation": {
+        "count": 6,
+        "bytes": 5797,
+        "wireHash": "98452397",
+        "verified": 3
+      },
+      "frames": [
+        "start-0",
+        "tick-2",
+        "key-5",
+        "key-16",
+        "key-22",
+        "focus-25"
+      ]
+    }
+  }
+}

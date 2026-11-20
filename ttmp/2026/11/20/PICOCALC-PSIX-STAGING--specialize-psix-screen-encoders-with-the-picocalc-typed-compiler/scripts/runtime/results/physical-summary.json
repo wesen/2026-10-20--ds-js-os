@@ -1,0 +1,310 @@
+{
+  "matchedBlocks": 5,
+  "receipts": 42,
+  "apps": {
+    "system": {
+      "exactByteVerification": 3,
+      "frames": 9,
+      "bytes": 15074,
+      "wireHash": "3e515422",
+      "policies": {
+        "generic": {
+          "encodeUs": {
+            "median": 287926,
+            "range": [
+              287470,
+              288940
+            ]
+          },
+          "setupUs": {
+            "median": 147,
+            "range": [
+              138,
+              151
+            ]
+          },
+          "totalUs": {
+            "median": 288075,
+            "range": [
+              287608,
+              289078
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 1.0,
+            "range": [
+              1.0,
+              1.0
+            ]
+          },
+          "hits": 0,
+          "fallback": 0,
+          "compiled": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "residentChargedBytes": 0
+        },
+        "trained": {
+          "encodeUs": {
+            "median": 260598,
+            "range": [
+              259256,
+              263660
+            ]
+          },
+          "setupUs": {
+            "median": 102444,
+            "range": [
+              101046,
+              104149
+            ]
+          },
+          "totalUs": {
+            "median": 363405,
+            "range": [
+              361644,
+              366655
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 0.9057693711354181,
+            "range": [
+              0.9004258038523787,
+              0.9129122058640222
+            ]
+          },
+          "hits": 7,
+          "fallback": 2,
+          "compiled": 0,
+          "evictions": 0,
+          "guardAttempts": 12,
+          "residentChargedBytes": 25560
+        },
+        "online": {
+          "encodeUs": {
+            "median": 358567,
+            "range": [
+              357240,
+              359600
+            ]
+          },
+          "setupUs": {
+            "median": 447,
+            "range": [
+              434,
+              470
+            ]
+          },
+          "totalUs": {
+            "median": 359001,
+            "range": [
+              357710,
+              360039
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 1.2419879559770195,
+            "range": [
+              1.2373550960486406,
+              1.2509131387623056
+            ]
+          },
+          "hits": 4,
+          "fallback": 5,
+          "compiled": 5,
+          "evictions": 0,
+          "guardAttempts": 6,
+          "residentChargedBytes": 25560
+        },
+        "warm": {
+          "encodeUs": {
+            "median": 271496,
+            "range": [
+              270045,
+              272283
+            ]
+          },
+          "setupUs": {
+            "median": 326304,
+            "range": [
+              325877,
+              328791
+            ]
+          },
+          "totalUs": {
+            "median": 598587,
+            "range": [
+              595922,
+              600287
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 0.9429367267978578,
+            "range": [
+              0.9346058005122171,
+              0.9467387901346227
+            ]
+          },
+          "hits": 8,
+          "fallback": 1,
+          "compiled": 1,
+          "evictions": 0,
+          "guardAttempts": 13,
+          "residentChargedBytes": 31398
+        }
+      }
+    },
+    "keys": {
+      "exactByteVerification": 3,
+      "frames": 6,
+      "bytes": 5797,
+      "wireHash": "98452397",
+      "policies": {
+        "generic": {
+          "encodeUs": {
+            "median": 121421,
+            "range": [
+              120734,
+              122759
+            ]
+          },
+          "setupUs": {
+            "median": 142,
+            "range": [
+              138,
+              149
+            ]
+          },
+          "totalUs": {
+            "median": 121559,
+            "range": [
+              120883,
+              122899
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 1.0,
+            "range": [
+              1.0,
+              1.0
+            ]
+          },
+          "hits": 0,
+          "fallback": 0,
+          "compiled": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "residentChargedBytes": 0
+        },
+        "trained": {
+          "encodeUs": {
+            "median": 124060,
+            "range": [
+              123590,
+              124418
+            ]
+          },
+          "setupUs": {
+            "median": 101785,
+            "range": [
+              100358,
+              104499
+            ]
+          },
+          "totalUs": {
+            "median": 225668,
+            "range": [
+              223948,
+              228663
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 1.023655308363841,
+            "range": [
+              1.011445189354752,
+              1.0258742588748957
+            ]
+          },
+          "hits": 0,
+          "fallback": 6,
+          "compiled": 0,
+          "evictions": 0,
+          "guardAttempts": 0,
+          "residentChargedBytes": 25560
+        },
+        "online": {
+          "encodeUs": {
+            "median": 179958,
+            "range": [
+              177949,
+              181909
+            ]
+          },
+          "setupUs": {
+            "median": 453,
+            "range": [
+              433,
+              455
+            ]
+          },
+          "totalUs": {
+            "median": 180411,
+            "range": [
+              178404,
+              182355
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 1.4818383988139363,
+            "range": [
+              1.471492007839181,
+              1.490532907051866
+            ]
+          },
+          "hits": 1,
+          "fallback": 5,
+          "compiled": 5,
+          "evictions": 0,
+          "guardAttempts": 7,
+          "residentChargedBytes": 14380
+        },
+        "warm": {
+          "encodeUs": {
+            "median": 176624,
+            "range": [
+              175215,
+              177304
+            ]
+          },
+          "setupUs": {
+            "median": 327951,
+            "range": [
+              326379,
+              331218
+            ]
+          },
+          "totalUs": {
+            "median": 505223,
+            "range": [
+              501594,
+              507842
+            ]
+          },
+          "pairedEncodeOverGeneric": {
+            "median": 1.4546412893980447,
+            "range": [
+              1.4273087920233953,
+              1.467424254973744
+            ]
+          },
+          "hits": 1,
+          "fallback": 5,
+          "compiled": 5,
+          "evictions": 2,
+          "guardAttempts": 7,
+          "residentChargedBytes": 29491
+        }
+      }
+    }
+  }
+}

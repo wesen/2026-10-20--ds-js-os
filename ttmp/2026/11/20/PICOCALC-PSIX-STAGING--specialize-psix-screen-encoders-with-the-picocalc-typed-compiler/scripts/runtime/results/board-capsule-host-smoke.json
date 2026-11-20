@@ -1,0 +1,138 @@
+{
+  "system": {
+    "verify": {
+      "elapsedUs": 5067.485000610352,
+      "setupUs": 1.126007080078125,
+      "count": 9,
+      "bytes": 15074,
+      "wireHash": "3e515422",
+      "hits": 0,
+      "fallback": 0,
+      "compiled": 0,
+      "evictions": 0,
+      "guardAttempts": 0,
+      "residentChargedBytes": 0,
+      "verified": 3
+    },
+    "generic": {
+      "elapsedUs": 4697.622039794922,
+      "setupUs": 0.912994384765625,
+      "count": 9,
+      "bytes": 15074,
+      "wireHash": "3e515422",
+      "hits": 0,
+      "fallback": 0,
+      "compiled": 0,
+      "evictions": 0,
+      "guardAttempts": 0,
+      "residentChargedBytes": 0
+    },
+    "trained": {
+      "elapsedUs": 4126.413986206055,
+      "setupUs": 2171.5599975585938,
+      "count": 9,
+      "bytes": 15074,
+      "wireHash": "3e515422",
+      "hits": 7,
+      "fallback": 2,
+      "compiled": 0,
+      "evictions": 0,
+      "guardAttempts": 12,
+      "residentChargedBytes": 25560
+    },
+    "online": {
+      "elapsedUs": 5887.447006225586,
+      "setupUs": 3.4780120849609375,
+      "count": 9,
+      "bytes": 15074,
+      "wireHash": "3e515422",
+      "hits": 4,
+      "fallback": 5,
+      "compiled": 5,
+      "evictions": 0,
+      "guardAttempts": 6,
+      "residentChargedBytes": 25560
+    },
+    "warm": {
+      "elapsedUs": 4095.5380096435547,
+      "setupUs": 5568.839996337891,
+      "count": 9,
+      "bytes": 15074,
+      "wireHash": "3e515422",
+      "hits": 8,
+      "fallback": 1,
+      "compiled": 1,
+      "evictions": 0,
+      "guardAttempts": 13,
+      "residentChargedBytes": 31398
+    }
+  },
+  "keys": {
+    "verify": {
+      "elapsedUs": 2175.9400024414062,
+      "setupUs": 1.1100006103515625,
+      "count": 6,
+      "bytes": 5797,
+      "wireHash": "98452397",
+      "hits": 0,
+      "fallback": 0,
+      "compiled": 0,
+      "evictions": 0,
+      "guardAttempts": 0,
+      "residentChargedBytes": 0,
+      "verified": 3
+    },
+    "generic": {
+      "elapsedUs": 2000.9609985351562,
+      "setupUs": 0.84100341796875,
+      "count": 6,
+      "bytes": 5797,
+      "wireHash": "98452397",
+      "hits": 0,
+      "fallback": 0,
+      "compiled": 0,
+      "evictions": 0,
+      "guardAttempts": 0,
+      "residentChargedBytes": 0
+    },
+    "trained": {
+      "elapsedUs": 2432.313003540039,
+      "setupUs": 1484.7729949951172,
+      "count": 6,
+      "bytes": 5797,
+      "wireHash": "98452397",
+      "hits": 0,
+      "fallback": 6,
+      "compiled": 0,
+      "evictions": 0,
+      "guardAttempts": 0,
+      "residentChargedBytes": 25560
+    },
+    "online": {
+      "elapsedUs": 3182.3580017089844,
+      "setupUs": 4.052001953125,
+      "count": 6,
+      "bytes": 5797,
+      "wireHash": "98452397",
+      "hits": 1,
+      "fallback": 5,
+      "compiled": 5,
+      "evictions": 0,
+      "guardAttempts": 7,
+      "residentChargedBytes": 14380
+    },
+    "warm": {
+      "elapsedUs": 3308.552017211914,
+      "setupUs": 5460.679000854492,
+      "count": 6,
+      "bytes": 5797,
+      "wireHash": "98452397",
+      "hits": 1,
+      "fallback": 5,
+      "compiled": 5,
+      "evictions": 2,
+      "guardAttempts": 7,
+      "residentChargedBytes": 29491
+    }
+  }
+}
