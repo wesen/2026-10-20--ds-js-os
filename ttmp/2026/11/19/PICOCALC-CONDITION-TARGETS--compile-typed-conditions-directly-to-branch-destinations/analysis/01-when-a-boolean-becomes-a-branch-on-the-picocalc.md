@@ -78,7 +78,19 @@ An independent JavaScript oracle computed the value, trace and trap outcome. Web
 
 The native counts exclude the surrounding reactor. The historical Stage 3 model rerun on A6 predicts 516, 2,497 and 15,969 instructions. The largest discrepancy is 15 instructions in Editor, below its five-percent tolerance. Native image output was identical in streamed and buffered compilation. Both lanes used the standard executable reservation. The smaller native code therefore occupied less of that reservation, while the allocated module size stayed fixed. [Frozen compiler identities](../various/compiler-inputs.json) · [Linked host ELF oracle](../various/board-oracle.json)
 
-<!-- physical_results -->
+## A cold build and a guest call use different clocks
+
+The ESP32-P4 compiled both lanes in the same firmware, in an alternating order across four paired blocks per boot. Each build used a fresh QuickJS runtime and the same native reactor. The device hashed the compiled ELF after timing and matched the independently linked host artifact in all 48 builds. Files, Agenda and Editor each loaded as a native world after both trial boots.
+
+| Workload | Paired change in cold compile time, two boots | Paired change in peak QuickJS heap, two boots |
+| --- | ---: | ---: |
+| Files | +8.42 to +9.37 ms | +3,184 to +3,194 bytes |
+| Agenda | −5.92 to +14.01 ms | −9,902 to −9,882 bytes |
+| Editor | +34.40 to +45.34 ms | −23,246 bytes on each boot |
+
+Each value is a median of within-block differences on one boot. Editor's unpaired boot medians were 2.917 and 2.930 seconds for staged A5 and 2.955 and 2.974 seconds for A6. The two Agenda time differences have opposite signs, so the trial did not establish a repeatable direction for that change.
+
+The board also ran 128-call batches of two real native functions and checked their results. The functions were drawn from the same machine code as the compiled apps. The median paired Files comparison cycles fell **5.72%** on both boots. Agenda's weekday cycles fell **11.43–11.47%**. Those are guest functions with fixed input distributions. The experiment did not time a physical Editor guest operation. The smaller Editor image met the static ceiling and reduced measured compile heap at the cost of a modest cold start increase. The board returned to its saved factory-app image after the two measured boots. [P4 hash, world state and measurement receipt](../various/physical.json) · [Per-boot paired results](../various/physical-summary.json)
 
 ## Reproduce the comparison
 

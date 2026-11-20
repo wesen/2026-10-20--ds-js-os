@@ -131,3 +131,57 @@ Run `node scripts/03-verify.mjs <staged-A6-root> picocalc-os/build/typed-world-r
 ### Technical details
 
 A6 produced 516, 2,496 and 15,954 words in the three native programs. The result-producing Wasm if counts were 19, 26 and 61. The compiler input receipt records hashes for both encoders and the world wrapper.
+
+
+## Step 3: Measure the paired cold builds and guest calls on the ESP32-P4
+
+The supervisor ran the two-lane A6 firmware in the shared board queue. The normal Editor boot loaded the candidate. The firmware measured fresh compiler runtimes for both lanes and emitted hashes after timing, then ran checked Files and Agenda functions from the same machine code.
+
+### Prompt Context
+
+**Study specification:** See Step 1.
+
+**Commit (code):** `dfc213a` — Lower typed conditions directly and qualify both host targets.
+
+### What I did
+
+- Copied the verified physical receipt and independently summarized the data with the prior lab's `05-summarize.py`.
+- Checked four complete paired blocks on each of two cold boots and 16 pairs of checked 128-call batches per guest operation per boot.
+- Used the reported ELF hashes and `worlds` entries to verify actual native loading from the candidate, rather than attributing simulator code size to a flashed image.
+- Completed the [article](../analysis/01-when-a-boolean-becomes-a-branch-on-the-picocalc.md) with the paired deltas and physical limitations.
+
+### Why
+
+The staged compiler can be slower even when it emits less guest code. Paired compiler heap and time measurements, plus guest cycles from separate batches, distinguish those outcomes.
+
+### What worked
+
+All 48 cold builds returned the correct full ELF digest in streamed mode. Editor used 23,246 fewer peak QuickJS bytes on each boot, with a paired compile cost of 34.40 and 45.34 ms. Files and Agenda guest cycles fell 5.72% and 11.43–11.47% in the checked functions. The original app image was restored and the final native world checks passed.
+
+### What didn't work
+
+Agenda cold time changed direction between the two boots. The receipt supports both medians and does not establish a directional Agenda time result.
+
+### What I learned
+
+The Editor compiler peak can fall even with temporary condition plans, because the final native emission also retains fewer words and fixups. The trial did not instrument enough allocations to assign the difference to either source independently.
+
+### What was tricky to build
+
+This experiment used the earlier paired fixture, which normally pins a production base. The staging wrapper substitutes the actual A5 frontend and native lowerer as lane zero. It independently checks the encoded program identities and selects the candidate for the normal Editor load.
+
+### What warrants a second pair of eyes
+
+Check that the size comparison concerns raw typed words while the full flashable reactor keeps its allocation unchanged. Per-boot paired time and heap use the same method for the control and candidate.
+
+### What should be done in the future
+
+Use A6 as the control for holding locals in registers. The independent A7 experiment adds a physical Editor search operation.
+
+### Code review instructions
+
+Open `various/physical.json` and `various/physical-summary.json`. The paired key is boot, workload and block. Compare each native ELF receipt with the matching lane in `various/board-oracle.json`.
+
+### Technical details
+
+Fresh QuickJS runtime per compile, constant reactor, ESP-IDF 5.4.2, streamed native lowering. There were 24 cold builds per boot and 64 guest batches per boot.
