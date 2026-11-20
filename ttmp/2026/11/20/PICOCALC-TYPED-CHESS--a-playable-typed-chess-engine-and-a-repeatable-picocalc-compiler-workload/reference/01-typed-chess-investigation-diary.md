@@ -226,3 +226,54 @@ Open scripts/13-measure-host.sh and trace the two separate clocks to scripts/13-
 The compiler clock includes source parse, code emission and linked-module construction. Setup covers loading the compiler source into an already created QuickJS runtime. The linked Wasm event clock starts after marshalling the event buffer and stops when the reactor returns.
 
 The follow-up source overlay in the engine oracle changes only the quiet-leaf capture extension. The activity-aware control takes the defended pawn d1d5 at +456 with 25 visits. Restoring the extension chooses f2f4 at +342 with 26 visits. Ordering and checked evasions are held constant. A separate exploratory Wasm comparison used Python chess 1.11.2 with seed 20261120, 24 random legal playouts capped at 90 plies, and samples at ply indexes congruent to 4 modulo 5. Move lists were sorted by UCI before selection. The 432 sampled positions matched every legal UCI and all 415,182 depth-two leaves. The committed executable oracle remains the 13-position dual-target qualification.
+
+## Step 5: Trace checkmate from the board position to the visible winner
+
+The engine had chosen and scored mates correctly, but the UI’s result code interpreted the side to move as the winner even though that side was checkmated. Commit **634105f** corrects the displayed color and tests the actual production outcome and rendering functions.
+
+### Prompt Context
+
+See Step 1 for the playable-app requirement. The supervisor authorized pausing and requeuing the waiting Chess job so the physical run uses the corrected firmware.
+
+### What I did
+
+- Applied the oracle's two known mating moves to the actual typed position and captured the label emitted by chessAppendStatus.
+- Updated chessOutcome to return the opposing color when the side to move has no legal move and is in check.
+- Reran both oracle scripts and repeated the nine host measurement samples and launcher replay on the corrected source.
+- Stopped only the waiting physical-chess session. Rebuilt its cached, isolated ESP-IDF project and restarted the queue behind the ongoing Editor campaigns.
+
+### Why
+
+The engine outcome and the text on the screen are two different contracts. A correct mate score does not verify the named winner. Evaluating the emitted status after each color's mating move exercises the result mapping itself.
+
+### What worked
+
+The UI reported White after e1e8 and Black after e8e1. The 6,981 engine words and 98 linked-reactor events still matched across targets. The existing opening screenshot and the rerun were byte-identical. The fresh host compile medians were 21.63 ms Wasm and 30.44 ms RV32. The earlier timings in Step 4 are historical. No compiler file changed between the host measurements.
+
+### What didn't work
+
+Before the fix, **node scripts/03-engine-oracle.mjs /usr/bin/gcc /usr/bin/false** reached the Wasm status assertion before it invoked either placeholder process. The diagnostic was **AssertionError [ERR_ASSERTION]: mate-in-one**, actual **Checkmate - Black wins**, expected **Checkmate - White wins**. The same test then passed with the real GCC and emulator paths.
+
+### What I learned
+
+The board's turn flips during chessMake. By the time chessOutcome examines it, the side with no reply is the losing side. The game state codes identify the winner.
+
+### What was tricky to build
+
+The original board queue was asleep. Replacing its firmware safely required pausing that queue before updating the file, running the same partition preflight on the rebuilt binary, and restarting with the same shared lock after ensuring no physical Chess run had started.
+
+### What warrants a second pair of eyes
+
+Check that the receipt's final source digest agrees with both linked modules and that the UI regression test applies real reference moves before checking the label.
+
+### What should be done in the future
+
+Keep both color fixtures in the engine-to-UI gate.
+
+### Code review instructions
+
+Start with chessOutcome in chess.typed, then inspect the render mapping in view.typed. The checkout-ready oracle test and physical command are in the reproduction guide.
+
+### Technical details
+
+The corrected physical firmware SHA-256 is **6b2acb8523eeb874ce94a7f1da33380571c08e2d73f27cf67d57be3ea619e707**. Its source SHA-256 is **871c60f88cd8365e263f057cd68e07a22fb283dea6a53602cb9365994514fff3**. Dry preflight matched the existing backup and partition table. The probe script logs the measured firmware digest in physical.json.

@@ -64,7 +64,7 @@ The app adjudicates checkmate, stalemate, bare kings, a single bishop or knight 
 
 For perft at depth one, list every legal move. At depth two, count the leaves after a legal reply to every root move. The initial position gives **20, 400 and 8,902** at depths one to three. Kiwipete adds **48 and 2,039** because its root position has castling and a denser tactical move tree. Specialty positions check every legal coordinate, including four promotion siblings, legal versus pinned en passant and castling through an attacked square. The clocks and board metadata are compared before and after traversal and search. [Independent perft cases](https://github.com/gflohr/Chess-Plisco/blob/main/t/05perft.t) · [Full engine receipt](../various/engine-oracle.json)
 
-The standalone engine oracle compares 6,981 returned words across Wasm and streamed RV32 under the CJI emulator. Those words cover legal moves and their deterministic order, perft, score, node count, completed depth and state-machine steps. The oracle checks native buffered output byte parity as well. The linked application replay compares 98 real reactor events and 18 retained frame payloads, including input during search, a stale token after reset and a failed timer. The separate WAMR launcher replay uses the keyboard, display, compositor and launcher to capture the game screen. The reset image is byte-identical to the initial image. [Cross-target application receipt](../various/world-oracle.json)
+The standalone engine oracle compares 6,981 returned words across Wasm and streamed RV32 under the CJI emulator. Those words cover legal moves and their deterministic order, perft, score, node count, completed depth and state-machine steps. The oracle checks native buffered output byte parity and separately exercises the actual UI's winner labels after a mate by each color in Wasm. The linked application replay compares 98 real reactor events and 18 retained frame payloads, including input during search, a stale token after reset and a failed timer. The separate WAMR launcher replay uses the keyboard, display, compositor and launcher to capture the game screen. The reset image is byte-identical to the initial image. [Cross-target application receipt](../various/world-oracle.json)
 
 ## Keep compilation and play on separate clocks
 
@@ -74,11 +74,11 @@ The hot application clock starts when the compiled Wasm reactor enters an event.
 
 | Host clock | Wasm | RV32 |
 | --- | ---: | ---: |
-| Compiler script setup, median of nine fresh processes | 6.38 ms | 7.24 ms |
-| Source to linked module, median of nine fresh processes | 30.74 ms | 41.05 ms |
-| Source to linked module, observed range | 29.99–31.21 ms | 40.69–44.26 ms |
+| Compiler script setup, median of nine fresh processes | 4.71 ms | 5.50 ms |
+| Source to linked module, median of nine fresh processes | 21.63 ms | 30.44 ms |
+| Source to linked module, observed range | 20.40–30.64 ms | 27.86–31.40 ms |
 | Linked module | 73,204 bytes | 240,452 bytes |
 
-The RV32 artifact includes the fixed executable slot and common reactor, so its file length is larger than the instructions Chess emits. The Node event medians for Wasm are 0.54 ms for the first board frame, 0.24 ms for the move and thinking frame, 7.33 ms across the 77 search-only wakes, and 0.11 ms for the final wake including the reply frame. The 78th wake includes the final move and frame build. These host observations identify operations with different costs. The board measures their runtime in its own scheduler and engine.
+The RV32 artifact includes the fixed executable slot and common reactor, so its file length is larger than the instructions Chess emits. The Node event medians for Wasm are 0.41 ms for the first board frame, 0.17 ms for the move and thinking frame, 5.30 ms across the 77 search-only wakes, and 0.09 ms for the final wake including the reply frame. The 78th wake includes the final move and frame build. An earlier host run during other firmware work measured 30.74 ms for Wasm and 41.05 ms for RV32 with the same compiler scripts. These are observations of the host in those sessions, with clock and system-load differences uncharacterized. The board measures its own scheduler and engine.
 
 See the raw [host timing distributions](../various/host-measurements.json) and the [physical replay preparation and command](../reference/03-reproduce-chess.md).
