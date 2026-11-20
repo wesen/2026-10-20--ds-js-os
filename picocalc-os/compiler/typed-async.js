@@ -116,33 +116,87 @@ class Cursor {
     }
 }
 
+// Reuse C-produced lexically valid rows. A null body result requests the old
+// candidate regexp and token/operator scan, with the same diagnostic precedence.
+function indexedBodies(source, lex, signatures) {
+    const index = lex.index;
+    if (!index) return null;
+    const {rows, symbols} = index;
+    const known = new Map(signatures.map(fn => [fn.name, fn.index + 1]));
+    const marks = new Uint8Array(symbols.length / 3);
+    const targets = new Uint32Array(marks.length);
+    let paren = -1, dot = -1;
+    for (let cell = 0; cell < symbols.length; cell += 3) {
+        const kind = symbols[cell + 2];
+        if (kind !== 1 && kind !== 4) continue;
+        const ordinal = cell / 3;
+        const value = source.slice(symbols[cell], symbols[cell + 1]);
+        if (kind === 4) {
+            if (value === "(") paren = ordinal;
+            if (value === ".") dot = ordinal;
+            continue;
+        }
+        targets[ordinal] = known.get(value) ?? 0;
+        if (value === "async" || value === "await") marks[ordinal] = 1;
+        else if (value === "start" || value === "cancel") marks[ordinal] = 2;
+        else if (value === "resume" || value === "pending") marks[ordinal] = 3;
+    }
+    return sig => {
+        if (sig.async) return null;
+        const first = lex.findIndexRow(sig.bodyAt);
+        const end = (rows[first + 3] - 1) * 4;
+        if (rows[first] !== sig.bodyAt || end <= first || rows[end + 1] !== sig.end) return null;
+        const calls = [];
+        for (let row = first + 4; row < end; row += 4) {
+            const ordinal = rows[row + 2];
+            const mark = marks[ordinal], target = targets[ordinal];
+            if (!mark && !target) continue;
+            const next = rows[row + 6], previous = rows[row - 2];
+            // Only the predicate for a task form is needed. The parser handles
+            // the complete form, its source-gate regexp, and all errors.
+            if (mark === 1 || (mark === 2 && symbols[next * 3 + 2] === 1) ||
+                (mark === 3 && next === paren)) return null;
+            if (target && next === paren && previous !== dot) {
+                // E.g. 1helper() has an identifier token but no regexp word
+                // boundary. Comment/literal markers influence the legacy scan
+                // selection in these invalid bodies, so preserve that path.
+                if (rows[row - 3] === rows[row] && symbols[previous * 3 + 2] === 2) return null;
+                calls.push(target - 1, rows[row]);
+            }
+        }
+        return calls;
+    };
+}
+
 function readProgram(source, imported) {
-    const lex = new typedWasm.Lexer(source);
+    const lex = new typedWasm.Lexer(source, 0, source.length, true);
     const recordEnds = new Map();
     const types = typedWasm.parseDeclarations(lex, recordEnds);
     const imports = new Map(imported.map(fn => [fn.name, fn]));
     const signatures = typedWasm.scanSignatures(lex, types.records, new Map(imports), 0,
         types.enums, types.distinct, true);
+    const inspectBody = indexedBodies(source, lex, signatures);
     const functions = new Map();
     let foundOperation = false;
     for (const sig of signatures) {
         const {name, result, start, end, bodyAt, async, index} = sig;
+        const calls = inspectBody?.(sig) ?? null;
         let tokens;
-        if (async || candidate.test(source.slice(bodyAt, end))) {
+        if (async || (calls === null && candidate.test(source.slice(bodyAt, end)))) {
             tokens = tokensFrom(source, bodyAt, end);
             foundOperation ||= async || tokens.some((_, i) => isOperation(tokens, i));
         }
-        const params = sig.params.map((type, i) => {
+        const params = async ? sig.params.map((type, i) => {
             const name = sig.paramNames[i];
             return {type, name, at: sig.paramAts[i], ambient: ambient.get(name) === type};
-        });
-        functions.set(name, {name, result, start, end, bodyAt, async, index, tokens,
-            params, edges: new Set(), waits: [], bindings: [], replacements: []});
+        }) : null;
+        functions.set(name, {name, result, start, end, bodyAt, async, index, tokens, calls, sig,
+            params, edges: new Set(), waits: async ? [] : null, bindings: async ? [] : null, replacements: []});
     }
     if (!foundOperation) return null;
     let prefix = "__typed_async_";
     while (source.includes(prefix)) prefix += "_";
-    return {source, types, functions, imports, prefix,
+    return {source, types, functions, imports, prefix, signatures,
         stateEnd: recordEnds.get("WorldState"), tasks: new Set(),
         stateFields: types.records.get("WorldState")?.size ?? 0};
 }
@@ -155,7 +209,7 @@ function sourceCallables(program) {
     const functions = new Map(program.imports);
     for (const fn of program.functions.values()) {
         if (fn.async) continue;
-        functions.set(fn.name, {name: fn.name, params: fn.params.map(param => param.type), result: fn.result, index: 0});
+        functions.set(fn.name, fn.sig);
     }
     return functions;
 }
@@ -180,7 +234,16 @@ function scanOperations(program) {
     for (const fn of functions.values()) {
         const {tokens} = fn;
         if (!tokens) {
-            scanOrdinaryCalls(source, fn, functions);
+            if (fn.calls === null) {
+                scanOrdinaryCalls(source, fn, functions);
+            } else {
+                for (let i = 0; i < fn.calls.length; i += 2) {
+                    const target = functions.get(program.signatures[fn.calls[i]].name);
+                    if (target.async)
+                        fail(source, fn.calls[i + 1], "call async function " + target.name + " with start or await");
+                    fn.edges.add(target);
+                }
+            }
             continue;
         }
         for (let i = 1; i < tokens.length - 1; i++) {
@@ -641,17 +704,36 @@ class GeneratedText {
 
     add(text, at, copied = false) {
         if (!text) return;
-        this.chunks.push({text, at, offset: this.offset, copied});
+        this.chunks.push({text, at, offset: this.offset, copied, length: text.length});
         this.offset += text.length;
     }
 
     line(text, at) { this.add(text + "\n", at); }
 
-    copy(from, to) { this.add(this.original.slice(from, to), from, true); }
+    copy(from, to) {
+        if (from >= to) return;
+        this.chunks.push({at: from, offset: this.offset, copied: true, length: to - from});
+        this.offset += to - from;
+    }
+
+    range(from, to) {
+        const parts = [];
+        for (const chunk of this.chunks) {
+            const first = Math.max(from, chunk.offset);
+            const last = Math.min(to, chunk.offset + chunk.length);
+            if (last <= first) continue;
+            const begin = first - chunk.offset;
+            const end = last - chunk.offset;
+            parts.push(chunk.copied ? this.original.slice(chunk.at + begin, chunk.at + end) : chunk.text.slice(begin, end));
+        }
+        return parts.join("");
+    }
 
     result(prefix, layout) {
-        const source = this.chunks.map(chunk => chunk.text).join("");
+        let whole;
+        const materialize = () => whole ??= this.range(0, this.offset);
         const remap = error => {
+            const source = materialize();
             const match = /^(\d+):(\d+): ([\s\S]*)$/.exec(error.message);
             if (!match) return error;
             let offset = 0;
@@ -668,7 +750,7 @@ class GeneratedText {
             const at = chunk.at + (chunk.copied ? offset - chunk.offset : 0);
             return new SyntaxError(location(this.original, at) + ": " + match[3]);
         };
-        return {source, layout, prefix, remap};
+        return {get source() { return materialize(); }, layout, prefix, remap};
     }
 }
 
@@ -1048,12 +1130,16 @@ function rewrite(source, imports = []) {
         for (const {name, type} of fields) writer.line("    " + name + ": " + type + ";", program.stateEnd);
         at = program.stateEnd;
     }
+    const ordinarySignatures = [], bodies = [];
     for (const fn of program.functions.values()) {
         if (fn.async) {
             writer.copy(at, fn.start);
             at = fn.end;
             continue;
         }
+        const {name, params, paramNames, result} = program.signatures[fn.index];
+        const outputAt = writer.offset + fn.bodyAt - at;
+        ordinarySignatures.push({name, params, paramNames, result, bodyAt: outputAt});
         for (const op of fn.replacements) {
             writer.copy(at, op.at);
             const root = allocation.tasks.get(op.target)?.root;
@@ -1070,12 +1156,23 @@ function rewrite(source, imports = []) {
             writer.add(text, op.at);
             at = op.end;
         }
+        bodies.push(fn.replacements.length ? {from: outputAt, to: writer.offset + fn.end - at}
+            : {originalAt: fn.bodyAt});
     }
     writer.copy(at, source.length);
+    const generatedAt = writer.offset;
     writer.add("\n", source.length);
     for (const frame of allocation.frames) emitStep(program, writer, frame);
     emitTaskOperations(program, writer, allocation);
-    return {...writer.result(program.prefix, allocation.layout), startFields};
+    const lowered = writer.result(program.prefix, allocation.layout);
+    Object.assign(lowered, {startFields, ordinarySignatures, generatedAt});
+    lowered.plan = {
+        original: source, declarations: program.types, fields,
+        bodies: bodies.map(body => body.originalAt === undefined
+            ? {text: writer.range(body.from, body.to), at: 0} : {at: body.originalAt}),
+        generated: writer.range(generatedAt, writer.offset),
+    };
+    return lowered;
 }
 
 globalThis.typedAsync = {

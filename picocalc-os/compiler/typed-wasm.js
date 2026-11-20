@@ -10,7 +10,7 @@ const I32 = 0x7f;
 const VOID = 0x40;
 const LITERAL = Symbol("integer literal");
 const scalarType = type => type === LITERAL ? "i32" : type;
-const BINARY = new Map([
+const BINARY = Object.assign(Object.create(null), Object.fromEntries([
     ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
     ["===", [3, null, "bool", 0x46]], ["!==", [3, null, "bool", 0x47]],
     ["<", [4, "i32", "bool", OP.lt]],
@@ -19,8 +19,8 @@ const BINARY = new Map([
     ["+", [6, "i32", "i32", OP.add]], ["-", [6, "i32", "i32", OP.sub]],
     ["*", [7, "i32", "i32", 0x6c]], ["/", [7, "i32", "i32", OP.div]],
     ["%", [7, "i32", "i32", 0x6f]],
-]);
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(?<str>"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?<op>!==|===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
+]));
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
@@ -57,12 +57,132 @@ function section(id, data) {
     return [id, ...unsigned(data.length), ...data];
 }
 
+// An index belongs to one exact source string in one compilation.
+let lexicalScope = null;
+const indexKinds = ["", "id", "int", "str", "op"];
+
+function withLexIndices(compile) {
+    const provide = globalThis.__typedLexIndex;
+    const previous = lexicalScope;
+    lexicalScope = typeof provide === "function" ? {provide, sources: new Map()} : null;
+    try {
+        return compile();
+    } finally {
+        lexicalScope = previous;
+    }
+}
+
+function indexFor(source) {
+    if (!lexicalScope) return null;
+    const {provide, sources} = lexicalScope;
+    if (sources.has(source)) return sources.get(source);
+    const buffers = provide(source);
+    const index = buffers === null ? null : {
+        rows: new Uint32Array(buffers[0]),
+        symbols: new Uint32Array(buffers[1]),
+        spellings: [],
+    };
+    sources.set(source, index);
+    return index;
+}
+
 class Lexer {
-    constructor(source, start = 0, end = source.length) {
+    constructor(source, start = 0, end = source.length, borrowCurrent = false) {
         this.source = source;
         this.offset = start;
         this.end = end;
+        const index = indexFor(source);
+        if (!index && borrowCurrent) {
+            this.borrowCurrent = true;
+            this.token = {value: "", kind: "eof", at: start};
+        }
+        if (index) {
+            this.index = index;
+            this.borrowCurrent = borrowCurrent;
+            if (borrowCurrent) this.token = {value: "", kind: "eof", at: start};
+            this.indexRow = 0;
+            this.indexOffset = undefined;
+            this.next = borrowCurrent && start === 0 && end === source.length
+                ? this.nextWholeIndexed : this.nextIndexed;
+        }
         this.next();
+    }
+
+    // Locate the next whole-source token when starting or after a seek.
+    findIndexRow(at) {
+        const rows = this.index.rows;
+        let low = 0, high = rows.length / 4;
+        while (low < high) {
+            const mid = (low + high) >>> 1;
+            if (rows[mid * 4] < at) low = mid + 1;
+            else high = mid;
+        }
+        return low * 4;
+    }
+
+    nextWholeIndexed() {
+        const row = this.indexRow;
+        const {rows, symbols, spellings} = this.index;
+        if (this.offset !== this.indexOffset || row >= rows.length) return this.nextIndexed();
+        const ordinal = rows[row + 2];
+        let symbol = spellings[ordinal];
+        if (symbol === undefined) {
+            const cell = ordinal * 3;
+            symbol = {
+                value: this.source.slice(symbols[cell], symbols[cell + 1]),
+                kind: indexKinds[symbols[cell + 2]],
+            };
+            spellings[ordinal] = symbol;
+        }
+        const token = this.token;
+        token.value = symbol.value;
+        token.kind = symbol.kind;
+        token.at = rows[row];
+        this.offset = this.indexOffset = rows[row + 1];
+        this.indexRow = row + 4;
+    }
+
+    nextIndexed() {
+        const at = this.offset;
+        if (at >= this.end) {
+            this.token = {value: "", kind: "eof", at};
+            return;
+        }
+        const {rows, symbols, spellings} = this.index;
+        let row = this.indexRow;
+        if (at !== this.indexOffset) {
+            row = this.findIndexRow(at);
+            if (at !== 0 && rows[row] !== at && (row === 0 || rows[row - 3] !== at)) {
+                Lexer.prototype.next.call(this);
+                return;
+            }
+        }
+        if (row >= rows.length || rows[row + 1] > this.end) {
+            // The reference regexp can backtrack over trivia in the tail,
+            // exposing terminal comment slashes as ordinary operator tokens.
+            Lexer.prototype.next.call(this);
+            return;
+        }
+        const ordinal = rows[row + 2];
+        let symbol = spellings[ordinal];
+        if (symbol === undefined) {
+            const cell = ordinal * 3;
+            symbol = {
+                value: this.source.slice(symbols[cell], symbols[cell + 1]),
+                kind: indexKinds[symbols[cell + 2]],
+            };
+            spellings[ordinal] = symbol;
+        }
+        if (this.borrowCurrent) {
+            this.token.value = symbol.value;
+            this.token.kind = symbol.kind;
+            this.token.at = rows[row];
+        } else {
+            // Range readers can retain these tokens across advances.
+            this.token = {value: symbol.value, kind: symbol.kind, at: rows[row]};
+        }
+        this.offset = this.indexOffset = rows[row + 1];
+        this.indexRow = row + 4;
     }
 
     next() {
@@ -73,10 +193,20 @@ class Lexer {
         TOKEN.lastIndex = this.offset;
         const match = TOKEN.exec(this.source);
         if (match && TOKEN.lastIndex <= this.end) {
-            const {id, int, str, op} = match.groups;
-            const value = id ?? int ?? str ?? op;
-            this.token = { value, kind: id ? "id" : int ? "int" : str ? "str" : "op",
-                at: TOKEN.lastIndex - value.length };
+            const value = match[1];
+            const first = value.charCodeAt(0);
+            const id = first === 95 || (first >= 65 && first <= 90) || (first >= 97 && first <= 122);
+            const kind = id ? "id" : first >= 48 && first <= 57 ? "int" : first === 34 ? "str" : "op";
+            const at = TOKEN.lastIndex - value.length;
+            const current = this.borrowCurrent ? this.token : null;
+            if (current) {
+                current.value = value;
+                current.kind = kind;
+                current.at = at;
+                this.token = current;
+            } else {
+                this.token = {value, kind, at};
+            }
             this.offset = TOKEN.lastIndex;
             return;
         }
@@ -98,7 +228,8 @@ class Lexer {
     }
 
     expect(value) {
-        if (!this.accept(value)) this.fail("expected " + value);
+        if (this.token.value !== value) this.fail("expected " + value);
+        this.next();
     }
 
     ident() {
@@ -118,6 +249,20 @@ class Lexer {
     }
 
     skipBody() {
+        if (this.index && this.token.value === "{" && this.indexOffset === this.offset) {
+            const row = this.indexRow - 4;
+            const rows = this.index.rows;
+            if (rows[row] === this.token.at) {
+                const close = rows[row + 3];
+                const end = close && rows[(close - 1) * 4 + 1];
+                if (end && end <= this.end) {
+                    this.indexRow = close * 4;
+                    this.offset = this.indexOffset = end;
+                    this.next();
+                    return end;
+                }
+            }
+        }
         BODY_TOKEN.lastIndex = this.offset;
         let depth = 1;
         for (let token; (token = BODY_TOKEN.exec(this.source)) && BODY_TOKEN.lastIndex <= this.end;) {
@@ -180,18 +325,18 @@ class FunctionEmitter {
 
     minmax() {
         const lex = this.lex;
-        lex.expect(".");
+        { if (lex.token.value !== ".") lex.fail("expected ."); lex.next(); }
         const name = lex.ident();
         if (name !== "min" && name !== "max") lex.fail("expected Math.min or Math.max");
-        lex.expect("(");
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         const a = this.nextLocal++;
         const b = this.nextLocal++;
         this.want(this.expr(), "i32");
         this.emitIndex(OP.set, a);
-        lex.expect(",");
+        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
         this.want(this.expr(), "i32");
         this.emitIndex(OP.set, b);
-        lex.expect(")");
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.emitIndex(OP.get, a);
         this.emitIndex(OP.get, b);
         this.code.push(OP.lt, OP.if, I32);
@@ -203,17 +348,21 @@ class FunctionEmitter {
 
     prefix() {
         const lex = this.lex;
-        if (lex.accept("(")) {
+        switch (lex.token.value) {
+        case "(": {
+            lex.next();
             const type = this.expr();
-            lex.expect(")");
+            { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
             return type;
         }
-        if (lex.accept("!")) {
+        case "!": {
+            lex.next();
             this.want(this.expr(8), "bool");
             this.code.push(OP.eqz);
             return "bool";
         }
-        if (lex.accept("-")) {
+        case "-": {
+            lex.next();
             if (lex.token.kind === "int" && Number(lex.token.value) === 2147483648) {
                 lex.next();
                 this.emitConst(-2147483648);
@@ -225,6 +374,31 @@ class FunctionEmitter {
             this.code.push(OP.sub);
             return type;
         }
+        case "true": {
+            lex.next();
+            this.emitConst(1);
+            return "bool";
+        }
+        case "false": {
+            lex.next();
+            this.emitConst(0);
+            return "bool";
+        }
+        case "Math": {
+            lex.next();
+            this.minmax();
+            return "i32";
+        }
+        case "i32": {
+            lex.next();
+            { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
+            const type = this.expr();
+            if (!this.enums.has(type) && !this.distinct.has(type))
+                lex.fail("i32 conversion requires an enum or a distinct integer, got " + scalarType(type));
+            { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+            return "i32";
+        }
+        }
         if (lex.token.kind === "int") {
             const value = Number(lex.token.value);
             if (value > 2147483647) lex.fail("i32 literal out of range");
@@ -232,39 +406,19 @@ class FunctionEmitter {
             lex.next();
             return LITERAL;
         }
-        if (lex.accept("true")) {
-            this.emitConst(1);
-            return "bool";
-        }
-        if (lex.accept("false")) {
-            this.emitConst(0);
-            return "bool";
-        }
-        if (lex.accept("Math")) {
-            this.minmax();
-            return "i32";
-        }
-        if (lex.accept("i32")) {
-            lex.expect("(");
-            const type = this.expr();
-            if (!this.enums.has(type) && !this.distinct.has(type))
-                lex.fail("i32 conversion requires an enum or a distinct integer, got " + scalarType(type));
-            lex.expect(")");
-            return "i32";
-        }
         const name = lex.ident();
-        if (lex.accept("(")) {
+        if ((lex.token.value === "(" && (lex.next(), true))) {
             const generatedType = lex.generatedWordType?.(name);
             if (generatedType || this.distinct.has(name)) {
                 this.want(this.expr(), "i32");
-                lex.expect(")");
+                { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
                 return generatedType ?? name;
             }
             return this.call(name);
         }
         const binding = this.locals.get(name);
         if (!binding && this.enums.has(name)) {
-            lex.expect(".");
+            { if (lex.token.value !== ".") lex.fail("expected ."); lex.next(); }
             const member = lex.ident();
             const value = this.enums.get(name).get(member);
             if (value === undefined) lex.fail("unknown enum member " + name + "." + member);
@@ -272,27 +426,31 @@ class FunctionEmitter {
             return name;
         }
         if (!binding) lex.fail("unknown local " + name);
-        if (this.records.has(binding.type) && lex.accept(".")) {
+        if (binding.type === "i32" || binding.type === "bool") {
+            this.emitIndex(OP.get, binding.index);
+            return binding.type;
+        }
+        if (this.records.has(binding.type) && (lex.token.value === "." && (lex.next(), true))) {
             this.emitIndex(OP.get, binding.index);
             const field = this.field(binding.type);
             this.emitMemory(0x28, 2, field.offset);
             return field.type;
         }
-        if ((binding.type === "string" || binding.type === "buffer") && lex.accept(".")) {
-            if (binding.type === "buffer" && lex.accept("writeLiteral")) {
+        if ((binding.type === "string" || binding.type === "buffer") && (lex.token.value === "." && (lex.next(), true))) {
+            if (binding.type === "buffer" && (lex.token.value === "writeLiteral" && (lex.next(), true))) {
                 this.emitConst(this.bufferLiteral(binding.index));
                 return "i32";
             }
-            if (lex.accept("length")) {
+            if ((lex.token.value === "length" && (lex.next(), true))) {
                 this.emitIndex(OP.get, binding.index);
                 this.code.push(0x28, 2, 0);
                 return "i32";
             }
-            lex.expect("charCodeAt");
-            lex.expect("(");
+            { if (lex.token.value !== "charCodeAt") lex.fail("expected charCodeAt"); lex.next(); }
+            { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             const pos = this.nextLocal++;
             this.want(this.expr(), "i32");
-            lex.expect(")");
+            { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
             this.emitIndex(OP.set, pos);
             this.codeUnitAddress(binding.index, pos);
             this.code.push(0x2f, 1, 4);
@@ -303,16 +461,17 @@ class FunctionEmitter {
     }
 
     expr(minPrecedence = 0) {
-        if (++this.depth > 128) this.lex.fail("expression nesting limit exceeded");
+        const lex = this.lex;
+        if (++this.depth > 128) lex.fail("expression nesting limit exceeded");
         let type = this.prefix();
         while (true) {
-            const op = this.lex.token.value;
-            const rule = BINARY.get(op);
+            const op = lex.token.value;
+            const rule = BINARY[op];
             if (!rule || rule[0] < minPrecedence) break;
-            const [precedence, input, result, opcode] = rule;
+            const precedence = rule[0], input = rule[1], result = rule[2], opcode = rule[3];
             if (op === "&&" || op === "||") {
                 this.want(type, "bool");
-                this.lex.next();
+                lex.next();
                 this.code.push(OP.if, I32);
                 if (op === "&&") {
                     this.want(this.expr(precedence + 1), "bool");
@@ -329,10 +488,10 @@ class FunctionEmitter {
                 const numeric = precedence === 3 || precedence === 4 || precedence === 6;
                 const nominal = numeric && this.distinct.has(type);
                 if (!input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
-                    this.lex.fail("expected scalar equality operands");
+                    lex.fail("expected scalar equality operands");
                 let expected = nominal || !input ? scalarType(type) : input;
                 this.want(type, expected);
-                this.lex.next();
+                lex.next();
                 const right = this.expr(precedence + 1);
                 if (numeric && type === LITERAL && this.distinct.has(right)) expected = right;
                 this.want(right, expected);
@@ -345,9 +504,9 @@ class FunctionEmitter {
     }
 
     result(type, branch) {
-        this.lex.expect("return");
+        { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }
         this.want(this.expr(), type);
-        this.lex.expect(";");
+        { if (this.lex.token.value !== ";") this.lex.fail("expected ;"); this.lex.next(); }
         if (branch) this.code.push(OP.return);
     }
 
@@ -363,34 +522,34 @@ class FunctionEmitter {
 
     bufferWrite(receiver) {
         const lex = this.lex;
-        if (lex.accept("writeLiteral")) {
+        if ((lex.token.value === "writeLiteral" && (lex.next(), true))) {
             this.bufferLiteral(receiver);
             return;
         }
-        lex.expect("setCharCodeAt");
-        lex.expect("(");
+        { if (lex.token.value !== "setCharCodeAt") lex.fail("expected setCharCodeAt"); lex.next(); }
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         const position = this.nextLocal++;
         this.want(this.expr(), "i32");
         this.emitIndex(OP.set, position);
-        lex.expect(",");
+        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
         this.codeUnitAddress(receiver, position);
         this.want(this.expr(), "i32");
-        lex.expect(")");
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.code.push(0x3b, 1, 4); // i32.store16 into the buffer's data after its capacity
     }
 
     bufferLiteral(receiver) {
         const lex = this.lex;
-        lex.expect("(");
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         const position = this.nextLocal++, address = this.nextLocal++;
         this.want(this.expr(), "i32");
         this.emitIndex(OP.set, position);
-        lex.expect(",");
+        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
         if (lex.token.kind !== "str") lex.fail("expected a double-quoted string literal");
         const value = JSON.parse(lex.token.value);
         if (value.length > 1022) lex.fail("buffer literal exceeds 1022 UTF-16 units");
         lex.next();
-        lex.expect(")");
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         if (!value.length) return 0;
         // Check the whole write before mutating the buffer. A negative start
         // is outside the unsigned bound even if the literal would end inside.
@@ -427,7 +586,7 @@ class FunctionEmitter {
             if (i) lex.expect(",");
             this.want(this.expr(), callee.params[i]);
         }
-        lex.expect(")");
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.emitIndex(0x10, callee.index);
         const ordinal = callee.index - this.functionBase;
         if (this.edges && ordinal >= 0 && !this.edges.includes(ordinal))
@@ -449,10 +608,10 @@ class FunctionEmitter {
 
     block(result) {
         if (++this.depth > 128) this.lex.fail("block nesting limit exceeded");
-        this.lex.expect("{");
+        { if (this.lex.token.value !== "{") this.lex.fail("expected {"); this.lex.next(); }
         const enclosing = this.locals;
         this.locals = new Map(enclosing);
-        while (!this.lex.accept("}")) this.statement(result);
+        while (!(this.lex.token.value === "}" && (this.lex.next(), true))) this.statement(result);
         this.locals = enclosing;
         this.depth--;
     }
@@ -462,16 +621,16 @@ class FunctionEmitter {
         const enclosing = this.controls;
         do {
             if (this.controls - enclosing + this.depth >= 128) lex.fail("block nesting limit exceeded");
-            lex.expect("(");
+            { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             this.want(this.expr(), "bool");
-            lex.expect(")");
+            { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
             this.code.push(OP.if, VOID);
             this.controls++;
             if (lex.token.value === "{") this.block(result);
             else this.result(result, true);
-            if (!lex.accept("else")) break;
+            if (!(lex.token.value === "else" && (lex.next(), true))) break;
             this.code.push(OP.else);
-            if (lex.accept("if")) continue;
+            if ((lex.token.value === "if" && (lex.next(), true))) continue;
             if (lex.token.value === "{") this.block(result);
             else this.result(result, true);
             break;
@@ -485,12 +644,12 @@ class FunctionEmitter {
     loop(result, counted) {
         const lex = this.lex;
         const enclosing = this.locals;
-        lex.expect("(");
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         if (counted) {
             this.locals = new Map(enclosing);
             if (lex.token.value === "let") this.declaration();
             else this.assignment(lex.ident());
-            lex.expect(";");
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
         }
         // Expression control blocks close within expr(), before any break can appear.
         this.loopExits.push(this.controls);
@@ -500,14 +659,14 @@ class FunctionEmitter {
         this.code.push(OP.eqz, 0x0d, 1);
         let update;
         if (counted) {
-            lex.expect(";");
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
             const loopCode = this.code;
             this.code = [];
             this.assignment(lex.ident());
             update = this.code;
             this.code = loopCode;
         }
-        lex.expect(")");
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.block(result);
         if (update) {
             for (const cell of update) this.code.push(cell);
@@ -523,14 +682,14 @@ class FunctionEmitter {
         const mutable = lex.token.value === "let";
         lex.next();
         const id = lex.ident();
-        const annotation = lex.accept(":") ? lex.type(this.records, this.enums, this.distinct) : null;
+        const annotation = (lex.token.value === ":" && (lex.next(), true)) ? lex.type(this.records, this.enums, this.distinct) : null;
         if (mutable && annotation !== null && lex.isGeneratedLocal?.(id) && lex.token.value === ";") {
             // Every continuation path reaches the original initializer or a reload
             // before reading this slot, including on targets with uninitialized frames.
             this.local(id, annotation, true);
             return;
         }
-        lex.expect("=");
+        { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
         const type = this.expr();
         if (annotation !== null) this.want(type, annotation);
         this.emitIndex(OP.set, this.local(id, annotation ?? scalarType(type), mutable));
@@ -540,18 +699,18 @@ class FunctionEmitter {
         const lex = this.lex;
         const local = this.locals.get(id);
         if (!local) lex.fail("unknown local " + id);
-        if (statement && lex.accept(".")) {
+        if (statement && (lex.token.value === "." && (lex.next(), true))) {
             if (local.type === "buffer") this.bufferWrite(local.index);
             else {
                 const field = this.field(local.type);
                 this.emitIndex(OP.get, local.index);
-                lex.expect("=");
+                { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
                 this.want(this.expr(), field.type);
                 this.emitMemory(0x36, 2, field.offset);
             }
         } else {
             if (!local.mutable) lex.fail("expected mutable local " + id);
-            lex.expect("=");
+            { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
             this.want(this.expr(), local.type);
             this.emitIndex(OP.set, local.index);
         }
@@ -591,17 +750,17 @@ class FunctionEmitter {
 
     match(result) {
         const lex = this.lex;
-        lex.expect("(");
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         const type = this.expr();
         const members = this.enums.get(type);
         if (!members) lex.fail("match requires an enum, got " + scalarType(type));
-        lex.expect(")");
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         const slot = this.nextLocal++;
         this.emitIndex(OP.set, slot);
-        lex.expect("{");
+        { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
         const seen = new Set();
         const enclosing = this.controls;
-        while (!lex.accept("}")) {
+        while (!(lex.token.value === "}" && (lex.next(), true))) {
             const values = [];
             do {
                 const member = lex.ident();
@@ -609,8 +768,8 @@ class FunctionEmitter {
                 if (seen.has(member)) lex.fail("useless case " + member);
                 seen.add(member);
                 values.push(members.get(member));
-            } while (lex.accept(","));
-            lex.expect(":");
+            } while ((lex.token.value === "," && (lex.next(), true)));
+            { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
             this.matchGroup(slot, values);
             this.code.push(OP.if, VOID);
             this.controls++;
@@ -628,43 +787,48 @@ class FunctionEmitter {
 
     statement(result) {
         const lex = this.lex;
-        if (lex.accept("if")) {
+        switch (lex.token.value) {
+        case "if":
+            lex.next();
             this.conditional(result);
             return;
-        }
-        if (lex.accept("match")) {
+        case "match":
+            lex.next();
             this.match(result);
             return;
-        }
-        if (lex.token.value === "return") {
+        case "return":
             this.result(result, true);
             return;
-        }
-        if (lex.token.value === "while" || lex.token.value === "for") {
-            const counted = lex.accept("for");
-            if (!counted) lex.expect("while");
-            this.loop(result, counted);
+        case "while":
+            lex.next();
+            this.loop(result, false);
             return;
-        }
-        if (lex.accept("break")) {
+        case "for":
+            lex.next();
+            this.loop(result, true);
+            return;
+        case "break": {
+            lex.next();
             const exit = this.loopExits.at(-1);
             if (exit === undefined) lex.fail("break outside a loop");
-            lex.expect(";");
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
             this.emitIndex(0x0c, this.controls - exit - 1);
             return;
         }
-        if (lex.token.value === "const" || lex.token.value === "let") {
+        case "const": case "let":
             this.declaration();
-        } else {
+            break;
+        default: {
             const id = lex.ident();
-            if (lex.accept("(")) {
+            if ((lex.token.value === "(" && (lex.next(), true))) {
                 this.call(id);
                 this.code.push(0x1a); // drop the unused call result
             } else {
                 this.assignment(id, true);
             }
         }
-        lex.expect(";");
+        }
+        { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
     }
 
     function(fn) {
@@ -673,10 +837,10 @@ class FunctionEmitter {
         for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
         lex.offset = fn.bodyAt;
         lex.next();
-        lex.expect("{");
+        { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
         while (lex.token.value !== "return") this.statement(result);
         this.result(result, false);
-        lex.expect("}");
+        { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
         this.code.push(OP.end);
         fn.nlocals = this.nextLocal - params.length;
         fn.code = this.code;
@@ -685,8 +849,7 @@ class FunctionEmitter {
 
     finish(fn) {
         const locals = fn.nlocals ? [1, ...unsigned(fn.nlocals), I32] : [0];
-        const body = [...locals, ...fn.code];
-        fn.body = [...unsigned(body.length), ...body];
+        fn.body = unsigned(locals.length + fn.code.length).concat(locals, fn.code);
         return fn;
     }
 }
@@ -704,26 +867,26 @@ function scanSignatures(lex, records, declared, functionBase, enums, distinct, a
     const functions = [];
     while (lex.token.kind !== "eof") {
         const start = lex.token.at;
-        const async = asyncSpans && lex.accept("async");
-        lex.expect("function");
+        const async = asyncSpans && (lex.token.value === "async" && (lex.next(), true));
+        { if (lex.token.value !== "function") lex.fail("expected function"); lex.next(); }
         const name = lex.ident();
         if (name === "memory") lex.fail("reserved memory export");
         if (declared.has(name) || distinct.has(name)) lex.fail("duplicate function " + name);
         const params = [], paramNames = [];
         const paramAts = asyncSpans ? [] : null;
-        lex.expect("(");
-        if (!lex.accept(")")) {
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
+        if (!(lex.token.value === ")" && (lex.next(), true))) {
             do {
                 paramAts?.push(lex.token.at);
                 const id = lex.ident();
-                lex.expect(":");
+                { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
                 params.push(lex.type(records, enums, distinct));
                 if (paramNames.includes(id)) lex.fail("duplicate local " + id);
                 paramNames.push(id);
-            } while (lex.accept(","));
-            lex.expect(")");
+            } while ((lex.token.value === "," && (lex.next(), true)));
+            { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         }
-        lex.expect(":");
+        { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
         const result = lex.type(records, enums, distinct);
         if (lex.token.value !== "{") lex.fail("expected {");
         const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
@@ -769,15 +932,15 @@ function checkAcyclic(functions, edges) {
 }
 
 function parseEnum(lex, name) {
-    lex.expect("{");
+    { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
     const members = new Map();
     const values = new Set();
     let next = 0;
-    while (!lex.accept("}")) {
+    while (!(lex.token.value === "}" && (lex.next(), true))) {
         const member = lex.ident();
         if (members.has(member)) lex.fail("duplicate member " + member + " in " + name);
-        if (lex.accept("=")) {
-            const negative = lex.accept("-");
+        if ((lex.token.value === "=" && (lex.next(), true))) {
+            const negative = (lex.token.value === "-" && (lex.next(), true));
             if (lex.token.kind !== "int") lex.fail("expected integer enum value");
             next = Number(lex.token.value) * (negative ? -1 : 1);
             lex.next();
@@ -786,8 +949,8 @@ function parseEnum(lex, name) {
         if (values.has(next)) lex.fail("duplicate enum value " + next + " in " + name);
         members.set(member, next | 0);
         values.add(next++);
-        if (!lex.accept(",")) {
-            lex.expect("}");
+        if (!(lex.token.value === "," && (lex.next(), true))) {
+            { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
             break;
         }
     }
@@ -810,25 +973,25 @@ function parseDeclarations(lex, recordEnds) {
             continue;
         }
         if (kind === "type") {
-            lex.expect("=");
-            lex.expect("distinct");
-            lex.expect("i32");
-            lex.expect(";");
+            { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
+            { if (lex.token.value !== "distinct") lex.fail("expected distinct"); lex.next(); }
+            { if (lex.token.value !== "i32") lex.fail("expected i32"); lex.next(); }
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
             distinct.add(name);
             continue;
         }
         const fields = new Map();
-        lex.expect("{");
+        { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
         while (lex.token.value !== "}") {
             const field = lex.ident();
             if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
-            lex.expect(":");
+            { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
             const type = lex.type(records, enums, distinct);
-            lex.expect(";");
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
             fields.set(field, {type, offset: fields.size * 4});
         }
         recordEnds?.set(name, lex.token.at);
-        lex.expect("}");
+        { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
         records.set(name, fields);
     }
     return {records, enums, distinct};
@@ -836,23 +999,92 @@ function parseDeclarations(lex, recordEnds) {
 
 function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures, options) {
     if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
-    const lowered = globalThis.typedAsync?.rewrite(source, imported);
-    try {
-        const program = emitFunctions(lowered?.source ?? source, functionBase, imported,
-            numericOperands, onFunction, onSignatures, lowered);
-        if (lowered) {
-            program.asyncLayout = lowered.layout;
-            if (options?.asyncSource) program.asyncSource = lowered.source;
+    return withLexIndices(() => {
+        const lowered = globalThis.typedAsync?.rewrite(source, imported);
+        try {
+            const program = lowered
+                ? emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures)
+                : emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures);
+            if (lowered) {
+                program.asyncLayout = lowered.layout;
+                if (options?.asyncSource) program.asyncSource = lowered.source;
+            }
+            return program;
+        } catch (error) {
+            if (!lowered || !(error instanceof SyntaxError)) throw error;
+            lexicalScope?.sources.clear();
+            try {
+                emitFunctions(lowered.source, functionBase, imported, numericOperands, undefined, undefined, lowered);
+            } catch (canonical) {
+                throw lowered.remap(canonical);
+            }
+            throw new Error("span emitter rejected the canonical program", {cause: error});
         }
-        return program;
-    } catch (error) {
-        throw lowered?.remap(error) ?? error;
+    });
+}
+
+function configureGeneratedLexer(lex, lowered) {
+    const generatedPrefix = lowered.prefix;
+    lex.isGeneratedLocal = name => name.startsWith(generatedPrefix + "local_");
+    lex.generatedWordType = name => name.startsWith(generatedPrefix + "word_")
+        ? name.slice(generatedPrefix.length + "word_".length) : null;
+    lex.generatedStartFields = lowered.startFields;
+    return lex;
+}
+
+function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures) {
+    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
+    const {original, declarations, fields, bodies, generated} = lowered.plan;
+    const {enums, distinct} = declarations;
+    const records = new Map(declarations.records);
+    if (fields.length) {
+        const state = new Map(records.get("WorldState"));
+        for (const {name, type} of fields) state.set(name, {type, offset: state.size * 4});
+        records.set("WorldState", state);
     }
+    const declared = new Map(imported.map(fn => [fn.name, fn]));
+    for (const name of distinct)
+        if (declared.has(name)) throw new SyntaxError("duplicate imported function " + name);
+
+    const functions = lowered.ordinarySignatures.slice();
+    for (const [ordinal, fn] of functions.entries()) {
+        fn.index = functionBase + ordinal;
+        declared.set(fn.name, fn);
+    }
+    const originalLex = configureGeneratedLexer(new Lexer(original, 0, original.length, true), lowered);
+    const generatedLex = configureGeneratedLexer(new Lexer(generated, 0, generated.length, true), lowered);
+    const ordinaryCount = functions.length;
+    for (const fn of scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct)) {
+        fn.bodyAt += lowered.generatedAt;
+        functions.push(fn);
+    }
+    if (!functions.length) throw new SyntaxError("expected a function");
+    if (onSignatures) onSignatures(functions);
+    const edges = functions.map(() => []);
+    for (const [i, fn] of functions.entries()) {
+        const virtualAt = fn.bodyAt;
+        let lex = originalLex;
+        if (i >= ordinaryCount) {
+            lex = generatedLex;
+            fn.bodyAt -= lowered.generatedAt;
+        } else {
+            const body = bodies[i];
+            if (body.text !== undefined) lex = configureGeneratedLexer(new Lexer(body.text, 0, body.text.length, true), lowered);
+            fn.bodyAt = body.at;
+        }
+        try {
+            new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct).function(fn);
+        } finally {
+            fn.bodyAt = virtualAt;
+        }
+        if (onFunction) onFunction(fn);
+    }
+    return {functions, records, enums, distinct, edges, order: checkAcyclic(functions, edges)};
 }
 
 function emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, lowered) {
     const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
-    const lex = new Lexer(source);
+    const lex = new Lexer(source, 0, source.length, true);
     if (lowered) {
         const generatedPrefix = lowered.prefix;
         lex.isGeneratedLocal = name => name.startsWith(generatedPrefix + "local_");
@@ -1075,5 +1307,5 @@ globalThis.compileTyped = (source, options) => {
     return bytes;
 };
 globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
-    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts};
+    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices};
 })();

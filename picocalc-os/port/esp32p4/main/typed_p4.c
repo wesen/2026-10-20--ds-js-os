@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "p4.h"
+#include "typed_lex_index.h"
 #include "quickjs.h"
 
 #define COMPILER_LIMIT (2 * 1024 * 1024)
@@ -80,6 +81,7 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   JS_SetInterruptHandler(rt, compile_interrupt, &heap);
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
+  if (!typed_lex_index_install(ctx)) goto rejected;
   if (!eval_file(ctx, "typed/wasm.js") ||
       (!strcmp(linker, "typed/world.js") && !eval_file(ctx, "typed/async.js")) ||
       (engine == ENG_NATIVE && !eval_file(ctx, "typed/rv32.js")) ||

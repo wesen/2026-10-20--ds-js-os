@@ -206,7 +206,7 @@ set_source_files_properties(
 # Typed apps override the same configured catalog, preserving the claims and
 # any peripheral or test selections made above.
 if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR OR PICOCALC_TYPED_CHESS)
-    target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c)
+    target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c typed_lex_index.c)
     list(APPEND BUNDLE_EXTRA "typed/wasm.js=${OS}/compiler/typed-wasm.js")
     list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-wasm.js")
     if(PICOCALC_RV32_AGENDA OR PICOCALC_RV32_FILES OR PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
