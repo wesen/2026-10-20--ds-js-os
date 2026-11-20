@@ -11,3 +11,7 @@ Frozen extractor and independent Keys replay complete. All System and Keys pixel
 ## 2026-11-20
 
 Added a post-holdout manual Keys comparator to make the registered 60% byte-recovery test computable. The frozen extractor fails against both generic baselines.
+
+## 2026-11-20
+
+Ticket closed

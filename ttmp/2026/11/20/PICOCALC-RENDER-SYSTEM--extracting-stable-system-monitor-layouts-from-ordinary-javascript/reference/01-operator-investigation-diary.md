@@ -315,3 +315,51 @@ Read scripts/24-keys-normalization.cjs and various/keys-normalization.json. The 
 ### Technical details
 
 Each of 26 images is 204,800 bytes. The comparison includes frame 1's discarded flush and recovery. The reproduced generic diff selects the shorter of each subtree replacement, fine path edits and a full serialized screen.
+
+## Step 7. Verify all five physical blocks and finish the study
+
+The director ran the boundary capsule on the real ESP32-P4 in a fresh QuickJS realm per trial. Each of 15 physical receipts passed the frame count, publication, byte length and final expanded-tree checksum checks. The stage result changes the interpretation of the receiver work. The manual producer is faster on the device, and its receiver spends more time rebuilding the generic tree than G spends decoding it.
+
+### Prompt Context
+
+See Step 1. The director controls the device and the eventual shared vault publication.
+
+### What I did
+
+Read only the director's raw physical.json and separately preserved the unmodified live System trace and captured SDK frame. scripts/26-read-board.py verifies each trial, rejects duplicate arm/block pairs, then computes within-arm medians/ranges and within-block paired ratios. Supplied the verified aggregate to Opus for an on-device article section.
+
+### Why
+
+Independent physical timings need the firmware identity, exact workload and clock boundary. A 100-frame Node trace and a 20-case P4 trace support different absolute totals.
+
+### What worked
+
+On device, G/M/A median combined times per 20 attempts were 101.960/73.345/319.515 ms. Body costs redistributed: producer 80.003/39.395/223.504 ms and receiver 21.559/34.149/96.103 ms. All 15 returned 2164593678. Median paired combined ratios were 0.727 and 3.134 against G.
+
+### What didn't work
+
+The automatic encoder's extra JSON scans cost much more than the bytes removed, both here and on the frozen host workload. The temporary firmware's first director session did not reach the System capsule; this child prices only the completed session's five blocks.
+
+### What I learned
+
+All same-boot blocks are consistent on the ordering of G, M and A. The maximum observed single receiver segment for M was 2.802 ms, against 1.870 ms for G. The conclusion concerns encoding, equality and reconstruction. The capsule does not deliver to the production compositor's mailbox.
+
+### What was tricky to build
+
+Median combined is computed after adding the two stage times per trial. A sum of the separately reported medians may yield a different total. The seeded screen state and hash establish exact input/output at this stage, alongside the independent host pixel tests.
+
+### What warrants a second pair of eyes
+
+Compare the live render+publish, frames, draw and nested commit observations without summing overlapping work. The measured value for a delivered SPI call is a port-side sample and does not date a visible panel event.
+
+### What should be done in the future
+
+Qualify one integrated manual transport path under the real retained slot and restart behavior, then run it alongside G on physical workloads before changing shipping firmware.
+
+### Code review instructions
+
+Read various/physical-system.json, physical-live-system-trace.json and scripts/26-read-board.py with the parent director's 08-board-lab.c. The report's hardware table identifies the same stage and sample scope.
+
+### Technical details
+
+The source study measured experiments under firmware 5172a38b98f5c3eed57bc4b6a7a1c33950ea955749e9cb099a0971dd6f67368a. The playable source image digest recorded by the director is f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83.

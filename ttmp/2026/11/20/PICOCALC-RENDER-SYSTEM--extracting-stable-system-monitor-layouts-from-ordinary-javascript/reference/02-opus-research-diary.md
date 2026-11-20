@@ -110,3 +110,7 @@ The external service declined the operator's initial combined article-and-diary 
 - **What should be done in the future:** Physical panel-latency runs on the device.
 - **Code review instructions:** Review `09-auto-runtime.js`, `12-board-capsule.cjs`, `18-reproduce.sh` and `summary.json`.
 - **Technical details:** The source map covers `03`, `05`, `06`, `08`, `09`, `11`, `12`, `16` and `18`.
+
+## Step 5 — Physical measurements
+
+Ran 26-read-board.py to collect results from the ESP32-P4 handheld running the temporary experiment firmware. The board reported five rotating blocks from one boot, each arm running 20 boundary render attempts with 17 changed deliveries per repetition. Arms G, M and A reported physical byte totals of 22072, 8002 and 18980, and every checksum read 2164593678. Combined medians were 101.960 ms for G, 73.345 ms for M and 319.515 ms for A. M measured 28.615 ms below G, and A measured 217.555 ms above G. Paired combined ratio medians were 0.7266 for M and 3.1337 for A. A 320x320 RGB565 pixel comparison was run separately on the host. One live generic System Down press was recorded separately on instrumented experimental firmware.

@@ -1,0 +1,270 @@
+{
+  "tree": {
+    "t": "col",
+    "gap": 4,
+    "kids": [
+      {
+        "t": "row",
+        "gap": 4,
+        "kids": [
+          {
+            "t": "text",
+            "s": "Worlds",
+            "font": "mb",
+            "color": "accentInk",
+            "bg": "ink",
+            "pad": 3,
+            "align": "center",
+            "w": 74
+          },
+          {
+            "t": "text",
+            "s": "Handles",
+            "font": "mb",
+            "color": "muted",
+            "pad": 3,
+            "align": "center",
+            "w": 74
+          },
+          {
+            "t": "text",
+            "s": "Buses",
+            "font": "mb",
+            "color": "muted",
+            "pad": 3,
+            "align": "center",
+            "w": 74
+          },
+          {
+            "t": "text",
+            "s": "16.0 s",
+            "font": "s",
+            "color": "muted",
+            "align": "right",
+            "pad": 5
+          }
+        ]
+      },
+      {
+        "t": "spark",
+        "values": [
+          3,
+          23,
+          5,
+          11,
+          8,
+          3,
+          8,
+          4,
+          2,
+          4,
+          4,
+          4,
+          3,
+          5,
+          8,
+          23,
+          9,
+          8,
+          12
+        ],
+        "label": "lane busy \u00b7 peak 96%",
+        "right": "49%",
+        "color": "accent",
+        "h": 26,
+        "max": 23,
+        "points": 48
+      },
+      {
+        "t": "gap",
+        "h": 2
+      },
+      {
+        "t": "table",
+        "cols": [
+          {
+            "label": "world",
+            "w": 72
+          },
+          {
+            "label": "state",
+            "w": 62
+          },
+          {
+            "label": "turns",
+            "align": "right"
+          },
+          {
+            "label": "cpu%",
+            "align": "right",
+            "w": 36
+          },
+          {
+            "label": "cpu ms",
+            "align": "right"
+          },
+          {
+            "label": "KB",
+            "align": "right",
+            "w": 32
+          },
+          {
+            "label": "rst",
+            "align": "right",
+            "w": 22
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              "keyboard",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "259",
+              "9.0",
+              "497",
+              "67.3",
+              "\u00b7"
+            ]
+          },
+          {
+            "cells": [
+              "power",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "3",
+              "0.2",
+              "17.7",
+              "77.2",
+              "\u00b7"
+            ]
+          },
+          {
+            "cells": [
+              "display",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "13",
+              "3.5",
+              "128",
+              "73.8",
+              "\u00b7"
+            ]
+          },
+          {
+            "cells": [
+              "compositor",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "79",
+              "22",
+              "817",
+              376,
+              "\u00b7"
+            ]
+          },
+          {
+            "cells": [
+              "agent",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "72",
+              "0.3",
+              "74.7",
+              771,
+              "\u00b7"
+            ]
+          },
+          {
+            "cells": [
+              "chat",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "8",
+              "0.0",
+              "144",
+              239,
+              "\u00b7"
+            ]
+          },
+          {
+            "cells": [
+              "launcher",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "7",
+              "0.0",
+              "136",
+              257,
+              "\u00b7"
+            ]
+          },
+          {
+            "cells": [
+              "files",
+              {
+                "s": "idle",
+                "color": "ink"
+              },
+              "1",
+              "0.0",
+              "3.9",
+              "68.2",
+              "\u00b7"
+            ]
+          }
+        ],
+        "sel": 1,
+        "font": "s",
+        "lead": 3
+      },
+      {
+        "t": "sep",
+        "h": 5
+      },
+      {
+        "t": "kv",
+        "pairs": [
+          [
+            "cpu",
+            "0.2% now, 17.7 ms since boot"
+          ],
+          [
+            "mailbox / peak",
+            "0 / 0"
+          ],
+          [
+            "budget, limit",
+            "20 ms, 320 KB"
+          ],
+          [
+            "claims",
+            "i2c0:0x1f"
+          ],
+          [
+            "last error",
+            "none",
+            "muted"
+          ]
+        ],
+        "keyW": 96,
+        "lead": 2
+      }
+    ]
+  },
+  "hints": "\u2191\u2193 world  \u2190\u2192 tab"
+}

@@ -1,0 +1,39 @@
+Write a 350–500 word article section for a newcomer titled "What the physical handheld measured", followed by a factual 120-word diary milestone, separated by a line containing exactly <<<DIARY>>>. You are the commissioned Opus High research author summarizing the supplied operator observations. Explain the 20-state trace, the shift in producer and receiver work, and what a developer can conclude. Include a compact table in milliseconds with exact median totals (at least 2 decimals; compute by dividing microseconds by 1000), absolute time savings for M against G, cost of A, medians of paired combined ratios, and observed worst individual producer/receiver segments. A sum of stage-time medians can differ from median of combined time; use supplied combinedUs. The work ran on a real handheld ESP32-P4 through a fresh QuickJS realm in a temporary experiment firmware. Every arm ran the same 20 *boundary* render attempts and 17 changed deliveries per repetition, one repetition per block across five rotating blocks on the same boot. The source was already parsed and the clock bounds only producer + equality suppression and parse/reconstruct on changed publications. Caller separately tallied bytes and hashed the complete expanded trees. Each arm reported its expected G/M/A physical bytes 22072/8002/18980; every checksum 2164593678. A 320x320 RGB565 pixel comparison was separately performed on the host. This capsule doesn't paint/queue/update the real display or exercise concurrent event dispatch; infer only the measured stages. A separate single live *generic* System Down press on the physical production path, in instrumented experimental firmware: sysmon key 602 µs, render+publish 7113 µs with 1780 bytes, a compositor frames event 15600 µs, deferred compositor draw 24557 µs, nested graphics commit 4292 µs for 3 rectangles, one SPI pixel-send sample 5057 µs/18240 bytes among several. Don't add these values, call them a latency estimate, or imply candidate packets traversed that path. Provide a grounded integration decision. No analogy, semicolons or colon-led lists. In diary record only external observable actions and outcomes plus command 26-read-board.py. Attach no unverified hardware claims.
+{
+  "G": {
+    "producerUs": 80003,
+    "receiverUs": 21559,
+    "combinedUs": 101960,
+    "worstProducerUs": 6483,
+    "worstReceiverUs": 1870,
+    "combinedRangeUs": [
+      99114,
+      103016
+    ],
+    "medianPairedCombinedRatio": 1.0
+  },
+  "M": {
+    "producerUs": 39395,
+    "receiverUs": 34149,
+    "combinedUs": 73345,
+    "worstProducerUs": 3793,
+    "worstReceiverUs": 2802,
+    "combinedRangeUs": [
+      71106,
+      74084
+    ],
+    "medianPairedCombinedRatio": 0.7265986661435857
+  },
+  "A": {
+    "producerUs": 223504,
+    "receiverUs": 96103,
+    "combinedUs": 319515,
+    "worstProducerUs": 16417,
+    "worstReceiverUs": 9268,
+    "combinedRangeUs": [
+      317201,
+      321654
+    ],
+    "medianPairedCombinedRatio": 3.133728913299333
+  }
+}
