@@ -1,0 +1,168 @@
+{
+  "app": "files",
+  "control": "40bcf850a5809ef6d839127869faa952596ed157",
+  "node": "v24.18.0",
+  "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+  "totals": {
+    "model": 593,
+    "base": 804,
+    "fusion": 738,
+    "short": 663,
+    "operands": 607,
+    "leaf": 597,
+    "staged": 593
+  },
+  "images": {
+    "base": {
+      "sha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+      "bytes": 3216,
+      "imports": 0
+    },
+    "fusion": {
+      "sha256": "527592bd79990c47e3d116d260ad03abdc3d409b207710366caf6350301690bb",
+      "bytes": 2952,
+      "imports": 0
+    },
+    "short": {
+      "sha256": "5e2558a690c6a3e65fb98f3d5978ca70da7ecd052be14caa9dd04fe107dfbe01",
+      "bytes": 2652,
+      "imports": 0
+    },
+    "operands": {
+      "sha256": "f3dc1656e6f08dcb1e418eaa1a015ba2dc778f4d6783552bb3f572393e90ba39",
+      "bytes": 2428,
+      "imports": 0
+    },
+    "leaf": {
+      "sha256": "c167cb5769ae79bb9e5d18562f6f53a1514d013622dace3ae5738b5ca1a59e76",
+      "bytes": 2388,
+      "imports": 0
+    },
+    "staged": {
+      "sha256": "3e2f78f83477d6bed12bd740e710c1dab0a51b46525ad1659c7d7d3d7ea8b43f",
+      "bytes": 2372,
+      "imports": 0
+    }
+  },
+  "rows": [
+    {
+      "name": "filesSpace",
+      "model": 98,
+      "flushA": 0,
+      "flushB": 0,
+      "maxDepth": 2,
+      "leaf": 98,
+      "shortCircuit": 12,
+      "nlocals": 1,
+      "regLocals": 1,
+      "base": 116,
+      "fusion": 112,
+      "short": 100,
+      "operands": 100,
+      "staged": 98,
+      "residual": 0
+    },
+    {
+      "name": "filesAlnum",
+      "model": 38,
+      "flushA": 0,
+      "flushB": 0,
+      "maxDepth": 2,
+      "leaf": 38,
+      "shortCircuit": 5,
+      "nlocals": 1,
+      "regLocals": 1,
+      "base": 51,
+      "fusion": 45,
+      "short": 40,
+      "operands": 40,
+      "staged": 38,
+      "residual": 0
+    },
+    {
+      "name": "filesName",
+      "model": 192,
+      "flushA": 0,
+      "flushB": 0,
+      "maxDepth": 3,
+      "leaf": 194,
+      "shortCircuit": 8,
+      "nlocals": 13,
+      "regLocals": 11,
+      "base": 261,
+      "fusion": 238,
+      "short": 217,
+      "operands": 194,
+      "staged": 192,
+      "residual": 0
+    },
+    {
+      "name": "filesCompare",
+      "model": 78,
+      "flushA": 0,
+      "flushB": 0,
+      "maxDepth": 4,
+      "leaf": 78,
+      "shortCircuit": 3,
+      "nlocals": 8,
+      "regLocals": 8,
+      "base": 107,
+      "fusion": 98,
+      "short": 89,
+      "operands": 80,
+      "staged": 78,
+      "residual": 0
+    },
+    {
+      "name": "filesSelect",
+      "model": 36,
+      "flushA": 0,
+      "flushB": 0,
+      "maxDepth": 2,
+      "leaf": 36,
+      "shortCircuit": 2,
+      "nlocals": 9,
+      "regLocals": 9,
+      "base": 48,
+      "fusion": 45,
+      "short": 42,
+      "operands": 38,
+      "staged": 36,
+      "residual": 0
+    },
+    {
+      "name": "filesPromptAction",
+      "model": 29,
+      "flushA": 0,
+      "flushB": 0,
+      "maxDepth": 2,
+      "leaf": 29,
+      "shortCircuit": 2,
+      "nlocals": 2,
+      "regLocals": 2,
+      "base": 46,
+      "fusion": 40,
+      "short": 35,
+      "operands": 31,
+      "staged": 29,
+      "residual": 0
+    },
+    {
+      "name": "filesAction",
+      "model": 122,
+      "flushA": 0,
+      "flushB": 0,
+      "maxDepth": 2,
+      "leaf": 124,
+      "shortCircuit": 10,
+      "nlocals": 5,
+      "regLocals": 5,
+      "base": 175,
+      "fusion": 160,
+      "short": 140,
+      "operands": 124,
+      "staged": 122,
+      "residual": 0
+    }
+  ]
+}

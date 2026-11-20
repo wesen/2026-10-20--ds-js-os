@@ -1,0 +1,29 @@
+{
+  "control": "40bcf850a5809ef6d839127869faa952596ed157",
+  "lanes": {
+    "base": {
+      "sha256": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38",
+      "sourceBytes": 15766
+    },
+    "fusion": {
+      "sha256": "8cdf92a2f42a4880a107718d59aecb79223bda67570752b055d13d6117ac0926",
+      "sourceBytes": 17029
+    },
+    "short": {
+      "sha256": "a034a8311818613b35427219edaa2b356816f38237f805a3417957fda153d1a5",
+      "sourceBytes": 23360
+    },
+    "operands": {
+      "sha256": "e0c472ca52dc7c890f23a80e0d09146f8c88fb1e076a161d9a863533063393e5",
+      "sourceBytes": 23359
+    },
+    "leaf": {
+      "sha256": "582644520b0f9d706d51094442c081550d27aaeae49fcbe361a2a20c53096675",
+      "sourceBytes": 23358
+    },
+    "staged": {
+      "sha256": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+      "sourceBytes": 23357
+    }
+  }
+}

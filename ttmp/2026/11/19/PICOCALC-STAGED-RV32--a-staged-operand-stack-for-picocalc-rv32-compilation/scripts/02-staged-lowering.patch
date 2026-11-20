@@ -1,0 +1,324 @@
+--- a/typed/rv32.js
++++ b/typed/rv32.js
+@@ -5,6 +5,7 @@
+ 
+ const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
+ const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
++const SHORT_BRANCHES = true, LAZY_OPERANDS = true, LEAF_FRAMES = true, LAZY_RETURNS = true;
+ const instruction = {
+     r: (op, rd, f3, a, b, f7 = 0) => (f7 << 25) | (b << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,
+     i: (op, rd, f3, a, imm) => (imm << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,
+@@ -39,6 +40,9 @@
+         this.locals = program.params.length + program.nlocals;
+         this.words = [];
+         this.calls = [];
++        this.branches = [];
++        this.deferred = [];
++        this.hasCall = false;
+         this.control = [];
+         this.depth = this.spillDepth = this.at = 0;
+         this.exit = {};
+@@ -72,17 +76,49 @@
+         this.spillDepth = Math.max(this.spillDepth, depth + 1);
+     }
+ 
+-    pop(scratch) {
+-        if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
+-        const depth = --this.depth;
++    valueAt(depth, scratch, direct = false) {
+         const reg = STACK_REGISTERS[depth];
++        const entry = this.deferred[depth];
++        if (entry) {
++            const want = direct ? scratch : reg ?? scratch;
++            switch (entry.kind) {
++            case "constant":
++                if (entry.value === 0) return ZERO;
++                this.constant(want, entry.value);
++                return want;
++            case "local": this.load(want, 4 * entry.value); return want;
++            case "return": return A0;
++            case "spill": this.load(want, this.slot(depth)); return want;
++            }
++        }
+         if (reg !== undefined) return reg;
+         this.load(scratch, this.slot(depth));
+         return scratch;
+     }
+ 
++    pop(scratch, direct = false) {
++        if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
++        const depth = --this.depth;
++        return this.valueAt(depth, scratch, direct);
++    }
++
++    defer(kind, value) { this.deferred[this.depth++] = {kind, value}; }
++
++    settle(depth) {
++        if (!this.deferred[depth]) return;
++        const home = STACK_REGISTERS[depth];
++        if (home !== undefined) this.move(home, this.valueAt(depth, T5));
++        else if (this.deferred[depth].kind !== "spill") this.spill(depth, this.valueAt(depth, T5));
++        this.deferred[depth] = undefined;
++    }
++
++    flush(depth) {
++        for (let d = 0; d < depth; d++) this.settle(d);
++    }
++
+     push(reg) {
+         const depth = this.depth++;
++        this.deferred[depth] = undefined;
+         const home = STACK_REGISTERS[depth];
+         if (home === undefined) this.spill(depth, reg);
+         else this.move(home, reg);
+@@ -92,10 +128,54 @@
+ 
+     // A conditional branch skips the fixed-width jump when the predicate is false.
+     branch(kind, a, b, target) {
++        if (SHORT_BRANCHES) this.branches.push({from: this.words.length, kind, a, b, target});
+         this.emit(instruction.b(kind ^ 1, a, b, 8));
+         this.jump(target);
+     }
+ 
++    // Use original word boundaries until the final round. Deletions can only shorten distances.
++    compact(removeAdjustment, removeSave) {
++        if (!this.branches.length && !removeAdjustment && !removeSave) return;
++        const erased = new Uint8Array(this.words.length);
++        const finalAt = new Int32Array(this.words.length + 1);
++        if (removeAdjustment) erased[0] = 1;
++        if (removeSave) erased[1] = 1;
++        const locate = () => {
++            let next = 0;
++            for (let i = 0; i < erased.length; i++) {
++                finalAt[i] = next;
++                next += 1 - erased[i];
++            }
++            finalAt[erased.length] = next;
++        };
++        for (let pass = 0; pass < 8; pass++) {
++            locate();
++            let changed = false;
++            for (const {from, target} of this.branches) {
++                if (erased[from + 1]) continue;
++                const delta = 4 * (finalAt[target.at] - finalAt[from] - Number(target.at > from + 1));
++                if (delta < -4096 || delta > 4094) continue;
++                erased[from + 1] = 1;
++                changed = true;
++            }
++            if (!changed) break;
++        }
++        locate();
++        for (const {from, kind, a, b, target} of this.branches) {
++            if (!erased[from + 1]) continue;
++            const delta = 4 * (finalAt[target.at] - finalAt[from]);
++            this.words[from] = instruction.b(kind, a, b, delta) >>> 0;
++        }
++        const labels = new Set();
++        this.calls = this.calls.filter(call => !erased[call.from]);
++        for (const call of this.calls) {
++            call.from = finalAt[call.from];
++            if (!call.target.global && call.target.importIndex === undefined) labels.add(call.target);
++        }
++        for (const label of labels) label.at = finalAt[label.at];
++        this.words = this.words.filter((_, i) => !erased[i]);
++    }
++
+     jump(target, rd = ZERO) {
+         this.calls.push({from: this.words.length, target, rd});
+         this.emit(0);
+@@ -104,16 +184,41 @@
+     mark(label) { label.at = this.words.length; }
+ 
+     binary(op) {
++        const entry = this.deferred[this.depth - 1];
++        if (LAZY_RETURNS && op === 0x6d) {
++            for (let d = 0; d < this.depth; d++) {
++                if (this.deferred[d]?.kind === "return") this.settle(d);
++            }
++        }
++        if (entry?.kind === "constant") {
++            const value = entry.value;
++            const fit = n => n >= -2048 && n <= 2047;
++            let immediate, kind;
++            if (op === 0x6a && fit(value)) { immediate = value; kind = 0; }
++            if (op === 0x6b && fit(-value)) { immediate = -value; kind = 0; }
++            if (op === 0x74) { immediate = value & 31; kind = 1; }
++            if (op === 0x75) { immediate = 0x400 | (value & 31); kind = 5; }
++            if (op === 0x48 && fit(value)) { immediate = value; kind = 2; }
++            if (kind !== undefined) {
++                this.depth--;
++                const left = this.pop(T5);
++                const out = this.resultRegister();
++                this.emit(instruction.i(0x13, out, kind, left, immediate));
++                this.push(out);
++                return;
++            }
++        }
+         const b = this.pop(T6);
+         const a = this.pop(T5);
+         const out = this.resultRegister();
+         const alu = ALU.get(op);
+         if (alu) {
+-            if (op === 0x6d || op === 0x6f) {
++            const divisor = entry?.kind === "constant" ? entry.value : undefined;
++            if ((op === 0x6d || op === 0x6f) && (divisor === undefined || divisor === 0)) {
+                 this.emit(instruction.b(1, b, ZERO, 8));
+                 this.emit(0x00100073);
+             }
+-            if (op === 0x6d) {
++            if (op === 0x6d && (divisor === undefined || divisor === -1)) {
+                 const safe = {};
+                 // No operand lives in an argument register between operations.
+                 this.constant(A0, -1);
+@@ -125,8 +230,8 @@
+             }
+             this.emit(instruction.r(0x33, out, alu[0], a, b, alu[1]));
+         } else if (op === 0x46) {
+-            this.emit(instruction.r(0x33, out, 4, a, b)); // xor
+-            this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
++            if (a !== ZERO && b !== ZERO) this.emit(instruction.r(0x33, out, 4, a, b));
++            this.emit(instruction.i(0x13, out, 3, b === ZERO ? a : a === ZERO ? b : out, 1));
+         } else {
+             const unsigned = op === 0x4f;
+             if (![0x48, 0x4a, 0x4c, 0x4e, 0x4f].includes(op))
+@@ -142,6 +247,7 @@
+     begin(op, kind = 0, a, b = ZERO) {
+         const type = this.cell();
+         if (type !== 0x40 && type !== 0x7f) throw new SyntaxError("unsupported RV32 control result");
++        if (a === undefined) this.flush(this.depth - Number(op === 0x04));
+         const condition = op === 0x04 ? a ?? this.pop(T5) : ZERO;
+         const block = {op, depth: this.depth, value: type === 0x7f, start: {}, alternate: {}, end: {}};
+         this.control.push(block);
+@@ -163,6 +269,7 @@
+         this.at += 1 + Number(negate);
+ 
+         const [kind, swap] = encoding;
++        this.flush(this.depth - (op === 0x45 ? 1 : 2));
+         const right = op === 0x45 ? ZERO : this.pop(T6);
+         const left = this.pop(T5);
+         const a = swap ? right : left;
+@@ -176,9 +283,10 @@
+     end() {
+         const block = this.control.pop();
+         if (!block) {
+-            this.move(A0, this.pop(A0));
++            this.move(A0, this.pop(A0, LAZY_OPERANDS));
+             return true;
+         }
++        this.flush(block.depth + Number(block.value));
+         if (block.alternate.at === undefined) this.mark(block.alternate);
+         this.mark(block.end);
+         // Both arms put a result in the same home at the block's entry depth.
+@@ -189,16 +297,28 @@
+     call(index) {
+         const count = this.functions[index].params.length;
+         if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
++        this.hasCall = true;
++        const surviving = this.depth - count;
++        if (LAZY_OPERANDS) {
++            for (let d = 0; d < surviving; d++) {
++                const entry = this.deferred[d];
++                if (entry?.kind === "constant" || entry?.kind === "local" || entry?.kind === "spill") continue;
++                if (entry?.kind === "return") this.spill(d, A0);
++                else if (d < STACK_REGISTERS.length) this.spill(d, STACK_REGISTERS[d]);
++                this.deferred[d] = {kind: "spill"};
++            }
++        }
+         for (let i = count - 1; i >= 0; i--) {
+             const arg = A0 + i;
+-            this.move(arg, this.pop(arg));
++            this.move(arg, this.pop(arg, LAZY_OPERANDS));
+         }
+         // Only the values below the arguments survive the call.
+-        const live = Math.min(this.depth, STACK_REGISTERS.length);
++        const live = LAZY_OPERANDS ? 0 : Math.min(this.depth, STACK_REGISTERS.length);
+         for (let d = 0; d < live; d++) this.spill(d, STACK_REGISTERS[d]);
+         this.jump(this.starts[index], RA);
+         for (let d = 0; d < live; d++) this.load(STACK_REGISTERS[d], this.slot(d));
+-        this.push(A0);
++        if (LAZY_RETURNS) this.defer("return");
++        else this.push(A0);
+     }
+ 
+     step(op) {
+@@ -208,6 +328,7 @@
+         case 0x02: case 0x03: case 0x04: this.begin(op); break;
+         case 0x05: {
+             const block = this.control.at(-1);
++            this.flush(block.depth + Number(block.value));
+             this.jump(block.end);
+             this.mark(block.alternate);
+             this.depth = block.depth;
+@@ -216,20 +337,34 @@
+         case 0x0b: return this.end();
+         case 0x0c: case 0x0d: {
+             const target = this.branchTarget();
++            this.flush(this.depth - Number(op === 0x0d));
+             if (op === 0x0d) this.branch(1, this.pop(T5), ZERO, target);
+             else this.jump(target);
+             break;
+         }
+-        case 0x0f: this.move(A0, this.pop(A0)); this.jump(this.exit); break;
++        case 0x0f: this.move(A0, this.pop(A0, LAZY_OPERANDS)); this.jump(this.exit); break;
+         case 0x10: this.call(this.cell()); break;
+         case 0x1a: this.depth--; break;
+         case 0x20: {
++            const local = this.cell();
++            if (LAZY_OPERANDS) {
++                this.defer("local", local);
++                break;
++            }
+             const out = this.resultRegister();
+-            this.load(out, 4 * this.cell());
++            this.load(out, 4 * local);
+             this.push(out);
+             break;
+         }
+-        case 0x21: this.store(this.pop(T5), 4 * this.cell()); break;
++        case 0x21: {
++            const local = this.cell();
++            for (let d = 0; d < this.depth - 1; d++) {
++                const entry = this.deferred[d];
++                if (entry?.kind === "local" && entry.value === local) this.settle(d);
++            }
++            this.store(this.pop(T5), 4 * local);
++            break;
++        }
+         case 0x28: case 0x2f: case 0x36: case 0x3b: {
+             this.cell(); // alignment hint
+             const offset = this.cell();
+@@ -246,8 +381,13 @@
+             break;
+         }
+         case 0x41: {
++            const value = this.cell();
++            if (LAZY_OPERANDS) {
++                this.defer("constant", value);
++                break;
++            }
+             const out = this.resultRegister();
+-            this.constant(out, this.cell());
++            this.constant(out, value);
+             this.push(out);
+             break;
+         }
+@@ -270,14 +410,16 @@
+         this.emit(0);
+         for (let i = 0; i < count; i++) this.store(A0 + i, 4 * i);
+         while (this.at < this.program.code.length && !this.step(this.cell())) {}
+-        const frame = (4 * (this.locals + this.spillDepth + 1) + 15) & -16;
++        const saveRA = !LEAF_FRAMES || this.hasCall;
++        const frame = (4 * (this.locals + this.spillDepth + Number(saveRA)) + 15) & -16;
+         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
+         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
+         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
+         this.mark(this.exit);
+-        this.load(RA, frame - 4);
+-        this.emit(instruction.i(0x13, SP, 0, SP, frame));
++        if (saveRA) this.load(RA, frame - 4);
++        if (frame) this.emit(instruction.i(0x13, SP, 0, SP, frame));
+         this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
++        this.compact(!frame, !saveRA);
+         return this;
+     }
+ }

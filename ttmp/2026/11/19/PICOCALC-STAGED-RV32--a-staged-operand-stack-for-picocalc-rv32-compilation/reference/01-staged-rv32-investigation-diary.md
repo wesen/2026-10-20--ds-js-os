@@ -73,3 +73,53 @@ Start with `picocalc-os/compiler/typed-rv32.js` at the pinned revision. Review t
 Instructions count as 32-bit words. Branch distances are signed relative byte offsets. The four-lane host and firmware fixtures are under the sibling `PICOCALC-RV32-COMBINED` ticket.
 
 The first generic design invocation timed out after 220 seconds with status 124 and no response. A narrower 90-second streaming request returned an authenticated `claude-opus-5-5` result. Its worked example identified the need to keep a value-producing branch's conditional materialization on the taken edge. Reviewing `typed-wasm.js` confirmed that the current branch-producing syntax uses `br_if` for statement loops and `if` with `else`/`end` for branch values. The intern guide records where that simpler design would need extension. No repository content went into either generic design request.
+
+## Step 2 — Count Files and freeze Agenda's prediction
+
+The staged lowering moves from 738 fusion words to 593 in four edits. All seven Files functions match the old model exactly. The model-only Agenda invocation predicts 2,789 words, while the frozen ±5% band extends from 2,649 to 2,929.
+
+### Prompt Context
+
+See Step 1. The benchmark harness records function boundaries from the real image, and the forecast enters Git before the candidate sees the second app.
+
+### What I did
+
+- Committed the design in `4c5a21c` and the model's source-free edge review in `34b2a6b`, then wrote the prototype under `scripts/` and staged it out of tree.
+- Ran `python3 -B scripts/01-stage.py /tmp/picocalc-staged-rv32-lab/run` and `node scripts/04-account.mjs files /tmp/picocalc-staged-rv32-lab/run` from the repository root. Verified per-lane streamed/buffered program equality.
+- Ran the corresponding `agenda ... --model-only` command, which walks encoded frontend operations. No staged Agenda image exists at this checkpoint.
+
+### Why
+
+Cumulative ablations identify instruction savings by function and prevent one whole-app number from hiding mistakes. The separate counter and candidate share the frozen frontend but use distinct operation representations and implementation logic.
+
+### What worked
+
+The 75 short-branch, 56 operand, 10 leaf-frame, and four delayed-return word reductions reconcile exactly to 593. Each host bundle's lowering hash and source hash is preserved in `various/`.
+
+### What didn't work
+
+`node scripts/04-account.mjs files /tmp/picocalc-staged-rv32-lab` failed with `Error: spawnSync git EPERM` while acquiring project files. Source extraction moved to Python staging, which already successfully called `git show` to freeze the compiler. The Node harness reads the emitted frozen inputs directly.
+
+### What I learned
+
+The measured 738-to-593 gap contains four separate classes of savings. The Files match verifies this calibration workload, with a nearby holdout still needed to advance.
+
+### What was tricky to build
+
+Relaxation records both sides of the old-to-new boundary map and remaps entry and call positions once after compaction. Value-producing arms settle the shared prefix and produced result before binding the following address. A call can spill a previously register-resident prefix, so the outgoing arm must settle it again before reaching its join.
+
+### What warrants a second pair of eyes
+
+Review paths where a call result lives below a division whose overflow guard uses `a0`, and where a path's local snapshots and deep spill words occupy the same scratch homes. The follow-up differential fixtures exercise these combinations.
+
+### What should be done in the future
+
+Test the held-out Agenda native image and use the agreed gates before the Editor slot trial.
+
+### Code review instructions
+
+Read `scripts/02-staged-lowering.patch` in the order that function code is translated, then review `analysis/01-files-calibration-and-prospective-agenda-prediction.md` alongside `various/files-account.json`.
+
+### Technical details
+
+The Stage 3 counter is pinned in `scripts/03-historical-model.mjs`. The four ablation switches are fixed for each generated backend, and the code combining compile functions and linking result metadata comes from the frozen source.
