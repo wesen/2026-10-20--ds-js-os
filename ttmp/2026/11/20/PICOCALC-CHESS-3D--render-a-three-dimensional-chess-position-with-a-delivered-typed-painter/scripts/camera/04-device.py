@@ -16,6 +16,17 @@ animation = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(animation)
 
 
+def wait_for_painter(console):
+    deadline = time.monotonic()+15
+    while True:
+        status = scene.painter(console)
+        if status["installed"] and status["calls"] > 0 and not status["rejects"]:
+            return status
+        if status["rejects"] or time.monotonic() >= deadline:
+            raise RuntimeError(f"painter failed to install and render first state: {status}")
+        time.sleep(.20)
+
+
 def main(a):
     paths = (a.release,a.image,a.final)
     parts = [(p/scene.PARTITION).read_bytes() for p in paths]
@@ -46,7 +57,7 @@ def main(a):
             scene.esp(a,"verify_flash",a.image,"candidate-verified")
             c = connect()
             initial = c.health()
-            receipt["bootPainter"] = scene.painter(c)
+            receipt["bootPainter"] = wait_for_painter(c)
             assert receipt["bootPainter"]["installed"] and receipt["bootPainter"]["rejects"] == 0
             assert any("memory keys" in l for l in c.command("panelobs memory-keys"))
             assert "panel capture active" in c.command("panelobs start")
@@ -85,6 +96,10 @@ def main(a):
                 assert initial[name]["restarts"] == final[name]["restarts"]
             receipt["qualified"] = True
             save()
+        except BaseException as exc:
+            receipt["failure"] = repr(exc)
+            save()
+            raise
         finally:
             if flashed:
                 if c.port.is_open: scene.hold(c)
@@ -94,7 +109,7 @@ def main(a):
                 c = connect()
                 receipt["finalFirmware"] = sha256((restore/scene.APP).read_bytes()).hexdigest()
                 receipt["finalWorlds"] = sorted(k for k in c.health() if k in scene.serial.NATIVE)
-                receipt["finalPainter"] = scene.painter(c)
+                receipt["finalPainter"] = wait_for_painter(c)
                 assert receipt["finalPainter"]["installed"] and not receipt["finalPainter"]["rejects"]
             c.close()
             save()

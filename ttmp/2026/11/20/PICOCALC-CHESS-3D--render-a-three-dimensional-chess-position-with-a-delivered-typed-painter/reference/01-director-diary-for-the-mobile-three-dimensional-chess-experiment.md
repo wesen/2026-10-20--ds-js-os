@@ -237,3 +237,51 @@ Review compositor.js, scripts/camera/02-paint.mjs, the model authoring tools, an
 ### Technical details
 
 A quarter-turn consists of eight 11.25-degree intervals. In the cardinal draft only cell values 0–3 were meaningful. The smooth build uses the same receiver-owned cell for phases 0–31. Both formats are internal to their own firmware and separate from the PSIX wire schema.
+
+## Step 5: Distinguish boot readiness from painter readiness
+
+The first physical run flashed and verified the observed image. All eight expected native worlds were healthy before the asynchronous compiler had returned its native painter. I initially asserted painter readiness at the instant world readiness succeeded. That race prevented this run from reaching the gameplay or camera checks.
+
+### Prompt Context
+
+See Steps 3 and 4 for the full gameplay, GIF, and smooth rotation requests. **Assistant interpretation:** Measure through real panel completion and preserve each phase.
+
+### What I did
+
+Read the ordered UART lines in the first hardware run and verified the recovery firmware readback. Changed scripts/camera/04-device.py to wait for both an installed painter and its first accepted state, fail immediately on a rejection, and capture the diagnostic in its receipt. Applied the same handshake to the ordinary release verification. Replayed the same firmware and unchanged references.
+
+### Why
+
+The Chess world can already answer status requests while a worker compiles the delivered painter. The two readiness events are intentionally independent so the compiler cannot stall other UI worlds.
+
+### What worked
+
+In the first trial the physical board compiled the actual game in 3,565,321 µs and the painter in 1,447,212 µs. It reported module sizes of 274,892 and 33,840 bytes. Flash verification covered both the app and partition. The ordinary recovery was installed and checked after the harness stopped.
+
+### What didn't work
+
+The first command was `python3 -B scripts/camera/04-device.py /tmp/chess-camera-smooth-refs /tmp/chess-camera-smooth-physical /tmp/mobile-painter-production/build /tmp/chess-camera-observed/build /tmp/chess-camera-release/build` from the ticket. It exited with AssertionError. The last painter query reported compiles=1, installed=false and rejects=0 just before “mobile-painter compile source=screen-message status=ok”. The new wait checks a real readiness condition for up to fifteen seconds.
+
+### What I learned
+
+A synthetic delay at boot would make the race intermittent. Checking the actual accepted state is insensitive to normal variance in worker scheduling.
+
+### What was tricky to build
+
+The observer is useful only while a compositor-owned framebuffer and a completed display transfer represent the same game state. Installation is merely the first of these conditions. An early assertion cannot be counted as a failed rendering result.
+
+### What warrants a second pair of eyes
+
+Confirm a native installation rejection exits early and that a test confirming the ordinary image does not depend on observer-only console commands.
+
+### What should be done in the future
+
+Attach the complete actual panel and game evidence to this ticket after the next run.
+
+### Code review instructions
+
+Inspect wait_for_painter and the ordered installation/status lines, then inspect the physical receipt for the later run separately.
+
+### Technical details
+
+Observed firmware 6364be0178215b2742c5648c48d657f7e5b9b00cd0bbc898b8b39426ff62e7a2 and ordinary 134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1 contain identical painter and Chess sources.
