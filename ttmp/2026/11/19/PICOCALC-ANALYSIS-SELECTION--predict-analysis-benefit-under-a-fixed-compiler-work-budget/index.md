@@ -1,7 +1,7 @@
 ---
 Title: Predict analysis benefit under a fixed compiler work budget
 Ticket: PICOCALC-ANALYSIS-SELECTION
-Status: complete
+Status: active
 Topics:
     - picocalc
     - compiler
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T22:27:25.643341676-05:00
+LastUpdated: 2026-11-19T22:36:14.132881166-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -22,6 +22,7 @@ WhenToUse: ""
 Study 7 compares source-order, literal-only and estimated-benefit admission for the existing bounded divisor analysis. This ticket records the preregistered split before any new held-out compiler invocation.
 
 - [Preregistered design](design-doc/01-a-preregistered-comparison-of-bounded-function-selectors.md)
+- [Physical transfer protocol](design-doc/02-transfer-frozen-selection-to-the-esp32-p4.md)
 - [Newcomer article and figure](analysis/01-which-functions-deserve-limited-compiler-analysis.md)
 - [Reproduction guide](README.md)
 - [Investigation diary](reference/01-analysis-selection-investigation-diary.md)

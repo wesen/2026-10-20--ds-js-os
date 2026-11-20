@@ -245,3 +245,55 @@ The frozen chooser source had SHA-256 `65c6cd926b08b3170df79a5eab305a3da229def01
 ## Step 5. Publish the held-out study
 
 The vault’s main branch contains the standalone article and verified figure at `450e9267c5ff7c7e99d3eae96d7048c9888fe411`. The project report, policy lock, archived datasets and reproduction guide remain together in this ticket. [Publication receipt](../various/vault-publication.json).
+
+## Step 6. Preregister and stage the frozen selector on the ESP32-P4
+
+This follow-up transfers the locked selector from Node to the real compiler process. I registered the time and allocation forecasts at `e5cfeee` before staging. The fixture includes unchanged Editor and the locked original order of the distributed synthetic workload. It preserves the held-out article and report as published.
+
+### Prompt context
+
+The supervisor requested an on-device three-arm transfer with matched cold timing, startup costs and allocator observations. He confirmed the eight new guides were uploaded together with the measurement protocol. Guide PDFs for Studies 1 and 7 are in the acknowledged nine-document bundle *PicoCalc Compiler Lab II - Eight Experiments and the Measurement Protocol* at `/ai/2026/11/19/PICOCALC-COMPILER-LAB2`. [Bundle receipt](../various/remarkable-guide-delivery.json).
+
+### What I did
+
+- Wrote the [physical transfer preregistration](../design-doc/02-transfer-frozen-selection-to-the-esp32-p4.md) and committed it before creating the stage.
+- Removed only ESM export syntax from the exact locked feature and chooser functions. Embedded them in the staged RV32 compiler for the two ranked arms. Source order uses the same proof code without the unused ranking script.
+- Counted allocations and live high-water by five compiler phases, with a small number of JS-to-C phase markers. The production elapsed clock closes before the new UART lines are printed.
+- Added the checked synthetic raw-image entry and retained the original Files, Agenda and Editor production paths. The physical runner verifies linked or raw output as appropriate.
+- Built the disposable image with ESP-IDF 5.4.2 and verified full bytes from both Node and vendored QuickJS before handing it to the serial owner.
+
+### Why
+
+The physical execution verifies how much the second parser pass costs on the P4. An Editor-only comparison tests the cost with unchanged native output. The registered synthetic comparison tests the cost when the selected proof set also changes output size.
+
+### What worked
+
+The Node preflight matched the locked Editor ELF and the three synthetic RV32 binaries. The physical scripts produced the same results in vendored QuickJS without phase callbacks. Editor removes 83 words in each arm. The density and literal synthetic outputs remove 10,107 and 7,407 words, compared with 7,749 under source order. [Preflight](../various/p4-transfer-preflight.json) · [QuickJS digests](../various/p4-transfer-quickjs.json).
+
+### What did not work
+
+No build or output eligibility failure occurred. The physical measurements are pending.
+
+### What I learned
+
+The selector prepass uses the app linker’s exact import list and maximum source length, so it must execute inside the native compile entry. The exact feature and proof visits are portable. Array sorting implementations can legitimately execute different comparison counts in QuickJS and Node, even when stable tie-breaking yields the same admission.
+
+### What was tricky to build
+
+The original generic stage reserves the `base` lane name for a frozen production pair. The physical overlay replaces that staged copy with the frozen source-order analysis treatment and then generates fresh guest and output oracles. The original generic runner and production sources stay unchanged.
+
+### What warrants a second pair of eyes
+
+Check that timer phase totals reproduce the outer timer and phase high-water reproduces the whole peak. Inspect the captured Editor and synthetic feature and proof counters for every arm.
+
+### What should be done in the future
+
+Record two complete physical captures, restoration, and forecast comparisons. Keep the transfer report separate from the original held-out article.
+
+### Code review instructions
+
+Run `08-stage-p4.py WORK`, build with the former frontend study’s `05-build.sh`, then run the original compiler lab’s `03-oracle.mjs WORK` and this ticket’s `11-p4-oracle.mjs WORK`. The single serial owner invokes `12-p4-board.py WORK BACKUP --port PORT --esptool ESPTOOL --boots 2`.
+
+### Technical details
+
+The physical-transfer image SHA-256 is `dac35e2bca871ea6e7d3a389659bd9ab79443e56e6341cd640f8aab71aca4ac7`. The density ranked arm uses the exact 32,768 proof-visit budget. Planning is timed independently and does not debit that physical budget.

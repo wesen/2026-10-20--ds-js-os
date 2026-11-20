@@ -25,3 +25,25 @@ python3 -B "$ticket/scripts/07-figure.py" "$ticket/various/held-out.json.gz" "$w
 Set `riscv_gcc` to the installed RV32 GCC executable. The independent test inputs are included under `various/independent` with compressed source and byte identities. Extract them into the scratch directory before using the custom-source command.
 
 [Newcomer article](analysis/01-which-functions-deserve-limited-compiler-analysis.md) · [Design](design-doc/01-a-preregistered-comparison-of-bounded-function-selectors.md) · [Diary](reference/01-analysis-selection-investigation-diary.md)
+
+## Physical transfer
+
+The three-arm transfer uses the frozen selectors on the ESP32-P4. Editor uses the pinned app source and linked ELF. The optional synthetic fixture uses the locked original order of `distributed-501` and returns raw RV32 bytes.
+
+```sh
+lab=$(find ttmp/2026/11/19 -maxdepth 1 -name 'PICOCALC-COMPILER-LAB--*')
+frontend=$(find ttmp/2026/11/19 -maxdepth 1 -name 'PICOCALC-FRONTEND-COLD--*')
+transfer=$(mktemp -d /tmp/p4-selector-transfer.XXXXXX)
+python3 -B "$ticket/scripts/08-stage-p4.py" "$transfer"
+bash "$frontend/scripts/05-build.sh" "$transfer" "$idf"
+node "$lab/scripts/03-oracle.mjs" "$transfer"
+node "$ticket/scripts/11-p4-oracle.mjs" "$transfer"
+python3 -B "$ticket/scripts/14-p4-quickjs.py" "$transfer" "$quickjs_runner"
+```
+
+Assign `idf` to the installed ESP-IDF export script. Build `quickjs_runner` with the frontend comparison guide’s host harness instructions. The single serial operator handles the trial and verifies restoration.
+
+```sh
+python3 -B "$ticket/scripts/12-p4-board.py" "$transfer" "$backup" --port "$port" --esptool "$esptool" --boots 2
+python3 -B "$ticket/scripts/13-p4-summary.py" "$transfer" > "$transfer/transfer-summary.json"
+```

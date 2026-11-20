@@ -1,0 +1,104 @@
+{
+  "firmware": "dac35e2bca871ea6e7d3a389659bd9ab79443e56e6341cd640f8aab71aca4ac7",
+  "firmwareBytes": 4700128,
+  "compilers": {
+    "base": {
+      "wasm": "b272a48ae1d9bab4b3ee7a4d578701d16ef7738d0c9a7642be6d1d362e9acb50",
+      "rv32": "a1f6d1b6404ba330cb5a4585937924cad72f57eca9c788392386cd29f7ae5100"
+    },
+    "literal": {
+      "wasm": "b272a48ae1d9bab4b3ee7a4d578701d16ef7738d0c9a7642be6d1d362e9acb50",
+      "rv32": "fe7e607f6691c18f5f4ad975ec3541f1aeb71bf67cb295b177387a3886c47154"
+    },
+    "density": {
+      "wasm": "b272a48ae1d9bab4b3ee7a4d578701d16ef7738d0c9a7642be6d1d362e9acb50",
+      "rv32": "822c18539360d8d9936aa948b15edabc06196222a46c18221297cbcbd62e25e7"
+    }
+  },
+  "selection": {
+    "base": {
+      "editor": {
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+        "bytes": 240452,
+        "raw": "8687d8c3b5cbe49e80ce93b9e25437b0e61aec3cd95fd27028849a2fa4b4cacd",
+        "words": 21803,
+        "counters": {
+          "cells": 0,
+          "comparisons": 0,
+          "retained": 0,
+          "proof": 4278
+        }
+      },
+      "synthetic": {
+        "sourceSha256": "8bb87e4ce2541d8505d59931b6232b3612463285984896ed92c3a5901dfa7377",
+        "sha256": "bd1930b860bd09f9423565be4083e7651d2ec189154c590123c8b32bd7760d90",
+        "bytes": 116428,
+        "raw": "bd1930b860bd09f9423565be4083e7651d2ec189154c590123c8b32bd7760d90",
+        "words": 29107,
+        "counters": {
+          "cells": 0,
+          "comparisons": 0,
+          "retained": 0,
+          "proof": 32166
+        }
+      }
+    },
+    "literal": {
+      "editor": {
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+        "bytes": 240452,
+        "raw": "8687d8c3b5cbe49e80ce93b9e25437b0e61aec3cd95fd27028849a2fa4b4cacd",
+        "words": 21803,
+        "counters": {
+          "cells": 2139,
+          "comparisons": 15,
+          "retained": 120,
+          "proof": 4278
+        }
+      },
+      "synthetic": {
+        "sourceSha256": "8bb87e4ce2541d8505d59931b6232b3612463285984896ed92c3a5901dfa7377",
+        "sha256": "98401a96cf6cd28a841ccf0b4bf59618815e72d7ded843cd6ef8a0f77849a544",
+        "bytes": 117796,
+        "raw": "98401a96cf6cd28a841ccf0b4bf59618815e72d7ded843cd6ef8a0f77849a544",
+        "words": 29449,
+        "counters": {
+          "cells": 24692,
+          "comparisons": 40,
+          "retained": 52,
+          "proof": 32226
+        }
+      }
+    },
+    "density": {
+      "editor": {
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+        "bytes": 240452,
+        "raw": "8687d8c3b5cbe49e80ce93b9e25437b0e61aec3cd95fd27028849a2fa4b4cacd",
+        "words": 21803,
+        "counters": {
+          "cells": 2139,
+          "comparisons": 14,
+          "retained": 120,
+          "proof": 4278
+        }
+      },
+      "synthetic": {
+        "sourceSha256": "8bb87e4ce2541d8505d59931b6232b3612463285984896ed92c3a5901dfa7377",
+        "sha256": "f10fdd4e921f14e1052a587b0d32dbb2f2a01d470c56533b269b1dfa51e99b58",
+        "bytes": 106996,
+        "raw": "f10fdd4e921f14e1052a587b0d32dbb2f2a01d470c56533b269b1dfa51e99b58",
+        "words": 26749,
+        "counters": {
+          "cells": 24692,
+          "comparisons": 229,
+          "retained": 52,
+          "proof": 32088
+        }
+      }
+    }
+  }
+}
