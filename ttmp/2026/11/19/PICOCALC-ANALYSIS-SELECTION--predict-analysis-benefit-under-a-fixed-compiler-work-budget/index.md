@@ -1,7 +1,7 @@
 ---
 Title: Predict analysis benefit under a fixed compiler work budget
 Ticket: PICOCALC-ANALYSIS-SELECTION
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T22:00:10.943747784-05:00
+LastUpdated: 2026-11-19T22:27:25.643341676-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

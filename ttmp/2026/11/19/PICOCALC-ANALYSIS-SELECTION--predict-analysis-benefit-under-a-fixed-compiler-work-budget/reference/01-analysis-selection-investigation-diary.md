@@ -241,3 +241,7 @@ Follow `README.md` for host evaluation and the independent arithmetic emulation.
 ### Technical details
 
 The frozen chooser source had SHA-256 `65c6cd926b08b3170df79a5eab305a3da229def01e3e353300005ac2da234bd0`. The summary cap test retained 256 summaries across 257 functions and produced a raw image byte-identical to ordinary source-order admission. Every cohort ran comparisons at 32,768 and at one-quarter, one-half and the full eligible proof cost, with coincident budgets represented once.
+
+## Step 5. Publish the held-out study
+
+The vault’s main branch contains the standalone article and verified figure at `450e9267c5ff7c7e99d3eae96d7048c9888fe411`. The project report, policy lock, archived datasets and reproduction guide remain together in this ticket. [Publication receipt](../various/vault-publication.json).
