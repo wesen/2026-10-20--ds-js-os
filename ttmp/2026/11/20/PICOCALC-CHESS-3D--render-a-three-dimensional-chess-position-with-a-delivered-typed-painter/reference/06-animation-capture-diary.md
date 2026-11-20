@@ -2,7 +2,7 @@
 Title: Independent observer diary for physical Chess camera animation
 Ticket: PICOCALC-CHESS-3D
 DocType: reference
-Status: active
+Status: complete
 Topics: [picocalc, esp32-p4, chess, rendering]
 ---
 
@@ -31,3 +31,19 @@ A mock UART replay using the real set of 32 phase references, controlled timesta
 ## Step 4. Check negative controls and diagnose the first observed build
 
 A native UBSan mock of the two actual observer includes exercised 33 ordered phases, a compositor epoch/handle, delayed first and final SPI windows and a partially transferred final window. The marker stayed unset until the final transaction. Deliberately skipping a phase stopped capture, and altering a reconstructed panel pixel caused the expected mismatch. I also inspected the full observed-image build failure. Its C compiler reported redeclarations of camera_painted and camera_panel_end_window. The wrapper then contained both a conditional invocation and a second invocation of the staging script. The owner removed the duplicate call, and I added a six-anchor preflight to make a complete repeated installation a no-op while rejecting partially applied hooks. The observation build runs against fresh private source copies.
+
+## Step 5. Audit the real orbit on the PicoCalc
+
+The first observed run read the painter service while a healthy asynchronous compilation was still underway. Its status showed one compilation, zero rejects, and installation pending. The raw UART subsequently recorded successful compilation. The director corrected both pre- and post-test readiness polling and ran the same observed image again. The second run captured all four real F4 turns under a single authorized compositor identity. Its state marker was CAMSTATE 33 0 0 0. World 3, epoch 0 and DMA handle 6 remained constant. Every expected panel window completed and every full-frame comparison succeeded.
+
+I independently parsed the saved UART bytes after the observer state marker. All 33 shot payloads matched their run counts, CRC32 values and 204,800-byte RGB565 files. The host body-plus-hints reference matched every byte of phases 0 through 31 and the returned phase zero. After converting the original raw pixels, the full 320 × 320 PNGs and all 32 GIF frames reproduced their colors exactly. Each physical frame used at most 22 distinct colors. The resulting GIF SHA-256 is 8d626a9ca9b09abecb624d9899ca17cce43f4ef64c82a920df9958d88acdb4c6. The first review of the UART tail also found later screenshots from independent interaction checks. The offline decoder deliberately takes the 33 shot replies immediately following the completed observer state.
+
+The elapsed times from the first painter entry in each quarter to its final completed SPI window were 528.919, 515.609, 523.726 and 545.951 ms. The 28 intervals between physically completed changes inside the four turns ranged from 58.057 to 91.870 ms with a median of 67.007 ms. The times include the instrumentation. The original application frames run continuously within each turn. Reading endpoint evidence introduces a gap between successive key presses; the exported looping GIF uses measured within-turn cadence at these boundaries.
+
+The real capture is under /tmp/chess-camera-smooth-run2. The comparable host references are under /tmp/chess-camera-smooth-refs. A read-only audit can be reproduced without serial access:
+
+```sh
+python3 -B scripts/camera/07-physical-animation.py /tmp/chess-camera-smooth-run2 /tmp/chess-camera-smooth-refs
+```
+
+Implementation checkpoints d1c0a44 and 85b3453 cover the private capture, staging and collector. The director owns release restoration and archive publication.

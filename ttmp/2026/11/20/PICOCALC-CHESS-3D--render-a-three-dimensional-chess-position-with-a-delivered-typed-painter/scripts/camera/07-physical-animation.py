@@ -174,3 +174,58 @@ def collect(console, reference, output):
                             'reconstructed completed SPI2 payloads; independent host RGB565 reference covers rows 22–319.'}
     (output/'smooth-rotation.json').write_text(json.dumps(result,indent=2)+'\n')
     return result
+
+
+def audit(capture, reference):
+    """Replay the operator's UART bytes independently of the live console decoder."""
+    receipt = json.loads((capture/'smooth-rotation.json').read_text())
+    uart = (capture/'uart.log').read_bytes()
+    records = [list(map(int,line.split()[1:])) for line in uart.splitlines()
+               if line.startswith(b'CAMFRAME ')][-33:]
+    if len(records) != 33 or [r[1] for r in records] != [i % 32 for i in range(33)]:
+        raise ValueError('Incomplete camera sequence in original UART log')
+    marker = b'CAMSTATE 33 0 0 0'
+    if marker not in uart or len({tuple(r[2:5]) for r in records}) != 1:
+        raise ValueError('Observer reported a failure or a different owner')
+    stream = uart.split(marker, 1)[1]
+    # Later independent display checks can also request ordinary screenshots.
+    shots = re.findall(rb'#SHOT 320 320\r?\n(.*?)#END ([0-9a-fA-F]{8}) ([0-9]+)', stream, re.S)[:33]
+    if len(shots) != 33:
+        raise ValueError('Incomplete RLE payload set')
+    with Image.open(capture/'smooth-rotation.gif') as gif:
+        if gif.n_frames != 32 or gif.size != (320,320) or gif.info.get('loop') != 0:
+            raise ValueError('Unexpected animation geometry or length')
+        for seq, (record, packet, row) in enumerate(zip(records, shots, receipt['frames'], strict=True)):
+            phase = seq % 32
+            name = f'phase-{phase:02d}' if seq < 32 else 'phase-32-wrap'
+            raw = (capture/(name+'.rgb565')).read_bytes()
+            expected = (reference/f'phase-{phase:02d}.ref').read_bytes()
+            lines = [line.strip() for line in packet[0].splitlines() if BASE64_LINE.fullmatch(line.strip())]
+            encoded = base64.b64decode(b''.join(lines), validate=True)
+            if len(encoded) != int(packet[2]) * 4 or len(raw) != SCREEN:
+                raise ValueError(f'Invalid UART extent at {seq}')
+            pixels = b''.join(struct.pack('<H',value) * n for n,value in struct.iter_unpack('<HH',encoded))
+            if pixels != raw or zlib.crc32(raw) != int(packet[1],16) or raw[BODY_OFFSET:] != expected:
+                raise ValueError(f'UART/frame/reference disagree at {seq}')
+            if record[5:] != [row[k] for k in ('painterBeginUs','commitUs','panelUs')]:
+                raise ValueError(f'UART timing disagrees with JSON at {seq}')
+            if seq < 32:
+                gif.seek(seq)
+                with Image.open(capture/(name+'.png')) as png:
+                    full = rgb(raw).tobytes()
+                    if full != png.convert('RGB').tobytes() or full != gif.convert('RGB').tobytes():
+                        raise ValueError(f'Color preservation failed at {seq}')
+    intervals = [(records[i][-1]-records[i-1][-1])/1000 for i in range(2,33) if i % 8 != 1]
+    return {'uartImages':33,'exactGifFrames':32,'ownerEpochHandle':records[0][2:5],
+            'quarterMs':[(records[i+7][-1]-records[i][-3])/1000 for i in (1,9,17,25)],
+            'spiIntervalMsMinMedianMax':[min(intervals),median(intervals),max(intervals)],
+            'gifSha256':hashlib.sha256((capture/'smooth-rotation.gif').read_bytes()).hexdigest()}
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Audit saved camera evidence without opening a device.')
+    parser.add_argument('capture', type=Path)
+    parser.add_argument('reference', type=Path)
+    args = parser.parse_args()
+    print(json.dumps(audit(args.capture, args.reference), indent=2))
