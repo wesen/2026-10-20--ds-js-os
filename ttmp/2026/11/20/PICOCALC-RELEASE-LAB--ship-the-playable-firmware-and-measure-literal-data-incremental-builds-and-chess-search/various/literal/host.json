@@ -1,0 +1,235 @@
+{
+  "node": "v24.18.0",
+  "workloads": {
+    "chess": {
+      "sourceBytes": 61022,
+      "sourceSHA256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+      "entries": {
+        "stock": {
+          "codeBytes": 256400,
+          "dataBytes": 0,
+          "padding": 0,
+          "totalBytes": 256400,
+          "literals": 0,
+          "uniqueLiterals": 0,
+          "linkedBytes": 274892,
+          "sha256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+          "sourceWriterModeledInstructions": 49354
+        },
+        "pool": {
+          "codeBytes": 54320,
+          "dataBytes": 33852,
+          "padding": 0,
+          "totalBytes": 88172,
+          "literals": 33,
+          "uniqueLiterals": 33,
+          "linkedBytes": 274892,
+          "sha256": "1e976e09a7d74b5fe19630e051970c65f0987eb8140114a8d9dac5af63313e46",
+          "sourceWriterModeledInstructions": 82066
+        },
+        "dedupe": {
+          "codeBytes": 54320,
+          "dataBytes": 33852,
+          "padding": 0,
+          "totalBytes": 88172,
+          "literals": 33,
+          "uniqueLiterals": 33,
+          "linkedBytes": 274892,
+          "sha256": "1e976e09a7d74b5fe19630e051970c65f0987eb8140114a8d9dac5af63313e46",
+          "sourceWriterModeledInstructions": 82066
+        },
+        "word": {
+          "codeBytes": 55232,
+          "dataBytes": 33852,
+          "padding": 0,
+          "totalBytes": 89084,
+          "literals": 33,
+          "uniqueLiterals": 33,
+          "linkedBytes": 274892,
+          "sha256": "ca2504c07979038174e60e0b35cccff7b8d5b1fcbf3a59f2e7277553b3a39871",
+          "sourceWriterModeledInstructions": 41324
+        }
+      },
+      "contextPlusCompileMs": {
+        "stock": [
+          35.527934999999985,
+          32.84605099999999,
+          27.674517999999978,
+          33.302819,
+          26.33472900000004,
+          30.69247299999995,
+          30.423251999999934,
+          31.239148,
+          26.959166000000096
+        ],
+        "pool": [
+          30.084739000000013,
+          21.62182899999999,
+          25.01986599999998,
+          24.538008999999988,
+          18.72300400000006,
+          21.241316000000097,
+          18.69176799999991,
+          28.41370900000004,
+          22.378202999999985
+        ],
+        "dedupe": [
+          22.18674599999997,
+          19.888405000000034,
+          21.489321000000018,
+          28.556456000000026,
+          20.059237000000053,
+          21.926425999999992,
+          23.137238000000025,
+          26.62465700000007,
+          23.961753000000044
+        ],
+        "word": [
+          20.54665399999999,
+          23.690561000000002,
+          23.32173400000005,
+          24.431566999999973,
+          20.719848999999954,
+          19.111987999999997,
+          18.20188100000007,
+          25.896175000000085,
+          20.677085000000034
+        ]
+      },
+      "reconstructedSourceSHA256": "6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214"
+    },
+    "editor": {
+      "sourceBytes": 69884,
+      "sourceSHA256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+      "entries": {
+        "stock": {
+          "codeBytes": 89168,
+          "dataBytes": 0,
+          "padding": 0,
+          "totalBytes": 89168,
+          "literals": 0,
+          "uniqueLiterals": 0,
+          "linkedBytes": 242124,
+          "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4"
+        },
+        "pool": {
+          "codeBytes": 75268,
+          "dataBytes": 2530,
+          "padding": 2,
+          "totalBytes": 77800,
+          "literals": 32,
+          "uniqueLiterals": 32,
+          "linkedBytes": 242124,
+          "sha256": "b1887e48da4f8ca3765be8286d1cb6d8a3e0501c3891a2f5f030585354626998"
+        },
+        "dedupe": {
+          "codeBytes": 75268,
+          "dataBytes": 2464,
+          "padding": 0,
+          "totalBytes": 77732,
+          "literals": 32,
+          "uniqueLiterals": 31,
+          "linkedBytes": 242124,
+          "sha256": "8b215c1a42f76b64307770c480d0a13f5addb3e225fde5020f44692b0f6bde4c"
+        },
+        "word": {
+          "codeBytes": 76124,
+          "dataBytes": 2464,
+          "padding": 0,
+          "totalBytes": 78588,
+          "literals": 32,
+          "uniqueLiterals": 31,
+          "linkedBytes": 242124,
+          "sha256": "91562d5ca83a26ecadc5939363231b6bccf50720cdcacc033329c19d7e51222d"
+        }
+      },
+      "contextPlusCompileMs": {
+        "stock": [
+          35.493556000000126,
+          32.85172699999998,
+          41.68710399999986,
+          32.9673150000001,
+          34.79477399999996,
+          43.59520500000008,
+          39.082810999999765,
+          39.10679900000014,
+          50.58269599999994
+        ],
+        "pool": [
+          38.36554000000001,
+          36.874487000000045,
+          37.571866,
+          39.75166300000001,
+          37.167593000000124,
+          38.86132799999996,
+          40.26816899999994,
+          45.38469199999963,
+          45.97161300000016
+        ],
+        "dedupe": [
+          35.13107100000002,
+          36.17554200000018,
+          36.00505799999996,
+          36.43695400000024,
+          43.387134999999944,
+          43.99482700000044,
+          45.16156799999999,
+          44.190998000000036,
+          43.90860900000007
+        ],
+        "word": [
+          36.0111780000002,
+          41.59476799999993,
+          39.38161500000001,
+          36.06530100000009,
+          36.98030999999992,
+          46.01377400000001,
+          54.68326399999978,
+          36.270442,
+          52.67310899999984
+        ]
+      }
+    }
+  },
+  "heldOut": {
+    "stock": {
+      "codeBytes": 1600,
+      "dataBytes": 0,
+      "padding": 0,
+      "totalBytes": 1600,
+      "literals": 0,
+      "uniqueLiterals": 0
+    },
+    "pool": {
+      "codeBytes": 368,
+      "dataBytes": 208,
+      "padding": 0,
+      "totalBytes": 576,
+      "literals": 2,
+      "uniqueLiterals": 2
+    },
+    "dedupe": {
+      "codeBytes": 368,
+      "dataBytes": 104,
+      "padding": 0,
+      "totalBytes": 472,
+      "literals": 2,
+      "uniqueLiterals": 1
+    },
+    "word": {
+      "codeBytes": 448,
+      "dataBytes": 104,
+      "padding": 0,
+      "totalBytes": 552,
+      "literals": 2,
+      "uniqueLiterals": 1
+    }
+  },
+  "successAndTrapCases": 180,
+  "depthCases": 48,
+  "rejectedLengths": [
+    1023,
+    1024,
+    2048
+  ]
+}

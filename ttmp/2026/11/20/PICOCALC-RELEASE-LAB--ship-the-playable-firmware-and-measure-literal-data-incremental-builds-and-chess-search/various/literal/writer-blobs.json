@@ -1,0 +1,29 @@
+{
+  "stock": {
+    "codeBytes": 197544,
+    "dataBytes": 0,
+    "padding": 0,
+    "totalBytes": 197544,
+    "literals": 0,
+    "uniqueLiterals": 0,
+    "sha256": "9df60095321c3f61279c1905e7d6824eb35740e169f7dd5877cf597bba09c7bf"
+  },
+  "half": {
+    "codeBytes": 2392,
+    "dataBytes": 32632,
+    "padding": 0,
+    "totalBytes": 35024,
+    "literals": 16,
+    "uniqueLiterals": 16,
+    "sha256": "7df3f7eefeeeac81b4a57c2a4fa6cc39c81f805c4c611822d04dff0ce317f5da"
+  },
+  "word": {
+    "codeBytes": 3032,
+    "dataBytes": 32632,
+    "padding": 0,
+    "totalBytes": 35664,
+    "literals": 16,
+    "uniqueLiterals": 16,
+    "sha256": "604def97bc5c701d59be6115c3edb02d2ce55f23aaa5d72992c58ce25f7dd0c8"
+  }
+}

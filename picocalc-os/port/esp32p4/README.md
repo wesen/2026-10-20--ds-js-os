@@ -62,6 +62,7 @@ The typed world handles checkmate, stalemate and basic dead material. Games live
 From a clean checkout, source the ESP-IDF **v5.4.2** environment and make Node.js 24 available. The release build
 uses the tracked `dependencies.elf.lock` to resolve the native ELF loader. The first build can download those
 components. From the repository root, choose an empty build directory.
+Use separate checkouts for concurrent builds. The CJI bootstrap writes intermediates into its source tree.
 
 ```sh
 source /path/to/esp-idf-5.4.2/export.sh
