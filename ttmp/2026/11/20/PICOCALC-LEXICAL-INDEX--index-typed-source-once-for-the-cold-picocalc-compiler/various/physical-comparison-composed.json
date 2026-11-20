@@ -1,0 +1,208 @@
+{
+  "ceiling_us": 2910112.7,
+  "arms": {
+    "manual": {
+      "us": {
+        "samples": [
+          2653065,
+          2645557,
+          2627345
+        ],
+        "median": 2645557
+      },
+      "peak": {
+        "samples": [
+          1493644,
+          1493880,
+          1493532
+        ],
+        "median": 1493644
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      }
+    },
+    "async": {
+      "us": {
+        "samples": [
+          3816925,
+          3834497,
+          3785138
+        ],
+        "median": 3816925
+      },
+      "peak": {
+        "samples": [
+          2256772,
+          2256776,
+          2256812
+        ],
+        "median": 2256776
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      }
+    },
+    "index": {
+      "us": {
+        "samples": [
+          3132429,
+          3131194,
+          3131202
+        ],
+        "median": 3131202
+      },
+      "peak": {
+        "samples": [
+          2685364,
+          2685364,
+          2685364
+        ],
+        "median": 2685364
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      },
+      "image_sha256": "9ac3d2041042f9ba9b18bd4dc6d7d014a7e27fa6579ab41b60f2b45dfaece251",
+      "staged_sources": {
+        "picocalc-os/port/esp32p4/main/typed_lex_index.c": "ecd5591e9ee0c8bdfcd2c9b8f9320c24ab02b17eac1722249bfa442d0cecd361",
+        "picocalc-os/port/esp32p4/main/typed_lex_index.h": "ddc8ddef276dca07839b365cca809021558bc96b218a6a2d17c8b8642c41196e",
+        "picocalc-os/port/esp32p4/main/typed_p4.c": "15b2385101b6babb3be5f2c281fc6191c2ef55c928efce624feb8b9582aa4192",
+        "picocalc-os/port/esp32p4/main/CMakeLists.txt": "a0d513714162946f5a34850e72f769d3c63f4fd0aceb72609c21d91a0f7f9807",
+        "picocalc-os/compiler/typed-wasm.js": "ca81a89557c2746e168fcc3379e346cd04a1531c4f82044f977d3929c93e3b84"
+      },
+      "change_from_async_percent": -17.965325491069382,
+      "distance_from_gate_us": 221089.2999999998,
+      "passes_cold_gate": false
+    },
+    "index-reuse": {
+      "us": {
+        "samples": [
+          2995217,
+          2993614,
+          2994557
+        ],
+        "median": 2994557
+      },
+      "peak": {
+        "samples": [
+          2686260,
+          2686236,
+          2686260
+        ],
+        "median": 2686260
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      },
+      "image_sha256": "623595716509e16b8c9eadef58e651ade71814780d7d6fd8886e7bfdaca05b47",
+      "staged_sources": {
+        "picocalc-os/port/esp32p4/main/typed_lex_index.c": "ecd5591e9ee0c8bdfcd2c9b8f9320c24ab02b17eac1722249bfa442d0cecd361",
+        "picocalc-os/port/esp32p4/main/typed_lex_index.h": "ddc8ddef276dca07839b365cca809021558bc96b218a6a2d17c8b8642c41196e",
+        "picocalc-os/port/esp32p4/main/typed_p4.c": "15b2385101b6babb3be5f2c281fc6191c2ef55c928efce624feb8b9582aa4192",
+        "picocalc-os/port/esp32p4/main/CMakeLists.txt": "a0d513714162946f5a34850e72f769d3c63f4fd0aceb72609c21d91a0f7f9807",
+        "picocalc-os/compiler/typed-wasm.js": "d2c7e0a5972632bd08b41e828610da6be9a1acb83c8136378839ca2c55a03e5c",
+        "picocalc-os/compiler/typed-async.js": "bdad2648bfabd4946a3efee7bd1cf3aa033d9347a9f32cc0dcc95b15633b36e1"
+      },
+      "change_from_async_percent": -21.545301518892824,
+      "distance_from_gate_us": 84444.29999999981,
+      "passes_cold_gate": false
+    },
+    "indexed-prepass": {
+      "us": {
+        "samples": [
+          2804638,
+          2806227,
+          2805457
+        ],
+        "median": 2805457
+      },
+      "peak": {
+        "samples": [
+          2701360,
+          2701352,
+          2701352
+        ],
+        "median": 2701352
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      },
+      "image_sha256": "63d4cf1f8d4495c8a1541cfe4b276e10949e289479b9ae67855d8125d0c5c204",
+      "staged_sources": {
+        "picocalc-os/port/esp32p4/main/typed_lex_index.c": "ecd5591e9ee0c8bdfcd2c9b8f9320c24ab02b17eac1722249bfa442d0cecd361",
+        "picocalc-os/port/esp32p4/main/typed_lex_index.h": "ddc8ddef276dca07839b365cca809021558bc96b218a6a2d17c8b8642c41196e",
+        "picocalc-os/port/esp32p4/main/typed_p4.c": "15b2385101b6babb3be5f2c281fc6191c2ef55c928efce624feb8b9582aa4192",
+        "picocalc-os/port/esp32p4/main/CMakeLists.txt": "a0d513714162946f5a34850e72f769d3c63f4fd0aceb72609c21d91a0f7f9807",
+        "picocalc-os/compiler/typed-wasm.js": "d2c7e0a5972632bd08b41e828610da6be9a1acb83c8136378839ca2c55a03e5c",
+        "picocalc-os/compiler/typed-async.js": "74edc1c8ed9d1df954113f96e66872a47d36446d657b05ee53613b52b2ff33fb"
+      },
+      "change_from_async_percent": -26.499551340411454,
+      "distance_from_gate_us": -104655.70000000019,
+      "passes_cold_gate": true
+    },
+    "indexed-spans": {
+      "us": {
+        "samples": [
+          2725262,
+          2723916,
+          2730606
+        ],
+        "median": 2725262
+      },
+      "peak": {
+        "samples": [
+          2528448,
+          2528464,
+          2528440
+        ],
+        "median": 2528448
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      },
+      "image_sha256": "3bf4f6a52a5c406b68cce3ccc2a0632c9e2277e77da462640380c9c06e917441",
+      "staged_sources": {
+        "picocalc-os/port/esp32p4/main/typed_lex_index.c": "ecd5591e9ee0c8bdfcd2c9b8f9320c24ab02b17eac1722249bfa442d0cecd361",
+        "picocalc-os/port/esp32p4/main/typed_lex_index.h": "ddc8ddef276dca07839b365cca809021558bc96b218a6a2d17c8b8642c41196e",
+        "picocalc-os/port/esp32p4/main/typed_p4.c": "15b2385101b6babb3be5f2c281fc6191c2ef55c928efce624feb8b9582aa4192",
+        "picocalc-os/port/esp32p4/main/CMakeLists.txt": "a0d513714162946f5a34850e72f769d3c63f4fd0aceb72609c21d91a0f7f9807",
+        "picocalc-os/compiler/typed-wasm.js": "f5d2ea51472a4616ebea62dee54ae8f60e1dcae8e9908c08c043f016ebb024d5",
+        "picocalc-os/compiler/typed-async.js": "7a0524cf89f6f3766cb8b265146d41975eae91a11f34fecacf19e09c922b9f17"
+      },
+      "change_from_async_percent": -28.60058816979637,
+      "distance_from_gate_us": -184850.7000000002,
+      "passes_cold_gate": true
+    }
+  }
+}

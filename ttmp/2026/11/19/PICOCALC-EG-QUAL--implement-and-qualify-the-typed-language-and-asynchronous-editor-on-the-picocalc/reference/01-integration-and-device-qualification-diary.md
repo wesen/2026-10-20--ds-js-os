@@ -320,3 +320,27 @@ Check the composed compiler candidates against the native cold compilation gate 
 ### Code review instructions
 
 Read scripts/16-compare-search.py alongside sources/verified/editor.md and various/search-comparison.json. The physical tail screenshot and timing chart are in various/.
+
+## Step 7 — Screen two complete compiler designs on the PicoCalc
+
+The first generated Editor missed its native cold limit by 907 ms. Reusing tokens brought the gap to 84 ms. I paired two further designs to determine whether an indexed body scan and reuse of original source spans could close it. Both compile the same generated Editor, use the same streaming RV32 backend and include index construction in the measured interval.
+
+### What I did and why
+
+I recorded three fresh boots for each design, verified the firmware image digests, and compared the medians to the handwritten Editor's frozen 2.910113 s ceiling. I added a check that links the eventual production source digests, all 24 host replays, both physical firmware images and all five final device gates. Each final workflow receipt now includes the two flashed image digests.
+
+### What worked
+
+Indexed body inspection took 2.805457 s and 2,701,352 bytes of peak compiler allocation. Adding original source spans took 2.725262 s and 2,528,448 bytes. The source-span version saved 80.195 ms and 172,904 bytes against its nearest competitor. It earned the full six-workflow device qualification.
+
+### What did not work and what I learned
+
+The independent first draft called the physical native engine emulated and treated a fixed native module size as evidence that generated instructions did not grow. I returned the draft to its author with the actual measurement boundaries and the instruction counts for both revisions. A module envelope, the instructions occupying its slot, and the guest's executed instructions answer three separate questions.
+
+### What warrants a second pair of eyes
+
+Check the regenerated comparison against all six raw samples. Check the integrated images against the board receipt before merging the candidate. A new compiler option, runtime binding or host timing input requires its own explicit identity.
+
+### Code review instructions
+
+Read scripts/28-check-qualified-integration.py and the lexical-index ticket's scripts/13-compare-physical-index.py. The final report distinguishes cold screening from full UI qualification and from the historical frontend-only host gate.
