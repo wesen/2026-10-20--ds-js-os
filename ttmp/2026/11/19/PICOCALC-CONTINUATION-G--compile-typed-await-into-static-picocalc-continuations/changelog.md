@@ -11,3 +11,7 @@ Qualified production continuation layout and execution on Wasm and RV32, and bou
 ### Related Files
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/picocalc-os/compiler/typed-async.js — Shared continuation lowering
+
+## 2026-11-20
+
+Completed G1 and G2 host acceptance and published the intern-level continuations report

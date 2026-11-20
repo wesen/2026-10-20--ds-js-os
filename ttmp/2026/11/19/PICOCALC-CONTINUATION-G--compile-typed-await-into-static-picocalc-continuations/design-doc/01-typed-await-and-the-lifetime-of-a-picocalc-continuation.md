@@ -7,7 +7,11 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-async.js
+      Note: Lexical analysis, frame allocation, and source generation
+    - Path: repo://picocalc-os/compiler/typed-wasm.js
+      Note: Shared type checking and staged emission
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-19T23:29:34.491932038-05:00

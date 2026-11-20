@@ -7,7 +7,11 @@ Topics:
 DocType: reference
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/19/PICOCALC-CONTINUATION-G--compile-typed-await-into-static-picocalc-continuations/scripts/14-check-async-layout.mjs
+      Note: Deterministic host trace and byte controls
+    - Path: repo://ttmp/2026/11/19/PICOCALC-CONTINUATION-G--compile-typed-await-into-static-picocalc-continuations/scripts/15-benchmark-quickjs.c
+      Note: QuickJS allocation and timing instrument
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-19T23:29:34.829420161-05:00
@@ -245,3 +249,53 @@ Run the focused fixture and optional baseline lane. The lexical checking path is
 ### Technical details
 
 Each old-source JSONL trial is ordered as old rewrite, span rewrite, old RV32, span RV32, sync RV32. Each final-source JSONL trial is ordered as span rewrite, token reuse rewrite, span RV32, token reuse RV32, sync RV32. Source assembly follows worlds/editor/source.list and inserts a newline after each part.
+
+## Step 5: Publish the intern report
+
+I compared the final compiler checkpoint 2e4fee1 with the compiler used for the first production Open and Find build. It produced byte-identical linked Editor output at 70 fields. I published the article in the Obsidian vault and verified that its local and remote branches both name the new commit.
+
+### Prompt context
+
+See Step 1. The report explains the production transformation, its evidence, and its differences from the earlier single-await pilot.
+
+### What I did
+
+- Confirmed linked Wasm and RV32 Editor identity against 9fd1744 on the 7b321a9 app source, with the same SDK reactor in each pair.
+- Revised the draft after checking that its normalization example included the real loop, the nested result transfer named the transient token-field use, and the evidence distinguished interpreter execution from complete ELF linking.
+- Committed and pushed the report in go-go-parc as 000fa2a. [Published note](https://github.com/go-go-golems/go-go-parc/blob/000fa2a/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20How%20PicoCalc%20Compiles%20Await%20into%20Static%20Continuations.md)
+
+### Why
+
+The original pilot's 74-field number and compile results describe a smaller lowering. The production report needs its own source, memory and behavioral evidence for a reader to reproduce the result accurately.
+
+### What worked
+
+The compared Wasm images were 88,969 bytes with SHA-256 5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65. The compared ELF images were 240,452 bytes with SHA-256 7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd for that archived reactor. The scoped vault commit was pushed to main.
+
+### What did not work
+
+An initial comparison invoked raw typedRv32.compile on assembled Editor with its default 64 KiB source limit and returned `SyntaxError: input limit exceeded`. The linked world API uses the production 96 KiB source limit and successfully verified both complete artifacts.
+
+### What I learned
+
+Allocator observations and linked program identity can hold simultaneously. Changes to the compiler's intermediate JavaScript allocations leave the generated application's behavior and compiled bytes identical in this comparison.
+
+### What was tricky to build
+
+The comparison requires matching the archived source, compiler revision and reactor inputs. Byte identity pertains to the same reactor in both lanes. A firmware build may package a reactor with different bytes outside the typed program slot.
+
+### What warrants a second pair of eyes
+
+Verify that the device qualification quotes measurements from the exact compiler revision or explicitly labels earlier runs. Use the parent qualification ledger for physical timing and replay outcomes.
+
+### What should be done in the future
+
+Keep the host trace as a regression for future task language changes and record physical compile timing separately from host allocation.
+
+### Code review instructions
+
+Use 2e4fee1 for code and fixture inspection. Read the vault report with the ticket design and the two paired host measurement receipts.
+
+### Technical details
+
+The final report branch evened with origin/main at commit 000fa2a705bebefdf8b5875304759221074f04be.
