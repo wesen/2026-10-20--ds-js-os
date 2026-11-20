@@ -10,16 +10,20 @@ const I32 = 0x7f;
 const VOID = 0x40;
 const BINARY = new Map([
     ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
-    ["===", [3, null, "bool", 0x46]], ["<", [4, "i32", "bool", OP.lt]],
+    ["===", [3, null, "bool", 0x46]], ["!==", [3, null, "bool", 0x47]],
+    ["<", [4, "i32", "bool", OP.lt]],
     ["<=", [4, "i32", "bool", 0x4c]], [">", [4, "i32", "bool", 0x4a]],
     [">=", [4, "i32", "bool", 0x4e]], [">>", [5, "i32", "i32", 0x75]],
     ["+", [6, "i32", "i32", OP.add]], ["-", [6, "i32", "i32", OP.sub]],
     ["*", [7, "i32", "i32", 0x6c]], ["/", [7, "i32", "i32", OP.div]],
     ["%", [7, "i32", "i32", 0x6f]],
 ]);
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(?<str>"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?<op>===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(?<str>"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?<op>!==|===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
+// The signature pass only needs delimiters. The body parser checks token syntax.
+const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
-    "true", "false", "Math", "let", "while", "string", "record", "buffer"]);
+    "true", "false", "Math", "let", "while", "string", "record", "buffer",
+    "else", "for", "break"]);
 
 function unsigned(value) {
     const bytes = [];
@@ -51,15 +55,16 @@ function section(id, data) {
 }
 
 class Lexer {
-    constructor(source) {
+    constructor(source, start = 0, end = source.length) {
         this.source = source;
-        this.offset = 0;
+        this.offset = start;
+        this.input = end === source.length ? source : source.slice(0, end);
         this.next();
     }
 
     next() {
         TOKEN.lastIndex = this.offset;
-        const match = TOKEN.exec(this.source);
+        const match = TOKEN.exec(this.input);
         if (match) {
             const {id, int, str, op} = match.groups;
             const value = id ?? int ?? str ?? op;
@@ -69,7 +74,7 @@ class Lexer {
             return;
         }
         this.token = { value: "", kind: "eof", at: this.offset };
-        if (!/^\s*(?:\/\/[^\n]*(?:\n|$)\s*)*$/.test(this.source.slice(this.offset))) {
+        if (!/^\s*(?:\/\/[^\n]*(?:\n|$)\s*)*$/.test(this.input.slice(this.offset))) {
             this.fail("invalid token");
         }
     }
@@ -102,17 +107,36 @@ class Lexer {
         this.next();
         return value;
     }
+
+    skipBody() {
+        BODY_TOKEN.lastIndex = this.offset;
+        let depth = 1;
+        for (let token; (token = BODY_TOKEN.exec(this.input));) {
+            if (token[0] === "{") depth++;
+            if (token[0] === "}" && --depth === 0) {
+                this.offset = BODY_TOKEN.lastIndex;
+                this.next();
+                return;
+            }
+        }
+        this.offset = this.input.length;
+        this.next();
+    }
 }
 
 class FunctionEmitter {
-    constructor(lexer, functions, records) {
+    constructor(lexer, functions, records, edges, functionBase) {
         this.records = records;
         this.functions = functions;
+        this.edges = edges;
+        this.functionBase = functionBase;
         this.lex = lexer;
         this.locals = new Map();
         this.code = [];
         this.nextLocal = 0;
         this.depth = 0;
+        this.controls = 0;
+        this.loopExits = [];
     }
 
     local(name, type, mutable = false) {
@@ -127,15 +151,18 @@ class FunctionEmitter {
     }
 
     emitConst(value) {
-        this.code.push(OP.const, ...signed(value));
+        if (value >= -64 && value < 64) this.code.push(OP.const, value & 127);
+        else this.code.push(OP.const, ...signed(value));
     }
 
     emitIndex(op, index) {
-        this.code.push(op, ...unsigned(index));
+        if (index < 128) this.code.push(op, index);
+        else this.code.push(op, ...unsigned(index));
     }
 
     emitMemory(op, alignment, offset) {
-        this.code.push(op, alignment, ...unsigned(offset));
+        if (offset < 128) this.code.push(op, alignment, offset);
+        else this.code.push(op, alignment, ...unsigned(offset));
     }
 
     minmax() {
@@ -346,6 +373,9 @@ class FunctionEmitter {
         }
         lex.expect(")");
         this.emitIndex(0x10, callee.index);
+        const ordinal = callee.index - this.functionBase;
+        if (this.edges && ordinal >= 0 && !this.edges.includes(ordinal))
+            this.edges.push(ordinal);
         return callee.result;
     }
 
@@ -366,92 +396,150 @@ class FunctionEmitter {
         this.depth--;
     }
 
-    statement(result) {
+    conditional(result) {
         const lex = this.lex;
-        if (lex.accept("if")) {
+        const enclosing = this.controls;
+        do {
+            if (this.controls - enclosing + this.depth >= 128) lex.fail("block nesting limit exceeded");
             lex.expect("(");
             this.want(this.expr(), "bool");
             lex.expect(")");
             this.code.push(OP.if, VOID);
+            this.controls++;
             if (lex.token.value === "{") this.block(result);
             else this.result(result, true);
+            if (!lex.accept("else")) break;
+            this.code.push(OP.else);
+            if (lex.accept("if")) continue;
+            if (lex.token.value === "{") this.block(result);
+            else this.result(result, true);
+            break;
+        } while (true);
+        while (this.controls > enclosing) {
             this.code.push(OP.end);
+            this.controls--;
+        }
+    }
+
+    loop(result, counted) {
+        const lex = this.lex;
+        const enclosing = this.locals;
+        lex.expect("(");
+        if (counted) {
+            this.locals = new Map(enclosing);
+            if (lex.token.value === "let") this.declaration();
+            else this.assignment(lex.ident());
+            lex.expect(";");
+        }
+        // Expression control blocks close within expr(), before any break can appear.
+        this.loopExits.push(this.controls);
+        this.controls += 2;
+        this.code.push(0x02, VOID, 0x03, VOID);
+        this.want(this.expr(), "bool");
+        this.code.push(OP.eqz, 0x0d, 1);
+        let update;
+        if (counted) {
+            lex.expect(";");
+            const loopCode = this.code;
+            this.code = [];
+            this.assignment(lex.ident());
+            update = this.code;
+            this.code = loopCode;
+        }
+        lex.expect(")");
+        this.block(result);
+        if (update) this.code.push(...update);
+        this.code.push(0x0c, 0, OP.end, OP.end);
+        this.controls -= 2;
+        this.loopExits.pop();
+        this.locals = enclosing;
+    }
+
+    declaration() {
+        const lex = this.lex;
+        const mutable = lex.token.value === "let";
+        lex.next();
+        const id = lex.ident();
+        const annotation = lex.accept(":") ? lex.type(this.records) : null;
+        if (mutable && annotation !== null && lex.isGeneratedLocal?.(id) && lex.token.value === ";") {
+            this.emitConst(0);
+            this.emitIndex(OP.set, this.local(id, annotation, true));
             return;
         }
-        if (lex.accept("while")) {
-            lex.expect("(");
-            this.code.push(0x02, VOID, 0x03, VOID);
-            this.want(this.expr(), "bool");
-            lex.expect(")");
-            this.code.push(OP.eqz, 0x0d, 1);
-            this.block(result);
-            this.code.push(0x0c, 0, OP.end, OP.end);
+        lex.expect("=");
+        const type = this.expr();
+        if (annotation !== null) this.want(type, annotation);
+        this.emitIndex(OP.set, this.local(id, type, mutable));
+    }
+
+    assignment(id, statement = false) {
+        const lex = this.lex;
+        const local = this.locals.get(id);
+        if (!local) lex.fail("unknown local " + id);
+        if (statement && lex.accept(".")) {
+            if (local.type === "buffer") this.bufferWrite(local.index);
+            else {
+                const field = this.field(local.type);
+                this.emitIndex(OP.get, local.index);
+                lex.expect("=");
+                this.want(this.expr(), field.type);
+                this.emitMemory(0x36, 2, field.offset);
+            }
+        } else {
+            if (!local.mutable) lex.fail("expected mutable local " + id);
+            lex.expect("=");
+            this.want(this.expr(), local.type);
+            this.emitIndex(OP.set, local.index);
+        }
+    }
+
+    statement(result) {
+        const lex = this.lex;
+        if (lex.accept("if")) {
+            this.conditional(result);
+            return;
+        }
+        if (lex.token.value === "while" || lex.token.value === "for") {
+            const counted = lex.accept("for");
+            if (!counted) lex.expect("while");
+            this.loop(result, counted);
+            return;
+        }
+        if (lex.accept("break")) {
+            const exit = this.loopExits.at(-1);
+            if (exit === undefined) lex.fail("break outside a loop");
+            lex.expect(";");
+            this.emitIndex(0x0c, this.controls - exit - 1);
             return;
         }
         if (lex.token.value === "const" || lex.token.value === "let") {
-            const mutable = lex.token.value === "let";
-            lex.next();
-            const id = lex.ident();
-            const annotation = lex.accept(":") ? lex.type(this.records) : null;
-            lex.expect("=");
-            const type = this.expr();
-            if (annotation !== null) this.want(type, annotation);
-            this.emitIndex(OP.set, this.local(id, type, mutable));
+            this.declaration();
         } else {
             const id = lex.ident();
             if (lex.accept("(")) {
                 this.call(id);
                 this.code.push(0x1a); // drop the unused call result
-                lex.expect(";");
-                return;
-            }
-            const local = this.locals.get(id);
-            if (!local) lex.fail("unknown local " + id);
-            if (lex.accept(".")) {
-                if (local.type === "buffer") {
-                    this.bufferWrite(local.index);
-                } else {
-                    const field = this.field(local.type);
-                    this.emitIndex(OP.get, local.index);
-                    lex.expect("=");
-                    this.want(this.expr(), field.type);
-                    this.emitMemory(0x36, 2, field.offset);
-                }
             } else {
-                if (!local.mutable) lex.fail("expected mutable local " + id);
-                lex.expect("=");
-                this.want(this.expr(), local.type);
-                this.emitIndex(OP.set, local.index);
+                this.assignment(id, true);
             }
         }
         lex.expect(";");
     }
 
-    function() {
+    function(fn) {
         const lex = this.lex;
-        lex.expect("function");
-        const name = lex.ident();
-        const params = [];
-        lex.expect("(");
-        if (!lex.accept(")")) {
-            do {
-                const id = lex.ident();
-                lex.expect(":");
-                const type = lex.type(this.records);
-                this.local(id, type);
-                params.push(type);
-            } while (lex.accept(","));
-            lex.expect(")");
-        }
-        lex.expect(":");
-        const result = lex.type(this.records);
+        const {params, paramNames, result} = fn;
+        for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
+        lex.offset = fn.bodyAt;
+        lex.next();
         lex.expect("{");
         while (lex.token.value !== "return") this.statement(result);
         this.result(result, false);
         lex.expect("}");
         this.code.push(OP.end);
-        const nlocals = this.nextLocal - params.length;
-        return this.finish({ name, params, result, code: this.code, nlocals });
+        fn.nlocals = this.nextLocal - params.length;
+        fn.code = this.code;
+        return this.finish(fn);
     }
 
     finish(fn) {
@@ -471,7 +559,67 @@ class NumericFunctionEmitter extends FunctionEmitter {
     finish(fn) { return fn; }
 }
 
-function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction) {
+function scanSignatures(lex, records, declared, functionBase) {
+    const functions = [];
+    while (lex.token.kind !== "eof") {
+        lex.expect("function");
+        const name = lex.ident();
+        if (name === "memory") lex.fail("reserved memory export");
+        if (declared.has(name)) lex.fail("duplicate function " + name);
+        const params = [], paramNames = [];
+        lex.expect("(");
+        if (!lex.accept(")")) {
+            do {
+                const id = lex.ident();
+                lex.expect(":");
+                params.push(lex.type(records));
+                if (paramNames.includes(id)) lex.fail("duplicate local " + id);
+                paramNames.push(id);
+            } while (lex.accept(","));
+            lex.expect(")");
+        }
+        lex.expect(":");
+        const result = lex.type(records);
+        if (lex.token.value !== "{") lex.fail("expected {");
+        const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
+        declared.set(name, fn);
+        functions.push(fn);
+        lex.skipBody();
+    }
+    return functions;
+}
+
+function checkAcyclic(functions, edges) {
+    const colors = new Uint8Array(functions.length);
+    const order = [], path = [], positions = [];
+    for (let root = 0; root < functions.length; root++) {
+        if (colors[root]) continue;
+        path.push(root);
+        positions.push(0);
+        colors[root] = 1;
+        while (path.length) {
+            const at = path.length - 1;
+            const fn = path[at];
+            const to = edges[fn][positions[at]++];
+            if (to === undefined) {
+                path.pop();
+                positions.pop();
+                colors[fn] = 2;
+                order.push(fn);
+            } else if (colors[to] === 1) {
+                const cycle = path.slice(path.indexOf(to)).concat(to);
+                throw new SyntaxError("recursive call cycle: " + cycle.map(i => functions[i].name).join(" -> "));
+            } else if (!colors[to]) {
+                colors[to] = 1;
+                path.push(to);
+                positions.push(0);
+            }
+        }
+    }
+    return order;
+}
+
+function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures) {
     const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
     const lex = new Lexer(source);
@@ -492,18 +640,17 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
         }
         records.set(name, fields);
     }
-    const functions = [];
-    while (lex.token.kind !== "eof") {
-        const fn = new Emitter(lex, declared, records).function();
-        if (fn.name === "memory") lex.fail("reserved memory export");
-        if (declared.has(fn.name)) lex.fail("duplicate function " + fn.name);
-        declared.set(fn.name, {index: functionBase + functions.length, params: fn.params, result: fn.result});
-        functions.push(fn);
+    const functions = scanSignatures(lex, records, declared, functionBase);
+    if (!functions.length) lex.fail("expected a function");
+    if (onSignatures) onSignatures(functions);
+    const edges = functions.map(() => []);
+    for (const [i, fn] of functions.entries()) {
+        new Emitter(lex, declared, records, edges[i], functionBase).function(fn);
         if (onFunction) onFunction(fn);
     }
-    if (!functions.length) lex.fail("expected a function");
 
-    return { functions, records };
+    const order = checkAcyclic(functions, edges);
+    return { functions, records, edges, order };
 }
 
 function signature(fn) {

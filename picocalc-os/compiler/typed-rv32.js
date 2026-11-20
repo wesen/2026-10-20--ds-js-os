@@ -113,9 +113,10 @@ class FunctionCode {
                 this.mark(safe);
             }
             this.emit(instruction.r(0x33, out, alu[0], a, b, alu[1]));
-        } else if (op === 0x46) {
+        } else if (op === 0x46 || op === 0x47) {
             this.emit(instruction.r(0x33, out, 4, a, b)); // xor
-            this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
+            if (op === 0x46) this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
+            else this.emit(instruction.r(0x33, out, 3, ZERO, out)); // snez
         } else {
             const unsigned = op === 0x4f;
             if (![0x48, 0x4a, 0x4c, 0x4e, 0x4f].includes(op))
@@ -252,11 +253,14 @@ function compile(source, imports = [], maxSourceLength, options) {
     const targets = imported.map(fn => ({importIndex: fn.index}));
     const callables = imported.slice();
     const code = [];
-    function lower(fn) {
-        targets.push({global: true});
-        callables.push(fn);
-        code.push(new FunctionCode(fn, callables, targets).lower());
+    function declare(functions) {
+        for (const fn of functions) {
+            targets.push({global: true});
+            callables.push(fn);
+        }
     }
+
+    function lower(fn) { code.push(new FunctionCode(fn, callables, targets).lower()); }
 
     let lowerError;
     function consume(fn) {
@@ -270,7 +274,7 @@ function compile(source, imports = [], maxSourceLength, options) {
 
     const stream = options?.streamFunctions ?? true;
     const {functions, records} = typedWasm.compileFunctions(source, imported.length, imported,
-        maxSourceLength, true, stream ? consume : undefined);
+        maxSourceLength, true, stream ? consume : undefined, declare);
     if (lowerError) throw lowerError;
     if (!stream) {
         for (const fn of functions) lower(fn);
