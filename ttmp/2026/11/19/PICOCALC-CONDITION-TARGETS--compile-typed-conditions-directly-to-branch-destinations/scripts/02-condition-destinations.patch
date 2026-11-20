@@ -1,0 +1,157 @@
+--- a/typed/wasm.js
++++ b/typed/wasm.js
+@@ -161,15 +161,19 @@
+         this.code.push(OP.end);
+     }
+ 
+-    prefix() {
++    prefix(conditionMode) {
+         const lex = this.lex;
+         if (lex.accept("(")) {
+-            const type = this.expr();
++            const type = this.expr(0, conditionMode);
+             lex.expect(")");
+             return type;
+         }
+         if (lex.accept("!")) {
+-            this.want(this.expr(8), "bool");
++            const start = this.code.length;
++            const operand = this.expr(8, conditionMode);
++            this.want(this.exprType(operand), "bool");
++            if (conditionMode)
++                return { op: "!", left: this.captureCondition(operand, start) };
+             this.code.push(OP.eqz);
+             return "bool";
+         }
+@@ -237,19 +241,28 @@
+         return binding.type;
+     }
+ 
+-    expr(minPrecedence = 0) {
++    expr(minPrecedence = 0, conditionMode = false) {
+         if (++this.depth > 128) this.lex.fail("expression nesting limit exceeded");
+-        let type = this.prefix();
++        const start = this.code.length;
++        let left = this.prefix(conditionMode);
+         while (true) {
+             const op = this.lex.token.value;
+             const rule = BINARY.get(op);
+             if (!rule || rule[0] < minPrecedence) break;
+             const [precedence, input, result, opcode] = rule;
++            const type = this.exprType(left);
+             if (!input && type !== "i32" && type !== "bool") this.lex.fail("expected scalar equality operands");
+             const expected = input ?? type;
+             this.want(type, expected);
+             this.lex.next();
+             if (op === "&&" || op === "||") {
++                if (conditionMode) {
++                    const first = this.captureCondition(left, start);
++                    const next = this.expr(precedence + 1, true);
++                    this.want(this.exprType(next), "bool");
++                    left = { op, left: first, right: this.captureCondition(next, start) };
++                    continue;
++                }
+                 this.code.push(OP.if, I32);
+                 if (op === "&&") {
+                     this.want(this.expr(precedence + 1), "bool");
+@@ -262,13 +275,69 @@
+                 }
+                 this.code.push(OP.end);
+             } else {
++                if (typeof left !== "string") this.emitCondition(left, null, 0);
+                 this.want(this.expr(precedence + 1), expected);
+                 this.code.push(opcode);
+             }
+-            type = result;
++            left = result;
+         }
+         this.depth--;
+-        return type;
++        return left;
++    }
++
++    exprType(value) {
++        return typeof value === "string" ? value : "bool";
++    }
++
++    captureCondition(value, start) {
++        return typeof value === "string" ? { code: this.code.splice(start) } : value;
++    }
++
++    // A null branch sense requests a Boolean value. Other senses leave the
++    // operand stack unchanged on both the taken branch and fall-through.
++    emitCondition(root, takenWhen, depth) {
++        const work = [{ plan: root, takenWhen, depth }];
++        while (work.length) {
++            const task = work.pop();
++            if (typeof task === "number") {
++                this.code.push(task);
++                continue;
++            }
++            const { plan, takenWhen, depth } = task;
++            if (plan.code) {
++                for (const cell of plan.code) this.code.push(cell);
++                if (takenWhen !== null) {
++                    if (!takenWhen) this.code.push(OP.eqz);
++                    this.emitIndex(0x0d, depth);
++                }
++            } else if (takenWhen === null) {
++                if (plan.op === "!") {
++                    work.push(OP.eqz, { plan: plan.left, takenWhen, depth });
++                    continue;
++                }
++                const isOr = plan.op === "||";
++                const value = { plan: plan.right, takenWhen, depth };
++                const constant = { plan: { code: [OP.const, Number(isOr)] }, takenWhen, depth };
++                work.push(OP.end, isOr ? value : constant, OP.else, isOr ? constant : value,
++                    I32, OP.if, { plan: plan.left, takenWhen, depth });
++            } else if (plan.op === "!") {
++                work.push({ plan: plan.left, takenWhen: !takenWhen, depth });
++            } else if (takenWhen === (plan.op === "||")) {
++                work.push({ plan: plan.right, takenWhen, depth },
++                    { plan: plan.left, takenWhen, depth });
++            } else {
++                this.code.push(0x02, VOID);
++                work.push(OP.end, { plan: plan.right, takenWhen, depth: depth + 1 },
++                    { plan: plan.left, takenWhen: !takenWhen, depth: 0 });
++            }
++        }
++    }
++
++    condition() {
++        const test = this.expr(0, true);
++        this.want(this.exprType(test), "bool");
++        this.lex.expect(")");
++        return test;
+     }
+ 
+     result(type, branch) {
+@@ -370,9 +439,12 @@
+         const lex = this.lex;
+         if (lex.accept("if")) {
+             lex.expect("(");
+-            this.want(this.expr(), "bool");
+-            lex.expect(")");
+-            this.code.push(OP.if, VOID);
++            const test = this.condition();
++            if (typeof test === "string") this.code.push(OP.if, VOID);
++            else {
++                this.code.push(0x02, VOID);
++                this.emitCondition(test, false, 0);
++            }
+             if (lex.token.value === "{") this.block(result);
+             else this.result(result, true);
+             this.code.push(OP.end);
+@@ -381,9 +453,9 @@
+         if (lex.accept("while")) {
+             lex.expect("(");
+             this.code.push(0x02, VOID, 0x03, VOID);
+-            this.want(this.expr(), "bool");
+-            lex.expect(")");
+-            this.code.push(OP.eqz, 0x0d, 1);
++            const test = this.condition();
++            if (typeof test === "string") this.code.push(OP.eqz, 0x0d, 1);
++            else this.emitCondition(test, false, 1);
+             this.block(result);
+             this.code.push(0x0c, 0, OP.end, OP.end);
+             return;

@@ -1,0 +1,2735 @@
+{
+  "node": "v24.18.0",
+  "comparisons": 3208,
+  "cases": 802,
+  "traps": 112,
+  "diagnostics": {
+    "if (a && 3) return 1;": "SyntaxError: 1:46: expected bool, got i32",
+    "if (a || unknown) return 1;": "SyntaxError: 1:52: unknown local unknown",
+    "if (a && ) return 1;": "SyntaxError: 1:45: expected identifier",
+    "if ((a && b) === 2) return 1;": "SyntaxError: 1:54: expected bool, got i32",
+    "if (!(a && b) + 1) return 1;": "SyntaxError: 1:50: expected i32, got bool",
+    "while ((a && b) || true { a = true; }": "SyntaxError: 1:60: expected )",
+    "if (false && missing()) return 1;": "SyntaxError: 1:57: unknown function missing",
+    "if (a && ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((b))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) return 1;": "SyntaxError: 1:172: expression nesting limit exceeded"
+  },
+  "accounts": {
+    "files": {
+      "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+      "ceiling": 547,
+      "valueIfCeiling": 19,
+      "lanes": {
+        "staged": {
+          "count": 593,
+          "modelA": 593,
+          "modelB": 470,
+          "valueIf": 42,
+          "wasmBytes": 1342,
+          "rv32Sha256": "3e2f78f83477d6bed12bd740e710c1dab0a51b46525ad1659c7d7d3d7ea8b43f",
+          "gates": {
+            "count": false,
+            "valueIf": false,
+            "modelA": true,
+            "editorWasm": true
+          },
+          "functionsAccount": [
+            {
+              "name": "filesSpace",
+              "count": 98,
+              "modelA": 98,
+              "modelB": 82,
+              "valueIf": 12
+            },
+            {
+              "name": "filesAlnum",
+              "count": 38,
+              "modelA": 38,
+              "modelB": 29,
+              "valueIf": 5
+            },
+            {
+              "name": "filesName",
+              "count": 192,
+              "modelA": 192,
+              "modelB": 158,
+              "valueIf": 8
+            },
+            {
+              "name": "filesCompare",
+              "count": 78,
+              "modelA": 78,
+              "modelB": 48,
+              "valueIf": 3
+            },
+            {
+              "name": "filesSelect",
+              "count": 36,
+              "modelA": 36,
+              "modelB": 18,
+              "valueIf": 2
+            },
+            {
+              "name": "filesPromptAction",
+              "count": 29,
+              "modelA": 29,
+              "modelB": 22,
+              "valueIf": 2
+            },
+            {
+              "name": "filesAction",
+              "count": 122,
+              "modelA": 122,
+              "modelB": 113,
+              "valueIf": 10
+            }
+          ]
+        },
+        "conditions": {
+          "count": 516,
+          "modelA": 516,
+          "modelB": 390,
+          "valueIf": 19,
+          "wasmBytes": 1315,
+          "rv32Sha256": "92a20ec1ea061e35fa5fcac52317b52cd3a12670601ff3bb4617810e20a45f0d",
+          "gates": {
+            "count": true,
+            "valueIf": true,
+            "modelA": true,
+            "editorWasm": true
+          },
+          "functionsAccount": [
+            {
+              "name": "filesSpace",
+              "count": 98,
+              "modelA": 98,
+              "modelB": 82,
+              "valueIf": 12
+            },
+            {
+              "name": "filesAlnum",
+              "count": 38,
+              "modelA": 38,
+              "modelB": 29,
+              "valueIf": 5
+            },
+            {
+              "name": "filesName",
+              "count": 164,
+              "modelA": 164,
+              "modelB": 130,
+              "valueIf": 0
+            },
+            {
+              "name": "filesCompare",
+              "count": 69,
+              "modelA": 69,
+              "modelB": 39,
+              "valueIf": 0
+            },
+            {
+              "name": "filesSelect",
+              "count": 36,
+              "modelA": 36,
+              "modelB": 18,
+              "valueIf": 2
+            },
+            {
+              "name": "filesPromptAction",
+              "count": 25,
+              "modelA": 25,
+              "modelB": 16,
+              "valueIf": 0
+            },
+            {
+              "name": "filesAction",
+              "count": 86,
+              "modelA": 86,
+              "modelB": 76,
+              "valueIf": 0
+            }
+          ]
+        }
+      }
+    },
+    "agenda": {
+      "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+      "ceiling": 2611,
+      "valueIfCeiling": 26,
+      "lanes": {
+        "staged": {
+          "count": 2793,
+          "modelA": 2789,
+          "modelB": 2418,
+          "valueIf": 115,
+          "wasmBytes": 6307,
+          "rv32Sha256": "a582d1d68c1defafcd99cbc3c5c308adcb53af83a9bf3cf269b7fc295b7b8fe2",
+          "gates": {
+            "count": false,
+            "valueIf": false,
+            "modelA": true,
+            "editorWasm": true
+          },
+          "functionsAccount": [
+            {
+              "name": "leap",
+              "count": 38,
+              "modelA": 38,
+              "modelB": 29,
+              "valueIf": 3
+            },
+            {
+              "name": "validDate",
+              "count": 79,
+              "modelA": 78,
+              "modelB": 72,
+              "valueIf": 8
+            },
+            {
+              "name": "leadValue",
+              "count": 118,
+              "modelA": 118,
+              "modelB": 76,
+              "valueIf": 2
+            },
+            {
+              "name": "leadMinutes",
+              "count": 12,
+              "modelA": 13,
+              "modelB": 14,
+              "valueIf": 0
+            },
+            {
+              "name": "space",
+              "count": 98,
+              "modelA": 98,
+              "modelB": 82,
+              "valueIf": 12
+            },
+            {
+              "name": "skipSpace",
+              "count": 36,
+              "modelA": 36,
+              "modelB": 34,
+              "valueIf": 1
+            },
+            {
+              "name": "decimal",
+              "count": 59,
+              "modelA": 59,
+              "modelB": 34,
+              "valueIf": 1
+            },
+            {
+              "name": "boundary",
+              "count": 29,
+              "modelA": 29,
+              "modelB": 28,
+              "valueIf": 1
+            },
+            {
+              "name": "readDue",
+              "count": 193,
+              "modelA": 192,
+              "modelB": 170,
+              "valueIf": 9
+            },
+            {
+              "name": "readLead",
+              "count": 65,
+              "modelA": 65,
+              "modelB": 57,
+              "valueIf": 2
+            },
+            {
+              "name": "scanTask",
+              "count": 285,
+              "modelA": 285,
+              "modelB": 234,
+              "valueIf": 14
+            },
+            {
+              "name": "writeTitle",
+              "count": 105,
+              "modelA": 105,
+              "modelB": 83,
+              "valueIf": 1
+            },
+            {
+              "name": "parseTask",
+              "count": 21,
+              "modelA": 21,
+              "modelB": 26,
+              "valueIf": 0
+            },
+            {
+              "name": "entryLower",
+              "count": 19,
+              "modelA": 19,
+              "modelB": 13,
+              "valueIf": 1
+            },
+            {
+              "name": "entryClock",
+              "count": 175,
+              "modelA": 175,
+              "modelB": 149,
+              "valueIf": 7
+            },
+            {
+              "name": "entryTime",
+              "count": 22,
+              "modelA": 22,
+              "modelB": 24,
+              "valueIf": 1
+            },
+            {
+              "name": "entryMonthLength",
+              "count": 50,
+              "modelA": 50,
+              "modelB": 48,
+              "valueIf": 4
+            },
+            {
+              "name": "entryAddDays",
+              "count": 68,
+              "modelA": 68,
+              "modelB": 56,
+              "valueIf": 0
+            },
+            {
+              "name": "entryWeekday",
+              "count": 63,
+              "modelA": 63,
+              "modelB": 52,
+              "valueIf": 0
+            },
+            {
+              "name": "agendaDateKey",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 10,
+              "valueIf": 0
+            },
+            {
+              "name": "agendaMark",
+              "count": 11,
+              "modelA": 11,
+              "modelB": 5,
+              "valueIf": 0
+            },
+            {
+              "name": "entryLetters",
+              "count": 53,
+              "modelA": 53,
+              "modelB": 51,
+              "valueIf": 1
+            },
+            {
+              "name": "entryRelative",
+              "count": 306,
+              "modelA": 305,
+              "modelB": 268,
+              "valueIf": 21
+            },
+            {
+              "name": "entryCalendar",
+              "count": 146,
+              "modelA": 145,
+              "modelB": 131,
+              "valueIf": 6
+            },
+            {
+              "name": "entryDateAt",
+              "count": 106,
+              "modelA": 106,
+              "modelB": 93,
+              "valueIf": 5
+            },
+            {
+              "name": "entryDate",
+              "count": 14,
+              "modelA": 15,
+              "modelB": 18,
+              "valueIf": 0
+            },
+            {
+              "name": "entryWordEnd",
+              "count": 36,
+              "modelA": 36,
+              "modelB": 34,
+              "valueIf": 1
+            },
+            {
+              "name": "entryYmdShape",
+              "count": 128,
+              "modelA": 127,
+              "modelB": 107,
+              "valueIf": 6
+            },
+            {
+              "name": "entryPut",
+              "count": 35,
+              "modelA": 35,
+              "modelB": 20,
+              "valueIf": 1
+            },
+            {
+              "name": "entryNumber",
+              "count": 59,
+              "modelA": 57,
+              "modelB": 58,
+              "valueIf": 0
+            },
+            {
+              "name": "entryCopy",
+              "count": 47,
+              "modelA": 47,
+              "modelB": 51,
+              "valueIf": 1
+            },
+            {
+              "name": "entryWriteDate",
+              "count": 52,
+              "modelA": 53,
+              "modelB": 58,
+              "valueIf": 0
+            },
+            {
+              "name": "entryFailure",
+              "count": 14,
+              "modelA": 14,
+              "modelB": 4,
+              "valueIf": 0
+            },
+            {
+              "name": "normalizeEntry",
+              "count": 235,
+              "modelA": 235,
+              "modelB": 229,
+              "valueIf": 6
+            }
+          ]
+        },
+        "conditions": {
+          "count": 2496,
+          "modelA": 2497,
+          "modelB": 2126,
+          "valueIf": 26,
+          "wasmBytes": 6212,
+          "rv32Sha256": "a6a5d9dcdc3df1bec2787d5e6b187b745a3500c6f2cc874e129ce67bc25d6c39",
+          "gates": {
+            "count": true,
+            "valueIf": true,
+            "modelA": true,
+            "editorWasm": true
+          },
+          "functionsAccount": [
+            {
+              "name": "leap",
+              "count": 38,
+              "modelA": 38,
+              "modelB": 29,
+              "valueIf": 3
+            },
+            {
+              "name": "validDate",
+              "count": 59,
+              "modelA": 58,
+              "modelB": 52,
+              "valueIf": 2
+            },
+            {
+              "name": "leadValue",
+              "count": 112,
+              "modelA": 112,
+              "modelB": 70,
+              "valueIf": 0
+            },
+            {
+              "name": "leadMinutes",
+              "count": 12,
+              "modelA": 13,
+              "modelB": 14,
+              "valueIf": 0
+            },
+            {
+              "name": "space",
+              "count": 98,
+              "modelA": 98,
+              "modelB": 82,
+              "valueIf": 12
+            },
+            {
+              "name": "skipSpace",
+              "count": 33,
+              "modelA": 33,
+              "modelB": 31,
+              "valueIf": 0
+            },
+            {
+              "name": "decimal",
+              "count": 56,
+              "modelA": 56,
+              "modelB": 31,
+              "valueIf": 0
+            },
+            {
+              "name": "boundary",
+              "count": 29,
+              "modelA": 29,
+              "modelB": 28,
+              "valueIf": 1
+            },
+            {
+              "name": "readDue",
+              "count": 169,
+              "modelA": 169,
+              "modelB": 147,
+              "valueIf": 2
+            },
+            {
+              "name": "readLead",
+              "count": 58,
+              "modelA": 58,
+              "modelB": 50,
+              "valueIf": 0
+            },
+            {
+              "name": "scanTask",
+              "count": 235,
+              "modelA": 235,
+              "modelB": 184,
+              "valueIf": 1
+            },
+            {
+              "name": "writeTitle",
+              "count": 102,
+              "modelA": 102,
+              "modelB": 80,
+              "valueIf": 0
+            },
+            {
+              "name": "parseTask",
+              "count": 21,
+              "modelA": 21,
+              "modelB": 26,
+              "valueIf": 0
+            },
+            {
+              "name": "entryLower",
+              "count": 15,
+              "modelA": 15,
+              "modelB": 9,
+              "valueIf": 0
+            },
+            {
+              "name": "entryClock",
+              "count": 151,
+              "modelA": 151,
+              "modelB": 125,
+              "valueIf": 0
+            },
+            {
+              "name": "entryTime",
+              "count": 22,
+              "modelA": 22,
+              "modelB": 24,
+              "valueIf": 1
+            },
+            {
+              "name": "entryMonthLength",
+              "count": 35,
+              "modelA": 35,
+              "modelB": 33,
+              "valueIf": 0
+            },
+            {
+              "name": "entryAddDays",
+              "count": 68,
+              "modelA": 68,
+              "modelB": 56,
+              "valueIf": 0
+            },
+            {
+              "name": "entryWeekday",
+              "count": 63,
+              "modelA": 63,
+              "modelB": 52,
+              "valueIf": 0
+            },
+            {
+              "name": "agendaDateKey",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 10,
+              "valueIf": 0
+            },
+            {
+              "name": "agendaMark",
+              "count": 11,
+              "modelA": 11,
+              "modelB": 5,
+              "valueIf": 0
+            },
+            {
+              "name": "entryLetters",
+              "count": 50,
+              "modelA": 50,
+              "modelB": 48,
+              "valueIf": 0
+            },
+            {
+              "name": "entryRelative",
+              "count": 245,
+              "modelA": 245,
+              "modelB": 208,
+              "valueIf": 1
+            },
+            {
+              "name": "entryCalendar",
+              "count": 128,
+              "modelA": 128,
+              "modelB": 114,
+              "valueIf": 0
+            },
+            {
+              "name": "entryDateAt",
+              "count": 88,
+              "modelA": 89,
+              "modelB": 76,
+              "valueIf": 0
+            },
+            {
+              "name": "entryDate",
+              "count": 14,
+              "modelA": 15,
+              "modelB": 18,
+              "valueIf": 0
+            },
+            {
+              "name": "entryWordEnd",
+              "count": 33,
+              "modelA": 33,
+              "modelB": 31,
+              "valueIf": 0
+            },
+            {
+              "name": "entryYmdShape",
+              "count": 112,
+              "modelA": 112,
+              "modelB": 92,
+              "valueIf": 1
+            },
+            {
+              "name": "entryPut",
+              "count": 31,
+              "modelA": 31,
+              "modelB": 16,
+              "valueIf": 0
+            },
+            {
+              "name": "entryNumber",
+              "count": 59,
+              "modelA": 57,
+              "modelB": 58,
+              "valueIf": 0
+            },
+            {
+              "name": "entryCopy",
+              "count": 43,
+              "modelA": 43,
+              "modelB": 47,
+              "valueIf": 0
+            },
+            {
+              "name": "entryWriteDate",
+              "count": 52,
+              "modelA": 53,
+              "modelB": 58,
+              "valueIf": 0
+            },
+            {
+              "name": "entryFailure",
+              "count": 14,
+              "modelA": 14,
+              "modelB": 4,
+              "valueIf": 0
+            },
+            {
+              "name": "normalizeEntry",
+              "count": 224,
+              "modelA": 224,
+              "modelB": 218,
+              "valueIf": 2
+            }
+          ]
+        }
+      }
+    },
+    "editor": {
+      "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+      "ceiling": 16210,
+      "valueIfCeiling": 61,
+      "lanes": {
+        "staged": {
+          "count": 16541,
+          "modelA": 16544,
+          "modelB": 13255,
+          "valueIf": 228,
+          "wasmBytes": 88255,
+          "rv32Sha256": "5482f378527cc2d4eea2758f02e8a25a96ffc0b22625448591b47fee2832db69",
+          "gates": {
+            "count": false,
+            "valueIf": false,
+            "modelA": true,
+            "editorWasm": true
+          },
+          "functionsAccount": [
+            {
+              "name": "editorHighSurrogate",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 11,
+              "valueIf": 1
+            },
+            {
+              "name": "editorLowSurrogate",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 11,
+              "valueIf": 1
+            },
+            {
+              "name": "editorNext",
+              "count": 64,
+              "modelA": 64,
+              "modelB": 54,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPrevious",
+              "count": 59,
+              "modelA": 59,
+              "modelB": 51,
+              "valueIf": 2
+            },
+            {
+              "name": "editorWrapEnd",
+              "count": 72,
+              "modelA": 72,
+              "modelB": 67,
+              "valueIf": 3
+            },
+            {
+              "name": "editorColumn",
+              "count": 30,
+              "modelA": 30,
+              "modelB": 33,
+              "valueIf": 1
+            },
+            {
+              "name": "editorOffset",
+              "count": 46,
+              "modelA": 46,
+              "modelB": 50,
+              "valueIf": 2
+            },
+            {
+              "name": "editorFold",
+              "count": 30,
+              "modelA": 30,
+              "modelB": 22,
+              "valueIf": 1
+            },
+            {
+              "name": "editorEmptyFrame",
+              "count": 688,
+              "modelA": 688,
+              "modelB": 456,
+              "valueIf": 0
+            },
+            {
+              "name": "editorWhitespace",
+              "count": 98,
+              "modelA": 98,
+              "modelB": 82,
+              "valueIf": 12
+            },
+            {
+              "name": "editorMdSpace",
+              "count": 36,
+              "modelA": 36,
+              "modelB": 36,
+              "valueIf": 1
+            },
+            {
+              "name": "editorMdSuffix",
+              "count": 84,
+              "modelA": 82,
+              "modelB": 68,
+              "valueIf": 2
+            },
+            {
+              "name": "editorIsMarkdown",
+              "count": 101,
+              "modelA": 103,
+              "modelB": 90,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdFence",
+              "count": 73,
+              "modelA": 73,
+              "modelB": 68,
+              "valueIf": 3
+            },
+            {
+              "name": "editorMdHeading",
+              "count": 86,
+              "modelA": 86,
+              "modelB": 73,
+              "valueIf": 5
+            },
+            {
+              "name": "editorMdColor",
+              "count": 57,
+              "modelA": 57,
+              "modelB": 61,
+              "valueIf": 2
+            },
+            {
+              "name": "editorMdMarker",
+              "count": 130,
+              "modelA": 130,
+              "modelB": 85,
+              "valueIf": 6
+            },
+            {
+              "name": "editorMdListEnd",
+              "count": 44,
+              "modelA": 44,
+              "modelB": 45,
+              "valueIf": 2
+            },
+            {
+              "name": "editorMdNextMarker",
+              "count": 173,
+              "modelA": 173,
+              "modelB": 112,
+              "valueIf": 2
+            },
+            {
+              "name": "editorMdEmit",
+              "count": 42,
+              "modelA": 42,
+              "modelB": 39,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdOpen",
+              "count": 155,
+              "modelA": 154,
+              "modelB": 132,
+              "valueIf": 4
+            },
+            {
+              "name": "editorMdBold",
+              "count": 124,
+              "modelA": 123,
+              "modelB": 112,
+              "valueIf": 4
+            },
+            {
+              "name": "editorMdCode",
+              "count": 70,
+              "modelA": 70,
+              "modelB": 67,
+              "valueIf": 1
+            },
+            {
+              "name": "editorMdLink",
+              "count": 120,
+              "modelA": 119,
+              "modelB": 101,
+              "valueIf": 2
+            },
+            {
+              "name": "editorMdMatch",
+              "count": 55,
+              "modelA": 56,
+              "modelB": 58,
+              "valueIf": 1
+            },
+            {
+              "name": "editorMdStep",
+              "count": 77,
+              "modelA": 77,
+              "modelB": 62,
+              "valueIf": 1
+            },
+            {
+              "name": "editorHex",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 10,
+              "valueIf": 0
+            },
+            {
+              "name": "editorQuoteContent",
+              "count": 166,
+              "modelA": 166,
+              "modelB": 131,
+              "valueIf": 1
+            },
+            {
+              "name": "editorQuote",
+              "count": 65,
+              "modelA": 65,
+              "modelB": 67,
+              "valueIf": 0
+            },
+            {
+              "name": "editorLineEnd",
+              "count": 23,
+              "modelA": 24,
+              "modelB": 25,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFirstRow",
+              "count": 32,
+              "modelA": 32,
+              "modelB": 28,
+              "valueIf": 0
+            },
+            {
+              "name": "editorNextRow",
+              "count": 90,
+              "modelA": 90,
+              "modelB": 68,
+              "valueIf": 2
+            },
+            {
+              "name": "editorStoreRow",
+              "count": 215,
+              "modelA": 215,
+              "modelB": 148,
+              "valueIf": 2
+            },
+            {
+              "name": "editorFrameRow",
+              "count": 178,
+              "modelA": 178,
+              "modelB": 144,
+              "valueIf": 0
+            },
+            {
+              "name": "editorResetRows",
+              "count": 12,
+              "modelA": 12,
+              "modelB": 6,
+              "valueIf": 0
+            },
+            {
+              "name": "editorInvalidateRows",
+              "count": 65,
+              "modelA": 65,
+              "modelB": 59,
+              "valueIf": 0
+            },
+            {
+              "name": "editorRowAnchor",
+              "count": 40,
+              "modelA": 41,
+              "modelB": 39,
+              "valueIf": 1
+            },
+            {
+              "name": "editorNeedsRow",
+              "count": 32,
+              "modelA": 32,
+              "modelB": 20,
+              "valueIf": 3
+            },
+            {
+              "name": "editorLocate",
+              "count": 26,
+              "modelA": 27,
+              "modelB": 29,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFrameNeedsRow",
+              "count": 28,
+              "modelA": 29,
+              "modelB": 28,
+              "valueIf": 1
+            },
+            {
+              "name": "editorFrameLocate",
+              "count": 99,
+              "modelA": 98,
+              "modelB": 86,
+              "valueIf": 2
+            },
+            {
+              "name": "editorDigits",
+              "count": 66,
+              "modelA": 64,
+              "modelB": 41,
+              "valueIf": 0
+            },
+            {
+              "name": "editorSavedStatus",
+              "count": 90,
+              "modelA": 90,
+              "modelB": 76,
+              "valueIf": 0
+            },
+            {
+              "name": "editorSaveError",
+              "count": 195,
+              "modelA": 195,
+              "modelB": 154,
+              "valueIf": 3
+            },
+            {
+              "name": "editorFindMatch",
+              "count": 94,
+              "modelA": 92,
+              "modelB": 80,
+              "valueIf": 3
+            },
+            {
+              "name": "editorSetFound",
+              "count": 81,
+              "modelA": 81,
+              "modelB": 73,
+              "valueIf": 4
+            },
+            {
+              "name": "editorFindLine",
+              "count": 22,
+              "modelA": 22,
+              "modelB": 22,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindAdvance",
+              "count": 93,
+              "modelA": 94,
+              "modelB": 81,
+              "valueIf": 3
+            },
+            {
+              "name": "editorFindStep",
+              "count": 219,
+              "modelA": 219,
+              "modelB": 179,
+              "valueIf": 5
+            },
+            {
+              "name": "editorFindNext",
+              "count": 87,
+              "modelA": 89,
+              "modelB": 79,
+              "valueIf": 2
+            },
+            {
+              "name": "editorFindInput",
+              "count": 110,
+              "modelA": 110,
+              "modelB": 97,
+              "valueIf": 6
+            },
+            {
+              "name": "editorBeginFind",
+              "count": 8,
+              "modelA": 8,
+              "modelB": 4,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindStatus",
+              "count": 170,
+              "modelA": 170,
+              "modelB": 134,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindMark",
+              "count": 124,
+              "modelA": 124,
+              "modelB": 108,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindMarks",
+              "count": 153,
+              "modelA": 152,
+              "modelB": 137,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPreviewSlot",
+              "count": 10,
+              "modelA": 10,
+              "modelB": 6,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewFinish",
+              "count": 51,
+              "modelA": 51,
+              "modelB": 45,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewAppend",
+              "count": 94,
+              "modelA": 94,
+              "modelB": 79,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewIndent",
+              "count": 17,
+              "modelA": 17,
+              "modelB": 12,
+              "valueIf": 1
+            },
+            {
+              "name": "editorPreviewWord",
+              "count": 128,
+              "modelA": 126,
+              "modelB": 112,
+              "valueIf": 5
+            },
+            {
+              "name": "editorPreviewStage",
+              "count": 112,
+              "modelA": 112,
+              "modelB": 100,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewUpper",
+              "count": 125,
+              "modelA": 126,
+              "modelB": 109,
+              "valueIf": 5
+            },
+            {
+              "name": "editorPreviewCooked",
+              "count": 76,
+              "modelA": 78,
+              "modelB": 72,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPreviewSource",
+              "count": 324,
+              "modelA": 324,
+              "modelB": 261,
+              "valueIf": 10
+            },
+            {
+              "name": "editorPreviewReset",
+              "count": 24,
+              "modelA": 24,
+              "modelB": 12,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewReady",
+              "count": 99,
+              "modelA": 99,
+              "modelB": 86,
+              "valueIf": 4
+            },
+            {
+              "name": "editorPreviewFrame",
+              "count": 789,
+              "modelA": 782,
+              "modelB": 597,
+              "valueIf": 3
+            },
+            {
+              "name": "editorBeginPreview",
+              "count": 13,
+              "modelA": 14,
+              "modelB": 14,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewKey",
+              "count": 74,
+              "modelA": 74,
+              "modelB": 48,
+              "valueIf": 4
+            },
+            {
+              "name": "editorRowColor",
+              "count": 300,
+              "modelA": 300,
+              "modelB": 200,
+              "valueIf": 0
+            },
+            {
+              "name": "editorStatus",
+              "count": 1073,
+              "modelA": 1075,
+              "modelB": 790,
+              "valueIf": 1
+            },
+            {
+              "name": "editorDocumentFrame",
+              "count": 997,
+              "modelA": 997,
+              "modelB": 745,
+              "valueIf": 3
+            },
+            {
+              "name": "editorHints",
+              "count": 352,
+              "modelA": 352,
+              "modelB": 230,
+              "valueIf": 0
+            },
+            {
+              "name": "editorShow",
+              "count": 118,
+              "modelA": 119,
+              "modelB": 111,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPositionDict",
+              "count": 149,
+              "modelA": 149,
+              "modelB": 106,
+              "valueIf": 7
+            },
+            {
+              "name": "editorPositionKeyEnd",
+              "count": 126,
+              "modelA": 124,
+              "modelB": 80,
+              "valueIf": 3
+            },
+            {
+              "name": "editorPositionNumberStop",
+              "count": 52,
+              "modelA": 52,
+              "modelB": 33,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPositionNumber",
+              "count": 54,
+              "modelA": 54,
+              "modelB": 32,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPositionTuple",
+              "count": 219,
+              "modelA": 215,
+              "modelB": 186,
+              "valueIf": 9
+            },
+            {
+              "name": "editorPositionKeyEqual",
+              "count": 59,
+              "modelA": 58,
+              "modelB": 30,
+              "valueIf": 1
+            },
+            {
+              "name": "editorPositionKey",
+              "count": 22,
+              "modelA": 24,
+              "modelB": 28,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionApply",
+              "count": 65,
+              "modelA": 66,
+              "modelB": 61,
+              "valueIf": 0
+            },
+            {
+              "name": "editorRestorePosition",
+              "count": 83,
+              "modelA": 84,
+              "modelB": 93,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPositionNewer",
+              "count": 104,
+              "modelA": 103,
+              "modelB": 52,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPositionRank",
+              "count": 154,
+              "modelA": 150,
+              "modelB": 126,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPositionCopy",
+              "count": 47,
+              "modelA": 47,
+              "modelB": 22,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionAppend",
+              "count": 129,
+              "modelA": 125,
+              "modelB": 122,
+              "valueIf": 1
+            },
+            {
+              "name": "editorRemember",
+              "count": 288,
+              "modelA": 292,
+              "modelB": 255,
+              "valueIf": 2
+            },
+            {
+              "name": "editorEqual",
+              "count": 54,
+              "modelA": 53,
+              "modelB": 29,
+              "valueIf": 1
+            },
+            {
+              "name": "editorKeyCode",
+              "count": 702,
+              "modelA": 702,
+              "modelB": 623,
+              "valueIf": 0
+            },
+            {
+              "name": "editorChange",
+              "count": 19,
+              "modelA": 19,
+              "modelB": 11,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMakeRoom",
+              "count": 59,
+              "modelA": 59,
+              "modelB": 48,
+              "valueIf": 0
+            },
+            {
+              "name": "editorInsert",
+              "count": 80,
+              "modelA": 80,
+              "modelB": 71,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDelete",
+              "count": 67,
+              "modelA": 70,
+              "modelB": 62,
+              "valueIf": 0
+            },
+            {
+              "name": "editorContinueList",
+              "count": 203,
+              "modelA": 203,
+              "modelB": 172,
+              "valueIf": 1
+            },
+            {
+              "name": "editorSplit",
+              "count": 86,
+              "modelA": 86,
+              "modelB": 80,
+              "valueIf": 1
+            },
+            {
+              "name": "editorMoveRow",
+              "count": 95,
+              "modelA": 94,
+              "modelB": 81,
+              "valueIf": 4
+            },
+            {
+              "name": "editorJump",
+              "count": 12,
+              "modelA": 12,
+              "modelB": 7,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPlainKey",
+              "count": 197,
+              "modelA": 198,
+              "modelB": 173,
+              "valueIf": 4
+            },
+            {
+              "name": "editorSave",
+              "count": 63,
+              "modelA": 64,
+              "modelB": 56,
+              "valueIf": 0
+            },
+            {
+              "name": "editorGoFiles",
+              "count": 172,
+              "modelA": 163,
+              "modelB": 131,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDiscard",
+              "count": 50,
+              "modelA": 52,
+              "modelB": 45,
+              "valueIf": 0
+            },
+            {
+              "name": "editorEscape",
+              "count": 52,
+              "modelA": 53,
+              "modelB": 47,
+              "valueIf": 1
+            },
+            {
+              "name": "editorApplyKey",
+              "count": 99,
+              "modelA": 100,
+              "modelB": 96,
+              "valueIf": 3
+            },
+            {
+              "name": "editorInput",
+              "count": 379,
+              "modelA": 379,
+              "modelB": 333,
+              "valueIf": 5
+            },
+            {
+              "name": "editorWriteDone",
+              "count": 135,
+              "modelA": 139,
+              "modelB": 127,
+              "valueIf": 3
+            },
+            {
+              "name": "typedWorldMeta",
+              "count": 643,
+              "modelA": 643,
+              "modelB": 430,
+              "valueIf": 0
+            },
+            {
+              "name": "editorNormalize",
+              "count": 99,
+              "modelA": 99,
+              "modelB": 55,
+              "valueIf": 2
+            },
+            {
+              "name": "editorReplyError",
+              "count": 116,
+              "modelA": 117,
+              "modelB": 95,
+              "valueIf": 0
+            },
+            {
+              "name": "editorRefuseOpen",
+              "count": 274,
+              "modelA": 276,
+              "modelB": 209,
+              "valueIf": 0
+            },
+            {
+              "name": "editorOpen",
+              "count": 522,
+              "modelA": 522,
+              "modelB": 415,
+              "valueIf": 5
+            },
+            {
+              "name": "editorOpened",
+              "count": 142,
+              "modelA": 143,
+              "modelB": 116,
+              "valueIf": 1
+            },
+            {
+              "name": "editorOpenFailed",
+              "count": 174,
+              "modelA": 175,
+              "modelB": 134,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDeferRead",
+              "count": 28,
+              "modelA": 29,
+              "modelB": 28,
+              "valueIf": 0
+            },
+            {
+              "name": "editorContinueRead",
+              "count": 27,
+              "modelA": 28,
+              "modelB": 36,
+              "valueIf": 0
+            },
+            {
+              "name": "editorReadSuccess",
+              "count": 49,
+              "modelA": 50,
+              "modelB": 54,
+              "valueIf": 0
+            },
+            {
+              "name": "editorResumeRead",
+              "count": 16,
+              "modelA": 17,
+              "modelB": 24,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMissingFile",
+              "count": 16,
+              "modelA": 17,
+              "modelB": 23,
+              "valueIf": 0
+            },
+            {
+              "name": "editorReadDone",
+              "count": 178,
+              "modelA": 179,
+              "modelB": 167,
+              "valueIf": 7
+            },
+            {
+              "name": "typedWorldEvent",
+              "count": 261,
+              "modelA": 262,
+              "modelB": 223,
+              "valueIf": 16
+            }
+          ]
+        },
+        "conditions": {
+          "count": 15954,
+          "modelA": 15969,
+          "modelB": 12679,
+          "valueIf": 61,
+          "wasmBytes": 88025,
+          "rv32Sha256": "1adfa63f253e495ebf2fe46c01f06f83997c3efb3b02f9c9cdc6a1cf1e064ebc",
+          "gates": {
+            "count": true,
+            "valueIf": true,
+            "modelA": true,
+            "editorWasm": true
+          },
+          "functionsAccount": [
+            {
+              "name": "editorHighSurrogate",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 11,
+              "valueIf": 1
+            },
+            {
+              "name": "editorLowSurrogate",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 11,
+              "valueIf": 1
+            },
+            {
+              "name": "editorNext",
+              "count": 58,
+              "modelA": 58,
+              "modelB": 48,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPrevious",
+              "count": 53,
+              "modelA": 53,
+              "modelB": 45,
+              "valueIf": 0
+            },
+            {
+              "name": "editorWrapEnd",
+              "count": 62,
+              "modelA": 62,
+              "modelB": 57,
+              "valueIf": 0
+            },
+            {
+              "name": "editorColumn",
+              "count": 27,
+              "modelA": 27,
+              "modelB": 30,
+              "valueIf": 0
+            },
+            {
+              "name": "editorOffset",
+              "count": 40,
+              "modelA": 40,
+              "modelB": 44,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFold",
+              "count": 26,
+              "modelA": 26,
+              "modelB": 18,
+              "valueIf": 0
+            },
+            {
+              "name": "editorEmptyFrame",
+              "count": 688,
+              "modelA": 688,
+              "modelB": 456,
+              "valueIf": 0
+            },
+            {
+              "name": "editorWhitespace",
+              "count": 98,
+              "modelA": 98,
+              "modelB": 82,
+              "valueIf": 12
+            },
+            {
+              "name": "editorMdSpace",
+              "count": 33,
+              "modelA": 33,
+              "modelB": 33,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdSuffix",
+              "count": 78,
+              "modelA": 76,
+              "modelB": 62,
+              "valueIf": 0
+            },
+            {
+              "name": "editorIsMarkdown",
+              "count": 101,
+              "modelA": 103,
+              "modelB": 90,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdFence",
+              "count": 73,
+              "modelA": 73,
+              "modelB": 68,
+              "valueIf": 3
+            },
+            {
+              "name": "editorMdHeading",
+              "count": 68,
+              "modelA": 68,
+              "modelB": 55,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdColor",
+              "count": 50,
+              "modelA": 50,
+              "modelB": 54,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdMarker",
+              "count": 106,
+              "modelA": 106,
+              "modelB": 61,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdListEnd",
+              "count": 37,
+              "modelA": 37,
+              "modelB": 38,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdNextMarker",
+              "count": 165,
+              "modelA": 165,
+              "modelB": 104,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdEmit",
+              "count": 42,
+              "modelA": 42,
+              "modelB": 39,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdOpen",
+              "count": 142,
+              "modelA": 142,
+              "modelB": 120,
+              "valueIf": 1
+            },
+            {
+              "name": "editorMdBold",
+              "count": 112,
+              "modelA": 112,
+              "modelB": 101,
+              "valueIf": 1
+            },
+            {
+              "name": "editorMdCode",
+              "count": 66,
+              "modelA": 66,
+              "modelB": 63,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdLink",
+              "count": 111,
+              "modelA": 111,
+              "modelB": 93,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMdMatch",
+              "count": 55,
+              "modelA": 56,
+              "modelB": 58,
+              "valueIf": 1
+            },
+            {
+              "name": "editorMdStep",
+              "count": 73,
+              "modelA": 73,
+              "modelB": 58,
+              "valueIf": 0
+            },
+            {
+              "name": "editorHex",
+              "count": 16,
+              "modelA": 16,
+              "modelB": 10,
+              "valueIf": 0
+            },
+            {
+              "name": "editorQuoteContent",
+              "count": 162,
+              "modelA": 162,
+              "modelB": 127,
+              "valueIf": 0
+            },
+            {
+              "name": "editorQuote",
+              "count": 65,
+              "modelA": 65,
+              "modelB": 67,
+              "valueIf": 0
+            },
+            {
+              "name": "editorLineEnd",
+              "count": 23,
+              "modelA": 24,
+              "modelB": 25,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFirstRow",
+              "count": 32,
+              "modelA": 32,
+              "modelB": 28,
+              "valueIf": 0
+            },
+            {
+              "name": "editorNextRow",
+              "count": 83,
+              "modelA": 83,
+              "modelB": 61,
+              "valueIf": 0
+            },
+            {
+              "name": "editorStoreRow",
+              "count": 215,
+              "modelA": 215,
+              "modelB": 148,
+              "valueIf": 2
+            },
+            {
+              "name": "editorFrameRow",
+              "count": 178,
+              "modelA": 178,
+              "modelB": 144,
+              "valueIf": 0
+            },
+            {
+              "name": "editorResetRows",
+              "count": 12,
+              "modelA": 12,
+              "modelB": 6,
+              "valueIf": 0
+            },
+            {
+              "name": "editorInvalidateRows",
+              "count": 65,
+              "modelA": 65,
+              "modelB": 59,
+              "valueIf": 0
+            },
+            {
+              "name": "editorRowAnchor",
+              "count": 36,
+              "modelA": 37,
+              "modelB": 35,
+              "valueIf": 0
+            },
+            {
+              "name": "editorNeedsRow",
+              "count": 32,
+              "modelA": 32,
+              "modelB": 20,
+              "valueIf": 3
+            },
+            {
+              "name": "editorLocate",
+              "count": 26,
+              "modelA": 27,
+              "modelB": 29,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFrameNeedsRow",
+              "count": 28,
+              "modelA": 29,
+              "modelB": 28,
+              "valueIf": 1
+            },
+            {
+              "name": "editorFrameLocate",
+              "count": 93,
+              "modelA": 92,
+              "modelB": 80,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDigits",
+              "count": 66,
+              "modelA": 64,
+              "modelB": 41,
+              "valueIf": 0
+            },
+            {
+              "name": "editorSavedStatus",
+              "count": 90,
+              "modelA": 90,
+              "modelB": 76,
+              "valueIf": 0
+            },
+            {
+              "name": "editorSaveError",
+              "count": 189,
+              "modelA": 189,
+              "modelB": 148,
+              "valueIf": 1
+            },
+            {
+              "name": "editorFindMatch",
+              "count": 84,
+              "modelA": 82,
+              "modelB": 70,
+              "valueIf": 0
+            },
+            {
+              "name": "editorSetFound",
+              "count": 72,
+              "modelA": 72,
+              "modelB": 64,
+              "valueIf": 1
+            },
+            {
+              "name": "editorFindLine",
+              "count": 22,
+              "modelA": 22,
+              "modelB": 22,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindAdvance",
+              "count": 87,
+              "modelA": 88,
+              "modelB": 75,
+              "valueIf": 1
+            },
+            {
+              "name": "editorFindStep",
+              "count": 209,
+              "modelA": 209,
+              "modelB": 169,
+              "valueIf": 2
+            },
+            {
+              "name": "editorFindNext",
+              "count": 85,
+              "modelA": 87,
+              "modelB": 76,
+              "valueIf": 1
+            },
+            {
+              "name": "editorFindInput",
+              "count": 95,
+              "modelA": 95,
+              "modelB": 82,
+              "valueIf": 1
+            },
+            {
+              "name": "editorBeginFind",
+              "count": 8,
+              "modelA": 8,
+              "modelB": 4,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindStatus",
+              "count": 170,
+              "modelA": 170,
+              "modelB": 134,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindMark",
+              "count": 124,
+              "modelA": 124,
+              "modelB": 108,
+              "valueIf": 0
+            },
+            {
+              "name": "editorFindMarks",
+              "count": 151,
+              "modelA": 150,
+              "modelB": 135,
+              "valueIf": 1
+            },
+            {
+              "name": "editorPreviewSlot",
+              "count": 10,
+              "modelA": 10,
+              "modelB": 6,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewFinish",
+              "count": 51,
+              "modelA": 51,
+              "modelB": 45,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewAppend",
+              "count": 94,
+              "modelA": 94,
+              "modelB": 79,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewIndent",
+              "count": 13,
+              "modelA": 13,
+              "modelB": 8,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewWord",
+              "count": 115,
+              "modelA": 114,
+              "modelB": 100,
+              "valueIf": 1
+            },
+            {
+              "name": "editorPreviewStage",
+              "count": 112,
+              "modelA": 112,
+              "modelB": 100,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewUpper",
+              "count": 115,
+              "modelA": 116,
+              "modelB": 99,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPreviewCooked",
+              "count": 68,
+              "modelA": 70,
+              "modelB": 64,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewSource",
+              "count": 297,
+              "modelA": 297,
+              "modelB": 234,
+              "valueIf": 2
+            },
+            {
+              "name": "editorPreviewReset",
+              "count": 24,
+              "modelA": 24,
+              "modelB": 12,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewReady",
+              "count": 87,
+              "modelA": 87,
+              "modelB": 74,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewFrame",
+              "count": 789,
+              "modelA": 782,
+              "modelB": 597,
+              "valueIf": 3
+            },
+            {
+              "name": "editorBeginPreview",
+              "count": 13,
+              "modelA": 14,
+              "modelB": 14,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPreviewKey",
+              "count": 67,
+              "modelA": 67,
+              "modelB": 41,
+              "valueIf": 2
+            },
+            {
+              "name": "editorRowColor",
+              "count": 300,
+              "modelA": 300,
+              "modelB": 200,
+              "valueIf": 0
+            },
+            {
+              "name": "editorStatus",
+              "count": 1069,
+              "modelA": 1071,
+              "modelB": 786,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDocumentFrame",
+              "count": 990,
+              "modelA": 990,
+              "modelB": 738,
+              "valueIf": 0
+            },
+            {
+              "name": "editorHints",
+              "count": 352,
+              "modelA": 352,
+              "modelB": 230,
+              "valueIf": 0
+            },
+            {
+              "name": "editorShow",
+              "count": 112,
+              "modelA": 113,
+              "modelB": 105,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionDict",
+              "count": 149,
+              "modelA": 149,
+              "modelB": 106,
+              "valueIf": 7
+            },
+            {
+              "name": "editorPositionKeyEnd",
+              "count": 112,
+              "modelA": 112,
+              "modelB": 68,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionNumberStop",
+              "count": 44,
+              "modelA": 44,
+              "modelB": 25,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionNumber",
+              "count": 50,
+              "modelA": 50,
+              "modelB": 28,
+              "valueIf": 1
+            },
+            {
+              "name": "editorPositionTuple",
+              "count": 179,
+              "modelA": 179,
+              "modelB": 150,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionKeyEqual",
+              "count": 55,
+              "modelA": 54,
+              "modelB": 26,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionKey",
+              "count": 22,
+              "modelA": 24,
+              "modelB": 28,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionApply",
+              "count": 65,
+              "modelA": 66,
+              "modelB": 61,
+              "valueIf": 0
+            },
+            {
+              "name": "editorRestorePosition",
+              "count": 77,
+              "modelA": 78,
+              "modelB": 87,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionNewer",
+              "count": 100,
+              "modelA": 99,
+              "modelB": 48,
+              "valueIf": 1
+            },
+            {
+              "name": "editorPositionRank",
+              "count": 151,
+              "modelA": 147,
+              "modelB": 123,
+              "valueIf": 1
+            },
+            {
+              "name": "editorPositionCopy",
+              "count": 47,
+              "modelA": 47,
+              "modelB": 22,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPositionAppend",
+              "count": 126,
+              "modelA": 122,
+              "modelB": 119,
+              "valueIf": 0
+            },
+            {
+              "name": "editorRemember",
+              "count": 284,
+              "modelA": 288,
+              "modelB": 251,
+              "valueIf": 1
+            },
+            {
+              "name": "editorEqual",
+              "count": 50,
+              "modelA": 49,
+              "modelB": 25,
+              "valueIf": 0
+            },
+            {
+              "name": "editorKeyCode",
+              "count": 702,
+              "modelA": 702,
+              "modelB": 623,
+              "valueIf": 0
+            },
+            {
+              "name": "editorChange",
+              "count": 19,
+              "modelA": 19,
+              "modelB": 11,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMakeRoom",
+              "count": 59,
+              "modelA": 59,
+              "modelB": 48,
+              "valueIf": 0
+            },
+            {
+              "name": "editorInsert",
+              "count": 80,
+              "modelA": 80,
+              "modelB": 71,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDelete",
+              "count": 67,
+              "modelA": 70,
+              "modelB": 62,
+              "valueIf": 0
+            },
+            {
+              "name": "editorContinueList",
+              "count": 199,
+              "modelA": 199,
+              "modelB": 168,
+              "valueIf": 0
+            },
+            {
+              "name": "editorSplit",
+              "count": 83,
+              "modelA": 83,
+              "modelB": 77,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMoveRow",
+              "count": 92,
+              "modelA": 91,
+              "modelB": 78,
+              "valueIf": 3
+            },
+            {
+              "name": "editorJump",
+              "count": 12,
+              "modelA": 12,
+              "modelB": 7,
+              "valueIf": 0
+            },
+            {
+              "name": "editorPlainKey",
+              "count": 181,
+              "modelA": 183,
+              "modelB": 158,
+              "valueIf": 0
+            },
+            {
+              "name": "editorSave",
+              "count": 63,
+              "modelA": 64,
+              "modelB": 56,
+              "valueIf": 0
+            },
+            {
+              "name": "editorGoFiles",
+              "count": 172,
+              "modelA": 163,
+              "modelB": 131,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDiscard",
+              "count": 50,
+              "modelA": 52,
+              "modelB": 45,
+              "valueIf": 0
+            },
+            {
+              "name": "editorEscape",
+              "count": 50,
+              "modelA": 51,
+              "modelB": 45,
+              "valueIf": 0
+            },
+            {
+              "name": "editorApplyKey",
+              "count": 88,
+              "modelA": 89,
+              "modelB": 85,
+              "valueIf": 0
+            },
+            {
+              "name": "editorInput",
+              "count": 364,
+              "modelA": 364,
+              "modelB": 318,
+              "valueIf": 0
+            },
+            {
+              "name": "editorWriteDone",
+              "count": 132,
+              "modelA": 136,
+              "modelB": 124,
+              "valueIf": 2
+            },
+            {
+              "name": "typedWorldMeta",
+              "count": 643,
+              "modelA": 643,
+              "modelB": 430,
+              "valueIf": 0
+            },
+            {
+              "name": "editorNormalize",
+              "count": 95,
+              "modelA": 95,
+              "modelB": 51,
+              "valueIf": 1
+            },
+            {
+              "name": "editorReplyError",
+              "count": 116,
+              "modelA": 117,
+              "modelB": 95,
+              "valueIf": 0
+            },
+            {
+              "name": "editorRefuseOpen",
+              "count": 274,
+              "modelA": 276,
+              "modelB": 209,
+              "valueIf": 0
+            },
+            {
+              "name": "editorOpen",
+              "count": 504,
+              "modelA": 504,
+              "modelB": 397,
+              "valueIf": 0
+            },
+            {
+              "name": "editorOpened",
+              "count": 137,
+              "modelA": 139,
+              "modelB": 112,
+              "valueIf": 0
+            },
+            {
+              "name": "editorOpenFailed",
+              "count": 174,
+              "modelA": 175,
+              "modelB": 134,
+              "valueIf": 0
+            },
+            {
+              "name": "editorDeferRead",
+              "count": 28,
+              "modelA": 29,
+              "modelB": 28,
+              "valueIf": 0
+            },
+            {
+              "name": "editorContinueRead",
+              "count": 27,
+              "modelA": 28,
+              "modelB": 36,
+              "valueIf": 0
+            },
+            {
+              "name": "editorReadSuccess",
+              "count": 49,
+              "modelA": 50,
+              "modelB": 54,
+              "valueIf": 0
+            },
+            {
+              "name": "editorResumeRead",
+              "count": 16,
+              "modelA": 17,
+              "modelB": 24,
+              "valueIf": 0
+            },
+            {
+              "name": "editorMissingFile",
+              "count": 16,
+              "modelA": 17,
+              "modelB": 23,
+              "valueIf": 0
+            },
+            {
+              "name": "editorReadDone",
+              "count": 150,
+              "modelA": 151,
+              "modelB": 139,
+              "valueIf": 0
+            },
+            {
+              "name": "typedWorldEvent",
+              "count": 209,
+              "modelA": 210,
+              "modelB": 171,
+              "valueIf": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "witnesses": {
+    "conditions": {
+      "branch10": [
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 0
+        },
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 0
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 14,
+          "trap": true
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 14,
+          "trap": false,
+          "result": 1
+        }
+      ],
+      "value10": [
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 0
+        },
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 0
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 14,
+          "trap": true
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 14,
+          "trap": false,
+          "result": 1
+        }
+      ],
+      "branch11": [
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 15,
+          "trap": true
+        },
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 15,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        }
+      ],
+      "value11": [
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 15,
+          "trap": true
+        },
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 15,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        }
+      ],
+      "branch12": [
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 14,
+          "trap": true
+        },
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 145,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        }
+      ],
+      "value12": [
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 14,
+          "trap": true
+        },
+        {
+          "args": [
+            32,
+            48,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 145,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        },
+        {
+          "args": [
+            32,
+            48,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "order": 1,
+          "trap": false,
+          "result": 1
+        }
+      ]
+    }
+  }
+}

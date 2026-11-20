@@ -1,0 +1,12 @@
+{
+  "staged": {
+    "wasm": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+    "rv32": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+    "world": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  },
+  "conditions": {
+    "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+    "rv32": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+    "world": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  }
+}
