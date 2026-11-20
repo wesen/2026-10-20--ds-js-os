@@ -1,0 +1,201 @@
+{
+  "sourceBytes": 6204,
+  "sourceSha256": "3b5a98462994c81a02e7264f07de66d86f2397a33428bb3fe9a5e05b3410643f",
+  "rv32Bytes": 11216,
+  "rv32Sha256": "ae5e5385455cb5c7e3e60406db7e820a7a127ceeb2e9a95f412fd486ce85fe5c",
+  "slotElfBytes": 17456,
+  "slotElfSha256": "483f4a5770fc30c41a4c184b6b0fef4d7d9dfb011945d9ce25c12900b284186c",
+  "entryOffset": 8188,
+  "matchingCommandStreams": 47,
+  "maxWords": 1085,
+  "rows": [
+    {
+      "id": "opening/000 launch",
+      "words": 1035
+    },
+    {
+      "id": "opening/001 unhandled printable key",
+      "words": 1035
+    },
+    {
+      "id": "opening/002 up",
+      "words": 1035
+    },
+    {
+      "id": "opening/003 enter",
+      "words": 1048
+    },
+    {
+      "id": "opening/004 down",
+      "words": 1048
+    },
+    {
+      "id": "opening/005 enter",
+      "words": 1047
+    },
+    {
+      "id": "opening/006 esc",
+      "words": 1035
+    },
+    {
+      "id": "opening/007 enter",
+      "words": 1047
+    },
+    {
+      "id": "opening/009 up",
+      "words": 1047
+    },
+    {
+      "id": "opening/010 up",
+      "words": 1047
+    },
+    {
+      "id": "opening/011 e2-e4",
+      "words": 1056
+    },
+    {
+      "id": "opening/013 cursor during search",
+      "words": 1056
+    },
+    {
+      "id": "opening/091 engine wake 78",
+      "words": 1085
+    },
+    {
+      "id": "opening/092 f2",
+      "words": 1035
+    },
+    {
+      "id": "opening/093 enter",
+      "words": 1047
+    },
+    {
+      "id": "opening/094 up",
+      "words": 1047
+    },
+    {
+      "id": "opening/095 up",
+      "words": 1047
+    },
+    {
+      "id": "opening/096 enter",
+      "words": 1056
+    },
+    {
+      "id": "opening/097 f2",
+      "words": 1035
+    },
+    {
+      "id": "promotion/000 launch",
+      "words": 629
+    },
+    {
+      "id": "promotion/001 enter",
+      "words": 635
+    },
+    {
+      "id": "promotion/002 up",
+      "words": 635
+    },
+    {
+      "id": "promotion/003 enter",
+      "words": 632
+    },
+    {
+      "id": "promotion/004 esc",
+      "words": 635
+    },
+    {
+      "id": "promotion/005 enter",
+      "words": 632
+    },
+    {
+      "id": "promotion/006 underpromote a8=N",
+      "words": 653
+    },
+    {
+      "id": "in-check/000 launch",
+      "words": 637
+    },
+    {
+      "id": "white-mate/000 launch",
+      "words": 638
+    },
+    {
+      "id": "black-mate/000 launch",
+      "words": 638
+    },
+    {
+      "id": "stalemate/000 launch",
+      "words": 632
+    },
+    {
+      "id": "dead-material/000 launch",
+      "words": 622
+    },
+    {
+      "id": "castle-short/000 launch",
+      "words": 671
+    },
+    {
+      "id": "castle-short/001 enter",
+      "words": 713
+    },
+    {
+      "id": "castle-short/002 right",
+      "words": 713
+    },
+    {
+      "id": "castle-short/003 right",
+      "words": 713
+    },
+    {
+      "id": "castle-short/004 enter",
+      "words": 692
+    },
+    {
+      "id": "castle-long/000 launch",
+      "words": 671
+    },
+    {
+      "id": "castle-long/001 enter",
+      "words": 713
+    },
+    {
+      "id": "castle-long/002 left",
+      "words": 713
+    },
+    {
+      "id": "castle-long/003 left",
+      "words": 713
+    },
+    {
+      "id": "castle-long/004 enter",
+      "words": 692
+    },
+    {
+      "id": "en-passant/000 launch",
+      "words": 643
+    },
+    {
+      "id": "en-passant/001 enter",
+      "words": 655
+    },
+    {
+      "id": "en-passant/002 left",
+      "words": 655
+    },
+    {
+      "id": "en-passant/003 up",
+      "words": 655
+    },
+    {
+      "id": "en-passant/004 enter",
+      "words": 650
+    },
+    {
+      "id": "signed-statistics/000 launch",
+      "words": 722
+    }
+  ]
+}
