@@ -128,3 +128,52 @@ A balanced boot with N lanes measures 2 × N² × 3 cold compiles and 16 warmed 
 The initial firmware link failed with `section .flash.text VMA [40000040,401b8f57] overlaps section .flash_rodata_dummy VMA [40000020,401c001f]`. The guest assembly had raised the entire output section's alignment to 64 bytes. The chip linker script expects mapped text to start at offset 0x20. Emitting ordinary four-byte instruction alignment restored the IDF layout. A complete rebuild succeeded, and the host oracle verified the two embedded guest images and all three application ELFs against the preceding trial's frozen control.
 
 The user approved sending the specified compiler, typed app sources, study designs, candidate code and aggregate measurements to the authenticated Anthropic endpoint. I relayed the payload restriction to all three research operators. The user subsequently approved GPT‑6.2 Sol High as an additional researcher model. The first three studies keep their Opus High partners; the planned incremental study can use Sol High.
+
+## Step 3: Compare two independent forecasts on a masked physical result
+
+With the larger program paused, the user endorsed asking the models the same question independently. I ran a separate retrospective comparison using an existing firmware experiment. The prior publication made this a blind exercise for the two respondents only. The physical board's previously running negative-control trial also finished restoring its original firmware.
+
+### Prompt Context
+
+**User prompt (verbatim):** “actually, your idea to ask the same question independently was good.” **Assistant interpretation:** Carry out an independent comparison about a real compiler design decision. **Inferred user intent:** See which kind of research judgment each model contributes. **Commits:** 4847d21 froze the common packet and grading rule; 8073de4 froze both predictions before grading.
+
+### What I did
+
+- Gave fresh GPT‑6.2 Sol High and Claude Opus 5.5 High the same six-forecast problem. Alias labels hid application names. Both had only baseline and two individual changes on boot 1 and neither used tools. The external call carried the approved aggregate research data alone.
+- Compared their predictions with paired blocks from the combined arm of boot 2. Included an additive forecast and an unchanged-control forecast under the same loss function.
+
+### Why
+
+A score measures a distinct part of research judgment. Asking for both a numerical forecast and an observation that would falsify a proposed mechanism permits separate review of ideas and accuracy.
+
+### What worked
+
+Both predicted all six directions, as did the arithmetic rule. Opus averaged 1.003 percentage points of absolute error, Sol 1.126 and the additive rule 1.172. The two proposed follow-up measurements are recorded beside their numbers.
+
+### What didn't work
+
+The CLI emitted an array of events, so the first query assuming an object produced `Cannot index array with string "is_error"`. Selecting the terminal result verified successful completion and resolved model identity. Opus fenced the JSON in Markdown. Only those fences were removed.
+
+### What I learned
+
+The difference between the model scores is small relative to the errors, and the data points are correlated across one board. The best discrimination came from explaining why the heap of the largest workload can fail to follow an additive estimate.
+
+### What was tricky to build
+
+The input supplies boot-1 group medians while the target is the median of four within-block percent changes on boot 2. These definitions are intentionally explicit. The scoring code evaluates signed changes before taking absolute errors, and preserves the exact scores for review.
+
+### What warrants a second pair of eyes
+
+The supervisor had seen the retrospective study. A future prospective task with several unseen mechanisms would support a stronger comparison. A phase label identifies when a peak occurred. Allocation ancestry is needed to attribute that peak.
+
+### What should be done in the future
+
+Use prospective blind design questions during later studies when the user resumes the lab. The earlier negative-control receipt reports one completed boot and verified restoration. No new flash was needed for this forecast.
+
+### Code review instructions
+
+Read `various/paired-review/protocol.md` and both response files. Run `python3 -B scripts/07-score-research-forecasts.py` from this ticket. Compare the printed JSON with `various/paired-review/scores.json`.
+
+### Technical details
+
+The common prompt SHA-256 is `9df493f28046d84a73b7421cd1d107af8745c58a94b635d2052a9f7b1a2abe83`. We graded two estimates per app on three apps, with no score for subjective explanation quality.

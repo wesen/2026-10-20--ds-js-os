@@ -1,0 +1,56 @@
+{
+  "truth": {
+    "small": {
+      "time_pct": -1.9067101345406696,
+      "heap_pct": 5.327428061121925
+    },
+    "medium": {
+      "time_pct": -0.7413220701228196,
+      "heap_pct": 3.1937679184482493
+    },
+    "large": {
+      "time_pct": -3.5894720395825166,
+      "heap_pct": -0.20469609801951053
+    }
+  },
+  "additive": {
+    "small": {
+      "time_pct": -3.267564247293977,
+      "heap_pct": 6.447111513132494
+    },
+    "medium": {
+      "time_pct": -2.739110371582876,
+      "heap_pct": 3.1958627551231915
+    },
+    "large": {
+      "time_pct": -2.790316597216199,
+      "heap_pct": -1.959953159600439
+    }
+  },
+  "scores": {
+    "sol": {
+      "time_mae_pp": 1.3638132783063426,
+      "heap_mae_pp": 0.8880359741367719,
+      "overall_mae_pp": 1.1259246262215572,
+      "correct_directions": 6
+    },
+    "opus": {
+      "time_mae_pp": 1.3138132783063425,
+      "heap_mae_pp": 0.6913693074701052,
+      "overall_mae_pp": 1.002591292888224,
+      "correct_directions": 6
+    },
+    "additive": {
+      "time_mae_pp": 1.385932618859894,
+      "heap_mae_pp": 0.9590117834221468,
+      "overall_mae_pp": 1.1724722011410202,
+      "correct_directions": 6
+    },
+    "zero": {
+      "time_mae_pp": 2.079168081415335,
+      "heap_mae_pp": 2.908630692529895,
+      "overall_mae_pp": 2.4938993869726147,
+      "correct_directions": 0
+    }
+  }
+}
