@@ -1,0 +1,29 @@
+{
+  "base": {
+    "reachable": [
+      "editorFindMatch",
+      "editorFold"
+    ],
+    "entry": 15228,
+    "words": 15954,
+    "sha256": "1adfa63f253e495ebf2fe46c01f06f83997c3efb3b02f9c9cdc6a1cf1e064ebc"
+  },
+  "uses": {
+    "reachable": [
+      "editorFindMatch",
+      "editorFold"
+    ],
+    "entry": 12204,
+    "words": 12725,
+    "sha256": "fec1c033cf9e577811a8f8a448be37e2186d46658e8f187265fd699588429a61"
+  },
+  "loops": {
+    "reachable": [
+      "editorFindMatch",
+      "editorFold"
+    ],
+    "entry": 12084,
+    "words": 12748,
+    "sha256": "e6f2851df8eb113d63b397429f9280ed4d720ce3c63efaffe05f0fefd9089b6c"
+  }
+}

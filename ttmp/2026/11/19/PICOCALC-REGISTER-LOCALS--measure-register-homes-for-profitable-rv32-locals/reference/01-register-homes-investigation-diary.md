@@ -74,3 +74,58 @@ Read the ABI table from the A7 task, the register plan and the single-epilogue r
 ### Technical details
 
 Stage from A6. The scope-A application instruction ceilings are 517, 2,660 and 14,581. Both candidate policies use `a0–a7` as available in leaves and `s1–s11` in non-leaves, while the existing temporary-register allocation remains fixed.
+
+
+## Step 2: Preserve pending local values across native writes and calls
+
+I added a pre-scan over one function at a time, plus local register and frame homes. I kept the staged backend's operand registers and call spilling. A separate frame-only instrumentation lane proves the counter attachment does not affect the original A6 machine code.
+
+### Prompt Context
+
+**Study specification:** See Step 1.
+
+**Assistant interpretation:** Apply both policies after the observed A6 host qualification and measure register placement with the same instruction selection and ABI.
+
+**Commit (design):** `772100e` — Design the RV32 register home comparison.
+
+### What I did
+
+- Added the pre-scan, local read/write helpers, assignment forwarding and save/restore frame slots in `scripts/02-register-locals.patch`.
+- Added host comparison of compiled functions, frame accounting and emulator checks in `scripts/03-verify.mjs`. Verified return-address and callee-saved state for every internal native call, with a hostile external import and raw deferred local reads.
+- Created a three-lane board fixture with the existing Files and Agenda kernels plus Editor's `editorFindMatch`. It walks call edges starting at that operation and confirms only `editorFold` is reachable. It embeds the entire corresponding app image so layout and call displacements are unchanged.
+
+### Why
+
+A separate register policy should change assignment choices while sharing the same ABI mechanics. The frame-only lane gives exact reference load counts. The Editor guest fixture measures an original hot function with its real offsets and internal calls.
+
+### What worked
+
+The focused RV32 fixture matched 29 Wasm cases per lane, including two traps. It preserved the caller state, handled both raw old-value cases and both paths of the hostile import, and produced five and seventeen instructions in `bump` and `countUnit`. The frame-only bytes and import relocations matched A6 on all three apps. Both policies met all app word ceilings.
+
+### What didn't work
+
+No compiler or fixture failures were observed during the targeted A7 verification. The replay wrapper required local child execution outside the sandbox, as discovered in A6.
+
+### What I learned
+
+The policy with the fewest static local loads has more save and restore instructions. Agenda's loop-weighted policy removes 31 additional static instructions overall even with 24 more local loads, which shows why raw local counts and native size are distinct outcomes.
+
+### What was tricky to build
+
+The old `a0` overflow scratch was not a free register in leaf functions after placement. The pre-scan reserves a different argument scratch for division. Separately, checking for older deferred reads before selecting a new output destination avoids consuming the two temporary registers needed by already loaded operands.
+
+### What warrants a second pair of eyes
+
+Verify the one-opcode lookahead still runs after each immediate has been read. Check that the embedded Editor operation uses only the confirmed import-free call closure.
+
+### What should be done in the future
+
+Use physical guest cycles to assess how the extra save pairs balance dynamically against removed frame loads. Preserve the same fixed executable reservation across physical candidates.
+
+### Code review instructions
+
+Run `node scripts/03-verify.mjs <A7-stage-root>`. Compare the instrumented `frame` lane's SHA-256 against unmodified A6, then examine the `staleSpill`, `signedLeaf` and `hostile` witnesses.
+
+### Technical details
+
+The static Files, Agenda and Editor counts were 395, 2,130 and 12,725 with use counts, and 392, 2,099 and 12,748 with loop weighting. The emitted register save and restore instructions total 1,278 and 1,112 in Editor.

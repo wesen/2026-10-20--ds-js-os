@@ -1,0 +1,251 @@
+--- a/typed/rv32.js
++++ b/typed/rv32.js
+@@ -4,6 +4,10 @@
+ "use strict";
+ 
+ const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
++const REGISTER_LOCALS = "uses";
++const SAVED_REGISTERS = [9, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]; // s1–s11
++const ARGUMENT_REGISTERS = [10, 11, 12, 13, 14, 15, 16, 17]; // a0–a7
++const LOOP_WEIGHT = [1, 8, 64, 512];
+ const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
+ const SHORT_BRANCHES = true, LAZY_OPERANDS = true, LEAF_FRAMES = true, LAZY_RETURNS = true;
+ const instruction = {
+@@ -32,12 +36,79 @@
+     [0x4f,[7,false]], // ge_u
+ ]);
+ 
++// Numeric Wasm immediates occupy one cell each. Count structured loop
++// depth from the actual opcode boundaries, including nested if and block.
++function planLocals(program, count) {
++    const score = new Uint32Array(count);
++    const code = program.code;
++    const blocks = [];
++    let loops = 0, hasCall = false, divides = false;
++    for (let i = 0; REGISTER_LOCALS !== "frame" && i < code.length;) {
++        const op = code[i++];
++        switch (op) {
++        case 0x02: case 0x03: case 0x04:
++            blocks.push(op);
++            if (op === 0x03) loops++;
++            i++;
++            break;
++        case 0x0b:
++            if (blocks.pop() === 0x03) loops--;
++            break;
++        case 0x10:
++            hasCall = true;
++            i++;
++            break;
++        case 0x20: case 0x21: {
++            const local = code[i++];
++            score[local] += REGISTER_LOCALS === "loops" ? LOOP_WEIGHT[Math.min(loops, 3)] : 1;
++            break;
++        }
++        case 0x28: case 0x2f: case 0x36: case 0x3b: i += 2; break;
++        case 0x0c: case 0x0d: case 0x41: i++; break;
++        case 0x6d: divides = true; break;
++        }
++    }
++    const pool = hasCall ? SAVED_REGISTERS :
++        divides ? ARGUMENT_REGISTERS.slice(0, -1) : ARGUMENT_REGISTERS;
++    const minScore = REGISTER_LOCALS === "loops" && hasCall ? 2 : 0;
++    const ranked = [];
++    for (let local = 0; local < count; local++) {
++        if (score[local] > minScore) ranked.push(local);
++    }
++    ranked.sort((a, b) => score[b] - score[a] || a - b);
++    const chosen = ranked.slice(0, pool.length);
++    const homes = new Uint8Array(count);
++    const used = new Set();
++    if (!hasCall) {
++        for (const local of chosen) {
++            if (local >= Math.min(program.params.length, pool.length)) continue;
++            homes[local] = pool[local];
++            used.add(homes[local]);
++        }
++    }
++    let next = 0;
++    for (const local of chosen) {
++        if (homes[local]) continue;
++        while (used.has(pool[next])) next++;
++        homes[local] = pool[next++];
++    }
++    const offsets = new Uint32Array(count);
++    let frameLocals = 0;
++    for (let local = 0; local < count; local++) {
++        if (!homes[local]) offsets[local] = 4 * frameLocals++;
++    }
++    return {homes, offsets, frameLocals, saved: hasCall ? pool.slice(0, chosen.length) : [],
++        divScratch: !hasCall && divides ? ARGUMENT_REGISTERS.at(-1) : A0};
++}
++
+ class FunctionCode {
+-    constructor(program, functions, starts) {
++    constructor(program, functions, starts, stats) {
+         this.program = program;
+         this.functions = functions;
+         this.starts = starts;
+         this.locals = program.params.length + program.nlocals;
++        this.plan = planLocals(program, this.locals);
++        this.stats = stats ? {name: program.name, loads: 0, stores: 0, forwarded: 0} : null;
+         this.words = [];
+         this.calls = [];
+         this.branches = [];
+@@ -69,7 +140,33 @@
+         if (to !== from) this.emit(instruction.i(0x13, to, 0, from, 0));
+     }
+ 
+-    slot(depth) { return 4 * (this.locals + depth); }
++    slot(depth) { return 4 * (this.plan.frameLocals + this.plan.saved.length + depth); }
++
++    readLocal(local, want) {
++        const home = this.plan.homes[local];
++        if (home) return home;
++        this.load(want, this.plan.offsets[local]);
++        if (this.stats) this.stats.loads++;
++        return want;
++    }
++
++    writeLocal(local, from) {
++        const home = this.plan.homes[local];
++        if (home) this.move(home, from);
++        else {
++            this.store(from, this.plan.offsets[local]);
++            if (this.stats) this.stats.stores++;
++        }
++    }
++
++    pendingLocal(local, depth) {
++        const entry = this.deferred[depth];
++        return entry?.kind === "local" && entry.value === local;
++    }
++
++    nextLocalSet() {
++        return this.program.code[this.at] === 0x21 ? this.program.code[this.at + 1] : -1;
++    }
+ 
+     spill(depth, reg) {
+         this.store(reg, this.slot(depth));
+@@ -86,7 +183,7 @@
+                 if (entry.value === 0) return ZERO;
+                 this.constant(want, entry.value);
+                 return want;
+-            case "local": this.load(want, 4 * entry.value); return want;
++            case "local": return this.readLocal(entry.value, want);
+             case "return": return A0;
+             case "spill": this.load(want, this.slot(depth)); return want;
+             }
+@@ -117,6 +214,11 @@
+     }
+ 
+     push(reg) {
++        if (this.plan.homes[this.nextLocalSet()] === reg) {
++            this.at += 2;
++            if (this.stats) this.stats.forwarded++;
++            return;
++        }
+         const depth = this.depth++;
+         this.deferred[depth] = undefined;
+         const home = STACK_REGISTERS[depth];
+@@ -124,7 +226,16 @@
+         else this.move(home, reg);
+     }
+ 
+-    resultRegister() { return STACK_REGISTERS[this.depth] ?? T5; }
++    resultRegister() {
++        const local = this.nextLocalSet();
++        const home = this.plan.homes[local];
++        if (home) {
++            let depth = 0;
++            while (depth < this.depth && !this.pendingLocal(local, depth)) depth++;
++            if (depth === this.depth) return home;
++        }
++        return STACK_REGISTERS[this.depth] ?? T5;
++    }
+ 
+     // A conditional branch skips the fixed-width jump when the predicate is false.
+     branch(kind, a, b, target) {
+@@ -220,11 +331,11 @@
+             }
+             if (op === 0x6d && (divisor === undefined || divisor === -1)) {
+                 const safe = {};
+-                // No operand lives in an argument register between operations.
+-                this.constant(A0, -1);
+-                this.branch(1, b, A0, safe);
+-                this.constant(A0, -2147483648);
+-                this.emit(instruction.b(1, a, A0, 8));
++                const scratch = this.plan.divScratch;
++                this.constant(scratch, -1);
++                this.branch(1, b, scratch, safe);
++                this.constant(scratch, -2147483648);
++                this.emit(instruction.b(1, a, scratch, 8));
+                 this.emit(0x00100073);
+                 this.mark(safe);
+             }
+@@ -352,17 +463,17 @@
+                 break;
+             }
+             const out = this.resultRegister();
+-            this.load(out, 4 * local);
++            this.move(out, this.readLocal(local, out));
+             this.push(out);
+             break;
+         }
+         case 0x21: {
+             const local = this.cell();
+             for (let d = 0; d < this.depth - 1; d++) {
+-                const entry = this.deferred[d];
+-                if (entry?.kind === "local" && entry.value === local) this.settle(d);
++                if (this.pendingLocal(local, d)) this.settle(d);
+             }
+-            this.store(this.pop(T5), 4 * local);
++            const source = this.plan.homes[local];
++            this.writeLocal(local, this.pop(source || T5, !!source));
+             break;
+         }
+         case 0x28: case 0x2f: case 0x36: case 0x3b: {
+@@ -403,24 +514,29 @@
+         return false;
+     }
+ 
+-    lower() {
++    lower(report) {
+         const count = this.program.params.length;
+         if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+         this.emit(0);
+         this.emit(0);
+-        for (let i = 0; i < count; i++) this.store(A0 + i, 4 * i);
++        const {frameLocals, saved} = this.plan;
++        for (const [i, reg] of saved.entries()) this.store(reg, 4 * (frameLocals + i));
++        for (let i = 0; i < count; i++) this.writeLocal(i, A0 + i);
+         while (this.at < this.program.code.length && !this.step(this.cell())) {}
+         const saveRA = !LEAF_FRAMES || this.hasCall;
+-        const frame = (4 * (this.locals + this.spillDepth + Number(saveRA)) + 15) & -16;
++        const frame = (4 * (frameLocals + saved.length + this.spillDepth + Number(saveRA)) + 15) & -16;
+         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
+         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
+         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
+         this.mark(this.exit);
+         if (saveRA) this.load(RA, frame - 4);
++        for (const [i, reg] of saved.entries()) this.load(reg, 4 * (frameLocals + i));
+         if (frame) this.emit(instruction.i(0x13, SP, 0, SP, frame));
+         this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
+         this.compact(!frame, !saveRA);
+-        return this;
++        if (report) report({...this.stats, registers: Array.from(this.plan.homes), saved: saved.length,
++            frame, spillDepth: this.spillDepth});
++        return {words: this.words, calls: this.calls};
+     }
+ }
+ 
+@@ -432,7 +548,8 @@
+     function lower(fn) {
+         targets.push({global: true});
+         callables.push(fn);
+-        code.push(new FunctionCode(fn, callables, targets).lower());
++        const report = options?.localStats;
++        code.push(new FunctionCode(fn, callables, targets, report).lower(report));
+     }
+ 
+     let lowerError;

@@ -1,0 +1,22 @@
+{
+  "a6": {
+    "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+    "rv32": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+    "world": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  },
+  "uses": {
+    "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+    "rv32": "9e92e999d37ad0ad8bf138cfb7c7b5fb989b17c4ec18841dbe5ae07f9f37e152",
+    "world": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  },
+  "loops": {
+    "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+    "rv32": "dc7fe2c83db8f633f549608b186b954f8075501704c8cbc02bdafec6701a0e2c",
+    "world": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  },
+  "frame": {
+    "wasm": "eaafeda68a206aa27b86a54e510ca65ed3e3c50763d23004e169fe9a329eb960",
+    "rv32": "1358d7776136ff5ed2262ba270cbb461789fe22b6deff3495defbe86b493f90d",
+    "world": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+  }
+}
