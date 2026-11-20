@@ -1,0 +1,14 @@
+// The compiler turns this one read into a pending token and a continuation.
+async function editorReadTask(event: WorldEvent, state: WorldState, output: buffer, hints: buffer, handle: i32): i32 {
+    const scratch: buffer = typedSdkBuffer(3);
+    const pending: buffer = typedSdkBuffer(2);
+    const keyLength: i32 = scratch.writeLiteral(0, "name");
+    let size: i32 = typedSdkEventText(3, scratch, keyLength, pending);
+    if (size < 1 || size > 95) { size = pending.writeLiteral(0, "untitled"); }
+    const ok = await typedSdkFileRead(handle);
+    if (!ok && !(event.kind === 4)) return editorReadNotStarted(handle, output);
+    state.offered = handle;
+    state.offeredNameLength = size;
+    if (ok) return editorReadSuccess(state, output, hints);
+    return editorReadFailure(state, output, hints);
+}

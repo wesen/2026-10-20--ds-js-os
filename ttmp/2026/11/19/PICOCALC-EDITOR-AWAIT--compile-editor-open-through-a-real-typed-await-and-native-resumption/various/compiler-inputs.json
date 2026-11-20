@@ -1,0 +1,23 @@
+{
+  "revision": "dbe26be",
+  "lanes": {
+    "manual": {
+      "sourceSha256": "fff072d103614c1c1a2f429f8ca64a39ecf06a57e63a194d268b321ae6b3453e",
+      "compiler": {
+        "async": "9f61f2f8c672f1d3e52c481188d4a8989f6c093f5043245f8d3796b3e7f1ca7b",
+        "rv32": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+        "wasm": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+        "world": "e3772cb7db74dc1d20c8fd45d318372c8af2b105bee7a36f0bffe17da5e50726"
+      }
+    },
+    "await": {
+      "sourceSha256": "03cd32abee8928594caeccb6e4ef01599aee862782566f923f5749aa8752fb8d",
+      "compiler": {
+        "async": "9f61f2f8c672f1d3e52c481188d4a8989f6c093f5043245f8d3796b3e7f1ca7b",
+        "rv32": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b",
+        "wasm": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+        "world": "e3772cb7db74dc1d20c8fd45d318372c8af2b105bee7a36f0bffe17da5e50726"
+      }
+    }
+  }
+}

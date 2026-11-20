@@ -71,3 +71,60 @@ Start at the sequence diagram, then read the linked foreground `editorOpen` and 
 ### Technical details
 
 The existing `WorldState` has 71 fields and the runtime allows 80. The prospective generated frame is 12 bytes. It is separate from the still hand-written normalization continuation.
+
+
+## Step 2: Generate the Editor file continuation and reproduce both target behaviors
+
+I implemented a one-function source rewriter for a top-level `const ok = await typedSdkFileRead(handle);`. The emitted functions use the existing typed emitter, linker, and reactor ABI. I staged the real Editor source and a matching manual reference for the native firmware and host replay fixtures.
+
+### Prompt Context
+
+**Study specification:** See Step 1.
+
+**Commit (design):** `6f815af` — Preregister the typed Editor Open await experiment.
+
+### What I did
+
+- Added structural parsing, backward liveness, storage layout, and generated start, resume, pending, and cancel functions in `scripts/02-typed-async.js`.
+- Used `sources/editor-read-task.typed` to split the real Editor read from the existing bounded newline normalization. The same successful and failed read handlers run after the await.
+- Built two physical images with the same staged lowerer, shared await helper, native ELF linker and reactor. The source bytes embedded in the candidate include the original await syntax.
+- Added a probe that asks from the ordinary Files world, allocates a real narrowed file grant, and uses the actual filesystem service's read and settlement. At the selected tests it injects a cancel event and an old settlement into the native handler. It suppresses persistent position reads and writes only during its own Editor fixture turns.
+- Used the protocol fixture to compare full observable memory against separate controlled expected outcomes in Wasm and the staged RV32 interpreter.
+
+### Why
+
+The file read's successful resume needs the current event payload. A generated continuation that saved the previous phase's references could produce a structurally valid ELF with incorrect effects. The protocol fixture assigns different buffer addresses to the two segments.
+
+### What worked
+
+The rewriter saved `handle` and `size` and used three words including the token. A definite write after the wait kept `overwritten` out of the frame. Both targets agreed over success, immediate failure, negative settlement, wrong and duplicate tokens and cancel followed by reopen. The candidate passed all 24 original host replay checks. Its complete ELF was the same fixed allocation, with 181 more native instruction words.
+
+### What didn't work
+
+- The first build using `scripts/04-stage-board.py` failed with `native_elf_p4.c:239:10: fatal error: mbedtls/sha256.h: No such file or directory`. The probe is compiled under the optional native ELF component, so adding mbedtls only to the main component did not expose its header. I added the private dependency to the optional component and rebuilt both images.
+- The first focused run of `scripts/05-verify.mjs` failed at `SyntaxError: 15:65: expected identifier`. The fixture put `return` inside a brace-form `if`. The existing typed grammar uses a single-statement `if (condition) return expression;` for early return. I factored the fixture's write into a typed helper and reran both encoders.
+- The physical fixture serializes its cancel injection at the exact post-suspend boundary to avoid relying on a mailbox interleaving the current kernel cannot deliver. It tests observed cleanup and stale suppression with a real file worker, and isolates prior user positions from fixture calls.
+
+### What I learned
+
+A single wait can use its token as the frame occupancy field. The two live scalars still have to survive it. Around that cut, the title's buffer contents have a stable reactor slot while the alias used to fill it can die and needs no stored pointer.
+
+### What was tricky to build
+
+The manual Editor reuses its read token for downstream normalization. The candidate keeps that path while using a separate generated token for the read. Dispatch calls the normalization code before checking the generated task on each kind-4 event, and a matched generated resume can schedule the next normalization turn.
+
+### What warrants a second pair of eyes
+
+Review the tracked `__await` fields and the generated test assembly paths. Confirm the host receives new event and output references in the test, and that app state changes still happen only after an accepted read completion.
+
+### What should be done in the future
+
+Run both fully compiled images on a shared P4. Compare actual normalized success frames, real UTF-8 errors, cancel cleanup, stale suppression and restored factory health.
+
+### Code review instructions
+
+Run `node scripts/05-verify.mjs <study> <firmware-pair> picocalc-os/build/typed-world-reactor.wasm`. Compare the lifetime diagnostic and the buffer-address witness. For the physical source, inspect the read fixture's actual file request and the native probe's narrow injection boundaries.
+
+### Technical details
+
+The state records contain 71 and 74 scalar fields. The full linked Editor ELF occupies 240,452 bytes in each lane. The tested shared compiler is staged A5 and only the candidate typed source contains an async declaration.
