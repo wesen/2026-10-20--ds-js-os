@@ -83,7 +83,7 @@ typedef struct {size_t live,peak;} heap_stats;
 static size_t usable(const void *p){return p?heap_caps_get_allocated_size((void*)p):0;}
 static void change(heap_stats *s,size_t old,size_t n){s->live=s->live-old+n;if(s->live>s->peak)s->peak=s->live;}
 static void *alloc_js(JSMallocState *s,size_t n){
-    void *p=heap_caps_malloc(n,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    void *p=heap_caps_aligned_alloc(8,n,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
     if(p)change(s->opaque,0,usable(p));
     return p;
 }
@@ -91,8 +91,10 @@ static void free_js(JSMallocState *s,void *p){if(p){change(s->opaque,usable(p),0
 static void *realloc_js(JSMallocState *s,void *p,size_t n){
     if(!p)return alloc_js(s,n);
     if(!n){free_js(s,p);return NULL;}
-    size_t old=usable(p);void *v=heap_caps_realloc(p,n,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
-    if(v)change(s->opaque,old,usable(v));
+    size_t old=usable(p);
+    if(n<=old && n+64>old)return p;
+    void *v=heap_caps_aligned_alloc(8,n,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if(v){memcpy(v,p,old<n?old:n);heap_caps_free(p);change(s->opaque,old,usable(v));}
     return v;
 }
 static const JSMallocFunctions allocator={alloc_js,free_js,realloc_js,usable};

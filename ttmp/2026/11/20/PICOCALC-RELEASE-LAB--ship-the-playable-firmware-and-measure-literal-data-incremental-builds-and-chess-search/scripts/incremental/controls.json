@@ -1,0 +1,69 @@
+[
+  {
+    "app": "editor",
+    "label": "body type error",
+    "error": "SyntaxError: 726:36: unknown local undefinedIncrementalName",
+    "reused": 54,
+    "rebuilt": 1
+  },
+  {
+    "app": "editor",
+    "label": "invalid syntax",
+    "error": "SyntaxError: 726:12: expected identifier",
+    "reused": 54,
+    "rebuilt": 1
+  },
+  {
+    "app": "editor",
+    "label": "async result used by synchronous caller",
+    "error": "SyntaxError: 730:18: call async function editorPreviewSlot with start or await",
+    "reused": 0,
+    "rebuilt": 0
+  },
+  {
+    "app": "editor",
+    "label": "additional suspension in existing async function",
+    "image": "19e20d000e830c2d13233a64e4d2d4e4bdbd413ea63c50dfdd78fadf876d4125",
+    "metadata": "09496dae01eb6a01bf6fe38596395bd7f2f63d4d104fa97864c995124d92cfbc",
+    "reused": 118,
+    "rebuilt": 1
+  },
+  {
+    "app": "editor",
+    "label": "discarded edits, all fragments reusable",
+    "reused": 119,
+    "verified": true
+  },
+  {
+    "app": "editor",
+    "label": "deliberately damaged in-memory word detected by clean ELF oracle",
+    "reused": 119,
+    "verified": true
+  },
+  {
+    "app": "chess",
+    "label": "body type error",
+    "error": "SyntaxError: 43:69: unknown local undefinedIncrementalName",
+    "reused": 4,
+    "rebuilt": 1
+  },
+  {
+    "app": "chess",
+    "label": "invalid syntax",
+    "error": "SyntaxError: 43:45: expected identifier",
+    "reused": 4,
+    "rebuilt": 1
+  },
+  {
+    "app": "chess",
+    "label": "discarded edits, all fragments reusable",
+    "reused": 82,
+    "verified": true
+  },
+  {
+    "app": "chess",
+    "label": "deliberately damaged in-memory word detected by clean ELF oracle",
+    "reused": 82,
+    "verified": true
+  }
+]

@@ -15,7 +15,7 @@ globalThis.fragmentSession = function(prior) {
     function lookup(lex, fn, edges) {
         const old = priorRoot && Object.hasOwn(priorRoot,fn.name) && priorRoot[fn.name];
         reusable = null;
-        if (old && lex.source.startsWith(old.body,fn.bodyAt)) {
+        if (old && Array.isArray(old.words) && Array.isArray(old.calls) && lex.source.startsWith(old.body,fn.bodyAt)) {
             for (const edge of old.edges) edges.push(edge);
             reusable = next[fn.name] = old;
             reused++;
@@ -30,6 +30,7 @@ globalThis.fragmentSession = function(prior) {
     }
     function lower(fn, targets, build) {
         if (reusable) {
+            if (reusable !== next[fn.name]) throw Error("fragment emission order differs");
             const old = reusable;
             return {words:old.words.slice(), calls:old.calls.map(([from,index,offset,rd]) =>
                 ({from, target:index < 0 ? {at:offset} : targets[index], rd}))};

@@ -28,7 +28,8 @@ for name, prefix in [('stock',''),('candidate','candidate-')]:
     payloads[name]=b'\n'.join(chunks)+tail
 for app in ('editor','chess'):
     for ext in ('typed','elf'):payloads[app+'_'+ext]=(stage/(app+'.'+ext)).read_bytes()
-payloads['session']=(here/'02-fragments.js').read_bytes()+(here/'04-edits.js').read_bytes()+(here/'06-board.js').read_bytes()
+identity=__import__('hashlib').sha256((stage/'identity.json').read_bytes()).hexdigest()
+payloads['session']=('globalThis.fragmentBuildIdentity="'+identity+'";\n').encode()+(here/'02-fragments.js').read_bytes()+(here/'04-edits.js').read_bytes()+(here/'06-board.js').read_bytes()
 payloads['gold']=(stage/'gold.json').read_bytes()
 with (main/'payload.S').open('w') as f:
     for name,data in payloads.items():

@@ -31,17 +31,23 @@ globalThis.runTrial=function(app,source,buffer,stockCompile,gold) {
             const rawClean=compile('clean',source,null); verified(rawClean,'base');
             emit(JSON.stringify({app,key:'base',arm:'empty-cache',us:before.us,...before.stats}));
             emit(JSON.stringify({app,key:'base',arm:'clean',us:rawClean.us}));
-            let t=micros();
-            const expected=JSON.stringify(before.state);
+            const checkpointBegin=micros();
+            let t=checkpointBegin;
+            const owner=fragmentBuildIdentity+":"+app;
+            const expected=JSON.stringify({owner,state:before.state});
             const encodeUs=micros()-t;
             const timings=checkpoint(expected);
             t=micros();
-            const recovered=JSON.parse(timings[0]);
+            const packet=JSON.parse(timings[0]);
+            if(packet.owner!==owner)throw Error("foreign checkpoint identity");
+            const recovered=packet.state;
             const parseUs=micros()-t;
-            const child=compile('ram',edits.body,recovered);verified(child,'body');
+            const child=compile('ram',edits.body,recovered);
+            const checkpointToEditedElfUs=micros()-checkpointBegin;
+            verified(child,'body');
             if(!equal(child.bytes,clean.bytes))throw Error('restored byte mismatch');
             emit(JSON.stringify({app,key:'restore',bytes:expected.length,encodeUs,writeUs:timings[1],
-                readUs:timings[2],decodeUs:parseUs,childUs:child.us,...child.stats,persisted:timings[3]}));
+                readUs:timings[2],checkpointToEditedElfUs,decodeUs:parseUs,childUs:child.us,...child.stats,persisted:timings[3]}));
             let expectedError,actualError;
             try {compile('clean',edits.bad,null);} catch(e){expectedError=String(e);}
             try {compile('ram',edits.bad,before.state);} catch(e){actualError=String(e);}
