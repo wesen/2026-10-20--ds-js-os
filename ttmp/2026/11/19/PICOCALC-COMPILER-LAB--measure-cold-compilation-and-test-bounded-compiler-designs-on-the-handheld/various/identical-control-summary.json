@@ -1,0 +1,209 @@
+[
+  {
+    "boot": 1,
+    "lane": "replicate",
+    "app": "files",
+    "us": {
+      "base_median": 236168.0,
+      "candidate_median": 241261.0,
+      "difference": 5130.0,
+      "percent": 2.172391455345891,
+      "differences": [
+        5381,
+        5385,
+        4027,
+        4879
+      ]
+    },
+    "peak": {
+      "base_median": 362614.0,
+      "candidate_median": 362622.0,
+      "difference": 8.0,
+      "percent": 0.0022062027390678147,
+      "differences": [
+        8,
+        8,
+        -12,
+        24
+      ]
+    },
+    "words": {
+      "base_median": 804.0,
+      "candidate_median": 804.0,
+      "difference": 0.0,
+      "percent": 0.0,
+      "differences": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "base_median": 24424.0,
+      "candidate_median": 24424.0,
+      "difference": 0.0,
+      "percent": 0.0,
+      "differences": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "guest_cycles_per_call": {
+      "base_median": 6523.40234375,
+      "candidate_median": 6523.24609375,
+      "difference": 0.11328125,
+      "percent": 0.0017367890792903502,
+      "differences": [
+        -10.2734375,
+        -9.6015625,
+        0.5859375,
+        -10.1796875,
+        -0.5625,
+        9.390625,
+        9.8203125,
+        0.421875,
+        -9.4375,
+        -10.109375,
+        0.5703125,
+        10.1171875,
+        9.8984375,
+        -0.1953125,
+        -9.921875,
+        0.5625
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "lane": "replicate",
+    "app": "agenda",
+    "us": {
+      "base_median": 663160.0,
+      "candidate_median": 668551.5,
+      "difference": 5633.5,
+      "percent": 0.8540157424922599,
+      "differences": [
+        1808,
+        -1141,
+        10024,
+        9459
+      ]
+    },
+    "peak": {
+      "base_median": 578948.0,
+      "candidate_median": 578948.0,
+      "difference": 0.0,
+      "percent": 0.0,
+      "differences": [
+        12,
+        0,
+        0,
+        -24
+      ]
+    },
+    "words": {
+      "base_median": 4058.0,
+      "candidate_median": 4058.0,
+      "difference": 0.0,
+      "percent": 0.0,
+      "differences": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "base_median": 66364.0,
+      "candidate_median": 66364.0,
+      "difference": 0.0,
+      "percent": 0.0,
+      "differences": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "guest_cycles_per_call": {
+      "base_median": 723.265625,
+      "candidate_median": 723.4375,
+      "difference": 0.1484375,
+      "percent": 0.02052167139573608,
+      "differences": [
+        0.2109375,
+        -10.9375,
+        0.390625,
+        -10.4609375,
+        0.0546875,
+        10.1328125,
+        0.0703125,
+        10.484375,
+        0.0078125,
+        10.4140625,
+        0.0546875,
+        10.921875,
+        0.0,
+        10.828125,
+        0.0859375,
+        10.3125
+      ]
+    }
+  },
+  {
+    "boot": 1,
+    "lane": "replicate",
+    "app": "editor",
+    "us": {
+      "base_median": 2455132.5,
+      "candidate_median": 2456865.5,
+      "difference": 2163.5,
+      "percent": 0.08865719173652611,
+      "differences": [
+        -5155,
+        6824,
+        5948,
+        -1621
+      ]
+    },
+    "peak": {
+      "base_median": 1410918.0,
+      "candidate_median": 1410874.0,
+      "difference": -42.0,
+      "percent": -0.002976659343589722,
+      "differences": [
+        -96,
+        12,
+        -300,
+        336
+      ]
+    },
+    "words": {
+      "base_median": 21886.0,
+      "candidate_median": 21886.0,
+      "difference": 0.0,
+      "percent": 0.0,
+      "differences": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "bytes": {
+      "base_median": 240452.0,
+      "candidate_median": 240452.0,
+      "difference": 0.0,
+      "percent": 0.0,
+      "differences": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  }
+]

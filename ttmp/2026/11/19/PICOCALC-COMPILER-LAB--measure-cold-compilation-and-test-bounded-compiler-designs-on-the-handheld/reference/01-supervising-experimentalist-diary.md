@@ -177,3 +177,53 @@ Read `various/paired-review/protocol.md` and both response files. Run `python3 -
 ### Technical details
 
 The common prompt SHA-256 is `9df493f28046d84a73b7421cd1d107af8745c58a94b635d2052a9f7b1a2abe83`. We graded two estimates per app on three apps, with no score for subjective explanation quality.
+
+## Step 4: Resume the measured studies and serialize the board jobs
+
+When the lab goal resumed, none of its prior researcher sessions or host processes was running. The original control trial had completed its restore. I resumed all three operators from their checkpoints and scheduled the physical trials behind one serial owner.
+
+### Prompt Context
+
+**User prompt (verbatim):** “ok it's fine then. I gather they are running in the background?” **Assistant interpretation:** Give the actual status. The user separately reactivated the existing goal. **Inferred user intent:** Continue the research and maintain end-to-end ownership. See Step 1 for original scope.
+
+### What I did
+
+- Verified the original backup checksum, rebuilt the frozen JS lane oracles independently, and used a balanced two-boot frontend protocol with normal app wrappers and exact host ELF checks.
+- Reserved the next three jobs for scanner replication, native instruction selection, and held-out arithmetic policies. Started separate builds in disposable directories, with a serial runner that requires restoration before another flash.
+- Recorded the negative-control measurements in `various/identical-control.json`. Compared current staged data with examiner predictions committed before the holdout was evaluated.
+
+### Why
+
+The scanner has an instrumented image and an uninstrumented physical effect. Independent compilation in a separate firmware tree retests the latter. For native and bounded code, executable bytes change, so the common harness adds two guest-cycle checks and requires exact per-candidate host/device ELF identity.
+
+### What worked
+
+The byte-identical arms differed by 2.17% for Files cold time, 0.85% for Agenda and 0.09% for Editor on the negative-control boot. Guest medians differed by 0.002% and 0.021% for the Files and Agenda checks. The first frontend boot accepted all 48 physical compiles. Editor saved 289,823.5 microseconds but used 9,036 additional peak bytes.
+
+### What didn't work
+
+The previous session state could not be inferred from the goal flag. The agents had explicitly stopped at pause; the host had no matching research process. A stored design or binary alone cannot establish live work. No fresh device failure was observed at this checkpoint.
+
+### What I learned
+
+The two objectives for cold builds must be tested together. A reproducibly faster scanner can retain more peak compiler memory even when it emits identical code. Static instruction counts can be accurate to within a few instructions without establishing compiler time or the loaded world's measured footprint.
+
+### What was tricky to build
+
+The same serial port is used for firmware programming and interactive status. Each run validates the current partition map, saves measurements first, restores the original factory bytes, verifies all three native worlds, and hands the port back only then. Experiments under development on the host may proceed throughout.
+
+### What warrants a second pair of eyes
+
+Check measured differences against the negative control. Keep initial scanner results separate from the independent hardware replay, and use the actual smaller-slot reactor when evaluating how much memory the running app reclaims.
+
+### What should be done in the future
+
+Collect all independent measurements, start the fourth study when an initial one finishes, secure independent scientific review and publish the four articles and synthesis.
+
+### Code review instructions
+
+Follow `scripts/08-run-frontend-board.py` for the instrumented research image, `scripts/09-run-ready-trials.sh` for serial ownership, and `scripts/04-board.py` for shared app and guest comparisons. Each final receipt must be traceable to a fresh host build and observed device hash.
+
+### Technical details
+
+Both the generic negative-control firmware and the frontend-specific firmware use the same saved factory partition. Its SHA-256 begins `6b0e3ba4`. The frontend's separately staged firmware SHA-256 starts `07d98dee`.
