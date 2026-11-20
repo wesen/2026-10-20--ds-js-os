@@ -281,3 +281,53 @@ Read the append in `FunctionEmitter.loop` and run `scripts/01-check-functions-di
 ### Technical details
 
 Only the append method changed. Every emitted opcode and immediate stays in the same sequence.
+
+## Step 6: Keep the research tools usable with the continuation compiler
+
+Once Editor's source used async syntax, the standalone model and phase timing tools had to load the same compiler files as production. The tooling now uses the SDK descriptors exported by the loaded world wrapper, including awaitability. The phase runner retains a small table reader for the frozen E baseline, which predates that export.
+
+### Prompt Context
+
+See Step 1. The supervisor requested that the older instruction and timing scripts keep using the authoritative SDK declarations.
+
+### What I did
+
+- Loaded the continuation compiler in the instruction mix and staged register models.
+- Added optional continuation loading in the phase timer so both frozen E and current Editor work.
+- Verified that the instruction mix and historical model's actual image counter agree on all three applications.
+
+### Why
+
+Presence of an awaitable descriptor changes how a compiler may call the reactor. A script that copies only names, argument types and result types cannot compile async source using those imports.
+
+### What worked
+
+Both Node tools counted 22,292 then-current Editor instructions, 804 Files instructions, and 4,058 Agenda instructions. The QuickJS driver compiled the G3 working source to an 88,969-byte Wasm module. The frozen-driver recheck still produced the 88,255-byte stock Editor module for both E5 and its baseline.
+
+### What didn't work
+
+The first continuation-aware filter still removed the awaitable field while adding import indexes for the frontend-only phase. Spreading the descriptor before setting its index retained the field for that phase.
+
+### What I learned
+
+The measurement path is itself a caller of the frontend. The set of imports and the set of compiler scripts must agree with the application source it measures.
+
+### What was tricky to build
+
+The same C timer also boots old compiler snapshots. Those directories lack the async compiler by design.
+
+### What warrants a second pair of eyes
+
+Confirm that every production descriptor, including the three awaitable SDK operations, reaches both exact-count and model tooling.
+
+### What should be done in the future
+
+Run the historical timings against explicit revisions whenever comparing across separate changes.
+
+### Code review instructions
+
+Open the imports near the start of each model and the optional fourth compiler file in `04-compile-phase-timing.c`.
+
+### Technical details
+
+The E4 fixture still reports 19 versus 18 emitted instructions and equal register estimates of 11 and five after the tooling change.

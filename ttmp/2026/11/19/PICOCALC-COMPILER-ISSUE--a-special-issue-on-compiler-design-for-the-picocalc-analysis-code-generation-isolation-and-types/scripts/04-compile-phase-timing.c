@@ -69,6 +69,13 @@ int main(int argc, char **argv) {
   eval(ctx, path);
   snprintf(path, sizeof path, "%s/typed-rv32.js", argv[1]); eval(ctx, path);
   snprintf(path, sizeof path, "%s/typed-world.js", argv[1]); eval(ctx, path);
+  // The frozen E checkpoints precede the standalone continuation pass.
+  snprintf(path, sizeof path, "%s/typed-async.js", argv[1]);
+  FILE *async = fopen(path, "rb");
+  if (async) {
+    fclose(async);
+    eval(ctx, path);
+  }
   double t1 = JS_VALUE_GET_FLOAT64(js_now(ctx, JS_UNDEFINED, 0, NULL));
   JS_SetPropertyStr(ctx, global, "__loadMs", JS_NewFloat64(ctx, t1 - t0));
   JS_FreeValue(ctx, global);

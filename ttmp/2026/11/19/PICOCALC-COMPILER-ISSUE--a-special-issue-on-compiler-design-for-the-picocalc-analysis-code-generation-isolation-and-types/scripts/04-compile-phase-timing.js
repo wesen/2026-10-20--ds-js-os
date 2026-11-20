@@ -5,7 +5,6 @@
     // The compiler's own tokenizer pattern, taken from its source text so the two cannot drift.
     const tokenLine = /const TOKEN = (\/.*\/y);/.exec(worldSrc)[1];
     const TOKEN = eval(tokenLine);
-    const imports = [];   // filled from compileTypedWorld's own table below
     function median(xs) { const s = xs.slice().sort((a, b) => a - b); return s[s.length >> 1]; }
     function time(label, fn, runs) {
         fn();                                   // warm-up (QuickJS has no JIT; this fills caches only)
@@ -26,11 +25,15 @@
             at = TOKEN.lastIndex; tokens++;
         }
     }, runs));
-    const importRows = [];
+    const importRows = globalThis.typedWorld?.imports ?? [];
     const rowPattern = /\["(typedSdk\w+)", "([^"]*)", "(\w+)"(?:, true)?\]/g;
     let row;
-    while ((row = rowPattern.exec(__worldText))) importRows.push({name: row[1], params: row[2] ? row[2].split(",") : [], result: row[3]});
-    const imported = importRows.map((fn, index) => ({name: fn.name, params: fn.params, result: fn.result, index}));
+    if (!importRows.length) {
+        while ((row = rowPattern.exec(__worldText))) {
+            importRows.push({name: row[1], params: row[2] ? row[2].split(",") : [], result: row[3]});
+        }
+    }
+    const imported = importRows.map((fn, index) => ({...fn, index}));
     let functions = 0, rv32Bytes = 0;
     rows.push(time("frontend only: parse, check, emit Wasm function bodies", () => {
         functions = typedWasm.compileFunctions(source, importRows.length, imported, 96 * 1024).functions.length;
@@ -44,7 +47,7 @@
         const elfReactor = new Uint8Array(__elfReactor);
         rows.push(time("RV32 world: parse, check, emit, lower, link into ELF slot", () => { elfBytes = compileTypedWorldRv32(source, elfReactor).length; }, runs));
     }
-    __print("compiler load (evaluate three compiler files): " + __loadMs.toFixed(2) + " ms");
+    __print("compiler load (evaluate compiler files): " + __loadMs.toFixed(2) + " ms");
     __print("source: " + source.length + " UTF-16 units, " + tokens + " tokens; Wasm module " + wasmBytes + " bytes; RV32 ELF " + elfBytes + " bytes");
     for (const [label, med, lo, hi] of rows) __print(label + ": median " + med.toFixed(2) + " ms (min " + lo.toFixed(2) + ", max " + hi.toFixed(2) + ", " + runs + " runs)");
     __print("heap in use after runs: " + __memory() + " bytes");

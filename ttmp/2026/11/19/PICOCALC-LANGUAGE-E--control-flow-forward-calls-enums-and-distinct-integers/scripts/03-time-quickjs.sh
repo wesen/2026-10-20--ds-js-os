@@ -19,6 +19,10 @@ for rev in "$@"; do
     for file in typed-wasm.js typed-rv32.js typed-world.js; do
         git show "$rev:$os/compiler/$file" > "$work/$rev/$file"
     done
+    tracked_async=$(git ls-tree "$rev" -- "$os/compiler/typed-async.js")
+    if [ -n "$tracked_async" ]; then
+        git show "$rev:$os/compiler/typed-async.js" > "$work/$rev/typed-async.js"
+    fi
 done
 printf 'CPU\n'
 lscpu | awk '/^Architecture:|^Model name:/'

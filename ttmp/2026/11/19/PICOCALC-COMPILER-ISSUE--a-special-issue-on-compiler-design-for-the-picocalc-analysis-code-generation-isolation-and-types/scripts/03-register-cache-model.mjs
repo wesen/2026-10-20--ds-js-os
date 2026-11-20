@@ -15,11 +15,11 @@ import {readFileSync} from 'node:fs';
 import {join, resolve} from 'node:path';
 import '../../../../../../picocalc-os/compiler/typed-wasm.js';
 import '../../../../../../picocalc-os/compiler/typed-rv32.js';
+import '../../../../../../picocalc-os/compiler/typed-async.js';
+import '../../../../../../picocalc-os/compiler/typed-world.js';
 
 const os = resolve('picocalc-os');
-const worldJs = readFileSync(join(os, 'compiler/typed-world.js'), 'utf8');
-const importRows = [...worldJs.matchAll(/\["(typedSdk\w+)", "([^"]*)", "(\w+)"(?:, true)?\]/g)]
-    .map(([, name, params, result]) => ({name, params: params ? params.split(',') : [], result}));
+const importRows = typedWorld.imports;
 const sourceOf = (dir, list) => list.map(name => readFileSync(join(os, 'worlds', dir, name), 'utf8') + '\n').join('');
 const editorList = readFileSync(join(os, 'worlds/editor/source.list'), 'utf8').trim().split('\n');
 const apps = {
