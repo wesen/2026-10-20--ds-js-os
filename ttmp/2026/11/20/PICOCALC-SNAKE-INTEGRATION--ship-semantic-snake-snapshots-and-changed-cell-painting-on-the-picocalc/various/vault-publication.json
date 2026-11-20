@@ -1,0 +1,13 @@
+{
+  "repository": "go-go-golems/go-go-parc",
+  "branch": "main",
+  "remoteVerifiedCommit": "42b00f57771a778a0d568120fc31743c1a6afb0d",
+  "filesSha256": {
+    "Projects/2026/11/20/_assets/snake-integration-panels.png": "7a1a499d3dda54745c328623321614fafd9903fd4a8475f2bc40a48f3649c509",
+    "Projects/2026/11/20/_assets/snake-physical-stage-times.png": "826feaf17dce039c028015b0581af19b43cadcc634a6bb6a08a77b0e2ced9f59",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Snake - Drawing a moving Snake on the PicoCalc.md": "65757e28cf70f77432328c68deb029eba308ec282987021a531a8e1a37b8ac26",
+    "Projects/2026/11/20/_assets/snake-autopilot-device.png": "d2fadca90a604c6ab7bad1810467f65ac0e0e3122d4b9eb923f7ed14fbf55d8b",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Snake - What the PicoCalc does for each Snake movement.md": "743825eb04c228399f1cf87da5b56d7066490992b4066a67ab40dc4a9f23737a",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Snake - How to tell whether a moving Snake reached the screen.md": "84b2a7cd6d7e1dddc748af0ecfbc772e9d9f4090fe9ed3f903a804411f0f8d4c"
+  }
+}

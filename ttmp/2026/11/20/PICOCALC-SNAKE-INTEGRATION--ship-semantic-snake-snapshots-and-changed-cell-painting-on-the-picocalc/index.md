@@ -35,3 +35,11 @@ The native and JS Snake producers now publish game positions, and the compositor
 4. [Independent correctness study](analysis/03-snake-rendering-correctness.md) uses exact pixels, malformed positions, and simulated display failures.
 
 The [director diary](reference/01-director-implementation-and-integration-diary.md), [board diary](reference/02-device-diary.md) and [replay diary](reference/03-replay-diary.md) record the research and implementation chronologically. See the [reproduction guide](README.md) and [tasks](tasks.md).
+
+## Deployment and publications
+
+The ESP32-P4 is running the ordinary image `c3d5d8ede739`. Flash and all eight native worlds were verified. In the matched hardware study, draw dispatch fell 58.2% and bytes per published frame fell 64.2%. Five physical application crops matched. A full power cycle is still needed for final physical keypad acceptance because the STM32 stopped acknowledging I²C reads. [Final installation](various/device/production-installed.json) · [Open task](tasks.md)
+
+The three articles, including the board and independent correctness studies, are [published together in go-go-parc](https://github.com/go-go-golems/go-go-parc/commit/42b00f57771a778a0d568120fc31743c1a6afb0d). The [publication manifest](various/vault-publication.json) records the digest of every article and figure.
+
+The [reMarkable packet](various/remarkable-publication.txt) contains the guide followed by all three reports.

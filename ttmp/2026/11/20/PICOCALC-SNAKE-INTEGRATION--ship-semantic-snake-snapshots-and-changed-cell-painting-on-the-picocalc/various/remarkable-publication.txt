@@ -1,0 +1,3 @@
+OK: uploaded PicoCalc Snake Rendering in Production.pdf
+Destination: /ai/2026/11/20/PICOCALC-SNAKE-INTEGRATION
+Contents: intern guide, director synthesis, hardware study, independent correctness study.

@@ -222,3 +222,99 @@ Inspect scripts/05-world-footprint.py and various/world-footprint.json, and comp
 ### Technical details
 
 ELF and compressed sizes are byte counts from the actual artifacts. Neither number is a PSRAM high-water measurement. Commit 4273e68 added the reproduction notes, simulator figure and roadmap link. Commit e4738db renamed the researcher's two raw provider transcripts to .txt to preserve their exact hashes while allowing docmgr to validate all governed Markdown.
+
+## Step 5: Compare repeated native gameplay and reconcile CPU cost with SPI time
+
+The board operator completed six baseline and six candidate windows on the same ESP32-P4. I recalculated the event rates from all twelve observations and rendered the block-by-block duration figure. The independently generated summary matched the operator's ticket copy byte for byte.
+
+### Prompt Context
+
+See Step 1. This step supplies the director's synthesis after the independent host and board research results were available.
+
+### What I did
+
+I calculated each block's average by dividing its measured microseconds by its event count before taking the median. I ran scripts/device/05-summarize.py against the two physical receipts, compared its output with various/device/profile-summary.json and plotted the twelve sets of observations using scripts/06-plot-game-timings.py. I inspected the chart and the candidate's actual autopilot framebuffer, which showed score 10 and length 5. The benchmark and the five screen comparisons are separate phases of the same study.
+
+### Why
+
+A comparison between a synthetic QuickJS encoding trial and a native game draw could not establish that integration delivered its predicted gain. The new experiment uses the same timing boundaries in both production code paths. Its windows include ordinary focus, input, scheduling, and display traffic. The test condition and observation method still matter when estimating what a user will see.
+
+### What worked
+
+The median block mean for compositor draw fell by 58.2%. Sender-envelope bytes per post fell by 64.2%. Snake and compositor scheduler CPU totals fell by 19.9% and 48.9% across windows of similar duration. Both physical images reproduced identical application crops across five named states. In the candidate observer build, opening the System Worlds tab and going home also succeeded.
+
+### What didn't work
+
+The STM32 stopped acknowledging normal keyboard register reads after repeated board resets. UART key commands alone could not deliver a key in that condition. Both isolated timing images supplied the keyboard status in memory while preserving native keyboard event publication, normal focus handling and the real SPI path. I did not use the earlier ordinary keyboard preflight as the baseline for performance ratios.
+
+### What I learned
+
+A 58.2% reduction in average draw-segment time and a 5.0% increase in display-flush-turn elapsed time coexist. The old display path already compared the framebuffer and sent only changed rectangles. The new drawing changes dramatically reduce producer and receiver CPU even though the median number of physical SPI transactions stays at 198 per window.
+
+### What was tricky to build
+
+Draw dispatch, the game timer, screen construction and serialization have overlapping boundaries. Display elapsed time includes waits, while scheduler CPU only charges work on the lane. The article keeps those series separate and shows every block mean. A hardware crop excludes the clock and battery strip that cannot be fixed across runs.
+
+### What warrants a second pair of eyes
+
+The six windows were collected sequentially per arm. Autopilot ran in real time, so the number of moves and growth events could vary. The display received real SPI transfers and the captures were taken from the committed RGB565 image. Key-to-glass latency, physical switch bounce and optical response remain unmeasured.
+
+### What should be done in the future
+
+If optical responsiveness becomes a user-visible problem, use a physical input edge, a visible state-change marker, and a display sensor on a common timebase. A functional acceptance run after a full keypad-controller power cycle would separately qualify the physical keys on the installed image.
+
+### Code review instructions
+
+Start with various/device/profile-summary.json. For each metric, compare the block counts and denominators in profile-before.json and profile-after.json. Read the board operator's article and diary for observation boundaries, the substitute keyboard status and the normal firmware identity. See commit 4251dd0 for the director's physical comparison.
+
+### Technical details
+
+Time per event and scheduler time per window answer different questions. The storage comparison is for the ordinary images and the native timing comparison is for observer images. The research method was commissioned with two independent Opus High requests. Local Sol/Astra operators collected private evidence and integrated it with the researchers' methods.
+
+## Step 6: Verify the installed release and publish the three studies
+
+The operator installed the ordinary candidate and independently verified both the application and its partition map in flash. The renderer research and publication are complete. Physical-key gameplay on that release remains the one open acceptance task.
+
+### Prompt Context
+
+See Step 1 for the requested research team, independent reports, director synthesis and publication to go-go-parc.
+
+### What I did
+
+I checked the final flash and native boot receipt, added the product boundary to the director article, and published the two researchers' reports and the director's synthesis as three linked notes. The publisher copied three figures and read each file back by Git object name after checking the remote main branch. A separate delivery worker uploaded the four-document reading packet to reMarkable.
+
+### Why
+
+A research image can contain timing hooks and a substitute input source. The ordinary release must have its own identity and boot evidence. Publishing immutable measurements, exact source references and the known physical-key limitation preserves enough context for an intern to reproduce the result.
+
+### What worked
+
+The installed normal firmware and partition passed esptool verification. Eight native worlds booted, all with empty last errors. The go-go-parc commit 42b00f57771a778a0d568120fc31743c1a6afb0d was verified on origin/main. The reMarkable cloud receipt was “OK: uploaded PicoCalc Snake Rendering in Production.pdf”. Scoped docmgr doctor passed with warnings treated as errors. All ticket Markdown relative links resolved.
+
+### What didn't work
+
+The final ordinary-image controller sample had 188 I²C errors in 188 attempts. Its SPI driver completed 66 transfers without an error. Normal-image physical-key acceptance remains open as task 3scp. Both researchers completed abstract Opus High work; private result-bearing follow-up via the provider was held by automatic approval review. The independent local operators authored and verified the measured sections, and no new external authorization was assumed.
+
+### What I learned
+
+The clean installation, the protected input-path workaround and the shipping renderer performance can all be verified separately. A report can distinguish them even when only one physical peripheral remains unavailable.
+
+### What was tricky to build
+
+The figures and articles live in two repositories. The vault publisher resolves source references to concrete project paths, copies figures into the vault's dated asset directory, rewrites the companion article links and compares the committed bytes to its manifest.
+
+### What warrants a second pair of eyes
+
+Use the final normal-image receipt to verify the firmware being tested after power cycling. The screenshot of the score-10 game is a hardware framebuffer capture from the observer build. The three-panel montage comes from a separately qualified system simulator.
+
+### What should be done in the future
+
+Exercise the native game on the installed ordinary image after the entire PicoCalc is powered down and back up. The ticket holds that acceptance check open.
+
+### Code review instructions
+
+Review the board/operator contribution in a0869dc and the independence of the host replay in 2c59e7b. See various/vault-publication.json and various/remarkable-publication.txt for both deliveries.
+
+### Technical details
+
+The installed app digest is c3d5d8ede739f5d4d21ad2b4981fbfd839cf20e2ab2a644ba1d330e6374446e3. The partition digest is 72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30. The board remained on the latest ordinary image. Project integration and research commits are local on main; the separately requested go-go-parc publication was pushed.
