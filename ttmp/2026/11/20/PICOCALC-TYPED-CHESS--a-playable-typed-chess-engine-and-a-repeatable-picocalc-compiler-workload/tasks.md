@@ -6,5 +6,5 @@
 - [x] Qualify independent rules, tactics and linked events on Wasm and RV32 <!-- t:dvy9 -->
 - [x] Measure cold host compilation and separate runtime events <!-- t:al42 -->
 - [x] Build and stage the physical replay under the shared board lock <!-- t:nef2 -->
-- [ ] Record the physical run and verified factory restoration <!-- t:jl2f -->
+- [x] Record the physical run and verified factory restoration <!-- t:jl2f -->
 - [ ] Publish the article and deliver the reMarkable bundle <!-- t:kqkm -->

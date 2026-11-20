@@ -1,0 +1,6 @@
+chess compile source=bundle status=ok us=1896356 peak_js_bytes=1298116 module_bytes=240452
+chess compile source=bundle status=ok us=1897746 peak_js_bytes=1298116 module_bytes=240452
+CHESSARM e2e4
+CHESSRUN e2e4 b8c6 3 1600 12 3147 472922 258777 250684 7990 79 78
+[p4cap] shot 1: /tmp/picocalc-chess-physical-retry/shot-1.png (crc ok)
+Hash of data verified.

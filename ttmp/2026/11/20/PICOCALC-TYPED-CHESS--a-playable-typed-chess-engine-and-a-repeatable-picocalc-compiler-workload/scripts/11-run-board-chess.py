@@ -119,8 +119,8 @@ def main():
             raise ValueError(f"Chess did not start on {engine}: {chess}")
         receipt["worldBeforePlay"] = {k: chess[k] for k in ("engine", "file", "last_error")}
         save()
-        play = capture("play", 10, ["0.3 key h", "1.5 key enter", "2.1 key up", "2.7 key up",
-                                    "3.3 chessarm", "3.7 key enter"])
+        play = capture("play", 10, ["0.3 key f1", "1.1 key h", "2.3 key enter", "2.9 key up",
+                                    "3.5 key up", "4.1 chessarm", "4.5 key enter"])
         receipt["move"] = chess_record(play)
         save()
         # UART screenshots start after the clock and counter windows have stopped.

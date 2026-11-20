@@ -1,0 +1,60 @@
+{
+  "build": {
+    "target": "rv32",
+    "sourceBytes": 40767,
+    "sourceSha256": "871c60f88cd8365e263f057cd68e07a22fb283dea6a53602cb9365994514fff3",
+    "firmwareSha256": "6b2acb8523eeb874ce94a7f1da33380571c08e2d73f27cf67d57be3ea619e707",
+    "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+    "compilerSha256": {
+      "typed-wasm.js": "b8b607f0539e42f76909edc9621cdb21c115c24cb8a0fc672c98922d00dbcea4",
+      "typed-async.js": "2e3dd185ef667065702d9882e528fce0e84240d73387972a0384f1c6a7650bfb",
+      "typed-world.js": "cea8f10247351416a3616fa83e16ff664730c2c3fc2c3de73207eb5ab07f3a43",
+      "typed-rv32.js": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5"
+    }
+  },
+  "backupSha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "restored": true,
+  "compile": {
+    "wall_us": 1897746,
+    "peak_js_bytes": 1298116,
+    "module_bytes": 240452
+  },
+  "worldBeforePlay": {
+    "engine": "native",
+    "file": "chess/compiled.bin",
+    "last_error": ""
+  },
+  "move": {
+    "depth": 3,
+    "nodes": 1600,
+    "score": 12,
+    "white_frame_us": 3147,
+    "reply_wall_us": 472922,
+    "world_cpu_us": 258777,
+    "engine_us": 250684,
+    "kernel_render_us": 7990,
+    "segments": 79,
+    "settlements": 78,
+    "after_white_frame_us": 469775,
+    "white": "e2e4",
+    "black": "b8c6"
+  },
+  "replyPngSha256": "cf28ae004e436c997b8311a758fa5f63fb0558373fd534315716a35e96da445b",
+  "worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    }
+  }
+}

@@ -82,3 +82,27 @@ The hot application clock starts when the compiled Wasm reactor enters an event.
 The RV32 artifact includes the fixed executable slot and common reactor, so its file length is larger than the instructions Chess emits. The Node event medians for Wasm are 0.41 ms for the first board frame, 0.17 ms for the move and thinking frame, 5.30 ms across the 77 search-only wakes, and 0.09 ms for the final wake including the reply frame. The 78th wake includes the final move and frame build. An earlier host run during other firmware work measured 30.74 ms for Wasm and 41.05 ms for RV32 with the same compiler scripts. These are observations of the host in those sessions, with clock and system-load differences uncharacterized. The board measures its own scheduler and engine.
 
 See the raw [host timing distributions](../various/host-measurements.json) and the [physical replay preparation and command](../reference/03-reproduce-chess.md).
+
+## One opening exchange on the physical PicoCalc
+
+The physical ESP32-P4 ran the streamed native RV32 linker and Chess module. The keyboard replay opened the launcher, selected Chess, picked the e2 pawn and sent Enter on e4. The staged observer recorded the committed white move and the retained engine reply frame during a single exchange.
+
+| Physical RV32 boundary or counter | Observed value |
+| --- | ---: |
+| Bundled source and reactor to copied linked module, including QuickJS setup and teardown | 1,897.746 ms |
+| Peak QuickJS allocation for compilation | 1,298,116 bytes |
+| Linked module | 240,452 bytes |
+| Chess receives Enter to retained e2–e4 frame | 3.147 ms |
+| Chess receives Enter to retained b8–c6 frame | 472.922 ms |
+| Retained white frame to retained reply frame | 469.775 ms |
+| Chess CPU across all measured segments | 258.777 ms |
+| Engine work within that CPU, including app frame construction | 250.684 ms |
+| Kernel frame handling within that CPU | 7.990 ms |
+| Chess segments / timer settlements | 79 / 78 |
+| Completed depth / visits / Black evaluation | 3 / 1,600 / +12 centipawns |
+
+The reply clock includes about 214 ms of elapsed time outside the measured Chess segments. That residual covers the interval outside app CPU without attributing it to individual worlds or display transfers. The game commits the human move in one Chess segment. The subsequent 78 timer settlements perform the reply work. The hardware result covers RV32 and ends at the retained frame, before physical panel presentation. Both targets pass the linked host replay. The reproduction guide gives the build command for a later Wasm device comparison.
+
+![The physical RV32 Chess world after e2–e4 and b8–c6](../various/chess-physical-reply.png)
+
+The first attempt observed two successful native compiles around 1.897 seconds, then stopped because its UART world-list capture ended mid-JSON. The retry separated the world-list and screenshot traffic from boot and gameplay. The operator flashed the original app partition at the end and verified its digest and world catalog. [Physical receipt](../various/physical-rv32.json) · [First attempt](../various/physical-first-attempt.json)

@@ -53,6 +53,7 @@ def evidence():
     engine = load("engine-oracle.json")
     host = load("host-measurements.json")
     world = load("world-oracle.json")
+    first_capture = load("physical-first-attempt.json")
     assert host["compile"]["rv32"]["artifact"]["sourceSha256"] == physical["build"]["sourceSha256"]
     assert host["compile"]["rv32"]["artifact"]["moduleBytes"] == physical["compile"]["module_bytes"]
     positions = ("opening", "kiwipete", "castling-through-attack", "en-passant-pinned",
@@ -71,6 +72,8 @@ def evidence():
                                    for key, result in host["compile"].items()},
                  "firstMove": host["firstMove"]["statistics"], "samplesPerTarget": 9},
         "physical": {k: physical[k] for k in ("compile", "move", "restored")},
+        "firstPhysicalCapture": {k: first_capture[k] for k in
+                                 ("successfulCompiles", "worldListFailure", "playStarted", "restored")},
     }
 
 

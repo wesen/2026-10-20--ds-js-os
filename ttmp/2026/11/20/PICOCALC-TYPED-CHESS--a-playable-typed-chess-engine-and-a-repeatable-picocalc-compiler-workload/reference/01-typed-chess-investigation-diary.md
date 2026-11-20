@@ -328,3 +328,54 @@ Read complete_world_list and query_worlds in the board runner. Compare the bad r
 ### Technical details
 
 The last compile stamp before the failed world-list read was 1,897,129 µs. The retry keeps compile setup and teardown in the same source-to-module clock. Its Enter-to-reply measurement ends before requesting the UART screenshot.
+
+## Step 7: Measure the opening exchange on the ESP32-P4 and restore the factory app
+
+The second physical run used the same native observer image after separating boot, world inventory, play and screenshot capture. The game exactly matched the linked host trace and the subsequent restoration passed.
+
+### Prompt Context
+
+See Steps 1, 3 and 6. The supervisor asked to report the native-only physical scope, exact clocks, move, score, completed depth, nodes and restored original.
+
+### What I did
+
+- Waited for both reserved Editor campaigns to release the shared serial lock and ran the revised physical command from the reproduction guide with output under /tmp/picocalc-chess-physical-retry.
+- Captured a complete settled world list, opened the launcher via F1, selected Chess via H, committed e2e4, and saved the one observer report after the reply.
+- Verified the CRC screenshot, the factory reflash hash and the restored world list before freezing the physical receipt.
+- Commissioned a fresh Claude Opus 4.6 High interpretation using the original design, independent legal fixtures, host counters, early capture failure and restored physical results.
+
+### Why
+
+The hardware run shows that the ordinary native world can compile, play and return its frame on the actual board. The observer preserves elapsed and CPU clocks independently because they answer different questions. UART screenshot and factory restoration occur after the measured reply.
+
+### What worked
+
+Native compilation measured 1,897,746 µs with 1,298,116 bytes of peak QuickJS heap and 240,452 linked module bytes. The reply was b8c6, score +12, completed depth 3, and 1,600 visits. There were 79 Chess segments including 78 timer settlements. Enter-to-white-frame elapsed time was 3,147 µs. Enter-to-reply reached 472,922 µs. Chess CPU was 258,777 µs, including 250,684 µs of engine work and 7,990 µs of kernel rendering. The screenshot passed CRC and showed the reply. The reflash reported hash verification and the restored factory catalog had native Files, Editor and Agenda without errors. [Physical receipt](../various/physical-rv32.json) · [Exact serial markers](../various/physical-rv32-clock.txt)
+
+### What didn't work
+
+No retry failure remained. The earlier boot-catalog truncation is retained in Step 6. The physical characterization consists of one completed RV32 exchange.
+
+### What I learned
+
+The elapsed time remaining after subtracting app CPU was 214,145 µs. The observation attributes it to time outside measured Chess segments. It does not identify individual scheduler or display contributions.
+
+### What was tricky to build
+
+The first Chess segment starts when the actual Enter reaches the world. Capturing a reply after rendering its JSON is a different boundary from the first physical pixel change. An observer next to the kernel segment accounting can verify both application boundaries without printing while the search is running.
+
+### What warrants a second pair of eyes
+
+Check that the host and device digests in physical-rv32.json and host-measurements.json identify the same app source and reactor. Cross-check the exact observer fields with the replay's output and the article's millisecond conversion.
+
+### What should be done in the future
+
+A qualified physical Wasm comparison can use the optional Wasm build lane and the same e2e4 event and observer. The committed numbers are native RV32 device measurements alongside both targets' host evidence.
+
+### Code review instructions
+
+Read the capture and restoration path in scripts/11-run-board-chess.py, then the observer's before/after hooks in scripts/09-chess-observer.inc. The world source contains gameplay and app rendering. The hooks belong only to the isolated measurement build.
+
+### Technical details
+
+Restoration verified 8,388,608 bytes of the original app partition. The confirmed screenshot SHA-256 is **cf28ae004e436c997b8311a758fa5f63fb0558373fd534315716a35e96da445b**. The final raw records and all digests are preserved in the ticket.

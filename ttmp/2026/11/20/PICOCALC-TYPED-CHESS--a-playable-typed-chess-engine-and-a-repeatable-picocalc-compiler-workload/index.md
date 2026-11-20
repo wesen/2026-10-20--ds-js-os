@@ -37,11 +37,12 @@ Typed Chess is a launcher app and a fourth PicoCalc compiler workload. The engin
 - [Independent Opus High design receipt](./various/opus-search-design.json)
 - [Engine and world qualification](./various/engine-oracle.json) · [Linked world transcript](./various/world-oracle.json)
 - [Host performance](./various/host-measurements.json) · [Reproduction guide](./reference/03-reproduce-chess.md)
+- [Physical RV32 run and restoration](./various/physical-rv32.json) · [Serial timing records](./various/physical-rv32-clock.txt)
 - [Implementation diary](./reference/01-typed-chess-investigation-diary.md) · [Supervisor diary](./reference/02-supervisor-experiment-diary.md)
 
 ## Status
 
-The host gates passed. The isolated RV32 measurement image passed partition preflight and is queued for physical replay.
+The host gates passed on both targets, and the physical RV32 game matched the host reply, score, depth and visit count. The operator verified the factory restoration.
 
 ## Topics
 
