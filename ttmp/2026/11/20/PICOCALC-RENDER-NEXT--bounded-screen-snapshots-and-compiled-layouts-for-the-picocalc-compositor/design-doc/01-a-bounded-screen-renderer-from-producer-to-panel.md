@@ -396,7 +396,7 @@ From the repository root, follow one Worlds update in this order. The source ref
 | `picocalc-os/js/apps/sysmon.js` | `worldsTab`, `tableWindow`, `lineGraph` | Static headers, windowed rows and graph encoding |
 | `picocalc-os/worlds/editor/document-view.typed`, `picocalc-os/sdk/typed/world.c` | `editorDocumentFrame`, `typedSdkScreen` | The typed producer constructs and submits its own serialized view |
 | `picocalc-os/nucleus/kernel.c` | `eng_render` call site, `frame_message`, `kernel_publish`, `replay_retained` | Order of comparison, replacement, fan-out and replay |
-| [CJI receiver source](../../../17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/world-native.js) | `$message`, `$decode`, `$wire` | The allocations incurred before an ordinary frame handler |
+| [CJI receiver source](../../../../../../cji/src/world-native.js) | `$message`, `$decode`, `$wire` | The allocations incurred before an ordinary frame handler |
 | `picocalc-os/js/system/compositor.js` | `frames`, `dirty`, `measure`, `stack`, `paint`, `draw` | Receipt and drawing occur on different events |
 | `picocalc-os/nucleus/hw.c`, `picocalc-os/nucleus/gfx.c` | `dmabuf_alloc`, `gfx_commit`, `gfx_invalidate` | Framebuffer ownership, changed-band comparison and recovery |
 | `picocalc-os/js/drivers/display.js` | `attach`, `flush` | Panel ownership, skipped transfers and settled SPI jobs |

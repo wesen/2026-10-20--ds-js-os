@@ -15,8 +15,7 @@ Set `reactors` to the built firmware application reactor directory, usually the 
 
 ```sh
 previous=$(find ttmp/2026/11/19 -maxdepth 1 -name 'PICOCALC-BOUNDED-FACTS--*')
-cji=$(find ttmp/2026/11/17 -maxdepth 1 -name 'PICOCALC-CJI--*')/sources/cji
-cc -O2 "$cji/tools/rv32/emu.c" -lm -o "$work/rv32emu"
+cc -O2 cji/tools/rv32/emu.c -lm -o "$work/rv32emu"
 node "$ticket/scripts/05-guest-fixtures.mjs" "$work/overlay" "$previous/scripts/04-arithmetic.typed" "$work/guests"
 python3 -B "$ticket/scripts/06-run-guests.py" "$riscv_gcc" "$work/rv32emu" "$work/guests"
 python3 -B "$ticket/scripts/07-figure.py" "$ticket/various/held-out.json.gz" "$work/figure.png"

@@ -4,7 +4,7 @@ set -euo pipefail
 compiler=$(realpath "${1:?stage1 executable or source cji.js}")
 out=$(realpath -m "${2:?scratch output directory}")
 shift 2
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 link=$(realpath picocalc-os/port/esp32p4/build-elf/cji)
 mkdir -p "$out"
 if [[ $compiler == *.js ]]; then

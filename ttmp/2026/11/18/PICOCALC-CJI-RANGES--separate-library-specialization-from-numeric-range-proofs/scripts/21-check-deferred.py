@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("candidate", type=Path)
 args = parser.parse_args()
 root = Path("picocalc-os/js")
-control = next(Path("ttmp/2026/11/17").glob("*--cji-workspace*/sources/cji"))
+control = Path("cji")
 failed = False
 for world in json.loads((root / "system.json").read_text())["worlds"]:
     runs = []

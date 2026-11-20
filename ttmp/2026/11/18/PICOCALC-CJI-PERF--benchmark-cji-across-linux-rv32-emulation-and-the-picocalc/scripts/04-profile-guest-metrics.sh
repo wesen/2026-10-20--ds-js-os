@@ -3,7 +3,7 @@
 set -euo pipefail
 out=$(realpath "$1")
 shift
-cji=$(realpath ttmp/2026/11/17/PICOCALC-CJI--*/sources/cji)
+cji=$(realpath cji)
 b="$cji/build/rv32"
 linker=$(command -v ld.lld || true)
 if [[ -z $linker ]]; then linker="$(rustc --print target-libdir)/../bin/gcc-ld/ld.lld"; fi

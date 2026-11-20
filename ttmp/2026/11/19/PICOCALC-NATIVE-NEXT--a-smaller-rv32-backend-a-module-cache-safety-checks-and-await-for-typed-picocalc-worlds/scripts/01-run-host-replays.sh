@@ -3,7 +3,7 @@
 # These 24 checks are the "existing cross-target replays" that every task of PICOCALC-NATIVE-NEXT must keep passing.
 # usage: 01-run-host-replays.sh P4_GCC RV32EMU
 #   P4_GCC   riscv32-esp-elf-gcc of the ESP-IDF toolchain
-#   RV32EMU  build/rv32/rv32emu of the CJI tree under ttmp/2026/11/17/PICOCALC-CJI--*/sources/cji
+#   RV32EMU  build/rv32/rv32emu of the CJI tree under cji
 # Exit status is the number of failed checks.
 set -uo pipefail
 if (( $# != 2 )); then sed -n 2,7p "$0" >&2; exit 2; fi

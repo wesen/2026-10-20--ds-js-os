@@ -17,7 +17,7 @@ fixture = Path(__file__).with_name("bench.world.js")
 agenda = Path("picocalc-os/js/apps/agenda.js").read_text()
 for pattern in [r"const AG_LINE = .*?;", r"function agToggled\(line\) \{.*?\n\}"]:
     assert re.search(pattern, agenda, re.S)[0] == re.search(pattern, fixture.read_text(), re.S)[0]
-cji = next(Path("ttmp/2026/11/17").glob("*--cji-workspace*/sources/cji"))
+cji = Path("cji")
 rv32 = cji / "build/rv32"
 
 

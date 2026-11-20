@@ -14,13 +14,13 @@ RelatedFiles:
       Note: Physical frontend and assembler boundaries
     - Path: repo://picocalc-os/port/esp32p4/main/perf_p4.c
       Note: Hardware cache instrumentation
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/runtime/aot_main.c
+    - Path: repo://cji/runtime/aot_main.c
       Note: Host AOT measurement driver
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/runtime/runtime.c
+    - Path: repo://cji/runtime/runtime.c
       Note: Collector metrics and relocation semantics
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/tools/rv32/emu.c
+    - Path: repo://cji/tools/rv32/emu.c
       Note: Guest instruction profiler
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/tools/rv32/fw/stage1_main.c
+    - Path: repo://cji/tools/rv32/fw/stage1_main.c
       Note: Guest timing boundary
 ExternalSources: []
 Summary: An intern guide to measuring CJI work and timing across Linux, RV32 and ESP32-P4.
@@ -91,7 +91,7 @@ The snippets use Bash from the repository root. Work products go in a new tempor
 ```bash
 set -eu
 ROOT=$PWD
-CJI=$(realpath ttmp/2026/11/17/PICOCALC-CJI--*/sources/cji)
+CJI=$(realpath cji)
 OUT=$(mktemp -d)
 make -C "$CJI" slas build/rv32/stage1/stage1.slir
 IR="$CJI/build/rv32/stage1/stage1.slir"

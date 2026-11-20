@@ -96,7 +96,7 @@ Commands in all documents assume these shell variables, set from the repository 
 ```sh
 GCC=~/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc
 OBJDUMP=${GCC%gcc}objdump
-EMU=$(realpath ttmp/2026/11/17/PICOCALC-CJI--*/sources/cji)/build/rv32/rv32emu
+EMU=$(realpath cji)/build/rv32/rv32emu
 ISSUE=$(ls -d ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--*)
 NEXT=$(ls -d ttmp/2026/11/19/PICOCALC-NATIVE-NEXT--*)
 ```

@@ -4,7 +4,7 @@ set -euo pipefail
 out=$(realpath "$1")
 candidate=$2
 scripts=$(realpath "$(dirname "$0")")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 target="$out/$candidate"
 mkdir -p "$target"
 node --max-old-space-size=6000 --stack-size=4000 "$scripts/14-build-candidate.mjs" "$cji" "$candidate" > "$target/stage1.slir"

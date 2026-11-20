@@ -3,8 +3,7 @@
 set -euo pipefail
 out=$(realpath -m "${1:?output directory}")
 scripts=$(realpath "$(dirname "$0")")
-sources=(ttmp/2026/11/17/*--cji-workspace*/sources/cji)
-cji=$(realpath "${sources[0]}")
+cji=$(realpath cji)
 mkdir -p "$out"
 work=$(mktemp -d "$out/source-XXXXXX")
 cp -r "$cji/src" "$cji/package.json" "$cji/cji.js" "$work/"

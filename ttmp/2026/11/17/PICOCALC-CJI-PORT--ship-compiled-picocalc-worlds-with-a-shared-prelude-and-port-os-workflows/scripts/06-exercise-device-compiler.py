@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--port", default="/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00")
 args = parser.parse_args()
 scripts = Path(__file__).resolve().parent
-source_dir = next(Path("ttmp/2026/11/17").glob("PICOCALC-CJI--*/sources/cji"))
+source_dir = Path("cji")
 original = (source_dir / "tests/native/toplog.world.js").read_bytes()
 reference = Path("picocalc-os/port/esp32p4/build-elf/esp-idf/main/natives/toplog.elf").read_bytes()
 reference_hash = hashlib.sha256(reference).hexdigest()

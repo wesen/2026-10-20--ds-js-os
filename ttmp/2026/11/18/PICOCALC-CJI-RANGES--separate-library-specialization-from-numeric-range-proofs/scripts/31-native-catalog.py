@@ -15,7 +15,7 @@ args = parser.parse_args()
 ticket = Path(__file__).resolve().parents[1]
 reference = {r["world"]: r for r in map(json.loads, (ticket / "various/catalog.jsonl").read_text().splitlines())}
 root = Path("picocalc-os/js")
-cji = next(Path("ttmp/2026/11/17").glob("*--cji-workspace*/sources/cji"))
+cji = Path("cji")
 ledger = next(Path("ttmp/2026/11/17").glob("*CJI-PORT*/various/device-catalog-results.json"))
 modules = {row["world"]: row.get("host_elf_sha256") for row in json.loads(ledger.read_text())["worlds"]}
 

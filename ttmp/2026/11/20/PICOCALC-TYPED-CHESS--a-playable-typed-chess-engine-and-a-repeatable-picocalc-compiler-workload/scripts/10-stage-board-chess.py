@@ -29,7 +29,7 @@ def main():
     work.mkdir(parents=True)
     checkout = work / "checkout"
     checkout.mkdir()
-    cji, = (REPO / "ttmp/2026/11/17").glob("PICOCALC-CJI--*/sources/cji")
+    cji = REPO / "cji"
     tracked = subprocess.check_output(
         ["git", "ls-files", "-z", "picocalc-os", str(cji.relative_to(REPO))], cwd=REPO)
     for name in tracked.decode().strip("\0").split("\0"):

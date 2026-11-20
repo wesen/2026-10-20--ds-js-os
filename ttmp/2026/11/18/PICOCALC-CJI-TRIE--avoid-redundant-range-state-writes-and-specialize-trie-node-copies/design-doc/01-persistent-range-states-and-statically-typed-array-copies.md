@@ -104,14 +104,13 @@ Scripts 01–04 implement the first two designs above. Script 01 performs source
 p=(ttmp/2026/11/18/*CJI-TRIE*)
 scripts="$p/scripts"
 ranges=(ttmp/2026/11/18/*CJI-RANGES*/scripts)
-cji=(ttmp/2026/11/17/*--cji-workspace*/sources/cji)
 scratch=$(mktemp -d)
 refs="$scratch/reference"
 mkdir "$refs"
 bash "$ranges/20-build-deferred.sh" "$scratch/guard" guard
 guard="$scratch/guard/stage1"
 for world in agenda files; do
-    node "$cji/cji.js" "picocalc-os/js/apps/$world.js" --world-unit --emit > "$refs/$world.ref"
+    node "cji/cji.js" "picocalc-os/js/apps/$world.js" --world-unit --emit > "$refs/$world.ref"
 done
 for variant in reuse typed both; do
     bash "$scripts/02-build.sh" "$scratch/$variant" "$variant"

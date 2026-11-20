@@ -10,11 +10,11 @@ Owners: []
 RelatedFiles:
     - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
       Note: Physical compiler frontend boundary
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/runtime/runtime.c
+    - Path: repo://cji/runtime/runtime.c
       Note: Dynamic representation and lookup operations
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/infer.js
+    - Path: repo://cji/src/infer.js
       Note: Structural inference and escape behavior
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/ranges.js
+    - Path: repo://cji/src/ranges.js
       Note: Numeric proofs and persistent local state
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-STATIC--static-representations-and-sparse-range-analysis-for-the-picocalc-compiler/scripts/12-range-state-copies.mjs
       Note: Measures unchanged writes and structural sharing
@@ -86,7 +86,7 @@ The lookup measurements also change the priority of an apparent optimization. Ag
 
 ## How the current compiler reaches a representation
 
-Read the following files relative to the imported CJI directory under `ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/`. The guarded scheduling changes used for the board experiment are the two source patches in the adjacent RANGES ticket. The original import remains the reference.
+Read the following files relative to the imported CJI directory under `cji/`. The guarded scheduling changes used for the board experiment are the two source patches in the adjacent RANGES ticket. The original import remains the reference.
 
 | File and interface | Input, output and why it matters |
 |---|---|

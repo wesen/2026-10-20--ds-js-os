@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Resolver and loader
     - Path: repo://picocalc-os/sdk/nw_elf.h
       Note: Board ABI
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/runtime/cji_elf.c
+    - Path: repo://cji/runtime/cji_elf.c
       Note: Runtime entry and state management
     - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/various/rv32-nosnap.txt
       Note: Reproduced emulator gate
@@ -40,7 +40,7 @@ log("hello from the top level");
 service("toplog").on("ping", (s) => "pong");
 ```
 
-This guide uses the ticket's `sources/cji/` as the compiler root and the repository's `picocalc-os/` as the OS root. The compiler source is a curated snapshot. The host build and RV32 trace comparisons below ran on this checkout. Firmware revision 6a8e1a0 passed this procedure on ESP32-P4 v1.3. The implementation uses uncached field lookup on the board to release 96 KiB of internal RAM and avoid retaining module addresses across restarts. The ticket’s various/p4-acceptance.txt and various/p4-repl-pong.png record the physical results. The design and first-pass diagnostics below describe how the integration was developed.
+This guide uses the repository's `cji/` as the compiler root and the repository's `picocalc-os/` as the OS root. The compiler source is a curated snapshot. The host build and RV32 trace comparisons below ran on this checkout. Firmware revision 6a8e1a0 passed this procedure on ESP32-P4 v1.3. The implementation uses uncached field lookup on the board to release 96 KiB of internal RAM and avoid retaining module addresses across restarts. The ticket’s various/p4-acceptance.txt and various/p4-repl-pong.png record the physical results. The design and first-pass diagnostics below describe how the integration was developed.
 
 ## Follow a world across the system
 
@@ -72,11 +72,11 @@ For the first build use the upstream single-world, no-snapshot mode. The JavaScr
 
 ## Reproduce the known result on Linux
 
-From the repository root, in a POSIX shell with Node, make, a native C compiler, Clang with the RISC-V target, and LLVM's ld.lld available, run the following. The PICOCALC setting is important because the archived Makefile's default points to the book author's workspace. On this host, ld.lld was available under the stable Rust toolchain's lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld directory.
+From the repository root, in a POSIX shell with Node, make, a native C compiler, Clang with the RISC-V target, and LLVM's ld.lld available, run the following. On this host, ld.lld was available under the stable Rust toolchain's lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld directory.
 
 ```sh
 repo=$(git rev-parse --show-toplevel)
-cd "$repo"/ttmp/2026/11/17/PICOCALC-CJI*/sources/cji
+cd "$repo"/cji
 PICOCALC="$repo/picocalc-os" NOSNAP=1 sh tools/rv32/nw-test.sh
 readelf -h -r -W build/rv32/nw/toplog.so
 readelf --dyn-syms -W build/rv32/nw/toplog.so
@@ -225,8 +225,8 @@ Save the firmware revision, size, chip revision, boot log, two replies and the w
 
 ## Source map for review
 
-- **Compiler path.** In the ticket, start at `sources/cji/cji.js`, then `src/world-native.js` for the bundled world API and `src/compiler.js` for the pass ordering. Inspect `runtime/rv32_mod.c` for ELF layout, relocations and thunks.
-- **Runtime boundary.** Read `sources/cji/runtime/cji_elf.h` beside `runtime/cji_elf.c` in the same tree. Follow entry, init, enter/leave and event. Then inspect `runtime/runtime.h` and `runtime/runtime.c` for roots, collection and state swapping.
+- **Compiler path.** From the repository root, start at `cji/cji.js`, then `src/world-native.js` for the bundled world API and `src/compiler.js` for the pass ordering. Inspect `runtime/rv32_mod.c` for ELF layout, relocations and thunks.
+- **Runtime boundary.** Read `cji/runtime/cji_elf.h` beside `runtime/cji_elf.c` in the same tree. Follow entry, init, enter/leave and event. Then inspect `runtime/runtime.h` and `runtime/runtime.c` for roots, collection and state swapping.
 - **OS boundary.** Under picocalc-os, `sdk/nw_elf.h` defines the two tables, `sdk/nw.h` explains the event and service API, and `nucleus/native.c` dispatches native operations. The physical bridge from those tables to the scheduler is `port/esp32p4/optional/native_elf/native_elf_p4.c`.
 - **Build and operations.** Read `port/esp32p4/main/CMakeLists.txt`, its `bundle_js.cmake`, the optional native component manifest, and `port/esp32p4/partitions.csv`. UART commands are implemented in `port/esp32p4/main/main_p4.c`. Capture is implemented in `tools/p4cap.py`.
-- **Independent controls.** The ticket contains `sources/cji/tests/native/toplog.events` and `toplog.out` in that directory. The emulator driver is `sources/cji/tools/rv32/nw-test.sh`. Read the fixture beside `various/rv32-nosnap.txt`. Selected chapters 24, 30 and 35 cover Linux host integration, RV32 module loading and the separate self-hosting experiment.
+- **Independent controls.** The compiler tree contains `cji/tests/native/toplog.events` and `toplog.out` in that directory. The emulator driver is `cji/tools/rv32/nw-test.sh`. Read the fixture beside `various/rv32-nosnap.txt`. Selected chapters 24, 30 and 35 cover Linux host integration, RV32 module loading and the separate self-hosting experiment.

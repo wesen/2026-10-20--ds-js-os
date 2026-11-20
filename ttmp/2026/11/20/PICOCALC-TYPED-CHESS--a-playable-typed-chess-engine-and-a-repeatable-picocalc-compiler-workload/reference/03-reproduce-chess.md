@@ -20,7 +20,7 @@ Set the paths to ESP-IDF's RISC-V GCC, the CJI emulator, and the shared reactor 
 ~~~bash
 chess_scripts=$(dirname "$(git ls-files 'ttmp/2026/11/20/PICOCALC-TYPED-CHESS--*/scripts/11-run-board-chess.py')")
 gcc=/home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20241119/riscv32-esp-elf/bin/riscv32-esp-elf-gcc
-emu=$(printf '%s\n' ttmp/2026/11/17/PICOCALC-CJI--*/sources/cji/build/rv32/rv32emu)
+emu=cji/build/rv32/rv32emu
 reactor=/tmp/picocalc-chess-board-rv32/build/esp-idf/main/typed-world-reactor.elf
 
 node "$chess_scripts/03-engine-oracle.mjs" "$gcc" "$emu"

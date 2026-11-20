@@ -145,8 +145,7 @@ Put the SDK’s `riscv32-esp-elf-gcc` on PATH (the study used GCC 14.2.0). Set `
 ```sh
 exam=$(ls -d ttmp/2026/11/19/PICOCALC-RV32-STUDIES--*)/scripts/examiner
 gcc=$(command -v riscv32-esp-elf-gcc)
-cji=$(ls -d ttmp/2026/11/17/PICOCALC-CJI--*)
-emu="$cji/sources/cji/build/rv32/rv32emu"
+emu="cji/build/rv32/rv32emu"
 node "$exam/guest.mjs" "$gcc" "$emu" baseline
 node "$exam/guest.mjs" "$gcc" "$emu" branch "$pair/candidate"
 node "$exam/output.mjs" compact "$compact" "$reactors"

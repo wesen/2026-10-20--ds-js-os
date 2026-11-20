@@ -86,7 +86,7 @@ boot that manifest, followed by the optional extra services
 
 ### File and API reference
 
-Paths beginning with js, sdk, nucleus and port below are relative to picocalc-os. Compiler paths are relative to the previous PICOCALC-CJI ticket's sources/cji directory.
+Paths beginning with js, sdk, nucleus and port below are relative to picocalc-os. Compiler paths are relative to the repository's top-level `cji/` directory.
 
 | Start here | Responsibility |
 |---|---|

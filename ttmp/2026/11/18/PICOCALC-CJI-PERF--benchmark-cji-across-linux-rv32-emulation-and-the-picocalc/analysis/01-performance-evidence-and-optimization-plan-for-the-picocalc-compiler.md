@@ -12,11 +12,11 @@ Owners: []
 RelatedFiles:
     - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
       Note: On-device frontend boundaries
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/infer.js
+    - Path: repo://cji/src/infer.js
       Note: Type solving and validated whole-range result reuse
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/library.js
+    - Path: repo://cji/src/library.js
       Note: Per-round library helper selection and additional inference
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/ranges.js
+    - Path: repo://cji/src/ranges.js
       Note: Range fixpoint, same-round skips and cross-round episode replay
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-PERF--benchmark-cji-across-linux-rv32-emulation-and-the-picocalc/various/p4/comparison.json
       Note: Physical heap experiment

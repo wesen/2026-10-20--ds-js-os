@@ -3,7 +3,7 @@ set -euo pipefail
 out=$(realpath -m "${1:?scratch directory}")
 policy=${2:?local or proof-off}
 scripts=$(realpath "$(dirname "$0")")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 ranges=(ttmp/2026/11/18/*CJI-RANGES*/scripts)
 trie=(ttmp/2026/11/18/*CJI-TRIE*/scripts)
 test ! -e "$out/source"

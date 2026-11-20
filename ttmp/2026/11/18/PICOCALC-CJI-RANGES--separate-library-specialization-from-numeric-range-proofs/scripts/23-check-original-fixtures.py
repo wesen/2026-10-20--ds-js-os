@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("archive", type=Path)
 parser.add_argument("candidate", type=Path)
 args = parser.parse_args()
-control = next(Path("ttmp/2026/11/17").glob("*--cji-workspace*/sources/cji"))
+control = Path("cji")
 with ZipFile(args.archive) as archive, tempfile.TemporaryDirectory() as scratch:
     root = Path(scratch)
     for member in archive.namelist():

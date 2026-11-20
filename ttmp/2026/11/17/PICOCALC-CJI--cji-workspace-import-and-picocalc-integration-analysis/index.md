@@ -21,7 +21,7 @@ WhenToUse: ""
 
 ## Overview
 
-Imported the [compiler and hardware test sources](sources/README.md). The [analysis](analysis/01-what-the-cji-workspace-brings-to-picocalc.md) traces a compiled world into the PicoCalc kernel and distinguishes host and emulator results from hardware validation.
+The [compiler and hardware test sources](../../../../../cji/) live at the repository root. The [import notes](sources/README.md) record their provenance. The [analysis](analysis/01-what-the-cji-workspace-brings-to-picocalc.md) traces a compiled world into the PicoCalc kernel and distinguishes host and emulator results from hardware validation.
 
 Read the [intern hardware bring-up guide](design-doc/01-running-a-compiled-javascript-world-on-the-picocalc-esp32-p4.md) for the verified host commands, device integration and physical acceptance procedure.
 

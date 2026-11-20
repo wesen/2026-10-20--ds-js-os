@@ -13,7 +13,7 @@ import tempfile
 SCRIPTS = Path(__file__).resolve().parent
 REPO = next(p for p in SCRIPTS.parents if (p / "picocalc-os/Makefile").exists())
 OS = REPO / "picocalc-os"
-CJI = next((REPO / "ttmp/2026/11/17").glob("PICOCALC-CJI--*/sources/cji"))
+CJI = REPO / "cji"
 FILES = {
     "agenda": ("// ---- dates", {
         "parsed": {"line": "- [ ] dentist @2026-11-03 14:30 !15m", "done": False, "title": "dentist",

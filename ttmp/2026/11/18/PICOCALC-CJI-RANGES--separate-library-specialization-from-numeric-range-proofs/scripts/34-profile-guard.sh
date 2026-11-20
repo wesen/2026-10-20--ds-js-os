@@ -4,7 +4,7 @@ set -euo pipefail
 base=$(realpath "${1:?baseline directory}")
 guard=$(realpath "${2:?qualified candidate directory}")
 out=$(realpath -m "${3:?output directory}")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 sampler=$(realpath ttmp/2026/11/18/*CJI-PERF*/scripts/host-sampling)
 mkdir -p "$out"
 SLAS_SYMBOLS=1 "$cji/slas" -S -c "$out/named.o" "$guard/stage1.slir"

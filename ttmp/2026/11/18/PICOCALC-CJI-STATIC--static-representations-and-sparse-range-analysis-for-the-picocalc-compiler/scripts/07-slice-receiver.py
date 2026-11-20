@@ -9,7 +9,7 @@ parser.add_argument('out', type=Path)
 args = parser.parse_args()
 out = args.out
 out.mkdir(parents=True, exist_ok=True)
-cji = next(Path('ttmp/2026/11/17').glob('*cji-workspace*/sources/cji'))
+cji = Path("cji")
 runtime = (cji/'runtime/runtime.c').read_text()
 marker = '/* (CJI-3, lane 6: an array or a string first'
 assert runtime.count(marker) == 1

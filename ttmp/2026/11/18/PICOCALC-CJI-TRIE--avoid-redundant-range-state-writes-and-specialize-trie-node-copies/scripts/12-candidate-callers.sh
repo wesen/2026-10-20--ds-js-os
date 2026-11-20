@@ -5,7 +5,7 @@ build=$(realpath "${1:?root containing candidate subdirectories}")
 refs=$(realpath "${2:?reference directory}")
 shift 2
 static=(ttmp/2026/11/18/*CJI-STATIC*/scripts)
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 for v in "$@"; do
     named="$build/$v/named"
     mkdir -p "$named"

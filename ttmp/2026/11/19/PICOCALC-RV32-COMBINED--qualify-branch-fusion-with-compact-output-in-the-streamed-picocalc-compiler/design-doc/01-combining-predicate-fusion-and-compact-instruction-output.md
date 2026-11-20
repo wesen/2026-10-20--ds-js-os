@@ -103,7 +103,7 @@ python3 -B "$ticket/scripts/06-board.py" "$scratch" "$port" "$flasher"
 python3 -B "$ticket/scripts/08-summarize.py" "$scratch/physical.json"
 ```
 
-Set `rv32_gcc` to the ESP GCC 14.2.0 (20260121) RISC-V binary, and `rv32_emulator` to the imported CJI `sources/cji/build/rv32/rv32emu` executable. The host workflow driver uses its neighboring support objects. The board receipt records each app, configuration, order, elapsed time, peak, returned length and SHA-256, along with the two native-world checks and restore outcome.
+Set `rv32_gcc` to the ESP GCC 14.2.0 (20260121) RISC-V binary, and `rv32_emulator` to the imported CJI `cji/build/rv32/rv32emu` executable. The host workflow driver uses its neighboring support objects. The board receipt records each app, configuration, order, elapsed time, peak, returned length and SHA-256, along with the two native-world checks and restore outcome.
 
 ## Integration outcome
 

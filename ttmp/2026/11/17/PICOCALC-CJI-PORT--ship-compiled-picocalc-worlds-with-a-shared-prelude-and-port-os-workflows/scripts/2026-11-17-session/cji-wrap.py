@@ -3,7 +3,7 @@ cm=Path('picocalc-os/port/esp32p4/main/CMakeLists.txt')
 s=cm.read_text(); rows=[l for l in s.splitlines(True) if 'cji_paths' in l or l.strip()=='target_include_directories(${COMPONENT_LIB} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})']; cm.write_text(''.join(l for l in s.splitlines(True) if l not in rows))
 o=cm.parent.parent/'optional/native_elf/CMakeLists.txt'
 s=o.read_text(); o.write_text(s.replace('# Build target', rows[0].strip()+'\nforeach(name IN LISTS CJI_WORLDS ITEMS toplog)\n    '+rows[1].strip()+'\nendforeach()\n'+'\n'.join(l.strip() for l in rows[2:])+'\n\n# Build target'))
-c=next(Path('ttmp/2026/11/17').glob('PICOCALC-CJI--*/sources/cji'))
+c=Path("cji")
 p=c/'src/world-native.js';s=p.read_text()
 start=s.index('    const out /*: Any */ = { id: h');end=s.index('    return out;',start)+len('    return out;')
 wrapper=s[start:end].replace("id: h, type: 'i2c', rights: 'rw',","id: h, type: type, rights: rights,")

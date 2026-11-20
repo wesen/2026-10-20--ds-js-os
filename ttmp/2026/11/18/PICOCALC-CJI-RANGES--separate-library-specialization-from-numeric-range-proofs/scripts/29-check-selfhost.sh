@@ -3,7 +3,7 @@
 set -euo pipefail
 candidate=$(realpath "${1:?guarded stage-0 source directory}")
 out=$(realpath -m "${2:?output directory}")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 unit="$cji/build/rv32/stage1"
 mkdir -p "$out"
 node --stack-size=4000 --max-old-space-size=6000 "$candidate/cji.js" "$unit/bundle-cji.js" --emit > "$out/selfhost.ir"

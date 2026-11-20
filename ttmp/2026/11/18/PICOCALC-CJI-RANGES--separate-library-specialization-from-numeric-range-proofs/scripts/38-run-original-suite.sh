@@ -4,7 +4,7 @@ set -euo pipefail
 archive=$(realpath "${1:?original archive}")
 stage1=$(realpath "${2:?guarded native executable}")
 out=$(realpath -m "${3:?fresh scratch directory}")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 mkdir -p "$out"
 work=$(mktemp -d "$out/suite-XXXXXX")
 unzip -qo "$archive" 'book/cji/run-tests.js' 'book/cji/tests/*' -d "$work"

@@ -4,7 +4,7 @@ set -euo pipefail
 dest=$(realpath -m "${1:?output directory}")
 ir=$(realpath "${2:?candidate stage1.slir}")
 board=$(realpath picocalc-os/port/esp32p4)
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 build="$board/build-elf"
 objects="$build/cji/tool"
 mkdir -p "$dest"

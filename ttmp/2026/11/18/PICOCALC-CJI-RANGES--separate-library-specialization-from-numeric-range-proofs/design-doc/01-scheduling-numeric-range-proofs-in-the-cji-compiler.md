@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/infer.js
+    - Path: repo://cji/src/infer.js
       Note: Type and range verdicts
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/library.js
+    - Path: repo://cji/src/library.js
       Note: Receiver specialization loop
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/src/ranges.js
+    - Path: repo://cji/src/ranges.js
       Note: Interval domain and widening
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-RANGES--separate-library-specialization-from-numeric-range-proofs/scripts/19-defer-range-proof.patch
       Note: Isolated prototype
@@ -106,7 +106,7 @@ Section 9.3.6 (pp. 493–497), particularly Figure 9.21 on sparse simple constan
 
 ## Implementation and reproduction sequence
 
-All paths below start at the project root. The compiler source is in `ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/`. This ticket owns the prototype patch and its experiments. The sibling `PICOCALC-CJI-PERF` ticket owns the baseline counters and the generic firmware comparison harness.
+All paths below start at the project root. The compiler source is in `cji/`. This ticket owns the prototype patch and its experiments. The sibling `PICOCALC-CJI-PERF` ticket owns the baseline counters and the generic firmware comparison harness.
 
 1. **Read the source in execution order.** Follow `src/build.js` to `src/pipeline.js`, then `instantiateLibraryTaking` in `src/library.js`, `inferTypes` and `inferOnce` in `src/infer.js`, and `analyzeRanges` in `src/ranges.js`. Within the latter, inspect `feed`, `topLevel` and the final iteration loop. Trace how a widening decision affects the next iteration.
 2. **Build an isolated candidate.** From the repo root run the ticket's `scripts/20-build-deferred.sh OUT`. It copies the source, applies `19-defer-range-proof.patch`, bundles the changed compiler and compiles the bundle using the original stage 0. Using the original translator separates the behavior of the compiler being tested from that of the compiler that built it. It prints identities for the bundle, SLIR and native executable.

@@ -5,7 +5,7 @@ base=$(realpath "${1:?baseline profiling build}")
 variant=$(realpath "${2:?candidate RV32 object directory}")
 out=$(realpath -m "${3:?output directory}")
 world=${4:?world name}
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 b="$cji/build/rv32"
 mkdir -p "$out"
 linker=$(command -v ld.lld || true)

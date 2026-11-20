@@ -1,5 +1,7 @@
 # cji: the compiler from *Compiling JavaScript, Incrementally*
 
+This checkout contains the PicoCalc selection of the companion compiler. From this directory, run `NOSNAP=1 sh tools/rv32/nw-test.sh` to build and replay the included native-world fixtures and their C control. See the [import notes](../ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/README.md) for provenance and the scope of the upstream test suite.
+
 Each chapter of the book has a tag here (`ch01`, `ch02`, ...). The code at a tag is the
 code the chapter shows, and its tests pass.
 

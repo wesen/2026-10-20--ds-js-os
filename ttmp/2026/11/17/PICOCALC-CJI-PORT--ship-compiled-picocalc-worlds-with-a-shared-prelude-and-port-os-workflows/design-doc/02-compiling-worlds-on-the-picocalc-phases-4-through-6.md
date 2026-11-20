@@ -18,7 +18,7 @@ RelatedFiles:
       Note: Private stage-1 invocation and module assembly
     - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: Production module ABI and relocation
-    - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/tools/rv32/fw/board_main.c
+    - Path: repo://cji/tools/rv32/fw/board_main.c
       Note: Emulator compilation reference
     - Path: repo://ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/scripts/06-exercise-device-compiler.py
       Note: Physical Editor, peer IPC, failure and reboot acceptance
@@ -35,7 +35,7 @@ WhenToUse: ""
 
 ## Follow a ping from source to hardware
 
-Open the imported CJI tree at `ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/sources/cji/`. Paths beginning with `cji/` below are relative to that tree's parent. Other paths start at the repository root. Start with `cji/tests/native/toplog.world.js`. Its top-level statement logs a greeting. Its service registers a handler for a ping and returns the string pong. This example tests **both** evaluating module-level code and delivering a later event. The expected calls are in the adjacent `toplog.out`.
+Open the imported CJI tree at `cji/`. Paths beginning with `cji/` below are relative to that tree's parent. Other paths start at the repository root. Start with `cji/tests/native/toplog.world.js`. Its top-level statement logs a greeting. Its service registers a handler for a ping and returns the string pong. This example tests **both** evaluating module-level code and delivering a later event. The expected calls are in the adjacent `toplog.out`.
 
 In the Phase 3 release the host ran the JavaScript compiler and the PicoCalc ran the resulting machine code. The development loop moves the two middle steps below onto the PicoCalc. Authoring the compiler remains a host operation. An intern changing a world should have to transfer only its source.
 

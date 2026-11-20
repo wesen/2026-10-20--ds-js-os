@@ -11,7 +11,7 @@ parser.add_argument("scratch", type=Path)
 parser.add_argument("compilers", nargs="+", help="NAME=path to cji.js or stage1")
 args = parser.parse_args()
 args.scratch.mkdir(parents=True, exist_ok=True)
-cji = next(Path("ttmp/2026/11/17").glob("*--cji-workspace*/sources/cji"))
+cji = Path("cji")
 fixtures = sorted(Path(__file__).with_name("fixtures").glob("*.js"))
 
 

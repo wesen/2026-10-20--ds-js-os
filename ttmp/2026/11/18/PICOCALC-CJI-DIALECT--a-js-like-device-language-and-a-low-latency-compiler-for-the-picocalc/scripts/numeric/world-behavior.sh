@@ -2,7 +2,7 @@
 set -euo pipefail
 compiler=$(realpath "${1:?stage1 executable or source cji.js}")
 out=$(realpath -m "${2:?scratch directory}")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 fixtures=$(realpath "$(dirname "$0")/fixtures/world")
 mkdir -p "$out"
 if [[ $compiler == *.js ]]; then

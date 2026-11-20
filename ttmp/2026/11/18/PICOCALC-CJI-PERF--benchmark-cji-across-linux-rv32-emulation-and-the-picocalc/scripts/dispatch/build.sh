@@ -3,7 +3,7 @@ set -euo pipefail
 out=$(realpath -m "$1")
 mkdir -p "$out"
 src=$(realpath "$(dirname "$0")")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 if ! command -v ld.lld >/dev/null; then
     export PATH="$(rustc --print target-libdir)/../bin/gcc-ld:$PATH"
 fi

@@ -3,7 +3,7 @@
 set -euo pipefail
 candidate=$(realpath "${1:?candidate source directory}")
 out=$(realpath -m "${2:?scratch directory}")
-ordinary=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+ordinary=$(realpath cji)
 mkdir -p "$out"
 input=picocalc-os/js/apps/files.js
 node "$ordinary/cji.js" "$input" --world-unit --emit --emit-sidecar "$out/control.sidecar" > "$out/control.ir"

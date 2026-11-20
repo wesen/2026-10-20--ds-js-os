@@ -30,10 +30,10 @@ Run in the repository root. The register script reads both pinned source snapsho
 tickets=(ttmp/2026/11/19/PICOCALC-COMPILER-THESIS--*)
 ticket=${tickets[0]}
 gcc=/home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc
-emulators=(ttmp/2026/11/17/PICOCALC-CJI--*/sources/cji/build/rv32/rv32emu)
+emu=cji/build/rv32/rv32emu
 node "$ticket/scripts/examiner/bounds.mjs"
 node "$ticket/scripts/examiner/scalar-facts.mjs"
-node "$ticket/scripts/examiner/registers.mjs" "$gcc" "${emulators[0]}"
+node "$ticket/scripts/examiner/registers.mjs" "$gcc" "$emu"
 ```
 
 `various/examiner/registers.json` provides a digest of 405 ordered output pairs from each ELF and the oracle. `various/examiner/bounds.json` records trap counts and the function fallback. `various/examiner/scalar-facts.json` gives expanded-source site IDs as function, line and source position, distinguishing two checks on the same line in Files. Site counts and inspected-edge counts describe different quantities. Both tests for `filesCompare` occupy expanded source line 37.

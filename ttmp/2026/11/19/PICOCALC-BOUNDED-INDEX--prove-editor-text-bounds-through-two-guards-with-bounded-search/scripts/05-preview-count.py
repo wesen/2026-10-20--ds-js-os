@@ -20,7 +20,7 @@ def replace(text, a, b):
 
 
 def prepare(output):
-    cji, = (DAY.parent / "17").glob("PICOCALC-CJI--*/sources/cji")
+    cji = REPO / "cji"
     replay, = (DAY.parent / "18").glob("PICOCALC-TYPED-WORLDS--*/scripts/02-check-editor-world.mjs")
     original_driver = replay.with_name("02-editor-world-driver.c")
     source = (cji / "tools/rv32/emu.c").read_text()

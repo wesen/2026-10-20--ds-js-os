@@ -1,5 +1,7 @@
 # PicoCalc compiler research
 
+The [CJI compiler](cji/) and the [Typed compiler](picocalc-os/compiler/) are separate source trees. Start with the [CJI pass list](cji/src/pipeline.js) for whole-program inference and numeric range analysis.
+
 Start with the [compiler research index](ttmp/2026/11/19/PICOCALC-COMPILER-THESIS--cold-compilation-and-bounded-analyses-on-the-picocalc/reference/02-picocalc-compiler-research-index-and-open-directions.md). It maps the professor’s native roadmap to experiments, production changes, and open questions.
 
 The [eight-study supervisor report](ttmp/2026/11/19/PICOCALC-COMPILER-LAB2--eight-experiments-in-compiler-construction-on-the-picocalc/analysis/01-what-a-compiler-can-afford-on-the-picocalc.md) gives on-device cold compilation, real edit-to-native-return timings and generated-code measurements. Its [ticket](ttmp/2026/11/19/PICOCALC-COMPILER-LAB2--eight-experiments-in-compiler-construction-on-the-picocalc/index.md) links every study, its reproduction scripts and its investigation diary.

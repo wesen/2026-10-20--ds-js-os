@@ -5,7 +5,7 @@ set -euo pipefail
 out=$(realpath "$1")
 kind=$2
 shift 2
-cji=$(realpath ttmp/2026/11/17/PICOCALC-CJI--*/sources/cji)
+cji=$(realpath cji)
 for world in "$@"; do
     source_file="picocalc-os/js/apps/$world.js"
     args=(-C -g -h 8388608 -H 8388608 -- "$source_file" --world-unit)

@@ -3,7 +3,7 @@ set -euo pipefail
 out=$(realpath -m "${1:?destination}")
 variant=${2:?reuse, typed or both}
 scripts=$(realpath "$(dirname "$0")")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 ranges=(ttmp/2026/11/18/*CJI-RANGES*/scripts)
 mkdir -p "$out/source"
 cp -r "$cji/src" "$cji/package.json" "$cji/cji.js" "$out/source"

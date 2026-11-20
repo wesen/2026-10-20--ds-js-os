@@ -2,7 +2,7 @@
 # Rebuild the exact native code with local CJI function symbols. Verify .text equality before profiling.
 set -euo pipefail
 out=$(realpath "$1")
-cji=$(realpath ttmp/2026/11/17/*--cji-workspace*/sources/cji)
+cji=$(realpath cji)
 SLAS_SYMBOLS=1 "$cji/slas" -S -c "$out/stage1-named.o" "$cji/build/rv32/stage1/stage1.slir"
 cc -std=gnu11 -O2 -g -fno-omit-frame-pointer -no-pie -I"$cji/runtime" \
     "$cji/runtime/aot_main.c" "$cji/runtime/runtime.c" "$out/stage1-named.o" -lm -o "$out/stage1-named"
