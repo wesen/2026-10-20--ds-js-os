@@ -173,3 +173,54 @@ Run scripts/16-run-span-studies.sh with the shared reactor ELF. Use scripts/18-r
 ### Technical details
 
 The G4 input SHA-256 is ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0. The shared reactor SHA-256 is 16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff. The tracked host harness SHA-256 is 3609d3e53410f5dcc90780861755a50fdda8aedda76d0d78e52ac10d36623a0b.
+
+## Step 4: Publish the source-span study
+
+The article follows a typed fragment through an unchanged body, an edited caller, and a generated task step. I checked it against the staged compilers and used the committed receipts for timing and parity.
+
+### Prompt context
+
+The parent requested an independent pedagogical article in go-go-parc with paired host time, memory, exact parity and the distinction from device timing. Physical follow-up remains in the aggregate qualification.
+
+### What I did
+
+- Recomputed the nine-run timing medians and five-run phase medians directly from the two JSONL files. Rechecked the reported digests and graph and diagnostic counts against parity.json.
+- Compiled the exact article fragment in the stock and composed vendored QuickJS stages. Both reported plusOne, begin, and the generated step and start functions in the same order, three state fields and 480 raw RV32 bytes.
+- Reread the draft to check which offsets belong to authored, edited and virtual rewritten text. Made the pre-G timing control's role explicit in the reproduction paragraph.
+- Committed and pushed the article to the vault in f75a58f. [Published article](https://github.com/go-go-golems/go-go-parc/blob/f75a58f/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Reusing%20Source%20Spans%20in%20the%20Asynchronous%20Compiler.md)
+
+### Why
+
+The article explains how the compiler can reuse an original body and its index while keeping the existing function order, emitted code and source-mapped diagnoses.
+
+### What worked
+
+The sample compiled in both staged lanes. The host results in the article match the archived sample files. The vault push advanced main to f75a58f.
+
+### What did not work
+
+No failures observed in the publication step.
+
+### What I learned
+
+The article's short example makes the boundaries visible. One unchanged callee keeps its original span, its starter changes in place, and the task contributes new functions and two state fields.
+
+### What was tricky to build
+
+The published measurements include medians from two independent host batches. The main table uses the nine-run linked batch. The subphase results come from a separate instrumented five-run batch.
+
+### What warrants a second pair of eyes
+
+Use the frozen staged variant and its matched reactor digest when connecting a cold board result to the host comparison.
+
+### What should be done in the future
+
+Keep the paired physical results with the aggregate qualification.
+
+### Code review instructions
+
+Start with the article's three-function fragment, then follow scripts/13-stage-span-reuse.py and scripts/14-indexed-prepass-overlay.mjs.
+
+### Technical details
+
+The public note references frozen experiment commit d3e7c7d. Its numerical comparison uses the shared G4 Editor source and a 4 MiB tracked QuickJS budget.
