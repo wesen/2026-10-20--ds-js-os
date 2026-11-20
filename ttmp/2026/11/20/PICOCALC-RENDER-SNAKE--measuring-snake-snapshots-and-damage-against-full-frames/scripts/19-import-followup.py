@@ -34,10 +34,15 @@ else:
     s=s.replace('## Painting only the cells that changed',parts['article'].strip()+'\n\n## Painting only the cells that changed')
     s=replace(s,'Exact equality and source replay justify testing','## Recommendation',parts['close'])
     brief='20-board-brief.txt'
+assembled_digest=sha((s.split('\n---\n',1)[1].strip()+'\n').encode())
+if kind=='board':
+    anchor='A collision in the source trace'
+    assert s.count(anchor)==1
+    s=s.replace(anchor,'![Ordinary turn and legal tail entry in RGB565](../various/snake-motion-rgb565.png)\n\n'+anchor)
 article.write_text(s)
 diary.write_text(diary.read_text().rstrip()+'\n\n'+parts['diary'].strip()+'\n')
 receipt=dict(model=list(r['modelUsage']),effort='high',turns=r['num_turns'],stop=r['stop_reason'],
              promptSha256=sha((ticket/'scripts'/brief).read_bytes()),
              publicReplySha256=sha(r['result'].strip().encode()),previousReceipt=f'opus-{previous}-receipt.json',
-             articleSha256=digest(article),diarySha256=digest(diary))
+             articleSha256=digest(article),diarySha256=digest(diary),assembledBeforeFigureSha256=assembled_digest)
 (ticket/f'various/opus-{kind}-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')

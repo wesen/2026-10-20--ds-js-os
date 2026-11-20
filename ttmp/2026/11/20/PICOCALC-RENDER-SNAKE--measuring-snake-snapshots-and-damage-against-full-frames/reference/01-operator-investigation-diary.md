@@ -1,7 +1,7 @@
 ---
 Title: Operator investigation diary
 Ticket: PICOCALC-RENDER-SNAKE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - ui
@@ -225,3 +225,51 @@ Inspect `summary.json` at `rasterMoves.changedFrequency` and `pixelExamples.ente
 ### Technical details
 
 The 196 eligible motions exclude initial, idle, full-fallback and intentionally skipped draws. All three full rendering arms still match every one of the 236 images.
+
+## Step 5. Read the physical ESP32-P4 and a held-out native screen
+
+The director ran the shared physical session, retaining the original CJI gameplay and display path for the live trace and using an isolated QuickJS runtime for each codec treatment. A raw application packet from the normal CJI world supplies a separate witness beyond the scripted input. The compact semantic option saves bytes in every comparison; on actual P4 CPU the semantic JSON receiver is faster.
+
+### Prompt Context
+
+See Step 1. **Prior commits** `d9f0f59` records the tail-entry correction and `cdb63c7` records the illustrative figure made from real RGB565 buffers. The director authorized offline use of the completed board data and asked for a final Opus integration.
+
+### What I did
+
+Checked all five rotated blocks for J, SJ and T against their expected counts, checksums and bytes. Compared the SHA of the staged firmware capsule with the archived child capsule. Parsed the eight producer and seven draw samples in the instrumented live window. Recovered the visible snapshot fields from the held-out native frame, rendered each admissible historical best, and ran the shared full oracle on the capture and reconstructed template. Commissioned Opus High to write the physical report and diary section.
+
+### Why
+
+A captured native scene tests real producer formatting and output. Separating it from the matched three-arm QuickJS benchmark avoids using a native production sample as an unmatched timing control for a QuickJS candidate.
+
+### What worked
+
+All blocks contained 24 snapshots and checksum 926. The median paired producer-plus-receiver time per snapshot was 1,734.375 µs for J, 621.208 for SJ and 738.542 for T. The 20-byte raw semantic record for the native capture rebuilt its exact tree; both complete images rasterized on the host to SHA-256 `199f11ef4792518e401878f3f058bccf2a6a6e85a417f5a449740b71ca44c926`. The director's restore verification matched the playable application image and partition table.
+
+### What didn't work
+
+The smallest raw encoding did not minimize combined measured CPU. The packed P4 receiver averaged 501.083 µs at its median block, against 360.917 µs for semantic JSON. The first local throwaway parse of the trace attempted to index a final `LAB TRACE_END` row as a stage, giving `IndexError: list index out of range`. The durable parser recognizes `LAB TRACE ` with the trailing space.
+
+### What I learned
+
+The captured native header displays the maximum of best score and current score. Private best values zero and ten both reconstruct this living length-five scene, so recovering unique historical state from a frame is impossible here. Two candidate packets of the same size can make the same screen.
+
+### What was tricky to build
+
+Native compositor draw includes its graphics commit. Thirteen SPI pixel-send calls describe individual rectangles. Adding their medians to draw duration or treating an aggregate sum as one observed frame time would overstate confidence. The retained screen was retrieved after trace collection and is a separate observation.
+
+### What warrants a second pair of eyes
+
+Compare the recorded firmware hashes, capsule checksum, 15 codec rows, 57 live trace samples and restored executable identity against the parent lab. The shipping Snake and compositor are CJI worlds. Promotion needs integrated semantic publication and receipt with the same engine, driver and focus behavior.
+
+### What should be done in the future
+
+Prioritize semantic JSON for a native matched comparison. Carry packed state if its extra wire savings matter to the application. Test damage as a separate treatment under actual display flush loss and chrome changes.
+
+### Code review instructions
+
+Open `various/physical-snake.json` and `various/native-published-frame.json`. Repeat `22-live-witness.mjs` and both oracle calls following the README to verify the native witness. The parent owns hardware startup, serial commands and restoration; the child does not flash independently.
+
+### Technical details
+
+The 12 distinct source states are used twice per physical block. Byte totals are 15,226 for generic JSON, 2,382 for semantic JSON, and 628 for raw packed state. Five paired block sums are divided by 24 prior to taking the median. The instrumentation interval for native render+publish included encoding, retention, message wrapping and publication, returning a median of 224.5 µs across eight events. The live SPI duration is per successful request. The child capsule SHA-256 is `2f9812fbff7f31e39929f0691a3a2330f62aa851b066a08be001188cfca7b3bd`.

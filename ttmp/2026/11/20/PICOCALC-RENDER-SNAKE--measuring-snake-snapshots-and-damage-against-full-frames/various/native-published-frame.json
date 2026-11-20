@@ -1,0 +1,93 @@
+{
+  "tree": {
+    "t": "col",
+    "gap": 6,
+    "kids": [
+      {
+        "t": "row",
+        "kids": [
+          {
+            "t": "text",
+            "s": "score 10",
+            "font": "mb",
+            "w": 104
+          },
+          {
+            "t": "text",
+            "s": "auto \u00b7 length 5 \u00b7 best 10",
+            "font": "s",
+            "color": "accent",
+            "align": "right",
+            "pad": 3
+          }
+        ]
+      },
+      {
+        "t": "canvas",
+        "w": 286,
+        "h": 234,
+        "ops": [
+          [
+            "fill",
+            235,
+            66,
+            11,
+            11,
+            "ink"
+          ],
+          [
+            "fill",
+            235,
+            53,
+            11,
+            11,
+            "ink"
+          ],
+          [
+            "fill",
+            235,
+            40,
+            11,
+            11,
+            "ink"
+          ],
+          [
+            "fill",
+            235,
+            27,
+            11,
+            11,
+            "ink"
+          ],
+          [
+            "fill",
+            235,
+            14,
+            11,
+            11,
+            "accent"
+          ],
+          [
+            "fill",
+            185,
+            16,
+            7,
+            7,
+            "accent"
+          ],
+          [
+            "rect",
+            183,
+            14,
+            11,
+            11,
+            "accent"
+          ]
+        ],
+        "bg": "#ffffff",
+        "border": "line"
+      }
+    ]
+  },
+  "hints": "\u2190\u2192\u2191\u2193 or wasd steer  p autopilot"
+}

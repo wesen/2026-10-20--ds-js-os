@@ -1,7 +1,7 @@
 ---
 Title: What moves when a Snake advances one cell
 Ticket: PICOCALC-RENDER-SNAKE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - ui
@@ -14,6 +14,10 @@ RelatedFiles:
       Note: Original application and gameplay transitions
     - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/scripts/11-run.sh
       Note: Reproduces source, raster, skip and recovery experiments
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/various/physical-snake.json
+      Note: Five paired physical blocks and the distinct native trace
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/various/snake-motion-rgb565.png
+      Note: Ordinary motion and the legal tail entry
     - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/various/summary.json
       Note: Host observations and timings
 ExternalSources: []
@@ -27,7 +31,7 @@ WhenToUse: ""
 
 A snake game on a 320×320 panel changes very little per step. One cell gains a head, another loses its tail, and the rest of the screen stays the same. Between the game's timer and the display, though, that small change passes through several stages. It becomes game state, then a serialized message, then a layout, then a raster image, and finally a comparison of framebuffers. Each stage can carry much more or much less data than the few cells that changed on screen.
 
-The measurements below were taken on the host. They follow one game frame from the application to the panel, show the exact bytes of one packed snapshot, report memory use, and describe when the painter redraws the full scene and how it recovers after missing snapshots. An isolated benchmark of QuickJS on physical hardware is scoped separately from the native CJI application and display driver, and its results may follow in a separate silicon sub-study.
+This study compares three ways of carrying Snake screen states from a producer to a receiver that rebuilds the user-interface tree. A controlled host replay drives the production game source through twelve states. A physical capsule then runs the same arms on an ESP32-P4 PicoCalc under QuickJS, a compact embeddable JavaScript engine. CJI, the native-code compiler for the shipped JavaScript app, provides an instrumented native game whose separate trace is reported on its own.
 
 ## The game under study
 
@@ -172,6 +176,34 @@ The repeated J control landed within 0.02 µs of the first J run. Validation and
 
 None of these figures include the game tick, inter-process communication, generic layout, rasterizing, SPI or JSON admission. They are host figures and support no conclusion about microcontroller timing.
 
+## What the physical PicoCalc measured
+
+The device trial uses the twelve source-shaped states of the host replay. They cover game start, eating, an ordinary turn, collision, restart, legal tail entry, wall death, autopilot, and the motion after autopilot. Each arm ran five blocks in rotating order. Every block created a fresh QuickJS realm on the physical ESP32-P4, loaded and evaluated the same all-arms capsule, and timed two passes over the states. Each block therefore contains 24 producer encodes and 24 receiver decodes or builds. Timing excludes capsule setup and installation, game state update, IPC, layout, commit, and SPI.
+
+In J, the producer builds the source UI tree with hints and serializes it to JSON, which the receiver parses. In SJ, the producer sends the complete semantic state as JSON, and the receiver parses it and rebuilds the tree. In T, the producer sends a raw binary record, and the receiver validates it and rebuilds the tree.
+
+The table gives microseconds per snapshot as the median of five per-block means. The paired sum is the median of the measured per-block paired sums, which differs slightly from the sum of the two medians. Bytes are per 24-frame block, with T counted as raw binary before base64.
+
+| Arm | Producer (µs) | Receiver (µs) | Paired sum (µs) | Bytes per block | Paired sum relative to J |
+|---|---|---|---|---|---|
+| J | 1120.9 | 615.5 | 1734.4 | 15226 | reference |
+| SJ | 261.0 | 360.9 | 621.2 | 2382 | -64.2% |
+| T | 237.5 | 501.1 | 738.5 | 628 | -57.4% |
+
+Every arm produced checksum 926. Each time includes the capsule's checksum and loop overhead. The capacity case cap 395 is outside the twelve-state trial and does not enter these figures.
+
+T has the smallest packet and the fastest producer, yet its receiver costs about 140 µs more per snapshot than SJ's, and its paired sum is about 18.9% higher. The T receiver applies strict domain checks to each field, while the SJ receiver relies on the engine's trusted JSON parser, and the two receivers perform different conversions into the tree. The trial does not separate these contributions, so the gap is not assigned to validation alone.
+
+For this corpus on this board, SJ is the better semantic arm on paired CPU, and it is the arm carried to the live candidate gate. T remains documented as an option for a path where transfer size, rather than CPU time, is the binding limit.
+
+### Separate native trace
+
+The same temporary image also ran the CJI-compiled Snake game and compositor normally under autopilot, with instrumented spans. Eight generic render-and-publish samples had a median of 224.5 µs (range 213 to 231 µs). That interval includes copying the complete retained sender envelope, 538 to 542 bytes, to subscribers. Seven 110 ms timer callbacks had a median of 24.375 ms. Seven compositor draw callbacks had a median of 18.570 ms, including a nested graphics commit with a median of 4.396 ms. Thirteen successful SPI pixel-send requests had a median of 353 µs, ranging from 102 to 802 µs and from 176 to 2860 bytes per request. These medians come from different real scenes, so nested and uncorrelated spans are kept separate and are not added into a frame cost. The trace contains no same-input semantic arm and therefore gives no native semantic speedup.
+
+A screen retained from this native app shows autopilot, a snake of length five with head-first cells 40, 62, 84, 106 and 128, food at cell 36, score 10, and displayed best 10. Because the visible best is max(best, score), a hidden historical best of 0 or 10 yields the same rendered tree. Compactly serialized to JSON offline, this screen description is 528 bytes, and the inferred 20-byte semantic record rebuilds an identical tree. Host RGB565 rasters of the captured native tree and of an independently reconstructed template tree agreed on all 102400 pixels. This establishes tree and host-raster equivalence for one physical held-out screen description. It is distinct from an LCD pixel comparison and from a capture of source state.
+
+The source replay and physical results are archived in physical-snake.json and native-published-frame.json, together with the device capsule and reproducible host meter fixtures. Allocation figures remain those of the separate host QuickJS allocator runs.
+
 ## Painting only the cells that changed
 
 The second question was whether the C side could avoid a full repaint on ordinary moves. The partial candidate keeps its own visual occupancy grid for both the previous state and the new state. It compares all 396 cells and fills only the cells that differ.
@@ -196,6 +228,8 @@ For ordinary moves, the forced-skip and idle frames were excluded, leaving 196 d
 
 PicoCalc Snake draws each segment as an 11x11 colored square of 121 pixels on a fixed 320x320 RGB565 scene, and the measurements below come from normal source movement in the warm native C raster benchmark. Three quantities must be kept separate. Changed source positions are pixels whose color differs between consecutive frames, writes are pixels the partial painter actually rewrites, and transfer area is the number of pixels inside the rectangles sent to the display. Of 196 eligible changed movement draws, which exclude the forced drop and idle frames, 195 changed and partially rewrote 363 pixels, or three cells of 121. One draw changed and rewrote exactly 242 pixels, and it occurred at legal tail entry. In that move the new head occupies the cell that was the tail, so that cell changes from body ink to head accent, while the old head changes from accent to body ink. No cell needs to be erased to white, which leaves 2 × 121 = 242 changed pixels.
 
+![Ordinary turn and legal tail entry in RGB565](../various/snake-motion-rgb565.png)
+
 A collision in the source trace changed 14,102 pixels and transferred 16,855. No frame required a full-panel transfer except the initial frame and the forced repairs. Whether the candidate stays correct for overlays other than those in this trace has not been established.
 
 ## Losing a record, skipping a flush, repainting, scheduling
@@ -212,7 +246,7 @@ One run withheld ten consecutive snapshots. On the next present, the partial pai
 
 ## Measured, predicted, open
 
-Exact equality and source replay justify testing the semantic formats on a device. The measured codec and CPU costs apply to the host capsule, and the native raster was measured apart from admission, the real scheduler and the actual display. Physical SPI timing and 20-seed endurance remain open. A P95 end-to-end threshold requires matched physical input-to-output timing measured beyond the isolated capsule.
+On the board, every arm reproduced checksum 926 across the complete-state corpus, and the measured ranking places SJ first on paired CPU, T second, and J well behind. On the host, the inferred semantic record for the separately captured native screen rebuilt an identical tree, and its raster matched an independent template on every pixel. The native trace now times real SPI pixel requests on silicon, a stage the host draft had left open, while candidate SPI and photon timing remain unmeasured. Delta and semantic results stay independent. The open gates are a physical end-to-end run, a live CJI candidate, and the 20-seed generic pilot endurance run.
 
 ## Recommendation
 

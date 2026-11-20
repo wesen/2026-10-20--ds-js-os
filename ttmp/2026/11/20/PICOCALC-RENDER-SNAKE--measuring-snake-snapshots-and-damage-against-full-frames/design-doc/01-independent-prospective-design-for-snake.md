@@ -1,7 +1,7 @@
 ---
 Title: Independent prospective design for Snake
 Ticket: PICOCALC-RENDER-SNAKE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - ui

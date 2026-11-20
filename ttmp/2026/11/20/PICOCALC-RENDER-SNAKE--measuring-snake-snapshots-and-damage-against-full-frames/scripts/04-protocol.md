@@ -1,7 +1,7 @@
 ---
 Title: Operator protocol for Snake replay and measurement
 Ticket: PICOCALC-RENDER-SNAKE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - ui

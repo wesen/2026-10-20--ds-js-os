@@ -1,0 +1,419 @@
+{
+  "playableFirmware": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "instrumentedFirmware": "5172a38b98f5c3eed57bc4b6a7a1c33950ea955749e9cb099a0971dd6f67368a",
+  "stagedCapsuleSha256": "2f9812fbff7f31e39929f0691a3a2330f62aa851b066a08be001188cfca7b3bd",
+  "blocks": [
+    {
+      "block": 0,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 26693,
+        "receiverUs": 14771,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 0,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6243,
+        "receiverUs": 8666,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 0,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5975,
+        "receiverUs": 12034,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 1,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 26728,
+        "receiverUs": 14789,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 1,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5699,
+        "receiverUs": 12026,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 1,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6271,
+        "receiverUs": 8677,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 2,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5642,
+        "receiverUs": 12063,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 2,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 26901,
+        "receiverUs": 14724,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 2,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6254,
+        "receiverUs": 8634,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 3,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5699,
+        "receiverUs": 11998,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 3,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6337,
+        "receiverUs": 8662,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 3,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 27090,
+        "receiverUs": 14890,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    },
+    {
+      "block": 4,
+      "name": "snake",
+      "arm": "SJ",
+      "reps": 2,
+      "data": {
+        "arm": "SJ",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 6265,
+        "receiverUs": 8588,
+        "checksum": 926,
+        "encodedUnits": 2382,
+        "bytes": 2382
+      }
+    },
+    {
+      "block": 4,
+      "name": "snake",
+      "arm": "T",
+      "reps": 2,
+      "data": {
+        "arm": "T",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 5800,
+        "receiverUs": 11950,
+        "checksum": 926,
+        "encodedUnits": 628,
+        "bytes": 628
+      }
+    },
+    {
+      "block": 4,
+      "name": "snake",
+      "arm": "J",
+      "reps": 2,
+      "data": {
+        "arm": "J",
+        "reps": 2,
+        "count": 24,
+        "producerUs": 27274,
+        "receiverUs": 14737,
+        "checksum": 926,
+        "encodedUnits": 15016,
+        "bytes": 15226
+      }
+    }
+  ],
+  "microsecondsPerSnapshot": {
+    "J": {
+      "producerUs": 1120.875,
+      "receiverUs": 615.4583333333334,
+      "bothUs": 1734.375,
+      "bytesPerBlock": 15226
+    },
+    "SJ": {
+      "producerUs": 261.0416666666667,
+      "receiverUs": 360.9166666666667,
+      "bothUs": 621.2083333333334,
+      "bytesPerBlock": 2382
+    },
+    "T": {
+      "producerUs": 237.45833333333334,
+      "receiverUs": 501.0833333333333,
+      "bothUs": 738.5416666666666,
+      "bytesPerBlock": 628
+    }
+  },
+  "nativeTrace": [
+    "LAB TRACE 21252569 432 1386 spi pixel-send",
+    "LAB TRACE 21287252 1277 0 compositor keys",
+    "LAB TRACE 21292743 6000 0 snake key",
+    "LAB TRACE 21298814 216 542 snake render+publish",
+    "LAB TRACE 21301026 4609 0 compositor frames",
+    "LAB TRACE 21315516 4216 1 graphics commit",
+    "LAB TRACE 21305742 17716 0 compositor draw",
+    "LAB TRACE 21328817 802 2860 spi pixel-send",
+    "LAB TRACE 21328562 24612 0 snake every 110 ms",
+    "LAB TRACE 21353231 226 542 snake render+publish",
+    "LAB TRACE 21360519 3786 0 compositor frames",
+    "LAB TRACE 21374212 4254 1 graphics commit",
+    "LAB TRACE 21364418 21743 0 compositor draw",
+    "LAB TRACE 21390842 531 1386 spi pixel-send",
+    "LAB TRACE 21397352 620 0 compositor keys",
+    "LAB TRACE 21436800 24375 0 snake every 110 ms",
+    "LAB TRACE 21461232 228 541 snake render+publish",
+    "LAB TRACE 21463577 292 0 compositor every 500 ms",
+    "LAB TRACE 21463909 4538 0 compositor frames",
+    "LAB TRACE 21478392 4323 1 graphics commit",
+    "LAB TRACE 21468551 17897 0 compositor draw",
+    "LAB TRACE 21491168 797 2400 spi pixel-send",
+    "LAB TRACE 21518850 3298 0 sysmon every 500 ms",
+    "LAB TRACE 21546050 24356 0 snake every 110 ms",
+    "LAB TRACE 21570459 228 540 snake render+publish",
+    "LAB TRACE 21572700 4624 0 compositor frames",
+    "LAB TRACE 21587344 4396 3 graphics commit",
+    "LAB TRACE 21577443 18570 0 compositor draw",
+    "LAB TRACE 21602416 203 242 spi pixel-send",
+    "LAB TRACE 21603205 551 1184 spi pixel-send",
+    "LAB TRACE 21603949 102 176 spi pixel-send",
+    "LAB TRACE 21657457 24922 0 snake every 110 ms",
+    "LAB TRACE 21682437 223 539 snake render+publish",
+    "LAB TRACE 21684771 4575 0 compositor frames",
+    "LAB TRACE 21699511 4440 2 graphics commit",
+    "LAB TRACE 21689700 21773 0 compositor draw",
+    "LAB TRACE 21719101 611 528 spi pixel-send",
+    "LAB TRACE 21721014 171 242 spi pixel-send",
+    "LAB TRACE 21761076 210 1186 nat-dial render+publish",
+    "LAB TRACE 21761378 9821 0 compositor frames",
+    "LAB TRACE 21771965 24510 0 snake every 110 ms",
+    "LAB TRACE 21796536 231 538 snake render+publish",
+    "LAB TRACE 21799130 4536 0 compositor frames",
+    "LAB TRACE 21813568 4452 2 graphics commit",
+    "LAB TRACE 21803773 18260 0 compositor draw",
+    "LAB TRACE 21827814 353 528 spi pixel-send",
+    "LAB TRACE 21828460 259 242 spi pixel-send",
+    "LAB TRACE 21876798 24330 0 snake every 110 ms",
+    "LAB TRACE 21901185 223 538 snake render+publish",
+    "LAB TRACE 21903730 4553 0 compositor frames",
+    "LAB TRACE 21918278 4423 2 graphics commit",
+    "LAB TRACE 21908396 22111 0 compositor draw",
+    "LAB TRACE 21936846 341 528 spi pixel-send",
+    "LAB TRACE 21937470 248 242 spi pixel-send",
+    "LAB TRACE 21946913 750 0 compositor every 500 ms",
+    "LAB TRACE 21986056 24302 0 snake every 110 ms",
+    "LAB TRACE 22010419 213 538 snake render+publish",
+    "LAB TRACE_END 57 0"
+  ],
+  "nativeStageSummary": {
+    "snake render+publish": {
+      "n": 8,
+      "medianUs": 224.5,
+      "rangeUs": [
+        213,
+        231
+      ],
+      "units": "envelope bytes",
+      "quantityRange": [
+        538,
+        542
+      ]
+    },
+    "snake every 110 ms": {
+      "n": 7,
+      "medianUs": 24375,
+      "rangeUs": [
+        24302,
+        24922
+      ],
+      "units": "none",
+      "quantityRange": [
+        0,
+        0
+      ]
+    },
+    "compositor draw": {
+      "n": 7,
+      "medianUs": 18570,
+      "rangeUs": [
+        17716,
+        22111
+      ],
+      "units": "none",
+      "quantityRange": [
+        0,
+        0
+      ]
+    },
+    "graphics commit": {
+      "n": 7,
+      "medianUs": 4396,
+      "rangeUs": [
+        4216,
+        4452
+      ],
+      "units": "rectangles",
+      "quantityRange": [
+        1,
+        3
+      ]
+    },
+    "spi pixel-send": {
+      "n": 13,
+      "medianUs": 353,
+      "rangeUs": [
+        102,
+        802
+      ],
+      "units": "bytes",
+      "quantityRange": [
+        176,
+        2860
+      ]
+    }
+  },
+  "witness": {
+    "input": "instrumented native CJI game retained screen JSON",
+    "genericBodyUtf8": 528,
+    "rawSemantic": 20,
+    "visible": {
+      "alive": true,
+      "auto": true,
+      "food": 36,
+      "body": [
+        40,
+        62,
+        84,
+        106,
+        128
+      ],
+      "score": 10,
+      "shownBest": 10
+    },
+    "indistinguishableHistoricalBest": [
+      0,
+      10
+    ],
+    "contentSha256": "753f7fa25bf6d0ed5496f63cb82a3090d5d08073ddab346dd17ecc084d845abf",
+    "hostRgb565Sha256": "199f11ef4792518e401878f3f058bccf2a6a6e85a417f5a449740b71ca44c926"
+  }
+}
