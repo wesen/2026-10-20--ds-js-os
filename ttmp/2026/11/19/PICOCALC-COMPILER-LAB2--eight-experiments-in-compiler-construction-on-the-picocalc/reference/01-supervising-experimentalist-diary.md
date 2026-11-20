@@ -73,3 +73,58 @@ Read the protocol beside `scripts/01-qualify-staged.py`. Compare the original sc
 ### Technical details
 
 Staged RV32 SHA-256 `532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b`. Scratch directory `/tmp/pico-lab2-wave`. Raw firmware and serial captures stay there. The committed evidence should contain compiler and output identities, timing rows, and restoration checks.
+
+## Step 2: Freeze two baselines, choose the integration arms and challenge the selection policy
+
+The staged compiler passed all 24 original application replays. The physical board was available, and a new read of its factory region matched the prior backup. Three researchers produced host-qualified study compilers while the board ran two frontend campaigns. A separate Opus High session answered each of the eight research questions before the supervisor combined any data.
+
+### Prompt Context
+
+**User prompt (verbatim)** “what's the editor compile time currently? the best?” and “and files?”
+
+**Assistant interpretation.** Give separate physical measures for cold compilation and editing-session rebuilds, including across-boot variability. **Inferred user intent.** Place architectural experiments in the context of how long the actual programmer waits for an app.
+
+**Commit (code).** `8a73866` freezes the replay result and model proposals. `744efe2` contains the independent held-out generator. `705c3af` adds bounded fragment retention to the incremental Editor study.
+
+### What I did
+
+- Compared a fresh 8 MiB factory backup and partition table, acquired a single serial lock, and ran the scanner factorial and source-span trial for two full physical boots each. Both restored all three native worlds. Passed eight independent Claude Code Opus High proposals to the researchers.
+- Wrote and committed a held-out 72-function fixed-point arithmetic kernel generator after the original policy freeze. Evaluated three declaration orders using the frozen policies. Captured each actual compiler output against the admission model.
+- Composed the eager cursor scanner, A6 destination lowering, direct typed reads and A7 raw-use register homes. The combined compiler passes the complete 24-replay suite. The four-arm firmware contains production, staged, native-only and combined. Its Editor search kernel uses the exact app text, and the native-only and combined arms emit identical machine words.
+- Set up a separate implementation ticket and physical ELF-to-return harness for the 120-function Editor. Uploaded the supervisor and incremental study designs together as *PicoCalc Compiler Lab II - Trial Protocol and Bounded Editor Rebuilds* to the wave's reMarkable folder.
+
+### Why
+
+The final experiment needs two fixed comparison points. Production establishes product impact, while the staged emitter isolates later research changes from its earlier code-size gain. Including native-only separately measures the scanner’s effect on the same final backend. Use counts provide a preregistered simpler register-policy choice for the principal integration test. Loop weighting, bounds proofs over edited source, incremental edits, analysis admission, and await retain their own reference programs and metrics.
+
+### What worked
+
+First-wave staged qualification passed 24/24 and combined qualification also passed 24/24. All eight model returns identify `claude-opus-5-5`; command-line effort was high. The scanner factorial measured 2.157–2.158 s for Editor and 232–233 ms for Files using cursor scanning and token reuse. Independent selection needed 38,016 eligible proof visits across the held-out 72 functions against a primary budget of 32,768. The simple literal and ranked policies both recovered 1,386 RV32 words on each order; source-order recovered 407–1,386.
+
+### What didn't work
+
+My first backup command used a stale documentation path; the script actually lives under `scripts/supervisor/`. I corrected the filename before opening the board. Lazy token text increased Editor build time by about 213 ms relative to eager cursor/reuse, despite reducing source slicing. The extra ranking pass costs 19,008 visits on the independent workload and exhausts a 9,504-visit inclusive budget before proof can start. The loss matters as much as the wins.
+
+### What I learned
+
+The paired scheduler's setup cost dominates small Files differences, while the Editor scanner difference repeats across independent studies. Charging a ranking scan to the same visit budget as the actual analysis reverses the result for small budgets. A reduced instruction count can coexist with a slower compiler because QuickJS runs the lowering algorithm.
+
+### What was tricky to build
+
+Node's sandboxed process-launch error and a real compiler failure produce the same FAIL in the professor’s abbreviated driver. An exact ELF digest and actual guest effects are separate correctness tests. Field reordering needs a guest that observes two different state offsets. Source spans and retained instruction words contribute to different memory measurements.
+
+### What warrants a second pair of eyes
+
+An independent Astra High examiner has been assigned host replay, physical accounting, retention and held-out scrutiny. The eight Opus proposals are advisory. Only independently reproduced claims enter the results tables.
+
+### What should be done in the future
+
+Measure the two backend phases, the incremental Editor and the final four-arm combination, and qualify the remaining suspended workflow. Collect and link every study's published article and guide.
+
+### Code review instructions
+
+Check `various/staged-replays.json`, `various/combined-host-replays.json`, and `various/combined-compiler-inputs.json`. Inspect the three independent orders and their cost-inclusive columns in `various/independent-selection.json`. The numerical source for the previously quoted 43–44 ms Files edit is the first COMPILER-LAB supervisor report, section “An edit through native return.”
+
+### Technical details
+
+The device factory digest begins `6b0e3ba4`. Code for the native-only and fully combined Editor is 12,444 RV32 words in the raw-use policy, against 16,541 staged and 21,886 production. These are static measures; the physical integrated cold times and guest cycles remain separate open observations.

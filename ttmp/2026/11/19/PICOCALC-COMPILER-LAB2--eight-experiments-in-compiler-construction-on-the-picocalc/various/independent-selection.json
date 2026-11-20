@@ -1,0 +1,298 @@
+{
+  "freeze": "70c85541957a32e0f0764ab5e40f88608c62b5711827fa92332da269457eb7e1",
+  "inputs": {
+    "clustered.typed": {
+      "sha": "42af41dc2bf8a9144af497613159778f4755132f8adee25b08b1882d81e3302b",
+      "eligible": 38016,
+      "planning": 19008
+    },
+    "reversed.typed": {
+      "sha": "835281ff0eed0d11a2a1f2a75ddb265bf3a6a4b186771fe315f1624573919b87",
+      "eligible": 38016,
+      "planning": 19008
+    },
+    "shuffled.typed": {
+      "sha": "f6e28680afe48309e6d14046eda49d01c61832ab4c490a6137c5e317afedeef1",
+      "eligible": 38016,
+      "planning": 19008
+    }
+  },
+  "cases": [
+    {
+      "order": "clustered.typed",
+      "budget": 32768,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 1386,
+          "charge": 32478,
+          "plannerChargedWords": 1386
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        }
+      }
+    },
+    {
+      "order": "clustered.typed",
+      "budget": 9504,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 1386,
+          "charge": 9412,
+          "plannerChargedWords": 1386
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        }
+      }
+    },
+    {
+      "order": "clustered.typed",
+      "budget": 19008,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 1386,
+          "charge": 18904,
+          "plannerChargedWords": 1386
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        }
+      }
+    },
+    {
+      "order": "clustered.typed",
+      "budget": 38016,
+      "binding": false,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 1386,
+          "charge": 38016,
+          "plannerChargedWords": 1386
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        }
+      }
+    },
+    {
+      "order": "reversed.typed",
+      "budget": 32768,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 407,
+          "charge": 32650,
+          "plannerChargedWords": 407
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        }
+      }
+    },
+    {
+      "order": "reversed.typed",
+      "budget": 9504,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 55,
+          "charge": 9452,
+          "plannerChargedWords": 55
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        }
+      }
+    },
+    {
+      "order": "reversed.typed",
+      "budget": 19008,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 0,
+          "charge": 18872,
+          "plannerChargedWords": 0
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        }
+      }
+    },
+    {
+      "order": "reversed.typed",
+      "budget": 38016,
+      "binding": false,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 1386,
+          "charge": 38016,
+          "plannerChargedWords": 1386
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        }
+      }
+    },
+    {
+      "order": "shuffled.typed",
+      "budget": 32768,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 1232,
+          "charge": 32556,
+          "plannerChargedWords": 1232
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        }
+      }
+    },
+    {
+      "order": "shuffled.typed",
+      "budget": 9504,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 462,
+          "charge": 9416,
+          "plannerChargedWords": 462
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        }
+      }
+    },
+    {
+      "order": "shuffled.typed",
+      "budget": 19008,
+      "binding": true,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 759,
+          "charge": 18984,
+          "plannerChargedWords": 759
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 0
+        }
+      }
+    },
+    {
+      "order": "shuffled.typed",
+      "budget": 38016,
+      "binding": false,
+      "oracle": 1386,
+      "policies": {
+        "source": {
+          "words": 1386,
+          "charge": 38016,
+          "plannerChargedWords": 1386
+        },
+        "literal": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        },
+        "density": {
+          "words": 1386,
+          "charge": 7596,
+          "plannerChargedWords": 1386
+        }
+      }
+    }
+  ]
+}

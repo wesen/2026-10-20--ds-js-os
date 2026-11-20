@@ -1,0 +1,21 @@
+{
+  "decoder": "cursor_reuse",
+  "inputs": {
+    "base": {
+      "wasm": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+      "rv32": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+    },
+    "staged": {
+      "wasm": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+      "rv32": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b"
+    },
+    "native": {
+      "wasm": "b56534763e6c3fc9d53a6aa47ecb740b2f53fd095389b35cd64996d4a195a6fe",
+      "rv32": "6f6b846dc1f2c9100ba79d87560ad19e13d2f727d1caa80be36bd38fb5450fc8"
+    },
+    "combined": {
+      "wasm": "aae4112e38fbc6476ff6618c10baf117af07a5653a9345af285d7b5b7d20ebaf",
+      "rv32": "6f6b846dc1f2c9100ba79d87560ad19e13d2f727d1caa80be36bd38fb5450fc8"
+    }
+  }
+}
