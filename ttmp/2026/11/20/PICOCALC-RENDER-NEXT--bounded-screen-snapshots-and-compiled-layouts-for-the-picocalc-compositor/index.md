@@ -37,3 +37,7 @@ The [director’s research report](../PICOCALC-RENDER-LAB--measure-bounded-scree
 ## Deriving the binary producer from application types
 
 The [PSIX specialization experiment](../PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/analysis/01-compiling-the-screen-writer-on-a-handheld.md) ran the existing compiler on the ESP32-P4 and compared generated Chess writers, compact layout tables and guarded packet copying. Its [research index](../PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/index.md) links the independent studies, physical controls and intern guide.
+
+## Integrating the Snake result
+
+The production [Snake integration](../PICOCALC-SNAKE-INTEGRATION--ship-semantic-snake-snapshots-and-changed-cell-painting-on-the-picocalc/index.md) follows a complete game position through native publication, compositor validation, changed-cell painting and the display driver. Its independent correctness and device reports distinguish serialized size, CPU time and display transfer. The game uses semantic JSON.

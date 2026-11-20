@@ -7,46 +7,31 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://cji/tests/native/snake.out
+      Note: Qualified RV32 world output
+    - Path: repo://picocalc-os/js/apps/snake.js
+      Note: Complete head-first board and visual state
+    - Path: repo://picocalc-os/js/system/compositor.js
+      Note: Admission, full composition and changed-cell painting
+    - Path: repo://picocalc-os/nucleus/gfx.c
+      Note: Commit, comparison copy and invalidation
 ExternalSources: []
-Summary: ""
+Summary: Integrate complete semantic Snake frames and incremental painting, qualify two runtimes, publish the measured results.
 LastUpdated: 2026-11-20T13:31:12.277911127-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
 
-# Ship semantic Snake snapshots and changed-cell painting on the PicoCalc
+# Shipping semantic Snake frames on the PicoCalc
 
-## Overview
+The native and JS Snake producers now publish game positions, and the compositor paints verified single-step movements using two or three cell interiors. Complete positions support full composition after focus changes, death, skipped publications or a compositor restart. This ticket implements the earlier [Snake research result](../PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/index.md).
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+## Read in order
 
-## Key Links
+1. [Intern design and implementation guide](design-doc/01-from-a-complete-snake-position-to-changed-framebuffer-cells.md) explains the screen message, sender and receiver, validation, painting and ownership.
+2. [Director report](analysis/01-drawing-a-moving-snake-on-the-picocalc.md) connects the protocol change with the verified movement, recovery cases and device result.
+3. [Physical measurement report](analysis/02-snake-on-the-device.md) explains the normal playable build, measurement boundaries, observations and final firmware.
+4. [Independent correctness study](analysis/03-snake-rendering-correctness.md) uses exact pixels, malformed positions, and simulated display failures.
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+The [director diary](reference/01-director-implementation-and-integration-diary.md), [board diary](reference/02-device-diary.md) and [replay diary](reference/03-replay-diary.md) record the research and implementation chronologically. See the [reproduction guide](README.md) and [tasks](tasks.md).
