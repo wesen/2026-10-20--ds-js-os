@@ -38,7 +38,9 @@ def verify(cc, emulator, directory):
     data["expected_traps"] = traps
     packed = b"".join(struct.pack("<i", value) for value, _ in rows)
     data["results_sha256"] = hashlib.sha256(packed).hexdigest()
-    if directory.parent.name == "agenda":
+    if directory.parent.name == "editor-preview-slot":
+        data["stats"] = [row for row in data["stats"] if row["name"] == "editorPreviewSlot"]
+    if directory.parent.name in ("agenda", "editor-preview-slot"):
         data["vectors"] = expected
     return data
 
@@ -53,7 +55,10 @@ def main():
     receipt = {"gcc": subprocess.check_output([cc, "-dumpfullversion"], text=True).strip(),
                "emulator_sha256": hashlib.sha256(Path(emulator).read_bytes()).hexdigest(),
                "guests": {}}
-    for name in ("arithmetic", "agenda", "limits"):
+    names = ["arithmetic", "agenda", "limits"]
+    if (args.directory/"editor-preview-slot").is_dir():
+        names.append("editor-preview-slot")
+    for name in names:
         results = {policy:verify(cc, emulator, args.directory/name/policy)
                    for policy in ("control", "always", "select")}
         assert len({r["results_sha256"] for r in results.values()}) == 1

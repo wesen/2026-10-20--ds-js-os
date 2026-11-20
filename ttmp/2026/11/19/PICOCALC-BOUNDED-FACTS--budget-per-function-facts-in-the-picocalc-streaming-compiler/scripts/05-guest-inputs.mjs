@@ -5,7 +5,7 @@ import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {collect, policies, realm, sha, revision} from './03-qualify.mjs';
 
-const [overlays, sources, output] = process.argv.slice(2);
+const [overlays, sources, output, reactors] = process.argv.slice(2);
 assert.ok(overlays && sources && output);
 mkdirSync(output, {recursive:true});
 const here = dirname(fileURLToPath(import.meta.url));
@@ -16,6 +16,12 @@ const dates = [19990101, 19991231, 20000229, 20000301, 20240229, 20241231, 21000
 
 const fixture = readFileSync(join(here,'04-arithmetic.typed'),'utf8');
 const agenda = readFileSync(join(sources,'agenda.typed'),'utf8');
+let editor, previewSlot, editorReactor;
+if (reactors) {
+    editor = readFileSync(join(sources,'editor.typed'),'utf8');
+    previewSlot = /^function editorPreviewSlot\([^]*?^}/m.exec(editor)[0];
+    editorReactor = readFileSync(join(reactors,'typed-world-reactor.elf'));
+}
 const ordinary = [...fixture.matchAll(/function (\w+)/g)].map(m => m[1]);
 const expectedProofs = {
     fixedDiv: [1,1], fixedRem: [1,0], minusOneDiv: [1,0], minusOneRem: [1,0],
@@ -33,14 +39,22 @@ const limits = [
     'function laterSmall(x:i32):i32{return x/4;}',
 ].join('\n');
 
-for (const [moduleName, source, vectors] of [
+const guests = [
     ['arithmetic', fixture, ordinary.flatMap(name => x.flatMap(a => y.map(b => [name,a,b])))],
     ['agenda', agenda, dates.map(date => ['entryWeekday',date,0])],
     ['limits', limits, [['fullProofTable',max,0],['highSlot',min,0],['aboveFunctionCap',0,0],
         ['budget0',3,0],['budget23',3,0],['laterSmall',61,0]]],
-]) {
+];
+
+if (editor) {
+    const rows = [0,1,35,36,37,71,72,65535];
+    guests.push(['editor-preview-slot',editor,rows.map(row => ['editorPreviewSlot',row,0])]);
+}
+
+for (const [moduleName, source, vectors] of guests) {
     const baseline = realm(overlays, 'control');
-    const oracle = (await WebAssembly.instantiate(baseline.typedWasm.compile(source).bytes)).instance.exports;
+    const wasmSource = moduleName === 'editor-preview-slot' ? previewSlot : source;
+    const oracle = (await WebAssembly.instantiate(baseline.typedWasm.compile(wasmSource).bytes)).instance.exports;
     const seenTraps = new Set();
     const expected = [], traps = [];
     for (const [name,a,b] of vectors) {
@@ -60,9 +74,28 @@ for (const [moduleName, source, vectors] of [
     for (const policy of policies) {
         const context = realm(overlays, policy);
         const stats = [];
-        const program = context.typedRv32.compile(source, [], undefined, {observeFacts: row => stats.push(row)});
+        const options = {observeFacts: row => stats.push(row)};
+        let program;
+        if (moduleName === 'editor-preview-slot') {
+            const compile = context.typedRv32.compile;
+            context.typedRv32.compile = (...args) => (program = compile(...args));
+            context.compileTypedWorldRv32(source, new Uint8Array(editorReactor), options);
+            const first = program.entries.editorPreviewSlot;
+            const entries = Object.values(program.entries);
+            const last = entries[entries.indexOf(first) + 1];
+            assert.ok(last > first);
+            // This arithmetic leaf needs no SDK import. All other functions are inert here.
+            assert.ok(program.relocations.every(r => r.offset < first || r.offset >= last));
+            const words = Buffer.from(program.image).subarray(first,last);
+            for (let i = 0; i < words.length; i += 4) {
+                const word = words.readUInt32LE(i);
+                assert.ok((word & 0xf80) !== 0x80 || (word & 0x7f) !== 0x6f, 'leaf has a call');
+            }
+        } else {
+            program = context.typedRv32.compile(source, [], undefined, options);
+            assert.equal(program.relocations.length,0);
+        }
         const raw = collect(program);
-        assert.equal(program.relocations.length,0);
         if (policy === 'control') initial = raw;
         assert.equal(raw.div,initial.div);
         assert.equal(raw.rem,initial.rem);

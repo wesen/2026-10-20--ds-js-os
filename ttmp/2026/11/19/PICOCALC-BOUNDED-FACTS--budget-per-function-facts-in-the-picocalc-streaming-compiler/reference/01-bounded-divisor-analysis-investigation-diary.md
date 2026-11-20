@@ -311,3 +311,57 @@ I linked the generated RV32 programs into a minimal ELF harness and ran them in 
 
 - The arithmetic output digest was `8ac3600584cdac84590055039b5fc2462160fafbc9560f9fbfb719c52cb03e05` under all three policies.
 - Agenda’s eight return values, in preregistered date order, were 5, 5, 2, 3, 4, 2, 1 and 5.
+
+## Step 6. Execute a leaf function from the withheld Editor image
+
+The preview replay and byte-level compiler check cover different things. I added a host execution of the exact `editorPreviewSlot` leaf from each full raw Editor image, then compared it with a Wasm execution. The candidate returned the same preview slot for each row and saved one retired instruction per call.
+
+### Prompt Context
+
+**User prompt:** See Step 1. Measure guest behavior when feasible. This optional guest vector was selected after unblinding.
+
+**Commit (previous):** `1248953` — Qualify bounded divisor proofs on Editor and emulated guests.
+
+### What I did
+
+- Compiled the complete frozen Editor through `compileTypedWorldRv32` and captured its raw program.
+- Selected eight ordinary row numbers crossing the 35-to-36 preview ring boundary.
+- Verified the function had neither native import relocations nor direct call instructions. Compared with the same unchanged source function compiled to Wasm.
+- Verified all three guest image hashes against `various/host-editor.json`.
+
+### Why
+
+- The full image establishes that the exact output from each held-out compilation runs correctly for this leaf. The harness can exercise it without simulating uncalled device SDK services.
+
+### What worked
+
+- All policy variants returned `[0,100,3500,0,100,3500,0,1500]`.
+- The emulator retired 160 instructions with production and 152 with either candidate. The counting window includes identical harness work.
+
+### What didn't work
+
+- The leaf workload covers one arithmetic site. The conditional preview workflow and device loader require a separate physical replay.
+
+### What I learned
+
+- One emitted branch and trap pair disappears in the selected remainder. Only the successful branch was previously executed in this guest path.
+
+### What was tricky to build
+
+- The typed-world reactor imports SDK functions. The untouched raw import placeholders are harmless for this leaf, which has no call and no relocations.
+
+### What warrants a second pair of eyes
+
+- Verify that the selected symbol and its boundary agree with the raw instruction positions. Keep the post-unblinding guest check distinct from the preregistered preview replay.
+
+### What should be done in the future
+
+- Fill in physical native replay scope and confirm ELF hashes.
+
+### Code review instructions
+
+- Add the reactor directory as the fourth argument to `scripts/05-guest-inputs.mjs`. Inspect `guests.editor-preview-slot` in `various/rv32-guests.json`.
+
+### Technical details
+
+- The three returning output digests were `3ccab95b8a00d3600191a3f1f065e5c57154d2c0d1ce0bb8a9c514d7a1589219`.

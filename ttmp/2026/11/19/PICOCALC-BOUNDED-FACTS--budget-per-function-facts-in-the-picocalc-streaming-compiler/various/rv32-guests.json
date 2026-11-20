@@ -2718,6 +2718,246 @@
         "expected_traps": [],
         "results_sha256": "72e68069c16f1bb95b050d137952bb97268d6fe4fddb56b484c65854c386ff57"
       }
+    },
+    "editor-preview-slot": {
+      "control": {
+        "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+        "policy": "control",
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "imageSha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+        "words": 21886,
+        "stats": [],
+        "returns": 8,
+        "retired_including_harness": 160,
+        "expected_traps": [],
+        "results_sha256": "3ccab95b8a00d3600191a3f1f065e5c57154d2c0d1ce0bb8a9c514d7a1589219",
+        "vectors": [
+          {
+            "name": "editorPreviewSlot",
+            "a": 0,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 20
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 1,
+            "b": 0,
+            "value": 100,
+            "retired_including_harness": 20
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 35,
+            "b": 0,
+            "value": 3500,
+            "retired_including_harness": 20
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 36,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 20
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 37,
+            "b": 0,
+            "value": 100,
+            "retired_including_harness": 20
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 71,
+            "b": 0,
+            "value": 3500,
+            "retired_including_harness": 20
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 72,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 20
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 65535,
+            "b": 0,
+            "value": 1500,
+            "retired_including_harness": 20
+          }
+        ]
+      },
+      "always": {
+        "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+        "policy": "always",
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "imageSha256": "8687d8c3b5cbe49e80ce93b9e25437b0e61aec3cd95fd27028849a2fa4b4cacd",
+        "words": 21803,
+        "stats": [
+          {
+            "name": "editorPreviewSlot",
+            "cells": 9,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 18,
+            "scratchBytes": 1280,
+            "analysisNs": 0,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          }
+        ],
+        "returns": 8,
+        "retired_including_harness": 152,
+        "expected_traps": [],
+        "results_sha256": "3ccab95b8a00d3600191a3f1f065e5c57154d2c0d1ce0bb8a9c514d7a1589219",
+        "vectors": [
+          {
+            "name": "editorPreviewSlot",
+            "a": 0,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 1,
+            "b": 0,
+            "value": 100,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 35,
+            "b": 0,
+            "value": 3500,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 36,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 37,
+            "b": 0,
+            "value": 100,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 71,
+            "b": 0,
+            "value": 3500,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 72,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 65535,
+            "b": 0,
+            "value": 1500,
+            "retired_including_harness": 19
+          }
+        ]
+      },
+      "select": {
+        "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+        "policy": "select",
+        "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+        "imageSha256": "8687d8c3b5cbe49e80ce93b9e25437b0e61aec3cd95fd27028849a2fa4b4cacd",
+        "words": 21803,
+        "stats": [
+          {
+            "name": "editorPreviewSlot",
+            "cells": 9,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 18,
+            "scratchBytes": 1280,
+            "analysisNs": 0,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          }
+        ],
+        "returns": 8,
+        "retired_including_harness": 152,
+        "expected_traps": [],
+        "results_sha256": "3ccab95b8a00d3600191a3f1f065e5c57154d2c0d1ce0bb8a9c514d7a1589219",
+        "vectors": [
+          {
+            "name": "editorPreviewSlot",
+            "a": 0,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 1,
+            "b": 0,
+            "value": 100,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 35,
+            "b": 0,
+            "value": 3500,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 36,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 37,
+            "b": 0,
+            "value": 100,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 71,
+            "b": 0,
+            "value": 3500,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 72,
+            "b": 0,
+            "value": 0,
+            "retired_including_harness": 19
+          },
+          {
+            "name": "editorPreviewSlot",
+            "a": 65535,
+            "b": 0,
+            "value": 1500,
+            "retired_including_harness": 19
+          }
+        ]
+      }
     }
   }
 }
