@@ -1,3 +1,21 @@
+---
+Title: Supervisor's chess workload diary
+Ticket: PICOCALC-TYPED-CHESS
+Status: active
+Topics:
+    - picocalc
+    - performance
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: Independent legal-move and tactical references for the typed chess benchmark.
+LastUpdated: 2026-11-20T01:07:00-05:00
+WhatFor: Reproduce the reference answers and the physical measurement schedule.
+WhenToUse: Reviewing chess rule correctness, fixed search positions and board evidence.
+---
+
 # Supervisor's chess workload diary
 
 ## Step 1: Establish an independent rule and search oracle
