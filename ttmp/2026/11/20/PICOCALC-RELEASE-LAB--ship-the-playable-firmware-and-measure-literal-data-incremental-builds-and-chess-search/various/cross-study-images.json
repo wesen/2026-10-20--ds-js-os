@@ -88,7 +88,18 @@
         "padding": 0,
         "totalBytes": 88172,
         "literals": 33,
-        "uniqueLiterals": 33
+        "uniqueLiterals": 33,
+        "instructionBytesBySource": {
+          "position.typed": 8668,
+          "moves.typed": 6772,
+          "search.typed": 11140,
+          "chess.typed": 10612,
+          "view.typed": 12620,
+          "generated writer": 2392,
+          "mobile-view.typed": 2116
+        },
+        "embeddedSourceBytesUTF16": 32632,
+        "generatedGeometryTableTextBytesUTF16": 2222
       },
       "guardedWord": {
         "pooledSHA256": "ca2504c07979038174e60e0b35cccff7b8d5b1fcbf3a59f2e7277553b3a39871",

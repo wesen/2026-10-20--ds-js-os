@@ -222,3 +222,53 @@ Run scripts/director/06-profile-search-functions.py with the Chess fixture direc
 ### Technical details
 
 The model counts instructions at each guest program counter. Each `chess*` symbol identifies a function entry and its range extends to the next entry. The model attributes exclusive instructions to the function containing the current program counter. Nested callees accumulate their own counts.
+
+## Step 5: Explain the 88,172-byte candidate and deliver the three design guides
+
+I reran the code-size census on the fresh release build and the final halfword and guarded word candidates. When the user asked about mesh data, I attributed the halfword image to functions and data and counted the generated geometry tables inside the delivered painter source. The researcher handling reMarkable delivered all three frozen designs.
+
+### Prompt Context
+
+**User prompt (verbatim):** “what's in those 88kB, is it all mesh data mostly?”
+
+**Assistant interpretation:** Identify the bytes in the specific candidate Chess app that was just measured. **Inferred user intent:** Understand how much is game code, painter code or mesh data, and whether optimizing geometry or delivery is the larger opportunity.
+
+### What I did
+
+Extended scripts/director/05-cross-study-images.mjs to measure instruction spans up to the start of the literal pool. Counted the source after the generation marker in painter-3d.typed and inspected the input points in generate-chess-meshes.py. Inspected the physical compile receipt for all five trials per arm and world. Published the corrected ordinary release profile through ad48b80. Obtained the reMarkable delivery receipt in eed79fe.
+
+### Why
+
+The halfword image includes the full source of a second program. The bytes carrying that text are data to Chess and code to the receiving compiler. Counting separately compiled painter instructions again inside the 88,172 bytes would double-count its representation.
+
+### What worked
+
+The qualified game compiled to 54,320 instruction bytes and 33,852 literal bytes. The search group accounted for 26,580 instruction bytes, the source writer 2,392, and the rest of the game and views 25,348. Of the 32,632 bytes carrying painter text, 2,222 spell the generated extrusion tables including their identifying comment. The three-guide PDF reached the reMarkable cloud folder /ai/2026/11/20/PICOCALC-RELEASE-LAB.
+
+### What didn't work
+
+The first release-profile clean build raced two builds in the same CJI staging tree. The operator rebuilt using a separate source archive. The permission for the published tag and the later main-branch release recipe concern distinct source identities.
+
+### What I learned
+
+Most shape construction happens at runtime using arithmetic and a small set of reusable geometry routines. The compact outlines cover three pieces. The 2.5% figure refers to the text of the generated outline and face functions, while other geometry constants appear inside other routines.
+
+### What was tricky to build
+
+The final function span in a pooled image ends at codeBytes. Extending it to the complete image length would incorrectly charge the last function for every pooled literal. I compared the sum of spans to the explicit emitter metric.
+
+### What warrants a second pair of eyes
+
+The 88,172-byte result and the 89,084-byte guarded word result use different native copy loops. The ordinary firmware retains the original implementation. The measured linked Chess ELF is still 274,892 bytes for all arms.
+
+### What should be done in the future
+
+Finish the integrated lab report once the incremental device trial completes and publish all four articles together.
+
+### Code review instructions
+
+Inspect the game.deduplicated arm under game.arms in various/cross-study-images.json. Compare the per-source counts to the native-size table in the director article. Read the reMarkable delivery section of the Chess researcher's diary.
+
+### Technical details
+
+The source is ASCII and the emitter's read-only literal pool encodes each code unit in two bytes. The qualified source has 16,316 characters. Its generated table section has 1,111 characters. The separate compositor painter occupies 21,920 bytes using the deduplicated, halfword-copy candidate.

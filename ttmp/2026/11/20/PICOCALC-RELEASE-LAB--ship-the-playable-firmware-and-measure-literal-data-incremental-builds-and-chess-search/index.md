@@ -25,6 +25,14 @@ The [ordinary native PicoCalc firmware](https://github.com/wesen/2026-10-20--ds-
 
 The lab measures three costs separately. Literal lowering concerns the size and cold-build cost of reconstructing a program's immutable data. Function-fragment reuse concerns the delay between an actual source edit and a working native module. Chess search concerns the running cost of the resulting program. Each department stores reproducible experiments in its own subdirectory of scripts/.
 
+## Reading the results
+
+- [Director synthesis](analysis/01-compiling-programs-and-measuring-chess-search-on-a-handheld.md) connects the installed code census, edit correctness and generated search profiles.
+- [Literal-pool design](design-doc/02-pool-checked-buffer-literals.md) describes checked UTF-16 copies and their native representation.
+- [Incremental compiler design](design-doc/03-incremental-builds.md) defines reusable fragments, invalidation and measurement boundaries.
+- [Chess benchmark](analysis/04-chess-search.md) records the host and board outcomes for seventeen search workloads.
+- [Remaining rendering tasks](../PICOCALC-RENDER-NEXT--bounded-screen-snapshots-and-compiled-layouts-for-the-picocalc-compositor/index.md) group the six original gates still open.
+
 ## Status
 
 Current status: **active**

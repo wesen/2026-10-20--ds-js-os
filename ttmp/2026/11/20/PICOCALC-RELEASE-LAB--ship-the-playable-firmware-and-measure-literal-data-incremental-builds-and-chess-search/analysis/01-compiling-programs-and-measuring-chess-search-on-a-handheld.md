@@ -42,6 +42,21 @@ We isolated the expansion in an experiment with one, two or four leaf functions.
 
 A literal-data optimization can encode the character sequence as data and use a short copying operation. Evaluating that change requires counting all storage. If a candidate moves the payload into another section, its size includes that section, alignment and any new support code. If the firmware still reserves the original 256 KiB slot, unused slot space makes room for future code. Recovering that space for the running system requires a separate slot change and a device test.
 
+### Accounting for the candidate's 88,172 bytes
+
+The halfword-copy candidate emits 54,320 bytes of RV32 instructions and 33,852 bytes of literal data for the Chess app. All 33 eligible literals are distinct, so deduplicating identical pool entries makes no difference to this app. The 16,316-character painter source accounts for 32,632 bytes of that data because the destination stores UTF-16 code units. The other pooled literals account for 1,220 bytes. The compositor separately compiles the painter into 21,920 bytes under the same option. Those bytes belong to another image.
+
+| Contents of the candidate game image | Bytes | Share |
+|---|---:|---:|
+| Game position, move generation and search instructions | 26,580 | 30.1% |
+| Game event handlers and view instructions | 25,348 | 28.7% |
+| Instructions for delivering the painter source | 2,392 | 2.7% |
+| Complete painter source encoded as UTF-16 data | 32,632 | 37.0% |
+| Other pooled literal data | 1,220 | 1.4% |
+| **Total** | **88,172** | **100%** |
+
+The pieces are largely constructed from parameters. A pawn consists of stacked tapered sections. Rooks add four battlements. The knight's head, bishop's mitre and king's cross are extruded outlines containing nine, eight and twelve points respectively. The build tool triangulates the caps and emits lookup functions in Typed source. The generated section including its identifying comment is 1,111 ASCII characters. It occupies 2,222 bytes in the copy of the source carried by the app, or 2.5% of the candidate image. This measurement counts source text spelling out two tables. Other painter routines still perform geometry work at runtime. [Painter](../../../../../../picocalc-os/worlds/chess/painter-3d.typed) · [Mesh generator](../../../../../../picocalc-os/tools/generate-chess-meshes.py)
+
 ## What survives an edit
 
 The RV32 frontend collects declarations so that a function can call another function defined later in the same source. As each function compiles, its local instruction stream can be generated before all final addresses are known. The backend eventually knows the lengths of all functions, assigns entry addresses, fixes call targets and copies instruction words into the final image. This ordering explains why comparing only unchanged source substrings is insufficient. A function can keep its text while the offset of a record field it reads changes. It can keep its complete meaning while a call target moves because an earlier function grew.
@@ -66,6 +81,8 @@ After `e2e4`, the physical P4 completed three plies and returned `b8c6` at the g
 
 The board also completed depth five in a pawn ending in 142.179 ms. In the opening position, 30,000 nodes bought four full iterations and part of a fifth in 4.322 s. A tactical Kiwipete trial spent approximately 5.683 s on the same 30,000-node allowance. Position-dependent move generation, ordering, check evasion and tactical continuations make a node a variable unit of work.
 
+![Hardware time and modeled instructions per search node at depth three](../various/search-cost-per-node.png)
+
 We assigned a function symbol to every entry in the exact 26,580-byte native engine and ran four selected positions under the repository's RV32 instruction-counting emulator. Adding symbols changes the host profiler's ability to interpret addresses and leaves the emitted engine bytes untouched. Each replay reproduced its move, score, completed depth, node count and slice count. The instruction totals spanning each measured search differed by at most one instruction from the independent multi-case harness. Function percentages use instructions executed inside Typed functions as their denominator. They count how often machine instructions execute. Physical elapsed time depends additionally on instruction latency and the memory system. [Function profile and harness](../scripts/director/06-profile-search-functions.py) · [Complete profile](../various/search-function-profile.json)
 
 | Position and request | Most frequently executed function by instructions | Share | Combined share of two coordinate helpers |
@@ -84,3 +101,20 @@ The literal-pool experiment provides a control on the interpretation of these re
 We calibrated two one-parameter timing estimates on the opening at depth four. The board median was 638,433 µs for 4,438 nodes and 167,379,205 modeled RV32 instructions. The first estimate multiplies nodes in the new case by the opening's measured µs per node. The second multiplies modeled instructions by the opening's measured µs per instruction. Both pay for one board observation. The second also has to execute the new case in the host emulator.
 
 We evaluated the estimates on thirteen different workloads from the other five positions. We counted identical budget-limited Kiwipete searches only once and gave each remaining workload one vote. Absolute percentage error is the absolute difference between forecast and observed time divided by the observed time. The node-based estimate had **40.6% median absolute error** and a 76.7% worst error. The instruction-based estimate had **1.0% median absolute error** and a 3.3% worst error. This is a retrospective test with a designated calibration position. It shows that even a simple instruction-count model can help prioritize experiments on this engine, memory placement and clock configuration. A new compiler pass that changes the instruction mix or moves the board buffer to external RAM would need fresh physical validation. [Calculation](../scripts/director/07-predict-search-time.py) · [Per-workload errors](../various/search-time-prediction.json)
+
+## Building with a literal pool on the P4
+
+The board operator compiled each full app five times per arm, rotating the stock, halfword and guarded word implementations. Each compile used a fresh QuickJS runtime. Source text and a fixed-size reactor were already available to the caller. A reactor is the existing executable module that reserves a slot and supplies the SDK entry points for the generated program. Compiling and linking into it produces a loadable application. The reported peak measures the compiler's QuickJS allocation. Other live operating-system allocations sit outside that measurement.
+
+| Outcome | Chess, stock | Chess, halfword | Editor, stock | Editor, halfword |
+|---|---:|---:|---:|---:|
+| Median fresh compile and link | 5.255 s | 2.659 s | 4.532 s | 4.333 s |
+| Median peak QuickJS bytes | 3,181,936 | 1,681,944 | 2,567,084 | 2,536,560 |
+| Emitted code and literal data | 256,400 B | 88,172 B | 89,168 B | 77,732 B |
+| Linked module | 274,892 B | 274,892 B | 242,124 B | 242,124 B |
+
+On Chess the halfword pool reduced fresh build time **49.4%**, measured peak compiler allocation **47.1%**, and generated image size **65.6%**. Editor gained **4.4%** in time and **12.8%** in image size. The compiler produces fewer operations for long literal writes. Chess exercises that translation extensively because it carries another program. Editor supplies a valuable second workload with fewer eligible literals.
+
+The guarded word-copy variant adds an alignment check and copies more than one code unit per iteration when possible. It compiled Chess in **2.677 s**, produced an **89,084-byte** image, and reproduced the writer's expected output. In a separate native experiment the source and instructions were flash-mapped and the destination was in PSRAM. Median cycles per complete painter-source reconstruction fell from 6,465,714 for the stock writer to 94,909 for halfword copies and 42,300 for guarded word copies. Those medians cover eleven samples of eight calls per sample. Code placement, the instruction cache and memory access dominate this endpoint. The comparison does not tell us how many milliseconds a player saves when the ordinary native loader installs the program. A smaller reserved game slot and a measured first playable frame are the appropriate next integration tests.
+
+The release remains identifiable independently of this research. Its published application and partition match the prior physical readback. A later clean build reproduced the SDK configuration, Chess source, checked component executables and linked Chess and painter identities. Its complete firmware binary had a different hash. The release tag therefore retains the original verified download. [Release receipt](../various/release.json) · [Clean rebuild comparison](../various/release-clean-rebuild.json)

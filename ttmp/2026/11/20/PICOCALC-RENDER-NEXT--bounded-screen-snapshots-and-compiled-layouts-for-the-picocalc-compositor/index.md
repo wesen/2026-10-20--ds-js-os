@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T10:30:49.210549412-05:00
+LastUpdated: 2026-11-20T18:10:00-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -18,6 +18,8 @@ WhenToUse: ""
 # Bounded screen snapshots and compiled layouts for the PicoCalc compositor
 
 This ticket is the research program for representation, partial evaluation, layout and painting on the PicoCalc. Its control is the qualified playable compositor. The native Chess painter now accepts counted PSIX snapshots, Snake uses semantic JSON and changed-cell paint, and the released Chess camera runs through completed SPI. Eight of the fourteen original roadmap tasks have reached a supported disposition. Six remain open at the broader scope of the original designs.
+
+The [ordinary firmware release](https://github.com/wesen/2026-10-20--ds-js-os/releases/tag/picocalc-p4-smooth-chess-20261120) contains the playable Chess renderer. The [release receipt](../PICOCALC-RELEASE-LAB--ship-the-playable-firmware-and-measure-literal-data-incremental-builds-and-chess-search/various/release.json) identifies the exact downloadable application and partition table. The [generated-code benchmark](../PICOCALC-RELEASE-LAB--ship-the-playable-firmware-and-measure-literal-data-incremental-builds-and-chess-search/analysis/04-chess-search.md) measures the game engine independently of painting and display transfer.
 
 ## Start here
 

@@ -38,6 +38,35 @@ for (const [name, text] of cases) {
         const pooled = build(trial, {literalPool:true, ...options, literalMetrics:metrics});
         const pooledSHA256 = hash(pooled.image);
         record.arms[arm] = {pooledSHA256, ...metrics};
+        if (name === "game" && arm === "deduplicated") {
+            const entries = Object.entries(pooled.entries).sort((a, b) => a[1] - b[1]);
+            const unitNames = read(join(dir, "source.list")).trim().split("\n").concat("mobile-view.typed");
+            const owners = new Map([["chessPainterSource", "generated writer"]]);
+            for (const file of unitNames) {
+                const unit = read(join(dir, file));
+                for (const [,fn] of unit.matchAll(/^function (\w+)\s*\(/gm)) {
+                    const name = file === "view.typed" && fn === "chessRender" ? "chessRenderTree" : fn;
+                    assert(!owners.has(name));
+                    owners.set(name, file);
+                }
+            }
+            const bytes = {};
+            for (const [i, [fn, at]] of entries.entries()) {
+                const end = entries[i+1]?.[1] ?? metrics.codeBytes;
+                const group = owners.get(fn);
+                assert(group);
+                bytes[group] = (bytes[group] ?? 0) + end - at;
+            }
+            assert.equal(Object.values(bytes).reduce((a,b) => a+b), metrics.codeBytes);
+            record.arms[arm].instructionBytesBySource = bytes;
+            const painter = read(join(dir, "painter-3d.typed"));
+            assert.equal(Buffer.byteLength(painter), painter.length);
+            const marker = "// Generated extrusion tables follow.";
+            const at = painter.indexOf(marker);
+            assert(at > 0);
+            record.arms[arm].embeddedSourceBytesUTF16 = painter.length * 2;
+            record.arms[arm].generatedGeometryTableTextBytesUTF16 = (painter.length - at) * 2;
+        }
         if (name === "engine") {
             assert.equal(baselineSHA256, hash(readFileSync(enginePath)));
             assert.equal(baselineSHA256, pooledSHA256);
