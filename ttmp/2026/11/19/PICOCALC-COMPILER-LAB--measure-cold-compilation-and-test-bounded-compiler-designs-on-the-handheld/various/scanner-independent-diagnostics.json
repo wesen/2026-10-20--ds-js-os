@@ -1,0 +1,19 @@
+{
+  "sources": 321,
+  "fixture_sha": "0c3ec86252cd867bf0914009ab1f7ffd104893364701e2d52d849c7c33e8281a",
+  "counts": {
+    "wasm": {
+      "success": 187,
+      "syntax_error": 134
+    },
+    "rv32": {
+      "success": 187,
+      "syntax_error": 134
+    }
+  },
+  "inputs": [
+    "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+    "d0fdd090764f4bf189f753f059e847d34808dbb1d813ec9598b2245fabbda601",
+    "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+  ]
+}

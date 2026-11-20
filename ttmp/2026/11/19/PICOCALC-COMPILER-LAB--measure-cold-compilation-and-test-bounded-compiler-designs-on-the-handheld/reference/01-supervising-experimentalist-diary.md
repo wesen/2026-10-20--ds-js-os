@@ -227,3 +227,54 @@ Follow `scripts/08-run-frontend-board.py` for the instrumented research image, `
 ### Technical details
 
 Both the generic negative-control firmware and the frontend-specific firmware use the same saved factory partition. Its SHA-256 begins `6b0e3ba4`. The frontend's separately staged firmware SHA-256 starts `07d98dee`.
+
+## Step 5: Replicate the scanner and separate compiler cost from native runtime cost
+
+The frontend researcher completed the first study. I started the incremental researcher and the independent methods examiner while the ESP32 ran the replication and native comparisons. The clean native timings overturned an easy inference from the smaller machine code.
+
+### Prompt Context
+
+**User prompt (verbatim):** “actually, your idea to ask the same question independently was good.” The research brief also asks the supervisor to “independently replay the strongest result.” **Assistant interpretation:** Preserve the blind research question and use an independent staging path for the strongest cold-build claim. **Inferred user intent:** Learn whether an optimization survives a change in measurement setup and have independent researchers look for falsifying examples.
+
+### What I did
+
+- Compiled the cursor scanner again from a separate staging tree with the generic supervisor harness. Used the production Files, Agenda, and Editor wrappers, ran four matched blocks per boot on two boots, verified 48 ELF identities and restored the original firmware. Kept all per-block measurements and ran diagnostic comparisons on unrelated generated fixtures.
+- Built a native-control comparison with three arms and six matched blocks per boot. Separated clean compiler time, allocator high-water mark, emitted RV32 words, padded file bytes and cycles for two native guest functions. Captured 108 fresh app builds across two boots.
+- Arranged physical qualification of the staged compiler with an actual smaller reactor. Prepared a separate normal Editor boot for the bounded Select compiler so the digest is taken from exactly the buffer returned to the native loader. The paired compiler trial alone returns to a control world after timing.
+- Started a fourth researcher on function-level edit-to-run and an independent methods reviewer. The reviewer generated 69,632 fresh lexical traces and constructed a budget adversary with a fixed number of charged visits and different source order.
+
+### Why
+
+A regular expression can be replaced without changing any generated instructions. A new instruction selector can shrink every program while making the compiler itself spend longer deciding what to emit. A timing harness can even verify the correct compiled bytes and then boot a different app. Each claim needs a measurement at its own boundary.
+
+### What worked
+
+The independently staged scanner saved 292.445 and 315.438 ms per Editor compile (11.92% and 12.77%) and added 9,066 and 9,070 peak bytes. The independently staged native operand implementation cut physical Files comparator and Agenda weekday cycles by about 25–26%, and cut the Editor instruction payload by 24.42%. Yet Editor compilation took an extra 444.973 and 444.120 ms, approximately 18%, and consumed about 28.94 kB more peak compiler heap.
+
+### What didn't work
+
+The native backend cannot satisfy the cold-compile target on this evidence. The common guest harness measured two pure leaf/workload functions; it does not measure total Editor UI latency. Recording a signed arithmetic operation in a function identifies opportunities, but the examiner's adversarial program shows that function order can bring the measured yield from 720 saved words to zero when eligible functions compete for budget.
+
+### What I learned
+
+The scanner receives four independent boot measurements across the originating and replication harnesses. Summing matched block deltas or averaging their percentages without identifying the boot would falsely give these repeated measurements the status of independent devices. The reference for native and bounded arithmetic is the frozen streaming control, so stacking the observed timing changes requires a separate build and trial.
+
+### What was tricky to build
+
+A smaller reservation only releases world memory when the ELF is linked against a resized reactor. A selected-policy guest screen only qualifies that particular compiler when the returned image is verified before loading and the application then exercises real behavior. The two qualification images share a serial resource, so they run after the timing queue, with a known control between trials.
+
+### What warrants a second pair of eyes
+
+Check the staged guest-cycle units, the signed direction of medians of paired differences, and the separate whole-workflow emulation counts. For the budget result, compare equal charged cells, the changed function order and the unbounded reference. Require the normal-world qualification receipts before asserting physical UI equivalence.
+
+### What should be done in the future
+
+Finish normal-boot qualification, collect independent results for the incremental lane, and publish a synthesis with separate cold, resident-world, guest execution and edit-to-run decisions.
+
+### Code review instructions
+
+Read `scripts/04-board.py` and `scripts/05-summarize.py` with `various/scanner-independent-physical.json` and `various/native-physical.json`. Run the summarizer on each receipt and compare its output with the checked-in JSON. The normal-world qualification lives in `scripts/10-small-slot-board.py` and `scripts/12-stage-select-editor.py`.
+
+### Technical details
+
+The control revision is `40bcf850a5809ef6d839127869faa952596ed157`. The generic firmware checks the embedded JS, generated image SHA-256, app size, test order, correctness of the guest results, and three native world names before accepting a trial. Raw flash images and serial streams stayed in disposable storage. Published artifacts contain the compact evidence required to recompute the reported quantities.

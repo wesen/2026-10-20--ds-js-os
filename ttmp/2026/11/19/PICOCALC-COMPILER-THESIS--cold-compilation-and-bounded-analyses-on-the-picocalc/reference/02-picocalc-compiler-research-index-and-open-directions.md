@@ -89,3 +89,13 @@ These tickets identify which source, ABI and behavior a benchmark actually cover
 For **cold compilation on the device**, start with the combined trial’s app-by-app budget figures and subdivide the frontend time found in the earlier phase trace. For **generated-code quality**, continue Scope A against the model and measure actual guest instructions and application behavior. For **language research**, E and G provide concrete programs on which to test the value of static facts and compiler-generated continuations. For **trusted native execution**, D and F define what evidence a verifier would need. Track warm boot, cold compiler time, compiler peak allocation, application runtime and physical interaction latency as separate results. A single ranking across these measurements would hide the question each experiment answers.
 
 Coverage is the project’s compiler ticket record of 17–19 November, the professor’s plan, the special issue, and earlier platform tickets used by those studies. To update it, preserve the source proposal, add the strongest code or measurement receipt, and state which acceptance criterion it actually satisfies.
+
+## Current four-study compiler program
+
+The [supervising experimentalist’s ticket](../../PICOCALC-COMPILER-LAB--measure-cold-compilation-and-test-bounded-compiler-designs-on-the-handheld/index.md) holds the frozen controls, common hardware protocol, independent measurements and publication record. Each study has a design written before implementation.
+
+- [Tokenization and frontend timing](../../PICOCALC-FRONTEND-COLD--measure-cold-typed-compiler-frontend-costs-and-compare-a-cursor-lexer-on-picocalc/design-doc/01-measuring-the-cold-frontend-before-replacing-the-lexer.md)
+- [Native instruction selection and code reservation](../../PICOCALC-STAGED-RV32--a-staged-operand-stack-for-picocalc-rv32-compilation/design-doc/01-where-an-rv32-operand-lives-between-instructions.md)
+- [Bounded arithmetic analysis and its held-out test](../../PICOCALC-BOUNDED-FACTS--budget-per-function-facts-in-the-picocalc-streaming-compiler/design-doc/01-when-a-streaming-compiler-should-remember-a-divisor.md)
+- [Incremental compilation after an edit](../../PICOCALC-FUNCTION-REBUILD--rebuild-changed-typed-native-functions-on-picocalc/design-doc/01-compile-one-edited-function-and-rebuild-its-native-links.md)
+- [Independent methods examination](../../PICOCALC-LAB-REVIEW--independent-examination-of-the-picocalc-compiler-lab/design-doc/01-examining-the-four-compiler-experiments.md)
