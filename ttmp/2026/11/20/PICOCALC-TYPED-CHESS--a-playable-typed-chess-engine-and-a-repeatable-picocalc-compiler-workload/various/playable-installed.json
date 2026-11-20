@@ -1,0 +1,40 @@
+{
+  "source_revision": "b1cbfa1af62a65a8da74f971e27ad536c0d36b8f",
+  "firmware_sha256": "03d0ea78da5cc54c7d94588d40fba8dd41aebe5dcae561e41ec155773a368c7a",
+  "image_bytes": 4197600,
+  "port": "/dev/ttyACM0",
+  "app_offset": "0x10000",
+  "worlds": {
+    "files": {
+      "file": "files/compiled.bin",
+      "engine": "native",
+      "last_error": ""
+    },
+    "editor": {
+      "file": "editor/compiled.bin",
+      "engine": "native",
+      "last_error": ""
+    },
+    "agenda": {
+      "file": "agenda/compiled.bin",
+      "engine": "native",
+      "last_error": ""
+    },
+    "chess": {
+      "file": "chess/compiled.bin",
+      "engine": "native",
+      "last_error": ""
+    },
+    "keyboard": {
+      "file": "natives/keyboard.elf",
+      "engine": "native",
+      "last_error": ""
+    },
+    "display": {
+      "file": "natives/display.elf",
+      "engine": "native",
+      "last_error": ""
+    }
+  },
+  "screenshot_sha256": "cb6d0a8847c87112d0ecd5f5d2bdf3fbcd8fca85beb98b780a3439025d56efec"
+}

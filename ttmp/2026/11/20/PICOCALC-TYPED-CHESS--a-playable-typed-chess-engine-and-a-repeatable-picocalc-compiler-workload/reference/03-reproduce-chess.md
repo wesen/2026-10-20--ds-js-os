@@ -61,3 +61,16 @@ flock /tmp/pico-lab2-wave/original/serial.lock \
 ~~~
 
 Add **--preflight** to validate the inputs without opening the serial port. The full run records the digest-checked backup, chosen image, compile latency, peak QuickJS heap, linked bytes, Chess reply, score, nodes, completed depth, segmentation, restored world list and capture checksum in **physical.json**. Each serial, flash and image capture log remains in the output directory. The move statistic uses the Chess key event and retained frame as its endpoints. It is not physical key-to-pixel latency.
+
+## Leave the current playable firmware installed
+
+For everyday use, build with the current production compiler, the native Agenda, Files, Editor and Chess worlds, and the physical keyboard and display drivers. The two commands below select the offline firmware profile and flash the application partition at 0x10000. The install command checks the partition map, opens Chess from the launcher and saves a framebuffer capture and receipt in the build directory's `install/` folder.
+
+~~~bash
+work=$(mktemp -d /tmp/picocalc-playable.XXXXXX)
+bash "$chess_scripts/16-build-playable-firmware.sh" "$work" /home/manuel/esp/esp-idf-5.4.2/export.sh
+flock /tmp/pico-lab2-wave/original/serial.lock python3 -B "$chess_scripts/17-install-playable-firmware.py" \
+    --work "$work" --port /dev/ttyACM0 \
+    --partition-table /tmp/picocalc-eg-wave/original/partition-table.bin \
+    --esptool /home/manuel/.espressif/python_env/idf5.4_py3.11_env/bin/esptool.py
+~~~

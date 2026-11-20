@@ -431,3 +431,49 @@ Inspect the structured receipt and compare the Markdown after each editorial not
 ### Technical details
 
 The recorded review model is **claude-opus-4-6** at **high**. The frozen prompt SHA-256 is **fd0135ad9899ae7d7612639e1422f6f5cc203e5cabd802a6b4a8dd87491c822b**. [Raw author receipt](../various/opus-interpretation.json)
+
+## Step 9: Leave the playable firmware installed
+
+### Prompt Context
+
+“you don't need to restore the original firmware, we can just run the latest firmware with all the cool new stuff.”
+
+### What I did
+
+Built the offline production firmware from b1cbfa1 with the streaming compiler, four native typed apps and physical display and keyboard drivers. Checked the partition map, flashed the application at 0x10000 over /dev/ttyACM0, then queried the running firmware. Sent F1 followed by h and captured the opening position. Left the board in Chess.
+
+### Why
+
+Restoring the pre-study image after a benchmark removed Chess from the user's launcher. Everyday use requires a persistent playable installation.
+
+### What worked
+
+The running image reported Chess, Editor, Agenda, Files, keyboard and display as native with empty error fields. The first capture passed its CRC. Visual inspection showed all 32 pieces in the opening position, White to move, and e2 selected. [Device receipt](../various/playable-installed.json) · [Framebuffer](../various/chess-installed-screen.png)
+
+### What didn't work
+
+The previous firmware lacked the expected launcher experience. This installation completed successfully.
+
+### What I learned
+
+A live world list establishes which programs loaded. Opening Chess from Home and reading its rendered frame also verifies the launcher binding and initial UI.
+
+### What was tricky to build
+
+The benchmark workflow restores its control image. The everyday installer reuses its flash and capture routines and ends after opening Chess.
+
+### What warrants a second pair of eyes
+
+Serial key injection exercises the software input path. The operator can confirm the physical keys and LCD directly.
+
+### What should be done in the future
+
+Use the playable installation recipe after experiments that leave a different image on the board.
+
+### Code review instructions
+
+Read scripts 16 and 17 alongside the everyday installation recipe in reference/03-reproduce-chess.md. Compare the expected manifest paths with the live receipt.
+
+### Technical details
+
+The receipt records the application and screenshot SHA-256 digests and the source revision. Wi-Fi was disabled for this build. Only the application partition was flashed.
