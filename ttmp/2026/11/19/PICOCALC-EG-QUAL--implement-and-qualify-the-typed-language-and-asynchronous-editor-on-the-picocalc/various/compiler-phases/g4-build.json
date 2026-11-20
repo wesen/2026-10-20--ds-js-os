@@ -1,0 +1,61 @@
+{
+  "variant": "g4",
+  "revision": "2e4fee184dd56de92cc090d97128011acdc961c7",
+  "phases": [
+    "input",
+    "context",
+    "bundle_scripts",
+    "eval_wasm",
+    "eval_async",
+    "eval_rv32",
+    "eval_world",
+    "arg_setup",
+    "js_dispatch",
+    "native_setup",
+    "rewrite_gate",
+    "rewrite_read_program",
+    "rewrite_scan_operations",
+    "rewrite_source_graph",
+    "rewrite_analyze",
+    "rewrite_allocate",
+    "rewrite_text",
+    "ordinary_signatures",
+    "ordinary_emission",
+    "native_lower",
+    "ordinary_graph",
+    "native_assembly",
+    "world_validate",
+    "native_link",
+    "arg_release",
+    "result_copy",
+    "error",
+    "teardown"
+  ],
+  "sourceSha256": {
+    "picocalc-os/port/esp32p4/main/typed_p4.c": "b7df9f4a10f54c7acd64b49e6193e0bc0657ff704ad0b81f13f7be5137a64975",
+    "picocalc-os/compiler/typed-wasm.js": "ba6dae79640213ace9043498b63122cb5fb9c883ac1ccd3331463c77d519e504",
+    "picocalc-os/compiler/typed-rv32.js": "9939a6e51ffeb85989d0df192908bb1570c568366047387acf46fc1c2b1caba6",
+    "picocalc-os/compiler/typed-world.js": "6c93a68595a31fef3dc3d8fe4d666b95767c6546057be198a173e5f8ecad1e54",
+    "picocalc-os/compiler/typed-async.js": "b028351d3767101427860c469cb525db5e55bf3d75b637939f053617829cbcd3",
+    "picocalc-os/port/esp32p4/main/eg_compiler_phases.inc": "d1ee833555c7118089bd3634b03eb44cea2fb219d6692821693ac11393d0e0d3"
+  },
+  "firmware": {
+    "compilerInputSha256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+    "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+    "stockObserverFirmwareSha256": "2c65c803b16a34b686215eef3800b7b2cc1705bff8ef7371af184dd224a0702c",
+    "artifacts": {
+      "picocalc-os-p4.bin": "dde4b0f6912db72f3ef8d6682d3db17fa225760745e339983bb47d37baddef79",
+      "partition-table.bin": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+      "sdkconfig": "6e3699a369b9c59fd723918511a5c1a3efabdcd8947cb4d49d63bc8341522520",
+      "system.typed-editor.json": "5300a42e234e3445662892f4f39e9ef0b73d3cfa712f7e19167c18a98db3c2a1",
+      "system.typed-files.json": "73c22cf274c70bb1bb012439e808784073ab772391e39fd609a7a82bc6580fa9",
+      "system.typed-agenda.json": "5cf2446904e26ecafb558c22d69e00dfd9849a0a4915bd936a4ba1998a1596da"
+    },
+    "bundledProbeSha256": {
+      "picocalc-os/compiler/typed-wasm.js": "ba6dae79640213ace9043498b63122cb5fb9c883ac1ccd3331463c77d519e504",
+      "picocalc-os/compiler/typed-rv32.js": "9939a6e51ffeb85989d0df192908bb1570c568366047387acf46fc1c2b1caba6",
+      "picocalc-os/compiler/typed-world.js": "6c93a68595a31fef3dc3d8fe4d666b95767c6546057be198a173e5f8ecad1e54",
+      "picocalc-os/compiler/typed-async.js": "b028351d3767101427860c469cb525db5e55bf3d75b637939f053617829cbcd3"
+    }
+  }
+}

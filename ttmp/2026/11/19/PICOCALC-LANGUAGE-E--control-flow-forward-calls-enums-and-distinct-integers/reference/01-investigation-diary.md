@@ -437,3 +437,55 @@ Open `scripts/10-stage-eager-cursor.py` for the two localized transforms and ver
 ### Technical details
 
 The candidate frontend SHA-256 is `497da6b5a24946506eb430d8ced8a041ae844d0e827894220e5226bc6f787ae0`. The async compiler SHA-256 is `56b124c045bf9ee8ce674f7a487b0adb7a63c93adee3a1bdfc91fc94c9cf1a18`. The linked host reactor's SHA-256 is recorded separately from the program bytes.
+
+## Step 9: Stage an exclusive device timeline for G4
+
+The initial physical native G4 compile took 3.817 seconds against a pre-G result of 2.646 seconds. Host timings measure different costs and could not attribute the 1.171-second device difference. I added a measurement-only firmware overlay in the supervisor's integration ticket for both exact compiler revisions.
+
+### Prompt Context
+
+See Step 1. The supervisor requested a monotonic P4 phase breakdown with exact reconciliation, separate builds for the matched lanes, and one board owner. My work covers staging, build verification, and the serial-record parser.
+
+### What I did
+
+- Started the trace at the stock compile timestamp and retained the same finish after QuickJS teardown.
+- Timed C setup, bundle reads, individual compiler script evaluation, JavaScript arguments, source rewrite phases, ordinary signatures and bodies, native lowering and linking, result copy and teardown.
+- Built both native overlays using the existing ESP-IDF 5.4.2 lanes and restored the temporary compiler inputs.
+- Verified equal reactors, SDK configs, partitions and manifests, and checked that the exact instrumented scripts appear inside each firmware image.
+- Compared linked native Editor bytes and phase visits against stock in a host realm. Tested the serial parser with generated inputs including a one-microsecond reconciliation error.
+
+### Why
+
+A single transition accumulator measures mutually exclusive intervals despite streamed lowering occurring inside frontend emission. It also supplies an exact equality test against the original total. Phase markers occur at substantial boundaries instead of per token, which limits the cost of the measurement itself.
+
+### What worked
+
+Both instrumented images packaged from the exact existing observer profiles. Host linked Editor ELFs matched the uninstrumented outputs. The visitation check counted 121 pre-G and 119 G4 native lowerings. The pre-G phase trace contains no rewrite visits and the G4 trace contains exactly one visit to every rewrite subphase.
+
+### What didn't work
+
+The one-microsecond malformed preview was rejected with `ValueError: ... phase times do not exactly sum to total`, as intended. The first standalone digest verification attempt used an unqualified `sha256` name and returned `NameError: name 'sha256' is not defined`; using `hashlib.sha256` verified both existing images without a rebuild.
+
+### What I learned
+
+The stock compile total includes the application's source and reactor bundle reads, but excludes executing the generated world. The compiler's own script loading and JavaScript transformation are individually meaningful buckets within that wider firmware entry.
+
+### What was tricky to build
+
+The JS frontend invokes the streamed native backend while a function is live. The native lower phase must end when the callback disposes of that function's numeric operation buffer. A phase keyed simply by entry and return of the whole frontend would charge most native work to source parsing.
+
+### What warrants a second pair of eyes
+
+Review whether each emitted phase row matches the uninstrumented compile line for its own boot. Compare phase-probed and uninstrumented totals before interpreting measurements on the exact physical board.
+
+### What should be done in the future
+
+The supervisor owns real board collection. Use the staged manifests and parser for per-row reconciliation, then compare the means across both phase lanes.
+
+### Code review instructions
+
+Open the integration ticket's `scripts/20-phase-qualification.md` and follow the staged inputs into `20-phase-qualification.py`, `20-compiler-phases.inc` and `20-summarize-phases.py`.
+
+### Technical details
+
+The pre-G measurement image SHA-256 is `62883b6cad288a872bd68ce32b28f20763bd537be8022a93b70d3b4a3a5126d5`. The G4 image SHA-256 is `dde4b0f6912db72f3ef8d6682d3db17fa225760745e339983bb47d37baddef79`. Staged build manifests and the host byte-parity receipt are in `PICOCALC-EG-QUAL/various/compiler-phases`.
