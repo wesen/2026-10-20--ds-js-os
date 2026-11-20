@@ -1,0 +1,20 @@
+digraph compiler {
+    graph [rankdir=TB, bgcolor="white", margin=0.16, pad=0.20, nodesep=0.38, ranksep=0.37, fontname="DejaVu Sans"];
+    node [shape=box, style="rounded,filled", color="#526371", fillcolor="#f4f6f7", fontname="DejaVu Sans", fontsize=12, margin="0.18,0.12"];
+    edge [color="#475569", arrowsize=0.7, fontname="DejaVu Sans", fontsize=10];
+    source [label="Typed application source\nFiles · Agenda · Editor"];
+    lexer [label="Scan source characters\nToken kind, spelling and source position"];
+    fn [label="Check and emit one typed function\nControl destination, text access and guard facts"];
+    wasm [label="Wasm encoding\nHost semantic replay", fillcolor="#f5f0e4"];
+    native [label="RV32 instruction selection\nOperand locations and register homes", fillcolor="#e2f1ed"];
+    prior [label="Previous editing session\nNative fragments and dependencies", fillcolor="#f2eef7"];
+    elf [label="Assign function addresses and link calls\nComplete reactor ELF"];
+    enter [label="Load ELF on ESP32-P4\nEnter generated code and check guest effects", fillcolor="#e2f1ed"];
+    source -> lexer -> fn;
+    fn -> wasm;
+    fn -> native;
+    native -> elf;
+    prior -> elf [label=" validated reuse",style=dashed];
+    elf -> enter;
+    {rank=same; wasm; native; prior;}
+}
