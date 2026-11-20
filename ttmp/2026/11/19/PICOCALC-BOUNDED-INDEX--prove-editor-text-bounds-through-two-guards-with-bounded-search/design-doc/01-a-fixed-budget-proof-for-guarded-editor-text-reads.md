@@ -4,8 +4,8 @@ Ticket: PICOCALC-BOUNDED-INDEX
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: design-doc
 Intent: long-term
 Owners: []

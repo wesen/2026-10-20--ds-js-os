@@ -4,8 +4,8 @@ Ticket: PICOCALC-BOUNDED-INDEX
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: analysis
 Intent: long-term
 Owners: []
@@ -44,7 +44,7 @@ if (end <= text.length) {
 while (i < end) { original checked copy }
 ```
 
-For length 6, `end = 5` and `i = 3`, the outer guard admits the span and the loop admits the index. The proof combines `3 < 5` and `5 <= 6`. The same reasoning holds for every value reaching that read. If the source begins at −1 or supplies an end greater than the length, the original loop still executes the checked access when its condition requires a read. The check traps there in the same order as before, after the destination buffer position has been validated.
+For length 6, `end = 5` and `i = 3`, the outer guard admits the span and the loop admits the index. The proof combines `3 < 5` and `5 <= 6`. The same reasoning holds for every value reaching that read. For valid string and buffer objects, a span that starts at −1 or has an end greater than the length follows the fallback. The original loop still executes the checked access when its condition requires a read. The check traps there in the same order as before, after the destination buffer position has been validated.
 
 A strict inequality distinguishes a valid index from the first index beyond the text. The compiler can combine `i < end` and `end <= length`, or `i <= end` and `end < length`. Two non-strict edges also admit `i == end == length`, so that proof fails. The lower bound rejects negative signed values before the compiler omits the underlying unsigned check.
 
@@ -82,6 +82,25 @@ At the real copy site the bounded query inspects the three current facts and fol
 The native-loader replay puts a dedicated instruction marker immediately before each emitted read check in its instrumented image. Driver markers delimit the preview actions. The emulator counts executed instructions at those markers, including when the actual check succeeds. The complete native output has the same hash across all lanes for each workload and matches the JS and Wasm frame comparisons in the existing replay. The sparse and dense workloads cover different preview actions, so the useful comparisons are across lanes within each row. Buffer-write checks and SDK internals remain outside this count. The physical test uses clean code.
 
 The adversarial fixtures cover empty strings, high code units, negative indices, the first invalid index, non-strict upper paths, a different text receiver, reassignment and joins, calls and record aliases, loop backedges and budget exhaustion. All 357 cases agreed with Wasm on values, traps and memory. Ninety-four cases trapped.
+
+## What the physical trial measured
+
+Each of two ESP32-P4 boots compiled the guarded source six times per lane in fresh QuickJS runtimes. The cold compile and peak heap effects are paired differences relative to current. Current and direct returned the same Editor ELF. The bounded ELF had 16 fewer occupied bytes in the same reservation. All 108 returned application module hashes matched the host oracle, and the backed-up firmware restored with Files, Agenda and Editor active.
+
+| Editor measurement | Boot 1 / Boot 2 |
+| --- | ---: |
+| Current cold compile time | 3,101 / 3,085 ms |
+| Direct analysis cold compile time change | +9.03% / +10.05% |
+| Bounded analysis cold compile time change | +8.08% / +10.10% |
+| Direct peak QuickJS heap change | +1.11% / +1.12% |
+| Bounded peak QuickJS heap change | +1.11% / +1.11% |
+| Current preview copy cycles per UTF-16 unit | 42.391 / 42.393 |
+| Direct preview copy cycles per UTF-16 unit | 42.386 / 42.385 |
+| Bounded preview copy cycles per UTF-16 unit | 38.378 / 38.379 |
+
+The physical guest isolates the guarded copy function and its helpers from the full Markdown reactor. Host qualification compared their generated machine bytes to the corresponding full Editor text and located those bytes in the actual firmware. Each timed pass feeds 65,536 UTF-16 units in spans of at most 48, with a copy and state check for every span. Eight passes per lane on each boot ran at 360 MHz. Bounded reduced paired cycles per code unit by 9.49% and 9.46% against current. The direct lane performs the same native check and gave essentially the same cycle count as current.
+
+The physical time is for the isolated copy on clean native code. The dynamic check counts above come from the full preview under the native loader with instrumented code. [Physical qualification](../various/physical.json), [paired timing and heap](../various/physical-summary.json), [UART capture identities](../various/preview-copy-captures.json).
 
 ## Compare the costs within the right source baseline
 

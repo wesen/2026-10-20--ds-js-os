@@ -1,0 +1,14 @@
+{
+  "boot_1": {
+    "source_log": "boot-1.log",
+    "source_sha256": "be881c45fe23cd482ec2f05be3823485aebba56a1788bd1e088f70aafaa0f3cc",
+    "measurement_log": "preview-copy-boot-1.log",
+    "measurement_sha256": "9f521b453ec5d6d4fd15a4a71736e505db7ae92fad645002cb2618e860cbb404"
+  },
+  "boot_2": {
+    "source_log": "boot-2.log",
+    "source_sha256": "7904786b998362802e1579bcefb6cce849b7017a71c11a13d6e1c7ee9e26de8c",
+    "measurement_log": "preview-copy-boot-2.log",
+    "measurement_sha256": "4143486be6c174faa7c78fb1182b8b3a51114d3bb0bf0877bd1df7b67b4eb2dd"
+  }
+}

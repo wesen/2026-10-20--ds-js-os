@@ -4,8 +4,8 @@ Ticket: PICOCALC-BOUNDED-INDEX
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: reference
 Intent: long-term
 Owners: []
@@ -173,3 +173,53 @@ Run `scripts/05-preview-count.py` with a local GCC and examine its saved per-lan
 ### Technical details
 
 Four instrumented instructions disappear per removed dynamic check. The counted word itself accounts for one of those four.
+
+## Step 4. Qualify cold compilation and the actual copy kernel on the physical board
+
+The current and direct lanes produced the same Editor native output on both boots. The bounded analysis paid a cold compiler cost but reduced the cycles per copied code unit in the clean guest benchmark.
+
+### Prompt context
+
+See Step 1. Host qualification and the dynamic native-loader counters were committed at `5ef7051`.
+
+### What I did
+
+- Compared all 108 complete first- and second-boot return hashes to the host oracle and verified restored native world status.
+- Recomputed cold time and heap pairings and checked 24 preview copy timing rows per boot. Each row copies 65,536 code units and validates the results.
+- Compared the clean timing routines to the corresponding slices of the full compiled application and confirmed their raw bytes in flash.
+
+### Why
+
+A full preview measurement answers how often the check executes. Timing the clean representative routine separately measures the effect of removing it apart from the instrumentation, display and host workload.
+
+### What worked
+
+Bounded Editor compile time changed +8.08% / +10.10% and peak QuickJS heap changed +1.11% / +1.11%. The paired preview copy effect was −9.49% / −9.46%. Both boots ran at 360 MHz.
+
+### What did not work
+
+The first new whole-app byte check looked for `world.js` in the board harness's two-file compiler lane. Node raised `ENOENT: no such file or directory, open .../lanes/base/typed/world.js`. The check now reads the shared frozen world contract from the original clean compiler bundle. The emitted timing bytes were identical to those in the existing board build.
+
+### What I learned
+
+The removed static site was part of a hot kernel. Its isolated improvement and the full preview check reduction answer different questions. Whole-preview device latency was outside this kernel comparison.
+
+### What was tricky to build
+
+Cycle inputs are native `uint16_t` units. The screen replays instead feed real Markdown documents of 65,536 UTF-8 bytes. Their size labels describe different inputs and both must be preserved with the evidence.
+
+### What warrants a second pair of eyes
+
+Check that the failed-path emitted sequence is still present in the complete application. Use the fixture counters and exact linked ELF hashes to identify the accepted release image.
+
+### What should be done in the future
+
+An unguarded production-source comparison would be needed to judge shipping this particular source intervention. The current study keeps the guarded source matched to isolate the proof.
+
+### Code review instructions
+
+Compare `various/physical-summary.json` to `various/physical.json` and read the exact native preview benchmark boundaries in `scripts/09-copy-trial.c`.
+
+### Technical details
+
+The standard reserved Editor ELF is 240,452 bytes. In that reservation bounded proof changes the occupied native image by four words.

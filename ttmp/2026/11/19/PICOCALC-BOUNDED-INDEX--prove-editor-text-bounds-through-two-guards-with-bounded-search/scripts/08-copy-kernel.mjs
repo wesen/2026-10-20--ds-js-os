@@ -19,8 +19,14 @@ for (const [lane, name] of ['base', 'direct', 'bounded'].entries()) {
     const ctx = vm.createContext({});
     for (const part of ['wasm', 'rv32'])
         vm.runInContext(readFileSync(join(board, 'lanes', name, 'typed', part + '.js'), 'utf8'), ctx);
+    vm.runInContext(readFileSync(join(work, 'clean/current/typed/world.js'), 'utf8'), ctx);
     const program = ctx.typedRv32.compile(code);
     const image = Buffer.from(program.image);
+    ctx.typedRv32.linkSlot = program => program;
+    const full = ctx.compileTypedWorldRv32(fullSource, null);
+    const sourceOffset = full.entries.editorPreviewSlot;
+    assert.deepEqual(image, Buffer.from(full.image.slice(sourceOffset, full.entries.editorPreviewIndent)),
+        name + ' guest routine must exactly match the compiled Editor text');
     const symbol = 'preview_copy_' + lane;
     assert.equal(program.importCount, 0);
     const offset = program.entries.editorPreviewAppend;

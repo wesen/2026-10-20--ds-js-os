@@ -57,4 +57,3 @@
         this.depth--;
         return left;
     }
-

@@ -4,8 +4,8 @@ Ticket: PICOCALC-BOUNDED-INDEX
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: index
 Intent: long-term
 Owners: []
@@ -28,3 +28,8 @@ This experiment measures whether an explicit lower guard and a two-edge upper pr
 - [Investigation diary](reference/01-bounded-index-proof-investigation-diary.md)
 - [Host qualification](various/host.json)
 - [Firmware compiler oracle](various/board-oracle.json)
+- [64 KiB native preview counters](various/preview-counts.json)
+- [Physical qualification](various/physical.json)
+- [Paired physical measurements](various/physical-summary.json)
+- [Physical preview copy UART summaries](various/preview-copy-captures.json)
+- [reMarkable cloud delivery](various/remarkable-delivery.json)

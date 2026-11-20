@@ -1,0 +1,3047 @@
+{
+  "firmware": "4ccf01fa40af2a8517b0f9c4a1eb62c70bae556bf9e06631e655dfff535c4cd2",
+  "table": "1e67efde107bf6b3b9ee582350256b0bead1f1f88605cc6b13a5216beefe07f8",
+  "original": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "compilers": {
+    "base": {
+      "wasm": "16e1590e1c8b995ad18bf0378dfe353a100583b682f7d53ffcbae95e14b198f3",
+      "rv32": "1e0ede93c1bc6f6cf79ad77d850d2e80ec8d79dd385da3bcbc345d3396dfd63e"
+    },
+    "direct": {
+      "wasm": "ab6e964c1d8dfe67f32ea9641fe5ad67aea6217503acbe0b27de1cc66c78a661",
+      "rv32": "1e0ede93c1bc6f6cf79ad77d850d2e80ec8d79dd385da3bcbc345d3396dfd63e"
+    },
+    "bounded": {
+      "wasm": "aa14e70e7ada370067bc8e3f748268dee2d249c90fbf426b4f2d66e716f89794",
+      "rv32": "1e0ede93c1bc6f6cf79ad77d850d2e80ec8d79dd385da3bcbc345d3396dfd63e"
+    }
+  },
+  "oracle": {
+    "base": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+        "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32",
+        "bytes": 24424,
+        "raw": "455000a8f637363daed94505a9b26d01bd39eabe42cf99a07097825bb0242f36",
+        "words": 572,
+        "guestFirmwareOffset": 2850312
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+        "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8",
+        "bytes": 66364,
+        "raw": "02f0acb66bd6016b7697080f43515700b9468e38e0322c99a19fbc1576687d0d",
+        "words": 2695,
+        "guestFirmwareOffset": 2852600
+      },
+      "editor": {
+        "sourceSha256": "2931cb22790b7eebf1a29e9071b7e3b17a0ff31dd6e41bedbea7a68e7ed4626f",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+        "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23",
+        "bytes": 240452,
+        "raw": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+        "words": 16214
+      }
+    },
+    "direct": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+        "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32",
+        "bytes": 24424,
+        "raw": "455000a8f637363daed94505a9b26d01bd39eabe42cf99a07097825bb0242f36",
+        "words": 572,
+        "guestFirmwareOffset": 2850312
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+        "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8",
+        "bytes": 66364,
+        "raw": "02f0acb66bd6016b7697080f43515700b9468e38e0322c99a19fbc1576687d0d",
+        "words": 2695,
+        "guestFirmwareOffset": 2852600
+      },
+      "editor": {
+        "sourceSha256": "2931cb22790b7eebf1a29e9071b7e3b17a0ff31dd6e41bedbea7a68e7ed4626f",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+        "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23",
+        "bytes": 240452,
+        "raw": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+        "words": 16214
+      }
+    },
+    "bounded": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "reactorSha256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+        "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32",
+        "bytes": 24424,
+        "raw": "455000a8f637363daed94505a9b26d01bd39eabe42cf99a07097825bb0242f36",
+        "words": 572,
+        "guestFirmwareOffset": 2850312
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "reactorSha256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+        "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8",
+        "bytes": 66364,
+        "raw": "02f0acb66bd6016b7697080f43515700b9468e38e0322c99a19fbc1576687d0d",
+        "words": 2695,
+        "guestFirmwareOffset": 2852600
+      },
+      "editor": {
+        "sourceSha256": "2931cb22790b7eebf1a29e9071b7e3b17a0ff31dd6e41bedbea7a68e7ed4626f",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+        "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8",
+        "bytes": 240452,
+        "raw": "31c735244aab03adc01165475232d2439aad5dfa5b3924016fe1ef099b9e0a8d",
+        "words": 16210
+      }
+    }
+  },
+  "guest_inputs": {
+    "base": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "words": 572,
+        "raw": "455000a8f637363daed94505a9b26d01bd39eabe42cf99a07097825bb0242f36",
+        "entryOffset": 1252
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "words": 2695,
+        "raw": "02f0acb66bd6016b7697080f43515700b9468e38e0322c99a19fbc1576687d0d",
+        "entryOffset": 5636
+      }
+    },
+    "direct": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "words": 572,
+        "raw": "455000a8f637363daed94505a9b26d01bd39eabe42cf99a07097825bb0242f36",
+        "entryOffset": 1252
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "words": 2695,
+        "raw": "02f0acb66bd6016b7697080f43515700b9468e38e0322c99a19fbc1576687d0d",
+        "entryOffset": 5636
+      }
+    },
+    "bounded": {
+      "files": {
+        "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+        "words": 572,
+        "raw": "455000a8f637363daed94505a9b26d01bd39eabe42cf99a07097825bb0242f36",
+        "entryOffset": 1252
+      },
+      "agenda": {
+        "sourceSha256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+        "words": 2695,
+        "raw": "02f0acb66bd6016b7697080f43515700b9468e38e0322c99a19fbc1576687d0d",
+        "entryOffset": 5636
+      }
+    }
+  },
+  "boots": [
+    {
+      "rows": [
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 306591,
+          "peak": 428048,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 865145,
+          "peak": 650000,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3120974,
+          "peak": 1458044,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 329063,
+          "peak": 432068,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 921840,
+          "peak": 654024,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3363906,
+          "peak": 1474300,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 322061,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 916238,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3364544,
+          "peak": 1474284,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 328637,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 919816,
+          "peak": 654020,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3358733,
+          "peak": 1474312,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 326766,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 926481,
+          "peak": 654016,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3379313,
+          "peak": 1474312,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 307073,
+          "peak": 428040,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 848151,
+          "peak": 650016,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3138284,
+          "peak": 1458052,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 324159,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 921571,
+          "peak": 654032,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3355961,
+          "peak": 1474288,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 308109,
+          "peak": 428028,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 829740,
+          "peak": 649992,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3098440,
+          "peak": 1458056,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 322775,
+          "peak": 432056,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 927139,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3420611,
+          "peak": 1474300,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 307661,
+          "peak": 428028,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 845451,
+          "peak": 650000,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3104141,
+          "peak": 1458056,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 325921,
+          "peak": 432076,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 915322,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3347489,
+          "peak": 1474288,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 333899,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 934250,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3377723,
+          "peak": 1473748,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 326398,
+          "peak": 432076,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 923707,
+          "peak": 654020,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3370379,
+          "peak": 1474300,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 310143,
+          "peak": 428040,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 841777,
+          "peak": 649988,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3076666,
+          "peak": 1458052,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 327706,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 921844,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3383872,
+          "peak": 1474296,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 322604,
+          "peak": 432072,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 896072,
+          "peak": 654024,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3393184,
+          "peak": 1474292,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 325152,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 913770,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3379475,
+          "peak": 1474320,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 308607,
+          "peak": 428028,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 848289,
+          "peak": 649996,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3093495,
+          "peak": 1458044,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        }
+      ],
+      "guest": [
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507970,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506704,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506706,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506667,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506689,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 508050,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506662,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507990,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506645,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507952,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506654,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507902,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506679,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507956,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506642,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506664,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506672,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 508016,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506644,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506657,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507922,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507988,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507955,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506668,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506637,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506649,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507920,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506645,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507955,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506637,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506638,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507908,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506658,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507919,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507920,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506652,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 711047,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506750,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 510671,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507905,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507933,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506694,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506639,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506621,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507895,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506626,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507907,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506673,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 69975,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68659,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68694,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68695,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68634,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 69997,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68709,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 70003,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68711,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68657,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68608,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68677,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68676,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68751,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68670,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 69992,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68761,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68760,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68760,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 70057,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68760,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68762,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68762,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68752,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68760,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68762,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68761,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 70046,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68716,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68761,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 70015,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68763,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68762,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68760,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 70118,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68740,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68760,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68742,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68742,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68743,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68742,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 70130,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68742,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68742,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68740,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68868,
+          "clock_hz": 360000000
+        }
+      ],
+      "worlds": {
+        "files": {
+          "engine": "native",
+          "file": "files/compiled.bin",
+          "last_error": ""
+        },
+        "agenda": {
+          "engine": "native",
+          "file": "agenda/compiled.bin",
+          "last_error": ""
+        },
+        "editor": {
+          "engine": "native",
+          "file": "editor/compiled.bin",
+          "last_error": ""
+        }
+      }
+    },
+    {
+      "rows": [
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 306675,
+          "peak": 428048,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 865616,
+          "peak": 650000,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 0,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3069327,
+          "peak": 1458044,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 327533,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 924954,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3367570,
+          "peak": 1474312,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 323657,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 908175,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3396929,
+          "peak": 1474284,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 324201,
+          "peak": 432072,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 913515,
+          "peak": 654020,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 1,
+          "position": 0,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3402575,
+          "peak": 1474320,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 324835,
+          "peak": 432060,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 923426,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3352972,
+          "peak": 1474296,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 306925,
+          "peak": 428052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 822664,
+          "peak": 649988,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3061340,
+          "peak": 1458056,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 321967,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 903085,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 2,
+          "position": 0,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3373873,
+          "peak": 1474296,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 307531,
+          "peak": 428028,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 834680,
+          "peak": 649988,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3098536,
+          "peak": 1458044,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 322991,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 905619,
+          "peak": 654024,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3420455,
+          "peak": 1474316,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 309774,
+          "peak": 428032,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 833705,
+          "peak": 649988,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 3,
+          "position": 0,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3087167,
+          "peak": 1458044,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 321719,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 914886,
+          "peak": 654016,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3373934,
+          "peak": 1474284,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 321211,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 921258,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3343116,
+          "peak": 1474320,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 318476,
+          "peak": 432064,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 920137,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 4,
+          "position": 0,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3396919,
+          "peak": 1474300,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 306627,
+          "peak": 428044,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 831064,
+          "peak": 649996,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3102500,
+          "peak": 1457484,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 326508,
+          "peak": 432052,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 915594,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3454659,
+          "peak": 1474284,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "bounded",
+          "app": "files",
+          "streamed": true,
+          "us": 320070,
+          "peak": 432084,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "bounded",
+          "app": "agenda",
+          "streamed": true,
+          "us": 925185,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 5,
+          "position": 0,
+          "lane": "bounded",
+          "app": "editor",
+          "streamed": true,
+          "us": 3447529,
+          "peak": 1474284,
+          "bytes": 240452,
+          "words": 16210,
+          "sha256": "1ac5e7bd765627f3962b50098edaeb0fbb22e2751ca3c9a29830ad899c6a92b8"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "direct",
+          "app": "files",
+          "streamed": true,
+          "us": 328440,
+          "peak": 432064,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "direct",
+          "app": "agenda",
+          "streamed": true,
+          "us": 902228,
+          "peak": 654012,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "lane": "direct",
+          "app": "editor",
+          "streamed": true,
+          "us": 3425038,
+          "peak": 1474300,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "files",
+          "streamed": true,
+          "us": 308466,
+          "peak": 428040,
+          "bytes": 24424,
+          "words": 572,
+          "sha256": "b4e86d4d396fc4906499d8e654bb01824aca07e18538215d4ea3e0483012dc32"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "agenda",
+          "streamed": true,
+          "us": 845600,
+          "peak": 650008,
+          "bytes": 66364,
+          "words": 2695,
+          "sha256": "da38eb305168fbc8c735ec5aa797a358e0597bbcc12686d14ba822f7379af1d8"
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "lane": "base",
+          "app": "editor",
+          "streamed": true,
+          "us": 3083482,
+          "peak": 1457484,
+          "bytes": 240452,
+          "words": 16214,
+          "sha256": "eb56eff73f46108fa77f890f6a08e50aae39321f5d8f816ddfb0770ad0755c23"
+        }
+      ],
+      "guest": [
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 508033,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506697,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 0,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506663,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506708,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506671,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 1,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 508037,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506642,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507986,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 2,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506643,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507961,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506688,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 3,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507963,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506715,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507919,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 4,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506695,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506685,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506664,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 5,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507939,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506691,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506695,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 6,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507894,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507991,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507937,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 7,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506649,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506674,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506672,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 8,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 508005,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506645,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507967,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 9,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506650,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506663,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507923,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 10,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506648,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507988,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507945,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 11,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506651,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506642,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 507988,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 12,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506646,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506671,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506683,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 13,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507994,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 507976,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506680,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 14,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 506650,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 506644,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 506702,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "compare",
+          "block": 15,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 507982,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68835,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68865,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 0,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68859,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "base",
+          "count": 128,
+          "cycles": 70167,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68827,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 1,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68877,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68890,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68861,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 2,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68850,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68889,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68924,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 3,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 70169,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68893,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68924,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 4,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 70052,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68709,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 5,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68706,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "base",
+          "count": 128,
+          "cycles": 70025,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68711,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 6,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 7,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68708,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 69903,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 8,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68711,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 9,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68662,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "base",
+          "count": 128,
+          "cycles": 70005,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68704,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 10,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68706,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "base",
+          "count": 128,
+          "cycles": 69990,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 11,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68706,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68711,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68706,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 12,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68704,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 13,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 70046,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68708,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68673,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 14,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "base",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "direct",
+          "count": 128,
+          "cycles": 68707,
+          "clock_hz": 360000000
+        },
+        {
+          "op": "weekday",
+          "block": 15,
+          "lane": "bounded",
+          "count": 128,
+          "cycles": 69943,
+          "clock_hz": 360000000
+        }
+      ],
+      "worlds": {
+        "files": {
+          "engine": "native",
+          "file": "files/compiled.bin",
+          "last_error": ""
+        },
+        "agenda": {
+          "engine": "native",
+          "file": "agenda/compiled.bin",
+          "last_error": ""
+        },
+        "editor": {
+          "engine": "native",
+          "file": "editor/compiled.bin",
+          "last_error": ""
+        }
+      }
+    }
+  ],
+  "restored": true,
+  "restored_worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    }
+  }
+}
