@@ -1,0 +1,13 @@
+{
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "effort": "high",
+  "turns": 1,
+  "stop": "end_turn",
+  "durationMs": 57374,
+  "promptSha256": "fa33d35bc8dea062c8becf4e71639da18da35391ece1863d77292fc79dbf69da",
+  "textSha256": "0f2fb7d65fc4644c7f865bf271305fd925ef34c4ee9159e96c4580b24ef4372f",
+  "output": "01-independent-prospective-design-for-snake.md",
+  "toolAccess": false
+}
