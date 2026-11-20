@@ -1,0 +1,15 @@
+function project(xs:buffer, ys:buffer, zs:buffer, sx:buffer, sy:buffer, depth:buffer, n:i32):i32 {
+    for (let i:i32=0; i<n; i=i+1) {
+        const x = xs.charCodeAt(i) % 256;
+        const y = ys.charCodeAt(i) % 256;
+        const z = zs.charCodeAt(i) % 256;
+        sx.setCharCodeAt(i,384+x-z);
+        sy.setCharCodeAt(i,640+x+z-y*2);
+        depth.setCharCodeAt(i,x+z+y);
+    }
+    return n;
+}
+
+function nested(xs:buffer, ys:buffer, zs:buffer, sx:buffer, sy:buffer, depth:buffer, n:i32):i32 {
+    return 19 + project(xs,ys,zs,sx,sy,depth,n);
+}
