@@ -26,38 +26,6 @@ WhenToUse: ""
 
 # Compile one edited function and rebuild its native links
 
-## Executive Summary
-
-<!-- Provide a high-level overview of the design proposal -->
-
-## Problem Statement
-
-<!-- Describe the problem this design addresses -->
-
-## Proposed Solution
-
-<!-- Describe the proposed solution in detail -->
-
-## Design Decisions
-
-<!-- Document key design decisions and rationale -->
-
-## Alternatives Considered
-
-<!-- List alternative approaches that were considered and why they were rejected -->
-
-## Implementation Plan
-
-<!-- Outline the steps to implement this design -->
-
-## Open Questions
-
-<!-- List any unresolved questions or concerns -->
-
-## References
-
-<!-- Link to related documents, RFCs, or external resources -->
-
 A Files developer who adds an allowed filename character changes one helper. A clean native build lexes and checks all seven functions, emits their instructions, and writes them into a reactor. The reactor is a prelinked ELF with reserved instruction space and entry stubs for the native application. This experiment asks how much work the handheld can avoid after the first build of an editing session. It will compare an actual edited ELF against the entire artifact made by the frozen production compiler at `40bcf850a5809ef6d839127869faa952596ed157`.
 
 ## Why an unchanged caller still needs a new call instruction
@@ -75,12 +43,12 @@ The candidate walks record declarations and function headers in the production o
 | Dependency | Information carried between builds | Why the candidate compares it |
 | --- | --- | --- |
 | Previous declaration or runtime import | Call name, ordered parameter types, return type, and binding kind | Type-check a call against its visible declaration and preserve the calling convention. The current binding index resolves symbolic relocation. |
-| Record lookup | Record name and current ordered fields with types and offsets, including an absent result | A field offset is embedded in a load or store. Body annotations and record-type recognition also use the record table. |
+| Record lookup | For type recognition, whether the record exists. For a field access, the ordered fields with their types and offsets | A field offset is embedded in a load or store. Body annotations and record-type recognition also use the record table. |
 | Session revision | An opaque token for the last successful source for this compiler and reactor, kept inside the process | A stale or foreign edit basis cannot substitute pieces from an older object lifetime. |
 
 For record dependencies record the lookups made by the original emitter. Check the entire layout for each touched record. This intentionally rebuilds some readers whose individual field offsets survive a change. There is no transitive body dependency because the candidate emits ordinary calls and performs no inlining. A caller of a recompiled reader can be reused if the reader's exported signature remains identical. A reference to an import stays an import and takes the normal linker route. Retain no parsed statements or numeric operations after lowering.
 
-Intra-function jumps store addresses relative to their function. Calls outside a body retain the name and whether the binding was an import. When generating the new image, assign every body a start in the new order, copy its compact machine words, then encode each jump in the output buffer. Cached fragments are never patched in place. Require the same range checks and linker errors as the clean path.
+Intra-function jumps use relative addresses and can be encoded as soon as lowering finishes. Calls outside a body retain the target name. The dependency fingerprint distinguishes an import from a source declaration. When generating the new image, assign every body a start in the new order, copy its compact machine words, then encode each jump in the output buffer. Cached fragments are never patched in place. Require the same range checks and linker errors as the clean path.
 
 ```mermaid
 flowchart LR
