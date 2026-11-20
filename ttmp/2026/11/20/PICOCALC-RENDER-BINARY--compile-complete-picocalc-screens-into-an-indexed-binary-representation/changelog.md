@@ -7,3 +7,7 @@
 ## 2026-11-20
 
 Qualified the bounded PSIX codec on all four corpora and P4 component controls. Preserve JSON for the current renderer and hand off a native Chess integration pilot.
+
+## 2026-11-20
+
+Recorded verified vault publication and the reMarkable upload for the Opus report and both design guides.

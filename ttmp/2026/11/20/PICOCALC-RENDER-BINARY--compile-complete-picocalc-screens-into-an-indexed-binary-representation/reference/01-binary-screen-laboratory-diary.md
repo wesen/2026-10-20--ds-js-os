@@ -187,3 +187,10 @@ Read the [reproduction guide](../README.md), run [the device summarizer](../scri
 ### Technical details
 
 First test image SHA-256 `576582843e2221f146e32c0babb8d1a163afbd43be388abf10ded8210f2a5b7c`. Second image SHA-256 `f8af1bbfd4478e569824512b18017d908217672f87c1ce37b342375cb7162e0d`. Both receipts record the same verified playable image SHA-256 `f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83`. Subgroup checkpoints are `7ffd3a6` and `22031ce` for native reader and `6dbecbb` and `400d6db` for native sender.
+
+## Step 4: Record verified publication
+
+The lab director confirmed the published article on `go-go-parc` main at `238183738a3312051525fc56c3f299d41a154478`. The reMarkable upload confirmed `OK: uploaded PicoCalc Indexed Binary Screens and Lab Conclusions.pdf -> /ai/2026/11/20/PICOCALC-RENDER-LAB`. The PDF includes the article and both design guides.
+
+- **Study commit** `5cc3df2` records the implementation, reproduction inputs, physical receipts and closed ticket.
+- **Publication evidence** The director verified the vault links and reMarkable receipt. [Published vault article](https://github.com/go-go-golems/go-go-parc/blob/238183738a3312051525fc56c3f299d41a154478/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Rendering%20-%20What%20an%20index%20on%20the%20wire%20buys%20a%20PicoCalc%20renderer.md).

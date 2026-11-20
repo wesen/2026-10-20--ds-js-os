@@ -29,3 +29,5 @@ PSIX v1 adds direct array indexing and bounded object-key lookup to an immutable
 - [Matched native producer measurement](scripts/producer/02-physical-appendix.md)
 
 See [tasks](tasks.md) and [changelog](changelog.md) for the study record.
+
+The lab director published the Opus article to the vault and uploaded the article and both guides to reMarkable as `PicoCalc Indexed Binary Screens and Lab Conclusions.pdf` under `/ai/2026/11/20/PICOCALC-RENDER-LAB`. [Published vault article](https://github.com/go-go-golems/go-go-parc/blob/238183738a3312051525fc56c3f299d41a154478/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Rendering%20-%20What%20an%20index%20on%20the%20wire%20buys%20a%20PicoCalc%20renderer.md).
