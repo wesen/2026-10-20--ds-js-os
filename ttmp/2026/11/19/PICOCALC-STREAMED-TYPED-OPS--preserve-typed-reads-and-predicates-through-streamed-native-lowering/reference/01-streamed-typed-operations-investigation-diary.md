@@ -1,7 +1,7 @@
 ---
 Title: Streamed typed operations investigation diary
 Ticket: PICOCALC-STREAMED-TYPED-OPS
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -222,3 +222,53 @@ Read the guide's physical section against `various/physical-summary.json`.
 ### Technical details
 
 Cloud delivery confirms acceptance of the PDF by reMarkable. Physical device synchronization was outside this check.
+
+## Step 5. Verify publication from the authorized vault operation
+
+The supervisor reviewed the exact standalone article and published it under the user's authorization. I verified that the published Git blob matches the finished manuscript byte for byte and that the publication commit is reachable from the local remote tracking branch. The supervisor independently checked the remote branch SHA.
+
+### Prompt context
+
+See Step 1 and the publication scope in Step 4. The board results and device cloud receipt were committed at `da91116`.
+
+### What I did
+
+- Compared the final manuscript to the article blob at `b8a73faf417a7749514292947dd1f75bd749576c`.
+- Recorded the repository, branch, blob hash, commit and stable URL in `various/vault-publication.json`.
+- Marked the study complete.
+
+### Why
+
+The exact blob comparison ties the published measurements to the manuscript that was reviewed.
+
+### What worked
+
+The standalone article is published and byte-identical to the verified manuscript. [Published article](https://github.com/go-go-golems/go-go-parc/blob/b8a73faf417a7749514292947dd1f75bd749576c/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Preserving%20Checked%20Text%20Reads%20Through%20Native%20Lowering.md).
+
+### What did not work
+
+Step 4 records the earlier blocked upload attempt. The successful vault operation was performed under the supervisor's verified authorization.
+
+### What I learned
+
+The publication evidence can be checked independently of the physical test receipt.
+
+### What was tricky to build
+
+The article preserves each boot as its own observation and uses paired rather than pooled effects.
+
+### What warrants a second pair of eyes
+
+Compare the article's guest scope to the complete headless test's two selected guest functions.
+
+### What should be done in the future
+
+No publication follow-up remains for this study.
+
+### Code review instructions
+
+Use the stable revision and SHA-256 in `various/vault-publication.json`.
+
+### Technical details
+
+The reMarkable guide and the standalone vault article are distinct documents with independent delivery receipts.

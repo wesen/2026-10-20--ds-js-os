@@ -1,7 +1,7 @@
 ---
 Title: From a typed text read to RV32 instructions
 Ticket: PICOCALC-STREAMED-TYPED-OPS
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native

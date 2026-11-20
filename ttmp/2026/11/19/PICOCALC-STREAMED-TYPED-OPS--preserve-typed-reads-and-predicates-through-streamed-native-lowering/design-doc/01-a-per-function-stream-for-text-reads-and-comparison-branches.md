@@ -1,7 +1,7 @@
 ---
 Title: A per-function stream for text reads and comparison branches
 Ticket: PICOCALC-STREAMED-TYPED-OPS
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native

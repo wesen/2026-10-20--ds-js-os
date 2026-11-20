@@ -1,7 +1,7 @@
 ---
 Title: Preserve typed reads and predicates through streamed native lowering
 Ticket: PICOCALC-STREAMED-TYPED-OPS
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -31,3 +31,4 @@ The staged RV32 compiler is the control for an experiment in retaining text read
 - [Physical qualification](various/physical.json)
 - [Paired physical measurements](various/physical-summary.json)
 - [reMarkable cloud delivery](various/remarkable-delivery.json)
+- [Standalone vault article](https://github.com/go-go-golems/go-go-parc/blob/b8a73faf417a7749514292947dd1f75bd749576c/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Preserving%20Checked%20Text%20Reads%20Through%20Native%20Lowering.md)
