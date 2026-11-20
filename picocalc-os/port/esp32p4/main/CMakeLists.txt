@@ -235,13 +235,29 @@ endif()
 
 if(PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
     set(native_world_reactor "${CMAKE_CURRENT_BINARY_DIR}/typed-world-reactor.elf")
-    set(world_runtime "${OS}/sdk/typed/world.c" "${OS}/sdk/typed/rv32-slot.S" "${QJS}/libunicode.c")
+    set(world_runtime "${OS}/sdk/typed/world.c" "${OS}/sdk/typed/chess-psix.c" "${OS}/sdk/typed/rv32-slot.S" "${QJS}/libunicode.c")
     add_custom_command(OUTPUT "${native_world_reactor}"
         COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${native_world_reactor}" ${world_runtime} ${OS}/sdk/nw_elf.c
-        DEPENDS ${world_runtime} ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
+        DEPENDS ${world_runtime} ${OS}/sdk/typed/chess-psix.h ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
                 ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_utf16.h
                 ${QJS}/cutils.h ${QJS}/libunicode.h ${QJS}/libunicode-table.h
         VERBATIM)
+endif()
+
+if(PICOCALC_MOBILE_PAINTER)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_MOBILE_PAINTER=1)
+    target_sources(${COMPONENT_LIB} PRIVATE mobile_painter_p4.c painter_service.c ${OS}/nucleus/painter_commands.c ${OS}/sdk/typed/chess-psix.c)
+    target_include_directories(${COMPONENT_LIB} PRIVATE ${OS}/sdk/typed)
+    target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
+    set(painter_slot "${CMAKE_CURRENT_BINARY_DIR}/mobile-painter-slot.elf")
+    set(painter_sources "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.c" "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.S")
+    add_custom_command(OUTPUT "${painter_slot}"
+        COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${painter_slot}" ${painter_sources}
+        DEPENDS ${painter_sources} VERBATIM)
+    set(painter_link "${OS}/compiler/mobile-painter.js")
+    set(painter_source "${OS}/worlds/chess/painter.typed")
+    list(APPEND BUNDLE_EXTRA "painter/slot.elf=${painter_slot}" "painter/link.js=${painter_link}" "chess/painter.typed=${painter_source}")
+    list(APPEND BUNDLE_EXTRA_DEPS "${painter_slot}" "${painter_link}" "${painter_source}")
 endif()
 
 if(PICOCALC_TYPED_CHESS)
@@ -263,9 +279,23 @@ if(PICOCALC_TYPED_CHESS)
     set(chess_source_text "")
     foreach(part IN LISTS chess_parts)
         file(READ "${chess_dir}/${part}" source_part)
+        if(PICOCALC_MOBILE_PAINTER AND part STREQUAL "view.typed")
+            string(REPLACE "function chessRender(" "function chessRenderTree(" source_part "${source_part}")
+        endif()
         string(APPEND chess_source_text "${source_part}\n")
         set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${chess_dir}/${part}")
     endforeach()
+    if(PICOCALC_MOBILE_PAINTER)
+        set(embed_tool "${OS}/tools/embed-chess-painter.py")
+        set(embedded_painter "${CMAKE_CURRENT_BINARY_DIR}/chess-painter-source.typed")
+        set(mobile_view "${chess_dir}/mobile-view.typed")
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${painter_source}" "${embed_tool}" "${mobile_view}")
+        execute_process(COMMAND ${PYTHON} "${embed_tool}" "${painter_source}" "${embedded_painter}"
+            COMMAND_ERROR_IS_FATAL ANY)
+        file(READ "${embedded_painter}" painter_function)
+        file(READ "${mobile_view}" view_source)
+        string(APPEND chess_source_text "\n${painter_function}\n${view_source}\n")
+    endif()
     file(CONFIGURE OUTPUT "${chess_source}" CONTENT "${chess_source_text}" @ONLY)
     string(JSON typed_manifest SET "${typed_manifest}" worlds ${world_count}
         "{\"name\":\"chess\",\"file\":\"chess/compiled.bin\",\"engine\":\"${chess_engine}\",\"budget_ms\":200,\"mem_kb\":768}")
