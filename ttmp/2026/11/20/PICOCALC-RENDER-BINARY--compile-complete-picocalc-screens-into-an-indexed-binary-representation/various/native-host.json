@@ -1,0 +1,1786 @@
+{
+  "memory": [
+    {
+      "app": "sysmon",
+      "arm": "G",
+      "retainedBytes": "17276",
+      "firstPeakBytes": "17276",
+      "allocationCalls": "543",
+      "twoRetainedBytes": "34552",
+      "twoPeakBytes": "34552"
+    },
+    {
+      "app": "sysmon",
+      "arm": "B",
+      "retainedBytes": "1850",
+      "firstPeakBytes": "1850",
+      "allocationCalls": "1",
+      "twoRetainedBytes": "3700",
+      "twoPeakBytes": "3700"
+    },
+    {
+      "app": "chess",
+      "arm": "G",
+      "retainedBytes": "48257",
+      "firstPeakBytes": "48257",
+      "allocationCalls": "1360",
+      "twoRetainedBytes": "96514",
+      "twoPeakBytes": "96514"
+    },
+    {
+      "app": "chess",
+      "arm": "B",
+      "retainedBytes": "2761",
+      "firstPeakBytes": "2761",
+      "allocationCalls": "1",
+      "twoRetainedBytes": "5522",
+      "twoPeakBytes": "5522"
+    },
+    {
+      "app": "snake",
+      "arm": "G",
+      "retainedBytes": "8708",
+      "firstPeakBytes": "8708",
+      "allocationCalls": "260",
+      "twoRetainedBytes": "17416",
+      "twoPeakBytes": "17416"
+    },
+    {
+      "app": "snake",
+      "arm": "B",
+      "retainedBytes": "766",
+      "firstPeakBytes": "766",
+      "allocationCalls": "1",
+      "twoRetainedBytes": "1532",
+      "twoPeakBytes": "1532"
+    },
+    {
+      "app": "editor",
+      "arm": "G",
+      "retainedBytes": "42327",
+      "firstPeakBytes": "42327",
+      "allocationCalls": "1181",
+      "twoRetainedBytes": "84654",
+      "twoPeakBytes": "84654"
+    },
+    {
+      "app": "editor",
+      "arm": "B",
+      "retainedBytes": "2572",
+      "firstPeakBytes": "2572",
+      "allocationCalls": "1",
+      "twoRetainedBytes": "5144",
+      "twoPeakBytes": "5144"
+    }
+  ],
+  "validation": "validated four genuine specimens, 56 rejected replacements preserved last-good plus NUL subdomain checks",
+  "bounds": "12 host blocks x 64 operations, stage times total microseconds/64, no producer or painter",
+  "summary": {
+    "sysmon": {
+      "G": {
+        "admitUs": 19.4453,
+        "lookupUs": 0.2422,
+        "repeatLookupUs": 3.0859,
+        "walkUs": 5.6406,
+        "releaseUs": 2.9922,
+        "admitWalkReleaseUs": 28.1094
+      },
+      "B": {
+        "admitUs": 2.4844,
+        "lookupUs": 0.2422,
+        "repeatLookupUs": 2.625,
+        "walkUs": 4.6797,
+        "releaseUs": 0.0312,
+        "admitWalkReleaseUs": 7.25
+      }
+    },
+    "chess": {
+      "G": {
+        "admitUs": 45.3672,
+        "lookupUs": 0.2578,
+        "repeatLookupUs": 3.2188,
+        "walkUs": 20.0156,
+        "releaseUs": 6.3906,
+        "admitWalkReleaseUs": 71.8828
+      },
+      "B": {
+        "admitUs": 3.7344,
+        "lookupUs": 0.0703,
+        "repeatLookupUs": 1.7734,
+        "walkUs": 17.8047,
+        "releaseUs": 0.0312,
+        "admitWalkReleaseUs": 21.4531
+      }
+    },
+    "snake": {
+      "G": {
+        "admitUs": 9.1953,
+        "lookupUs": 0.0859,
+        "repeatLookupUs": 1.6562,
+        "walkUs": 3.7578,
+        "releaseUs": 1.3047,
+        "admitWalkReleaseUs": 14.3203
+      },
+      "B": {
+        "admitUs": 1.1641,
+        "lookupUs": 0.0781,
+        "repeatLookupUs": 1.5781,
+        "walkUs": 3.4766,
+        "releaseUs": 0.0156,
+        "admitWalkReleaseUs": 4.6875
+      }
+    },
+    "editor": {
+      "G": {
+        "admitUs": 39.5234,
+        "lookupUs": 0.3672,
+        "repeatLookupUs": 4.5703,
+        "walkUs": 17.2578,
+        "releaseUs": 5.2812,
+        "admitWalkReleaseUs": 61.9141
+      },
+      "B": {
+        "admitUs": 3.2109,
+        "lookupUs": 0.2578,
+        "repeatLookupUs": 2.7969,
+        "walkUs": 15.7969,
+        "releaseUs": 0.0391,
+        "admitWalkReleaseUs": 18.9453
+      }
+    }
+  },
+  "samples": [
+    {
+      "block": 0,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1257,
+        "lookupUs": 11,
+        "repeatLookupUs": 198,
+        "walkUs": 362,
+        "releaseUs": 186,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 0,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 160,
+        "lookupUs": 17,
+        "repeatLookupUs": 169,
+        "walkUs": 306,
+        "releaseUs": 2,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 0,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2904,
+        "lookupUs": 17,
+        "repeatLookupUs": 202,
+        "walkUs": 1413,
+        "releaseUs": 408,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 0,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 254,
+        "lookupUs": 11,
+        "repeatLookupUs": 116,
+        "walkUs": 1347,
+        "releaseUs": 2,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 0,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 568,
+        "lookupUs": 8,
+        "repeatLookupUs": 105,
+        "walkUs": 229,
+        "releaseUs": 90,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 0,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 74,
+        "lookupUs": 2,
+        "repeatLookupUs": 91,
+        "walkUs": 242,
+        "releaseUs": 3,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 0,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2614,
+        "lookupUs": 26,
+        "repeatLookupUs": 293,
+        "walkUs": 1115,
+        "releaseUs": 335,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 0,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 201,
+        "lookupUs": 18,
+        "repeatLookupUs": 166,
+        "walkUs": 981,
+        "releaseUs": 3,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 168,
+        "lookupUs": 14,
+        "repeatLookupUs": 172,
+        "walkUs": 299,
+        "releaseUs": 3,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 1,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1186,
+        "lookupUs": 15,
+        "repeatLookupUs": 190,
+        "walkUs": 355,
+        "releaseUs": 178,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 1,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 299,
+        "lookupUs": 4,
+        "repeatLookupUs": 129,
+        "walkUs": 1524,
+        "releaseUs": 2,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 1,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2903,
+        "lookupUs": 14,
+        "repeatLookupUs": 208,
+        "walkUs": 1289,
+        "releaseUs": 404,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 1,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 79,
+        "lookupUs": 4,
+        "repeatLookupUs": 110,
+        "walkUs": 227,
+        "releaseUs": 1,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 1,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 610,
+        "lookupUs": 7,
+        "repeatLookupUs": 105,
+        "walkUs": 252,
+        "releaseUs": 84,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 1,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 205,
+        "lookupUs": 13,
+        "repeatLookupUs": 170,
+        "walkUs": 994,
+        "releaseUs": 2,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2487,
+        "lookupUs": 26,
+        "repeatLookupUs": 283,
+        "walkUs": 1080,
+        "releaseUs": 340,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 2,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1187,
+        "lookupUs": 21,
+        "repeatLookupUs": 192,
+        "walkUs": 348,
+        "releaseUs": 186,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 169,
+        "lookupUs": 14,
+        "repeatLookupUs": 167,
+        "walkUs": 303,
+        "releaseUs": 4,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 3096,
+        "lookupUs": 17,
+        "repeatLookupUs": 224,
+        "walkUs": 1346,
+        "releaseUs": 441,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 2,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 226,
+        "lookupUs": 5,
+        "repeatLookupUs": 114,
+        "walkUs": 1132,
+        "releaseUs": 3,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 2,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 587,
+        "lookupUs": 7,
+        "repeatLookupUs": 107,
+        "walkUs": 240,
+        "releaseUs": 78,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 2,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 72,
+        "lookupUs": 3,
+        "repeatLookupUs": 101,
+        "walkUs": 209,
+        "releaseUs": 0,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 2,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2511,
+        "lookupUs": 26,
+        "repeatLookupUs": 292,
+        "walkUs": 1103,
+        "releaseUs": 342,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 2,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 221,
+        "lookupUs": 17,
+        "repeatLookupUs": 191,
+        "walkUs": 1142,
+        "releaseUs": 1,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 3,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 149,
+        "lookupUs": 16,
+        "repeatLookupUs": 166,
+        "walkUs": 294,
+        "releaseUs": 4,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 3,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1204,
+        "lookupUs": 16,
+        "repeatLookupUs": 191,
+        "walkUs": 353,
+        "releaseUs": 182,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 3,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 231,
+        "lookupUs": 6,
+        "repeatLookupUs": 113,
+        "walkUs": 1140,
+        "releaseUs": 2,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 3,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 3062,
+        "lookupUs": 18,
+        "repeatLookupUs": 219,
+        "walkUs": 1319,
+        "releaseUs": 424,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 3,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 90,
+        "lookupUs": 6,
+        "repeatLookupUs": 131,
+        "walkUs": 281,
+        "releaseUs": 1,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 3,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 700,
+        "lookupUs": 5,
+        "repeatLookupUs": 135,
+        "walkUs": 279,
+        "releaseUs": 97,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 3,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 242,
+        "lookupUs": 22,
+        "repeatLookupUs": 211,
+        "walkUs": 1176,
+        "releaseUs": 3,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 3,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 3324,
+        "lookupUs": 25,
+        "repeatLookupUs": 386,
+        "walkUs": 1426,
+        "releaseUs": 437,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 4,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1507,
+        "lookupUs": 14,
+        "repeatLookupUs": 237,
+        "walkUs": 435,
+        "releaseUs": 226,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 4,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 158,
+        "lookupUs": 14,
+        "repeatLookupUs": 170,
+        "walkUs": 300,
+        "releaseUs": 2,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 4,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2872,
+        "lookupUs": 16,
+        "repeatLookupUs": 204,
+        "walkUs": 1239,
+        "releaseUs": 400,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 4,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 253,
+        "lookupUs": 2,
+        "repeatLookupUs": 129,
+        "walkUs": 1197,
+        "releaseUs": 4,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 4,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 563,
+        "lookupUs": 4,
+        "repeatLookupUs": 115,
+        "walkUs": 236,
+        "releaseUs": 83,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 4,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 70,
+        "lookupUs": 4,
+        "repeatLookupUs": 95,
+        "walkUs": 220,
+        "releaseUs": 1,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 4,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2522,
+        "lookupUs": 12,
+        "repeatLookupUs": 287,
+        "walkUs": 1083,
+        "releaseUs": 336,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 4,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 200,
+        "lookupUs": 17,
+        "repeatLookupUs": 171,
+        "walkUs": 986,
+        "releaseUs": 5,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 153,
+        "lookupUs": 15,
+        "repeatLookupUs": 162,
+        "walkUs": 287,
+        "releaseUs": 3,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 5,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1260,
+        "lookupUs": 16,
+        "repeatLookupUs": 208,
+        "walkUs": 357,
+        "releaseUs": 197,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 5,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 234,
+        "lookupUs": 2,
+        "repeatLookupUs": 108,
+        "walkUs": 1113,
+        "releaseUs": 3,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 5,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2805,
+        "lookupUs": 22,
+        "repeatLookupUs": 193,
+        "walkUs": 1224,
+        "releaseUs": 403,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 5,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 69,
+        "lookupUs": 7,
+        "repeatLookupUs": 96,
+        "walkUs": 208,
+        "releaseUs": 3,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 5,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 585,
+        "lookupUs": 3,
+        "repeatLookupUs": 102,
+        "walkUs": 238,
+        "releaseUs": 78,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 5,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 202,
+        "lookupUs": 13,
+        "repeatLookupUs": 178,
+        "walkUs": 968,
+        "releaseUs": 1,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2537,
+        "lookupUs": 23,
+        "repeatLookupUs": 287,
+        "walkUs": 1089,
+        "releaseUs": 343,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 6,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1223,
+        "lookupUs": 9,
+        "repeatLookupUs": 197,
+        "walkUs": 349,
+        "releaseUs": 184,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 166,
+        "lookupUs": 19,
+        "repeatLookupUs": 176,
+        "walkUs": 326,
+        "releaseUs": 2,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2894,
+        "lookupUs": 9,
+        "repeatLookupUs": 207,
+        "walkUs": 1273,
+        "releaseUs": 402,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 6,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 244,
+        "lookupUs": 1,
+        "repeatLookupUs": 113,
+        "walkUs": 1125,
+        "releaseUs": 0,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 6,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 583,
+        "lookupUs": 10,
+        "repeatLookupUs": 101,
+        "walkUs": 247,
+        "releaseUs": 82,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 6,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 77,
+        "lookupUs": 7,
+        "repeatLookupUs": 101,
+        "walkUs": 232,
+        "releaseUs": 1,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 6,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2478,
+        "lookupUs": 19,
+        "repeatLookupUs": 283,
+        "walkUs": 1106,
+        "releaseUs": 328,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 6,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 206,
+        "lookupUs": 12,
+        "repeatLookupUs": 180,
+        "walkUs": 1016,
+        "releaseUs": 2,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 7,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 138,
+        "lookupUs": 14,
+        "repeatLookupUs": 142,
+        "walkUs": 255,
+        "releaseUs": 1,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 7,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1355,
+        "lookupUs": 16,
+        "repeatLookupUs": 216,
+        "walkUs": 390,
+        "releaseUs": 211,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 7,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 227,
+        "lookupUs": 4,
+        "repeatLookupUs": 108,
+        "walkUs": 1102,
+        "releaseUs": 2,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 7,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2794,
+        "lookupUs": 14,
+        "repeatLookupUs": 205,
+        "walkUs": 1194,
+        "releaseUs": 399,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 7,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 75,
+        "lookupUs": 5,
+        "repeatLookupUs": 101,
+        "walkUs": 210,
+        "releaseUs": 1,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 7,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 590,
+        "lookupUs": 7,
+        "repeatLookupUs": 105,
+        "walkUs": 239,
+        "releaseUs": 92,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 7,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 197,
+        "lookupUs": 14,
+        "repeatLookupUs": 171,
+        "walkUs": 977,
+        "releaseUs": 1,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 7,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2452,
+        "lookupUs": 24,
+        "repeatLookupUs": 273,
+        "walkUs": 1071,
+        "releaseUs": 318,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 8,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1203,
+        "lookupUs": 12,
+        "repeatLookupUs": 194,
+        "walkUs": 362,
+        "releaseUs": 179,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 8,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 154,
+        "lookupUs": 16,
+        "repeatLookupUs": 165,
+        "walkUs": 296,
+        "releaseUs": 1,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 8,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2879,
+        "lookupUs": 9,
+        "repeatLookupUs": 205,
+        "walkUs": 1243,
+        "releaseUs": 410,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 8,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 227,
+        "lookupUs": 3,
+        "repeatLookupUs": 108,
+        "walkUs": 1113,
+        "releaseUs": 2,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 8,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 626,
+        "lookupUs": 4,
+        "repeatLookupUs": 116,
+        "walkUs": 246,
+        "releaseUs": 84,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 8,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 72,
+        "lookupUs": 8,
+        "repeatLookupUs": 97,
+        "walkUs": 203,
+        "releaseUs": 2,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 8,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2707,
+        "lookupUs": 21,
+        "repeatLookupUs": 303,
+        "walkUs": 1185,
+        "releaseUs": 351,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 8,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 289,
+        "lookupUs": 15,
+        "repeatLookupUs": 226,
+        "walkUs": 1312,
+        "releaseUs": 3,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 9,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 249,
+        "lookupUs": 24,
+        "repeatLookupUs": 261,
+        "walkUs": 469,
+        "releaseUs": 6,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 9,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1928,
+        "lookupUs": 23,
+        "repeatLookupUs": 297,
+        "walkUs": 555,
+        "releaseUs": 286,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 9,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 386,
+        "lookupUs": 14,
+        "repeatLookupUs": 171,
+        "walkUs": 1911,
+        "releaseUs": 1,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 9,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 4182,
+        "lookupUs": 23,
+        "repeatLookupUs": 318,
+        "walkUs": 1743,
+        "releaseUs": 584,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 9,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 77,
+        "lookupUs": 5,
+        "repeatLookupUs": 102,
+        "walkUs": 223,
+        "releaseUs": 3,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 9,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 616,
+        "lookupUs": 4,
+        "repeatLookupUs": 109,
+        "walkUs": 234,
+        "releaseUs": 82,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 9,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 192,
+        "lookupUs": 18,
+        "repeatLookupUs": 171,
+        "walkUs": 1006,
+        "releaseUs": 1,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 9,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2499,
+        "lookupUs": 17,
+        "repeatLookupUs": 295,
+        "walkUs": 1089,
+        "releaseUs": 330,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 10,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1232,
+        "lookupUs": 15,
+        "repeatLookupUs": 196,
+        "walkUs": 360,
+        "releaseUs": 201,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 10,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 154,
+        "lookupUs": 14,
+        "repeatLookupUs": 165,
+        "walkUs": 292,
+        "releaseUs": 1,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 10,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 2943,
+        "lookupUs": 15,
+        "repeatLookupUs": 204,
+        "walkUs": 1244,
+        "releaseUs": 418,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 10,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 233,
+        "lookupUs": 6,
+        "repeatLookupUs": 108,
+        "walkUs": 1139,
+        "releaseUs": 1,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 10,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 577,
+        "lookupUs": 6,
+        "repeatLookupUs": 98,
+        "walkUs": 241,
+        "releaseUs": 80,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 10,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 74,
+        "lookupUs": 2,
+        "repeatLookupUs": 103,
+        "walkUs": 222,
+        "releaseUs": 1,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 10,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 2578,
+        "lookupUs": 23,
+        "repeatLookupUs": 297,
+        "walkUs": 1164,
+        "releaseUs": 335,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 10,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 228,
+        "lookupUs": 18,
+        "repeatLookupUs": 210,
+        "walkUs": 1183,
+        "releaseUs": 3,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 11,
+      "app": "sysmon",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 1850,
+        "admitUs": 169,
+        "lookupUs": 16,
+        "repeatLookupUs": 173,
+        "walkUs": 304,
+        "releaseUs": 2,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 11,
+      "app": "sysmon",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 1919,
+        "admitUs": 1477,
+        "lookupUs": 16,
+        "repeatLookupUs": 239,
+        "walkUs": 452,
+        "releaseUs": 235,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 11,
+      "app": "chess",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2761,
+        "admitUs": 279,
+        "lookupUs": 11,
+        "repeatLookupUs": 141,
+        "walkUs": 1365,
+        "releaseUs": 3,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 11,
+      "app": "chess",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3443,
+        "admitUs": 3411,
+        "lookupUs": 27,
+        "repeatLookupUs": 238,
+        "walkUs": 1463,
+        "releaseUs": 502,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 11,
+      "app": "snake",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 766,
+        "admitUs": 93,
+        "lookupUs": 8,
+        "repeatLookupUs": 122,
+        "walkUs": 271,
+        "releaseUs": 1,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 11,
+      "app": "snake",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 758,
+        "admitUs": 713,
+        "lookupUs": 5,
+        "repeatLookupUs": 130,
+        "walkUs": 288,
+        "releaseUs": 96,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 11,
+      "app": "editor",
+      "arm": "B",
+      "data": {
+        "reps": 64,
+        "bytes": 2572,
+        "admitUs": 270,
+        "lookupUs": 16,
+        "repeatLookupUs": 244,
+        "walkUs": 1376,
+        "releaseUs": 5,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 11,
+      "app": "editor",
+      "arm": "G",
+      "data": {
+        "reps": 64,
+        "bytes": 3105,
+        "admitUs": 3803,
+        "lookupUs": 31,
+        "repeatLookupUs": 428,
+        "walkUs": 1631,
+        "releaseUs": 504,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    }
+  ]
+}
