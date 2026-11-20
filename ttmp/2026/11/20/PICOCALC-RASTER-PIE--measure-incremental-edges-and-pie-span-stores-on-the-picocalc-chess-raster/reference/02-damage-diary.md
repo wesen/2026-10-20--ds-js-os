@@ -3,7 +3,7 @@ Title: Independent damage-repaint investigation diary
 Ticket: PICOCALC-RASTER-PIE
 DocType: reference
 Status: complete
-Topics: [picocalc, chess, rendering, research-diary]
+Topics: [picocalc, chess, rendering, testing]
 ---
 
 # Independent damage-repaint investigation diary

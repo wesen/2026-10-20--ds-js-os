@@ -67,3 +67,51 @@ Start with the two designs and the raw host/raster/damage results. The earlier f
 ### Technical details
 
 Each RGB565 pixel takes two bytes and one P4 128-bit store fills eight pixels. The matte covers 320 × 280 pixels; the physical app and hints extend to 298 rows. Each timed scope must state whether it includes the larger compositor clear, SPI transfers or retention.
+
+## Step 2: Compare complete body draws and publish the three studies
+
+The original opening now has a physical four-arm comparison and a second, independent retained-body study. The scalar prevalidated arm captures most of the full-render improvement. I selected stepped edges and direct scalar writes for the live rotating scene and retained the ordinary matte fill in that integration. Its eventual measurements belong to the new scene.
+
+### Prompt Context
+
+See Step 1 for the original request. The subsequent camera and gameplay GIF requests are recorded in the 3D Chess director diary.
+
+### What I did
+
+Read all raw timings and both research reports. Derived a plot with distinct panels for the two protocols in scripts/director/01-frame-costs.py. Wrote the director article, verified links, published three articles and a figure, and delivered the designs and articles to reMarkable.
+
+### Why
+
+An unchanged scene, a cursor, a pawn move and a whole camera turn invalidate different numbers of pixels. Reporting only the cursor would imply that retention will make rotating the board equally fast. The two native comparisons have separate controls.
+
+### What worked
+
+Sol commits a6d7205 and 9a11e21 qualify the four drawing arms; Astra commits 060b481 and 3db329d qualify retention and independent arithmetic. Eleven opening samples per full-draw arm give median 17.589, 16.025, 4.301 and 3.897 ms. Camera fallback in the retained trial adds 0.146 ms. All 51 device CRC and metadata checks and ten damage cases passed. The remote vault is verified at c0e9efed7b16c78ffcf017a0248d0f0cb901a5b0. The reMarkable cloud reported the upload in various/publication.json.
+
+### What didn't work
+
+The first publication dry run failed with FileNotFoundError on the scalar paper's sibling-ticket link. Its target used ../PICOCALC-CHESS-3D from an analysis directory. Changing that prefix to ../../PICOCALC-CHESS-3D resolved the actual file and all three articles passed the publication check.
+
+### What I learned
+
+The packed raster threshold routed every historical triangle to scalar and every full matte to PIE. The independent old/new body comparison established exact rendering, yet the compositor's unconditional clear still prevents direct adoption of partial replay.
+
+### What was tricky to build
+
+The chart uses actual medians for each independent control. The 18 ms control in the retained experiment and the 17.59 ms control in the four-arm benchmark require separate denominators.
+
+### What warrants a second pair of eyes
+
+Review real application capture timing before predicting input-to-panel speed from either standalone table.
+
+### What should be done in the future
+
+Measure the rotating models' actual receiver and display times under their normal app workflow. Keep the frozen figures for future threshold and buffering studies.
+
+### Code review instructions
+
+Review analysis/02, various/physical.json, scripts/damage/board.json, and various/publication.json. Run scripts/director/01-frame-costs.py to reproduce its chart.
+
+### Technical details
+
+At 360 MHz, divide cycles by 360,000 to obtain milliseconds. Read each median at its stated scope. The tests also confirm restoration of the ordinary native image and partition before later Chess work took the board.

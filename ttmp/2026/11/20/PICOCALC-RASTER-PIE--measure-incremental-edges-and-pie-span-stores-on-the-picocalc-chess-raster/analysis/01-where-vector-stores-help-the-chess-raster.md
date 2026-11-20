@@ -26,7 +26,7 @@ WhenToUse: ""
 
 # Where vector stores help the Chess raster
 
-A Chess painter emits a display list. The list describes the background, triangles, piece glyphs and hints. Rendering executes those commands against a framebuffer. For the 3D experiment on PicoCalc, generating the commands took roughly half a millisecond and executing the body raster took roughly 18 milliseconds. The projection study optimized a small part of command generation. The next opportunity lies in the work that starts after all the projected coordinates are known. [3D packed scene study](../PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/analysis/03-packed-scene.md)
+A Chess painter emits a display list. The list describes the background, triangles, piece glyphs and hints. Rendering executes those commands against a framebuffer. For the 3D experiment on PicoCalc, generating the commands took roughly half a millisecond and executing the body raster took roughly 18 milliseconds. The projection study optimized a small part of command generation. The next opportunity lies in the work that starts after all the projected coordinates are known. [3D packed scene study](../../PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/analysis/03-packed-scene.md)
 
 ## From three vertices to a row of pixels
 
