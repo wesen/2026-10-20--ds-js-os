@@ -72,3 +72,99 @@ Follow the native ELF path through runtime/cji_elf.c and elf_event. Read the des
 ### Technical details
 
 The reproducing image has a 320 × 320 display, 80 ms compositor segment budget and 768 KiB compositor quota. The System monitor collects 48 samples of history. Both eyes on quota and host allocator behavior are needed when interpreting an out-of-memory record.
+
+## Step 2: Compare the changed producer against the existing renderer
+
+I implemented the System frame reduction in df79a0f and compared it to dcf3fca. The initial candidate keeps the existing app features, driver and native event ABI. The physical trial uses the same playable firmware profile as the fault report.
+
+### Prompt Context
+
+See Step 1. The comparison answers whether a smaller message can preserve the observed screen.
+
+### What I did
+
+Compiled both source versions into separate host VM contexts, called the actual compositor drawing routines, and compared the recorded draw calls. Built the four-app ESP-IDF image and started the normal installer and qualification schedule against the shared serial lock.
+
+### Why
+
+A plain JSON equality test would reject an intentional change in representation. A selected-row count alone would miss a shifted viewport or a graph whose lines move by one pixel.
+
+### What worked
+
+All 65 fixture selections produced identical drawing calls. For the final selection of each tab, the serialized synthetic tree fell from 4016 to 1766 bytes for Worlds, 2641 to 1529 for Handles, and 2678 to 1166 for Buses. The two existing host test files passed. The firmware build completed. These byte counts exclude the enclosing event.
+
+### What didn't work
+
+The first host harness attempted to spawn git from Node; the sandbox reported “spawnSync git EPERM”. Passing the original source through stdin produced the same comparison without a nested process. An initial Opus alias session declined the receiver request. Explicit Opus 4.6 High returned a public technical review. Its suggestion to clamp a fault return to 1 conflicts with the actual native ABI and was rejected.
+
+### What I learned
+
+A source-free review needs an explicit definition of each return code. I checked the receiver's recommendations against the local loader and documented the correction in various/04-review-disposition.md.
+
+### What was tricky to build
+
+The candidate flashes only the application partition. The physical driver remains enabled, and the capture schedule waits across samples, scrolls, changes tabs, reopens System and returns to Chess. Local framebuffer contents will be verified visually as well as by CRC.
+
+### What warrants a second pair of eyes
+
+Test the numeric transform near half-pixel ties and examine long-run physical behavior. The host fixture measures drawing calls for one 320-pixel layout.
+
+### What should be done in the future
+
+Review every captured tab and the final world snapshots. Query another state snapshot if a long serial JSON response is incomplete. A visible crash invalidates the candidate even if it restarts successfully.
+
+### Code review instructions
+
+Run the comparison command in the design guide. The exact physical schedule and acceptance checks are in scripts/04-exercise-device.py.
+
+### Technical details
+
+Negative rounding before negation gives a distance that rounds halfway towards the baseline for an integer-base line plot. The existing compositor remains responsible for geometry, cell colors, font clipping and pixel writes.
+
+## Step 3: Correct a drawing difference and inspect the first physical trial
+
+The producer researcher's boundary-case suggestion found a real one-pixel difference in the first candidate. I corrected the calculation in ef0ff95. The first candidate provided direct physical evidence about the fault while the corrected firmware was building.
+
+### Prompt Context
+
+See Step 1. This step verifies both the visible output and continued progress of the services on the board.
+
+### What I did
+
+Added half-pixel samples, empty lists and lengths surrounding each table's window capacity. Replayed the actual draw calls. Built the corrected image separately while inspecting the first board's 152-second qualification.
+
+### Why
+
+A measurable payload reduction cannot establish that the graph still draws the same points. A CRC failure during serial capture should be separated from the compositor fault.
+
+### What worked
+
+The added test first failed at “half-pixel fixture / tab 0 / count 0 / row 0”. The recorded line endpoint moved from 81 to 80. Preserving the original operands close to a half fixed that fixture. All 69 added comparisons passed. The first image reached the bottom world, both other tabs and Chess. Compositor turns advanced by 1,075 and System by 327 with no new fault records.
+
+### What didn't work
+
+The final Chess screenshot in the first run failed with “BAD: 984297 px”. A separate capture of the same screen passed CRC. The four System screenshots passed on the first attempt. An initial research report interpreted cumulative turns as a throughput improvement. I removed that claim and kept the two counter observations and their meaning.
+
+### What I learned
+
+The errors found by the two independent reviews were of different kinds. The producer's proposed test changed production code. The receiver qualification required observable progress in addition to a quiet log. An independent technical review still needs verification against the ABI.
+
+### What was tricky to build
+
+The two runs use the same 80 ms budget, 768 KiB quota, four native typed apps and enabled peripherals. The only production source changed between the two candidate images is the graph boundary correction.
+
+### What warrants a second pair of eyes
+
+The previous control did not run for the same duration as the candidates. No rate reduction or latency speedup is inferred from the number of timed events.
+
+### What should be done in the future
+
+Rerun the corrected binary and verify its five screenshots, fault stream and world snapshots. Archive both the first receipt and the corrected-build result.
+
+### Code review instructions
+
+Compare df79a0f and ef0ff95, then run scripts/02-compare-system-frames.mjs with the old source supplied on standard input. Inspect scripts/04-exercise-device.py for the time and location of each UI action.
+
+### Technical details
+
+The real Worlds screenshot showed six rows. After the Down sequence, the final nat-dial row was selected with its details. The other two frames showed the Handles listing and the I²C and SPI bus transfer graphs. The half-pixel correction uses the actual display coordinate range.

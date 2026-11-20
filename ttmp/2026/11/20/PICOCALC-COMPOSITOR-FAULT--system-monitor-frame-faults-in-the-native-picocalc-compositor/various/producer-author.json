@@ -1,0 +1,6 @@
+{
+  "lane": "producer",
+  "model": "claude-opus-4-6",
+  "effort": "high",
+  "publicResponseSha256": "cc7dd3b080b2f0ea76db563eaa488b7953712c1c114f70cd29ce42e15594ffac"
+}

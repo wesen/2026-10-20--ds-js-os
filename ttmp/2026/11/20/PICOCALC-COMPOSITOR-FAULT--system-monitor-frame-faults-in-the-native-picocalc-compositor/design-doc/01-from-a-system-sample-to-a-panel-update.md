@@ -100,3 +100,26 @@ The historical capture script is in the PICOCALC-SYS ticket under scripts/query-
 ### Interpreting the CJI return value
 
 The actual ELF bridge is runtime/cji_elf.c in the imported CJI source tree. Its cji_elf_event saves an escape point, enters the current world's runtime state and invokes the generated entry. On a fatal allocation failure the runtime escapes to this point. The bridge logs the reason, marks the world crashed, and returns 2. The kernel's generic ELF loader subsequently reports the out-of-contract value. In both captured instances, a line immediately above the structured kernel fault says “compositor: crashed: out of memory”. Preserve both lines when diagnosing this case. The allocation wrapper checks the world allowance and then asks the port allocator; the short reason does not distinguish which check failed.
+
+## Screen geometry and the candidate fix
+
+On this panel the drawable body is 304 pixels wide and 270 pixels high after the outer insets. Each table draws its header, computes how many complete rows fit underneath it, then centers that interval on the selected row. The producer has all application state and can send a larger enclosing interval with a local selection. With 28 worlds, selected row 20 and a window of eight, the producer sends rows 16 through 23 and sets the local selection to 4. If the renderer can fit six rows, it draws local rows 1 through 6, corresponding to original rows 17 through 22. At the first and last rows both algorithms clamp to the same edge. The details panel continues to index the full world array with 20. The Handles tab uses fourteen rows to cover its taller viewport.
+
+A line graph requires an x position fixed by sample number and a y position bounded by the plot height. For a 26-pixel plot the renderer scales its normalized sample by 23. The candidate transmits the integer distance from the graph baseline and sets the plot scale to 23. The monitor still computes peak and current percentages from the original samples. The Buses tab applies the same conversion independently to the I²C and SPI traces. Geometry belongs to the current PicoCalc layout; any panel or font change should rerun the drawing comparison.
+
+The host comparison feeds identical System state to the committed producer at dcf3fca and to the candidate, then calls the actual compositor draw function on both trees. Its fake framebuffer records each operation and argument, including coordinates, colors and text. Comparing these streams checks row alignment, highlighting and graph geometry on the tested data. Its byte count measures the serialized UI tree. The actual wire envelope also carries the app name, title and hints.
+
+~~~sh
+git show dcf3fca:picocalc-os/js/apps/sysmon.js | node "$ticket/scripts/02-compare-system-frames.mjs"
+node --test picocalc-os/tests/compositor-auth.test.mjs picocalc-os/tests/sysapps.test.mjs
+~~~
+
+### Display ownership and recovery
+
+The nucleus retains the latest published frame per app. When a compositor instance restarts, it can receive these frames again. This behavior explains how a transient blank screen can disappear while its restart counter keeps rising. In the separate draw event, framebuffer commit compares the front and back pixel buffers. The display driver issues CASET and RASET to select the destination rectangle, RAMWR to begin a pixel write and a SPI transfer for the RGB565 pixel data. A rectangle can be skipped while a new driver is waiting for a framebuffer attachment. Invalidating the framebuffer on a skipped flush ensures the next successful draw can restore the panel.
+
+For debugging, first check that the world doing the work stayed alive, then confirm the expected screen content from the device. Increasing turns alone can indicate a busy process receiving the wrong messages. A CRC-checked screenshot verifies framebuffer contents. A human looking at the physical display can also confirm the last transfer reached the panel.
+
+### Half-pixel regression
+
+A second fixture generates samples intended to land halfway between two pixels. On the first candidate the upper endpoint of one line segment changed from y=81 to y=80. On the panel, y increases downwards. The renderer computes round(base − offset), and its floating-point subtraction can eliminate a tiny error in the fraction near a tie. Rounding the offset by itself has a different result in that case. The correction falls back to the original sample array and scale when a computed offset is inexact at a half and differs from that half by at most 320 times Number.EPSILON. This leaves the renderer's absolute-coordinate calculation intact. The 69 extended comparisons passed after the correction.

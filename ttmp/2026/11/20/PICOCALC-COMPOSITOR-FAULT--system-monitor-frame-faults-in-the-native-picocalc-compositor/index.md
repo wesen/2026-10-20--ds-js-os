@@ -17,36 +17,13 @@ WhenToUse: ""
 
 # System monitor frame faults in the native PicoCalc compositor
 
-## Overview
+Opening System on the PicoCalc produced two frame-budget faults and two native fatal returns. The adjacent console lines identify both fatal returns as out-of-memory errors. This ticket tracks the producer-side fix, review and physical qualification on the latest playable firmware.
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+## Read in order
 
-## Key Links
+1. [Architecture and debugging guide](design-doc/01-from-a-system-sample-to-a-panel-update.md). Follow a single update from the sampler to the panel and trace a world restart.
+2. [Supervisor investigation diary](reference/01-supervisor-investigation-diary.md). Find the original fault evidence, rejected explanations and test decisions.
+3. [Frame producer study](analysis/01-how-much-of-a-system-screen-must-cross-the-mailbox.md) and [native receiver study](analysis/02-reading-the-two-faults-behind-a-compositor-restart.md).
+4. [Supervisor synthesis](analysis/03-diagnosing-a-handheld-compositor-from-the-first-key-to-the-last-pixel.md). Read the physical qualification results and the remaining limits.
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+The scripts directory contains the researcher assignments, differential renderer and board qualification schedule. The various directory contains the evidence.
