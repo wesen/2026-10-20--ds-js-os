@@ -540,3 +540,53 @@ report went to the vault.
 ### Code review instructions
 
 - Guide section 9.
+
+## Step 8: Query the compositor after opening System on the handheld
+
+I captured world state and fault events from the latest playable build over USB. The board reported two compositor frame-budget overruns and two invalid native returns during the captures of System opening. The firmware stayed installed.
+
+### Prompt Context
+
+**User prompt (verbatim):** “opening the system app often breaks the compositor protocol it seems, is there a way for you to query the crash logs or so?”
+
+**Follow-up (verbatim):** “you can leave that as the defaut firmware now btw, the llatest always”
+
+### What I did
+
+Queried the serial console using worlds and opened System with F1 followed by M. The repeatable 30-second schedule is in scripts/query-system-fault.py. Preserved the structured compositor records in various/system-compositor-faults.jsonl and documented the default firmware in AGENTS.md.
+
+### Why
+
+The kernel records a reason, message type and timestamp for each world fault. Capturing the serial events preserves both reasons across automatic restarts.
+
+### What worked
+
+At board times 30.419 and 31.763 seconds, frames exceeded the compositor's 80 ms turn budget. At 39.836 and 53.336 seconds the native return value was 2. The earlier worlds snapshot showed two compositor restarts and the budget error. A later snapshot showed four restarts and the protocol error.
+
+### What didn't work
+
+The first capture included a POWERON banner. The original incident before that boot could not be established from this session. The subsequent capture reproduced the reported symptom.
+
+### What I learned
+
+The compositor's frame handler can fail in two observable ways. In elf_event, the elapsed-time check precedes the return-value check. The diagnostic alone cannot identify the operation that produced the value 2.
+
+### What was tricky to build
+
+The worlds command gives one last_error per world, so a later crash can replace the reason from an earlier one. Serial #OCT1 fault lines preserve the sequence.
+
+### What warrants a second pair of eyes
+
+Review the native event return path and measure the renderer while the System worlds table updates. The largest compositor memory reading in these records was 512 KB against a 768 KB limit.
+
+### What should be done in the future
+
+Instrument the compositor's frames entry and exit with elapsed time, frame origin and native return value to localize the fault.
+
+### Code review instructions
+
+Start in picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c at elf_event and picocalc-os/js/apps/sysmon.js at worldsTab. Replay with the ticket script on the current handheld firmware.
+
+### Technical details
+
+Kernel log retention is a 256-line RAM ring. The installed ESP-IDF configuration selects ESP_COREDUMP_ENABLE_TO_NONE. The native event contract defines NW_DONE as 0 and NW_LATER as 1.

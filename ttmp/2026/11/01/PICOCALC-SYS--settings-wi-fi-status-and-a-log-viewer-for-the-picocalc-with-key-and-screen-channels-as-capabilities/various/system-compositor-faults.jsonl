@@ -1,0 +1,4 @@
+{"ev":"fault","t":30418.925,"world":"compositor","file":"natives/compositor.elf","handling":"frames","why":"ran past its turn budget of 80 ms","crashes":2,"mem_kb":504,"limit_kb":768}
+{"ev":"fault","t":31762.757,"world":"compositor","file":"natives/compositor.elf","handling":"frames","why":"ran past its turn budget of 80 ms","crashes":3,"mem_kb":504,"limit_kb":768}
+{"ev":"fault","t":39835.523,"world":"compositor","file":"natives/compositor.elf","handling":"frames","why":"it broke the native protocol (an end of 2)","crashes":3,"mem_kb":512,"limit_kb":768}
+{"ev":"fault","t":53335.907,"world":"compositor","file":"natives/compositor.elf","handling":"frames","why":"it broke the native protocol (an end of 2)","crashes":1,"mem_kb":512,"limit_kb":768}

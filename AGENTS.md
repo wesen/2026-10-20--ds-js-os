@@ -9,3 +9,7 @@ The [independent studies](ttmp/2026/11/19/PICOCALC-RV32-STUDIES--independent-pic
 The [first four-study compiler program](ttmp/2026/11/19/PICOCALC-COMPILER-LAB--measure-cold-compilation-and-test-bounded-compiler-designs-on-the-handheld/index.md) covers cold frontend costs, RISC-V instruction generation, bounded analysis and function-level recompilation. Each study has its own design, evidence and diary.
 
 The [four-study supervisor report](ttmp/2026/11/19/PICOCALC-COMPILER-LAB--measure-cold-compilation-and-test-bounded-compiler-designs-on-the-handheld/analysis/01-which-compiler-work-pays-for-itself-on-a-handheld.md) explains physical Editor cold builds, reservation size, bounded proofs and the Files edit-to-native-return measurement. Its [published vault edition](https://github.com/go-go-golems/go-go-parc/blob/5e62fa498c37bf5480f2f6c1cf338fc918166916/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Which%20Compiler%20Work%20Pays%20for%20Itself%20on%20a%20Handheld.md) links all five individual reports.
+
+## Handheld firmware
+
+Leave the latest playable firmware installed on the PicoCalc for everyday use. After an experiment with a temporary image, return the device to the current playable build. Follow the [build and installation recipe](ttmp/2026/11/20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/reference/03-reproduce-chess.md).
