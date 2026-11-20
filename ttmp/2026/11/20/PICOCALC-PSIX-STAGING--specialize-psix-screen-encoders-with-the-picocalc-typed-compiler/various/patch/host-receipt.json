@@ -1,0 +1,28 @@
+{
+    "trace": {
+        "calls": 47,
+        "classes": 4,
+        "hits": 40,
+        "misses": 7
+    },
+    "chronological": {
+        "calls": 20,
+        "classes": 3,
+        "hits": 16,
+        "misses": 4
+    },
+    "sampledCycle": {
+        "calls": 24,
+        "classes": 3,
+        "hits": 0,
+        "misses": 24
+    },
+    "widthTransitions": {
+        "calls": 24,
+        "hits": 16,
+        "misses": 8
+    },
+    "refusedUnmodified": 19,
+    "aliasByteMatches": 2,
+    "cacheBytes": 1192
+}

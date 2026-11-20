@@ -1,0 +1,154 @@
+{
+  "fen": "8/R6R/8/3k4/8/8/8/K7 w - - 0 1",
+  "witness": [
+    {
+      "label": "launch",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000"
+    },
+    {
+      "label": "select a7 rook",
+      "key": "1/1/1/0",
+      "mask": "017e010101010100"
+    },
+    {
+      "label": "select h7 rook",
+      "key": "1/2/1/0",
+      "mask": "807e808080808080"
+    }
+  ],
+  "chronological": {
+    "calls": 20,
+    "classes": 3,
+    "hits": 16,
+    "misses": 4
+  },
+  "sampledCycle": {
+    "calls": 24,
+    "classes": 3,
+    "hits": 0,
+    "misses": 24
+  },
+  "events": [
+    {
+      "label": "launch",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "select a7 rook",
+      "key": "1/1/1/0",
+      "mask": "017e010101010100",
+      "selected": 8
+    },
+    {
+      "label": "clear a7 selection",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "right 1",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "right 2",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "right 3",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "right 4",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "right 5",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "right 6",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "right 7",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "select h7 rook",
+      "key": "1/2/1/0",
+      "mask": "807e808080808080",
+      "selected": 15
+    },
+    {
+      "label": "clear h7 selection",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "left 1",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "left 2",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "left 3",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "left 4",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "left 5",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "left 6",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "left 7",
+      "key": "1/1/0/0",
+      "mask": "0000000000000000",
+      "selected": 64
+    },
+    {
+      "label": "select a7 again",
+      "key": "1/1/1/0",
+      "mask": "017e010101010100",
+      "selected": 8
+    }
+  ]
+}

@@ -8,6 +8,12 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
+    - Path: repo://ttmp/2026/11/20/PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/scripts/board/patch-host.c
+      Note: Independent cache qualification
+    - Path: repo://ttmp/2026/11/20/PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/scripts/board/patch.h
+      Note: Two-entry canonical byte-template reuse
+    - Path: repo://ttmp/2026/11/20/PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/various/patch/host-receipt.json
+      Note: Exact byte and cache witnesses
     - Path: repo://ttmp/2026/11/20/PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/various/static/host-receipt.json
       Note: Raw host measurements and exact oracle counts
 ExternalSources: []
@@ -84,3 +90,43 @@ The director's board harness used the frozen generator and Typed primitives. It 
 ### Outcome
 
 The generated native function matched the generic reference for all 47 traced states in each block. Its median call was 78.24 µs, against 101.28 µs for generic C and 24.71 µs for the resident C layout-table writer. Runtime generation through qualified load took 603.79 ms median. Those endpoints support a roughly 26,210-call break-even against generic C on the measured board and zero break-even advantage over the layout table. Restoration and its verification are tracked by the director. [Physical evidence](../various/physical.json).
+
+## Step 4 — Test an immutable template cache against layout churn
+
+The physical table writer suggested a cheaper way to spend schema information. This follow-up control retains two fixed-capacity packet layouts on the native side. On a successful hit it copies the chosen template into the caller's span and supplies both dynamic string contents and all nine live numbers. The setting is the same declared Chess profile used by the generated and table writers.
+
+### What I built
+
+The selector computes each live string's rank among the 14 constant strings, determines which live string sorts first, and sets one width bit for each metadata field needing a binary64 body. One-wide nodes and one-wide score have the same packet size but different overwrite locations, so the layout key records their individual bits. Position, cursor, labels and actual numeric contents are derived from the current ABI cells. Every call validates the same profile and refuses insufficient byte capacity before touching caller output. A failed hit or miss leaves both cache entries, LRU order and counters intact.
+
+A miss invokes the existing table writer into a local scratch span and copies the result to the caller. Before retaining the layout, it clears the whole board and mask strings and every varying numeric value in scratch. The template keeps each reference tag and address. An inline number has zero payload in the template. A wide reference keeps its body offset and points to eight zeroed bytes until the next caller patches them. The cache never stores a complete live snapshot. Cache storage belongs to the caller and is disjoint from the other spans. Output may overlap input because every input load finishes before the copy. A zero-initialized cache has two LRU entries, 1,192 bytes total in the tested host C layout. [Cache control](../scripts/board/patch.h).
+
+### What I verified
+
+The host qualification passed the canonical JavaScript and resident-tree C oracle for all 47 traced frames. It observed four layout classes and 40 hits and seven misses in a single trace-order pass. Twenty-four additional width-transition calls covered both inline boundaries, nodes alone, score alone and both wide. The independently compiled C and JavaScript reference paths held the comparison. Every call used a fresh output canary. Refusals preserved all output and cache bytes, including a short miss with two warm entries that survived the failure. Two additional success calls put output over input, one miss and one hit. The cache's string and number holes were checked for scrubbing after each successful fill. [Host qualification](../scripts/board/patch-host.c) · [Host receipt](../various/patch/host-receipt.json).
+
+I used a legal start position with white rooks at a7 and h7. The actual Chess event entry emitted three different layout classes without moving a piece. The zero mask precedes the board string. Selecting a7 produces a mask beginning with `01`, which puts the board string first in the same interval. Selecting h7 produces a mask beginning with `80`, which puts the mask after the view digest. The chronological stream contains 20 frames, including intervening cursor moves, and had 16 hits and four misses. Sampling launch and the two selections, then cycling the three samples for 24 calls, produced 24 misses. Each sampled state came from a legitimate game event. The rotation is a cache stress control with intervening events omitted. [Fixture generator](../scripts/board/patch-fixtures.mjs) · [Chronological and sampled class witness](../various/patch/churn-receipt.json).
+
+### What needed revision
+
+LeakSanitizer reported `LeakSanitizer does not work under ptrace (strace, gdb, etc)` in the managed environment. The ordinary GCC build passed. The same qualification passed with AddressSanitizer and UndefinedBehaviorSanitizer active and leak checking disabled. The cache makes no heap allocations. The C reference oracle allocates temporary objects and releases them after byte comparison.
+
+### Replay commands
+
+Run from the repository root with the Chess Wasm reactor built as in the [previous reproduction recipe](../design-doc/02-static-emitter.md).
+
+```bash
+ticket=$(find ttmp/2026/11/20 -maxdepth 1 -name 'PICOCALC-PSIX-STAGING--*')
+binary=$(find ttmp/2026/11/20 -maxdepth 1 -name 'PICOCALC-RENDER-BINARY--*')/scripts
+cjson=/home/manuel/esp/esp-idf-5.4.2/components/json/cJSON
+work=$(mktemp -d /tmp/psix-patch-qualify.XXXXXX)
+
+cp "$binary/native/02-native.inc" "$work/binary_native.inc"
+cp "$binary/producer/binary_producer.inc" "$work/"
+node "$ticket/scripts/board/fixtures.mjs" "$work/stage_fixtures.h"
+node "$ticket/scripts/board/patch-fixtures.mjs" "$work"
+cc -std=c11 -O2 -Wall -Wextra -Wno-unused-function \
+  -I"$work" -I"$binary/native" -I"$cjson" \
+  "$ticket/scripts/board/patch-host.c" "$cjson/cJSON.c" -lm -o "$work/qualify"
+"$work/qualify"
+```
