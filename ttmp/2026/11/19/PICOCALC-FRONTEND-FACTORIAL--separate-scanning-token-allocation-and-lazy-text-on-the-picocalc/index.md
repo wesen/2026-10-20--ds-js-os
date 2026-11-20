@@ -1,0 +1,27 @@
+---
+Title: Separate scanning, token allocation and lazy text on the PicoCalc
+Ticket: PICOCALC-FRONTEND-FACTORIAL
+Status: active
+Topics:
+    - picocalc
+    - compiler
+    - performance
+DocType: index
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: ""
+LastUpdated: 2026-11-19T21:53:37.264419472-05:00
+WhatFor: ""
+WhenToUse: ""
+---
+
+# Separate scanning, token allocation and lazy text on the PicoCalc
+
+Study 1 in the eight-study compiler wave measures the scanner and record lifetime independently on the ESP32-P4, then compares a parser that reads source offsets with the eager cursor parser. Files, Agenda and Editor provide full cold native compilations with byte-identical output as the validation gate.
+
+- [Pre-implementation design](design-doc/01-measuring-scanning-and-token-lifetime-independently-on-the-picocalc.md)
+- [Investigation diary](reference/01-frontend-factorial-investigation-diary.md)
+- [Tasks](tasks.md)
+- [Changelog](changelog.md)
