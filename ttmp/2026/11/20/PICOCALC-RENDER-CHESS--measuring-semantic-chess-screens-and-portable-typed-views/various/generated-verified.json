@@ -1,0 +1,1056 @@
+{
+  "seedText": "postfreeze/730b8cb/chess/20-games/10-white-plies",
+  "prng": "xorshift32, SHA-256 first 32 bits",
+  "artifact": "63d752c673c41636e4951c0f9a95ba7b7f69f698d98ed723e39037a3bc7fb026",
+  "games": 20,
+  "moves": 200,
+  "events": 20109,
+  "screenCalls": 2433,
+  "settledFrames": 220,
+  "distinctPiecePlacements": 194,
+  "sha256": "40b23b543bb5854253d6390dcc8b31acc1fb42147b37024f5dbce3b72639dc76",
+  "gameLogs": [
+    [
+      {
+        "from": 49,
+        "to": 33,
+        "wakes": 75
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 92
+      },
+      {
+        "from": 50,
+        "to": 42,
+        "wakes": 82
+      },
+      {
+        "from": 48,
+        "to": 40,
+        "wakes": 79
+      },
+      {
+        "from": 63,
+        "to": 62,
+        "wakes": 84
+      },
+      {
+        "from": 59,
+        "to": 50,
+        "wakes": 93
+      },
+      {
+        "from": 56,
+        "to": 48,
+        "wakes": 94
+      },
+      {
+        "from": 58,
+        "to": 49,
+        "wakes": 91
+      },
+      {
+        "from": 55,
+        "to": 47,
+        "wakes": 89
+      },
+      {
+        "from": 49,
+        "to": 56,
+        "wakes": 91
+      }
+    ],
+    [
+      {
+        "from": 62,
+        "to": 47,
+        "wakes": 75
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 91
+      },
+      {
+        "from": 50,
+        "to": 34,
+        "wakes": 108
+      },
+      {
+        "from": 57,
+        "to": 40,
+        "wakes": 95
+      },
+      {
+        "from": 59,
+        "to": 51,
+        "wakes": 95
+      },
+      {
+        "from": 60,
+        "to": 59,
+        "wakes": 83
+      },
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 78
+      },
+      {
+        "from": 61,
+        "to": 54,
+        "wakes": 85
+      },
+      {
+        "from": 52,
+        "to": 44,
+        "wakes": 99
+      },
+      {
+        "from": 34,
+        "to": 26,
+        "wakes": 112
+      }
+    ],
+    [
+      {
+        "from": 57,
+        "to": 40,
+        "wakes": 79
+      },
+      {
+        "from": 55,
+        "to": 39,
+        "wakes": 76
+      },
+      {
+        "from": 39,
+        "to": 31,
+        "wakes": 79
+      },
+      {
+        "from": 40,
+        "to": 34,
+        "wakes": 84
+      },
+      {
+        "from": 48,
+        "to": 40,
+        "wakes": 80
+      },
+      {
+        "from": 40,
+        "to": 32,
+        "wakes": 90
+      },
+      {
+        "from": 32,
+        "to": 24,
+        "wakes": 89
+      },
+      {
+        "from": 56,
+        "to": 40,
+        "wakes": 88
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 96
+      },
+      {
+        "from": 40,
+        "to": 56,
+        "wakes": 110
+      }
+    ],
+    [
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 83
+      },
+      {
+        "from": 53,
+        "to": 37,
+        "wakes": 77
+      },
+      {
+        "from": 48,
+        "to": 32,
+        "wakes": 93
+      },
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 98
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 87
+      },
+      {
+        "from": 50,
+        "to": 34,
+        "wakes": 89
+      },
+      {
+        "from": 41,
+        "to": 33,
+        "wakes": 91
+      },
+      {
+        "from": 37,
+        "to": 29,
+        "wakes": 85
+      },
+      {
+        "from": 52,
+        "to": 44,
+        "wakes": 85
+      },
+      {
+        "from": 32,
+        "to": 24,
+        "wakes": 83
+      }
+    ],
+    [
+      {
+        "from": 55,
+        "to": 39,
+        "wakes": 76
+      },
+      {
+        "from": 63,
+        "to": 47,
+        "wakes": 79
+      },
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 83
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 78
+      },
+      {
+        "from": 58,
+        "to": 40,
+        "wakes": 86
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 91
+      },
+      {
+        "from": 40,
+        "to": 49,
+        "wakes": 93
+      },
+      {
+        "from": 43,
+        "to": 35,
+        "wakes": 99
+      },
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 91
+      },
+      {
+        "from": 52,
+        "to": 44,
+        "wakes": 101
+      }
+    ],
+    [
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 78
+      },
+      {
+        "from": 52,
+        "to": 44,
+        "wakes": 77
+      },
+      {
+        "from": 60,
+        "to": 52,
+        "wakes": 83
+      },
+      {
+        "from": 50,
+        "to": 34,
+        "wakes": 94
+      },
+      {
+        "from": 53,
+        "to": 45,
+        "wakes": 89
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 97
+      },
+      {
+        "from": 62,
+        "to": 47,
+        "wakes": 90
+      },
+      {
+        "from": 54,
+        "to": 46,
+        "wakes": 93
+      },
+      {
+        "from": 59,
+        "to": 61,
+        "wakes": 94
+      },
+      {
+        "from": 41,
+        "to": 33,
+        "wakes": 94
+      }
+    ],
+    [
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 78
+      },
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 77
+      },
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 81
+      },
+      {
+        "from": 62,
+        "to": 47,
+        "wakes": 103
+      },
+      {
+        "from": 50,
+        "to": 42,
+        "wakes": 100
+      },
+      {
+        "from": 59,
+        "to": 51,
+        "wakes": 86
+      },
+      {
+        "from": 57,
+        "to": 40,
+        "wakes": 90
+      },
+      {
+        "from": 43,
+        "to": 35,
+        "wakes": 81
+      },
+      {
+        "from": 58,
+        "to": 49,
+        "wakes": 78
+      },
+      {
+        "from": 56,
+        "to": 57,
+        "wakes": 88
+      }
+    ],
+    [
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 76
+      },
+      {
+        "from": 61,
+        "to": 47,
+        "wakes": 85
+      },
+      {
+        "from": 60,
+        "to": 61,
+        "wakes": 95
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 80
+      },
+      {
+        "from": 45,
+        "to": 35,
+        "wakes": 82
+      },
+      {
+        "from": 35,
+        "to": 41,
+        "wakes": 88
+      },
+      {
+        "from": 53,
+        "to": 45,
+        "wakes": 96
+      },
+      {
+        "from": 50,
+        "to": 42,
+        "wakes": 107
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 100
+      },
+      {
+        "from": 59,
+        "to": 52,
+        "wakes": 100
+      }
+    ],
+    [
+      {
+        "from": 57,
+        "to": 42,
+        "wakes": 82
+      },
+      {
+        "from": 52,
+        "to": 36,
+        "wakes": 83
+      },
+      {
+        "from": 42,
+        "to": 32,
+        "wakes": 82
+      },
+      {
+        "from": 48,
+        "to": 40,
+        "wakes": 88
+      },
+      {
+        "from": 55,
+        "to": 39,
+        "wakes": 89
+      },
+      {
+        "from": 62,
+        "to": 47,
+        "wakes": 95
+      },
+      {
+        "from": 47,
+        "to": 37,
+        "wakes": 93
+      },
+      {
+        "from": 32,
+        "to": 26,
+        "wakes": 86
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 126
+      },
+      {
+        "from": 61,
+        "to": 25,
+        "wakes": 111
+      }
+    ],
+    [
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 83
+      },
+      {
+        "from": 49,
+        "to": 33,
+        "wakes": 100
+      },
+      {
+        "from": 50,
+        "to": 42,
+        "wakes": 84
+      },
+      {
+        "from": 52,
+        "to": 36,
+        "wakes": 80
+      },
+      {
+        "from": 61,
+        "to": 52,
+        "wakes": 91
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 98
+      },
+      {
+        "from": 55,
+        "to": 47,
+        "wakes": 88
+      },
+      {
+        "from": 48,
+        "to": 32,
+        "wakes": 90
+      },
+      {
+        "from": 42,
+        "to": 34,
+        "wakes": 87
+      },
+      {
+        "from": 52,
+        "to": 61,
+        "wakes": 83
+      }
+    ],
+    [
+      {
+        "from": 57,
+        "to": 42,
+        "wakes": 82
+      },
+      {
+        "from": 48,
+        "to": 40,
+        "wakes": 80
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 82
+      },
+      {
+        "from": 55,
+        "to": 39,
+        "wakes": 82
+      },
+      {
+        "from": 52,
+        "to": 44,
+        "wakes": 85
+      },
+      {
+        "from": 39,
+        "to": 31,
+        "wakes": 84
+      },
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 81
+      },
+      {
+        "from": 43,
+        "to": 35,
+        "wakes": 86
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 88
+      },
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 85
+      }
+    ],
+    [
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 78
+      },
+      {
+        "from": 45,
+        "to": 30,
+        "wakes": 82
+      },
+      {
+        "from": 30,
+        "to": 45,
+        "wakes": 85
+      },
+      {
+        "from": 63,
+        "to": 62,
+        "wakes": 86
+      },
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 89
+      },
+      {
+        "from": 48,
+        "to": 40,
+        "wakes": 88
+      },
+      {
+        "from": 62,
+        "to": 63,
+        "wakes": 84
+      },
+      {
+        "from": 56,
+        "to": 48,
+        "wakes": 84
+      },
+      {
+        "from": 40,
+        "to": 32,
+        "wakes": 89
+      },
+      {
+        "from": 45,
+        "to": 39,
+        "wakes": 77
+      }
+    ],
+    [
+      {
+        "from": 54,
+        "to": 46,
+        "wakes": 78
+      },
+      {
+        "from": 53,
+        "to": 45,
+        "wakes": 77
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 90
+      },
+      {
+        "from": 41,
+        "to": 33,
+        "wakes": 90
+      },
+      {
+        "from": 45,
+        "to": 37,
+        "wakes": 85
+      },
+      {
+        "from": 33,
+        "to": 25,
+        "wakes": 86
+      },
+      {
+        "from": 46,
+        "to": 38,
+        "wakes": 86
+      },
+      {
+        "from": 58,
+        "to": 49,
+        "wakes": 79
+      },
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 89
+      },
+      {
+        "from": 60,
+        "to": 59,
+        "wakes": 98
+      }
+    ],
+    [
+      {
+        "from": 62,
+        "to": 47,
+        "wakes": 75
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 91
+      },
+      {
+        "from": 58,
+        "to": 44,
+        "wakes": 91
+      },
+      {
+        "from": 54,
+        "to": 46,
+        "wakes": 88
+      },
+      {
+        "from": 59,
+        "to": 35,
+        "wakes": 116
+      },
+      {
+        "from": 50,
+        "to": 42,
+        "wakes": 106
+      },
+      {
+        "from": 60,
+        "to": 59,
+        "wakes": 79
+      },
+      {
+        "from": 46,
+        "to": 38,
+        "wakes": 82
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 86
+      },
+      {
+        "from": 63,
+        "to": 62,
+        "wakes": 87
+      }
+    ],
+    [
+      {
+        "from": 53,
+        "to": 45,
+        "wakes": 80
+      },
+      {
+        "from": 60,
+        "to": 53,
+        "wakes": 79
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 91
+      },
+      {
+        "from": 45,
+        "to": 37,
+        "wakes": 115
+      },
+      {
+        "from": 53,
+        "to": 60,
+        "wakes": 83
+      },
+      {
+        "from": 48,
+        "to": 40,
+        "wakes": 81
+      },
+      {
+        "from": 58,
+        "to": 49,
+        "wakes": 83
+      },
+      {
+        "from": 60,
+        "to": 59,
+        "wakes": 93
+      },
+      {
+        "from": 59,
+        "to": 58,
+        "wakes": 82
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 76
+      }
+    ],
+    [
+      {
+        "from": 55,
+        "to": 47,
+        "wakes": 78
+      },
+      {
+        "from": 57,
+        "to": 40,
+        "wakes": 81
+      },
+      {
+        "from": 63,
+        "to": 55,
+        "wakes": 85
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 89
+      },
+      {
+        "from": 52,
+        "to": 45,
+        "wakes": 83
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 90
+      },
+      {
+        "from": 59,
+        "to": 52,
+        "wakes": 109
+      },
+      {
+        "from": 45,
+        "to": 37,
+        "wakes": 129
+      },
+      {
+        "from": 47,
+        "to": 39,
+        "wakes": 112
+      },
+      {
+        "from": 50,
+        "to": 34,
+        "wakes": 101
+      }
+    ],
+    [
+      {
+        "from": 50,
+        "to": 34,
+        "wakes": 77
+      },
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 101
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 95
+      },
+      {
+        "from": 34,
+        "to": 26,
+        "wakes": 85
+      },
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 89
+      },
+      {
+        "from": 52,
+        "to": 36,
+        "wakes": 108
+      },
+      {
+        "from": 61,
+        "to": 54,
+        "wakes": 116
+      },
+      {
+        "from": 54,
+        "to": 61,
+        "wakes": 91
+      },
+      {
+        "from": 57,
+        "to": 42,
+        "wakes": 131
+      },
+      {
+        "from": 59,
+        "to": 51,
+        "wakes": 114
+      }
+    ],
+    [
+      {
+        "from": 52,
+        "to": 36,
+        "wakes": 78
+      },
+      {
+        "from": 36,
+        "to": 28,
+        "wakes": 86
+      },
+      {
+        "from": 57,
+        "to": 40,
+        "wakes": 95
+      },
+      {
+        "from": 50,
+        "to": 42,
+        "wakes": 96
+      },
+      {
+        "from": 40,
+        "to": 57,
+        "wakes": 91
+      },
+      {
+        "from": 61,
+        "to": 34,
+        "wakes": 97
+      },
+      {
+        "from": 48,
+        "to": 40,
+        "wakes": 92
+      },
+      {
+        "from": 53,
+        "to": 37,
+        "wakes": 118
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 112
+      },
+      {
+        "from": 60,
+        "to": 53,
+        "wakes": 94
+      }
+    ],
+    [
+      {
+        "from": 51,
+        "to": 43,
+        "wakes": 83
+      },
+      {
+        "from": 62,
+        "to": 45,
+        "wakes": 81
+      },
+      {
+        "from": 54,
+        "to": 46,
+        "wakes": 86
+      },
+      {
+        "from": 45,
+        "to": 28,
+        "wakes": 91
+      },
+      {
+        "from": 59,
+        "to": 51,
+        "wakes": 98
+      },
+      {
+        "from": 46,
+        "to": 38,
+        "wakes": 90
+      },
+      {
+        "from": 43,
+        "to": 35,
+        "wakes": 88
+      },
+      {
+        "from": 55,
+        "to": 47,
+        "wakes": 81
+      },
+      {
+        "from": 49,
+        "to": 33,
+        "wakes": 78
+      },
+      {
+        "from": 61,
+        "to": 54,
+        "wakes": 90
+      }
+    ],
+    [
+      {
+        "from": 54,
+        "to": 38,
+        "wakes": 76
+      },
+      {
+        "from": 38,
+        "to": 30,
+        "wakes": 82
+      },
+      {
+        "from": 30,
+        "to": 22,
+        "wakes": 107
+      },
+      {
+        "from": 51,
+        "to": 35,
+        "wakes": 88
+      },
+      {
+        "from": 49,
+        "to": 41,
+        "wakes": 86
+      },
+      {
+        "from": 57,
+        "to": 51,
+        "wakes": 77
+      },
+      {
+        "from": 52,
+        "to": 44,
+        "wakes": 77
+      },
+      {
+        "from": 55,
+        "to": 39,
+        "wakes": 87
+      },
+      {
+        "from": 35,
+        "to": 27,
+        "wakes": 108
+      },
+      {
+        "from": 51,
+        "to": 36,
+        "wakes": 111
+      }
+    ]
+  ],
+  "rawPixelPairs": 220,
+  "concatenatedPixelSha256": "cc8b26e8e6a789ee8224842d3474e6fe276d85a1126d4e53e0aedf05ac1d712a"
+}

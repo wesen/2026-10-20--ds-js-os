@@ -176,3 +176,51 @@ Run `scripts/17-run-host.sh FRESH_DIRECTORY`. Examine `various/host-summary.json
 ### Technical details
 
 All timers use monotonic clocks. The host key window ends at a parsed ordinary tree plus hints, before the common painter. Distribution admission enrolls only an exact approved digest. The desktop test separates immutable source and Wasm bytes from the one 64-KiB view page. Host and WAMR wall time cannot be substituted for one another.
+
+## Step 4. Replay generated middlegames against the frozen view
+
+The original eleven scenarios deliberately exercised presentation branches. They left open whether the same view would remain faithful through long, ordinary histories with different move sequences. After freezing the specimen, I wrote a driver that observes only the control's painted white pieces and orange legal-destination markers, moves the real cursor, selects a legal move using a seeded generator, and wakes the existing engine for its reply.
+
+### Prompt context
+
+See Step 1. This extends the original corpus after the host artifact and protocol were frozen at `730b8cb`. Host timings, mobile checks and the board staging milestone are committed in `53696bf`.
+
+### What I did
+
+Ran `node scripts/21-generated-games.mjs /tmp/chess-render-generated` to generate twenty deterministic ten-move White sessions. The ordinary guest's output chose subsequent inputs. The candidate executed the same key and timer events in its independent memory. Rendered all 220 launch and settled positions using the common pixel oracle, then ran `22-verify-generated.py`.
+
+### Why
+
+Handwritten seeded terminal positions can cover rare headings while exploring few real game histories. A generator can cheaply exercise changes to many different pieces, overlays and search results. It should not derive a new state for the candidate, or certify its own decision about a drawing.
+
+### What worked
+
+20,109 events produced 2,433 complete, byte-equal screen trees and hints. The 200 White moves and engine replies produced 194 distinct piece placements among 220 launch/settled frames. All 220 full 320×320 RGB565 buffers matched. Fresh view instances independently reconstructed every saved position.
+
+### What didn't work
+
+No mismatch was observed. A corpus based on this engine's deterministic replies and a fixed move selector does not represent all legal chess games. It is an additional post-freeze test and carries no claim of independent sealed holdouts.
+
+### What I learned
+
+A square can be located independently from its display primitives: the cursor is the 24×24 outline and legal destinations are the 5×5 orange fills. If those primitives change, the driver needs review. The ordinary screen completely determines the inputs without access to candidate metadata.
+
+### What was tricky to build
+
+The generator must handle blocked white pieces, deselect them and try another. It must finish any promotion choice and wait for the exact sequence of engine promises before reading the next control position. The driver asserts cursor coordinates and timer termination.
+
+### What warrants a second pair of eyes
+
+The generator samples White's moves and the same Black engine always responds. Twenty games share the initial position. Using the 220 saved frames as a unique-position count would inflate coverage; the actual distinct piece-array count is 194.
+
+### What should be done in the future
+
+Use the director's single device experiment to learn which host costs transfer. A renderer integration would need live layout, scheduling and panel evidence in addition to these host game histories.
+
+### Code review instructions
+
+The final three commands in `17-run-host.sh` generate and evaluate the extension. Review `21-generated-games.mjs`, `22-verify-generated.py` and `various/generated-verified.json` for all chosen moves, wake counts and a single ordered digest of all compared raw pixels.
+
+### Technical details
+
+The xorshift32 generator starts from the first 32 bits of SHA-256 of the declared post-freeze seed string. After each accepted input, the checker compares the candidate's unsorted JSON and hint bytes with the real guest syscall. The 220 saved states additionally check reconstruction in a new instance.

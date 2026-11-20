@@ -26,3 +26,8 @@ python "$here/08-board-fixtures.py" "$out" "$out/chess_fixtures.h"
 node "$here/12-board-receive.mjs" "$out" "$out/chess-receive.js"
 node "$here/13-board-producers.mjs" "$out"
 python "$here/18-summarize.py" "$out"
+node "$here/21-generated-games.mjs" "$out/generated"
+for arm in control resident; do
+    node "${oracle[0]}" "$out/generated/$arm.ndjson" "$out/generated/$arm-pixels"
+done
+python "$here/22-verify-generated.py" "$out/generated"
