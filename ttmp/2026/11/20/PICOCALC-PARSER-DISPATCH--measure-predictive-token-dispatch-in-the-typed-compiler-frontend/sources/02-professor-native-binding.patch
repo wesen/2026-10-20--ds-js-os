@@ -1,0 +1,15 @@
+--- a/04-compile-phase-timing.c
++++ b/04-compile-phase-timing.c
+@@ -1,3 +1,4 @@
++#include "01-typed-lex-index.h"
+ // Time the phases of the typed compiler inside QuickJS, the interpreter that runs it on the device.
+ // Host x86 timings: use the proportions, not the absolute values.
+ // Build and run: see 04-compile-phase-timing.sh
+@@ -45,6 +46,7 @@
+   JSRuntime *rt = JS_NewRuntime();
+   JS_SetMaxStackSize(rt, 4 * 1024 * 1024);
+   JSContext *ctx = JS_NewContext(rt);
++  if (!typed_lex_index_install(ctx)) return 3;
+   JSValue global = JS_GetGlobalObject(ctx);
+   JS_SetPropertyStr(ctx, global, "__now", JS_NewCFunction(ctx, js_now, "__now", 0));
+   JS_SetPropertyStr(ctx, global, "__print", JS_NewCFunction(ctx, js_print, "__print", 1));
