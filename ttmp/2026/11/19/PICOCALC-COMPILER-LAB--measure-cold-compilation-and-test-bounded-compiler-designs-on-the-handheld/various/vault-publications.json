@@ -1,0 +1,58 @@
+{
+  "vault_head": "5e62fa498c37bf5480f2f6c1cf338fc918166916",
+  "articles": {
+    "Frontend": {
+      "commit": "0f27aa9dbb50cb64d5044053b99398ce8cf70903",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - Where Cold Typed Compilation Time Goes.md",
+      "sha256": "d155a57ba64723d128f9de8eb319885e517b77a7de83cba6d4677d78a3b1ba30",
+      "assets": {
+        "Projects/2026/11/19/_assets/picocalc-frontend-editor-timings.png": "e463fe204410a9fd1df6b448a18730cc9d63836f342f4e7f4d840de481dff51b"
+      },
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/0f27aa9dbb50cb64d5044053b99398ce8cf70903/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Where%20Cold%20Typed%20Compilation%20Time%20Goes.md"
+    },
+    "Native": {
+      "commit": "cd9068343729df710b826c45197ad7b779382238",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - How a Staged Operand Stack Made Room for Editor.md",
+      "sha256": "2fb68337fc5fa2f9c50402c222ed8f1edc374eeaf4b75c7ff1499a084c3ed61d",
+      "assets": {
+        "Projects/2026/11/19/_assets/picocalc-staged-editor-64k-preview.png": "24044f3bf69ac0c391678e0bc29473307629122b92ddb3df34867391fa7f373b"
+      },
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/cd9068343729df710b826c45197ad7b779382238/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20How%20a%20Staged%20Operand%20Stack%20Made%20Room%20for%20Editor.md"
+    },
+    "Bounded": {
+      "commit": "16a68ebdc28c0261d9e64ba1ab154132e2b4110b",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - When a Handheld Compiler Needs More Facts.md",
+      "sha256": "7d612759a745fdebbb42e044cf7c0e813bb815ac7d05f464999a0f932b9d90d7",
+      "assets": {},
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/16a68ebdc28c0261d9e64ba1ab154132e2b4110b/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20When%20a%20Handheld%20Compiler%20Needs%20More%20Facts.md"
+    },
+    "Incremental": {
+      "commit": "c4ce0ce0232cfb6c6cf908e793261596ae481b72",
+      "path": "Projects/2026/11/19/PROJECT REPORT - PicoCalc Compiler - Rebuilding Typed Native Functions After an Edit.md",
+      "sha256": "0053de7fe0dcc703abf3e6f68b2da3a931d3a9ad3f06e263aa9d368a166bb477",
+      "assets": {
+        "Projects/2026/11/19/_assets/picocalc-function-rebuild-timings.png": "5a1de8672366fd62339da58da10a911baf442713d954144863253900bc748470"
+      },
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/c4ce0ce0232cfb6c6cf908e793261596ae481b72/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Rebuilding%20Typed%20Native%20Functions%20After%20an%20Edit.md"
+    },
+    "Examination": {
+      "commit": "d5b3cccab404d53b23e2ebea289e0ceb06fb76af",
+      "path": "Projects/2026/11/19/ARTICLE - PicoCalc Compiler - Independently Examining Four Compiler Experiments.md",
+      "sha256": "a27681a7d1adb97ce3e604b025dda4a9b5c8c6a8ef571d5284a745b8a726e88a",
+      "assets": {
+        "Projects/2026/11/19/_assets/picocalc-methods-policy-and-fragments.png": "1d5d8e6b74f8b1b03f1f89a685376b9c0ec7840dbca4962000335966f6c489c4"
+      },
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/d5b3cccab404d53b23e2ebea289e0ceb06fb76af/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Independently%20Examining%20Four%20Compiler%20Experiments.md"
+    },
+    "Synthesis": {
+      "commit": "5e62fa498c37bf5480f2f6c1cf338fc918166916",
+      "path": "Projects/2026/11/19/PROJECT REPORT - PicoCalc Compiler - Which Compiler Work Pays for Itself on a Handheld.md",
+      "sha256": "8df69b777d257289ca0324d0bab8bef3415bf0bbdbab74d3be3e659bc4cf987a",
+      "assets": {
+        "Projects/2026/11/19/_assets/picocalc-staged-editor-64k-preview.png": "24044f3bf69ac0c391678e0bc29473307629122b92ddb3df34867391fa7f373b",
+        "Projects/2026/11/19/_assets/picocalc-four-compiler-experiments.png": "c1be63e5ae4e9e92f16f622064f24a06d2f963fd589e6c752e4e85093c022e7c"
+      },
+      "url": "https://github.com/go-go-golems/go-go-parc/blob/5e62fa498c37bf5480f2f6c1cf338fc918166916/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Which%20Compiler%20Work%20Pays%20for%20Itself%20on%20a%20Handheld.md"
+    }
+  }
+}

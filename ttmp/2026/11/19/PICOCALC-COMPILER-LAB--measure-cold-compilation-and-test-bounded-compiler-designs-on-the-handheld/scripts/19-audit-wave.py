@@ -66,6 +66,19 @@ def live():
     return {k:r["boots"][0]["world_kib"] for k,r in results.items()}
 
 
+def incremental():
+    functions=runpy.run_path(str(HERE/"17-compare-rebuild.py"))
+    lane,=DAY.glob("PICOCALC-FUNCTION-REBUILD--*")
+    expected=json.loads((EVIDENCE/"incremental-comparisons.json").read_text())
+    counts={}
+    for name,key,estimator in (("p4-rebuild","components","paired"),("p4-endpoint","continuous","continuous")):
+        raw=functions["read"](lane/"various"/(name+".json.gz"))
+        assert raw["restored"] and len(raw["boots"])==2
+        assert [functions[estimator](boot) for boot in raw["boots"]]==expected[key]
+        counts[key]=sum(len(boot["rows"]) for boot in raw["boots"])
+    return {"component_requests":counts["components"],"continuous_edited_executions":counts["continuous"]}
+
+
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--include-live",action="store_true")
@@ -73,4 +86,5 @@ if __name__=="__main__":
     receipt={"checked_documents":documents(),"generic_board_compiles":boards()}
     if args.include_live:
         receipt["normal_editor_world_kib"]=live()
+        receipt["incremental"]=incremental()
     print(json.dumps(receipt,indent=2))

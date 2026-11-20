@@ -1,7 +1,7 @@
 ---
 Title: Measure cold compilation and test bounded compiler designs on the handheld
 Ticket: PICOCALC-COMPILER-LAB
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -14,8 +14,8 @@ RelatedFiles:
     - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
       Note: Physical compiler invocation and allocator
 ExternalSources: []
-Summary: ""
-LastUpdated: 2026-11-19T20:23:19.538679464-05:00
+Summary: Results, publication index and replay procedures for four physical compiler studies and independent review.
+LastUpdated: 2026-11-19T21:38:53.56887006-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -47,3 +47,12 @@ Start with the [supervisor’s technical chapter](analysis/01-which-compiler-wor
 - [Independent examination of the experiments](../PICOCALC-LAB-REVIEW--independent-examination-of-the-picocalc-compiler-lab/analysis/01-what-makes-a-compiler-measurement-travel.md)
 
 The six design guides were delivered to `/ai/2026/11/19/PICOCALC-COMPILER-LAB/PicoCalc Compiler Lab - Six Research Design Guides.pdf` on reMarkable.
+
+## Go-go-parc articles
+
+- [Synthesis](https://github.com/go-go-golems/go-go-parc/blob/5e62fa498c37bf5480f2f6c1cf338fc918166916/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Which%20Compiler%20Work%20Pays%20for%20Itself%20on%20a%20Handheld.md)
+- [Frontend](https://github.com/go-go-golems/go-go-parc/blob/0f27aa9dbb50cb64d5044053b99398ce8cf70903/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Where%20Cold%20Typed%20Compilation%20Time%20Goes.md)
+- [Native](https://github.com/go-go-golems/go-go-parc/blob/cd9068343729df710b826c45197ad7b779382238/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20How%20a%20Staged%20Operand%20Stack%20Made%20Room%20for%20Editor.md)
+- [Bounded](https://github.com/go-go-golems/go-go-parc/blob/16a68ebdc28c0261d9e64ba1ab154132e2b4110b/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20When%20a%20Handheld%20Compiler%20Needs%20More%20Facts.md)
+- [Incremental](https://github.com/go-go-golems/go-go-parc/blob/c4ce0ce0232cfb6c6cf908e793261596ae481b72/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Rebuilding%20Typed%20Native%20Functions%20After%20an%20Edit.md)
+- [Examination](https://github.com/go-go-golems/go-go-parc/blob/d5b3cccab404d53b23e2ebea289e0ceb06fb76af/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Independently%20Examining%20Four%20Compiler%20Experiments.md)

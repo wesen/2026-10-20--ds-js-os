@@ -1,7 +1,7 @@
 ---
 Title: Supervising experimentalist diary
 Ticket: PICOCALC-COMPILER-LAB
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -11,7 +11,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T20:23:27.425585616-05:00
+LastUpdated: 2026-11-19T21:38:53.255787-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -381,3 +381,57 @@ See the committed matched results in `various/staged-standard-world.json`, `vari
 ### Technical details
 
 The superseded internal-executable-allocation image began `4ec49cf9` and was never flashed. The first physical incremental image began `72769ef4`; its resolver failure followed a 24,424-byte seed. The small/standard staged median normal compile times were 2,889.555 and 2,908.296 ms in sequential groups. For the native lowerer's head-to-head compiler cost, use the rotated same-firmware rows instead.
+
+## Step 8: Time a real edited native return and assemble the publications
+
+The final firmware produced one answer for compile-and-link and another for the complete edit-to-native-return interval. The independent reviewer verified both. Each test ended with the original factory firmware and native Files, Agenda and Editor healthy.
+
+### Prompt Context
+
+The user asked to run the independent research “all the way” and for every researcher and supervisor to publish a pedagogical report. **Assistant interpretation:** Verify the changed program’s observable output, refresh the common index, retain negative or failed attempts, and verify each published artifact. **Inferred user intent:** Be able to retrace the conclusion through the programs, measurements and publication history.
+
+### What I did
+
+- Re-ran the corrected primary with the production loader resolver and captured two qualified boots. Each had 144 complete compile/diagnostic rows, 16 native guest results and four fresh cold Files comparisons.
+- Ran a separate firmware with six independently initialized, rotated clean/rebuild pairs per boot. Its clock encloses the handoff of the edited source, compilation, ELF relocation, entry lookup, call and native return. Correct output, the 24,424-byte ELF digest, allocator ceiling and sample order were required for acceptance. The hash and serial output came after the clock.
+- Recomputed medians and matched percentages from both raw structured receipts. Extended the project audit and regenerated the final synthesis and its two figures. Checked the API and file links in six tickets and the independent checks on the loaded world allocations.
+
+### Why
+
+The main campaign's diagnostic and validation work occurs between some recorded phase clocks. Also, a clean comparison artifact can remain live in that harness. The separate continuously timed images give a comparable start and end point and each arm owns its own runtime. The experiment deliberately distinguishes seeded editing from a cold launch and a whole-source cache hit.
+
+### What worked
+
+The source edit changed Files’ answer to `_Ab` from −1 to 3 and wrote the expected three UTF-16 units. The continuous paired median improvement was 63.346 and 63.538 ms (58.60% and 59.40%). All 12 pairs favored the rebuild. Retaining the editing session cost about 67.5 kB of extra live compiler heap before the request and 87.8 kB at its peak. The restored board reports all three application engines as native with empty last-error fields.
+
+### What didn't work
+
+The half-second cold Editor target with unchanged peak heap remained out of reach. The bounded selector's sparse-app result broke under budget competition. Incremental compilation did extra work on some short signature and layout edits. The discarded loader attempt's correct ELF could not run until the preboot experiment installed the ordinary symbol resolver.
+
+### What I learned
+
+Elapsed time, code size, transient compiler heap and a world’s entire lifetime are four different quantities. A research conclusion can be strong for one and unfavorable for another. The archival ordering matters as well: keep the failed receipt, collect a repaired measurement, then allow an independent reader to reconstruct why its denominator and timing boundary are valid.
+
+### What was tricky to build
+
+All trials used the same serial target. The repair and the supplemental endpoint each had a distinct pinned firmware identity, structured result and cleanly restored predecessor. Resident-session reuse and same-source hits both return a complete ELF, so the input-specific native behavior was the decisive test that a real edit had been performed.
+
+### What warrants a second pair of eyes
+
+Review the per-boot evidence instead of averaging across the device campaigns. The published 59% saving applies to the Files edit in a seeded realm. Full Editor incremental behavior is qualified on the host. The physical Editor result in this lab concerns cold compilation, the reservation and the real 64 KiB preview.
+
+### What should be done in the future
+
+The synthesis identifies a two-factor frontend experiment, held-out admission policies under a binding budget, and real Editor edit traces under a resident-fragment budget. The engineering choice of trading cold latency for 144 KiB in the running Editor now has a measured basis.
+
+### Code review instructions
+
+Run `scripts/17-compare-rebuild.py PRIMARY/physical.json --endpoint ENDPOINT/physical.json` and compare with `various/incremental-comparisons.json`. Each researcher's ticket links its archive. Use `scripts/19-audit-wave.py --include-live` to check the joint physical receipts. `scripts/21-verify-publications.py` reads the named go-go-parc Git revision to verify the text and linked figures of all six articles.
+
+### Technical details
+
+The accepted broad incremental firmware SHA-256 starts `cef741f9` and the accepted continuous endpoint firmware starts `67773793`. The two returned edited ELF digests are identical and start `7be267e2`. Full-screen validation excluded only the status clock. Production compiler source files were unchanged by the research candidates; their scoped patches and reproduction scripts live within the study tickets.
+
+### Publication verification
+
+All six text files and their linked figures were verified from go-go-parc revision `5e62fa498c37bf5480f2f6c1cf338fc918166916` on remote `main`. The publishing commits are Frontend `0f27aa9`, Native `cd90683`, Bounded `16a68eb`, Incremental `c4ce0ce`, Examination `d5b3ccc`, Synthesis `5e62fa4`. The [publication receipt](../various/vault-publications.json) records each Git path, content digest and figure digest. The project research index links the pinned articles.

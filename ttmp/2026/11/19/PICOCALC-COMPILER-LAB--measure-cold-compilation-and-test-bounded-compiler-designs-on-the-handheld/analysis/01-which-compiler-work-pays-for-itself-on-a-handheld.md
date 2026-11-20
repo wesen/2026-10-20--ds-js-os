@@ -1,7 +1,7 @@
 ---
 Title: Which compiler work pays for itself on a handheld
 Ticket: PICOCALC-COMPILER-LAB
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -11,7 +11,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: "Four physical compiler studies separate cold compilation, machine code footprint, budgeted arithmetic proofs and reuse after an edit."
-LastUpdated: 2026-11-19T20:23:28.1707295-05:00
+LastUpdated: 2026-11-19T21:35:55.737858-05:00
 WhatFor: "Read the technical findings and the independent examiner’s counterexamples."
 WhenToUse: "When choosing the next compiler experiment or teaching the streaming compiler to a new researcher."
 ---
@@ -20,6 +20,8 @@ WhenToUse: "When choosing the next compiler experiment or teaching the streaming
 An edit to one character in Files and a cold launch of Editor both end in an executable RISC-V program. They present different problems for the compiler. At cold launch it has a source bundle and a prelinked runtime. After an edit it can also have the previous source, machine instructions and information about their dependencies. On the ESP32-P4 a third quantity matters after compilation finishes: the memory that remains committed to the running application. A change worth roughly three tenths of a second during compilation and a change worth 144 KiB throughout the application's lifetime call for different experiments.
 
 This lab studied four questions on the same typed compiler. How expensive is recognizing tokens? Where should temporary operands live during native compilation? Which functions deserve an extra proof pass? What evidence lets an editing session reuse the machine code of a function? Each researcher committed a design before implementing the candidate. An independent examiner then constructed cases outside those designs. The reference revision was `40bcf850a5809ef6d839127869faa952596ed157` in the `2026-10-20--ds-js-os` repository.
+
+The cold scanner saved **292–315 ms (12–13%)** in independent Editor trials and cost about **9 KB** of peak compiler heap. The staged instruction selector made Editor small enough to release **144 KiB of live application memory (20.28%)**; generating those instructions at the original reservation took about **18% longer**. A bounded arithmetic proof tested successfully on a held-out app and failed to rank profitable functions when a constructed workload exhausted its budget. An incremental compiler rebuilt and ran a real Files edit in **43–44 ms**, about **59% less time** than a warmed full compile through the same native return. None of the tested cold designs met the half-second and unchanged-heap target.
 
 ## Trace a source file into a running application
 
@@ -122,6 +124,27 @@ validate the app ABI, link the ELF and publish the new revision together
 
 On the host an independent examiner edited the full 120-function Editor and compared every accepted 240,452-byte ELF with a separately evaluated clean compiler. One body edit rebuilt one function and reused 119. Repairing a signature and its callers rebuilt four, yet 42 linked bodies changed. Moving functions changed the encoded offsets in calls even where the source and cached fragments were reusable. Swapping two fields in the `WorldState` record rebuilt 77 functions. Seventy of those yielded identical linked instructions, since a dependency on an entire record layout invalidates more than a dependency on an individual field. A rejected change to the shared `WorldEvent` ABI left the previous revision usable. Adding a comment that shifted source offsets then reused all 120 bodies. Those cases illustrate both a correctness requirement and a concrete opportunity to narrow invalidation. [Independent edit sequence](../../PICOCALC-LAB-REVIEW--independent-examination-of-the-picocalc-compiler-lab/various/rebuild.json)
 
+### What happened after a real Files edit on the P4
+
+Files has seven typed functions. The test supplied the changed source that admits underscore in the first character of a name. It checked the linked ELF against a clean host compile and called `filesName` with `_Ab`. The original returned −1. The edited program returned three and wrote the UTF-16 units 95, 65 and 98. The ordinary ELF loader relocated the complete Files module into executable PSRAM before the call.
+
+Each of two physical boots exercised 144 compiler requests, including invalid changes, whole-source hits, stale revisions, and real dependent edits. The uninstrumented Files body change took **40.7 and 40.6 ms** to produce the linked image. A warm clean compiler took **106.2 and 106.5 ms**, for a paired reduction of about **62%** on these two boots. In the same campaign, copying a cached ELF after submitting identical source took **1.06–1.07 ms**. A newly created stock runtime compiling Files through the ordinary cold wrapper took about **238 ms**. These are three reproducible tasks with different inputs and available state.
+
+The resident session has a price. Setting up the experimental realm and its inputs took about 175 ms, and the first compile to seed the fragments took a further 119–120 ms. On the tiny test program, changing the signature or record layout gave a median rebuild around 0.8–1.5 ms slower than a warm clean compile. On the full Editor the independent examiner established host-side artifact equivalence and dependency counts. Physical post-edit latency here belongs to Files.
+
+The preliminary hardware attempt also explains why the guest check belongs in the protocol. Its seed ELF matched the clean compiler. The runtime then failed to resolve the enclosing reactor's `strcpy` import because this test ran earlier than normal application startup. Calling the same symbol-resolver setup as the production loader repaired the test. The failed attempt contributes zero accepted observations. [Incremental implementation and researcher's account](../../PICOCALC-FUNCTION-REBUILD--rebuild-changed-typed-native-functions-on-picocalc/analysis/01-what-picocalc-can-reuse-after-editing-a-function.md)
+
+### Time from submitted edited source to native return
+
+A separate firmware measured one uninterrupted physical interval. It starts immediately before passing the changed text into the compiler in a prepared realm. It ends on return from the newly linked and loaded native `filesName`. Both arms used the production symbol resolver and ELF relocation. Only afterward did the harness hash the result, print it, and validate its bytes. The warm clean arm had previously compiled the original source. The incremental arm held the seed fragments. Each boot contained six rotated pairs. All 24 edited executions returned the same expected three characters and the same linked ELF digest.
+
+| Physical boot | Warm clean edit-to-return | Incremental edit-to-return | Median paired change | Extra live JS heap before the edit | Extra peak JS heap during the edit |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 107.396 ms | 44.459 ms | −63.346 ms (−58.60%) | 67,482 B | 87,826 B |
+| 2 | 106.815 ms | 43.435 ms | −63.538 ms (−59.40%) | 67,474 B | 87,818 B |
+
+The endpoint starts with an edited source snapshot already in memory and ends when native code returns. It includes the full Files ELF relocation. It excludes human typing time, UI dispatch and a display refresh. The earlier component experiment sometimes retained a clean comparison artifact during candidate heap measurement. This second experiment gives each arm its own prepared realm and avoids that measurement artifact. [Continuously timed comparison](../various/incremental-comparisons.json) · [C clock and native return boundary](../../PICOCALC-FUNCTION-REBUILD--rebuild-changed-typed-native-functions-on-picocalc/scripts/10-endpoint.c.inc)
+
 ## Compare the machine before and after each change
 
 Every percentage below uses the concurrent control for that design and boot. The displayed control row provides the absolute scale from the independent scanner experiment. Compiler peak is the high-water mark of the QuickJS allocator. Code bytes count four bytes per emitted RV32 word. Each Files guest call compares long names. The Agenda guest statistic times weekday evaluation over a rotating set of eight dates. Cycles are converted to microseconds using the recorded 360 MHz clock. These microbenchmarks did not call a dedicated Editor kernel. [Complete paired rows and denominators](../various/cross-study.json)
@@ -170,3 +193,9 @@ For research on bound analysis, retain the reordered 37-function case in the nex
 For the edit path, retain the whole-module clean compiler as the reference and keep persistent session memory visible. The full Editor experiment identifies field-level dependencies and relocation as distinct causes of downstream changes. A useful next application test is a series of real Editor edits on the device under a bound on retained fragments. Evicting a fragment should cause a recompile, and accepting a stale one should fail a clean-ELF comparison. A persistent SD cache would introduce another question about I/O and invalidation after firmware updates. The current experiment isolates reuse during a live session.
 
 The independent model forecast also belongs on the lab record. Opus High through Claude Code and GPT‑6.2 Sol High received the same masked data from a previous combined-optimization experiment. Both predicted all six directions correctly. Their mean absolute errors were 1.00 and 1.13 percentage points. The lead reversed when the examiner excluded Editor after scoring. A single retrospective case with one known supervisor result cannot rank models as researchers. Asking each to commit a prediction first gave the lab concrete disagreements it could adjudicate against measurements. [Common prompt and protocol](../various/paired-review/01-protocol.md) · [Original answers and numerical score](../various/paired-review/02-result.md)
+
+## Reproduce the conclusions
+
+The six study tickets hold the designs, evidence and dated investigation diaries. Start in the repository root. The supervisor ticket’s `scripts/19-audit-wave.py --include-live` checks the app/document links, recomputes all generic paired comparisons, verifies the matched normal boot receipts and screenshot, and recomputes the edit results from the incremental researcher's archived compressed JSON. Its inputs are in the checkout, so replaying these calculations requires no access to the original device.
+
+To repeat a physical experiment, use its ticket's staging and qualification scripts and the pinned compiler revision. The scripts specify the ESP-IDF target, app sources, reactor, measured boundary, boot order and expected ELF hashes. The board programming scripts write the factory application partition and restore the saved image. Source evidence and derived results can be examined independently of that operation. [Supervisor audit](../scripts/19-audit-wave.py) · [Independent examination and counterexamples](../../PICOCALC-LAB-REVIEW--independent-examination-of-the-picocalc-compiler-lab/analysis/01-what-makes-a-compiler-measurement-travel.md)

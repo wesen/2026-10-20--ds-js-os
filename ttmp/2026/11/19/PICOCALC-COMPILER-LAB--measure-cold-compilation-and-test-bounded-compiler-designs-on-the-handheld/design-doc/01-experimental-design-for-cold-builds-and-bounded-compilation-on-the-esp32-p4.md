@@ -1,7 +1,7 @@
 ---
 Title: Experimental design for cold builds and bounded compilation on the ESP32-P4
 Ticket: PICOCALC-COMPILER-LAB
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -11,7 +11,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T20:23:27.810311158-05:00
+LastUpdated: 2026-11-19T21:38:53.255787-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

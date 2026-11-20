@@ -2,6 +2,7 @@
 import argparse
 from pathlib import Path
 import re
+import runpy
 import shutil
 
 HERE = Path(__file__).resolve().parent
@@ -45,7 +46,10 @@ def render(folder):
         rel = path.relative_to(REPO)
         return f"{label} (`{rel}`)"
     body = re.sub(r"(!?)\[([^\]]+)\]\(([^)]+)\)", local, body)
-    (folder / NAME).write_text(HEADER + body.rstrip() + "\n")
+    articles = runpy.run_path(str(HERE/"21-verify-publications.py"))["ARTICLES"]
+    related = [f"- [[{Path(name).stem}|{study} study and evidence]]" for study,name in articles.items()
+               if study!="Synthesis"]
+    (folder / NAME).write_text(HEADER + body.rstrip() + "\n\n## The researchers’ articles\n\n" + "\n".join(related) + "\n")
 
 
 if __name__ == "__main__":

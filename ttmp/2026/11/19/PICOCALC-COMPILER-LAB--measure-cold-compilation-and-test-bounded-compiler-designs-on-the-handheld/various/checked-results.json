@@ -1,0 +1,24 @@
+{
+  "checked_documents": {
+    "COMPILER-LAB": 4,
+    "FRONTEND-COLD": 4,
+    "STAGED-RV32": 5,
+    "BOUNDED-FACTS": 5,
+    "FUNCTION-REBUILD": 4,
+    "LAB-REVIEW": 4
+  },
+  "generic_board_compiles": {
+    "scanner-independent": 48,
+    "native": 108,
+    "bounded": 108
+  },
+  "normal_editor_world_kib": {
+    "small": 566.1,
+    "select": 710.1,
+    "standard": 710.1
+  },
+  "incremental": {
+    "component_requests": 288,
+    "continuous_edited_executions": 24
+  }
+}
