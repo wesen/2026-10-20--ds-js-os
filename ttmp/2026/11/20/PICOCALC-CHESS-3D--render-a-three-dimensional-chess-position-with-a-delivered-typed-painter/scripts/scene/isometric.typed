@@ -1,0 +1,159 @@
+// Board axes are x and z. Positive y raises a point above the playing surface.
+function projectPoint(x: i32, y: i32, z: i32, pitch: i32): i32 {
+    const u = 160 + x - z;
+    const v = 42 + (x + z) * pitch / 8 - y;
+    return v * 512 + u;
+}
+
+function face(out: buffer, at: i32, a: i32, b: i32, c: i32, color: i32): i32 {
+    out.setCharCodeAt(at, 5);
+    out.setCharCodeAt(at + 1, a % 512);
+    out.setCharCodeAt(at + 2, a / 512);
+    out.setCharCodeAt(at + 3, b % 512);
+    out.setCharCodeAt(at + 4, b / 512);
+    out.setCharCodeAt(at + 5, c % 512);
+    out.setCharCodeAt(at + 6, c / 512);
+    out.setCharCodeAt(at + 7, color);
+    return at + 8;
+}
+
+function glyph(out: buffer, at: i32, point: i32, letter: i32, color: i32): i32 {
+    out.setCharCodeAt(at, 3);
+    out.setCharCodeAt(at + 1, point % 512 - 3);
+    out.setCharCodeAt(at + 2, point / 512 - 4);
+    out.setCharCodeAt(at + 3, 0);
+    out.setCharCodeAt(at + 4, color);
+    out.setCharCodeAt(at + 5, 12);
+    out.setCharCodeAt(at + 6, 1);
+    out.setCharCodeAt(at + 7, letter);
+    return at + 8;
+}
+
+function quad(out: buffer, at: i32, a: i32, b: i32, c: i32, d: i32, color: i32): i32 {
+    return face(out, face(out, at, a, b, c, color), a, c, d, color);
+}
+
+function piece(out: buffer, start: i32, x: i32, z: i32, encoded: i32, pitch: i32): i32 {
+    const kind = encoded % 8;
+    let letter = 80;
+    let shoulder = 7;
+    let width = 3;
+    if (kind === 2) { letter = 78; shoulder = 16; width = 3; }
+    if (kind === 3) { letter = 66; shoulder = 12; width = 3; }
+    if (kind === 4) { letter = 82; shoulder = 13; width = 4; }
+    if (kind === 5) { letter = 81; shoulder = 14; width = 4; }
+    if (kind === 6) { letter = 75; shoulder = 16; width = 4; }
+    let lit = 63350;   // ivory, warm light on the +z face
+    let shade = 44269;
+    let top = 65502;
+    let ink = 10342;
+    if (encoded >= 8) { lit = 19602; shade = 10410; top = 34172; ink = 65503; }
+
+    const left = projectPoint(x - 6, 0, z + 6, pitch);
+    const right = projectPoint(x + 6, 0, z - 6, pitch);
+    const front = projectPoint(x + 6, 0, z + 6, pitch);
+    const a = projectPoint(x - width, shoulder, z - width, pitch);
+    const b = projectPoint(x + width, shoulder, z - width, pitch);
+    const c = projectPoint(x + width, shoulder, z + width, pitch);
+    const d = projectPoint(x - width, shoulder, z + width, pitch);
+    let at = quad(out, start, left, front, c, d, lit);
+    at = quad(out, at, front, right, b, c, shade);
+
+    if (kind === 1 || kind === 3) {
+        let crown = projectPoint(x, 14, z, pitch);
+        if (kind === 3) { crown = projectPoint(x - 1, 22, z - 1, pitch); }
+        at = face(out, at, d, crown, c, top);
+        at = face(out, at, c, crown, b, lit);
+        at = face(out, at, b, crown, a, top);
+    } else if (kind === 2) {
+        // A sloped neck carries a long muzzle toward the +x direction.
+        const ear = projectPoint(x - 3, 22, z, pitch);
+        const muzzle = projectPoint(x + 8, 17, z - 2, pitch);
+        at = face(out, at, d, ear, muzzle, top);
+        at = face(out, at, d, muzzle, c, lit);
+        at = face(out, at, c, muzzle, b, shade);
+    } else if (kind === 4 || kind === 5) {
+        // The crown has an open center. Three visible points rise from its rim.
+        at = face(out, at, b, a, d, top);
+        at = face(out, at, b, d, c, lit);
+        let ridge = shoulder + 5;
+        let tip = shoulder + 5;
+        if (kind === 5) { ridge = shoulder + 8; tip = shoulder + 12; }
+        at = face(out, at, d, projectPoint(x - 5, ridge, z + 5, pitch), projectPoint(x - 2, ridge, z + 3, pitch), top);
+        at = face(out, at, b, projectPoint(x + 2, ridge, z - 3, pitch), projectPoint(x + 5, ridge, z - 5, pitch), top);
+        at = face(out, at, d, projectPoint(x + 1, tip, z + 1, pitch), c, lit);
+    } else {
+        at = quad(out, at, a, b, c, d, top);
+        // The cross stands vertically over the near diagonal of the cap.
+        const low = projectPoint(x, shoulder - 1, z, pitch);
+        const high = projectPoint(x, 28, z, pitch);
+        at = face(out, at, low, projectPoint(x - 2, 26, z + 1, pitch), high, top);
+        at = face(out, at, low, high, projectPoint(x + 2, 26, z - 1, pitch), lit);
+        at = face(out, at, projectPoint(x - 5, 23, z + 4, pitch), projectPoint(x, 20, z, pitch),
+                  projectPoint(x + 5, 23, z - 4, pitch), top);
+    }
+    return glyph(out, at, projectPoint(x + 2, shoulder / 2 + 2, z + 2, pitch), letter, ink);
+}
+
+function paintPose(state: buffer, out: buffer, pitch: i32): i32 {
+    let at = 6;
+    out.setCharCodeAt(0, 1);
+    out.setCharCodeAt(1, 0);
+    out.setCharCodeAt(2, 0);
+    out.setCharCodeAt(3, 320);
+    out.setCharCodeAt(4, 280);
+    out.setCharCodeAt(5, 61242); // warm neutral matte
+    const lipA = projectPoint(0, 0, 128, pitch);
+    const lipB = projectPoint(128, 0, 128, pitch);
+    const lipC = projectPoint(128, 0, 0, pitch);
+    const lipD = projectPoint(0, -5, 128, pitch);
+    const lipE = projectPoint(128, -5, 128, pitch);
+    const lipF = projectPoint(128, -5, 0, pitch);
+    at = quad(out, at, lipA, lipB, lipE, lipD, 29321);
+    at = quad(out, at, lipB, lipC, lipF, lipE, 20901);
+    const cursor = state.charCodeAt(72);
+    const selected = state.charCodeAt(74);
+    const from = state.charCodeAt(76);
+    const to = state.charCodeAt(78);
+    let legalBit = 1;
+    for (let i = 0; i < 64; i = i + 1) {
+        const file = i % 8;
+        const rank = i / 8;
+        const x = file * 16;
+        const z = rank * 16;
+        const a = projectPoint(x, 0, z, pitch);
+        const b = projectPoint(x + 16, 0, z, pitch);
+        const c = projectPoint(x + 16, 0, z + 16, pitch);
+        const d = projectPoint(x, 0, z + 16, pitch);
+        let color = 31824;
+        if ((file + rank) % 2 === 0) { color = 52918; }
+        if (i === from || i === to) { color = 42224; }
+        if (state.charCodeAt(64 + rank) / legalBit % 2 === 1) { color = 54959; }
+        if (selected === i) { color = 60970; }
+        if (cursor === i) { color = 56199; }
+        legalBit = legalBit * 2;
+        if (file === 7) { legalBit = 1; }
+        at = face(out, at, a, b, c, color);
+        at = face(out, at, a, c, d, color);
+    }
+    // Increasing x+z traverses the board from the far corner to the near one.
+    for (let diagonal = 0; diagonal < 15; diagonal = diagonal + 1) {
+        for (let file = 0; file < 8; file = file + 1) {
+            const rank = diagonal - file;
+            if (rank >= 0 && rank < 8) {
+                const encoded = state.charCodeAt(rank * 8 + file);
+                if (encoded !== 0) { at = piece(out, at, file * 16 + 8, rank * 16 + 8, encoded, pitch); }
+            }
+        }
+    }
+    out.setCharCodeAt(at, 4);
+    let length = 0;
+    if (state.charCodeAt(82) === 1) { length = out.writeLiteral(at + 2, "Q R B N promote   Esc cancel"); }
+    else { length = out.writeLiteral(at + 2, "Arrows move   Enter select   F2 new   Esc"); }
+    out.setCharCodeAt(at + 1, length);
+    return at + 2 + length;
+}
+
+function paintChess(state: buffer, out: buffer): i32 {
+    return paintPose(state, out, 5);
+}
