@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import re
 import runpy
-import subprocess
+import shutil
 
 HERE = Path(__file__).resolve().parent
 DAY = HERE.parent.parent
@@ -20,6 +20,12 @@ def sha(path):
 
 
 def observe(log, oracle):
+    # Opening the serial stream after flashing can retain a complete boot
+    # that preceded our actual timed reboot. Qualify the explicit boot only.
+    sections = re.split(r"^i2c0 .*; rebooting[ \t]*$", log, flags=re.M)
+    if len(sections) != 2:
+        raise ValueError("expected one explicit trial reboot")
+    preamble, log = sections
     worlds = BOARD["worlds"](log)
     expected = oracle["nativeSha256"]
     seen = re.findall(r"^AWAITELF bytes=(\d+) sha256=([0-9a-f]+)$", log, re.M)
@@ -75,7 +81,8 @@ def observe(log, oracle):
     return {"cold_compile":{"us":int(compiled[0][0]), "peak_js_bytes":int(compiled[0][1]),
                             "module_bytes":int(compiled[0][2]), "sha256":expected},
             "worlds":worlds, "start_tokens":starts, "settles":remotes, "duplicate":duplicate,
-            "injections":injections}
+            "injections":injections,
+            "pre_reboot_compiles":preamble.count("editor compile source=bundle status=ok")}
 
 
 def outcomes(boot):
@@ -90,9 +97,11 @@ def main():
     parser.add_argument("--port", required=True)
     parser.add_argument("--esptool", type=Path, required=True)
     parser.add_argument("--boots", type=int, choices=(1,2,3), default=2)
+    parser.add_argument("--reuse-manual", type=Path, help="validate a completed manual log from this restored trial directory")
     args = parser.parse_args()
     args.esptool_python = args.esptool.parent / "python"
-    args.output.mkdir(parents=True)
+    if not args.reuse_manual:
+        args.output.mkdir(parents=True)
     build = args.build.resolve()
     original = args.backup / "factory-original.bin"
     assert original.stat().st_size == 0x800000
@@ -102,6 +111,18 @@ def main():
         assert (build / lane / "partition-table.bin").read_bytes().ljust(4096, b"\xff") == table
         assert sha(build / lane / "picocalc-os-p4.bin") == expected["firmwareSha256"]
     receipt = {"before_factory_sha256":sha(original), "oracle":oracle, "lanes":{}, "restored":False}
+    if args.reuse_manual:
+        prior = args.output / "physical.json"
+        before = json.loads(prior.read_text())
+        assert before["restored"] and not before.get("all_observable_outcomes_identical")
+        assert before["oracle"] == oracle and before["before_factory_sha256"] == sha(original)
+        assert args.reuse_manual.resolve().parent == args.output.resolve()
+        boot = observe(args.reuse_manual.read_text(errors="replace"), oracle["manual"])
+        archived = args.output / "physical-first-attempt.json"
+        assert not archived.exists()
+        shutil.copyfile(prior, archived)
+        receipt["reused_manual_log_sha256"] = sha(args.reuse_manual)
+        receipt["lanes"]["manual"] = [boot]
     def save():
         (args.output / "physical.json").write_text(json.dumps(receipt, indent=2) + "\n")
     def capture(label, duration, commands):
@@ -109,9 +130,12 @@ def main():
     save()
     try:
         for lane in ("manual", "await"):
-            BOARD["shared"]["flash"](args, args.output, build / lane / "picocalc-os-p4.bin", lane)
-            receipt["lanes"][lane] = []
-            for i in range(args.boots):
+            measured = receipt["lanes"].setdefault(lane, [])
+            if len(measured) == args.boots:
+                continue
+            flash_name = lane + "-retry" if measured else lane
+            BOARD["shared"]["flash"](args, args.output, build / lane / "picocalc-os-p4.bin", flash_name)
+            for i in range(len(measured), args.boots):
                 log = capture(f"{lane}-{i+1}", 25, ["0.7 reboot",
                     "15 awaitcheck ok", "16.5 awaitcheck bad", "18 awaitcheck cancel", "19.5 awaitcheck reopen", "22 worlds"])
                 receipt["lanes"][lane].append(observe(log, oracle[lane]))

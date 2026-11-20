@@ -184,3 +184,59 @@ Inspect `various/combined-inputs.json` and `various/host-replays-combined.json`.
 ### Technical details
 
 The composed Editor kept 74 state fields and a 12-byte asynchronous frame. It produced 12,791 native instruction words and the same 240,452-byte native reactor allocation.
+
+
+## Step 4: Recover a valid physical trace from the flash boot preamble
+
+The first manual firmware opened and resumed real file reads on the device. Its capture started while a flash boot was still buffered, so it contained two complete compile lines and two identical ELF digests. The measurement parser returned an error because it expected one boot per capture. The original app partition was restored before the retry.
+
+### Prompt Context
+
+**Study specification:** See Step 1.
+
+**Supervisor steering:** Own the physical retry and preserve the validated receipt used by the remaining serial queue.
+
+**Commit (code):** `8373f97` — Qualify real Editor await with the combined compiler.
+
+### What I did
+
+- Traced the initial `await-physical/manual-1.log` and found the explicit `i2c0 held; rebooting` line between the cold compile records.
+- Updated `scripts/07-board.py` to isolate the deliberate reboot. Required exactly one measured Editor compile and digest after it.
+- Reparsed the first manual capture and confirmed every file and grant outcome, including a canceled token of 197 and a stale 197 while token 260 was pending.
+- Started the retry under the same serial lock. The runner preserves and hashes the valid manual boot, archives the restored first attempt receipt, and samples the remaining manual and both await boots.
+
+### Why
+
+The flash boot's compile occurs before the scheduled test events. A measured reboot has both a fresh compiler and the attached first-to-last response trace. Selecting the announced boundary keeps those observations together.
+
+### What worked
+
+The revised parser validated the exact saved native code hash and the whole manual Open protocol, with a cold compile of 3,060,487 microseconds and a 1,495,136-byte QuickJS peak.
+
+### What didn't work
+
+Running `scripts/07-board.py` without the reboot boundary failed at its single-digest assertion. The diagnostic was `AssertionError: [('240452', '6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9'), ('240452', '6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9')]`. Both entries described the same firmware. I split the capture at the explicitly requested software reboot and retained the complete post-reboot trace.
+
+### What I learned
+
+The serial capture's process boundaries do not delimit the firmware's boot boundaries. An exact image digest identifies a compiled payload but does not establish which boot received a later stimulus.
+
+### What was tricky to build
+
+Retry selected the first manual boot without treating the failed overall attempt as a completed device trial. It validates the original and current oracle hashes, requires the earlier restore, and acquires the same lock before restarting.
+
+### What warrants a second pair of eyes
+
+Check the actual logged reboot marker, the reused log SHA-256 in the final receipt, and the fresh cold compile rows before comparing the two compiler variants.
+
+### What should be done in the future
+
+Use one explicit reset boundary in any cold-compile capture that begins immediately after flashing.
+
+### Code review instructions
+
+Start at `observe(log, oracle)` in `scripts/07-board.py`. Pass the first physical capture to verify the before/after counts. Inspect the read and cancel rows after the reboot line.
+
+### Technical details
+
+The initial manual capture included one pre-reboot compile. The accepted boot sample links a 240,452-byte ELF matching its independent oracle. The queued trial still needs two accepted manual and two accepted await boots with restoration.
