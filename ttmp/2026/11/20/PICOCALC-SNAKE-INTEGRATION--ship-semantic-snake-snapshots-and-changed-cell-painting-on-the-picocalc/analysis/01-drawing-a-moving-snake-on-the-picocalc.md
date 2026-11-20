@@ -68,7 +68,7 @@ The backbuffer holds the new pixels. A separate front copy records the image aga
 
 On a skipped or failed transfer the existing OS invalidates the comparison copy. A subsequent successful transfer can then restore the whole panel using the accurate backbuffer. Incremental painting is compatible with that mechanism because it modifies the same backbuffer and still calls the same commit. The independent test exercised both a skipped transfer and a timeout, then checked all 102,400 presented pixels. In particular “three fills” does not imply “three transfers.” Bounding rectangles can cover unchanged pixels, and retrying a dropped transfer can require the entire screen. [Graphics commit and invalidation](../../../../../../picocalc-os/nucleus/gfx.c)
 
-## Running the code on three machines
+## Testing the source, the native module and the complete OS
 
 Node ran the original and candidate game callbacks and compositor callbacks against production C raster operations and an independently simulated display. Across all 236 observations the RGB565 images matched the recorded reference. Another test loaded the actual CJI-compiled RV32 Snake into an emulator, exercised its six native SDK screens, and compared the new semantic fields with the positions decoded from the old independent command trace. A whole-OS Linux simulation then drove normal keys and timers through the two releases and compared the display-controller images shown above.
 
@@ -79,3 +79,34 @@ Physical compilation exposed a problem the Node tests could not see. The first v
 Moving drawing policy across a world boundary has a cost in program storage. The baseline native Snake module occupied 77,176 bytes and the new one occupies 62,064, a 19.6% reduction. The shared compositor grew from 248,520 to 279,096 bytes, a 12.3% increase. A smaller publisher is only half of this accounting. These ELF file sizes describe the linked programs on disk. Runtime heap also depends on the loader, JS object representation and the lifetime of each frame.
 
 The firmware bundles both modules in compressed form. Their combined compressed size grew from 47,273 to 49,560 bytes, an increase of **2,287 bytes (4.8%)**. This is the storage price of replacing one application's general drawing commands with a receiver that understands Snake. The total playable firmware image grew by 5,568 bytes across the two builds. The two measured module payloads account for only part of that difference. [Native and compressed artifact sizes and digests](../various/world-footprint.json) · [Comparison script](../scripts/05-world-footprint.py)
+
+## Why the earlier 621 microseconds measures something different
+
+Before integration, the lab ran a QuickJS experiment on the ESP32-P4. Each block encoded twelve saved positions twice and reconstructed their widget trees. Semantic JSON consumed 621.2 microseconds per snapshot for those two steps together, the median of five block means. In the same study, a separate trace timed the running game's original native compositor. Those two experiments had different inputs, runtimes and timing boundaries. Dividing the reconstructed-tree time by the old native draw time would produce a meaningless speedup. The new firmware runs the real game in both arms, and its semantic receiver paints directly. Comparing the same measured interval before and after integration answers the production question. [Earlier Snake experiment](../../PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/analysis/01-what-moves-when-a-snake-advances-one-cell.md)
+
+## What changed on the real ESP32-P4
+
+The board ran its ordinary compiled Snake, launcher, compositor and display service in both measured builds. A temporary observer timestamped specific operations and counted posts. The handheld's physical STM32 keyboard controller had stopped acknowledging I²C reads, so both measurement builds supplied the test key status from memory. The native keyboard world still published keys, the game computed each position, and the real SPI controller transferred pixels to the display. Each arm ran six windows of roughly 2.5 seconds of autopilot, with opening and returning to the launcher included in the measurement. The baseline ran first. Physical key scanning and optical response were outside the comparison.
+
+| Physical interval or quantity | Previous | Integrated | Change |
+|---|---:|---:|---:|
+| Build a screen and resolve hints | 1.529 ms | 0.146 ms | −90.5% |
+| Serialize the producer's JSON | 3.131 ms | 1.014 ms | −67.6% |
+| Dispatch a game timer event | 20.979 ms | 17.444 ms | −16.9% |
+| Kernel render/publication bookkeeping per timer event | 0.214 ms | 0.163 ms | −24.0% |
+| Receive a Snake frame in the compositor | 5.622 ms | 2.613 ms | −53.5% |
+| Dispatch the compositor draw, including framebuffer commit | 18.612 ms | 7.773 ms | **−58.2%** |
+| Display flush turn, including its waiting time | 9.904 ms | 10.398 ms | +5.0% |
+| Bytes per kernel publication | 551.4 | 197.6 | **−64.2%** |
+
+Each entry is the median of six block means. First divide the total recorded for each interval by the number of those events in the block. Then take the median across the six blocks. Some intervals nest and their event counts differ. Adding them would double-count work. A draw can be a cheap movement, a full redraw on a focus change or a redraw involving system chrome. The draw figures include the mixture observed in ordinary play. [Board operator's measurement report](./02-snake-on-the-device.md)
+
+![Measured native Snake stage times before and after integration](../various/snake-physical-stage-times.png)
+
+Each circle represents one block mean and the vertical mark indicates its median. The final row measures elapsed time across a display turn, including time waiting for the driver. In these windows it increased by roughly half a millisecond. Stable gameplay input deliberately kept the same movement schedule. A lower draw time gives other worlds more execution time between ticks. Measuring key-to-visible-pixel latency or LCD refresh rate requires a different experiment. [Plotting script](../scripts/06-plot-game-timings.py) · [Measured block summary](../various/device/profile-summary.json)
+
+The physical bytes-per-post result and the 74.1% host reduction answer different questions. The device count includes the kernel's serialized publication envelope and samples a short, live run. The host comparison counts a different 222-publication corpus at the inner frame boundary. In both experiments, the reduction comes from encoding the game position once; the precise savings depend on body length, frame wrappers and which positions occur.
+
+A second accounting uses the scheduler's CPU counters for each complete window. Median compositor CPU fell from 801.9 to 409.4 ms (−48.9%), and Snake CPU fell from 629.4 to 504.4 ms (−19.9%). Display-world CPU rose from 149.0 to 160.6 ms (+7.7%). The median SPI transfer count was 198 in each arm, and median bus busy time was 118.3 versus 119.6 ms. The baseline graphics layer already avoided transferring unchanged pixels. Most of the gain is in the software that decides which pixels to draw, before the screen driver receives its rectangles.
+
+The two instrumented images also produced identical RGB565 application crops for game over, game over after re-entry, autopilot, the launcher and the screen after a compositor restart. The top 22 rows contain the system clock and battery, and were excluded from this physical comparison. The independent replay checked the entire screen with a fixed clock. Together these tests establish that the cheaper path reproduces the intended Snake image across realistic state changes.

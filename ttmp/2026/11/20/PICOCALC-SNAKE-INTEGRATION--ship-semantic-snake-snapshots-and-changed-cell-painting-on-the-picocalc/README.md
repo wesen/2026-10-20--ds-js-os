@@ -17,3 +17,10 @@ The SDK check executes the new native Snake module in CJI's RV32 emulator, uses 
 The [host-replay article](analysis/03-snake-rendering-correctness.md) and [examiner diary](reference/03-replay-diary.md) give the native raster harness build and run commands and describe its two independent references. The earlier research scripts that directly read the sources in a checkout can be reproduced at e339b6a. The new replay deliberately retrieves that exact revision with Git.
 
 The [device report](analysis/02-snake-on-the-device.md) and [board operator's diary](reference/02-device-diary.md) document the matched physical sessions, isolated observer builds, profile settings and health checks. Its [runner](scripts/device/01-normal-snake.py) takes the actual USB port, baseline build and test counts as explicit inputs. Only one process should operate the serial device at a time. The ordinary playable image is installed after instrumented measurements.
+
+To reproduce the timing figure directly from committed board observations, use the two instrumented-arm receipts. Each circle is one window mean. To verify separate storage costs you also need both **ordinary** ESP-IDF build directories.
+
+```bash
+python3 "$ticket/scripts/06-plot-game-timings.py" "$ticket/various/device/profile-before.json" "$ticket/various/device/profile-after.json" "$work/physical-stages.png"
+python3 "$ticket/scripts/05-world-footprint.py" /path/to/old/build /path/to/new/build
+```
