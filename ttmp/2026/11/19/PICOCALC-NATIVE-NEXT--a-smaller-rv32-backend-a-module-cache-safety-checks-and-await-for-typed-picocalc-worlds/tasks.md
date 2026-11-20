@@ -33,7 +33,7 @@
 - [x] G1: async and await: statement tree, liveness, rejection of strings and buffers live across a wait, frame layout report (M; needs E1, E5) <!-- t:uqtk -->
 - [x] G2: State machine generation with start, resume, pending, cancel and the generated dispatcher (L; needs G1) <!-- t:idnx -->
 - [x] G3: Editor open path rewritten with await; all Editor replays match (M; needs G2) <!-- t:46qu -->
-- [ ] G4: Editor find path rewritten with await; at most 71 state fields; device qualification (M; needs G3) <!-- t:dddi -->
+- [x] G4: Editor find path rewritten with await; at most 71 state fields; device qualification (M; needs G3) <!-- t:dddi -->
 - [ ] M1: Key-to-frame intervals and per-world CPU from kernel timestamps over serial; application share under 10% (S) <!-- t:xleu -->
 - [ ] M2: DEFERRED until a logic analyzer or high-speed camera is available: key press to visible pixels (S; needs M1) <!-- t:4fdd -->
 - [ ] H1: Later: per-turn arena with its two lifetime rules (M; needs G1, D1) <!-- t:p5ce -->

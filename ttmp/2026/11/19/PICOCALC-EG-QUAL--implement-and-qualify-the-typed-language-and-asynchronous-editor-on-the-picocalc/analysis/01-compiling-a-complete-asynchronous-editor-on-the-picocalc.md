@@ -201,6 +201,22 @@ Relative to the first implementation of the same generated Editor, cold compilat
 
 ![Final cold compiler and interactive CPU observations, with each individual boot shown](../various/portable-workflow-clocks.png)
 
+### A complete search on the production compiler
+
+We repeated all three searches on each physical engine using the production compiler. The input digest, query, number of guest turns and number of settlements match the earlier comparisons. Each row below compares one complete physical observation per arm. This table distinguishes a candidate's ability to complete a long operation, which the fixture directly tests, from a claim about typical response time, which requires more repetitions.
+
+| Backend | Early hit | Late hit at 852:1 | Dense miss |
+| --- | ---: | ---: | ---: |
+| Native, elapsed | 4.315 ms | 47.104 ms | 151.736 ms |
+| Native, change vs. handwritten | −4.45% | −13.14% | −17.48% |
+| Wasm, elapsed | 41.826 ms | 755.747 ms | 1,605.471 ms |
+| Wasm, change vs. handwritten | +0.75% | +3.19% | −8.89% |
+| Turns on each backend | 1 | 27 | 297 |
+
+Two intervals in the dense native miss illustrate the distinction between clocks. The operation took 151.736 ms from Enter to the retained result. The kernel charged 111.633 ms to the Editor segments. The engine and reactor accounted for 101.691 ms within those segments. Reporting only the first turn, the pure guest clock, or the elapsed time as though they were interchangeable would change the scientific question. [Final paired measurements](../various/search-portable-comparison.json)
+
+The integrated production revision is `e0ad43b`. A detached checkout of that commit passed the 24 frozen application workflows. The acceptance audit recomputed the source and firmware digests, verified the host timing harness and 70-field layout, and matched every complete Find trial to its serial counters and framebuffer transfer. At the end of the experiment the board booted the original Files, Agenda and Editor natively. [Final acceptance receipt](../various/final-acceptance.json) · [Replay from the actual merge](../various/host-merged-portable.json)
+
 ## How far the result generalizes
 
 Editor is a strong test of suspension and resumption because the original implementation exposes the state that a human programmer chose to keep. Its 64 KiB search stresses long cooperative operations, but the SDK can skip a line in a single call. A native loop that does most of its own integer arithmetic can spend a different fraction of its time in emitted guest code. Compiler speed, native instruction quality and application responsiveness therefore need separate observations even when the application source is identical.

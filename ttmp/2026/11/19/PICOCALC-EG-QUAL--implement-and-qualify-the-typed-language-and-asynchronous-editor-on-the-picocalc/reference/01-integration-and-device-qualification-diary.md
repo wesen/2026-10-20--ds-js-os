@@ -428,3 +428,27 @@ Complete the physical 64 KiB search with the final production compiler, archive 
 ### Code review instructions
 
 Start at e0ad43b and various/workflow-portable.json. The committed code uses a portable scanner in generic QuickJS hosts and the C occurrence index installed by the P4 compiler port. Both produce the same final Editor guest artifacts.
+
+## Step 11 — Close the professor's device acceptance against the actual merge
+
+The merged compiler passed all 24 frozen application workflows. I ran the 64 KiB Find fixture again on both physical targets and checked the original input digest and each serial completion marker. The late match was line 852, column 1. The dense miss crossed 296 suspension boundaries on each target. Factory restoration succeeded and all three original applications booted natively.
+
+### What I did and why
+
+Ran scripts/31-collect-final-results.sh in search mode against the production tree. It checks the actual source files, the two interactive firmware images, both observer firmware images, the original host benchmark code, the 70-field state report, and all twelve matched outcomes. Recorded the result in various/final-acceptance.json. Checked G4 and the combined migration tasks in docmgr.
+
+### What worked
+
+Physical native elapsed times were 4.315, 47.104 and 151.736 ms for the early hit, late hit and dense miss. Wasm took 41.826, 755.747 and 1,605.471 ms. With one observation per query per arm, these support the measured complete executions; longer statistical sampling would be needed to infer typical execution speed. The integrated compiler outputs match the previously qualified Wasm and ELF byte for byte.
+
+### What warrants a second pair of eyes
+
+Reproduce the checksum and state-field assertions from the final receipt. The original design's literal cancellation delays were tested as controlled event order at suspension boundaries. The actual kernel serializes some of those deliveries. The article documents this methodological distinction.
+
+### What should be done in the future
+
+Keep the newly published research articles discoverable. Record the outcome of the separate Chess board benchmark and finish the supervisor publication.
+
+### Code review instructions
+
+Read the professor's original 11 E/G task rows, the merged replay at dcbbd78, and the source and firmware identity checks in scripts/28-check-qualified-integration.py. The updated intern walkthrough and three independent reports were delivered to reMarkable as “PicoCalc - Language and Continuation Research Reports” in the ticket folder.
