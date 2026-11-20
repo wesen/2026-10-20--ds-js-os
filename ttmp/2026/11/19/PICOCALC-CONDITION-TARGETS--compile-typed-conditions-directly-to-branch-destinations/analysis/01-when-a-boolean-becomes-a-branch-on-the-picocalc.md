@@ -5,7 +5,7 @@ Status: active
 Topics:
     - picocalc
     - native
-    - compiler
+    - performance
 DocType: analysis
 Intent: long-term
 Owners: []

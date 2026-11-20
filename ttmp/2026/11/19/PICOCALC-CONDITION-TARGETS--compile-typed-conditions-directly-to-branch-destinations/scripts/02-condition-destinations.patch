@@ -3,7 +3,7 @@
 @@ -161,15 +161,19 @@
          this.code.push(OP.end);
      }
- 
+
 -    prefix() {
 +    prefix(conditionMode) {
          const lex = this.lex;
@@ -26,7 +26,7 @@
 @@ -237,19 +241,28 @@
          return binding.type;
      }
- 
+
 -    expr(minPrecedence = 0) {
 +    expr(minPrecedence = 0, conditionMode = false) {
          if (++this.depth > 128) this.lex.fail("expression nesting limit exceeded");
@@ -124,7 +124,7 @@
 +        this.lex.expect(")");
 +        return test;
      }
- 
+
      result(type, branch) {
 @@ -370,9 +439,12 @@
          const lex = this.lex;

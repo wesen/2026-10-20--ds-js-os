@@ -5,7 +5,7 @@ Status: complete
 Topics:
     - picocalc
     - native
-    - compiler
+    - performance
 DocType: index
 Intent: long-term
 Owners: []
