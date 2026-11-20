@@ -1,0 +1,151 @@
+// Snapshot and drawing words are described by nucleus/mobile_painter.h.
+// This function lays out the PicoCalc body. The compositor draws its chrome.
+function chessField(state: buffer, field: i32): i32 {
+    const low = state.charCodeAt(72 + field * 2);
+    let high = state.charCodeAt(73 + field * 2);
+    if (high >= 32768) { high = high - 65536; }
+    return low + high * 65536;
+}
+
+function chessBox(out: buffer, at: i32, op: i32, x: i32, y: i32, w: i32, h: i32, color: i32): i32 {
+    out.setCharCodeAt(at, op);
+    out.setCharCodeAt(at + 1, x);
+    out.setCharCodeAt(at + 2, y);
+    out.setCharCodeAt(at + 3, w);
+    out.setCharCodeAt(at + 4, h);
+    out.setCharCodeAt(at + 5, color);
+    return at + 6;
+}
+
+function chessText(out: buffer, at: i32, x: i32, y: i32, font: i32, color: i32, maxWidth: i32, length: i32): i32 {
+    out.setCharCodeAt(at, 3);
+    out.setCharCodeAt(at + 1, x);
+    out.setCharCodeAt(at + 2, y);
+    out.setCharCodeAt(at + 3, font);
+    out.setCharCodeAt(at + 4, color);
+    out.setCharCodeAt(at + 5, maxWidth);
+    out.setCharCodeAt(at + 6, length);
+    return at + 7 + length;
+}
+
+function chessGlyph(out: buffer, at: i32, x: i32, y: i32, font: i32, color: i32, glyph: i32): i32 {
+    out.setCharCodeAt(at + 7, glyph);
+    return chessText(out, at, x, y, font, color, 0, 1);
+}
+
+function chessTextCenter(out: buffer, at: i32, y: i32, font: i32, color: i32, length: i32, cellWidth: i32): i32 {
+    let x = (320 - length * cellWidth) / 2;
+    if (x < 8) { x = 8; }
+    return chessText(out, at, x, y, font, color, 312 - x, length);
+}
+
+function chessStatus(out: buffer, at: i32, status: i32): i32 {
+    if (status === 1) return out.writeLiteral(at, "Checkmate - White wins");
+    if (status === 2) return out.writeLiteral(at, "Checkmate - Black wins");
+    if (status === 3) return out.writeLiteral(at, "Draw - stalemate");
+    if (status === 4) return out.writeLiteral(at, "Draw - dead material");
+    if (status === 5) return out.writeLiteral(at, "Promote to Q, R, B or N");
+    if (status === 6) return out.writeLiteral(at, "Black is thinking");
+    if (status === 7) return out.writeLiteral(at, "Please choose a legal move");
+    if (status === 8) return out.writeLiteral(at, "White to move - check");
+    return out.writeLiteral(at, "White to move");
+}
+
+function chessNumber(out: buffer, at: i32, value: i32): i32 {
+    let cursor = at;
+    let n = value;
+    // A negative magnitude can represent every i32, including INT32_MIN.
+    if (n < 0) {
+        out.setCharCodeAt(cursor, 45);
+        cursor = cursor + 1;
+    } else {
+        n = 0 - n;
+    }
+    let place = 1;
+    while (0 - place >= n / 10) { place = place * 10; }
+    while (place > 0) {
+        out.setCharCodeAt(cursor, 48 - (n / place) % 10);
+        cursor = cursor + 1;
+        place = place / 10;
+    }
+    return cursor;
+}
+
+function chessFooter(state: buffer, out: buffer, at: i32, from: i32, to: i32): i32 {
+    const start = at + 7;
+    let p = start + out.writeLiteral(start, "Last ");
+    out.setCharCodeAt(p, 97 + from % 8);
+    out.setCharCodeAt(p + 1, 56 - from / 8);
+    out.setCharCodeAt(p + 2, 45);
+    out.setCharCodeAt(p + 3, 97 + to % 8);
+    out.setCharCodeAt(p + 4, 56 - to / 8);
+    p = p + 5;
+    const depth = chessField(state, 6);
+    if (depth > 0) {
+        p = p + out.writeLiteral(p, "   Depth ");
+        p = chessNumber(out, p, depth);
+        p = p + out.writeLiteral(p, "   Nodes ");
+        p = chessNumber(out, p, chessField(state, 7));
+        p = p + out.writeLiteral(p, "   Eval ");
+        p = chessNumber(out, p, chessField(state, 8));
+    }
+    return chessTextCenter(out, at, 262, 0, 31629, p - start, 6);
+}
+
+function chessPiece(out: buffer, at: i32, x: i32, y: i32, piece: i32): i32 {
+    const side = piece / 8;
+    const kind = piece % 8;
+    let glyph = 80;
+    if (kind === 2) { glyph = 78; }
+    if (kind === 3) { glyph = 66; }
+    if (kind === 4) { glyph = 82; }
+    if (kind === 5) { glyph = 81; }
+    if (kind === 6) { glyph = 75; }
+    let paper = 65501; // #fffbec
+    let ink = 8516; // #242822
+    if (side !== 0) { paper = 8516; ink = 65501; }
+    const p = chessBox(out, at, 1, x + 4, y + 3, 18, 20, paper);
+    return chessGlyph(out, p, x + 9, y + 5, 1, ink, glyph + side * 32);
+}
+
+function paintChess(state: buffer, out: buffer): i32 {
+    const cursor = chessField(state, 0);
+    const selected = chessField(state, 1);
+    const from = chessField(state, 2);
+    const to = chessField(state, 3);
+    const titleLength = chessStatus(out, 7, chessField(state, 4));
+    let p = chessTextCenter(out, 0, 6, 2, 6371, titleLength, 8);
+    p = chessBox(out, p, 2, 62, 30, 210, 210, 6371); // #1d1c1a
+    for (let row = 0; row < 8; row = row + 1) {
+        p = chessGlyph(out, p, 49, 39 + row * 26, 0, 31629, 56 - row); // #787369
+        p = chessGlyph(out, p, 73 + row * 26, 242, 0, 31629, 97 + row);
+        const mask = state.charCodeAt(64 + row);
+        let bit = 1;
+        for (let file = 0; file < 8; file = file + 1) {
+            const square = 8 * row + file;
+            const x = 63 + 26 * file;
+            const y = 31 + 26 * row;
+            let tile = 29773; // #758a68
+            if (square === selected) { tile = 60970; } // #efc752
+            else if (square === from || square === to) { tile = 42478; } // #a2bd71
+            else if ((row + file) % 2 === 0) { tile = 61207; } // #efe1bd
+            p = chessBox(out, p, 1, x, y, 26, 26, tile);
+            const piece = state.charCodeAt(square);
+            if (piece !== 0) { p = chessPiece(out, p, x, y, piece); }
+            if ((mask / bit) % 2 === 1) {
+                p = chessBox(out, p, 1, x + 19, y + 19, 5, 5, 56259); // #de781f
+            }
+            if (square === cursor) {
+                p = chessBox(out, p, 2, x + 1, y + 1, 24, 24, 59973); // #ed492d
+            }
+            bit = bit * 2;
+        }
+    }
+    if (from < 64) { p = chessFooter(state, out, p, from, to); }
+    out.setCharCodeAt(p, 4);
+    let n = 0;
+    if (chessField(state, 5) === 1) { n = out.writeLiteral(p + 2, "Q R B N promote   Esc cancel"); }
+    else { n = out.writeLiteral(p + 2, "Arrows move   Enter select   F2 new   Esc"); }
+    out.setCharCodeAt(p + 1, n);
+    return p + 2 + n;
+}
