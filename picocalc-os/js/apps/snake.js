@@ -1,6 +1,6 @@
 // Snake, on the virtual clock: the game ticks every 110 ms while it is in front and pauses when it is
 // not. Food is placed with Math.random, which the prelude seeds per world, so a recorded game replays.
-const CW = 22, CH = 18, CELL = 13;
+const CW = 22, CH = 18;
 const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0], w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0] };
 
 function reset(s) {
@@ -87,22 +87,10 @@ app("snake")
     if (k.ch === "p") s.auto = !s.auto;
     if (k.key === "enter" && !s.alive) reset(s);
   })
-  .screen((s) => {
-    const ops = [];
-    for (let i = s.body.length - 1; i >= 0; i--) {  // tail first, so the head is drawn on top
-      const [x, y] = s.body[i];
-      ops.push(["fill", x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2, i === 0 ? "accent" : "ink"]);
-    }
-    const [fx, fy] = s.food;
-    ops.push(["fill", fx * CELL + 3, fy * CELL + 3, CELL - 6, CELL - 6, "accent"], ["rect", fx * CELL + 1, fy * CELL + 1, CELL - 2, CELL - 2, "accent"]);
-    if (!s.alive) {
-      const bw = 190, bx = (CW * CELL - bw) >> 1, by = 70;
-      ops.push(["fill", bx, by, bw, 78, "ink"], ["text", bx + 52, by + 12, "GAME OVER", "l", "accentInk"],
-        ["text", bx + 16, by + 42, `score ${s.score}   best ${s.best}`, "s", "faint"], ["text", bx + 40, by + 58, "⏎ to play again", "s", "accentInk"]);
-    }
-    return ui.col({ gap: 6 },
-      ui.row(ui.text(`score ${s.score}`, { font: "mb", w: 104 }), ui.text(`${s.auto ? "auto · " : ""}length ${s.body.length} · best ${Math.max(s.best, s.score)}`, { font: "s", color: s.auto ? "accent" : "muted", align: "right", pad: 3 })),
-      ui.canvas(CW * CELL, CH * CELL, ops, { bg: "#ffffff", border: "line" }),
-    );
-  })
+  // One complete position can be replayed after focus changes or a compositor restart.
+  .screen((s) => ({
+    t: "snake", v: 1, body: s.body.map(([x, y]) => y * CW + x),
+    food: s.food[1] * CW + s.food[0], score: s.score, best: s.best,
+    alive: s.alive, auto: s.auto,
+  }))
   .hints((s) => (s.alive ? "←→↑↓ or wasd steer  p autopilot" : "⏎ play again"));

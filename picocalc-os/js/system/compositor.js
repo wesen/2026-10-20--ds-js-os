@@ -336,17 +336,92 @@ function batteryGlyph(fb, x, y, p) {   // a 22 x 10 battery outline, filled to t
   if (p) fb.fill(x + 2, y + 2, Math.round(16 * Math.max(0, Math.min(100, p.pct)) / 100), 6, p.pct <= 15 ? C.accent : C.barInk);
 }
 
+// Snake's complete screen uses head-first cell indices. Admission checks the
+// invariants once, before replacing the last accepted app frame.
+const SNAKE_COLS = 22, SNAKE_ROWS = 18, SNAKE_CELL = 13;
+const SNAKE_CELLS = SNAKE_COLS * SNAKE_ROWS;
+const snakeSeen = new Uint8Array(SNAKE_CELLS);
+function validSnakeCell(c) { return (c | 0) === c && c >= 0 && c < SNAKE_CELLS; }
+function validSnake(n) {
+  if (n.v !== 1 || !Array.isArray(n.body) || n.body.length < 4 || n.body.length >= SNAKE_CELLS ||
+      typeof n.alive !== "boolean" || typeof n.auto !== "boolean" || !validSnakeCell(n.food) ||
+      n.score !== (n.body.length - 4) * 10 || (n.best | 0) !== n.best || n.best < 0 ||
+      n.best > (SNAKE_CELLS - 5) * 10 || n.best % 10 !== 0) return false;
+  snakeSeen.fill(0);
+  snakeSeen[n.food] = 1;
+  for (let i = 0; i < n.body.length; i++) {
+    const c = n.body[i];
+    if (!validSnakeCell(c) || snakeSeen[c]) return false;
+    if (i) {
+      const prev = n.body[i - 1];
+      if (Math.abs(c - prev) !== SNAKE_COLS &&
+          !(Math.abs(c - prev) === 1 && ((c / SNAKE_COLS) | 0) === ((prev / SNAKE_COLS) | 0))) return false;
+    }
+    snakeSeen[c] = 1;
+  }
+  return true;
+}
+
+// The original board sat in a centered canvas, below a row of two font sizes.
+const snakeX = (W - SNAKE_COLS * SNAKE_CELL) >> 1;
+const snakeY = () => TOP + 6 + Math.max(fh("mb"), fh("s") + 6) + 6;
+function snakeCell(fb, cell, y, ink) {
+  fb.fill(snakeX + (cell % SNAKE_COLS) * SNAKE_CELL + 1, y + ((cell / SNAKE_COLS) | 0) * SNAKE_CELL + 1, 11, 11, ink);
+}
+function drawSnake(fb, n) {
+  const width = SNAKE_COLS * SNAKE_CELL, height = SNAKE_ROWS * SNAKE_CELL, y = snakeY();
+  draw(fb, { t: "row", kids: [
+    { t: "text", s: "score " + n.score, font: "mb", w: 104 },
+    { t: "text", s: (n.auto ? "auto · " : "") + "length " + n.body.length + " · best " + Math.max(n.best, n.score),
+      font: "s", color: n.auto ? "accent" : "muted", align: "right", pad: 3 },
+  ] }, 8, TOP + 6, W - 16, y - TOP - 12);
+  fb.fill(snakeX, y, width, height, "#ffffff");
+  for (let i = n.body.length - 1; i >= 0; i--) snakeCell(fb, n.body[i], y, i ? C.ink : C.accent);
+  const fx = snakeX + (n.food % SNAKE_COLS) * SNAKE_CELL, fy = y + ((n.food / SNAKE_COLS) | 0) * SNAKE_CELL;
+  fb.fill(fx + 3, fy + 3, 7, 7, C.accent);
+  fb.rect(fx + 1, fy + 1, 11, 11, C.accent);
+  if (!n.alive) {
+    const bx = snakeX + ((width - 190) >> 1), by = y + 70;
+    fb.fill(bx, by, 190, 78, C.ink);
+    fb.text(bx + 52, by + 12, "GAME OVER", "l", C.accentInk, 0);
+    fb.text(bx + 16, by + 42, "score " + n.score + "   best " + n.best, "s", C.faint, 0);
+    fb.text(bx + 40, by + 58, "⏎ to play again", "s", C.accentInk, 0);
+  }
+  fb.rect(snakeX - 1, y - 1, width + 2, height + 2, C.line);
+}
+
+function paintSnakeMove(fb, previous, next) {
+  const a = previous.tree, b = next.tree;
+  if (!a.alive || !b.alive || a.auto !== b.auto || a.food !== b.food || a.score !== b.score ||
+      a.best !== b.best || previous.title !== next.title || previous.hints !== next.hints) return false;
+  // Score fixes length. A one-step shift covers ordinary moves and legal tail entry.
+  // A coalesced sequence takes the full paint path from the latest complete state.
+  for (let i = 1; i < b.body.length; i++) if (b.body[i] !== a.body[i - 1]) return false;
+  const y = snakeY(), tail = a.body[a.body.length - 1];
+  if (tail !== b.body[0]) snakeCell(fb, tail, y, "#ffffff");
+  snakeCell(fb, a.body[0], y, C.ink);
+  snakeCell(fb, b.body[0], y, C.accent);
+  return true;
+}
+
 function paint(s) {
   const fb = s.fb;
   const app = s.apps[s.focus];
+  const snake = s.focus === "snake" && app && app.tree && app.tree.t === "snake";
+  const time = clockText();
+  if (snake && s.paintedSnake && !s.banner && time === s.snakeClock &&
+      paintSnakeMove(fb, s.paintedSnake, app)) {
+    s.paintedSnake = app;
+    return;
+  }
+  s.paintedSnake = null;
   fb.fill(0, 0, W, H, C.paper);
   // status bar: what is in front, the battery, the clock
   fb.fill(0, 0, W, TOP, C.bar);
   fb.fill(0, 0, 4, TOP, C.accent);
   fb.text(11, 3, app ? app.title : s.focus, "mb", C.barInk, 170);
-  const clock = clockText();
-  fb.text(W - 6 - clock.length * fw("mb"), 3, clock, "mb", C.barInk);
-  const bx = W - 6 - clock.length * fw("mb") - 34;
+  fb.text(W - 6 - time.length * fw("mb"), 3, time, "mb", C.barInk);
+  const bx = W - 6 - time.length * fw("mb") - 34;
   batteryGlyph(fb, bx, 6, s.battery);
   if (s.battery) {
     const pct = (s.battery.charging ? "+" : "") + s.battery.pct + "%";
@@ -354,7 +429,12 @@ function paint(s) {
   }
   // the app
   if (app && app.tree) {
-    try { draw(fb, app.tree, 8, TOP + 6, W - 16, BODY - 10); }
+    try {
+      if (snake) {
+        drawSnake(fb, app.tree);
+        if (!s.banner) { s.paintedSnake = app; s.snakeClock = time; }
+      } else draw(fb, app.tree, 8, TOP + 6, W - 16, BODY - 10);
+    }
     catch (e) {   // a malformed tree costs its own app the screen, not every app the compositor
       fb.fill(0, TOP, W, BODY, C.paper);
       fb.text(12, TOP + 12, `${app.title}'s screen could not be drawn`, "m", C.ink, W - 24);
@@ -390,7 +470,9 @@ function nextNote(s) {
   dirty(s);
 }
 
-function dirty(s) {
+function dirty(s, snakeFrame) {
+  // Any change to chrome, focus or the drawing surface requires a full composition.
+  if (!snakeFrame) s.paintedSnake = null;
   if (s.queued) return;
   s.queued = true;
   send(self, "draw");
@@ -435,11 +517,13 @@ service("compositor")
   .on("frames", (s, f, msg) => {
     // A world may publish its own frame only. Otherwise another world could cover an approval
     // prompt with misleading text while the real focused app still receives the user's keys.
-    if (!f || f.app !== msg.from) return;
+    if (!f || f.app !== msg.from || !f.frame) return;
+    const tree = f.frame.tree;
+    if (f.app === "snake" && (!tree || !validSnake(tree) || tree.t !== "snake")) return;
     s.frames++;
-    s.apps[f.app] = { title: f.title, tree: f.frame.tree, hints: f.frame.hints };
+    s.apps[f.app] = { title: f.title, tree, hints: f.frame.hints };
     delete s.crashed[f.app];
-    if (f.app === s.focus) dirty(s);
+    if (f.app === s.focus) dirty(s, f.app === "snake");
   })
   .on("keys", (s, e, msg) => {
     // Only worlds with the claim keys.raw may provide keys; checking the sender as well keeps a second line.
