@@ -42,6 +42,19 @@ test("a publisher cannot cover another app's approval with a forged frame", () =
   assert.equal(sent.at(-1).type, "draw");
 });
 
+test("a native painter becomes visible only after the compositor confirms admission", () => {
+  const { def, state, sent } = setup();
+  state.focus = "chess";
+  for (const from of ["chess", "launcher", null]) {
+    def.handlers["painter.ready"](state, null, { from });
+  }
+  assert.equal(state.apps.chess, undefined);
+  assert.equal(sent.length, 0);
+  def.handlers["painter.ready"](state, null, { from: "compositor" });
+  assert.equal(state.apps.chess.mobile, true);
+  assert.equal(sent.at(-1).type, "draw");
+});
+
 test("a malformed Snake position preserves the last admitted screen", () => {
   const { def, state, sent } = setup();
   state.focus = "snake";

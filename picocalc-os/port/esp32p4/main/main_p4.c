@@ -26,6 +26,9 @@
 #include "esp_system.h"
 #include "freertos/task.h"
 #include "p4.h"
+#if PICOCALC_MOBILE_PAINTER
+#include "painter_service.h"
+#endif
 #if PICOCALC_DEVICE_COMPILER
 #include "install.h"
 #endif
@@ -157,6 +160,9 @@ void console_exec(char *line) {
     else if (cmd[0] == 'c') kernel_fault(W, "killed from the console");
     else kernel_restart_world(W);
   } else if (!strcmp(cmd, "shot")) shot();
+#if PICOCALC_MOBILE_PAINTER
+  else if (!strcmp(cmd, "painter")) p4_painter_status();
+#endif
 #if PICOCALC_DEVICE_COMPILER
   else if (!strcmp(cmd, "cji")) compiler_console(rest);
 #endif
@@ -237,6 +243,9 @@ static void kernel_task(void *arg) {
       else if (m.fs) p4_fs_done(m.fs);
       else bus_p4_done(&m);
     }
+#if PICOCALC_MOBILE_PAINTER
+    p4_painter_poll();
+#endif
     kernel_run_until(port_clock());
 #if PICOCALC_TYPED_AGENDA
     p4_agenda_report_boot();

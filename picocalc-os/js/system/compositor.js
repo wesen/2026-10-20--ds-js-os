@@ -431,9 +431,10 @@ function paint(s) {
     fb.text(bx - 4 - pct.length * fw("s"), 5, pct, "s", C.barMuted);
   }
   // the app
-  if (app && app.tree) {
+  if (app && (app.tree || app.mobile)) {
     try {
-      if (snake) {
+      if (app.mobile) app.hints = fb.paintView();
+      else if (snake) {
         drawSnake(fb, app.tree);
         if (!s.banner) { s.paintedSnake = app; s.snakeClock = time; }
       } else draw(fb, app.tree, 8, TOP + 6, W - 16, BODY - 10);
@@ -516,6 +517,14 @@ service("compositor")
       if (r.skipped) s.fb.invalidate();   // the panel did not get these pixels: send everything next time
       s.flushError = "";
     } catch (e) { s.flushError = e.message; s.fb.invalidate(); }
+  })
+  .on("painter.ready", (s, _, msg) => {
+    // Only the compositor-side service posts this self-message after admission.
+    if (!msg || msg.from !== self) return;
+    s.apps.chess = { title: "Chess", mobile: true, hints: "" };
+    s.frames++;
+    delete s.crashed.chess;
+    if (s.focus === "chess") dirty(s);
   })
   .on("frames", (s, f, msg) => {
     // A world may publish its own frame only. Otherwise another world could cover an approval

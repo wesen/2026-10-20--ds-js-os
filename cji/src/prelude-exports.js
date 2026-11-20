@@ -42,7 +42,7 @@ export const PRELUDE_KEY_ORDERS = [
   [],
   ['get', 'set', 'remove', 'all', 'status'],
   ['id', 'type', 'rights', 'release', 'cmd', 'pixels'],
-  ['id', 'type', 'rights', 'release', 'narrow', 'fill', 'rect', 'line', 'text', 'commit', 'invalidate'],
+  ['id', 'type', 'rights', 'release', 'narrow', 'fill', 'rect', 'line', 'text', 'paintView', 'commit', 'invalidate'],
   ['id', 'type', 'rights', 'path', 'file', 'release', 'revoke', 'at', 'list', 'stat', 'read', 'write', 'append', 'mkdir', 'remove', 'rename', 'info'],
   ['id', 'type', 'rights', 'release'],
   ['id', 'type', 'rights', 'transfer', 'read', 'write', 'release'],

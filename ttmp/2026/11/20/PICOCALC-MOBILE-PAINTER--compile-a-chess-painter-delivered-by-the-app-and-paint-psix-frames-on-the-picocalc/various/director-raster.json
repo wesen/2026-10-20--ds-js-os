@@ -1,0 +1,244 @@
+{
+  "matched": 47,
+  "comparedPixelsPerPosition": 89600,
+  "hintsMatched": 47,
+  "chromeUntouched": 47,
+  "rejectedStreams": 14,
+  "positions": [
+    {
+      "position": "opening/000 launch",
+      "wordCount": 1035,
+      "bodySha256": "1b067d9ca8ab4616abc08f845f1653710414a3e221f99819387ed86d1587385f"
+    },
+    {
+      "position": "opening/001 unhandled printable key",
+      "wordCount": 1035,
+      "bodySha256": "1b067d9ca8ab4616abc08f845f1653710414a3e221f99819387ed86d1587385f"
+    },
+    {
+      "position": "opening/002 up",
+      "wordCount": 1035,
+      "bodySha256": "9afbbf977926e13bda2eb19ab97e9f6e1aeef8f1ad711103c9a1b980bbe783e7"
+    },
+    {
+      "position": "opening/003 enter",
+      "wordCount": 1048,
+      "bodySha256": "70b22924495d6b1be196f8cece7a2930bf4d8fb9c55e4006dd3e415f1639828d"
+    },
+    {
+      "position": "opening/004 down",
+      "wordCount": 1048,
+      "bodySha256": "c584ee8703b754b0b3179f257ab06d68ebcd7f6be1ae700629d0ac5d6311ecc7"
+    },
+    {
+      "position": "opening/005 enter",
+      "wordCount": 1047,
+      "bodySha256": "58e37bc3214f3bfabdcbcca4b6d47ec1e31edd287f5d22a8f0b9c039376bf3f4"
+    },
+    {
+      "position": "opening/006 esc",
+      "wordCount": 1035,
+      "bodySha256": "1b067d9ca8ab4616abc08f845f1653710414a3e221f99819387ed86d1587385f"
+    },
+    {
+      "position": "opening/007 enter",
+      "wordCount": 1047,
+      "bodySha256": "58e37bc3214f3bfabdcbcca4b6d47ec1e31edd287f5d22a8f0b9c039376bf3f4"
+    },
+    {
+      "position": "opening/009 up",
+      "wordCount": 1047,
+      "bodySha256": "0e9f429cbfc799b0c72435c88624afbddb50796f32d6e79b7d72f187e514389d"
+    },
+    {
+      "position": "opening/010 up",
+      "wordCount": 1047,
+      "bodySha256": "2339809ef4fb67814c3b6601e21866635306577fc53ab98895abfc7a073442ac"
+    },
+    {
+      "position": "opening/011 e2-e4",
+      "wordCount": 1056,
+      "bodySha256": "61a00ee8256a0e81f42e2cf6dff5b5348ae52e71dad940bcc8bf644bf46d26a7"
+    },
+    {
+      "position": "opening/013 cursor during search",
+      "wordCount": 1056,
+      "bodySha256": "568577568490d05f08b9032286a97e88483f97c4d30d9cd9e6e0570a7a69da4b"
+    },
+    {
+      "position": "opening/091 engine wake 78",
+      "wordCount": 1085,
+      "bodySha256": "46a4bd844b5cd1ee6f8ca7e236a1f845b470905dffbeced040b8648d4e7b5fab"
+    },
+    {
+      "position": "opening/092 f2",
+      "wordCount": 1035,
+      "bodySha256": "1b067d9ca8ab4616abc08f845f1653710414a3e221f99819387ed86d1587385f"
+    },
+    {
+      "position": "opening/093 enter",
+      "wordCount": 1047,
+      "bodySha256": "58e37bc3214f3bfabdcbcca4b6d47ec1e31edd287f5d22a8f0b9c039376bf3f4"
+    },
+    {
+      "position": "opening/094 up",
+      "wordCount": 1047,
+      "bodySha256": "0e9f429cbfc799b0c72435c88624afbddb50796f32d6e79b7d72f187e514389d"
+    },
+    {
+      "position": "opening/095 up",
+      "wordCount": 1047,
+      "bodySha256": "2339809ef4fb67814c3b6601e21866635306577fc53ab98895abfc7a073442ac"
+    },
+    {
+      "position": "opening/096 enter",
+      "wordCount": 1056,
+      "bodySha256": "61a00ee8256a0e81f42e2cf6dff5b5348ae52e71dad940bcc8bf644bf46d26a7"
+    },
+    {
+      "position": "opening/097 f2",
+      "wordCount": 1035,
+      "bodySha256": "1b067d9ca8ab4616abc08f845f1653710414a3e221f99819387ed86d1587385f"
+    },
+    {
+      "position": "promotion/000 launch",
+      "wordCount": 629,
+      "bodySha256": "ab9a0ec0c8add1cb0c173326d5a6583f2a367170350d50a9d7c1d776cf1732ec"
+    },
+    {
+      "position": "promotion/001 enter",
+      "wordCount": 635,
+      "bodySha256": "772e946c35fe676a674d533a29e50cea5fbee172e5194f123c6c97a8e6fde803"
+    },
+    {
+      "position": "promotion/002 up",
+      "wordCount": 635,
+      "bodySha256": "2fde861617b34a193c80426690288d73243dd4eb65332556b90b4f98f0d1cdc6"
+    },
+    {
+      "position": "promotion/003 enter",
+      "wordCount": 632,
+      "bodySha256": "e8407daa74421472c6a9c0eb1cb677087d522e9d3f67aaaea05453cab4e4f551"
+    },
+    {
+      "position": "promotion/004 esc",
+      "wordCount": 635,
+      "bodySha256": "2fde861617b34a193c80426690288d73243dd4eb65332556b90b4f98f0d1cdc6"
+    },
+    {
+      "position": "promotion/005 enter",
+      "wordCount": 632,
+      "bodySha256": "e8407daa74421472c6a9c0eb1cb677087d522e9d3f67aaaea05453cab4e4f551"
+    },
+    {
+      "position": "promotion/006 underpromote a8=N",
+      "wordCount": 653,
+      "bodySha256": "fba62af0d6bf37c9433885d0a7a39c46d673aa6535d558a40fbcc5bc4ff6bbcf"
+    },
+    {
+      "position": "in-check/000 launch",
+      "wordCount": 637,
+      "bodySha256": "e261645cdb5221f9cb2c0c26d24cc561327596e7faf096c5e713d470aea145cb"
+    },
+    {
+      "position": "white-mate/000 launch",
+      "wordCount": 638,
+      "bodySha256": "433a71a7ce80b15aee249513cac076f9ba1c77532ee92398e5bf4c1ce2ab37ba"
+    },
+    {
+      "position": "black-mate/000 launch",
+      "wordCount": 638,
+      "bodySha256": "5ec534f32941b2374e0021e75aef3c46a34fa1712e74d32ca3856e4dc66c472b"
+    },
+    {
+      "position": "stalemate/000 launch",
+      "wordCount": 632,
+      "bodySha256": "751d7c45d6f00773fe187c6d99bb0b5a006633c9697037a83217f23a07f7d121"
+    },
+    {
+      "position": "dead-material/000 launch",
+      "wordCount": 622,
+      "bodySha256": "3ef752c4061faf59f905e0ab80647f493f97fc699834a58d9997b6eef86971aa"
+    },
+    {
+      "position": "castle-short/000 launch",
+      "wordCount": 671,
+      "bodySha256": "a119e5d7889e21719e329acd48445b276320d5a7e5ff7745b4633e9da6cbcc71"
+    },
+    {
+      "position": "castle-short/001 enter",
+      "wordCount": 713,
+      "bodySha256": "6ca7b2558f13ccb525ee5283c02bcc4fd721100352811f664017e2684c4c603d"
+    },
+    {
+      "position": "castle-short/002 right",
+      "wordCount": 713,
+      "bodySha256": "74ad54d2bb84cf909be24651ab51585c99a9b1b57ee84de43915851f144c856e"
+    },
+    {
+      "position": "castle-short/003 right",
+      "wordCount": 713,
+      "bodySha256": "5a2f6b3b48b61e1687c63df2de562f5a58f09cae93c5272d03c10285f0c7e2c2"
+    },
+    {
+      "position": "castle-short/004 enter",
+      "wordCount": 692,
+      "bodySha256": "794e8b0c6c3dd78c241b048fa68387f4095ab0955aec52d2b9971dab400cab29"
+    },
+    {
+      "position": "castle-long/000 launch",
+      "wordCount": 671,
+      "bodySha256": "a119e5d7889e21719e329acd48445b276320d5a7e5ff7745b4633e9da6cbcc71"
+    },
+    {
+      "position": "castle-long/001 enter",
+      "wordCount": 713,
+      "bodySha256": "6ca7b2558f13ccb525ee5283c02bcc4fd721100352811f664017e2684c4c603d"
+    },
+    {
+      "position": "castle-long/002 left",
+      "wordCount": 713,
+      "bodySha256": "fa39556bfd425964d618ba2e7c9abf2b95634a11adcd1d37ac7d675e8d7f50bf"
+    },
+    {
+      "position": "castle-long/003 left",
+      "wordCount": 713,
+      "bodySha256": "8f97b07dce5e8ebc2d063bf22ead7416338e28f60e715d1210405094883b2d7a"
+    },
+    {
+      "position": "castle-long/004 enter",
+      "wordCount": 692,
+      "bodySha256": "16c574d2977c475f1d7f06ed97d5721a67483b7aaadcc200a8b170cc7d19251a"
+    },
+    {
+      "position": "en-passant/000 launch",
+      "wordCount": 643,
+      "bodySha256": "648982efc66681cf822476bb377ec4fca77a9aaa6d2d7574f1f314ef689f262a"
+    },
+    {
+      "position": "en-passant/001 enter",
+      "wordCount": 655,
+      "bodySha256": "baa1ebe6fdb945cbf5ca83793fed8848f217b50902a4ffb05062113bb7878d88"
+    },
+    {
+      "position": "en-passant/002 left",
+      "wordCount": 655,
+      "bodySha256": "3cae5772df4d893b5a968a71054cd120c48e42414fc1233da7a0f613ac5de79c"
+    },
+    {
+      "position": "en-passant/003 up",
+      "wordCount": 655,
+      "bodySha256": "a818752970334bfda4498898c634f144eb26f7fa328d0457352fc5c72d5133cd"
+    },
+    {
+      "position": "en-passant/004 enter",
+      "wordCount": 650,
+      "bodySha256": "4425a1bfd9d4cd17e8b467009991fe8779bfb596b2726aec0358484f01aceca5"
+    },
+    {
+      "position": "signed-statistics/000 launch",
+      "wordCount": 722,
+      "bodySha256": "644efef36b449b0b398628d85cf6521a75e5dc0ac7e1834dfc575fc5b771ee7e"
+    }
+  ]
+}
