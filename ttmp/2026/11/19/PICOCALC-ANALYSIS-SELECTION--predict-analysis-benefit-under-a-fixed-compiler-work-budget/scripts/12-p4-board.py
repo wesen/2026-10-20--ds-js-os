@@ -29,8 +29,10 @@ if __name__ == "__main__":
     if native:
         runner = replace(runner, 'APPS = ("files", "agenda", "editor")',
                          'APPS = ("files", "agenda", "editor", "synthetic")')
+    # The synthetic run is slower than Editor in host QuickJS. A longer
+    # capture prevents the initial world query from cutting off the last block.
     runner = replace(runner, '    duration=round(18+8.2*len(compilers)**2)',
-                     '    duration=' + ("145" if native else "112"))
+                     '    duration=' + ("185" if native else "112"))
     command = f'    subprocess.run(["node", {str(HERE / "11-p4-oracle.mjs")!r}, work], check=True)'
     runner = replace(runner, '    oracle=json.loads((work/"oracle.json").read_text())',
                      command + '\n    oracle=json.loads((work/"oracle.json").read_text())')
