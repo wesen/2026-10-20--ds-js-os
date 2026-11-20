@@ -1,0 +1,133 @@
+{
+  "firmware": "75c94df7b1aa565c8cb7858bea628aa2c9c644ef64cc885b96e1d80088f8af56",
+  "partitionTable": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "memoryKeys": null,
+  "screens": {},
+  "windows": {},
+  "verified": true,
+  "preflightPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1022094,
+    "relocate_us": 872,
+    "native_us": 133,
+    "raster_us": 0,
+    "image_bytes": 17456
+  },
+  "boot": {
+    "chess": {
+      "turns": 1,
+      "cpu_ms": 15.545,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "compositor": {
+      "turns": 48,
+      "cpu_ms": 515.476,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 71.596,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "keyboard": {
+      "turns": 147,
+      "cpu_ms": 292.947,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 2803.55,
+      "transfers": 149,
+      "bytes": 598,
+      "errors": 149
+    },
+    "spi2": {
+      "busyMs": 119.96,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  },
+  "bootPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1022094,
+    "relocate_us": 872,
+    "native_us": 133,
+    "raster_us": 0,
+    "image_bytes": 17456
+  },
+  "keyboard": "physical keyboard I2C0 did not qualify: {'busyMs': 2960.05, 'transfers': 154, 'bytes': 619, 'errors': 154} -> {'busyMs': 4064.2, 'transfers': 178, 'bytes': 715, 'errors': 178}",
+  "worlds": {
+    "keyboard": {
+      "engine": "native",
+      "file": "natives/keyboard.elf",
+      "state": "waiting",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "engine": "native",
+      "file": "natives/display.elf",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "compositor": {
+      "engine": "native",
+      "file": "natives/compositor.elf",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "snake": {
+      "engine": "native",
+      "file": "natives/snake.elf",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "chess": {
+      "engine": "native",
+      "file": "chess/compiled.bin",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    }
+  }
+}

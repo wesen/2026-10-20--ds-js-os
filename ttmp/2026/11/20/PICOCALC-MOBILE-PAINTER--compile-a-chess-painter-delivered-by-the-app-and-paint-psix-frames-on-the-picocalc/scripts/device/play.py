@@ -32,7 +32,11 @@ def run(args):
         raise ValueError("image geometry differs from the known release")
 
     def esp(verb, build, tag):
-        cmd = [str(args.esptool), "--chip", "esp32p4", "-p", args.port, "-b", "921600", verb, "0x10000", str(build / app)]
+        # Stay in the bootloader between write and verification. The STM32
+        # should not see a newly booted P4 reset halfway through a register read.
+        after = "no_reset" if verb == "write_flash" else "hard_reset"
+        cmd = [str(args.esptool), "--chip", "esp32p4", "-p", args.port, "-b", "921600",
+               "--after", after, verb, "0x10000", str(build / app)]
         if verb == "verify_flash":
             cmd += ["0x8000", str(build / partition)]
         with (args.output / (tag + ".log")).open("wb") as log:
@@ -66,6 +70,9 @@ def run(args):
                 esp("verify_flash", image, "candidate-verified")
             result["verified"] = True
             c = console()
+            if args.mobile:
+                result["preflightPainter"] = next(json.loads(l) for l in c.command("painter") if l.startswith('{"sources"'))
+                save()
             result["boot"] = c.counters()
             save()
             if args.boot_check:
@@ -83,6 +90,8 @@ def run(args):
                     result["keyboard"] = "controller responded"
                 except ValueError as exc:
                     result["keyboard"] = str(exc)
+                result["worlds"] = {n:{k:w[k] for k in ("engine","file","state","restarts","last_error")}
+                                    for n,w in c.health().items() if n in shared.NATIVE}
                 qualified = True
                 return
             if args.memory_keys:

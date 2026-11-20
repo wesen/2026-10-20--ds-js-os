@@ -1,0 +1,7 @@
+[
+  "chess compile source=bundle status=ok us=2316713 peak_js_bytes=2291360 module_bytes=242124",
+  "[  8107.119] compositor crashed handling draw: ran past its turn budget of 80 ms",
+  "#OCT1 {\"ev\":\"fault\",\"t\":8107.119,\"world\":\"compositor\",\"file\":\"natives/compositor.elf\",\"handling\":\"draw\",\"why\":\"ran past its turn budget of 80 ms\",\"crashes\":1,\"mem_kb\":345,\"limit_kb\":768}",
+  "mobile-painter native compiler functions=streamed",
+  "mobile-painter compile source=screen-message status=ok us=1186403 peak_js_bytes=537704 module_bytes=17456"
+]

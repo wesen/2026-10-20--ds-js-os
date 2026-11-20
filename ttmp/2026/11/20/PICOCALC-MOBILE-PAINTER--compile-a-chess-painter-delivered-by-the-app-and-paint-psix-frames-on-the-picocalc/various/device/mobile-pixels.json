@@ -1,0 +1,26 @@
+{
+  "e2": {
+    "examinedPixels": 95360,
+    "different": 0,
+    "statusBarDifferent": 138,
+    "appSha256": "d73617cca312f4be9bd40fdf297c25a228dac77dcd7fb59d29e4c49e2141aa63",
+    "expectedSha256": "d73617cca312f4be9bd40fdf297c25a228dac77dcd7fb59d29e4c49e2141aa63",
+    "firstDifference": null
+  },
+  "e3": {
+    "examinedPixels": 95360,
+    "different": 0,
+    "statusBarDifferent": 138,
+    "appSha256": "f4af7936a9b06e15de535277c1b17b31302cbab07f91b1e3485af8799ae0e3da",
+    "expectedSha256": "f4af7936a9b06e15de535277c1b17b31302cbab07f91b1e3485af8799ae0e3da",
+    "firstDifference": null
+  },
+  "f3": {
+    "examinedPixels": 95360,
+    "different": 0,
+    "statusBarDifferent": 138,
+    "appSha256": "409d21443e80523ff0f56e6db41469682d22d6d122a6b43d6d0f99ee781151cb",
+    "expectedSha256": "409d21443e80523ff0f56e6db41469682d22d6d122a6b43d6d0f99ee781151cb",
+    "firstDifference": null
+  }
+}

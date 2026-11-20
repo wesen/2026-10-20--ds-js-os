@@ -1,0 +1,8 @@
+{
+  "sourceBytes": 40767,
+  "sourceSha256": "871c60f88cd8365e263f057cd68e07a22fb283dea6a53602cb9365994514fff3",
+  "target": "wasm",
+  "moduleBytes": 73204,
+  "moduleSha256": "a1b93422ae65f8e26f658955726d513dc8525f79d10fc743cf7065f06d9d4703",
+  "reactorSha256": "b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f"
+}

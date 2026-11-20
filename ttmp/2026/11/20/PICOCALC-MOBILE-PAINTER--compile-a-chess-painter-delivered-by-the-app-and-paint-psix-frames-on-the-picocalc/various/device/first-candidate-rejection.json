@@ -1,0 +1,47 @@
+{
+  "firmware": "d5957845393d743e016887b6aeeb106e9e89519bf2dafcbcdba10f65993da04a",
+  "partitionTable": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "memoryKeys": "panel",
+  "screens": {},
+  "windows": {},
+  "verified": true,
+  "failure": "RuntimeError('native worlds and peripheral drivers did not become healthy')",
+  "restored": {
+    "chess": {
+      "turns": 1,
+      "cpu_ms": 16.294,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "compositor": {
+      "turns": 48,
+      "cpu_ms": 523.007,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 69.502,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "keyboard": {
+      "turns": 184,
+      "cpu_ms": 266.064,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 2881.97,
+      "transfers": 188,
+      "bytes": 755,
+      "errors": 188
+    },
+    "spi2": {
+      "busyMs": 106.91,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  }
+}

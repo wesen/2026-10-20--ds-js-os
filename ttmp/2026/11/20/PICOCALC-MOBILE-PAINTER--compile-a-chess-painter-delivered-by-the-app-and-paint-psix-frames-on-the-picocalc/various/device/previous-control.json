@@ -1,0 +1,326 @@
+{
+  "firmware": "624b6e2939cd08dd14425c16cbd74ea7ed288b290f9f33515434b06fd78f427b",
+  "partitionTable": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "memoryKeys": "snake",
+  "screens": {
+    "e2": {
+      "crc32": "631aa946",
+      "sha256": "b52b4838f55b4ee55ab3d1f77e7f22890fd738ddfbfce499375f6659e969d42e",
+      "appSha256": "d73617cca312f4be9bd40fdf297c25a228dac77dcd7fb59d29e4c49e2141aa63",
+      "cursor": [
+        168,
+        210,
+        191,
+        233
+      ]
+    },
+    "e3": {
+      "crc32": "28855ef6",
+      "sha256": "7860e89c426bf1f36a84cd9f06021c818bef6599f9f4f9393eaffca52224f6d7",
+      "appSha256": "f4af7936a9b06e15de535277c1b17b31302cbab07f91b1e3485af8799ae0e3da",
+      "cursor": [
+        168,
+        184,
+        191,
+        207
+      ]
+    },
+    "f3": {
+      "crc32": "c362667c",
+      "sha256": "85e45fd69d3c32832490e631578d5b1788e338bf9396ff2a253788c35125d7bc",
+      "appSha256": "409d21443e80523ff0f56e6db41469682d22d6d122a6b43d6d0f99ee781151cb",
+      "cursor": [
+        194,
+        184,
+        217,
+        207
+      ]
+    }
+  },
+  "windows": {
+    "e2": {
+      "before": {
+        "compositor": {
+          "turns": 59,
+          "cpu_ms": 601.384,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 9,
+          "cpu_ms": 74.337,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 56,
+          "cpu_ms": 108.777,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2725.72,
+          "transfers": 293,
+          "bytes": 1177,
+          "errors": 188
+        },
+        "spi2": {
+          "busyMs": 115.58,
+          "transfers": 70,
+          "bytes": 398304,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 69,
+          "cpu_ms": 677.815,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 10,
+          "cpu_ms": 82.619,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 68,
+          "cpu_ms": 128.499,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2737.19,
+          "transfers": 351,
+          "bytes": 1412,
+          "errors": 189
+        },
+        "spi2": {
+          "busyMs": 153.82,
+          "transfers": 86,
+          "bytes": 561894,
+          "errors": 0
+        }
+      },
+      "spi2": {
+        "busyMs": 38.24,
+        "transfers": 16,
+        "bytes": 163590,
+        "errors": 0
+      },
+      "hostWindowMs": 1913.39
+    },
+    "e3": {
+      "before": {
+        "compositor": {
+          "turns": 81,
+          "cpu_ms": 728.783,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 10,
+          "cpu_ms": 82.619,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 97,
+          "cpu_ms": 175.538,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2743.29,
+          "transfers": 504,
+          "bytes": 2024,
+          "errors": 189
+        },
+        "spi2": {
+          "busyMs": 153.82,
+          "transfers": 86,
+          "bytes": 561894,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 91,
+          "cpu_ms": 829.707,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 11,
+          "cpu_ms": 87.392,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 109,
+          "cpu_ms": 196.158,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2758.01,
+          "transfers": 562,
+          "bytes": 2259,
+          "errors": 190
+        },
+        "spi2": {
+          "busyMs": 155.83,
+          "transfers": 94,
+          "bytes": 564220,
+          "errors": 0
+        }
+      },
+      "spi2": {
+        "busyMs": 2.01,
+        "transfers": 8,
+        "bytes": 2326,
+        "errors": 0
+      },
+      "hostWindowMs": 1922.28
+    },
+    "f3": {
+      "before": {
+        "compositor": {
+          "turns": 103,
+          "cpu_ms": 883.362,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 11,
+          "cpu_ms": 87.392,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 138,
+          "cpu_ms": 243.066,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2775.01,
+          "transfers": 717,
+          "bytes": 2880,
+          "errors": 191
+        },
+        "spi2": {
+          "busyMs": 155.83,
+          "transfers": 94,
+          "bytes": 564220,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 112,
+          "cpu_ms": 979.518,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 12,
+          "cpu_ms": 92.755,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 150,
+          "cpu_ms": 262.348,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2776.38,
+          "transfers": 772,
+          "bytes": 3102,
+          "errors": 191
+        },
+        "spi2": {
+          "busyMs": 157.1,
+          "transfers": 98,
+          "bytes": 566631,
+          "errors": 0
+        }
+      },
+      "spi2": {
+        "busyMs": 1.27,
+        "transfers": 4,
+        "bytes": 2411,
+        "errors": 0
+      },
+      "hostWindowMs": 1915.99
+    }
+  },
+  "verified": true,
+  "boot": {
+    "compositor": {
+      "turns": 48,
+      "cpu_ms": 531.633,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 69.535,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "snake": {
+      "turns": 36,
+      "cpu_ms": 77.151,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 2670.89,
+      "transfers": 185,
+      "bytes": 743,
+      "errors": 185
+    },
+    "spi2": {
+      "busyMs": 105.34,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  },
+  "restored": {
+    "compositor": {
+      "turns": 49,
+      "cpu_ms": 527.161,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 69.575,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "snake": {
+      "turns": 37,
+      "cpu_ms": 72.854,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 2917.23,
+      "transfers": 191,
+      "bytes": 767,
+      "errors": 191
+    },
+    "spi2": {
+      "busyMs": 99.32,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  }
+}

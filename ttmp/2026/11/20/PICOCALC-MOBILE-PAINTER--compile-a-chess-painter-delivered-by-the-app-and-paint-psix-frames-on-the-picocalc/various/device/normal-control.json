@@ -1,0 +1,41 @@
+{
+  "firmware": "c3d5d8ede739f5d4d21ad2b4981fbfd839cf20e2ab2a644ba1d330e6374446e3",
+  "partitionTable": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "memoryKeys": null,
+  "screens": {},
+  "windows": {},
+  "verified": true,
+  "boot": {
+    "compositor": {
+      "turns": 48,
+      "cpu_ms": 527.7,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 73.903,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "snake": {
+      "turns": 36,
+      "cpu_ms": 73.446,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 3498.15,
+      "transfers": 187,
+      "bytes": 751,
+      "errors": 187
+    },
+    "spi2": {
+      "busyMs": 102.08,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  },
+  "failure": "ValueError(\"physical keyboard I2C0 did not qualify: {'busyMs': 4202.55, 'transfers': 189, 'bytes': 759, 'errors': 189} -> {'busyMs': 4603.61, 'transfers': 212, 'bytes': 851, 'errors': 212}\")"
+}

@@ -17,7 +17,9 @@ if [[ "$arm" = mobile ]]; then
     # Include all implementation changes in the private staging tree. Exclude
     # generated artifacts according to the repository's per-directory ignore rules.
     (cd "$repo" && git ls-files -co --exclude-standard -z -- cji picocalc-os) |
-      (cd "$repo" && tar --null -T - -cf -) | tar -xf - -C "$tree"
+      rsync -rcpl --from0 --files-from=- "$repo/" "$tree/"
+    # Copy by content and stamp changes at staging time. Otherwise a file edited
+    # during a prior build can be older than the object built from its old copy.
 else
     git -C "$repo" archive "$base" cji picocalc-os | tar -xf - -C "$tree"
 fi

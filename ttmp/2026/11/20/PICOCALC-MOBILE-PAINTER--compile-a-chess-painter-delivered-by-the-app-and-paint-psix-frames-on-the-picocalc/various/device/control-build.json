@@ -1,0 +1,202 @@
+{
+  "source": {
+    "cji/src/prelude-exports.js": {
+      "bytes": 3217,
+      "sha256": "6243fb8e5adccbc68e1db49879ceb2ed6bec92f0ad9e1a669f2db972136d3fbb"
+    },
+    "cji/src/world-native.js": {
+      "bytes": 34459,
+      "sha256": "b08a83da4e9d324b737ca9cd3d5b55d59209955ad2d04ff66a29b16e4f8532ab"
+    },
+    "picocalc-os/compiler/typed-async.js": {
+      "bytes": 49588,
+      "sha256": "7a0524cf89f6f3766cb8b265146d41975eae91a11f34fecacf19e09c922b9f17"
+    },
+    "picocalc-os/compiler/typed-rv32.js": {
+      "bytes": 16076,
+      "sha256": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5"
+    },
+    "picocalc-os/compiler/typed-wasm.js": {
+      "bytes": 54330,
+      "sha256": "d6dc04692d29596a43b6c15414745023aaa8fa4280353a434b8820e65dab9a0b"
+    },
+    "picocalc-os/compiler/typed-world.js": {
+      "bytes": 4021,
+      "sha256": "cea8f10247351416a3616fa83e16ff664730c2c3fc2c3de73207eb5ab07f3a43"
+    },
+    "picocalc-os/js/system/compositor.js": {
+      "bytes": 28577,
+      "sha256": "07117cc469fefca6b0b4c493dab190ff4f6891101c207c78adb00794fdb94b52"
+    },
+    "picocalc-os/nucleus/kernel.c": {
+      "bytes": 48939,
+      "sha256": "8ba479f8b6553aa7466ffbc67ce66881378bf8306eb8e1829bab36c9911112d2"
+    },
+    "picocalc-os/nucleus/native.c": {
+      "bytes": 37137,
+      "sha256": "a6a309e2a8a44b1cb0094104e668186a0d0310f5bf3d1dc80dcc9290e92b7427"
+    },
+    "picocalc-os/nucleus/nucleus.h": {
+      "bytes": 32967,
+      "sha256": "0c79b6e617eb25bce556ccf7ff726d54ac321a58e3da0857fca86c293f69fe11"
+    },
+    "picocalc-os/port/esp32p4/CMakeLists.txt": {
+      "bytes": 4054,
+      "sha256": "21693622b53f0892bebac73c6bfa78e06fb637a4a98a6c898dfe74ca6a4d5299"
+    },
+    "picocalc-os/port/esp32p4/main/CMakeLists.txt": {
+      "bytes": 26427,
+      "sha256": "762ee5b9308973b4ab8411cac4e1ee4ae6fffaece0a631460f0e52edefc8d389"
+    },
+    "picocalc-os/port/esp32p4/main/agenda_p4.c": {
+      "bytes": 8889,
+      "sha256": "2ae0cd71e25b3c3389704d14328bdafb14d268707c0cfd22329450b98aa8134a"
+    },
+    "picocalc-os/port/esp32p4/main/agent_p4.c": {
+      "bytes": 30039,
+      "sha256": "1b221d5747ef48b7c53a75dcd62ec181b4b24aeec274c6a0e9d8ec475218f8a6"
+    },
+    "picocalc-os/port/esp32p4/main/bus_p4.c": {
+      "bytes": 18716,
+      "sha256": "de888f4537a7018773230d33dc0d582b33891b8a5e1c80dad1c922f1dc8432f9"
+    },
+    "picocalc-os/port/esp32p4/main/chess_p4.c": {
+      "bytes": 991,
+      "sha256": "29a9cac799706f2ecfe421bf7b382b51c1accd1fa18eee27a76663ff5c85cdbe"
+    },
+    "picocalc-os/port/esp32p4/main/editor_p4.c": {
+      "bytes": 998,
+      "sha256": "81cb70e8a9d975bc4d1f41b203949a3093250738ea34eb5f9cc5770bcca6627e"
+    },
+    "picocalc-os/port/esp32p4/main/files_p4.c": {
+      "bytes": 882,
+      "sha256": "9fc7e53e7fb465e94a572a039b8c5c847e9a231cb2dff70bbdb8c6ec5b1eec09"
+    },
+    "picocalc-os/port/esp32p4/main/fs_p4.c": {
+      "bytes": 6457,
+      "sha256": "8c2117f9eea34986b47b26bcb618bc180790c153e1a7a2bdef3a0006d1667f03"
+    },
+    "picocalc-os/port/esp32p4/main/main_p4.c": {
+      "bytes": 13279,
+      "sha256": "e39b8b99784a7392bdcd1e0735a295d5d996f98ab63421520be3585307b2b838"
+    },
+    "picocalc-os/port/esp32p4/main/p4.h": {
+      "bytes": 3560,
+      "sha256": "19cb31c7d91328a75347887b0e5bd6adbd348146606c0828b50a6b3e2a500597"
+    },
+    "picocalc-os/port/esp32p4/main/perf_p4.c": {
+      "bytes": 10006,
+      "sha256": "3e30f825b58d88152c868ddb4ff63fbc7a9c18307329ea7f69982b81db3c5be1"
+    },
+    "picocalc-os/port/esp32p4/main/port_p4.c": {
+      "bytes": 6078,
+      "sha256": "50ec7515888ba0c3bbd59b59ba1c881203ec22f2271ec5c3fde601d9beadb2ce"
+    },
+    "picocalc-os/port/esp32p4/main/store_p4.c": {
+      "bytes": 3609,
+      "sha256": "5aa3bc92dc7c7c07ae76a2de7dd47fe656fc3d357fcec84629f972551fc1a097"
+    },
+    "picocalc-os/port/esp32p4/main/typed_p4.c": {
+      "bytes": 5888,
+      "sha256": "15b2385101b6babb3be5f2c281fc6191c2ef55c928efce624feb8b9582aa4192"
+    },
+    "picocalc-os/sdk/nw.h": {
+      "bytes": 6290,
+      "sha256": "4d1a74f48537c10ac3b10c636f56e0dced33c3b950596c5b8c981a53318ff11b"
+    },
+    "picocalc-os/sdk/nw_calls.inc": {
+      "bytes": 5376,
+      "sha256": "ebd56584ed5db82d2d0ae727b8f7e21b9a5378db970b6170c649fa7434978802"
+    },
+    "picocalc-os/sdk/nw_elf.h": {
+      "bytes": 1625,
+      "sha256": "1cf436cfd43401c181cc9b0401d585c52f6fc817db0cf3db93e300ae05e5955d"
+    },
+    "picocalc-os/sdk/nw_json.h": {
+      "bytes": 5383,
+      "sha256": "0adeaa4e8e06ff22f6d6fc57aeb1ff1f2998555ad26b4dfaf08d221bf6d22d9d"
+    },
+    "picocalc-os/sdk/nw_ui.h": {
+      "bytes": 3371,
+      "sha256": "b8c81ff1727d39c3d39ae3da4a7227149a22bf00509b25e9bb6a564ce1e329bd"
+    },
+    "picocalc-os/sdk/nw_utf16.h": {
+      "bytes": 1553,
+      "sha256": "7b5b891b908b484b9cd60747926d37864b54819ad4a96431370ced6ac6323d67"
+    },
+    "picocalc-os/sdk/nw_wire.h": {
+      "bytes": 2279,
+      "sha256": "e1156ab6197236899ec9b3dfe427c9e9ee3168bb706ca520cc3802c1b799fd39"
+    },
+    "picocalc-os/sdk/typed/rv32-slot.S": {
+      "bytes": 1174,
+      "sha256": "a39bc55e204c29ce95b794c22513e6a079d2fa53243d0cd343b376733a7a6804"
+    },
+    "picocalc-os/sdk/typed/wasm-slot.c": {
+      "bytes": 236,
+      "sha256": "4a1f0b13af450ada35b09ef938814f925760ff5063cc5410654f925a6a20b613"
+    },
+    "picocalc-os/sdk/typed/world.c": {
+      "bytes": 19502,
+      "sha256": "23b6519007cdcc2ad84126093d2d02d52f7805ed3970b2b9db9adb6f8f287fed"
+    },
+    "picocalc-os/worlds/chess/chess.typed": {
+      "bytes": 8543,
+      "sha256": "bdb323e619a6a2408622e85c3345f2343bcd0dc01deb4916de15660fb5f91023"
+    },
+    "picocalc-os/worlds/chess/moves.typed": {
+      "bytes": 6451,
+      "sha256": "ce27a2d61f57b8b1832b7c65b683d4b903f70e3d804c8efa2c44c89d3483d608"
+    },
+    "picocalc-os/worlds/chess/position.typed": {
+      "bytes": 7335,
+      "sha256": "6378b078de2bebda4f396463b66e81898fdbeb4210f191a796e2b352f390d295"
+    },
+    "picocalc-os/worlds/chess/search.typed": {
+      "bytes": 11285,
+      "sha256": "9b67c4ecd115d318335a3900f56d659de397c598ce892e2f22142d3c3c1e23dc"
+    },
+    "picocalc-os/worlds/chess/source.list": {
+      "bytes": 75,
+      "sha256": "9fd1ab6e83c0253779f651a2e3fa1e428151dd0b3f4861930c95ce9a6eec2eb6"
+    },
+    "picocalc-os/worlds/chess/state.typed": {
+      "bytes": 408,
+      "sha256": "8ba411b95413430c48564cac8ae63d782e359ec0dc3fa9cd33e3a1c33b4dbb69"
+    },
+    "picocalc-os/worlds/chess/view.typed": {
+      "bytes": 6739,
+      "sha256": "8762c96e3fb8a46197d5fa6dd7cd4d3c1288af0bb2afc80e7e3e7be503844314"
+    }
+  },
+  "products": {
+    "cji/unit.list": {
+      "bytes": 8816,
+      "sha256": "a5c5dada9d84d95542b7160713ff044cd6cbd49991c233b150d0b31669e2372b"
+    },
+    "esp-idf/main/chess.typed": {
+      "bytes": 40767,
+      "sha256": "871c60f88cd8365e263f057cd68e07a22fb283dea6a53602cb9365994514fff3"
+    },
+    "esp-idf/main/natives/compositor.elf": {
+      "bytes": 279096,
+      "sha256": "25faa103560371a9775268564fdd58d4775f66f01faf591c9c9c16bb1d5b40b7"
+    },
+    "esp-idf/main/system.typed-agenda.json": {
+      "bytes": 3426,
+      "sha256": "7cffe74595cccac97d39793cbe7fabdd48e83e6aaac4888f3e31dabbc1855ed2"
+    },
+    "esp-idf/main/typed-world-reactor.elf": {
+      "bytes": 240452,
+      "sha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff"
+    },
+    "partition_table/partition-table.bin": {
+      "bytes": 3072,
+      "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
+    },
+    "picocalc-os-p4.bin": {
+      "bytes": 4205808,
+      "sha256": "79faa87598fe9b133ad27c089f9d307dde390c763feb25eed1d17c36c3d7fa9a"
+    }
+  }
+}

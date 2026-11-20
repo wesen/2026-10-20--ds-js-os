@@ -1,0 +1,493 @@
+{
+  "firmware": "c3e5e9075426a179ad43373a11557d7c57b6c55cca21334b64e59e33081ccbb8",
+  "partitionTable": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "memoryKeys": "panel",
+  "screens": {
+    "e2": {
+      "crc32": "631aa946",
+      "sha256": "b52b4838f55b4ee55ab3d1f77e7f22890fd738ddfbfce499375f6659e969d42e",
+      "appSha256": "d73617cca312f4be9bd40fdf297c25a228dac77dcd7fb59d29e4c49e2141aa63",
+      "cursor": [
+        168,
+        210,
+        191,
+        233
+      ],
+      "panel": {
+        "panelCRC": "e7f6b2d0",
+        "faults": 0,
+        "windows": 20,
+        "bytes": 561666,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 1,
+        "calls": 1,
+        "paints": 1,
+        "rejects": 0,
+        "compile_us": 1029397,
+        "relocate_us": 721,
+        "native_us": 132,
+        "raster_us": 2343,
+        "image_bytes": 17456
+      }
+    },
+    "e3": {
+      "crc32": "28855ef6",
+      "sha256": "7860e89c426bf1f36a84cd9f06021c818bef6599f9f4f9393eaffca52224f6d7",
+      "appSha256": "f4af7936a9b06e15de535277c1b17b31302cbab07f91b1e3485af8799ae0e3da",
+      "cursor": [
+        168,
+        184,
+        191,
+        207
+      ],
+      "panel": {
+        "panelCRC": "ac694560",
+        "faults": 0,
+        "windows": 22,
+        "bytes": 563970,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 2,
+        "calls": 2,
+        "paints": 2,
+        "rejects": 0,
+        "compile_us": 1029397,
+        "relocate_us": 721,
+        "native_us": 192,
+        "raster_us": 2238,
+        "image_bytes": 17456
+      }
+    },
+    "f3": {
+      "crc32": "c362667c",
+      "sha256": "85e45fd69d3c32832490e631578d5b1788e338bf9396ff2a253788c35125d7bc",
+      "appSha256": "409d21443e80523ff0f56e6db41469682d22d6d122a6b43d6d0f99ee781151cb",
+      "cursor": [
+        194,
+        184,
+        217,
+        207
+      ],
+      "panel": {
+        "panelCRC": "478e7dea",
+        "faults": 0,
+        "windows": 23,
+        "bytes": 566370,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 3,
+        "calls": 3,
+        "paints": 3,
+        "rejects": 0,
+        "compile_us": 1029397,
+        "relocate_us": 721,
+        "native_us": 189,
+        "raster_us": 2232,
+        "image_bytes": 17456
+      }
+    }
+  },
+  "windows": {
+    "e2": {
+      "before": {
+        "chess": {
+          "turns": 1,
+          "cpu_ms": 15.884,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "turns": 59,
+          "cpu_ms": 554.407,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 8,
+          "cpu_ms": 73.484,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keyboard": {
+          "turns": 249,
+          "cpu_ms": 419.641,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2450.02,
+          "transfers": 255,
+          "bytes": 1025,
+          "errors": 148
+        },
+        "spi2": {
+          "busyMs": 124.46,
+          "transfers": 66,
+          "bytes": 360229,
+          "errors": 0
+        }
+      },
+      "after": {
+        "chess": {
+          "turns": 2,
+          "cpu_ms": 16.172,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "turns": 71,
+          "cpu_ms": 642.692,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 10,
+          "cpu_ms": 90.243,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keyboard": {
+          "turns": 304,
+          "cpu_ms": 494.086,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2471.58,
+          "transfers": 313,
+          "bytes": 1260,
+          "errors": 149
+        },
+        "spi2": {
+          "busyMs": 176.77,
+          "transfers": 86,
+          "bytes": 561894,
+          "errors": 0
+        }
+      },
+      "spi2": {
+        "busyMs": 52.31,
+        "transfers": 20,
+        "bytes": 201665,
+        "errors": 0
+      },
+      "hostWindowMs": 1930.65
+    },
+    "e3": {
+      "before": {
+        "chess": {
+          "turns": 2,
+          "cpu_ms": 16.172,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "turns": 83,
+          "cpu_ms": 690.694,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 10,
+          "cpu_ms": 90.243,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keyboard": {
+          "turns": 459,
+          "cpu_ms": 671.374,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2476.12,
+          "transfers": 468,
+          "bytes": 1880,
+          "errors": 149
+        },
+        "spi2": {
+          "busyMs": 176.77,
+          "transfers": 86,
+          "bytes": 561894,
+          "errors": 0
+        }
+      },
+      "after": {
+        "chess": {
+          "turns": 3,
+          "cpu_ms": 16.515,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "turns": 93,
+          "cpu_ms": 735.985,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 11,
+          "cpu_ms": 95.298,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keyboard": {
+          "turns": 513,
+          "cpu_ms": 733.418,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2485.2,
+          "transfers": 525,
+          "bytes": 2111,
+          "errors": 150
+        },
+        "spi2": {
+          "busyMs": 178.54,
+          "transfers": 94,
+          "bytes": 564220,
+          "errors": 0
+        }
+      },
+      "spi2": {
+        "busyMs": 1.77,
+        "transfers": 8,
+        "bytes": 2326,
+        "errors": 0
+      },
+      "hostWindowMs": 1912.0
+    },
+    "f3": {
+      "before": {
+        "chess": {
+          "turns": 3,
+          "cpu_ms": 16.515,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "turns": 104,
+          "cpu_ms": 782.328,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 11,
+          "cpu_ms": 95.298,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keyboard": {
+          "turns": 669,
+          "cpu_ms": 913.774,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2510.47,
+          "transfers": 682,
+          "bytes": 2740,
+          "errors": 151
+        },
+        "spi2": {
+          "busyMs": 178.54,
+          "transfers": 94,
+          "bytes": 564220,
+          "errors": 0
+        }
+      },
+      "after": {
+        "chess": {
+          "turns": 4,
+          "cpu_ms": 16.849,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "turns": 114,
+          "cpu_ms": 827.257,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 12,
+          "cpu_ms": 99.556,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keyboard": {
+          "turns": 723,
+          "cpu_ms": 977.092,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "i2c0": {
+          "busyMs": 2511.72,
+          "transfers": 738,
+          "bytes": 2966,
+          "errors": 151
+        },
+        "spi2": {
+          "busyMs": 180.03,
+          "transfers": 98,
+          "bytes": 566631,
+          "errors": 0
+        }
+      },
+      "spi2": {
+        "busyMs": 1.49,
+        "transfers": 4,
+        "bytes": 2411,
+        "errors": 0
+      },
+      "hostWindowMs": 1921.34
+    }
+  },
+  "verified": true,
+  "preflightPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1029397,
+    "relocate_us": 721,
+    "native_us": 132,
+    "raster_us": 0,
+    "image_bytes": 17456
+  },
+  "boot": {
+    "chess": {
+      "turns": 1,
+      "cpu_ms": 15.884,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "compositor": {
+      "turns": 48,
+      "cpu_ms": 515.746,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 73.484,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "keyboard": {
+      "turns": 143,
+      "cpu_ms": 308.723,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 2397.97,
+      "transfers": 146,
+      "bytes": 586,
+      "errors": 146
+    },
+    "spi2": {
+      "busyMs": 124.46,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  },
+  "bootPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1029397,
+    "relocate_us": 721,
+    "native_us": 132,
+    "raster_us": 0,
+    "image_bytes": 17456
+  },
+  "reopen": {
+    "screen": {
+      "crc32": "c362667c",
+      "sha256": "85e45fd69d3c32832490e631578d5b1788e338bf9396ff2a253788c35125d7bc",
+      "appSha256": "409d21443e80523ff0f56e6db41469682d22d6d122a6b43d6d0f99ee781151cb"
+    },
+    "painter": {
+      "sources": 2,
+      "compiles": 1,
+      "installed": true,
+      "packets": 4,
+      "calls": 3,
+      "paints": 4,
+      "rejects": 0,
+      "compile_us": 1029397,
+      "relocate_us": 721,
+      "native_us": 189,
+      "raster_us": 2302,
+      "image_bytes": 17456
+    },
+    "panel": {
+      "panelCRC": "478e7dea",
+      "faults": 0,
+      "windows": 31,
+      "bytes": 940562,
+      "remaining": 0
+    }
+  },
+  "restored": {
+    "chess": {
+      "turns": 1,
+      "cpu_ms": 16.3,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "compositor": {
+      "turns": 48,
+      "cpu_ms": 524.797,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 69.27,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "keyboard": {
+      "turns": 183,
+      "cpu_ms": 262.364,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 2877.45,
+      "transfers": 187,
+      "bytes": 751,
+      "errors": 187
+    },
+    "spi2": {
+      "busyMs": 98.47,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  }
+}
