@@ -509,3 +509,55 @@ Start with `various/reports/negative-results.md` and `various/reports/physical-e
 ### Technical details
 
 Raw filtered serial receipts, P4 medians and per-block samples, host oracle hashes, pixel-difference bounds and restoration checks are under `various/supervisor/`. Hardware inputs and outputs used the same 240,452-byte reactor format in both device series.
+
+## Step 10: Index the research program against the professor’s plan
+
+The professor’s ticket catalogs proposed native work. The thesis and integration tickets catalog experiments and production decisions. I connected these layers with the older CJI and application studies so a reader can trace a question from proposal to evidence.
+
+### Prompt Context
+
+**User prompt (verbatim)** “do we have a more global set of research directions? do you have an index of all the things previously proposed / researched already?”
+
+**User clarification (verbatim)** “lookat PICOCALC-NATIVE-NEXT for example”
+
+**Assistant interpretation** Use the native plan as a primary source, account for previously proposed and investigated ideas, and give the reader a durable entry point.
+
+### What I did
+
+Read the professor’s task ledger, the scope designs and their counting model. Compared them with the subsequent register, operand representation and proof reports, the CJI line of research, and the existing ten-article issue. Added the index under `reference/` and linked it from the thesis landing page and project README.
+
+### Why
+
+The professor’s task list predates subsequent implementations. A task checkbox, an instruction-count prediction and a production receipt refer to different pieces of evidence. The index keeps the task IDs while attaching the stronger evidence wherever it exists.
+
+### What worked
+
+`python3 scripts/supervisor/check-research-index.py /home/manuel/code/wesen/go-go-golems/go-go-parc` (with the full ticket path from the repository root) verified all 41 task IDs, the 20 dated compiler/application tickets, 49 distinct workspace documents and eight vault articles at their named Git revision.
+
+### What didn't work
+
+A Git inventory showed that the original Native Next and special-issue ticket directories are present locally but absent from the tracked source snapshot. A reference to those paths alone would lose the roadmap inventory for a reader using a clean checkout. The index includes the task objectives and commit-pinned vault pointers. The supplied plan was left as received.
+
+### What I learned
+
+The implementation plan explicitly prioritizes native backend work even before physical key-to-pixel timing is available. The later proposal to measure output allocation addresses the separate question of cold compiler time and heap. Both can be located without inferring priority from whichever experiment was most recent.
+
+### What was tricky to build
+
+Scope A’s model starts from an earlier backend, and the shipped shallow-operand register scheme implements only part of its design. The index gives the model and the measured backend separate entries in the same row. The E8-related bounds study receives the same treatment because its local merge was subsequently reverted.
+
+### What warrants a second pair of eyes
+
+Read the A/E rows against the professor’s task acceptance criteria, then compare the CJI physical times with their heap, source and instrumentation controls. Counts from a 22-world JS catalog, a 15-app migration inventory and a three-world typed benchmark refer to distinct corpora.
+
+### What should be done in the future
+
+When an experiment lands or is rejected, add its evidence link next to the question it answered. A future task can keep its original design target and independently record a replacement implementation.
+
+### Code review instructions
+
+Start with `reference/02-picocalc-compiler-research-index-and-open-directions.md`. Run the coverage checker from the ticket’s `scripts/supervisor/` directory using the vault checkout as its argument. Inspect the README and ticket landing-page links.
+
+### Technical details
+
+The integration baseline for the inventory was source commit `39bf91f`. The JS streaming default landed at `7677932`. The vault’s special issue is referenced at `37d4459`. This checkpoint changed documentation and its coverage check.

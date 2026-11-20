@@ -4,6 +4,8 @@ A JavaScript operating system for a PicoCalc whose RP2040 has been replaced by a
 the device (`port/esp32p4/`, see "On the device") and on Linux against a simulated board, so it can run,
 be scripted and have its screen captured without the hardware.
 
+The [compiler research index](../ttmp/2026/11/19/PICOCALC-COMPILER-THESIS--cold-compilation-and-bounded-analyses-on-the-picocalc/reference/02-picocalc-compiler-research-index-and-open-directions.md) connects the native roadmap, language designs, and measured results for CJI, Wasm, and RV32.
+
 Every driver, the compositor and every app is a *world*: its own QuickJS runtime, heap limit and turn
 budget. A small C nucleus runs them on a virtual clock, delivers their messages, hands out hardware as
 *handles*, and supervises them. The keyboard, power and display drivers are JavaScript that talks to

@@ -19,3 +19,5 @@ Qualified the original, register, buffered numeric and streamed Editor compilers
 ## 2026-11-19
 
 Physical qualification complete. Preserved both device series, replay evidence, negative results, controls and conditions for revisiting deferred designs.
+
+Added a [cross-ticket compiler research index](reference/02-picocalc-compiler-research-index-and-open-directions.md). It reconciles all 41 PICOCALC-NATIVE-NEXT tasks with the CJI and typed compiler evidence, including retired experiments and the later streaming default.

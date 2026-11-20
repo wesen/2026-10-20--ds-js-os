@@ -23,6 +23,8 @@ Three experiments test temporary placement in RV32 registers, per-function inter
 
 ## Studies and examination
 
+For the wider research program, see the [PicoCalc compiler research index](reference/02-picocalc-compiler-research-index-and-open-directions.md). It maps the professor’s 41 tasks to the CJI studies, typed language designs, production compiler, and outstanding experiments.
+
 Start with [the supervisor's synthesis](various/reports/synthesis.md). Each investigation has a report, its chronological record, working notes, scripts and measured evidence.
 
 | Study | Report | Investigation diary | Notes |
