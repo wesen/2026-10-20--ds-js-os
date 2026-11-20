@@ -1,0 +1,44 @@
+# Tasks
+
+## TODO
+- [ ] A0: Host harness: staged model library, per-function instruction-count check, RV32 interpreter and differential fixtures (S) <!-- t:0y3f -->
+- [ ] A1: Register lowering with a compile-time operand stack, lazy constants and locals, flush and pending-read rules; Files at 732 instructions, tolerance 5% (M; needs A0) <!-- t:cooz -->
+- [ ] A2: Pending comparisons fused into branches; Files at 668 (S; needs A1) <!-- t:o82z -->
+- [ ] A3: Short branches with fix-up; Files at 593 (model A), Files switched to the new lowering, Files device run (S; needs A2) <!-- t:fbtt -->
+- [ ] A4: Agenda on the new lowering at 2,789 instructions; 3,924 cross-target cases agree (S; needs A3) <!-- t:bnug -->
+- [ ] A5: Editor on the new lowering at 16,544 instructions with frame slots for deep stacks; all 13 Editor replays (M; needs A4) <!-- t:lzh5 -->
+- [ ] A6: Frontend compiles && and || in conditions to branches; at most 547 / 2,611 / 16,210 instructions (S; needs A5) <!-- t:5jek -->
+- [ ] A7: Locals in registers (model B): at most 517 / 2,660 / 14,581 instructions (M; needs A6) <!-- t:l4dj -->
+- [ ] A8: Remove the old lowering, shrink the slots, device qualification: Editor module 92,996 bytes and world memory at most 570 KiB (S; needs A7) <!-- t:dk9i -->
+- [ ] B1: Cache library: five-part content key, module before record, hash check on load; 15-step host driver (M) <!-- t:8cki -->
+- [ ] B2: Compile-or-load at boot on device and in the host simulator; warm boot under 100 ms on the device (M; needs B1) <!-- t:owgk -->
+- [ ] C1: CJI compiler tool out of the default qualification profile, with a check on the built image (S) <!-- t:mle0 -->
+- [ ] D1: Interface description generating the import table, trampolines and C declarations; drift check with six mutations (S) <!-- t:s6i5 -->
+- [ ] D2: Capability, fuel charge and stack use per reactor function in the interface description (S; needs D1) <!-- t:e7ij -->
+- [ ] E1: Language: else and else if (S) <!-- t:vvfx -->
+- [ ] E2: Language: for loops (S) <!-- t:2w3r -->
+- [ ] E3: Language: break (S) <!-- t:qcyx -->
+- [ ] E4: Language: !== (S) <!-- t:ps2t -->
+- [ ] E5: Language: calls to later functions with an explicit call-graph cycle check (S) <!-- t:2p7f -->
+- [ ] E6: Language: enumerations with exhaustive match; Editor findPhase as demonstration (S) <!-- t:s8ld -->
+- [ ] E7: Language: distinct integer types with zero change to generated code (S) <!-- t:3brw -->
+- [ ] E8: Language: unsigned index type and guard facts that remove bounds checks; at most 7 / 29 / 373 trap sites (M; needs A3, E7) <!-- t:d5zd -->
+- [ ] E9: Per-world reactor-usage report checked against manifest claims (S; needs D2, E5) <!-- t:dox4 -->
+- [ ] F1: Static stack need per function and program; at most 96 / 320 / 896 bytes of typed frames (S; needs A5, D2, E5) <!-- t:fw2h -->
+- [ ] F2: Controlled trap exit for native typed code in place of ebreak (S; needs D1) <!-- t:zj1j -->
+- [ ] F3: Fuel counter at loop back-edges with clamped reactor-call charges (M; needs A5, D2, F2) <!-- t:9k37 -->
+- [ ] F4: Verifier over emitted RV32 with checks V1 to V7; 161 functions accepted, 12 targeted changes rejected (M; needs A7, F1, F3) <!-- t:vaqi -->
+- [ ] F5: Mutation testing of the verifier: 20,000 single-bit mutants per application, none accepted and harmful (S; needs A0, F4) <!-- t:sgz6 -->
+- [ ] F6: Address masking and its verifier check, later and separate (M; needs F5) <!-- t:sslo -->
+- [ ] G1: async and await: statement tree, liveness, rejection of strings and buffers live across a wait, frame layout report (M; needs E1, E5) <!-- t:uqtk -->
+- [ ] G2: State machine generation with start, resume, pending, cancel and the generated dispatcher (L; needs G1) <!-- t:idnx -->
+- [ ] G3: Editor open path rewritten with await; all Editor replays match (M; needs G2) <!-- t:46qu -->
+- [ ] G4: Editor find path rewritten with await; at most 71 state fields; device qualification (M; needs G3) <!-- t:dddi -->
+- [ ] M1: Key-to-frame intervals and per-world CPU from kernel timestamps over serial; application share under 10% (S) <!-- t:xleu -->
+- [ ] M2: DEFERRED until a logic analyzer or high-speed camera is available: key press to visible pixels (S; needs M1) <!-- t:4fdd -->
+- [ ] H1: Later: per-turn arena with its two lifetime rules (M; needs G1, D1) <!-- t:p5ce -->
+- [ ] H2: Later: JavaScript emitter and reactor shim (M; needs D1) <!-- t:9sff -->
+- [ ] H3: Later: typed screen protocol and typed compositor, only if M1 shows the compositor dominates (L; needs D1, M1) <!-- t:8i0d -->
+- [ ] H4: Later: linear handles, then typestate (L; needs H1) <!-- t:08qb -->
+- [ ] H5: Later: PMP and user-mode experiment (M) <!-- t:jrsm -->
+- [ ] H6: Later: workstation and device builds give identical bytes (S; needs B2) <!-- t:o0tw -->
