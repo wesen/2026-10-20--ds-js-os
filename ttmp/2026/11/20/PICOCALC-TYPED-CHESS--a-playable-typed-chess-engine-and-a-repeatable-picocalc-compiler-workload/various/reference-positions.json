@@ -1,0 +1,374 @@
+{
+  "reference": "chess 1.11.2",
+  "positions": [
+    {
+      "name": "opening",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "legal_uci": [
+        "a2a3",
+        "a2a4",
+        "b1a3",
+        "b1c3",
+        "b2b3",
+        "b2b4",
+        "c2c3",
+        "c2c4",
+        "d2d3",
+        "d2d4",
+        "e2e3",
+        "e2e4",
+        "f2f3",
+        "f2f4",
+        "g1f3",
+        "g1h3",
+        "g2g3",
+        "g2g4",
+        "h2h3",
+        "h2h4"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 20,
+        "2": 400,
+        "3": 8902
+      }
+    },
+    {
+      "name": "castling-both-sides",
+      "fen": "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+      "legal_uci": [
+        "a1a2",
+        "a1a3",
+        "a1a4",
+        "a1a5",
+        "a1a6",
+        "a1a7",
+        "a1a8",
+        "a1b1",
+        "a1c1",
+        "a1d1",
+        "e1c1",
+        "e1d1",
+        "e1d2",
+        "e1e2",
+        "e1f1",
+        "e1f2",
+        "e1g1",
+        "h1f1",
+        "h1g1",
+        "h1h2",
+        "h1h3",
+        "h1h4",
+        "h1h5",
+        "h1h6",
+        "h1h7",
+        "h1h8"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 26,
+        "2": 568
+      }
+    },
+    {
+      "name": "castling-through-attack",
+      "fen": "4kr2/8/8/8/8/8/8/R3K2R w KQ - 0 1",
+      "legal_uci": [
+        "a1a2",
+        "a1a3",
+        "a1a4",
+        "a1a5",
+        "a1a6",
+        "a1a7",
+        "a1a8",
+        "a1b1",
+        "a1c1",
+        "a1d1",
+        "e1c1",
+        "e1d1",
+        "e1d2",
+        "e1e2",
+        "h1f1",
+        "h1g1",
+        "h1h2",
+        "h1h3",
+        "h1h4",
+        "h1h5",
+        "h1h6",
+        "h1h7",
+        "h1h8"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 23,
+        "2": 271
+      }
+    },
+    {
+      "name": "en-passant-pinned",
+      "fen": "k3r3/8/8/3pP3/8/8/8/4K3 w - d6 0 2",
+      "legal_uci": [
+        "e1d1",
+        "e1d2",
+        "e1e2",
+        "e1f1",
+        "e1f2",
+        "e5e6"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 6,
+        "2": 77
+      }
+    },
+    {
+      "name": "en-passant-legal",
+      "fen": "k7/8/8/3pP3/8/8/8/4K3 w - d6 0 2",
+      "legal_uci": [
+        "e1d1",
+        "e1d2",
+        "e1e2",
+        "e1f1",
+        "e1f2",
+        "e5d6",
+        "e5e6"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 7,
+        "2": 27
+      }
+    },
+    {
+      "name": "promotion-and-underpromotion",
+      "fen": "4k3/P7/8/8/8/8/8/4K3 w - - 0 1",
+      "legal_uci": [
+        "a7a8b",
+        "a7a8n",
+        "a7a8q",
+        "a7a8r",
+        "e1d1",
+        "e1d2",
+        "e1e2",
+        "e1f1",
+        "e1f2"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 9,
+        "2": 41
+      }
+    },
+    {
+      "name": "mate-in-one",
+      "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
+      "legal_uci": [
+        "e1a1",
+        "e1b1",
+        "e1c1",
+        "e1d1",
+        "e1e2",
+        "e1e3",
+        "e1e4",
+        "e1e5",
+        "e1e6",
+        "e1e7",
+        "e1e8",
+        "e1f1",
+        "f2f3",
+        "f2f4",
+        "g1f1",
+        "g1h1",
+        "g2g3",
+        "g2g4",
+        "h2h3",
+        "h2h4"
+      ],
+      "mate_in_one_uci": [
+        "e1e8"
+      ],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 20,
+        "2": 153
+      }
+    },
+    {
+      "name": "mate-in-one-black",
+      "fen": "4r1k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1",
+      "legal_uci": [
+        "e8a8",
+        "e8b8",
+        "e8c8",
+        "e8d8",
+        "e8e1",
+        "e8e2",
+        "e8e3",
+        "e8e4",
+        "e8e5",
+        "e8e6",
+        "e8e7",
+        "e8f8",
+        "f7f5",
+        "f7f6",
+        "g7g5",
+        "g7g6",
+        "g8f8",
+        "g8h8",
+        "h7h5",
+        "h7h6"
+      ],
+      "mate_in_one_uci": [
+        "e8e1"
+      ],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 20,
+        "2": 153
+      }
+    },
+    {
+      "name": "quiet-mate-in-two",
+      "fen": "k7/8/3K4/4Q3/8/8/8/8 w - - 0 1",
+      "legal_uci": [
+        "d6c5",
+        "d6c6",
+        "d6c7",
+        "d6d5",
+        "d6d7",
+        "d6e6",
+        "d6e7",
+        "e5a1",
+        "e5a5",
+        "e5b2",
+        "e5b5",
+        "e5c3",
+        "e5c5",
+        "e5d4",
+        "e5d5",
+        "e5e1",
+        "e5e2",
+        "e5e3",
+        "e5e4",
+        "e5e6",
+        "e5e7",
+        "e5e8",
+        "e5f4",
+        "e5f5",
+        "e5f6",
+        "e5g3",
+        "e5g5",
+        "e5g7",
+        "e5h2",
+        "e5h5",
+        "e5h8"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 31,
+        "2": 67
+      },
+      "mate_in_two_witnesses": {
+        "d6c7": {
+          "a8a7": [
+            "e5a1",
+            "e5a5"
+          ]
+        }
+      }
+    },
+    {
+      "name": "stalemate",
+      "fen": "7k/5Q2/6K1/8/8/8/8/8 b - - 0 1",
+      "legal_uci": [],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": true,
+      "perft": {
+        "1": 0,
+        "2": 0
+      }
+    },
+    {
+      "name": "checkmate",
+      "fen": "7k/6Q1/5K2/8/8/8/8/8 b - - 0 1",
+      "legal_uci": [],
+      "mate_in_one_uci": [],
+      "in_check": true,
+      "checkmate": true,
+      "stalemate": false,
+      "perft": {
+        "1": 0,
+        "2": 0
+      }
+    },
+    {
+      "name": "defended-rook",
+      "fen": "3r2k1/5ppp/8/3p4/8/8/5PPP/3Q2K1 w - - 0 1",
+      "legal_uci": [
+        "d1a1",
+        "d1a4",
+        "d1b1",
+        "d1b3",
+        "d1c1",
+        "d1c2",
+        "d1d2",
+        "d1d3",
+        "d1d4",
+        "d1d5",
+        "d1e1",
+        "d1e2",
+        "d1f1",
+        "d1f3",
+        "d1g4",
+        "d1h5",
+        "f2f3",
+        "f2f4",
+        "g1f1",
+        "g1h1",
+        "g2g3",
+        "g2g4",
+        "h2h3",
+        "h2h4"
+      ],
+      "mate_in_one_uci": [],
+      "in_check": false,
+      "checkmate": false,
+      "stalemate": false,
+      "perft": {
+        "1": 24,
+        "2": 380
+      },
+      "poisoned_pawn_line": [
+        "d1d5",
+        "d8d5"
+      ]
+    }
+  ]
+}
