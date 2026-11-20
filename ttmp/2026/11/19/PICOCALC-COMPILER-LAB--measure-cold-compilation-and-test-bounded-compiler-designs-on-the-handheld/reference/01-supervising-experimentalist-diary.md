@@ -74,3 +74,57 @@ Start with [the experimental design](../design-doc/01-experimental-design-for-co
 ### Technical details
 
 Pinned SHA-256 for `typed-wasm.js` is `cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2`; for `typed-rv32.js` it is `64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38`. Hardware receipts will retain compile time in microseconds and peak heap in bytes.
+
+## Step 2: Take a fresh backup and build the negative control
+
+I captured the current factory partition before flashing any experiment, then built a disposable firmware image with two copies of the production compiler. Measuring the same implementation under two labels makes timing differences from the harness observable. The measured guest functions execute instructions emitted by those same compiler variants.
+
+### Prompt Context
+
+**User prompt:** See Step 1 and the attached brief. **Assistant interpretation:** Independently measure compiler and guest costs while the researchers work on host implementations. **Inferred user intent:** Keep different studies comparable on the actual handheld. **Commit (design):** 121121b — Freeze the handheld compiler experiments and physical evaluation design.
+
+### What I did
+
+- Ran the thesis ticket's `p4-backup.sh` on the confirmed physical port. The fresh 8 MiB factory image SHA-256 is `6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f`. The partition table SHA-256 is `1e67efde107bf6b3b9ee582350256b0bead1f1f88605cc6b13a5216beefe07f8`. Store the firmware locally outside version control.
+- Staged isolated per-lane compilers, real Files/Agenda/Editor C entry points, a matched-block board driver and a complete executable hash oracle. Generated a two-app guest timing fixture and an independent frontend differential suite covering 321 source inputs on each target.
+- Checked the hosted compiler probe used by the native research operator. It reported Opus 5.5. The approval review subsequently rejected forwarding private compiler inputs to the provider. I requested user authorization for a narrowly defined payload. Public algorithm questions with tools disabled are proceeding independently.
+
+### Why
+
+Guest work can change while the compiler becomes slower, and it can stay identical while cold build time changes. A second experiment inside the same firmware times 128 calls per sample to a pure Files name comparison and to Agenda's weekday calculation on eight independently checked dates. Guest output and compile output have separate oracles.
+
+### What worked
+
+Fresh hardware backup succeeded. Host control probes produced 804 Files words and 4,058 Agenda words for both labels. All 321 independent source comparisons passed against the control on both compiler targets, including 134 syntax failures per target whose error type and message match exactly.
+
+### What didn't work
+
+The first local tmux start returned `error connecting to /tmp/compiler-wave.Sh834IUJ/tmux.sock (Operation not permitted)`. The approved outer tmux build used a private socket and the previously verified IDF toolchain. Automatic approval rejected the native design request with private source; the rejection and approved alternatives are recorded in the relevant study.
+
+### What I learned
+
+Agenda's weekday function calls other functions in its generated program. Copying its isolated function body would measure invalid code. The guest fixture therefore retains the complete position-independent app instruction image and labels the chosen function's byte offset.
+
+### What was tricky to build
+
+Physical comparisons require three distinct byte identities: the compiler script present in the firmware, the guest text executed by the timing fixture, and the complete application ELF returned through each normal C wrapper. The oracle checks each independently. Experimental images include multiple JS blobs, so a compiler source hash by itself does not prove the wrapper selected that source.
+
+### What warrants a second pair of eyes
+
+The fixture's eight-date calendar workload and long equal-prefix filename exercise pure app functions. They do not estimate an application turn or user interaction. Position balancing and a byte-identical control quantify some harness variation; instruction address and cache state can still alter guest cycles.
+
+### What should be done in the future
+
+Run the physical negative control first. Use the same timing fixtures on qualified native and bounded-analysis candidates, then remeasure the best cold-build result through the supervisor's own runner.
+
+### Code review instructions
+
+Read `scripts/01-stage.py`, `scripts/02-trials.c` and `scripts/03-oracle.mjs` together. The complete cases and validation are in `scripts/04-board.py` and `scripts/06-frontend-differential.mjs`.
+
+### Technical details
+
+A balanced boot with N lanes measures 2 × N² × 3 cold compiles and 16 warmed batches per named guest and lane. The fresh process receives production streaming settings and teardown on every cold call. Durations use CPU cycles for guest batches and microseconds for the complete compiler.
+
+The initial firmware link failed with `section .flash.text VMA [40000040,401b8f57] overlaps section .flash_rodata_dummy VMA [40000020,401c001f]`. The guest assembly had raised the entire output section's alignment to 64 bytes. The chip linker script expects mapped text to start at offset 0x20. Emitting ordinary four-byte instruction alignment restored the IDF layout. A complete rebuild succeeded, and the host oracle verified the two embedded guest images and all three application ELFs against the preceding trial's frozen control.
+
+The user approved sending the specified compiler, typed app sources, study designs, candidate code and aggregate measurements to the authenticated Anthropic endpoint. I relayed the payload restriction to all three research operators. The user subsequently approved GPT‑6.2 Sol High as an additional researcher model. The first three studies keep their Opus High partners; the planned incremental study can use Sol High.
