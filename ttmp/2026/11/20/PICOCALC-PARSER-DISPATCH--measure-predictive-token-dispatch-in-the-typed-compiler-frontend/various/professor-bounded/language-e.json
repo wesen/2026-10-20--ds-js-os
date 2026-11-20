@@ -1,0 +1,1 @@
+{"results":46,"traps":3,"rejected":30,"targets":["wasm","rv32"],"modes":["streamed","buffered"],"equalLowering":["for","distinct"],"expandedUpdate":{"sourceBytes":31488,"wasmBytes":275538,"rv32Bytes":371348}}

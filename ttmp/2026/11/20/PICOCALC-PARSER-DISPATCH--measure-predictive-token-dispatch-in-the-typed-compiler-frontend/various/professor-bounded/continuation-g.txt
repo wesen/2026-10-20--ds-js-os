@@ -1,0 +1,40 @@
+wasm handled 29 events and normalized 10000 units
+rv32 handled 29 events and normalized 10000 units
+rv32 buffered handled 29 events and normalized 10000 units
+{
+  "declaredFields": 5,
+  "totalFields": 10,
+  "tasks": {
+    "openFile": [
+      {
+        "function": "openFile",
+        "fields": [
+          "__typed_async_1_openFile_openFile_state",
+          "__typed_async_1_openFile_openFile_token",
+          "__typed_async_1_openFile_openFile_v3_length",
+          "__typed_async_1_openFile_openFile_v4_read",
+          "__typed_async_1_openFile_openFile_v5_written"
+        ],
+        "waits": [
+          {
+            "id": 1,
+            "line": 5,
+            "callee": "typedSdkFileRead",
+            "saved": []
+          },
+          {
+            "id": 2,
+            "line": 23,
+            "callee": "typedSdkYield",
+            "saved": [
+              "length",
+              "read",
+              "written"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+both targets reject invalid awaits, illegal references, cycles, and frame overflow

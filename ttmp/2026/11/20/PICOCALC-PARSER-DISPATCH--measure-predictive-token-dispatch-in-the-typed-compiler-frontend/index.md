@@ -20,10 +20,13 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+The initial predictive-dispatch experiment isolated failed parser lookahead. The follow-up composed parser cleared the original 31.4 ms frontend-only gate in six elapsed-wall sessions with the unchanged professor host and JavaScript driver.
 
 ## Key Links
 
+- [Portable benchmark analysis](analysis/01-qualifying-the-portable-typed-frontend-on-the-historical-editor.md)
+- [Implementation diary](reference/02-bounded-parser-and-portable-timing-investigation-diary.md)
+- [Exact patch](sources/03-parser-and-portable-fallback.patch)
 - **Related Files**: See frontmatter RelatedFiles field
 - **External Sources**: See frontmatter ExternalSources field
 
