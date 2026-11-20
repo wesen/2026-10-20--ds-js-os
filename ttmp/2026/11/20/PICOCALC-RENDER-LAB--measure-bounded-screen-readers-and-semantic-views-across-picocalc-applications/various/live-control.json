@@ -1,0 +1,296 @@
+{
+  "commands": [
+    [
+      "1",
+      "worlds"
+    ],
+    [
+      "2",
+      "key f1"
+    ],
+    [
+      "3",
+      "key s"
+    ],
+    [
+      "4",
+      "key f2"
+    ],
+    [
+      "5",
+      "key p"
+    ],
+    [
+      "7",
+      "shot"
+    ],
+    [
+      "21",
+      "worlds"
+    ],
+    [
+      "22",
+      "key f1"
+    ],
+    [
+      "23",
+      "key m"
+    ],
+    [
+      "25",
+      "key down"
+    ],
+    [
+      "27",
+      "shot"
+    ],
+    [
+      "42",
+      "worlds"
+    ],
+    [
+      "43",
+      "key f1"
+    ],
+    [
+      "44",
+      "key h"
+    ],
+    [
+      "46",
+      "key f2"
+    ],
+    [
+      "47",
+      "key enter"
+    ],
+    [
+      "49",
+      "shot"
+    ],
+    [
+      "65",
+      "worlds"
+    ],
+    [
+      "66",
+      "key f1"
+    ]
+  ],
+  "duration_s": 69,
+  "worlds": [
+    {
+      "keyboard": {
+        "engine": "native",
+        "turns": 684573,
+        "cpu_ms": 839731.517,
+        "msgs": 684573,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "display": {
+        "engine": "native",
+        "turns": 704,
+        "cpu_ms": 6150.774,
+        "msgs": 704,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "compositor": {
+        "engine": "native",
+        "turns": 43258,
+        "cpu_ms": 211546.615,
+        "msgs": 43258,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "sysmon": {
+        "engine": "js",
+        "turns": 27534,
+        "cpu_ms": 150542.974,
+        "msgs": 27534,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "snake": {
+        "engine": "native",
+        "turns": 124645,
+        "cpu_ms": 637158.664,
+        "msgs": 124645,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "chess": {
+        "engine": "native",
+        "turns": 222,
+        "cpu_ms": 5712.705,
+        "msgs": 222,
+        "restarts": 0,
+        "last_error": ""
+      }
+    },
+    {
+      "keyboard": {
+        "engine": "native",
+        "turns": 685541,
+        "cpu_ms": 840993.861,
+        "msgs": 685541,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "display": {
+        "engine": "native",
+        "turns": 722,
+        "cpu_ms": 6247.296,
+        "msgs": 722,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "compositor": {
+        "engine": "native",
+        "turns": 43363,
+        "cpu_ms": 212281.24,
+        "msgs": 43363,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "sysmon": {
+        "engine": "js",
+        "turns": 27574,
+        "cpu_ms": 150750.619,
+        "msgs": 27574,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "snake": {
+        "engine": "native",
+        "turns": 124824,
+        "cpu_ms": 638278.767,
+        "msgs": 124824,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "chess": {
+        "engine": "native",
+        "turns": 222,
+        "cpu_ms": 5712.705,
+        "msgs": 222,
+        "restarts": 0,
+        "last_error": ""
+      }
+    },
+    {
+      "keyboard": {
+        "engine": "native",
+        "turns": 686501,
+        "cpu_ms": 842408.851,
+        "msgs": 686501,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "display": {
+        "engine": "native",
+        "turns": 763,
+        "cpu_ms": 6686.653,
+        "msgs": 763,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "compositor": {
+        "engine": "native",
+        "turns": 43514,
+        "cpu_ms": 214611.518,
+        "msgs": 43514,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "sysmon": {
+        "engine": "js",
+        "turns": 27618,
+        "cpu_ms": 151766.074,
+        "msgs": 27618,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "snake": {
+        "engine": "native",
+        "turns": 125009,
+        "cpu_ms": 639486.557,
+        "msgs": 125009,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "chess": {
+        "engine": "native",
+        "turns": 222,
+        "cpu_ms": 5712.705,
+        "msgs": 222,
+        "restarts": 0,
+        "last_error": ""
+      }
+    },
+    {
+      "keyboard": {
+        "engine": "native",
+        "turns": 687607,
+        "cpu_ms": 843876.147,
+        "msgs": 687608,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "display": {
+        "engine": "native",
+        "turns": 770,
+        "cpu_ms": 6752.812,
+        "msgs": 770,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "compositor": {
+        "engine": "native",
+        "turns": 43606,
+        "cpu_ms": 215303.527,
+        "msgs": 43606,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "sysmon": {
+        "engine": "js",
+        "turns": 27665,
+        "cpu_ms": 152045.097,
+        "msgs": 27665,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "snake": {
+        "engine": "native",
+        "turns": 125213,
+        "cpu_ms": 640790.775,
+        "msgs": 125213,
+        "restarts": 0,
+        "last_error": ""
+      },
+      "chess": {
+        "engine": "native",
+        "turns": 225,
+        "cpu_ms": 5717.855,
+        "msgs": 225,
+        "restarts": 0,
+        "last_error": ""
+      }
+    }
+  ],
+  "pngSha256": {
+    "shot-1.png": "544002c9e66863dd1cbe50c152a4ce9a70587888f60245d0b9350bc2ace55669",
+    "shot-2.png": "149a745f0e3bec9a0fc8c2e4d4b95fa0abc783f627397d9df6a4a8acbbd1c64d",
+    "shot-3.png": "6bf7e9cb86881a8dd9861016ff19eb7c08e92fbda3a1eca1190634713b639a8d"
+  },
+  "captureDiagnostics": [
+    "",
+    "[p4cap] shot 1: /tmp/pico-render-live-01/shot-1.png (crc ok)",
+    "",
+    "[p4cap] shot 2: /tmp/pico-render-live-01/shot-2.png (crc ok)",
+    "",
+    "[p4cap] shot 3: /tmp/pico-render-live-01/shot-3.png (crc ok)"
+  ]
+}
