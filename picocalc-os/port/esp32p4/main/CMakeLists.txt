@@ -274,11 +274,12 @@ if(PICOCALC_TYPED_EDITOR)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_EDITOR=1)
     list(APPEND BUNDLE_EXTRA
         "system.typed-editor.json=${editor_manifest_path}"
+        "typed/async.js=${OS}/compiler/typed-async.js"
         "typed/world.js=${OS}/compiler/typed-world.js"
         "editor/editor.typed=${editor_source}"
         "editor/reactor.bin=${editor_reactor}")
     list(APPEND BUNDLE_EXTRA_DEPS
-        "${editor_manifest_path}" "${editor_reactor}" "${editor_source}" "${OS}/compiler/typed-world.js")
+        "${editor_manifest_path}" "${editor_reactor}" "${editor_source}" "${OS}/compiler/typed-async.js" "${OS}/compiler/typed-world.js")
 endif()
 
 if(PICOCALC_TYPED_FILES)

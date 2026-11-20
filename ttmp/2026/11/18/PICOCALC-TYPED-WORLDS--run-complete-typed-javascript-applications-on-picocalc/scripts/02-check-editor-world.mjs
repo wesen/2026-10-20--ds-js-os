@@ -6,6 +6,7 @@ import {dirname, join, resolve} from 'node:path';
 import {runInNewContext} from 'node:vm';
 import {fileURLToPath} from 'node:url';
 import '../../../../../../picocalc-os/compiler/typed-wasm.js';
+import '../../../../../../picocalc-os/compiler/typed-async.js';
 import '../../../../../../picocalc-os/compiler/typed-rv32.js';
 import '../../../../../../picocalc-os/compiler/typed-world.js';
 

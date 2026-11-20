@@ -81,6 +81,7 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
   if (!eval_file(ctx, "typed/wasm.js") ||
+      (!strcmp(linker, "typed/world.js") && !eval_file(ctx, "typed/async.js")) ||
       (engine == ENG_NATIVE && !eval_file(ctx, "typed/rv32.js")) ||
       !eval_file(ctx, linker)) goto rejected;
   JSValue global = JS_GetGlobalObject(ctx);
