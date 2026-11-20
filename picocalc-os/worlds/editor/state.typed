@@ -1,6 +1,8 @@
 type Unit = distinct i32;
 type Point = distinct i32;
 
+enum FindPhase { LineSuffix, LaterLines, EarlierLines, LinePrefix, NotFound, Found }
+
 record WorldEvent {
     kind: i32;
     ask: bool;
@@ -52,7 +54,7 @@ record WorldState {
     finding: bool;
     queryLength: i32;
     findToken: i32;
-    findPhase: i32;
+    findPhase: FindPhase;
     findOrigin: i32;
     findFrom: i32;
     findStart: i32;

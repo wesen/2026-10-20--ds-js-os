@@ -27,17 +27,25 @@ function editorFindLine(state: WorldState, text: string, start: i32): i32 {
 // Visit the cursor line suffix, following lines, preceding lines, and
 // finally the cursor line prefix. A prefix match may cross the origin.
 function editorFindAdvance(state: WorldState, text: string): i32 {
-    if (state.findPhase === 3) { state.findPhase = 4; }
-    if (state.findPhase === 4) return 0;
+    if (state.findPhase === FindPhase.LinePrefix) { state.findPhase = FindPhase.NotFound; }
+    if (state.findPhase === FindPhase.NotFound) return 0;
     const next = state.findEnd + 1;
-    if (state.findPhase === 0) { state.findPhase = 1; }
-    if (state.findPhase === 1 && next < text.length) return editorFindLine(state, text, next);
-    const wraps = state.findPhase === 1 && state.findOrigin > 0;
-    if (wraps) { state.findPhase = 2; }
+    if (state.findPhase === FindPhase.LineSuffix) { state.findPhase = FindPhase.LaterLines; }
+    if (state.findPhase === FindPhase.LaterLines && next < text.length) return editorFindLine(state, text, next);
+    const wraps = state.findPhase === FindPhase.LaterLines && state.findOrigin > 0;
+    if (wraps) { state.findPhase = FindPhase.EarlierLines; }
     if (wraps) return editorFindLine(state, text, 0);
-    if (state.findPhase === 2 && next < state.findOrigin) return editorFindLine(state, text, next);
-    state.findPhase = 3;
+    if (state.findPhase === FindPhase.EarlierLines && next < state.findOrigin) return editorFindLine(state, text, next);
+    state.findPhase = FindPhase.LinePrefix;
     return editorFindLine(state, text, state.findOrigin);
+}
+
+function editorFindActive(phase: FindPhase): bool {
+    match (phase) {
+        LineSuffix, LaterLines, EarlierLines, LinePrefix: { return true; }
+        NotFound, Found: { return false; }
+    }
+    return false;
 }
 
 function editorFindStep(state: WorldState, text: string): i32 {
@@ -49,7 +57,7 @@ function editorFindStep(state: WorldState, text: string): i32 {
     let alternate = low;
     if (low === 107) { alternate = 8490; }
     let work = 0;
-    while (state.findPhase < 4 && work < 1024) {
+    while (editorFindActive(state.findPhase) && work < 1024) {
         work = work + 1;
         let candidate = state.findEnd;
         if (state.findAt < state.findEnd) {
@@ -57,10 +65,10 @@ function editorFindStep(state: WorldState, text: string): i32 {
         }
         const folded = state.findFolded + candidate - state.findAt;
         let limit = state.findEnd;
-        if (state.findPhase === 3 && folded >= state.findFrom) { limit = candidate; }
+        if (state.findPhase === FindPhase.LinePrefix && folded >= state.findFrom) { limit = candidate; }
         if (candidate >= limit) { editorFindAdvance(state, text); }
         if (candidate < limit) {
-            const eligible = state.findPhase > 0 || folded >= state.findFrom;
+            const eligible = state.findPhase !== FindPhase.LineSuffix || folded >= state.findFrom;
             const unit = text.charCodeAt(candidate);
             state.findAt = candidate + 1;
             state.findFolded = folded + 1;
@@ -68,11 +76,11 @@ function editorFindStep(state: WorldState, text: string): i32 {
             if (eligible) { work = work + size; }
             const found = eligible && editorFindMatch(text, candidate, state.findEnd, query, size);
             if (found) { editorSetFound(state, text, state.findStart, state.findEnd, folded); }
-            if (found) { state.findPhase = 5; }
+            if (found) { state.findPhase = FindPhase.Found; }
         }
     }
-    if (state.findPhase === 4) { state.notice = 10; }
-    if (state.findPhase >= 4) return 0;
+    if (state.findPhase === FindPhase.NotFound) { state.notice = 10; }
+    if (!editorFindActive(state.findPhase)) return 0;
     state.findToken = typedSdkYield();
     if (state.findToken <= 0) { state.notice = 11; }
     return 0;
@@ -85,7 +93,7 @@ function editorFindNext(state: WorldState, advance: bool): i32 {
     const newline = typedSdkLastIndex(text, 0, state.cursor, 10);
     state.findOrigin = 0;
     if (newline < state.cursor) { state.findOrigin = newline + 1; }
-    state.findPhase = 0;
+    state.findPhase = FindPhase.LineSuffix;
     editorFindLine(state, text, state.findOrigin);
     state.findFrom = state.cursor - state.findOrigin;
     if (advance) { state.findFrom = Math.min(state.findEnd, editorNext(text, state.cursor)) - state.findOrigin; }
