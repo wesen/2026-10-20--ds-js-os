@@ -8,6 +8,31 @@ const candidate = /\b(?:async|await)\b|\b(?:start|cancel)\b\s*(?:\/\/[^\n]*\n\s*
 const ambient = new Map([["event", "WorldEvent"], ["state", "WorldState"],
     ["output", "buffer"], ["hints", "buffer"]]);
 const completion = 4;
+const ordinaryCall = /\/\/[^\n]*|"(?:[^"\\\r\n]|\\.)*"|(?<member>\.\s*(?:\/\/[^\n]*\n\s*)*)?(?<name>\b[a-zA-Z_]\w*)\s*(?:\/\/[^\n]*\n\s*)*\(/g;
+
+// Use the real expression/statement checker over already lexed source tokens.
+// Its type and mutability checks do not require allocating instruction bytes.
+class TypeChecker extends typedWasm.FunctionEmitter {
+    constructor(lex, functions, {records, enums, distinct}, locals, nextLocal) {
+        super(lex, functions, records, undefined, 0, enums, distinct);
+        this.locals = locals;
+        this.nextLocal = nextLocal;
+        this.code = {push() {}};
+    }
+    emitConst() {}
+    emitIndex() {}
+    emitMemory() {}
+}
+
+function rangeLexer(source, tokens) {
+    const lex = Object.create(typedWasm.Lexer.prototype);
+    lex.source = source;
+    const at = tokens.at(-1).end;
+    let i = 0;
+    lex.next = () => { lex.token = tokens[i++] ?? {value: "", kind: "eof", at}; };
+    lex.next();
+    return lex;
+}
 
 function isOperation(tokens, i) {
     const {value} = tokens[i];
@@ -15,6 +40,17 @@ function isOperation(tokens, i) {
     if (value === "async" || value === "await") return true;
     if (value === "start" || value === "cancel") return next?.kind === "id";
     if (value === "resume" || value === "pending") return next?.value === "(";
+    return false;
+}
+
+function startNeedsGuard(tokens, open) {
+    // Calls, record loads, and arithmetic can have effects before the wrapper
+    // has a chance to reject a busy start. Plain argument words cannot.
+    for (let i = open + 1, word = true; i < tokens.length; i++, word = !word) {
+        const token = tokens[i];
+        if (token.value === ")") return false;
+        if (word ? token.kind !== "id" && token.kind !== "int" : token.value !== ",") return true;
+    }
     return false;
 }
 
@@ -127,15 +163,14 @@ function sourceCallables(program) {
 // A synchronous body with no task syntax needs only its call edges here.
 // Skip strings, comments, and method syntax without allocating lexer tokens.
 function scanOrdinaryCalls(source, fn, functions) {
-    const calls = /\/\/[^\n]*|"(?:[^"\\\r\n]|\\.)*"|(?<member>\.\s*(?:\/\/[^\n]*\n\s*)*)?(?<name>\b[a-zA-Z_]\w*)\s*(?:\/\/[^\n]*\n\s*)*\(/g;
-    const body = source.slice(fn.bodyAt, fn.end);
-    for (const match of body.matchAll(calls)) {
+    ordinaryCall.lastIndex = fn.bodyAt;
+    for (let match; (match = ordinaryCall.exec(source)) && match.index < fn.end;) {
         const {name, member} = match.groups;
         if (!name || member) continue;
         const target = functions.get(name);
         if (!target) continue;
         if (target.async)
-            fail(source, fn.bodyAt + match.index, "call async function " + name + " with start or await");
+            fail(source, match.index, "call async function " + name + " with start or await");
         fn.edges.add(target);
     }
 }
@@ -164,7 +199,8 @@ function scanOperations(program) {
                 } else if (![";", "{", "}"].includes(tokens[i - 1]?.value) || tokens[i + 2]?.value !== ";") {
                     fail(source, at, "cancel must be a statement");
                 }
-                fn.replacements.push({kind: value, at, end: next.end, target});
+                fn.replacements.push({kind: value, at, end: next.end, target,
+                    guard: value === "start" && startNeedsGuard(tokens, i + 2)});
                 i++;
                 continue;
             }
@@ -240,17 +276,10 @@ class AsyncBody extends Cursor {
         return node;
     }
 
-    emitter(tokens, functions = this.ordinary, semicolon = false) {
-        const from = tokens[0].at;
-        const to = tokens.at(-1).end;
-        // The update in a for header is a statement without its final semicolon.
-        const lex = semicolon
-            ? new typedWasm.Lexer(this.source.slice(0, to) + ";", from, to + 1)
-            : new typedWasm.Lexer(this.source, from, to);
-        const {records, enums, distinct} = this.program.types;
-        const emitter = new typedWasm.FunctionEmitter(lex, functions, records, undefined, 0, enums, distinct);
-        for (const [name, binding] of this.locals) emitter.local(name, binding.type, binding.mutable);
-        return emitter;
+    emitter(tokens, functions = this.ordinary, declares = false) {
+        const lex = rangeLexer(this.source, tokens);
+        const locals = declares ? new Map(this.locals) : this.locals;
+        return new TypeChecker(lex, functions, this.program.types, locals, this.fn.bindings.length);
     }
 
     references(tokens) {
@@ -314,7 +343,7 @@ class AsyncBody extends Cursor {
         let target;
         if (declaration) {
             const binding = tokens[1];
-            new typedWasm.Lexer(this.source, binding.at, binding.end).ident();
+            rangeLexer(this.source, [binding]).ident();
             if (tokens[2]?.value === ":" && tokens[3]?.value !== type)
                 this.fail("expected " + tokens[3]?.value + ", got " + type, at);
             target = this.add({name: binding.value, type, mutable: tokens[0].value === "let", at: binding.at});
@@ -333,11 +362,12 @@ class AsyncBody extends Cursor {
         const declaration = first.value === "let" || first.value === "const";
         const index = syntax.findIndex(token => token.value === "await");
         if (index >= 0) return this.wait(syntax, index, declaration);
-        const emitter = this.emitter(tokens, undefined, !semicolon);
+        const emitter = this.emitter(tokens, undefined, declaration);
         const assignment = !declaration && syntax[1]?.value === "=";
         const equals = syntax.findIndex(token => token.value === "=");
         const data = this.references(declaration || assignment ? syntax.slice(equals + 1) : syntax);
-        emitter.statement(this.fn.result);
+        if (semicolon) emitter.statement(this.fn.result);
+        else emitter.assignment(emitter.lex.ident());
         if (emitter.lex.token.kind !== "eof") emitter.lex.fail("unexpected token after statement");
         let def;
         if (declaration) {
@@ -351,15 +381,12 @@ class AsyncBody extends Cursor {
     }
 
     body() {
-        if (++this.depth > 128) this.fail("async statement nesting limit exceeded");
-        const result = this.inScope(() => {
+        return this.inScope(() => {
             this.expect("{");
             const nodes = [];
             while (!this.accept("}")) nodes.push(this.statement());
             return nodes;
         });
-        this.depth--;
-        return result;
     }
 
     condition() {
@@ -383,6 +410,13 @@ class AsyncBody extends Cursor {
     }
 
     statement() {
+        if (++this.depth > 128) this.fail("async statement nesting limit exceeded");
+        const node = this.readStatement();
+        this.depth--;
+        return node;
+    }
+
+    readStatement() {
         const at = this.token.at;
         if (this.accept("if")) {
             const cond = this.condition();
@@ -395,6 +429,32 @@ class AsyncBody extends Cursor {
             const cond = this.condition();
             const body = this.loopBody();
             return {kind: "while", at, cond, body, hasWait: contains(body, "hasWait")};
+        }
+        if (this.accept("match")) {
+            this.expect("(");
+            const value = this.expression(this.range(")"));
+            this.expect(")");
+            const members = this.program.types.enums.get(value.type);
+            if (!members) this.fail("expected an enum value in match", at);
+            this.expect("{");
+            const seen = new Set(), arms = [];
+            while (!this.accept("}")) {
+                const names = [];
+                do {
+                    const member = this.take();
+                    if (!members.has(member.value)) this.fail("unknown enum member " + member.value, member.at);
+                    if (seen.has(member.value)) this.fail("useless case " + member.value, member.at);
+                    seen.add(member.value);
+                    names.push(member.value);
+                } while (this.accept(","));
+                this.expect(":");
+                arms.push({names, body: this.body()});
+            }
+            const missing = [...members.keys()].filter(name => !seen.has(name));
+            if (missing.length) this.fail("match on " + value.type + " does not cover: " + missing.join(", "), at);
+            return {kind: "match", at, value, arms,
+                hasWait: arms.some(({body}) => contains(body, "hasWait")),
+                exits: arms.some(({body}) => contains(body, "exits"))};
         }
         if (this.accept("for")) return this.inScope(() => {
             this.expect("(");
@@ -475,6 +535,12 @@ function liveBefore(node, out, loopExit) {
         return merge(node.after, node.args.uses);
     case "if":
         return merge(node.cond.uses, liveSequence(node.yes, out, loopExit), liveSequence(node.no, out, loopExit));
+    case "match": {
+        const uses = new Set(node.value.uses);
+        for (const {body} of node.arms)
+            for (const binding of liveSequence(body, out, loopExit)) uses.add(binding);
+        return uses;
+    }
     case "while":
     case "for": {
         const base = merge(node.cond.uses, out);
@@ -660,6 +726,11 @@ function cut(fn) {
                 current = piece(node.at, {kind: "branch", cond: node.cond, yes, no});
                 break;
             }
+            case "match": {
+                const arms = node.arms.map(arm => ({...arm, next: sequence(arm.body, current, breakTo)}));
+                current = piece(node.at, {kind: "match", value: node.value, arms});
+                break;
+            }
             case "while":
             case "for": {
                 const loop = piece(node.at, null);
@@ -742,6 +813,15 @@ function emitStep(program, writer, frame) {
             }
             line("}", at);
             break;
+        case "match":
+            line("match (" + renderData(node.value) + ") {", at);
+            for (const {names, body} of node.arms) {
+                line(names.join(", ") + ": {", at);
+                for (const child of body) native(child);
+                line("}", at);
+            }
+            line("}", at);
+            break;
         case "while":
         case "for": {
             const cond = renderData(node.cond);
@@ -762,6 +842,10 @@ function emitStep(program, writer, frame) {
             line(goto(ending.next), at);
         } else if (ending.kind === "branch") {
             line("if (" + renderData(ending.cond) + ") { " + goto(ending.yes) + " } else { " + goto(ending.no) + " }", at);
+        } else if (ending.kind === "match") {
+            line("match (" + renderData(ending.value) + ") {", at);
+            for (const {names, next} of ending.arms) line(names.join(", ") + ": { " + goto(next) + " }", at);
+            line("}", at);
         } else {
             const wait = ending.node;
             const child = frame.task.frames.get(wait.callee);
@@ -832,6 +916,19 @@ function zero(type, types) {
     return "0";
 }
 
+function requestFrames(tasks) {
+    const seen = new Set(), frames = [];
+    function visit(frame) {
+        if (seen.has(frame)) return;
+        seen.add(frame);
+        for (const wait of frame.fn.waits)
+            if (wait.callee) visit(frame.task.frames.get(wait.callee));
+        if (frame.fn.waits.some(wait => !wait.callee)) frames.push(frame);
+    }
+    for (const task of tasks.values()) visit(task.root);
+    return frames;
+}
+
 function emitDispatcher(program, writer, allocation, op) {
     const {prefix, types} = program;
     const route = prefix + "route";
@@ -842,7 +939,7 @@ function emitDispatcher(program, writer, allocation, op) {
     const args = frame => frame.fn.params.map(param => param.ambient ? param.name : zero(param.type, types));
     const matches = frame => stateField(frame, "state") + " > 0 && " + stateField(frame, "token") +
         " > 0 && " + stateField(frame, "token") + " === event.token";
-    const innermost = allocation.frames.filter(frame => frame.fn.waits.some(wait => !wait.callee));
+    const innermost = requestFrames(allocation.tasks);
     line(signature(prefix + "resume", params, "bool"));
     line("if (!(event.kind === " + completion + ")) return false;");
     if (allocation.frames.every(frame => !frame.parents.length)) {
@@ -859,7 +956,8 @@ function emitDispatcher(program, writer, allocation, op) {
         return;
     }
     line("let " + route + " = 0;");
-    for (const frame of innermost) line("if (" + matches(frame) + ") { " + route + " = " + frame.id + "; }");
+    for (const frame of innermost)
+        line("if (" + route + " === 0 && " + matches(frame) + ") { " + route + " = " + frame.id + "; }");
     line("if (" + route + " === 0) return false;");
     line("let " + word + " = 0;");
     line("if (event.ok) { " + word + " = 1; }");
@@ -939,7 +1037,10 @@ function rewrite(source, imports = []) {
     if (!input) return null;
     const {program, allocation} = input;
     const writer = new GeneratedText(source);
+    const startFields = new Map();
     const fields = allocation.fields;
+    if (fields.length && allocation.layout.totalFields > 80)
+        throw new SyntaxError("WorldState supports up to 80 scalar fields");
     let at = 0;
     if (fields.length) {
         writer.copy(at, program.stateEnd);
@@ -958,7 +1059,10 @@ function rewrite(source, imports = []) {
             const root = allocation.tasks.get(op.target)?.root;
             let text;
             switch (op.kind) {
-            case "start": text = root.base + "start"; break;
+            case "start":
+                text = root.base + "start";
+                if (op.guard) startFields.set(text, root.base + "state");
+                break;
             case "cancel": text = call(root.base + "cancel", ["state"]); break;
             case "pending": text = call(program.prefix + "pending", fields.length ? ["state"] : []); break;
             case "resume": text = call(program.prefix + "resume", [...ambient.keys()]); break;
@@ -971,7 +1075,7 @@ function rewrite(source, imports = []) {
     writer.add("\n", source.length);
     for (const frame of allocation.frames) emitStep(program, writer, frame);
     emitTaskOperations(program, writer, allocation);
-    return writer.result(program.prefix, allocation.layout);
+    return {...writer.result(program.prefix, allocation.layout), startFields};
 }
 
 globalThis.typedAsync = {

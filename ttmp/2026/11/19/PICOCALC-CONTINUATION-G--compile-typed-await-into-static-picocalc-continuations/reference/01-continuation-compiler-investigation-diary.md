@@ -189,3 +189,59 @@ Start at readProgram and scanOperations in typed-async.js, then inspect scanSign
 ### Technical details
 
 The staged G4 source SHA-256 was b22520158aa8f22151ae8c681fde8a2116231ff0e0d23930e3333e7fff547778. It contained an older 70-field Editor application variant. Both compiler versions consumed identical input for the allocator comparison.
+
+## Step 4: Reuse lexed tokens and verify observable start behavior
+
+I used the expression emitter as a type checker over pre-lexed ranges. The checker reads the existing lexical bindings and discards emitted instructions. I also caught an observable ordering bug when reviewing a generated start call. The wrapper could return false after already evaluating an argument that changes state.
+
+### Prompt context
+
+The parent asked for a cold-compile performance follow-up and a checkpoint whose generated Editor output remains stable. Step 1 records the G1 and G2 scope.
+
+### What I did
+
+- Avoided cutting a copy of the source prefix every time a bounded lexer is constructed.
+- Reused token ranges inside the async body checker and current lexical binding metadata for expression checking.
+- Generated a short-circuit guard so starting a busy task skips a compound argument with possible effects. Added a fixture whose argument increments a field.
+- Added exhaustive enum match lowering inside async functions, nested control and overlapping save-set fixtures, a mixed sync/start cycle, both nonpositive request outcomes and standalone introspection.
+- Recorded the paired host results in various/01-span-allocation-quickjs.jsonl and various/02-typed-token-reuse-quickjs.jsonl. Each contains seven trials with five lane records per trial.
+
+### Why
+
+Source-sized copies and a throwaway emitted instruction array are unnecessary for checking ordinary fragments already present as typed source tokens. Discarding invalid code earlier also keeps the generated input below the existing state ABI budget.
+
+### What worked
+
+The focused suite passed 29 events on Wasm, RV32 and buffered RV32. Tests accounted for argument side effects, enum states, transitive start cycles and the exact scalar/frame sizes. The native image for the 70-field combined Editor was 89,168 bytes before and after the last host optimization.
+
+On the same staged input at a common 8 MiB comparison ceiling or lower, the full-source scanner and span scanner had median rewrite times 93.141 and 34.739 ms, and raw RV32 times 205.218 and 139.184 ms. The peak tracked raw RV32 allocation fell from 5,720,480 to 2,653,592 bytes. The old lane used 8 MiB because 4 MiB failed. The span lane used 4 MiB.
+
+For the later input pinned by SHA-256 ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0, alternating runs on one host core gave 28.915 and 23.597 ms median rewrite, 103.558 and 97.939 ms raw RV32 emission, and 80.877 ms raw RV32 for the synchronous E6 input. The measured peaks for the two raw RV32 G4 lanes were 2,649,408 and 2,790,136 bytes. New source and old source timing comparisons are separate experiments, so compare paired rows within each group.
+
+### What did not work
+
+The initial design's eager argument evaluation was found by source review. The new fixture observes exactly one argument evaluation after an accepted start followed by a rejected busy start. Initial unpinned host batches showed broad timing differences during other local work. I switched the paired runs to one CPU and kept both variants adjacent within each trial.
+
+### What I learned
+
+The measured savings from precise source spans are distinct from the remaining analysis overhead. Host raw RV32 timing omits real ELF linking and the physical PicoCalc's QuickJS execution characteristics.
+
+### What was tricky to build
+
+A generated call must preserve normal expression typing and stack balance even when a busy frame skips the arguments. A typed if with i32 result merges the taken call's bool representation and the false value, so both Wasm and RV32 reuse their existing structured branch emitters.
+
+### What warrants a second pair of eyes
+
+Check the contract of the implicit world state lookup used by the guarded call, and check that generated-only syntax remains inaccessible to authored text. The full WorldState is the one persistent record passed to the world handler and aliases name the same storage.
+
+### What should be done in the future
+
+Record physical medians against the paired firmware sources in the aggregate qualification. Measure generated dispatch and host compiler discovery separately when changes target those costs.
+
+### Code review instructions
+
+Run the focused fixture and optional baseline lane. The lexical checking path is TypeChecker in typed-async.js and the runtime argument guard is FunctionEmitter.call in typed-wasm.js.
+
+### Technical details
+
+Each old-source JSONL trial is ordered as old rewrite, span rewrite, old RV32, span RV32, sync RV32. Each final-source JSONL trial is ordered as span rewrite, token reuse rewrite, span RV32, token reuse RV32, sync RV32. Source assembly follows worlds/editor/source.list and inserts a newline after each part.

@@ -17,7 +17,7 @@ const {runRv32} = await import("data:text/javascript;base64," +
 
 const {entries, imports} = typedWorld;
 const eventRecord = "record WorldEvent { kind: i32; ask: bool; token: i32; ok: bool; }";
-const stateRecord = "record WorldState { docLength: i32; normalized: i32; nested: i32; other: i32; }";
+const stateRecord = "record WorldState { docLength: i32; normalized: i32; nested: i32; other: i32; evaluated: i32; }";
 const handlerSignature = "function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32";
 const handlerMeta = "function typedWorldMeta(field: i32, output: buffer): i32 { return 0; }";
 const preamble = eventRecord + "\n" + stateRecord + "\n";
@@ -67,8 +67,10 @@ async function nested(state: WorldState, event: WorldEvent, n: i32): i32 {
     for (let k = 0; k < n; k = k + 1) {
         if (k === 1) { break; }
         phase = await readHelper(state, event, 15);
-        if (phase === Phase.Complete) { total = total + 10; }
-        await typedSdkYield();
+        match (phase) {
+            Complete: { total = total + 10; await typedSdkYield(); }
+            Ready: { await typedSdkYield(); }
+        }
     }
     state.nested = state.nested + i32(phase) + i32(total);
     return 0;
@@ -85,7 +87,7 @@ async function other(state: WorldState, event: WorldEvent, output: buffer): i32 
 
 ` + handlerMeta + "\n" + handlerSignature + ` {
     if (event.kind === 0) {
-        if (start openFile(17, state)) return 101;
+        if (start openFile(nextHandle(state), state)) return 101;
         return 102;
     }
     if (event.kind === 1) {
@@ -105,6 +107,10 @@ async function other(state: WorldState, event: WorldEvent, output: buffer): i32 
     return 106;
 }
 function checkPending(state: WorldState): bool { return pending(); }
+function nextHandle(state: WorldState): i32 {
+    state.evaluated = state.evaluated + 1;
+    return 17;
+}
 `;
 
 function uleb(n) {
@@ -166,11 +172,11 @@ function rv32Reactor(sdk = imports, entryDescriptors = worldEntries) {
 
 function miniatureReactor() {
     let next = 1;
-    let reject = 0;
+    let reject;
     const trace = [];
     function request(name, handle) {
-        const token = reject || next++;
-        reject = 0;
+        const token = reject ?? next++;
+        reject = undefined;
         trace.push({name, handle, token});
         return token;
     }
@@ -248,6 +254,7 @@ for (const engine of ["wasm", "rv32", "rv32 buffered"]) {
     };
     check(101, 0);
     check(102, 0);
+    assert.equal(h.scalar(16), 1, "a busy start skips effectful arguments");
     const waiting = h.record();
     check(105, 4, 99);
     check(105, 5, 1);
@@ -265,6 +272,12 @@ for (const engine of ["wasm", "rv32", "rv32 buffered"]) {
     check(101, 0);
     check(106, 4, 5);
     assert.equal(h.mock.trace.at(-1).token, -5);
+    assert.equal(h.scalar(16), 2);
+    h.mock.failStart(0);
+    check(101, 0);
+    check(106, 4, 5);
+    assert.equal(h.mock.trace.at(-1).token, 0);
+    assert.equal(h.scalar(16), 3);
 
     check(101, 1);
     check(101, 2);
@@ -303,6 +316,27 @@ for (const engine of ["wasm", "rv32", "rv32 buffered"]) {
 console.log(JSON.stringify(typedAsync.analyze(preamble + asyncOpen + handlerMeta + "\n" + handlerSignature +
     " { start openFile(17, state); return 0; }", imports), null, 2));
 
+const overlap = typedAsync.analyze(preamble + `
+async function overlap(state: WorldState, limit: i32, pre: i32): i32 {
+    let ix = 0;
+    let total = pre;
+    while (ix < limit) {
+        if (ix === 0) {
+            const before = ix;
+            state.normalized = before;
+            await typedSdkYield();
+        }
+        await typedSdkYield();
+        total = total + 1;
+        ix = ix + 1;
+    }
+    state.normalized = total;
+    return 0;
+}
+` + handlerMeta + "\n" + handlerSignature + " { start overlap(state, 2, 1); return 0; }", imports).tasks.overlap[0];
+assert.deepEqual(overlap.waits.map(wait => wait.saved), [["limit", "ix", "total"], ["limit", "ix", "total"]]);
+assert.equal(overlap.fields.length, 5);
+
 function rejects(body, pattern, task = true) {
     const program = preamble + body + "\n" + handlerMeta + "\n" + handlerSignature +
         (task ? " { start work(state); return 0; }" : " { return 0; }");
@@ -319,6 +353,9 @@ rejects("async function work(state: WorldState, text: buffer): i32 { return text
 rejects("async function work(state: WorldState): i32 { return helper(state); }\nasync function helper(state: WorldState): i32 { return 0; }", /call async function helper with start or await/);
 rejects("async function work(state: WorldState): i32 { await helper(state); return 0; }\nasync function helper(state: WorldState): i32 { await work(state); return 0; }", /recursive call cycle: work -> helper -> work/);
 rejects("async function work(state: WorldState): i32 { const ok: i32 = await typedSdkYield(); return ok; }", /expected i32, got bool/);
+rejects(`async function work(state: WorldState): i32 { return bridge(state); }
+function bridge(state: WorldState): i32 { return bounce(state); }
+function bounce(state: WorldState): i32 { start work(state); return 0; }`, /recursive call cycle: work -> bridge -> bounce -> work/);
 rejects("async function work(state: WorldState): i32 { await typedSdkRelease(5); return 0; }", /expected an async function or awaitable reactor function/);
 rejects("async function work(state: WorldState): i32 { const ok = false; ok = await typedSdkYield(); return 0; }", /expected mutable local ok/);
 rejects("async function work(state: WorldState): i32 { const value = typedSdkView(typedSdkBuffer(0), 1); await typedSdkYield(); return value.length; }", /value is live across the wait/);
@@ -329,6 +366,16 @@ const tooLarge = source.replace(stateRecord, stateRecord.replace("}", Array.from
 assert.throws(() => compileTypedWorld(tooLarge, wasmReactor()), /WorldState supports up to 80 scalar fields/);
 assert.throws(() => compileTypedWorldRv32(tooLarge, rv32Reactor()), /WorldState supports up to 80 scalar fields/);
 console.log("both targets reject invalid awaits, illegal references, cycles, and frame overflow");
+
+const standalone = compileTyped(stateRecord + `
+async function complete(state: WorldState): bool { state.normalized = 5; return true; }
+function begin(state: WorldState): bool { return start complete(state); }
+`, {asyncSource: true});
+assert(standalone.asyncLayout.tasks.complete);
+assert.match(standalone.asyncSource, /complete_step/);
+const standaloneWorld = new WebAssembly.Instance(new WebAssembly.Module(standalone));
+assert.equal(standaloneWorld.exports.begin(128), 1);
+assert.equal(new DataView(standaloneWorld.exports.memory.buffer).getInt32(132, true), 5);
 
 const baseline = process.argv[2];
 if (baseline) checkBaseline(baseline);

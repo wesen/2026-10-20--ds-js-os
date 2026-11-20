@@ -61,14 +61,18 @@ class Lexer {
     constructor(source, start = 0, end = source.length) {
         this.source = source;
         this.offset = start;
-        this.input = end === source.length ? source : source.slice(0, end);
+        this.end = end;
         this.next();
     }
 
     next() {
+        if (this.offset >= this.end) {
+            this.token = {value: "", kind: "eof", at: this.offset};
+            return;
+        }
         TOKEN.lastIndex = this.offset;
-        const match = TOKEN.exec(this.input);
-        if (match) {
+        const match = TOKEN.exec(this.source);
+        if (match && TOKEN.lastIndex <= this.end) {
             const {id, int, str, op} = match.groups;
             const value = id ?? int ?? str ?? op;
             this.token = { value, kind: id ? "id" : int ? "int" : str ? "str" : "op",
@@ -77,7 +81,7 @@ class Lexer {
             return;
         }
         this.token = { value: "", kind: "eof", at: this.offset };
-        if (!/^\s*(?:\/\/[^\n]*(?:\n|$)\s*)*$/.test(this.input.slice(this.offset))) {
+        if (!/^\s*(?:\/\/[^\n]*(?:\n|$)\s*)*$/.test(this.source.slice(this.offset, this.end))) {
             this.fail("invalid token");
         }
     }
@@ -116,7 +120,7 @@ class Lexer {
     skipBody() {
         BODY_TOKEN.lastIndex = this.offset;
         let depth = 1;
-        for (let token; (token = BODY_TOKEN.exec(this.input));) {
+        for (let token; (token = BODY_TOKEN.exec(this.source)) && BODY_TOKEN.lastIndex <= this.end;) {
             if (token[0] === "{") depth++;
             if (token[0] === "}" && --depth === 0) {
                 const end = BODY_TOKEN.lastIndex;
@@ -125,7 +129,7 @@ class Lexer {
                 return end;
             }
         }
-        this.offset = this.input.length;
+        this.offset = this.end;
         this.next();
     }
 }
@@ -409,6 +413,16 @@ class FunctionEmitter {
         const lex = this.lex;
         const callee = this.functions.get(name);
         if (!callee) lex.fail("unknown function " + name);
+        const startField = lex.generatedStartFields?.get(name);
+        if (startField) {
+            const named = this.locals.get("state");
+            const state = named?.type === "WorldState" ? named :
+                [...this.locals.values()].find(local => local.type === "WorldState");
+            if (!state) lex.fail("start requires an ambient WorldState binding");
+            this.emitIndex(OP.get, state.index);
+            this.emitMemory(0x28, 2, this.records.get("WorldState").get(startField).offset);
+            this.code.push(OP.eqz, OP.if, I32);
+        }
         for (let i = 0; i < callee.params.length; i++) {
             if (i) lex.expect(",");
             this.want(this.expr(), callee.params[i]);
@@ -418,6 +432,11 @@ class FunctionEmitter {
         const ordinal = callee.index - this.functionBase;
         if (this.edges && ordinal >= 0 && !this.edges.includes(ordinal))
             this.edges.push(ordinal);
+        if (startField) {
+            this.code.push(OP.else);
+            this.emitConst(0);
+            this.code.push(OP.end);
+        }
         return callee.result;
     }
 
@@ -820,7 +839,7 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
     const lowered = globalThis.typedAsync?.rewrite(source, imported);
     try {
         const program = emitFunctions(lowered?.source ?? source, functionBase, imported,
-            numericOperands, onFunction, onSignatures, lowered?.prefix);
+            numericOperands, onFunction, onSignatures, lowered);
         if (lowered) {
             program.asyncLayout = lowered.layout;
             if (options?.asyncSource) program.asyncSource = lowered.source;
@@ -831,13 +850,15 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
     }
 }
 
-function emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, generatedPrefix) {
+function emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, lowered) {
     const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     const lex = new Lexer(source);
-    if (generatedPrefix) {
+    if (lowered) {
+        const generatedPrefix = lowered.prefix;
         lex.isGeneratedLocal = name => name.startsWith(generatedPrefix + "local_");
         lex.generatedWordType = name => name.startsWith(generatedPrefix + "word_")
             ? name.slice(generatedPrefix.length + "word_".length) : null;
+        lex.generatedStartFields = lowered.startFields;
     }
     const declared = new Map(imported.map(fn => [fn.name, fn]));
     const {records, enums, distinct} = parseDeclarations(lex);
@@ -1047,7 +1068,12 @@ function invoke(exports, signature, args) {
     return signature.result === "bool" ? value !== 0 : value;
 }
 
-globalThis.compileTyped = source => compile(source).bytes;
+globalThis.compileTyped = (source, options) => {
+    const {bytes, asyncLayout, asyncSource} = compile(source, options);
+    if (asyncLayout) bytes.asyncLayout = asyncLayout;
+    if (asyncSource) bytes.asyncSource = asyncSource;
+    return bytes;
+};
 globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
     parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts};
 })();
