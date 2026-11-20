@@ -4,7 +4,8 @@ Ticket: PICOCALC-RENDER-SNAKE
 Status: active
 Topics:
     - picocalc
-    - rendering
+    - ui
+    - performance
 DocType: design-doc
 Intent: long-term
 Owners: []

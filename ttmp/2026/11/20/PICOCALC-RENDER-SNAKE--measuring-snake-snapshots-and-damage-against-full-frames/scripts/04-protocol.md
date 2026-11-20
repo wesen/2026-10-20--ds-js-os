@@ -1,3 +1,22 @@
+---
+Title: Operator protocol for Snake replay and measurement
+Ticket: PICOCALC-RENDER-SNAKE
+Status: active
+Topics:
+    - picocalc
+    - ui
+    - performance
+DocType: design-doc
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: ""
+LastUpdated: 2026-11-20T11:08:08.018742764-05:00
+WhatFor: ""
+WhenToUse: ""
+---
+
 # Operator freeze before measurements
 
 The independent design was recorded first. The work below uses release-real controls inside an isolated host model. We will evaluate the design's predictions against these specific treatments.

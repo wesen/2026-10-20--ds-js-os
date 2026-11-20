@@ -1,0 +1,1454 @@
+{
+  "seed": 5172,
+  "intervalMs": 110,
+  "actions": [
+    {
+      "id": "start",
+      "kind": 2,
+      "type": "",
+      "payload": null
+    },
+    {
+      "id": "focus",
+      "kind": 0,
+      "type": "focus",
+      "payload": null
+    },
+    {
+      "id": "eat",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "reject-reverse",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "left",
+        "ch": "",
+        "state": "down"
+      }
+    },
+    {
+      "id": "turn-down",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "down",
+        "ch": "",
+        "state": "down"
+      }
+    },
+    {
+      "id": "move-down",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "blur",
+      "kind": 0,
+      "type": "blur",
+      "payload": null
+    },
+    {
+      "id": "paused-timer",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "refocus",
+      "kind": 0,
+      "type": "focus",
+      "payload": null
+    },
+    {
+      "id": "turn-left",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "left",
+        "ch": "",
+        "state": "down"
+      }
+    },
+    {
+      "id": "move-left",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "turn-up",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "up",
+        "ch": "",
+        "state": "down"
+      }
+    },
+    {
+      "id": "self-collision",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "dead-timer",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "restart",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "enter",
+        "ch": "",
+        "state": "down"
+      }
+    },
+    {
+      "id": "right-again",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "loop-down",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "s",
+        "ch": "s",
+        "state": "down"
+      }
+    },
+    {
+      "id": "loop-leg-1",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "loop-left",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "a",
+        "ch": "a",
+        "state": "down"
+      }
+    },
+    {
+      "id": "loop-leg-2",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "loop-up",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "w",
+        "ch": "w",
+        "state": "down"
+      }
+    },
+    {
+      "id": "enter-vacated-tail",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-1",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-2",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-3",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-4",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-5",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-6",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-7",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-8",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "wall-run-9",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "restart-after-wall",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "enter",
+        "ch": "",
+        "state": "down"
+      }
+    },
+    {
+      "id": "enable-autopilot",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "p",
+        "ch": "p",
+        "state": "down"
+      }
+    },
+    {
+      "id": "auto-1",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-2",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-3",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-4",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-5",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-6",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-7",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-8",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-9",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-10",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-11",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-12",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-13",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-14",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-15",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-16",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-17",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-18",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-19",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-20",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-21",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-22",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-23",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-24",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-25",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-26",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-27",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-28",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-29",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-30",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-31",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-32",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-33",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-34",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-35",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-36",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-37",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-38",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-39",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-40",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-41",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-42",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-43",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-44",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-45",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-46",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-47",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-48",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-49",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-50",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-51",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-52",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-53",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-54",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-55",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-56",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-57",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-58",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-59",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-60",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-61",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-62",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-63",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-64",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-65",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-66",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-67",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-68",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-69",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-70",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-71",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-72",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-73",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-74",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-75",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-76",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-77",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-78",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-79",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-80",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-81",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-82",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-83",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-84",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-85",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-86",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-87",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-88",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-89",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-90",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-91",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-92",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-93",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-94",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-95",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-96",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-97",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-98",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-99",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-100",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-101",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-102",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-103",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-104",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-105",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-106",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-107",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-108",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-109",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-110",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-111",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-112",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-113",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-114",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-115",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-116",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-117",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-118",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-119",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-120",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-121",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-122",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-123",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-124",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-125",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-126",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-127",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-128",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-129",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-130",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-131",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-132",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-133",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-134",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-135",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-136",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-137",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-138",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-139",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-140",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-141",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-142",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-143",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-144",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-145",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-146",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-147",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-148",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-149",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-150",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-151",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-152",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-153",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-154",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-155",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-156",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-157",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-158",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-159",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-160",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-161",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-162",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-163",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-164",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-165",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-166",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-167",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-168",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-169",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-170",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-171",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-172",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-173",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-174",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-175",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-176",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-177",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-178",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-179",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-180",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-181",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-182",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-183",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-184",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-185",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-186",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-187",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-188",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-189",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-190",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-191",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-192",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-193",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-194",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-195",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-196",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-197",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-198",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-199",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "auto-200",
+      "kind": 1,
+      "type": 0,
+      "payload": null
+    },
+    {
+      "id": "manual-takes-over",
+      "kind": 0,
+      "type": "key",
+      "payload": {
+        "key": "right",
+        "ch": "",
+        "state": "down"
+      }
+    }
+  ]
+}

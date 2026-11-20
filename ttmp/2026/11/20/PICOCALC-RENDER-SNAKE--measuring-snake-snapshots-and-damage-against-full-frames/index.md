@@ -4,7 +4,8 @@ Ticket: PICOCALC-RENDER-SNAKE
 Status: active
 Topics:
     - picocalc
-    - rendering
+    - ui
+    - performance
 DocType: index
 Intent: long-term
 Owners: []
@@ -18,37 +19,9 @@ WhenToUse: ""
 
 # Measuring Snake snapshots and damage against full frames
 
-## Overview
+The [project report](analysis/01-what-moves-when-a-snake-advances-one-cell.md) follows a game tick from a 22×18 board to the 320×320 RGB565 display. An unchanged application screen, two complete semantic encodings, and a motion-only partial repaint were compared on 234 real-input snapshots plus two capacity fixtures. Three independent full raster runs agree byte-for-byte in all 236 frames. The study has no production changes.
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
-
-## Key Links
-
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-- rendering
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+- [Pre-measurement Opus design](design-doc/01-independent-prospective-design-for-snake.md) and [frozen operator protocol](scripts/04-protocol.md)
+- [Host data](various/summary.json) and [reproduction guide](README.md)
+- [Researcher's diary](reference/02-opus-researcher-investigation-diary.md) and [operator's diary](reference/01-operator-investigation-diary.md)
+- [Director's companion lab](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/index.md)
