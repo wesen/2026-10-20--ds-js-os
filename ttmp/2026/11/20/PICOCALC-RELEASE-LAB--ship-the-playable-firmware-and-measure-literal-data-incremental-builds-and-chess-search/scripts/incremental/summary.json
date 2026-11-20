@@ -1,0 +1,178 @@
+{
+  "releaseReadbackVerified": true,
+  "playablePainterVerified": true,
+  "configuration": {
+    "host": "Node/V8, 5 rotated blocks; public compile plus hash/metadata; fsync+rename+directory sync in disk arm",
+    "board": "ESP32-P4 360 MHz QuickJS native lexer; 3 alternating pairs/edit in one boot; complete linked ELF return, correctness checks outside compiler clock",
+    "currentApplicationPolicy": {
+      "heapBytes": 4194304,
+      "deadlineUs": 6000000
+    }
+  },
+  "apps": {
+    "editor": {
+      "hostMs": {
+        "base": {
+          "clean": 15.992,
+          "ram": 9.726,
+          "disk": 21.511,
+          "cold-cache": 17.522
+        },
+        "body": {
+          "clean": 20.026,
+          "ram": 9.817,
+          "disk": 20.484,
+          "cold-cache": 20.08
+        },
+        "signature": {
+          "clean": 17.655,
+          "ram": 18.063,
+          "disk": 26.373,
+          "cold-cache": 17.0
+        },
+        "layout": {
+          "clean": 15.739,
+          "ram": 15.034,
+          "disk": 27.124,
+          "cold-cache": 13.886
+        }
+      },
+      "board": {
+        "body": {
+          "cleanUs": 2231793,
+          "ramUs": 878315,
+          "pairedRatio": 0.39256,
+          "wins": 3,
+          "reused": 118,
+          "rebuilt": 1
+        },
+        "signature": {
+          "cleanUs": 2243074,
+          "ramUs": 2427834,
+          "pairedRatio": 1.084,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 119
+        },
+        "layout": {
+          "cleanUs": 2247134,
+          "ramUs": 2430574,
+          "pairedRatio": 1.08167,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 119
+        }
+      },
+      "fresh": {
+        "clean": {
+          "us": 2552384,
+          "peakBytes": 2554092,
+          "crc": 3763014618
+        },
+        "fragment": {
+          "us": 2768222,
+          "peakBytes": 3066112,
+          "crc": 3763014618
+        }
+      },
+      "diagnostic": "SyntaxError: 730:53: expected ,",
+      "checkpoint": {
+        "app": "editor",
+        "key": "restore",
+        "bytes": 292438,
+        "encodeUs": 180913,
+        "writeUs": 3151411,
+        "readUs": 54055,
+        "checkpointToEditedElfUs": 4622496,
+        "decodeUs": 173006,
+        "childUs": 873971,
+        "reused": 118,
+        "rebuilt": 1,
+        "persisted": true
+      },
+      "warmHarnessPeak": 18745176
+    },
+    "chess": {
+      "hostMs": {
+        "base": {
+          "clean": 11.116,
+          "ram": 3.305,
+          "disk": 16.699,
+          "cold-cache": 15.878
+        },
+        "body": {
+          "clean": 8.328,
+          "ram": 4.845,
+          "disk": 16.946,
+          "cold-cache": 9.988
+        },
+        "signature": {
+          "clean": 8.834,
+          "ram": 9.986,
+          "disk": 23.343,
+          "cold-cache": 9.886
+        },
+        "layout": {
+          "clean": 8.53,
+          "ram": 9.424,
+          "disk": 22.468,
+          "cold-cache": 9.925
+        }
+      },
+      "board": {
+        "body": {
+          "cleanUs": 3235948,
+          "ramUs": 591325,
+          "pairedRatio": 0.18257,
+          "wins": 3,
+          "reused": 81,
+          "rebuilt": 1
+        },
+        "signature": {
+          "cleanUs": 3231845,
+          "ramUs": 3367867,
+          "pairedRatio": 1.04209,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 82
+        },
+        "layout": {
+          "cleanUs": 3241467,
+          "ramUs": 3377166,
+          "pairedRatio": 1.03938,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 82
+        }
+      },
+      "fresh": {
+        "clean": {
+          "us": 3577496,
+          "peakBytes": 3186424,
+          "crc": 178518363
+        },
+        "fragment": {
+          "us": 3716999,
+          "peakBytes": 3908360,
+          "crc": 178518363
+        }
+      },
+      "diagnostic": "SyntaxError: 146:32: expected ,",
+      "checkpoint": {
+        "app": "chess",
+        "key": "restore",
+        "bytes": 681313,
+        "encodeUs": 318978,
+        "writeUs": 7431749,
+        "readUs": 124128,
+        "checkpointToEditedElfUs": 9002901,
+        "decodeUs": 342645,
+        "childUs": 589632,
+        "reused": 81,
+        "rebuilt": 1,
+        "persisted": true
+      },
+      "warmHarnessPeak": 8938604
+    }
+  }
+}

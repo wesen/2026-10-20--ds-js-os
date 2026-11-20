@@ -1,0 +1,54 @@
+INC_BEGIN mounted=1
+INC_COLD editor clean 2552384 2554092 3763014618
+INC_COLD editor fragment 2768222 3066112 3763014618
+INC_COLD chess clean 3577496 3186424 178518363
+INC_COLD chess fragment 3716999 3908360 178518363
+INC_READY editor 636330
+INC_ROW {"app":"editor","key":"body","arm":"clean","i":0,"us":2237412,"crc":3650697465}
+INC_ROW {"app":"editor","key":"body","arm":"ram","i":0,"us":878315,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"ram","i":1,"us":875490,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"clean","i":1,"us":2231212,"crc":3650697465}
+INC_ROW {"app":"editor","key":"body","arm":"clean","i":2,"us":2231793,"crc":3650697465}
+INC_ROW {"app":"editor","key":"body","arm":"ram","i":2,"us":882334,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"base","arm":"empty-cache","us":2423829,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"base","arm":"clean","us":2231870}
+INC_ROW {"app":"editor","key":"restore","bytes":292438,"encodeUs":180913,"writeUs":3151411,"readUs":54055,"checkpointToEditedElfUs":4622496,"decodeUs":173006,"childUs":873971,"reused":118,"rebuilt":1,"persisted":true}
+INC_ROW {"app":"editor","key":"bad","diagnostic":"SyntaxError: 730:53: expected ,"}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","i":0,"us":2244190,"crc":3656441164}
+INC_ROW {"app":"editor","key":"signature","arm":"ram","i":0,"us":2438083,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"signature","arm":"ram","i":1,"us":2424019,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","i":1,"us":2236171,"crc":3656441164}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","i":2,"us":2243074,"crc":3656441164}
+INC_ROW {"app":"editor","key":"signature","arm":"ram","i":2,"us":2427834,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","i":0,"us":2247397,"crc":3731796167}
+INC_ROW {"app":"editor","key":"layout","arm":"ram","i":0,"us":2427492,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"ram","i":1,"us":2437911,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","i":1,"us":2247134,"crc":3731796167}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","i":2,"us":2247047,"crc":3731796167}
+INC_ROW {"app":"editor","key":"layout","arm":"ram","i":2,"us":2430574,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_MEM editor 18745176
+INC_READY chess 632753
+INC_ROW {"app":"chess","key":"body","arm":"clean","i":0,"us":3230570,"crc":2170287918}
+INC_ROW {"app":"chess","key":"body","arm":"ram","i":0,"us":591497,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"ram","i":1,"us":590342,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"clean","i":1,"us":3235948,"crc":2170287918}
+INC_ROW {"app":"chess","key":"body","arm":"clean","i":2,"us":3238956,"crc":2170287918}
+INC_ROW {"app":"chess","key":"body","arm":"ram","i":2,"us":591325,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"base","arm":"empty-cache","us":3358963,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"base","arm":"clean","us":3233179}
+INC_ROW {"app":"chess","key":"restore","bytes":681313,"encodeUs":318978,"writeUs":7431749,"readUs":124128,"checkpointToEditedElfUs":9002901,"decodeUs":342645,"childUs":589632,"reused":81,"rebuilt":1,"persisted":true}
+INC_ROW {"app":"chess","key":"bad","diagnostic":"SyntaxError: 146:32: expected ,"}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","i":0,"us":3234016,"crc":766439757}
+INC_ROW {"app":"chess","key":"signature","arm":"ram","i":0,"us":3367420,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"signature","arm":"ram","i":1,"us":3367867,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","i":1,"us":3231845,"crc":766439757}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","i":2,"us":3231487,"crc":766439757}
+INC_ROW {"app":"chess","key":"signature","arm":"ram","i":2,"us":3371132,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","i":0,"us":3249768,"crc":145852333}
+INC_ROW {"app":"chess","key":"layout","arm":"ram","i":0,"us":3377735,"crc":145852333,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"ram","i":1,"us":3366816,"crc":145852333,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","i":1,"us":3241467,"crc":145852333}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","i":2,"us":3241057,"crc":145852333}
+INC_ROW {"app":"chess","key":"layout","arm":"ram","i":2,"us":3377166,"crc":145852333,"reused":0,"rebuilt":82}
+INC_MEM chess 8938604
+INC_DONE ok

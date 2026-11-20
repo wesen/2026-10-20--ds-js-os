@@ -1,0 +1,358 @@
+Write the final public research article as the actual Opus High lead researcher for the release compiler experiment below. You already supplied the design and critique. The operator implemented the scoped private treatment, tested your suggestions, operated the real ESP32-P4 and supplied frozen evidence. Author the actual Markdown article now, no plans or questions, no tool use. Approximately 1,800–2,400 words, no YAML header, pedagogical textbook-style prose, no analogies. Use accurate, concrete sentences and small comparative tables. Title it "Which parts of a handheld build survive an edit?" Explain one worked example end-to-end. Briefly introduce a function fragment, the call graph, relocation, ABI, and how linking code shape differs from restoring a complete ELF. State disposition and limits including single boot/3 paired samples, direct compiler entry, no edited native invocation, budgets and attributable heap. Discuss actual new P4 and host results, both positive and negative. Give an accessible explanation of why checking every function signature/type/layout makes the current conservatively correct signature/layout cost differ from the selective prior LAB2. Include exact local-body, signature and layout timings for each app, fresh cold measurements, RAM hits, physical checkpoint byte count and wall-time including persistence, host atomic commit versus device exclusive temporary FAT round-trip, checked cold diagnostics and async correctness, budget and timing exclusions. When aggregating, distinguish ratio of medians and median paired ratio. Do not present fixed counts as confidence intervals. Stay inside supporting data, never promise savings in all workloads. Use linked sources with these relative article links at point of use: ../scripts/incremental/summary.json, ../scripts/incremental/physical.json, ../scripts/incremental/host.json, ../scripts/incremental/controls.json, ../various/fragment-correctness.json, ../design-doc/03-incremental-builds.md and ../reference/04-incremental-build-diary.md. Provide reproduction commands from scripts/incremental at the end. The director handles publication. No credentials/no serial logs supplied. No production code was changed for the experiment.
+
+Physical setup: one 360 MHz core of PicoCalc ESP32-P4; matching checked compiler sources, same production native token index, async transformer, aligned PSRAM JS allocator, full current release app sources (Editor 69884, Chess 61022 bytes) and SDK reactors. 80KiB internal measurement task stack, 56KiB JS stack guard. The shipping Editor/Chess compile policy is 4 MiB and 6 seconds. Isolated warm harness holds two compilers plus both roots and spare correctness images, uses no such cutoff; report that whole harness peak cannot be attributed to a single session. Fresh single-compiler peaks are more interpretable; fresh trial begins at JS runtime construction and ends at complete linked ELF; it includes compiler evaluation and creating JS source and reactor inputs from embedded bytes, excludes storage fetch of bundle and execution of edited app. Fresh trials use one observation per arm per app. Three warm pairs each compare actual stock vs retained baseline of the preceding revision; same QuickJS engine; verification afterwards compares exact bytes and also trusted clean host CRC. Diagnostic 'bad' changed signature so all fragments miss; extra host body errors hit old entries first, extra suspension and rejection tested, root rollback and poisoned-word control. Independent relocation witness 84→144 bytes and cycle with a previously cached edge. Initial checkpoint written to FAT, fsynced, closed, reopened and checked with CRC+firmware/app target before host JS decode/rebuild. checkpointToEditedElfUs includes serialize/exclusive write/read/JS decode and build of first body edit. This physical measurement does not write a second checkpoint for its child, and does not establish power-loss recovery or real editor UI latency. Native runner temporarily uses the published app slot and requires readback of the ordinary image before publication. Restoration status is in the summary. The canonical image is SHA-256 134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1. Host durable path includes input checkpoint read + hash/decode + compile + entire new checkpoint write/fsync/rename and directory fsync, plus ELF and async metadata hashing in timing. Host integrity controls reject stale identity and truncation. Host unchanged/base warm refers to valid previous version. A single boot does not compare independent restarts.
+
+Final operator summary
+{
+  "releaseReadbackVerified": false,
+  "playablePainterVerified": false,
+  "configuration": {
+    "host": "Node/V8, 5 rotated blocks; public compile plus hash/metadata; fsync+rename+directory sync in disk arm",
+    "board": "ESP32-P4 360 MHz QuickJS native lexer; 3 alternating pairs/edit in one boot; complete linked ELF return, correctness checks outside compiler clock",
+    "currentApplicationPolicy": {
+      "heapBytes": 4194304,
+      "deadlineUs": 6000000
+    }
+  },
+  "apps": {
+    "editor": {
+      "hostMs": {
+        "base": {
+          "clean": 15.992,
+          "ram": 9.726,
+          "disk": 21.511,
+          "cold-cache": 17.522
+        },
+        "body": {
+          "clean": 20.026,
+          "ram": 9.817,
+          "disk": 20.484,
+          "cold-cache": 20.08
+        },
+        "signature": {
+          "clean": 17.655,
+          "ram": 18.063,
+          "disk": 26.373,
+          "cold-cache": 17.0
+        },
+        "layout": {
+          "clean": 15.739,
+          "ram": 15.034,
+          "disk": 27.124,
+          "cold-cache": 13.886
+        }
+      },
+      "board": {
+        "body": {
+          "cleanUs": 2231793,
+          "ramUs": 878315,
+          "pairedRatio": 0.39256,
+          "wins": 3,
+          "reused": 118,
+          "rebuilt": 1
+        },
+        "signature": {
+          "cleanUs": 2243074,
+          "ramUs": 2427834,
+          "pairedRatio": 1.084,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 119
+        },
+        "layout": {
+          "cleanUs": 2247134,
+          "ramUs": 2430574,
+          "pairedRatio": 1.08167,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 119
+        }
+      },
+      "fresh": {
+        "clean": {
+          "us": 2552384,
+          "peakBytes": 2554092,
+          "crc": 3763014618
+        },
+        "fragment": {
+          "us": 2768222,
+          "peakBytes": 3066112,
+          "crc": 3763014618
+        }
+      },
+      "diagnostic": "SyntaxError: 730:53: expected ,",
+      "checkpoint": {
+        "app": "editor",
+        "key": "restore",
+        "bytes": 292438,
+        "encodeUs": 180913,
+        "writeUs": 3151411,
+        "readUs": 54055,
+        "checkpointToEditedElfUs": 4622496,
+        "decodeUs": 173006,
+        "childUs": 873971,
+        "reused": 118,
+        "rebuilt": 1,
+        "persisted": true
+      },
+      "warmHarnessPeak": 18745176
+    },
+    "chess": {
+      "hostMs": {
+        "base": {
+          "clean": 11.116,
+          "ram": 3.305,
+          "disk": 16.699,
+          "cold-cache": 15.878
+        },
+        "body": {
+          "clean": 8.328,
+          "ram": 4.845,
+          "disk": 16.946,
+          "cold-cache": 9.988
+        },
+        "signature": {
+          "clean": 8.834,
+          "ram": 9.986,
+          "disk": 23.343,
+          "cold-cache": 9.886
+        },
+        "layout": {
+          "clean": 8.53,
+          "ram": 9.424,
+          "disk": 22.468,
+          "cold-cache": 9.925
+        }
+      },
+      "board": {
+        "body": {
+          "cleanUs": 3235948,
+          "ramUs": 591325,
+          "pairedRatio": 0.18257,
+          "wins": 3,
+          "reused": 81,
+          "rebuilt": 1
+        },
+        "signature": {
+          "cleanUs": 3231845,
+          "ramUs": 3367867,
+          "pairedRatio": 1.04209,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 82
+        },
+        "layout": {
+          "cleanUs": 3241467,
+          "ramUs": 3377166,
+          "pairedRatio": 1.03938,
+          "wins": 0,
+          "reused": 0,
+          "rebuilt": 82
+        }
+      },
+      "fresh": {
+        "clean": {
+          "us": 3577496,
+          "peakBytes": 3186424,
+          "crc": 178518363
+        },
+        "fragment": {
+          "us": 3716999,
+          "peakBytes": 3908360,
+          "crc": 178518363
+        }
+      },
+      "diagnostic": "SyntaxError: 146:32: expected ,",
+      "checkpoint": {
+        "app": "chess",
+        "key": "restore",
+        "bytes": 681313,
+        "encodeUs": 318978,
+        "writeUs": 7431749,
+        "readUs": 124128,
+        "checkpointToEditedElfUs": 9002901,
+        "decodeUs": 342645,
+        "childUs": 589632,
+        "reused": 81,
+        "rebuilt": 1,
+        "persisted": true
+      },
+      "warmHarnessPeak": 8938604
+    }
+  }
+}
+Additional host controls
+[
+  {
+    "app": "editor",
+    "label": "body type error",
+    "error": "SyntaxError: 726:36: unknown local undefinedIncrementalName",
+    "reused": 54,
+    "rebuilt": 1
+  },
+  {
+    "app": "editor",
+    "label": "invalid syntax",
+    "error": "SyntaxError: 726:12: expected identifier",
+    "reused": 54,
+    "rebuilt": 1
+  },
+  {
+    "app": "editor",
+    "label": "async result used by synchronous caller",
+    "error": "SyntaxError: 730:18: call async function editorPreviewSlot with start or await",
+    "reused": 0,
+    "rebuilt": 0
+  },
+  {
+    "app": "editor",
+    "label": "additional suspension in existing async function",
+    "image": "19e20d000e830c2d13233a64e4d2d4e4bdbd413ea63c50dfdd78fadf876d4125",
+    "metadata": "09496dae01eb6a01bf6fe38596395bd7f2f63d4d104fa97864c995124d92cfbc",
+    "reused": 118,
+    "rebuilt": 1
+  },
+  {
+    "app": "editor",
+    "label": "discarded edits, all fragments reusable",
+    "reused": 119,
+    "verified": true
+  },
+  {
+    "app": "editor",
+    "label": "deliberately damaged in-memory word detected by clean ELF oracle",
+    "reused": 119,
+    "verified": true
+  },
+  {
+    "app": "chess",
+    "label": "body type error",
+    "error": "SyntaxError: 43:69: unknown local undefinedIncrementalName",
+    "reused": 4,
+    "rebuilt": 1
+  },
+  {
+    "app": "chess",
+    "label": "invalid syntax",
+    "error": "SyntaxError: 43:45: expected identifier",
+    "reused": 4,
+    "rebuilt": 1
+  },
+  {
+    "app": "chess",
+    "label": "discarded edits, all fragments reusable",
+    "reused": 82,
+    "verified": true
+  },
+  {
+    "app": "chess",
+    "label": "deliberately damaged in-memory word detected by clean ELF oracle",
+    "reused": 82,
+    "verified": true
+  }
+]
+Host clean ELF and metadata identities plus fragment counts
+{"editor": {"gold": {"base": {"hash": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d", "bytes": 242124, "async": "83f6749e7fe0312188e1e2e24a95027dc274dbda3202ef84161fb9f441c9452b"}, "body": {"hash": "3a2a453f73210b40d8d1873752501449125b3cb6cc1c66dfe70563274ad4d858", "bytes": 242124, "async": "36390f724f42d497e44f4d3377bb3c7b6373157e45221f7ac0437fde133717c6"}, "signature": {"hash": "442e54e58c295e816ada52a398691197d3f1d35a82c0be3f15f1748008abdf3a", "bytes": 242124, "async": "e0d17999abb0b9987e5b357290e053b8b05b90abcb87c7034f757e75a916150d"}, "layout": {"hash": "6911edc15c18f699983d69a8e3d260e8b5e9e58819d6b82cd23b94d59d58d3ce", "bytes": 242124, "async": "6dac2a5e0093341095ef03ca35edeafe683be0602066833ebc699f9d254e8640"}}, "counts": {"base": {"reused": 0, "rebuilt": 119}, "body": {"reused": 118, "rebuilt": 1}, "bad": {"diagnostic": "SyntaxError: 730:53: expected ,"}, "signature": {"reused": 0, "rebuilt": 119}, "layout": {"reused": 0, "rebuilt": 119}}}, "chess": {"gold": {"base": {"hash": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685", "bytes": 274892, "async": "95cb9b4f84ceff132cc7a875d8c192bf4997016a939ee64141c1fd628c0e8738"}, "body": {"hash": "1dbe9a9379ddd392250fb306bb4f3c60ce8437b7b0eed0cab65b6e653fb37ff7", "bytes": 274892, "async": "95cb9b4f84ceff132cc7a875d8c192bf4997016a939ee64141c1fd628c0e8738"}, "signature": {"hash": "5f6bb7a5a3aa85ea586de328bdf2e3e47a3f2f4b2d7112a5d4f0e270965304ea", "bytes": 274892, "async": "95cb9b4f84ceff132cc7a875d8c192bf4997016a939ee64141c1fd628c0e8738"}, "layout": {"hash": "9c527677c57ea6b569afcc68a820a11b3c7e0f2d4c14e4a808cd3b907dc5306a", "bytes": 274892, "async": "95cb9b4f84ceff132cc7a875d8c192bf4997016a939ee64141c1fd628c0e8738"}}, "counts": {"base": {"reused": 0, "rebuilt": 82}, "body": {"reused": 81, "rebuilt": 1}, "bad": {"diagnostic": "SyntaxError: 146:32: expected ,"}, "signature": {"reused": 0, "rebuilt": 82}, "layout": {"reused": 0, "rebuilt": 82}}}}
+Older independent report excerpt
+## Prove that the budget binds
+
+| Edited revision | Rebuilt / reused at 256 KiB | Rebuilt / reused at 40 KiB |
+| --- | ---: | ---: |
+| Stride in one helper | 1 / 119 | 49 / 71 |
+| Helper signature and three callers | 4 / 116 | 52 / 68 |
+| File-handle record layout | 77 / 43 | 90 / 30 |
+| Preview row record layout | 77 / 43 | 90 / 30 |
+
+The generous limit fits all submitted fragments. Its retained code after the first edit is 87,544 bytes, about 85.5 KiB. At 40 KiB, 72 fragments totaling 40,892 bytes fit. The session briefly needs the code for the other functions to assemble the current ELF. A separate zero-capacity check rebuilt all 120 functions after every edit. An independent examiner inserted 8,192 source spaces and reproduced the same output and retained native bytes while retained function spellings increased from 34,431 to 42,623 UTF-16 units. This directly distinguishes the native payload bound from total JavaScript memory. The allocator measures the latter on the board.
+
+## Trace the measured interval
+
+Both lanes load the compiler in advance and build the parent source once. In the clean lane this warms the compiler but keeps no native fragments. In the incremental lane it seeds the bounded fragment store. Each measurement starts immediately before calling the compiler with the edited source. Source concatenation, seeding and collection occur before that timestamp. The session returns a complete ELF. The harness passes the ELF to `esp_elf_relocate`, maps an instruction address from the executable segment, prepares the preview caller arguments, executes it and records the return timestamp. Hashing and serial output occur afterward. The interval therefore includes output wrapping, executable relocation and the call setup as well as the compile. It excludes front-panel interaction, preparing source text and painting a new frame.
+
+```text
+warm clean session    | compile all 120 | link | load ELF | call → return |
+warm fragment session | validate and lower misses | link | load | call → return |
+                      ^ same edited-source handoff                         ^ endpoint
+```
+
+The host builds each accepted revision in a separate clean compiler realm. It compares every byte and calculates clean field indices and the internal function offset. The default Editor runtime exposes only metadata and event delivery through public stubs, so test firmware enters the existing preview helper through its independently verified internal address. The experiment leaves the actual native function text unchanged. Five emulated RV32 executions checked the original and four edited native images. A separate negative control applied the final field offsets to its predecessor's code and observed a trap, demonstrating that the final fixture can tell those two revisions apart.
+
+## What the physical board measured
+
+Each cell gives the median for boot one and boot two. The reference is a warmed full compiler that receives the same edited source. There are three counterbalanced measurements per cell per boot. All 72 device executions returned the expected result and wrote the expected Editor state. Each produced the same complete 240,452-byte ELF as its clean host oracle.
+
+| Edit | Warm clean (ms) | 256 KiB cap (ms) | Paired change (%) | 40 KiB cap (ms) | Paired change (%) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Body | 2,302.7 / 2,288.3 | 487.3 / 489.9 | -78.8 / -78.6 | 1,567.6 / 1,571.2 | -32.0 / -31.9 |
+| Signature and callers | 2,309.7 / 2,301.0 | 576.1 / 576.0 | -75.1 / -74.9 | 1,680.3 / 1,663.9 | -27.3 / -27.7 |
+| File handle layout | 2,301.2 / 2,295.0 | 2,135.4 / 2,122.3 | -7.2 / -7.5 | 2,355.5 / 2,345.9 | 2.5 / 2.4 |
+| Preview row layout | 2,306.6 / 2,299.5 | 2,166.2 / 2,151.6 | -5.8 / -6.3 | 2,356.1 / 2,339.1 | 2.3 / 1.7 |
+
+![Physical Editor edit-to-native-return time and QuickJS peak heap](../various/picocalc-editor-fragment-effects.png)
+
+The dots show the two boot medians. The labels 256 KiB and 40 KiB specify how much native instruction payload the session may keep between edits. The peak heap includes the other allocations needed while compiling.
+
+| Edit | Warm clean peak (KiB) | 256 KiB peak (KiB) | 40 KiB peak (KiB) |
+| --- | ---: | ---: | ---: |
+| Body | 1,379.5 / 1,379.5 | 1,547.5 / 1,547.4 | 1,530.7 / 1,530.7 |
+| Signature and callers | 1,380.4 / 1,380.4 | 1,560.0 / 1,560.0 | 1,544.3 / 1,544.3 |
+| File handle layout | 1,380.4 / 1,380.5 | 1,806.3 / 1,806.3 | 1,653.6 / 1,653.6 |
+| Preview row layout | 1,380.4 / 1,380.4 | 1,806.3 / 1,806.3 | 1,653.6 / 1,653.6 |
+
+Before the body edit, live QuickJS memory was about 721 KiB for the warm clean session, 1,190 KiB at the generous cap and 1,006 KiB at the tighter cap. The generous cap bought roughly 1.8 seconds on a one-function change. Both field-order changes still forced it to compile 77 of the 120 functions. The tighter cap had already discarded additional valid fragments and needed 90 compilations in each layout case. Those two cases took longer than the warm full build on both boots.
+
+The observed delay depends on how many valid fragments survive the edit and how many fit before the edit. Holding a full set can make a body or signature edit interactive while exposing the disproportionate cost of conservative record dependencies. The next focused comparison would replace the whole-record fingerprint with a fingerprint of the fields actually used by each function. For that experiment the same four edits, stale-layout witness, complete ELF equality and physical return clock provide a direct control.
+
+
+
+Study code reference
+// Private prototype. Every committed backend-version/ABI identity is supplied by the harness.
+globalThis.fragmentSession = function(prior) {
+    let descriptor, reusable, priorRoot, reused = 0, rebuilt = 0;
+    const next = Object.create(null);
+    function init(imports, functions, records, enums, distinct, lowered) {
+        descriptor = JSON.stringify([
+            imports.map(f => [f.name,f.params,f.result,Boolean(f.awaitable)]),
+            functions.map(f => [f.name,f.params,f.paramNames,f.result]),
+            [...records].map(([name,fields]) => [name,[...fields]]),
+            [...enums].map(([name,fields]) => [name,[...fields]]), [...distinct],
+            lowered ? [lowered.prefix,[...lowered.startFields]] : null
+        ]);
+        priorRoot = prior && prior.descriptor === descriptor ? prior.items : null;
+    }
+    function lookup(lex, fn, edges) {
+        const old = priorRoot && Object.hasOwn(priorRoot,fn.name) && priorRoot[fn.name];
+        reusable = null;
+        if (old && Array.isArray(old.words) && Array.isArray(old.calls) && lex.source.startsWith(old.body,fn.bodyAt)) {
+            for (const edge of old.edges) edges.push(edge);
+            reusable = next[fn.name] = old;
+            reused++;
+            return true;
+        }
+        lex.offset = fn.bodyAt;
+        lex.next();
+        const end = lex.skipBody();
+        if (end !== undefined) next[fn.name] = {body:lex.source.slice(fn.bodyAt,end), edges};
+        rebuilt++;
+        return false;
+    }
+    function lower(fn, targets, build) {
+        if (reusable) {
+            if (reusable !== next[fn.name]) throw Error("fragment emission order differs");
+            const old = reusable;
+            return {words:old.words.slice(), calls:old.calls.map(([from,index,offset,rd]) =>
+                ({from, target:index < 0 ? {at:offset} : targets[index], rd}))};
+        }
+        const built = build();
+        const saved = next[fn.name];
+        if (saved) {
+            saved.words = built.words.slice();
+            saved.calls = built.calls.map(({from,target,rd}) => {
+                const index = targets.indexOf(target);
+                return [from,index,index < 0 ? target.at : 0,rd];
+            });
+        }
+        return built;
+    }
+    return {init,lookup,lower,commit:() => ({descriptor,items:next}),stats:() => ({reused,rebuilt})};
+};

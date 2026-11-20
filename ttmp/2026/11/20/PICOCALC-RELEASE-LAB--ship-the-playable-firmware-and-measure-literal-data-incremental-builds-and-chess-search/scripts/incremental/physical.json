@@ -1,0 +1,477 @@
+{
+  "release": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "candidate": "5b5d5c6013da495f85bdbd18e5dbccf7c12ada5af73596d4ecbdd4bfb66a83a8",
+  "cold": [
+    {
+      "app": "editor",
+      "arm": "clean",
+      "us": 2552384,
+      "peakBytes": 2554092,
+      "crc": 3763014618
+    },
+    {
+      "app": "editor",
+      "arm": "fragment",
+      "us": 2768222,
+      "peakBytes": 3066112,
+      "crc": 3763014618
+    },
+    {
+      "app": "chess",
+      "arm": "clean",
+      "us": 3577496,
+      "peakBytes": 3186424,
+      "crc": 178518363
+    },
+    {
+      "app": "chess",
+      "arm": "fragment",
+      "us": 3716999,
+      "peakBytes": 3908360,
+      "crc": 178518363
+    }
+  ],
+  "rows": [
+    {
+      "app": "editor",
+      "key": "body",
+      "arm": "clean",
+      "i": 0,
+      "us": 2237412,
+      "crc": 3650697465
+    },
+    {
+      "app": "editor",
+      "key": "body",
+      "arm": "ram",
+      "i": 0,
+      "us": 878315,
+      "crc": 3650697465,
+      "reused": 118,
+      "rebuilt": 1
+    },
+    {
+      "app": "editor",
+      "key": "body",
+      "arm": "ram",
+      "i": 1,
+      "us": 875490,
+      "crc": 3650697465,
+      "reused": 118,
+      "rebuilt": 1
+    },
+    {
+      "app": "editor",
+      "key": "body",
+      "arm": "clean",
+      "i": 1,
+      "us": 2231212,
+      "crc": 3650697465
+    },
+    {
+      "app": "editor",
+      "key": "body",
+      "arm": "clean",
+      "i": 2,
+      "us": 2231793,
+      "crc": 3650697465
+    },
+    {
+      "app": "editor",
+      "key": "body",
+      "arm": "ram",
+      "i": 2,
+      "us": 882334,
+      "crc": 3650697465,
+      "reused": 118,
+      "rebuilt": 1
+    },
+    {
+      "app": "editor",
+      "key": "base",
+      "arm": "empty-cache",
+      "us": 2423829,
+      "reused": 0,
+      "rebuilt": 119
+    },
+    {
+      "app": "editor",
+      "key": "base",
+      "arm": "clean",
+      "us": 2231870
+    },
+    {
+      "app": "editor",
+      "key": "restore",
+      "bytes": 292438,
+      "encodeUs": 180913,
+      "writeUs": 3151411,
+      "readUs": 54055,
+      "checkpointToEditedElfUs": 4622496,
+      "decodeUs": 173006,
+      "childUs": 873971,
+      "reused": 118,
+      "rebuilt": 1,
+      "persisted": true
+    },
+    {
+      "app": "editor",
+      "key": "bad",
+      "diagnostic": "SyntaxError: 730:53: expected ,"
+    },
+    {
+      "app": "editor",
+      "key": "signature",
+      "arm": "clean",
+      "i": 0,
+      "us": 2244190,
+      "crc": 3656441164
+    },
+    {
+      "app": "editor",
+      "key": "signature",
+      "arm": "ram",
+      "i": 0,
+      "us": 2438083,
+      "crc": 3656441164,
+      "reused": 0,
+      "rebuilt": 119
+    },
+    {
+      "app": "editor",
+      "key": "signature",
+      "arm": "ram",
+      "i": 1,
+      "us": 2424019,
+      "crc": 3656441164,
+      "reused": 0,
+      "rebuilt": 119
+    },
+    {
+      "app": "editor",
+      "key": "signature",
+      "arm": "clean",
+      "i": 1,
+      "us": 2236171,
+      "crc": 3656441164
+    },
+    {
+      "app": "editor",
+      "key": "signature",
+      "arm": "clean",
+      "i": 2,
+      "us": 2243074,
+      "crc": 3656441164
+    },
+    {
+      "app": "editor",
+      "key": "signature",
+      "arm": "ram",
+      "i": 2,
+      "us": 2427834,
+      "crc": 3656441164,
+      "reused": 0,
+      "rebuilt": 119
+    },
+    {
+      "app": "editor",
+      "key": "layout",
+      "arm": "clean",
+      "i": 0,
+      "us": 2247397,
+      "crc": 3731796167
+    },
+    {
+      "app": "editor",
+      "key": "layout",
+      "arm": "ram",
+      "i": 0,
+      "us": 2427492,
+      "crc": 3731796167,
+      "reused": 0,
+      "rebuilt": 119
+    },
+    {
+      "app": "editor",
+      "key": "layout",
+      "arm": "ram",
+      "i": 1,
+      "us": 2437911,
+      "crc": 3731796167,
+      "reused": 0,
+      "rebuilt": 119
+    },
+    {
+      "app": "editor",
+      "key": "layout",
+      "arm": "clean",
+      "i": 1,
+      "us": 2247134,
+      "crc": 3731796167
+    },
+    {
+      "app": "editor",
+      "key": "layout",
+      "arm": "clean",
+      "i": 2,
+      "us": 2247047,
+      "crc": 3731796167
+    },
+    {
+      "app": "editor",
+      "key": "layout",
+      "arm": "ram",
+      "i": 2,
+      "us": 2430574,
+      "crc": 3731796167,
+      "reused": 0,
+      "rebuilt": 119
+    },
+    {
+      "app": "chess",
+      "key": "body",
+      "arm": "clean",
+      "i": 0,
+      "us": 3230570,
+      "crc": 2170287918
+    },
+    {
+      "app": "chess",
+      "key": "body",
+      "arm": "ram",
+      "i": 0,
+      "us": 591497,
+      "crc": 2170287918,
+      "reused": 81,
+      "rebuilt": 1
+    },
+    {
+      "app": "chess",
+      "key": "body",
+      "arm": "ram",
+      "i": 1,
+      "us": 590342,
+      "crc": 2170287918,
+      "reused": 81,
+      "rebuilt": 1
+    },
+    {
+      "app": "chess",
+      "key": "body",
+      "arm": "clean",
+      "i": 1,
+      "us": 3235948,
+      "crc": 2170287918
+    },
+    {
+      "app": "chess",
+      "key": "body",
+      "arm": "clean",
+      "i": 2,
+      "us": 3238956,
+      "crc": 2170287918
+    },
+    {
+      "app": "chess",
+      "key": "body",
+      "arm": "ram",
+      "i": 2,
+      "us": 591325,
+      "crc": 2170287918,
+      "reused": 81,
+      "rebuilt": 1
+    },
+    {
+      "app": "chess",
+      "key": "base",
+      "arm": "empty-cache",
+      "us": 3358963,
+      "reused": 0,
+      "rebuilt": 82
+    },
+    {
+      "app": "chess",
+      "key": "base",
+      "arm": "clean",
+      "us": 3233179
+    },
+    {
+      "app": "chess",
+      "key": "restore",
+      "bytes": 681313,
+      "encodeUs": 318978,
+      "writeUs": 7431749,
+      "readUs": 124128,
+      "checkpointToEditedElfUs": 9002901,
+      "decodeUs": 342645,
+      "childUs": 589632,
+      "reused": 81,
+      "rebuilt": 1,
+      "persisted": true
+    },
+    {
+      "app": "chess",
+      "key": "bad",
+      "diagnostic": "SyntaxError: 146:32: expected ,"
+    },
+    {
+      "app": "chess",
+      "key": "signature",
+      "arm": "clean",
+      "i": 0,
+      "us": 3234016,
+      "crc": 766439757
+    },
+    {
+      "app": "chess",
+      "key": "signature",
+      "arm": "ram",
+      "i": 0,
+      "us": 3367420,
+      "crc": 766439757,
+      "reused": 0,
+      "rebuilt": 82
+    },
+    {
+      "app": "chess",
+      "key": "signature",
+      "arm": "ram",
+      "i": 1,
+      "us": 3367867,
+      "crc": 766439757,
+      "reused": 0,
+      "rebuilt": 82
+    },
+    {
+      "app": "chess",
+      "key": "signature",
+      "arm": "clean",
+      "i": 1,
+      "us": 3231845,
+      "crc": 766439757
+    },
+    {
+      "app": "chess",
+      "key": "signature",
+      "arm": "clean",
+      "i": 2,
+      "us": 3231487,
+      "crc": 766439757
+    },
+    {
+      "app": "chess",
+      "key": "signature",
+      "arm": "ram",
+      "i": 2,
+      "us": 3371132,
+      "crc": 766439757,
+      "reused": 0,
+      "rebuilt": 82
+    },
+    {
+      "app": "chess",
+      "key": "layout",
+      "arm": "clean",
+      "i": 0,
+      "us": 3249768,
+      "crc": 145852333
+    },
+    {
+      "app": "chess",
+      "key": "layout",
+      "arm": "ram",
+      "i": 0,
+      "us": 3377735,
+      "crc": 145852333,
+      "reused": 0,
+      "rebuilt": 82
+    },
+    {
+      "app": "chess",
+      "key": "layout",
+      "arm": "ram",
+      "i": 1,
+      "us": 3366816,
+      "crc": 145852333,
+      "reused": 0,
+      "rebuilt": 82
+    },
+    {
+      "app": "chess",
+      "key": "layout",
+      "arm": "clean",
+      "i": 1,
+      "us": 3241467,
+      "crc": 145852333
+    },
+    {
+      "app": "chess",
+      "key": "layout",
+      "arm": "clean",
+      "i": 2,
+      "us": 3241057,
+      "crc": 145852333
+    },
+    {
+      "app": "chess",
+      "key": "layout",
+      "arm": "ram",
+      "i": 2,
+      "us": 3377166,
+      "crc": 145852333,
+      "reused": 0,
+      "rebuilt": 82
+    }
+  ],
+  "memory": {
+    "editor": 18745176,
+    "chess": 8938604
+  },
+  "qualified": true,
+  "restoredReadback": true,
+  "restoredWorlds": [
+    "about",
+    "agenda",
+    "agent",
+    "calc",
+    "chat",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "faults",
+    "files",
+    "flaky",
+    "keyboard",
+    "keys",
+    "launcher",
+    "loader",
+    "logs",
+    "nat-bench",
+    "nat-dial",
+    "nat-echo",
+    "nat-import",
+    "power",
+    "repl",
+    "sandbox",
+    "settings",
+    "snake",
+    "sysmon",
+    "toplog"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 2070981,
+    "relocate_us": 1205,
+    "native_us": 2922,
+    "raster_us": 0,
+    "image_bytes": 33840
+  }
+}
