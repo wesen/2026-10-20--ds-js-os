@@ -1,0 +1,274 @@
+{
+  "source": "second study boot",
+  "serialSHA256": "48a2ef6823957df0d715694af2019ab22813048d909e11bfba42bde35f372a84",
+  "core": "1",
+  "hz": "360000000",
+  "code": {
+    "old": {
+      "address": "0x400bb2b8",
+      "bytes": 428,
+      "sha256": "4c36ee97faa432f65afca16c316d58553a70562a14165574cffee85b0c60f999",
+      "fnv": "0xb9639eb4"
+    },
+    "next": {
+      "address": "0x400bb478",
+      "bytes": 392,
+      "sha256": "1c4461d1ce7cb76f02d3f12a4d8f834bdae656868938768e441cdd02a8495811",
+      "fnv": "0x1ae4213f"
+    }
+  },
+  "cold": {
+    "base": {
+      "us": 2463364.5,
+      "peak": 1410872.0,
+      "paired_us_candidate_minus_base": 0.0,
+      "paired_peak_candidate_minus_base": 0.0
+    },
+    "branch": {
+      "us": 2461632.5,
+      "peak": 1394728.0,
+      "paired_us_candidate_minus_base": -2977.5,
+      "paired_peak_candidate_minus_base": -16142.0
+    },
+    "direct": {
+      "us": 2330993.0,
+      "peak": 1414090.0,
+      "paired_us_candidate_minus_base": -124543.5,
+      "paired_peak_candidate_minus_base": 3214.0
+    },
+    "compact": {
+      "us": 2397348.5,
+      "peak": 1403148.0,
+      "paired_us_candidate_minus_base": -60977.5,
+      "paired_peak_candidate_minus_base": -7716.0
+    }
+  },
+  "phaseMedians": {
+    "pb": {
+      "0": {
+        "us": 1428113.0,
+        "bytes": 1311504.0,
+        "visits": 122.0
+      },
+      "1": {
+        "us": 692037.5,
+        "bytes": 1316480.0,
+        "visits": 120.0
+      },
+      "2": {
+        "us": 149348.5,
+        "bytes": 1415100.0,
+        "visits": 1.0
+      },
+      "3": {
+        "us": 3813.5,
+        "bytes": 1154946.0,
+        "visits": 1.0
+      },
+      "4": {
+        "us": 9252.5,
+        "bytes": 1153594.0,
+        "visits": 1.0
+      },
+      "5": {
+        "us": 13552.0,
+        "bytes": 1394054.0,
+        "visits": 1.0
+      },
+      "6": {
+        "us": 2081.5,
+        "bytes": 1394054.0,
+        "visits": 1.0
+      },
+      "7": {
+        "us": 28656.5,
+        "bytes": 147076.0,
+        "visits": 1.0
+      },
+      "8": {
+        "us": 121272.5,
+        "bytes": 323176.0,
+        "visits": 1.0
+      },
+      "9": {
+        "us": 15916.0,
+        "bytes": 687094.0,
+        "visits": 1.0
+      },
+      "10": {
+        "us": 4637.5,
+        "bytes": 976942.0,
+        "visits": 1.0
+      },
+      "11": {
+        "us": 6076.0,
+        "bytes": 354282.0,
+        "visits": 1.0
+      }
+    },
+    "pd": {
+      "0": {
+        "us": 1378913.5,
+        "bytes": 1192612.0,
+        "visits": 122.0
+      },
+      "1": {
+        "us": 698762.0,
+        "bytes": 1197588.0,
+        "visits": 120.0
+      },
+      "2": {
+        "us": 45461.0,
+        "bytes": 1208656.0,
+        "visits": 1.0
+      },
+      "3": {
+        "us": 3860.0,
+        "bytes": 1175372.0,
+        "visits": 1.0
+      },
+      "4": {
+        "us": 9281.5,
+        "bytes": 1174020.0,
+        "visits": 1.0
+      },
+      "5": {
+        "us": 14161.5,
+        "bytes": 1414480.0,
+        "visits": 1.0
+      },
+      "6": {
+        "us": 2252.0,
+        "bytes": 1414480.0,
+        "visits": 1.0
+      },
+      "7": {
+        "us": 28749.5,
+        "bytes": 147080.0,
+        "visits": 1.0
+      },
+      "8": {
+        "us": 125706.5,
+        "bytes": 332436.0,
+        "visits": 1.0
+      },
+      "9": {
+        "us": 16073.5,
+        "bytes": 692732.0,
+        "visits": 1.0
+      },
+      "10": {
+        "us": 5097.5,
+        "bytes": 990716.0,
+        "visits": 1.0
+      },
+      "11": {
+        "us": 6234.0,
+        "bytes": 368056.0,
+        "visits": 1.0
+      }
+    }
+  },
+  "warmPairs": {
+    "equal91": {
+      "all": {
+        "pairs": 16,
+        "candidateWins": 16,
+        "savedCyclesPerCall": 913.140625,
+        "savedPct": 13.956075166812315
+      },
+      "old": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 913.0625,
+        "savedPct": 13.955114118150323
+      },
+      "new": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 916.9765625,
+        "savedPct": 14.006105254533274
+      }
+    },
+    "late91": {
+      "all": {
+        "pairs": 16,
+        "candidateWins": 16,
+        "savedCyclesPerCall": 910.3359375,
+        "savedPct": 13.963997980113172
+      },
+      "old": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 910.046875,
+        "savedPct": 13.960040725347133
+      },
+      "new": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 910.4921875,
+        "savedPct": 13.965959586636842
+      }
+    },
+    "prefix": {
+      "all": {
+        "pairs": 16,
+        "candidateWins": 16,
+        "savedCyclesPerCall": 712.08984375,
+        "savedPct": 13.903379911838961
+      },
+      "old": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 712.078125,
+        "savedPct": 13.903066285680671
+      },
+      "new": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 717.03125,
+        "savedPct": 14.0000205029319
+      }
+    },
+    "first": {
+      "all": {
+        "pairs": 16,
+        "candidateWins": 16,
+        "savedCyclesPerCall": 9.9609375,
+        "savedPct": 9.473917487092429
+      },
+      "old": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 9.9453125,
+        "savedPct": 9.460465047229835
+      },
+      "new": {
+        "pairs": 8,
+        "candidateWins": 8,
+        "savedCyclesPerCall": 10.0546875,
+        "savedPct": 9.560953866726098
+      }
+    },
+    "dir": {
+      "all": {
+        "pairs": 16,
+        "candidateWins": 10,
+        "savedCyclesPerCall": 0.03125,
+        "savedPct": 0.10368066355624676
+      },
+      "old": {
+        "pairs": 8,
+        "candidateWins": 4,
+        "savedCyclesPerCall": 0.015625,
+        "savedPct": 0.05184033177812338
+      },
+      "new": {
+        "pairs": 8,
+        "candidateWins": 6,
+        "savedCyclesPerCall": 0.03515625,
+        "savedPct": 0.11647321699011925
+      }
+    }
+  }
+}

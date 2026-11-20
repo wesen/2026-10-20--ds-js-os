@@ -73,3 +73,50 @@ A 116-byte two-entry program fit a 256-byte synthetic slot exactly. The next sma
 Use `scripts/examiner/output.mjs compact|direct CANDIDATE_DIR REACTOR_DIR` with the generated variants and all three reactor templates. `output-{compact,direct}.json` names template and result digests. The explicit source allowance in the far-jump test is 128 Ki code units. This is a backend diagnostic exercise using the public limit parameter. The actual app wrappers keep their own limits.
 
 A missing intermediate allocation is directly observable. Whether that allocation overlapped the maximum simultaneous live bytes needs allocator data. The phase and uninstrumented cold-run comparison are the remaining evidence for this question. The real reactor ELF bytes here have their own hashes. A separate reactor build can have a different linked-file hash even for the same raw instruction image.
+
+## Step 4. Reconstruct the physical evidence from the serial stream
+
+The supervisor captured a primary boot of the qualification firmware. I wrote a separate reader of the raw capture and extracted the board function bytes independently from executable ELF program segments using the symbol addresses from `nm -S`. I verified the SHA-256, size and FNV for both functions, the reported addresses and frequency, the fixture and order of every batch, every expected checksum, the uninstrumented compile rows and the 12 phase samples in each profile run.
+
+The primary Editor peak was lower under compact but slightly higher under direct. In four matched blocks the median candidate-minus-baseline peak difference for direct was +3,218 bytes, while duration decreased by 150,657.5 microseconds. On the profiled runs the direct assembly-stage high-water fell by 206,460 bytes. The highest charge moved to the final ELF template copy. Reporting a saving equal to the missing contiguous image would be wrong. The report uses uninstrumented runs for the candidate's resource change.
+
+### Measurement checks and recovery
+
+The previous standalone comparator validator expected core 0. This experiment runs inside the OS kernel task pinned to core 1 in `main_p4.c`. The observed 360 MHz core-1 header is consistent with the actual runner. The two symbols are both at address 56 modulo 64 and have lengths 428 and 392 bytes. The 80 blocks each timed 128 calls with output hashing. On the directory-only path eight baseline-first and eight candidate-first blocks had opposite tiny median differences. I reported no resolved improvement there.
+
+A dependency check for the optional Python ELF parser produced `ModuleNotFoundError: No module named 'elftools'`. Native `nm` plus Python's standard `struct` module were sufficient. The first local staging attempt had also reported `fatal: Unable to create '…/.git/index.lock': Read-only file system`. After obtaining the configured index-write approval, the eight examiner paths were committed at `d433cce`.
+
+Run `scripts/examiner/board.py UART ELF MANIFEST SUPERVISOR_JSON` to reproduce the independent audit. It obtains measurements, offsets and digests from the first three inputs, compares the supervisor's block rows and checks the expected ELF hash per mode against the fourth. The retained receipt is `various/examiner/board-first.json`. No flash, restore or user-interaction operation was performed by the examiner.
+
+### Author's second reading before publication
+
+I completed separate report and guide drafts, then read each as a reader who has never operated this repository. I noted these comprehension gaps before revising:
+
+- The guest pseudocode and article need a clear reason to observe two trace fields when a single final integer might look sufficient. Introduce an explicit skipped call and name the order digest without making it a collision-proof trace.
+- A newcomer could mistake an ELF entry stub for the destination function. State the roles of both jump cells at the first slot description.
+- The report's phase conclusion needs the ordinary C allocation boundary and an explanation of why phase 6 can show the same peak as phase 5.
+- The guide's last page gives a reproducible execution path but the toolchain paths are unnecessarily long for an e-ink page. Use a command on PATH for the installed SDK compiler, show the relative emulator lookup on a second line, and name precisely which template file the physical audit needs.
+- Check that percentage claims describe the median of paired fractional savings and that the alternating directory path is described as unresolved. Check that aggregate records of calls are described as sampled evidence, and make the checked memory sizes explicit.
+
+## Step 5. Repeat the physical audit and publish the two documents
+
+I ran the same independent serial/ELF audit against the supervisor's second complete boot. The code identity checks, four-way scheduling, compiled Editor hashes, 48 phase rows and all 80 warm pairs verified again. Both the published article and intern guide identify their board results as those of the primary boot. This separate replication entry preserves the second experiment's independent estimates without pooling boots.
+
+| Median paired difference from frozen compiler | First boot | Second boot |
+|---|---:|---:|
+| Branch cold time | −32.96 ms | −2.98 ms |
+| Branch peak | −16,150 B | −16,142 B |
+| Compact cold time | −78.95 ms | −60.98 ms |
+| Compact peak | −7,720 B | −7,716 B |
+| Direct cold time | −150.66 ms | −124.54 ms |
+| Direct peak | +3,218 B | +3,214 B |
+
+A faster compile is a weak argument for branch fusion. Its second cold-time difference was only 0.003 seconds compared with a run lasting about 2.46 seconds. The long warmed comparator paths and peak differences reproduced much more closely. Second-boot paired savings were 13.96% for equal length-91 strings, 13.96% for a last-unit difference, 13.90% for the prefix and 9.47% for a first-unit mismatch. The directory flag case was 0.10%, about 0.03 cycles per call. The separate receipt is `various/examiner/board-replicate.json`.
+
+I finished a practical intern guide with an execution-path diagram, pseudocode, a slab-boundary example, API and file references and commands. The separate technical article follows one comparison and one module through the independent measurements. The final reader pass clarified the result and memory checks, template entry/service responsibilities, the inherited peak at phase 6, the scope of cycle and percentage estimates, and how to supply the inputs. Neither document claims an observed UI latency effect from leaf-function timing.
+
+### Publication and recovery
+
+The unique vault note is `Projects/2026/11/19/PROJECT REPORT - PicoCalc Compiler - Independent Examination of RV32 Branches and Output Storage.md` in `go-go-golems/go-go-parc`. I used `cmp` against the ticket article before staging. A normal first push returned `[rejected] HEAD -> main (fetch first)`. Inspection after fetching showed one unrelated remote article and only my new unpublished report locally. Rebasing that commit and pushing produced `3828f65..c128253 HEAD -> main`. The verified vault revision is `c12825399128e2efc5bf554cfdcbb2fe8974fca8`.
+
+The practical guide was submitted with `remarquee upload bundle`, the requested unique name and destination, with no overwrite. The final receipt was `OK: uploaded PicoCalc RV32 Independent Examination.pdf -> /ai/2026/11/19/PICOCALC-RV32-STUDIES`. This is a successful cloud upload. Physical device synchronization was outside this check.
