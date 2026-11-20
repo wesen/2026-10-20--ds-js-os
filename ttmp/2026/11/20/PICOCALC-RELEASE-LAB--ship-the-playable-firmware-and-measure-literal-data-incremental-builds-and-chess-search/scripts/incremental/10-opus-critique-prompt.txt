@@ -1,0 +1,180 @@
+You are the Opus High lead researcher on the incremental build study. Review the actual prototype sources and the matched host evidence for correctness gaps, experiment interpretation, clean/fragment diagnostics, and overhead. Identify a specific counterexample and a practical negative control, if possible. No tools. Distinguish an invalidating flaw from a testable extension. The ESP32-P4 trial will use production QuickJS native token index, PSRAM, whole-image CRC and checked actual FAT file I/O; results pending. Existing prior LAB2 used an older compiler, a 120-function Editor, selective invalidation and 40/256 KiB caps. The new two app release has an async Editor. Include a short, precise independent critique in Markdown. Source and aggregate results explicitly approved by the owner.
+
+02-fragments.js
+// Private prototype. Every committed backend-version/ABI identity is supplied by the harness.
+globalThis.fragmentSession = function(prior) {
+    let descriptor, reusable, priorRoot, reused = 0, rebuilt = 0;
+    const next = Object.create(null);
+    function init(imports, functions, records, enums, distinct, lowered) {
+        descriptor = JSON.stringify([
+            imports.map(f => [f.name,f.params,f.result,Boolean(f.awaitable)]),
+            functions.map(f => [f.name,f.params,f.paramNames,f.result]),
+            [...records].map(([name,fields]) => [name,[...fields]]),
+            [...enums].map(([name,fields]) => [name,[...fields]]), [...distinct],
+            lowered ? [lowered.prefix,[...lowered.startFields]] : null
+        ]);
+        priorRoot = prior && prior.descriptor === descriptor ? prior.items : null;
+    }
+    function lookup(lex, fn, edges) {
+        const old = priorRoot && Object.hasOwn(priorRoot,fn.name) && priorRoot[fn.name];
+        reusable = null;
+        if (old && lex.source.startsWith(old.body,fn.bodyAt)) {
+            for (const edge of old.edges) edges.push(edge);
+            reusable = next[fn.name] = old;
+            reused++;
+            return true;
+        }
+        lex.offset = fn.bodyAt;
+        lex.next();
+        const end = lex.skipBody();
+        if (end !== undefined) next[fn.name] = {body:lex.source.slice(fn.bodyAt,end), edges};
+        rebuilt++;
+        return false;
+    }
+    function lower(fn, targets, build) {
+        if (reusable) {
+            const old = reusable;
+            return {words:old.words.slice(), calls:old.calls.map(([from,index,offset,rd]) =>
+                ({from, target:index < 0 ? {at:offset} : targets[index], rd}))};
+        }
+        const built = build();
+        const saved = next[fn.name];
+        if (saved) {
+            saved.words = built.words.slice();
+            saved.calls = built.calls.map(({from,target,rd}) => {
+                const index = targets.indexOf(target);
+                return [from,index,index < 0 ? target.at : 0,rd];
+            });
+        }
+        return built;
+    }
+    return {init,lookup,lower,commit:() => ({descriptor,items:next}),stats:() => ({reused,rebuilt})};
+};
+
+03-stage.py
+"""Build the current compiler unchanged and a private fragment-aware variant."""
+import argparse
+from hashlib import sha256
+import json
+from pathlib import Path
+import shutil
+
+here=Path(__file__).resolve().parent
+repo=next(p for p in here.parents if (p/'.git').is_dir())
+parser=argparse.ArgumentParser()
+parser.add_argument('out',type=Path)
+parser.add_argument('release_main',type=Path,help='qualified CMake build/esp-idf/main')
+args=parser.parse_args()
+args.out.mkdir(exist_ok=True,parents=True)
+source=repo/'picocalc-os/compiler'
+files=('typed-wasm.js','typed-async.js','typed-rv32.js','typed-world.js')
+def sub(text,a,b,n):
+    assert text.count(a)==n,(a,text.count(a),n)
+    return text.replace(a,b)
+for name in files:
+    text=(source/name).read_text()
+    (args.out/name).write_text(text)
+    if name=='typed-wasm.js':
+        a='    if (onSignatures) onSignatures(functions);'
+        b=a+'''
+    const fragments = onFunction && globalThis.activeFragments;
+    if (fragments) fragments.init(imported,functions,records,enums,distinct,lowered);'''
+        text=sub(text,a,b,2)
+        a='new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct).function(fn);'
+        text=sub(text,a,'if (!fragments || !fragments.lookup(lex,fn,edges[i])) '+a,2)
+    if name=='typed-rv32.js':
+        a='function lower(fn) { code.push(new FunctionCode(fn, callables, targets).lower()); }'
+        b='''function lower(fn) {
+        const build = () => new FunctionCode(fn,callables,targets).lower();
+        code.push(globalThis.activeFragments ? globalThis.activeFragments.lower(fn,targets,build) : build());
+    }'''
+        text=sub(text,a,b,1)
+    (args.out/('candidate-'+name)).write_text(text)
+for dest,src in [('chess.typed','chess.typed'),('editor.typed','editor.typed'),('chess.elf','typed-chess-3d-reactor.elf'),('editor.elf','typed-world-reactor.elf')]:
+    shutil.copyfile(args.release_main/src,args.out/dest)
+files=list(files)+['candidate-'+x for x in files]+['editor.typed','chess.typed','editor.elf','chess.elf']
+dig={name:sha256((args.out/name).read_bytes()).hexdigest() for name in files}
+dig['02-fragments.js']=sha256((here/'02-fragments.js').read_bytes()).hexdigest()
+(args.out/'identity.json').write_text(json.dumps(dig,indent=2)+'\n')
+
+04-edits.js
+globalThis.incrementalEdits = function(app, source) {
+    function change(text, from, to, count=1) {
+        if(text.split(from).length!==count+1) throw Error("unexpected source anchor: "+from);
+        return text.split(from).join(to);
+    }
+    if(app==="editor") {
+        const body=change(source,"return (row % 36) * 100;","return (row % 36) * 99 + 1;");
+        const bad=change(body,"editorPreviewSlot(row: i32)","editorPreviewSlot(row: i32, stride: i32)");
+        let signature=change(bad,"* 99 + 1;","* stride + 1;");
+        signature=change(signature,"editorPreviewSlot(state.previewRows)","editorPreviewSlot(state.previewRows, 99)",2);
+        signature=change(signature,"editorPreviewSlot(row)","editorPreviewSlot(row, 99)");
+        const layout=change(signature,"    file: i32;\n    opening: bool;","    opening: bool;\n    file: i32;");
+        return {base:source,body,bad,signature,layout};
+    }
+    const body=change(source,"return chessSquare((move / 64) % 64);","return chessSquare((move / 64) % 64) + 1;");
+    const bad=change(body,"function chessFrom(move: i32)","function chessFrom(move: i32, bias: i32)");
+    let signature=change(bad,"return chessSquare((move / 64) % 64) + 1;","return chessSquare((move / 64) % 64) + bias;");
+    signature=change(signature,"chessFrom(move)","chessFrom(move, 1)",7);
+    signature=change(signature,"chessFrom(state.lastMove)","chessFrom(state.lastMove, 1)",3);
+    const layout=change(signature,"    cursor: i32;\n    selected: i32;","    selected: i32;\n    cursor: i32;");
+    return {base:source,body,bad,signature,layout};
+};
+
+06-board.js
+function crcOf(bytes) { return crc(bytes.buffer, bytes.byteOffset, bytes.byteLength); }
+function equal(a,b) {if (a.length!==b.length) return false;for(let i=0;i<a.length;i++) if(a[i]!==b[i])return false;return true;}
+globalThis.runTrial=function(app,source,buffer,stockCompile,gold) {
+    const elf=new Uint8Array(buffer), edits=incrementalEdits(app,source);
+    function compile(arm,text,prior) {
+        globalThis.activeFragments=arm==='clean'?null:fragmentSession(prior);
+        try {
+            const begin=micros();
+            const bytes=(arm==='clean'?stockCompile:compileTypedWorldRv32)(text,elf);
+            const us=micros()-begin;
+            return {us,bytes,stats:activeFragments?.stats(),state:activeFragments?.commit()};
+        } finally {globalThis.activeFragments=null;}
+    }
+    function verified(b,key) {
+        const actual=crcOf(b.bytes);
+        if(actual!==gold[key])throw Error(app+' '+key+': CRC differs '+actual+' '+gold[key]);
+        return actual;
+    }
+    for(const [parent,key] of [['base','body'],['body','signature'],['signature','layout']]){
+        const before=compile('cache',edits[parent],null);verified(before,parent);
+        const clean=compile('clean',edits[key],null);verified(clean,key);
+        for(let i=0;i<3;i++){
+            const arms=i%2?['ram','clean']:['clean','ram'];
+            for(const arm of arms){
+                const b=compile(arm,edits[key],before.state); verified(b,key);
+                if(!equal(b.bytes,clean.bytes))throw Error('complete ELF differs');
+                emit(JSON.stringify({app,key,arm,i,us:b.us,crc:gold[key],...b.stats}));
+            }
+        }
+        if(key==='body'){
+            const rawClean=compile('clean',source,null); verified(rawClean,'base');
+            emit(JSON.stringify({app,key:'base',arm:'empty-cache',us:before.us,...before.stats}));
+            emit(JSON.stringify({app,key:'base',arm:'clean',us:rawClean.us}));
+            let t=micros();
+            const expected=JSON.stringify(before.state);
+            const encodeUs=micros()-t;
+            const timings=checkpoint(expected);
+            t=micros();
+            const recovered=JSON.parse(timings[0]);
+            const parseUs=micros()-t;
+            const child=compile('ram',edits.body,recovered);verified(child,'body');
+            if(!equal(child.bytes,clean.bytes))throw Error('restored byte mismatch');
+            emit(JSON.stringify({app,key:'restore',bytes:expected.length,encodeUs,writeUs:timings[1],
+                readUs:timings[2],decodeUs:parseUs,childUs:child.us,...child.stats,persisted:timings[3]}));
+            let expectedError,actualError;
+            try {compile('clean',edits.bad,null);} catch(e){expectedError=String(e);}
+            try {compile('ram',edits.bad,before.state);} catch(e){actualError=String(e);}
+            if(!expectedError || actualError!==expectedError)throw Error('diagnostic mismatch');
+            emit(JSON.stringify({app,key:'bad',diagnostic:actualError}));
+        }
+    }
+};
+
+Host medians are warm Node milliseconds and include ELF SHA.
+[["editor", "base", {"clean": 35.247, "ram": 19.623, "disk": 39.078, "cold-cache": 33.54}], ["editor", "body", {"clean": 24.328, "ram": 16.247, "disk": 32.852, "cold-cache": 32.997}], ["editor", "signature", {"clean": 33.056, "ram": 30.776, "disk": 50.876, "cold-cache": 31.682}], ["editor", "layout", {"clean": 23.062, "ram": 27.011, "disk": 41.835, "cold-cache": 21.958}], ["chess", "base", {"clean": 15.766, "ram": 5.675, "disk": 20.115, "cold-cache": 17.817}], ["chess", "body", {"clean": 10.798, "ram": 3.785, "disk": 19.733, "cold-cache": 12.659}], ["chess", "signature", {"clean": 11.193, "ram": 12.964, "disk": 28.75, "cold-cache": 13.951}], ["chess", "layout", {"clean": 17.58, "ram": 19.92, "disk": 43.735, "cold-cache": 21.258}]]
+{"editor": {"base": {"reused": 0, "rebuilt": 119}, "body": {"reused": 118, "rebuilt": 1}, "bad": {"diagnostic": "SyntaxError: 730:53: expected ,"}, "signature": {"reused": 0, "rebuilt": 119}, "layout": {"reused": 0, "rebuilt": 119}}, "chess": {"base": {"reused": 0, "rebuilt": 82}, "body": {"reused": 81, "rebuilt": 1}, "bad": {"diagnostic": "SyntaxError: 146:32: expected ,"}, "signature": {"reused": 0, "rebuilt": 82}, "layout": {"reused": 0, "rebuilt": 82}}}
