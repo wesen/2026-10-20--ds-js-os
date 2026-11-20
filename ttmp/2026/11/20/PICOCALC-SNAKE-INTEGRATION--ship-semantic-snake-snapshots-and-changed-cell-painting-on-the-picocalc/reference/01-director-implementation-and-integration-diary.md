@@ -174,3 +174,51 @@ Run the commands in scripts/01-native-fixture.py and scripts/02-simulate-game.py
 ### Technical details
 
 The screenshots are 320×320 unscaled RGB images of the simulated display controller. various/simulator.json stores a SHA-256 of decompressed pixels for each capture. The research-design Opus request used a source-free brief. Automated approval review held a separate request to provide measurements; I requested specific consent and continued locally rather than disclosing internal data.
+
+## Step 4: Independently repeat the replay and account for the cost of the resident view
+
+The new message moves geometry into a compositor that runs for every app. I compared both linked native programs and their compressed firmware payloads, and reran the independent examiner's host experiment before reviewing the device metrics.
+
+### Prompt Context
+
+See Step 1 for the production and publication request.
+
+### What I did
+
+I verified the production build receipt against the exact source digests in the checkout. I ran scripts/05-world-footprint.py on the original playable build at /tmp/p4-system-fix-final/build and the new normal build at /tmp/pico-snake-production/build. Separately I ran scripts/replay/04-production-replay.mjs in a new process and used cmp against scripts/replay/06-host-results.json.
+
+### Why
+
+Shipping a specialized renderer can reduce producer traffic while increasing the size of a permanently resident service. The two ELF files and their compressed forms answer distinct storage questions. Comparing a fresh host replay against the examiner's raw output additionally checks the reproduction instructions and code revision.
+
+### What worked
+
+The entire replay receipt reproduced byte for byte. The old modules occupied 47,273 compressed bytes together and the new ones 49,560. The candidate compositor source SHA-256 began 07117cc4 and the Snake source d5b1b9ef. The new uninstrumented firmware image had digest c3d5d8ed, and its file length was 4,204,544 bytes.
+
+### What didn't work
+
+A first attempt at the independent replay inside the sandbox hit `Error: spawnSync git EPERM`. I repeated the same read-only test with permission for normal host subprocesses. The board operator also discovered that too-early input could miss gameplay and that the keypad's I²C controller could stop acknowledging register reads entirely. I requested a full PicoCalc power cycle and verified the distinction between keypad status reads and FIFO injection in bus_p4.c.
+
+### What I learned
+
+A CRC-valid screen capture and a healthy world alone cannot establish that a benchmark actually reached the app. Inspect the screen, verify game and display counters moved, and keep diagnostic windows apart from the game timings. The same distinction applies to storage. The growing receiver and shrinking producer can be reported separately using the actual built modules.
+
+### What was tricky to build
+
+The serial console queues keyboard input locally, but the normal keyboard driver first reads a status register from the physical STM32 over I²C. A failed register read prevents dispatch even when the UART command itself returned OK.
+
+### What warrants a second pair of eyes
+
+Check how an image is identified and how the input path is exercised in each physical arm before comparing numbers. The protocol, simulator integration and independent replay are separate observations.
+
+### What should be done in the future
+
+Complete the normal and instrumented board comparisons and publish the three complementary articles with one traceable manifest.
+
+### Code review instructions
+
+Inspect scripts/05-world-footprint.py and various/world-footprint.json, and compare the two archived images' digests there with the physical qualification receipt. Repeat the independent replay with the pinned Git history present.
+
+### Technical details
+
+ELF and compressed sizes are byte counts from the actual artifacts. Neither number is a PSRAM high-water measurement. Commit 4273e68 added the reproduction notes, simulator figure and roadmap link. Commit e4738db renamed the researcher's two raw provider transcripts to .txt to preserve their exact hashes while allowing docmgr to validate all governed Markdown.

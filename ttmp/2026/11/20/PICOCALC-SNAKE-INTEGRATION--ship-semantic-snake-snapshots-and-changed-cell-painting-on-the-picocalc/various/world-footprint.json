@@ -1,0 +1,52 @@
+{
+  "esp-idf/main/natives/snake.elf": {
+    "before": {
+      "bytes": 77176,
+      "sha256": "77fef8ac465344bcc88293b1f0997307f919fe36e5169fa4c93bbf3394769bd9"
+    },
+    "after": {
+      "bytes": 62064,
+      "sha256": "ff46fbc2d8b73c64060d4b3bdd033dd67a3f1d5a9ada0dda41369cc3773e6dac"
+    }
+  },
+  "esp-idf/main/natives/snake.elf.z": {
+    "before": {
+      "bytes": 11747,
+      "sha256": "4aa9378902a0b3ffeaa778b8c49a9fe4e23586fa695584b4180b05fe542f926d"
+    },
+    "after": {
+      "bytes": 9555,
+      "sha256": "cf3ea49014d237f6bc0e62b734fc08b245e72e19de010aa54b7a0aba20b53e2d"
+    }
+  },
+  "esp-idf/main/natives/compositor.elf": {
+    "before": {
+      "bytes": 248520,
+      "sha256": "4f62fd72518a7888e8678663ba1f54e5644ce3c8d89b3b7ea454f7d6e31511ba"
+    },
+    "after": {
+      "bytes": 279096,
+      "sha256": "25faa103560371a9775268564fdd58d4775f66f01faf591c9c9c16bb1d5b40b7"
+    }
+  },
+  "esp-idf/main/natives/compositor.elf.z": {
+    "before": {
+      "bytes": 35526,
+      "sha256": "f165cbd41b2733c66cd11e5d06a15bcf7ae78d4361e7e5b6e6104e8c9a7cef39"
+    },
+    "after": {
+      "bytes": 40005,
+      "sha256": "babf46c799caf91604071636db09ab64336f500ee8187d43f4234e09f6e89212"
+    }
+  },
+  "picocalc-os-p4.bin": {
+    "before": {
+      "bytes": 4198976,
+      "sha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83"
+    },
+    "after": {
+      "bytes": 4204544,
+      "sha256": "c3d5d8ede739f5d4d21ad2b4981fbfd839cf20e2ab2a644ba1d330e6374446e3"
+    }
+  }
+}
