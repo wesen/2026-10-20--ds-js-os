@@ -1,0 +1,52 @@
+[
+  {
+    "name": "base",
+    "reused": 0,
+    "rebuilt": 3,
+    "image": "6547331d81668bdaa6243fd90abb38316b2fc359fd4a37296f43493845797d19",
+    "entries": {
+      "head": 0,
+      "spacer": 52,
+      "leaf": 84
+    }
+  },
+  {
+    "name": "move unchanged call target",
+    "reused": 2,
+    "rebuilt": 1,
+    "image": "0d0bf3010e9cdf96a5812ec6e60f15913989fdc3e54ad1c8b38cb449775a98fe",
+    "entries": {
+      "head": 0,
+      "spacer": 52,
+      "leaf": 144
+    }
+  },
+  {
+    "name": "introduce a cycle through an unchanged caller",
+    "reused": 2,
+    "rebuilt": 1,
+    "diagnostic": "SyntaxError: recursive call cycle: head -> leaf -> head"
+  },
+  {
+    "name": "recover from the rejected cycle",
+    "reused": 3,
+    "rebuilt": 0,
+    "image": "0d0bf3010e9cdf96a5812ec6e60f15913989fdc3e54ad1c8b38cb449775a98fe",
+    "entries": {
+      "head": 0,
+      "spacer": 52,
+      "leaf": 144
+    }
+  },
+  {
+    "name": "reorder declarations",
+    "reused": 0,
+    "rebuilt": 3,
+    "image": "eea038ed0a980aa85f04b2bbea12ce91a49b067a944763fb721f63edd8c7145c",
+    "entries": {
+      "leaf": 0,
+      "spacer": 40,
+      "head": 132
+    }
+  }
+]

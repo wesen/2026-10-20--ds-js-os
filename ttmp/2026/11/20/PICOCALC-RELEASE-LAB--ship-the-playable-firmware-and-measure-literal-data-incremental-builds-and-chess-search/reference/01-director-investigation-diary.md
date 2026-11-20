@@ -126,3 +126,51 @@ Run the ticket's scripts/director/01-literal-growth.mjs with Node from the repos
 ### Technical details
 
 The standalone controls pass the destination at address zero, set its 32-bit capacity, fill its 16-bit elements including a trailing sentinel, call each exported writer, then verify returned unit count, destination contents and sentinel. Only the ASCII character x is varied in length. Character encoding or a long displacement can change native instruction selection outside this range.
+
+## Step 3: Attribute shipped machine code and challenge function-fragment reuse
+
+I reconstructed the source of the game that generated the release qualification receipt and compiled it in both streaming and buffered modes. I also constructed a three-function program in which the address of an unchanged callee moves and an invalid edit introduces a cycle through a cached edge. These tests exercise the contracts between the independent studies.
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Explain which improvements can affect compilation, application size and executing search. **Inferred user intent:** Quantify useful device outcomes and ensure that an apparent speedup preserves program behavior. **Commit (code):** 3092d67, shipped game census and compiler chart.
+
+### What I did
+
+Matched the game source checksum to the previously qualified ordinary firmware. Attributed the bytes between function entries to their source units, then compiled the standalone search and full game with the literal prototype. Exercised call relocation, cycle diagnostics, cache rollback and declaration reordering with the incremental prototype. Kept scripts and machine-readable receipts in the ticket.
+
+### Why
+
+Seeing a smaller app does not establish that a search instruction changed. A reused machine instruction that calls a function can still require patching. Both assertions are testable independently of noisy device timings.
+
+### What worked
+
+The game image contained 256,400 bytes, of which 197,544 belonged to the generated painter-source writer. The 26,580-byte engine matched the board runner binary. The incremental compiler relocated an unchanged target from byte 84 to byte 144 and diagnosed a cycle crossing a reused function. All five program states matched the clean compiler.
+
+### What didn't work
+
+The sandboxed native-code census failed with “spawnSync python3 EPERM” when calling the project's embedder. Repeating the same command with approved execution completed. A shell wildcard in the cross-study command expanded to two copies of engine.bin. The second temporary pilot copy briefly received JSON. I restored the exact bytes from the verified live-gate copy and compared SHA-256 against the pilot manifest. I notified the Chess researcher and changed the CLI to require exactly three arguments and a JSON output suffix. The live-gate input and board binary were untouched.
+
+### What I learned
+
+The release game and its separately compiled compositor painter have different source and image identities. The search engine is an independently addressable third program. The size of one should never be divided by runtime observations from another to infer a compiler speedup.
+
+### What was tricky to build
+
+A comparison of byte spans needs the exact source built by CMake. The mobile build renames the legacy view entry, embeds a generated source writer and appends a mobile view with explicit newline separators. The census checks the reconstructed source digest before using any results.
+
+### What warrants a second pair of eyes
+
+The literal study continues to develop its copy loop. Re-run the cross-study comparison against its final arm and identify it by artifact and options. A successful host differential for fragments supplies correctness evidence. Physical edit latency and persistence require their own observations.
+
+### What should be done in the future
+
+Reconcile final receipts across all three studies and publish only after all four articles pass link and asset checks.
+
+### Code review instructions
+
+Read scripts/director/03-shipped-code-census.mjs through 05-cross-study-images.mjs. Pass an explicit engine binary path and a separate JSON result name to the cross-study script.
+
+### Technical details
+
+The engine image SHA-256 is d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4. A fresh copy was used by the timed board runner. The three-function fixture stores symbolic address and dependency information on clean success. Its negative edit must leave the prior generation usable.

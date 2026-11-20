@@ -1,0 +1,104 @@
+{
+  "engine": {
+    "sourceSHA256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+    "before": 26580,
+    "baselineSHA256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+    "arms": {
+      "separate": {
+        "pooledSHA256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+        "codeBytes": 26580,
+        "dataBytes": 0,
+        "padding": 0,
+        "totalBytes": 26580,
+        "literals": 0,
+        "uniqueLiterals": 0
+      },
+      "deduplicated": {
+        "pooledSHA256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+        "codeBytes": 26580,
+        "dataBytes": 0,
+        "padding": 0,
+        "totalBytes": 26580,
+        "literals": 0,
+        "uniqueLiterals": 0
+      },
+      "guardedWord": {
+        "pooledSHA256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+        "codeBytes": 26580,
+        "dataBytes": 0,
+        "padding": 0,
+        "totalBytes": 26580,
+        "literals": 0,
+        "uniqueLiterals": 0
+      }
+    }
+  },
+  "painter": {
+    "sourceSHA256": "6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214",
+    "before": 23848,
+    "baselineSHA256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+    "arms": {
+      "separate": {
+        "pooledSHA256": "b7c1a77ff0a3ca0f4f9dd666690a1c92df0f0a1aa02d95fedc24969f1dc4fe3a",
+        "codeBytes": 21452,
+        "dataBytes": 466,
+        "padding": 2,
+        "totalBytes": 21920,
+        "literals": 10,
+        "uniqueLiterals": 10
+      },
+      "deduplicated": {
+        "pooledSHA256": "b7c1a77ff0a3ca0f4f9dd666690a1c92df0f0a1aa02d95fedc24969f1dc4fe3a",
+        "codeBytes": 21452,
+        "dataBytes": 466,
+        "padding": 2,
+        "totalBytes": 21920,
+        "literals": 10,
+        "uniqueLiterals": 10
+      },
+      "guardedWord": {
+        "pooledSHA256": "e5773a474fe467d66d4586880522289bd683705e150501bf7a6534f7cdb75a97",
+        "codeBytes": 21748,
+        "dataBytes": 466,
+        "padding": 2,
+        "totalBytes": 22216,
+        "literals": 10,
+        "uniqueLiterals": 10
+      }
+    }
+  },
+  "game": {
+    "sourceSHA256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+    "before": 256400,
+    "baselineSHA256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+    "arms": {
+      "separate": {
+        "pooledSHA256": "1e976e09a7d74b5fe19630e051970c65f0987eb8140114a8d9dac5af63313e46",
+        "codeBytes": 54320,
+        "dataBytes": 33852,
+        "padding": 0,
+        "totalBytes": 88172,
+        "literals": 33,
+        "uniqueLiterals": 33
+      },
+      "deduplicated": {
+        "pooledSHA256": "1e976e09a7d74b5fe19630e051970c65f0987eb8140114a8d9dac5af63313e46",
+        "codeBytes": 54320,
+        "dataBytes": 33852,
+        "padding": 0,
+        "totalBytes": 88172,
+        "literals": 33,
+        "uniqueLiterals": 33
+      },
+      "guardedWord": {
+        "pooledSHA256": "ca2504c07979038174e60e0b35cccff7b8d5b1fcbf3a59f2e7277553b3a39871",
+        "codeBytes": 55232,
+        "dataBytes": 33852,
+        "padding": 0,
+        "totalBytes": 89084,
+        "literals": 33,
+        "uniqueLiterals": 33
+      }
+    }
+  }
+}
