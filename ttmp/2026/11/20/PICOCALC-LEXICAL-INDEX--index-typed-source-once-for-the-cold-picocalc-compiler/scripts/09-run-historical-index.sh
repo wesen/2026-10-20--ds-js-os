@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -ne 4 ]]; then
-  echo "usage: $0 FRESH_WORK_DIR QJS_INDEX CROSS_GCC CJI_RV32EMU" >&2
+if [[ $# -lt 4 || $# -gt 5 || (${5:-reuse} != reuse) ]]; then
+  echo "usage: $0 FRESH_WORK_DIR QJS_INDEX CROSS_GCC CJI_RV32EMU [reuse]" >&2
   exit 2
 fi
 work=$1
@@ -14,6 +14,9 @@ repo=$(git -C "$script_dir" rev-parse --show-toplevel)
 mkdir -p -- "$work"
 work=$(cd -- "$work" && pwd)
 "$script_dir/01-stage-index.sh" "$work" >/dev/null
+if [[ ${5:-} == reuse ]]; then
+  node "$script_dir/10-reuse-token-overlay.mjs" "$work/picocalc-os/compiler"
+fi
 
 cd "$repo"
 fixtures=(

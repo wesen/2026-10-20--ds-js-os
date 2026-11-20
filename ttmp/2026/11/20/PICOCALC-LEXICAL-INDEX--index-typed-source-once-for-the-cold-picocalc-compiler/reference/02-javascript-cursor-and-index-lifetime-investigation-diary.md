@@ -195,3 +195,53 @@ See scripts/09-run-historical-index.sh for the complete historical test command.
 ### Technical details
 
 The test counts refer to the historical fixture files exported at 2e4fee1. Their compiled programs consumed the native producer's row buffers in the overlay.
+
+## Step 4: Measure an optional borrowed current token
+
+The default cursor constructs a fresh token for each read. Most of the compiler inspects a token before advancing and keeps only its name or offset. This second arm lets those parsers share a mutable current token. The async range reader and public lexer preserve the default storage contract.
+
+### Prompt context
+
+The parent requested a separate optional arm based on the now-frozen default at de07831, with measured performance and the same verification.
+
+### What I did
+
+- Added scripts/10-reuse-token-overlay.mjs. It opts in the generated-source emitter and the async signature scan. The separate bounded token materializer retains the normal constructor, so its tokens remain safe to annotate and keep.
+- Compared the optional overlay with the frozen default under the real C producer. Both used the same G4 source, reactors and affinity 7.
+- Reran the native differential, all nine linked comparisons and historical language, continuation and Editor execution fixtures.
+
+### Why
+
+A token's symbol spelling is immutable, but its occurrence offset changes with every advance. Reuse is sound only for parsers that do not retain the moving object. An explicit constructor option keeps that lifetime visible at the affected call sites.
+
+### What worked
+
+The optional arm matched all oracle outputs and linked artifact bytes. Its historical E/G and Editor fixture receipts were byte-identical to the default arm. In 11 interleaved paired linked RV32 runs the default median was 51.962 ms and the optional median was 49.264 ms. The ratio of those medians gives a 5.2 percent reduction. The paired median saving was 2.777 ms, and 10 of the 11 pairs improved.
+
+### What did not work
+
+One pair took 4.075 ms longer in the optional arm. The measured optional gain is a distribution, not a guaranteed result for a single process. This batch ran at consistently different absolute times from the reference-versus-index batch. I kept all 22 samples and compared variants only within this batch.
+
+### What I learned
+
+Changing the JavaScript token representation can still change compile CPU time after moving lexical discovery to C. The gain here is smaller than the earlier gain from indexing.
+
+### What was tricky to build
+
+The phase that reads async signatures can borrow a token. The different phase that retains the body of an async function cannot. Both instantiate a Lexer, so the optional patch targets the whole-source constructor call and leaves the bounded token materializer alone.
+
+### What warrants a second pair of eyes
+
+Any added body consumer should declare whether it keeps tokens after calling next. Keep the borrow request limited to callers reviewed for that contract.
+
+### What should be done in the future
+
+Use the paired hardware measurements to decide whether to keep the experiment or qualify it further. Compare the optional lane with the indexed baseline using the same source, compiler setup and board conditions.
+
+### Code review instructions
+
+After a full 07-run-index-checks.sh run, pass its work directory and native harness to scripts/11-compare-token-reuse.sh. Repeat the historical fixtures by giving scripts/09-run-historical-index.sh the final argument reuse.
+
+### Technical details
+
+The paired optional timing inputs and artifact hashes are various/04-borrowed-token-linked-cpu.jsonl and various/05-borrowed-token-artifacts.sha256. The original and optimized runtimes both produced the same 240,452-byte ELF.
