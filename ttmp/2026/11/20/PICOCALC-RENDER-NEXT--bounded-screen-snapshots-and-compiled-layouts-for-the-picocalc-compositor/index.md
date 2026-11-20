@@ -45,3 +45,5 @@ The production [Snake integration](../PICOCALC-SNAKE-INTEGRATION--ship-semantic-
 ## Delivering a Chess painter to the running compositor
 
 The [mobile painter study](../PICOCALC-MOBILE-PAINTER--compile-a-chess-painter-delivered-by-the-app-and-paint-psix-frames-on-the-picocalc/index.md) follows the app-sent Typed source, counted PSIX snapshots, runtime RV32 compilation, validated draw commands and physical display observations. It includes the compiler-service design and the differences between host and hardware verification.
+
+The [three-dimensional Chess study](../PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/index.md) extends the receiving compositor with validated triangles. A scalar reference and a separate [PIE lowering study](../PICOCALC-TYPED-PIE--lower-bounded-scalar-typed-vertex-loops-to-esp32-p4-pie-instructions/index.md) let the lab distinguish geometry cost, instruction selection and actual presentation.

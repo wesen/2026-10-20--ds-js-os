@@ -1,3 +1,11 @@
+---
+Title: Archived source-free review of the counted painter-message protocol
+Ticket: PICOCALC-MOBILE-PAINTER
+DocType: reference
+Status: complete
+Topics: [picocalc]
+---
+
 # Transport Experiment: Pinned Procedure and Counted Snapshots Across Isolated Worlds
 
 ## 1. Setup

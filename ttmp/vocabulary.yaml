@@ -49,6 +49,12 @@ topics:
       description: Capabilities, secrets and isolation
     - slug: native
       description: 'Native worlds: binaries (WebAssembly, machine code) as picocalc-os worlds'
+    - slug: chess
+      description: Chess world, engine, and rendering studies
+    - slug: psix
+      description: Indexed binary screen snapshots
+    - slug: rendering
+      description: Screen composition, rasterization, and presentation
 docTypes:
     - slug: design-doc
       description: Structured rationale and architecture notes

@@ -18,37 +18,10 @@ WhenToUse: ""
 
 # Render a three-dimensional Chess position with a delivered Typed painter
 
-## Overview
+## What the experiment measures
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+Chess publishes the same PSIX positions that drove the flat native painter. An alternative Typed source program projects a low-polygon board and six piece models into a bounded stream of colored triangles. Its physical comparison uses the original on-device compiler, framebuffer and SPI subsystem. The separate packed-vertex arm uses a private eight-argument painter entry and measures whether the isolated P4 vector result transfers to a visible application.
 
-## Key Links
+Start with the [intern implementation guide](design-doc/01-projecting-a-chess-position-into-a-bounded-triangle-stream.md) and the [director article](analysis/01-how-a-chess-position-becomes-a-three-dimensional-screen-on-the-picocalc.md). See [research diaries](reference/), [project scripts](scripts/), [evidence](various/), [tasks](tasks.md), and the [changelog](changelog.md).
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-- compiler
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+The upstream [mobile source and PSIX experiments](../PICOCALC-MOBILE-PAINTER--compile-a-chess-painter-delivered-by-the-app-and-paint-psix-frames-on-the-picocalc/index.md) establish source provenance and exact two-dimensional physical results. The [compiler experiment](../PICOCALC-TYPED-PIE--lower-bounded-scalar-typed-vertex-loops-to-esp32-p4-pie-instructions/index.md) tests automatic PIE lowering and separates guarded scalar optimization from packed hardware arithmetic.

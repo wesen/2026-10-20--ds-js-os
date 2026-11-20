@@ -137,3 +137,7 @@ The E/G qualification compares four application checkpoints and separates the ti
 ## Screen template and renderer research
 
 [PICOCALC-RENDER-NEXT](../../../20/PICOCALC-RENDER-NEXT--bounded-screen-snapshots-and-compiled-layouts-for-the-picocalc-compositor/index.md) proposes automatic extraction of immutable UI templates, independently replayable bounded snapshots, layout reuse and selective painting. The planning ticket defines controls, two held-out workloads and a lab schedule awaiting validation.
+
+## Native painters and automatic packed vertex loops
+
+A [delivered Chess painter](../../../20/PICOCALC-MOBILE-PAINTER--compile-a-chess-painter-delivered-by-the-app-and-paint-psix-frames-on-the-picocalc/index.md) exercises source provenance, on-device RV32 compilation, executable reuse and completed panel writes. The [PIE compiler study](../../../20/PICOCALC-TYPED-PIE--lower-bounded-scalar-typed-vertex-loops-to-esp32-p4-pie-instructions/index.md) compares stock scalar, analysis-improved scalar, and eight-lane generated instructions from identical Typed source. The [3D scene study](../../../20/PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/index.md) asks how much of the isolated vertex result transfers to a full painter. Each ticket contains independent controls, reproduction scripts, researcher diaries and newcomer reports.
