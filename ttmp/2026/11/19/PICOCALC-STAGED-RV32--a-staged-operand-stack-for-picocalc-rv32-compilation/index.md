@@ -24,6 +24,8 @@ Isolate the remaining native code size reductions after the previous adjacent pr
 
 ## Key Links
 - [Intern guide](design-doc/01-where-an-rv32-operand-lives-between-instructions.md)
+- [Study and results](analysis/02-how-a-staged-operand-stack-made-room-for-picocalc-editor.md)
+- [Board recipe](playbooks/01-qualify-the-80-kib-editor-slot.md)
 - [Investigation diary](reference/01-staged-rv32-investigation-diary.md)
 
 - **Related Files**: See frontmatter RelatedFiles field

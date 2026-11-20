@@ -1,0 +1,346 @@
+{
+  "cases": 2713,
+  "traps": 182,
+  "steps": {
+    "base": 68424,
+    "fusion": 65417,
+    "staged": 49922
+  },
+  "transfers": {
+    "shortArm": {
+      "b": [
+        4084
+      ],
+      "j": []
+    },
+    "nearArm": {
+      "b": [
+        8
+      ],
+      "j": [
+        4096
+      ]
+    },
+    "longArm": {
+      "b": [
+        8
+      ],
+      "j": [
+        4108
+      ]
+    },
+    "longLoop": {
+      "b": [
+        8
+      ],
+      "j": [
+        4820,
+        -4824
+      ]
+    }
+  },
+  "witnesses": [
+    {
+      "name": "call8",
+      "args": [
+        64,
+        2,
+        3
+      ],
+      "value": 165,
+      "trap": false,
+      "steps": {
+        "base": 208,
+        "fusion": 208,
+        "staged": 138
+      }
+    },
+    {
+      "name": "call8",
+      "args": [
+        64,
+        3,
+        2
+      ],
+      "value": 161,
+      "trap": false,
+      "steps": {
+        "base": 208,
+        "fusion": 208,
+        "staged": 138
+      }
+    },
+    {
+      "name": "call8",
+      "args": [
+        64,
+        -1,
+        0
+      ],
+      "value": 111,
+      "trap": false,
+      "steps": {
+        "base": 208,
+        "fusion": 208,
+        "staged": 138
+      }
+    },
+    {
+      "name": "joincall",
+      "args": [
+        64,
+        2,
+        3
+      ],
+      "value": 5,
+      "trap": false,
+      "steps": {
+        "base": 125,
+        "fusion": 124,
+        "staged": 97
+      }
+    },
+    {
+      "name": "joincall",
+      "args": [
+        64,
+        0,
+        2
+      ],
+      "value": -1,
+      "trap": false,
+      "steps": {
+        "base": 85,
+        "fusion": 84,
+        "staged": 64
+      }
+    },
+    {
+      "name": "joincall",
+      "args": [
+        64,
+        1,
+        -1
+      ],
+      "value": -1,
+      "trap": false,
+      "steps": {
+        "base": 125,
+        "fusion": 124,
+        "staged": 96
+      }
+    },
+    {
+      "name": "bounds8",
+      "args": [
+        32,
+        -1,
+        65261
+      ],
+      "trap": true,
+      "steps": {
+        "base": 14,
+        "fusion": 12,
+        "staged": 11
+      }
+    },
+    {
+      "name": "bounds8",
+      "args": [
+        32,
+        0,
+        65261
+      ],
+      "value": 65297,
+      "trap": false,
+      "steps": {
+        "base": 90,
+        "fusion": 84,
+        "staged": 66
+      }
+    },
+    {
+      "name": "bounds8",
+      "args": [
+        32,
+        1,
+        65261
+      ],
+      "value": 65297,
+      "trap": false,
+      "steps": {
+        "base": 90,
+        "fusion": 84,
+        "staged": 66
+      }
+    },
+    {
+      "name": "bounds8",
+      "args": [
+        32,
+        2,
+        65261
+      ],
+      "trap": true,
+      "steps": {
+        "base": 14,
+        "fusion": 12,
+        "staged": 11
+      }
+    },
+    {
+      "name": "bounds8",
+      "args": [
+        32,
+        2147483647,
+        65261
+      ],
+      "trap": true,
+      "steps": {
+        "base": 14,
+        "fusion": 12,
+        "staged": 11
+      }
+    },
+    {
+      "name": "shortArm",
+      "args": [
+        20,
+        0
+      ],
+      "value": 20,
+      "trap": false,
+      "steps": {
+        "base": 16,
+        "fusion": 15,
+        "staged": 10
+      }
+    },
+    {
+      "name": "shortArm",
+      "args": [
+        20,
+        1
+      ],
+      "value": 360,
+      "trap": false,
+      "steps": {
+        "base": 1375,
+        "fusion": 1374,
+        "staged": 1030
+      }
+    },
+    {
+      "name": "nearArm",
+      "args": [
+        20,
+        0
+      ],
+      "value": 20,
+      "trap": false,
+      "steps": {
+        "base": 16,
+        "fusion": 15,
+        "staged": 11
+      }
+    },
+    {
+      "name": "nearArm",
+      "args": [
+        20,
+        1
+      ],
+      "value": 361,
+      "trap": false,
+      "steps": {
+        "base": 1379,
+        "fusion": 1378,
+        "staged": 1033
+      }
+    },
+    {
+      "name": "longArm",
+      "args": [
+        20,
+        0
+      ],
+      "value": 20,
+      "trap": false,
+      "steps": {
+        "base": 16,
+        "fusion": 15,
+        "staged": 11
+      }
+    },
+    {
+      "name": "longArm",
+      "args": [
+        20,
+        1
+      ],
+      "value": 362,
+      "trap": false,
+      "steps": {
+        "base": 1383,
+        "fusion": 1382,
+        "staged": 1036
+      }
+    },
+    {
+      "name": "longLoop",
+      "args": [
+        0
+      ],
+      "value": 0,
+      "trap": false,
+      "steps": {
+        "base": 18,
+        "fusion": 16,
+        "staged": 11
+      }
+    },
+    {
+      "name": "longLoop",
+      "args": [
+        1
+      ],
+      "value": 400,
+      "trap": false,
+      "steps": {
+        "base": 1628,
+        "fusion": 1624,
+        "staged": 1217
+      }
+    },
+    {
+      "name": "longLoop",
+      "args": [
+        2
+      ],
+      "value": 800,
+      "trap": false,
+      "steps": {
+        "base": 3238,
+        "fusion": 3232,
+        "staged": 2423
+      }
+    }
+  ],
+  "diagnostics": [
+    "SyntaxError: 1:1: expected a function",
+    "SyntaxError: 1:17: expected identifier",
+    "SyntaxError: 1:39: expected i32, got bool",
+    "SyntaxError: RV32 supports up to eight register arguments"
+  ],
+  "staleLocalSpill": {
+    "depth": 5,
+    "expected": 56
+  },
+  "importClobber": {
+    "order": [
+      2,
+      3
+    ],
+    "expected": 19
+  }
+}

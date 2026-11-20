@@ -1,0 +1,18 @@
+{
+  "workload": "Editor edit and save",
+  "driverSha256": "40e6acb32941465a49036e0a07fb2b4094f64d339191ec778a0dd34c705f74c3",
+  "results": {
+    "standard": {
+      "moduleSha256": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439",
+      "instructions": 2157263,
+      "stdoutSha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34",
+      "stdoutBytes": 10386
+    },
+    "small": {
+      "moduleSha256": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4",
+      "instructions": 2157263,
+      "stdoutSha256": "975ae813a1d4369b6c97415453f25fa7927604afc05716496a43527dbe8aac34",
+      "stdoutBytes": 10386
+    }
+  }
+}

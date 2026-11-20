@@ -1,0 +1,73 @@
+{
+  "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+  "standardReactor": {
+    "imageBytes": 240452,
+    "sha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+    "loadSegments": [
+      {
+        "fileOffset": 0,
+        "virtualAddress": 0,
+        "fileBytes": 239292,
+        "memoryBytes": 239292,
+        "flags": 5
+      },
+      {
+        "fileOffset": 239296,
+        "virtualAddress": 239296,
+        "fileBytes": 196,
+        "memoryBytes": 487880,
+        "flags": 6
+      }
+    ],
+    "slot": {
+      "fileOffset": 5904,
+      "capacity": 229376,
+      "exports": 2,
+      "imports": 28,
+      "headerBytes": 140
+    }
+  },
+  "smallReactor": {
+    "imageBytes": 92996,
+    "sha256": "8653f543fe6617cbbe483fce83bcdbf2630daecad15b657bb8642d9d14a53fdf",
+    "loadSegments": [
+      {
+        "fileOffset": 0,
+        "virtualAddress": 0,
+        "fileBytes": 91836,
+        "memoryBytes": 91836,
+        "flags": 5
+      },
+      {
+        "fileOffset": 91840,
+        "virtualAddress": 91840,
+        "fileBytes": 196,
+        "memoryBytes": 487880,
+        "flags": 6
+      }
+    ],
+    "slot": {
+      "fileOffset": 5904,
+      "capacity": 81920,
+      "exports": 2,
+      "imports": 28,
+      "headerBytes": 140
+    }
+  },
+  "codeBytes": 66164,
+  "codeRoomBytes": 81780,
+  "remainingBytes": 15616,
+  "identicalLinkedInstructionBytes": true,
+  "oldLanesSmallSlotError": {
+    "name": "SyntaxError",
+    "message": "RV32 program does not fit the reactor slot"
+  },
+  "standardModule": {
+    "bytes": 240452,
+    "sha256": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439"
+  },
+  "smallModule": {
+    "bytes": 92996,
+    "sha256": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4"
+  }
+}

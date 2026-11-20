@@ -1,0 +1,28 @@
+{
+  "firmware": {
+    "bytes": 4324336,
+    "sha256": "0a0da5812013c7aee898e33102e00b308f22500076312b99eb895ee627a2b443"
+  },
+  "partitionTable": {
+    "bytes": 3072,
+    "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
+  },
+  "standardModule": {
+    "bytes": 240452,
+    "sha256": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439"
+  },
+  "smallModule": {
+    "bytes": 92996,
+    "sha256": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4"
+  },
+  "smallReactor": {
+    "bytes": 92996,
+    "sha256": "8653f543fe6617cbbe483fce83bcdbf2630daecad15b657bb8642d9d14a53fdf"
+  },
+  "candidate": {
+    "bytes": 23357,
+    "sha256": "532c5ed74ac6105b98c6a4609bae7f9c551f89e5a19ab36cd0e6faba91745e5b"
+  },
+  "confirmedCompilerAndSmallReactorInFirmware": true,
+  "confirmedPostTimerHashReceiptInFirmware": true
+}
