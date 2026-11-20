@@ -1,0 +1,173 @@
+base compile source=bundle status=ok us=2489828 peak_js_bytes=1410880 module_bytes=240452
+LABSHA 0 0 base aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+branch compile source=bundle status=ok us=2473258 peak_js_bytes=1394736 module_bytes=240452
+LABSHA 0 1 branch 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+direct compile source=bundle status=ok us=2319403 peak_js_bytes=1414084 module_bytes=240452
+LABSHA 0 2 direct aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+compact compile source=bundle status=ok us=2380955 peak_js_bytes=1403164 module_bytes=240452
+LABSHA 0 3 compact aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+branch compile source=bundle status=ok us=2456082 peak_js_bytes=1394720 module_bytes=240452
+LABSHA 1 0 branch 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+compact compile source=bundle status=ok us=2422107 peak_js_bytes=1403144 module_bytes=240452
+LABSHA 1 1 compact aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+base compile source=bundle status=ok us=2460575 peak_js_bytes=1410860 module_bytes=240452
+LABSHA 1 2 base aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+direct compile source=bundle status=ok us=2328984 peak_js_bytes=1414092 module_bytes=240452
+LABSHA 1 3 direct aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+compact compile source=bundle status=ok us=2392455 peak_js_bytes=1403148 module_bytes=240452
+LABSHA 2 0 compact aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+direct compile source=bundle status=ok us=2333002 peak_js_bytes=1414088 module_bytes=240452
+LABSHA 2 1 direct aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+branch compile source=bundle status=ok us=2449036 peak_js_bytes=1394720 module_bytes=240452
+LABSHA 2 2 branch 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+base compile source=bundle status=ok us=2450498 peak_js_bytes=1410864 module_bytes=240452
+LABSHA 2 3 base aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+direct compile source=bundle status=ok us=2371481 peak_js_bytes=1414092 module_bytes=240452
+LABSHA 3 0 direct aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+base compile source=bundle status=ok us=2466154 peak_js_bytes=1410896 module_bytes=240452
+LABSHA 3 1 base aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+compact compile source=bundle status=ok us=2402242 peak_js_bytes=1403148 module_bytes=240452
+LABSHA 3 2 compact aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+branch compile source=bundle status=ok us=2467183 peak_js_bytes=1394784 module_bytes=240452
+LABSHA 3 3 branch 20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed
+pb compile source=bundle status=ok us=2466236 peak_js_bytes=1415084 module_bytes=240452
+LABPHASE pb 0 122 1421955 1311488
+LABPHASE pb 1 120 690202 1316464
+LABPHASE pb 2 1 149025 1415084
+LABPHASE pb 3 1 3806 1154944
+LABPHASE pb 4 1 9260 1153592
+LABPHASE pb 5 1 13526 1394052
+LABPHASE pb 6 1 2073 1394052
+LABPHASE pb 7 1 29453 147076
+LABPHASE pb 8 1 121493 323176
+LABPHASE pb 9 1 15925 687092
+LABPHASE pb 10 1 4732 976940
+LABPHASE pb 11 1 6112 354280
+LABSHA 4 0 pb aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+pd compile source=bundle status=ok us=2332942 peak_js_bytes=1414480 module_bytes=240452
+LABPHASE pd 0 122 1376791 1192596
+LABPHASE pd 1 120 699813 1197572
+LABPHASE pd 2 1 45993 1208640
+LABPHASE pd 3 1 3808 1175372
+LABPHASE pd 4 1 9139 1174020
+LABPHASE pd 5 1 14168 1414480
+LABPHASE pd 6 1 2250 1414480
+LABPHASE pd 7 1 28392 147084
+LABPHASE pd 8 1 126442 332436
+LABPHASE pd 9 1 16119 692732
+LABPHASE pd 10 1 5045 990716
+LABPHASE pd 11 1 6286 368056
+LABSHA 4 1 pd aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+pd compile source=bundle status=ok us=2333550 peak_js_bytes=1414480 module_bytes=240452
+LABPHASE pd 0 122 1381036 1192628
+LABPHASE pd 1 120 697711 1197604
+LABPHASE pd 2 1 44929 1208672
+LABPHASE pd 3 1 3912 1175372
+LABPHASE pd 4 1 9424 1174020
+LABPHASE pd 5 1 14155 1414480
+LABPHASE pd 6 1 2254 1414480
+LABPHASE pd 7 1 29107 147076
+LABPHASE pd 8 1 124971 332436
+LABPHASE pd 9 1 16028 692732
+LABPHASE pd 10 1 5150 990716
+LABPHASE pd 11 1 6182 368056
+LABSHA 5 0 pd aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+pb compile source=bundle status=ok us=2480643 peak_js_bytes=1415116 module_bytes=240452
+LABPHASE pb 0 122 1434271 1311520
+LABPHASE pb 1 120 693873 1316496
+LABPHASE pb 2 1 149672 1415116
+LABPHASE pb 3 1 3821 1154948
+LABPHASE pb 4 1 9245 1153596
+LABPHASE pb 5 1 13578 1394056
+LABPHASE pb 6 1 2090 1394056
+LABPHASE pb 7 1 27860 147076
+LABPHASE pb 8 1 121052 323176
+LABPHASE pb 9 1 15907 687096
+LABPHASE pb 10 1 4543 976944
+LABPHASE pb 11 1 6040 354284
+LABSHA 5 1 pb aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50
+FCBENCH START smoke=0 old=64d5c1550442c161 new=8cdf92a2f42a4880 core=1 hz=360000000 repeats=128 blocks=16
+FCBENCH CODE old_ptr=0x400bb2b8 old_bytes=428 old_fnv=b9639eb4 next_ptr=0x400bb478 next_bytes=392 next_fnv=1ae4213f
+FCBENCH PAIR case=equal91 block=0 first=old old=839779 new=720623 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=1 first=new old=838625 new=720665 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=2 first=old old=837602 new=720624 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=3 first=new old=837320 new=720604 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=4 first=old old=838605 new=720618 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=5 first=new old=837396 new=720610 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=6 first=old old=837368 new=720602 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=7 first=new old=838688 new=720634 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=8 first=old old=837346 new=720604 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=9 first=new old=837340 new=720637 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=10 first=old old=838652 new=720646 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=11 first=new old=837376 new=720656 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=12 first=old old=837316 new=720579 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=13 first=new old=838658 new=720578 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=14 first=old old=837297 new=720634 hash=a7b537c5
+FCBENCH PAIR case=equal91 block=15 first=new old=846289 new=720578 hash=a7b537c5
+FCBENCH PAIR case=late91 block=0 first=new old=834449 new=717913 hash=e0cb9345
+FCBENCH PAIR case=late91 block=1 first=old old=835774 new=717984 hash=e0cb9345
+FCBENCH PAIR case=late91 block=2 first=new old=834427 new=717967 hash=e0cb9345
+FCBENCH PAIR case=late91 block=3 first=old old=834438 new=717972 hash=e0cb9345
+FCBENCH PAIR case=late91 block=4 first=new old=835713 new=717961 hash=e0cb9345
+FCBENCH PAIR case=late91 block=5 first=old old=834416 new=717929 hash=e0cb9345
+FCBENCH PAIR case=late91 block=6 first=new old=834457 new=717947 hash=e0cb9345
+FCBENCH PAIR case=late91 block=7 first=old old=835612 new=717898 hash=e0cb9345
+FCBENCH PAIR case=late91 block=8 first=new old=834474 new=717875 hash=e0cb9345
+FCBENCH PAIR case=late91 block=9 first=old old=834418 new=717989 hash=e0cb9345
+FCBENCH PAIR case=late91 block=10 first=new old=834409 new=717988 hash=e0cb9345
+FCBENCH PAIR case=late91 block=11 first=old old=835729 new=717988 hash=e0cb9345
+FCBENCH PAIR case=late91 block=12 first=new old=834509 new=717959 hash=e0cb9345
+FCBENCH PAIR case=late91 block=13 first=old old=834433 new=717948 hash=e0cb9345
+FCBENCH PAIR case=late91 block=14 first=new old=835779 new=717909 hash=e0cb9345
+FCBENCH PAIR case=late91 block=15 first=old old=834434 new=718012 hash=e0cb9345
+FCBENCH PAIR case=prefix block=0 first=old old=655597 new=563138 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=1 first=new old=655575 new=564437 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=2 first=old old=654267 new=564405 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=3 first=new old=654291 new=564479 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=4 first=old old=655571 new=564470 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=5 first=new old=655565 new=563137 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=6 first=old old=655581 new=564424 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=7 first=new old=655560 new=563120 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=8 first=old old=655653 new=563150 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=9 first=new old=655582 new=564459 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=10 first=old old=655593 new=563143 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=11 first=new old=654319 new=564471 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=12 first=old old=655547 new=564442 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=13 first=new old=655654 new=563131 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=14 first=old old=655583 new=564448 hash=b6ca95c5
+FCBENCH PAIR case=prefix block=15 first=new old=655566 new=563144 hash=b6ca95c5
+FCBENCH PAIR case=first block=0 first=new old=13469 new=12183 hash=02514445
+FCBENCH PAIR case=first block=1 first=old old=13457 new=12194 hash=02514445
+FCBENCH PAIR case=first block=2 first=new old=13462 new=12186 hash=02514445
+FCBENCH PAIR case=first block=3 first=old old=13454 new=12192 hash=02514445
+FCBENCH PAIR case=first block=4 first=new old=14824 new=12183 hash=02514445
+FCBENCH PAIR case=first block=5 first=old old=13458 new=12186 hash=02514445
+FCBENCH PAIR case=first block=6 first=new old=13461 new=12174 hash=02514445
+FCBENCH PAIR case=first block=7 first=old old=13454 new=12180 hash=02514445
+FCBENCH PAIR case=first block=8 first=new old=13461 new=12174 hash=02514445
+FCBENCH PAIR case=first block=9 first=old old=13454 new=12180 hash=02514445
+FCBENCH PAIR case=first block=10 first=new old=13461 new=12174 hash=02514445
+FCBENCH PAIR case=first block=11 first=old old=13454 new=12200 hash=02514445
+FCBENCH PAIR case=first block=12 first=new old=13461 new=12174 hash=02514445
+FCBENCH PAIR case=first block=13 first=old old=13454 new=12180 hash=02514445
+FCBENCH PAIR case=first block=14 first=new old=13461 new=12174 hash=02514445
+FCBENCH PAIR case=first block=15 first=old old=13454 new=12180 hash=02514445
+FCBENCH PAIR case=dir block=0 first=old old=3878 new=3870 hash=a096ef45
+FCBENCH PAIR case=dir block=1 first=new old=3868 new=3863 hash=a096ef45
+FCBENCH PAIR case=dir block=2 first=old old=3872 new=3867 hash=a096ef45
+FCBENCH PAIR case=dir block=3 first=new old=3866 new=3861 hash=a096ef45
+FCBENCH PAIR case=dir block=4 first=old old=3858 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=5 first=new old=3862 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=6 first=old old=5213 new=3862 hash=a096ef45
+FCBENCH PAIR case=dir block=7 first=new old=3856 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=8 first=old old=3854 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=9 first=new old=3858 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=10 first=old old=3856 new=3862 hash=a096ef45
+FCBENCH PAIR case=dir block=11 first=new old=3854 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=12 first=old old=3854 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=13 first=new old=3861 new=3854 hash=a096ef45
+FCBENCH PAIR case=dir block=14 first=old old=3854 new=3862 hash=a096ef45
+FCBENCH PAIR case=dir block=15 first=new old=3854 new=3854 hash=a096ef45
+FCBENCH COMPLETE
+LABCOMPLETE
+branch compile source=bundle status=ok us=2487122 peak_js_bytes=1394740 module_bytes=240452

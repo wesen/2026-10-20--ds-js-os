@@ -1,0 +1,29 @@
+{
+  "smoke": false,
+  "sourceSha256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+  "abiSha256": "02d7bc96441ac533e2d550ccad114e6ca4ec6b1e4dd87e8ecef13e2cb4ee30a3",
+  "old": {
+    "revision": "64d5c1550442c161",
+    "compiler": {
+      "compiler/typed-wasm.js": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+      "compiler/typed-rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+    },
+    "imageSha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+    "offset": 1712,
+    "bytes": 428,
+    "sha256": "4c36ee97faa432f65afca16c316d58553a70562a14165574cffee85b0c60f999",
+    "fnv": 3110313652
+  },
+  "next": {
+    "revision": "8cdf92a2f42a4880",
+    "compiler": {
+      "compiler/typed-wasm.js": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+      "compiler/typed-rv32.js": "8cdf92a2f42a4880a107718d59aecb79223bda67570752b055d13d6117ac0926"
+    },
+    "imageSha256": "527592bd79990c47e3d116d260ad03abdc3d409b207710366caf6350301690bb",
+    "offset": 1580,
+    "bytes": 392,
+    "sha256": "1c4461d1ce7cb76f02d3f12a4d8f834bdae656868938768e441cdd02a8495811",
+    "fnv": 451158335
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "primary": {
+    "saved_factory_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+    "verified_factory_restore": true,
+    "verified_bytes": 8388608,
+    "worlds_after_restore": [
+      {
+        "name": "files",
+        "engine": "native",
+        "file": "files/compiled.bin",
+        "last_error": ""
+      },
+      {
+        "name": "editor",
+        "engine": "native",
+        "file": "editor/compiled.bin",
+        "last_error": ""
+      },
+      {
+        "name": "agenda",
+        "engine": "native",
+        "file": "agenda/compiled.bin",
+        "last_error": ""
+      }
+    ]
+  },
+  "replicate": {
+    "saved_factory_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+    "verified_factory_restore": true,
+    "verified_bytes": 8388608,
+    "worlds_after_restore": [
+      {
+        "name": "files",
+        "engine": "native",
+        "file": "files/compiled.bin",
+        "last_error": ""
+      },
+      {
+        "name": "editor",
+        "engine": "native",
+        "file": "editor/compiled.bin",
+        "last_error": ""
+      },
+      {
+        "name": "agenda",
+        "engine": "native",
+        "file": "agenda/compiled.bin",
+        "last_error": ""
+      }
+    ],
+    "preview": {
+      "changed_pixel_bounds": {
+        "shot-1.png": [
+          548,
+          10,
+          626,
+          30
+        ],
+        "shot-2.png": [
+          548,
+          10,
+          626,
+          30
+        ]
+      },
+      "all_pixels_outside_clock_match": true
+    }
+  }
+}

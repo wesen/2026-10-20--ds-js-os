@@ -1,0 +1,655 @@
+{
+  "oracle": {
+    "source": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+    "reactor": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+    "lanes": {
+      "base": {
+        "size": 240452,
+        "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+      },
+      "branch": {
+        "size": 240452,
+        "sha256": "20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed"
+      },
+      "compact": {
+        "size": 240452,
+        "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+      },
+      "direct": {
+        "size": 240452,
+        "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+      },
+      "pb": {
+        "size": 240452,
+        "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+      },
+      "pd": {
+        "size": 240452,
+        "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+      }
+    }
+  },
+  "original_partition_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "trial_firmware_sha256": "d276c070154de6fbbf380e96ca87f041e00f168a228c9aa83c21a976e569f866",
+  "rows": [
+    {
+      "block": 0,
+      "position": 0,
+      "lane": "base",
+      "us": 2489828,
+      "peak": 1410880,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 0,
+      "position": 1,
+      "lane": "branch",
+      "us": 2473258,
+      "peak": 1394736,
+      "size": 240452,
+      "sha256": "20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed"
+    },
+    {
+      "block": 0,
+      "position": 2,
+      "lane": "direct",
+      "us": 2319403,
+      "peak": 1414084,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 0,
+      "position": 3,
+      "lane": "compact",
+      "us": 2380955,
+      "peak": 1403164,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 1,
+      "position": 0,
+      "lane": "branch",
+      "us": 2456082,
+      "peak": 1394720,
+      "size": 240452,
+      "sha256": "20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed"
+    },
+    {
+      "block": 1,
+      "position": 1,
+      "lane": "compact",
+      "us": 2422107,
+      "peak": 1403144,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 1,
+      "position": 2,
+      "lane": "base",
+      "us": 2460575,
+      "peak": 1410860,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 1,
+      "position": 3,
+      "lane": "direct",
+      "us": 2328984,
+      "peak": 1414092,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 2,
+      "position": 0,
+      "lane": "compact",
+      "us": 2392455,
+      "peak": 1403148,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 2,
+      "position": 1,
+      "lane": "direct",
+      "us": 2333002,
+      "peak": 1414088,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 2,
+      "position": 2,
+      "lane": "branch",
+      "us": 2449036,
+      "peak": 1394720,
+      "size": 240452,
+      "sha256": "20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed"
+    },
+    {
+      "block": 2,
+      "position": 3,
+      "lane": "base",
+      "us": 2450498,
+      "peak": 1410864,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 3,
+      "position": 0,
+      "lane": "direct",
+      "us": 2371481,
+      "peak": 1414092,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 3,
+      "position": 1,
+      "lane": "base",
+      "us": 2466154,
+      "peak": 1410896,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 3,
+      "position": 2,
+      "lane": "compact",
+      "us": 2402242,
+      "peak": 1403148,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50"
+    },
+    {
+      "block": 3,
+      "position": 3,
+      "lane": "branch",
+      "us": 2467183,
+      "peak": 1394784,
+      "size": 240452,
+      "sha256": "20e1d4d71e5e2c67bcc79565cffb9d98e2fda5bfd1c5e9160dc4d455cd7ae2ed"
+    },
+    {
+      "block": 4,
+      "position": 0,
+      "lane": "pb",
+      "us": 2466236,
+      "peak": 1415084,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "phases": [
+        {
+          "phase": 0,
+          "visits": 122,
+          "us": 1421955,
+          "peak": 1311488
+        },
+        {
+          "phase": 1,
+          "visits": 120,
+          "us": 690202,
+          "peak": 1316464
+        },
+        {
+          "phase": 2,
+          "visits": 1,
+          "us": 149025,
+          "peak": 1415084
+        },
+        {
+          "phase": 3,
+          "visits": 1,
+          "us": 3806,
+          "peak": 1154944
+        },
+        {
+          "phase": 4,
+          "visits": 1,
+          "us": 9260,
+          "peak": 1153592
+        },
+        {
+          "phase": 5,
+          "visits": 1,
+          "us": 13526,
+          "peak": 1394052
+        },
+        {
+          "phase": 6,
+          "visits": 1,
+          "us": 2073,
+          "peak": 1394052
+        },
+        {
+          "phase": 7,
+          "visits": 1,
+          "us": 29453,
+          "peak": 147076
+        },
+        {
+          "phase": 8,
+          "visits": 1,
+          "us": 121493,
+          "peak": 323176
+        },
+        {
+          "phase": 9,
+          "visits": 1,
+          "us": 15925,
+          "peak": 687092
+        },
+        {
+          "phase": 10,
+          "visits": 1,
+          "us": 4732,
+          "peak": 976940
+        },
+        {
+          "phase": 11,
+          "visits": 1,
+          "us": 6112,
+          "peak": 354280
+        }
+      ]
+    },
+    {
+      "block": 4,
+      "position": 1,
+      "lane": "pd",
+      "us": 2332942,
+      "peak": 1414480,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "phases": [
+        {
+          "phase": 0,
+          "visits": 122,
+          "us": 1376791,
+          "peak": 1192596
+        },
+        {
+          "phase": 1,
+          "visits": 120,
+          "us": 699813,
+          "peak": 1197572
+        },
+        {
+          "phase": 2,
+          "visits": 1,
+          "us": 45993,
+          "peak": 1208640
+        },
+        {
+          "phase": 3,
+          "visits": 1,
+          "us": 3808,
+          "peak": 1175372
+        },
+        {
+          "phase": 4,
+          "visits": 1,
+          "us": 9139,
+          "peak": 1174020
+        },
+        {
+          "phase": 5,
+          "visits": 1,
+          "us": 14168,
+          "peak": 1414480
+        },
+        {
+          "phase": 6,
+          "visits": 1,
+          "us": 2250,
+          "peak": 1414480
+        },
+        {
+          "phase": 7,
+          "visits": 1,
+          "us": 28392,
+          "peak": 147084
+        },
+        {
+          "phase": 8,
+          "visits": 1,
+          "us": 126442,
+          "peak": 332436
+        },
+        {
+          "phase": 9,
+          "visits": 1,
+          "us": 16119,
+          "peak": 692732
+        },
+        {
+          "phase": 10,
+          "visits": 1,
+          "us": 5045,
+          "peak": 990716
+        },
+        {
+          "phase": 11,
+          "visits": 1,
+          "us": 6286,
+          "peak": 368056
+        }
+      ]
+    },
+    {
+      "block": 5,
+      "position": 0,
+      "lane": "pd",
+      "us": 2333550,
+      "peak": 1414480,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "phases": [
+        {
+          "phase": 0,
+          "visits": 122,
+          "us": 1381036,
+          "peak": 1192628
+        },
+        {
+          "phase": 1,
+          "visits": 120,
+          "us": 697711,
+          "peak": 1197604
+        },
+        {
+          "phase": 2,
+          "visits": 1,
+          "us": 44929,
+          "peak": 1208672
+        },
+        {
+          "phase": 3,
+          "visits": 1,
+          "us": 3912,
+          "peak": 1175372
+        },
+        {
+          "phase": 4,
+          "visits": 1,
+          "us": 9424,
+          "peak": 1174020
+        },
+        {
+          "phase": 5,
+          "visits": 1,
+          "us": 14155,
+          "peak": 1414480
+        },
+        {
+          "phase": 6,
+          "visits": 1,
+          "us": 2254,
+          "peak": 1414480
+        },
+        {
+          "phase": 7,
+          "visits": 1,
+          "us": 29107,
+          "peak": 147076
+        },
+        {
+          "phase": 8,
+          "visits": 1,
+          "us": 124971,
+          "peak": 332436
+        },
+        {
+          "phase": 9,
+          "visits": 1,
+          "us": 16028,
+          "peak": 692732
+        },
+        {
+          "phase": 10,
+          "visits": 1,
+          "us": 5150,
+          "peak": 990716
+        },
+        {
+          "phase": 11,
+          "visits": 1,
+          "us": 6182,
+          "peak": 368056
+        }
+      ]
+    },
+    {
+      "block": 5,
+      "position": 1,
+      "lane": "pb",
+      "us": 2480643,
+      "peak": 1415116,
+      "size": 240452,
+      "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "phases": [
+        {
+          "phase": 0,
+          "visits": 122,
+          "us": 1434271,
+          "peak": 1311520
+        },
+        {
+          "phase": 1,
+          "visits": 120,
+          "us": 693873,
+          "peak": 1316496
+        },
+        {
+          "phase": 2,
+          "visits": 1,
+          "us": 149672,
+          "peak": 1415116
+        },
+        {
+          "phase": 3,
+          "visits": 1,
+          "us": 3821,
+          "peak": 1154948
+        },
+        {
+          "phase": 4,
+          "visits": 1,
+          "us": 9245,
+          "peak": 1153596
+        },
+        {
+          "phase": 5,
+          "visits": 1,
+          "us": 13578,
+          "peak": 1394056
+        },
+        {
+          "phase": 6,
+          "visits": 1,
+          "us": 2090,
+          "peak": 1394056
+        },
+        {
+          "phase": 7,
+          "visits": 1,
+          "us": 27860,
+          "peak": 147076
+        },
+        {
+          "phase": 8,
+          "visits": 1,
+          "us": 121052,
+          "peak": 323176
+        },
+        {
+          "phase": 9,
+          "visits": 1,
+          "us": 15907,
+          "peak": 687096
+        },
+        {
+          "phase": 10,
+          "visits": 1,
+          "us": 4543,
+          "peak": 976944
+        },
+        {
+          "phase": 11,
+          "visits": 1,
+          "us": 6040,
+          "peak": 354284
+        }
+      ]
+    }
+  ],
+  "cycles": {
+    "run": {
+      "smoke": "0",
+      "old": "64d5c1550442c161",
+      "new": "8cdf92a2f42a4880",
+      "core": "1",
+      "hz": "360000000",
+      "repeats": "128",
+      "blocks": "16"
+    },
+    "code": {
+      "old_ptr": "0x400bb2b8",
+      "old_bytes": "428",
+      "old_fnv": "b9639eb4",
+      "next_ptr": "0x400bb478",
+      "next_bytes": "392",
+      "next_fnv": "1ae4213f"
+    },
+    "fixtures": {
+      "equal91": {
+        "old_cycles_per_call_median": 6542.9609375,
+        "new_cycles_per_call_median": 5629.84765625,
+        "paired_cycles_saved_per_call_median": 913.140625,
+        "paired_saving_percent_median": 13.956075166812315,
+        "candidate_faster_blocks": 16,
+        "blocks": 16
+      },
+      "late91": {
+        "old_cycles_per_call_median": 6519.1640625,
+        "new_cycles_per_call_median": 5609.0625,
+        "paired_cycles_saved_per_call_median": 910.3359375,
+        "paired_saving_percent_median": 13.963997980113174,
+        "candidate_faster_blocks": 16,
+        "blocks": 16
+      },
+      "prefix": {
+        "old_cycles_per_call_median": 5121.6640625,
+        "new_cycles_per_call_median": 4409.48828125,
+        "paired_cycles_saved_per_call_median": 712.08984375,
+        "paired_saving_percent_median": 13.903379911838964,
+        "candidate_faster_blocks": 16,
+        "blocks": 16
+      },
+      "first": {
+        "old_cycles_per_call_median": 105.15234375,
+        "new_cycles_per_call_median": 95.15625,
+        "paired_cycles_saved_per_call_median": 9.9609375,
+        "paired_saving_percent_median": 9.473917487092432,
+        "candidate_faster_blocks": 16,
+        "blocks": 16
+      },
+      "dir": {
+        "old_cycles_per_call_median": 30.140625,
+        "new_cycles_per_call_median": 30.109375,
+        "paired_cycles_saved_per_call_median": 0.03125,
+        "paired_saving_percent_median": 0.10368066355624928,
+        "candidate_faster_blocks": 10,
+        "blocks": 16
+      }
+    }
+  },
+  "pairs": [
+    "FCBENCH PAIR case=equal91 block=0 first=old old=839779 new=720623 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=1 first=new old=838625 new=720665 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=2 first=old old=837602 new=720624 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=3 first=new old=837320 new=720604 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=4 first=old old=838605 new=720618 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=5 first=new old=837396 new=720610 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=6 first=old old=837368 new=720602 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=7 first=new old=838688 new=720634 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=8 first=old old=837346 new=720604 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=9 first=new old=837340 new=720637 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=10 first=old old=838652 new=720646 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=11 first=new old=837376 new=720656 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=12 first=old old=837316 new=720579 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=13 first=new old=838658 new=720578 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=14 first=old old=837297 new=720634 hash=a7b537c5",
+    "FCBENCH PAIR case=equal91 block=15 first=new old=846289 new=720578 hash=a7b537c5",
+    "FCBENCH PAIR case=late91 block=0 first=new old=834449 new=717913 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=1 first=old old=835774 new=717984 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=2 first=new old=834427 new=717967 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=3 first=old old=834438 new=717972 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=4 first=new old=835713 new=717961 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=5 first=old old=834416 new=717929 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=6 first=new old=834457 new=717947 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=7 first=old old=835612 new=717898 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=8 first=new old=834474 new=717875 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=9 first=old old=834418 new=717989 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=10 first=new old=834409 new=717988 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=11 first=old old=835729 new=717988 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=12 first=new old=834509 new=717959 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=13 first=old old=834433 new=717948 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=14 first=new old=835779 new=717909 hash=e0cb9345",
+    "FCBENCH PAIR case=late91 block=15 first=old old=834434 new=718012 hash=e0cb9345",
+    "FCBENCH PAIR case=prefix block=0 first=old old=655597 new=563138 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=1 first=new old=655575 new=564437 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=2 first=old old=654267 new=564405 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=3 first=new old=654291 new=564479 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=4 first=old old=655571 new=564470 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=5 first=new old=655565 new=563137 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=6 first=old old=655581 new=564424 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=7 first=new old=655560 new=563120 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=8 first=old old=655653 new=563150 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=9 first=new old=655582 new=564459 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=10 first=old old=655593 new=563143 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=11 first=new old=654319 new=564471 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=12 first=old old=655547 new=564442 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=13 first=new old=655654 new=563131 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=14 first=old old=655583 new=564448 hash=b6ca95c5",
+    "FCBENCH PAIR case=prefix block=15 first=new old=655566 new=563144 hash=b6ca95c5",
+    "FCBENCH PAIR case=first block=0 first=new old=13469 new=12183 hash=02514445",
+    "FCBENCH PAIR case=first block=1 first=old old=13457 new=12194 hash=02514445",
+    "FCBENCH PAIR case=first block=2 first=new old=13462 new=12186 hash=02514445",
+    "FCBENCH PAIR case=first block=3 first=old old=13454 new=12192 hash=02514445",
+    "FCBENCH PAIR case=first block=4 first=new old=14824 new=12183 hash=02514445",
+    "FCBENCH PAIR case=first block=5 first=old old=13458 new=12186 hash=02514445",
+    "FCBENCH PAIR case=first block=6 first=new old=13461 new=12174 hash=02514445",
+    "FCBENCH PAIR case=first block=7 first=old old=13454 new=12180 hash=02514445",
+    "FCBENCH PAIR case=first block=8 first=new old=13461 new=12174 hash=02514445",
+    "FCBENCH PAIR case=first block=9 first=old old=13454 new=12180 hash=02514445",
+    "FCBENCH PAIR case=first block=10 first=new old=13461 new=12174 hash=02514445",
+    "FCBENCH PAIR case=first block=11 first=old old=13454 new=12200 hash=02514445",
+    "FCBENCH PAIR case=first block=12 first=new old=13461 new=12174 hash=02514445",
+    "FCBENCH PAIR case=first block=13 first=old old=13454 new=12180 hash=02514445",
+    "FCBENCH PAIR case=first block=14 first=new old=13461 new=12174 hash=02514445",
+    "FCBENCH PAIR case=first block=15 first=old old=13454 new=12180 hash=02514445",
+    "FCBENCH PAIR case=dir block=0 first=old old=3878 new=3870 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=1 first=new old=3868 new=3863 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=2 first=old old=3872 new=3867 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=3 first=new old=3866 new=3861 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=4 first=old old=3858 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=5 first=new old=3862 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=6 first=old old=5213 new=3862 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=7 first=new old=3856 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=8 first=old old=3854 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=9 first=new old=3858 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=10 first=old old=3856 new=3862 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=11 first=new old=3854 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=12 first=old old=3854 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=13 first=new old=3861 new=3854 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=14 first=old old=3854 new=3862 hash=a096ef45",
+    "FCBENCH PAIR case=dir block=15 first=new old=3854 new=3854 hash=a096ef45"
+  ]
+}

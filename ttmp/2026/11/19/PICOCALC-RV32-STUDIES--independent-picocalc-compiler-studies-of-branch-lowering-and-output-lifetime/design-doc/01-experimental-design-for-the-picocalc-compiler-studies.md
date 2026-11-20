@@ -1,7 +1,7 @@
 ---
 Title: Experimental design for the PicoCalc compiler studies
 Ticket: PICOCALC-RV32-STUDIES
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -11,7 +11,7 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
+Summary: Experimental design, implementation map and reproduction procedure for the two physical native compiler studies.
 LastUpdated: 2026-11-19T19:30:57.023314819-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -81,3 +81,29 @@ A separate instrumented runtime marks lowering, finalization, ABI validation, re
 | `scripts/stage.py`, `scripts/editor-trials.c`, `scripts/phase-hooks.c.inc` | Isolated build, scheduling, phase clocks and allocation maxima. |
 
 For each output variant, test raw compilation, buffered and streamed inputs, real reactor linking and failure handling. For control flow, compare results, mutation and call order on signed extrema, empty branches, nested loops and deep expression stacks. The common examiner runs separate tests. An improvement in one native leaf operation describes only the executed inputs and code paths from that operation.
+
+## Reproduce the physical trial
+
+Run from the repository root with the IDF 5.4.2 installation, matching cross toolchain and attached P4. The previously qualified backup utility checks that the factory partition begins at 0x10000 and spans 8 MiB. The temporary directory must be new. Keep the full saved firmware local.
+
+```bash
+day=ttmp/2026/11/19
+studies=$(find "$day" -maxdepth 1 -name 'PICOCALC-RV32-STUDIES--*')
+thesis=$(find "$day" -maxdepth 1 -name 'PICOCALC-COMPILER-THESIS--*')
+scratch=$(mktemp -d /tmp/p4-rv32-studies.XXXXXXXX)
+port=/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00
+flasher=/home/manuel/.espressif/python_env/idf5.4_py3.13_env/bin/esptool.py
+bash "$thesis/scripts/supervisor/p4-backup.sh" "$port" "$scratch/original" "$flasher"
+bash "$studies/scripts/build.sh" "$scratch" /home/manuel/esp/esp-idf-5.4.2/export.sh
+python3 -B "$studies/scripts/board.py" "$scratch" "$port" "$flasher"
+```
+
+The driver verifies the core-1 leaf probe, cold builds, host hashes and physical preview. Its final section restores the original application and queries the native worlds. The final `study.json` should include 20 rows, 80 cycle pairs, the two decoded preview comparisons, and `verified_factory_restore: true`. For an already saved capture, add `--analyze /path/to/first-boot.log` to recheck the measures without interacting with the board. The two positional device arguments are unused in offline mode.
+
+## Results to read alongside the code
+
+The [supervisor report](../analysis/01-how-a-handheld-compiler-spends-time-and-memory.md) includes the worked example, physical results, attribution and decisions. The independent [examiner guide](../reference/examiner-guide.md) and [review](../reference/examiner-review.md) describe how to check the semantic, byte-equality and measurement claims. The [primary P4 receipt](../various/p4-first-boot.json) preserves the four clean blocks, the two marked pairs and all 80 native leaf timing pairs.
+
+## Reading the two boots
+
+The control and candidates were physically rebuilt in fresh QuickJS runtimes on two boots of the same firmware. The first and second runs gave 6.06% and 5.07% paired median cold-time savings for direct output. Compact saved 3.17% and 2.48%. Fusion saved 1.33% and 0.12%. The roughly 14% physical long-name comparison gain from fusion repeated. Use the two separate receipts when interpreting the variability. [First boot](../various/p4-first-boot.json) · [Replication](../various/p4-replicate.json)
