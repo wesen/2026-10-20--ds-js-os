@@ -130,3 +130,9 @@ cc -std=c11 -O2 -Wall -Wextra -Wno-unused-function \
   "$ticket/scripts/board/patch-host.c" "$cjson/cJSON.c" -lm -o "$work/qualify"
 "$work/qualify"
 ```
+
+## Step 5 — Compare chronological cache reuse with compulsory misses on the board
+
+The director measured ten blocks of the three streams. Every block started with a fresh cache, and its time included cache lookup and building on the miss path. The cache took 29.79 µs median on the 47-frame sequence, compared with 35.67 µs for the resident table. Paired within a block, the median saving was 5.79 µs and the result favored the cache in eight of ten blocks. The full 20-frame legal chronology yielded a 2.65 µs paired median saving. The cyclic 24-call sample caused all misses and cost 12.79 µs more at the paired median. The host's cache counts and the device counts agreed for every stream.
+
+The director also exposed the C table logic as a separate ELF, with a median hot call of 33.67 µs in the follow-up trace. Its 3,340-byte artifact loaded in 0.87 ms median. The prebuilt 33,964-byte Typed artifact loaded in 3.48 ms. The generated Typed program's runtime generation-through-load cost in the same blocks was 606.35 ms median. All of these loader times end at entry resolution and standalone calls are accounted for separately. [Follow-up wire and timing witnesses](../various/physical-followup.json).
