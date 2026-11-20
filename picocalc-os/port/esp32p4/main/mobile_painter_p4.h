@@ -7,6 +7,11 @@
 typedef struct mobile_painter mobile_painter;
 
 typedef struct {
+  char *bytes;
+  size_t length;
+} mobile_painter_image;
+
+typedef struct {
   size_t image_bytes;
   int64_t compile_us;
   int64_t relocate_us;
@@ -15,8 +20,10 @@ typedef struct {
 bool mobile_painter_source_allowed(const char *source, size_t length);
 
 // Called from a worker. The caller retains the source only until this returns.
-mobile_painter *mobile_painter_install(const char *source, size_t length,
-                                      mobile_painter_install_stats *stats);
+mobile_painter_image mobile_painter_compile(const char *source, size_t length,
+                                            mobile_painter_install_stats *stats);
+// Consumes the image. The ESP loader requires an internal DRAM stack.
+mobile_painter *mobile_painter_load(mobile_painter_image image, mobile_painter_install_stats *stats);
 void mobile_painter_free(mobile_painter *painter);
 
 // One owner per handle. On success returns the number of words written to the

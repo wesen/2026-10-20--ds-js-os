@@ -38,40 +38,45 @@ bool mobile_painter_source_allowed(const char *source, size_t length) {
   return allowed;
 }
 
-mobile_painter *mobile_painter_install(const char *source, size_t length,
-                                      mobile_painter_install_stats *stats) {
+mobile_painter_image mobile_painter_compile(const char *source, size_t length,
+                                            mobile_painter_install_stats *stats) {
+  mobile_painter_image image = {0};
   if (stats) *stats = (mobile_painter_install_stats){0};
-  if (!mobile_painter_source_allowed(source, length)) return NULL;
+  if (!mobile_painter_source_allowed(source, length)) return image;
 
   size_t reactor_length = 0;
   char *reactor = p4_bundle_read("painter/slot.elf", &reactor_length, NULL, 0);
-  if (!reactor) return NULL;
-  size_t image_length = 0;
+  if (!reactor) return image;
   const p4_compile_limits limits = {.heap_bytes = 2 * 1024 * 1024, .duration_us = 1700000};
   vtime_t started = port_clock();
   // Compile the bytes delivered by Chess. The firmware copy only authorizes them.
-  char *image = p4_typed_compile("mobile-painter", "screen-message", source, length,
-                                 "painter/link.js", "linkMobilePainter", ENG_NATIVE,
-                                 reactor, reactor_length, &image_length, started, &limits);
-  vtime_t compiled = port_clock();
+  image.bytes = p4_typed_compile("mobile-painter", "screen-message", source, length,
+                                 "painter/link.js", "linkMobilePainter", ENG_NATIVE, reactor,
+                                 reactor_length, &image.length, started, &limits);
+  if (stats) {
+    stats->compile_us = port_clock() - started;
+    stats->image_bytes = image.length;
+  }
   free(reactor);
-  if (stats) stats->compile_us = compiled - started;
-  if (!image) return NULL;
-  if (stats) stats->image_bytes = image_length;
+  return image;
+}
 
+mobile_painter *mobile_painter_load(mobile_painter_image image, mobile_painter_install_stats *stats) {
+  if (!image.bytes) return NULL;
+  vtime_t started = port_clock();
   mobile_painter *painter = port_big_calloc(sizeof(*painter));
   if (!painter) {
-    free(image);
+    free(image.bytes);
     return NULL;
   }
   int rc = esp_elf_init(&painter->module);
-  if (!rc) rc = esp_elf_relocate(&painter->module, (const uint8_t *)image, image_length);
+  if (!rc) rc = esp_elf_relocate(&painter->module, (const uint8_t *)image.bytes, image.length);
   if (!rc) {
     char *args[] = {(char *)&painter->entry};
     rc = esp_elf_request(&painter->module, 0, 1, args);
   }
-  free(image);
-  if (stats) stats->relocate_us = port_clock() - compiled;
+  free(image.bytes);
+  if (stats) stats->relocate_us = port_clock() - started;
   if (rc || !painter->entry) {
     printf("mobile-painter relocation rejected rc=%d\n", rc);
     mobile_painter_free(painter);
