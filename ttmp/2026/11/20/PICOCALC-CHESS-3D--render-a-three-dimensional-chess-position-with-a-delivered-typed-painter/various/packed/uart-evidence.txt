@@ -1,0 +1,16 @@
+mobile-painter compile source=screen-message status=ok us=1007898 peak_js_bytes=537692 module_bytes=17456
+mobile-painter compile source=screen-message status=ok us=1947275 peak_js_bytes=669132 module_bytes=50252
+chess3d-packed-target=paired source-bytes=7965 source-fnv=450f9418 linked-bytes=50252 linked-fnv=09a52537
+chess3d-packed-arm=paired cursor=52 count=3281 stride=192 capacity=82 witness=abcd draw-fnv=b8f492e5
+chess3d-paired cursor=52 count=3281 equal=yes fnv=b8f492e5 core=1
+chess3d-cycles arm=guarded-rv32 calls=8 188880 188916 188920 188927 188956 188899 188941 188940 188916 188901 189103
+chess3d-cycles arm=raw-pie calls=8 185416 185331 185352 185564 185351 185356 185362 185354 185589 185344 185371
+chess3d-packed-arm=paired cursor=44 count=3281 stride=192 capacity=82 witness=abcd draw-fnv=8452161d
+chess3d-paired cursor=44 count=3281 equal=yes fnv=8452161d core=1
+chess3d-cycles arm=guarded-rv32 calls=8 188979 188947 188936 188928 188905 188929 189106 188923 189118 189096 188905
+chess3d-cycles arm=raw-pie calls=8 185372 185362 185348 185354 185351 185363 185382 185388 185382 185358 185386
+chess3d-packed-arm=paired cursor=45 count=3281 stride=192 capacity=82 witness=abcd draw-fnv=4a0b7fa5
+chess3d-paired cursor=45 count=3281 equal=yes fnv=4a0b7fa5 core=1
+chess3d-cycles arm=guarded-rv32 calls=8 188923 189151 188888 188924 188927 188913 188975 188926 188887 188881 188889
+chess3d-cycles arm=raw-pie calls=8 185376 185341 185329 185335 185342 185550 185330 185346 185573 185332 185374
+mobile-painter compile source=screen-message status=ok us=1034971 peak_js_bytes=537704 module_bytes=17456

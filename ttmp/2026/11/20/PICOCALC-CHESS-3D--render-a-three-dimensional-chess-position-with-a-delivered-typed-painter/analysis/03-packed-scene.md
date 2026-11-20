@@ -2,10 +2,26 @@
 Title: The 3D chessboard that consumes eight-lane projection
 Ticket: PICOCALC-CHESS-3D
 Status: active
-Topics: [picocalc, native, esp32-p4, performance]
+Topics:
+    - picocalc
+    - native
+    - esp32-p4
+    - performance
 DocType: analysis
 Intent: long-term
+Owners: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/20/PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/scripts/packed/01-source.mjs
+      Note: Build visible tile triangles from the packed ground lattice
+    - Path: repo://ttmp/2026/11/20/PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/scripts/packed/benchmark.inc
+      Note: Paired raw PIE and guarded RV32 comparison
+    - Path: repo://ttmp/2026/11/20/PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/various/packed/physical.json
+      Note: Physical identity, three witnesses, cycle samples and restored release
+ExternalSources: []
 Summary: Trace the 81 ground vertices through actual packed execution and compare command words, pixels, and native call costs.
+LastUpdated: 0001-01-01T00:00:00Z
+WhatFor: ""
+WhenToUse: ""
 ---
 
 # The 3D chessboard that consumes eight-lane projection
@@ -25,3 +41,21 @@ The host compared all 47 positions at camera pitches 3, 5 and 7, and included th
 The unchanged two-argument scalar scene is the control for the complete change. The control for PIE's contribution to the new scene uses the same six buffers, guards, lattice construction, screen conversion and triangle commands. Its projection loop uses ordinary RV32 operations. This difference matters because the alternate scene changes how the board is computed as well as the hardware instructions that perform the central projection.
 
 The paired research image reserves one reactor slot for three closed compilations of the app-delivered scalar source. The ordinary observed draw calls the witnessed PIE entry. Only that entry writes a reserved tag at `depth[81]` after the verified vector prefix. The two measurement entries have no tag write. After a captured scene settles, a console request schedules the paired benchmark on the kernel lane with the current semantic state. Each arm warms once for each sample, then runs eight native calls. The arms alternate order over 11 samples. Every batch checks that the command count and words match the witnessed call. The timing runs outside the ordinary draw turn.
+
+## Physical result
+
+The PicoCalc received 7,965 source bytes from the Chess app and ran the compiler once through the private three-variant build path. The source length and FNV-1a value matched the host input. The linked image was 50,252 bytes and matched the independent host link by length and FNV-1a. The observed triple compilation took 1,962,756 µs including worker scheduling, and relocation took 1,441 µs. The earlier scalar scene installed a single 17,456-byte image, with observed compile and relocation intervals of 1,064,648 and 741 µs. The triple-build cost belongs to the measurement apparatus. [Physical scalar control](../various/scalar-device/receipt.json) [Paired physical receipt](../various/packed/physical.json)
+
+The active painter rendered the opening board with the cursor at e2, e3 and f3. Each draw stamped `abcd` beyond the projected depth values, returned 3,281 drawing words and produced the same completed SPI pixel CRC as the independent host frame. The SPI check included the app body and hints. These are three cursor states in one physical opening position. The wider host matrix covers distinct Chess positions and three camera pitches.
+
+| Cursor | Guarded RV32 cycles | Raw PIE cycles | Difference | Raw PIE time at 360 MHz |
+| --- | ---: | ---: | ---: | ---: |
+| e2 | 188,920 | 185,356 | −1.89% | 514.9 µs |
+| e3 | 188,936 | 185,363 | −1.89% | 514.9 µs |
+| f3 | 188,923 | 185,342 | −1.90% | 514.8 µs |
+
+The paired numbers are per-call medians on CPU1, with the same loaded scene, state and output layout in both arms. The guard preparation, construction of 81 vertices and final screen-space conversion remain in each measured call. The raster call took about 18.15 ms in the observed frames and was outside this timing window. The test used an instrumented keyboard register and SPI capture. The timing therefore measures native generation of scene commands, with raster time reported separately.
+
+The earlier two-argument scalar scene produced matching physical pixels without the shared lattice. Its three observed native calls took 488, 592 and 593 µs. The corresponding witnessed alternate calls took 538, 648 and 652 µs. Those single observations come from different firmware images and include ordinary scheduling. The controlled 1.9% improvement applies specifically to choosing PIE over guarded RV32 inside the same packed scene. The host instruction model also counted more work for the whole alternate scene than for the scalar control in the opening frame. At a fixed pitch, the ground lattice could be retained across board-state changes. That would remove construction and projection work and propose a distinct comparison from lowering those operations to PIE.
+
+The runner restored and verified the preceding playable app and partition, confirmed healthy native worlds and observed the ordinary painter install again. [Witnessed e2 framebuffer capture](../various/packed/e2-screen.png) [Board identity and raw timing lines](../various/packed/uart-evidence.txt)

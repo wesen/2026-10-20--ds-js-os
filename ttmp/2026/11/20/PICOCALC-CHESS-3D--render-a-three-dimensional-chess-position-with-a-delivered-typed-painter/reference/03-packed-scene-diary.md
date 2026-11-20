@@ -64,3 +64,59 @@ Run `scripts/packed/01-source.mjs` and compare the generated source with `script
 ### Technical details
 
 For tile corner base `j=rank*9+file`, the corner indices are `j,j+1,j+10,j+9`. The schema of the drawing commands stays fixed.
+
+## Step 2 — Observe the app-delivered vector path and pair the native scene controls
+
+The board image contains three closed versions of the same delivered eight-argument source. It paints through the witnessed version. The kernel times the two uninstrumented versions under an explicit research command after each captured state.
+
+### Prompt Context
+
+**Previous prompt** — See Step 1. The director requested matched raw PIE and guarded scalar calls, separate from the witnessed visible path and ordinary draw turn.
+
+**Commit (host and device preparation)** — `305622a` Feed actual Chess board triangles from the packed ground lattice.
+
+### What I did
+
+- Staged the private three-entry reactor, launcher identity check, aligned scratch and native timing command.
+- Built from the warm ESP-IDF output after the clean bootstrap reached the CJI stage.
+- Checked the app-only candidate, release, partition geometry, source and independently linked ELF before opening serial.
+- Recorded three witnessed frames and all 66 timed eight-call batches on the board.
+- Compared the three on-device command lists by full word arrays, then checked the actual framebuffer and completed SPI pixels separately.
+
+### Why
+
+A standalone PIE kernel's speedup cannot determine total scene cost. Both timed versions need the same state, input construction and layout. The raw executable avoids any cost of the evidence write.
+
+### What worked
+
+The app-delivered source was 7,965 bytes and the linked output was 50,252 bytes. Both matched the expected length and FNV-1a identity. The e2, e3 and f3 frames each wrote the reserved `abcd` witness and produced matching physical pixels. The paired native medians improved by approximately 1.9%. The witnessed single-call measurements include the evidence write and ordinary scheduling, while the paired rows exclude both witness instrumentation and raster.
+
+### What didn't work
+
+Independent review found two C staging issues before the measured image. The initial reactor still used the control's two-argument prototype. Declaring extra functions by replacing only the `app_main` line also attached the existing visibility attribute to an inserted declaration. The final stage replaces both prototypes and inserts the extra declarations before the entire annotated function. The independent wrapper test then passed with `-Wall -Wextra -Werror`.
+
+### What I learned
+
+The main scene spends over 185,000 cycles per call even when the standalone vector loop completes only 81 points. The matched optimization eliminates about 3,600 cycles, whereas replacing the scalar geometry path with scratch staging and repeated checked reads adds work elsewhere.
+
+### What was tricky to build
+
+The UART command arrives on CPU0, while the live painter and scratch belong to the CPU1 kernel lane. The command transfers a request through an atomic flag and the kernel benchmark reads its owned state in a separate poll. Each sample checks complete command bytes against the witnessed reference before discarding the working output.
+
+### What warrants a second pair of eyes
+
+The evidence marker exists only in the staged, allowlisted experiment. Review the runtime and compiler checks together if the source or ABI grows. Compare native generation times separately from raster and completed display transfers.
+
+### What should be done in the future
+
+A cached fixed-camera board would provide another end-to-end control. A generic painter ABI for new applications would require its own source authorization and capacity design.
+
+### Code review instructions
+
+Review the witness under `scripts/packed/03-stage.py` and the timing loop in `scripts/packed/benchmark.inc`. The parent scene runner owns display and flash checks, and the packed adapter adds staged ELF identity and the paired timing protocol.
+
+### Technical details
+
+Each arm completes one warmup, then eight measured calls. Arms alternate first position across 11 samples per state. The data buffer allocation is internal and 16-byte aligned. The two comparison entries are generated from the same source as the witnessed entry and relocate together in the widened research slot.
+
+The physical runner exited successfully. Readback verified the application and partition against the previous playable release. All eight monitored worlds were healthy and the 2D painter reinstalled with zero rejects. The serial lock passed to the scalar 3D board operator for the separate move test. [Verified board receipt](../various/packed/physical.json)

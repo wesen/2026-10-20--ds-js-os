@@ -2,10 +2,23 @@
 Title: Feed the visible board from packed ground vertices
 Ticket: PICOCALC-CHESS-3D
 Status: active
-Topics: [picocalc, native, esp32-p4]
+Topics:
+    - picocalc
+    - native
+    - esp32-p4
 DocType: design-doc
 Intent: long-term
+Owners: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/20/PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/scripts/packed/03-stage.py
+      Note: Stage the closed eight-argument C and Typed ABI
+    - Path: repo://ttmp/2026/11/20/PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/scripts/packed/05-device.py
+      Note: Apply the shared physical display and recovery procedure
+ExternalSources: []
 Summary: Compare a private eight-argument projection painter with the frozen two-argument scalar scene.
+LastUpdated: 0001-01-01T00:00:00Z
+WhatFor: ""
+WhenToUse: ""
 ---
 
 # Feed the visible board from packed ground vertices
