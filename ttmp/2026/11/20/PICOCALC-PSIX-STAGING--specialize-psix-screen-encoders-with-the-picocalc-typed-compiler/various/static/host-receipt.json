@@ -1,0 +1,782 @@
+{
+  "environment": {
+    "node": "v24.18.0",
+    "arch": "x64",
+    "cpu": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+    "gcc": "riscv32-esp-elf-gcc (crosstool-NG esp-14.2.0_20241119) 14.2.0"
+  },
+  "input": {
+    "events": 127,
+    "tracedFrames": 47,
+    "changedFrames": 46,
+    "groups": 11,
+    "traceSha256": "a129b9a062fc35f4448620281e5f58fa07c3b776ba35a43890c6803b7b0c4bad",
+    "fixtureSha256": "8a82439ee3a35fbf6e523a30ff1ca138e26b4660a002dd969eb09a77ae6f37b7",
+    "maxPackedWireBytes": 329
+  },
+  "correctness": {
+    "matchingWasmRv32JsAndC": 121,
+    "wasmMalformed": 15,
+    "rv32Malformed": 1,
+    "packedOutputShortCallerAndBacking": 242,
+    "titleWitnesses": [
+      {
+        "title": "Pico Chess",
+        "nativeBytes": 16128,
+        "sha256": "50fbcf4e9dd5192ee4016465638ce10c5c6747829c829e14fd1de8dd16b85df1",
+        "wireBytes": 318
+      },
+      {
+        "title": "chess",
+        "nativeBytes": 15452,
+        "sha256": "0daa9425f9e4b353641a929ea52dd7502607a1fa997acdd7be150d9da6d262cf",
+        "wireBytes": 306
+      }
+    ]
+  },
+  "bytes": {
+    "source": 16680,
+    "wasm": 6514,
+    "rv32": 16116,
+    "elf": 107700
+  },
+  "sha256": {
+    "source": "b18f006e33b6b9357602683c4073a8e5d57306d317ad1a8cb4fe84a4852563ba",
+    "wasm": "797e38d582a50f8864d8a6d9d74aee2daf5bec9e3388db8fe4d99174a7652bcb",
+    "rv32": "c8ac3a052c0f2b333a20893941900abcb698632c7a08c8b196897216721d9d23"
+  },
+  "endpoint": {
+    "installation": "host Node in-process available compiler; stage, emit, Wasm validate, Wasm instantiate timed separately",
+    "rv32ExternalLink": "host process wall time for static freestanding ELF wrapper, including compiler spawn",
+    "rv32Instructions": "CJI emulator count between adjacent ecall-10 markers around one psixEncode call plus surrounding RISC-V C instructions",
+    "wasmPacked": "V8 Wasm call for preloaded state through domain checks to packed bytes in preallocated memory",
+    "jsReference": "resident JS tree through PSIX encode to newly allocated Uint8Array, V8"
+  },
+  "externalLinkMs": 66.02152600000005,
+  "installation": [
+    {
+      "generateMs": 0.5575850000000173,
+      "rv32CompileMs": 4.5028389999999945,
+      "wasmCompileMs": 9.894896000000017,
+      "wasmModuleMs": 0.1597070000000258,
+      "wasmInstantiateMs": 0.16439400000012938
+    },
+    {
+      "generateMs": 0.4072129999999561,
+      "rv32CompileMs": 10.138271999999915,
+      "wasmCompileMs": 9.467217000000119,
+      "wasmModuleMs": 0.07033599999999751,
+      "wasmInstantiateMs": 0.16610399999990477
+    },
+    {
+      "generateMs": 4.205404999999928,
+      "rv32CompileMs": 9.23128500000007,
+      "wasmCompileMs": 4.382114000000001,
+      "wasmModuleMs": 0.07244199999990997,
+      "wasmInstantiateMs": 0.16007100000001628
+    },
+    {
+      "generateMs": 0.6616699999999582,
+      "rv32CompileMs": 2.991448999999875,
+      "wasmCompileMs": 7.704768999999942,
+      "wasmModuleMs": 0.09445899999991525,
+      "wasmInstantiateMs": 0.17974100000014914
+    },
+    {
+      "generateMs": 0.34932499999990796,
+      "rv32CompileMs": 2.9667360000000826,
+      "wasmCompileMs": 4.115841000000046,
+      "wasmModuleMs": 0.07227699999998549,
+      "wasmInstantiateMs": 0.14509399999997186
+    },
+    {
+      "generateMs": 0.38972100000000864,
+      "rv32CompileMs": 5.994809999999916,
+      "wasmCompileMs": 7.534840999999915,
+      "wasmModuleMs": 0.07114899999987756,
+      "wasmInstantiateMs": 0.145766999999978
+    },
+    {
+      "generateMs": 0.39317000000005464,
+      "rv32CompileMs": 6.263406000000032,
+      "wasmCompileMs": 12.954926999999998,
+      "wasmModuleMs": 2.169986999999992,
+      "wasmInstantiateMs": 0.1624939999999242
+    },
+    {
+      "generateMs": 0.40187700000001314,
+      "rv32CompileMs": 3.074572999999873,
+      "wasmCompileMs": 6.57149400000003,
+      "wasmModuleMs": 0.065326000000141,
+      "wasmInstantiateMs": 0.145774000000074
+    },
+    {
+      "generateMs": 0.3675270000001092,
+      "rv32CompileMs": 5.033268999999791,
+      "wasmCompileMs": 3.4508089999999356,
+      "wasmModuleMs": 0.06450300000005882,
+      "wasmInstantiateMs": 0.14376399999991918
+    }
+  ],
+  "hotRunsPerSample": 2000,
+  "hot": [
+    {
+      "wasmPackedUs": 3.34267849999992,
+      "jsReferenceUs": 25.831530499999985
+    },
+    {
+      "jsReferenceUs": 25.33608849999996,
+      "wasmPackedUs": 3.562979000000041
+    },
+    {
+      "wasmPackedUs": 3.774540000000002,
+      "jsReferenceUs": 25.18846999999994
+    },
+    {
+      "jsReferenceUs": 24.7092204999999,
+      "wasmPackedUs": 3.249772500000063
+    },
+    {
+      "wasmPackedUs": 4.284095000000093,
+      "jsReferenceUs": 25.934703000000013
+    },
+    {
+      "jsReferenceUs": 24.719245500000056,
+      "wasmPackedUs": 3.1998289999999088
+    },
+    {
+      "wasmPackedUs": 3.1901715000000195,
+      "jsReferenceUs": 27.228632500000003
+    },
+    {
+      "jsReferenceUs": 25.52451999999994,
+      "wasmPackedUs": 3.2574555000001055
+    },
+    {
+      "wasmPackedUs": 3.1806804999998803,
+      "jsReferenceUs": 26.022837999999865
+    }
+  ],
+  "checksum": 12520000,
+  "counts": [
+    {
+      "name": "opening/000 launch",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/001 unhandled printable key",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/002 up",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/003 enter",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/004 down",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/005 enter",
+      "bytes": 313,
+      "instructions": 21472
+    },
+    {
+      "name": "opening/006 esc",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/007 enter",
+      "bytes": 313,
+      "instructions": 21472
+    },
+    {
+      "name": "opening/009 up",
+      "bytes": 313,
+      "instructions": 21472
+    },
+    {
+      "name": "opening/010 up",
+      "bytes": 313,
+      "instructions": 21472
+    },
+    {
+      "name": "opening/011 e2-e4",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/013 cursor during search",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/091 engine wake 78",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/092 f2",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/093 enter",
+      "bytes": 313,
+      "instructions": 21472
+    },
+    {
+      "name": "opening/094 up",
+      "bytes": 313,
+      "instructions": 21472
+    },
+    {
+      "name": "opening/095 up",
+      "bytes": 313,
+      "instructions": 21472
+    },
+    {
+      "name": "opening/096 enter",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "opening/097 f2",
+      "bytes": 313,
+      "instructions": 21496
+    },
+    {
+      "name": "promotion/000 launch",
+      "bytes": 313,
+      "instructions": 22458
+    },
+    {
+      "name": "promotion/001 enter",
+      "bytes": 313,
+      "instructions": 21525
+    },
+    {
+      "name": "promotion/002 up",
+      "bytes": 313,
+      "instructions": 21525
+    },
+    {
+      "name": "promotion/003 enter",
+      "bytes": 313,
+      "instructions": 21525
+    },
+    {
+      "name": "promotion/004 esc",
+      "bytes": 313,
+      "instructions": 21525
+    },
+    {
+      "name": "promotion/005 enter",
+      "bytes": 313,
+      "instructions": 21525
+    },
+    {
+      "name": "promotion/006 underpromote a8=N",
+      "bytes": 313,
+      "instructions": 21397
+    },
+    {
+      "name": "in-check/000 launch",
+      "bytes": 313,
+      "instructions": 21523
+    },
+    {
+      "name": "white-mate/000 launch",
+      "bytes": 313,
+      "instructions": 22458
+    },
+    {
+      "name": "black-mate/000 launch",
+      "bytes": 313,
+      "instructions": 23679
+    },
+    {
+      "name": "stalemate/000 launch",
+      "bytes": 313,
+      "instructions": 22458
+    },
+    {
+      "name": "dead-material/000 launch",
+      "bytes": 313,
+      "instructions": 22455
+    },
+    {
+      "name": "castle-short/000 launch",
+      "bytes": 313,
+      "instructions": 21418
+    },
+    {
+      "name": "castle-short/001 enter",
+      "bytes": 313,
+      "instructions": 21394
+    },
+    {
+      "name": "castle-short/002 right",
+      "bytes": 313,
+      "instructions": 21394
+    },
+    {
+      "name": "castle-short/003 right",
+      "bytes": 313,
+      "instructions": 21394
+    },
+    {
+      "name": "castle-short/004 enter",
+      "bytes": 313,
+      "instructions": 21418
+    },
+    {
+      "name": "castle-long/000 launch",
+      "bytes": 313,
+      "instructions": 21418
+    },
+    {
+      "name": "castle-long/001 enter",
+      "bytes": 313,
+      "instructions": 21394
+    },
+    {
+      "name": "castle-long/002 left",
+      "bytes": 313,
+      "instructions": 21394
+    },
+    {
+      "name": "castle-long/003 left",
+      "bytes": 313,
+      "instructions": 21394
+    },
+    {
+      "name": "castle-long/004 enter",
+      "bytes": 313,
+      "instructions": 21418
+    },
+    {
+      "name": "en-passant/000 launch",
+      "bytes": 313,
+      "instructions": 22461
+    },
+    {
+      "name": "en-passant/001 enter",
+      "bytes": 313,
+      "instructions": 21982
+    },
+    {
+      "name": "en-passant/002 left",
+      "bytes": 313,
+      "instructions": 21982
+    },
+    {
+      "name": "en-passant/003 up",
+      "bytes": 313,
+      "instructions": 21982
+    },
+    {
+      "name": "en-passant/004 enter",
+      "bytes": 313,
+      "instructions": 22458
+    },
+    {
+      "name": "signed-statistics/000 launch",
+      "bytes": 313,
+      "instructions": 21422
+    },
+    {
+      "name": "boundary-inline",
+      "bytes": 313,
+      "instructions": 23650
+    },
+    {
+      "name": "boundary-positive-float-negative-float",
+      "bytes": 329,
+      "instructions": 29386
+    },
+    {
+      "name": "maximum-i32",
+      "bytes": 329,
+      "instructions": 30394
+    },
+    {
+      "name": "minimum-profile-score",
+      "bytes": 321,
+      "instructions": 27196
+    },
+    {
+      "name": "directory-before-digest",
+      "bytes": 313,
+      "instructions": 22356
+    },
+    {
+      "name": "directory-after-digest",
+      "bytes": 313,
+      "instructions": 22506
+    },
+    {
+      "name": "directory-prefix-b",
+      "bytes": 313,
+      "instructions": 21853
+    },
+    {
+      "name": "directory-prefix-chess",
+      "bytes": 313,
+      "instructions": 21999
+    },
+    {
+      "name": "directory-board-first-same-rank",
+      "bytes": 313,
+      "instructions": 21523
+    },
+    {
+      "name": "directory-masks-first-same-rank",
+      "bytes": 313,
+      "instructions": 21523
+    },
+    {
+      "name": "seeded-domain-0",
+      "bytes": 329,
+      "instructions": 27207
+    },
+    {
+      "name": "seeded-domain-1",
+      "bytes": 329,
+      "instructions": 27303
+    },
+    {
+      "name": "seeded-domain-2",
+      "bytes": 329,
+      "instructions": 27328
+    },
+    {
+      "name": "seeded-domain-3",
+      "bytes": 329,
+      "instructions": 27258
+    },
+    {
+      "name": "seeded-domain-4",
+      "bytes": 329,
+      "instructions": 27683
+    },
+    {
+      "name": "seeded-domain-5",
+      "bytes": 329,
+      "instructions": 27550
+    },
+    {
+      "name": "seeded-domain-6",
+      "bytes": 329,
+      "instructions": 27281
+    },
+    {
+      "name": "seeded-domain-7",
+      "bytes": 329,
+      "instructions": 27493
+    },
+    {
+      "name": "seeded-domain-8",
+      "bytes": 329,
+      "instructions": 27228
+    },
+    {
+      "name": "seeded-domain-9",
+      "bytes": 329,
+      "instructions": 27311
+    },
+    {
+      "name": "seeded-domain-10",
+      "bytes": 329,
+      "instructions": 27378
+    },
+    {
+      "name": "seeded-domain-11",
+      "bytes": 329,
+      "instructions": 27277
+    },
+    {
+      "name": "seeded-domain-12",
+      "bytes": 329,
+      "instructions": 27544
+    },
+    {
+      "name": "seeded-domain-13",
+      "bytes": 329,
+      "instructions": 27578
+    },
+    {
+      "name": "seeded-domain-14",
+      "bytes": 329,
+      "instructions": 27557
+    },
+    {
+      "name": "seeded-domain-15",
+      "bytes": 329,
+      "instructions": 27187
+    },
+    {
+      "name": "seeded-domain-16",
+      "bytes": 329,
+      "instructions": 27352
+    },
+    {
+      "name": "seeded-domain-17",
+      "bytes": 329,
+      "instructions": 27382
+    },
+    {
+      "name": "seeded-domain-18",
+      "bytes": 329,
+      "instructions": 27443
+    },
+    {
+      "name": "seeded-domain-19",
+      "bytes": 329,
+      "instructions": 27611
+    },
+    {
+      "name": "seeded-domain-20",
+      "bytes": 329,
+      "instructions": 27223
+    },
+    {
+      "name": "seeded-domain-21",
+      "bytes": 329,
+      "instructions": 27156
+    },
+    {
+      "name": "seeded-domain-22",
+      "bytes": 329,
+      "instructions": 27253
+    },
+    {
+      "name": "seeded-domain-23",
+      "bytes": 329,
+      "instructions": 27408
+    },
+    {
+      "name": "seeded-domain-24",
+      "bytes": 329,
+      "instructions": 27276
+    },
+    {
+      "name": "seeded-domain-25",
+      "bytes": 329,
+      "instructions": 27260
+    },
+    {
+      "name": "seeded-domain-26",
+      "bytes": 329,
+      "instructions": 27557
+    },
+    {
+      "name": "seeded-domain-27",
+      "bytes": 329,
+      "instructions": 27549
+    },
+    {
+      "name": "seeded-domain-28",
+      "bytes": 329,
+      "instructions": 27143
+    },
+    {
+      "name": "seeded-domain-29",
+      "bytes": 329,
+      "instructions": 27634
+    },
+    {
+      "name": "seeded-domain-30",
+      "bytes": 329,
+      "instructions": 27251
+    },
+    {
+      "name": "seeded-domain-31",
+      "bytes": 329,
+      "instructions": 27342
+    },
+    {
+      "name": "seeded-domain-32",
+      "bytes": 329,
+      "instructions": 27312
+    },
+    {
+      "name": "seeded-domain-33",
+      "bytes": 329,
+      "instructions": 27568
+    },
+    {
+      "name": "seeded-domain-34",
+      "bytes": 329,
+      "instructions": 27452
+    },
+    {
+      "name": "seeded-domain-35",
+      "bytes": 329,
+      "instructions": 27559
+    },
+    {
+      "name": "seeded-domain-36",
+      "bytes": 329,
+      "instructions": 27283
+    },
+    {
+      "name": "seeded-domain-37",
+      "bytes": 329,
+      "instructions": 27598
+    },
+    {
+      "name": "seeded-domain-38",
+      "bytes": 329,
+      "instructions": 27132
+    },
+    {
+      "name": "seeded-domain-39",
+      "bytes": 329,
+      "instructions": 27428
+    },
+    {
+      "name": "seeded-domain-40",
+      "bytes": 329,
+      "instructions": 27324
+    },
+    {
+      "name": "seeded-domain-41",
+      "bytes": 329,
+      "instructions": 27257
+    },
+    {
+      "name": "seeded-domain-42",
+      "bytes": 329,
+      "instructions": 27734
+    },
+    {
+      "name": "seeded-domain-43",
+      "bytes": 329,
+      "instructions": 27550
+    },
+    {
+      "name": "seeded-domain-44",
+      "bytes": 329,
+      "instructions": 27500
+    },
+    {
+      "name": "seeded-domain-45",
+      "bytes": 329,
+      "instructions": 27292
+    },
+    {
+      "name": "seeded-domain-46",
+      "bytes": 329,
+      "instructions": 27346
+    },
+    {
+      "name": "seeded-domain-47",
+      "bytes": 329,
+      "instructions": 26984
+    },
+    {
+      "name": "seeded-domain-48",
+      "bytes": 329,
+      "instructions": 27580
+    },
+    {
+      "name": "seeded-domain-49",
+      "bytes": 329,
+      "instructions": 27415
+    },
+    {
+      "name": "seeded-domain-50",
+      "bytes": 329,
+      "instructions": 27313
+    },
+    {
+      "name": "seeded-domain-51",
+      "bytes": 329,
+      "instructions": 27280
+    },
+    {
+      "name": "seeded-domain-52",
+      "bytes": 329,
+      "instructions": 27265
+    },
+    {
+      "name": "seeded-domain-53",
+      "bytes": 329,
+      "instructions": 27263
+    },
+    {
+      "name": "seeded-domain-54",
+      "bytes": 329,
+      "instructions": 27211
+    },
+    {
+      "name": "seeded-domain-55",
+      "bytes": 329,
+      "instructions": 27411
+    },
+    {
+      "name": "seeded-domain-56",
+      "bytes": 329,
+      "instructions": 27637
+    },
+    {
+      "name": "seeded-domain-57",
+      "bytes": 329,
+      "instructions": 27333
+    },
+    {
+      "name": "seeded-domain-58",
+      "bytes": 329,
+      "instructions": 27333
+    },
+    {
+      "name": "seeded-domain-59",
+      "bytes": 329,
+      "instructions": 27988
+    },
+    {
+      "name": "seeded-domain-60",
+      "bytes": 329,
+      "instructions": 27611
+    },
+    {
+      "name": "seeded-domain-61",
+      "bytes": 329,
+      "instructions": 27430
+    },
+    {
+      "name": "seeded-domain-62",
+      "bytes": 329,
+      "instructions": 27652
+    },
+    {
+      "name": "seeded-domain-63",
+      "bytes": 329,
+      "instructions": 27489
+    }
+  ],
+  "medians": {
+    "installation": {
+      "generateMs": 0.40187700000001314,
+      "rv32CompileMs": 5.033268999999791,
+      "wasmCompileMs": 7.534840999999915,
+      "wasmModuleMs": 0.07227699999998549,
+      "wasmInstantiateMs": 0.16007100000001628
+    },
+    "hot": {
+      "wasmPackedUs": 3.2574555000001055,
+      "jsReferenceUs": 25.52451999999994
+    },
+    "tracedRv32Instructions": 21496
+  }
+}

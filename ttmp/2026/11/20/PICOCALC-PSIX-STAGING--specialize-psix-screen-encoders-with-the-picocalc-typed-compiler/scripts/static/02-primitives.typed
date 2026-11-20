@@ -1,0 +1,142 @@
+// Byte offsets address a little-endian counted span in the typed halfword buffer.
+function psixPutByte(out: buffer, at: i32, value: i32): i32 {
+    const word = at >> 1;
+    const old = out.charCodeAt(word);
+    if (at % 2 === 0) {
+        out.setCharCodeAt(word, (old >> 8) * 256 + value);
+    } else {
+        out.setCharCodeAt(word, old % 256 + value * 256);
+    }
+    return 0;
+}
+
+function psixPut16(out: buffer, at: i32, value: i32): i32 {
+    if (at % 2 === 0) {
+        out.setCharCodeAt(at >> 1, value);
+    } else {
+        psixPutByte(out, at, value % 256);
+        psixPutByte(out, at + 1, value >> 8);
+    }
+    return 0;
+}
+
+function psixPutRef(out: buffer, at: i32, value: i32): i32 {
+    psixPut16(out, at, value % 65536);
+    psixPutByte(out, at + 2, value >> 16);
+    return 0;
+}
+
+function psixRead32(input: buffer, at: i32): i32 {
+    return input.charCodeAt(at) + input.charCodeAt(at + 1) * 65536;
+}
+
+function psixValidBoard(input: buffer, selected: i32): bool {
+    let pieces = 0;
+    for (let i = 0; i < 64; i = i + 1) {
+        const piece = input.charCodeAt(i);
+        if (piece > 14 || piece === 7 || piece === 8) return false;
+        if (piece > 0) { pieces = pieces + 1; }
+    }
+    if (pieces > 32) return false;
+    for (let i = 64; i < 72; i = i + 1) {
+        const mask = input.charCodeAt(i);
+        if (mask > 255 || (selected === 64 && mask !== 0)) return false;
+    }
+    return true;
+}
+
+function psixHexDigit(n: i32): i32 {
+    if (n < 10) return 48 + n;
+    return 87 + n;
+}
+
+function psixHexUnit(input: buffer, start: i32, index: i32, packed: bool): i32 {
+    if (!packed) return psixHexDigit(input.charCodeAt(start + index));
+    const unit = input.charCodeAt(start + (index >> 1));
+    if (index % 2 === 0) return psixHexDigit(unit >> 4);
+    return psixHexDigit(unit % 16);
+}
+
+function psixBoardBeforeMasks(input: buffer): bool {
+    for (let i = 0; i < 16; i = i + 1) {
+        const board = psixHexUnit(input, 0, i, false);
+        const masks = psixHexUnit(input, 64, i, true);
+        if (board !== masks) return board < masks;
+    }
+    // The mask string is a strict prefix when all its 16 digits match.
+    return false;
+}
+
+function psixWriteHex(input: buffer, out: buffer, at: i32, start: i32, size: i32, packed: bool): i32 {
+    if (at % 2 === 0) {
+        for (let i = 0; i < size; i = i + 2) {
+            const lo = psixHexUnit(input, start, i, packed);
+            const hi = psixHexUnit(input, start, i + 1, packed);
+            out.setCharCodeAt((at + i) >> 1, lo + 256 * hi);
+        }
+    } else {
+        psixPutByte(out, at, psixHexUnit(input, start, 0, packed));
+        for (let i = 1; i + 1 < size; i = i + 2) {
+            const lo = psixHexUnit(input, start, i, packed);
+            const hi = psixHexUnit(input, start, i + 1, packed);
+            out.setCharCodeAt((at + i) >> 1, lo + 256 * hi);
+        }
+        psixPutByte(out, at + size - 1, psixHexUnit(input, start, size - 1, packed));
+    }
+    return 0;
+}
+
+function psixSmall(value: i32): bool {
+    return value >= -524288 && value <= 524287;
+}
+
+// Outside the inline range an i32 is still exactly representable as IEEE-754
+// binary64. Write its exponent and extract the mantissa most-significant bit
+// first. The profile's signed domain excludes INT32_MIN.
+function psixPutFloat(out: buffer, at: i32, value: i32): i32 {
+    let sign = 0;
+    let magnitude = value;
+    if (value < 0) {
+        sign = 32768;
+        magnitude = 0 - value;
+    }
+    let place = 1;
+    let exponent = 1023;
+    while (place <= (magnitude >> 1)) {
+        place = place * 2;
+        exponent = exponent + 1;
+    }
+    let bits = magnitude - place;
+    place = place >> 1;
+    for (let n = 6; n >= 0; n = n - 1) {
+        let width = 8;
+        if (n === 6) { width = 4; }
+        let digit = 0;
+        for (let k = 0; k < width; k = k + 1) {
+            digit = digit * 2;
+            if (place > 0 && bits >= place) {
+                digit = digit + 1;
+                bits = bits - place;
+            }
+            place = place >> 1;
+        }
+        if (n === 6) {
+            psixPut16(out, at + 6, sign + exponent * 16 + digit);
+        } else {
+            psixPutByte(out, at + n, digit);
+        }
+    }
+    return 0;
+}
+
+function psixWriteInteger(out: buffer, at: i32, tail: i32, value: i32): i32 {
+    if (psixSmall(value)) {
+        let immediate = value;
+        if (immediate < 0) { immediate = immediate + 1048576; }
+        psixPutRef(out, at, 3145728 + immediate);
+        return tail;
+    }
+    psixPutRef(out, at, 4194304 + tail);
+    psixPutFloat(out, tail, value);
+    return tail + 8;
+}
