@@ -8,7 +8,13 @@ Topics:
 DocType: reference
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/20/PICOCALC-LEXICAL-INDEX--index-typed-source-once-for-the-cold-picocalc-compiler/scripts/02-index-overlay.mjs
+      Note: Scoped indexed cursor
+    - Path: repo://ttmp/2026/11/20/PICOCALC-LEXICAL-INDEX--index-typed-source-once-for-the-cold-picocalc-compiler/scripts/05-check-index.js
+      Note: Native cursor and diagnostic oracle
+    - Path: repo://ttmp/2026/11/20/PICOCALC-LEXICAL-INDEX--index-typed-source-once-for-the-cold-picocalc-compiler/scripts/10-reuse-token-overlay.mjs
+      Note: Optional current-token borrowing
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-20T00:31:15.793634521-05:00
@@ -245,3 +251,54 @@ After a full 07-run-index-checks.sh run, pass its work directory and native harn
 ### Technical details
 
 The paired optional timing inputs and artifact hashes are various/04-borrowed-token-linked-cpu.jsonl and various/05-borrowed-token-artifacts.sha256. The original and optimized runtimes both produced the same 240,452-byte ELF.
+
+## Step 5: Publish the compiler-reader article
+
+The report follows a single short typed fragment from its source offsets to occurrence rows and symbol ordinals. It then uses the same contracts to explain why the compiler drops its original index before emitting from generated async source. The report keeps the default and borrowed-token measurements as separate host comparisons.
+
+### Prompt context
+
+The parent requested a follow-up article in the Obsidian vault after measuring the optional arm.
+
+### What I did
+
+- Ran the native helper on the exact article example and checked that the opening brace at row 6 points to the closing row 13 with stored value 14.
+- Confirmed the three x occurrences have one symbol ordinal and offsets [4, 5), [13, 14), and [17, 18).
+- Reviewed the full draft for correct half-open offsets, source terminology, and timing scope.
+- Committed and pushed the article to go-go-parc as 6135063. [Published article](https://github.com/go-go-golems/go-go-parc/blob/6135063/Projects/2026/11/20/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20How%20a%20Lexical%20Index%20Serves%20the%20PicoCalc%20Compiler.md)
+
+### Why
+
+A newcomer can derive the indexed cursor from its array layout and observe how the signature scan and type emitter read the same source with different purposes.
+
+### What worked
+
+The example matched the native provider's actual rows. The vault push advanced main to 6135063.
+
+### What did not work
+
+No failures observed in this publication step.
+
+### What I learned
+
+The article's first example could show valid token positions while forming a type-inconsistent conditional. I changed the condition to compare the integer with 1, then measured the resulting row offsets again.
+
+### What was tricky to build
+
+The host CPU times belong to two different measurement batches. A single combined ratio would give the later borrowed-token experiment credit for unrelated timing changes between batches.
+
+### What warrants a second pair of eyes
+
+Check device selection against a physical compiler and heap receipt. The staged host arms preserve full generated program bytes.
+
+### What should be done in the future
+
+Record the paired board result in the aggregate qualification and keep the selected source revision alongside its linked digest.
+
+### Code review instructions
+
+The default JS overlay is frozen at de07831. The optional token-reuse overlay and paired receipt are at 3a78414.
+
+### Technical details
+
+The publication is a new dated note under Projects/2026/11/20. The ticket includes the trace, linked artifact fingerprints and reproducers that the note references.
