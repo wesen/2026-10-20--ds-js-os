@@ -19,4 +19,6 @@ mkdir -p "$result/build/partition_table"
 cp "$work/build/picocalc-os-p4.bin" "$result/build/"
 cp "$work/build/partition_table/partition-table.bin" "$result/build/partition_table/"
 cp "$port/main/literal-writer.json" "$result/"
+python3 -B "$here/06-verify-writers.py" "$work/build/picocalc-os-p4.elf" \
+    "$result/build/picocalc-os-p4.bin" "$result/literal-writer.json" "$result/flash-writers.json"
 sha256sum "$result/build/picocalc-os-p4.bin"

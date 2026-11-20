@@ -1,0 +1,35 @@
+LIT_BEGIN core=1 copy_samples=11 calls=8 compile_samples=5
+LIT_WRITE stock 6272211 9593023 6063842 6467011 6694172 6300234 6306370 6064415 6704889 6666946 6465714
+LIT_WRITE half 82893 82889 496456 84009 82902 198957 82893 199985 198374 94909 159330
+LIT_WRITE word 64853 42025 50355 51171 42300 53068 42015 41943 41920 41948 42818
+lit-chess-stock compile source=bundle status=ok us=5282555 peak_js_bytes=3181936 module_bytes=274892
+lit-chess-half compile source=bundle status=ok us=2659192 peak_js_bytes=1681708 module_bytes=274892
+lit-chess-word compile source=bundle status=ok us=2683368 peak_js_bytes=1692172 module_bytes=274892
+lit-chess-half compile source=bundle status=ok us=2661656 peak_js_bytes=1681944 module_bytes=274892
+lit-chess-word compile source=bundle status=ok us=2661451 peak_js_bytes=1692108 module_bytes=274892
+lit-chess-stock compile source=bundle status=ok us=5254907 peak_js_bytes=3181984 module_bytes=274892
+lit-chess-word compile source=bundle status=ok us=2681085 peak_js_bytes=1692176 module_bytes=274892
+lit-chess-stock compile source=bundle status=ok us=5251113 peak_js_bytes=3181912 module_bytes=274892
+lit-chess-half compile source=bundle status=ok us=2638087 peak_js_bytes=1681944 module_bytes=274892
+lit-chess-stock compile source=bundle status=ok us=5262777 peak_js_bytes=3181952 module_bytes=274892
+lit-chess-half compile source=bundle status=ok us=2639670 peak_js_bytes=1682056 module_bytes=274892
+lit-chess-word compile source=bundle status=ok us=2677218 peak_js_bytes=1692116 module_bytes=274892
+lit-chess-half compile source=bundle status=ok us=2694533 peak_js_bytes=1682004 module_bytes=274892
+lit-chess-word compile source=bundle status=ok us=2632002 peak_js_bytes=1692224 module_bytes=274892
+lit-chess-stock compile source=bundle status=ok us=5246914 peak_js_bytes=3181668 module_bytes=274892
+lit-editor-stock compile source=bundle status=ok us=4501686 peak_js_bytes=2567096 module_bytes=242124
+lit-editor-half compile source=bundle status=ok us=4366012 peak_js_bytes=2536560 module_bytes=242124
+lit-editor-word compile source=bundle status=ok us=4348838 peak_js_bytes=2541032 module_bytes=242124
+lit-editor-half compile source=bundle status=ok us=4325532 peak_js_bytes=2536616 module_bytes=242124
+lit-editor-word compile source=bundle status=ok us=4351802 peak_js_bytes=2541996 module_bytes=242124
+lit-editor-stock compile source=bundle status=ok us=4550840 peak_js_bytes=2567084 module_bytes=242124
+lit-editor-word compile source=bundle status=ok us=4330739 peak_js_bytes=2542016 module_bytes=242124
+lit-editor-stock compile source=bundle status=ok us=4520090 peak_js_bytes=2567084 module_bytes=242124
+lit-editor-half compile source=bundle status=ok us=4332638 peak_js_bytes=2536536 module_bytes=242124
+lit-editor-stock compile source=bundle status=ok us=4531573 peak_js_bytes=2567076 module_bytes=242124
+lit-editor-half compile source=bundle status=ok us=4357754 peak_js_bytes=2536556 module_bytes=242124
+lit-editor-word compile source=bundle status=ok us=4350644 peak_js_bytes=2541992 module_bytes=242124
+lit-editor-half compile source=bundle status=ok us=4328389 peak_js_bytes=2536560 module_bytes=242124
+lit-editor-word compile source=bundle status=ok us=4377740 peak_js_bytes=2541996 module_bytes=242124
+lit-editor-stock compile source=bundle status=ok us=4578615 peak_js_bytes=2567060 module_bytes=242124
+LIT_DONE ok

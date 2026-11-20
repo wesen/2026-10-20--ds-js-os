@@ -1,0 +1,95 @@
+{
+  "worlds": {
+    "keyboard": {
+      "file": "natives/keyboard.elf",
+      "engine": "native",
+      "state": "waiting",
+      "last_error": "",
+      "restarts": 0
+    },
+    "display": {
+      "file": "natives/display.elf",
+      "engine": "native",
+      "state": "idle",
+      "last_error": "",
+      "restarts": 0
+    },
+    "compositor": {
+      "file": "natives/compositor.elf",
+      "engine": "native",
+      "state": "idle",
+      "last_error": "",
+      "restarts": 0
+    },
+    "files": {
+      "file": "files/compiled.bin",
+      "engine": "native",
+      "state": "idle",
+      "last_error": "",
+      "restarts": 0
+    },
+    "editor": {
+      "file": "editor/compiled.bin",
+      "engine": "native",
+      "state": "idle",
+      "last_error": "",
+      "restarts": 0
+    },
+    "agenda": {
+      "file": "agenda/compiled.bin",
+      "engine": "native",
+      "state": "idle",
+      "last_error": "",
+      "restarts": 0
+    },
+    "snake": {
+      "file": "natives/snake.elf",
+      "engine": "native",
+      "state": "idle",
+      "last_error": "",
+      "restarts": 0
+    },
+    "chess": {
+      "file": "chess/compiled.bin",
+      "engine": "native",
+      "state": "idle",
+      "last_error": "",
+      "restarts": 0
+    }
+  },
+  "painter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 2057355,
+    "relocate_us": 1165,
+    "native_us": 2948,
+    "raster_us": 0,
+    "image_bytes": 33840
+  },
+  "i2c0Before": {
+    "busyMs": 13923.32,
+    "transfers": 2542,
+    "bytes": 10180,
+    "errors": 0
+  },
+  "i2c0After": {
+    "busyMs": 14156.74,
+    "transfers": 2584,
+    "bytes": 10348,
+    "errors": 0
+  },
+  "uartNacksSeen": 0,
+  "keypadPollsClean": true,
+  "ordinaryReady": true,
+  "observedActions": [
+    "worlds",
+    "painter",
+    "stats",
+    "stats"
+  ]
+}

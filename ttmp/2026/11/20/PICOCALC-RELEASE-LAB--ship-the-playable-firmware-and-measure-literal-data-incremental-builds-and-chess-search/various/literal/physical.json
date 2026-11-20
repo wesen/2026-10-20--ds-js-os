@@ -1,0 +1,315 @@
+{
+  "candidate": "ea974ded0b9d0166ac197a1aa3ecffac4c0de65adaacfc256cbb9b9c6c50e21d",
+  "release": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "copyCycles": {
+    "stock": [
+      6272211,
+      9593023,
+      6063842,
+      6467011,
+      6694172,
+      6300234,
+      6306370,
+      6064415,
+      6704889,
+      6666946,
+      6465714
+    ],
+    "half": [
+      82893,
+      82889,
+      496456,
+      84009,
+      82902,
+      198957,
+      82893,
+      199985,
+      198374,
+      94909,
+      159330
+    ],
+    "word": [
+      64853,
+      42025,
+      50355,
+      51171,
+      42300,
+      53068,
+      42015,
+      41943,
+      41920,
+      41948,
+      42818
+    ]
+  },
+  "compileSamples": [
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5282555,
+      "peakJsBytes": 3181936,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "half",
+      "status": "ok",
+      "us": 2659192,
+      "peakJsBytes": 1681708,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "word",
+      "status": "ok",
+      "us": 2683368,
+      "peakJsBytes": 1692172,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "half",
+      "status": "ok",
+      "us": 2661656,
+      "peakJsBytes": 1681944,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "word",
+      "status": "ok",
+      "us": 2661451,
+      "peakJsBytes": 1692108,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5254907,
+      "peakJsBytes": 3181984,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "word",
+      "status": "ok",
+      "us": 2681085,
+      "peakJsBytes": 1692176,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5251113,
+      "peakJsBytes": 3181912,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "half",
+      "status": "ok",
+      "us": 2638087,
+      "peakJsBytes": 1681944,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5262777,
+      "peakJsBytes": 3181952,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "half",
+      "status": "ok",
+      "us": 2639670,
+      "peakJsBytes": 1682056,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "word",
+      "status": "ok",
+      "us": 2677218,
+      "peakJsBytes": 1692116,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "half",
+      "status": "ok",
+      "us": 2694533,
+      "peakJsBytes": 1682004,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "word",
+      "status": "ok",
+      "us": 2632002,
+      "peakJsBytes": 1692224,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5246914,
+      "peakJsBytes": 3181668,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4501686,
+      "peakJsBytes": 2567096,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "half",
+      "status": "ok",
+      "us": 4366012,
+      "peakJsBytes": 2536560,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "word",
+      "status": "ok",
+      "us": 4348838,
+      "peakJsBytes": 2541032,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "half",
+      "status": "ok",
+      "us": 4325532,
+      "peakJsBytes": 2536616,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "word",
+      "status": "ok",
+      "us": 4351802,
+      "peakJsBytes": 2541996,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4550840,
+      "peakJsBytes": 2567084,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "word",
+      "status": "ok",
+      "us": 4330739,
+      "peakJsBytes": 2542016,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4520090,
+      "peakJsBytes": 2567084,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "half",
+      "status": "ok",
+      "us": 4332638,
+      "peakJsBytes": 2536536,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4531573,
+      "peakJsBytes": 2567076,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "half",
+      "status": "ok",
+      "us": 4357754,
+      "peakJsBytes": 2536556,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "word",
+      "status": "ok",
+      "us": 4350644,
+      "peakJsBytes": 2541992,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "half",
+      "status": "ok",
+      "us": 4328389,
+      "peakJsBytes": 2536560,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "word",
+      "status": "ok",
+      "us": 4377740,
+      "peakJsBytes": 2541996,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4578615,
+      "peakJsBytes": 2567060,
+      "linkedBytes": 242124
+    }
+  ],
+  "settings": "LIT_BEGIN core=1 copy_samples=11 calls=8 compile_samples=5",
+  "passed": true,
+  "restoreReadback": true,
+  "restoredWorlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": false,
+    "packets": 1,
+    "calls": 0,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 0,
+    "relocate_us": 0,
+    "native_us": 0,
+    "raster_us": 0,
+    "image_bytes": 0
+  }
+}

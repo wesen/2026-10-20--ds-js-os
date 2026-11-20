@@ -94,7 +94,13 @@ def run(args):
             ready = connect()
             try:
                 result["restoredWorlds"] = sorted(w for w in ready.health() if w in board.serial.NATIVE)
+                deadline = time.monotonic() + 18
                 result["restoredPainter"] = board.painter(ready)
+                while not result["restoredPainter"]["installed"] and time.monotonic() < deadline:
+                    time.sleep(.15)
+                    result["restoredPainter"] = board.painter(ready)
+                if not result["restoredPainter"]["installed"] or result["restoredPainter"]["rejects"]:
+                    raise RuntimeError("restored ordinary painter did not install")
             finally:
                 ready.close()
                 save()

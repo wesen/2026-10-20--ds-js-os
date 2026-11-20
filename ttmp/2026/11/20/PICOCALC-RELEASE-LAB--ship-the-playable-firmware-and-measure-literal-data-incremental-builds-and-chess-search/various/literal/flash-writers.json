@@ -1,0 +1,20 @@
+{
+  "word": {
+    "vma": 1074726636,
+    "section": ".flash.text",
+    "size": 35664,
+    "sha256": "604def97bc5c701d59be6115c3edb02d2ce55f23aaa5d72992c58ce25f7dd0c8"
+  },
+  "half": {
+    "vma": 1074691612,
+    "section": ".flash.text",
+    "size": 35024,
+    "sha256": "7df3f7eefeeeac81b4a57c2a4fa6cc39c81f805c4c611822d04dff0ce317f5da"
+  },
+  "stock": {
+    "vma": 1074494068,
+    "section": ".flash.text",
+    "size": 197544,
+    "sha256": "9df60095321c3f61279c1905e7d6824eb35740e169f7dd5877cf597bba09c7bf"
+  }
+}
