@@ -39,6 +39,20 @@ A PicoCalc application, called a *world*, can be written in a typed JavaScript-l
 | How large is the compiled program? | Count of emitted 32-bit words, linked ELF length, and the loader’s reported world size | A compiler can eliminate instructions while the reserved ELF slot stays the same size |
 | How fast does an edit become a usable artifact? | Time from a supplied edited string in a live session to a linked replacement ELF | Reuse validation, changed bodies, call relocation and copying the result. Actual launch or display requires its own endpoint |
 
+```mermaid
+flowchart LR
+    A["Edited source in a live QuickJS session"] --> B["Check declarations and dependencies"]
+    B --> C["Compile changed function fragments"]
+    B --> D["Reuse valid previous fragments"]
+    C --> E["Lay out instructions and encode calls"]
+    D --> E
+    E --> F["Validate ABI and return linked ELF"]
+    F --> G["Relocate executable and map entry"]
+    G --> H["Call native function and observe return"]
+```
+
+The ordinary rebuild experiment stops its first clock at the linked ELF. A separate uninterrupted endpoint can start before handing over the edited source and stop immediately after the first checked native function returns. Source entry on the keyboard and display refresh occur outside these definitions.
+
 An artifact identity ties several of these observations together. SHA-256 of a full ELF produced from a source string by two different paths supplies a strong check that the paths built the same artifact. One equal hash does little to establish correctness for source changes, and two different hashes can both represent correct programs. For changes that intentionally generate different instructions the lab also ran independent expected outputs and application workflows. The compact audit records include the input and executable identities needed to reproduce these comparisons. [Physical audit](../scripts/04-board.py) · [Native audit](../scripts/03-native.py)
 
 ## How to read a 300 ms result
@@ -79,6 +93,19 @@ Always analyzes every function up to a 2,048-cell intermediate-body limit. Selec
 
 On held-out Editor the preregistered rule chose seven of 120 functions. Always charged 60,740 cells and Select charged 4,278, or 7.04% as many. Both removed 17 zero guards and seven overflow guards. The measured reduction is therefore 2 × 17 + 7 × 7 = 83 words. None of the app’s removed guards needed a proven local variable. The local-variable machinery is a tested feature whose additional value on this app is unestablished. On the two physical boots Select saved about 403 and 398 ms relative to Always, yet added about 50 and 54 ms and roughly 15 KB of compiler peak relative to production. The exact same static facts can be profitable against one baseline and expensive against another. Agenda’s eight-date kernel used about 11.7% fewer cycles, which makes workload frequency relevant to an engineering decision. [Bounded board audit](../various/bounded.json) · [Held-out Editor host receipt](../../PICOCALC-BOUNDED-FACTS--budget-per-function-facts-in-the-picocalc-streaming-compiler/various/host-editor.json)
 
+The selection decision can be expressed directly in the compiler’s accounting units.
+
+```text
+remaining = 32,768
+for function in source order:
+    charge = 2 * length(function.numericBody)
+    if function.containsDivisionOrRemainder and length(function.numericBody) <= 2,048:
+        if charge <= remaining:
+            remaining -= charge
+            analyzeDivisors(function)
+    emitFunction(function)
+```
+
 I constructed a case where the budget must choose. Thirty-six functions each perform 80 divisions using a runtime divisor. One function performs 80 divisions by 3. All 37 have the same numeric body size and do not call one another. Every function passes the operation-presence screen. Changing the source order moves the sole productive function without changing its contents or the total work available.
 
 | Position of the literal-divisor function | Always savings | Select charge | Select savings | Recovery |
@@ -92,7 +119,9 @@ Select’s 32,768-cell allowance admitted 28 of the 37 equal-cost functions. In 
 
 A firmware backup identifies precisely what was installed, but the installed image can predate the lab’s frozen compiler. I searched the factory backup for the exact frontend, backend, Editor source and reactor bytes. The source and reactor matched. Both compiler scripts matched repository revision `08fbae85985b`, with earlier instruction decoding. Neither script from the experiment’s frozen `40bcf850a580` control was present. The generic physical trial images contained the frozen scripts and their declared candidates. [Firmware identity checks](../scripts/07-firmware.py) · [Hashes and bundle offsets](../various/firmware.json)
 
-This matters when booting a normal small-slot world. Subject to independent validation, the normal boot can establish that a specific ELF ran and that the world occupied a measured amount of memory. Comparing its compiler time and heap with the older installed image changes more than the reservation. The supervisor therefore arranged a normal boot of the same staged lowerer in the standard reservation as a matched reference for the slot change. For the half-second target the same frozen production compiler must serve as the reference, in a comparable measurement configuration.
+A matched standalone build used exactly the same staged compiler, wrapper and Editor source with its original 224 KiB reservation. Three normal starts per reservation returned the independently decoded ELF hash and loaded the native Editor. Every 224 KiB boot reported 710.1 KiB world occupancy and 1,439,808 bytes of peak compiler allocation. Every 80 KiB boot reported 566.1 KiB and 1,284,204 bytes. Shrinking the reservation therefore reduced reported running-world occupancy by **144.0 KiB** and compiler peak by **155,604 bytes** on this configuration. The medians of the separate time series were 2,908.296 and 2,889.555 ms, a difference of 18.741 ms. The supervisor ran one firmware series after the other on the same device. Reservation, source and executable identity are tightly controlled. Timing can still include order and firmware-placement effects.
+
+The small-slot world and the bounded Select world separately opened a 65,536-byte native preview. I compared both captures from each with the existing qualified 640 × 640 bitmap. Every differing pixel was within the clock. Select used the original reservation, loaded the expected 240,452-byte ELF, and reported 710.1 KiB world occupancy. These are real application behaviors in the measured worlds. The before/after installed image remains a restoration and health control. The frozen production-versus-candidate timing comparison comes from the balanced generic firmware trials. [Normal-boot and screenshot examination](../various/worlds.json)
 
 ## A real edit changes dependencies and addresses
 
@@ -111,6 +140,10 @@ For an independent test I started with the full 70,859-byte Editor and a stock s
 The first version of the new signature left the old one-argument calls in place. Both implementations reported the same diagnostic at line 723, column 53. Repairing the source grew the generated program by 28 bytes. New call displacements changed additional linked bodies even though those callers reused their compiled fragments. The state-layout edit preserved each field’s type, so it remained valid source, but two offsets changed. Whole-record dependency checks caused 77 functions to rebuild. Seventy of those produced the same bytes they had before the edit. A finer dependency representation might record individual accessed fields. Its extra storage and validation cost would have to be measured.
 
 As a final check I changed the order of two required fields in the externally specified WorldEvent record. Both compilers rejected the ABI. Inserting the comment into the previous *valid* revision reused every fragment and reproduced the previous hash. Undo reproduced the original ELF. This audit establishes artifact and diagnostic agreement for these concrete edits. The edits include artificial changes to Editor policy and its internal layout. These results do not assert compatibility with previously saved application state, user interaction latency, or measured execution of these modified Editors. [Independent edit sequence](../scripts/05-rebuild.mjs) · [Images, diagnostics and fragment counts](../various/rebuild.json)
+
+![Comparison of static guard savings by source order and rebuilt versus changed linked functions](_assets/picocalc-methods-policy-and-fragments.png)
+
+*The left panel holds the set of functions and the analysis budget fixed. The right compares two counts within each Editor edit. The layout edit rebuilt functions whose instructions stayed identical, while the signature edit changed calls in linked functions whose fragments were reused.*
 
 ## Grading a forecast in the right units
 

@@ -143,6 +143,35 @@
         "smallReactor": -1
       }
     },
+    "selectLive": {
+      "bytes": 4553952,
+      "sha": "348e1c877c5bc00fdd70002832ed617fe7ab58baa7c37c912ebb70081c2bb4d5",
+      "offsets": {
+        "editorSource": 787272,
+        "standardReactor": 546816,
+        "frozen-wasm": 399692,
+        "older-wasm": -1,
+        "frozen-rv32": 383924,
+        "older-rv32": -1,
+        "independent-cursor-wasm": -1,
+        "independent-cursor-rv32": 383924,
+        "independent-base-wasm": 399692,
+        "independent-base-rv32": 383924,
+        "native-base-wasm": 399692,
+        "native-base-rv32": 383924,
+        "native-staged-wasm": 399692,
+        "native-staged-rv32": -1,
+        "native-fusion-wasm": 399692,
+        "native-fusion-rv32": -1,
+        "bounded-select-wasm": 357632,
+        "bounded-select-rv32": 336168,
+        "bounded-base-wasm": 399692,
+        "bounded-base-rv32": 383924,
+        "bounded-always-wasm": 357632,
+        "bounded-always-rv32": -1,
+        "smallReactor": -1
+      }
+    },
     "independent": {
       "bytes": 4592272,
       "sha": "dcc8732c7fce2541d5b18968636bfde78f7a2ffb5ccba95d9f142a7490f560ae",

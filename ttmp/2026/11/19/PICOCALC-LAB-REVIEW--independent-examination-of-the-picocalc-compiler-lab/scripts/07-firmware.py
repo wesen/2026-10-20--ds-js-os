@@ -30,6 +30,7 @@ output={}
 images = {'original':work/'original/factory-original.bin','slot80':staged/'slot80/build/picocalc-os-p4.bin'}
 images['frontendSpecialist']=frontend/'build/picocalc-os-p4.bin'
 images['stagedStandard']=work/'staged-standard/build/picocalc-os-p4.bin'
+images['selectLive']=work/'bounded-live/build/picocalc-os-p4.bin'
 images.update({v:work/v/'build/picocalc-os-p4.bin' for v in ('independent','native','bounded')})
 for name,path in images.items():
     data=path.read_bytes()
@@ -46,6 +47,8 @@ for variant,item in output.items():
     assert item['offsets']['smallReactor' if variant=='slot80' else 'standardReactor']>=0
 for asset in ('frozen-wasm','frozen-rv32','independent-cursor-wasm'):
     assert output['frontendSpecialist']['offsets'][asset]>=0
+for asset in ('bounded-select-wasm','bounded-select-rv32'):
+    assert output['selectLive']['offsets'][asset]>=0
 for variant in ('stagedStandard','slot80'):
     for asset in ('frozen-wasm','native-staged-rv32'):
         assert output[variant]['offsets'][asset]>=0

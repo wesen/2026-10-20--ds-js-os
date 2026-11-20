@@ -1,0 +1,122 @@
+{
+  "columns": [
+    "coldUs",
+    "peakBytes",
+    "elfBytes",
+    "worldKiB"
+  ],
+  "trials": {
+    "standard-world": {
+      "firmware": "3038ea64db1620ccb470b31ccf6e33af1c293325898bb3db6f7978682502bbd7",
+      "elf": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439",
+      "boots": [
+        [
+          2908296,
+          1439808,
+          240452,
+          710.1
+        ],
+        [
+          2908777,
+          1439808,
+          240452,
+          710.1
+        ],
+        [
+          2907738,
+          1439808,
+          240452,
+          710.1
+        ]
+      ],
+      "median": [
+        2908296,
+        1439808,
+        240452,
+        710.1
+      ]
+    },
+    "slot80": {
+      "firmware": "0a0da5812013c7aee898e33102e00b308f22500076312b99eb895ee627a2b443",
+      "elf": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4",
+      "boots": [
+        [
+          2889319,
+          1284204,
+          92996,
+          566.1
+        ],
+        [
+          2889555,
+          1284204,
+          92996,
+          566.1
+        ],
+        [
+          2892244,
+          1284204,
+          92996,
+          566.1
+        ]
+      ],
+      "median": [
+        2889555,
+        1284204,
+        92996,
+        566.1
+      ],
+      "pixelDifferenceBoundingBoxes": {
+        "shot-1.png": [
+          548,
+          10,
+          626,
+          30
+        ],
+        "shot-2.png": [
+          548,
+          10,
+          626,
+          30
+        ]
+      }
+    },
+    "select-world": {
+      "firmware": "348e1c877c5bc00fdd70002832ed617fe7ab58baa7c37c912ebb70081c2bb4d5",
+      "elf": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+      "boots": [
+        [
+          2506599,
+          1425796,
+          240452,
+          710.1
+        ]
+      ],
+      "median": [
+        2506599,
+        1425796,
+        240452,
+        710.1
+      ],
+      "pixelDifferenceBoundingBoxes": {
+        "shot-1.png": [
+          548,
+          10,
+          626,
+          30
+        ],
+        "shot-2.png": [
+          548,
+          10,
+          626,
+          30
+        ]
+      }
+    }
+  },
+  "smallMinusStandard": {
+    "coldUs": -18741,
+    "peakBytes": -155604,
+    "elfBytes": -147456,
+    "worldKiB": -144.0
+  }
+}
