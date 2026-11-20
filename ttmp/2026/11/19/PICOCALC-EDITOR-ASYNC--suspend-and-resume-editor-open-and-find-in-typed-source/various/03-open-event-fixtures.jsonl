@@ -1,0 +1,2 @@
+{"fixture":"guard-open","targets":["wasm","rv32"],"events":27,"timers":17,"screens":5,"examinedSavedBytes":64685}
+{"fixture":"read-failures","targets":["wasm","rv32"],"events":9,"timers":0,"screens":2,"examinedSavedBytes":0}

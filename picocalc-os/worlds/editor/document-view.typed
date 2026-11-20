@@ -85,7 +85,7 @@ function editorHints(hints: buffer, state: WorldState): i32 {
 }
 
 function editorShow(output: buffer, hints: buffer, state: WorldState): i32 {
-    if (state.findToken > 0 || state.frameToken > 0) return 0;
+    if (state.opening || state.findToken > 0 || state.frameToken > 0) return 0;
     const text = typedSdkView(typedSdkBuffer(0), state.textLength);
     if (state.preview && !editorPreviewReady(text, state)) return 0;
     if (!editorFrameLocate(text, state)) return 0;

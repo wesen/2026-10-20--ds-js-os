@@ -12,15 +12,9 @@ record WorldEvent {
 
 record WorldState {
     file: i32;
-    offered: i32;
-    offeredNameLength: i32;
-    readToken: i32;
+    opening: bool;
     nameLength: i32;
     textLength: i32;
-    reading: bool;
-    sourceLength: i32;
-    unitsRead: i32;
-    unitsWritten: i32;
     cursor: i32;
     top: i32;
     goal: i32;
