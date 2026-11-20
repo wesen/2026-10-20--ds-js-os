@@ -1,0 +1,59 @@
+{
+  "operatorImage": "f83e5e3f294e5602c40d436ae2db35fb96235c4f0ea15846630fdf26484d8308",
+  "images": {
+    "stock": "cb6ee22c4574455ab29f944e2869cd0c45c0993cf5410430ebef8c7e3bd61331",
+    "portable": "f467f17081885d0252dec590bbdd560b87603ea99cfd71865d26f468ab1171ad",
+    "pie": "0e3d8a4ab666a330c5ec177fe525c687ba450941e3a09a993f8bdbcf13716d3d"
+  },
+  "crcMatches": 72,
+  "costs": [
+    {
+      "vertices": 1,
+      "stock": 316,
+      "portable": 319,
+      "pie": 319
+    },
+    {
+      "vertices": 7,
+      "stock": 1353,
+      "portable": 1355,
+      "pie": 1355
+    },
+    {
+      "vertices": 8,
+      "stock": 1526,
+      "portable": 755,
+      "pie": 398
+    },
+    {
+      "vertices": 9,
+      "stock": 1699,
+      "portable": 932,
+      "pie": 578
+    },
+    {
+      "vertices": 17,
+      "stock": 3092,
+      "portable": 1340,
+      "pie": 617
+    },
+    {
+      "vertices": 64,
+      "stock": 11360,
+      "portable": 3561,
+      "pie": 678
+    },
+    {
+      "vertices": 256,
+      "stock": 45675,
+      "portable": 13161,
+      "pie": 1644
+    },
+    {
+      "vertices": 1024,
+      "stock": 184005,
+      "portable": 51561,
+      "pie": 5484
+    }
+  ]
+}

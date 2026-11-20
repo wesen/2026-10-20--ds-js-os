@@ -71,7 +71,30 @@ A second generated function uses ordinary RV32 operations after the same prefix 
 
 At sixteen vertices the guard and scalar rewrite alone remove 1344 retired instructions. The packed operations remove another 579. In the packed column the first complete group costs 202 instructions including entry and return. Adding a second complete group costs only 29 more because it reuses the initial alignment, bounds and overlap checks. At forty-one vertices the final scalar iteration adds 131 instructions to all three arms. The cost in executable storage is visible even when guards always fail. The fixture including its nested caller occupies 772 bytes stock, 1560 bytes with the guarded scalar version and 1528 bytes with the PIE version. [Nested-call measurements and image hashes](../scripts/review/receipt.json)
 
-Keep this opt-in for bounded, measured workloads. A real painter needs a source loop that matches, six properly aligned payloads and enough repeated vertices to qualify at runtime. A complete scene also performs face construction, rasterization, compositing and display transfer. Qualification of its projection time needs actual path evidence inside the receiving painter and comparison of complete rendered frames. A host instruction count alone cannot establish cycles, frame time or input latency.
+## What the physical P4 measured
+
+The board operator ran the three freshly compiled functions from a standalone firmware image. The board passed six Typed buffer pointers and the vertex count directly to each function. On the independent host I regenerated the three raw machine images from the checked-in source and matched every SHA-256 in the operator's receipt. I also reconstructed every halfword in the expected output arrays, including the untouched input tail when the first output aliases the first input. All 72 independently calculated CRCs agreed with the recorded device results. This cross-check covers eight counts, three memory layouts and three compiled versions. The canary and partial-trap comparisons described earlier run on the host. [Operator receipt](../various/physical.json) · [Independent physical audit](../scripts/review/board-audit.json)
+
+| Vertices | Stock cycles | Guarded scalar cycles | PIE cycles |
+| ---: | ---: | ---: | ---: |
+| 1 | 316 | 319 | 319 |
+| 7 | 1353 | 1355 | 1355 |
+| 8 | 1526 | 755 | 398 |
+| 9 | 1699 | 932 | 578 |
+| 17 | 3092 | 1340 | 617 |
+| 64 | 11360 | 3561 | 678 |
+| 256 | 45675 | 13161 | 1644 |
+| 1024 | 184005 | 51561 | 5484 |
+
+Each cell is the median of eleven batch averages for warm calls using aligned, disjoint payloads. Each batch repeated a function floor(16384 / vertices) times and used the CPU cycle counter around those calls. The order of the three variants rotated across trials. Counts one and seven cost two or three additional cycles with the guard. At eight vertices, the first complete group took 398 cycles, compared with 755 in the guarded scalar version. At 1024 vertices the same comparison is 5484 versus 51561 cycles, a 9.40-fold throughput increase for this kernel. The 33.55-fold comparison with stock includes the large benefit of cheaper scalar address generation and bounds checks. A batch mean cannot reveal the worst latency of an individual call. [Board harness](../scripts/board/main/main.c)
+
+## Does the delivered three-dimensional Chess painter use PIE?
+
+The finished painter projects one point at a time. Its function takes integer coordinates and a camera pitch and returns one packed screen position. Calls from board and piece construction pass those positions directly to triangle emitters. The public painter entry receives two buffers holding the normalized game state and the drawing commands. None of these loops loads coordinate columns at one index and stores independent result columns at that index. Turning the PIE option on produced exactly the same 9572 machine bytes as stock for source digest d6c2dc3a…. The review's instruction interpreter counted zero packed operations in these frames. [3D painter source](../../PICOCALC-CHESS-3D--render-a-three-dimensional-chess-position-with-a-delivered-typed-painter/scripts/scene/isometric.typed) · [Independent scene receipt](../scripts/review/scene-receipt.json)
+
+I tested 15 independently constructed states, including the opening, e2–e4, two alternate camera pitches, a promotion prompt and each piece type at the same square. The Wasm return and all 8960 memory bytes agreed with generated RV32 for every state. A separate geometric calculation checked both triangles of every square in all fifteen outputs, for 1920 checked triangles. Removing the color and printed letter still left six distinct streams of piece coordinates. The opening returned 3281 command words and the empty board 1105. I also ran the 47 game replay inputs drawn from the scene author's fixture and compared every native result with the fixture's expected command stream, original input and untouched output tail. The replay contained 32 distinct command streams. [Scene driver](../scripts/review/scene.mjs)
+
+Keep the compiler option experimental for users with demonstrably independent, bounded coordinate arrays. The measured throughput justifies evaluating batching in a renderer that spends enough time projecting vertices. For this particular painter, the next design question is where batches would live. The two-buffer entry currently supplies game state and command storage. A bounded scratch layout and explicit buffer lifetime, or a recognizer that can reason about nonoverlapping regions within a workspace, would be necessary for this form of lowering. The projection kernel results establish no end-to-end frame speedup for this experimental scene.
 
 ## Reproducing the independent test
 
@@ -82,4 +105,4 @@ node ttmp/2026/11/20/PICOCALC-TYPED-PIE--*/scripts/review/qualify.mjs \
   /home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20241119/riscv32-esp-elf/bin/riscv32-esp-elf
 ~~~
 
-The JSON output records both compiler script hashes and all three emitted image hashes. Its retired rows give count, stock RV32, guarded scalar RV32 and PIE in that order. Node runs the WebAssembly reference and the independent RV32 interpreter locally. [Executable driver](../scripts/review/qualify.mjs)
+The JSON output records both compiler script hashes and all three emitted image hashes. Its retired rows give count, stock RV32, guarded scalar RV32 and PIE in that order. The sibling audit-board.mjs script takes the operator’s physical.json. The scene.mjs script runs the fifteen standalone states with no arguments and accepts the scene experiment’s generated fixtures.bin to add the 47-state replay. Node runs the WebAssembly reference and the independent RV32 interpreter locally. [Executable driver](../scripts/review/qualify.mjs)
