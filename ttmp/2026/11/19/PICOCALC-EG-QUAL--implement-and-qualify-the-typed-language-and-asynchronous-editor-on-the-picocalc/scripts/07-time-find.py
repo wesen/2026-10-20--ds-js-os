@@ -39,7 +39,10 @@ def exercise(args, engine, trial, out):
     else:
         # Recover only the empty directory which an earlier, recorded trial created.
         prior=args.resume_empty
-        if not prior or found.strip()!="#OK ls" or missing not in (prior/"preflight.log").read_text() or (
+        prior_stage=args.resume_staged
+        known_file=prior_stage and found.strip()==(prior_stage/"staged.log").read_text().strip() and (
+            f"put {path}: {len(DOC)} bytes") in (prior_stage/"put.log").read_text()
+        if not prior or (found.strip()!="#OK ls" and not known_file) or missing not in (prior/"preflight.log").read_text() or (
                 "fs: op 5 on "+directory+" took ") not in (prior/"setup.log").read_text():
             raise ValueError("benchmark directory already exists")
         listing=capture("root",3,["0.3 key f1","0.8 key d","2 ls"])
@@ -58,16 +61,22 @@ def exercise(args, engine, trial, out):
     for index,(case,query) in enumerate(QUERIES):
         # F3, Escape cancels the existing query and empties its buffer. Reopen the prompt when needed.
         commands=(["0.25 key f3","0.9 key esc","1.6 key f3"] if index else ["1.6 key f3"])
-        commands += ["2.35 type "+query,"4.1 egfind "+case+" "+leaf,"4.5 key enter","14 shot","18 worlds"]
-        result=capture(case,19.5,commands,True)
+        commands += ["2.35 type "+query,"4.1 egfind "+case+" "+leaf,"4.5 key enter"]
+        result=capture(case,15,commands)
         observation=re.findall(r"^EGFIND (\w+) (\d+) (\d+) (\d+) (\d+) (\d+)$",result,re.M)
         if len(observation)!=1 or observation[0][0]!=case or "EGBAD" in result or "editor crashed" in result:
             raise ValueError(f"{case}: did not observe the expected prompt, Enter and completed status")
         _,wall,cpu,execution,segments,settlements=observation[0]
         # The capture tool numbers images from one per command invocation.
         shot=out/f"{case}.png"
-        (out/"shot-1.png").replace(shot)
-        if "crc ok" not in (out/f"{case}-capture.log").read_text(): raise ValueError("unverified screenshot")
+        for attempt in range(1,4):
+            label=f"{case}-shot-{attempt}"
+            capture(label,22,["0.3 shot"],True)
+            if "crc ok" in (out/f"{label}-capture.log").read_text():
+                (out/"shot-1.png").replace(shot)
+                break
+        else:
+            raise ValueError("unverified screenshot")
         values=dict(wall_us=int(wall),editor_cpu_us=int(cpu),engine_us=int(execution),
                     editor_segments=int(segments),settlements=int(settlements))
         # A late unique hit can skip almost a whole line in one SDK seek.
@@ -87,6 +96,7 @@ def main():
     p.add_argument("--port",default="/dev/ttyACM0");p.add_argument("--kind",choices=["control","candidate"],required=True)
     p.add_argument("--repetitions",type=int,default=1,choices=range(1,4))
     p.add_argument("--resume-empty",type=Path,help="prior trial with proof it created an empty scratch directory")
+    p.add_argument("--resume-staged",type=Path,help="prior trial with a verified upload to the owned scratch directory")
     a=p.parse_args()
     a.esptool_python=a.esptool.parent/"python"
     original=MATCHED["validate"](a)

@@ -117,3 +117,51 @@ Build with `scripts/04-build-native-host.sh`. Run the resulting executable with 
 ### Technical details
 
 Each occurrence occupies four unsigned 32-bit words. The algorithm maps a spelling to the first source interval that contains it. Variable binding remains in the typed frontend. Separate staged images pin the C scanner and both JavaScript cursor implementations.
+
+## Step 3: Replay the professor's frontend-only timing gate
+
+I ran the original phase timer against the pre-E Editor corpus, then repeated it on the two staged index implementations. All three medians exceeded the historical absolute gate. The indexed versions still improved on the control measured in the same session.
+
+### Prompt Context
+
+See Step 1. The E5 design asks for a host median of at most 31.4 ms. I interpreted that as a separate test from the device cold-build requirement.
+
+### What I did
+
+I attached the optional C index to the original QuickJS timing harness, kept its fifteen-sample JavaScript timer unchanged, and ran all arms on CPU 7. The exact source SHA-256 was f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed.
+
+### Why
+
+The frontend-only measurement excludes native lowering, linking and firmware startup. Changes between historical and present host conditions can affect an absolute limit.
+
+### What worked
+
+The historical pre-E control at 289281c took 44.73 ms. The staged index took 39.28 ms. Borrowing tokens in internal consumers reduced the median to 35.15 ms, 21.4% below the simultaneously studied control.
+
+### What didn't work
+
+The fastest observed median still exceeded the 31.4 ms ceiling by 3.75 ms. The historical control itself exceeded the ceiling by 13.33 ms.
+
+### What I learned
+
+A relative improvement and an absolute qualification can give different answers. The source used here has handwritten continuations; it is appropriate for the E5 gate.
+
+### What was tricky to build
+
+The original benchmark exercises several compiler entry points within one runtime. Installing the index in that runtime preserves the original benchmark loop and warm-up. Installing it does not cause the old compiler to call it.
+
+### What warrants a second pair of eyes
+
+Check the driver row labeled frontend only, the pre-E source revision and pinned CPU. Other processes on the host were active during the series.
+
+### What should be done in the future
+
+Use the independent, full-source device runs to decide which index variant to pursue. Repeat the absolute host gate under controlled conditions when qualifying the final implementation.
+
+### Code review instructions
+
+Run scripts/12-run-professor-frontend.sh with the prepared qualification directory, a CPU number and a scratch output directory. Compare its text files with various/professor-frontend.
+
+### Technical details
+
+The three arms ran consecutively. Each reports one warm-up and fifteen timed compilations. The complete source, timer construction and runtime setup are reproducible from the checked-in script.
