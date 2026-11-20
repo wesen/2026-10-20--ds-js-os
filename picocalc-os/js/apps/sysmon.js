@@ -41,16 +41,32 @@ function short(v) {
 }
 const share = (v) => (v == null ? "·" : v < 0.0995 ? (100 * v).toFixed(1) : Math.round(100 * v) + "");
 
+// The compositor centers its visible rows around sel. A centered window at least as
+// tall as the viewport gives it the same first and last rows, including at either edge.
+function tableWindow(items, sel, capacity) {
+  const start = Math.max(0, Math.min(items.length - capacity, sel - (capacity >> 1)));
+  return { items: items.slice(start, start + capacity), sel: sel - start };
+}
+
+// A line graph draws each sample at one integer y coordinate. Send that coordinate
+// in plot units so the receiver can decode small integers instead of long decimals.
+function lineGraph(values, max, height, options) {
+  const scale = height - 3;
+  const levels = values.map(v => -Math.round(-scale * Math.min(1, v / max)));
+  return ui.spark(levels, { ...options, h: height, max: scale, points: HISTORY });
+}
+
 function worldsTab(s) {
-  const rows = s.worlds.map((w) => ({
+  const window = tableWindow(s.worlds, s.sel, 8);
+  const rows = window.items.map((w) => ({
     cells: [w.name, { s: w.state, color: STATE_COLOR[w.state] }, short(w.turns), share(w.pct), short(w.cpu_ms), kb(w.mem_kb), w.restarts ? String(w.restarts) : "·"],
   }));
   const w = s.worlds[s.sel] || {};
   return [
-    ui.spark(s.lane, { h: 26, max: Math.max(0.1, ...s.lane), points: HISTORY, label: `lane busy · peak ${pct(Math.max(0, ...s.lane))}`, right: pct(s.lane[s.lane.length - 1]), color: "accent" }),
+    lineGraph(s.lane, Math.max(0.1, ...s.lane), 26, { label: `lane busy · peak ${pct(Math.max(0, ...s.lane))}`, right: pct(s.lane[s.lane.length - 1]), color: "accent" }),
     ui.gap(2),
     ui.table([{ label: "world", w: 72 }, { label: "state", w: 62 }, { label: "turns", align: "right" }, { label: "cpu%", align: "right", w: 36 },
-      { label: "cpu ms", align: "right" }, { label: "KB", align: "right", w: 32 }, { label: "rst", align: "right", w: 22 }], rows, { sel: s.sel, font: "s", lead: 3 }),
+      { label: "cpu ms", align: "right" }, { label: "KB", align: "right", w: 32 }, { label: "rst", align: "right", w: 22 }], rows, { sel: window.sel, font: "s", lead: 3 }),
     ui.sep({ h: 5 }),
     ui.kv([
       ["cpu", w.pct == null ? `${(w.cpu_ms || 0).toFixed(1)} ms since boot` : `${share(w.pct)}% now, ${(w.cpu_ms || 0).toFixed(1)} ms since boot`],
@@ -63,7 +79,8 @@ function worldsTab(s) {
 }
 
 function handlesTab(s) {
-  const rows = s.handles.map((h) => ({
+  const window = tableWindow(s.handles, Math.min(s.sel, s.handles.length - 1), 14);
+  const rows = window.items.map((h) => ({
     cells: [String(h.id), h.type, h.claim, h.rights, h.holders.join(" ") || "·", h.kb ? h.kb + " KB" : h.hz ? (h.hz >= 1e6 ? h.hz / 1e6 + " MHz" : h.hz / 1e3 + " kHz") : ""],
     color: h.revoked ? "muted" : undefined,
   }));
@@ -71,14 +88,14 @@ function handlesTab(s) {
     ui.text("Hardware the kernel has handed out. A handle is checked on every use; a narrowed one carries fewer rights.", { wrap: true, font: "s", color: "muted" }),
     ui.gap(4),
     ui.table([{ label: "id", w: 22, align: "right" }, { label: "type", w: 32 }, { label: "claim", w: 66 }, { label: "rt", w: 28 }, { label: "held by" }, { label: "", w: 52, align: "right" }],
-      rows, { sel: Math.min(s.sel, rows.length - 1), font: "s", lead: 5 }),
+      rows, { sel: window.sel, font: "s", lead: 5 }),
   ];
 }
 
 function busesTab(s) {
   const b = s.last ? s.last.buses : [];
   const line = (bus, hist, note) => [
-    ui.spark(hist, { h: 30, max: 1, points: HISTORY, label: `${bus.name} · ${note}`, right: pct(hist[hist.length - 1]), color: bus.name === "spi2" ? "blue" : "ink" }),
+    lineGraph(hist, 1, 30, { label: `${bus.name} · ${note}`, right: pct(hist[hist.length - 1]), color: bus.name === "spi2" ? "blue" : "ink" }),
     ui.kv([["transfers", String(bus.transfers)], ["bytes", String(bus.bytes)], ["busy", bus.busy_ms.toFixed(1) + " ms"], ["errors", String(bus.errors), bus.errors ? "accent" : "muted"]], { keyW: 96, lead: 1 }),
     ui.gap(6),
   ];
