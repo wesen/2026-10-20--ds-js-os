@@ -1,0 +1,26 @@
+{
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "effort": "high",
+  "publicSha256": "7c8485244b599d253d063739fe069afba437683ae17c37e9dc074397eeea6503",
+  "operatorAudit": {
+    "scope": "First physical window and the host results supplied to Opus. Later controls are reported separately.",
+    "originalArticleSha256": "00a43f54f21ae05a303ea639dad6fb329966fcb488be2a5f00b01cd18474fb0b",
+    "originalResultsDiarySha256": "5740e65d59762b322fc259f6388078803f70872ffd08105ce530acbfe91e00dd",
+    "originalCombinedResponseDigestVerified": true,
+    "originalOutboundUrls": 0,
+    "firstWindowReceiptSha256": "31e66835f94b60b719f9bd543c5c8633918330db2e863460ec0d9fb263cd1e97",
+    "firstWindowHarnessRevision": "d8f9810",
+    "nativeMedianBlockMeanUsPerCall": {
+      "G": 101.28191489361703,
+      "N": 78.24468085106383,
+      "T": 24.71276595744681
+    },
+    "freshInputPacket": {
+      "meaning": "null",
+      "canonicalBytes": 15,
+      "alsoAdmittedWithUnusedString": 18
+    }
+  }
+}
