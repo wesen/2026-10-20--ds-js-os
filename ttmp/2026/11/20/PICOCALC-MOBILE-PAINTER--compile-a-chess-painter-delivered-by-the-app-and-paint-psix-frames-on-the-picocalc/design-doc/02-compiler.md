@@ -48,7 +48,7 @@ On RV32 each typed buffer begins with an aligned 32-bit capacity in cells. Cell 
 | `3` Text | `x, y, font, RGB565, maxWidth, count, ASCII[count]` |
 | `4` Hints | `count, ASCII[count]`, once at the end |
 
-The text record font indices `0`, `1` and `2` select `s`, `m` and `mb`. The painter requests `312 - x` as the maximum width of the status and footer lines, matching the ordinary compositor's 8-pixel app margins. Board glyphs use zero for the natural width case. The complete command stream fits within the 274-command admission ceiling. An admitted 32-piece position uses at most 64 tile fills, 64 piece records, 64 destination marks, 16 coordinate labels, one board outline, one cursor outline, two lines and one hints record. The text size follows from the fixed literals plus the bounded integer fields.
+The text record font indices `0`, `1` and `2` select `s`, `m` and `mb`. The painter requests `312 - x` as the maximum width of the status and footer lines, matching the ordinary compositor's 8-pixel app margins. Board glyphs use zero for the natural width case. The complete command stream fits within the 274-command admission ceiling. A Chess position with 32 pieces uses at most 64 tile fills, 64 piece records, 64 destination marks, 16 coordinate labels, one board outline, one cursor outline, two lines and one hints record. The text size follows from the fixed literals plus the bounded integer fields.
 
 The painter emits labels and tiles in the same order as Chess's ordinary canvas. A single tile can emit its background, piece background, piece glyph, destination mark, then cursor outline. Overlapping pixels are resolved by later primitives. A consumer that sorts by primitive kind changes that order and can erase parts of an overlay.
 

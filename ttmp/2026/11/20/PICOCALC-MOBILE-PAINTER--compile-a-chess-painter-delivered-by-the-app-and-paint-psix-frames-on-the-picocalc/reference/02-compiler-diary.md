@@ -106,7 +106,7 @@ The legacy renderer uses a 12-pixel `s` font and a 16-pixel `mb` font. Its fill 
 
 ### What was tricky to build
 
-Chess score text is signed. I kept the magnitude negative when writing decimal digits so the arithmetic also covers `INT32_MIN` without negating it into an unrepresentable positive `i32`. Its repeated tile commands have fixed loop counts, and its two decimal loops are bounded by the value domain.
+Chess score text is signed. I kept the magnitude negative when writing decimal digits so the arithmetic also covers `INT32_MIN` without negating it into an unrepresentable positive `i32`. The tile loops have fixed counts, and the two decimal loops are bounded by the integer domain.
 
 ### What warrants a second pair of eyes
 
@@ -194,7 +194,7 @@ The kernel task already provides an internal 80 KiB stack. Compiling off-task ke
 
 ### What worked
 
-Source and ELF command-stream generation remain covered by the host replay. The new split changes the C ownership and cache synchronization boundary around the image.
+Source and ELF command-stream generation remain covered by the host replay. The new split changes the C ownership and cache synchronization boundary around the image. A cross-build of the updated P4 C file passed using the generated candidate's compiler command. The host replay reproduced the checked-in receipt byte-for-byte after producer integration. The replay also passed with the firmware build's GCC, esp-14.2.0_20241119. Its reactor template matched the hardware build byte-for-byte. The original replay's newer GCC template differs only in the compiler version string in the ELF comment section.
 
 ### What did not work
 
