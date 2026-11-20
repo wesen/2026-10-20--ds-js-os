@@ -1,0 +1,5 @@
+{
+  "Thirteen of these replays compare the Editor application against its JavaScript reference.": "The Editor suite also compares thirteen workflows against its JavaScript reference.",
+  "The controlled delivery was necessary where normal kernel routing serializes requests; test-injected events are not physical keypresses.": "The separate host fixtures deliberately reorder events that normal kernel routing can serialize. The physical fixture drives the real Editor through serial key injection.",
+  "Whether this compile-time cost is acceptable depends on how frequently the editor is recompiled on-device versus shipped as a fixed artifact.": "A later physical compiler experiment reused tokens and original source spans. Its three cold native builds had a median of 2.725 seconds, 3.01% above the handwritten reference. [Subsequent compiler screening](../../../20/PICOCALC-LEXICAL-INDEX--index-typed-source-once-for-the-cold-picocalc-compiler/various/physical-comparison-composed.json)"
+}
