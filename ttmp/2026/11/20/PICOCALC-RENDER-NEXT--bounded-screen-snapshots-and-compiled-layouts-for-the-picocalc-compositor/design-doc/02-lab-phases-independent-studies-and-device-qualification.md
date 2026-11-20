@@ -64,6 +64,8 @@ A first physical sample is a feasibility run. For comparisons use the same input
 
 **Gate:** Retain automation when it preserves pixels and effects, works on the held-out source shape, and offers a worthwhile device or authoring benefit after catalog/build cost. A successful hand-coded example alone qualifies the representation, not the extractor.
 
+**T4, proposed extension.** Use Chess to test a resident view procedure, delivery of identical portable bytes, then compilation of typed source on the receiving device. Record installation and warm rendering separately. The same P2 researcher and board operator own this conditional trial. The [mobile renderer design](04-sending-a-typed-view-program-to-the-compositor.md) gives the dependency cut, proposed ABI, host evidence and decision gates.
+
 ## P3. Reduce work after receipt
 
 **Owner:** renderer researcher. During P1 and P2, measure visits to measure/stack, wrap calls, primitive count, pixels touched and dirty-band comparisons on unchanged production behavior. Use these data to choose the next isolated change.

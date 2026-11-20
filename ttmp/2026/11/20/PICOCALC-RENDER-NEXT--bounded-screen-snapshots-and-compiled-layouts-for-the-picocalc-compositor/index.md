@@ -25,5 +25,6 @@ WhenToUse: ""
 2. [Lab phases and decision gates](design-doc/02-lab-phases-independent-studies-and-device-qualification.md) assigns the work, names controls and workloads, and says when an experiment should stop.
 3. [Research families and promotion criteria](design-doc/03-research-families-primary-sources-and-promotion-criteria.md) organizes the literature by the four decisions.
 4. [Independent Astra review](analysis/01-independent-astra-review.md) identifies the raw-message boundary, restart hazard, feedback loop in System measurements and the two different held-out tests.
+5. [Sending a typed view program to the compositor](design-doc/04-sending-a-typed-view-program-to-the-compositor.md) extends P2 with Chess. It compares a resident view, a delivered module and source compiled on the receiving device, with measured host baselines.
 
 See [tasks](tasks.md) for executable study milestones and [the director diary](reference/01-director-investigation-diary.md) for authorship, review decisions, and delivery evidence. Consult the [earlier physical incident](../PICOCALC-COMPOSITOR-FAULT--system-monitor-frame-faults-in-the-native-picocalc-compositor/index.md) for the original fault and verified correction.

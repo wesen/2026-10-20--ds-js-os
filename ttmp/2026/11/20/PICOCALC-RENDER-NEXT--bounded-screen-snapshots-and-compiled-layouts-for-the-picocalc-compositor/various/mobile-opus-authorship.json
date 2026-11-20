@@ -1,0 +1,8 @@
+{
+  "effort": "xhigh",
+  "modelsInResponse": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+  ],
+  "publicTextSha256": "48aa202a1c3f6c1fbf0d828847e0d38b454d50641dcef009dc41d80d6c0b2f9c"
+}

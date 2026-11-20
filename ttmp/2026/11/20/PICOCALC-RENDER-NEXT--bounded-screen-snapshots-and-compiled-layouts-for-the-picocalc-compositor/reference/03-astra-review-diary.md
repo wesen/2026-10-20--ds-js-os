@@ -177,3 +177,56 @@ Start with the [disposition](../analysis/01-independent-astra-review.md#disposit
 ### Technical details
 
 The original guide's public response SHA-256 is `c7d704f3d105bd9ee8fd6973e7790b0414ada7cc762f674511628f6fcf221970`. I sent the director two correction messages covering the false rectangle oracle, actual source vocabulary, producer/kernel boundary, graphics-memory allocation, binary/profile limitations, recovery, controls and task dependencies.
+
+## Step 4 — Determine how Chess could send drawing code once
+
+I traced the functions exercised by the current Chess view and compared the installed world compiler and loaders with a candidate pure rendering interface. The initial idea of sending the existing rendering function failed a dependency check. A smaller procedure could consume a complete position and precomputed view facts inside a receiver-local instance.
+
+### Prompt Context
+
+**New user request, summarized from the director's commission.** Study whether an app could send a self-contained, relocatable drawing function or typed source for receiver-side compilation, use it for later semantic updates, and clarify whether the compositor calls Chess code. The direct user text was not supplied in my delegated context. The director requested an independent study and a single P2 extension.
+
+**Assistant interpretation.** Distinguish a callable copy of a pure presentation procedure, a resident renderer ID, an RPC into a world, and a cached locally compiled artifact. Pick a single first candidate based on the actual checkout and name the evidence that could disqualify it.
+
+### What I did
+
+- Inspected the Chess source list, view, event loop, make/undo, legal moves, search-scratch offsets, status and visible footer. Verified the director's host screen receipt and the older complete-world P4 receipt as separate sources.
+- Traced the file-read compilation hook, custom QuickJS allocator and deadline, synchronous JS_Call, complete-world linker, standalone typed Wasm emitter, current WAMR world loader and native ELF/loadable-world boundaries.
+- Compared NeWS download semantics, W3C's Paint callback and Android RemoteViews against this project's replay contract. Specified one mobile Wasm arm with matched resident and complete-tree controls, a gated source-install comparison, and a drawing-program reserve.
+- Created the [independent mobile renderer review](04-astra-mobile-renderer-review.md) using docmgr and sent its findings to the director.
+
+### Why
+
+Once the semantic-state cut makes a screen small, any resident renderer can realize that reduction. Comparing a mobile module only with a large JSON frame would falsely attribute the entire savings to moving code. Preinstalling the identical Wasm bytes in the same interpreter gives mobility its own measurable cost.
+
+### What worked
+
+The standalone compiler at typed-wasm.js constructs a module without an import section and with initial and maximum linear memory fixed at one page. The WAMR world backend already meters guest instructions but expects ordinary world entry points. These facts provide a credible experiment without assuming the paint ABI exists. The verified existing SDK boundary for initial Chess was 4,835 tree bytes plus 41 hint bytes and 146 canvas operations.
+
+### What didn't work
+
+A guessed path for the board helper produced `rg: picocalc-os/worlds/chess/board.typed: No such file or directory (os error 2)`. The source list identifies the actual move and position modules. Two shell globs returned `no matches found: picocalc-os/nucleus/load*.c` and `no matches found: picocalc-os/tests/typed*.mjs`. Searching the actual nucleus and compiler directories exposed the relevant public loader and emitter. No standalone drawing-module receipt was present; the 240,452-byte installed whole-world artifact cannot supply one.
+
+### What I learned
+
+The existing code's presentation routine calls chessLegalMoves, which makes/checks/unmakes positions and writes scratch lists. Choosing the boundary requires explicit destination flags and a selected status. Even after code registration, application memory, capability handles, the scheduler and the SDK screen call belong on their original side of the interface.
+
+### What was tricky to build
+
+A verified descriptor can produce an invalid or over-budget display list for one state. Durable “last drawable” semantics therefore require keeping a previous drawable generation until a replacement succeeds. Wasm instruction fuel does not bound the cost of trusted raster primitives after the guest returns. Both obligations appear in the proposed publication and draw contract.
+
+### What warrants a second pair of eyes
+
+Independently confirm correct status precedence, both hint modes, last-move/footer rules and temporary legal-mark handling in the captured state. Check the new loader's parse/instantiate budget, entry signature, no-import policy, reset/eviction cost and host-side drawing work before any future device trial. Test an idle owner across receiver restart.
+
+### What should be done in the future
+
+After owner validation, measure a separately compiled pure renderer and complete semantic states, then compare the identical resident and transported module. Open source compilation only after installation or update flexibility could pay for a measured miss and interactive stalls can be bounded.
+
+### Code review instructions
+
+Read the [Chess view](../../../../../../picocalc-os/worlds/chess/view.typed), [standalone compiler](../../../../../../picocalc-os/compiler/typed-wasm.js), [current Wasm loader](../../../../../../picocalc-os/nucleus/native_wasm.c) and [existing host-frame receipt](../various/chess-screen-baseline.json) beside the independent review. The proposed interface and break-even test are planning results. No new renderer was built or tested on hardware during this review.
+
+### Technical details
+
+Reviewed at project revision `434c64e`. The old whole-world RV32 compilation took 1,897,746 µs, peaked at 1,298,116 QuickJS bytes and linked 240,452 bytes from 40,767 source bytes. These metrics come from the separate Chess ticket's physical receipt. That build's move timing ends at retained frame publication. The newer six-event host receipt describes full-tree and hint sizes at the typed screen API.

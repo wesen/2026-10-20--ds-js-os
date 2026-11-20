@@ -135,3 +135,129 @@ The four frozen documents were bundled in reading order and uploaded as **PicoCa
 - **Prompt context.** See Step 1 for the requested destination and Step 2 for the final research judgment.
 - **Evidence.** The exact successful CLI line is in [the delivery receipt](../various/remarkable-upload.txt). The bundle contains the intern guide, lab phase plan, research survey and independent review. The receipt and checked sources are part of the publication checkpoint.
 - **Next action.** The owner can approve the measurement baseline and two primary investigations. The conditional renderer studies have explicit release criteria in the phase plan.
+
+## Step 4: Investigate code mobility and receiver-side compilation with Chess
+
+The owner proposed shipping a drawing function once and following it with complete semantic updates. I commissioned two independent assessments and tested two prerequisites on the host. The current producer spells out thousands of bytes of canvas operations for a cursor change. An actual pure typed drawing helper can be compiled and invoked without the Chess runtime. These findings identify a feasible experiment and leave the cost of a complete renderer on the P4 open.
+
+### Prompt Context
+
+The owner wrote, verbatim:
+
+> imagine also this idea: an app can send relocatable code / self contained code over to the compositor, who can execute it given the received data so that only the semantic data is sent to the compositor. this kind of "sending code over the bus" is i think an interesting technique, maybe reminiscient of say, tuple spaces or capturing closures over channels in go or so. relocatable could also mean that the compositor can call chess code? It breaks "security" a bit but I think it's an interesting avenue.
+
+> or it could send the typed code over to the compositor who then compiles it, that could maybe be more pragmatically sound
+
+> anyway, search it al, use opus xhigh and astra again, maybe create a second design doc
+
+I interpreted this as a request for an independently researched alternative in the existing renderer program. The deliverable is a second architectural design and reproducible supporting evidence, pending approval before firmware work.
+
+### What I did
+
+- Commissioned Claude Opus at xhigh with a generic source-free question and public literature search. Asked Astra xhigh independently to study the concrete code, compiler, scheduler and existing hardware receipts.
+- Read the Chess view from legal-marker computation through canvas serialization and SDK publication. Compared the standalone no-import compiler with the whole-world board compiler. Consulted the primary literature on remote evaluation, active messages, NeWS, Linda, Go closures, CSS Paint, and Wasm embedding.
+- Wrote and replayed two ticket-local probes. `08-measure-chess-screen.mjs` runs the current compiled Chess world through a fixed opening. `09-probe-standalone-view-function.mjs` extracts and compiles the existing piece-glyph helper. Stored both receipts with artifact digests and committed the evidence as `58a05a3`.
+
+### Why
+
+Shipping semantic data, shipping a renderer, and compiling on the device are distinct interventions. A comparison between today's tree and a source-compiled renderer would conflate all three. A resident renderer and a delivered copy of the same program make each incremental cost measurable.
+
+### What worked
+
+The cursor updates for e3 and e4 both produced 4,897 tree bytes, plus 41 of hints, covering 148 canvas operations each. The full trees differed, as expected for a moved highlight. The 339 source bytes for the pure helper produced 156 portable module bytes, zero imports, a 65,536-byte linear memory and all 12 expected glyphs. I reran both scripts and obtained byte-identical JSON receipts.
+
+### What didn't work
+
+A direct copy of the current drawing entry is unsuitable for replay because it writes legal move scratch and can query check detection. Source compilation using the current whole-world path also assumes a reactor and a synchronous call. Both are substantive differences between the proposed API and the existing system. During source navigation, a lookup for `picocalc-os/nucleus/native_elf.c` reported `No such file or directory`. The P4 ELF backend lives under `picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c`.
+
+### What I learned
+
+Code can be syntactically small yet drag in expensive computation through its callees. Moving colors, geometry and glyphs is plausible, while computing legal destinations from the game's mutable search workspace in a repaint would change both costs and ownership. The source distribution arm can improve on-device authoring even if precompiled delivery installs faster. When emitted module bytes are identical, both share warm execution behavior.
+
+### What was tricky to build
+
+A previous snapshot can outlive its sender and compositor. Successful validation of a module says nothing about whether a particular input exhausts its fuel or generates excess host raster work. The protocol consequently commits a replacement only after its output is drawable, and pins all dependencies of the prior view through the handover.
+
+### What warrants a second pair of eyes
+
+Review the proposed 92-byte schema against every branch in `chessAppendStatus`, `chessAppendTile` and the optional search footer. Check whether formatting, text transcoding, output validation, memory reset and content clipping dominate the saving. Keep the physical SPI endpoint separate from SDK byte counts.
+
+### What should be done in the future
+
+Subject to owner validation, run T4 under the existing P2 owner. Compare generic and resident semantic renderers first. Release code installation and source compilation trials if their workload has enough useful updates or local edits to justify the fixed costs.
+
+### Code review instructions
+
+Begin at [Sending a typed view program to the compositor](../design-doc/04-sending-a-typed-view-program-to-the-compositor.md). Run both Node scripts from the repository root with the existing typed world reactor. Compare their outputs with the checked-in JSON receipts. Read the two independent assessments for the published mechanisms, source evidence and design alternatives.
+
+### Technical details
+
+One historical hardware receipt spent 1.898 s compiling **the entire RV32 Chess world**. The new host capture and leaf-module probe use Wasm and provide no renderer-only device timing. The design prices installation and steady-state work separately, with equal module bytes across the resident, delivered and source-compiled arms where the compiler and target match.
+
+## Step 5: Reconcile the independent findings
+
+Opus returned its xhigh memo and public literature survey. I incorporated its strongest challenge into the proposed study: the current retained tree already survives a compositor restart with an idle sender. Astra's qualified implementation candidate and the host measurements set a narrower first trial.
+
+### Prompt Context
+
+See Step 4. The decision was how to consolidate both assessments into one comparable extension.
+
+### What I did
+
+Imported only the public Opus response and digest, added source-reading limitations before its memo, and linked it with the independent Astra review. Consulted the authors' Cloud Haskell and automatic partitioning publications. Described an optional later placement analysis whose constraints follow from the measured Chess dependency cut.
+
+### Why
+
+The research models chose different scopes. Opus considered moving selection and touch handling into the receiver. Astra identified where the current typed source draws on mutable game state. Moving input policy would alter replay and introduce extra confounders. The chosen first trial keeps Chess authoritative for all game and selection state.
+
+### What worked
+
+The Opus design explicitly challenged the need for client code in the presence of persisted descriptions. Astra proposed comparing identical bytes preinstalled and delivered in the same runner. Together these give the semantic model, mobile delivery and receiver-side compilation distinct empirical tests.
+
+### What didn't work
+
+The first invocation of `10-import-mobile-research.py` stopped with `ValueError: Refusing to overwrite an edited document`. Docmgr created a blank analysis body rather than a comment template. Checked the file, changed the importer to accept only an empty body, and reran successfully. The script still rejects overwriting edited prose.
+
+### What I learned
+
+The remote-evaluation precedent settles the mechanism. A program-placement model can make an independently useful prediction about when a serializable cut pays. It must include who owns effects, how often views change and whether repeated values share a wire record. The original literature memo alone could not establish those facts for this implementation.
+
+### What was tricky to build
+
+Specialization is an optional extra intervention. Giving source-to-Wasm and delivered Wasm different optimizers would attribute optimization gains to source transport. T4 compares identical output first. A later specialization study would need the same target context and the same opportunities on both representations.
+
+### What warrants a second pair of eyes
+
+Review the proposed state encoding against complete game outcomes and frozen pixel fixtures. Measure the actual cost of staging and validating primitives as well as the wire saving. Review the source-reading limits of the Opus memo before citing a historical result.
+
+### What should be done in the future
+
+Qualify the resident control and manual semantic split first. Keep further research on automatic partitioning within T4 and conditional on a measurable opportunity.
+
+### Code review instructions
+
+Read design document 04, the independent Astra assessment, the Opus memo’s editorial disposition, and the two host receipts. The CLI receipt records Opus 5.5 with xhigh effort and a Haiku search helper.
+
+### Technical details
+
+The initial probes ran at repository revision `434c64e`. Scripts and outputs were committed in `58a05a3`. The leaf test used Node’s Wasm execution rather than WAMR on the board. The reference tree bytes were captured at the SDK boundary rather than on the LCD bus.
+
+## Step 6: Deliver the code-mobility supplement
+
+The design, source-level Astra review and independent Opus survey were delivered together as **Typed View Programs on the PicoCalc.pdf**. The named file appears in the [successful upload receipt](../various/remarkable-typed-view-upload.txt) for the ticket’s reMarkable cloud folder.
+
+### Prompt Context
+
+See Step 4 for the second design commission and Step 1 for the ticket’s delivery instructions.
+
+### Evidence and commits
+
+The host evidence commit is `58a05a3`. Both host receipts reproduced byte-for-byte, ticket doctor passed and local references resolved. The second cloud document has a new name, preserving the first roadmap edition.
+
+### Noteworthy decisions or failures
+
+The upload completed through the ordinary bundle command. The receipt establishes cloud delivery.
+
+### Remaining requirements and next action
+
+The user can validate T4 as a conditional arm of P2. Testing a complete semantic renderer on the P4, including cold installation latency and pixel parity, is the proposed experiment.
