@@ -1,0 +1,116 @@
+{
+  "sourceSHA256": {
+    "typed-wasm.js": "d6dc04692d29596a43b6c15414745023aaa8fa4280353a434b8820e65dab9a0b",
+    "typed-rv32.js": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5"
+  },
+  "rows": [
+    {
+      "units": 1,
+      "copies": 1,
+      "rv32Bytes": 148,
+      "wasmModuleBytes": 105
+    },
+    {
+      "units": 1,
+      "copies": 2,
+      "rv32Bytes": 296,
+      "wasmModuleBytes": 175
+    },
+    {
+      "units": 1,
+      "copies": 4,
+      "rv32Bytes": 592,
+      "wasmModuleBytes": 316
+    },
+    {
+      "units": 8,
+      "copies": 1,
+      "rv32Bytes": 232,
+      "wasmModuleBytes": 161
+    },
+    {
+      "units": 8,
+      "copies": 2,
+      "rv32Bytes": 464,
+      "wasmModuleBytes": 288
+    },
+    {
+      "units": 8,
+      "copies": 4,
+      "rv32Bytes": 928,
+      "wasmModuleBytes": 540
+    },
+    {
+      "units": 32,
+      "copies": 1,
+      "rv32Bytes": 520,
+      "wasmModuleBytes": 355
+    },
+    {
+      "units": 32,
+      "copies": 2,
+      "rv32Bytes": 1040,
+      "wasmModuleBytes": 674
+    },
+    {
+      "units": 32,
+      "copies": 4,
+      "rv32Bytes": 2080,
+      "wasmModuleBytes": 1312
+    },
+    {
+      "units": 128,
+      "copies": 1,
+      "rv32Bytes": 1672,
+      "wasmModuleBytes": 1191
+    },
+    {
+      "units": 128,
+      "copies": 2,
+      "rv32Bytes": 3344,
+      "wasmModuleBytes": 2346
+    },
+    {
+      "units": 128,
+      "copies": 4,
+      "rv32Bytes": 6688,
+      "wasmModuleBytes": 4656
+    },
+    {
+      "units": 512,
+      "copies": 1,
+      "rv32Bytes": 6280,
+      "wasmModuleBytes": 4647
+    },
+    {
+      "units": 512,
+      "copies": 2,
+      "rv32Bytes": 12560,
+      "wasmModuleBytes": 9258
+    },
+    {
+      "units": 512,
+      "copies": 4,
+      "rv32Bytes": 25120,
+      "wasmModuleBytes": 18481
+    },
+    {
+      "units": 1022,
+      "copies": 1,
+      "rv32Bytes": 12400,
+      "wasmModuleBytes": 9237
+    },
+    {
+      "units": 1022,
+      "copies": 2,
+      "rv32Bytes": 24800,
+      "wasmModuleBytes": 18439
+    },
+    {
+      "units": 1022,
+      "copies": 4,
+      "rv32Bytes": 49600,
+      "wasmModuleBytes": 36841
+    }
+  ]
+}
