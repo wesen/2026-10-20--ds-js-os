@@ -1,0 +1,557 @@
+{
+  "worlds": {
+    "keyboard": {
+      "engine": "native",
+      "file": "natives/keyboard.elf",
+      "last_error": "",
+      "state": "idle"
+    },
+    "display": {
+      "engine": "native",
+      "file": "natives/display.elf",
+      "last_error": "",
+      "state": "idle"
+    },
+    "compositor": {
+      "engine": "native",
+      "file": "natives/compositor.elf",
+      "last_error": "",
+      "state": "idle"
+    },
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    },
+    "snake": {
+      "engine": "native",
+      "file": "natives/snake.elf",
+      "last_error": "",
+      "state": "idle"
+    },
+    "chess": {
+      "engine": "native",
+      "file": "chess/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    }
+  },
+  "blocks": [
+    {
+      "sequence": 0,
+      "runningHostMs": 2503.703,
+      "before": {
+        "compositor": {
+          "turns": 68,
+          "cpu_ms": 719.077,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 11,
+          "cpu_ms": 79.804,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 54,
+          "cpu_ms": 303.774,
+          "restarts": 1,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 122.04,
+          "transfers": 82,
+          "bytes": 433901,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 121,
+          "cpu_ms": 1233.032,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 30,
+          "cpu_ms": 184.568,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 83,
+          "cpu_ms": 473.284,
+          "restarts": 1,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 225.78,
+          "transfers": 182,
+          "bytes": 814408,
+          "errors": 0
+        }
+      },
+      "delta": {
+        "snake": {
+          "turns": 29,
+          "cpu_ms": 169.51,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 53,
+          "cpu_ms": 513.955,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 19,
+          "cpu_ms": 104.764,
+          "restarts": 0
+        },
+        "spi2": {
+          "busyMs": 103.74,
+          "transfers": 100,
+          "bytes": 380507,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "sequence": 1,
+      "runningHostMs": 2503.946,
+      "before": {
+        "compositor": {
+          "turns": 141,
+          "cpu_ms": 1447.143,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 33,
+          "cpu_ms": 201.26,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 101,
+          "cpu_ms": 579.871,
+          "restarts": 2,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 244.63,
+          "transfers": 198,
+          "bytes": 871316,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 194,
+          "cpu_ms": 1961.394,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 52,
+          "cpu_ms": 305.523,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 130,
+          "cpu_ms": 753.982,
+          "restarts": 2,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 352.82,
+          "transfers": 298,
+          "bytes": 1251823,
+          "errors": 0
+        }
+      },
+      "delta": {
+        "snake": {
+          "turns": 29,
+          "cpu_ms": 174.111,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 53,
+          "cpu_ms": 514.251,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 19,
+          "cpu_ms": 104.263,
+          "restarts": 0
+        },
+        "spi2": {
+          "busyMs": 108.19,
+          "transfers": 100,
+          "bytes": 380507,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "runningHostMs": 2505.415,
+      "before": {
+        "compositor": {
+          "turns": 214,
+          "cpu_ms": 2177.114,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 55,
+          "cpu_ms": 321.113,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 148,
+          "cpu_ms": 865.594,
+          "restarts": 3,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 371.74,
+          "transfers": 314,
+          "bytes": 1308731,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 266,
+          "cpu_ms": 2673.736,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 74,
+          "cpu_ms": 429.173,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 177,
+          "cpu_ms": 1040.219,
+          "restarts": 3,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 479.86,
+          "transfers": 414,
+          "bytes": 1689238,
+          "errors": 0
+        }
+      },
+      "delta": {
+        "snake": {
+          "turns": 29,
+          "cpu_ms": 174.625,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 52,
+          "cpu_ms": 496.622,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 19,
+          "cpu_ms": 108.06,
+          "restarts": 0
+        },
+        "spi2": {
+          "busyMs": 108.12,
+          "transfers": 100,
+          "bytes": 380507,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "runningHostMs": 2521.29,
+      "before": {
+        "compositor": {
+          "turns": 286,
+          "cpu_ms": 2890.854,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 77,
+          "cpu_ms": 445.617,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 195,
+          "cpu_ms": 1153.189,
+          "restarts": 4,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 499.38,
+          "transfers": 430,
+          "bytes": 1746106,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 353,
+          "cpu_ms": 3579.056,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 103,
+          "cpu_ms": 594.638,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 225,
+          "cpu_ms": 1734.485,
+          "restarts": 4,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 615.65,
+          "transfers": 598,
+          "bytes": 2109538,
+          "errors": 0
+        }
+      },
+      "delta": {
+        "snake": {
+          "turns": 30,
+          "cpu_ms": 581.296,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 67,
+          "cpu_ms": 688.202,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 26,
+          "cpu_ms": 149.021,
+          "restarts": 0
+        },
+        "spi2": {
+          "busyMs": 116.27,
+          "transfers": 168,
+          "bytes": 363432,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "runningHostMs": 2503.981,
+      "before": {
+        "compositor": {
+          "turns": 372,
+          "cpu_ms": 3768.508,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 105,
+          "cpu_ms": 608.133,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 243,
+          "cpu_ms": 1846.11,
+          "restarts": 5,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 636.98,
+          "transfers": 614,
+          "bytes": 2171316,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 426,
+          "cpu_ms": 4320.729,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 125,
+          "cpu_ms": 720.85,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 271,
+          "cpu_ms": 2012.867,
+          "restarts": 5,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 744.06,
+          "transfers": 718,
+          "bytes": 2551914,
+          "errors": 0
+        }
+      },
+      "delta": {
+        "snake": {
+          "turns": 28,
+          "cpu_ms": 166.757,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 54,
+          "cpu_ms": 552.221,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 20,
+          "cpu_ms": 112.717,
+          "restarts": 0
+        },
+        "spi2": {
+          "busyMs": 107.08,
+          "transfers": 104,
+          "bytes": 380598,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "runningHostMs": 2503.723,
+      "before": {
+        "compositor": {
+          "turns": 446,
+          "cpu_ms": 4547.305,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 128,
+          "cpu_ms": 739.171,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 289,
+          "cpu_ms": 2119.65,
+          "restarts": 6,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 765.25,
+          "transfers": 734,
+          "bytes": 2608812,
+          "errors": 0
+        }
+      },
+      "after": {
+        "compositor": {
+          "turns": 499,
+          "cpu_ms": 5055.867,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "turns": 147,
+          "cpu_ms": 842.972,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "turns": 318,
+          "cpu_ms": 2293.505,
+          "restarts": 6,
+          "last_error": "restarted by an administrator"
+        },
+        "spi2": {
+          "busyMs": 872.21,
+          "transfers": 834,
+          "bytes": 2989319,
+          "errors": 0
+        }
+      },
+      "delta": {
+        "snake": {
+          "turns": 29,
+          "cpu_ms": 173.855,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 53,
+          "cpu_ms": 508.562,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 19,
+          "cpu_ms": 103.801,
+          "restarts": 0
+        },
+        "spi2": {
+          "busyMs": 106.96,
+          "transfers": 100,
+          "bytes": 380507,
+          "errors": 0
+        }
+      }
+    }
+  ],
+  "screens": {
+    "death": {
+      "crc32": "9a7249e5",
+      "sha256": "b5e0b00dd620c3878a094983d06fbd97ec41a8255dbc8ad1eb4b0d16535dc8e8",
+      "appSha256": "9b4652f5db7df61ce961cc7d3d0f133f4ebb2016b1920b323add14be9fae98a1"
+    },
+    "home": {
+      "crc32": "e37ddf20",
+      "sha256": "83af300c93e6bc915c562cac4216282895b34a0de88211572a3903bba50c2297",
+      "appSha256": "fe43787bdc1871884d59f478ca78f4c461ffcc8fc3281dca7ed7dcd4cae04ab8"
+    },
+    "death-after-reentry": {
+      "crc32": "8c194156",
+      "sha256": "673f59f458ab1bba3d95f0c0ffda4e81296cc32609ab57c7907abdf058071c22",
+      "appSha256": "e7463d6ca88e45e97140ba150a66421a0c2d255c89fa8cbc3ab4f6b10567822a"
+    },
+    "autopilot": {
+      "crc32": "ee4b788d",
+      "sha256": "9b683649c903423367e57d2b4263218ef107339f3a0ec5c0dda96bad222b69ae",
+      "appSha256": "e84ed7c70f75f5ced2de386a30a139b99fba53f50df85702ce2cfe091f73672f"
+    },
+    "after-compositor-restart": {
+      "crc32": "3b2c165a",
+      "sha256": "0e7ffbaa4f98fa00f21f118a9128543cf7092f820d9cd219fcd8ab9f4ab7de9b",
+      "appSha256": "21ddf0f6561a3eb832baee2e3e7b08809947c7efb62bc1f30477c5b5b47205b0"
+    }
+  },
+  "imageSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "partitionSha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
+}

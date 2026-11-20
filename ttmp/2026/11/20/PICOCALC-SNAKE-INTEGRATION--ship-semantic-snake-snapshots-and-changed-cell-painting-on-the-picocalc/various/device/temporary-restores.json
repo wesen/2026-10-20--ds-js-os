@@ -1,0 +1,10 @@
+{
+  "before": {
+    "appAndPartitionVerified": true,
+    "appSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83"
+  },
+  "after": {
+    "appAndPartitionVerified": true,
+    "appSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "sourceBase": "8715aaf60eef2ef34f2b351e03d83fd69bec1e48",
+  "sourceMode": "ref",
+  "profile": "normal",
+  "sourceSha256": {
+    "snake": "d5b1b9ef08b086c3be08e44c528b10a22b36bd01cef7ae6cf2beb872e36fd4c8",
+    "compositor": "07117cc469fefca6b0b4c493dab190ff4f6891101c207c78adb00794fdb94b52"
+  },
+  "nativeModules": {
+    "snake": [
+      {
+        "path": "build/esp-idf/main/natives/snake.elf",
+        "bytes": 62064,
+        "sha256": "ff46fbc2d8b73c64060d4b3bdd033dd67a3f1d5a9ada0dda41369cc3773e6dac"
+      }
+    ],
+    "compositor": [
+      {
+        "path": "build/esp-idf/main/natives/compositor.elf",
+        "bytes": 279096,
+        "sha256": "25faa103560371a9775268564fdd58d4775f66f01faf591c9c9c16bb1d5b40b7"
+      }
+    ]
+  },
+  "nativeTypedWorlds": {
+    "keyboard": "natives/keyboard.elf",
+    "power": "natives/power.elf",
+    "display": "natives/display.elf",
+    "compositor": "natives/compositor.elf",
+    "agent": "natives/agent.elf",
+    "files": "files/compiled.bin",
+    "editor": "editor/compiled.bin",
+    "agenda": "agenda/compiled.bin",
+    "settings": "natives/settings.elf",
+    "snake": "natives/snake.elf",
+    "flaky": "natives/flaky.elf",
+    "chess": "chess/compiled.bin"
+  },
+  "firmwareSha256": "c3d5d8ede739f5d4d21ad2b4981fbfd839cf20e2ab2a644ba1d330e6374446e3",
+  "imageBytes": 4204544
+}

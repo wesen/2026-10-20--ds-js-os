@@ -1,0 +1,16 @@
+{
+  "claudeCode": "2.1.328",
+  "modelFlag": "opus",
+  "effortFlag": "high",
+  "reportedModels": [
+    "claude-opus-5-5"
+  ],
+  "prompt": "scripts/device/07-opus-short-protocol.txt",
+  "promptSha256": "76aa05138a3a5e72afbd0f2074cbfa2b2088523efb4b38fc6f2890972eda5c9d",
+  "response": "various/device/opus-hardware-methods.txt",
+  "responseSha256": "101eaf297bf2ad5bb762d365d3c0f5daf7e1c00f2363ac6350cd9db4f4ea59b9",
+  "result": "success",
+  "elapsedMs": 15573,
+  "tools": "disabled",
+  "sent": "abstract task only, no project code, identifiers, captures or measurements"
+}

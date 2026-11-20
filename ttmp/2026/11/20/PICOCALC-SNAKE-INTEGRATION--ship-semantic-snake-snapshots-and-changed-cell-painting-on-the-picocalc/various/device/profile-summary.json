@@ -1,0 +1,423 @@
+{
+  "before": {
+    "imageSha256": "09b8981954ddd66c660dca8d6cf04c5207bb4f648a26b15ee3caafde0bbc8ec8",
+    "blocks": 6,
+    "totals": {
+      "hostActiveMs": {
+        "median": 2522.7735,
+        "min": 2512.416,
+        "max": 2525.268
+      },
+      "snake": {
+        "turns": {
+          "median": 33.0,
+          "min": 33,
+          "max": 34
+        },
+        "cpu_ms": {
+          "median": 629.424,
+          "min": 621.108,
+          "max": 635.947
+        },
+        "restarts": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "compositor": {
+        "turns": {
+          "median": 75.0,
+          "min": 74,
+          "max": 77
+        },
+        "cpu_ms": {
+          "median": 801.9365,
+          "min": 745.528,
+          "max": 820.541
+        },
+        "restarts": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "display": {
+        "turns": {
+          "median": 29.5,
+          "min": 29,
+          "max": 30
+        },
+        "cpu_ms": {
+          "median": 149.03,
+          "min": 142.693,
+          "max": 152.463
+        },
+        "restarts": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "spi2": {
+        "busyMs": {
+          "median": 118.305,
+          "min": 112.03,
+          "max": 119.88
+        },
+        "transfers": {
+          "median": 198.0,
+          "min": 192,
+          "max": 200
+        },
+        "bytes": {
+          "median": 385182.5,
+          "min": 376656,
+          "max": 391740
+        },
+        "errors": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "i2c0": {
+        "busyMs": {
+          "median": 15.8,
+          "min": 7.68,
+          "max": 22.13
+        },
+        "transfers": {
+          "median": 157.5,
+          "min": 153,
+          "max": 165
+        },
+        "bytes": {
+          "median": 637.0,
+          "min": 619,
+          "max": 667
+        },
+        "errors": {
+          "median": 1.0,
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    "instrumented": {
+      "posts": {
+        "median": 27.0,
+        "min": 26,
+        "max": 27
+      },
+      "postBytes": {
+        "median": 14889.0,
+        "min": 14303,
+        "max": 14889
+      },
+      "screenBuild": {
+        "nPerBlock": {
+          "median": 31.0,
+          "min": 31,
+          "max": 32
+        },
+        "meanUsPerEventByBlock": {
+          "median": 1529.2419,
+          "min": 1504.125,
+          "max": 1568.2581
+        }
+      },
+      "stringify": {
+        "nPerBlock": {
+          "median": 31.0,
+          "min": 31,
+          "max": 32
+        },
+        "meanUsPerEventByBlock": {
+          "median": 3130.8735,
+          "min": 2988.8387,
+          "max": 3218.0312
+        }
+      },
+      "snakeTickDispatch": {
+        "nPerBlock": {
+          "median": 28.0,
+          "min": 28,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 20979.0536,
+          "min": 20592.7586,
+          "max": 21176.6786
+        }
+      },
+      "kernelRenderPublish": {
+        "nPerBlock": {
+          "median": 28.0,
+          "min": 28,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 214.0,
+          "min": 202.3793,
+          "max": 216.5
+        }
+      },
+      "compositorDrawDispatch": {
+        "nPerBlock": {
+          "median": 29.0,
+          "min": 28,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 18611.9292,
+          "min": 18075.8621,
+          "max": 19076.5172
+        }
+      },
+      "compositorSnakeMessage": {
+        "nPerBlock": {
+          "median": 27.0,
+          "min": 26,
+          "max": 27
+        },
+        "meanUsPerEventByBlock": {
+          "median": 5621.9701,
+          "min": 4847.1481,
+          "max": 6180.3704
+        }
+      },
+      "displayFlushTurn": {
+        "nPerBlock": {
+          "median": 29.0,
+          "min": 28,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 9903.7777,
+          "min": 9484.069,
+          "max": 10286.7931
+        }
+      },
+      "meanBytesPerPostByBlock": {
+        "median": 551.4444,
+        "min": 550.1154,
+        "max": 551.4444
+      }
+    }
+  },
+  "after": {
+    "imageSha256": "624b6e2939cd08dd14425c16cbd74ea7ed288b290f9f33515434b06fd78f427b",
+    "blocks": 6,
+    "totals": {
+      "hostActiveMs": {
+        "median": 2505.585,
+        "min": 2503.846,
+        "max": 2519.147
+      },
+      "snake": {
+        "turns": {
+          "median": 33.0,
+          "min": 32,
+          "max": 34
+        },
+        "cpu_ms": {
+          "median": 504.404,
+          "min": 501.127,
+          "max": 510.921
+        },
+        "restarts": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "compositor": {
+        "turns": {
+          "median": 75.0,
+          "min": 75,
+          "max": 77
+        },
+        "cpu_ms": {
+          "median": 409.399,
+          "min": 376.543,
+          "max": 442.454
+        },
+        "restarts": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "display": {
+        "turns": {
+          "median": 30.0,
+          "min": 29,
+          "max": 30
+        },
+        "cpu_ms": {
+          "median": 160.568,
+          "min": 157.781,
+          "max": 168.141
+        },
+        "restarts": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "spi2": {
+        "busyMs": {
+          "median": 119.62,
+          "min": 117.95,
+          "max": 124.82
+        },
+        "transfers": {
+          "median": 198.0,
+          "min": 196,
+          "max": 200
+        },
+        "bytes": {
+          "median": 378665.5,
+          "min": 376747,
+          "max": 391740
+        },
+        "errors": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "i2c0": {
+        "busyMs": {
+          "median": 14.735,
+          "min": 6.14,
+          "max": 27.1
+        },
+        "transfers": {
+          "median": 164.0,
+          "min": 160,
+          "max": 165
+        },
+        "bytes": {
+          "median": 662.5,
+          "min": 647,
+          "max": 667
+        },
+        "errors": {
+          "median": 1.0,
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    "instrumented": {
+      "posts": {
+        "median": 27.0,
+        "min": 26,
+        "max": 27
+      },
+      "postBytes": {
+        "median": 5334.0,
+        "min": 5133,
+        "max": 5334
+      },
+      "screenBuild": {
+        "nPerBlock": {
+          "median": 31.0,
+          "min": 31,
+          "max": 32
+        },
+        "meanUsPerEventByBlock": {
+          "median": 145.7903,
+          "min": 144.0312,
+          "max": 166.7097
+        }
+      },
+      "stringify": {
+        "nPerBlock": {
+          "median": 31.0,
+          "min": 31,
+          "max": 32
+        },
+        "meanUsPerEventByBlock": {
+          "median": 1013.5312,
+          "min": 984.5806,
+          "max": 1072.2903
+        }
+      },
+      "snakeTickDispatch": {
+        "nPerBlock": {
+          "median": 28.0,
+          "min": 28,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 17444.4643,
+          "min": 16792.2069,
+          "max": 17582.1429
+        }
+      },
+      "kernelRenderPublish": {
+        "nPerBlock": {
+          "median": 28.0,
+          "min": 28,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 162.75,
+          "min": 155.1379,
+          "max": 174.6071
+        }
+      },
+      "compositorDrawDispatch": {
+        "nPerBlock": {
+          "median": 29.0,
+          "min": 29,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 7773.3793,
+          "min": 7611.931,
+          "max": 8492.069
+        }
+      },
+      "compositorSnakeMessage": {
+        "nPerBlock": {
+          "median": 27.0,
+          "min": 26,
+          "max": 27
+        },
+        "meanUsPerEventByBlock": {
+          "median": 2613.2407,
+          "min": 2457.4074,
+          "max": 2772.037
+        }
+      },
+      "displayFlushTurn": {
+        "nPerBlock": {
+          "median": 29.0,
+          "min": 29,
+          "max": 29
+        },
+        "meanUsPerEventByBlock": {
+          "median": 10397.9483,
+          "min": 10063.0,
+          "max": 10871.8966
+        }
+      },
+      "meanBytesPerPostByBlock": {
+        "median": 197.5556,
+        "min": 197.4231,
+        "max": 197.5556
+      }
+    }
+  },
+  "appCropExact": {
+    "death": true,
+    "home": true,
+    "death-after-reentry": true,
+    "autopilot": true,
+    "after-compositor-restart": true
+  }
+}

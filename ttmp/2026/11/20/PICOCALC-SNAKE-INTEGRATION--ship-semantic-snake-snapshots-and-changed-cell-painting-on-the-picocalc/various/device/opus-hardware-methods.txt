@@ -1,0 +1,11 @@
+# Hardware Test Plan: Full-Paint vs. Changed-Cell Snake Rendering
+
+1. **Framebuffer parity.** Seed both renderers identically and replay a fixed input script. After every tick, read back the framebuffer (or a CRC of it) and require byte-identical results. Any mismatch fails the run regardless of timing gains.
+
+2. **Real-clock input alignment.** Drive inputs against the device's hardware timer, not tick counts. Confirm alignment by observing visible on-screen events (head turn, food eaten) or by routing a GPIO toggle per handled key to a logic analyzer. Record key-to-pixel latency per renderer.
+
+3. **Separate measurements.** Time CPU render work with a cycle counter, excluding transfers. Measure SPI separately: bytes sent, transaction count, and bus-busy time captured on the analyzer. Report both; never merge them into one "frame time."
+
+4. **Focus/restart checks.** After focus loss/regain and after game restart, verify a full repaint occurs, dirty-cell state resets, and parity still holds.
+
+5. **Labeling.** A run that substitutes the keypad status register but keeps the native keyboard publisher and display driver is labeled "hardware-in-loop, injected keypad register." It validates publishing, rendering, and SPI, not physical key scanning, debounce, or wiring.

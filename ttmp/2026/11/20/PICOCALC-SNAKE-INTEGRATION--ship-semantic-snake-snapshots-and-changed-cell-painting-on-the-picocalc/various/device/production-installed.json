@@ -1,0 +1,88 @@
+{
+  "worlds": {
+    "keyboard": {
+      "engine": "native",
+      "file": "natives/keyboard.elf",
+      "last_error": "",
+      "state": "waiting"
+    },
+    "display": {
+      "engine": "native",
+      "file": "natives/display.elf",
+      "last_error": "",
+      "state": "idle"
+    },
+    "compositor": {
+      "engine": "native",
+      "file": "natives/compositor.elf",
+      "last_error": "",
+      "state": "idle"
+    },
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    },
+    "snake": {
+      "engine": "native",
+      "file": "natives/snake.elf",
+      "last_error": "",
+      "state": "idle"
+    },
+    "chess": {
+      "engine": "native",
+      "file": "chess/compiled.bin",
+      "last_error": "",
+      "state": "idle"
+    }
+  },
+  "bootsOnly": true,
+  "counters": {
+    "compositor": {
+      "turns": 49,
+      "cpu_ms": 528.434,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "display": {
+      "turns": 8,
+      "cpu_ms": 69.943,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "snake": {
+      "turns": 37,
+      "cpu_ms": 74.842,
+      "restarts": 0,
+      "last_error": ""
+    },
+    "i2c0": {
+      "busyMs": 2930.36,
+      "transfers": 188,
+      "bytes": 755,
+      "errors": 188
+    },
+    "spi2": {
+      "busyMs": 110.09,
+      "transfers": 66,
+      "bytes": 360229,
+      "errors": 0
+    }
+  },
+  "imageSha256": "c3d5d8ede739f5d4d21ad2b4981fbfd839cf20e2ab2a644ba1d330e6374446e3",
+  "partitionSha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "appAndPartitionVerified": true
+}

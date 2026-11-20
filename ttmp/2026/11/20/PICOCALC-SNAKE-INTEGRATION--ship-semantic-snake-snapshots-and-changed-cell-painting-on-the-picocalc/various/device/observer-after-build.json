@@ -1,0 +1,46 @@
+{
+  "sourceBase": "e339b6ab8aef7e3499aadf81f13ca50baa3695bf",
+  "sourceMode": "workspace",
+  "profile": "profile",
+  "sourceSha256": {
+    "snake": "d5b1b9ef08b086c3be08e44c528b10a22b36bd01cef7ae6cf2beb872e36fd4c8",
+    "compositor": "07117cc469fefca6b0b4c493dab190ff4f6891101c207c78adb00794fdb94b52"
+  },
+  "nativeModules": {
+    "snake": [
+      {
+        "path": "build/esp-idf/main/natives/snake.elf",
+        "bytes": 62080,
+        "sha256": "21afc351f3cd3a4a1d332e1c84489a46f604e5333e7e93731b6134ee8a7400a1"
+      }
+    ],
+    "compositor": [
+      {
+        "path": "build/esp-idf/main/natives/compositor.elf",
+        "bytes": 279112,
+        "sha256": "cc7c4c4ac200706ff08d16a02859b60e7fd3533221176d284e25f34b37e4d8e0"
+      }
+    ]
+  },
+  "nativeTypedWorlds": {
+    "keyboard": "natives/keyboard.elf",
+    "power": "natives/power.elf",
+    "display": "natives/display.elf",
+    "compositor": "natives/compositor.elf",
+    "agent": "natives/agent.elf",
+    "files": "files/compiled.bin",
+    "editor": "editor/compiled.bin",
+    "agenda": "agenda/compiled.bin",
+    "settings": "natives/settings.elf",
+    "snake": "natives/snake.elf",
+    "flaky": "natives/flaky.elf",
+    "chess": "chess/compiled.bin"
+  },
+  "firmwareSha256": "624b6e2939cd08dd14425c16cbd74ea7ed288b290f9f33515434b06fd78f427b",
+  "imageBytes": 4207760,
+  "observer": {
+    "physicalOriginalAvailable": true,
+    "keyboardStatusOverride": "opt-in",
+    "scriptSha256": "06446f8591c1e8bf07e9fbf0dc95cf34310597b0408f40590372a79619f46aa7"
+  }
+}
