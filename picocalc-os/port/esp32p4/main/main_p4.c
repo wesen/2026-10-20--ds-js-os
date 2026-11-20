@@ -206,6 +206,8 @@ static void kernel_task(void *arg) {
   const char *manifest = "js/system.typed-files.json";
 #elif PICOCALC_TYPED_EDITOR
   const char *manifest = "js/system.typed-editor.json";
+#elif PICOCALC_TYPED_CHESS
+  const char *manifest = "js/system.typed-chess.json";
 #elif PICOCALC_NATIVE_ELF
   const char *manifest = "js/system.cji.json";
 #else

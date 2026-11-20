@@ -1,0 +1,13 @@
+wait 350
+key h
+wait 350
+capture chess-initial.png
+key enter
+key up
+key up
+key enter
+wait 2500
+capture chess-reply.png
+key f2
+wait 200
+capture chess-reset.png

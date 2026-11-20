@@ -205,11 +205,11 @@ set_source_files_properties(
 
 # Typed apps override the same configured catalog, preserving the claims and
 # any peripheral or test selections made above.
-if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR)
+if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR OR PICOCALC_TYPED_CHESS)
     target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c)
     list(APPEND BUNDLE_EXTRA "typed/wasm.js=${OS}/compiler/typed-wasm.js")
     list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-wasm.js")
-    if(PICOCALC_RV32_AGENDA OR PICOCALC_RV32_FILES OR PICOCALC_RV32_EDITOR)
+    if(PICOCALC_RV32_AGENDA OR PICOCALC_RV32_FILES OR PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
         if(NOT PICOCALC_RV32_STREAM_FUNCTIONS)
             set_property(SOURCE typed_p4.c APPEND PROPERTY COMPILE_DEFINITIONS PICOCALC_RV32_BUFFER_FUNCTIONS=1)
         endif()
@@ -226,16 +226,63 @@ if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR)
     math(EXPR last_world "${world_count} - 1")
 endif()
 
+if(PICOCALC_TYPED_EDITOR OR PICOCALC_TYPED_CHESS)
+    list(APPEND BUNDLE_EXTRA
+        "typed/async.js=${OS}/compiler/typed-async.js"
+        "typed/world.js=${OS}/compiler/typed-world.js")
+    list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-async.js" "${OS}/compiler/typed-world.js")
+endif()
+
+if(PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
+    set(native_world_reactor "${CMAKE_CURRENT_BINARY_DIR}/typed-world-reactor.elf")
+    set(world_runtime "${OS}/sdk/typed/world.c" "${OS}/sdk/typed/rv32-slot.S" "${QJS}/libunicode.c")
+    add_custom_command(OUTPUT "${native_world_reactor}"
+        COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${native_world_reactor}" ${world_runtime} ${OS}/sdk/nw_elf.c
+        DEPENDS ${world_runtime} ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
+                ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_utf16.h
+                ${QJS}/cutils.h ${QJS}/libunicode.h ${QJS}/libunicode-table.h
+        VERBATIM)
+endif()
+
+if(PICOCALC_TYPED_CHESS)
+    if(PICOCALC_RV32_CHESS)
+        set(chess_reactor "${native_world_reactor}")
+        set(chess_engine native)
+        target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_CHESS=1)
+    else()
+        set(chess_reactor "${OS}/build/typed-world-reactor.wasm")
+        if(NOT EXISTS "${chess_reactor}")
+            message(FATAL_ERROR "Build the shared typed reactor with make -C picocalc-os typed-world-reactor")
+        endif()
+        set(chess_engine wasm)
+    endif()
+    set(chess_dir "${OS}/worlds/chess")
+    file(STRINGS "${chess_dir}/source.list" chess_parts)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${chess_dir}/source.list")
+    set(chess_source "${CMAKE_CURRENT_BINARY_DIR}/chess.typed")
+    set(chess_source_text "")
+    foreach(part IN LISTS chess_parts)
+        file(READ "${chess_dir}/${part}" source_part)
+        string(APPEND chess_source_text "${source_part}\n")
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${chess_dir}/${part}")
+    endforeach()
+    file(CONFIGURE OUTPUT "${chess_source}" CONTENT "${chess_source_text}" @ONLY)
+    string(JSON typed_manifest SET "${typed_manifest}" worlds ${world_count}
+        "{\"name\":\"chess\",\"file\":\"chess/compiled.bin\",\"engine\":\"${chess_engine}\",\"budget_ms\":200,\"mem_kb\":768}")
+    set(chess_manifest_path "${CMAKE_CURRENT_BINARY_DIR}/system.typed-chess.json")
+    file(CONFIGURE OUTPUT "${chess_manifest_path}" CONTENT "${typed_manifest}" @ONLY)
+    target_sources(${COMPONENT_LIB} PRIVATE chess_p4.c)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_CHESS=1)
+    list(APPEND BUNDLE_EXTRA
+        "system.typed-chess.json=${chess_manifest_path}"
+        "chess/chess.typed=${chess_source}"
+        "chess/reactor.bin=${chess_reactor}")
+    list(APPEND BUNDLE_EXTRA_DEPS "${chess_manifest_path}" "${chess_source}" "${chess_reactor}")
+endif()
+
 if(PICOCALC_TYPED_EDITOR)
     if(PICOCALC_RV32_EDITOR)
-        set(editor_reactor "${CMAKE_CURRENT_BINARY_DIR}/typed-world-reactor.elf")
-        set(editor_runtime "${OS}/sdk/typed/world.c" "${OS}/sdk/typed/rv32-slot.S" "${QJS}/libunicode.c")
-        add_custom_command(OUTPUT "${editor_reactor}"
-            COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${editor_reactor}" ${editor_runtime} ${OS}/sdk/nw_elf.c
-            DEPENDS ${editor_runtime} ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
-                    ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_utf16.h
-                    ${QJS}/cutils.h ${QJS}/libunicode.h ${QJS}/libunicode-table.h
-            VERBATIM)
+        set(editor_reactor "${native_world_reactor}")
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_EDITOR=1)
         set(editor_engine native)
     else()
@@ -274,12 +321,10 @@ if(PICOCALC_TYPED_EDITOR)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_EDITOR=1)
     list(APPEND BUNDLE_EXTRA
         "system.typed-editor.json=${editor_manifest_path}"
-        "typed/async.js=${OS}/compiler/typed-async.js"
-        "typed/world.js=${OS}/compiler/typed-world.js"
         "editor/editor.typed=${editor_source}"
         "editor/reactor.bin=${editor_reactor}")
     list(APPEND BUNDLE_EXTRA_DEPS
-        "${editor_manifest_path}" "${editor_reactor}" "${editor_source}" "${OS}/compiler/typed-async.js" "${OS}/compiler/typed-world.js")
+        "${editor_manifest_path}" "${editor_reactor}" "${editor_source}")
 endif()
 
 if(PICOCALC_TYPED_FILES)

@@ -141,6 +141,8 @@ function chessRender(board: buffer, state: WorldState, out: buffer, hints: buffe
             p = chessAppendNumber(out, p, state.completed);
             p = p + out.writeLiteral(p, "   Nodes ");
             p = chessAppendNumber(out, p, state.nodes);
+            p = p + out.writeLiteral(p, "   Eval ");
+            p = chessAppendNumber(out, p, state.score);
         }
         p = p + out.writeLiteral(p, "\"}");
     }
