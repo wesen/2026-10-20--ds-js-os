@@ -187,3 +187,56 @@ Read `editorOpen`, `editorOpenTask` and `editorShow`. The [Open fixture](../scri
 ### Technical details
 
 The 65,536-byte direct fixture has 851 CRLF pairs. The expected save contains 64,685 bytes. The app receives an ignored key at the read wait and at the first normalization wait, a duplicate successful read settlement, 16 normalization timer settlements and the separate first-frame timer. The test checks the normalized bytes at the syscall boundary.
+
+## Step 4 — Replace Find's saved positions and cancel obsolete searches
+
+The final search retains the old candidate filter, four-range order and 1,024-unit work counter. It stores absolute scan and folded positions and one anchor. An accepted replacement Open or a new query clears the old Find frame before reusing the document or query slots.
+
+### Prompt context
+
+See Step 1. **Code commits.** `eb4ef81` — Await the Editor file read and bounded CRLF normalization. `7b321a9` — Await bounded Editor Find and discard replaced search timers.
+
+### What I did
+
+- Gave the async Find task five live scalar locals. Used a separate acquisition of the document and query buffers for each slice and retained the line end across waits.
+- Replaced the last manual Find timer test in the event handler with the generated resume call. Used `pending()` in `editorShow` to defer rendering while the search still waits and called it from the dispatcher after a matched Find completion.
+- Sent the same synthetic timer to the replacement Open with and without a prior search. Compared every replacement effect, including its reply, previous grant release, frame and hints.
+- Added an independent replaced-query fixture. The old dense search waits on a timer, a new Find enters `x` and shows the first match at `large.txt  1:3`, and the old timer arrives without changing the screen.
+- Saved the [checkpoint replay logs](../various/05-combined-host-replays.txt), [per-event fixture receipts](../various/04-combined-event-fixtures.jsonl) and [exact state layouts](../various/06-checkpoint-layouts.jsonl).
+
+### Why
+
+The original renderer reads the query and the pending status, but no longer needs a separate field for a Find token. Cursor navigation remains a different deferred operation and can need its own timer after the search finds a match. Keeping the physical line end across waits avoids repeatedly scanning a long imported line.
+
+### What worked
+
+The final source passed all thirteen original Editor workflows and five direct both-target fixtures. It emits 88,969 Wasm bytes and 22,292 raw RV32 instructions, with 57 declared plus 13 generated fields. The matched tail-search image at line 852 is byte-identical to the original JS workflow's host framebuffer. The prior enum-only checkpoint also passed all thirteen workflows.
+
+### What didn't work
+
+- An attempt to put the first text borrow inside a standalone block in the async body failed with `SyntaxError: 573:5: expected ;`. The current dialect accepts blocks owned by control statements. I used an ordinary local whose last read precedes the first wait, which allows the liveness pass to leave it out of the frame.
+- The first replaced-query fixture expected a query for `x` to move to line 852, but both runtimes returned `large.txt  1:3`. That is the first `x` in `text`. A two-letter query encountered many `x` candidates before the tail and the test incorrectly expected a synchronous frame. Reserving a unique letter for line 852 gave a different immediate trace, `["sleep 2019","return 1"]`, because the viewport must traverse over 64 rows. The replaced-query fixture now checks the original nearby `x` match. The full replay tests the independent delayed rendering for the tail match.
+
+### What I learned
+
+The task can finish a search while the view still has layout work to do. A pending Find frame and a pending renderer timer are distinct. A scope test should assert either the final frame after settling both or a known match close enough to display immediately.
+
+### What was tricky to build
+
+On wrapping, a physical line end at or beyond the anchor identifies the original line. The prefix limit checks absolute folded candidate positions against the same anchor. Replacing one coordinate system while preserving the other would change the position after U+0130 and the result of a prefix overlap.
+
+### What warrants a second pair of eyes
+
+Check that `editorFindAdvance` never follows a second physical EOF after wrapping. Check that the cursor-clamp rule still protects a split surrogate even with an expanded fold. Compare the two replacement traces at specific events rather than comparing the initial Find-entry screens with the control.
+
+### What should be done in the future
+
+Compare the host evidence with physical cold compile and Editor CPU results. Both host direct-event drivers expose rejection of canceled tokens without relying on P4 message timing.
+
+### Code review instructions
+
+Trace `editorFindNext` to `editorFindTask`, then `typedWorldEvent` and `editorShow`. Run `03-check-editor-event-interleaving.mjs` with the P4 compiler and the CJI RV32 emulator. Check the `replace-search`, `replace-control` and `replace-query` receipts and the `--dense-search` and `--tail-search` workflows.
+
+### Technical details
+
+The final Open frame has two control fields and saves one value at the read or four at a timer. The final Find frame has two control fields and saves `at`, `end`, `anchor`, `foldedAt` and `phase`. Editor's static C reactor still reserves 80 slots. The result changes used slots, from 71 to 70.
