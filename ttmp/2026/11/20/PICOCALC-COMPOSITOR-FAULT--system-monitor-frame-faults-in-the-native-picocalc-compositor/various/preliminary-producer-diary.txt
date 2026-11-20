@@ -1,0 +1,334 @@
+# Investigation Diary — Bounding the System Monitor Worlds-Table Update
+
+*Producer researcher. Entry 1. Nothing below has been executed. Every number comes from the brief or is labelled as a prediction or a parameter. I have no access to the board, the producer code, or the compositor source.*
+
+---
+
+## Prompt Context
+
+**Given facts:**
+
+| # | Fact |
+|---|------|
+| F1 | The System monitor samples every 500 ms. |
+| F2 | When the Worlds tab is focused, each tick serializes **all** rows of a 7-column table, a 48-point activity history, and the selected world's details into one JSON frame. |
+| F3 | The native compositor receives the JSON frame, **retains** its tree, and **queues a separate draw**. |
+| F4 | There were four observed native frame faults: 2 × 80 ms overrun, and 2 × event return value `2` where only `0` or `1` are accepted. |
+| F5 | Memory at the faults was 504 KB or 512 KB of 768 KB. |
+
+**Task:**
+- Design a minimal bounded update that preserves all rows, selection, headers, and scrolling.
+- Design differential behavioral tests.
+- Investigate display semantics.
+- Give predictions, pseudocode, and limitations.
+- Later, after experimental feedback arrives, write the final report.
+
+---
+
+## What I did
+
+1. Decomposed the frame into size terms and identified which ones scale with row count.
+2. Built a peak-memory model for one update, given that the compositor retains a tree and draws separately.
+3. Formed competing hypotheses for each fault type and designed one discriminating experiment per hypothesis.
+4. Chose a minimal design (row windowing with spacers, plus a single-in-flight gate) and rejected two alternatives.
+5. Wrote pseudocode, a differential test plan, and falsifiable predictions.
+
+**What I did not do:** I ran no measurements and read no code. I have not observed compositor behavior beyond F1–F5.
+
+---
+
+## Why
+
+### Frame size decomposition
+
+Every term in the frame except the rows is constant-size:
+
+```
+S_frame = S_hdr            (7 header strings)        constant
+        + R · b_row        (R rows × 7 cells)         O(R)
+        + S_hist           (48 numbers)               constant
+        + S_detail         (1 world)                  constant
+```
+
+So the only unbounded term is `R · b_row`. A bounded update therefore only needs to change how rows are serialized. Headers, history, and details can stay exactly as they are.
+
+### Why delta patching alone does not bound the update
+
+Monitor columns such as CPU, memory, and tick counts change on nearly every sample. With a keyed delta, the changed-row count approaches R on most ticks. That bounds nothing.
+
+**Windowing is the only one of the three options that bounds the update independently of how fast the data changes.**
+
+### Peak-memory model for one full-frame update
+
+The tree is retained (F3) and the draw is queued separately. That allows the following to coexist at the moment of peak memory:
+
+```
+peak_full ≈ M_base + T(R)_old + J(R) + T(R)_new  [+ draw-time refs to T_old if draw pending]
+```
+
+Definitions:
+- `T(R)` is the parsed tree size.
+- `J(R)` is the JSON text size.
+- Both are linear in R.
+
+The windowed design replaces R with `W_tot = W_visible + 2·overscan` in every term.
+
+---
+
+## What worked (at the design level, unverified)
+
+### Recommended minimal design
+
+**1. Row windowing with spacers.**
+- Serialize only rows in the range `[s, s+n)`, where `n = W_tot`.
+- Add one top spacer of height `s·h` and one bottom spacer of height `(R−s−n)·h`.
+- The native scroll extent and scroll position stay correct while the tree holds O(W) row nodes instead of O(R).
+- This requires a fixed row height `h`.
+
+**2. Stable keys.**
+- Every row carries the world ID.
+- Selection is held as an ID in the producer.
+
+**3. Selection is decoupled from visibility.**
+- The details block is always serialized for the selected ID, even when that row is outside the window.
+
+**4. Headers are sent in every frame.**
+- This costs a constant amount.
+- It removes any risk of headers disappearing if the compositor replaces the tree.
+
+**5. Single-in-flight gate with latest-wins coalescing.**
+- No new frame is sent while the previous draw is unacknowledged.
+- A tick that arrives during that time only marks the frame dirty.
+
+**6. Scroll-driven out-of-band frames.**
+- When a native scroll event brings the window edge within the overscan margin, the producer emits a frame immediately, rate-limited, instead of waiting for the next 500 ms tick.
+
+### Rejected alternatives
+
+| Alternative | Reason rejected |
+|-------------|-----------------|
+| Keyed delta only | Not bounded when most cells change every tick. Kept as a possible later optimization *inside* the window. |
+| Chunking rows across ticks | Makes rows up to ⌈R/K⌉ ticks stale and breaks the requirement to preserve all rows coherently. |
+
+---
+
+## What didn't work
+
+Nothing has been tested yet, so nothing has failed experimentally. Two design-level dead ends are recorded above: delta-only patching and chunking.
+
+---
+
+## What I learned (inferences, each tagged)
+
+- **[Inference]** The fault-relevant cost is the *transient* coexistence of the old tree, the JSON text, and the new tree. The steady-state tree size alone is not the driver.
+- **[Inference]** 512 KB is exactly 2/3 of 768 KB. That could be a soft limit, a collection trigger, or an arena boundary rather than a coincidence. It is testable (see E4).
+- **[Inference]** 504 and 512 differ by 8 KB. That could be allocation granularity, or the measurement being taken at different points in the update. With n = 2 per value, no correlation with fault type can be claimed.
+- **[Inference]** An event return of `2` combined with "queues a separate draw" makes **"draw already pending / coalesced / busy"** a leading hypothesis. It is not established.
+
+---
+
+## What was tricky to build
+
+**Scroll ownership.**
+- If the compositor scrolls locally, the producer learns the offset only through events.
+- Overscan has to absorb the latency of that round trip.
+- Fast flings can briefly expose rows that have not arrived yet.
+
+**Reconciliation semantics.**
+- Suppose the compositor matches children *by position*.
+- Then shifting the window renames every child node, which may reset per-node state such as highlight or focus.
+- Windowing is safe only if reconciliation is keyed, or the compositor fully replaces the tree and scroll state lives outside the row nodes.
+
+**Reorder under sort.**
+- If the table is sorted by a volatile column, rows move between ticks.
+- Scroll must be anchored by index, not by key. Otherwise the view jumps to follow the anchor row.
+- The baseline's behavior defines which choice is correct, so the baseline must be measured first.
+
+---
+
+## What warrants a second pair of eyes
+
+- Whether `2` is a legitimate status the producer must handle, or an out-of-enum value that indicates a native bug. Those two cases call for opposite responses: handle the status in the producer, or fix the native code.
+- Whether the memory figures are *current use* or *high-water mark*, and at which stage of the update they were sampled.
+- What the 80 ms overrun is measured against: receive-to-draw-complete, or parse only. What the budget is.
+- My assumption that row height is uniform.
+
+---
+
+## What should be done in the future
+
+### Display-semantics questions to answer before implementing
+
+| ID | Question | How to answer |
+|----|----------|---------------|
+| Q1 | Does the compositor replace the retained tree or reconcile into it? Keyed or positional? | Send two frames that differ only in row order and inspect native node identity or address. |
+| Q2 | Where does scroll offset live? Does it survive a frame? | Scroll, send an unchanged frame, and read the offset. |
+| Q3 | What happens when a frame arrives while a draw is queued? | Stall the draw (debug hook or long draw) and send a second frame. |
+| Q4 | Who returns `2`, and what does the enumeration define? | Grep the native code. Log return values with the queue state. |
+| Q5 | When are the JSON text and the old tree freed relative to the new parse and the draw? | Allocation trace across one update. |
+| Q6 | Is the selection highlight native-owned or producer-owned? | Select, then send a frame without the selection field. |
+
+### Discriminating experiments (proposed, not run)
+
+**E1 — Overrun vs R.**
+- Measure update time at R ∈ {1, W, 4W, 16W} with a constant heap.
+- *Linear slope* → parse/layout cost.
+- *Flat with spikes* → collection or draw contention.
+
+**E2 — Overrun vs heap occupancy.**
+- Hold R constant and pre-fill the heap to 400, 480, 504, 512, and 600 KB.
+- *Spikes at ≥ ~504 KB* → allocator or collection effect.
+
+**E3 — Return `2` vs draw pending.**
+- Use small frames, stall the draw, and send a second frame.
+- *`2` appears with low memory* → H1 (busy/coalesced).
+- Separately, inject allocation failure with an idle draw.
+- *`2` appears* → H2 (allocation-error propagation).
+- *Neither reproduces* → H3 (uninitialized or out-of-enum path).
+
+**E4 — Fault onset vs predicted peak.**
+- Sweep R and compute `peak_full(R)`.
+- If faults begin where peak crosses ~504–512 KB, the 2/3 threshold is real.
+
+---
+
+## Code review instructions
+
+1. Confirm that no code path serializes more than `W_tot` rows. Add an assertion in the serializer.
+2. Confirm that selection is stored as an ID and is never derived from window index.
+3. Confirm that both spacer heights sum with the row heights to exactly `R·h`.
+4. Confirm the window clamps when R shrinks: `s ≤ max(0, R−n)`.
+5. Confirm the gate cannot deadlock if an acknowledgement is lost. There must be a timeout and a full resync.
+6. Confirm that a deleted selected world has a defined successor rule, and that the rule matches the baseline.
+7. Confirm headers are present in every frame.
+
+---
+
+## Technical details
+
+### Frame schema (candidate)
+
+```json
+{
+  "seq": 1042,
+  "table": {
+    "cols": ["Name","State","CPU","Mem","Ticks","Entities","Uptime"],
+    "total": 312,
+    "row_h": 18,
+    "win_start": 40,
+    "rows": [["w:7f3a","Alpha","run",12.5,8192,1234,88,"03:12"], "..."],
+    "pad_top": 720,
+    "pad_bottom": 4248,
+    "selected": "w:7f3a"
+  },
+  "history": [/* 48 values */],
+  "details": { "id": "w:7f3a", "...": "..." }
+}
+```
+
+### Producer pseudocode
+
+```python
+state = {selected_id, scroll_px=0, inflight=None, dirty=False, last_emit=0}
+OVERSCAN = k; W_VIS = viewport_h // ROW_H; N = W_VIS + 2*OVERSCAN
+
+def window(R, scroll_px):
+    first_visible = scroll_px // ROW_H
+    s = clamp(first_visible - OVERSCAN, 0, max(0, R - N))
+    return s, min(N, R - s)
+
+def build_frame(sample):
+    rows = sample.rows_sorted()                    # baseline ordering, unchanged
+    R = len(rows)
+    s, n = window(R, state.scroll_px)
+    sel = resolve_selection(state.selected_id, rows)  # baseline successor rule
+    state.selected_id = sel
+    return {
+      "seq": next_seq(),
+      "table": {
+        "cols": HEADERS, "total": R, "row_h": ROW_H, "win_start": s,
+        "rows": [serialize(r) for r in rows[s:s+n]],
+        "pad_top": s*ROW_H, "pad_bottom": (R-s-n)*ROW_H,
+        "selected": sel},
+      "history": sample.history48,
+      "details": serialize_details(find(rows, sel))}
+
+def on_tick(sample):
+    state.latest = sample
+    try_emit()
+
+def on_native_scroll(px):
+    state.scroll_px = px
+    s, n = window(len(state.latest.rows), px)
+    if near_window_edge(px, s, n) and now() - state.last_emit >= MIN_GAP:
+        try_emit()
+
+def try_emit():
+    if state.inflight is not None:
+        if now() - state.inflight.t > ACK_TIMEOUT:
+            state.inflight = None           # lost ack → resync with full window frame
+        else:
+            state.dirty = True; return
+    f = build_frame(state.latest)
+    assert len(f["table"]["rows"]) <= N
+    send(f); state.inflight = (f["seq"], now()); state.last_emit = now()
+
+def on_draw_ack(seq):
+    if state.inflight and state.inflight[0] == seq:
+        state.inflight = None
+        if state.dirty: state.dirty = False; try_emit()
+```
+
+### Differential behavioral tests
+
+**Setup.**
+- Record a deterministic trace: per-tick samples plus timestamped user events (scroll, select, tab focus).
+- Replay the trace through the **baseline** (full-frame) producer and the **candidate** producer.
+- Use the same compositor, or a software model of it if the native tree cannot be dumped.
+- At each settled tick, extract a *logical view*:
+  - visible row IDs and cells
+  - header texts
+  - selected ID and highlight
+  - details content
+  - scroll offset
+  - scroll extent
+
+| Test | Assertion |
+|------|-----------|
+| D1 Equivalence | `view_base(t) == view_cand(t)` for every settled tick t. |
+| D2 Reachability | Sweep the scroll from 0 to the extent in steps of `h`. The union of visible IDs equals the full row set, in both producers. |
+| D3 Selection | Selected row moves offscreen, is reordered by sort, or is deleted. Selected ID and details are equal across producers. |
+| D4 Headers | All 7 headers are present and identical every tick, including after a resync. |
+| D5 Scroll | Offset is unchanged across ticks without user input. When R shrinks below the offset, the clamp result is equal across producers. |
+| D6 Bound | Frame bytes and row count are ≤ the constant for R ∈ {W, 4W, 16W, 64W}. The baseline grows linearly. |
+| D7 Backpressure | Stall the draw. The candidate keeps ≤ 1 frame in flight, and the frame drawn after the stall holds the latest sample. Record return codes. |
+| D8 Memory | Peak heap per update for each R, in both producers. |
+| D9 Lost ack | Drop one acknowledgement. The candidate resyncs within `ACK_TIMEOUT`, and the views reconverge. |
+| D10 Fling | Fast scroll. Record the number of ticks or milliseconds that rows are missing beyond overscan. This is the only allowed divergence, and it must be quantified. |
+
+### Predictions (falsifiable)
+
+**P1.** The candidate's frame size and row-node count are constant for R > N. The baseline's are linear in R.
+
+**P2.** Peak heap per update decreases by approximately `(R−N)·(2·t_row + j_row)`, where:
+- `t_row` is the measured per-row tree cost
+- `j_row` is the measured per-row JSON cost
+
+**P3.** If E1 shows linear slope, the 80 ms overruns disappear in the candidate for all tested R. If E2 shows a heap threshold, overruns drop in frequency in proportion to how far the peak falls below ~504 KB, but do not vanish where other heap users dominate.
+
+**P4.** If H1 holds (`2` means busy or already queued), the single-in-flight gate eliminates return `2` entirely. If H2 or H3 holds, the gate has no effect and the fix must be native.
+
+**P5.** D1–D9 pass with zero divergence. D10 shows divergence bounded by roughly one scroll-to-frame round trip, and only when scroll velocity exceeds `OVERSCAN·h` per round trip.
+
+### Limitations
+
+- Assumes fixed row height. Variable row heights require a prefix-sum height index, and the spacers are then approximate.
+- Correctness depends on Q1 and Q2. Positional reconciliation, or scroll state stored on row nodes, invalidates the spacer approach without extra work.
+- Fast native scrolling can expose unloaded rows. Overscan reduces this but cannot eliminate it without a native virtual list.
+- Four faults is too few to attribute causes or correlate fault type with memory value. Every causal statement above is a hypothesis.
+- The design does not reduce steady-state memory held by the compositor for non-table content.
+- The design does not address faults that originate in the native draw itself.
+
+---
+
+*Next entry: after experimental feedback on Q1–Q6, E1–E4, and D1–D10.*

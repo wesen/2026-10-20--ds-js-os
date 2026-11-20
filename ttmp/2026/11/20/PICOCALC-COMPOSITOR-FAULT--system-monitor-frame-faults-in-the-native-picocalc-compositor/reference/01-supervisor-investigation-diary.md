@@ -168,3 +168,51 @@ Compare df79a0f and ef0ff95, then run scripts/02-compare-system-frames.mjs with 
 ### Technical details
 
 The real Worlds screenshot showed six rows. After the Down sequence, the final nat-dial row was selected with its details. The other two frames showed the Handles listing and the I²C and SPI bus transfer graphs. The half-pixel correction uses the actual display coordinate range.
+
+## Step 4: Qualify the final firmware and publish the three studies
+
+I inspected the five captured screens on the corrected firmware and verified the final world counters. Both researchers returned their authored articles and diaries. I reviewed their conclusions, completed the synthesis and published the three reports.
+
+### Prompt Context
+
+See Step 1. Publication and an installed, qualified fix are the completion conditions.
+
+### What I did
+
+Installed ef0ff95 and ran the full 152-second schedule. Checked each image against its intended screen, inspected the structured receipt, reviewed the Opus High articles against the source, and pushed five files to go-go-parc main in b246fd0.
+
+### Why
+
+The first trial exercised the frame reduction; a fresh trial was necessary to qualify the corrected graph implementation. The operator's problem concerns a live screen, so a clean log alone was insufficient.
+
+### What worked
+
+All five final images passed CRC and visual inspection. Three full snapshots showed that the compositor, System and display progressed without restarting. The serial stream contained zero fault events in the test window. Final focus was Chess. Both researcher reports and the supervisor report are published with two board figures.
+
+### What didn't work
+
+The first published-draft review caught a suggested throughput percentage derived from cumulative turn counts; that interpretation was removed before publication. The docmgr check also caught missing document metadata on interim review files. Adding frontmatter and numeric prefixes resolved it.
+
+### What I learned
+
+Keeping the raw line immediately before each structured fault made the runtime error legible. Comparing drawing operations exposed a real half-pixel regression. Device-side restart counters, active turns and actual screens answered three different questions.
+
+### What was tricky to build
+
+The first trial's corrupt final UART image required an isolated retry. The final trial recovered all five images directly. The prose distinguishes a charge at a failed allocation from the unknown size of the refused request.
+
+### What warrants a second pair of eyes
+
+The run duration is bounded and the failing allocation site remains unmeasured. The eight- and fourteen-row enclosing windows depend on the PicoCalc layout.
+
+### What should be done in the future
+
+Reopen the study if the monitor faults again on the installed build or if a change to its panel geometry invalidates the differential drawing test.
+
+### Code review instructions
+
+Inspect the two production commits df79a0f and ef0ff95, then the final device receipt and the three articles in the analysis folder. The vault publication changes exactly three notes and two images.
+
+### Technical details
+
+The installed application image SHA-256 is f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83. Final world counters advanced by 1,075 compositor, 327 System and 279 display turns. Both tolerances remained 80 ms and 768 KiB for the compositor.

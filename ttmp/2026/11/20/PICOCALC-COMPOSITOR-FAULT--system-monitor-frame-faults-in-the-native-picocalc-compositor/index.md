@@ -1,7 +1,7 @@
 ---
 Title: System monitor frame faults in the native PicoCalc compositor
 Ticket: PICOCALC-COMPOSITOR-FAULT
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T07:12:07.530549262-05:00
+LastUpdated: 2026-11-20T07:29:10.308096809-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

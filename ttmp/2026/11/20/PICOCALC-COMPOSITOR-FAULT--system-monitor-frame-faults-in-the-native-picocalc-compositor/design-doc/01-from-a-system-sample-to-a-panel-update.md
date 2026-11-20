@@ -123,3 +123,7 @@ For debugging, first check that the world doing the work stayed alive, then conf
 ### Half-pixel regression
 
 A second fixture generates samples intended to land halfway between two pixels. On the first candidate the upper endpoint of one line segment changed from y=81 to y=80. On the panel, y increases downwards. The renderer computes round(base − offset), and its floating-point subtraction can eliminate a tiny error in the fraction near a tie. Rounding the offset by itself has a different result in that case. The correction falls back to the original sample array and scale when a computed offset is inexact at a half and differs from that half by at most 320 times Number.EPSILON. This leaves the renderer's absolute-coordinate calculation intact. The 69 extended comparisons passed after the correction.
+
+## Final device result
+
+Source ef0ff95 ran the complete 152-second test with three complete world snapshots, five CRC-verified screenshots and zero recorded faults or restarts. The compositor advanced 1,075 turns, System 327 and the display 279. Visual inspection confirmed Worlds, the selected final row, Handles, Buses and the return to Chess. The old control and the qualification runs have different durations. The qualification establishes correct behavior for this interaction under its original budgets. [Device receipt](../various/final-device-trial.json) · [Installed image](../various/final-installed.json)

@@ -1,0 +1,6 @@
+{
+  "lane": "receiver",
+  "model": "claude-opus-4-6",
+  "effort": "high",
+  "publicResponseSha256": "a618b75cf636afea5441fd7c3fd2799887dff6021b21cb7e0252e04a3f72da55"
+}

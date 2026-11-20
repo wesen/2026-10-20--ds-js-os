@@ -1,0 +1,297 @@
+{
+  "duration_s": 152,
+  "commands": [
+    [
+      1,
+      "worlds"
+    ],
+    [
+      5,
+      "key f1"
+    ],
+    [
+      6,
+      "key m"
+    ],
+    [
+      15,
+      "shot"
+    ],
+    [
+      25.0,
+      "key down"
+    ],
+    [
+      25.27,
+      "key down"
+    ],
+    [
+      25.54,
+      "key down"
+    ],
+    [
+      25.81,
+      "key down"
+    ],
+    [
+      26.08,
+      "key down"
+    ],
+    [
+      26.35,
+      "key down"
+    ],
+    [
+      26.62,
+      "key down"
+    ],
+    [
+      26.89,
+      "key down"
+    ],
+    [
+      27.16,
+      "key down"
+    ],
+    [
+      27.43,
+      "key down"
+    ],
+    [
+      27.7,
+      "key down"
+    ],
+    [
+      27.97,
+      "key down"
+    ],
+    [
+      28.240000000000002,
+      "key down"
+    ],
+    [
+      28.51,
+      "key down"
+    ],
+    [
+      28.78,
+      "key down"
+    ],
+    [
+      29.05,
+      "key down"
+    ],
+    [
+      29.32,
+      "key down"
+    ],
+    [
+      29.59,
+      "key down"
+    ],
+    [
+      29.86,
+      "key down"
+    ],
+    [
+      30.130000000000003,
+      "key down"
+    ],
+    [
+      30.4,
+      "key down"
+    ],
+    [
+      30.67,
+      "key down"
+    ],
+    [
+      30.94,
+      "key down"
+    ],
+    [
+      31.21,
+      "key down"
+    ],
+    [
+      31.48,
+      "key down"
+    ],
+    [
+      31.75,
+      "key down"
+    ],
+    [
+      32.02,
+      "key down"
+    ],
+    [
+      32.29,
+      "key down"
+    ],
+    [
+      32.56,
+      "key down"
+    ],
+    [
+      32.83,
+      "key down"
+    ],
+    [
+      34,
+      "shot"
+    ],
+    [
+      43,
+      "key right"
+    ],
+    [
+      50,
+      "shot"
+    ],
+    [
+      60,
+      "key right"
+    ],
+    [
+      69,
+      "shot"
+    ],
+    [
+      78,
+      "key right"
+    ],
+    [
+      80,
+      "key f1"
+    ],
+    [
+      81,
+      "key m"
+    ],
+    [
+      86,
+      "key f1"
+    ],
+    [
+      87,
+      "key m"
+    ],
+    [
+      92,
+      "key f1"
+    ],
+    [
+      93,
+      "key m"
+    ],
+    [
+      122,
+      "worlds"
+    ],
+    [
+      127,
+      "key f1"
+    ],
+    [
+      128,
+      "key h"
+    ],
+    [
+      134,
+      "shot"
+    ],
+    [
+      145,
+      "worlds"
+    ]
+  ],
+  "snapshots": [
+    {
+      "display": {
+        "turns": 10,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "compositor": {
+        "turns": 181,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "sysmon": {
+        "turns": 92,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "chess": {
+        "turns": 2,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      }
+    },
+    {
+      "display": {
+        "turns": 278,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "compositor": {
+        "turns": 1161,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "sysmon": {
+        "turns": 373,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "chess": {
+        "turns": 3,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      }
+    },
+    {
+      "display": {
+        "turns": 289,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "compositor": {
+        "turns": 1256,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "sysmon": {
+        "turns": 419,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      },
+      "chess": {
+        "turns": 4,
+        "state": "idle",
+        "last_error": "",
+        "restarts": 0
+      }
+    }
+  ],
+  "faults": [],
+  "screenshots": {
+    "shot-1.png": "f3ffbfd21602ad2cdd45d84631090c578c1f89e5b8889c02ad8b3aa8b4c8abad",
+    "shot-2.png": "848d438d61ec4141b628ea4f6be56225d6b42febc54ca12f761a40574870adcb",
+    "shot-3.png": "05f585f368e6b0bc285d596534373b6566c3003478fba50efeea93ebac79aae6",
+    "shot-4.png": "96a6d39a9af16d56445272c2081a57a2b006ef415c5a44e7a32e153bbd54c56f",
+    "shot-5.png": "cb6d0a8847c87112d0ecd5f5d2bdf3fbcd8fca85beb98b780a3439025d56efec"
+  }
+}
