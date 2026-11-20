@@ -74,3 +74,18 @@ node scripts/runtime/03-run.mjs node /tmp/psix-runtime-independent.json
 ```
 
 The run exited 0 on Node v24.18.0. [Bounded replay record](../scripts/review/05-independent-node-replay.json)
+
+## Step 6. Repeat the declared Wasm and RV32 qualification
+
+The generator author added a generation-time rejection for a container following a potentially wide integer body. I confirmed the guard in source and reran the independent 294-case cross-check against the revised implementation. Its compact JSON stayed byte-identical. I also ran the author's full driver in a fresh directory with the RISC-V GCC toolchain, the repository's RV32 emulator and the ESP-IDF cJSON source. The linked runner exited 0.
+
+```sh
+node scripts/static/05-replay.mjs /tmp/psix-independent-static-review \
+  /home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20241119/riscv32-esp-elf/bin/riscv32-esp-elf-gcc \
+  /home/manuel/code/wesen/2026-10-20--ds-js-os/cji/build/rv32/rv32emu \
+  /home/manuel/esp/esp-idf-5.4.2/components/json/cJSON
+```
+
+The trace contributed 47 recorded frames from 127 events. Across all 121 qualifying vectors, generated Wasm, emulated generated RV32, the JavaScript writer and a separate C producer agreed byte for byte. The default source was 16,680 bytes, Wasm 6,514 bytes and the RV32 image 16,116 bytes. The median recorded frame took 21,496 emulated instructions. These instruction counts measure the standalone serialization call under the harness. The [bounded receipt](../scripts/review/06-independent-static-replay.json) includes artifact digests, cases, sizes and the independently repeated host medians. The direct comparison with a C plan interpreter on real silicon belongs to the director’s device study.
+
+The first review deliverables are in `3ddc866`. The initial sandboxed `git add` reported `fatal: Unable to create '/home/manuel/code/wesen/2026-10-20--ds-js-os/.git/index.lock': Read-only file system`. The scoped approved git action succeeded. All three docmgr frontmatters and all repository-relative links validated, and both differential scripts reproduced the checked-in JSON.

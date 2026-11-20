@@ -1,0 +1,69 @@
+{
+  "environment": {
+    "node": "v24.18.0",
+    "arch": "x64",
+    "cpu": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+    "gcc": "riscv32-esp-elf-gcc (crosstool-NG esp-14.2.0_20241119) 14.2.0"
+  },
+  "input": {
+    "events": 127,
+    "tracedFrames": 47,
+    "changedFrames": 46,
+    "groups": 11,
+    "traceSha256": "a129b9a062fc35f4448620281e5f58fa07c3b776ba35a43890c6803b7b0c4bad",
+    "fixtureSha256": "8a82439ee3a35fbf6e523a30ff1ca138e26b4660a002dd969eb09a77ae6f37b7",
+    "maxPackedWireBytes": 329
+  },
+  "correctness": {
+    "matchingWasmRv32JsAndC": 121,
+    "wasmMalformed": 15,
+    "rv32Malformed": 1,
+    "packedOutputShortCallerAndBacking": 242,
+    "titleWitnesses": [
+      {
+        "title": "Pico Chess",
+        "nativeBytes": 16128,
+        "sha256": "50fbcf4e9dd5192ee4016465638ce10c5c6747829c829e14fd1de8dd16b85df1",
+        "wireBytes": 318
+      },
+      {
+        "title": "chess",
+        "nativeBytes": 15452,
+        "sha256": "0daa9425f9e4b353641a929ea52dd7502607a1fa997acdd7be150d9da6d262cf",
+        "wireBytes": 306
+      }
+    ]
+  },
+  "bytes": {
+    "source": 16680,
+    "wasm": 6514,
+    "rv32": 16116,
+    "elf": 107700
+  },
+  "sha256": {
+    "source": "b18f006e33b6b9357602683c4073a8e5d57306d317ad1a8cb4fe84a4852563ba",
+    "wasm": "797e38d582a50f8864d8a6d9d74aee2daf5bec9e3388db8fe4d99174a7652bcb",
+    "rv32": "c8ac3a052c0f2b333a20893941900abcb698632c7a08c8b196897216721d9d23"
+  },
+  "endpoint": {
+    "installation": "host Node in-process available compiler; stage, emit, Wasm validate, Wasm instantiate timed separately",
+    "rv32ExternalLink": "host process wall time for static freestanding ELF wrapper, including compiler spawn",
+    "rv32Instructions": "CJI emulator count between adjacent ecall-10 markers around one psixEncode call plus surrounding RISC-V C instructions",
+    "wasmPacked": "V8 Wasm call for preloaded state through domain checks to packed bytes in preallocated memory",
+    "jsReference": "resident JS tree through PSIX encode to newly allocated Uint8Array, V8"
+  },
+  "medians": {
+    "installation": {
+      "generateMs": 0.20533199999999852,
+      "rv32CompileMs": 1.2668909999999869,
+      "wasmCompileMs": 1.3537140000000818,
+      "wasmModuleMs": 0.03109200000005785,
+      "wasmInstantiateMs": 0.0811390000000074
+    },
+    "hot": {
+      "wasmPackedUs": 0.8537890000000061,
+      "jsReferenceUs": 6.340950999999961
+    },
+    "tracedRv32Instructions": 21496
+  }
+}
