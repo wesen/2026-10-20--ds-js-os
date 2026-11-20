@@ -1,0 +1,132 @@
+{
+  "baseline": "e339b6a",
+  "sourceSha256": {
+    "baselineSnake": "707c5d503adfa55c35ecad4618d00374cd13e80d432516d2eeb793aa6d879885",
+    "candidateSnake": "d5b1b9ef08b086c3be08e44c528b10a22b36bd01cef7ae6cf2beb872e36fd4c8",
+    "baselineCompositor": "e25a2f94fc9b53845459c27d0cddeacdd07e200ba175380f134bd2ec2418be0b",
+    "candidateCompositor": "07117cc469fefca6b0b4c493dab190ff4f6891101c207c78adb00794fdb94b52"
+  },
+  "observations": 236,
+  "recorded": 234,
+  "constructed": 2,
+  "sourceSends": 224,
+  "candidateSends": 224,
+  "sourceFrameBytes": 184831,
+  "candidateFrameBytes": 45511,
+  "recordedTraffic": {
+    "distinctConsecutiveSends": 222,
+    "oldFrameBytes": 164581,
+    "newFrameBytes": 42659
+  },
+  "fullClears": 27,
+  "changedWithoutFullClear": 197,
+  "witnesses": {
+    "move-down": {
+      "changedPixels": 363,
+      "calls": 3,
+      "fullClear": false,
+      "rects": 1
+    },
+    "paused-timer": {
+      "changedPixels": 0,
+      "calls": 0,
+      "fullClear": false,
+      "rects": 0
+    },
+    "self-collision": {
+      "changedPixels": 14102,
+      "calls": 25,
+      "fullClear": true,
+      "rects": 2
+    },
+    "restart": {
+      "changedPixels": 14690,
+      "calls": 20,
+      "fullClear": true,
+      "rects": 4
+    },
+    "enter-vacated-tail": {
+      "changedPixels": 242,
+      "calls": 2,
+      "fullClear": false,
+      "rects": 1
+    },
+    "fixture-395": {
+      "changedPixels": 11694,
+      "calls": 411,
+      "fullClear": true,
+      "rects": 3
+    }
+  },
+  "chaseBodies": [
+    [
+      204,
+      205,
+      183,
+      182
+    ],
+    [
+      182,
+      204,
+      205,
+      183
+    ]
+  ],
+  "lifecycleChecks": [
+    "return from near-full fixture",
+    "start nonadjacent sequence",
+    "skip ten intermediate frames",
+    "three replacement frames before draw",
+    "open another ordinary app",
+    "unfocused Snake replaces its retained frame",
+    "return to latest Snake frame",
+    "F1 keyboard focus moves to launcher",
+    "open Snake from launcher again",
+    "battery status and low-battery color",
+    "clock becomes valid",
+    "clock minute advances with motion",
+    "rename focused title",
+    "notification overlay during active game",
+    "motion behind notification",
+    "banner expiration uncovers board",
+    "changed hints with same board",
+    "kernel crash removes focused content",
+    "kernel restart and retained publication",
+    "dismiss restarted banner",
+    "display restarts",
+    "display notice expires",
+    "skip failed transfer and next draw",
+    "throw failed transfer and next draw",
+    "constructed length 13",
+    "constructed length 14",
+    "constructed length 255",
+    "constructed length 256",
+    "fresh frame after refusals",
+    "restart eat",
+    "restart self-collision",
+    "restart restart",
+    "restart auto-105",
+    "restart fixture-395"
+  ],
+  "malformedChecks": [
+    "unknown kind",
+    "unknown version",
+    "nonboolean alive",
+    "nonboolean auto",
+    "food past board",
+    "negative cell",
+    "fractional cell",
+    "food over segment",
+    "duplicate body",
+    "disconnected",
+    "three cells",
+    "overlong",
+    "string body",
+    "row wrap",
+    "best above permitted maximum",
+    "score mismatch",
+    "fractional best",
+    "sender mismatch",
+    "null frame"
+  ]
+}
