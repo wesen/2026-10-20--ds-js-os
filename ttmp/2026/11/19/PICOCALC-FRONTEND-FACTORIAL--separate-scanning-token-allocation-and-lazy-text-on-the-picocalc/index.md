@@ -1,7 +1,7 @@
 ---
 Title: Separate scanning, token allocation and lazy text on the PicoCalc
 Ticket: PICOCALC-FRONTEND-FACTORIAL
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T21:53:37.264419472-05:00
+LastUpdated: 2026-11-19T22:22:17.99110264-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

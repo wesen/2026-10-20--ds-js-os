@@ -204,3 +204,7 @@ Run the final commands in `README.md` against the committed measurement receipts
 ### Technical details
 
 The successful eager candidate is `treatments/cursor_reuse/typed/wasm.js`, SHA-256 `b9c3c3ee18645f0ee0f9b6461eb0406a94c4bde549a3b61e0c7fb12c11fda396`. Both firmware builds used a factory backup with SHA-256 `6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f` and returned to its original app partition.
+
+## Step 4. Publish the standalone article
+
+The vault article and figure are committed at `90d7417ca05104400ee749cfb80a687bca14f0ab`. The main ref returned the same commit from the remote after push. The project copy and guide remain with the physical evidence. [Publication receipt](../various/vault-publication.json).
