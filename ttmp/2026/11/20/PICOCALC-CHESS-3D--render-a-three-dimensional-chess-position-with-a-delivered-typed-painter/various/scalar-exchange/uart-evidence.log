@@ -1,0 +1,26 @@
+i2c0 held between transactions; reboot or flash now
+i2c0 held between transactions; reboot or flash now
+chess3d-target=pie source-bytes=7093 source-fnv=e3c9dfb8 linked-bytes=17456 linked-fnv=d5a226be
+panel: memory keys
+panel capture active
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":1095388,"relocate_us":928,"native_us":486,"raster_us":0,"image_bytes":17456}
+#END 1f17143e 4869
+{"panelCRC":"9bfb0fa8","faults":0,"windows":19,"bytes":585158,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":1,"rejects":0,"compile_us":1095388,"relocate_us":928,"native_us":486,"raster_us":18087,"image_bytes":17456}
+#END 9c72caf9 4859
+{"panelCRC":"189ed16f","faults":0,"windows":20,"bytes":587678,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":2,"calls":2,"paints":2,"rejects":0,"compile_us":1095388,"relocate_us":928,"native_us":587,"raster_us":18081,"image_bytes":17456}
+#END 39624e71 4869
+{"panelCRC":"bd8e55e7","faults":0,"windows":22,"bytes":589104,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":3,"calls":3,"paints":3,"rejects":0,"compile_us":1095388,"relocate_us":928,"native_us":592,"raster_us":18046,"image_bytes":17456}
+#END 45530d2d 4869
+{"panelCRC":"c1bf16bb","faults":0,"windows":23,"bytes":591624,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":4,"calls":4,"paints":4,"rejects":0,"compile_us":1095388,"relocate_us":928,"native_us":593,"raster_us":18058,"image_bytes":17456}
+{"panelCRC":"9eb04a4a","faults":0,"windows":25,"bytes":594752,"remaining":0}
+#END 1a5c51dc 4901
+{"sources":1,"compiles":1,"installed":true,"packets":6,"calls":6,"paints":6,"rejects":0,"compile_us":1095388,"relocate_us":928,"native_us":592,"raster_us":18158,"image_bytes":17456}
+#END 1654a030 4873
+{"panelCRC":"92b8bba6","faults":0,"windows":29,"bytes":601784,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":7,"calls":7,"paints":7,"rejects":0,"compile_us":1095388,"relocate_us":928,"native_us":588,"raster_us":18039,"image_bytes":17456}
+i2c0 held between transactions; reboot or flash now
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":1047390,"relocate_us":953,"native_us":129,"raster_us":0,"image_bytes":17456}

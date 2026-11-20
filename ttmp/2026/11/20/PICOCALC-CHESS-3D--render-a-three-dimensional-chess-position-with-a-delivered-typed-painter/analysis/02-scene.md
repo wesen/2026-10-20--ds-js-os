@@ -76,6 +76,14 @@ The key commands ran through the ordinary Chess focus and key handling, using th
 
 Raster replay took about 18 ms in all three observed frames. SPI busy time changed when the compositor could send small regions for the two cursor moves. The e3 movement sent 1,448 SPI bytes in its window and f3 sent 2,531. The rasterizer still walked the full triangle stream. This explains why most of the warm CPU cost survives a small display update. The SPI column is the controller's aggregate busy time over an observation window with an explicit settle period. Measuring key-to-display latency would require a timestamp spanning the input event and the last applicable transaction.
 
+## White plays e2–e4 and Black replies b8–c6
+
+The next handheld run tested an actual opening exchange. Enter selected the white pawn on e2. The legal destinations appeared on e3 and e4. Two Up presses moved the cursor to e4, and a second Enter moved the pawn. The runner captured the resulting position while the engine searched. Black advanced the knight from b8 to c6. A final Right press moved the cursor to f4 so the comparison used the same view as the host replay.
+
+![PicoCalc frame captures before selection, after selection, after e2–e4 and after b8–c6](../various/scalar-exchange/opening-exchange.png)
+
+The reference came from the original game's independent host replay. The pawn vacated e2 and appeared on e4. The black knight later vacated b8 and appeared on c6. The host last-move fields agreed with those two pairs. All six handheld checkpoints matched the full 190,720-byte app region predicted from those states. The CRC-32 of completed SPI pixels was `9eb04a4a` after White and `92b8bba6` after Black. There was one painter compile over the exchange, seven paint calls and zero rejects. This tested one opening exchange with instrumented keys. A separate 3D build with the ordinary keyboard driver and stock compiler is available for a physical play session. [Play receipt](../various/scalar-exchange/receipt.json) · [Reference cells](../various/scalar-exchange/reference.json)
+
 ## What changes when the compiler can emit PIE?
 
 PIE is the ESP32-P4's packed integer extension. One of its instructions can perform arithmetic on several small integer lanes together. The separate compiler study's kernel supplies eight independent projection inputs at a time. It establishes that the hardware and the experimental compiler can execute a supported vector loop. The scalar Chess painter instead calls its point projector one vertex at a time and interleaves the results with command emission and piece selection. Enabling the experimental target therefore gives the compiler zero eligible loops in this program.

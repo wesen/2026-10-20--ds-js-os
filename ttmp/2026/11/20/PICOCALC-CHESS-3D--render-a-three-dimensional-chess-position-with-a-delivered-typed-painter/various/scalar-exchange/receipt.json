@@ -1,0 +1,411 @@
+{
+  "firmware": "640681d10c0ad6fe6a8578f0cb042c5a10a6ac9c150b2067df5fcd59b36b6561",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "release": "75c94df7b1aa565c8cb7858bea628aa2c9c644ef64cc885b96e1d80088f8af56",
+  "input": "instrumented keyboard register",
+  "screens": {
+    "e2": {
+      "crc32": "1f17143e",
+      "sha256": "0924b9a1b0e3525bb2df658efd9ec45b532bf0c9eee7d03cf48f6a478c574870",
+      "appSha256": "3dc29499e4a6c93f74f2348e8d62b8bbebc2a8a7e5e2d320e6f312d7967fe271",
+      "panel": {
+        "panelCRC": "9bfb0fa8",
+        "faults": 0,
+        "windows": 19,
+        "bytes": 585158,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 1,
+        "calls": 1,
+        "paints": 1,
+        "rejects": 0,
+        "compile_us": 1095388,
+        "relocate_us": 928,
+        "native_us": 486,
+        "raster_us": 18087,
+        "image_bytes": 17456
+      },
+      "spi2": {
+        "busyMs": 54.52,
+        "transfers": 16,
+        "bytes": 225146,
+        "errors": 0
+      },
+      "hostWindowMs": 1929.8,
+      "worldDelta": {
+        "chess": {
+          "turns": 1,
+          "cpu_ms": 0.326,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 12,
+          "cpu_ms": 103.849,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 2,
+          "cpu_ms": 12.446,
+          "restarts": 0
+        },
+        "keyboard": {
+          "turns": 55,
+          "cpu_ms": 70.529,
+          "restarts": 0
+        }
+      },
+      "panelCheckBeforeShot": false,
+      "bodySha256": "c08ea4e10d30e95ad58e664acdecf8d3067f3fde80bbbdd4afe8249170ad82f5",
+      "hintSha256": "cd9af8bff7b3fbef7059e58560dbadbefff3115924772a93aece45dcc466a64f"
+    },
+    "selected": {
+      "crc32": "9c72caf9",
+      "sha256": "f7a0e4a4c3e0341967db1251c0c46d157ad810605fb03e279288bffa51521d7c",
+      "appSha256": "97d3d41bc2eca33e97f1f5263e0fde511665e6aefc4350884127c663b1454db2",
+      "panel": {
+        "panelCRC": "189ed16f",
+        "faults": 0,
+        "windows": 20,
+        "bytes": 587678,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 2,
+        "calls": 2,
+        "paints": 2,
+        "rejects": 0,
+        "compile_us": 1095388,
+        "relocate_us": 928,
+        "native_us": 587,
+        "raster_us": 18081,
+        "image_bytes": 17456
+      },
+      "spi2": {
+        "busyMs": 1.67,
+        "transfers": 4,
+        "bytes": 2531,
+        "errors": 0
+      },
+      "hostWindowMs": 1925.42,
+      "worldDelta": {
+        "chess": {
+          "turns": 1,
+          "cpu_ms": 0.776,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 10,
+          "cpu_ms": 61.047,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 1,
+          "cpu_ms": 4.223,
+          "restarts": 0
+        },
+        "keyboard": {
+          "turns": 54,
+          "cpu_ms": 67.872,
+          "restarts": 0
+        }
+      },
+      "panelCheckBeforeShot": false,
+      "bodySha256": "f0ecfd31104cfed0ab7a35621b464ac1674e3906f1a965b690bfd16fa6cdad9c",
+      "hintSha256": "cd9af8bff7b3fbef7059e58560dbadbefff3115924772a93aece45dcc466a64f"
+    },
+    "e3-ready": {
+      "crc32": "39624e71",
+      "sha256": "0705bf760bce2d45aa05fc7efcdb18e3964c7f6b42af594c9ab8fd00ec5be847",
+      "appSha256": "ce2e0253f3667c393b9dc76c7866e73c1cd5026db16f280c5d99c314e8ce75b0",
+      "panel": {
+        "panelCRC": "bd8e55e7",
+        "faults": 0,
+        "windows": 22,
+        "bytes": 589104,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 3,
+        "calls": 3,
+        "paints": 3,
+        "rejects": 0,
+        "compile_us": 1095388,
+        "relocate_us": 928,
+        "native_us": 592,
+        "raster_us": 18046,
+        "image_bytes": 17456
+      },
+      "spi2": {
+        "busyMs": 1.7,
+        "transfers": 8,
+        "bytes": 1448,
+        "errors": 0
+      },
+      "hostWindowMs": 1934.98,
+      "worldDelta": {
+        "chess": {
+          "turns": 1,
+          "cpu_ms": 0.803,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 11,
+          "cpu_ms": 61.315,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 1,
+          "cpu_ms": 4.664,
+          "restarts": 0
+        },
+        "keyboard": {
+          "turns": 56,
+          "cpu_ms": 72.714,
+          "restarts": 0
+        }
+      },
+      "panelCheckBeforeShot": false,
+      "bodySha256": "e465556fd05e30179d25638498753ea20af452cdf3d2bef7c0bdd9b6809a33e0",
+      "hintSha256": "cd9af8bff7b3fbef7059e58560dbadbefff3115924772a93aece45dcc466a64f"
+    },
+    "e4-ready": {
+      "crc32": "45530d2d",
+      "sha256": "f0f041dfc1de93aca5234a2b4c0abd9177f90a15141add8d291a10345e2ca2b9",
+      "appSha256": "fc48220d3bae6fd5ef3a278e688fda7d122ffe61ae0502b8f185a63667cd410e",
+      "panel": {
+        "panelCRC": "c1bf16bb",
+        "faults": 0,
+        "windows": 23,
+        "bytes": 591624,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 4,
+        "calls": 4,
+        "paints": 4,
+        "rejects": 0,
+        "compile_us": 1095388,
+        "relocate_us": 928,
+        "native_us": 593,
+        "raster_us": 18058,
+        "image_bytes": 17456
+      },
+      "spi2": {
+        "busyMs": 1.37,
+        "transfers": 4,
+        "bytes": 2531,
+        "errors": 0
+      },
+      "hostWindowMs": 1926.17,
+      "worldDelta": {
+        "chess": {
+          "turns": 1,
+          "cpu_ms": 0.752,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 10,
+          "cpu_ms": 60.471,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 1,
+          "cpu_ms": 3.717,
+          "restarts": 0
+        },
+        "keyboard": {
+          "turns": 55,
+          "cpu_ms": 66.708,
+          "restarts": 0
+        }
+      },
+      "panelCheckBeforeShot": false,
+      "bodySha256": "2f632f79103bca79078495b14d42304509715a0ae7aaff85aeb073c64b1dba27",
+      "hintSha256": "cd9af8bff7b3fbef7059e58560dbadbefff3115924772a93aece45dcc466a64f"
+    },
+    "white": {
+      "crc32": "1a5c51dc",
+      "sha256": "1c67265fe83b5d86d3b86abbe7b0ff8a3e3b3a8cc05a04709e3f2df7c15f53dc",
+      "appSha256": "6387b1cc754421f5a060c5d29fca16ccd569bec9065dcd7cd56e1bd78bd8e18f",
+      "panel": {
+        "panelCRC": "9eb04a4a",
+        "faults": 0,
+        "windows": 25,
+        "bytes": 594752,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 6,
+        "calls": 6,
+        "paints": 6,
+        "rejects": 0,
+        "compile_us": 1095388,
+        "relocate_us": 928,
+        "native_us": 592,
+        "raster_us": 18158,
+        "image_bytes": 17456
+      },
+      "spi2": {
+        "busyMs": 6.46,
+        "transfers": 20,
+        "bytes": 7915,
+        "errors": 0
+      },
+      "hostWindowMs": 4543.57,
+      "worldDelta": {
+        "chess": {
+          "turns": 1,
+          "cpu_ms": 246.706,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 21,
+          "cpu_ms": 122.814,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 2,
+          "cpu_ms": 11.392,
+          "restarts": 0
+        },
+        "keyboard": {
+          "turns": 185,
+          "cpu_ms": 226.61,
+          "restarts": 0
+        }
+      },
+      "panelCheckBeforeShot": true,
+      "bodySha256": "8112c7150628a749a68604b642baf3dff8f9c708dd8b9eaee4ff1a3a9864cbeb",
+      "hintSha256": "cd9af8bff7b3fbef7059e58560dbadbefff3115924772a93aece45dcc466a64f"
+    },
+    "reply": {
+      "crc32": "1654a030",
+      "sha256": "cd74f272db2bf1e276aca278d699c363b6984744508e69140bb455474fb83e83",
+      "appSha256": "71bac8b42386f91f6272ef8c99229bf3083df2663cdbfb4b69612cf39a348f7d",
+      "panel": {
+        "panelCRC": "92b8bba6",
+        "faults": 0,
+        "windows": 29,
+        "bytes": 601784,
+        "remaining": 0
+      },
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 7,
+        "calls": 7,
+        "paints": 7,
+        "rejects": 0,
+        "compile_us": 1095388,
+        "relocate_us": 928,
+        "native_us": 588,
+        "raster_us": 18039,
+        "image_bytes": 17456
+      },
+      "spi2": {
+        "busyMs": 1.65,
+        "transfers": 4,
+        "bytes": 2311,
+        "errors": 0
+      },
+      "hostWindowMs": 1914.57,
+      "worldDelta": {
+        "chess": {
+          "turns": 1,
+          "cpu_ms": 0.279,
+          "restarts": 0
+        },
+        "compositor": {
+          "turns": 11,
+          "cpu_ms": 61.052,
+          "restarts": 0
+        },
+        "display": {
+          "turns": 1,
+          "cpu_ms": 3.683,
+          "restarts": 0
+        },
+        "keyboard": {
+          "turns": 53,
+          "cpu_ms": 68.208,
+          "restarts": 0
+        }
+      },
+      "panelCheckBeforeShot": false,
+      "bodySha256": "a47698d265dac3d2534e123859076419d514df264a923b3798c74e5f821f99bf",
+      "hintSha256": "cd9af8bff7b3fbef7059e58560dbadbefff3115924772a93aece45dcc466a64f"
+    }
+  },
+  "releasePreflight": true,
+  "candidateVerified": true,
+  "bootPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1095388,
+    "relocate_us": 928,
+    "native_us": 486,
+    "raster_us": 0,
+    "image_bytes": 17456
+  },
+  "compiled": {
+    "match": true,
+    "sourceSha256": "d6c2dc3a6858dbf1571409a534f63c27d0d5ab116dd466fafbd7701fca7a81a4",
+    "linkedScalarHostSha256": "16b7207ce9d5c19eb89115e6f9e4cbe53279a1c9936f3578a957eaf83b01ca28",
+    "uartFields": [
+      [
+        "7093",
+        "e3c9dfb8",
+        "17456",
+        "d5a226be"
+      ]
+    ]
+  },
+  "qualified": true,
+  "restoreReadback": true,
+  "restoredWorlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1047390,
+    "relocate_us": 953,
+    "native_us": 129,
+    "raster_us": 0,
+    "image_bytes": 17456
+  }
+}

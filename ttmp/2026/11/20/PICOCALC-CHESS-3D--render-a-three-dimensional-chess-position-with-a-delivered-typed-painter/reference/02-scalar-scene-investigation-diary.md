@@ -159,3 +159,51 @@ Begin with the [physical receipt](../various/scalar-device/receipt.json) and [di
 ### Technical details
 
 The final observed app SHA-256 was `16e45761b46f75a5b3c98b9c67920efac483b1fe73863427aea7bc6d50247e24`. The partition SHA-256 was `72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30`. The clean tree eventually completed, but the measurements identify the warm-path image by its own separately recorded digest.
+
+## Step 4. Play a real opening exchange and prepare a normal-keyboard 3D build
+
+The cursor checkpoints did not exercise the game search. I used the same fixed camera and Typed source to play e2–e4 and wait for Black's engine reply. The six checkpoints covered the opening, selection, the cursor on e3 and e4, White's move and Black's reply. The exact prediction for each frame came from the earlier real host-game trace and the independent reference raster.
+
+### Prompt context
+
+The user asked whether the 3D prototype was playable. I interpreted this as exercising both the normal move path and the unmodified AI on the handheld. The director requested a separate ordinary image with the hardware keyboard path available.
+
+### What I did
+
+I prepared the archived clean scalar build because the earlier warm tree had been repurposed for the packed tests. The source, staged triangle raster and generated Chess unit matched the first trial by SHA-256. I extended `device.py` with an exchange mode and added `exchange-refs.py` to select six named states from the real host replay. For the transient white frame, the runner requested the panel CRC before copying the framebuffer so both observations could occur during Black's search. It moved the cursor Right after the reply to match the final host comparison's f4 cursor.
+
+### Why
+
+The actual engine can publish its next position during UART screenshot transport. A panel query after that transfer would observe Black's reply instead of the white position in the captured image. The console copies the framebuffer immediately and encodes it in a separate task. Taking the panel checksum first lets the proof cover each step independently.
+
+### What worked
+
+The panel CRC matched the independently generated app pixels in all six cases. White e2–e4 was `9eb04a4a` and Black b8–c6 was `92b8bba6`. The full 190,720-byte app area also matched for each frame. The receiver compiled once and reached seven calls and seven paints after sending Right, with zero rejects or world restarts. White's screenshot showed the transient white position even though the later native counters already included the engine's reply.
+
+### What didn't work
+
+The warm staging tree from the first scalar run had been reused for the packed variant. Its firmware hash differed from the first scalar receipt. I used the separately completed clean scalar image, verified its original source and IR input identities, and copied its observed app and manifest before recycling the build cache.
+
+### What I learned
+
+Highlight colors make the selected e2 pawn and both legal destinations observable. The movement proof comes from the complete frame matched against the expected board cells, including the black knight shifting off its back rank and the move highlights moving to b8 and c6. This qualifies an opening exchange through the existing keyboard and compositor event path with the instrumented key-status source.
+
+### What was tricky to build
+
+The final reply reference from the original host scenario has the cursor on f4. The engine's b8–c6 move itself leaves the cursor at e4. The final Right key shifts only the cursor, and the reference verifies the complete state with both moves already applied. The display's assistive keys use the same focus router and Chess event handler as the ordinary keyboard path.
+
+### What warrants a second pair of eyes
+
+Confirm the short-lived White framebuffer compares to the panel receipt captured immediately beforehand, independent of the counters read after serial encoding. The six raw frames and the reference checksum JSON are retained separately.
+
+### What should be done in the future
+
+The normal-keyboard build is suitable for a separate hands-on play session. The 3D opening test covers one White move and one engine response at the fixed pitch. A longer play session can assess usability and moving cameras with their own physical receipts.
+
+### Code review instructions
+
+Run the same host replay and use `exchange-refs.py` on the rendered poses. Compare each app digest to the [handheld receipt](../various/scalar-exchange/receipt.json) and view the [four illustrated checkpoints](../various/scalar-exchange/opening-exchange.png). Build the ordinary image using the `ordinary` profile in the design guide.
+
+### Technical details
+
+The observed app for this run was SHA-256 `640681d10c0ad6fe6a8578f0cb042c5a10a6ac9c150b2067df5fcd59b36b6561`. The prepared unobserved image at `/tmp/mobile-chess3d-playable/build` was `10cebcca1354be4a40e65aa9083126c6de003e24e533147bf105e0bcc9610a0e`. Its bus driver, console and RV32 compiler sources matched the stock checkout exactly. Its painter source, triangle raster and combined Chess unit matched the observed image, and a host relink with its ELF slot matched the earlier scalar linked ELF byte for byte.

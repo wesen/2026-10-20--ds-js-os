@@ -1,0 +1,266 @@
+{
+  "source": {
+    "cji/src/prelude-exports.js": {
+      "bytes": 3230,
+      "sha256": "3563ac29591adf915ed49c046b082df01fbb1b2123bc5559eb5f25d2c564ca0c"
+    },
+    "cji/src/world-native.js": {
+      "bytes": 34575,
+      "sha256": "4445f2534260c8e2cf9b43c7a357d2c5b2121e8f39dacf32352a7a03f1f751f0"
+    },
+    "picocalc-os/compiler/mobile-painter.js": {
+      "bytes": 520,
+      "sha256": "0de2e9f37f7cd66901b6e9d56cd83fa39c0c656924d2bf389db90b78ee7099e1"
+    },
+    "picocalc-os/compiler/typed-async.js": {
+      "bytes": 49588,
+      "sha256": "7a0524cf89f6f3766cb8b265146d41975eae91a11f34fecacf19e09c922b9f17"
+    },
+    "picocalc-os/compiler/typed-rv32.js": {
+      "bytes": 16076,
+      "sha256": "d0eccd4947215329cfcf676bbab5efebb42f66fde3e3bb81db9b8f772782c1d5"
+    },
+    "picocalc-os/compiler/typed-wasm.js": {
+      "bytes": 54330,
+      "sha256": "d6dc04692d29596a43b6c15414745023aaa8fa4280353a434b8820e65dab9a0b"
+    },
+    "picocalc-os/compiler/typed-world.js": {
+      "bytes": 4128,
+      "sha256": "bdd2a9606eb8bda5c3cfe481aaca94fbb2e63178f334eb9074ce7f36dfa33978"
+    },
+    "picocalc-os/js/system/compositor.js": {
+      "bytes": 28964,
+      "sha256": "1be004c50035f4cc0d8f7227735558a93806e642efafe9d7416fa8cfa406e92e"
+    },
+    "picocalc-os/nucleus/kernel.c": {
+      "bytes": 51087,
+      "sha256": "73999b5b86d5f3d2c8228f61759cd4c4bf942e8f80080882a35a30888ff8dcec"
+    },
+    "picocalc-os/nucleus/mobile_painter.h": {
+      "bytes": 887,
+      "sha256": "6c4db9238149ab5b0a23a52af96afe89cd1b148944957e4154f37bf714fc5d88"
+    },
+    "picocalc-os/nucleus/native.c": {
+      "bytes": 38681,
+      "sha256": "0122482b45eee42678b4269ff5b60fa34c86bf6e424d4eddeff8f3b88ee18193"
+    },
+    "picocalc-os/nucleus/nucleus.h": {
+      "bytes": 33425,
+      "sha256": "3ce4cb1b927758118a37e90b9bed35e95a8149eaa36f4bb1ab4b3cc67c78d00d"
+    },
+    "picocalc-os/nucleus/painter_commands.c": {
+      "bytes": 3712,
+      "sha256": "1a82a9ba799f1736bad2947e6da8dcf8c6cba287e89abe27801e50a2b6527303"
+    },
+    "picocalc-os/nucleus/painter_commands.h": {
+      "bytes": 482,
+      "sha256": "ba6a547ce7e806912810bf26807be43cd34281ccc5c9b013497bdde69e7bd504"
+    },
+    "picocalc-os/port/esp32p4/CMakeLists.txt": {
+      "bytes": 4302,
+      "sha256": "9a2e78aa4e291abb98d90aeb0ef0c9bd2894ea237a1f5102d58193139ba8d442"
+    },
+    "picocalc-os/port/esp32p4/main/CMakeLists.txt": {
+      "bytes": 28529,
+      "sha256": "b412a0053dccfa03bfb73a048de0aa94d747a537e33306ad924b126186d3cabf"
+    },
+    "picocalc-os/port/esp32p4/main/agenda_p4.c": {
+      "bytes": 8889,
+      "sha256": "2ae0cd71e25b3c3389704d14328bdafb14d268707c0cfd22329450b98aa8134a"
+    },
+    "picocalc-os/port/esp32p4/main/agent_p4.c": {
+      "bytes": 30039,
+      "sha256": "1b221d5747ef48b7c53a75dcd62ec181b4b24aeec274c6a0e9d8ec475218f8a6"
+    },
+    "picocalc-os/port/esp32p4/main/bus_p4.c": {
+      "bytes": 15964,
+      "sha256": "87ee52474d066066695a9b1dfc4d91d157ccc1e949a7570947e53393608dae6d"
+    },
+    "picocalc-os/port/esp32p4/main/chess_p4.c": {
+      "bytes": 991,
+      "sha256": "29a9cac799706f2ecfe421bf7b382b51c1accd1fa18eee27a76663ff5c85cdbe"
+    },
+    "picocalc-os/port/esp32p4/main/editor_p4.c": {
+      "bytes": 998,
+      "sha256": "81cb70e8a9d975bc4d1f41b203949a3093250738ea34eb5f9cc5770bcca6627e"
+    },
+    "picocalc-os/port/esp32p4/main/files_p4.c": {
+      "bytes": 882,
+      "sha256": "9fc7e53e7fb465e94a572a039b8c5c847e9a231cb2dff70bbdb8c6ec5b1eec09"
+    },
+    "picocalc-os/port/esp32p4/main/fs_p4.c": {
+      "bytes": 6457,
+      "sha256": "8c2117f9eea34986b47b26bcb618bc180790c153e1a7a2bdef3a0006d1667f03"
+    },
+    "picocalc-os/port/esp32p4/main/main_p4.c": {
+      "bytes": 13362,
+      "sha256": "f89dd1942393c8cd5780aabc68895872169b3e608db37f4081f99a26809f9f2e"
+    },
+    "picocalc-os/port/esp32p4/main/mobile_painter_p4.c": {
+      "bytes": 3923,
+      "sha256": "b32886fac625721f25be8a574ba8be63d0bb44cb8f0175c91785d6800509876c"
+    },
+    "picocalc-os/port/esp32p4/main/mobile_painter_p4.h": {
+      "bytes": 1196,
+      "sha256": "a8a23e0b8f4a47da2ed186e9498df8fb6b2da5d5707eec3dfd94847242d5a563"
+    },
+    "picocalc-os/port/esp32p4/main/mobile_painter_slot.S": {
+      "bytes": 487,
+      "sha256": "e3dfe091b35dd94b9e3c48ae5a69389412233bb2a2f9105a1cae02c13960340a"
+    },
+    "picocalc-os/port/esp32p4/main/mobile_painter_slot.c": {
+      "bytes": 434,
+      "sha256": "183022e8a7fad1d69a61dad82b2e668be644afcd918429ea6ededa98d84ea3de"
+    },
+    "picocalc-os/port/esp32p4/main/p4.h": {
+      "bytes": 3560,
+      "sha256": "19cb31c7d91328a75347887b0e5bd6adbd348146606c0828b50a6b3e2a500597"
+    },
+    "picocalc-os/port/esp32p4/main/painter_service.c": {
+      "bytes": 5937,
+      "sha256": "c6fdc2bf7ec3970a7f612c07358777d54cec15586f11770ebf0415a0cea1b54e"
+    },
+    "picocalc-os/port/esp32p4/main/painter_service.h": {
+      "bytes": 270,
+      "sha256": "a3ac9fb849555b81704e800fe9f861095f27aa7c8cd06499523416d040b792b7"
+    },
+    "picocalc-os/port/esp32p4/main/perf_p4.c": {
+      "bytes": 10006,
+      "sha256": "3e30f825b58d88152c868ddb4ff63fbc7a9c18307329ea7f69982b81db3c5be1"
+    },
+    "picocalc-os/port/esp32p4/main/port_p4.c": {
+      "bytes": 6078,
+      "sha256": "50ec7515888ba0c3bbd59b59ba1c881203ec22f2271ec5c3fde601d9beadb2ce"
+    },
+    "picocalc-os/port/esp32p4/main/store_p4.c": {
+      "bytes": 3609,
+      "sha256": "5aa3bc92dc7c7c07ae76a2de7dd47fe656fc3d357fcec84629f972551fc1a097"
+    },
+    "picocalc-os/port/esp32p4/main/typed_p4.c": {
+      "bytes": 5888,
+      "sha256": "15b2385101b6babb3be5f2c281fc6191c2ef55c928efce624feb8b9582aa4192"
+    },
+    "picocalc-os/sdk/nw.h": {
+      "bytes": 6458,
+      "sha256": "f15dd6f0f7d7a7bc3840bf40faf39c893d356e20913cc04d046bf1fb03dce986"
+    },
+    "picocalc-os/sdk/nw_calls.inc": {
+      "bytes": 5569,
+      "sha256": "ba2f0a158f6d30d91d8a994ae94a276a63929e4c73d017315ea75a1e96c075a8"
+    },
+    "picocalc-os/sdk/nw_elf.h": {
+      "bytes": 1625,
+      "sha256": "1cf436cfd43401c181cc9b0401d585c52f6fc817db0cf3db93e300ae05e5955d"
+    },
+    "picocalc-os/sdk/nw_json.h": {
+      "bytes": 5383,
+      "sha256": "0adeaa4e8e06ff22f6d6fc57aeb1ff1f2998555ad26b4dfaf08d221bf6d22d9d"
+    },
+    "picocalc-os/sdk/nw_ui.h": {
+      "bytes": 3371,
+      "sha256": "b8c81ff1727d39c3d39ae3da4a7227149a22bf00509b25e9bb6a564ce1e329bd"
+    },
+    "picocalc-os/sdk/nw_utf16.h": {
+      "bytes": 1553,
+      "sha256": "7b5b891b908b484b9cd60747926d37864b54819ad4a96431370ced6ac6323d67"
+    },
+    "picocalc-os/sdk/nw_wire.h": {
+      "bytes": 2304,
+      "sha256": "142e17e4b09a473cb958a74b816201e7934cbae6f3533e2efe3721351584ced0"
+    },
+    "picocalc-os/sdk/typed/chess-psix.c": {
+      "bytes": 8628,
+      "sha256": "90466845245e1ef5c894e23c43bb0631a8b225ffbc226c9b01c527d159ded0d8"
+    },
+    "picocalc-os/sdk/typed/chess-psix.h": {
+      "bytes": 437,
+      "sha256": "a1813b62bde167072755b673d3b9fab9834b0c8fe496074118117c1ea86b4d06"
+    },
+    "picocalc-os/sdk/typed/rv32-slot.S": {
+      "bytes": 1229,
+      "sha256": "20e0527343031cd147f9508f624aaaa38a2051624a6bcbd6073c1b7e6255778a"
+    },
+    "picocalc-os/sdk/typed/wasm-slot.c": {
+      "bytes": 236,
+      "sha256": "4a1f0b13af450ada35b09ef938814f925760ff5063cc5410654f925a6a20b613"
+    },
+    "picocalc-os/sdk/typed/world.c": {
+      "bytes": 20294,
+      "sha256": "a0252046c92b7db4777dbe89bb65b164cb3008441366708d65c8d4b7aadeab66"
+    },
+    "picocalc-os/tools/embed-chess-painter.py": {
+      "bytes": 989,
+      "sha256": "d273e3af5a67f4b2006a699b78c04b1f0c86c9d014dde8b8baf074c7400f6125"
+    },
+    "picocalc-os/worlds/chess/chess.typed": {
+      "bytes": 8837,
+      "sha256": "1e7977136d2fd7f7e963de80ee8903df197b4264832ec84296bfbcc69fc8de73"
+    },
+    "picocalc-os/worlds/chess/mobile-view.typed": {
+      "bytes": 2605,
+      "sha256": "05802c207df49c34800ab7afc85ee23c8007c54d58d8a5d5a0bd7b821069d0a3"
+    },
+    "picocalc-os/worlds/chess/moves.typed": {
+      "bytes": 6451,
+      "sha256": "ce27a2d61f57b8b1832b7c65b683d4b903f70e3d804c8efa2c44c89d3483d608"
+    },
+    "picocalc-os/worlds/chess/painter.typed": {
+      "bytes": 7093,
+      "sha256": "d6c2dc3a6858dbf1571409a534f63c27d0d5ab116dd466fafbd7701fca7a81a4"
+    },
+    "picocalc-os/worlds/chess/position.typed": {
+      "bytes": 7335,
+      "sha256": "6378b078de2bebda4f396463b66e81898fdbeb4210f191a796e2b352f390d295"
+    },
+    "picocalc-os/worlds/chess/search.typed": {
+      "bytes": 11285,
+      "sha256": "9b67c4ecd115d318335a3900f56d659de397c598ce892e2f22142d3c3c1e23dc"
+    },
+    "picocalc-os/worlds/chess/source.list": {
+      "bytes": 75,
+      "sha256": "9fd1ab6e83c0253779f651a2e3fa1e428151dd0b3f4861930c95ce9a6eec2eb6"
+    },
+    "picocalc-os/worlds/chess/state.typed": {
+      "bytes": 432,
+      "sha256": "a785237a76bc4ab2084654fa8a2d00d9b7c21420d12ac8fab37f6b3b52807d20"
+    },
+    "picocalc-os/worlds/chess/view.typed": {
+      "bytes": 6739,
+      "sha256": "8762c96e3fb8a46197d5fa6dd7cd4d3c1288af0bb2afc80e7e3e7be503844314"
+    }
+  },
+  "products": {
+    "cji/unit.list": {
+      "bytes": 8864,
+      "sha256": "381a6aca0b5bcc610092c1b8372d4b77baacf8910d391b5e4286029f86041745"
+    },
+    "esp-idf/main/chess.typed": {
+      "bytes": 51241,
+      "sha256": "b19b5c000aebb42e56e64cc646af5ff027505c10e2948ecb18e5fc80ea84b015"
+    },
+    "esp-idf/main/mobile-painter-slot.elf": {
+      "bytes": 17456,
+      "sha256": "794210c4cb1b202c2ca318404b5fd17d0b397f5ea5465f95597a240894bc5362"
+    },
+    "esp-idf/main/natives/compositor.elf": {
+      "bytes": 282032,
+      "sha256": "82cbe2c37a690054e4737f2cd46f618b5888ef800cdad00b7a3817b374d3c4af"
+    },
+    "esp-idf/main/system.typed-agenda.json": {
+      "bytes": 3426,
+      "sha256": "7cffe74595cccac97d39793cbe7fabdd48e83e6aaac4888f3e31dabbc1855ed2"
+    },
+    "esp-idf/main/typed-world-reactor.elf": {
+      "bytes": 242124,
+      "sha256": "386a56b9e2ae4ff3e3bfb8f431ba315d5fb415b6ba29360b04e7d7e611c3837b"
+    },
+    "partition_table/partition-table.bin": {
+      "bytes": 3072,
+      "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
+    },
+    "picocalc-os-p4.bin": {
+      "bytes": 4256944,
+      "sha256": "10cebcca1354be4a40e65aa9083126c6de003e24e533147bf105e0bcc9610a0e"
+    }
+  }
+}

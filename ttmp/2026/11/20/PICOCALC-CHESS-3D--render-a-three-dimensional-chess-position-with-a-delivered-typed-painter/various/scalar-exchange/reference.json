@@ -1,0 +1,116 @@
+{
+  "e2": {
+    "frameIndex": 0,
+    "board": "cabdebac99999999000000000000000000000000000000001111111142356324",
+    "legalMasks": "0000000000000000",
+    "fields": [
+      52,
+      64,
+      64,
+      64,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "pixelBytes": 190720,
+    "crc32": "9bfb0fa8",
+    "appSha256": "3dc29499e4a6c93f74f2348e8d62b8bbebc2a8a7e5e2d320e6f312d7967fe271"
+  },
+  "selected": {
+    "frameIndex": 7,
+    "board": "cabdebac99999999000000000000000000000000000000001111111142356324",
+    "legalMasks": "0000000010100000",
+    "fields": [
+      52,
+      52,
+      64,
+      64,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "pixelBytes": 190720,
+    "crc32": "189ed16f",
+    "appSha256": "97d3d41bc2eca33e97f1f5263e0fde511665e6aefc4350884127c663b1454db2"
+  },
+  "e3-ready": {
+    "frameIndex": 8,
+    "board": "cabdebac99999999000000000000000000000000000000001111111142356324",
+    "legalMasks": "0000000010100000",
+    "fields": [
+      44,
+      52,
+      64,
+      64,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "pixelBytes": 190720,
+    "crc32": "bd8e55e7",
+    "appSha256": "ce2e0253f3667c393b9dc76c7866e73c1cd5026db16f280c5d99c314e8ce75b0"
+  },
+  "e4-ready": {
+    "frameIndex": 9,
+    "board": "cabdebac99999999000000000000000000000000000000001111111142356324",
+    "legalMasks": "0000000010100000",
+    "fields": [
+      36,
+      52,
+      64,
+      64,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "pixelBytes": 190720,
+    "crc32": "c1bf16bb",
+    "appSha256": "fc48220d3bae6fd5ef3a278e688fda7d122ffe61ae0502b8f185a63667cd410e"
+  },
+  "white": {
+    "frameIndex": 10,
+    "board": "cabdebac99999999000000000000000000001000000000001111011142356324",
+    "legalMasks": "0000000000000000",
+    "fields": [
+      36,
+      64,
+      52,
+      36,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    "pixelBytes": 190720,
+    "crc32": "9eb04a4a",
+    "appSha256": "6387b1cc754421f5a060c5d29fca16ccd569bec9065dcd7cd56e1bd78bd8e18f"
+  },
+  "reply": {
+    "frameIndex": 12,
+    "board": "c0bdebac9999999900a000000000000000001000000000001111011142356324",
+    "legalMasks": "0000000000000000",
+    "fields": [
+      37,
+      64,
+      1,
+      18,
+      0,
+      0,
+      3,
+      1600,
+      12
+    ],
+    "pixelBytes": 190720,
+    "crc32": "92b8bba6",
+    "appSha256": "71bac8b42386f91f6272ef8c99229bf3083df2663cdbfb4b69612cf39a348f7d"
+  }
+}
