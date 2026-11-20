@@ -1,7 +1,7 @@
 ---
 Title: Proving a text index safe in a streaming compiler
 Ticket: PICOCALC-BOUNDED-INDEX
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native

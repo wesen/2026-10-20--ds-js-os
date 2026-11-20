@@ -6,4 +6,4 @@
 - [x] Measure actual executed read checks in the 64 KiB Editor preview.
 - [x] Measure cold compile and native guest execution on the ESP32-P4.
 - [x] Publish the intern guide and investigation diary in the ticket and deliver the guide to reMarkable.
-- [ ] Publish the standalone vault article.
+- [x] Publish the standalone vault article.

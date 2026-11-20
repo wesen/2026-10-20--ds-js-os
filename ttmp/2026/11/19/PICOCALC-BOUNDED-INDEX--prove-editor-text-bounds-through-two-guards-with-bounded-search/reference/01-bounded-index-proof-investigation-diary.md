@@ -1,7 +1,7 @@
 ---
 Title: Bounded index proof investigation diary
 Ticket: PICOCALC-BOUNDED-INDEX
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -223,3 +223,53 @@ Compare `various/physical-summary.json` to `various/physical.json` and read the 
 ### Technical details
 
 The standard reserved Editor ELF is 240,452 bytes. In that reservation bounded proof changes the occupied native image by four words.
+
+## Step 5. Deliver the guide and verify the standalone publication
+
+The finished guide contains both the full-preview native check counts and the clocked on-device copy trial. The guide was accepted in the lab's reMarkable folder. The supervisor reviewed and published the separate vault article under the user's authorization.
+
+### Prompt context
+
+See Step 1. Project commit `c942c3e` records the physical evidence and reMarkable receipt.
+
+### What I did
+
+- Uploaded `Proving_a_Text_Index_Safe_in_a_Streaming_Compiler.pdf` to `/ai/2026/11/19/PICOCALC-COMPILER-LAB2` and retained the exact cloud acknowledgment.
+- Verified the exact article blob at `31a17a798bc08af9f3a2a0378c561fab6b0a9cbe`, its SHA-256 and its reachability from the vault's tracked remote main.
+- Recorded the stable links and closed the ticket.
+
+### Why
+
+The immutable article link and PDF acknowledgment tie each output to the completed experiments.
+
+### What worked
+
+Both deliveries succeeded and the article blob matches the reviewed manuscript byte for byte. [Published article](https://github.com/go-go-golems/go-go-parc/blob/31a17a798bc08af9f3a2a0378c561fab6b0a9cbe/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Two%20Guards%20Can%20Prove%20a%20Text%20Read%20Safe.md).
+
+### What did not work
+
+The completed delivery checks reported no failure.
+
+### What I learned
+
+The article can report guest cycles and dynamic checks together when it names their distinct measurement boundaries and inputs.
+
+### What was tricky to build
+
+The copy trial feeds 65,536 UTF-16 units per pass. Each complete preview replay uses a 65,536-byte Markdown document. The article keeps both units explicit.
+
+### What warrants a second pair of eyes
+
+Verify the date, destination and exact article revision in the two delivery receipts.
+
+### What should be done in the future
+
+No publication follow-up remains.
+
+### Code review instructions
+
+Read `various/vault-publication.json` and `various/remarkable-delivery.json` alongside the completed guide.
+
+### Technical details
+
+The reMarkable receipt verifies cloud delivery. The vault receipt identifies the externally published Git blob.

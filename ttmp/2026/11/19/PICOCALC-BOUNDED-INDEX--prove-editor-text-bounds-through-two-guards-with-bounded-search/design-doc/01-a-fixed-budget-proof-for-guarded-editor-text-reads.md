@@ -1,7 +1,7 @@
 ---
 Title: A fixed-budget proof for guarded Editor text reads
 Ticket: PICOCALC-BOUNDED-INDEX
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native

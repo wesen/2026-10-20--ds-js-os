@@ -1,7 +1,7 @@
 ---
 Title: Prove Editor text bounds through two guards with bounded search
 Ticket: PICOCALC-BOUNDED-INDEX
-Status: active
+Status: complete
 Topics:
     - picocalc
     - native
@@ -33,3 +33,4 @@ This experiment measures whether an explicit lower guard and a two-edge upper pr
 - [Paired physical measurements](various/physical-summary.json)
 - [Physical preview copy UART summaries](various/preview-copy-captures.json)
 - [reMarkable cloud delivery](various/remarkable-delivery.json)
+- [Standalone vault article](https://github.com/go-go-golems/go-go-parc/blob/31a17a798bc08af9f3a2a0378c561fab6b0a9cbe/Projects/2026/11/19/ARTICLE%20-%20PicoCalc%20Compiler%20-%20Two%20Guards%20Can%20Prove%20a%20Text%20Read%20Safe.md)
