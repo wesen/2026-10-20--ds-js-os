@@ -1,0 +1,102 @@
+{
+  "rawRGB565": {
+    "M": 47,
+    "S": 47
+  },
+  "coldMicroseconds": {
+    "R": {
+      "installUs": {
+        "n": 12,
+        "median": 239.2920000000007,
+        "min": 220.07599999999883,
+        "max": 718.7990000000007
+      },
+      "instantiateUs": {
+        "n": 12,
+        "median": 498.3025000000012,
+        "min": 448.32199999999744,
+        "max": 535.5580000000018
+      },
+      "firstUs": {
+        "n": 12,
+        "median": 1787.1930000000002,
+        "min": 1210.093999999998,
+        "max": 1915.9900000000007
+      }
+    },
+    "M": {
+      "installUs": {
+        "n": 12,
+        "median": 375.9324999999993,
+        "min": 324.7969999999967,
+        "max": 3535.9070000000015
+      },
+      "instantiateUs": {
+        "n": 12,
+        "median": 501.6175000000018,
+        "min": 469.5159999999987,
+        "max": 1065.7019999999982
+      },
+      "firstUs": {
+        "n": 12,
+        "median": 1936.2180000000003,
+        "min": 1334.035,
+        "max": 5174.258000000002
+      }
+    },
+    "S": {
+      "installUs": {
+        "n": 12,
+        "median": 5941.283000000002,
+        "min": 5408.111999999999,
+        "max": 6784.204000000002
+      },
+      "instantiateUs": {
+        "n": 12,
+        "median": 562.4419999999973,
+        "min": 521.1990000000028,
+        "max": 812.5149999999976
+      },
+      "firstUs": {
+        "n": 12,
+        "median": 7031.030999999997,
+        "min": 6463.094000000002,
+        "max": 8435.248000000001
+      }
+    }
+  },
+  "changedOpeningPosts": 18,
+  "openingByteCrossover": {
+    "M": {
+      "changedPosts": 2,
+      "event": "opening/002 up",
+      "savedBytesBeforeInstall": 9352,
+      "installBytes": 8649
+    },
+    "S": {
+      "changedPosts": 2,
+      "event": "opening/002 up",
+      "savedBytesBeforeInstall": 9352,
+      "installBytes": 6416
+    }
+  },
+  "assumptions": "Host byte crossover adds the 8-byte binary install header and payload once; only actual changed posts count.",
+  "rowsByScope": {
+    "opening": {
+      "controlBody": 88571,
+      "semanticBody": 3603,
+      "controlPost": 89651,
+      "semanticPost": 4683,
+      "callsAfterDedup": 18,
+      "framedRatio": 19.143924834507793
+    },
+    "all": {
+      "controlBody": 176195,
+      "semanticBody": 9192,
+      "controlPost": 178955,
+      "semanticPost": 11952,
+      "callsAfterDedup": 46,
+      "framedRatio": 14.972807898259706
+    }
+  }
+}

@@ -7,8 +7,10 @@ import {scripts} from './03-guest.mjs';
 
 export const hash = bytes=>createHash('sha256').update(bytes).digest('hex');
 export const source=readFileSync(join(scripts,'05-closed-view.typed'),'utf8');
-export const wasm=typedWasm.compile(source).bytes;
-export const id=hash(wasm);
+// The preinstalled specimen is independent of today's compiler; a fresh host can time its first source compile.
+export const wasm=readFileSync(join(scripts,'../various/view.wasm'));
+export const id='63d752c673c41636e4951c0f9a95ba7b7f69f698d98ed723e39037a3bc7fb026';
+assert.equal(hash(wasm),id);
 export const abi=1;
 const inputOffset=0, metaOffset=160, outOffset=224, hintOffset=16616;
 const outputLimit=8192, hintLimit=120;
@@ -64,7 +66,7 @@ export function transfer(kind,payload) {
     head.write('CHV1'); head[4]=kind;head[5]=abi;head.writeUInt16LE(body.length,6);
     return Buffer.concat([head,body]);
 }
-export function installer() {
+export function installer(approvedSourceDigests = new Set([hash(source)])) {
     const cache=new Map();
     return packet=>{
         if(packet.length<8 || packet.toString('ascii',0,4)!=='CHV1' || packet[5]!==abi ||
@@ -73,7 +75,7 @@ export function installer() {
         if(kind!==1 && kind!==2) throw Error('unknown delivery kind');
         const key=[kind,abi,compilerId,hash(bytes)].join('/');
         if(cache.has(key)) return {module:cache.get(key),hit:true};
-        if(kind===2 && hash(bytes)!==hash(source)) throw Error('unapproved typed source');
+        if(kind===2 && !approvedSourceDigests.has(hash(bytes))) throw Error('unapproved typed source');
         const executable=kind===1?bytes:typedWasm.compile(bytes.toString('utf8')).bytes;
         const module=admit(executable);
         cache.set(key,module);

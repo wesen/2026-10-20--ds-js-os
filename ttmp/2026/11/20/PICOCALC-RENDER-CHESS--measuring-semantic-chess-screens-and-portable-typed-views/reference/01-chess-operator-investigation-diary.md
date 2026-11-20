@@ -126,3 +126,53 @@ Run `node scripts/07-replay.mjs OUTPUT` from the ticket; use the lab's shared `0
 ### Technical details
 
 Module SHA-256 is `63d752c673c41636e4951c0f9a95ba7b7f69f698d98ed723e39037a3bc7fb026` and size is 8,641 bytes. The standalone typed source is 6,408 bytes. Shared memory offsets 0, 160, 224 and 16,616 name the input board, nine signed integers, output tree and hint buffer. The first output is 4,835 ASCII tree bytes and 41 hint bytes with FNV-1a 0x01b474f2. The receiver admits only the known hash. This makes bounded trusted-specimen evaluation feasible on the host; general fuel metering and hostile source admission are unresolved.
+
+## Step 3. Price moving work and prepare the two intact guests for the board
+
+The render gate from `730b8cb` opened the installation experiment. I ran the validated renderer as preinstalled code, as delivered bytes, and as delivered source compiled by the receiver. The semantic representation saves bytes early in the opening, but counting the receiver exposes a small endpoint gain on the host. The director requested the actual producer modules for a physical WAMR comparison; I supplied both and verified the same C harness under host WAMR.
+
+### Prompt context
+
+See Step 1. The director asked for a board-callable module, a QuickJS receive capsule and fixed producer trials through both real guests. Device access, image installation and restoration remain with the director.
+
+### What I did
+
+- Added a binary install header, a cache keyed by kind, ABI, compiler identity and content digest, allowlisted source revisions, and verified raw module identity. Compared M/S output against the A/A-qualified control through the shared rasterizer.
+- Rotated the order of two unchanged controls and two distinct producers on 1,200 selected and 1,200 plain cursor pairs in each comparison. Timed the guest event, envelope construction, receipt through the parsed paint input, and whole path. Recorded all raw samples. Measured 35 repeated new-cache installs per delivery arm and 12 fresh Node processes for each of R/M/S. Added unrelated same-event-loop callback probes.
+- Implemented a WAMR C fixture for the real whole-world producers. An instance-identity check in a disposable image forwards only the fixed test instance to a span capture. All other worlds continue to use ordinary kernel syscalls. The shared test input buffer stays outside the event clock. Generated real generic and semantic launch/left/right/select/left/right/deselect checksums.
+
+### Why
+
+The Node runtime can retain compilation caches across `new WebAssembly.Module`. A fresh installer inside a hot process and the first install in a fresh process answer different questions. Sending approved source also requires testing the source cache rather than assuming that deterministic compilation gives a cache hit.
+
+### What worked
+
+A binary packet costs 8,649 bytes and a source packet 6,416. In the observed opening both repay their entire install traffic by the second changed post. The three arms constructed the same 8,641-byte artifact in all applicable checks, and all 47 full framebuffer comparisons passed for each delivered arm. Hot R/M/S render p50 was 25.276/25.193/25.410 µs. Fresh-process first-tree medians were 1.787/1.936/7.031 ms. Selected-cursor median guest/capture work fell from 14.583 to 5.347 µs but receiver work grew from 28.062 to 37.404 µs. The complete paired saving was 1.024 µs. Both full producer modules passed 25 returned frames in the host WAMR smoke test.
+
+### What didn't work
+
+The first `node scripts/10-measure.mjs /tmp/chess-render-experiment` tried a source edit adding a trailing line comment and returned `SyntaxError: 154:1: expected function`. Moving the comment before the first declaration gave the same verified output bytes while changing the source cache key. The reproduction keeps this frontend limitation explicit. An early timing pass tied order to movement direction. The retained measurement uses the four-order sequence G/R, R/G, R/G, G/R and includes an A/A comparison.
+
+### What I learned
+
+An 18-post opening already saves 84,968 framed update bytes, so distribution size is material only for a short session. CPU cost is different. Behind the receiver the candidate still writes thousands of UTF-16 units, converts them to a string and parses a complete tree. The serial C fixture checks each complete byte stream outside the guest timer.
+
+### What was tricky to build
+
+Serving the two intact world binaries needs safe imports for the SDK metadata and screen calls. Re-registering process-wide imports could affect unrelated applications. The probe uses the currently running instance identity and checks each event's returned value, screen count, two lengths and content FNV. At 73,204 and 66,618 bytes the emitted modules both instantiate an eight-page initial guest memory, one at a time. The 16,504-byte capture buffer exists only for the trial.
+
+### What warrants a second pair of eyes
+
+The small host saving should not be turned into a time crossover guarantee, especially on a different runtime. The paired 95th percentile in the selected A/A series is +6.525 µs. Source compiles synchronously; a setImmediate callback wait is a host latency probe, and a P4 optical endpoint and physical key progress require additional instrumentation.
+
+### What should be done in the future
+
+The director owns physical procedure 15 and PC-side serial collection. When readings arrive, interpret producer, receive, WAMR view, install and checksum costs with their own clocks. Preserve the distinction between isolated physical components and shipping-game latency.
+
+### Code review instructions
+
+Run `scripts/17-run-host.sh FRESH_DIRECTORY`. Examine `various/host-summary.json`, `various/host-timing.json`, `various/cold.ndjson` and `various/raw-timings.json.gz`. Inspect `scripts/13-board-producers.mjs`, `14-board-producer.inc` and `15-stage-producer.py` before building a disposable image. The director has the stage and console instructions.
+
+### Technical details
+
+All timers use monotonic clocks. The host key window ends at a parsed ordinary tree plus hints, before the common painter. Distribution admission enrolls only an exact approved digest. The desktop test separates immutable source and Wasm bytes from the one 64-KiB view page. Host and WAMR wall time cannot be substituted for one another.

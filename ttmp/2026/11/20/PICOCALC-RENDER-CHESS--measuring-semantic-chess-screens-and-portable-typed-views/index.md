@@ -7,7 +7,13 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-CHESS--measuring-semantic-chess-screens-and-portable-typed-views/scripts/07-replay.mjs
+      Note: Independent guest traces, retained replay and fixture production
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-CHESS--measuring-semantic-chess-screens-and-portable-typed-views/scripts/17-run-host.sh
+      Note: Complete reproducible host experiment
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-CHESS--measuring-semantic-chess-screens-and-portable-typed-views/various/host-summary.json
+      Note: Verified aggregate frame, byte and cold endpoint measurements
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-20T11:06:43.314317132-05:00
@@ -17,36 +23,12 @@ WhenToUse: ""
 
 # Measuring semantic Chess screens and portable typed views
 
-## Overview
+A Chess world can publish an entire drawing or describe its visible position and let a separate renderer construct the drawing. This ticket measures the two choices with independent production guest instances, retains the latest complete position, and prices loading or compiling the same isolated view.
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+- [The project report](analysis/01-what-crosses-the-screen-boundary-when-a-chess-cursor-moves.md) explains the findings and their scope.
+- [Independent prediction and operator contract](design-doc/01-a-retained-chess-view-from-a-by-value-position.md) record the gates before timing.
+- [Researcher diary](reference/02-opus-researcher-investigation-diary.md) and [operator diary](reference/01-chess-operator-investigation-diary.md) document decisions, errors and verification.
+- [Host reproduction](scripts/17-run-host.sh) runs the guest, common raster oracle, mobile code paths and timing trials. Start with [summary](various/host-summary.json), [timing distributions](various/host-timing.json) and [pixel receipts](various/pixel-gate.json).
+- [Board fixtures](scripts/08-board-fixtures.py) and [whole-producer staging](scripts/15-stage-producer.py) support the lab director's single-device experiments.
 
-## Key Links
-
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+See [tasks](tasks.md) and [changelog](changelog.md).
