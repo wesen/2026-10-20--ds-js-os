@@ -3,7 +3,7 @@
 - [x] Qualify and freeze staged backend across 24 historical replays
 - [x] 1. Factor scanner and token representation on P4
 - [x] 2. Compile condition destinations on Wasm and RV32
-- [ ] 3. Compare projection and native consumption of streamed operations
+- [x] 3. Compare projection and native consumption of streamed operations
 - [x] 4. Bound incremental Editor fragments and measure edit to native return
 - [ ] 5. Compare two register-local policies using A6
 - [ ] 6. Test two-hop text bounds with dynamic counts
