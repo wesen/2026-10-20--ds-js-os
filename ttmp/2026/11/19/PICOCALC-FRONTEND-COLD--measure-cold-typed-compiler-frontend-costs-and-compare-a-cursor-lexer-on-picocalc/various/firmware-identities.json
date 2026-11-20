@@ -1,0 +1,10 @@
+{
+  "app_binary": {
+    "path": "/tmp/p4-frontend.20261119/build/picocalc-os-p4.bin",
+    "sha256": "07d98dee8dbacc4fe261629eed338c322ea8ae42eb896be5ed2ebe6f755aef8a"
+  },
+  "partition_table": {
+    "path": "/tmp/p4-frontend.20261119/build/partition_table/partition-table.bin",
+    "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
+  }
+}

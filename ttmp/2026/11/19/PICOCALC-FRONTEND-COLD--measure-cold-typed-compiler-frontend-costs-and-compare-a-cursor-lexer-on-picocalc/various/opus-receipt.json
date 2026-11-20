@@ -1,0 +1,16 @@
+{
+  "generic_design": {
+    "alias": "opus",
+    "effort": "high",
+    "resolved": "claude-opus-5-5",
+    "receipt_sha256": "d5291c02066a987ad42b0f5004f2a5553632eaefbbb1b2837d11fa0c94749b8d",
+    "subtype": "success"
+  },
+  "project_review": {
+    "alias": "opus",
+    "effort": "high",
+    "resolved": "claude-opus-5-5",
+    "receipt_sha256": "d0ff776fbc9b229bfb5f75d6f320b28f1641353b94203cb95110d21a35807de0",
+    "subtype": "error_during_execution"
+  }
+}

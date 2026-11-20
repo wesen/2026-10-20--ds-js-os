@@ -79,3 +79,107 @@ Start at `Lexer.next` and `compileFunctions` in `picocalc-os/compiler/typed-wasm
 ### Technical details
 
 The pinned wrapper observes QuickJS allocation high water via `port_heap_usable`. Native result copying uses a separate C allocation. Native module identity is checked after each measured compile, outside the wrapper's elapsed time.
+
+## Step 2 — Separate clock categories and preserve comment backtracking
+
+I committed the initial design as `646e7d9` before creating the experimental compiler variants. I staged a copy of the pinned project and the pinned CJI tree in `/tmp/p4-frontend.20261119`. The isolated port selects four combinations of the original and cursor frontends with and without trace markers. Every trial uses a fresh realm initiated through the original helper and app wrapper.
+
+Claude Code then returned an approved no-data design from `claude-opus-5-5` with high effort. Its design emphasized the exclusive callback boundary, validating every code-unit position and comparing measured totals across levels of instrumentation. It proposed a lex-only run as a way around observer effects. I implemented a trace against the production call path with an independent clean comparison because lex-only execution would change allocation lifetimes and omit parser interactions. The initial request with compiler excerpts was interrupted in the default sandbox with exit 130 and an empty reply after the supervision update. The approved generic input contained a fictional scenario and public ECMAScript terminology.
+
+### Prompt context
+
+See Step 1 for the frontend assignment. The code design fixes the control source at the supervisor's chosen revision and leaves project sources alone.
+
+### What I did
+
+- Added a scratch-tree stage program, scanner source, C phase switch, native trial wrapper and ESP-IDF build script.
+- Created a differential oracle that compares all UTF-16 values in token context, randomized token concatenations, valid and invalid whole programs, and the linked modules from all three application wrappers.
+- Kept token and lowering counters alongside timestamps. The board reader requires total phase and maximum phase heap equality with the outer result, exact output hashes and the expected phase visit relationships.
+
+### Why
+
+The ordinary lexer allocates a match result with named captures and a token object. The cursor writes one reusable object on successful common-path matches. Lexer-only host variants keep the option of constructing fresh tokens so the combined change can be interpreted.
+
+### What worked
+
+The corrected cursor matched the control through all Node differential cases and produced the same native output for the previously built application reactors. The subsequent board oracle uses the actual firmware build's reactor bytes.
+
+### What did not work
+
+- `git add` initially returned `fatal: Unable to create '/home/manuel/code/wesen/2026-10-20--ds-js-os/.git/index.lock': Read-only file system`. A scoped escalation staged and committed only the ticket's design and diary.
+- The first oracle run, `node scripts/06-oracle.mjs /tmp/p4-frontend.20261119 /tmp/p4-combined.2kZZ9ZqW/build/esp-idf/main` from the ticket path, failed on `x  // ignored<U+2028>still ignored<LF>   @`. Cursor scanning returned `1:2: invalid token`. The original lexer returned two slash tokens and comment words before reporting `1:28: invalid token`.
+
+### What I learned
+
+The sticky regex makes the comment repetition optional. If greedily skipping all trivia leaves no legal token, the engine can backtrack to a slash in an earlier comment. The cursor's no-token path now delegates to the original matcher. This also preserves the no-token diagnostic anchor and the prior EOF behavior.
+
+### What was tricky to build
+
+A scanner error and the original regex's failure are distinct states. Treating both as EOF or an invalid token changed the grammar at the end of comments. The corrected fallback executes only when ordinary cursor classification does not produce a token.
+
+### What warrants a second pair of eyes
+
+Per-token callbacks make both traces slower and can move where the allocator sees a peak. Capture raw observer overhead. Keep the clean result authoritative for the decision.
+
+### What should be done in the future
+
+Run the packaged firmware and reconcile visits, times, peaks and output hashes. Run the existing RV32 workflow tests on the frozen base and cursor output.
+
+### Code review instructions
+
+Open `scripts/01-stage.py`, `scripts/02-cursor.js.inc` and `scripts/06-oracle.mjs`. The lexer fallback is a renamed copy of the original `next()` body. Review `scripts/07-board-receipt.py` for phase invariants and output identity checks.
+
+### Technical details
+
+The control and cursor share identical clean `typed/rv32.js`. Their traced variants share identical marked backend bytes. Phase entry queries the same monotonic port clock as the production outer measurement. The firmware emits accumulated phase totals after capturing the outer end timestamp.
+
+## Step 3 — Park the firmware and host oracle before the board slot
+
+The operator requested a resume checkpoint when the broader lab paused. The isolated ESP-IDF build completed and the Node oracle matched every variant using the firmware's actual bundled reactor inputs. The board has no observations for this ticket at pause.
+
+### Prompt context
+
+Continue with the frontend assignment in Step 1 when the supervising operator reopens the lab. At pause, preserve an exact artifact identity and a reproducible route to the first physical capture.
+
+### What I did
+
+- Built the research app under ESP-IDF 5.4.2 with the existing agent-ELF configuration and streaming enabled. Verified the partition table matched the earlier known firmware build and all four bundled compiler byte sequences matched the manifest.
+- Ran 71,814 lexical differential cases and 535 whole compiler cases across all frontend variants in Node. The native app wrappers produced identical instruction bytes, metadata, and linked images. Editor emits 87,544 instruction bytes inside a 240,452-byte linked module.
+- Built the vendored QuickJS runner and generated its lexical and whole-compile fixture. These two host preparations completed before the pause. QuickJS fixture execution, cold host comparison and native guest qualification remain open.
+- Started the explicitly approved project-specific Opus high review outside the sandbox from an empty directory with no tools. Its CLI init resolves to `claude-opus-5-5`. The request was interrupted at pause before a successful result event, so the design has no completed project-specific Opus review to claim. The generic review succeeded.
+
+### Why
+
+The checkpoint lets the board operator reproducibly verify firmware and compiler provenance before starting timed boots. Preserving only digests and aggregate host results keeps the ticket small.
+
+### What worked
+
+The app binary has SHA-256 `07d98dee8dbacc4fe261629eed338c322ea8ae42eb896be5ed2ebe6f755aef8a`. The exact built files are under `/tmp/p4-frontend.20261119`. The oracle and compiler identities are under `various/`.
+
+### What did not work
+
+The phase fixture has no physical receipt at pause, so the phase attribution and half-second claim remain untested.
+
+### What I learned
+
+The Node test contains a compact comparison for all UTF-16 code units, but the Phase and heap claims need the vendored QuickJS runtime on the P4.
+
+### What was tricky to build
+
+The initial IDF component registry check could not connect in the sandbox. The staged build had all seven locked components already available and completed using the cached sources.
+
+### What warrants a second pair of eyes
+
+Inspect the first phased run for exact boundary reconciliation and verify the scanner and control produce equal phase visit counts per app. Check that the serial capture includes the full kickoff and post-trial world state.
+
+### What should be done in the future
+
+Resume with the QuickJS differential fixture and the previous native workflow tool. Run the two physical captures through the supervisor. Review the clean pair, then charge the measured overhead to the interpretation of the marks. Ask Opus high to write the measured article from the approved summarized inputs.
+
+### Code review instructions
+
+Run `scripts/01-stage.py WORK --board-assets PORT_ASSETS` and `bash scripts/05-build.sh WORK /home/manuel/esp/esp-idf-5.4.2/export.sh` to rebuild. Use `node scripts/06-oracle.mjs WORK WORK/build/esp-idf/main WORK/quickjs-fixture.js` for the oracle and fixture. Parse two complete captures with `python3 -B scripts/07-board-receipt.py WORK WORK/oracle.json BOOT1.log BOOT2.log`.
+
+### Technical details
+
+Capture 90 seconds per boot and issue `worlds` at 87 seconds. Each complete run has 48 `FRONT begin` and `FRONT end` lines and a `FRONT complete` marker. Firmware and partition digests are in `various/firmware-identities.json`. The supervisor retains authority over the board window and restore.

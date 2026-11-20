@@ -1,0 +1,25 @@
+{
+  "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+  "variants": {
+    "base": {
+      "typed/wasm.js": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+      "typed/rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+    },
+    "cursor": {
+      "typed/wasm.js": "d0fdd090764f4bf189f753f059e847d34808dbb1d813ec9598b2245fabbda601",
+      "typed/rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+    },
+    "base_trace": {
+      "typed/wasm.js": "893b12137582e4c58bbe12861d4e08483a24795dcf40e08c1df7d64efb251568",
+      "typed/rv32.js": "e0668872202354c8d512a4fd617cef01aed95545b91dbdee92226194f99464d9"
+    },
+    "cursor_trace": {
+      "typed/wasm.js": "4222b6a693fd56dbb7740e8d1833a0846ec5dc7870930403b46283d5fd44994a",
+      "typed/rv32.js": "e0668872202354c8d512a4fd617cef01aed95545b91dbdee92226194f99464d9"
+    },
+    "cursor_fresh": {
+      "typed/wasm.js": "3e5447a770b9fccba3d81f15e5fd97505d3f77291f8103f6d5496a737bb2d11d",
+      "typed/rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38"
+    }
+  }
+}
