@@ -6,6 +6,7 @@
 #include "nw.h"
 #include "nw_json.h"
 #include "nw_utf16.h"
+#include "chess-psix.h"
 #include "../../third_party/quickjs/cutils.h"
 #include "../../third_party/quickjs/libunicode.h"
 
@@ -78,6 +79,25 @@ int typedSdkScreen(const void *screen, int length, const void *hint, int hint_le
         utf8(output.units, length, screen_bytes, sizeof screen_bytes) < 0 ||
         utf8(hints.units, hint_length, hint_bytes, sizeof hint_bytes) < 0) return -1;
     return nw_screen(screen_bytes, hint_bytes);
+}
+
+SDK(typedSdkPainterSource)
+int typedSdkPainterSource(const void *source, int units)
+{
+    if (source != &output || units <= 0 || units > SCREEN_CAP) return -1;
+    int length = utf8(output.units, units, screen_bytes, sizeof screen_bytes);
+    if (length < 0 || length > CHESS_PAINTER_SOURCE_MAX) return -1;
+    return nw_painter_publish(1, (const unsigned char *)screen_bytes, (unsigned)length);
+}
+
+SDK(typedSdkPainterFrame)
+int typedSdkPainterFrame(const void *state)
+{
+    if (state != &frame_scratch || frame_scratch.length < CHESS_PSIX_CELLS) return -1;
+    uint8_t packet[CHESS_PSIX_MAX];
+    size_t length = chess_psix_encode(frame_scratch.units, packet, sizeof packet);
+    if (!length) return -1;
+    return nw_painter_publish(0, packet, (unsigned)length);
 }
 
 // The runtime owns the allocation; the typed program manages its contents and

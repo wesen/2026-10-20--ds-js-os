@@ -54,6 +54,11 @@ typedef struct msg {
   int hs[MAX_MSG_HANDLES], nh;  // handles the receiver is given on delivery
   vtime_t t;                // when it was sent
   uint64_t seq;
+#if PICOCALC_MOBILE_PAINTER
+  size_t painter_length;    // counted bytes immediately after this object; zero for ordinary messages
+  int painter_from_epoch, painter_to_epoch;
+  bool painter_source;
+#endif
 } msg_t;
 
 typedef struct settle { struct settle *next; int promise; int ok; char *json; vtime_t t; uint64_t seq; } settle_t;
@@ -268,6 +273,10 @@ msg_t *new_msg(int kind, const char *type, const char *json, int from);
 void free_msg(msg_t *m);
 void defer(deferred_t *d);
 void defer_deliver(world_t *to, msg_t *m);
+#if PICOCALC_MOBILE_PAINTER
+bool kernel_chess_painter_send(world_t *from, world_t *to, bool source, const uint8_t *bytes, size_t length);
+bool kernel_chess_painter_current(const world_t *to, const msg_t *m);
+#endif
 void defer_settle(world_t *W, int promise, int ok, const char *json, vtime_t delay);
 void kernel_settle_at(int w, int epoch, int promise, int ok, char *json, vtime_t t);
 vtime_t kernel_now(void);
@@ -344,14 +353,14 @@ enum {
   NW_CLOCK_WALL, NW_CLOCK_ZONE, NW_CLOCK_SETZONE, NW_NET_INFO, NW_NET_SCAN, NW_NET_RESULT, NW_NET_JOIN,
   NW_FS_OPEN, NW_FS_READ, NW_CLOCK_OFFSET, NW_FS_WRITE, NW_CLOCK_TODAY,
   NW_FS_AT, NW_REVOKE, NW_ASK_FILE,
-  NW_FS_OP,
+  NW_FS_OP, NW_PAINTER_PUBLISH,
   NW_CALLS
 };
 // Firmware-private CJI operations. The compiler uses the matching CJI constants in world-native.js.
 enum {
   CJI_HANDLE_INFO = 1001, CJI_FS_OPEN, CJI_FS_AT, CJI_FS_OP, CJI_REVOKE,
   CJI_DMA = 1010, CJI_NARROW, CJI_SPI, CJI_CMD, CJI_PIXELS, CJI_FILL, CJI_RECT, CJI_LINE,
-  CJI_TEXT, CJI_COMMIT, CJI_INVALIDATE, CJI_FONTS,
+  CJI_TEXT, CJI_COMMIT, CJI_INVALIDATE, CJI_FONTS, CJI_PAINTER_DRAW,
   CJI_WORLDS = 1030, CJI_STATS, CJI_STORE_STATUS, CJI_AGENT_STATUS, CJI_AGENT_START, CJI_AGENT_POLL,
   CJI_AGENT_CANCEL, CJI_AGENT_BODY
 };

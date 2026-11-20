@@ -193,12 +193,19 @@ function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, h
         const key = typedSdkBuffer(1);
         const word = typedSdkBuffer(2);
         let size = typedSdkEventText(0, word, 0, key);
-        if (!chessUiEqual(key, size, word, word.writeLiteral(0, "key"))) {
+        const isKey = chessUiEqual(key, size, word, word.writeLiteral(0, "key"));
+        if (!isKey && !chessUiEqual(key, size, word, word.writeLiteral(0, "painter.resend"))) {
             if (state.timer > 0) return 1;
             return 0;
         }
         size = typedSdkEventText(1, word, 0, key);
         if (!chessUiEqual(key, size, word, word.writeLiteral(0, "compositor"))) {
+            if (state.timer > 0) return 1;
+            return 0;
+        }
+        if (!isKey) {
+            state.painterReady = false;
+            chessRender(board, state, output, hints);
             if (state.timer > 0) return 1;
             return 0;
         }

@@ -37,6 +37,8 @@
         ["typedSdkCopySpan", "string,i32,i32,buffer,i32", "i32"],
         ["typedSdkCodePoints", "string,i32,i32", "i32"],
         ["typedSdkPointIndex", "string,i32,i32,i32", "i32"],
+        ["typedSdkPainterSource", "buffer,i32", "i32"],
+        ["typedSdkPainterFrame", "buffer", "i32"],
     ].map(([name, params, result, awaitable = false]) => ({
         name, params: params ? params.split(",") : [], result, awaitable,
     }));

@@ -15,8 +15,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "nucleus.h"
+#if PICOCALC_MOBILE_PAINTER
+#include "../sdk/typed/chess-psix.h"
+#endif
 
 kernel_t K;
+#if PICOCALC_MOBILE_PAINTER
+// Counts allocations across deferred effects, events and mailboxes.
+static unsigned painter_pending[2];
+#endif
 static vtime_t apply_at = -1;   // while a segment's effects are applied: the time it ended
 static vtime_t frozen_now = -1; // while a crash is handled: the time it happened
 #ifdef BOARD_PAPERS3
@@ -208,7 +215,13 @@ msg_t *new_msg(int kind, const char *type, const char *json, int from) {
   m->kind = kind; m->type = xstrdup(type ? type : ""); m->json = xstrdup(json); m->from = from;
   return m;
 }
-void free_msg(msg_t *m) { if (!m) return; free(m->type); free(m->json); free(m); }
+void free_msg(msg_t *m) {
+  if (!m) return;
+#if PICOCALC_MOBILE_PAINTER
+  if (m->painter_length) painter_pending[m->painter_source]--;
+#endif
+  free(m->type); free(m->json); free(m);
+}
 
 // ---- deferred effects --------------------------------------------------------------------------------------
 void defer(deferred_t *d) {
@@ -247,6 +260,39 @@ void defer_deliver(world_t *to, msg_t *m) {
   d->run = run_deliver; d->w = to->id; d->msg = m;
   defer(d);
 }
+
+#if PICOCALC_MOBILE_PAINTER
+bool kernel_chess_painter_send(world_t *from, world_t *to, bool source, const uint8_t *bytes, size_t length) {
+  const unsigned max_pending = source ? 2 : 8;
+  const unsigned max_bytes = source ? CHESS_PAINTER_SOURCE_MAX : CHESS_PSIX_MAX;
+  if (!bytes || !length || length > max_bytes || painter_pending[source] >= max_pending) return false;
+  msg_t *m = calloc(1, sizeof(*m) + length);
+  deferred_t *d = calloc(1, sizeof(*d));
+  if (!m || !d) { free(m); free(d); return false; }
+  const char *name = source ? "painter.source" : "painter.frame";
+  size_t name_size = strlen(name) + 1;
+  m->type = malloc(name_size);
+  if (!m->type) { free(m); free(d); return false; }
+  memcpy(m->type, name, name_size);
+  m->kind = M_ON;
+  m->from = from->id;
+  m->painter_from_epoch = from->epoch;
+  m->painter_to_epoch = to->epoch;
+  m->painter_source = source;
+  m->painter_length = length;
+  memcpy(m + 1, bytes, length);
+  painter_pending[source]++;
+  d->run = run_deliver; d->w = to->id; d->msg = m;
+  defer(d);
+  return true;
+}
+
+bool kernel_chess_painter_current(const world_t *to, const msg_t *m) {
+  world_t *from = world_by_id(m->from);
+  return from && from->status == W_IDLE && from->epoch == m->painter_from_epoch &&
+         to->engine == ENG_NATIVE && to->epoch == m->painter_to_epoch;
+}
+#endif
 
 void kernel_settle_at(int w, int epoch, int promise, int ok, char *json, vtime_t t) {
   event_t *e = new_event(E_SETTLE, t);
@@ -437,6 +483,21 @@ static void teardown(world_t *W, const char *why) {
   clear_turn(W);
   free(W->frame); W->frame = NULL;
   drop_retained(W);
+#if PICOCALC_MOBILE_PAINTER
+  msg_t **link = &W->mbox;
+  W->mbox_tail = NULL;
+  while (*link) {
+    msg_t *m = *link;
+    if (m->painter_length) {
+      *link = m->next;
+      W->mbox_len--;
+      free_msg(m);
+    } else {
+      W->mbox_tail = m;
+      link = &m->next;
+    }
+  }
+#endif
   for (int i = 0; i < MAX_LIST; i++) W->tick_queued[i] = false;
   W->epoch++;
 }
@@ -790,6 +851,9 @@ static void handle_event(event_t *e) {
   switch (e->type) {
     case E_DELIVER: {
       msg_t *m = e->msg;
+#if PICOCALC_MOBILE_PAINTER
+      if (m->painter_length && (!W || !kernel_chess_painter_current(W, m))) { free_msg(m); break; }
+#endif
       if (!W || W->status == W_STOPPED) {
         if (m->ask) { char t[96]; snprintf(t, sizeof t, "%s is stopped", W ? W->name : "?"); settle_ask(m->ask, 0, t, NULL, 0); }
         free_msg(m);
@@ -946,6 +1010,9 @@ void kernel_reset(void) {
   char root[sizeof K.js_root];
   memcpy(root, K.js_root, sizeof root);
   memset(&K, 0, sizeof K);
+#if PICOCALC_MOBILE_PAINTER
+  memset(painter_pending, 0, sizeof painter_pending);
+#endif
   K.uart = uart; K.verbose = verbose; K.quiet = quiet; K.trace = trace; K.realtime = realtime;
   memcpy(K.js_root, root, sizeof root);
   apply_at = -1; frozen_now = -1;

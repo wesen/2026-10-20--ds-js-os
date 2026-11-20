@@ -1,0 +1,74 @@
+function chessDisplayStatus(board: buffer, state: WorldState): i32 {
+    if (state.outcome !== 0) return state.outcome;
+    if (state.promoteTo >= 0) return 5;
+    if (state.running) return 6;
+    if (state.notice === 1) return 7;
+    if (chessInCheck(board, chessSide(board))) return 8;
+    return 0;
+}
+
+function chessVisibleSquare(square: i32): i32 {
+    if (!chessOnBoard(square)) return 64;
+    return chessDense(square);
+}
+
+function chessPutPainterField(view: buffer, field: i32, value: i32): i32 {
+    const at = 72 + 2 * field;
+    view.setCharCodeAt(at, value);
+    view.setCharCodeAt(at + 1, value >> 16);
+    return 0;
+}
+
+function chessRender(board: buffer, state: WorldState, out: buffer, hints: buffer): i32 {
+    if (!state.painterReady) {
+        const length = chessPainterSource(out);
+        if (typedSdkPainterSource(out, length) < 0) return chessRenderTree(board, state, out, hints);
+        state.painterReady = true;
+    }
+
+    chessMarkDestinations(board, state.selected);
+    const view = typedSdkBuffer(9);
+    for (let square = 0; square < 64; square = square + 1) {
+        view.setCharCodeAt(square, board.charCodeAt(chessSquare(square)));
+    }
+    for (let rank = 0; rank < 8; rank = rank + 1) {
+        let mask = 0;
+        if (state.selected >= 0) {
+            let bit = 1;
+            for (let file = 0; file < 8; file = file + 1) {
+                mask = mask + board.charCodeAt(768 + 16 * rank + file) * bit;
+                bit = bit * 2;
+            }
+        }
+        view.setCharCodeAt(64 + rank, mask);
+    }
+
+    chessPutPainterField(view, 0, chessDense(state.cursor));
+    chessPutPainterField(view, 1, chessVisibleSquare(state.selected));
+    let from = 64;
+    let to = 64;
+    if (state.lastMove !== 0) {
+        from = chessDense(chessFrom(state.lastMove));
+        to = chessDense(chessTo(state.lastMove));
+    }
+    chessPutPainterField(view, 2, from);
+    chessPutPainterField(view, 3, to);
+    chessPutPainterField(view, 4, chessDisplayStatus(board, state));
+    let hint = 0;
+    if (state.promoteTo >= 0) { hint = 1; }
+    chessPutPainterField(view, 5, hint);
+    let depth = 0;
+    let nodes = 0;
+    let score = 0;
+    if (state.lastMove !== 0 && state.completed > 0 && !state.running) {
+        depth = state.completed;
+        nodes = state.nodes;
+        score = state.score;
+    }
+    chessPutPainterField(view, 6, depth);
+    chessPutPainterField(view, 7, nodes);
+    chessPutPainterField(view, 8, score);
+    const result = typedSdkPainterFrame(view);
+    if (result < 0) return chessRenderTree(board, state, out, hints);
+    return result;
+}

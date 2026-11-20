@@ -212,11 +212,11 @@ $(BUILD)/files-reactor.wasm: $(FILES_SRC) worlds/files/slots.h $(WASM_SDK)
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(FILES_SRC) sdk/nw_wasm.c
 
-TYPED_WORLD_SRC := sdk/typed/world.c sdk/typed/wasm-slot.c third_party/quickjs/libunicode.c
+TYPED_WORLD_SRC := sdk/typed/world.c sdk/typed/wasm-slot.c sdk/typed/chess-psix.c third_party/quickjs/libunicode.c
 .PHONY: typed-world-reactor
 typed-world-reactor: $(BUILD)/typed-world-reactor.wasm
 
-$(BUILD)/typed-world-reactor.wasm: $(TYPED_WORLD_SRC) $(WASM_SDK) third_party/quickjs/cutils.h third_party/quickjs/libunicode.h third_party/quickjs/libunicode-table.h
+$(BUILD)/typed-world-reactor.wasm: $(TYPED_WORLD_SRC) sdk/typed/chess-psix.h $(WASM_SDK) third_party/quickjs/cutils.h third_party/quickjs/libunicode.h third_party/quickjs/libunicode-table.h
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(TYPED_WORLD_SRC) sdk/nw_wasm.c
 

@@ -3,7 +3,7 @@
 .Lprogram:
     // Entry count in the low 16 bits and runtime imports in the high 16 bits.
     .word 0x4147454e, 0x44415256, 0x3332534c
-    .word .Lend-.Lprogram, 0x1c0002
+    .word .Lend-.Lprogram, 0x1e0002
     .macro entry name
     .global \name
     .hidden \name
@@ -45,6 +45,8 @@
     j typedSdkCopySpan
     j typedSdkCodePoints
     j typedSdkPointIndex
+    j typedSdkPainterSource
+    j typedSdkPainterFrame
     .option pop
     .space 229376 - (.-.Lprogram)
 .Lend:

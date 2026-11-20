@@ -11,6 +11,9 @@ void nw_log(const char *text) { call(NW_CALL_LOG, 0, 0, 0, S(text), NONE, NONE, 
 int64_t nw_now(void) { return call(NW_CALL_NOW, 0, 0, 0, NONE, NONE, NONE, NULL, 0); }
 int nw_self(char *buf, int n) { return (int)call(NW_CALL_SELF, 0, 0, 0, NONE, NONE, NONE, buf, n); }
 int nw_send(const char *to, const char *type, const char *json) { return (int)call(NW_CALL_SEND, 0, 0, 0, S(to), S(type), S(json), NULL, 0); }
+int nw_painter_publish(int source, const unsigned char *bytes, unsigned length) {
+  return (int)call(NW_CALL_PAINTER_PUBLISH, source, 0, 0, (const char *)bytes, length, NONE, NONE, NULL, 0);
+}
 int nw_publish(const char *ch, const char *json) { return (int)call(NW_CALL_PUBLISH, 0, 0, 0, S(ch), S(json), NONE, NULL, 0); }
 int nw_publish_retained(const char *ch, const char *json) { return (int)call(NW_CALL_PUBLISH, 1, 0, 0, S(ch), S(json), NONE, NULL, 0); }
 int nw_reply(const char *json) { return (int)call(NW_CALL_REPLY, 0, 0, 0, S(json), NONE, NONE, NULL, 0); }

@@ -48,6 +48,9 @@ int nw_ask(const char *to, const char *type, const char *json, int timeout_ms); 
 // which the sender must hold and be allowed to pass. Returns a settlement token.
 int nw_ask_file(const char *to, const char *type, int file, const char *name, int timeout_ms);
 
+// Bundled Chess to compositor. source is 1 for the painter or 0 for a PSIX position.
+int nw_painter_publish(int source, const unsigned char *bytes, unsigned length);
+
 // The screen: the tree of ui nodes it shows (a JSON object, as JavaScript's ui.* builds: {"t":"col","kids":[...]}; see
 // sdk/nw_ui.h) and the hint bar's text. At any time; the kernel shows it after the current event if it changed, kept
 // for a compositor that restarts. At most 16 KB with the hints (120 bytes).

@@ -19,4 +19,5 @@ record WorldState {
     bestMove: i32;
     score: i32;
     advanced: bool;
+    painterReady: bool;
 }

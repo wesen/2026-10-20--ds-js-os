@@ -67,6 +67,15 @@ void nat_dispose(world_t *W) {
 
 int nat_dispatch(world_t *W, msg_t *m) {
   world_t *F = m->from >= 0 ? world_by_id(m->from) : NULL;
+#if PICOCALC_MOBILE_PAINTER
+  if (m->painter_length) {
+    extern void p4_painter_receive(world_t *, world_t *, bool, const uint8_t *, size_t);
+    if (W->nat->cji_handles && kernel_chess_painter_current(W, m))
+      p4_painter_receive(W, F, m->painter_source, (const uint8_t *)(m + 1), m->painter_length);
+    W->turn_done = true;
+    return 0;
+  }
+#endif
   nw_event_t e = { 0 };
   e.kind = m->kind == M_ON ? NW_MESSAGE : m->kind == M_TICK ? NW_TICK : m->kind == M_START ? NW_START : NW_IRQ;
   e.type = m->kind == M_TICK ? "" : m->type ? m->type : "";
@@ -346,6 +355,14 @@ static int64_t cji_graphics(world_t *W, const nw_call_t *c, char *out, size_t ca
   if (!h) return fail(W, "%s", err);
   dmabuf_t *b = handle_buf(h);
   if (!b) return fail(W, "framebuffer is gone");
+#if PICOCALC_MOBILE_PAINTER
+  if (op == CJI_PAINTER_DRAW) {
+    extern bool p4_painter_draw(dmabuf_t *, char *, size_t);
+    if (strcmp(W->name, "compositor")) return fail(W, "painter requires the compositor");
+    if (!p4_painter_draw(b, out, cap)) return fail(W, "no accepted painter output");
+    return strlen(out);
+  }
+#endif
   if (op == CJI_INVALIDATE) { gfx_invalidate(b); return 0; }
   if (op == CJI_COMMIT) {
     int rs[64 * 4], count = gfx_commit(b, rs, 64);
@@ -385,6 +402,9 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
     }
   }
   if (c->op >= CJI_HANDLE_INFO && !W->nat->cji_handles) return fail(W, "operation requires a bundled CJI module");
+#if PICOCALC_MOBILE_PAINTER
+  if (c->op == CJI_PAINTER_DRAW) return cji_graphics(W, c, out, out_n);
+#endif
   if (c->op >= CJI_DMA && c->op <= CJI_FONTS) return cji_graphics(W, c, out, out_n);
   switch (c->op) {
     // Firmware-private CJI operation, outside the public native wire ABI.
@@ -574,6 +594,21 @@ fs_done:
     }
     case NW_NOW: return kernel_now();
     case NW_SELF: snprintf(out, out_n, "%s", W->name); return (int64_t)strlen(out);
+    case NW_PAINTER_PUBLISH: {
+#if PICOCALC_MOBILE_PAINTER
+      if (W->user || strcmp(W->name, "chess") || strcmp(W->file, "chess/compiled.bin") || W->nat->in_init)
+        return fail(W, "painter publication requires bundled Chess");
+      world_t *T = world_by_name("compositor");
+      if (!T || T->user || T->engine != ENG_NATIVE || T->status == W_STOPPED)
+        return fail(W, "the native compositor is unavailable");
+      if ((c->i[0] != 0 && c->i[0] != 1) || c->n[1] || c->n[2] ||
+          !kernel_chess_painter_send(W, T, c->i[0] == 1, (const uint8_t *)c->s[0], c->n[0]))
+        return fail(W, "painter packet exceeds transport capacity");
+      return 0;
+#else
+      return fail(W, "painter publication is unavailable");
+#endif
+    }
     case NW_SEND: {
       if (!name_ok(c, 0, NAME_LEN) || !name_ok(c, 1, NAME_LEN)) return fail(W, "send needs a world's name and a message type");
       char *to = str(c, 0), *type = str(c, 1), *json = c->n[2] ? str(c, 2) : NULL;
