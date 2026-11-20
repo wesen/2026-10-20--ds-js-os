@@ -1,0 +1,13 @@
+{
+  "frozenRules": "958d760",
+  "postHocManualControl": true,
+  "matchedTrees": 26,
+  "G": 26227,
+  "M": 8515,
+  "A": 24379,
+  "S1": 15371,
+  "S1ResetFrame": 13,
+  "S1NoReset": 14909,
+  "recoveredVsG": 0.1043360433604336,
+  "recoveredVsS1": -1.3138856476079346
+}

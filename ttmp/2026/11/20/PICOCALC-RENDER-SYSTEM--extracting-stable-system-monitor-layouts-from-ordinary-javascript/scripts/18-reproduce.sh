@@ -20,3 +20,6 @@ node "$dir/13-comparisons.cjs"
 node "$dir/16-protocol-audit.cjs"
 node "$dir/22-paired-diff.cjs"
 "$dir/23-source-cost.sh"
+node "$dir/24-keys-normalization.cjs"
+node "${lab[0]}" "$dir/../various/keys-manual-posthoc.ndjson" /tmp/render-system-keys-manual --skip-frame 1
+diff -qr /tmp/render-system-keys-generic /tmp/render-system-keys-manual

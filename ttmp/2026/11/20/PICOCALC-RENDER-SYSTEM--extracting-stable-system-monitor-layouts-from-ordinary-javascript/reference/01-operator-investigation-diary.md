@@ -267,3 +267,51 @@ Read scripts/22-paired-diff.cjs, various/paired-diff-first-summary.json, various
 ### Technical details
 
 All nine archived deterministic hashes from the clean run match. See various/clean-replay.json. The replay with repaired Acorn used the same v8.15.0 parser as the frozen build.
+
+## Step 6. Supply the manual denominator for held-out Keys
+
+The early host paper recorded the missing manual Keys comparator. Its absence made the formal 60% recovery test unscored. The frozen automatic packets and complete held-out inputs were already on disk, so I added a hand-coded independent comparator without reopening or changing the extractor.
+
+### Prompt Context
+
+See Step 1. The researcher's blind protocol asks how much of the possible manual byte reduction survives when the frozen rule encounters a second ordinary-JS application.
+
+### What I did
+
+Built a complete manual Keys value vector for the key details, driver counters and ordered event history. Reconstructed the SDK tree and compared all 26 states, every publication and complete RGB565 frames. Scored both G and S1 baselines and made the S1 midpoint-reset choice explicit.
+
+### Why
+
+The control must be constructed after scoring if a sealed independent operator has already run the blind trial. Its evidence answers a normalization question. The date of its construction matters to interpretation.
+
+### What worked
+
+All trees and frames matched. G, M, A and S1 sent 26,227, 8,515, 24,379 and 15,371 bytes respectively. The frozen automatic's saving is 10.43% of the manual saving relative to G. Relative to S1, A sends 9,008 extra bytes and M saves 6,856. The signed recovery of −131.39% fails the 60% test.
+
+### What didn't work
+
+The literal-only representation cannot reduce this trace below even the stateful baseline. Its compact column descriptors leave the changing event rows and container vocabulary on the wire.
+
+### What I learned
+
+Measured recovery is distinct from semantic recall of all compile-time constants. The latter would need an independent ground-truth annotation.
+
+### What was tricky to build
+
+The S1 receiver needs a reset policy. One full midpoint reset yields 15,371 bytes; no reset yields 14,909. The conclusion about A holds under either.
+
+### What warrants a second pair of eyes
+
+The manual Keys control is post-holdout normalization, whereas the automatic rule, packets and scored inputs were frozen independently.
+
+### What should be done in the future
+
+Advance a new extractor only with a fresh held-out producer.
+
+### Code review instructions
+
+Read scripts/24-keys-normalization.cjs and various/keys-normalization.json. The native pixel-oracle output and receipt for the manual arm match the files under /tmp/render-system-keys-generic.
+
+### Technical details
+
+Each of 26 images is 204,800 bytes. The comparison includes frame 1's discarded flush and recovery. The reproduced generic diff selects the shorter of each subtree replacement, fine path edits and a full serialized screen.
