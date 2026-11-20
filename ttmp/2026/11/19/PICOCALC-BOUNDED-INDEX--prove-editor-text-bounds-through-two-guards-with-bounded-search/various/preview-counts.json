@@ -1,0 +1,75 @@
+{
+  "emulatorSourceSha256": "701ed72484f1dc328615cf1f7d993ae25ca039f6317fe5fe5c4f8fbc6d7998a6",
+  "workloads": {
+    "preview-inline": {
+      "current": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 4,
+        "rv32Open": true,
+        "wasmBytes": 88361,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200,
+        "executedReadChecks": 4740,
+        "instrumentedPreviewSteps": 4699554,
+        "semanticSha256": "7f23c45b52fd63c8ac259907df9d32f91b020133ecef4d187977079d2a4e3126"
+      },
+      "direct": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 4,
+        "rv32Open": true,
+        "wasmBytes": 88361,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200,
+        "executedReadChecks": 4740,
+        "instrumentedPreviewSteps": 4699554,
+        "semanticSha256": "7f23c45b52fd63c8ac259907df9d32f91b020133ecef4d187977079d2a4e3126"
+      },
+      "bounded": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 4,
+        "rv32Open": true,
+        "wasmBytes": 88361,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200,
+        "executedReadChecks": 4538,
+        "instrumentedPreviewSteps": 4698746,
+        "semanticSha256": "7f23c45b52fd63c8ac259907df9d32f91b020133ecef4d187977079d2a4e3126"
+      }
+    },
+    "preview-dense-inline": {
+      "current": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 5,
+        "rv32Open": true,
+        "wasmBytes": 88361,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200,
+        "executedReadChecks": 47105,
+        "instrumentedPreviewSteps": 13017768,
+        "semanticSha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+      },
+      "direct": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 5,
+        "rv32Open": true,
+        "wasmBytes": 88361,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200,
+        "executedReadChecks": 47105,
+        "instrumentedPreviewSteps": 13017768,
+        "semanticSha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+      },
+      "bounded": {
+        "inputBytes": 65536,
+        "matchingWasmFramebuffers": 5,
+        "rv32Open": true,
+        "wasmBytes": 88361,
+        "elfBytes": 240452,
+        "wasmTurnBudgetMs": 200,
+        "executedReadChecks": 43976,
+        "instrumentedPreviewSteps": 13005252,
+        "semanticSha256": "78ca0997567d0ba22920001187dbebd19ebb8c22d67f3412bf4787d3d8454d45"
+      }
+    }
+  }
+}

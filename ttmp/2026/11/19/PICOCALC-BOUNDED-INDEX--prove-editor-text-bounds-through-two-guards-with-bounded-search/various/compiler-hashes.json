@@ -1,0 +1,36 @@
+{
+  "clean": {
+    "current": {
+      "rv32.js": "1e0ede93c1bc6f6cf79ad77d850d2e80ec8d79dd385da3bcbc345d3396dfd63e",
+      "wasm.js": "16e1590e1c8b995ad18bf0378dfe353a100583b682f7d53ffcbae95e14b198f3",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "direct": {
+      "rv32.js": "1e0ede93c1bc6f6cf79ad77d850d2e80ec8d79dd385da3bcbc345d3396dfd63e",
+      "wasm.js": "ab6e964c1d8dfe67f32ea9641fe5ad67aea6217503acbe0b27de1cc66c78a661",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "bounded": {
+      "rv32.js": "1e0ede93c1bc6f6cf79ad77d850d2e80ec8d79dd385da3bcbc345d3396dfd63e",
+      "wasm.js": "aa14e70e7ada370067bc8e3f748268dee2d249c90fbf426b4f2d66e716f89794",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    }
+  },
+  "count": {
+    "current": {
+      "rv32.js": "1ab284e2793641b2dd0fdcc0a58ed903f512c0c06fb490cb3f6a39cdc908aa88",
+      "wasm.js": "16e1590e1c8b995ad18bf0378dfe353a100583b682f7d53ffcbae95e14b198f3",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "direct": {
+      "rv32.js": "1ab284e2793641b2dd0fdcc0a58ed903f512c0c06fb490cb3f6a39cdc908aa88",
+      "wasm.js": "ab6e964c1d8dfe67f32ea9641fe5ad67aea6217503acbe0b27de1cc66c78a661",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    },
+    "bounded": {
+      "rv32.js": "1ab284e2793641b2dd0fdcc0a58ed903f512c0c06fb490cb3f6a39cdc908aa88",
+      "wasm.js": "aa14e70e7ada370067bc8e3f748268dee2d249c90fbf426b4f2d66e716f89794",
+      "world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    }
+  }
+}

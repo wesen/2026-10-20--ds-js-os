@@ -24,3 +24,7 @@ This experiment measures whether an explicit lower guard and a two-edge upper pr
 - [Frozen design](design-doc/01-a-fixed-budget-proof-for-guarded-editor-text-reads.md)
 - [Tasks](tasks.md)
 - [Changelog](changelog.md)
+- [Intern guide](analysis/01-proving-a-text-index-safe-in-a-streaming-compiler.md)
+- [Investigation diary](reference/01-bounded-index-proof-investigation-diary.md)
+- [Host qualification](various/host.json)
+- [Firmware compiler oracle](various/board-oracle.json)

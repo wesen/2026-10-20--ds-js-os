@@ -1,0 +1,209 @@
+{
+  "apps": {
+    "files": {
+      "current": {
+        "words": 495,
+        "sha256": "9502dc74876968d7eff9c221acc8fce4f3e1e0a5fb03ea7726110eb2b2a0de06",
+        "checks": 7,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        }
+      },
+      "direct": {
+        "words": 495,
+        "sha256": "9502dc74876968d7eff9c221acc8fce4f3e1e0a5fb03ea7726110eb2b2a0de06",
+        "checks": 7,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 5,
+          "exhausted": 0
+        }
+      },
+      "bounded": {
+        "words": 495,
+        "sha256": "9502dc74876968d7eff9c221acc8fce4f3e1e0a5fb03ea7726110eb2b2a0de06",
+        "checks": 7,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 5,
+          "exhausted": 0
+        }
+      }
+    },
+    "agenda": {
+      "current": {
+        "words": 2398,
+        "sha256": "f9f889bd2abc6332d6cf0c55adb7cbc83f98f11cc19663116cf5098b0f4654c2",
+        "checks": 32,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        }
+      },
+      "direct": {
+        "words": 2398,
+        "sha256": "f9f889bd2abc6332d6cf0c55adb7cbc83f98f11cc19663116cf5098b0f4654c2",
+        "checks": 32,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 10,
+          "exhausted": 0
+        }
+      },
+      "bounded": {
+        "words": 2398,
+        "sha256": "f9f889bd2abc6332d6cf0c55adb7cbc83f98f11cc19663116cf5098b0f4654c2",
+        "checks": 32,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 10,
+          "exhausted": 0
+        }
+      }
+    },
+    "editor": {
+      "current": {
+        "words": 15624,
+        "sha256": "f040144f9c72d38b385ef7f5da51eee3a766e8aa34a3530170adc19a5f3143e0",
+        "checks": 116,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        }
+      },
+      "direct": {
+        "words": 15624,
+        "sha256": "f040144f9c72d38b385ef7f5da51eee3a766e8aa34a3530170adc19a5f3143e0",
+        "checks": 116,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 31,
+          "exhausted": 0
+        },
+        "previewAppend": {
+          "proven": 0,
+          "exhausted": 0,
+          "examined": 4
+        }
+      },
+      "bounded": {
+        "words": 15620,
+        "sha256": "8eaf1d3af9e247bbac370a95800e23b7623f6d7e518d6ba0cd9b6a97bba18751",
+        "checks": 115,
+        "proofAttempts": {
+          "proven": 1,
+          "examined": 32,
+          "exhausted": 0
+        },
+        "previewAppend": {
+          "proven": 1,
+          "exhausted": 0,
+          "examined": 5
+        }
+      }
+    },
+    "fixture": {
+      "current": {
+        "words": 598,
+        "sha256": "931ca92e8e1d01f1a3915480a66c5d7dafcb375218270594aff0d1c9d3ea63fa",
+        "checks": 21,
+        "proofAttempts": {
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "checksByFunction": {
+          "shrink": 0,
+          "direct": 2,
+          "bounded": 2,
+          "missingLower": 1,
+          "nonstrict": 1,
+          "disjunction": 1,
+          "different": 1,
+          "changedIndex": 1,
+          "changedText": 1,
+          "joinedIndex": 1,
+          "joinedGuard": 1,
+          "callEffect": 1,
+          "fieldEffect": 1,
+          "logicEffect": 1,
+          "loop": 2,
+          "loopEffect": 1,
+          "loopRecord": 1,
+          "rhs": 1,
+          "budget": 1
+        }
+      },
+      "direct": {
+        "words": 594,
+        "sha256": "b811b9c8adb4096bd3a48c12bb1550cd5bf7027e343152c024c4cd94cbbe74f6",
+        "checks": 20,
+        "proofAttempts": {
+          "proven": 1,
+          "examined": 32,
+          "exhausted": 1
+        },
+        "checksByFunction": {
+          "shrink": 0,
+          "direct": 1,
+          "bounded": 2,
+          "missingLower": 1,
+          "nonstrict": 1,
+          "disjunction": 1,
+          "different": 1,
+          "changedIndex": 1,
+          "changedText": 1,
+          "joinedIndex": 1,
+          "joinedGuard": 1,
+          "callEffect": 1,
+          "fieldEffect": 1,
+          "logicEffect": 1,
+          "loop": 2,
+          "loopEffect": 1,
+          "loopRecord": 1,
+          "rhs": 1,
+          "budget": 1
+        }
+      },
+      "bounded": {
+        "words": 582,
+        "sha256": "fba4caf4dd0eeeda32c0a9e6b4e7dce08cb7a5a5a037ed1bd2cd024f839a6ac0",
+        "checks": 17,
+        "proofAttempts": {
+          "proven": 4,
+          "examined": 46,
+          "exhausted": 1
+        },
+        "checksByFunction": {
+          "shrink": 0,
+          "direct": 1,
+          "bounded": 1,
+          "missingLower": 1,
+          "nonstrict": 1,
+          "disjunction": 1,
+          "different": 1,
+          "changedIndex": 1,
+          "changedText": 1,
+          "joinedIndex": 1,
+          "joinedGuard": 1,
+          "callEffect": 1,
+          "fieldEffect": 1,
+          "logicEffect": 1,
+          "loop": 1,
+          "loopEffect": 1,
+          "loopRecord": 1,
+          "rhs": 0,
+          "budget": 1
+        }
+      }
+    }
+  },
+  "fixture": {
+    "cases": 357,
+    "traps": 94
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "base": {
+    "sha256": "e76b4ccc37fa89a83945e18e939415a263b9f1679d5f563b8c834a0b1373746c",
+    "words": 192,
+    "entryOffset": 244,
+    "firmwareOffset": 2889516
+  },
+  "direct": {
+    "sha256": "e76b4ccc37fa89a83945e18e939415a263b9f1679d5f563b8c834a0b1373746c",
+    "words": 192,
+    "entryOffset": 244,
+    "firmwareOffset": 2889516
+  },
+  "bounded": {
+    "sha256": "809730ba34143cc2535c9bc167a530b7bebab14e45c0653f59dc19d77551c5d3",
+    "words": 188,
+    "entryOffset": 244,
+    "firmwareOffset": 2891052
+  }
+}
