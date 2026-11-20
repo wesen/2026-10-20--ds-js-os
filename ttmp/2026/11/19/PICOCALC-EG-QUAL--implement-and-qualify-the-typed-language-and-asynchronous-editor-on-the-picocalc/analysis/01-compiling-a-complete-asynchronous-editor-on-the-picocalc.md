@@ -24,6 +24,21 @@ The original Editor implemented this sequence by assigning progress to named fie
 
 ![The compile path from two Editor tasks to their persistent state](../various/editor-state.png)
 
+## The language underneath the Editor
+
+Consider a small search that examines offsets zero through four while staying inside a supplied length. It returns one of four outcomes. A match at the first position, a later match, reaching the work limit, and exhausting the input each have a distinct meaning. At length nine, searching for offset three returns a match and searching for offset seven hits the work limit. At length four, searching for seven exhausts the input first. The accompanying program compiles with the ordinary typed frontend and runs six checked cases in Wasm. [Complete typed example](../sources/search-limit-example.typed) · [Executable check](../scripts/27-check-guide-example.mjs)
+
+| Professor task | What the compiler learns from this example |
+| --- | --- |
+| E1, conditional alternatives | `if`, `else if` and `else` group mutually exclusive cases. After taking a branch, control continues after the whole conditional unless the branch returns or breaks. |
+| E2–E3, counted loops and exits | A `for` initializer runs once, the condition runs before each iteration and the update follows an ordinary iteration. A `break` exits its nearest loop and skips its update. |
+| E4, strict inequality | `i !== i32(wanted)` produces a Boolean after the compiler checks the operand types. The comparison operates on machine integers. |
+| E5, forward calls | The entry function `result` calls `scan`, defined later. Reading function signatures before body emission gives the compiler the parameter and return types. The call graph check rejects recursion. |
+| E6, enumerations | `ScanEnd` names every possible result. If a new member is added, an exhaustive `match` must handle it. The real Editor applies the same rule to line-suffix, later-line, earlier-line, line-prefix and terminal search phases. |
+| E7, distinct integers | `Unit` gives offsets a type identity. The explicit conversion `Unit(limit)` establishes that a plain integer is being used as an offset. Conversion back with `i32(limit)` allows integer comparison. These conversions require no runtime instruction. |
+
+Together these rules separate three jobs. The type checker rejects a wrong unit or a missing search case. Structured control tells the backends where a loop or branch may go. The continuation compiler uses these control paths to determine what must survive when a running function suspends.
+
 ## What survives a kernel turn
 
 At the first read suspension, Open must remember the file handle. The call `typedSdkFileRead(handle)` issues the request. A subsequent event identifies its completion by token. Editor obtains text or error information from the *current* event. Saving the old event pointer would give the program a view with the wrong lifetime. A numeric file handle has a different contract. The kernel keeps its resource alive until the owner releases it.

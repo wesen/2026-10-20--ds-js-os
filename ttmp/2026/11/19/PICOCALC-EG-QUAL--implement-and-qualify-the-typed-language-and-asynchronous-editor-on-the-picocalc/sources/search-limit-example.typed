@@ -1,0 +1,27 @@
+type Unit = distinct i32;
+enum ScanEnd { AtStart, Found, Limit, Exhausted }
+
+function result(limit: i32, wanted: i32): i32 {
+    const end = scan(Unit(limit), Unit(wanted));
+    match (end) {
+        AtStart: { return 0; }
+        Found: { return 1; }
+        Limit: { return 2; }
+        Exhausted: { return 3; }
+    }
+    return 3;
+}
+
+function scan(limit: Unit, wanted: Unit): ScanEnd {
+    for (let i = 0; i < i32(limit); i = i + 1) {
+        if (i !== i32(wanted)) {
+            if (i === 4) { break; }
+        } else if (i === 0) {
+            return ScanEnd.AtStart;
+        } else {
+            return ScanEnd.Found;
+        }
+    }
+    if (i32(limit) > 4) { return ScanEnd.Limit; }
+    return ScanEnd.Exhausted;
+}
