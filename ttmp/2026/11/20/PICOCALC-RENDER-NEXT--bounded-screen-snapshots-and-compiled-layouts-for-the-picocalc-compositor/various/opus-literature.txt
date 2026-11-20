@@ -1,0 +1,92 @@
+# Technical memo: Render-next empirical research program
+
+**Scope.** This is a planning memo. Nothing will be deployed and no code is written. The setup is one ESP32-P4, immutable full-screen snapshots, a hard memory limit B, and a held-out text-editor workload. The memo keeps the existing four decisions and adds no new projects. The reserve items are alternatives inside those decisions. **[P]** marks a published finding. **[L]** marks a local proposal that has not been validated.
+
+## Shared protocol (applies to all four decisions)
+
+- **[L] Reference oracle.** The baseline is a full decode, full layout and full redraw of every frame. Each candidate must produce the same framebuffer hash as the oracle on every frame of every trace. A single mismatch disqualifies the candidate.
+- **[L] Hard memory check.** Measure peak memory use (static data + stack + arenas). It must stay at or below B on every trace, and also on a synthetic snapshot that is exactly B bytes.
+- **[L] Workload split.** Split the editor traces into a development set and a frozen held-out set. Cover typing, cursor movement, scrolling, selection, large pastes and resizing. Tune only on the development set. The held-out set is used once, for the go/no-go decision. Set each decision's pass/fail thresholds before running the held-out traces.
+- **[P] Measurement bias.** Small setup details, such as environment size and link order, can bias results enough to reverse a conclusion ([Mytkowicz et al., ASPLOS 2009](https://sape.inf.usi.ch/publications/asplos09)). Plan how many repetitions to run across builds and runs, and report effect sizes with confidence intervals ([Kalibera & Jones, ISMM 2013](https://kar.kent.ac.uk/id/document/3127886)).
+- **[L] What this means on one board.** Make several builds with randomized link order, interleave the conditions being compared, and report confidence intervals on median and p99 frame time.
+- **[L] Order of work.** First, profile the oracle and split frame time into decode, template, layout, rasterization and panel transfer. Start with the largest share. Gate each decision on its own, then test them together.
+
+## 1. Bounded frame decoding
+
+- **Principle [P].** Find the document's structure first, then build values. simdjson's first pass finds structural characters, and a second pass writes a flat "tape" ([Langdale & Lemire, VLDB J. 2019](https://arxiv.org/abs/1902.08318)). It is built for wide-SIMD desktop CPUs, so it supplies the idea rather than code to port. jsmn shows the bounded version: the caller supplies the token array, there is no heap use, and it returns an explicit out-of-memory error ([jsmn](https://github.com/zserge/jsmn)).
+- **Candidate [L].** A jsmn-style tokenizer that writes into a fixed tape sized from B. Frames that are too large are rejected, not degraded.
+- **Comparator.** The current decoder.
+- **Disqualify if:**
+  - peak tape use exceeds B on any held-out or maximum-size synthetic frame;
+  - p99 decode time is over its preset share of the frame budget; or
+  - the worst-case token count per byte needs a tape larger than the snapshot itself.
+
+## 2. Compiled immutable UI templates
+
+- **Principle [P].** Binding-time analysis labels each input as static (known at build time) or dynamic (known only at runtime). Partial evaluation then produces a reduced program that does only the dynamic work ([Jones, Gomard & Sestoft 1993](https://www.itu.dk/~sestoft/pebook/)).
+- **Candidate [L].** Treat template structure, styles and font metrics as static. At build time, compile each template into an immutable flat list of operations stored in flash. Its only runtime inputs are indexes into snapshot fields.
+- **Comparator.** A generic interpreter that walks the decoded snapshot.
+- **Disqualify if:**
+  - most operations turn out to be dynamic, so the speedup's confidence interval includes 1.0;
+  - added flash or RAM across all templates goes over budget; or
+  - templates change at runtime often enough that the fallback path dominates.
+
+## 3. Bounded layout reuse
+
+- **Principle [P].** Treat layout as attribute evaluation over a tree, and after an edit recompute only the attributes it affects. Reps, Teitelbaum and Demers give an update algorithm that is asymptotically optimal in time ([TOPLAS 1983](https://research.cs.wisc.edu/wpis/abstracts/toplas83.abs.html)). Meyerovich and Bodík expressed real CSS layout this way ([WWW 2010](https://lmeyerov.github.io/projects/pbrowser/pubfiles/extended.pdf)).
+- **Candidate [L].** A fixed-size, direct-mapped cache of per-line layouts. The key is (template id, content hash, width). A miss recomputes the line, and a resize clears the cache.
+- **Comparator.** Full layout on every frame.
+- **Disqualify if:**
+  - the held-out hit rate is below the preset minimum;
+  - hashing and lookup cost as much as the layout time they save;
+  - the worst-case frame (a large paste or a cascade of line rewrapping) is slower than full layout; or
+  - any oracle mismatch occurs, which would point to a stale-key bug.
+
+## 4. Partial redraw
+
+- **Principle [P].** Collect changed screen areas ("damage") as a region, and choose how precisely to report it. The X DAMAGE extension offers raw rectangles, deltas, a bounding box, or just "something changed," trading precision against bookkeeping ([DAMAGE spec](https://xorg.freedesktop.org/archive/X11R7.7/doc/damageproto/damageproto.txt)). Earlier work on overlapping layers limits redrawing to the exposed parts ([Pike 1983](https://plan9.io/sources/contrib/steve/other-docs/bitmap-layers.pdf)).
+- **Candidate [L].** Because snapshots are immutable, compare consecutive snapshots node by node. Turn the differences into at most K rectangles, or a coarse tile mask. If that overflows, fall back to one bounding box. Send only the damaged windows to the panel.
+- **Comparator.** Flushing the full frame every time.
+- **Disqualify if:**
+  - any pixel differs from the oracle, meaning some damage was missed;
+  - fixed setup cost per rectangle makes a K-rectangle flush slower than a full flush at the held-out median; or
+  - the overdraw ratio (pixels repainted ÷ pixels changed) stays high enough that the savings interval includes zero.
+
+## Reserve list (alternatives within the four decisions; promote only when the condition holds)
+
+- **R1. Alternative wire formats (decision 1).**
+  - Options: definite-length CBOR ([RFC 8949 §4.2](https://www.rfc-editor.org/rfc/rfc8949)) and FlatBuffers ([internals](https://fuchsia.googlesource.com/third_party/flatbuffers/+/main/docs/source/Internals.md)).
+  - **[P]** In definite-length CBOR, each array or map header states how many items follow, so a decoder knows sizes up front and can skip items.
+  - **[P]** FlatBuffers reads fields in place after a verification pass. Its C++ verifier's default limits (nesting depth 64, one million tables) are far looser than B and would have to be tightened.
+  - **Promote if** decoding dominates frame time, or the tape goes over B, and the producer can change its format. Then compare each format's encoded size against B.
+- **R2. Lazy field access (decision 1).**
+  - simdjson's On-Demand API builds values only when they are read ([Keiser & Lemire 2024](https://arxiv.org/abs/2312.17149)).
+  - **Promote if** instrumentation shows most snapshot fields are never read in a given frame.
+- **R3. Demand-driven incremental computation (decision 3).**
+  - Options: Adapton ([PLDI 2014](https://www.cs.umd.edu/~hammer/adapton/)) and Hudson's lazy attribute update ([TOPLAS 1991](https://doi.org/10.1145/117009.117012)).
+  - **Promote if** the cache computes many layouts that are never shown (for example, off-screen lines), or eager invalidation costs more than the misses it avoids.
+- **R4. Hardware fill/blend offload (decision 4).**
+  - The ESP32-P4's Pixel-Processing Accelerator works with its DMA-2D engine ([ESP-IDF PPA](https://docs.espressif.com/projects/esp-idf/en/stable/esp32p4/api-reference/peripherals/ppa.html)).
+  - **[P]** Output buffers in cacheable memory must be aligned to the cache-line size.
+  - **Promote if** CPU rasterization, not panel transfer, dominates redraw time.
+
+**Separating evidence from proposals.** The sources above support only the principles, the API and hardware behavior, and the measurement-bias findings. Every candidate, threshold and promotion condition marked [L] is a hypothesis for this program to test. Speedups reported on desktop CPUs or in browsers are not evidence for the ESP32-P4.
+
+---
+
+Sources:
+- [Langdale & Lemire, arXiv 1902.08318](https://arxiv.org/abs/1902.08318)
+- [Keiser & Lemire, arXiv 2312.17149](https://arxiv.org/abs/2312.17149)
+- [jsmn](https://github.com/zserge/jsmn)
+- [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949) · [draft-ietf-cbor-cde](https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde)
+- [FlatBuffers Internals](https://fuchsia.googlesource.com/third_party/flatbuffers/+/main/docs/source/Internals.md) · [FlatBuffers verifier.h](https://fuchsia.googlesource.com/third_party/flatbuffers/+/refs/tags/v24.3.7/include/flatbuffers/verifier.h)
+- [Jones, Gomard & Sestoft](https://www.itu.dk/~sestoft/pebook/)
+- [Reps, Teitelbaum & Demers 1983](https://research.cs.wisc.edu/wpis/abstracts/toplas83.abs.html)
+- [Meyerovich & Bodík 2010](https://lmeyerov.github.io/projects/pbrowser/pubfiles/extended.pdf)
+- [Adapton](https://www.cs.umd.edu/~hammer/adapton/)
+- [Hudson 1991 DOI](https://doi.org/10.1145/117009.117012)
+- [X DAMAGE spec](https://xorg.freedesktop.org/archive/X11R7.7/doc/damageproto/damageproto.txt)
+- [Pike, bitmap layers](https://plan9.io/sources/contrib/steve/other-docs/bitmap-layers.pdf)
+- [ESP-IDF PPA](https://docs.espressif.com/projects/esp-idf/en/stable/esp32p4/api-reference/peripherals/ppa.html) · [LVGL PPA notes](https://docs.lvgl.io/9.5/integration/chip_vendors/espressif/hardware_accelerator_ppa.html)
+- [Mytkowicz et al. 2009](https://sape.inf.usi.ch/publications/asplos09)
+- [Kalibera & Jones 2013](https://kar.kent.ac.uk/id/document/3127886)
