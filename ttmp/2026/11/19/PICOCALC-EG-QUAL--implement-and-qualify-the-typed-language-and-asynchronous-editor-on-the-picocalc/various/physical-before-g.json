@@ -1,0 +1,258 @@
+{
+  "original": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "kind": "before-g",
+  "trials": [
+    {
+      "image_sha256": "d21b5ca03784a148094223c7f338d1a3f594c1301511ba57b26ba04370278306",
+      "compiles": [
+        {
+          "us": 2038241,
+          "peak_js_bytes": 1546096,
+          "module_bytes": 88302
+        },
+        {
+          "us": 2025205,
+          "peak_js_bytes": 1545880,
+          "module_bytes": 88302
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3441326,
+          "loader_us": 176589
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2318,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "dde3a73798e324687cd565856e7eb446b5176fa63e3ce3ed9e1e9f86aff6b789",
+        "shot-2.png": "b471abae2b39c8cb8ff4f04350539de7e56ed08f5a014f6dff0d751e682199e7"
+      },
+      "trial": 1,
+      "engine": "wasm",
+      "workflow_cpu_ms": 144.53
+    },
+    {
+      "image_sha256": "6659e8bae369d3c4e2ef6826732019505c5ad59fe3df41618ed1945362a097f3",
+      "compiles": [
+        {
+          "us": 2654595,
+          "peak_js_bytes": 1493644,
+          "module_bytes": 240452
+        },
+        {
+          "us": 2653065,
+          "peak_js_bytes": 1493644,
+          "module_bytes": 240452
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 4064140,
+          "loader_us": 13931
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2279,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "c62eba2048b9052b2189824683befff48ad67832e7a3131ae9583e5d7189a2ff",
+        "shot-2.png": "b5f8b4fa04179b76d1e0d86c32b6ccabed132aa53c7903b142a72de96e98132f"
+      },
+      "trial": 2,
+      "engine": "rv32",
+      "workflow_cpu_ms": 33.72
+    },
+    {
+      "image_sha256": "6659e8bae369d3c4e2ef6826732019505c5ad59fe3df41618ed1945362a097f3",
+      "compiles": [
+        {
+          "us": 2643177,
+          "peak_js_bytes": 1493876,
+          "module_bytes": 240452
+        },
+        {
+          "us": 2645557,
+          "peak_js_bytes": 1493880,
+          "module_bytes": 240452
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 4060278,
+          "loader_us": 14214
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2273,
+          0
+        ],
+        "spi2": [
+          590,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "c62eba2048b9052b2189824683befff48ad67832e7a3131ae9583e5d7189a2ff",
+        "shot-2.png": "b5f8b4fa04179b76d1e0d86c32b6ccabed132aa53c7903b142a72de96e98132f"
+      },
+      "trial": 3,
+      "engine": "rv32",
+      "workflow_cpu_ms": 35.03
+    },
+    {
+      "image_sha256": "d21b5ca03784a148094223c7f338d1a3f594c1301511ba57b26ba04370278306",
+      "compiles": [
+        {
+          "us": 2026727,
+          "peak_js_bytes": 1546152,
+          "module_bytes": 88302
+        },
+        {
+          "us": 2036252,
+          "peak_js_bytes": 1545892,
+          "module_bytes": 88302
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3455880,
+          "loader_us": 176246
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2314,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "dde3a73798e324687cd565856e7eb446b5176fa63e3ce3ed9e1e9f86aff6b789",
+        "shot-2.png": "b471abae2b39c8cb8ff4f04350539de7e56ed08f5a014f6dff0d751e682199e7"
+      },
+      "trial": 4,
+      "engine": "wasm",
+      "workflow_cpu_ms": 144.35
+    },
+    {
+      "image_sha256": "d21b5ca03784a148094223c7f338d1a3f594c1301511ba57b26ba04370278306",
+      "compiles": [
+        {
+          "us": 2023951,
+          "peak_js_bytes": 1545880,
+          "module_bytes": 88302
+        },
+        {
+          "us": 2028286,
+          "peak_js_bytes": 1546084,
+          "module_bytes": 88302
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3438212,
+          "loader_us": 175937
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2324,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "dde3a73798e324687cd565856e7eb446b5176fa63e3ce3ed9e1e9f86aff6b789",
+        "shot-2.png": "b471abae2b39c8cb8ff4f04350539de7e56ed08f5a014f6dff0d751e682199e7"
+      },
+      "trial": 5,
+      "engine": "wasm",
+      "workflow_cpu_ms": 142.84
+    },
+    {
+      "image_sha256": "6659e8bae369d3c4e2ef6826732019505c5ad59fe3df41618ed1945362a097f3",
+      "compiles": [
+        {
+          "us": 2644871,
+          "peak_js_bytes": 1493876,
+          "module_bytes": 240452
+        },
+        {
+          "us": 2627345,
+          "peak_js_bytes": 1493532,
+          "module_bytes": 240452
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 4035156,
+          "loader_us": 14172
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2276,
+          0
+        ],
+        "spi2": [
+          590,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "c62eba2048b9052b2189824683befff48ad67832e7a3131ae9583e5d7189a2ff",
+        "shot-2.png": "b5f8b4fa04179b76d1e0d86c32b6ccabed132aa53c7903b142a72de96e98132f"
+      },
+      "trial": 6,
+      "engine": "rv32",
+      "workflow_cpu_ms": 35.46
+    }
+  ],
+  "restored": true,
+  "worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    }
+  }
+}
