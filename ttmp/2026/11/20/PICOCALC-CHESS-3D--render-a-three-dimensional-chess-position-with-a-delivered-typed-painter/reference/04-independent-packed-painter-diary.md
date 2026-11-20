@@ -71,3 +71,33 @@ Review receiver allocation and actual hardware selected-path evidence after the 
 ### Code review instructions and technical details
 
 Run scripts/review/combined.mjs with the generated source, the frozen scene's fixtures.bin, an output directory and the installed Espressif binutils prefix. Then run scripts/review/check-pixels.py on that output directory. Machine and argument digests are in scripts/review/combined-host.json. Aggregate pixel checks are in scripts/review/combined-pixels.json.
+
+## Step 3. Fix and exercise the C entry contract
+
+Static review of the first staged receiving firmware showed that the C declaration inside the relocatable reactor still accepted two pointers, while its caller used eight. The machine representation of a function pointer happened to match, but the store through the old function-pointer type was incompatible. I reported it to the implementation author. The correction now extends through the wrapper, reactor entry, generated signature check, and eight-register native call.
+
+### Prompt context and approach
+
+See Step 1. I wrote a host smoke program that compiles the staged receiver's actual structure definitions and load/run/free routines with the real reactor C handoff. It substitutes test implementations of the allocator, clock, ELF loader and generated entry to inspect address identity and failure cleanup.
+
+### What I did and why
+
+The test uses static C type assertions on both sides of the handoff. It builds under -Wall -Wextra -Werror. It rejects four fault conditions individually: no handle allocation, relocation failure, missing entry and failed 1152-byte scratch allocation. Two normal calls pass different game cursor cells, check scratch address reuse, repeat pitch and witness initialization and copy exactly the two mock output words. Deliberately reducing one scratch capacity blocks the next native call. The test checks all live-resource counters at every failure and after teardown.
+
+### What did not work
+
+On the initial staged image, invoking check-receiver.py on the witness tree printed “static assertion failed: \"slot handoff must take eight buffers\"” and “static assertion failed: \"slot target must take eight buffers\"”. After that was fixed, the early paired build introduced a visibility conflict. A fresh staging run gave “error: ‘mobile_painter_raw’ redeclared with different visibility”. The script had left app_main's existing default visibility annotation ahead of the inserted raw function's hidden annotation. The author corrected the anchor and retained the original entry symbol visibility.
+
+### What worked and what I learned
+
+Rebuilding from a fresh input and checking the paired stage succeeded: “RECEIVER_OK 4 rejected installs, 2 eight-buffer calls, 1 rejected capacity, 0 live allocations”. Each scratch data pointer was 16-byte aligned and adjacent channels lay exactly 192 bytes apart. The 1152-byte allocation is internal RAM owned by the installed program. The preserved drawing list owns copies of output words, so it can survive reuse of all six channels.
+
+I also rendered the native packed command words and compared actual screen bytes from the physical *original scalar* scene with that output. All three 320-by-298 app regions matched exactly. Each independently recomputed application CRC matched the operator's completed SPI observer, with zero faults and zero remaining pixels. This observation establishes the scalar hardware control; the captured arm matters to its interpretation.
+
+### What warrants review and what comes next
+
+Require a separate hardware witness for the packed entry. The staging source places the stamp after the vector groups and before the scalar suffix. The receiver initializes that slot to zero before each call, then checks for 0xabcd only in the witness arm. An uninstrumented image used for timing must leave the stamp zero. The paired timing experiment is intended to compare the two implementations on the same core and data.
+
+### Code review instructions and technical details
+
+Run scripts/review/check-receiver.py with a freshly staged tree and arm name paired. Run scripts/review/check-pixels.py with the words saved by the independent native interpreter and --device pointing at the operator's capture. The first host qualification checkpoint is 418189e.
