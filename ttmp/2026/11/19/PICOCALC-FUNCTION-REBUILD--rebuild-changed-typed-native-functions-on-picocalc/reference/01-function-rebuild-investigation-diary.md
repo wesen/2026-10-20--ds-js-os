@@ -124,3 +124,54 @@ Read [02-incremental.js](../scripts/02-incremental.js) at `fragment`, `compile` 
 ### Technical details
 
 The stock wrapper in the firmware has its original frontend, backend and Files validation source. The warm comparison evaluates those original entry definitions in the session runtime, where the adapters also exist. The installed physical runner verifies the host oracle, UART diagnostics, whole ELF SHA-256, heap ceiling and the edited entry's output. C reads the linked Files slot and copies it to executable memory, including its entry jump. The run timer begins at the actual entry call.
+
+## Step 3: Use the production ELF loader for the edited guest
+
+The first guest harness would copy the linked slot into local executable memory. A configuration review before flashing established that this firmware's hardware memory split removes the requested executable flag from every eligible local heap. I changed the fixture to load the actual edited ELF through the ordinary loader into executable PSRAM and call the mapped Files entry stub.
+
+### Prompt Context
+
+See Step 1. The initial isolated prototype and board runner were committed in `ff03ea9`. The supervisor had queued the first binary but stopped the queue before it touched the port.
+
+### What I did
+
+- Checked `build/config/sdkconfig.h`, ESP-IDF's ESP32-P4 heap region capabilities, and the pinned loader's `esp_elf_malloc` and `esp_elf_map_sym` paths.
+- Replaced the local slot copy with `esp_elf_init`, `esp_elf_relocate` and `esp_elf_map_sym`. Resolve the entry stub through the file offset in an executable load segment. Use the same source and ABI as the complete ELF passed to the stock loader.
+- Rebuilt using `idf.py -C /tmp/pico-function-rebuild/tree/picocalc-os/port/esp32p4 -B /tmp/pico-function-rebuild/build build` in the activated ESP-IDF 5.4.2 shell. The rebuilt image was 4,577,008 bytes and SHA-256 `72769ef41bf952e4fee37dd5e762404294cc30ec75b78c5e8dd1305d408053af`.
+- Returned the corrected image to the supervisor for the same two-boot queue.
+
+### Why
+
+The experimental firmware must retain the reference board's normal memory configuration. Loading the whole ELF exercises the executable mapping the real app expects and gives the entry clock a concrete predecessor.
+
+### What worked
+
+The repaired image built on the first attempt. Neither the candidate compiler scripts nor the reactor changed. The original host output digests still apply.
+
+### What didn't work
+
+The prior `heap_caps_malloc(capacity, MALLOC_CAP_EXEC | MALLOC_CAP_INTERNAL)` design was incompatible with `#define CONFIG_ESP_SYSTEM_PMP_IDRAM_SPLIT 1`. The IDF heap config omits `MALLOC_CAP_EXEC` from local SRAM when that option is active. This was a source and configuration preflight finding. The superseded binary was never flashed.
+
+### What I learned
+
+RV32 relative jumps are independent of where the slot is mapped. The device still decides which regions carry execute permission. In this firmware the ELF loader already owns the executable PSRAM path.
+
+### What was tricky to build
+
+The slot marker is found at an offset in the ELF file, but the loader expects a virtual address. The runner finds the executable load segment and maps `virtualStart + slotEntryOffset - fileStart`. The app's pure `filesName` routine can then run with the two ABI record arguments without initializing a whole world.
+
+### What warrants a second pair of eyes
+
+Check that a matching ELF, the loaded segment, and the entry receipt refer to the same object. The guest test must call the runtime-generated image under measurement.
+
+### What should be done in the future
+
+Capture the physical rows and restore the scheduled device's prior image.
+
+### Code review instructions
+
+Read `rebuild_guest` in [05-p4.c.inc](../scripts/05-p4.c.inc). The runner checks the SHA-256 and native output for each measured seed and body edit.
+
+### Technical details
+
+The stock firmware has `CONFIG_ELF_LOADER_LOAD_PSRAM=1`. The candidate hands the confirmed ELF bytes to that loader, verifies the mapped entry address, records load time, calls the pure entry once with `_Ab`, and frees the mapped ELF after the clock stops. The cache trial's compile times exclude all of that work.

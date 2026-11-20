@@ -1,6 +1,6 @@
 /* Appended to the isolated typed_p4.c to share its allocator and bundle I/O. */
 #include <inttypes.h>
-#include "esp_heap_caps.h"
+#include "esp_elf.h"
 #include "mbedtls/sha256.h"
 
 char *rebuild_editor_compile(size_t *length);
@@ -32,34 +32,53 @@ static void rebuild_hash(const uint8_t *bytes, size_t size) {
 }
 
 static bool rebuild_guest(const uint8_t *bytes, size_t size, const char *id) {
-  // This fixture has no runtime imports. Copy the already linked slot to local
-  // executable memory, preserving the relative entry stub and all call deltas.
   static const uint32_t magic[] = {0x4147454e, 0x44415256, 0x3332534c};
-  const uint8_t *slot = NULL;
-  uint32_t capacity = 0;
+  size_t entry_offset = 0;
   for (size_t at = 0; at + 36 <= size; at += 4) {
     if (memcmp(bytes + at, magic, sizeof magic)) continue;
-    uint32_t entries;
+    uint32_t entries, capacity;
     memcpy(&capacity, bytes + at + 12, 4);
     memcpy(&entries, bytes + at + 16, 4);
-    if (slot || entries != 4 || capacity > size - at || capacity < 36) return false;
-    slot = bytes + at;
+    if (entry_offset || entries != 4 || capacity > size - at || capacity < 36) return false;
+    entry_offset = at + 20;  // Files has no runtime imports; filesName is entry stub 0.
     at += capacity - 4;
   }
-  if (!slot) return false;
+  if (!entry_offset || ((uintptr_t)bytes & 3)) return false;
+
+  // Use the firmware's ELF loader and executable PSRAM configuration. The
+  // reactor's entry setup lives elsewhere; this pure Files call needs no world.
   const vtime_t load_at = port_clock();
-  uint32_t *words = heap_caps_malloc(capacity, MALLOC_CAP_EXEC | MALLOC_CAP_INTERNAL);
-  if (!words) return false;
-  for (size_t i = 0; i < capacity / 4; ++i) memcpy(words + i, slot + 4 * i, 4);
-  __asm__ volatile("fence.i" ::: "memory");
+  esp_elf_t elf;
+  esp_elf_init(&elf);
+  int rc = esp_elf_relocate(&elf, bytes, size);
+  if (rc) {
+    printf("REBUILDERROR guest ELF load %d\n", rc);
+    esp_elf_deinit(&elf);
+    return false;
+  }
+  const elf32_hdr_t *header = (const void *)bytes;
+  const elf32_phdr_t *segments = (const void *)(bytes + header->phoff);
+  uintptr_t mapped = 0;
+  for (uint16_t i = 0; i < header->phnum; ++i) {
+    const elf32_phdr_t *segment = segments + i;
+    if (segment->type == PT_LOAD && (segment->flags & 1) && entry_offset >= segment->offset &&
+        entry_offset - segment->offset < segment->filesz) {
+      mapped = esp_elf_map_sym(&elf, segment->vaddr + entry_offset - segment->offset);
+      break;
+    }
+  }
   const vtime_t load_us = port_clock() - load_at;
-  int (*entry)(const rebuild_string *, rebuild_string *) = (void *)(words + 5);
+  if (!mapped) {
+    esp_elf_deinit(&elf);
+    return false;
+  }
+  int (*entry)(const rebuild_string *, rebuild_string *) = (void *)mapped;
   rebuild_string input = {.length = 3, .units = {'_', 'A', 'b'}};
   rebuild_string output = {.length = 96};
   const vtime_t start = port_clock();
   const int result = entry(&input, &output);
   const vtime_t run_us = port_clock() - start;
-  free(words);
+  esp_elf_deinit(&elf);
   printf("REBUILDGUEST %s %lld %lld %d %u %u %u\n", id, (long long)load_us,
          (long long)run_us, result, output.units[0], output.units[1], output.units[2]);
   return !strcmp(id, "seed") ? result == -1 :
