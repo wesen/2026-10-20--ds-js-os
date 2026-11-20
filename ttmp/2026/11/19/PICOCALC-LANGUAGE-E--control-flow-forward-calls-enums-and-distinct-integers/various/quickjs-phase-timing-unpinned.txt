@@ -1,0 +1,42 @@
+CPU
+Architecture:                            x86_64
+Model name:                              11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+Source and stock reactor revisions
+f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed  /tmp/tmp.LodpT04Iaz/editor.typed
+b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f  picocalc-os/build/typed-world-reactor.wasm
+
+Revision 289281c
+compiler load (evaluate three compiler files): 3.48 ms
+source: 70857 UTF-16 units, 16792 tokens; Wasm module 88255 bytes; RV32 ELF 0 bytes
+tokenize only (the compiler's regex, no parsing): median 13.13 ms (min 13.03, max 13.37, 15 runs)
+frontend only: parse, check, emit Wasm function bodies: median 46.16 ms (min 44.40, max 52.54, 15 runs)
+frontend + RV32 lowering (no ELF link): median 71.41 ms (min 59.23, max 99.30, 15 runs)
+Wasm world: parse, check, emit, link into reactor: median 54.06 ms (min 49.27, max 78.66, 15 runs)
+heap in use after runs: 490806 bytes
+
+Revision c5e2839
+compiler load (evaluate three compiler files): 4.01 ms
+source: 70857 UTF-16 units, 16792 tokens; Wasm module 88255 bytes; RV32 ELF 0 bytes
+tokenize only (the compiler's regex, no parsing): median 14.15 ms (min 13.21, max 19.87, 15 runs)
+frontend only: parse, check, emit Wasm function bodies: median 50.04 ms (min 48.26, max 66.28, 15 runs)
+frontend + RV32 lowering (no ELF link): median 66.98 ms (min 64.36, max 69.71, 15 runs)
+Wasm world: parse, check, emit, link into reactor: median 46.87 ms (min 45.22, max 49.39, 15 runs)
+heap in use after runs: 511678 bytes
+
+Revision 4eb08cb
+compiler load (evaluate three compiler files): 4.39 ms
+source: 70857 UTF-16 units, 16792 tokens; Wasm module 88255 bytes; RV32 ELF 0 bytes
+tokenize only (the compiler's regex, no parsing): median 15.28 ms (min 15.20, max 16.30, 15 runs)
+frontend only: parse, check, emit Wasm function bodies: median 44.50 ms (min 44.19, max 47.84, 15 runs)
+frontend + RV32 lowering (no ELF link): median 64.49 ms (min 63.59, max 66.17, 15 runs)
+Wasm world: parse, check, emit, link into reactor: median 47.34 ms (min 46.56, max 48.83, 15 runs)
+heap in use after runs: 540254 bytes
+
+Revision 289281c
+compiler load (evaluate three compiler files): 3.42 ms
+source: 70857 UTF-16 units, 16792 tokens; Wasm module 88255 bytes; RV32 ELF 0 bytes
+tokenize only (the compiler's regex, no parsing): median 12.89 ms (min 12.49, max 13.23, 15 runs)
+frontend only: parse, check, emit Wasm function bodies: median 45.86 ms (min 44.55, max 53.40, 15 runs)
+frontend + RV32 lowering (no ELF link): median 67.37 ms (min 60.04, max 84.87, 15 runs)
+Wasm world: parse, check, emit, link into reactor: median 49.32 ms (min 47.75, max 61.57, 15 runs)
+heap in use after runs: 490806 bytes

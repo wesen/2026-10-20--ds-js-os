@@ -1,0 +1,51 @@
+{
+  "baseline": "289281c",
+  "candidate": "4eb08cb",
+  "candidateSource": "4eb08cb",
+  "before": {
+    "editor": {
+      "wasmBytes": 88255,
+      "wasmSha256": "274946940de536b018952c29fd6b9d786d42a13e1961c83ff54a668116745d82",
+      "rv32Instructions": 21886,
+      "rv32Sha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+      "worldStateFields": 71
+    },
+    "files": {
+      "wasmBytes": 49089,
+      "wasmSha256": "c7f8892cd99ed86d9282582cc8c6d797a58cbe39623e8a9512a3bc0fbe90b07a",
+      "rv32Instructions": 804,
+      "rv32Sha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+      "worldStateFields": 0
+    },
+    "agenda": {
+      "wasmBytes": 67429,
+      "wasmSha256": "1d7f6ecbaaa629e40fe69b67fab9ed62dd596c667f0ab364641ee5cc311ef46a",
+      "rv32Instructions": 4058,
+      "rv32Sha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+      "worldStateFields": 0
+    }
+  },
+  "after": {
+    "editor": {
+      "wasmBytes": 88255,
+      "wasmSha256": "274946940de536b018952c29fd6b9d786d42a13e1961c83ff54a668116745d82",
+      "rv32Instructions": 21886,
+      "rv32Sha256": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+      "worldStateFields": 71
+    },
+    "files": {
+      "wasmBytes": 49089,
+      "wasmSha256": "c7f8892cd99ed86d9282582cc8c6d797a58cbe39623e8a9512a3bc0fbe90b07a",
+      "rv32Instructions": 804,
+      "rv32Sha256": "21f3fb660fbf1a9d988ea9866bee42a4876436944c2d0d49685e9a47e3c6b9db",
+      "worldStateFields": 0
+    },
+    "agenda": {
+      "wasmBytes": 67429,
+      "wasmSha256": "1d7f6ecbaaa629e40fe69b67fab9ed62dd596c667f0ab364641ee5cc311ef46a",
+      "rv32Instructions": 4058,
+      "rv32Sha256": "b6477c219a396e55a9a2ebf26e1e3ab810b2abdc51fa4a7b5fc8abc11ad90ec1",
+      "worldStateFields": 0
+    }
+  }
+}
