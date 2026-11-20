@@ -1,0 +1,26 @@
+{
+  "frames": 51,
+  "uniqueFrames": 35,
+  "pixelsPerFrame": 95360,
+  "device": {
+    "firmware": "fc035cef5208da3edc4271ba67568b98b434606150819fc7f237d85aafac45a0",
+    "captures": [
+      {
+        "name": "e2",
+        "panelCRC": "9bfb0fa8",
+        "sha256": "3dc29499e4a6c93f74f2348e8d62b8bbebc2a8a7e5e2d320e6f312d7967fe271"
+      },
+      {
+        "name": "e3",
+        "panelCRC": "372bf81b",
+        "sha256": "2a478662ac36f444e3a30178d593bd1e0a9d401a9f3c16c8097859f9ec9b7c8f"
+      },
+      {
+        "name": "f3",
+        "panelCRC": "65a21193",
+        "sha256": "e11c6d30d5f5c7ff6c832b0796f6179b9abb44a910c333c584b9d6d6585ff4a0"
+      }
+    ]
+  },
+  "orderedHashesSha256": "668c65d2c1900b73752bdfcd1d1dc2be294f7cf3aad0de326e8b050e7a55dbef"
+}

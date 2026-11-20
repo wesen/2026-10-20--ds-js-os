@@ -13,6 +13,8 @@ os=args.tree.resolve()/'picocalc-os'
 main=os/'port/esp32p4/main'
 receiver=(main/'mobile_painter_p4.c').read_text()
 start=receiver.index('typedef int (*paint_entry)')
+if 'packed_trial_hash(' in receiver[receiver.index('int mobile_painter_run('):]:
+    start=receiver.index('static uint32_t packed_trial_hash(')
 split=receiver.index('bool mobile_painter_source_allowed',start)
 end=receiver.index('mobile_painter *mobile_painter_load',split)
 with tempfile.TemporaryDirectory(prefix='receiver-abi-review-') as tmp:

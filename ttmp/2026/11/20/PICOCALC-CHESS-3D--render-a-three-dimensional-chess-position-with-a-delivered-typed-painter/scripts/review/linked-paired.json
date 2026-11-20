@@ -1,0 +1,53 @@
+{
+  "elfBytes": 50252,
+  "sha256": "b1956592f08cabe47f7d2f78c5e8af15ad3e57a9311d604fb269daee7916c6dd",
+  "slotCapacity": 49152,
+  "entryDestinationsRelativeToSlot": [
+    6004,
+    17692,
+    29332
+  ],
+  "modeBytes": {
+    "witness": 11688,
+    "raw": 11640,
+    "guarded": 11672
+  },
+  "results": [
+    {
+      "entry": "witness",
+      "misalign": false,
+      "stamp": 43981,
+      "stores": 30
+    },
+    {
+      "entry": "raw",
+      "misalign": false,
+      "stamp": 0,
+      "stores": 30
+    },
+    {
+      "entry": "guarded",
+      "misalign": false,
+      "stamp": 0,
+      "stores": 0
+    },
+    {
+      "entry": "witness",
+      "misalign": true,
+      "stamp": 0,
+      "stores": 0
+    },
+    {
+      "entry": "raw",
+      "misalign": true,
+      "stamp": 0,
+      "stores": 0
+    },
+    {
+      "entry": "guarded",
+      "misalign": true,
+      "stamp": 0,
+      "stores": 0
+    }
+  ]
+}
