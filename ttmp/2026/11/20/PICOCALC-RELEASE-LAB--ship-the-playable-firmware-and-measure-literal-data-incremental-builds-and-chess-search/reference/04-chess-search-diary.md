@@ -152,3 +152,9 @@ The board input uses the same checked 17 FEN/configuration cases. I checked the 
 ## Step 4. Review the Opus-authored article against the experiment
 
 Claude Opus High wrote the standalone article from the aggregate JSON and the defined timing boundary. I checked the entire manuscript against the engine and the receipts, and corrected the precise board-bound predicate from the generic 0x88 bit test to this engine's range and remainder test. I also clarified that the FEN was validated through the real move path, and that the longest one-slice timer covers a driver call rather than keyboard latency. I checked every table row against the aggregate and every local evidence link. [Opus invocation provenance](../various/chess/opus-provenance.json)
+
+## Step 5. Deliver the study designs
+
+I bundled the frozen literal-pool, incremental-build and Chess-search design guides in that order. The reMarkable cloud accepted the PDF.
+
+`OK: uploaded PicoCalc Firmware Compiler Lab - Study Designs.pdf -> /ai/2026/11/20/PICOCALC-RELEASE-LAB`
