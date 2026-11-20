@@ -1,0 +1,46 @@
+{
+  "guardsRejected": 10,
+  "effectCases": [
+    {
+      "log": [
+        "rows",
+        "opts"
+      ],
+      "wireMode": "template"
+    },
+    {
+      "log": [
+        "x",
+        "y"
+      ],
+      "wireMode": "generic"
+    },
+    {
+      "log": [],
+      "wireMode": "template"
+    },
+    {
+      "log": [],
+      "wireMode": "template"
+    },
+    {
+      "log": [
+        "get",
+        "coerce"
+      ],
+      "wireMode": "generic"
+    },
+    {
+      "log": [
+        "getter"
+      ],
+      "wireMode": "template"
+    },
+    {
+      "log": [],
+      "wireMode": "generic"
+    }
+  ],
+  "postConstructionMutation": true,
+  "wrongVersionAndSlotRejected": true
+}

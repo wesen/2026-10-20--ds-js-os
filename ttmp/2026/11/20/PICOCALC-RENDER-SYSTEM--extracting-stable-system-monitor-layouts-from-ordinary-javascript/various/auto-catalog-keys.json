@@ -1,0 +1,61 @@
+{
+  "entries": [
+    "[{\"label\":\"t ms\",\"w\":62,\"align\":\"right\"},{\"label\":\"code\",\"w\":46},{\"label\":\"key\",\"w\":74},{\"label\":\"state\"}]",
+    "{\"t\":\"text\",\"s\":\"\"}"
+  ],
+  "version": "a59cc674448eaaf1",
+  "sites": [
+    {
+      "line": 19,
+      "method": "text",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 22,
+      "method": "col",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 23,
+      "method": "row",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 24,
+      "method": "box",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 25,
+      "method": "text",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 26,
+      "method": "text",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 27,
+      "method": "kv",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 34,
+      "method": "table",
+      "fragments": [
+        "arg0"
+      ],
+      "decision": "catalog"
+    }
+  ]
+}

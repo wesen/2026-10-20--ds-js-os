@@ -1,0 +1,136 @@
+{
+  "entries": [
+    "[{\"label\":\"world\",\"w\":72},{\"label\":\"state\",\"w\":62},{\"label\":\"turns\",\"align\":\"right\"},{\"label\":\"cpu%\",\"align\":\"right\",\"w\":36},{\"label\":\"cpu ms\",\"align\":\"right\"},{\"label\":\"KB\",\"align\":\"right\",\"w\":32},{\"label\":\"rst\",\"align\":\"right\",\"w\":22}]",
+    "[{\"label\":\"id\",\"w\":22,\"align\":\"right\"},{\"label\":\"type\",\"w\":32},{\"label\":\"claim\",\"w\":66},{\"label\":\"rt\",\"w\":28},{\"label\":\"held by\"},{\"label\":\"\",\"w\":52,\"align\":\"right\"}]",
+    "{\"t\":\"text\",\"s\":\"Hardware the kernel has handed out. A handle is checked on every use; a narrowed one carries fewer rights.\",\"wrap\":true,\"font\":\"s\",\"color\":\"muted\"}",
+    "{\"t\":\"text\",\"s\":\"…\"}",
+    "{\"t\":\"text\",\"s\":\"\"}",
+    "{\"t\":\"gap\",\"h\":2}",
+    "{\"t\":\"gap\",\"h\":4}",
+    "{\"t\":\"gap\",\"h\":6}",
+    "{\"t\":\"sep\",\"h\":5}"
+  ],
+  "version": "faee38aee4e8832a",
+  "sites": [
+    {
+      "line": 63,
+      "method": "spark",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 66,
+      "method": "spark",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 77,
+      "method": "gap",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 78,
+      "method": "table",
+      "fragments": [
+        "arg0"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 80,
+      "method": "sep",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 81,
+      "method": "kv",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 98,
+      "method": "text",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 99,
+      "method": "gap",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 100,
+      "method": "table",
+      "fragments": [
+        "arg0"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 109,
+      "method": "kv",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 110,
+      "method": "gap",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 112,
+      "method": "text",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 133,
+      "method": "text",
+      "fragments": [
+        "node"
+      ],
+      "decision": "catalog"
+    },
+    {
+      "line": 135,
+      "method": "col",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 136,
+      "method": "row",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 136,
+      "method": "text",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    },
+    {
+      "line": 137,
+      "method": "text",
+      "fragments": [],
+      "decision": "fallback: dynamic or unprofitable literal"
+    }
+  ]
+}

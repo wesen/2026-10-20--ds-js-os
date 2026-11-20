@@ -1,0 +1,902 @@
+[
+  {
+    "id": "blur",
+    "app": "sysmon",
+    "filename": "00000.rgb565",
+    "commands": 11,
+    "changedPixels": null,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a1ce09256a7d5e277aed6d6c2e2e1258712d20956c09069aeaa567c7d4b55743"
+  },
+  {
+    "id": "worlds-empty",
+    "app": "sysmon",
+    "filename": "00001.rgb565",
+    "commands": 37,
+    "changedPixels": 12743,
+    "recoveredSkippedFlush": true,
+    "pixelSha256": "c0b9eb6e7aea9a2f5efef623f01520cc3a5c6476eefacefe4fae30b7733e7f02"
+  },
+  {
+    "id": "worlds-first",
+    "app": "sysmon",
+    "filename": "00002.rgb565",
+    "commands": 174,
+    "changedPixels": 8003,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9"
+  },
+  {
+    "id": "worlds-first-repeat",
+    "app": "sysmon",
+    "filename": "00003.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9"
+  },
+  {
+    "id": "worlds-selection",
+    "app": "sysmon",
+    "filename": "00004.rgb565",
+    "commands": 174,
+    "changedPixels": 9938,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "c651f3490ae638761f5e804ac4110b7b0f4aa7f60b9c859ad3c28cb48780a909"
+  },
+  {
+    "id": "worlds-shift",
+    "app": "sysmon",
+    "filename": "00005.rgb565",
+    "commands": 174,
+    "changedPixels": 10005,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a71fc269c10722f2eddd94de76214a5671ba43d8ccf20f0e078060cb928b6f7b"
+  },
+  {
+    "id": "worlds-last",
+    "app": "sysmon",
+    "filename": "00006.rgb565",
+    "commands": 174,
+    "changedPixels": 10655,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "49faf73e29bf269fb485b4c22ff7fe7096d54dcb80510d2e9091e3ada0937367"
+  },
+  {
+    "id": "worlds-refresh",
+    "app": "sysmon",
+    "filename": "00007.rgb565",
+    "commands": 174,
+    "changedPixels": 1542,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "2d9740c25b1b69e6b5540cc8853a86cf787030fd41bae2991c9bd089a1fbdff5"
+  },
+  {
+    "id": "worlds-near-half",
+    "app": "sysmon",
+    "filename": "00008.rgb565",
+    "commands": 84,
+    "changedPixels": 12116,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "bb6a743ed5dcf6783838b4504c50d7da9dec82955ded53e88cb1336ea1756b24"
+  },
+  {
+    "id": "handles-empty",
+    "app": "sysmon",
+    "filename": "00009.rgb565",
+    "commands": 25,
+    "changedPixels": 20957,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ba1193c2c294b7ed911d8b46e4902dad4d5ae139419693485040b382035ac132"
+  },
+  {
+    "id": "handles-short",
+    "app": "sysmon",
+    "filename": "00010.rgb565",
+    "commands": 44,
+    "changedPixels": 5463,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "c1abf5ebd754ff0656d99725601551c49c1aae1364c9c129f7feb07f0b2e61ef"
+  },
+  {
+    "id": "handles-first",
+    "app": "sysmon",
+    "filename": "00011.rgb565",
+    "commands": 86,
+    "changedPixels": 12410,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a824816dd7914b76f5a1ec59aae16763a4e507b1f3be3a6a4f844856e316c05a"
+  },
+  {
+    "id": "handles-shift",
+    "app": "sysmon",
+    "filename": "00012.rgb565",
+    "commands": 86,
+    "changedPixels": 12540,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "913c7af02c6626314ea7455c8e98c9ee292a3755575bf0478766cf686ca9f540"
+  },
+  {
+    "id": "handles-last",
+    "app": "sysmon",
+    "filename": "00013.rgb565",
+    "commands": 86,
+    "changedPixels": 11639,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "5728f2709494e539b521051bd783b08dd318a49364a97e7d8d7069bd5319ffab"
+  },
+  {
+    "id": "handles-last-overlay",
+    "app": "sysmon",
+    "filename": "00014.rgb565",
+    "commands": 88,
+    "changedPixels": 6552,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "aaee6930e90da16589ff23e246eb167640a9f6c13253299f233489a5eac397b5"
+  },
+  {
+    "id": "handles-overlay-removed",
+    "app": "sysmon",
+    "filename": "00015.rgb565",
+    "commands": 86,
+    "changedPixels": 6552,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "5728f2709494e539b521051bd783b08dd318a49364a97e7d8d7069bd5319ffab"
+  },
+  {
+    "id": "buses-empty",
+    "app": "sysmon",
+    "filename": "00016.rgb565",
+    "commands": 16,
+    "changedPixels": 12834,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "3c483dc371404285240ccbb6a8e116bf826ac30d5ba3e4ee2acb4ea947ff409f"
+  },
+  {
+    "id": "buses-first",
+    "app": "sysmon",
+    "filename": "00017.rgb565",
+    "commands": 225,
+    "changedPixels": 20044,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "0586bd2eb1ed909640bcbd3613e6867a1c784d899dbd49294c8089d2f37f7e6d"
+  },
+  {
+    "id": "buses-refresh",
+    "app": "sysmon",
+    "filename": "00018.rgb565",
+    "commands": 225,
+    "changedPixels": 64,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "309f8336c82650c549dceb95e85024d3ad1ff2c7f0191dd193e9607ee4a14c1c"
+  },
+  {
+    "id": "blur-again",
+    "app": "sysmon",
+    "filename": "00019.rgb565",
+    "commands": 11,
+    "changedPixels": 22263,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a1ce09256a7d5e277aed6d6c2e2e1258712d20956c09069aeaa567c7d4b55743"
+  },
+  {
+    "id": "refresh-0",
+    "app": "sysmon",
+    "filename": "00020.rgb565",
+    "commands": 174,
+    "changedPixels": 18709,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f21c3374a065e54417d723ebb3dbf8aef52d9c9feffd21ec0327d7a82c78e929"
+  },
+  {
+    "id": "refresh-1",
+    "app": "sysmon",
+    "filename": "00021.rgb565",
+    "commands": 86,
+    "changedPixels": 27272,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "67f63345a4f0d105234fdbbc8e62b4b7a0354b7fcd29a4fabdaf76d34750c61d"
+  },
+  {
+    "id": "refresh-2",
+    "app": "sysmon",
+    "filename": "00022.rgb565",
+    "commands": 225,
+    "changedPixels": 31411,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "95aa4af5d9aad689e01b6e43d840d9a6b95c58b17e449c210df7ccff6e21e57b"
+  },
+  {
+    "id": "refresh-3",
+    "app": "sysmon",
+    "filename": "00023.rgb565",
+    "commands": 174,
+    "changedPixels": 20561,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "3353815b4bc414ef527bbf5aec8e405259bad6222f64bbe34d782196647e92e4"
+  },
+  {
+    "id": "refresh-4",
+    "app": "sysmon",
+    "filename": "00024.rgb565",
+    "commands": 86,
+    "changedPixels": 27273,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e6c6ce3043a023e261f51ca02be2c535ef09bc65e62838e69e6b71e908864ad8"
+  },
+  {
+    "id": "refresh-5",
+    "app": "sysmon",
+    "filename": "00025.rgb565",
+    "commands": 225,
+    "changedPixels": 31369,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "c410e445767fb73b0d23b11f565210656ae4446a7b3ae9399e7aab9bbe696522"
+  },
+  {
+    "id": "refresh-6",
+    "app": "sysmon",
+    "filename": "00026.rgb565",
+    "commands": 174,
+    "changedPixels": 20575,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f18bd49f4bc6a1361266f6533e09ba02873ff9cd0cb62f35828ecb8e9ed1a0e1"
+  },
+  {
+    "id": "refresh-7",
+    "app": "sysmon",
+    "filename": "00027.rgb565",
+    "commands": 86,
+    "changedPixels": 27272,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "44d8c43d8bdf9b08a029a56149f135df45f1f7be890c617c95b0e101d27bcd07"
+  },
+  {
+    "id": "refresh-8",
+    "app": "sysmon",
+    "filename": "00028.rgb565",
+    "commands": 225,
+    "changedPixels": 31417,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "2519926ad6517961a78a42af90bb1e3b476d56cd7cc840303f627d0a621c9ceb"
+  },
+  {
+    "id": "refresh-9",
+    "app": "sysmon",
+    "filename": "00029.rgb565",
+    "commands": 174,
+    "changedPixels": 20561,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "c21f79b2436f99c1b1d78e0717e9c87cc75b0ee3a2184de17eac1b3754e5ec97"
+  },
+  {
+    "id": "refresh-10",
+    "app": "sysmon",
+    "filename": "00030.rgb565",
+    "commands": 86,
+    "changedPixels": 27248,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "426d2d1e4986cdb208fa267e296189aad9090411c9d2e1216f242cfabbc35fba"
+  },
+  {
+    "id": "refresh-11",
+    "app": "sysmon",
+    "filename": "00031.rgb565",
+    "commands": 225,
+    "changedPixels": 31353,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "9d04fcc786a0a310524c55c82a9e9c143256aa71ac5f2a8caef3136db819d829"
+  },
+  {
+    "id": "refresh-12",
+    "app": "sysmon",
+    "filename": "00032.rgb565",
+    "commands": 174,
+    "changedPixels": 20579,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "86155fe31229ad1b1a59b76493870ceee4c5a48c6a503b2823a2f68b9a61f6a4"
+  },
+  {
+    "id": "refresh-13",
+    "app": "sysmon",
+    "filename": "00033.rgb565",
+    "commands": 86,
+    "changedPixels": 27258,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "99478687820cdccb3c4ed7c522597ee6f6211a95fbb59e65cba92f1c92ed6d3a"
+  },
+  {
+    "id": "refresh-14",
+    "app": "sysmon",
+    "filename": "00034.rgb565",
+    "commands": 225,
+    "changedPixels": 31396,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "905b0755a9cac8bdfd2da7c1cc5289c7dce279fac59d492e1db1276a61589d7e"
+  },
+  {
+    "id": "refresh-15",
+    "app": "sysmon",
+    "filename": "00035.rgb565",
+    "commands": 174,
+    "changedPixels": 20566,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "b9a425a0d14d4154e56e64bf3c1b11ead212b09cc439d0b269b424490e9de357"
+  },
+  {
+    "id": "refresh-16",
+    "app": "sysmon",
+    "filename": "00036.rgb565",
+    "commands": 86,
+    "changedPixels": 27258,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ef54c6bb99ba2043c90c882a61926aca2787530eedbfaccf6ef498b9d3c9451f"
+  },
+  {
+    "id": "refresh-17",
+    "app": "sysmon",
+    "filename": "00037.rgb565",
+    "commands": 225,
+    "changedPixels": 31356,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "0d437fc22975958e9f200863d5aee226bc38b620deef80cf1e418028c734c47e"
+  },
+  {
+    "id": "refresh-18",
+    "app": "sysmon",
+    "filename": "00038.rgb565",
+    "commands": 174,
+    "changedPixels": 20584,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "4be51489e7411520ca218331af2ed943fda6a3069d09cb3c85dcf0ef38f0e339"
+  },
+  {
+    "id": "refresh-19",
+    "app": "sysmon",
+    "filename": "00039.rgb565",
+    "commands": 86,
+    "changedPixels": 27255,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "8db504708b5089064f55ff361a14e52d1b4b3b2970c46ce736952a6743014081"
+  },
+  {
+    "id": "refresh-20",
+    "app": "sysmon",
+    "filename": "00040.rgb565",
+    "commands": 225,
+    "changedPixels": 31398,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ce91dea60fc39cfbdf469e2ff1cd57ddd2a039d33fc31410add6477272995ad7"
+  },
+  {
+    "id": "refresh-21",
+    "app": "sysmon",
+    "filename": "00041.rgb565",
+    "commands": 174,
+    "changedPixels": 20566,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "13e5f9ee392596965ef14d303086e69b9d9bcddc74d08762b3b72e709d83464a"
+  },
+  {
+    "id": "refresh-22",
+    "app": "sysmon",
+    "filename": "00042.rgb565",
+    "commands": 86,
+    "changedPixels": 27261,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "b7ebd7aca14dee525fbfb29ed4998ae99a97a57ca8178323860b6fb30b054df0"
+  },
+  {
+    "id": "refresh-23",
+    "app": "sysmon",
+    "filename": "00043.rgb565",
+    "commands": 225,
+    "changedPixels": 31353,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f21972da03bf4fb5c0089c90851ae1976953ccc30c03de77d3e84c9a0c909d23"
+  },
+  {
+    "id": "refresh-24",
+    "app": "sysmon",
+    "filename": "00044.rgb565",
+    "commands": 174,
+    "changedPixels": 20575,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "901f777b14cf48997a6633953d23466fbe18796564f726ff62b1bd21aeab35cd"
+  },
+  {
+    "id": "refresh-25",
+    "app": "sysmon",
+    "filename": "00045.rgb565",
+    "commands": 86,
+    "changedPixels": 27250,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "4162b0a087fb2a3ae77cddf30689cec04725643dec04533d7990381cb410c1bf"
+  },
+  {
+    "id": "refresh-26",
+    "app": "sysmon",
+    "filename": "00046.rgb565",
+    "commands": 225,
+    "changedPixels": 31392,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "03385b0767749c656d20b926d990808d3612ddfd653972900c707687661d187f"
+  },
+  {
+    "id": "refresh-27",
+    "app": "sysmon",
+    "filename": "00047.rgb565",
+    "commands": 174,
+    "changedPixels": 20571,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "75ee0d2d72608e2ecd1d3f6434de385ddb858c371ba38ed7d3d977959fa7f946"
+  },
+  {
+    "id": "refresh-28",
+    "app": "sysmon",
+    "filename": "00048.rgb565",
+    "commands": 86,
+    "changedPixels": 27265,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "30f00589d66a8b50ad1edc9cee53aa5bf1448c13c41f051c653bd72dc994f11d"
+  },
+  {
+    "id": "refresh-29",
+    "app": "sysmon",
+    "filename": "00049.rgb565",
+    "commands": 225,
+    "changedPixels": 31350,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "7b16af893cb2e9e17409b2e1c36989b0dc725cacee2ebe658c11ea1233b86097"
+  },
+  {
+    "id": "refresh-30",
+    "app": "sysmon",
+    "filename": "00050.rgb565",
+    "commands": 174,
+    "changedPixels": 20563,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "793999aa96c854361de63e7f6ca4e06bae977b1c4da884289cef0f2df4aec575"
+  },
+  {
+    "id": "refresh-31",
+    "app": "sysmon",
+    "filename": "00051.rgb565",
+    "commands": 86,
+    "changedPixels": 27258,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "cffb4400823de16f43878b87b7fd75b6ed0c0368cb2d860cb2e8d7274dd95d6d"
+  },
+  {
+    "id": "refresh-32",
+    "app": "sysmon",
+    "filename": "00052.rgb565",
+    "commands": 225,
+    "changedPixels": 31399,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "2350979e36c723083512804a066b5472a359d41978c2afbaa5c003b00b70b38c"
+  },
+  {
+    "id": "refresh-33",
+    "app": "sysmon",
+    "filename": "00053.rgb565",
+    "commands": 174,
+    "changedPixels": 20579,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "6c12db71fc6b31f8e06c96071bf4913f5c45c0342effc339ab4f582e808fa645"
+  },
+  {
+    "id": "refresh-34",
+    "app": "sysmon",
+    "filename": "00054.rgb565",
+    "commands": 86,
+    "changedPixels": 27262,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "cf4f5b3a1e6cc1d2ac88b6f631f2c372727c1da3a49ebc128847fba607189e1b"
+  },
+  {
+    "id": "refresh-35",
+    "app": "sysmon",
+    "filename": "00055.rgb565",
+    "commands": 225,
+    "changedPixels": 31354,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "387bfeea2f59ca61268269fde50405dc6d9941446e0153329dd0c3a922330a7e"
+  },
+  {
+    "id": "refresh-36",
+    "app": "sysmon",
+    "filename": "00056.rgb565",
+    "commands": 174,
+    "changedPixels": 20581,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "af5c20541affd3736e4de1267b0638bcb3c3b8f57dfb2cf06f100c8abfdd6938"
+  },
+  {
+    "id": "refresh-37",
+    "app": "sysmon",
+    "filename": "00057.rgb565",
+    "commands": 86,
+    "changedPixels": 27257,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "07268285f3c0a71fad8b55d6d8ffeb31a58f1bbd242176619ec005eef3e31f79"
+  },
+  {
+    "id": "refresh-38",
+    "app": "sysmon",
+    "filename": "00058.rgb565",
+    "commands": 225,
+    "changedPixels": 31409,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "5bb0a909532488065e6bc7e8e1221b846e581caa64f110871ff8d51532798547"
+  },
+  {
+    "id": "refresh-39",
+    "app": "sysmon",
+    "filename": "00059.rgb565",
+    "commands": 174,
+    "changedPixels": 20580,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "78c86590a49599b9bd6b8778c39282cbeb261cb236034d37ae97dc6abb5db060"
+  },
+  {
+    "id": "refresh-40",
+    "app": "sysmon",
+    "filename": "00060.rgb565",
+    "commands": 86,
+    "changedPixels": 27261,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a110af96c1a7e9a111303f812da0b031817262b35d3a0e3aba4bc5e28492944e"
+  },
+  {
+    "id": "refresh-41",
+    "app": "sysmon",
+    "filename": "00061.rgb565",
+    "commands": 225,
+    "changedPixels": 31348,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e5177fa4a7a62bb665e1f875d7876988985e8a72519f30b25f8fd2856ff36415"
+  },
+  {
+    "id": "refresh-42",
+    "app": "sysmon",
+    "filename": "00062.rgb565",
+    "commands": 174,
+    "changedPixels": 20573,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f6c9d05bcbd658933c6200e68e48a2678707781029eb0111bc0e2a5311237f6a"
+  },
+  {
+    "id": "refresh-43",
+    "app": "sysmon",
+    "filename": "00063.rgb565",
+    "commands": 86,
+    "changedPixels": 27254,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "277e5418c2241540cda05eaec134e2c519efbb525064f45be456cc4db03506e3"
+  },
+  {
+    "id": "refresh-44",
+    "app": "sysmon",
+    "filename": "00064.rgb565",
+    "commands": 225,
+    "changedPixels": 31387,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "8c51551e9d3c6882775eedcab3b013843392f471cf32ea6db8826e01270d59bd"
+  },
+  {
+    "id": "refresh-45",
+    "app": "sysmon",
+    "filename": "00065.rgb565",
+    "commands": 174,
+    "changedPixels": 20576,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "d80cb0e7f385ee689e26a6ff73c4b6c6d67b0ff70a21becd1b79ac225bca5037"
+  },
+  {
+    "id": "refresh-46",
+    "app": "sysmon",
+    "filename": "00066.rgb565",
+    "commands": 86,
+    "changedPixels": 27263,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "040e7f031bb4645bd08cbce8382f6b316901a7e81a2098470ad4cd8945cc0a62"
+  },
+  {
+    "id": "refresh-47",
+    "app": "sysmon",
+    "filename": "00067.rgb565",
+    "commands": 225,
+    "changedPixels": 31351,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "9f7ac1e0602addfb73fc6ba6fb2b2c2174257a031bb1ab26c1996a81e59e78f3"
+  },
+  {
+    "id": "refresh-48",
+    "app": "sysmon",
+    "filename": "00068.rgb565",
+    "commands": 174,
+    "changedPixels": 20577,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "45ff373d6ae848b6339763bedb87dc60b682f9a751473bc4ea77e60550611dd1"
+  },
+  {
+    "id": "refresh-49",
+    "app": "sysmon",
+    "filename": "00069.rgb565",
+    "commands": 86,
+    "changedPixels": 27249,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ff060e5c634eeb6a1a40eae59cb44bb7475bf1c9be0ed65d5a4361893deed7a1"
+  },
+  {
+    "id": "select-0",
+    "app": "sysmon",
+    "filename": "00070.rgb565",
+    "commands": 174,
+    "changedPixels": 27064,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "ec273e82cb6ae53b45a4fa8426ad68daa710f3aa060a50abf6e05b235a73d3d2"
+  },
+  {
+    "id": "select-1",
+    "app": "sysmon",
+    "filename": "00071.rgb565",
+    "commands": 174,
+    "changedPixels": 2778,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "1b57b3338b35ec8d9834c24ee26c4c881a3c3fb0e56d72af88b112df582e4b27"
+  },
+  {
+    "id": "select-2",
+    "app": "sysmon",
+    "filename": "00072.rgb565",
+    "commands": 174,
+    "changedPixels": 2807,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a0595643830bc18eb83f65061e2845f05c3b7605636e43efb69241a3c0591fee"
+  },
+  {
+    "id": "select-3",
+    "app": "sysmon",
+    "filename": "00073.rgb565",
+    "commands": 174,
+    "changedPixels": 3109,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "3cc4ed9b3945e7262e30f8f86ddc7d5ea1f50925c8d39d76285a2219f62375b6"
+  },
+  {
+    "id": "select-4",
+    "app": "sysmon",
+    "filename": "00074.rgb565",
+    "commands": 174,
+    "changedPixels": 3040,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "90d0822723bd0a3c308ca3bd01ced23db5b63c2046d59c2081720fcfa11e3ed3"
+  },
+  {
+    "id": "select-5",
+    "app": "sysmon",
+    "filename": "00075.rgb565",
+    "commands": 174,
+    "changedPixels": 2979,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "8c66c6d753c87006979741771cf74eb156fad232c06b7fbadc733716fad6f662"
+  },
+  {
+    "id": "select-6",
+    "app": "sysmon",
+    "filename": "00076.rgb565",
+    "commands": 174,
+    "changedPixels": 3054,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "54404ab0b683160d73a8d898ce879209607a4607f0a2c5cb4edeafb05642e879"
+  },
+  {
+    "id": "select-7",
+    "app": "sysmon",
+    "filename": "00077.rgb565",
+    "commands": 174,
+    "changedPixels": 3009,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "7ddc2cccaa1f43654ba3a0a1d76b219698d4032cf36fb057cb5f1991d3464a4a"
+  },
+  {
+    "id": "select-8",
+    "app": "sysmon",
+    "filename": "00078.rgb565",
+    "commands": 174,
+    "changedPixels": 3074,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "bab44f3033c3b8dc988b0ddc6882f3a3832e375623cfa59987fa224a1b399e59"
+  },
+  {
+    "id": "select-9",
+    "app": "sysmon",
+    "filename": "00079.rgb565",
+    "commands": 174,
+    "changedPixels": 2708,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-0",
+    "app": "sysmon",
+    "filename": "00080.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-1",
+    "app": "sysmon",
+    "filename": "00081.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-2",
+    "app": "sysmon",
+    "filename": "00082.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-3",
+    "app": "sysmon",
+    "filename": "00083.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-4",
+    "app": "sysmon",
+    "filename": "00084.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-5",
+    "app": "sysmon",
+    "filename": "00085.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-6",
+    "app": "sysmon",
+    "filename": "00086.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-7",
+    "app": "sysmon",
+    "filename": "00087.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-8",
+    "app": "sysmon",
+    "filename": "00088.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "unrelated-9",
+    "app": "sysmon",
+    "filename": "00089.rgb565",
+    "commands": 174,
+    "changedPixels": 0,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9"
+  },
+  {
+    "id": "title-0",
+    "app": "sysmon",
+    "filename": "00090.rgb565",
+    "commands": 174,
+    "changedPixels": 10266,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "43550a14012e738100c48e2df80eac4be458371044c3e236a3994578206f6383"
+  },
+  {
+    "id": "title-1",
+    "app": "sysmon",
+    "filename": "00091.rgb565",
+    "commands": 174,
+    "changedPixels": 51,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "9226d8e90bff1cf7273a247a1860044bf0fbc9508bdece22342f22b1c25c343e"
+  },
+  {
+    "id": "title-2",
+    "app": "sysmon",
+    "filename": "00092.rgb565",
+    "commands": 174,
+    "changedPixels": 33,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "9c0391f155c0899c311b9798e76267eedcb300f67da4a69965843d4faae24639"
+  },
+  {
+    "id": "title-3",
+    "app": "sysmon",
+    "filename": "00093.rgb565",
+    "commands": 174,
+    "changedPixels": 18,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "3a6baa1b9d0c03eb900dda6ca1dbe17edce9c2d0d4d2bb71eb4dc344e253712d"
+  },
+  {
+    "id": "title-4",
+    "app": "sysmon",
+    "filename": "00094.rgb565",
+    "commands": 174,
+    "changedPixels": 34,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "f739699673bafba85581f7baf308d270d89917d3905e5f6d046958453a82c429"
+  },
+  {
+    "id": "switch-0",
+    "app": "sysmon",
+    "filename": "00095.rgb565",
+    "commands": 174,
+    "changedPixels": 34,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9"
+  },
+  {
+    "id": "switch-1",
+    "app": "sysmon",
+    "filename": "00096.rgb565",
+    "commands": 86,
+    "changedPixels": 20440,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a824816dd7914b76f5a1ec59aae16763a4e507b1f3be3a6a4f844856e316c05a"
+  },
+  {
+    "id": "switch-2",
+    "app": "sysmon",
+    "filename": "00097.rgb565",
+    "commands": 225,
+    "changedPixels": 31050,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "0586bd2eb1ed909640bcbd3613e6867a1c784d899dbd49294c8089d2f37f7e6d"
+  },
+  {
+    "id": "switch-3",
+    "app": "sysmon",
+    "filename": "00098.rgb565",
+    "commands": 174,
+    "changedPixels": 24155,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9"
+  },
+  {
+    "id": "switch-4",
+    "app": "sysmon",
+    "filename": "00099.rgb565",
+    "commands": 86,
+    "changedPixels": 20440,
+    "recoveredSkippedFlush": false,
+    "pixelSha256": "a824816dd7914b76f5a1ec59aae16763a4e507b1f3be3a6a4f844856e316c05a"
+  }
+]

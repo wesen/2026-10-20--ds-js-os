@@ -29,7 +29,7 @@ function fixture(arm, name, cases, tag, save=true) {
   for(const {id,state,banner,title} of cases){
     const wire=arm.make(state), {tree,hints}=arm.open(wire);
     const row={id,app:name,title:title||(name==='sysmon'?'System':'Keys'),tree,hints};
-    if(banner)row.banner=banner;
+    if(banner)row.banner={text:banner,sub:'',color:'#181818'};
     rows.push(row);
     records.push({id,bytes:Buffer.byteLength(wire),enqueued:prev!==wire,wire});
     prev=wire;

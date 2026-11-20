@@ -1,0 +1,371 @@
+{
+  "traceFrames": 100,
+  "realEventStates": 176,
+  "systemTimings": {
+    "G": {
+      "producer": {
+        "medianUs": 1088.243875,
+        "p95Us": 1525.485375,
+        "medianPairedRatio": 1,
+        "p95PairedRatio": 1,
+        "p95RatioCI": [
+          1,
+          1
+        ]
+      },
+      "receiver": {
+        "medianUs": 685.4011875,
+        "p95Us": 800.0705,
+        "medianPairedRatio": 1,
+        "p95PairedRatio": 1,
+        "p95RatioCI": [
+          1,
+          1
+        ]
+      },
+      "total": {
+        "medianUs": 1772.4025625,
+        "p95Us": 2213.9387500000003,
+        "medianPairedRatio": 1,
+        "p95PairedRatio": 1,
+        "p95RatioCI": [
+          1,
+          1
+        ]
+      }
+    },
+    "M": {
+      "producer": {
+        "medianUs": 529.979625,
+        "p95Us": 654.1035,
+        "medianPairedRatio": 0.4900981138069364,
+        "p95PairedRatio": 0.5977343148697838,
+        "p95RatioCI": [
+          0.5228542390617423,
+          0.7939923374999714
+        ]
+      },
+      "receiver": {
+        "medianUs": 464.1718125,
+        "p95Us": 584.7048125,
+        "medianPairedRatio": 0.6376106956102102,
+        "p95PairedRatio": 0.8389905148899591,
+        "p95RatioCI": [
+          0.7092756738800611,
+          0.8854949170940951
+        ]
+      },
+      "total": {
+        "medianUs": 984.3569375,
+        "p95Us": 1254.3834375000001,
+        "medianPairedRatio": 0.5558246499605352,
+        "p95PairedRatio": 0.7078082218689828,
+        "p95RatioCI": [
+          0.5895981579175542,
+          0.753908638427286
+        ]
+      }
+    },
+    "A": {
+      "producer": {
+        "medianUs": 2968.6696875,
+        "p95Us": 3208.8989375,
+        "medianPairedRatio": 2.731826793042005,
+        "p95PairedRatio": 2.8084343417329802,
+        "p95RatioCI": [
+          2.788532021277015,
+          2.8695732786806807
+        ]
+      },
+      "receiver": {
+        "medianUs": 2055.896375,
+        "p95Us": 2410.181875,
+        "medianPairedRatio": 2.9909312735771185,
+        "p95PairedRatio": 3.619791556666067,
+        "p95RatioCI": [
+          3.070928102718793,
+          3.766040337920233
+        ]
+      },
+      "total": {
+        "medianUs": 5026.755,
+        "p95Us": 5400.1655,
+        "medianPairedRatio": 2.839628243315632,
+        "p95PairedRatio": 3.100449289309007,
+        "p95RatioCI": [
+          2.8755427791698294,
+          3.1507222601384757
+        ]
+      }
+    }
+  },
+  "aaTimings": {
+    "AA": {
+      "producer": {
+        "medianUs": 1082.9950900000001,
+        "p95Us": 1174.8485500000002,
+        "medianPairedRatio": 1.040617072469182,
+        "p95PairedRatio": 1.0864756726666938,
+        "p95RatioCI": [
+          1.0461551741651938,
+          1.0864756726666938
+        ]
+      },
+      "receiver": {
+        "medianUs": 702.19712,
+        "p95Us": 770.16718,
+        "medianPairedRatio": 1.0079610639174557,
+        "p95PairedRatio": 1.1088680077256061,
+        "p95RatioCI": [
+          1.015805444004477,
+          1.1088680077256061
+        ]
+      },
+      "total": {
+        "medianUs": 1801.78989,
+        "p95Us": 1908.7403200000003,
+        "medianPairedRatio": 1.021544359579583,
+        "p95PairedRatio": 1.075909489714979,
+        "p95RatioCI": [
+          1.0300218596171868,
+          1.075909489714979
+        ]
+      }
+    }
+  },
+  "tabs": {
+    "0": {
+      "G": {
+        "frames": 54,
+        "bytes": 80229
+      },
+      "M": {
+        "frames": 54,
+        "bytes": 38770
+      },
+      "A": {
+        "frames": 54,
+        "bytes": 72093
+      }
+    },
+    "1": {
+      "G": {
+        "frames": 26,
+        "bytes": 38098
+      },
+      "M": {
+        "frames": 26,
+        "bytes": 16937
+      },
+      "A": {
+        "frames": 26,
+        "bytes": 30850
+      }
+    },
+    "2": {
+      "G": {
+        "frames": 20,
+        "bytes": 23335
+      },
+      "M": {
+        "frames": 20,
+        "bytes": 8859
+      },
+      "A": {
+        "frames": 20,
+        "bytes": 23335
+      }
+    }
+  },
+  "studies": {
+    "sysmonG": {
+      "frames": 100,
+      "published": 82,
+      "attempted": 175120,
+      "enqueued": 141662,
+      "max": 2657,
+      "compressed": 0
+    },
+    "sysmonM": {
+      "frames": 100,
+      "published": 82,
+      "attempted": 77704,
+      "enqueued": 64566,
+      "max": 1501,
+      "compressed": 0
+    },
+    "sysmonA": {
+      "frames": 100,
+      "published": 82,
+      "attempted": 155516,
+      "enqueued": 126278,
+      "max": 2431,
+      "compressed": 78
+    },
+    "keysG": {
+      "frames": 26,
+      "published": 26,
+      "attempted": 26227,
+      "enqueued": 26227,
+      "max": 1539,
+      "compressed": 0
+    },
+    "keysA": {
+      "frames": 26,
+      "published": 26,
+      "attempted": 24379,
+      "enqueued": 24379,
+      "max": 1462,
+      "compressed": 24
+    }
+  },
+  "pixel": {
+    "sysmonG": {
+      "frames": 100,
+      "bytesCompared": 20480000,
+      "skippedFlushes": 1,
+      "maxCommands": 225
+    },
+    "sysmonM": {
+      "frames": 100,
+      "bytesCompared": 20480000,
+      "skippedFlushes": 1,
+      "maxCommands": 225
+    },
+    "sysmonA": {
+      "frames": 100,
+      "bytesCompared": 20480000,
+      "skippedFlushes": 1,
+      "maxCommands": 225
+    },
+    "keysG": {
+      "frames": 26,
+      "bytesCompared": 5324800,
+      "skippedFlushes": 1,
+      "maxCommands": 73
+    },
+    "keysA": {
+      "frames": 26,
+      "bytesCompared": 5324800,
+      "skippedFlushes": 1,
+      "maxCommands": 73
+    }
+  },
+  "S1": {
+    "totalBytes": 119142,
+    "medianProducerUs": 5935.968,
+    "medianReceiverUs": 713.661,
+    "resetAt": 50
+  },
+  "costs": {
+    "sysmonG": {
+      "producerSource": 7550,
+      "residentSource": 0,
+      "catalog": 0,
+      "total": 7550,
+      "gzip9": 3110
+    },
+    "sysmonM": {
+      "producerSource": 6076,
+      "residentSource": 2041,
+      "catalog": 0,
+      "total": 8117,
+      "gzip9": 3599
+    },
+    "sysmonA": {
+      "producerSource": 7550,
+      "residentSource": 2309,
+      "catalog": 903,
+      "total": 9859,
+      "gzip9": 3956,
+      "buildUsMedian": 1843.842,
+      "buildUsP95": 3093.08,
+      "sites": 17,
+      "catalogSites": 9
+    },
+    "keysG": {
+      "producerSource": 2045,
+      "residentSource": 0,
+      "catalog": 0,
+      "total": 2045,
+      "gzip9": 930
+    },
+    "keysA": {
+      "producerSource": 2045,
+      "residentSource": 1613,
+      "catalog": 207,
+      "total": 3658,
+      "gzip9": 1678,
+      "buildUsMedian": 477.907,
+      "buildUsP95": 838.988,
+      "sites": 8,
+      "catalogSites": 2
+    }
+  },
+  "keysTimings": {
+    "G": {
+      "producer": {
+        "medianUs": 135.19616666666667,
+        "p95Us": 161.36283333333336,
+        "medianPairedRatio": 1,
+        "p95PairedRatio": 1,
+        "p95RatioCI": [
+          1,
+          1
+        ]
+      },
+      "receiver": {
+        "medianUs": 165.12029166666665,
+        "p95Us": 184.54575,
+        "medianPairedRatio": 1,
+        "p95PairedRatio": 1,
+        "p95RatioCI": [
+          1,
+          1
+        ]
+      },
+      "total": {
+        "medianUs": 302.03545833333334,
+        "p95Us": 327.25795833333336,
+        "medianPairedRatio": 1,
+        "p95PairedRatio": 1,
+        "p95RatioCI": [
+          1,
+          1
+        ]
+      }
+    },
+    "A": {
+      "producer": {
+        "medianUs": 448.8659166666667,
+        "p95Us": 484.15708333333333,
+        "medianPairedRatio": 3.321728977014725,
+        "p95PairedRatio": 3.5673942309611126,
+        "p95RatioCI": [
+          3.459541588110213,
+          3.6954663090623576
+        ]
+      },
+      "receiver": {
+        "medianUs": 541.2186666666666,
+        "p95Us": 598.8614166666666,
+        "medianPairedRatio": 3.26492682774252,
+        "p95PairedRatio": 3.5487416525967337,
+        "p95RatioCI": [
+          3.4483640335947,
+          3.6544779795548923
+        ]
+      },
+      "total": {
+        "medianUs": 985.9171249999999,
+        "p95Us": 1090.73775,
+        "medianPairedRatio": 3.3341662855225143,
+        "p95PairedRatio": 3.4584557898566226,
+        "p95RatioCI": [
+          3.3782911676736656,
+          3.4839973948974805
+        ]
+      }
+    }
+  }
+}

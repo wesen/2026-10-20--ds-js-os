@@ -1,0 +1,259 @@
+{
+  "node": "v24.18.0",
+  "frames": 100,
+  "reps": 100,
+  "blocks": [
+    {
+      "block": 0,
+      "order": [
+        "G",
+        "AA"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1052.5028300000001,
+          "receiverUsPerTrace": 697.22589,
+          "sink": 14078400
+        },
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1082.9950900000001,
+          "receiverUsPerTrace": 719.26374,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 1,
+      "order": [
+        "AA",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1070.37277,
+          "receiverUsPerTrace": 701.15126,
+          "sink": 14078400
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1062.08024,
+          "receiverUsPerTrace": 718.4737700000001,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 2,
+      "order": [
+        "AA",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1085.91361,
+          "receiverUsPerTrace": 770.16718,
+          "sink": 14078400
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1030.57464,
+          "receiverUsPerTrace": 694.55262,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 3,
+      "order": [
+        "G",
+        "AA"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1050.96022,
+          "receiverUsPerTrace": 697.98855,
+          "sink": 14078400
+        },
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1058.36956,
+          "receiverUsPerTrace": 686.6606999999999,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 4,
+      "order": [
+        "G",
+        "AA"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1051.07999,
+          "receiverUsPerTrace": 688.12361,
+          "sink": 14078400
+        },
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1099.59277,
+          "receiverUsPerTrace": 702.19712,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 5,
+      "order": [
+        "AA",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1174.8485500000002,
+          "receiverUsPerTrace": 733.8917700000001,
+          "sink": 14078400
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1081.33903,
+          "receiverUsPerTrace": 812.57348,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 6,
+      "order": [
+        "AA",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1123.00463,
+          "receiverUsPerTrace": 703.9687700000001,
+          "sink": 14078400
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1040.0698399999999,
+          "receiverUsPerTrace": 710.86864,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 7,
+      "order": [
+        "G",
+        "AA"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1085.5666999999999,
+          "receiverUsPerTrace": 691.6525300000001,
+          "sink": 14078400
+        },
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1058.37579,
+          "receiverUsPerTrace": 697.15882,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 8,
+      "order": [
+        "G",
+        "AA"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1037.18061,
+          "receiverUsPerTrace": 684.45968,
+          "sink": 14078400
+        },
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1079.3078500000001,
+          "receiverUsPerTrace": 690.0967800000001,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 9,
+      "order": [
+        "AA",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1058.23419,
+          "receiverUsPerTrace": 694.9238,
+          "sink": 14078400
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1052.9355500000001,
+          "receiverUsPerTrace": 684.11112,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 10,
+      "order": [
+        "AA",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1054.64895,
+          "receiverUsPerTrace": 683.95258,
+          "sink": 14078400
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1046.49226,
+          "receiverUsPerTrace": 695.28938,
+          "sink": 14078400
+        }
+      ]
+    },
+    {
+      "block": 11,
+      "order": [
+        "G",
+        "AA"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 1058.97512,
+          "receiverUsPerTrace": 727.22418,
+          "sink": 14078400
+        },
+        {
+          "arm": "AA",
+          "producerUsPerTrace": 1102.86647,
+          "receiverUsPerTrace": 721.81535,
+          "sink": 14078400
+        }
+      ]
+    }
+  ]
+}

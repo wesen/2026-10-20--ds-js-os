@@ -1,0 +1,4 @@
+{"component":"generic","size":{"source":7550,"bytecode":14867}}
+{"component":"manual","size":{"source":6076,"bytecode":11423}}
+{"component":"manualResident","size":{"source":2041,"bytecode":5050}}
+{"component":"autoResident","size":{"source":2309,"bytecode":4773}}

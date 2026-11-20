@@ -1,0 +1,3105 @@
+{
+  "actions": [
+    {
+      "action": "start",
+      "handled": false
+    },
+    {
+      "action": "focus",
+      "handled": true
+    },
+    {
+      "action": "tick",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "key",
+      "handled": true
+    },
+    {
+      "action": "tick",
+      "handled": true
+    },
+    {
+      "action": "blur",
+      "handled": true
+    },
+    {
+      "action": "focus",
+      "handled": true
+    }
+  ],
+  "states": [
+    {
+      "id": "start-0",
+      "state": {
+        "focused": false,
+        "events": [],
+        "last": null,
+        "stats": null
+      }
+    },
+    {
+      "id": "focus-1",
+      "state": {
+        "focused": true,
+        "events": [],
+        "last": null,
+        "stats": {
+          "polls": 2,
+          "events": 1,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "tick-2",
+      "state": {
+        "focused": true,
+        "events": [],
+        "last": null,
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-3",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "a",
+          "code": 65,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-4",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "down",
+          "code": 40,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-5",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "enter",
+          "code": 13,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-6",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "b",
+          "code": 66,
+          "mods": 1,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-7",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "0",
+          "code": 48,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-8",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "1",
+          "code": 49,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-9",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "2",
+          "code": 50,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-10",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "3",
+          "code": 51,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-11",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "4",
+          "code": 52,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-12",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "5",
+          "code": 53,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-13",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "6",
+          "code": 54,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-14",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "7",
+          "code": 55,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-15",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "8",
+          "code": 56,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-16",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "9",
+          "code": 57,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-17",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "0",
+          "code": 48,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-18",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "1",
+          "code": 49,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-19",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 380,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "2",
+          "code": 50,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-20",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 380,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 400,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "3",
+          "code": 51,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-21",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 380,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 400,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 420,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "4",
+          "code": 52,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "key-22",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 380,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 400,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 420,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 440,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "5",
+          "code": 53,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 3,
+          "events": 2,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "tick-23",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 380,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 400,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 420,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 440,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "5",
+          "code": 53,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 24,
+          "events": 23,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "blur-24",
+      "state": {
+        "focused": false,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 380,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 400,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 420,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 440,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "5",
+          "code": 53,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 24,
+          "events": 23,
+          "errors": 0
+        }
+      }
+    },
+    {
+      "id": "focus-25",
+      "state": {
+        "focused": true,
+        "events": [
+          {
+            "t": 60,
+            "key": "a",
+            "code": 65,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 80,
+            "key": "down",
+            "code": 40,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 100,
+            "key": "enter",
+            "code": 13,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 120,
+            "key": "b",
+            "code": 66,
+            "mods": 1,
+            "state": "down"
+          },
+          {
+            "t": 140,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 160,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 180,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 200,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 220,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 240,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 260,
+            "key": "6",
+            "code": 54,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 280,
+            "key": "7",
+            "code": 55,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 300,
+            "key": "8",
+            "code": 56,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 320,
+            "key": "9",
+            "code": 57,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 340,
+            "key": "0",
+            "code": 48,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 360,
+            "key": "1",
+            "code": 49,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 380,
+            "key": "2",
+            "code": 50,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 400,
+            "key": "3",
+            "code": 51,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 420,
+            "key": "4",
+            "code": 52,
+            "mods": 0,
+            "state": "down"
+          },
+          {
+            "t": 440,
+            "key": "5",
+            "code": 53,
+            "mods": 0,
+            "state": "down"
+          }
+        ],
+        "last": {
+          "key": "5",
+          "code": 53,
+          "mods": 0,
+          "state": "down"
+        },
+        "stats": {
+          "polls": 26,
+          "events": 25,
+          "errors": 0
+        }
+      }
+    }
+  ],
+  "reps": 24,
+  "blocks": [
+    {
+      "block": 0,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 153.03133333333335,
+          "receiverUsPerTrace": 165.180875,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 480.941375,
+          "receiverUsPerTrace": 580.0310416666666,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 1,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 449.96025,
+          "receiverUsPerTrace": 548.4956666666666,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 161.36283333333336,
+          "receiverUsPerTrace": 163.19591666666665,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 2,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 468.1348333333333,
+          "receiverUsPerTrace": 584.1559166666666,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 136.04475,
+          "receiverUsPerTrace": 165.99070833333334,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 3,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 143.17429166666665,
+          "receiverUsPerTrace": 165.12029166666665,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 461.847625,
+          "receiverUsPerTrace": 569.394875,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 4,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 139.38233333333335,
+          "receiverUsPerTrace": 163.59254166666665,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 453.972125,
+          "receiverUsPerTrace": 580.5476666666666,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 5,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 445.65566666666666,
+          "receiverUsPerTrace": 545.71875,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 137.279875,
+          "receiverUsPerTrace": 171.11266666666666,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 6,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 444.6984583333333,
+          "receiverUsPerTrace": 541.2186666666666,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 136.272375,
+          "receiverUsPerTrace": 172.042,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 7,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 161.38404166666666,
+          "receiverUsPerTrace": 198.63791666666665,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 491.8763333333333,
+          "receiverUsPerTrace": 598.8614166666666,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 8,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 155.2975,
+          "receiverUsPerTrace": 171.96045833333335,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 463.72154166666667,
+          "receiverUsPerTrace": 628.4257083333333,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 9,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 455.7275,
+          "receiverUsPerTrace": 530.0634166666666,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 134.52704166666666,
+          "receiverUsPerTrace": 184.54575,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 10,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 484.15708333333333,
+          "receiverUsPerTrace": 546.1597916666666,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 135.71729166666665,
+          "receiverUsPerTrace": 163.02945833333334,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 11,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 140.952375,
+          "receiverUsPerTrace": 183.53070833333334,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 440.1326666666667,
+          "receiverUsPerTrace": 534.6012083333334,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 12,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 131.60370833333334,
+          "receiverUsPerTrace": 171.2545,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 442.13783333333333,
+          "receiverUsPerTrace": 542.4335416666667,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 13,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 478.1175833333333,
+          "receiverUsPerTrace": 526.7627916666667,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 129.3795,
+          "receiverUsPerTrace": 171.11541666666665,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 14,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 439.1214583333333,
+          "receiverUsPerTrace": 531.2254583333333,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 138.04145833333334,
+          "receiverUsPerTrace": 166.58983333333333,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 15,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 133.21066666666667,
+          "receiverUsPerTrace": 161.58483333333334,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 475.1524166666667,
+          "receiverUsPerTrace": 530.7265833333333,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 16,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 143.25495833333335,
+          "receiverUsPerTrace": 162.13029166666666,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 457.7749166666667,
+          "receiverUsPerTrace": 562.69225,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 17,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 436.6856666666667,
+          "receiverUsPerTrace": 541.6427916666667,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 135.19616666666667,
+          "receiverUsPerTrace": 161.78595833333335,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 18,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 448.8659166666667,
+          "receiverUsPerTrace": 536.0495833333333,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 132.53820833333333,
+          "receiverUsPerTrace": 161.90958333333333,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 19,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 126.54558333333333,
+          "receiverUsPerTrace": 163.851375,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 437.7897083333333,
+          "receiverUsPerTrace": 534.96275,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 20,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 129.758125,
+          "receiverUsPerTrace": 164.01570833333335,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 426.06333333333333,
+          "receiverUsPerTrace": 530.756375,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 21,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 451.487125,
+          "receiverUsPerTrace": 520.7795833333333,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 127.17420833333333,
+          "receiverUsPerTrace": 160.62416666666667,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 22,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 435.17633333333333,
+          "receiverUsPerTrace": 516.2542083333333,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 127.76970833333333,
+          "receiverUsPerTrace": 158.88254166666667,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 23,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 126.5595,
+          "receiverUsPerTrace": 166.10870833333334,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 434.4575,
+          "receiverUsPerTrace": 529.1052916666666,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 24,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 134.69504166666667,
+          "receiverUsPerTrace": 164.15541666666667,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 465.6828333333333,
+          "receiverUsPerTrace": 530.834,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 25,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 437.55470833333334,
+          "receiverUsPerTrace": 537.1142083333334,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 131.45020833333334,
+          "receiverUsPerTrace": 160.66445833333336,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 26,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 442.681625,
+          "receiverUsPerTrace": 559.0870416666667,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 126.887875,
+          "receiverUsPerTrace": 162.76991666666666,
+          "sink": 631272
+        }
+      ]
+    },
+    {
+      "block": 27,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 129.10620833333334,
+          "receiverUsPerTrace": 165.31583333333333,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 428.8558333333333,
+          "receiverUsPerTrace": 536.4698333333333,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 28,
+      "order": [
+        "G",
+        "A"
+      ],
+      "trials": [
+        {
+          "arm": "G",
+          "producerUsPerTrace": 134.47429166666666,
+          "receiverUsPerTrace": 164.605375,
+          "sink": 631272
+        },
+        {
+          "arm": "A",
+          "producerUsPerTrace": 430.9992083333333,
+          "receiverUsPerTrace": 548.769125,
+          "sink": 586920
+        }
+      ]
+    },
+    {
+      "block": 29,
+      "order": [
+        "A",
+        "G"
+      ],
+      "trials": [
+        {
+          "arm": "A",
+          "producerUsPerTrace": 438.6742083333333,
+          "receiverUsPerTrace": 541.1329166666666,
+          "sink": 586920
+        },
+        {
+          "arm": "G",
+          "producerUsPerTrace": 139.283625,
+          "receiverUsPerTrace": 169.09858333333335,
+          "sink": 631272
+        }
+      ]
+    }
+  ]
+}

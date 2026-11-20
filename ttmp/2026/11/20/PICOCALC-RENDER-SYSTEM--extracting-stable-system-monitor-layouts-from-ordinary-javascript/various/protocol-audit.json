@@ -1,0 +1,75 @@
+{
+  "groups": {
+    "refresh": {
+      "G": 92464,
+      "M": 45852,
+      "A": 83488,
+      "S1": 91457
+    },
+    "select": {
+      "G": 18892,
+      "M": 7312,
+      "A": 16632,
+      "S1": 9592
+    },
+    "unrelated": {
+      "G": 0,
+      "M": 0,
+      "A": 0,
+      "S1": 0
+    },
+    "title": {
+      "G": 1889,
+      "M": 730,
+      "A": 1663,
+      "S1": 898
+    }
+  },
+  "exampleWorldsLast": {
+    "G": 1882,
+    "M": 725,
+    "A": 1656,
+    "S1": 870
+  },
+  "perTabBreakEven": {
+    "0": {
+      "first": 9,
+      "netBalanceAtEnd": 22042
+    },
+    "1": {
+      "first": 9,
+      "netBalanceAtEnd": 15732
+    },
+    "2": {
+      "first": 5,
+      "netBalanceAtEnd": 10647
+    }
+  },
+  "finalObjectAndArrayCounts": {
+    "G": 3549,
+    "M": 3549,
+    "A": 3549
+  },
+  "wireIncludingTwoLogicalInstalls": {
+    "G": 141662,
+    "M": 68648,
+    "A": 130896,
+    "S1": 119142
+  },
+  "archiveReplay": {
+    "M": {
+      "oldId": "worlds-last",
+      "invalidRejected": true,
+      "idleFreshReceiverMatches": true,
+      "catalogMiss": "generic",
+      "acceptedNext": "worlds-near-half"
+    },
+    "A": {
+      "oldId": "worlds-last",
+      "invalidRejected": true,
+      "idleFreshReceiverMatches": true,
+      "catalogMiss": "generic",
+      "acceptedNext": "worlds-near-half"
+    }
+  }
+}
