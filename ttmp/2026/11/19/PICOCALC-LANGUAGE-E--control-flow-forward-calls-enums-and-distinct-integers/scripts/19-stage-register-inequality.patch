@@ -1,0 +1,35 @@
+--- a/typed/rv32.js
++++ b/typed/rv32.js
+@@ -24,6 +24,7 @@
+ // True branch funct3 and whether the instruction's operands are reversed.
+ const PREDICATES = new Map([
+     [0x45,[0,false]], // eqz (right operand is zero)
++    [0x47,[1,false]], // ne
+     [0x46,[0,false]], // eq
+     [0x48,[4,false]], // lt_s
+     [0x4a,[4,true]],  // gt_s
+@@ -229,9 +230,11 @@
+                 this.mark(safe);
+             }
+             this.emit(instruction.r(0x33, out, alu[0], a, b, alu[1]));
+-        } else if (op === 0x46) {
++        } else if (op === 0x46 || op === 0x47) {
+             if (a !== ZERO && b !== ZERO) this.emit(instruction.r(0x33, out, 4, a, b));
+-            this.emit(instruction.i(0x13, out, 3, b === ZERO ? a : a === ZERO ? b : out, 1));
++            const difference = b === ZERO ? a : a === ZERO ? b : out;
++            if (op === 0x46) this.emit(instruction.i(0x13, out, 3, difference, 1));
++            else this.emit(instruction.r(0x33, out, 3, ZERO, difference));
+         } else {
+             const unsigned = op === 0x4f;
+             if (![0x48, 0x4a, 0x4c, 0x4e, 0x4f].includes(op))
+@@ -323,6 +326,10 @@
+ 
+     step(op) {
+         if (op >= 0x45 && op <= 0x4f && this.fuseBranch(op)) return false;
++        if ((op === 0x46 || op === 0x47) && this.program.code[this.at] === 0x45) {
++            this.at++;
++            op ^= 1;
++        }
+         switch (op) {
+         case 0x00: this.emit(0x00100073); break;  // Wasm unreachable
+         case 0x02: case 0x03: case 0x04: this.begin(op); break;

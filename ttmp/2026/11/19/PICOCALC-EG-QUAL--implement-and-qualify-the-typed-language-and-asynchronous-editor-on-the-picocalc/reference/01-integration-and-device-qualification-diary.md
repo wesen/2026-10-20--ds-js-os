@@ -344,3 +344,31 @@ Check the regenerated comparison against all six raw samples. Check the integrat
 ### Code review instructions
 
 Read scripts/28-check-qualified-integration.py and the lexical-index ticket's scripts/13-compare-physical-index.py. The final report distinguishes cold screening from full UI qualification and from the historical frontend-only host gate.
+
+## Step 8 — Execute the register instruction-count criterion and qualify a portable frontend
+
+I audited the E4 comparison against the professor's wording. The stock emitter had emitted 18 versus 19 instructions, and only a cost model had predicted equality for a register implementation. I connected the typed frontend to the staged register backend and executed both programs for all four combinations of operand type and result consumer.
+
+### What I did and why
+
+Added the missing inequality branch predicate and value materialization to the staged experiment. A comparison producing a value followed by Boolean negation can reverse the comparison directly. Ran LANGUAGE-E/scripts/20-execute-register-inequality.mjs with signed extremes, zero and Boolean values. The experiment changes the archived register-backend variant and leaves the historical stock emitter measurement reproducible.
+
+### What worked
+
+Each value-producing spelling emitted ten RV32 words. Each branching spelling emitted eleven. The RV32 emulator returned the expected results in 116 executions across both spellings. These are emitted machine words, independently of the earlier cost model.
+
+### What did not work and what I learned
+
+The source-span compiler that cleared the P4 cold limit still took 34.09–35.06 ms in the unmodified professor host harness without its optional native binding. The parser researcher tested the combined direct parser and portable lexer fallback with this exact harness. Its six medians were 24.99, 24.89, 25.25, 25.34, 25.68 and 25.55 ms. This experiment directly tested the portable fallback that a plain QuickJS runtime uses.
+
+### What warrants a second pair of eyes
+
+Check the difference between the unchanged C harness and the optional native index registration. The final combined candidate's frontend digest is d6dc04692d29596a43b6c15414745023aaa8fa4280353a434b8820e65dab9a0b. It needs a new matched physical workflow because the indexed path also changed.
+
+### What should be done in the future
+
+Run that six-workflow device comparison after the reserved Chess trial. Check its firmware digests and current host replay before integrating the exact source or reporting both gates as satisfied.
+
+### Code review instructions
+
+Start with the language ticket's scripts/19-stage-register-inequality.patch and scripts/20-execute-register-inequality.mjs. The parser patch is in PICOCALC-PARSER-DISPATCH/sources/03-parser-and-portable-fallback.patch. Qualification scripts 25, 26, 28 and 29 reproduce the combined candidate and compare the actual artifacts.

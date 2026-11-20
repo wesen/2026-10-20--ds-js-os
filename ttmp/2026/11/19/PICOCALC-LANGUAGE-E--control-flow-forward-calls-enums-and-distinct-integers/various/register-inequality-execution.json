@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "type": "bool",
+      "consumer": "value",
+      "directWords": 10,
+      "negatedWords": 10,
+      "checkedExecutions": 8
+    },
+    {
+      "type": "bool",
+      "consumer": "branch",
+      "directWords": 11,
+      "negatedWords": 11,
+      "checkedExecutions": 8
+    },
+    {
+      "type": "i32",
+      "consumer": "value",
+      "directWords": 10,
+      "negatedWords": 10,
+      "checkedExecutions": 50
+    },
+    {
+      "type": "i32",
+      "consumer": "branch",
+      "directWords": 11,
+      "negatedWords": 11,
+      "checkedExecutions": 50
+    }
+  ]
+}

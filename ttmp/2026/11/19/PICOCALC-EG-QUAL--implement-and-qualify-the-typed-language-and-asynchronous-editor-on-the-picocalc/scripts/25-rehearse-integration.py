@@ -17,6 +17,7 @@ def main():
     for arg in ("wave","out","gcc","emulator"):p.add_argument(arg,type=Path)
     p.add_argument("lane",choices=["native-index-prepass","native-index-span"])
     p.add_argument("revision")
+    p.add_argument("--parser-patch", type=Path)
     a=p.parse_args()
     out=a.out.resolve()
     out.mkdir(parents=True,exist_ok=False)
@@ -35,6 +36,11 @@ def main():
     after="target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c typed_lex_index.c)"
     if old.count(before)!=1 or (tree/cmake).read_text()!=old.replace(before,after):
         raise ValueError("CMake change extends beyond the typed compiler source list")
+    if a.parser_patch:
+        frontend = "picocalc-os/compiler/typed-wasm.js"
+        subprocess.run(["git", "-C", tree, "apply", "--check", a.parser_patch.resolve()], check=True)
+        subprocess.run(["git", "-C", tree, "apply", a.parser_patch.resolve()], check=True)
+        actual[frontend] = hashlib.sha256((tree / frontend).read_bytes()).hexdigest()
     subprocess.run(["git","-C",tree,"add","-N","--",*CSOURCES],check=True)
     patch=subprocess.check_output(["git","-C",tree,"diff","--binary","--",*actual])
     (out/"integration.patch").write_bytes(patch)
