@@ -1,0 +1,5 @@
+# Ordinary smooth 3D Chess firmware. Apply after sdkconfig.defaults.
+CONFIG_ESP32P4_REV_MIN_1=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_360=y
+CONFIG_CACHE_L2_CACHE_LINE_64B=y
+CONFIG_ELF_LOADER_LOAD_PSRAM=y

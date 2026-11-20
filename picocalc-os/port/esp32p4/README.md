@@ -57,6 +57,26 @@ Press **H** from the launcher to play White. Use the arrows and **Enter** to sel
 The typed world handles checkmate, stalemate and basic dead material. Games live in memory.
 [Chess design, qualification, and reproduction commands](../../../ttmp/2026/11/20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/index.md)
 
+### Ordinary smooth 3D Chess release
+
+From a clean checkout, source the ESP-IDF **v5.4.2** environment and make Node.js 24 available. The release build
+uses the tracked `dependencies.elf.lock` to resolve the native ELF loader. The first build can download those
+components. From the repository root, choose an empty build directory.
+
+```sh
+source /path/to/esp-idf-5.4.2/export.sh
+picocalc-os/port/esp32p4/build-smooth-chess.sh /tmp/picocalc-smooth-chess
+```
+
+The script prints SHA-256 digests for `picocalc-os-p4.bin` and `partition_table/partition-table.bin`.
+The ordinary profile uses the real keyboard controller and display, includes native Files, Agenda, Editor, and
+Chess, and uses the app-delivered smooth 3D painter. Press **H** in the launcher, then **F3/F4** to turn the camera.
+
+On an existing installation, verify the published partition-table digest against the device before updating
+only the factory app at offset `0x10000`. This preserves the bootloader, settings, and files. The app binary
+targets ESP32-P4 and the documented 32 MB layout. Follow the release notes for the qualified hardware revision
+and keypad status.
+
 ## Provisioning and companion firmware
 
 Credentials are entered locally through the native `net` UART commands or the provisioning helper
