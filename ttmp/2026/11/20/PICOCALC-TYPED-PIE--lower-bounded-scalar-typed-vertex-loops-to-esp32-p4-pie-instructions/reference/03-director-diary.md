@@ -70,3 +70,51 @@ Start with scripts/01-vertices.typed and the independent report. Inspect each in
 ### Technical details
 
 A 128-bit PIE vector holds eight 16-bit cells. The initial projection computes sx = 384 + x - z, sy = 640 + x + z - 2*y, and depth = x + z + y, for x, y and z in [0,255]. All outputs fit in unsigned 16-bit cells and every intermediate in this expression fits in a signed lane. A remainder by 256 is a low-byte mask only for these zero-extended inputs.
+
+## Step 2: Measure a third compiler and keep the scope of the speedup explicit
+
+The two candidate fast paths share range, address and independence checks. Measuring both lets us estimate which execution savings come from moving checks and address arithmetic outside the loop, and which require packed hardware operations. I conducted a separate cross-workload host compilation survey to measure how often the selector applies to existing project code.
+
+### Prompt Context
+
+See Step 1. The scientific goal was to infer an optimization from ordinary source that materially speeds up native code. The project goal ultimately includes the compile time and visible result on the handheld. Commit bd544af contains the experimental compiler, 29ca4f1 the first independent qualification, f277cc8 the physical report, and dd52e64 the final independent recheck.
+
+### What I did
+
+I commissioned the physical three-arm run, kept the 2D firmware as the recoverable image, and asked the reviewer to independently compute output checksums from the fixture generator. I ran scripts/director/01-cold.mjs over the projection fixture and four project workloads. Each of nine paired rounds per workload created fresh Node VM contexts, evaluated the compiler sources, and recorded setup, compilation and output bytes. I generated a two-panel chart from the operator's raw physical medians and linked both raw receipts in the synthesis.
+
+### Why
+
+An apparent 28-fold speedup against the stock backend cannot be attributed entirely to SIMD. The better scalar code alone already removes most original cycles. Measuring unrelated programs also tests whether the candidate silently changes outputs or imposes general costs on applications it cannot improve.
+
+### What worked
+
+At 256 vertices the physical medians were 45,675, 13,161, and 1,644 cycles. The independent reviewer regenerated all three machine images and independently matched all 72 memory checksums. The reported 1,024-vertex PIE cost was 5,484 cycles. Nine host realm pairs on each ordinary test workload produced an identical native output image in both modes. The projection fixture alone changed. The operator verified the original app and partition after the benchmark before handing the device to the 3D team.
+
+### What didn't work
+
+The first selector accepted a legal reassignment of the induction variable. A separate frame-limit test exposed scratch allocation that could reject a scalar-compilable function. Both failed programs became durable review fixtures. The stationary 3D painter selected no loops even though it computes coordinates. Its point-by-point layout does not fit the six disjoint buffer contract. This led to a separate optional combined-ABI trial.
+
+### What I learned
+
+At seven vertices the candidate and control have the same scalar work plus a few guard cycles. At eight, the PIE result drops sharply. Short tails make this curve depend on count modulo eight. At a fixed camera and unchanged board geometry, caching projected points competes with either scalar or SIMD calculation.
+
+### What was tricky to build
+
+The hardware samples are warm averages across repeated calls. Their extrema summarize sample averages rather than individual-call jitter. The host compile survey uses fresh JS realms inside one Node process, and cannot represent cold QuickJS deployment on the P4. Distinguishing these clocks prevents presenting a runtime projector speed as a compiler throughput improvement.
+
+### What warrants a second pair of eyes
+
+The width proofs, prefix and tail control transfers, mutation refusals, register save lists, raw arena equality, and recovery image identity are all inspectable from the three articles and their receipts. A separate PIE-enabled compiler build on the P4 is required for a cold cost estimate of its compilation service.
+
+### What should be done in the future
+
+The follow-on CHESS-3D combined experiment attempts a bounded six-column workspace for the 81 real grid vertices. It must use the projected values to generate visible geometry, enter the fast path, agree on all output words and record P4 results before anyone cites an application-frame speedup.
+
+### Code review instructions
+
+Read scripts/02-pie-lowering.js and scripts/review/cases.mjs, then compare various/physical.json with scripts/review/receipt.json and various/director-host-compile.json. Replay scripts/director/02-figure.py to regenerate the chart.
+
+### Technical details
+
+The standalone kernel moved from 628 to 1,384 bytes. The matched scalar-only fast path consumed 1,416 bytes. One vector loop occupies 29 machine words, and the guarded scalar loop 40. The 360 MHz board ran from flash-mapped code with test buffers in internal RAM. The director and two independent reports plus the new chart were published and verified at go-go-parc main 04ac835fa9b6f2382f29975f3769c4934c0c51de. Cloud delivery returned OK: uploaded PicoCalc Typed PIE Compiler Research.pdf -> /ai/2026/11/20/PICOCALC-TYPED-PIE.

@@ -1,0 +1,11 @@
+{
+  "vault": "go-go-golems/go-go-parc",
+  "verifiedRemoteMain": "04ac835fa9b6f2382f29975f3769c4934c0c51de",
+  "files": {
+    "Projects/2026/11/20/ARTICLE - PicoCalc Typed PIE - When a scalar chess vertex loop becomes eight PIE lanes.md": "523fd9c7634e740fbf2266879390b4e3e95636585daa7715acdcd89d36c72f3e",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Typed PIE - When eight projected vertices may share an instruction.md": "a132b977fa22c06034a7447a7fb453078ec697c409e38f5340ab2e960ab256da",
+    "Projects/2026/11/20/_assets/typed-pie-projection-cost.png": "e338cdd6a0a5e42520c2f0141b2f2a871f36b2e4c8ecf2f580c5e1559b864c4c",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Typed PIE - When eight vertices can share one instruction on a handheld compiler.md": "e3d51e93d135f4570f72404695bbf3ec0c7d6c93baec7b114eeb10200d401a3d"
+  },
+  "remarkable": "OK: uploaded PicoCalc Typed PIE Compiler Research.pdf -> /ai/2026/11/20/PICOCALC-TYPED-PIE"
+}
