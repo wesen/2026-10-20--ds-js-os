@@ -1,0 +1,62 @@
+{
+  "boundary": "host Wasm typed SDK SCREEN; JSON tree and hints only",
+  "sourceSha256": "871c60f88cd8365e263f057cd68e07a22fb283dea6a53602cb9365994514fff3",
+  "reactorSha256": "b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f",
+  "moduleSha256": "a1b93422ae65f8e26f658955726d513dc8525f79d10fc743cf7065f06d9d4703",
+  "runs": [
+    {
+      "event": "launch",
+      "status": "White to move",
+      "treeBytes": 4835,
+      "hintBytes": 41,
+      "canvasOps": 146,
+      "treeSha256": "3c5185d0bd959717bbdd4ba6a0ed60a156ad521caa066e102ee8478feacd2be4",
+      "hintsSha256": "afca1415d0580e0671c3d5f93a6d10544e7bce162dbbcfd8f3168a814bcd6eaf"
+    },
+    {
+      "event": "select e2",
+      "status": "White to move",
+      "treeBytes": 4897,
+      "hintBytes": 41,
+      "canvasOps": 148,
+      "treeSha256": "7e33fc0faec1379ef8ddb5efb87c28902e8277de2ba0a551140653731402039a",
+      "hintsSha256": "afca1415d0580e0671c3d5f93a6d10544e7bce162dbbcfd8f3168a814bcd6eaf"
+    },
+    {
+      "event": "cursor e3",
+      "status": "White to move",
+      "treeBytes": 4897,
+      "hintBytes": 41,
+      "canvasOps": 148,
+      "treeSha256": "f443fb673a4f0484f48a27f00c58ed0ba4c6196771445d7542a51f9221ef1bd2",
+      "hintsSha256": "afca1415d0580e0671c3d5f93a6d10544e7bce162dbbcfd8f3168a814bcd6eaf"
+    },
+    {
+      "event": "cursor e4",
+      "status": "White to move",
+      "treeBytes": 4897,
+      "hintBytes": 41,
+      "canvasOps": 148,
+      "treeSha256": "d74062dc5ba9410ca1772f1a54a35143f1b4494c56541b419348d981050728c8",
+      "hintsSha256": "afca1415d0580e0671c3d5f93a6d10544e7bce162dbbcfd8f3168a814bcd6eaf"
+    },
+    {
+      "event": "play e2e4",
+      "status": "Black is thinking",
+      "treeBytes": 4913,
+      "hintBytes": 41,
+      "canvasOps": 146,
+      "treeSha256": "175558c20a45b13d5d7c8c83050b211bda2cc9c9d5a9d9b0e3aeb3de2089531f",
+      "hintsSha256": "afca1415d0580e0671c3d5f93a6d10544e7bce162dbbcfd8f3168a814bcd6eaf"
+    },
+    {
+      "event": "reply wake 78",
+      "status": "White to move",
+      "treeBytes": 4944,
+      "hintBytes": 41,
+      "canvasOps": 146,
+      "treeSha256": "fe050d03a18ad2eae8b656e9203ae1446caa71c0bcf9bafce9c16bebe460a92a",
+      "hintsSha256": "afca1415d0580e0671c3d5f93a6d10544e7bce162dbbcfd8f3168a814bcd6eaf"
+    }
+  ]
+}

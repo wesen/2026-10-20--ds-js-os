@@ -1,0 +1,21 @@
+{
+  "input": "picocalc-os/worlds/chess/view.typed",
+  "function": "chessPieceGlyph",
+  "sourceBytes": 339,
+  "moduleBytes": 156,
+  "moduleSha256": "ecb75c5b4560c433ba3d6e020bdb8150fc1c558544a8ef9101af66ae7a1597ef",
+  "imports": [],
+  "exports": [
+    {
+      "name": "chessPieceGlyph",
+      "kind": "function"
+    },
+    {
+      "name": "memory",
+      "kind": "memory"
+    }
+  ],
+  "linearMemoryBytes": 65536,
+  "observed": "PNBRQKpnbrqk",
+  "identicalSecondCompilation": true
+}
