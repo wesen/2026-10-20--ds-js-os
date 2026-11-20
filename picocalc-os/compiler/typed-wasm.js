@@ -119,9 +119,10 @@ class Lexer {
         for (let token; (token = BODY_TOKEN.exec(this.input));) {
             if (token[0] === "{") depth++;
             if (token[0] === "}" && --depth === 0) {
-                this.offset = BODY_TOKEN.lastIndex;
+                const end = BODY_TOKEN.lastIndex;
+                this.offset = end;
                 this.next();
-                return;
+                return end;
             }
         }
         this.offset = this.input.length;
@@ -489,7 +490,9 @@ class FunctionEmitter {
         }
         lex.expect(")");
         this.block(result);
-        if (update) this.code.push(...update);
+        if (update) {
+            for (const cell of update) this.code.push(cell);
+        }
         this.code.push(0x0c, 0, OP.end, OP.end);
         this.controls -= 2;
         this.loopExits.pop();
@@ -678,17 +681,21 @@ class NumericFunctionEmitter extends FunctionEmitter {
     finish(fn) { return fn; }
 }
 
-function scanSignatures(lex, records, declared, functionBase, enums, distinct) {
+function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false) {
     const functions = [];
     while (lex.token.kind !== "eof") {
+        const start = lex.token.at;
+        const async = asyncSpans && lex.accept("async");
         lex.expect("function");
         const name = lex.ident();
         if (name === "memory") lex.fail("reserved memory export");
         if (declared.has(name) || distinct.has(name)) lex.fail("duplicate function " + name);
         const params = [], paramNames = [];
+        const paramAts = asyncSpans ? [] : null;
         lex.expect("(");
         if (!lex.accept(")")) {
             do {
+                paramAts?.push(lex.token.at);
                 const id = lex.ident();
                 lex.expect(":");
                 params.push(lex.type(records, enums, distinct));
@@ -703,7 +710,11 @@ function scanSignatures(lex, records, declared, functionBase, enums, distinct) {
         const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
         declared.set(name, fn);
         functions.push(fn);
-        lex.skipBody();
+        const end = lex.skipBody();
+        if (asyncSpans) {
+            if (end === undefined) lex.fail("unterminated function body");
+            Object.assign(fn, {start, end, async, paramAts});
+        }
     }
     return functions;
 }
@@ -765,7 +776,7 @@ function parseEnum(lex, name) {
     return members;
 }
 
-function parseDeclarations(lex) {
+function parseDeclarations(lex, recordEnds) {
     const records = new Map();
     const enums = new Map();
     const distinct = new Set();
@@ -789,7 +800,7 @@ function parseDeclarations(lex) {
         }
         const fields = new Map();
         lex.expect("{");
-        while (!lex.accept("}")) {
+        while (lex.token.value !== "}") {
             const field = lex.ident();
             if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
             lex.expect(":");
@@ -797,6 +808,8 @@ function parseDeclarations(lex) {
             lex.expect(";");
             fields.set(field, {type, offset: fields.size * 4});
         }
+        recordEnds?.set(name, lex.token.at);
+        lex.expect("}");
         records.set(name, fields);
     }
     return {records, enums, distinct};
@@ -1036,5 +1049,5 @@ function invoke(exports, signature, args) {
 
 globalThis.compileTyped = source => compile(source).bytes;
 globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
-    parseDeclarations, inferredType: scalarType, recordLayouts, enumLayouts};
+    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts};
 })();

@@ -142,7 +142,7 @@ function wasmReactor(sdk = imports, entryDescriptors = worldEntries) {
 
 function rv32Reactor(sdk = imports, entryDescriptors = worldEntries) {
     const header = 84;
-    const capacity = 65536;
+    const capacity = 229376;
     const bytes = new Uint8Array(header + capacity);
     const view = new DataView(bytes.buffer);
     const word = (at, value) => view.setUint32(at, value, true);

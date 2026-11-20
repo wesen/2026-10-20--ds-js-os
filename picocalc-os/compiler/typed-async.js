@@ -4,7 +4,7 @@
 "use strict";
 
 // Existing typed sources use start and pending as locals and record fields.
-const candidate = /\b(?:async|await|start|cancel)\b\s*(?:\/\/[^\n]*\n\s*)*[a-zA-Z_]\w*|\b(?:resume|pending)\b\s*(?:\/\/[^\n]*\n\s*)*\(/;
+const candidate = /\b(?:async|await)\b|\b(?:start|cancel)\b\s*(?:\/\/[^\n]*\n\s*)*[a-zA-Z_]\w*|\b(?:resume|pending)\b\s*(?:\/\/[^\n]*\n\s*)*\(/;
 const ambient = new Map([["event", "WorldEvent"], ["state", "WorldState"],
     ["output", "buffer"], ["hints", "buffer"]]);
 const completion = 4;
@@ -27,13 +27,13 @@ function fail(source, at, message) {
     throw new SyntaxError(location(source, at) + ": " + message);
 }
 
-function tokensFrom(source, at) {
+function tokensFrom(source, from, to) {
     const tokens = [];
-    const lex = new typedWasm.Lexer(source, at);
+    const lex = new typedWasm.Lexer(source, from, to);
     for (; lex.token.kind !== "eof"; lex.next()) {
-        tokens.push({...lex.token, end: lex.offset});
+        lex.token.end = lex.offset;
+        tokens.push(lex.token);
     }
-    tokens.push({...lex.token, end: lex.offset});
     return tokens;
 }
 
@@ -66,18 +66,11 @@ class Cursor {
         if (!this.accept(value)) this.fail("expected " + value);
     }
 
-    ident() {
-        const token = this.token;
-        new typedWasm.Lexer(this.source, token.at, token.end).ident();
-        this.take();
-        return token.value;
-    }
-
     range(end) {
         const from = this.i;
         let depth = 0;
         while (depth || this.value !== end) {
-            if (this.value === ")" && !depth || this.value === "{" || this.value === "}")
+            if ((this.value === ")" && !depth) || this.value === "{" || this.value === "}")
                 this.fail("expected " + end);
             if (this.value === "(") depth++;
             if (this.value === ")") depth--;
@@ -85,70 +78,37 @@ class Cursor {
         }
         return this.tokens.slice(from, this.i);
     }
-
-    blockRange() {
-        this.expect("{");
-        const from = this.i;
-        let depth = 1;
-        while (depth) {
-            const value = this.take().value;
-            if (value === "{") depth++;
-            if (value === "}") depth--;
-        }
-        return [from, this.i - 1];
-    }
 }
 
 function readProgram(source, imported) {
     const lex = new typedWasm.Lexer(source);
-    const types = typedWasm.parseDeclarations(lex);
-    const tokens = tokensFrom(source, 0);
-    if (!tokens.some((_, i) => isOperation(tokens, i))) return null;
-    const c = new Cursor(source, tokens, tokens.findIndex(token => token.at === lex.token.at));
-    const functions = new Map();
+    const recordEnds = new Map();
+    const types = typedWasm.parseDeclarations(lex, recordEnds);
     const imports = new Map(imported.map(fn => [fn.name, fn]));
-    const usedNames = new Set(tokens.filter(token => token.kind === "id").map(token => token.value));
-    let prefix = "__typed_async_";
-    while ([...usedNames].some(name => name.startsWith(prefix))) prefix += "_";
-    let stateEnd;
-    for (let i = 0; i < c.i; i++) {
-        if (tokens[i].value !== "record" || tokens[i + 1]?.value !== "WorldState") continue;
-        stateEnd = tokens.slice(i + 2, c.i).find(token => token.value === "}")?.at;
-        break;
-    }
-    while (c.token.kind !== "eof") {
-        const start = c.token.at;
-        const async = c.accept("async");
-        c.expect("function");
-        const name = c.ident();
-        if (functions.has(name) || imports.has(name)) c.fail("duplicate function " + name, start);
-        const params = [];
-        const names = new Set();
-        c.expect("(");
-        if (!c.accept(")")) {
-            do {
-                const at = c.token.at;
-                const name = c.ident();
-                c.expect(":");
-                const bindingType = new typedWasm.Lexer(source, c.token.at, c.token.end);
-                const type = bindingType.type(types.records, types.enums, types.distinct);
-                c.take();
-                if (names.has(name)) c.fail("duplicate local " + name, at);
-                names.add(name);
-                params.push({name, type, at, ambient: ambient.get(name) === type});
-            } while (c.accept(","));
-            c.expect(")");
+    const signatures = typedWasm.scanSignatures(lex, types.records, new Map(imports), 0,
+        types.enums, types.distinct, true);
+    const functions = new Map();
+    let foundOperation = false;
+    for (const sig of signatures) {
+        const {name, result, start, end, bodyAt, async, index} = sig;
+        let tokens;
+        if (async || candidate.test(source.slice(bodyAt, end))) {
+            tokens = tokensFrom(source, bodyAt, end);
+            foundOperation ||= async || tokens.some((_, i) => isOperation(tokens, i));
         }
-        c.expect(":");
-        const result = new typedWasm.Lexer(source, c.token.at, c.token.end)
-            .type(types.records, types.enums, types.distinct);
-        c.take();
-        const [from, to] = c.blockRange();
-        functions.set(name, {name, async, params, result, from, to, start,
-            end: tokens[to].end, edges: new Set(), waits: [], bindings: [], replacements: []});
+        const params = sig.params.map((type, i) => {
+            const name = sig.paramNames[i];
+            return {type, name, at: sig.paramAts[i], ambient: ambient.get(name) === type};
+        });
+        functions.set(name, {name, result, start, end, bodyAt, async, index, tokens,
+            params, edges: new Set(), waits: [], bindings: [], replacements: []});
     }
-    return {source, tokens, types, functions, imports, prefix, stateEnd,
-        tasks: new Set(), stateFields: types.records.get("WorldState")?.size ?? 0};
+    if (!foundOperation) return null;
+    let prefix = "__typed_async_";
+    while (source.includes(prefix)) prefix += "_";
+    return {source, types, functions, imports, prefix,
+        stateEnd: recordEnds.get("WorldState"), tasks: new Set(),
+        stateFields: types.records.get("WorldState")?.size ?? 0};
 }
 
 function scalar(type, {enums, distinct}) {
@@ -164,10 +124,31 @@ function sourceCallables(program) {
     return functions;
 }
 
+// A synchronous body with no task syntax needs only its call edges here.
+// Skip strings, comments, and method syntax without allocating lexer tokens.
+function scanOrdinaryCalls(source, fn, functions) {
+    const calls = /\/\/[^\n]*|"(?:[^"\\\r\n]|\\.)*"|(?<member>\.\s*(?:\/\/[^\n]*\n\s*)*)?(?<name>\b[a-zA-Z_]\w*)\s*(?:\/\/[^\n]*\n\s*)*\(/g;
+    const body = source.slice(fn.bodyAt, fn.end);
+    for (const match of body.matchAll(calls)) {
+        const {name, member} = match.groups;
+        if (!name || member) continue;
+        const target = functions.get(name);
+        if (!target) continue;
+        if (target.async)
+            fail(source, fn.bodyAt + match.index, "call async function " + name + " with start or await");
+        fn.edges.add(target);
+    }
+}
+
 function scanOperations(program) {
-    const {source, functions, tokens, tasks} = program;
+    const {source, functions, tasks} = program;
     for (const fn of functions.values()) {
-        for (let i = fn.from; i < fn.to; i++) {
+        const {tokens} = fn;
+        if (!tokens) {
+            scanOrdinaryCalls(source, fn, functions);
+            continue;
+        }
+        for (let i = 1; i < tokens.length - 1; i++) {
             const {value, at} = tokens[i];
             const next = tokens[i + 1];
             if (value === "async") fail(source, at, "async can only introduce a function");
@@ -205,6 +186,7 @@ function scanOperations(program) {
                 fn.edges.add(target);
             }
         }
+        if (!fn.async) fn.tokens = null;
     }
     for (const fn of functions.values()) {
         for (const op of fn.replacements) {
@@ -215,29 +197,15 @@ function scanOperations(program) {
     }
 }
 
-function assertAcyclic(program) {
-    const finished = new Set();
-    const visiting = new Set();
-    const path = [];
-    function visit(fn) {
-        if (finished.has(fn)) return;
-        if (visiting.has(fn)) {
-            const cycle = [...path.slice(path.indexOf(fn)), fn].map(entry => entry.name);
-            fail(program.source, fn.start, "recursive call cycle: " + cycle.join(" -> "));
-        }
-        visiting.add(fn);
-        path.push(fn);
-        for (const target of fn.edges) visit(target);
-        path.pop();
-        visiting.delete(fn);
-        finished.add(fn);
-    }
-    for (const fn of program.functions.values()) visit(fn);
+function assertAcyclic({functions}) {
+    const signatures = [...functions.values()];
+    const edges = signatures.map(fn => [...fn.edges].map(target => target.index));
+    typedWasm.checkAcyclic(signatures, edges);
 }
 
 class AsyncBody extends Cursor {
     constructor(program, fn, ordinary) {
-        super(program.source, program.tokens, fn.from);
+        super(program.source, fn.tokens, 1);
         this.program = program;
         this.fn = fn;
         this.ordinary = ordinary;
@@ -466,9 +434,9 @@ class AsyncBody extends Cursor {
 
     parse() {
         const statements = [];
-        while (this.i < this.fn.to) statements.push(this.statement());
+        while (this.i < this.tokens.length - 1) statements.push(this.statement());
         if (statements.at(-1)?.kind !== "return")
-            this.fail("expected a final return", this.program.tokens[this.fn.to].at);
+            this.fail("expected a final return", this.token.at);
         return statements;
     }
 }
@@ -529,6 +497,7 @@ function analyze(program) {
     for (const fn of program.functions.values()) {
         if (!fn.async) continue;
         fn.body = new AsyncBody(program, fn, ordinary).parse();
+        fn.tokens = null;
         liveSequence(fn.body, new Set(), new Set());
         const saved = new Set();
         for (const wait of fn.waits) {
