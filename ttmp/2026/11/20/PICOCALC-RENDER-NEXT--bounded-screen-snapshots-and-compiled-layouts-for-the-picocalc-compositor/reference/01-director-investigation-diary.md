@@ -261,3 +261,59 @@ The upload completed through the ordinary bundle command. The receipt establishe
 ### Remaining requirements and next action
 
 The user can validate T4 as a conditional arm of P2. Testing a complete semantic renderer on the P4, including cold installation latency and pixel parity, is the proposed experiment.
+
+## Step 7: Turn the two renderer designs into department assignments
+
+I wrote a dispatch-ready program for the bounded renderer and the typed view procedure inside RENDER-NEXT. It identifies four research responsibilities and schedules their work within one board and three Codex worker slots. The handout separates studies which can start immediately from ones whose interpretable control still needs building.
+
+### Prompt Context
+
+The user asked, verbatim:
+
+> Ok, so let's look at the last two NEXT design docs, and give me a substantive reseach program so we can hand it out to the epartments (opus, astra, researchers, etc...) . What is available?
+
+They clarified, verbatim:
+
+> I guess I was refering to the two design docs in RENDER-NEXT.
+
+I took the deliverable to be a program for review and dispatch. The first wave is proposed and has no new assignments running. The starting revision was `46f17ca`.
+
+### What I did
+
+I read the producer-to-panel and mobile-view guides, task list, phase plan, author receipts and latest diary. I replayed scripts 08 and 09 and compared both JSON outputs byte-for-byte with their receipts. I reran the System producer comparison using the original sysmon source from `dcf3fca`. I checked the available simulator and typed reactor, worker status and visible serial paths. I then wrote the department handout and linked it from the ticket index.
+
+### Why
+
+The lab can assign work now even before the full device oracle exists. An ownership study, manual template, blind placement prediction and two-sequence replay have distinct outputs. Keeping the three Chess delivery arms in one lane preserves the same program, schema and runner across the comparison.
+
+### What worked
+
+The six Chess screen records and standalone glyph result reproduced exactly. The System fixture run completed with its 65 selection cases and 69 additional boundary cases. The ticket already has separate source-constructor and receiver holdouts, two completed independent research assessments and a shared hardware program.
+
+### What didn't work
+
+I initially interpreted NEXT as possibly naming the native and rendering tickets together. The user clarified the intended pair. I renamed the empty draft and scoped the final handout to the two renderer designs. The native compiler appears only as an existing tool for a view procedure. Checking `ls /dev/serial/by-id` returned `No such file or directory`; a subsequent read-only check of ttyACM and ttyUSB names also found none. No hardware trial was attempted.
+
+### What I learned
+
+The scientific decision changes when the comparison changes. A semantic position can reduce repeated screen construction, a delivered module changes installation, and source changes the workflow for an edit on the handheld. Only the resident comparison measures the first effect. Keys and Editor also answer different generalization questions.
+
+### What was tricky to build
+
+Department boundaries had to conserve an independent reviewer and a single board operator. I kept installation as a rotating assignment after the resident control. Layout and damage share instrumentation early but gain dedicated implementers only when their measured opportunity justifies it.
+
+### What warrants a second pair of eyes
+
+The experimentalist should freeze the minimum worthwhile effects, timing boundaries and correct panel recovery before the first candidate comparison. An index implemented in C needs its own same-boundary materializing control.
+
+### What should be done in the future
+
+Upon authorization, dispatch the host work. Qualify independent treatments before testing their interaction on the P4. Each project should return a design, scripts, detailed diary, receipts, and a report for a positive, negative or inconclusive result.
+
+### Code review instructions
+
+Read [Department briefs](../design-doc/05-department-briefs-for-bounded-rendering-and-typed-view-programs.md) starting with the inventory, then compare the first authorization with the phase task IDs. The two existing Node probes are reproduced from the repository root. For System use `git show dcf3fca:picocalc-os/js/apps/sysmon.js` as standard input to the fault ticket’s `02-compare-system-frames.mjs`.
+
+### Technical details
+
+At the typed SDK boundary the reference cursor move emits 4,897 tree bytes plus 41 hint bytes. The proposed 92-byte state is a schema calculation. The standalone 156-byte Wasm program is only a leaf function. Qualification of a complete Chess view and measurement of any new device speedup remain open.

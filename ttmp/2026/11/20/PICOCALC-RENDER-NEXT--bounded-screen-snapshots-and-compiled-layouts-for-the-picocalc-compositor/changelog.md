@@ -19,3 +19,7 @@ Extended P2 with an independent study of receiver-compiled typed views. Measured
 ## 2026-11-20
 
 Delivered Typed View Programs on the PicoCalc.pdf to the reMarkable ticket folder with both independent research assessments.
+
+## 2026-11-20
+
+Added a department handout for both renderer designs, with available evidence, staffing, first assignments, shared experimental controls and release gates. Host Chess receipts and System fixture comparisons reproduced.
