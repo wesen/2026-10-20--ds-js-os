@@ -1,0 +1,22 @@
+{
+  "command": "bash .../scripts/18-reproduce.sh",
+  "isolatedTicketCopy": true,
+  "localAcornDependency": "8.15.0",
+  "exit": 0,
+  "identicalEvidenceSha256": {
+    "keys-auto-wire.ndjson": "2179dda3f96fbdd3fa313604accfddafe631fb9388ae6e739fb77c6952bbcb5a",
+    "keys-generic-wire.ndjson": "76574d8d61d3d9c2bbd41dc1b85dba31a2ba237e4483c54f7f1b4c8ff556b7da",
+    "keys-pixel-receipt.json": "e71e02aaf315b8595c8680a6540b92cf005b38bd11d363412f11ba5b03120b70",
+    "minified-source.json": "c1566a9b33c63dcb621e3c72b02b2abcb360244db4f0a40fb00bcf9869da1186",
+    "protocol-audit.json": "f676bec153d0ead07c47767d3a50b4a53f8d9f623cf72aad115ea24a12c6e3c7",
+    "sysmon-auto-wire.ndjson": "0249eb360ea60e8d855dae1f99839d2d6cafb6fea0237af0178c1a5d849e118d",
+    "sysmon-generic-wire.ndjson": "3c461d5c1311af8ae19046e3d2f3afd82aa4771eab43c33c6b6bb0de0247e872",
+    "sysmon-manual-wire.ndjson": "8a09d5c5d3e1cb7e73acd722662362dc38f38b57ad300030a855567a06b772b5",
+    "sysmon-pixel-receipt.json": "f8a24f259459ae1d4d66e38df7bd22cf1cb5874cabb1a8d9e8ff18765652c800"
+  },
+  "additionalVerificationP95ReceiverRatio": 1.265427048988284,
+  "additionalVerificationP95ReceiverCI": [
+    0.7772156586404662,
+    1.2748924656136922
+  ]
+}

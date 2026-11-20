@@ -1,0 +1,25 @@
+{
+  "G": {
+    "components": {
+      "generic": 4852
+    },
+    "minified": 4852,
+    "gzip9": 2210
+  },
+  "M": {
+    "components": {
+      "manual": 3678,
+      "manualResident": 1728
+    },
+    "minified": 5407,
+    "gzip9": 2466
+  },
+  "A": {
+    "components": {
+      "generic": 4852,
+      "autoResident": 1552
+    },
+    "minified": 6405,
+    "gzip9": 2821
+  }
+}

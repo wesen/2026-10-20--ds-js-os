@@ -219,3 +219,51 @@ Run scripts/18-reproduce.sh from the repository root. See reference/04-reproduct
 ### Technical details
 
 The portable physical runner exposes renderLabRun(arm,1), prices 20 attempts and 17 publications, and returns a canonical-screen checksum of 2164593678. It occupies 23,710 source bytes including all controls, corpus and measurement glue.
+
+## Step 5. Independently rerun the complete host program and test the diff tail
+
+The project's primary control is G. After the article draft, I tested the researcher's stricter S1 receiver-tail gate directly rather than leaving it to an inference from G. I also ran the complete host sequence in a scratch ticket copy, preserving the original source measurements.
+
+### Prompt Context
+
+See Step 1. The blind promotion threshold is the upper confidence limit of the 95th percentile of paired receiver-time ratios at or below 1.10.
+
+### What I did
+
+Paired M and S1 in 30 alternating blocks of six full sweeps with the same compare/clock boundaries. Extracted the common diff function for the two harnesses and replayed. Measured minified and gzipped artifacts with Terser 5.19.2. Copied the full study into /tmp and executed scripts/18-reproduce.sh, then compared hashes for nine deterministic evidence files.
+
+### Why
+
+A ratio using M/G cannot answer the registered M/S1 cut. A receiver using path edits may do less work per frame than one reconstructing a complete tree. Minified source prices a deployment different from the physical firmware's uncompressed content.
+
+### What worked
+
+A clean independent host replay returned zero. Every envelope stream, pixel receipt, protocol audit and minified-size report reproduced exactly. G/M/A compressed minified source costs were 2,210/2,466/2,821 bytes. The program also verified catalog-miss fallback can be implemented with the manual packer and shared reconstruction code on the sender, without a second full System producer.
+
+### What didn't work
+
+The first scratch run could not resolve the Acorn dependency installed through the workspace's parent path and raised MODULE_NOT_FOUND. Exposed the same Acorn package to the isolated scratch copy, then ran the whole workflow successfully. The paired-diff verification step overwrote the first run's full block file. Retained its printed summary alongside the complete second blocks and a third independent replay interval.
+
+### What I learned
+
+The primary M/G timing result is large. The separate M/S1 receiver-tail ratio is sensitive to host run conditions. Its three 95% upper limits were 0.798, 1.295 and 1.275. The 1.10 threshold remains inconclusive.
+
+### What was tricky to build
+
+The stateful receiver edits the previous tree in place. Instrumentation had to time its predecessor-dependent update while validating tree equality outside the measured region. A full reset starts at frozen frame 50. For diagnosis, S1 parsed 3,272 JSON containers and issued 173 path writes; M parsed 1,081 wire containers and constructed the full view.
+
+### What warrants a second pair of eyes
+
+The shortest source representation is a distinct metric from ESP-IDF image bytes and from heap residency. Absolute timings and the tails of short host operations depend on runtime and competing load.
+
+### What should be done in the future
+
+Use whole pipeline trials before treating either host comparison as a production frame-latency claim.
+
+### Code review instructions
+
+Read scripts/22-paired-diff.cjs, various/paired-diff-first-summary.json, various/paired-diff.json and various/clean-replay.json together. scripts/23-source-cost.sh records the source compaction recipe.
+
+### Technical details
+
+All nine archived deterministic hashes from the clean run match. See various/clean-replay.json. The replay with repaired Acorn used the same v8.15.0 parser as the frozen build.

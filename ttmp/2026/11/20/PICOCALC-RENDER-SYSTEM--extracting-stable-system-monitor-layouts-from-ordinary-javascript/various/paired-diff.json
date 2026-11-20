@@ -1,0 +1,805 @@
+{
+  "checks": [
+    {
+      "arm": "M",
+      "producerUsPerTrace": 2300.698,
+      "receiverUsPerTrace": 1752.904,
+      "bytes": 64566,
+      "parsedContainers": 1081,
+      "appliedPathWrites": 0
+    },
+    {
+      "arm": "S1",
+      "producerUsPerTrace": 10566.224,
+      "receiverUsPerTrace": 1000.698,
+      "bytes": 119142,
+      "parsedContainers": 3272,
+      "appliedPathWrites": 173
+    }
+  ],
+  "reps": 6,
+  "blocks": [
+    {
+      "block": 0,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6784.757666666667,
+          "receiverUsPerTrace": 878.0336666666666,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 892.0586666666667,
+          "receiverUsPerTrace": 658.5433333333334,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 1,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 662.0398333333334,
+          "receiverUsPerTrace": 532.7686666666666,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5950.200833333333,
+          "receiverUsPerTrace": 720.1455,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 2,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6159.7395,
+          "receiverUsPerTrace": 721.2685,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 614.6788333333334,
+          "receiverUsPerTrace": 604.6673333333333,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 3,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 595.2626666666666,
+          "receiverUsPerTrace": 584.836,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6520.703333333333,
+          "receiverUsPerTrace": 811.2593333333334,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 4,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6400.217166666667,
+          "receiverUsPerTrace": 792.5935,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 636.0655,
+          "receiverUsPerTrace": 522.5986666666666,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 5,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 626.3735,
+          "receiverUsPerTrace": 559.4638333333334,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6622.822666666667,
+          "receiverUsPerTrace": 835.2276666666667,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 6,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6511.477833333333,
+          "receiverUsPerTrace": 786.8776666666666,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 627,
+          "receiverUsPerTrace": 518.0826666666667,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 7,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 630.0035,
+          "receiverUsPerTrace": 538.8253333333333,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6239.483833333333,
+          "receiverUsPerTrace": 730.3995,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 8,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6090.289666666667,
+          "receiverUsPerTrace": 720.7545,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 1020.586,
+          "receiverUsPerTrace": 933.496,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 9,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 888.3693333333333,
+          "receiverUsPerTrace": 821.7626666666666,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6955.237166666667,
+          "receiverUsPerTrace": 848.7145,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 10,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6702.194166666667,
+          "receiverUsPerTrace": 779.3723333333334,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 584.4401666666666,
+          "receiverUsPerTrace": 522.1726666666667,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 11,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 586.514,
+          "receiverUsPerTrace": 503.6035,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6337.2595,
+          "receiverUsPerTrace": 735.7706666666667,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 12,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6318.4875,
+          "receiverUsPerTrace": 730.9306666666666,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 622.1413333333334,
+          "receiverUsPerTrace": 490.7423333333333,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 13,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 657.5321666666666,
+          "receiverUsPerTrace": 566.3065,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6756.986,
+          "receiverUsPerTrace": 812.404,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 14,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 7720.961833333333,
+          "receiverUsPerTrace": 918.1898333333334,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 672.1088333333333,
+          "receiverUsPerTrace": 553.0676666666666,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 15,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 648.3165,
+          "receiverUsPerTrace": 523.7471666666667,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 7898.948833333333,
+          "receiverUsPerTrace": 947.4525,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 16,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6612.468166666667,
+          "receiverUsPerTrace": 759.47,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 594.8298333333333,
+          "receiverUsPerTrace": 505.4831666666667,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 17,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 645.0331666666666,
+          "receiverUsPerTrace": 546.1001666666666,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6557.356166666667,
+          "receiverUsPerTrace": 797.4755,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 18,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 6657.979666666667,
+          "receiverUsPerTrace": 783.765,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 679.165,
+          "receiverUsPerTrace": 561.9806666666666,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 19,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 613.3403333333333,
+          "receiverUsPerTrace": 514.9226666666667,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 7046.109333333333,
+          "receiverUsPerTrace": 807.094,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 20,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 7161.147166666667,
+          "receiverUsPerTrace": 903.6895,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 585.3278333333334,
+          "receiverUsPerTrace": 526.0445,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 21,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 630.6981666666667,
+          "receiverUsPerTrace": 544.9991666666666,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5872.769333333333,
+          "receiverUsPerTrace": 701.4253333333334,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 22,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5773.755833333333,
+          "receiverUsPerTrace": 656.3325,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 546.6683333333334,
+          "receiverUsPerTrace": 517.7511666666667,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 23,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 528.8883333333333,
+          "receiverUsPerTrace": 469.8655,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5816.874833333333,
+          "receiverUsPerTrace": 671.2951666666667,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 24,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5779.172166666667,
+          "receiverUsPerTrace": 658.1453333333334,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 535.9918333333334,
+          "receiverUsPerTrace": 473.56,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 25,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 539.7353333333334,
+          "receiverUsPerTrace": 462.64283333333333,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5810.019,
+          "receiverUsPerTrace": 658.5058333333334,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 26,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5824.1885,
+          "receiverUsPerTrace": 665.5558333333333,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 536.4196666666667,
+          "receiverUsPerTrace": 472.1906666666667,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 27,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 526.2181666666667,
+          "receiverUsPerTrace": 454.2215,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5764.7915,
+          "receiverUsPerTrace": 658.5528333333334,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 28,
+      "order": [
+        "S1",
+        "M"
+      ],
+      "trials": [
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 7019.9515,
+          "receiverUsPerTrace": 838.7581666666666,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "M",
+          "producerUsPerTrace": 569.3458333333334,
+          "receiverUsPerTrace": 465.70483333333334,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    },
+    {
+      "block": 29,
+      "order": [
+        "M",
+        "S1"
+      ],
+      "trials": [
+        {
+          "arm": "M",
+          "producerUsPerTrace": 553.6843333333334,
+          "receiverUsPerTrace": 450.5415,
+          "bytes": 64566,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        },
+        {
+          "arm": "S1",
+          "producerUsPerTrace": 5842.9385,
+          "receiverUsPerTrace": 685.153,
+          "bytes": 119142,
+          "parsedContainers": 0,
+          "appliedPathWrites": 0
+        }
+      ]
+    }
+  ],
+  "relativeMOverS1": {
+    "producer": {
+      "medianUs": 622.1413333333334,
+      "p95Us": 892.0586666666667,
+      "medianPairedRatio": 0.09468158147202567,
+      "p95PairedRatio": 0.13147981261723274,
+      "p95RatioCI": [
+        0.1020076710958214,
+        0.16757593741162505
+      ]
+    },
+    "receiver": {
+      "medianUs": 523.7471666666667,
+      "p95Us": 821.7626666666666,
+      "medianPairedRatio": 0.6970749774742616,
+      "p95PairedRatio": 0.968243934405111,
+      "p95RatioCI": [
+        0.750020595261913,
+        1.2951649972355357
+      ]
+    },
+    "total": {
+      "medianUs": 1158.6641666666667,
+      "p95Us": 1710.132,
+      "medianPairedRatio": 0.15786886809027195,
+      "p95PairedRatio": 0.21913667242514528,
+      "p95RatioCI": [
+        0.1772045849484068,
+        0.28689903518219734
+      ]
+    }
+  }
+}

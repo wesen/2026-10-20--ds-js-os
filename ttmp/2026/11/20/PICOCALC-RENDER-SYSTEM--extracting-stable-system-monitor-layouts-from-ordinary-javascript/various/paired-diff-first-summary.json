@@ -1,0 +1,9 @@
+{
+  "stage": "before importing the identical diff function via CommonJS exports",
+  "source": "captured helper output before the verification rerun replaced paired-diff.json",
+  "blocks": 30,
+  "reps": 6,
+  "p95ReceiverRatio": 0.7958541311512448,
+  "receiverRatioCI": [0.7144127103688116, 0.7980978785179743],
+  "retainedFullBlocks": false
+}

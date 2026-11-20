@@ -26,7 +26,12 @@ for(const [arm,codec,version] of [['M',m,1],['A',a,a.catalog.version]]){
   let retained=null;
   const decode=(w)=>arm==='M'&&w[0]==='{'&&Object.hasOwn(JSON.parse(w),'tree')?g.open(w):codec.open(w);
   function admit(w){const x=decode(w);if(!x||typeof x.tree!=='object')throw Error('missing tree');retained=w;return x;}
-  function make(s,known){return known===version?codec.make(s):g.make(s);}
+  function make(s,known){
+    if(known===version)return codec.make(s);
+    // M carries the same resident reconstruction code in its producer on a miss,
+    // so this path needs the manual packer and shared catalog but no duplicate app.
+    return arm==='M'?JSON.stringify(codec.open(codec.make(s))):g.make(s);
+  }
   const s=cases[6].state,view=admit(make(s,version)),accepted=retained;
   const obj=JSON.parse(accepted);
   if(arm==='M')obj.v[0]=901;else obj[0]='mismatch';
@@ -34,6 +39,7 @@ for(const [arm,codec,version] of [['M',m,1],['A',a,a.catalog.version]]){
   const fresh=arm==='M'?manualApp():autoApp('sysmon');
   assert.deepEqual(fresh.open(retained),view);
   const unknown=make(cases[7].state,'uninstalled');
+  assert.equal(unknown,g.make(cases[7].state));
   assert.deepEqual(admit(unknown),g.open(g.make(cases[7].state)));
   const ok=admit(make(cases[8].state,version));assert.deepEqual(JSON.parse(JSON.stringify(ok)),g.open(g.make(cases[8].state)));
   archives[arm]={oldId:cases[6].id,invalidRejected:true,idleFreshReceiverMatches:true,catalogMiss:'generic',acceptedNext:cases[8].id};

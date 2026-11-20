@@ -80,6 +80,7 @@ function live(){
   }
   step('blur',app.events.blur);return cases;
 }
+if(require.main===module){
 const cases=systemCases(), g=genericApp('sysmon'),m=manualApp(),a=autoApp('sysmon');
 const blocks=timings({G:g,M:m,A:a},cases,16,30);
 write('timing-system.json',JSON.stringify({node:process.version,reps:16,blocks},null,2)+'\n');
@@ -118,3 +119,5 @@ for(const [name,arm,tag] of [['sysmon','G','generic'],['sysmon','M','manual'],['
 }
 write('summary.json',JSON.stringify(summary,null,2)+'\n');
 console.log(JSON.stringify(summary));
+}
+module.exports={diff,paired};

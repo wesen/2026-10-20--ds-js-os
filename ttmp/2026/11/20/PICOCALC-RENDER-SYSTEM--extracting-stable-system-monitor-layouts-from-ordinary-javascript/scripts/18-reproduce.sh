@@ -18,3 +18,5 @@ done
 node "$dir/13-comparisons.cjs"
 "$dir/15-heap.sh"
 node "$dir/16-protocol-audit.cjs"
+node "$dir/22-paired-diff.cjs"
+"$dir/23-source-cost.sh"
