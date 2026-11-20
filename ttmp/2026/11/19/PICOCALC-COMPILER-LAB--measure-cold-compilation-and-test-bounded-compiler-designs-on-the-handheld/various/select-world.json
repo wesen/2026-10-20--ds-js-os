@@ -1,0 +1,64 @@
+{
+  "candidate": "select",
+  "firmware_sha256": "348e1c877c5bc00fdd70002832ed617fe7ab58baa7c37c912ebb70081c2bb4d5",
+  "boots": [
+    {
+      "elapsed_us": 2506599,
+      "peak_js_bytes": 1425796,
+      "module_bytes": 240452,
+      "compiled_sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+      "world_kib": 710.1,
+      "world_limit_kib": 768,
+      "engine": "native"
+    }
+  ],
+  "restored": true,
+  "control_before": {
+    "elapsed_us": 3137543,
+    "peak_js_bytes": 2454960,
+    "module_bytes": 240452,
+    "compiled_sha256": null,
+    "world_kib": 710.1,
+    "world_limit_kib": 768,
+    "engine": "native"
+  },
+  "preview": {
+    "input_bytes": 65536,
+    "engine": "native",
+    "page_down_keys": 1,
+    "editor_mem_kb_at_start": 710.1,
+    "editor_limit_kb": 768,
+    "faults": [],
+    "scratch_removed": true,
+    "screenshots": {
+      "shot-1.png": "b5e94f51cb0d3092c97178b9ea78d7745db01b6e00253d186984651e37b03576",
+      "shot-2.png": "b5e94f51cb0d3092c97178b9ea78d7745db01b6e00253d186984651e37b03576"
+    }
+  },
+  "pixels": {
+    "changed_pixel_bounds": {
+      "shot-1.png": [
+        548,
+        10,
+        626,
+        30
+      ],
+      "shot-2.png": [
+        548,
+        10,
+        626,
+        30
+      ]
+    },
+    "all_pixels_outside_clock_match": true
+  },
+  "control_after": {
+    "elapsed_us": 3137387,
+    "peak_js_bytes": 2454960,
+    "module_bytes": 240452,
+    "compiled_sha256": null,
+    "world_kib": 710.1,
+    "world_limit_kib": 768,
+    "engine": "native"
+  }
+}

@@ -1,3 +1,14 @@
+---
+Title: Physical compiler comparisons on the ESP32-P4
+Ticket: PICOCALC-COMPILER-LAB
+Status: complete
+Topics: [picocalc, performance]
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+---
 | App | Compiler | Cold ms, boots 1 / 2 | Cold change, % | Peak KiB, boot 1 | Code bytes | Guest µs/call, boot 1 |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | Files | Control (scanner trial) | 235.9 / 236.8 | reference | 354.1 | 3,216 | 18.121 |

@@ -58,7 +58,8 @@ def markdown_table(data, evidence):
             code = int(r["words"][side][0]*4)
             guest = "—" if app=="editor" else f'{r["guest_cycles_per_call"][side][0]/cycles_per_us:.3f}'
             rows.append(f"| {app.title()} | {label} | {times} | {pct} | {heap:,.1f} | {code:,} | {guest} |")
-    return "\n".join(rows)+"\n"
+    frontmatter = '---\nTitle: Physical compiler comparisons on the ESP32-P4\nTicket: PICOCALC-COMPILER-LAB\nStatus: complete\nTopics: [picocalc, performance]\nDocType: reference\nIntent: long-term\nOwners: []\nRelatedFiles: []\nExternalSources: []\n---\n'
+    return frontmatter+"\n".join(rows)+"\n"
 
 
 def figure(data,output):
@@ -96,5 +97,5 @@ if __name__=="__main__":
     args=parser.parse_args()
     rows=table(args.evidence)
     (args.evidence/"cross-study.json").write_text(json.dumps(rows,indent=2)+"\n")
-    (args.evidence/"cross-study-table.md").write_text(markdown_table(rows,args.evidence))
+    (args.evidence/"01-cross-study-table.md").write_text(markdown_table(rows,args.evidence))
     figure(rows,args.evidence/"compiler-design-comparison.png")

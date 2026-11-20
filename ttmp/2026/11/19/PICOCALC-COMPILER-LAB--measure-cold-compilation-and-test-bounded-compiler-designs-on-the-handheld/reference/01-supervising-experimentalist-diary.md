@@ -172,7 +172,7 @@ Use prospective blind design questions during later studies when the user resume
 
 ### Code review instructions
 
-Read `various/paired-review/protocol.md` and both response files. Run `python3 -B scripts/07-score-research-forecasts.py` from this ticket. Compare the printed JSON with `various/paired-review/scores.json`.
+Read `various/paired-review/01-protocol.md` and both response files. Run `python3 -B scripts/07-score-research-forecasts.py` from this ticket. Compare the printed JSON with `various/paired-review/scores.json`.
 
 ### Technical details
 
@@ -325,7 +325,7 @@ Finish the matched capacity and incremental trials, validate the physical result
 
 ### Code review instructions
 
-Follow `scripts/10-small-slot-board.py`, `scripts/12-stage-select-editor.py`, and `scripts/15-stage-matched-reservation.py`. Check the host and board identities in the native study's slot oracle. Regenerate `various/cross-study.json`, `various/cross-study-table.md` and the figure with `scripts/11-cross-study.py`. Inspect the independent reviewer’s firmware-source comparison.
+Follow `scripts/10-small-slot-board.py`, `scripts/12-stage-select-editor.py`, and `scripts/15-stage-matched-reservation.py`. Check the host and board identities in the native study's slot oracle. Regenerate `various/cross-study.json`, `various/01-cross-study-table.md` and the figure with `scripts/11-cross-study.py`. Inspect the independent reviewer’s firmware-source comparison.
 
 ### Technical details
 

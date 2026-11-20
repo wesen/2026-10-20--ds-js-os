@@ -1,3 +1,14 @@
+---
+Title: Results of the independent forecasts
+Ticket: PICOCALC-COMPILER-LAB
+Status: complete
+Topics: [picocalc, performance]
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+---
 # Can a researcher predict what two compiler changes will do together?
 
 Opus High and Sol High received the same unchanged first-boot evidence from a completed PicoCalc experiment. Neither saw the combined configuration on either boot. The supervisor knew the published study. This was a retrospective forecast masked from the two respondents. The protocol, estimates and grading program were committed before scoring.
@@ -23,4 +34,4 @@ Sol proposed identifying each live allocation by allocation site and measuring t
 
 One board experiment, one interaction, one answer per model, and six correlated outcomes support a narrow numerical verdict. The improvement of either model over a simple additive baseline was small. For future design reviews, independent written predictions and a separate discussion of disconfirming evidence are worth preserving.
 
-[Shared question](question.txt) · [Scoring protocol](protocol.md) · [Sol response](sol.json) · [Opus response](opus.json) · [Exact scores](scores.json)
+[Shared question](question.txt) · [Scoring protocol](01-protocol.md) · [Sol response](sol.json) · [Opus response](opus.json) · [Exact scores](scores.json)
