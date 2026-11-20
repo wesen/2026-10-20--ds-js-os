@@ -50,7 +50,7 @@ function chessDeadMaterial(board: buffer): bool {
 function chessOutcome(board: buffer): i32 {
     const count = chessPseudoMoves(board, chessList(0));
     if (chessFirstLegal(board, chessList(0), count, chessUndo(0)) === 0) {
-        if (chessInCheck(board, chessSide(board))) return chessSide(board) + 1;
+        if (chessInCheck(board, chessSide(board))) return 2 - chessSide(board);
         return 3;
     }
     if (chessDeadMaterial(board)) return 4;

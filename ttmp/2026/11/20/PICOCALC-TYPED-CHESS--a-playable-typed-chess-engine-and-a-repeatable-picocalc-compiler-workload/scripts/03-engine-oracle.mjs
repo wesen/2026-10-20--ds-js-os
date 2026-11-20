@@ -136,6 +136,31 @@ const quietLeafAblation = {
 };
 assert.deepEqual(quietLeafAblation.withoutQuietExtension, {move:'d1d5',nodes:25,score:456});
 
+// Apply both reference mates, then qualify the exact adjudication and status functions used by the app.
+const appSource = readFileSync(join(root, 'chess.typed'), 'utf8');
+const viewSource = readFileSync(join(root, 'view.typed'), 'utf8');
+const terminal = appSource.slice(appSource.indexOf('function chessDeadMaterial('), appSource.indexOf('function chessNewGame('));
+const status = viewSource.slice(viewSource.indexOf('function chessAppendStatus('), viewSource.indexOf('function chessMarkDestinations('));
+const ui = new WebAssembly.Instance(new WebAssembly.Module(typedWasm.compile(source + '\n' + terminal + status).bytes)).exports;
+const uiMemory = new DataView(ui.memory.buffer);
+const statusAt = 35000;
+uiMemory.setUint32(0, limit, true);
+uiMemory.setUint32(statusAt, 256, true);
+const mateLabels = [];
+for (const [fixture, from, to, label] of [
+    ['mate-in-one', 116, 4, 'Checkmate - White wins'],
+    ['mate-in-one-black', 4, 116, 'Checkmate - Black wins'],
+]) {
+    const fen = positions.find(position => position.name === fixture).fen;
+    board(fen).forEach((value, i) => uiMemory.setUint16(4 + i * 2, value, true));
+    ui.chessMake(0, ui.chessMove(from, to, 0), undo);
+    uiMemory.setInt32(stateAt + offsets.outcome.offset, ui.chessOutcome(0), true);
+    const length = ui.chessAppendStatus(statusAt, 0, 0, stateAt);
+    const actual = String.fromCharCode(...Array.from({length}, (_, i) => uiMemory.getUint16(statusAt + 4 + i * 2, true)));
+    assert.equal(actual, label, fixture);
+    mateLabels.push(actual);
+}
+
 const native = typedRv32.compile(source);
 const buffered = typedRv32.compile(source, [], undefined, {streamFunctions:false});
 assert.deepEqual(native.image, buffered.image);
@@ -170,5 +195,5 @@ try {
 } finally {
     rmSync(temp, {recursive:true, force:true});
 }
-console.log(JSON.stringify({reference,targets:['wasm','rv32'],rows,wordsMatched:expected.length,quietLeafAblation,
+console.log(JSON.stringify({reference,targets:['wasm','rv32'],rows,wordsMatched:expected.length,quietLeafAblation,mateLabels,
     engineSourceSha256:createHash('sha256').update(source).digest('hex')}, null, 2));

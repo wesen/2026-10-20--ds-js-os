@@ -645,5 +645,9 @@
       "score": 456
     }
   },
+  "mateLabels": [
+    "Checkmate - White wins",
+    "Checkmate - Black wins"
+  ],
   "engineSourceSha256": "f665b0291173cb9bcdd85f24f9dfdf7bdf6940aa80bcd09b09c3459e9932e7b5"
 }
