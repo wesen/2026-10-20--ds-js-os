@@ -1,7 +1,7 @@
 ---
 Title: Measure bounded screen readers and semantic views across PicoCalc applications
 Ticket: PICOCALC-RENDER-LAB
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Frame retention and delivery
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T11:07:19.761722347-05:00
+LastUpdated: 2026-11-20T11:59:24.278197951-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

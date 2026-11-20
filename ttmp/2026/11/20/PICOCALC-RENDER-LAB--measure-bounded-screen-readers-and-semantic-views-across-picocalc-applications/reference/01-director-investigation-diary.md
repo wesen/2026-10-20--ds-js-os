@@ -223,3 +223,53 @@ Begin with scripts/25-semantic-consumer-check.mjs, scripts/29-binary-results.py 
 ### Technical details
 
 The native encoder/receiver protocol, initial Opus research brief, implementation, host trace witnesses and both hardware measurement arms are in PICOCALC-RENDER-BINARY. The bulk evidence belongs in that ticket. The director's ticket keeps the cross-study results, the reproducible handoff and the board session scripts. The original four vault articles were verified at f6350ad; the correction was committed in da7ffd6. The first reMarkable volume's upload receipt is in various/remarkable-deliveries.txt.
+
+For the receiving teams I revisited RFC 8949 §3.1, the FlexBuffers access and efficiency notes, and Keiser and Lemire's On-Demand JSON. The three annotated entries in the application handoff connect each reading to a concrete experimental decision and distinguish the published result from a PicoCalc measurement.
+
+## Step 5: Publish six reviewed articles and the application reading packet
+
+After the binary investigator returned both host and physical chapters, I published that article with the director's synthesis. A reader opening the synthesis in the vault can follow the five links into individual studies and inspect the measured images. The reMarkable packet contains the binary format design, the study, the proposed Chess pilot, the cross-application reading notes and the director's conclusions.
+
+### Prompt Context
+
+See the publication instructions in Step 1 and the added researcher instructions in Step 4. The expected deliverables were individual reports, a supervisor synthesis connecting the studies, and a readable offline copy.
+
+### What I did
+
+Published the final two articles and figures using scripts/24-publish-vault.py. Checked the remote branch SHA after the push, resolved all six article files at that revision, and verified the articles' relative links and assets. Uploaded the final volume with remarquee upload bundle. The returned receipts are in various/remarkable-deliveries.txt.
+
+### Why
+
+Manuscript files and vault notes live in separate repositories. A relative link to a sibling ticket would break in the vault. The publisher rewrites cross-article links to the actual vault filenames and records explicit project-relative paths for implementation references.
+
+### What worked
+
+The six articles are in go-go-golems/go-go-parc on main at 238183738a3312051525fc56c3f299d41a154478. Both online branch identity and local file existence were checked. The two cloud uploads returned OK for the dated PICOCALC-RENDER-LAB folder. Code and research are in project commits d588995 (director comparison) and 5cc3df2 (binary study), plus the native engineer commits from Step 4.
+
+### What didn't work
+
+No unresolved publication failure. A raw Markdown cross-ticket link would have led outside the vault's directory tree. Checking the five relative references in the binary report before uploading exposed this, and the publisher resolved them at publication time.
+
+### What I learned
+
+A native result can be ready for a different research team while a firmware change remains unqualified. The published synthesis names the application, input state, producer and receiver, timing endpoint and reference drawing for the next engineering decision.
+
+### What was tricky to build
+
+The publication has two coordinate systems for links. Reports and figures have real destinations in the vault. Source-level references belong to this workspace. Preserving those destinations matters for an intern who intends to reproduce the measurements from a separate checkout.
+
+### What warrants a second pair of eyes
+
+An independent reviewer can verify the ordered eight-publication native blocks, the stage medians, and the difference between a normal Chess display interaction and a benchmark that ends at a field read. The original app-specific controls remain recorded for that purpose.
+
+### What should be done in the future
+
+The normal Chess publisher-to-painter trial and its stopping criteria are in the binary ticket's second design document. This research ticket ends with the documented handoff and publication.
+
+### Code review instructions
+
+Inspect the six dated ARTICLE - PicoCalc Rendering notes at vault revision 2381837, the two reMarkable upload receipts, the named root and binary docmgr tickets, and the scoped project commits above. In the director report, follow the individual study links or run the independent host replay from Step 4.
+
+### Technical details
+
+The publication verifies the reMarkable cloud destination. Physical tablet synchronization was outside the recorded upload. The vault carries the original framebuffer captures compiled into a labeled figure and the observed physical producer/receiver stage chart.

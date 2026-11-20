@@ -1,6 +1,7 @@
 """Append reviewed articles and their original evidence figures to the go-go-parc vault."""
 import argparse,hashlib,re,subprocess
 from pathlib import Path
+from urllib.parse import quote
 p=argparse.ArgumentParser(description=__doc__);p.add_argument('vault',type=Path);p.add_argument('articles',nargs='+',type=Path)
 p.add_argument('--push',action='store_true');a=p.parse_args()
 day=a.vault/'Projects/2026/11/20';assets=day/'_assets'
@@ -12,13 +13,29 @@ def append(path,data):
     if path.exists() and path.read_bytes()!=data:raise ValueError(f'Existing note differs: {path}')
     if not path.exists():path.write_bytes(data)
     paths.append(str(path.relative_to(a.vault)))
+def note_filename(title):
+    return 'ARTICLE - PicoCalc Rendering - '+title.rstrip('?').replace(':',' -')+'.md'
+
+repo=Path(subprocess.check_output(['git','rev-parse','--show-toplevel'],text=True).strip())
+def vault_reference(match):
+    label,href=match.groups()
+    target=(article.parent/href).resolve(strict=True)
+    if target.parent.name=='analysis' and target.suffix=='.md':
+        heading=next(l[2:].strip() for l in target.read_text().splitlines() if l.startswith('# '))
+        filename=note_filename(heading)
+        if not (day/filename).exists() and target not in {f.resolve() for f in a.articles}:
+            raise ValueError(f'Missing vault article {filename}')
+        return f'[{label}]({quote(filename)})'
+    return f'{label} (`{target.relative_to(repo)}`)'
+
 for article in a.articles:
     content=article.read_text().split('\n---\n',1)[1].strip()
     title=next(line.removeprefix('# ').strip() for line in content.splitlines() if line.startswith('# '))
     for rel in re.findall(r'!\[[^\]]*\]\((\.\./various/[^ ()]+)\)',content):
         f=article.parent/rel
         append(assets/f.name,f.read_bytes());content=content.replace('('+rel+')','(_assets/'+f.name+')')
-    name='ARTICLE - PicoCalc Rendering - '+title.rstrip('?').replace(':',' -')+'.md'
+    content=re.sub(r'(?<!!)\[([^]\n]+)\]\((\.\.?/[^ ()]+)\)',vault_reference,content)
+    name=note_filename(title)
     header='---\ntitle: "'+title.replace('"','\\"')+'"\naliases: []\ntags: [article, picocalc, rendering, esp32-p4]\ncreated: 2026-11-20\ntype: project-report\nstatus: complete\n---\n\n'
     append(day/name,(header+content+'\n').encode())
 subprocess.run(git+['add','--',*paths],check=True)

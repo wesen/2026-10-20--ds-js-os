@@ -5,4 +5,4 @@
 - [x] Capture physical playable controls.
 - [x] Verify matching control, run device comparisons and restore.
 - [x] Test last-good admission and Editor holdout.
-- [ ] Review and publish the five researcher reports and the director’s synthesis.
+- [x] Review and publish the five researcher reports and the director’s synthesis.

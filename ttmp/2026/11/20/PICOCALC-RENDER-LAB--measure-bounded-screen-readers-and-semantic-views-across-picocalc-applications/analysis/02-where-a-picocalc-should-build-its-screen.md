@@ -136,3 +136,11 @@ For the first hardware milestone, alternate ordinary Chess cursor movements on t
 In the `PICOCALC-RENDER-LAB` ticket, `scripts/30-replay-host.sh NEW_DIRECTORY` regenerates the ordinary screen fixtures, exercises the held-out typed Editor, validates record ownership, reconstructs the four-workload binary capsule, and passes the semantic inputs into the original three resident views. An independent run reproduced all 453 drawing-command observations and all 44 Editor control and treatment pixel digests. The generated binary capsule matched the exact SHA-256 of the one installed on the P4. The binary group separately checked 427 application frames against the original framebuffer path.
 
 The physical session uses `scripts/14-board-session.py`. The first coordinated wave made 140 isolated measurements, followed by 20 competing-key observations and eight independent replay cells. The binary wave made another 140 receiver and JavaScript trials, followed by 56 native sender/receiver cells. The physical receipts record image identities, values and paired order. The capacity and transfer claims apply to the corresponding prototype and workloads. The ticket's application handoff supplies the versioned API, executable examples and the production boundary that still needs implementation.
+
+## Individual research reports
+
+- [What a Bounded Screen Reader Retains](./01-what-a-bounded-screen-reader-retains.md)
+- [Restartable screens on the PicoCalc, measured byte by byte](../../PICOCALC-RENDER-SYSTEM--extracting-stable-system-monitor-layouts-from-ordinary-javascript/analysis/01-what-stays-on-the-other-side-of-a-system-screen.md)
+- [What Moves When a Snake Advances One Cell?](../../PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/analysis/01-what-moves-when-a-snake-advances-one-cell.md)
+- [What crosses the screen boundary when a Chess cursor moves?](../../PICOCALC-RENDER-CHESS--measuring-semantic-chess-screens-and-portable-typed-views/analysis/01-what-crosses-the-screen-boundary-when-a-chess-cursor-moves.md)
+- [What an index on the wire buys a PicoCalc renderer](../../PICOCALC-RENDER-BINARY--compile-complete-picocalc-screens-into-an-indexed-binary-representation/analysis/01-what-an-index-on-the-wire-buys-a-picocalc-renderer.md)
