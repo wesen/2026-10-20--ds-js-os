@@ -1,0 +1,152 @@
+// Standalone Chess view. board contains 64 piece codes then 8 rank masks.
+// meta is an explicit i32 record. No field is a game pointer or a syscall.
+record ViewState { cursor: i32; selected: i32; from: i32; to: i32; status: i32; hint: i32; depth: i32; nodes: i32; score: i32; }
+
+function chessAppendNumber(out: buffer, at: i32, value: i32): i32 {
+    let cursor = at;
+    let n = value;
+    if (n < 0) {
+        out.setCharCodeAt(cursor, 45);
+        cursor = cursor + 1;
+        n = 0 - n;
+    }
+    let place = 1;
+    while (place <= n / 10) { place = place * 10; }
+    while (place > 0) {
+        out.setCharCodeAt(cursor, 48 + (n / place) % 10);
+        cursor = cursor + 1;
+        place = place / 10;
+    }
+    return cursor;
+}
+
+function chessAppendCoordinates(out: buffer, at: i32, x: i32, y: i32): i32 {
+    let p = chessAppendNumber(out, at, x);
+    out.setCharCodeAt(p, 44);
+    p = chessAppendNumber(out, p + 1, y);
+    out.setCharCodeAt(p, 44);
+    return p + 1;
+}
+
+function chessPieceGlyph(piece: i32): i32 {
+    const kind = piece % 8;
+    const side = piece / 8;
+    let letter = 80;
+    if (kind === 2) { letter = 78; }
+    if (kind === 3) { letter = 66; }
+    if (kind === 4) { letter = 82; }
+    if (kind === 5) { letter = 81; }
+    if (kind === 6) { letter = 75; }
+    return letter + side * 32;
+}
+
+function chessAppendSquareName(out: buffer, at: i32, square: i32): i32 {
+    out.setCharCodeAt(at, 97 + square % 8);
+    out.setCharCodeAt(at + 1, 56 - square / 8);
+    return at + 2;
+}
+
+function chessAppendStatus(out: buffer, at: i32, status: i32): i32 {
+    if (status === 1) return at + out.writeLiteral(at, "Checkmate - White wins");
+    if (status === 2) return at + out.writeLiteral(at, "Checkmate - Black wins");
+    if (status === 3) return at + out.writeLiteral(at, "Draw - stalemate");
+    if (status === 4) return at + out.writeLiteral(at, "Draw - dead material");
+    if (status === 5) return at + out.writeLiteral(at, "Promote to Q, R, B or N");
+    if (status === 6) return at + out.writeLiteral(at, "Black is thinking");
+    if (status === 7) return at + out.writeLiteral(at, "Please choose a legal move");
+    if (status === 8) return at + out.writeLiteral(at, "White to move - check");
+    return at + out.writeLiteral(at, "White to move");
+}
+
+function marked(mask: i32, file: i32): bool {
+    let bit = 1;
+    for (let i = 0; i < file; i = i + 1) { bit = bit * 2; }
+    return (mask / bit) % 2 === 1;
+}
+
+function chessAppendLabel(out: buffer, at: i32, x: i32, y: i32, glyph: i32): i32 {
+    let p = at + out.writeLiteral(at, ",[\"text\",");
+    p = chessAppendCoordinates(out, p, x, y);
+    out.setCharCodeAt(p, 34);
+    out.setCharCodeAt(p + 1, glyph);
+    return p + 2 + out.writeLiteral(p + 2, "\",\"s\",\"muted\"]");
+}
+
+function chessAppendTile(out: buffer, at: i32, board: buffer, state: ViewState, square: i32): i32 {
+    const row = square / 8;
+    const file = square % 8;
+    const x = 17 + file * 26;
+    const y = 3 + row * 26;
+    let p = at + out.writeLiteral(at, ",[\"fill\",");
+    p = chessAppendCoordinates(out, p, x, y);
+    p = p + out.writeLiteral(p, "26,26,\"");
+    if (state.selected === square) { p = p + out.writeLiteral(p, "#efc752"); }
+    else if (square === state.from || square === state.to) {
+        p = p + out.writeLiteral(p, "#a2bd71");
+    } else if ((row + file) % 2 === 0) {
+        p = p + out.writeLiteral(p, "#efe1bd");
+    } else {
+        p = p + out.writeLiteral(p, "#758a68");
+    }
+    p = p + out.writeLiteral(p, "\"]");
+    const piece = board.charCodeAt(square);
+    if (piece !== 0) {
+        p = p + out.writeLiteral(p, ",[\"fill\",");
+        p = chessAppendCoordinates(out, p, x + 4, y + 3);
+        p = p + out.writeLiteral(p, "18,20,");
+        if (piece < 8) { p = p + out.writeLiteral(p, "\"#fffbec\"]"); }
+        else { p = p + out.writeLiteral(p, "\"#242822\"]"); }
+        p = p + out.writeLiteral(p, ",[\"text\",");
+        p = chessAppendCoordinates(out, p, x + 9, y + 5);
+        out.setCharCodeAt(p, 34);
+        out.setCharCodeAt(p + 1, chessPieceGlyph(piece));
+        p = p + 2 + out.writeLiteral(p + 2, "\",\"m\",");
+        if (piece < 8) { p = p + out.writeLiteral(p, "\"#242822\"]"); }
+        else { p = p + out.writeLiteral(p, "\"#fffbec\"]"); }
+    }
+    if (marked(board.charCodeAt(64 + row), file)) {
+        p = p + out.writeLiteral(p, ",[\"fill\",");
+        p = chessAppendCoordinates(out, p, x + 19, y + 19);
+        p = p + out.writeLiteral(p, "5,5,\"#de781f\"]");
+    }
+    if (square === state.cursor) {
+        p = p + out.writeLiteral(p, ",[\"rect\",");
+        p = chessAppendCoordinates(out, p, x + 1, y + 1);
+        p = p + out.writeLiteral(p, "24,24,\"#ed492d\"]");
+    }
+    return p;
+}
+
+function render(board: buffer, state: ViewState, out: buffer, hints: buffer): i32 {
+    let p = out.writeLiteral(0, "{\"t\":\"col\",\"gap\":6,\"kids\":[{\"t\":\"text\",\"font\":\"mb\",\"align\":\"center\",\"s\":\"");
+    p = chessAppendStatus(out, p, state.status);
+    p = p + out.writeLiteral(p, "\"},{\"t\":\"canvas\",\"w\":228,\"h\":228,\"ops\":[[\"rect\",16,2,210,210,\"ink\"]");
+    for (let i = 0; i < 8; i = i + 1) {
+        p = chessAppendLabel(out, p, 3, 11 + i * 26, 56 - i);
+        p = chessAppendLabel(out, p, 27 + i * 26, 214, 97 + i);
+        for (let j = 0; j < 8; j = j + 1) {
+            p = chessAppendTile(out, p, board, state, i * 8 + j);
+        }
+    }
+    p = p + out.writeLiteral(p, "]}");
+    if (state.from < 64) {
+        p = p + out.writeLiteral(p, ",{\"t\":\"text\",\"font\":\"s\",\"color\":\"muted\",\"align\":\"center\",\"s\":\"Last ");
+        p = chessAppendSquareName(out, p, state.from);
+        out.setCharCodeAt(p, 45);
+        p = chessAppendSquareName(out, p + 1, state.to);
+        if (state.depth > 0) {
+            p = p + out.writeLiteral(p, "   Depth ");
+            p = chessAppendNumber(out, p, state.depth);
+            p = p + out.writeLiteral(p, "   Nodes ");
+            p = chessAppendNumber(out, p, state.nodes);
+            p = p + out.writeLiteral(p, "   Eval ");
+            p = chessAppendNumber(out, p, state.score);
+        }
+        p = p + out.writeLiteral(p, "\"}");
+    }
+    p = p + out.writeLiteral(p, "]}");
+    let n = 0;
+    if (state.hint === 1) { n = hints.writeLiteral(0, "Q R B N promote   Esc cancel"); }
+    else { n = hints.writeLiteral(0, "Arrows move   Enter select   F2 new   Esc"); }
+    return p * 128 + n;
+}

@@ -1,0 +1,1486 @@
+{
+  "node": "v24.18.0",
+  "id": "63d752c673c41636e4951c0f9a95ba7b7f69f698d98ed723e39037a3bc7fb026",
+  "abi": 1,
+  "reactor": "b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f",
+  "source": "b6660de84a4bb78c146463cbe2ccae7c74f973a4279599d71738dac40068dbd2",
+  "moduleBytes": 8641,
+  "sourceBytes": 6408,
+  "groups": {
+    "opening": [
+      "a1b93422ae65f8e26f658955726d513dc8525f79d10fc743cf7065f06d9d4703",
+      "9e191bc34f68d8c637007fa06a03fa846cd948c8e14b03b6142b8c7909521ccc"
+    ],
+    "promotion": [
+      "f707f467fba7d1a552d070f703ed452386e1d8a766d6507f383f150053f75592",
+      "299d407c04032fefd355b180a812301267299a12d538ed8dfa1518b244188192"
+    ],
+    "in-check": [
+      "bc9417bd25b734e0ec610d38283296793b66520e4a812a6232f21650cd15b82a",
+      "088a17b9334e3d0f8647cd5029fc1b65b3df00d743a32e27a1782a92f66f4072"
+    ],
+    "white-mate": [
+      "f4414defde052152450e540403cbf56149670870d54fb7266bdc3abb5138b599",
+      "9efccbe1d942ecd5aabcd98bcd098107d58c35e64f8a7abc7714f2962ab09075"
+    ],
+    "black-mate": [
+      "9331dea0e81e26f1b8360abd45b0deb3143d33f66296869c57a82fbab2901d56",
+      "b181cea25f8fe4dfe74fbf7208654a8d8fd3ae4d90b1c6d9cc224a5ee82f26aa"
+    ],
+    "stalemate": [
+      "c5042b5dc69be87667a285299d2d64f3fad44eec6d63a9293a3e707240637eef",
+      "545502199db1bcca9d4c2194460a152d870b55d276d4b9dc956dca9c57482d42"
+    ],
+    "dead-material": [
+      "f6d3515a54af3a0de14ffc61cf49181bf36c31a764b0755779fc548d1317599a",
+      "b7cce60bdf6efde093d1c45ee7a3feff179d49f894279c1a89e94d7141135738"
+    ],
+    "castle-short": [
+      "32917d3c3e8f14366e19b59518f1296c8a28e2aa3a0a8e18f4c76fd6061367ae",
+      "bc3239016b8cf66d05337b77f5f8f23ff3522bbc075c504133d7e85fcbd38db8"
+    ],
+    "castle-long": [
+      "32917d3c3e8f14366e19b59518f1296c8a28e2aa3a0a8e18f4c76fd6061367ae",
+      "bc3239016b8cf66d05337b77f5f8f23ff3522bbc075c504133d7e85fcbd38db8"
+    ],
+    "en-passant": [
+      "8f2908ed6218b38b67d97912cab50579b3764d4f488dcf54a771165492b557d7",
+      "9ee5fedd4cd40b134d7061e718d2bdc7a0d9be638337111d01380583975c463c"
+    ],
+    "signed-statistics": [
+      "00f1dc83b8fbe3a51c9455f686efb9b5df0418da1791d5b6d0403648a1d44edf",
+      "ae9a4b95121d195badbd4b4c9203495157d5800fe049d68c5ca2fa83826c8c23"
+    ]
+  },
+  "events": 127,
+  "screenCalls": 47,
+  "changedPosts": 46,
+  "retainedReplay": 47,
+  "invalidStates": 5,
+  "traceSha256": "a129b9a062fc35f4448620281e5f58fa07c3b776ba35a43890c6803b7b0c4bad",
+  "orderedScreensSha256": "662ce6609959929c12ef268c2f638a4b802cda2e9a93f9120f69af6bf949f78a",
+  "rows": [
+    {
+      "id": "opening/000 launch",
+      "changed": true,
+      "controlBody": 4876,
+      "semanticBody": 200,
+      "controlPost": 4936,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "c4b75ec6a96f3cddc4e062edc35543c1e319b75228c42b4c7937abedf696a0e4",
+      "stateSha256": "3d6344b2d5cb1f97c964a87c9db510dfce16c99b6f226f2882452da70cd1d594"
+    },
+    {
+      "id": "opening/001 unhandled printable key",
+      "changed": false,
+      "controlBody": 4876,
+      "semanticBody": 200,
+      "controlPost": 4936,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "c4b75ec6a96f3cddc4e062edc35543c1e319b75228c42b4c7937abedf696a0e4",
+      "stateSha256": "3d6344b2d5cb1f97c964a87c9db510dfce16c99b6f226f2882452da70cd1d594"
+    },
+    {
+      "id": "opening/002 up",
+      "changed": true,
+      "controlBody": 4876,
+      "semanticBody": 200,
+      "controlPost": 4936,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "bc8e5961e23b5b45b2436468afa635b4b326c219ebd8a4b1a820e02c8dedbcdf",
+      "stateSha256": "381f1bc33cfb0f8feb2a5c40fa42b4f6bbfc596900226c0e0b658cf168e97a66"
+    },
+    {
+      "id": "opening/003 enter",
+      "changed": true,
+      "controlBody": 4889,
+      "semanticBody": 200,
+      "controlPost": 4949,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Please choose a legal move",
+      "footer": null,
+      "outputSha256": "4697024d02f04f23ea44d503dc7ff27c8adaf0c4d9baa074e9e7f21201040c74",
+      "stateSha256": "a10829ca9fc16a0900eb4bc09d523b106f27b962d54c35b1d27fa5890b161bc3"
+    },
+    {
+      "id": "opening/004 down",
+      "changed": true,
+      "controlBody": 4889,
+      "semanticBody": 200,
+      "controlPost": 4949,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Please choose a legal move",
+      "footer": null,
+      "outputSha256": "043c954316a2f7e34b22c28d6e13c2acf7f05048bdce609abe35e977b9f8aafa",
+      "stateSha256": "c88bcc20f078706dfd199f062c8e5637887b382bcfedc6ff8c0ef04f1cb46177"
+    },
+    {
+      "id": "opening/005 enter",
+      "changed": true,
+      "controlBody": 4938,
+      "semanticBody": 200,
+      "controlPost": 4998,
+      "semanticPost": 260,
+      "ops": 148,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "d2a4a32e1b552e72ddb1b6d14b05141097f6750247379f3c78ecdbd666f54472",
+      "stateSha256": "b4c1805cf20060b85a61e898050fc623523d2f177bfb2a07bb5baaa612e42253"
+    },
+    {
+      "id": "opening/006 esc",
+      "changed": true,
+      "controlBody": 4876,
+      "semanticBody": 200,
+      "controlPost": 4936,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "c4b75ec6a96f3cddc4e062edc35543c1e319b75228c42b4c7937abedf696a0e4",
+      "stateSha256": "3d6344b2d5cb1f97c964a87c9db510dfce16c99b6f226f2882452da70cd1d594"
+    },
+    {
+      "id": "opening/007 enter",
+      "changed": true,
+      "controlBody": 4938,
+      "semanticBody": 200,
+      "controlPost": 4998,
+      "semanticPost": 260,
+      "ops": 148,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "d2a4a32e1b552e72ddb1b6d14b05141097f6750247379f3c78ecdbd666f54472",
+      "stateSha256": "b4c1805cf20060b85a61e898050fc623523d2f177bfb2a07bb5baaa612e42253"
+    },
+    {
+      "id": "opening/009 up",
+      "changed": true,
+      "controlBody": 4938,
+      "semanticBody": 200,
+      "controlPost": 4998,
+      "semanticPost": 260,
+      "ops": 148,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "4448443afee79bc336adaa7e39e1c50caa1b1756c85286597474359302f0bd61",
+      "stateSha256": "265ff1438fe424dff83214068c70e6a8e811d38b277438175cc080c164701b40"
+    },
+    {
+      "id": "opening/010 up",
+      "changed": true,
+      "controlBody": 4938,
+      "semanticBody": 200,
+      "controlPost": 4998,
+      "semanticPost": 260,
+      "ops": 148,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "cf07369bca506b26b06291e1051c5824e82e51e50562689db20edd780ae62f0f",
+      "stateSha256": "8fb5b06f689f1796bad7ce1c6693c3d87ea0bdc4ae6aa2489dce7559685f1d7f"
+    },
+    {
+      "id": "opening/011 e2-e4",
+      "changed": true,
+      "controlBody": 4954,
+      "semanticBody": 200,
+      "controlPost": 5014,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Black is thinking",
+      "footer": "Last e2-e4",
+      "outputSha256": "7d6ca22ab59ba1afb5ea31c68f0aead356d43b09db68f93ac7244b145df3086f",
+      "stateSha256": "9fc81f50621fba3f370972d642296e3229259e9984be56cb6a0f8cfb93c38a39"
+    },
+    {
+      "id": "opening/013 cursor during search",
+      "changed": true,
+      "controlBody": 4954,
+      "semanticBody": 200,
+      "controlPost": 5014,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Black is thinking",
+      "footer": "Last e2-e4",
+      "outputSha256": "09c3aa2223b1c407998210f6851a4e9c1916bfdabf8eedb233a22525ece2644d",
+      "stateSha256": "ab811d0ed839049237b70836183934f728f9deea7b9e178725d44a7636af923a"
+    },
+    {
+      "id": "opening/091 engine wake 78",
+      "changed": true,
+      "controlBody": 4985,
+      "semanticBody": 203,
+      "controlPost": 5045,
+      "semanticPost": 263,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": "Last b8-c6   Depth 3   Nodes 1600   Eval 12",
+      "outputSha256": "511721124ab0c0d851a8e015765dc1f495d3d4973195ef635afdf74b802cd882",
+      "stateSha256": "61f88f1320726ff874004a9362849c99591383870bd41d26478d53f66c962c94"
+    },
+    {
+      "id": "opening/092 f2",
+      "changed": true,
+      "controlBody": 4876,
+      "semanticBody": 200,
+      "controlPost": 4936,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "c4b75ec6a96f3cddc4e062edc35543c1e319b75228c42b4c7937abedf696a0e4",
+      "stateSha256": "3d6344b2d5cb1f97c964a87c9db510dfce16c99b6f226f2882452da70cd1d594"
+    },
+    {
+      "id": "opening/093 enter",
+      "changed": true,
+      "controlBody": 4938,
+      "semanticBody": 200,
+      "controlPost": 4998,
+      "semanticPost": 260,
+      "ops": 148,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "d2a4a32e1b552e72ddb1b6d14b05141097f6750247379f3c78ecdbd666f54472",
+      "stateSha256": "b4c1805cf20060b85a61e898050fc623523d2f177bfb2a07bb5baaa612e42253"
+    },
+    {
+      "id": "opening/094 up",
+      "changed": true,
+      "controlBody": 4938,
+      "semanticBody": 200,
+      "controlPost": 4998,
+      "semanticPost": 260,
+      "ops": 148,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "4448443afee79bc336adaa7e39e1c50caa1b1756c85286597474359302f0bd61",
+      "stateSha256": "265ff1438fe424dff83214068c70e6a8e811d38b277438175cc080c164701b40"
+    },
+    {
+      "id": "opening/095 up",
+      "changed": true,
+      "controlBody": 4938,
+      "semanticBody": 200,
+      "controlPost": 4998,
+      "semanticPost": 260,
+      "ops": 148,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "cf07369bca506b26b06291e1051c5824e82e51e50562689db20edd780ae62f0f",
+      "stateSha256": "8fb5b06f689f1796bad7ce1c6693c3d87ea0bdc4ae6aa2489dce7559685f1d7f"
+    },
+    {
+      "id": "opening/096 enter",
+      "changed": true,
+      "controlBody": 4954,
+      "semanticBody": 200,
+      "controlPost": 5014,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Black is thinking",
+      "footer": "Last e2-e4",
+      "outputSha256": "7d6ca22ab59ba1afb5ea31c68f0aead356d43b09db68f93ac7244b145df3086f",
+      "stateSha256": "9fc81f50621fba3f370972d642296e3229259e9984be56cb6a0f8cfb93c38a39"
+    },
+    {
+      "id": "opening/097 f2",
+      "changed": true,
+      "controlBody": 4876,
+      "semanticBody": 200,
+      "controlPost": 4936,
+      "semanticPost": 260,
+      "ops": 146,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "c4b75ec6a96f3cddc4e062edc35543c1e319b75228c42b4c7937abedf696a0e4",
+      "stateSha256": "3d6344b2d5cb1f97c964a87c9db510dfce16c99b6f226f2882452da70cd1d594"
+    },
+    {
+      "id": "promotion/000 launch",
+      "changed": true,
+      "controlBody": 2970,
+      "semanticBody": 199,
+      "controlPost": 3030,
+      "semanticPost": 259,
+      "ops": 88,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "14e1a11b189b47f0615e820d07e963e0239704c04702f10b4b9f91238941cdec",
+      "stateSha256": "1ad22b3d248aea0f5f631d2ee114dbeefe0ec3f62e26adf8f1046a80317e0c34"
+    },
+    {
+      "id": "promotion/001 enter",
+      "changed": true,
+      "controlBody": 2999,
+      "semanticBody": 198,
+      "controlPost": 3059,
+      "semanticPost": 258,
+      "ops": 89,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "f5b5782392e86ca0c22ca9426564bef580e67655a7c4d0288b08288da91c4e80",
+      "stateSha256": "c333f512057faa75fc8044e897345ced25a3d6a06b70b34f8945a3ff7f75aa7c"
+    },
+    {
+      "id": "promotion/002 up",
+      "changed": true,
+      "controlBody": 2998,
+      "semanticBody": 198,
+      "controlPost": 3058,
+      "semanticPost": 258,
+      "ops": 89,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "a4ad1112b7c44b6f52c2e83fcd5609e8ab2a328affdcaad30833d8383ae0e1c2",
+      "stateSha256": "4ebaf8d4a9a51284c2a6fe597609b6cef8b04dce1e39f7086c446f7e95f6498c"
+    },
+    {
+      "id": "promotion/003 enter",
+      "changed": true,
+      "controlBody": 2995,
+      "semanticBody": 198,
+      "controlPost": 3055,
+      "semanticPost": 258,
+      "ops": 89,
+      "hints": "Q R B N promote   Esc cancel",
+      "status": "Promote to Q, R, B or N",
+      "footer": null,
+      "outputSha256": "fc5752499c15772fe75c60b301e78d7c0ed6c9bffe87bc21d38913500ae4736a",
+      "stateSha256": "adb8b68284c05d448e16666b3fb537acf305c691bc01e3b5404ffd18f7e92115"
+    },
+    {
+      "id": "promotion/004 esc",
+      "changed": true,
+      "controlBody": 2998,
+      "semanticBody": 198,
+      "controlPost": 3058,
+      "semanticPost": 258,
+      "ops": 89,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "a4ad1112b7c44b6f52c2e83fcd5609e8ab2a328affdcaad30833d8383ae0e1c2",
+      "stateSha256": "4ebaf8d4a9a51284c2a6fe597609b6cef8b04dce1e39f7086c446f7e95f6498c"
+    },
+    {
+      "id": "promotion/005 enter",
+      "changed": true,
+      "controlBody": 2995,
+      "semanticBody": 198,
+      "controlPost": 3055,
+      "semanticPost": 258,
+      "ops": 89,
+      "hints": "Q R B N promote   Esc cancel",
+      "status": "Promote to Q, R, B or N",
+      "footer": null,
+      "outputSha256": "fc5752499c15772fe75c60b301e78d7c0ed6c9bffe87bc21d38913500ae4736a",
+      "stateSha256": "adb8b68284c05d448e16666b3fb537acf305c691bc01e3b5404ffd18f7e92115"
+    },
+    {
+      "id": "promotion/006 underpromote a8=N",
+      "changed": true,
+      "controlBody": 3048,
+      "semanticBody": 197,
+      "controlPost": 3108,
+      "semanticPost": 257,
+      "ops": 88,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Draw - dead material",
+      "footer": "Last a7-a8",
+      "outputSha256": "e0d4c3957f45598c7448bd92b0976fbeb5c051a0b546a1f6279124c0a7082e14",
+      "stateSha256": "5d26bebfb0ac7e139e0896bbda5065364805eb82d6e0272c55f98e9091afe5b3"
+    },
+    {
+      "id": "in-check/000 launch",
+      "changed": true,
+      "controlBody": 2978,
+      "semanticBody": 200,
+      "controlPost": 3038,
+      "semanticPost": 260,
+      "ops": 88,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move - check",
+      "footer": null,
+      "outputSha256": "235bae77317ad7c7273cd20e4d3731a44821410cf2548435e31e14d149ddbba9",
+      "stateSha256": "d82996924d82f91695a5c8e1a1dd5d477d74fba1c13f5a10ff458195b97201d5"
+    },
+    {
+      "id": "white-mate/000 launch",
+      "changed": true,
+      "controlBody": 2981,
+      "semanticBody": 200,
+      "controlPost": 3041,
+      "semanticPost": 260,
+      "ops": 88,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Checkmate - White wins",
+      "footer": null,
+      "outputSha256": "fd4778a894f99c329054c511b858e0a191da74ea0994cf95e1e9aa9e599d9894",
+      "stateSha256": "43b84747efc269d681621cd4379112fd19424f2ef3cf8f274f3c987fea93cb8c"
+    },
+    {
+      "id": "black-mate/000 launch",
+      "changed": true,
+      "controlBody": 2989,
+      "semanticBody": 200,
+      "controlPost": 3049,
+      "semanticPost": 260,
+      "ops": 88,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Checkmate - Black wins",
+      "footer": null,
+      "outputSha256": "1e29a50c7ab3e19274cfb56f2e3a0c322ab8814ea0612c6f144126221689b8cf",
+      "stateSha256": "c2a42023dc2aaa0e2652515f7240b8ae7116cc311b14fba942dd86ed8544e14e"
+    },
+    {
+      "id": "stalemate/000 launch",
+      "changed": true,
+      "controlBody": 2975,
+      "semanticBody": 200,
+      "controlPost": 3035,
+      "semanticPost": 260,
+      "ops": 88,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Draw - stalemate",
+      "footer": null,
+      "outputSha256": "5daa30e352785a4340dc6404da832aa69b8dd3188ac64c5495239454a2109655",
+      "stateSha256": "67b477383ecec0e7c0ae875a71c46df815f190c757a55494f748914f4c7408fc"
+    },
+    {
+      "id": "dead-material/000 launch",
+      "changed": true,
+      "controlBody": 2915,
+      "semanticBody": 200,
+      "controlPost": 2975,
+      "semanticPost": 260,
+      "ops": 86,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Draw - dead material",
+      "footer": null,
+      "outputSha256": "c8a4970d860ef1dc31779d7253a653ec1499de74ac6038f2e70f1a280c271a21",
+      "stateSha256": "ec5b941335c2177b79e500c961eaeebb332381cb9efb44ce7f0910ea51fbe77f"
+    },
+    {
+      "id": "castle-short/000 launch",
+      "changed": true,
+      "controlBody": 3168,
+      "semanticBody": 200,
+      "controlPost": 3228,
+      "semanticPost": 260,
+      "ops": 94,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "856409d33546f919c355737b87d8cc33cad0b568eea9c6fe553b486d8232639e",
+      "stateSha256": "da7f255df7b6a819692d1c08c2cb2943f0e4579a8abecdda470e5e0bd5fb0c28"
+    },
+    {
+      "id": "castle-short/001 enter",
+      "changed": true,
+      "controlBody": 3384,
+      "semanticBody": 200,
+      "controlPost": 3444,
+      "semanticPost": 260,
+      "ops": 101,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "212b9fb99973213bf1a5288f53dd113012e7e46b447db909679fdbf5380faa98",
+      "stateSha256": "0a2d043124fddee90442d3e3e7a164d26f859342a829640ad23a26bda7fd7d23"
+    },
+    {
+      "id": "castle-short/002 right",
+      "changed": true,
+      "controlBody": 3384,
+      "semanticBody": 200,
+      "controlPost": 3444,
+      "semanticPost": 260,
+      "ops": 101,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "4bff8ef0211abac6722f5c67dcdf29c5a7647c73ac5caba3f1b2835def27c72d",
+      "stateSha256": "59828941d4f72276a40376534c0d06a05d81fe743c6ed8aaa7ffd3899f21014c"
+    },
+    {
+      "id": "castle-short/003 right",
+      "changed": true,
+      "controlBody": 3384,
+      "semanticBody": 200,
+      "controlPost": 3444,
+      "semanticPost": 260,
+      "ops": 101,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "6896116ef43c494845b1c120d0eac893b7a045814333890824d0d3561dee62f0",
+      "stateSha256": "a23da8bb81f6fd0e75e0f8b39f390698c7ee1103f4fa6fde577845cf29b71f95"
+    },
+    {
+      "id": "castle-short/004 enter",
+      "changed": true,
+      "controlBody": 3246,
+      "semanticBody": 200,
+      "controlPost": 3306,
+      "semanticPost": 260,
+      "ops": 94,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Black is thinking",
+      "footer": "Last e1-g1",
+      "outputSha256": "29de5fa87bde975c76611fa32a7fd2b8670c2a330dfda32e24f3908a888911c2",
+      "stateSha256": "de9a7c637176de6834d3834081ad3083b8c0abd0e0a3298615e138d19f88a6a5"
+    },
+    {
+      "id": "castle-long/000 launch",
+      "changed": true,
+      "controlBody": 3168,
+      "semanticBody": 200,
+      "controlPost": 3228,
+      "semanticPost": 260,
+      "ops": 94,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "856409d33546f919c355737b87d8cc33cad0b568eea9c6fe553b486d8232639e",
+      "stateSha256": "da7f255df7b6a819692d1c08c2cb2943f0e4579a8abecdda470e5e0bd5fb0c28"
+    },
+    {
+      "id": "castle-long/001 enter",
+      "changed": true,
+      "controlBody": 3384,
+      "semanticBody": 200,
+      "controlPost": 3444,
+      "semanticPost": 260,
+      "ops": 101,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "212b9fb99973213bf1a5288f53dd113012e7e46b447db909679fdbf5380faa98",
+      "stateSha256": "0a2d043124fddee90442d3e3e7a164d26f859342a829640ad23a26bda7fd7d23"
+    },
+    {
+      "id": "castle-long/002 left",
+      "changed": true,
+      "controlBody": 3383,
+      "semanticBody": 200,
+      "controlPost": 3443,
+      "semanticPost": 260,
+      "ops": 101,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "fb5d1246be54ae3ba11ec72d9fbaa323a63441c81244ccf8bc437f5415f99ef3",
+      "stateSha256": "a54a76700989a219adc3db78e34e9ce3cd40fdcde9cc5929365fccce8d69dd1c"
+    },
+    {
+      "id": "castle-long/003 left",
+      "changed": true,
+      "controlBody": 3383,
+      "semanticBody": 200,
+      "controlPost": 3443,
+      "semanticPost": 260,
+      "ops": 101,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "c90a234ef70b5a87517149b321a8600a2e194392de70e2384c0586daee1e4ee3",
+      "stateSha256": "26c92f130c0ce7b7b30144e68e2db2703f90cf09fde69cb385c137b04e42991c"
+    },
+    {
+      "id": "castle-long/004 enter",
+      "changed": true,
+      "controlBody": 3244,
+      "semanticBody": 200,
+      "controlPost": 3304,
+      "semanticPost": 260,
+      "ops": 94,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Black is thinking",
+      "footer": "Last e1-c1",
+      "outputSha256": "a554733036f59a6bf96da5b7b26820785cec525c423d4299dc52c44fbd8011b7",
+      "stateSha256": "76110211e6f930310e90c0656c7a610636d3cee5dd4c917f165381bfc8de3824"
+    },
+    {
+      "id": "en-passant/000 launch",
+      "changed": true,
+      "controlBody": 3038,
+      "semanticBody": 200,
+      "controlPost": 3098,
+      "semanticPost": 260,
+      "ops": 90,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "edb374b37d3b15957c4d36ae999dbbf1f7989aede4d0f8a030cb825bc0c756fe",
+      "stateSha256": "b933af18431ca2caba83a38c4e376107dfd383d9c9c0fbc629b49c5eb94e59a0"
+    },
+    {
+      "id": "en-passant/001 enter",
+      "changed": true,
+      "controlBody": 3098,
+      "semanticBody": 200,
+      "controlPost": 3158,
+      "semanticPost": 260,
+      "ops": 92,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "57492dcea1badb115f313764b5416a68bb79af3d62360c5ecbaf8a03d9fd082d",
+      "stateSha256": "a9bbee5831cb7cb91a2e4434b783bc6993b4f2c3d847ccdce98e87e2afc277d5"
+    },
+    {
+      "id": "en-passant/002 left",
+      "changed": true,
+      "controlBody": 3097,
+      "semanticBody": 200,
+      "controlPost": 3157,
+      "semanticPost": 260,
+      "ops": 92,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "f9d5ac927f2693767b7ee3251b21561a4430281e26f47c296d28fe1424a13087",
+      "stateSha256": "bccbbd964954397f36c423b6c37ec88e10d7cf8cebf01b853a61a0ead574b189"
+    },
+    {
+      "id": "en-passant/003 up",
+      "changed": true,
+      "controlBody": 3097,
+      "semanticBody": 200,
+      "controlPost": 3157,
+      "semanticPost": 260,
+      "ops": 92,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": null,
+      "outputSha256": "0a7babccf70dda0f2abcc0d77d7d9e7bda52c4258ac33ac1b8b0757761156d88",
+      "stateSha256": "318b79255b77ad2044a19cef084b43dafd9cd9ce993cc0c49acf2f3b12e9b5e9"
+    },
+    {
+      "id": "en-passant/004 enter",
+      "changed": true,
+      "controlBody": 3049,
+      "semanticBody": 200,
+      "controlPost": 3109,
+      "semanticPost": 260,
+      "ops": 88,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "Black is thinking",
+      "footer": "Last e5-d6",
+      "outputSha256": "6eb18ebfa4d891cec19e2036bd95a92f257705b5f7712daa580ff343d7e2f2d5",
+      "stateSha256": "5c6f7b696da5ec90c57f9cb31db92a0d3cc1f3194c377a54145152c1ced9e766"
+    },
+    {
+      "id": "signed-statistics/000 launch",
+      "changed": true,
+      "controlBody": 3276,
+      "semanticBody": 203,
+      "controlPost": 3336,
+      "semanticPost": 263,
+      "ops": 94,
+      "hints": "Arrows move   Enter select   F2 new   Esc",
+      "status": "White to move",
+      "footer": "Last e8-f8   Depth 4   Nodes 3210   Eval -77",
+      "outputSha256": "3fcb50e445d15a1ab40ed015e5de7ef78c07027878f74d4b0af50b2434f76025",
+      "stateSha256": "47eb9130a1c56ee5e65639a3d0d01e5abeeb10a7797b32620a89fd77289e9c02"
+    }
+  ],
+  "eventLog": [
+    {
+      "id": "opening/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/001 unhandled printable key",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/002 up",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/003 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/004 down",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/005 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/006 esc",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/007 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/008 key release",
+      "result": 0,
+      "schedules": 0,
+      "screen": false
+    },
+    {
+      "id": "opening/009 up",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/010 up",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/011 e2-e4",
+      "result": 1,
+      "schedules": 1,
+      "screen": true
+    },
+    {
+      "id": "opening/012 unknown wake",
+      "result": 1,
+      "schedules": 0,
+      "screen": false
+    },
+    {
+      "id": "opening/013 cursor during search",
+      "result": 1,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/014 engine wake 1",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/015 engine wake 2",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/016 engine wake 3",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/017 engine wake 4",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/018 engine wake 5",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/019 engine wake 6",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/020 engine wake 7",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/021 engine wake 8",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/022 engine wake 9",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/023 engine wake 10",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/024 engine wake 11",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/025 engine wake 12",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/026 engine wake 13",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/027 engine wake 14",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/028 engine wake 15",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/029 engine wake 16",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/030 engine wake 17",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/031 engine wake 18",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/032 engine wake 19",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/033 engine wake 20",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/034 engine wake 21",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/035 engine wake 22",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/036 engine wake 23",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/037 engine wake 24",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/038 engine wake 25",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/039 engine wake 26",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/040 engine wake 27",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/041 engine wake 28",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/042 engine wake 29",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/043 engine wake 30",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/044 engine wake 31",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/045 engine wake 32",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/046 engine wake 33",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/047 engine wake 34",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/048 engine wake 35",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/049 engine wake 36",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/050 engine wake 37",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/051 engine wake 38",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/052 engine wake 39",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/053 engine wake 40",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/054 engine wake 41",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/055 engine wake 42",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/056 engine wake 43",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/057 engine wake 44",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/058 engine wake 45",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/059 engine wake 46",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/060 engine wake 47",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/061 engine wake 48",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/062 engine wake 49",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/063 engine wake 50",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/064 engine wake 51",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/065 engine wake 52",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/066 engine wake 53",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/067 engine wake 54",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/068 engine wake 55",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/069 engine wake 56",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/070 engine wake 57",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/071 engine wake 58",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/072 engine wake 59",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/073 engine wake 60",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/074 engine wake 61",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/075 engine wake 62",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/076 engine wake 63",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/077 engine wake 64",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/078 engine wake 65",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/079 engine wake 66",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/080 engine wake 67",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/081 engine wake 68",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/082 engine wake 69",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/083 engine wake 70",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/084 engine wake 71",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/085 engine wake 72",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/086 engine wake 73",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/087 engine wake 74",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/088 engine wake 75",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/089 engine wake 76",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/090 engine wake 77",
+      "result": 1,
+      "schedules": 1,
+      "screen": false
+    },
+    {
+      "id": "opening/091 engine wake 78",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/092 f2",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/093 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/094 up",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/095 up",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/096 enter",
+      "result": 1,
+      "schedules": 1,
+      "screen": true
+    },
+    {
+      "id": "opening/097 f2",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "opening/098 stale wake after reset",
+      "result": 0,
+      "schedules": 0,
+      "screen": false
+    },
+    {
+      "id": "promotion/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "promotion/001 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "promotion/002 up",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "promotion/003 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "promotion/004 esc",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "promotion/005 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "promotion/006 underpromote a8=N",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "in-check/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "white-mate/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "black-mate/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "stalemate/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "dead-material/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-short/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-short/001 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-short/002 right",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-short/003 right",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-short/004 enter",
+      "result": 1,
+      "schedules": 1,
+      "screen": true
+    },
+    {
+      "id": "castle-long/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-long/001 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-long/002 left",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-long/003 left",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "castle-long/004 enter",
+      "result": 1,
+      "schedules": 1,
+      "screen": true
+    },
+    {
+      "id": "en-passant/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "en-passant/001 enter",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "en-passant/002 left",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "en-passant/003 up",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    },
+    {
+      "id": "en-passant/004 enter",
+      "result": 1,
+      "schedules": 1,
+      "screen": true
+    },
+    {
+      "id": "signed-statistics/000 launch",
+      "result": 0,
+      "schedules": 0,
+      "screen": true
+    }
+  ]
+}

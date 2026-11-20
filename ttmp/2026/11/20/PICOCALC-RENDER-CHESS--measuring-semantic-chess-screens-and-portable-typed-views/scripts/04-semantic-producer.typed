@@ -1,0 +1,74 @@
+// The guest transmits stable visible values as JSON. One printable hex digit per piece;
+// two hex digits per rank for the destination mask, with the a-file in bit zero.
+function emitNibble(value: i32): i32 {
+    if (value < 10) return 48 + value;
+    return 87 + value;
+}
+
+function displayStatus(board: buffer, state: WorldState): i32 {
+    if (state.outcome !== 0) return state.outcome;
+    if (state.promoteTo >= 0) return 5;
+    if (state.running) return 6;
+    if (state.notice === 1) return 7;
+    if (chessInCheck(board, chessSide(board))) return 8;
+    return 0;
+}
+
+function optionalDense(square: i32): i32 {
+    if (!chessOnBoard(square)) return 64;
+    return chessDense(square);
+}
+
+function emitField(out: buffer, at: i32, value: i32): i32 {
+    out.setCharCodeAt(at, 44);
+    return chessAppendNumber(out, at + 1, value);
+}
+
+function chessRender(board: buffer, state: WorldState, out: buffer, hints: buffer): i32 {
+    chessMarkDestinations(board, state.selected);
+    let p = out.writeLiteral(0, "{\"v\":1,\"p\":\"__DIGEST__\",\"b\":\"");
+    for (let i = 0; i < 64; i = i + 1) {
+        out.setCharCodeAt(p + i, emitNibble(board.charCodeAt(chessSquare(i))));
+    }
+    p = p + 64;
+    p = p + out.writeLiteral(p, "\",\"m\":\"");
+    for (let y = 0; y < 8; y = y + 1) {
+        let mask = 0;
+        let bit = 1;
+        for (let x = 0; x < 8; x = x + 1) {
+            if (state.selected >= 0 && board.charCodeAt(768 + y * 16 + x) === 1) { mask = mask + bit; }
+            bit = bit * 2;
+        }
+        out.setCharCodeAt(p, emitNibble(mask / 16));
+        out.setCharCodeAt(p + 1, emitNibble(mask % 16));
+        p = p + 2;
+    }
+    p = p + out.writeLiteral(p, "\",\"f\":[");
+    p = chessAppendNumber(out, p, chessDense(state.cursor));
+    p = emitField(out, p, optionalDense(state.selected));
+    let from = 64;
+    let to = 64;
+    if (state.lastMove !== 0) {
+        from = chessDense(chessFrom(state.lastMove));
+        to = chessDense(chessTo(state.lastMove));
+    }
+    p = emitField(out, p, from);
+    p = emitField(out, p, to);
+    p = emitField(out, p, displayStatus(board, state));
+    let hint = 0;
+    if (state.promoteTo >= 0) { hint = 1; }
+    p = emitField(out, p, hint);
+    let depth = 0;
+    let nodes = 0;
+    let score = 0;
+    if (state.lastMove !== 0 && state.completed > 0 && !state.running) {
+        depth = state.completed;
+        nodes = state.nodes;
+        score = state.score;
+    }
+    p = emitField(out, p, depth);
+    p = emitField(out, p, nodes);
+    p = emitField(out, p, score);
+    p = p + out.writeLiteral(p, "]}");
+    return typedSdkScreen(out, p, hints, 0);
+}
