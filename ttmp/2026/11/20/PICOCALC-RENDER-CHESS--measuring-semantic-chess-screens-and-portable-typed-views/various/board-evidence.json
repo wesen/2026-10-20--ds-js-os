@@ -1,0 +1,1682 @@
+{
+  "sourceSha256": "da1e0f69d24f48a48ec054ca055290f9655677663cad5a28fad07c4c3691caa2",
+  "firmware": "5172a38b98f5c3eed57bc4b6a7a1c33950ea955749e9cb099a0971dd6f67368a",
+  "playableFirmware": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "restored": true,
+  "serialUploadMs": {
+    "wasm": 3224.989069000003,
+    "typed": 2221.734523001942
+  },
+  "raw": [
+    {
+      "block": 0,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 145,
+        "installUs": 16671,
+        "resetUs": 4270,
+        "guestUs": 164431,
+        "checkUs": 2627,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 0,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5048,
+        "installUs": 16575,
+        "resetUs": 4206,
+        "guestUs": 163240,
+        "checkUs": 2649,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 0,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 364433,
+        "installUs": 16620,
+        "resetUs": 4376,
+        "guestUs": 164633,
+        "checkUs": 2628,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 0,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54518,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 0,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2165,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 0,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15927,
+          63133,
+          63019,
+          79907,
+          79711,
+          79805,
+          63062
+        ]
+      }
+    },
+    {
+      "block": 0,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1335,
+          5488,
+          5361,
+          21488,
+          21329,
+          21360,
+          5346
+        ]
+      }
+    },
+    {
+      "block": 1,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 142,
+        "installUs": 16870,
+        "resetUs": 4284,
+        "guestUs": 163723,
+        "checkUs": 2630,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 1,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 361020,
+        "installUs": 16679,
+        "resetUs": 4235,
+        "guestUs": 164459,
+        "checkUs": 2648,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 1,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5026,
+        "installUs": 16583,
+        "resetUs": 4243,
+        "guestUs": 164296,
+        "checkUs": 2628,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 1,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54790,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 1,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2205,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 1,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15925,
+          63007,
+          62901,
+          79817,
+          79652,
+          79699,
+          62883
+        ]
+      }
+    },
+    {
+      "block": 1,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1351,
+          5483,
+          5382,
+          21501,
+          21309,
+          21361,
+          5344
+        ]
+      }
+    },
+    {
+      "block": 2,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 359677,
+        "installUs": 16664,
+        "resetUs": 4287,
+        "guestUs": 163592,
+        "checkUs": 2609,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 2,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 160,
+        "installUs": 16768,
+        "resetUs": 4240,
+        "guestUs": 163771,
+        "checkUs": 2646,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 2,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5105,
+        "installUs": 16602,
+        "resetUs": 4284,
+        "guestUs": 164048,
+        "checkUs": 2628,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 2,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54756,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 2,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2179,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 2,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15923,
+          63006,
+          62810,
+          79769,
+          79540,
+          79573,
+          62803
+        ]
+      }
+    },
+    {
+      "block": 2,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1340,
+          5468,
+          5356,
+          21514,
+          21291,
+          21340,
+          5354
+        ]
+      }
+    },
+    {
+      "block": 3,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 359816,
+        "installUs": 16674,
+        "resetUs": 4255,
+        "guestUs": 163878,
+        "checkUs": 2631,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 3,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5213,
+        "installUs": 16600,
+        "resetUs": 4204,
+        "guestUs": 163512,
+        "checkUs": 2637,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 3,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 185,
+        "installUs": 16893,
+        "resetUs": 4268,
+        "guestUs": 164163,
+        "checkUs": 2643,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 3,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54516,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 3,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2207,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 3,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15960,
+          63144,
+          62996,
+          79937,
+          79781,
+          79790,
+          62974
+        ]
+      }
+    },
+    {
+      "block": 3,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1349,
+          5470,
+          5370,
+          21487,
+          21297,
+          21343,
+          5337
+        ]
+      }
+    },
+    {
+      "block": 4,
+      "name": "view",
+      "arm": "module",
+      "reps": 1,
+      "data": {
+        "acquireUs": 5076,
+        "installUs": 16590,
+        "resetUs": 4217,
+        "guestUs": 163791,
+        "checkUs": 2625,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 4,
+      "name": "view",
+      "arm": "source",
+      "reps": 1,
+      "data": {
+        "acquireUs": 361606,
+        "installUs": 16617,
+        "resetUs": 4236,
+        "guestUs": 164333,
+        "checkUs": 2642,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 4,
+      "name": "view",
+      "arm": "resident",
+      "reps": 1,
+      "data": {
+        "acquireUs": 197,
+        "installUs": 16796,
+        "resetUs": 4343,
+        "guestUs": 164013,
+        "checkUs": 2631,
+        "frames": 47,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "block": 4,
+      "name": "chess",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 54708,
+        "bytes": 59980,
+        "consumed": 1812
+      }
+    },
+    {
+      "block": 4,
+      "name": "chess",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "frames": 12,
+        "parseUs": 2185,
+        "bytes": 3132,
+        "consumed": 828
+      }
+    },
+    {
+      "block": 4,
+      "name": "producer",
+      "arm": "generic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 73204,
+        "sumEventUs": [
+          15915,
+          62967,
+          62904,
+          79701,
+          79494,
+          79522,
+          62841
+        ]
+      }
+    },
+    {
+      "block": 4,
+      "name": "producer",
+      "arm": "semantic",
+      "reps": 4,
+      "data": {
+        "reps": 4,
+        "frames": 25,
+        "moduleBytes": 66618,
+        "sumEventUs": [
+          1331,
+          5484,
+          5370,
+          21499,
+          21294,
+          21344,
+          5360
+        ]
+      }
+    }
+  ],
+  "failures": [],
+  "series": {
+    "view/resident/acquireUs": [
+      [
+        0,
+        145
+      ],
+      [
+        1,
+        142
+      ],
+      [
+        2,
+        160
+      ],
+      [
+        3,
+        185
+      ],
+      [
+        4,
+        197
+      ]
+    ],
+    "view/resident/installUs": [
+      [
+        0,
+        16671
+      ],
+      [
+        1,
+        16870
+      ],
+      [
+        2,
+        16768
+      ],
+      [
+        3,
+        16893
+      ],
+      [
+        4,
+        16796
+      ]
+    ],
+    "view/resident/acquireAndInstallUs": [
+      [
+        0,
+        16816
+      ],
+      [
+        1,
+        17012
+      ],
+      [
+        2,
+        16928
+      ],
+      [
+        3,
+        17078
+      ],
+      [
+        4,
+        16993
+      ]
+    ],
+    "view/resident/resetUsPerFrame": [
+      [
+        0,
+        90.85106382978724
+      ],
+      [
+        1,
+        91.14893617021276
+      ],
+      [
+        2,
+        90.2127659574468
+      ],
+      [
+        3,
+        90.80851063829788
+      ],
+      [
+        4,
+        92.40425531914893
+      ]
+    ],
+    "view/resident/guestUsPerFrame": [
+      [
+        0,
+        3498.531914893617
+      ],
+      [
+        1,
+        3483.468085106383
+      ],
+      [
+        2,
+        3484.4893617021276
+      ],
+      [
+        3,
+        3492.8297872340427
+      ],
+      [
+        4,
+        3489.6382978723404
+      ]
+    ],
+    "view/resident/checkUsPerFrame": [
+      [
+        0,
+        55.8936170212766
+      ],
+      [
+        1,
+        55.95744680851064
+      ],
+      [
+        2,
+        56.297872340425535
+      ],
+      [
+        3,
+        56.234042553191486
+      ],
+      [
+        4,
+        55.97872340425532
+      ]
+    ],
+    "view/module/acquireUs": [
+      [
+        0,
+        5048
+      ],
+      [
+        1,
+        5026
+      ],
+      [
+        2,
+        5105
+      ],
+      [
+        3,
+        5213
+      ],
+      [
+        4,
+        5076
+      ]
+    ],
+    "view/module/installUs": [
+      [
+        0,
+        16575
+      ],
+      [
+        1,
+        16583
+      ],
+      [
+        2,
+        16602
+      ],
+      [
+        3,
+        16600
+      ],
+      [
+        4,
+        16590
+      ]
+    ],
+    "view/module/acquireAndInstallUs": [
+      [
+        0,
+        21623
+      ],
+      [
+        1,
+        21609
+      ],
+      [
+        2,
+        21707
+      ],
+      [
+        3,
+        21813
+      ],
+      [
+        4,
+        21666
+      ]
+    ],
+    "view/module/resetUsPerFrame": [
+      [
+        0,
+        89.48936170212765
+      ],
+      [
+        1,
+        90.27659574468085
+      ],
+      [
+        2,
+        91.14893617021276
+      ],
+      [
+        3,
+        89.44680851063829
+      ],
+      [
+        4,
+        89.72340425531915
+      ]
+    ],
+    "view/module/guestUsPerFrame": [
+      [
+        0,
+        3473.191489361702
+      ],
+      [
+        1,
+        3495.659574468085
+      ],
+      [
+        2,
+        3490.3829787234044
+      ],
+      [
+        3,
+        3478.978723404255
+      ],
+      [
+        4,
+        3484.9148936170213
+      ]
+    ],
+    "view/module/checkUsPerFrame": [
+      [
+        0,
+        56.361702127659576
+      ],
+      [
+        1,
+        55.91489361702128
+      ],
+      [
+        2,
+        55.91489361702128
+      ],
+      [
+        3,
+        56.1063829787234
+      ],
+      [
+        4,
+        55.851063829787236
+      ]
+    ],
+    "view/source/acquireUs": [
+      [
+        0,
+        364433
+      ],
+      [
+        1,
+        361020
+      ],
+      [
+        2,
+        359677
+      ],
+      [
+        3,
+        359816
+      ],
+      [
+        4,
+        361606
+      ]
+    ],
+    "view/source/installUs": [
+      [
+        0,
+        16620
+      ],
+      [
+        1,
+        16679
+      ],
+      [
+        2,
+        16664
+      ],
+      [
+        3,
+        16674
+      ],
+      [
+        4,
+        16617
+      ]
+    ],
+    "view/source/acquireAndInstallUs": [
+      [
+        0,
+        381053
+      ],
+      [
+        1,
+        377699
+      ],
+      [
+        2,
+        376341
+      ],
+      [
+        3,
+        376490
+      ],
+      [
+        4,
+        378223
+      ]
+    ],
+    "view/source/resetUsPerFrame": [
+      [
+        0,
+        93.1063829787234
+      ],
+      [
+        1,
+        90.1063829787234
+      ],
+      [
+        2,
+        91.2127659574468
+      ],
+      [
+        3,
+        90.53191489361703
+      ],
+      [
+        4,
+        90.12765957446808
+      ]
+    ],
+    "view/source/guestUsPerFrame": [
+      [
+        0,
+        3502.8297872340427
+      ],
+      [
+        1,
+        3499.127659574468
+      ],
+      [
+        2,
+        3480.68085106383
+      ],
+      [
+        3,
+        3486.7659574468084
+      ],
+      [
+        4,
+        3496.446808510638
+      ]
+    ],
+    "view/source/checkUsPerFrame": [
+      [
+        0,
+        55.91489361702128
+      ],
+      [
+        1,
+        56.340425531914896
+      ],
+      [
+        2,
+        55.51063829787234
+      ],
+      [
+        3,
+        55.97872340425532
+      ],
+      [
+        4,
+        56.212765957446805
+      ]
+    ],
+    "chess/generic/parseUsPerFrame": [
+      [
+        0,
+        4543.166666666667
+      ],
+      [
+        1,
+        4565.833333333333
+      ],
+      [
+        2,
+        4563.0
+      ],
+      [
+        3,
+        4543.0
+      ],
+      [
+        4,
+        4559.0
+      ]
+    ],
+    "chess/generic/parseUs": [
+      [
+        0,
+        54518
+      ],
+      [
+        1,
+        54790
+      ],
+      [
+        2,
+        54756
+      ],
+      [
+        3,
+        54516
+      ],
+      [
+        4,
+        54708
+      ]
+    ],
+    "chess/semantic/parseUsPerFrame": [
+      [
+        0,
+        180.41666666666666
+      ],
+      [
+        1,
+        183.75
+      ],
+      [
+        2,
+        181.58333333333334
+      ],
+      [
+        3,
+        183.91666666666666
+      ],
+      [
+        4,
+        182.08333333333334
+      ]
+    ],
+    "chess/semantic/parseUs": [
+      [
+        0,
+        2165
+      ],
+      [
+        1,
+        2205
+      ],
+      [
+        2,
+        2179
+      ],
+      [
+        3,
+        2207
+      ],
+      [
+        4,
+        2185
+      ]
+    ],
+    "producer/generic/launchUs": [
+      [
+        0,
+        15927.0
+      ],
+      [
+        1,
+        15925.0
+      ],
+      [
+        2,
+        15923.0
+      ],
+      [
+        3,
+        15960.0
+      ],
+      [
+        4,
+        15915.0
+      ]
+    ],
+    "producer/generic/plainLeftUs": [
+      [
+        0,
+        15783.25
+      ],
+      [
+        1,
+        15751.75
+      ],
+      [
+        2,
+        15751.5
+      ],
+      [
+        3,
+        15786.0
+      ],
+      [
+        4,
+        15741.75
+      ]
+    ],
+    "producer/generic/plainRightUs": [
+      [
+        0,
+        15754.75
+      ],
+      [
+        1,
+        15725.25
+      ],
+      [
+        2,
+        15702.5
+      ],
+      [
+        3,
+        15749.0
+      ],
+      [
+        4,
+        15726.0
+      ]
+    ],
+    "producer/generic/selectUs": [
+      [
+        0,
+        19976.75
+      ],
+      [
+        1,
+        19954.25
+      ],
+      [
+        2,
+        19942.25
+      ],
+      [
+        3,
+        19984.25
+      ],
+      [
+        4,
+        19925.25
+      ]
+    ],
+    "producer/generic/selectedLeftUs": [
+      [
+        0,
+        19927.75
+      ],
+      [
+        1,
+        19913.0
+      ],
+      [
+        2,
+        19885.0
+      ],
+      [
+        3,
+        19945.25
+      ],
+      [
+        4,
+        19873.5
+      ]
+    ],
+    "producer/generic/selectedRightUs": [
+      [
+        0,
+        19951.25
+      ],
+      [
+        1,
+        19924.75
+      ],
+      [
+        2,
+        19893.25
+      ],
+      [
+        3,
+        19947.5
+      ],
+      [
+        4,
+        19880.5
+      ]
+    ],
+    "producer/generic/deselectUs": [
+      [
+        0,
+        15765.5
+      ],
+      [
+        1,
+        15720.75
+      ],
+      [
+        2,
+        15700.75
+      ],
+      [
+        3,
+        15743.5
+      ],
+      [
+        4,
+        15710.25
+      ]
+    ],
+    "producer/generic/selectedCursorUs": [
+      [
+        0,
+        19939.5
+      ],
+      [
+        1,
+        19918.875
+      ],
+      [
+        2,
+        19889.125
+      ],
+      [
+        3,
+        19946.375
+      ],
+      [
+        4,
+        19877.0
+      ]
+    ],
+    "producer/generic/plainCursorUs": [
+      [
+        0,
+        15769.0
+      ],
+      [
+        1,
+        15738.5
+      ],
+      [
+        2,
+        15727.0
+      ],
+      [
+        3,
+        15767.5
+      ],
+      [
+        4,
+        15733.875
+      ]
+    ],
+    "producer/semantic/launchUs": [
+      [
+        0,
+        1335.0
+      ],
+      [
+        1,
+        1351.0
+      ],
+      [
+        2,
+        1340.0
+      ],
+      [
+        3,
+        1349.0
+      ],
+      [
+        4,
+        1331.0
+      ]
+    ],
+    "producer/semantic/plainLeftUs": [
+      [
+        0,
+        1372.0
+      ],
+      [
+        1,
+        1370.75
+      ],
+      [
+        2,
+        1367.0
+      ],
+      [
+        3,
+        1367.5
+      ],
+      [
+        4,
+        1371.0
+      ]
+    ],
+    "producer/semantic/plainRightUs": [
+      [
+        0,
+        1340.25
+      ],
+      [
+        1,
+        1345.5
+      ],
+      [
+        2,
+        1339.0
+      ],
+      [
+        3,
+        1342.5
+      ],
+      [
+        4,
+        1342.5
+      ]
+    ],
+    "producer/semantic/selectUs": [
+      [
+        0,
+        5372.0
+      ],
+      [
+        1,
+        5375.25
+      ],
+      [
+        2,
+        5378.5
+      ],
+      [
+        3,
+        5371.75
+      ],
+      [
+        4,
+        5374.75
+      ]
+    ],
+    "producer/semantic/selectedLeftUs": [
+      [
+        0,
+        5332.25
+      ],
+      [
+        1,
+        5327.25
+      ],
+      [
+        2,
+        5322.75
+      ],
+      [
+        3,
+        5324.25
+      ],
+      [
+        4,
+        5323.5
+      ]
+    ],
+    "producer/semantic/selectedRightUs": [
+      [
+        0,
+        5340.0
+      ],
+      [
+        1,
+        5340.25
+      ],
+      [
+        2,
+        5335.0
+      ],
+      [
+        3,
+        5335.75
+      ],
+      [
+        4,
+        5336.0
+      ]
+    ],
+    "producer/semantic/deselectUs": [
+      [
+        0,
+        1336.5
+      ],
+      [
+        1,
+        1336.0
+      ],
+      [
+        2,
+        1338.5
+      ],
+      [
+        3,
+        1334.25
+      ],
+      [
+        4,
+        1340.0
+      ]
+    ],
+    "producer/semantic/selectedCursorUs": [
+      [
+        0,
+        5336.125
+      ],
+      [
+        1,
+        5333.75
+      ],
+      [
+        2,
+        5328.875
+      ],
+      [
+        3,
+        5330.0
+      ],
+      [
+        4,
+        5329.75
+      ]
+    ],
+    "producer/semantic/plainCursorUs": [
+      [
+        0,
+        1356.125
+      ],
+      [
+        1,
+        1358.125
+      ],
+      [
+        2,
+        1353.0
+      ],
+      [
+        3,
+        1355.0
+      ],
+      [
+        4,
+        1356.75
+      ]
+    ]
+  },
+  "medians": {
+    "view/resident/acquireUs": {
+      "n": 5,
+      "median": 160,
+      "min": 142,
+      "max": 197
+    },
+    "view/resident/installUs": {
+      "n": 5,
+      "median": 16796,
+      "min": 16671,
+      "max": 16893
+    },
+    "view/resident/acquireAndInstallUs": {
+      "n": 5,
+      "median": 16993,
+      "min": 16816,
+      "max": 17078
+    },
+    "view/resident/resetUsPerFrame": {
+      "n": 5,
+      "median": 90.85106382978724,
+      "min": 90.2127659574468,
+      "max": 92.40425531914893
+    },
+    "view/resident/guestUsPerFrame": {
+      "n": 5,
+      "median": 3489.6382978723404,
+      "min": 3483.468085106383,
+      "max": 3498.531914893617
+    },
+    "view/resident/checkUsPerFrame": {
+      "n": 5,
+      "median": 55.97872340425532,
+      "min": 55.8936170212766,
+      "max": 56.297872340425535
+    },
+    "view/module/acquireUs": {
+      "n": 5,
+      "median": 5076,
+      "min": 5026,
+      "max": 5213
+    },
+    "view/module/installUs": {
+      "n": 5,
+      "median": 16590,
+      "min": 16575,
+      "max": 16602
+    },
+    "view/module/acquireAndInstallUs": {
+      "n": 5,
+      "median": 21666,
+      "min": 21609,
+      "max": 21813
+    },
+    "view/module/resetUsPerFrame": {
+      "n": 5,
+      "median": 89.72340425531915,
+      "min": 89.44680851063829,
+      "max": 91.14893617021276
+    },
+    "view/module/guestUsPerFrame": {
+      "n": 5,
+      "median": 3484.9148936170213,
+      "min": 3473.191489361702,
+      "max": 3495.659574468085
+    },
+    "view/module/checkUsPerFrame": {
+      "n": 5,
+      "median": 55.91489361702128,
+      "min": 55.851063829787236,
+      "max": 56.361702127659576
+    },
+    "view/source/acquireUs": {
+      "n": 5,
+      "median": 361020,
+      "min": 359677,
+      "max": 364433
+    },
+    "view/source/installUs": {
+      "n": 5,
+      "median": 16664,
+      "min": 16617,
+      "max": 16679
+    },
+    "view/source/acquireAndInstallUs": {
+      "n": 5,
+      "median": 377699,
+      "min": 376341,
+      "max": 381053
+    },
+    "view/source/resetUsPerFrame": {
+      "n": 5,
+      "median": 90.53191489361703,
+      "min": 90.1063829787234,
+      "max": 93.1063829787234
+    },
+    "view/source/guestUsPerFrame": {
+      "n": 5,
+      "median": 3496.446808510638,
+      "min": 3480.68085106383,
+      "max": 3502.8297872340427
+    },
+    "view/source/checkUsPerFrame": {
+      "n": 5,
+      "median": 55.97872340425532,
+      "min": 55.51063829787234,
+      "max": 56.340425531914896
+    },
+    "chess/generic/parseUsPerFrame": {
+      "n": 5,
+      "median": 4559.0,
+      "min": 4543.0,
+      "max": 4565.833333333333
+    },
+    "chess/generic/parseUs": {
+      "n": 5,
+      "median": 54708,
+      "min": 54516,
+      "max": 54790
+    },
+    "chess/semantic/parseUsPerFrame": {
+      "n": 5,
+      "median": 182.08333333333334,
+      "min": 180.41666666666666,
+      "max": 183.91666666666666
+    },
+    "chess/semantic/parseUs": {
+      "n": 5,
+      "median": 2185,
+      "min": 2165,
+      "max": 2207
+    },
+    "producer/generic/launchUs": {
+      "n": 5,
+      "median": 15925.0,
+      "min": 15915.0,
+      "max": 15960.0
+    },
+    "producer/generic/plainLeftUs": {
+      "n": 5,
+      "median": 15751.75,
+      "min": 15741.75,
+      "max": 15786.0
+    },
+    "producer/generic/plainRightUs": {
+      "n": 5,
+      "median": 15726.0,
+      "min": 15702.5,
+      "max": 15754.75
+    },
+    "producer/generic/selectUs": {
+      "n": 5,
+      "median": 19954.25,
+      "min": 19925.25,
+      "max": 19984.25
+    },
+    "producer/generic/selectedLeftUs": {
+      "n": 5,
+      "median": 19913.0,
+      "min": 19873.5,
+      "max": 19945.25
+    },
+    "producer/generic/selectedRightUs": {
+      "n": 5,
+      "median": 19924.75,
+      "min": 19880.5,
+      "max": 19951.25
+    },
+    "producer/generic/deselectUs": {
+      "n": 5,
+      "median": 15720.75,
+      "min": 15700.75,
+      "max": 15765.5
+    },
+    "producer/generic/selectedCursorUs": {
+      "n": 5,
+      "median": 19918.875,
+      "min": 19877.0,
+      "max": 19946.375
+    },
+    "producer/generic/plainCursorUs": {
+      "n": 5,
+      "median": 15738.5,
+      "min": 15727.0,
+      "max": 15769.0
+    },
+    "producer/semantic/launchUs": {
+      "n": 5,
+      "median": 1340.0,
+      "min": 1331.0,
+      "max": 1351.0
+    },
+    "producer/semantic/plainLeftUs": {
+      "n": 5,
+      "median": 1370.75,
+      "min": 1367.0,
+      "max": 1372.0
+    },
+    "producer/semantic/plainRightUs": {
+      "n": 5,
+      "median": 1342.5,
+      "min": 1339.0,
+      "max": 1345.5
+    },
+    "producer/semantic/selectUs": {
+      "n": 5,
+      "median": 5374.75,
+      "min": 5371.75,
+      "max": 5378.5
+    },
+    "producer/semantic/selectedLeftUs": {
+      "n": 5,
+      "median": 5324.25,
+      "min": 5322.75,
+      "max": 5332.25
+    },
+    "producer/semantic/selectedRightUs": {
+      "n": 5,
+      "median": 5336.0,
+      "min": 5335.0,
+      "max": 5340.25
+    },
+    "producer/semantic/deselectUs": {
+      "n": 5,
+      "median": 1336.5,
+      "min": 1334.25,
+      "max": 1340.0
+    },
+    "producer/semantic/selectedCursorUs": {
+      "n": 5,
+      "median": 5330.0,
+      "min": 5328.875,
+      "max": 5336.125
+    },
+    "producer/semantic/plainCursorUs": {
+      "n": 5,
+      "median": 1356.125,
+      "min": 1353.0,
+      "max": 1358.125
+    }
+  }
+}

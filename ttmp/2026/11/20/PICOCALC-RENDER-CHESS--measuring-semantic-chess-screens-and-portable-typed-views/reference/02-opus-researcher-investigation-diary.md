@@ -183,3 +183,100 @@ A neutral source edit misses the cache and then hits.
 
 **Fresh Linux Node processes (12 per arm)**
 - Median install-to-first-verified-tree, R/M/S: 1.787 / 1.936 / 7.031 ms.
+
+## Step 3 — Interpreting the five-block firmware study
+
+This step turned the board evidence into the closing chapters of the article. A hands-on operator and the lab director executed every experiment on the ESP32-P4 PicoCalc. I designed the arms and wrote the interpretation. I did not operate the board, so everything listed under "worked" is reported evidence, not my own observation.
+
+All five blocks ran in one boot. The director verifies firmware restoration separately at close, and this entry makes no claim about it.
+
+### Prompt context
+I was asked to write the firmware chapters and this entry strictly from the five-block study. I was to start at firmware and not repeat the host chapters.
+
+### What I did
+I organised the evidence into three arms: the whole-guest producer under WAMR, the isolated QuickJS parse, and three acquisition pathways for one pinned renderer. I wrote a reading rule for each arm and built one table. I drafted a decision and a testable next experiment.
+
+### Why
+The host results showed byte and pixel equivalence. They did not show where cost sits on the device, or whether provenance changes the running code. The arms were designed to separate those questions.
+
+### What worked
+These are observations, as reported:
+- All 705 view checks and all 250 producer outputs matched.
+- The semantic output saved 14.4–14.6 ms per screen under WAMR before painting.
+- R, M and S produced byte-identical code, with view-call medians of 3.485–3.496 ms.
+- Ranges stayed tight within the boot.
+
+### What didn't work
+- My compile estimate of 0.5–5 s on a hypothetical 1.5 GHz core was too pessimistic for this source. The measured acquisition plus compile was below 0.5 s, and the source size differed from my assumption.
+- No live pipeline combined native Chess with the candidate.
+- The native baseline is a single sample.
+- Memory peaks went unmeasured.
+
+### What I learned
+- In the one native sample, compositor work dwarfs producer work.
+- A smaller input parse moves decoding rather than removing it, because the renderer still emits full tree JSON.
+- Source compilation is viable as a staged install. At 361 ms against an 80 ms allowance, it is not viable on the frame path.
+
+### What was tricky to build
+The hard part was the accounting, not code. I had to keep these scopes apart without letting any of them blur:
+- overlapping native stages
+- the isolated parse versus the live event
+- a median of paired sums versus a sum of medians
+- a hash versus pixels
+- a cold acquisition versus a one-off upload
+
+### What warrants a second pair of eyes
+- **Low-byte hash:** confirm that the hash over low ASCII bytes cannot mask a non-ASCII code unit. The length check alone may not cover this.
+- **Per-frame reset:** confirm that zeroing and the instruction-allowance reset happen on every frame in the binding, not once per block.
+- **Timing endpoints:** confirm the nw_wasm_event timing endpoints and the stated exclusions.
+- **Setup sums:** confirm that the setup sums were paired within each block.
+
+### What should be done in the future
+These are proposals, not results:
+- Run the integrated native RV32 experiment with timestamps through to the final SPI send, optical capture, and at least three independent boots. It passes if the candidate is no slower than the baseline in every boot.
+- Measure runtime and compile memory peaks.
+- Measure key progress during a staged source install.
+- Test a bounded drawing representation, qualified against host pixels.
+
+### Code review instructions
+1. Start with scripts/14-board-producer.inc. Check the timing start and stop points, and check that input setup, checksum, kernel queue and painter are excluded.
+2. In various/board-evidence.json, recompute every median from the per-block means, and verify the counts of 705 and 250.
+3. Confirm that scripts/05-closed-view.typed is the source the S pathway compiled.
+4. Rerun scripts/17-run-host.sh to regenerate the reference lengths and hashes.
+
+### Technical details
+**Runtime bounds**
+- 16 KiB interpreter stack
+- one 64 KiB view page, zeroed every frame
+- 72 position codes and nine i32 fields copied in per frame
+- 2,000,000-instruction allowance per frame
+- 6 MiB QuickJS limit
+- per-frame overhead: copy and zeroing about 0.09 ms, checksum about 0.056 ms
+
+**Block 1 (generic / semantic, ms)**
+- launch 15.925 / 1.340
+- plain left/right 15.739 / 1.356
+- selected left/right 19.919 / 5.330
+
+**Block 2 (JSON.parse per post, ms)**
+- 4.559 / 0.182
+
+**Block 3 (R / M / S, ms)**
+- acquisition 0.160 / 5.076 / 361.020
+- load, instantiate and install 16.796 / 16.590 / 16.664
+- setup 16.993 / 21.666 / 377.699
+- view call 3.490 / 3.485 / 3.496
+
+**One-off uploads**
+- 3,225 ms for the module file, 2,222 ms for the source
+
+**Native sample (overlapping stages, ms)**
+- live key 1.790
+- render and publish 0.468 for 4,935 bytes
+- compositor event 44.984
+- compositor draw 26.794, including graphics commit 4.273
+- one 2,400-byte SPI send 1.019
+
+### Later evidence from the director
+
+After this entry was written, five single-frame install trials per arm measured unrelated F1 console acknowledgments at medians of 6.315 ms idle, 40.595 ms resident, 44.157 ms module and 398.812 ms source. Those samples time key admission on the shared serialized path. The director separately verified the playable firmware restoration after the five-block session. The article incorporates these updates.

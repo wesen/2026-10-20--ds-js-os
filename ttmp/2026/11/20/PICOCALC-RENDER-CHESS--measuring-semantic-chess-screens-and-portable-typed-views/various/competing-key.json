@@ -1,0 +1,236 @@
+{
+  "imageSha256": "a9dee66f59bbbf31e55ac00c30f7845b397e7589828a0df0f4ee2f843e42f6b5",
+  "rows": [
+    {
+      "arm": "idle",
+      "hostAckMs": 6.300298,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.890982,
+      "stage": {
+        "acquireUs": 167,
+        "installUs": 16877,
+        "resetUs": 110,
+        "guestUs": 4734,
+        "checkUs": 86,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 45.400892,
+      "stage": {
+        "acquireUs": 5151,
+        "installUs": 16627,
+        "resetUs": 110,
+        "guestUs": 4726,
+        "checkUs": 94,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 398.81223,
+      "stage": {
+        "acquireUs": 358063,
+        "installUs": 16658,
+        "resetUs": 108,
+        "guestUs": 4760,
+        "checkUs": 90,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.394228,
+      "stage": {
+        "acquireUs": 155,
+        "installUs": 16682,
+        "resetUs": 109,
+        "guestUs": 4729,
+        "checkUs": 86,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 43.561837,
+      "stage": {
+        "acquireUs": 5075,
+        "installUs": 16564,
+        "resetUs": 107,
+        "guestUs": 4717,
+        "checkUs": 90,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 400.327076,
+      "stage": {
+        "acquireUs": 360106,
+        "installUs": 16601,
+        "resetUs": 109,
+        "guestUs": 4752,
+        "checkUs": 84,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 6.508881,
+      "stage": null
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 45.25006,
+      "stage": {
+        "acquireUs": 5134,
+        "installUs": 16550,
+        "resetUs": 108,
+        "guestUs": 4706,
+        "checkUs": 97,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 396.630186,
+      "stage": {
+        "acquireUs": 357877,
+        "installUs": 16646,
+        "resetUs": 109,
+        "guestUs": 4736,
+        "checkUs": 94,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 6.314913,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.193787,
+      "stage": {
+        "acquireUs": 145,
+        "installUs": 16738,
+        "resetUs": 109,
+        "guestUs": 4725,
+        "checkUs": 95,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 400.965417,
+      "stage": {
+        "acquireUs": 360607,
+        "installUs": 16630,
+        "resetUs": 109,
+        "guestUs": 4739,
+        "checkUs": 94,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 6.348991,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.791348,
+      "stage": {
+        "acquireUs": 117,
+        "installUs": 16870,
+        "resetUs": 108,
+        "guestUs": 4751,
+        "checkUs": 95,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 43.765263,
+      "stage": {
+        "acquireUs": 5095,
+        "installUs": 16576,
+        "resetUs": 110,
+        "guestUs": 4728,
+        "checkUs": 93,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "idle",
+      "hostAckMs": 5.630066,
+      "stage": null
+    },
+    {
+      "arm": "resident",
+      "hostAckMs": 40.595002,
+      "stage": {
+        "acquireUs": 190,
+        "installUs": 16694,
+        "resetUs": 113,
+        "guestUs": 4720,
+        "checkUs": 88,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "module",
+      "hostAckMs": 44.157148,
+      "stage": {
+        "acquireUs": 5128,
+        "installUs": 16579,
+        "resetUs": 112,
+        "guestUs": 4719,
+        "checkUs": 96,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    },
+    {
+      "arm": "source",
+      "hostAckMs": 398.553675,
+      "stage": {
+        "acquireUs": 358211,
+        "installUs": 16609,
+        "resetUs": 110,
+        "guestUs": 4744,
+        "checkUs": 90,
+        "frames": 1,
+        "moduleBytes": 8641
+      }
+    }
+  ],
+  "hostAckMs": {
+    "idle": 6.314913,
+    "resident": 40.595002,
+    "module": 44.157148,
+    "source": 398.81223
+  },
+  "sumOfFirstFrameStageMediansMs": {
+    "resident": 21.812,
+    "module": 26.602,
+    "source": 379.764
+  }
+}

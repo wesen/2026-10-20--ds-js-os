@@ -224,3 +224,55 @@ The final three commands in `17-run-host.sh` generate and evaluate the extension
 ### Technical details
 
 The xorshift32 generator starts from the first 32 bits of SHA-256 of the declared post-freeze seed string. After each accepted input, the checker compares the candidate's unsorted JSON and hint bytes with the real guest syscall. The 220 saved states additionally check reconstruction in a new instance.
+
+## Step 5. Interpret the physical trials and check the article against the actual interfaces
+
+The director tested the compiled specimen, locally compiled source, actual whole guest producers and incoming JSON parses on the ESP32-P4. I interpreted five interleaved blocks after confirming each block had every Chess arm. The director restored and verified the playable firmware. The native, unchanged application's one-key trace provides a crucial comparison: the current RV32 key event was much faster than the Wasm control producer used to isolate the representation.
+
+### Prompt context
+
+See Step 1 for the user request. The director supplied the supervised board session receipt and asked me to return the final Opus-authored report and figure. The extended generated-game evidence is in `5ed77d3`.
+
+### What I did
+
+Extracted Chess-only runs into `various/board-evidence.json` with `24-board-evidence.py`; verified all 35 relevant rows and the restoration field. Read the fixed board harness timing boundaries and captured the ordinary native Chess trace. Sent the independent researcher only aggregate measurements and the methodological context. Re-read the host chapters as a newcomer, corrected details against the code and rendered a three-panel figure from actual raw pixels.
+
+### Why
+
+Three independent sources of cost change under this design. The producer avoids formatting large JSON, the input parser reads a smaller document, and the view reconstructs an ordinary tree. A result measured at one clock cannot by itself predict the full native app. In particular, the physical isolated view returned UTF-16 output; turning it into an ordinary parsed drawing tree still costs work.
+
+### What worked
+
+The P4 produced 705 correct lengths and FNV-1a checks for 47 cases × 3 installation routes × 5 blocks. Both real game producers also checked 250 complete SCREEN events. Median-of-block-mean selected WAMR cursor cost went from 19.919 to 5.330 ms. The same standalone view cost about 3.49 ms per case after installation. Device setup (acquisition plus WAMR installation, before first output) measured 16.993 ms resident, 21.666 ms delivered bytes, 377.699 ms locally compiled source. The original playable firmware was restored and verification found Chess running with the native backend and no error.
+
+### What didn't work
+
+The isolated board pipeline does not combine the prototype producer, kernel retention, renderer, parser and LCD path into one live application. There is no measured native-candidate end-to-end speedup. The initial physical attempt 01 produced zero Chess trial rows and is excluded; the director completed all relevant arms in session 02. The host article's first draft had check status precedence reversed and attributed dropped-flush recovery purely to complete snapshots. The operator corrected both against the production function and shared raster driver before publication.
+
+### What I learned
+
+One live unmodified RV32 Chess key segment measured 1.790 ms. It would be impossible to take the more than 14 ms saved in the separate Wasm producer and subtract it from this observation. The source arm did validate byte-for-byte on the board, so the same generated program can be installed from either representation. The recurring cost is its isolated invocation and consumption, independent of how its bytes arrived.
+
+### What was tricky to build
+
+The board hash is FNV over low ASCII bytes of the verified-length UTF-16 output, while the host pixel check compares actual framebuffer arrays. The article reports each endpoint explicitly. The live draw includes its graphics commit; adding both would double-count. The checksum phase lives outside the isolated renderer's timer.
+
+### What warrants a second pair of eyes
+
+The compiler's 6 MiB cap is a limit, not a measured peak. The five blocks share one boot and one physical board. The actual interactive compositor uses native code; the separately measured QuickJS parser is a component experiment. No physical candidate key-to-panel, unrelated-input-during-compile or optical latency was measured.
+
+### What should be done in the future
+
+Integrate a bounded consumer with real native RV32 Chess, run the same key traces with the existing full painter and a draw/flush observer, and time each stage including decoding the generated output. Qualify any source installation with an explicit scheduling measurement outside the paint turn.
+
+### Code review instructions
+
+Read `analysis/01-what-crosses-the-screen-boundary-when-a-chess-cursor-moves.md`, `various/board-evidence.json` and `various/native-chess-trace.json`. Compare timestamps to the shared supervised lab's board C harness. The figure generator uses the two labeled ordinary control framebuffers and asserts an exact 274-pixel difference.
+
+### Technical details
+
+The experiment image SHA-256 was `5172a38b98f5c3eed57bc4b6a7a1c33950ea955749e9cb099a0971dd6f67368a`. Restored app SHA-256 was `f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83`. The source-trial compiler evaluated typed source and the real standalone compiler on the board and compared the output byte-for-byte with the bundled reference before entering the same WAMR invocation path.
+
+### Independent install and keyboard admission follow-up
+
+The director subsequently supplied five single-frame installation trials per arm. A serial F1 acknowledgment took a median 6.315 ms idle and 398.812 ms alongside a source install, versus 40.595 ms resident and 44.157 ms for a delivered module. The article includes these new measurements and distinguishes admission from key-to-panel latency. I retained the twenty underlying measurements and per-frame component timings in `various/competing-key.json`. This updates the open question on the five-block run; user-visible competing-key response remains unmeasured.
