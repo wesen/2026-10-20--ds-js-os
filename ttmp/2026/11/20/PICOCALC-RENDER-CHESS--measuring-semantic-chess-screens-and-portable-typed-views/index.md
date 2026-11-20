@@ -1,7 +1,7 @@
 ---
 Title: Measuring semantic Chess screens and portable typed views
 Ticket: PICOCALC-RENDER-CHESS
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Verified aggregate frame, byte and cold endpoint measurements
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T11:06:43.314317132-05:00
+LastUpdated: 2026-11-20T11:38:25.816195658-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -32,3 +32,5 @@ A Chess world can publish an entire drawing or describe its visible position and
 - [Board fixtures](scripts/08-board-fixtures.py) and [whole-producer staging](scripts/15-stage-producer.py) support the lab director's single-device experiments.
 
 See [tasks](tasks.md) and [changelog](changelog.md).
+
+The director published the [vault edition](https://github.com/go-go-golems/go-go-parc/blob/f6350ad094cf91cf98224cffa9e3029ab32e078f/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Rendering%20-%20What%20crosses%20the%20screen%20boundary%20when%20a%20Chess%20cursor%20moves.md) with its verified Chess selection figure at go-go-parc revision `f6350ad094cf91cf98224cffa9e3029ab32e078f`.

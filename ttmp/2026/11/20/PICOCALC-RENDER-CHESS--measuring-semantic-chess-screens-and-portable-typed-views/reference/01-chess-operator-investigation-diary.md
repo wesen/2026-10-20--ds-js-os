@@ -276,3 +276,9 @@ The experiment image SHA-256 was `5172a38b98f5c3eed57bc4b6a7a1c33950ea955749e9cb
 ### Independent install and keyboard admission follow-up
 
 The director subsequently supplied five single-frame installation trials per arm. A serial F1 acknowledgment took a median 6.315 ms idle and 398.812 ms alongside a source install, versus 40.595 ms resident and 44.157 ms for a delivered module. The article includes these new measurements and distinguishes admission from key-to-panel latency. I retained the twenty underlying measurements and per-frame component timings in `various/competing-key.json`. This updates the open question on the five-block run; user-visible competing-key response remains unmeasured.
+
+## Step 6. Record the verified vault publication
+
+The director reported the pushed go-go-parc revision `f6350ad094cf91cf98224cffa9e3029ab32e078f`. I independently checked that revision's tree with `git ls-tree` and found the dated article and its `_assets/chess-selection.png` figure. The study manuscript, operator diary, researcher diary and board evidence were committed in the project at `4b218a1` before publication.
+
+**Review.** Follow the immutable vault link in the ticket index. The figure depicts the two verified complete frames and their 274 differing pixels. The child task and ticket can now close.
