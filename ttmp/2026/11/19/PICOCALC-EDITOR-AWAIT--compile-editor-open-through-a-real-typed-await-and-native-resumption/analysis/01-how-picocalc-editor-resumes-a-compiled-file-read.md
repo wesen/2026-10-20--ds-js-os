@@ -91,9 +91,27 @@ The focused Wasm and RV32 tests verified immediate failure, a failed read, succe
 
 The same await source also passed all 24 host replays when its world linker was paired with the program's combined scanner and native backend. This composition exercised the real Editor source on both targets. It produced 12,791 native instructions and 89,010 linked Wasm bytes, with the same 12-byte inferred frame. The separately flashed study uses the staged compiler so that the physical comparison isolates await. [Combined host replay](../various/host-replays-combined.json) · [Combined compiler input identities](../various/combined-inputs.json)
 
-The manual comparison includes the same cancellation behavior as the candidate so both can be exercised with the same physical stimulus. The compiler rewriter and reactor are also identical between lanes. This isolates the incremental cost of the generated file-read path. The resulting 74 fields fit the runtime's 80-field capacity and exceed the full Scope G goal of at most 71. Removing the remaining hand-written normalization continuation is outside the measured pilot.
+The manual comparison includes the same cancellation behavior as the candidate so both can be exercised with the same physical stimulus. The compiler rewriter and reactor are also identical between lanes. This isolates the incremental cost of the generated file-read path. Both reactors reserve 80 state words, so the three generated fields use 12 bytes of that existing allocation. The resulting 74 fields fit the runtime's 80-field capacity and exceed the full Scope G goal of at most 71. Removing the remaining hand-written normalization continuation is outside the measured pilot.
 
-<!-- physical_results -->
+## Resume the actual filesystem operation on the P4
+
+Two explicit cold boots of each variant returned the expected host-linked ELF hash. The candidate's raw await source was present in its image. The P4 compiled it before the native loader ran Editor. The probe issued a normal Files-to-Editor ask with an actual narrowed file grant. A temporary CRLF text file exercised a successful read. A second file contained invalid UTF-8 and received the real filesystem service's error.
+
+| Physical request | Observed result in both variants |
+| --- | --- |
+| Successful read | One request token, a success reply and a new document frame. Editor retained the offered file grant. |
+| Invalid UTF-8 | One request token and a real failed settlement. Editor released the offered grant and preserved the existing frame. |
+| Cancel before completion | The injected cancel event returned a cancellation reply and released the grant. The real file worker subsequently reported success for that token. The result produced no reply or frame change. |
+| Reopen | An injected older canceled token left the new request pending. Its own token then opened the new file and updated the frame. |
+
+Each of the four measured boots executed every row. The two normal success frame digests, all replies, handle ownership and ignored duplicate outcomes matched exactly. For one await boot the canceled request was token 185 and the reopened request was 252. Delivering 185 while 252 waited returned `NW_LATER` and left the frame unchanged. The scheduler keeps a pending ask's ordinary mailbox serialized. The probe therefore supplied cancel, duplicate and older-token stimuli at the loaded native handler boundary. The actual read results still arrived through the normal kernel. The probe used exclusively created temporary files and isolated test turns from persistent Editor position storage.
+
+| Cold compile | Hand-written read | Typed await |
+| --- | ---: | ---: |
+| Explicit boot times | 3,060.487 and 3,054.070 ms | 3,145.457 and 3,126.343 ms |
+| Peak QuickJS allocation | 1,495,136 and 1,495,156 B | 1,666,424 and 1,667,000 B |
+
+The difference between the two per-variant medians is **78.62 ms** and **171,566 bytes**. Both variants load the same compiler helper. The hand-written source bypasses rewriting because it contains no async declaration. The measured difference includes rewriting, compiling the generated code and linking it. These are two boots per variant on one board in separate firmware sequences. The explicit reboot boundary keeps the initial flash boot's buffered compile log out of the measured samples. The saved app image was restored after the experiment. [P4 compiler and outcome receipt](../various/physical.json) · [Selected UART records](../various/physical-transcript.txt)
 
 ## Reproduce one full suspension
 

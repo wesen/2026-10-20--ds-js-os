@@ -1,0 +1,480 @@
+{
+  "before_factory_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "oracle": {
+    "manual": {
+      "sourceSha256": "fff072d103614c1c1a2f429f8ca64a39ecf06a57e63a194d268b321ae6b3453e",
+      "loweredSourceSha256": "fff072d103614c1c1a2f429f8ca64a39ecf06a57e63a194d268b321ae6b3453e",
+      "stateFields": 71,
+      "layout": null,
+      "instructions": 16812,
+      "imageSha256": "c099c18362c02e878ac5b2e76c67958395c45325f061276d45b1874a4adf232e",
+      "nativeBytes": 240452,
+      "nativeSha256": "6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9",
+      "wasmBytes": 88884,
+      "wasmSha256": "4dc0b2b7c72dea72dd3873022e34c9d0500e11fb64349c5e957f78236645884a",
+      "firmwareSha256": "12723ce8389be860bfc08b88b6397a391b762c6c7312cd0851995b007750e909",
+      "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff"
+    },
+    "await": {
+      "sourceSha256": "03cd32abee8928594caeccb6e4ef01599aee862782566f923f5749aa8752fb8d",
+      "loweredSourceSha256": "fa9e61b4fd37fd04622341dec178ea853c1a9ff0e81122e122397453bae42653",
+      "stateFields": 74,
+      "layout": {
+        "task": "editorReadTask",
+        "wait": "typedSdkFileRead",
+        "saved": [
+          {
+            "name": "handle",
+            "type": "i32"
+          },
+          {
+            "name": "size",
+            "type": "i32"
+          }
+        ],
+        "owned": "handle",
+        "frameBytes": 12,
+        "fields": [
+          {
+            "name": "__await_editorReadTask_token",
+            "type": "i32"
+          },
+          {
+            "name": "__await_editorReadTask_handle",
+            "type": "i32"
+          },
+          {
+            "name": "__await_editorReadTask_size",
+            "type": "i32"
+          }
+        ]
+      },
+      "instructions": 16993,
+      "imageSha256": "8126e064c86b6b11ca17b74092ab2eb6c37787dcc5fe0d20004d276ebf7842ba",
+      "nativeBytes": 240452,
+      "nativeSha256": "bf83615181dcec144b34dd69302042587cabb7f53e09c7203db2d849368e6c1d",
+      "wasmBytes": 89275,
+      "wasmSha256": "04c97d74a9db3f56c161bd77b420bdd3c49778c0148af92bec39fcc124c88656",
+      "firmwareSha256": "6172af2587c21b7f1398b2e98a9337a0a2aa13a12ea158e3fae54f76f6c2e46e",
+      "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff"
+    }
+  },
+  "lanes": {
+    "manual": [
+      {
+        "cold_compile": {
+          "us": 3060487,
+          "peak_js_bytes": 1495136,
+          "module_bytes": 240452,
+          "sha256": "6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9"
+        },
+        "worlds": {
+          "files": {
+            "engine": "native",
+            "file": "files/compiled.bin",
+            "last_error": ""
+          },
+          "agenda": {
+            "engine": "native",
+            "file": "agenda/compiled.bin",
+            "last_error": ""
+          },
+          "editor": {
+            "engine": "native",
+            "file": "editor/compiled.bin",
+            "last_error": ""
+          }
+        },
+        "start_tokens": {
+          "ok": 25,
+          "bad": 129,
+          "cancel": 197,
+          "reopen": 260
+        },
+        "settles": {
+          "ok": {
+            "token": 25,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": true
+            }
+          },
+          "bad": {
+            "token": 129,
+            "ok": 0,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": false,
+              "why": "pico-await-test-bad.txt is not text (UTF-8)"
+            }
+          },
+          "cancel": {
+            "token": 197,
+            "ok": 1,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": null
+          },
+          "reopen": {
+            "token": 260,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c",
+            "reply": {
+              "ok": true
+            }
+          }
+        },
+        "duplicate": {
+          "ok": true,
+          "bad": true,
+          "cancel": true,
+          "reopen": true
+        },
+        "injections": {
+          "cancel": {
+            "token": 197,
+            "reply": {
+              "ok": false,
+              "why": "Open canceled."
+            },
+            "unchanged": true
+          },
+          "stale": {
+            "token": 197,
+            "current": 260,
+            "unchanged": true
+          }
+        },
+        "pre_reboot_compiles": 1
+      },
+      {
+        "cold_compile": {
+          "us": 3054070,
+          "peak_js_bytes": 1495156,
+          "module_bytes": 240452,
+          "sha256": "6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9"
+        },
+        "worlds": {
+          "files": {
+            "engine": "native",
+            "file": "files/compiled.bin",
+            "last_error": ""
+          },
+          "agenda": {
+            "engine": "native",
+            "file": "agenda/compiled.bin",
+            "last_error": ""
+          },
+          "editor": {
+            "engine": "native",
+            "file": "editor/compiled.bin",
+            "last_error": ""
+          }
+        },
+        "start_tokens": {
+          "ok": 21,
+          "bad": 134,
+          "cancel": 203,
+          "reopen": 265
+        },
+        "settles": {
+          "ok": {
+            "token": 21,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": true
+            }
+          },
+          "bad": {
+            "token": 134,
+            "ok": 0,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": false,
+              "why": "pico-await-test-bad.txt is not text (UTF-8)"
+            }
+          },
+          "cancel": {
+            "token": 203,
+            "ok": 1,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": null
+          },
+          "reopen": {
+            "token": 265,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c",
+            "reply": {
+              "ok": true
+            }
+          }
+        },
+        "duplicate": {
+          "ok": true,
+          "bad": true,
+          "cancel": true,
+          "reopen": true
+        },
+        "injections": {
+          "cancel": {
+            "token": 203,
+            "reply": {
+              "ok": false,
+              "why": "Open canceled."
+            },
+            "unchanged": true
+          },
+          "stale": {
+            "token": 203,
+            "current": 265,
+            "unchanged": true
+          }
+        },
+        "pre_reboot_compiles": 1
+      }
+    ],
+    "await": [
+      {
+        "cold_compile": {
+          "us": 3145457,
+          "peak_js_bytes": 1666424,
+          "module_bytes": 240452,
+          "sha256": "bf83615181dcec144b34dd69302042587cabb7f53e09c7203db2d849368e6c1d"
+        },
+        "worlds": {
+          "files": {
+            "engine": "native",
+            "file": "files/compiled.bin",
+            "last_error": ""
+          },
+          "agenda": {
+            "engine": "native",
+            "file": "agenda/compiled.bin",
+            "last_error": ""
+          },
+          "editor": {
+            "engine": "native",
+            "file": "editor/compiled.bin",
+            "last_error": ""
+          }
+        },
+        "start_tokens": {
+          "ok": 21,
+          "bad": 121,
+          "cancel": 185,
+          "reopen": 252
+        },
+        "settles": {
+          "ok": {
+            "token": 21,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": true
+            }
+          },
+          "bad": {
+            "token": 121,
+            "ok": 0,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": false,
+              "why": "pico-await-test-bad.txt is not text (UTF-8)"
+            }
+          },
+          "cancel": {
+            "token": 185,
+            "ok": 1,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": null
+          },
+          "reopen": {
+            "token": 252,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c",
+            "reply": {
+              "ok": true
+            }
+          }
+        },
+        "duplicate": {
+          "ok": true,
+          "bad": true,
+          "cancel": true,
+          "reopen": true
+        },
+        "injections": {
+          "cancel": {
+            "token": 185,
+            "reply": {
+              "ok": false,
+              "why": "Open canceled."
+            },
+            "unchanged": true
+          },
+          "stale": {
+            "token": 185,
+            "current": 252,
+            "unchanged": true
+          }
+        },
+        "pre_reboot_compiles": 1
+      },
+      {
+        "cold_compile": {
+          "us": 3126343,
+          "peak_js_bytes": 1667000,
+          "module_bytes": 240452,
+          "sha256": "bf83615181dcec144b34dd69302042587cabb7f53e09c7203db2d849368e6c1d"
+        },
+        "worlds": {
+          "files": {
+            "engine": "native",
+            "file": "files/compiled.bin",
+            "last_error": ""
+          },
+          "agenda": {
+            "engine": "native",
+            "file": "agenda/compiled.bin",
+            "last_error": ""
+          },
+          "editor": {
+            "engine": "native",
+            "file": "editor/compiled.bin",
+            "last_error": ""
+          }
+        },
+        "start_tokens": {
+          "ok": 385,
+          "bad": 451,
+          "cancel": 513,
+          "reopen": 574
+        },
+        "settles": {
+          "ok": {
+            "token": 385,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": true
+            }
+          },
+          "bad": {
+            "token": 451,
+            "ok": 0,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": {
+              "ok": false,
+              "why": "pico-await-test-bad.txt is not text (UTF-8)"
+            }
+          },
+          "cancel": {
+            "token": 513,
+            "ok": 1,
+            "result": 0,
+            "held": 0,
+            "unchanged": 1,
+            "screen": "5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27",
+            "reply": null
+          },
+          "reopen": {
+            "token": 574,
+            "ok": 1,
+            "result": 0,
+            "held": 1,
+            "unchanged": 0,
+            "screen": "ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c",
+            "reply": {
+              "ok": true
+            }
+          }
+        },
+        "duplicate": {
+          "ok": true,
+          "bad": true,
+          "cancel": true,
+          "reopen": true
+        },
+        "injections": {
+          "cancel": {
+            "token": 513,
+            "reply": {
+              "ok": false,
+              "why": "Open canceled."
+            },
+            "unchanged": true
+          },
+          "stale": {
+            "token": 513,
+            "current": 574,
+            "unchanged": true
+          }
+        },
+        "pre_reboot_compiles": 0
+      }
+    ]
+  },
+  "restored": true,
+  "reused_manual_log_sha256": "0d763c0f50d1c3e99f86119ac0327f45e91b6eb1617a4d18fed82267d8d64964",
+  "all_observable_outcomes_identical": true,
+  "restored_worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    }
+  }
+}

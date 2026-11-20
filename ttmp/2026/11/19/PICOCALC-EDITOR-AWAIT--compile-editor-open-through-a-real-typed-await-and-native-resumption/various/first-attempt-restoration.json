@@ -1,0 +1,83 @@
+{
+  "before_factory_sha256": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "oracle": {
+    "manual": {
+      "sourceSha256": "fff072d103614c1c1a2f429f8ca64a39ecf06a57e63a194d268b321ae6b3453e",
+      "loweredSourceSha256": "fff072d103614c1c1a2f429f8ca64a39ecf06a57e63a194d268b321ae6b3453e",
+      "stateFields": 71,
+      "layout": null,
+      "instructions": 16812,
+      "imageSha256": "c099c18362c02e878ac5b2e76c67958395c45325f061276d45b1874a4adf232e",
+      "nativeBytes": 240452,
+      "nativeSha256": "6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9",
+      "wasmBytes": 88884,
+      "wasmSha256": "4dc0b2b7c72dea72dd3873022e34c9d0500e11fb64349c5e957f78236645884a",
+      "firmwareSha256": "12723ce8389be860bfc08b88b6397a391b762c6c7312cd0851995b007750e909",
+      "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff"
+    },
+    "await": {
+      "sourceSha256": "03cd32abee8928594caeccb6e4ef01599aee862782566f923f5749aa8752fb8d",
+      "loweredSourceSha256": "fa9e61b4fd37fd04622341dec178ea853c1a9ff0e81122e122397453bae42653",
+      "stateFields": 74,
+      "layout": {
+        "task": "editorReadTask",
+        "wait": "typedSdkFileRead",
+        "saved": [
+          {
+            "name": "handle",
+            "type": "i32"
+          },
+          {
+            "name": "size",
+            "type": "i32"
+          }
+        ],
+        "owned": "handle",
+        "frameBytes": 12,
+        "fields": [
+          {
+            "name": "__await_editorReadTask_token",
+            "type": "i32"
+          },
+          {
+            "name": "__await_editorReadTask_handle",
+            "type": "i32"
+          },
+          {
+            "name": "__await_editorReadTask_size",
+            "type": "i32"
+          }
+        ]
+      },
+      "instructions": 16993,
+      "imageSha256": "8126e064c86b6b11ca17b74092ab2eb6c37787dcc5fe0d20004d276ebf7842ba",
+      "nativeBytes": 240452,
+      "nativeSha256": "bf83615181dcec144b34dd69302042587cabb7f53e09c7203db2d849368e6c1d",
+      "wasmBytes": 89275,
+      "wasmSha256": "04c97d74a9db3f56c161bd77b420bdd3c49778c0148af92bec39fcc124c88656",
+      "firmwareSha256": "6172af2587c21b7f1398b2e98a9337a0a2aa13a12ea158e3fae54f76f6c2e46e",
+      "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff"
+    }
+  },
+  "lanes": {
+    "manual": []
+  },
+  "restored": true,
+  "restored_worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    }
+  }
+}

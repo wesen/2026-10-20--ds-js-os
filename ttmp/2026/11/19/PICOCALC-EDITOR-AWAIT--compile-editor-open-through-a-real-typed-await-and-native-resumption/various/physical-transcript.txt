@@ -1,0 +1,83 @@
+[manual explicit boot 1]
+i2c0 held; rebooting
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3060487 peak_js_bytes=1495136 module_bytes=240452
+AWAITELF bytes=240452 sha256=6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9
+AWAITPROBE start ok token=25 r=1 requests=1
+AWAITPROBE settle ok token=25 ok=1 r=0 held=1 unchanged=0 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":true}
+AWAITPROBE duplicate ok r=0 unchanged=1
+AWAITPROBE start bad token=129 r=1 requests=1
+AWAITPROBE settle bad token=129 ok=0 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":false,"why":"pico-await-test-bad.txt is not text (UTF-8)"}
+AWAITPROBE duplicate bad r=0 unchanged=1
+AWAITPROBE start cancel token=197 r=1 requests=1
+AWAITPROBE cancel token=197 r=0 unchanged=1 reply={"ok":false,"why":"Open canceled."}
+AWAITPROBE settle cancel token=197 ok=1 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply=null
+AWAITPROBE duplicate cancel r=0 unchanged=1
+AWAITPROBE start reopen token=260 r=1 requests=1
+AWAITPROBE stale token=197 current=260 r=1 unchanged=1
+AWAITPROBE settle reopen token=260 ok=1 r=0 held=1 unchanged=0 screen=ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c reply={"ok":true}
+AWAITPROBE duplicate reopen r=0 unchanged=1
+#OK worlds
+
+[manual explicit boot 2]
+i2c0 held; rebooting
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3054070 peak_js_bytes=1495156 module_bytes=240452
+AWAITELF bytes=240452 sha256=6d533703516dd3aacfbfb3104749719b3f97747fb9c40fe4e4c671e38d35a9f9
+AWAITPROBE start ok token=21 r=1 requests=1
+AWAITPROBE settle ok token=21 ok=1 r=0 held=1 unchanged=0 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":true}
+AWAITPROBE duplicate ok r=0 unchanged=1
+AWAITPROBE start bad token=134 r=1 requests=1
+AWAITPROBE settle bad token=134 ok=0 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":false,"why":"pico-await-test-bad.txt is not text (UTF-8)"}
+AWAITPROBE duplicate bad r=0 unchanged=1
+AWAITPROBE start cancel token=203 r=1 requests=1
+AWAITPROBE cancel token=203 r=0 unchanged=1 reply={"ok":false,"why":"Open canceled."}
+AWAITPROBE settle cancel token=203 ok=1 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply=null
+AWAITPROBE duplicate cancel r=0 unchanged=1
+AWAITPROBE start reopen token=265 r=1 requests=1
+AWAITPROBE stale token=203 current=265 r=1 unchanged=1
+AWAITPROBE settle reopen token=265 ok=1 r=0 held=1 unchanged=0 screen=ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c reply={"ok":true}
+AWAITPROBE duplicate reopen r=0 unchanged=1
+#OK worlds
+
+[await explicit boot 1]
+i2c0 held; rebooting
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3145457 peak_js_bytes=1666424 module_bytes=240452
+AWAITELF bytes=240452 sha256=bf83615181dcec144b34dd69302042587cabb7f53e09c7203db2d849368e6c1d
+AWAITPROBE start ok token=21 r=1 requests=1
+AWAITPROBE settle ok token=21 ok=1 r=0 held=1 unchanged=0 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":true}
+AWAITPROBE duplicate ok r=0 unchanged=1
+AWAITPROBE start bad token=121 r=1 requests=1
+AWAITPROBE settle bad token=121 ok=0 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":false,"why":"pico-await-test-bad.txt is not text (UTF-8)"}
+AWAITPROBE duplicate bad r=0 unchanged=1
+AWAITPROBE start cancel token=185 r=1 requests=1
+AWAITPROBE cancel token=185 r=0 unchanged=1 reply={"ok":false,"why":"Open canceled."}
+AWAITPROBE settle cancel token=185 ok=1 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply=null
+AWAITPROBE duplicate cancel r=0 unchanged=1
+AWAITPROBE start reopen token=252 r=1 requests=1
+AWAITPROBE stale token=185 current=252 r=1 unchanged=1
+AWAITPROBE settle reopen token=252 ok=1 r=0 held=1 unchanged=0 screen=ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c reply={"ok":true}
+AWAITPROBE duplicate reopen r=0 unchanged=1
+#OK worlds
+
+[await explicit boot 2]
+i2c0 held; rebooting
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3126343 peak_js_bytes=1667000 module_bytes=240452
+AWAITELF bytes=240452 sha256=bf83615181dcec144b34dd69302042587cabb7f53e09c7203db2d849368e6c1d
+AWAITPROBE start ok token=385 r=1 requests=1
+AWAITPROBE settle ok token=385 ok=1 r=0 held=1 unchanged=0 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":true}
+AWAITPROBE duplicate ok r=0 unchanged=1
+AWAITPROBE start bad token=451 r=1 requests=1
+AWAITPROBE settle bad token=451 ok=0 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply={"ok":false,"why":"pico-await-test-bad.txt is not text (UTF-8)"}
+AWAITPROBE duplicate bad r=0 unchanged=1
+AWAITPROBE start cancel token=513 r=1 requests=1
+AWAITPROBE cancel token=513 r=0 unchanged=1 reply={"ok":false,"why":"Open canceled."}
+AWAITPROBE settle cancel token=513 ok=1 r=0 held=0 unchanged=1 screen=5561cba9f932a9084df8b9e51dbd827b4871437dae4f019cd15b92ca0419ee27 reply=null
+AWAITPROBE duplicate cancel r=0 unchanged=1
+AWAITPROBE start reopen token=574 r=1 requests=1
+AWAITPROBE stale token=513 current=574 r=1 unchanged=1
+AWAITPROBE settle reopen token=574 ok=1 r=0 held=1 unchanged=0 screen=ab689d49311d9e955def0f8be5e7be0c18d9702081477e6362c924d0ad980d1c reply={"ok":true}
+AWAITPROBE duplicate reopen r=0 unchanged=1
+#OK worlds

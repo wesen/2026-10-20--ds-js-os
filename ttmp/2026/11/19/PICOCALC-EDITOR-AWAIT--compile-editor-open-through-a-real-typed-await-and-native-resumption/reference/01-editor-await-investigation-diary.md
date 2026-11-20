@@ -240,3 +240,57 @@ Start at `observe(log, oracle)` in `scripts/07-board.py`. Pass the first physica
 ### Technical details
 
 The initial manual capture included one pre-reboot compile. The accepted boot sample links a 240,452-byte ELF matching its independent oracle. The queued trial still needs two accepted manual and two accepted await boots with restoration.
+
+
+## Step 5: Compare the cold-compiled native Editor paths and restore the board
+
+The completed retry captured two intentional reboots of each firmware, each with the P4's own streamed compiler result and all four probe scenarios. I compared the event results, reply JSON, grant ownership and exact native screen digests between the two variants.
+
+### Prompt Context
+
+**Study specification:** See Step 1.
+
+**Commit (board runner):** `306a987` — Recover the measured Editor boot from a buffered flash boot.
+
+### What I did
+
+- Verified the flashed firmware and linked ELF identities on every measured boot. The P4 compiled the raw source inside its ordinary QuickJS compiler.
+- Ran real filesystem success and invalid UTF-8, injected cancel followed by the actual pending file result, and reopen with an injected older canceled token.
+- Compared four complete behavior traces, each with four requests and duplicate-settlement checks. Preserved only the relevant UART lines alongside the structured data.
+- Recorded cold compile time and peak QuickJS heap. Verified the restoration and native world health before publishing.
+
+### Why
+
+The differentiating behavior is native resumption on the correct real file result. Seen file tokens, old-result suppression, reply content and screen digests together show the state machine has the right externally visible effects.
+
+### What worked
+
+The generated and hand-written read paths matched every observed effect. On one await boot, a delayed token 185 appeared while 252 was pending. It produced no change and the new file then opened normally. Native ELF hashes matched on all four boots. Median compile time increased by 78.62 ms and median QuickJS peak increased by 171,566 bytes. The saved factory application was restored.
+
+### What didn't work
+
+The implemented pilot uses 74 state fields rather than the larger Scope G target of 71 fields. The downstream normalization continuation continues to use its existing hand-written fields. The physical trial injects cancellation at the native event boundary because the ordinary mailbox queues a second message behind the suspended ask.
+
+### What I learned
+
+The two live values are sufficient to resume the real read without storing any event buffer address. The lifetime of the file job differs from the lifetime of the frame. Cancel can clear the frame and release its grant while the prepared job still returns safely.
+
+### What was tricky to build
+
+The same file grant crosses the ordinary Files-to-Editor ask. Using a genuine invalid UTF-8 payload exercises the real failure mode without altering scheduling. The probe uses a fresh test file and suppresses only persistent position storage during the fixture's turns.
+
+### What warrants a second pair of eyes
+
+Check that the reported 12-byte frame size consumes the fixed reactor state area and the unchanged ELF allocation. The heap increase describes the compiler runtime and its rewritten source, independent of the state frame.
+
+### What should be done in the future
+
+Measure a subsequent normalization or Find suspension separately if the broader scope is implemented.
+
+### Code review instructions
+
+Open `various/physical-transcript.txt` and compare the watch records with `various/physical.json`. Run the final board parser with the indicated boot and build inputs to repeat the independent trial.
+
+### Technical details
+
+Manual Editor times were 3,060,487 and 3,054,070 microseconds with a peak near 1.495 MB. The await variant returned at 3,145,457 and 3,126,343 microseconds with a peak near 1.667 MB. The factory image hash and native world status appear in the restoration receipt.
