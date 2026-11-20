@@ -2,7 +2,7 @@
 Title: Incremental build investigation diary
 Ticket: PICOCALC-RELEASE-LAB
 DocType: reference
-Status: active
+Status: complete
 Topics: [picocalc]
 ---
 
@@ -66,3 +66,11 @@ python3 -B 13-summary.py physical.json /tmp/incremental-summary.json
 ```
 
 A third restricted Opus High commission received only approved sources and aggregate final measurements to author the article. The two earlier checkpoints are 94350a1 and c9c74db. The research director owns vault and reMarkable publication.
+
+## Step 7. Check the commissioned article against the hardware and source
+
+The third tool-free Claude Opus 5.5 High commission supplied the complete lead-authored Markdown draft from the aggregate evidence. The raw public article is preserved byte for byte in `scripts/incremental/14-opus-article-draft.txt`. The matching receipt records the model, empty tool list, effort, session, usage and SHA-256 of its prompt and original public draft. The CLI transcript was not published. The two earlier commissions produced the design and the pre-hardware critique. The critique became a .txt source artifact so docmgr treats it as original material instead of a managed ticket document.
+
+I compared the lead's article with the actual fragment record, host and P4 measurements, prior LAB2 tables and independent director's relocation receipt. I corrected the number and meaning of relocation fields, the graph's role, the unsupported claim of universal cache soundness, the previous-study comparator and the interpretation of the moved call target. I removed a numerical host-noise threshold unsupported by five blocks. I supplied the actual script names, added the specific Editor edit, linked the source and clarified that the restored release painter is a separate check from invocation of edited code. The lead had received the preliminary physical summary before ordinary firmware readback completed. I updated its pending status with the completed receipt after the board had been returned.
+
+The independent evidence reader accepted four cold observations, 44 additional physical rows and both checkpoints. Summarizing the checked-in physical receipt regenerated `summary.json` byte for byte. I checked every local Markdown link and both complete-image identity examples. The one-boot physical trial directly answers how long this trusted compiler took to return a complete ELF. Attributable memory under a production resident session, behavior after power failure, and UI-to-native-return latency remain open. The result is ready for publication by the research director.
