@@ -194,9 +194,7 @@ For ordinary moves, the forced-skip and idle frames were excluded, leaving 196 d
 | Fallback | Full control | 35.118 | 22.102 |
 | Fallback | Partial candidate | 34.861 | 22.360 |
 
-On an ordinary move, the partial painter wrote 363 pixels. The control's first step alone, clearing the panel, writes 102,400 pixels.
-
-Both arms produced the same 363 changed pixels per move, and their transfer counts were equal. The median transfer was 385 pixels, the 95th percentile (p95) was 2,136, and the maximum was 4,008.
+PicoCalc Snake draws each segment as an 11x11 colored square of 121 pixels on a fixed 320x320 RGB565 scene, and the measurements below come from normal source movement in the warm native C raster benchmark. Three quantities must be kept separate. Changed source positions are pixels whose color differs between consecutive frames, writes are pixels the partial painter actually rewrites, and transfer area is the number of pixels inside the rectangles sent to the display. Of 196 eligible changed movement draws, which exclude the forced drop and idle frames, 195 changed and partially rewrote 363 pixels, or three cells of 121. One draw changed and rewrote exactly 242 pixels, and it occurred at legal tail entry. In that move the new head occupies the cell that was the tail, so that cell changes from body ink to head accent, while the old head changes from accent to body ink. No cell needs to be erased to white, which leaves 2 × 121 = 242 changed pixels.
 
 A collision in the source trace changed 14,102 pixels and transferred 16,855. No frame required a full-panel transfer except the initial frame and the forced repairs. Whether the candidate stays correct for overlays other than those in this trace has not been established.
 

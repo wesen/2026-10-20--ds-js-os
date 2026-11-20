@@ -70,42 +70,49 @@
   "sourceSentSize": {
     "j": {
       "total": 164581,
+      "min": 483,
       "median": 749.5,
       "p95": 973,
       "max": 986
     },
     "b": {
       "total": 156586,
+      "min": 474,
       "median": 713.0,
       "p95": 930,
       "max": 932
     },
     "sj": {
       "total": 25615,
+      "min": 78,
       "median": 111.5,
       "p95": 152,
       "max": 153
     },
     "t": {
       "total": 7732,
+      "min": 18,
       "median": 36.0,
       "p95": 52,
       "max": 52
     },
     "jEnvelope": {
       "total": 173461,
+      "min": 523,
       "median": 789.5,
       "p95": 1013,
       "max": 1026
     },
     "sjEnvelope": {
       "total": 41155,
+      "min": 148,
       "median": 181.5,
       "p95": 222,
       "max": 223
     },
     "tEnvelope": {
       "total": 26790,
+      "min": 97,
       "median": 121.0,
       "p95": 145,
       "max": 145
@@ -114,51 +121,61 @@
   "hostStagesUsPerOperation": {
     "source": {
       "Bproduce": {
+        "min": 5.322,
         "median": 5.705,
         "p95": 9.109,
         "max": 12.909
       },
       "Breceive": {
+        "min": 4.821,
         "median": 4.976,
         "p95": 8.743,
         "max": 11.199
       },
       "Jproduce": {
+        "min": 3.839,
         "median": 4.137,
         "p95": 6.623,
         "max": 8.33
       },
       "JproduceAA": {
+        "min": 3.778,
         "median": 4.153,
         "p95": 7.845,
         "max": 11.449
       },
       "Jreceive": {
+        "min": 3.421,
         "median": 3.599,
         "p95": 9.956,
         "max": 10.668
       },
       "SJproduce": {
+        "min": 0.394,
         "median": 0.428,
         "p95": 0.549,
         "max": 0.661
       },
       "SJreceive": {
+        "min": 0.686,
         "median": 0.741,
         "p95": 1.292,
         "max": 2.053
       },
       "Tproduce": {
+        "min": 0.32,
         "median": 0.457,
         "p95": 0.687,
         "max": 0.82
       },
       "Treceive": {
+        "min": 0.632,
         "median": 0.706,
         "p95": 1.478,
         "max": 9.078
       },
       "Tvalidate": {
+        "min": 0.386,
         "median": 0.431,
         "p95": 4.482,
         "max": 7.486
@@ -166,51 +183,61 @@
     },
     "short": {
       "Bproduce": {
+        "min": 4.141,
         "median": 4.348,
         "p95": 4.84,
         "max": 4.86
       },
       "Breceive": {
+        "min": 3.593,
         "median": 3.72,
         "p95": 4.297,
         "max": 13.697
       },
       "Jproduce": {
+        "min": 2.709,
         "median": 2.941,
         "p95": 12.401,
         "max": 12.645
       },
       "JproduceAA": {
+        "min": 2.761,
         "median": 2.969,
         "p95": 11.713,
         "max": 12.927
       },
       "Jreceive": {
+        "min": 2.343,
         "median": 2.424,
         "p95": 2.896,
         "max": 8.384
       },
       "SJproduce": {
+        "min": 0.286,
         "median": 0.303,
         "p95": 0.327,
         "max": 0.331
       },
       "SJreceive": {
+        "min": 0.503,
         "median": 0.556,
         "p95": 0.594,
         "max": 9.063
       },
       "Tproduce": {
+        "min": 0.256,
         "median": 0.269,
         "p95": 0.319,
         "max": 0.326
       },
       "Treceive": {
+        "min": 0.468,
         "median": 0.501,
         "p95": 0.586,
         "max": 0.688
       },
       "Tvalidate": {
+        "min": 0.306,
         "median": 0.322,
         "p95": 0.383,
         "max": 0.501
@@ -218,51 +245,61 @@
     },
     "long300": {
       "Bproduce": {
+        "min": 43.636,
         "median": 44.809,
         "p95": 56.704,
         "max": 69.414
       },
       "Breceive": {
+        "min": 44.215,
         "median": 46.372,
         "p95": 79.973,
         "max": 80.513
       },
       "Jproduce": {
+        "min": 36.085,
         "median": 37.733,
         "p95": 60.641,
         "max": 78.314
       },
       "JproduceAA": {
+        "min": 36.376,
         "median": 37.847,
         "p95": 45.466,
         "max": 54.537
       },
       "Jreceive": {
+        "min": 41.079,
         "median": 42.6,
         "p95": 68.89,
         "max": 71.307
       },
       "SJproduce": {
+        "min": 3.339,
         "median": 3.68,
         "p95": 4.206,
         "max": 4.269
       },
       "SJreceive": {
+        "min": 6.268,
         "median": 7.178,
         "p95": 34.641,
         "max": 38.337
       },
       "Tproduce": {
+        "min": 1.559,
         "median": 1.766,
         "p95": 2.081,
         "max": 2.289
       },
       "Treceive": {
+        "min": 5.988,
         "median": 6.779,
         "p95": 32.248,
         "max": 42.898
       },
       "Tvalidate": {
+        "min": 2.616,
         "median": 2.859,
         "p95": 5.158,
         "max": 27.982
@@ -270,51 +307,61 @@
     },
     "nearCap395": {
       "Bproduce": {
+        "min": 56.366,
         "median": 61.029,
         "p95": 102.637,
         "max": 111.258
       },
       "Breceive": {
+        "min": 58.108,
         "median": 62.901,
         "p95": 99.057,
         "max": 106.202
       },
       "Jproduce": {
+        "min": 48.074,
         "median": 50.789,
         "p95": 82.467,
         "max": 97.741
       },
       "JproduceAA": {
+        "min": 47.694,
         "median": 50.261,
         "p95": 68.807,
         "max": 78.979
       },
       "Jreceive": {
+        "min": 54.223,
         "median": 58.531,
         "p95": 108.186,
         "max": 124.549
       },
       "SJproduce": {
+        "min": 4.21,
         "median": 4.901,
         "p95": 5.253,
         "max": 5.666
       },
       "SJreceive": {
+        "min": 8.476,
         "median": 9.779,
         "p95": 45.064,
         "max": 45.293
       },
       "Tproduce": {
+        "min": 2.009,
         "median": 2.266,
         "p95": 2.798,
         "max": 3.529
       },
       "Treceive": {
+        "min": 8.275,
         "median": 9.32,
         "p95": 28.757,
         "max": 50.333
       },
       "Tvalidate": {
+        "min": 3.46,
         "median": 3.964,
         "p95": 4.724,
         "max": 4.986
@@ -325,32 +372,42 @@
     "framesPerTrial": 196,
     "trialMedianUs": {
       "fullPaintUs": {
+        "min": 32.168,
         "median": 34.642,
         "p95": 54.707,
         "max": 54.707
       },
       "damagePaintUs": {
+        "min": 0.371,
         "median": 0.388,
         "p95": 0.575,
         "max": 0.575
       },
       "fullCommitUs": {
+        "min": 18.87,
         "median": 19.697,
         "p95": 30.848,
         "max": 30.848
       },
       "damageCommitUs": {
+        "min": 5.842,
         "median": 5.995,
         "p95": 9.425,
         "max": 9.425
       }
     },
     "actualChanged": {
+      "min": 242,
       "median": 363.0,
       "p95": 363,
       "max": 363
     },
+    "changedFrequency": {
+      "242": 1,
+      "363": 195
+    },
     "transferredPixels": {
+      "min": 264,
       "median": 385.0,
       "p95": 2136,
       "max": 4008
@@ -360,32 +417,59 @@
     "framesPerTrial": 24,
     "trialMedianUs": {
       "fullPaintUs": {
+        "min": 32.014,
         "median": 35.118,
         "p95": 60.204,
         "max": 60.204
       },
       "damagePaintUs": {
+        "min": 32.334,
         "median": 34.861,
         "p95": 57.706,
         "max": 57.706
       },
       "fullCommitUs": {
+        "min": 20.987,
         "median": 22.102,
         "p95": 34.224,
         "max": 34.224
       },
       "damageCommitUs": {
+        "min": 21.008,
         "median": 22.36,
         "p95": 39.127,
         "max": 39.127
       }
     },
     "actualChanged": {
+      "min": 254,
       "median": 317.0,
       "p95": 14690,
       "max": 15051
     },
+    "changedFrequency": {
+      "254": 1,
+      "277": 1,
+      "281": 1,
+      "284": 1,
+      "293": 2,
+      "296": 2,
+      "314": 2,
+      "316": 1,
+      "317": 2,
+      "330": 2,
+      "339": 1,
+      "365": 1,
+      "461": 1,
+      "558": 1,
+      "655": 1,
+      "14102": 1,
+      "14576": 1,
+      "14690": 1,
+      "15051": 1
+    },
     "transferredPixels": {
+      "min": 1490,
       "median": 3080.0,
       "p95": 21570,
       "max": 22404

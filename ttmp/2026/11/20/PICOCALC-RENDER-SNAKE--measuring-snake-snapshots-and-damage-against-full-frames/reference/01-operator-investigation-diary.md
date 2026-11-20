@@ -177,3 +177,51 @@ Compare `15-host-quickjs.sh`, the System ticket's `14-host-heap.c`, `various/hos
 ### Technical details
 
 The host timing results in this step use one fresh QuickJS process per arm/trial. The paired raster results in Step 2 use the actual C fill and commit routines. Both are independent of the Node timing series.
+
+## Step 4. Count the exceptional tail-entry transition
+
+The Step 2 claim that every changed motion drew 363 pixels was incorrect. Looking up the archived row for `enter-vacated-tail` exposed a lower value which minimum-free summaries had hidden. Of 196 eligible motion draws, 195 changed 363 pixels and one changed 242. The raw C receipt and all frame comparisons already recorded the correct result.
+
+### Prompt Context
+
+See Step 1. **Commit (code)** `684064e` contains Opus's previous editorial correction, which preserved the insufficient quantile description.
+
+### What I did
+
+Read the frame's C CSV row, grouped every eligible observation by exact changed-pixel count, added the minimum and frequency distribution to the summarizer, and commissioned replacement prose from Opus. Notified the director of the corrected count.
+
+### Why
+
+Minima and named adversarial transitions matter in a study estimating whether movement always touches three regions. Median, 95th percentile and maximum all returned the same 363.
+
+### What worked
+
+The legal tail-entry row reported 242 actual changes, 242 partial writes, one rectangle and 264 transferred pixels at zero mismatch. The old head becomes body ink, the former tail becomes the accent head, and no segment clears to white. The other 195 observations had 363 changes each.
+
+### What didn't work
+
+I inferred an invariant from equal median, p95 and maximum. A population split 195/1 can produce exactly that summary. The new frequency table is derived from the same raw CSV, with the original selection predicate unchanged.
+
+### What I learned
+
+The game's tail rule changes the motion geometry. A proposed two-cell or three-cell shortcut must give distinct roles priority when the new head coincides with the old tail. Comparing per-cell roles handled this case correctly before the article described it accurately.
+
+### What was tricky to build
+
+No new implementation was needed. The algorithm and oracle already agreed. The difficulty was identifying a verbal claim stronger than the evidence displayed in the results table.
+
+### What warrants a second pair of eyes
+
+Review every statement that says all or every for equality against raw observations. Distinguish exact counts established for every replay frame from medians across selected moving frames.
+
+### What should be done in the future
+
+Maintain the isolated hardware timing as a separate result. Keep the representative tail-entry witness with any future version that rewrites the damage logic.
+
+### Code review instructions
+
+Inspect `summary.json` at `rasterMoves.changedFrequency` and `pixelExamples.enter-vacated-tail`, then compare the relevant raw CSV entry and replay snapshot.
+
+### Technical details
+
+The 196 eligible motions exclude initial, idle, full-fallback and intentionally skipped draws. All three full rendering arms still match every one of the 236 images.

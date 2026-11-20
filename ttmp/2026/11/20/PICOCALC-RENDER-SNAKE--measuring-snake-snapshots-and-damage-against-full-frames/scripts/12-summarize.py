@@ -1,5 +1,6 @@
 """Verify complete pixel identities, summarize separately scoped host costs and replay repair cases."""
 import csv
+from collections import Counter
 import gzip
 import hashlib
 import json
@@ -13,7 +14,7 @@ def rows(p): return list(csv.DictReader(p.open()))
 def median(xs): return round(statistics.median(xs),3)
 def quant(xs):
     s=sorted(xs)
-    return dict(median=median(s),p95=round(s[(95*len(s)+99)//100-1],3),max=round(max(s),3))
+    return dict(min=round(s[0],3),median=median(s),p95=round(s[(95*len(s)+99)//100-1],3),max=round(max(s),3))
 def save(name,value): (out/name).write_text(json.dumps(value,indent=2)+'\n')
 def digest(b): return hashlib.sha256(b).hexdigest()
 
@@ -56,6 +57,7 @@ def raster_summary(group):
            for key in ('fullPaintNs','damagePaintNs','fullCommitNs','damageCommitNs')}
     return {'framesPerTrial':len(group),'trialMedianUs':{k[:-2]+'Us':v for k,v in times.items()},
             'actualChanged':quant([int(sample[i]['changed']) for i in group]),
+            'changedFrequency':dict(sorted(Counter(int(sample[i]['changed']) for i in group).items())),
             'transferredPixels':quant([int(sample[i]['transferPixels']) for i in group])}
 scenario={}
 for p in sorted(out.glob('scenario-*.csv')):
