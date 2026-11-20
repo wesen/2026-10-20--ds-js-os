@@ -278,3 +278,55 @@ Read `scripts/04-board.py` and `scripts/05-summarize.py` with `various/scanner-i
 ### Technical details
 
 The control revision is `40bcf850a5809ef6d839127869faa952596ed157`. The generic firmware checks the embedded JS, generated image SHA-256, app size, test order, correctness of the guest results, and three native world names before accepting a trial. Raw flash images and serial streams stayed in disposable storage. Published artifacts contain the compact evidence required to recompute the reported quantities.
+
+## Step 6: Qualify the real Editor and identify a different installed compiler
+
+The smaller-slot image produced a real running Editor with a measurable memory reduction. Separately, the examiner identified the compiler actually installed when we took the factory backup. Its identity changed which comparison could attribute the difference to the reservation alone.
+
+### Prompt Context
+
+The lab brief asks, “Can Scope A make the generated program small enough to reduce Editor’s reserved native-code slot?” The user also asked for diagrams, screenshots, careful diaries and design guides on reMarkable. **Assistant interpretation:** Build and run the resized reactor, verify a real Editor use case and document which baseline owns each number. **Inferred user intent:** Distinguish practical results from estimates in a way someone can repeat later.
+
+### What I did
+
+- Flashed the 80 KiB staged reactor, verified its returned ELF after each of three normal Editor boots, and measured 566.1 KiB live at all three. Opened a 65,536-byte Unicode Markdown file, captured two screen CRCs, compared every non-clock pixel to the previously qualified reference, removed the test document and restored the factory firmware. Saved one screenshot since both captures were identical.
+- Completed the two bounded arithmetic boots. Archived all 108 compile rows and 192 guest batches and generated the joint comparison table and figure. Queued a normal Select Editor with matching verified compiler sources for its live workflow.
+- The examiner matched the factory image's JavaScript bytes against the earlier revision `08fbae85`. The frozen research control is `40bcf85`. I built a second normal staged image with the larger 224 KiB reservation, matching the 80 KiB image in compiler, normal wrapper and SDK configuration. I also re-linked both independently and matched their prior ELF hashes.
+- Delivered the frontend, native, bounded, incremental, reviewer and supervisor design guides together on reMarkable. The client returned `OK: uploaded PicoCalc Compiler Lab - Six Research Design Guides.pdf -> /ai/2026/11/19/PICOCALC-COMPILER-LAB`.
+- Removed the queued first incremental image before it wrote any bytes. Its author identified an incompatible executable heap allocation with this board's memory-protection configuration. Moved the ready matched reservation ahead of the incremental run while the author repaired guest placement.
+
+### Why
+
+The ELF hash and machine-code count establish what the compiler produced. The world status and screen establish what the OS actually loaded and displayed. The factory backup is essential for restoration and its compiler revision must be considered before treating it as a comparison arm.
+
+### What worked
+
+The capacity reduction was real and the live 64 KiB workflow passed. The clean bounded comparison found a 398–403 ms lower Editor compile time for Select compared with Always, but Select still cost 50–54 ms more than the frozen control. A fixed-budget stress test showed that changing only source order could erase all 720 words of available benefit. Six guides reached the user's reMarkable cloud folder.
+
+### What didn't work
+
+The first attempt to regenerate the matched ELF oracle used the outer staging directory, which has compiler sources but no `sources/editor/app.typed`. The native study's `run/` child contained the frozen source. With that corrected input the complete 224 KiB-slot ELF matched `c93d2296…`. The initial incremental firmware was never used for a measurement.
+
+### What I learned
+
+An old installation can be in perfect working order and still be an unsuitable contemporary control. Its three native app health checks qualify the restoration. The pooled table uses the control in the same firmware as each research candidate. The 224/80 comparison needs the same lowerer in both normal firmware images.
+
+### What was tricky to build
+
+Same-world verification depends on hashing the buffer returned by the ordinary wrapper and preserving it for the loader. The staged small and standard images intentionally use identical receipt code, including its historical label. The observed ELF identities, sizes and predeclared image hashes distinguish the arms. Each serial job starts only when the preceding job's restored health receipt is complete.
+
+### What warrants a second pair of eyes
+
+Verify the 224 KiB and 80 KiB reactor inputs, full ELF digests and actual loaded bytes. In the incremental arm, distinguish time to compile/link, time to prepare executable memory and time to call the function. Comparing raw resident-firmware boot times across compiler revisions would produce a misleading claim.
+
+### What should be done in the future
+
+Finish the matched capacity and incremental trials, validate the physical results with the independent examiner and publish each final research article and the synthesis.
+
+### Code review instructions
+
+Follow `scripts/10-small-slot-board.py`, `scripts/12-stage-select-editor.py`, and `scripts/15-stage-matched-reservation.py`. Check the host and board identities in the native study's slot oracle. Regenerate `various/cross-study.json`, `various/cross-study-table.md` and the figure with `scripts/11-cross-study.py`. Inspect the independent reviewer’s firmware-source comparison.
+
+### Technical details
+
+The identity of the normal 80 KiB-slot ELF starts `81718435`. Its firmware starts `0a0da581`. The matched 224 KiB-slot firmware starts `3038ea64`. Select’s normal firmware starts `348e1c87` and its expected Editor ELF starts `06a85ff6`. The original factory partition starts `6b0e3ba4`. The restored physical board and private backup remain distinct from the frozen experimental control.

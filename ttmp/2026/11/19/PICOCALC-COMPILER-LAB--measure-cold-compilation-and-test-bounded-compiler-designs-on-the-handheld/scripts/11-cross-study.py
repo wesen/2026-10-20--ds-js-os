@@ -35,6 +35,32 @@ def table(evidence):
     return data
 
 
+def markdown_table(data, evidence):
+    frequency = set()
+    for name, _, _ in RUNS:
+        receipt = json.loads((evidence/name.replace("summary", "physical")).read_text())
+        frequency.update(batch["clock_hz"] for boot in receipt["boots"] for batch in boot["guest"])
+    if len(frequency) != 1:
+        raise ValueError(f"inconsistent clock rates {frequency}")
+    cycles_per_us = frequency.pop()/1_000_000
+    rows=["| App | Compiler | Cold ms, boots 1 / 2 | Cold change, % | Peak KiB, boot 1 | Code bytes | Guest µs/call, boot 1 |",
+          "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
+    labels={"Cursor scanner":"Cursor", "Staged native operands":"Staged", "Comparison and branch fusion":"Fusion",
+            "Analyze every eligible function":"Always", "Select functions with division":"Select"}
+    for app in APPS:
+        variants = [r for r in data if r["app"]==app]
+        for r,side in [(variants[0],"base_median")]+[(variant,"candidate_median") for variant in variants]:
+            ref = side=="base_median"
+            label = "Control (scanner trial)" if ref else labels[r["design"]]
+            times = " / ".join(f"{us/1000:.1f}" for us in r["us"][side])
+            pct = "reference" if ref else " / ".join(f"{x:+.1f}" for x in r["us"]["percent"])
+            heap = r["peak"][side][0]/1024
+            code = int(r["words"][side][0]*4)
+            guest = "—" if app=="editor" else f'{r["guest_cycles_per_call"][side][0]/cycles_per_us:.3f}'
+            rows.append(f"| {app.title()} | {label} | {times} | {pct} | {heap:,.1f} | {code:,} | {guest} |")
+    return "\n".join(rows)+"\n"
+
+
 def figure(data,output):
     subset=[r for r in data if r["app"]=="editor"]
     titles=("Cold compile time","Peak compiler heap","Emitted RV32 words")
@@ -70,4 +96,5 @@ if __name__=="__main__":
     args=parser.parse_args()
     rows=table(args.evidence)
     (args.evidence/"cross-study.json").write_text(json.dumps(rows,indent=2)+"\n")
+    (args.evidence/"cross-study-table.md").write_text(markdown_table(rows,args.evidence))
     figure(rows,args.evidence/"compiler-design-comparison.png")

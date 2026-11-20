@@ -38,7 +38,9 @@ def main():
     parser.add_argument("stage",type=Path)
     parser.add_argument("backup",type=Path)
     parser.add_argument("output",type=Path)
-    parser.add_argument("--select", action="store_true", help="qualify the Select compiler in the production-sized reservation")
+    variant = parser.add_mutually_exclusive_group()
+    variant.add_argument("--matched-standard", action="store_true", help="measure the staged lowerer with the 224 KiB reservation")
+    variant.add_argument("--select", action="store_true", help="qualify the Select compiler in the production-sized reservation")
     parser.add_argument("--port",required=True)
     parser.add_argument("--esptool",type=Path,required=True)
     parser.add_argument("--firmware-sha",required=True)
@@ -57,10 +59,16 @@ def main():
             assert source.read_bytes() in binary
         label="select"
     else:
-        elf=args.stage/"editor-small.elf"
-        size,digest=elf.stat().st_size,sha(elf)
-        assert size==92996 and digest=="81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4"
-        label="small-slot"
+        if args.matched_standard:
+            filename="editor-standard.elf"
+            size,digest=240452,"c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439"
+            label="staged-224"
+        else:
+            filename="editor-small.elf"
+            size,digest=92996,"81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4"
+            label="small-slot"
+        elf=args.stage/filename
+        assert elf.stat().st_size==size and sha(elf)==digest
     assert (args.backup/"partition-table.bin").read_bytes()==(args.stage/"build/partition_table/partition-table.bin").read_bytes().ljust(4096,b"\xff")
     args.output.mkdir()
     result={"candidate":label,"firmware_sha256":sha(image),"boots":[],"restored":False}
@@ -78,6 +86,8 @@ def main():
         for i in range(1 if args.select else 3):
             result["boots"].append(observe(boot(f"measured-{i+1}"),size,digest))
             save()
+        if args.matched_standard:
+            return  # Both reservations have three observed boots. The smaller already has a live preview.
         preview,=DAY.glob("PICOCALC-EDITOR-CAPACITY--*/scripts/03-check-large-preview-on-p4.py")
         verify,=DAY.glob("PICOCALC-COMPILER-THESIS--*/scripts/supervisor/p4-verify-preview.py")
         subprocess.run([sys.executable,"-B",preview,"--engine","native","--port",args.port,

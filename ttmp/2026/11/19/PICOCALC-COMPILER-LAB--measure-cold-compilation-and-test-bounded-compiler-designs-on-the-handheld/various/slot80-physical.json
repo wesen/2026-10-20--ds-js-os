@@ -1,0 +1,82 @@
+{
+  "candidate": "small-slot",
+  "firmware_sha256": "0a0da5812013c7aee898e33102e00b308f22500076312b99eb895ee627a2b443",
+  "boots": [
+    {
+      "elapsed_us": 2889319,
+      "peak_js_bytes": 1284204,
+      "module_bytes": 92996,
+      "compiled_sha256": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4",
+      "world_kib": 566.1,
+      "world_limit_kib": 768,
+      "engine": "native"
+    },
+    {
+      "elapsed_us": 2889555,
+      "peak_js_bytes": 1284204,
+      "module_bytes": 92996,
+      "compiled_sha256": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4",
+      "world_kib": 566.1,
+      "world_limit_kib": 768,
+      "engine": "native"
+    },
+    {
+      "elapsed_us": 2892244,
+      "peak_js_bytes": 1284204,
+      "module_bytes": 92996,
+      "compiled_sha256": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4",
+      "world_kib": 566.1,
+      "world_limit_kib": 768,
+      "engine": "native"
+    }
+  ],
+  "restored": true,
+  "control_before": {
+    "elapsed_us": 3166777,
+    "peak_js_bytes": 2454928,
+    "module_bytes": 240452,
+    "compiled_sha256": null,
+    "world_kib": 710.1,
+    "world_limit_kib": 768,
+    "engine": "native"
+  },
+  "preview": {
+    "input_bytes": 65536,
+    "engine": "native",
+    "page_down_keys": 1,
+    "editor_mem_kb_at_start": 566.1,
+    "editor_limit_kb": 768,
+    "faults": [],
+    "scratch_removed": true,
+    "screenshots": {
+      "shot-1.png": "24044f3bf69ac0c391678e0bc29473307629122b92ddb3df34867391fa7f373b",
+      "shot-2.png": "24044f3bf69ac0c391678e0bc29473307629122b92ddb3df34867391fa7f373b"
+    }
+  },
+  "pixels": {
+    "changed_pixel_bounds": {
+      "shot-1.png": [
+        548,
+        10,
+        626,
+        30
+      ],
+      "shot-2.png": [
+        548,
+        10,
+        626,
+        30
+      ]
+    },
+    "all_pixels_outside_clock_match": true
+  },
+  "control_after": {
+    "elapsed_us": 3167856,
+    "peak_js_bytes": 2454928,
+    "module_bytes": 240452,
+    "compiled_sha256": null,
+    "world_kib": 710.1,
+    "world_limit_kib": 768,
+    "engine": "native"
+  }
+}
