@@ -129,3 +129,51 @@ Start in `05-replay.mjs`, `06-semantic.mjs`, `09-damage.c` and the shared compos
 ### Technical details
 
 Two independent maps of 396 cells cover all board roles. Admission reserves a disjoint cell for food, so cap 395. Two raw records can occupy 1,600 bytes; the validation occupancy array adds 396 bytes and the reconstructed JS objects cost additional host/runtime-specific memory. Full source-body totals over 222 publications were 164,581 bytes; the complete raw candidate transmitted 7,732. Wrapped candidate bytes, which matter on the existing JSON channel, were 26,790 against 173,461 for the enveloped control.
+
+## Step 3. Reproduce the full run, measure host QuickJS heap and review the article
+
+I ran the published command in a fresh directory. The resulting original-source hashes, event trace and RGB565 identities matched the archival run byte for byte. The separate System study had built an allocator meter for precisely the QuickJS runtime used by the shared board capsule, so I repeated the 12-state capsule comparison on that host meter while the director prepared the physical image.
+
+### Prompt Context
+
+See Step 1. **Commit (code)** `0c42703` contains the reproducers, raw observations and full-pixel checks.
+
+### What I did
+
+Ran `bash scripts/11-run.sh /tmp/picocalc-snake-independent` from the repository root using the full ticket path. Compared `events.json`, `replay.json` and `pixels.json` with the first run. Ran `15-host-quickjs.sh` to launch five fresh 64-bit host QuickJS processes per arm (one complete 12-state block per process). Captured Opus's report and diary, checked each against the receipt, source and stage boundaries, and prepared specific factual corrections for final editing.
+
+### Why
+
+A whole-arm high-water observation is distinct from a bound on the decoder's private buffers. Running identical fixture code in each fresh runtime holds fixture residency constant. The 12 cases match the physical capsule, while the V8 experiment samples a wider moving trace.
+
+### What worked
+
+The same resident charge, 260,992 bytes, was present after capsule initialization and GC for all arms. Above this baseline, the host allocator charged 12,864 bytes at peak for J and 3,888 for either complete semantic form. Each arm returned checksum 463. The full host replay reproduced the original three durable identity files exactly.
+
+### What didn't work
+
+The host draft described the framebuffer commit and display SPI delivery in one step, and used placeholders for the food and best words in the worked binary record. Source review separated the operations. Reading the exact seeded turn supplied food index 112, best zero and the full 20 bytes `0101050070000a000000cd00b700b600b500b400`. The researcher's diary also received a correction to the turn order leading into self-collision: down, left, up.
+
+### What I learned
+
+The current playable configuration compiles Snake and the compositor with CJI. The physical QuickJS capsule will evaluate the source-side algorithm and its candidate receiver on the board. It does not reproduce the native CJI app-to-compositor delivery.
+
+### What was tricky to build
+
+Measured peak includes the benchmark call and receipt in one runtime. The 9,231-byte capsule and its 27,964-byte host QuickJS bytecode carry all three arms and their fixtures; these are not the marginal install costs of an application view. Peak applied to the specific 12-state fixture, not to a worst-case 395-segment record.
+
+### What warrants a second pair of eyes
+
+Fresh-runtime allocation accounting is Linux malloc usable size plus eight bytes per block. The reported median is above a measured all-arms resident heap. Neither that resident baseline nor its peak is an on-device heap measurement.
+
+### What should be done in the future
+
+Incorporate the director's independent board timing and reconcile the article's scope and worked example before handing over the publication.
+
+### Code review instructions
+
+Compare `15-host-quickjs.sh`, the System ticket's `14-host-heap.c`, `various/host-quickjs.json` and the Snake capsule. Verify that each initial state hashes to the committed reference and use the original report and diary receipts to distinguish authored text from later amendments.
+
+### Technical details
+
+The host timing results in this step use one fresh QuickJS process per arm/trial. The paired raster results in Step 2 use the actual C fill and commit routines. Both are independent of the Node timing series.

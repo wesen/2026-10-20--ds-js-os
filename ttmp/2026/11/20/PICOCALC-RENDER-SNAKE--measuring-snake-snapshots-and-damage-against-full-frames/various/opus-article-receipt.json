@@ -1,0 +1,13 @@
+{
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "effort": "high",
+  "turns": 1,
+  "stop": "end_turn",
+  "durationMs": 189899,
+  "promptSha256": "072dc2ef66bea3ce453930ede2d66219d64a3c39d8615c6ec0d466cc77f74ddb",
+  "textSha256": "5b24a025185b61dcd73ffe4812c4b78702c50fabacef2cf2bae4e408124ee07a",
+  "output": "01-what-moves-when-a-snake-advances-one-cell.md",
+  "toolAccess": false
+}

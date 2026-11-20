@@ -1,0 +1,284 @@
+{
+  "compile": {
+    "raw": [
+      {
+        "source": 9231,
+        "bytecode": 27964
+      },
+      {
+        "source": 9231,
+        "bytecode": 27964
+      },
+      {
+        "source": 9231,
+        "bytecode": 27964
+      },
+      {
+        "source": 9231,
+        "bytecode": 27964
+      },
+      {
+        "source": 9231,
+        "bytecode": 27964
+      }
+    ]
+  },
+  "J": {
+    "raw": [
+      {
+        "resident": 260992,
+        "peak": 273856,
+        "highWaterAboveStart": 12864,
+        "result": {
+          "arm": "J",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 240.22799682617188,
+          "receiverUs": 121.8699951171875,
+          "checksum": 463,
+          "encodedUnits": 7508,
+          "bytes": 7613
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 273856,
+        "highWaterAboveStart": 12864,
+        "result": {
+          "arm": "J",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 256.6419982910156,
+          "receiverUs": 120.87599182128906,
+          "checksum": 463,
+          "encodedUnits": 7508,
+          "bytes": 7613
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 273856,
+        "highWaterAboveStart": 12864,
+        "result": {
+          "arm": "J",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 210.06700134277344,
+          "receiverUs": 104.61099243164062,
+          "checksum": 463,
+          "encodedUnits": 7508,
+          "bytes": 7613
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 273856,
+        "highWaterAboveStart": 12864,
+        "result": {
+          "arm": "J",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 247.76100158691406,
+          "receiverUs": 122.18299865722656,
+          "checksum": 463,
+          "encodedUnits": 7508,
+          "bytes": 7613
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 273856,
+        "highWaterAboveStart": 12864,
+        "result": {
+          "arm": "J",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 214.2080078125,
+          "receiverUs": 105.13699340820312,
+          "checksum": 463,
+          "encodedUnits": 7508,
+          "bytes": 7613
+        }
+      }
+    ],
+    "median": {
+      "resident": 260992,
+      "peak": 273856,
+      "highWaterAboveStart": 12864,
+      "producerUs": 240.22799682617188,
+      "receiverUs": 120.87599182128906
+    }
+  },
+  "SJ": {
+    "raw": [
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "SJ",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 56.087005615234375,
+          "receiverUs": 76.73500061035156,
+          "checksum": 463,
+          "encodedUnits": 1191,
+          "bytes": 1191
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "SJ",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 55.85600280761719,
+          "receiverUs": 69.31199645996094,
+          "checksum": 463,
+          "encodedUnits": 1191,
+          "bytes": 1191
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "SJ",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 56.98799133300781,
+          "receiverUs": 69.15000915527344,
+          "checksum": 463,
+          "encodedUnits": 1191,
+          "bytes": 1191
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "SJ",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 48.95100402832031,
+          "receiverUs": 60.05699157714844,
+          "checksum": 463,
+          "encodedUnits": 1191,
+          "bytes": 1191
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "SJ",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 56.60099792480469,
+          "receiverUs": 68.51499938964844,
+          "checksum": 463,
+          "encodedUnits": 1191,
+          "bytes": 1191
+        }
+      }
+    ],
+    "median": {
+      "resident": 260992,
+      "peak": 264880,
+      "highWaterAboveStart": 3888,
+      "producerUs": 56.087005615234375,
+      "receiverUs": 69.15000915527344
+    }
+  },
+  "T": {
+    "raw": [
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "T",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 50.490997314453125,
+          "receiverUs": 89.92500305175781,
+          "checksum": 463,
+          "encodedUnits": 314,
+          "bytes": 314
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "T",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 49.277008056640625,
+          "receiverUs": 89.25399780273438,
+          "checksum": 463,
+          "encodedUnits": 314,
+          "bytes": 314
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "T",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 58.27899169921875,
+          "receiverUs": 88.84300231933594,
+          "checksum": 463,
+          "encodedUnits": 314,
+          "bytes": 314
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "T",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 52.14900207519531,
+          "receiverUs": 87.6820068359375,
+          "checksum": 463,
+          "encodedUnits": 314,
+          "bytes": 314
+        }
+      },
+      {
+        "resident": 260992,
+        "peak": 264880,
+        "highWaterAboveStart": 3888,
+        "result": {
+          "arm": "T",
+          "reps": 1,
+          "count": 12,
+          "producerUs": 49.170989990234375,
+          "receiverUs": 88.50801086425781,
+          "checksum": 463,
+          "encodedUnits": 314,
+          "bytes": 314
+        }
+      }
+    ],
+    "median": {
+      "resident": 260992,
+      "peak": 264880,
+      "highWaterAboveStart": 3888,
+      "producerUs": 50.490997314453125,
+      "receiverUs": 88.84300231933594
+    }
+  }
+}
