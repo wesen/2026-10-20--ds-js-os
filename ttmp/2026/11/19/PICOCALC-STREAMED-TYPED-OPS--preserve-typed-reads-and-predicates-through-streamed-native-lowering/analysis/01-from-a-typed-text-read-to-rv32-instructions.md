@@ -4,8 +4,8 @@ Ticket: PICOCALC-STREAMED-TYPED-OPS
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: analysis
 Intent: long-term
 Owners: []
@@ -81,6 +81,20 @@ The observation compiler and staged control matched the full native images, entr
 Editor delivered 35,133 numeric cells to the staged lowerer. The observation stream carried 33,223, and the direct-read stream carried 33,108. The largest Editor function still took 2,477–2,479 cells in all versions. The compiler allocates a projection array for a function that contains typed events. Its high-water allocation also includes retained native words, call fixups and the final ELF. Peak QuickJS bytes measure the combined allocations.
 
 The test fixture exercises high code units and both receiver kinds. An index computation updates a record before a read. A short-circuited expression skips that call and the potential read trap. The deepest expressions carry ten values around the read. Across 126 runs, all lanes matched the Wasm return value, trap status and memory contents. Forty-six runs trapped in each lane.
+
+## What the physical trial isolates
+
+The ESP32-P4 compiled each lane six times per application on each of two boots. Each compile created a fresh QuickJS runtime. The harness balanced the lane order, compared every returned module to its host hash, and confirmed that all three native worlds loaded after restoring the backed-up image. The table gives the two boots' paired median changes relative to staged. The staged boot medians are rounded to milliseconds.
+
+| World | Staged compile time | Observation time change | Direct time change | Observation peak heap change | Direct peak heap change |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Files | 278 / 278 ms | +6.23% / +5.71% | +4.49% / +3.63% | +2.58% / +2.58% | +2.56% / +2.56% |
+| Agenda | 791 / 787 ms | +4.53% / +5.18% | +2.17% / +2.37% | +1.00% / +1.00% | +0.93% / +0.93% |
+| Editor | 2,949 / 2,926 ms | +6.18% / +6.79% | +3.42% / +4.12% | +0.42% / +0.42% | −1.09% / −1.09% |
+
+The byte-identical observation arm increased compile time across all three workloads. Direct lowering recovered part of that cost and cut Editor's peak by about 15.7 kB versus staged. Editor's direct compile still took an additional 101 and 120 ms in the paired blocks.
+
+The native test ran 16 timed batches of 128 calls per lane on each boot at 360 MHz. Files compared two 91-unit strings whose last units differ. The direct version went from about 4,879 to 3,959 cycles per call, an 18.9% reduction on both boots. Agenda's weekday calculation stayed near 538 cycles per call. It provided a comparison workload that does not exercise the text read. The trial measured Editor's compilation and emitted words, and exercised its cold loading. Guest-cycle timing covered the Files and Agenda functions. [Physical receipt](../various/physical.json), [paired measurement summary](../various/physical-summary.json).
 
 ## Composing with two other backend changes
 

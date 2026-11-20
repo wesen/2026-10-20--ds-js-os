@@ -4,8 +4,8 @@ Ticket: PICOCALC-STREAMED-TYPED-OPS
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: design-doc
 Intent: long-term
 Owners: []

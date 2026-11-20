@@ -4,8 +4,8 @@ Ticket: PICOCALC-STREAMED-TYPED-OPS
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: index
 Intent: long-term
 Owners: []
@@ -28,3 +28,6 @@ The staged RV32 compiler is the control for an experiment in retaining text read
 - [Investigation diary](reference/01-streamed-typed-operations-investigation-diary.md)
 - [Host qualification](various/host.json)
 - [Firmware compiler oracle](various/board-oracle.json)
+- [Physical qualification](various/physical.json)
+- [Paired physical measurements](various/physical-summary.json)
+- [reMarkable cloud delivery](various/remarkable-delivery.json)

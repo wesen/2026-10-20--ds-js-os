@@ -4,8 +4,8 @@ Ticket: PICOCALC-STREAMED-TYPED-OPS
 Status: active
 Topics:
     - picocalc
-    - compiler
-    - research
+    - native
+    - performance
 DocType: reference
 Intent: long-term
 Owners: []
@@ -122,3 +122,103 @@ Run `node scripts/06-verify.mjs <staged-directory>`. Check the compiled guest im
 ### Technical details
 
 The P4 app image SHA-256 is `a537fb102936269ae10d5f8b8fb02fbcd826566c2830a0b545249b27eee2ef90`. The observed Editor ELF SHA-256 equals the staged control, `c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439`.
+
+## Step 3. Measure retention and direct reads on two physical boots
+
+The observation lane preserved every code hash and cost additional compile time on each application. The direct lane recovered part of that time, reduced the emitted code, and lowered peak heap in Editor. Files provided a guest workload that repeatedly reaches the read.
+
+### Prompt context
+
+See Step 1. The experiment implementation and host evidence were committed at `4397eb7` before the physical results.
+
+### What I did
+
+- Recomputed the paired statistics from the supervisor's physical receipt with the existing lab summarizer and compared its output byte for byte.
+- Verified 54 cold compile rows and 96 timed guest batches per boot. The timer frequency was 360 MHz and all 108 linked-module hashes agreed with the host oracle.
+- Verified native Files, Agenda and Editor status after restoring the original firmware. Appended the paired effects to the newcomer guide and the standalone article.
+
+### Why
+
+The observation arm measures carrying and projecting typed information while the machine code is fixed. The direct arm changes the fast path while retaining the language's bounds, unsigned width and evaluation semantics.
+
+### What worked
+
+The observation Editor compiles took 6.18% and 6.79% more time than the staged arm, with 0.42% more peak QuickJS memory on each boot. The direct Editor compiles took 3.42% and 4.12% more time and used 1.09% less peak QuickJS memory. The Files text-comparison guest used 18.9% fewer cycles in both boots. Agenda weekday cycles stayed within 0.01% of control.
+
+### What did not work
+
+There was no failed bench row in the two completed captures. The earlier IDF build and profiling harness did not measure interactive Editor guest cycles. All reported guest cycle changes apply to the isolated Files and Agenda functions.
+
+### What I learned
+
+A representation can occupy fewer cells and still make cold compilation slower, especially when projecting into an additional per-function array. Direct lowering can buy a lower peak or faster guest while leaving a positive compile-time cost.
+
+### What was tricky to build
+
+Rotating the lane order and checking the exact ELF hash made the paired comparison independent of boot placement and a mistaken compiler selection.
+
+### What warrants a second pair of eyes
+
+Compare the two boots separately. Check that regressions and improvements are based on matched blocks rather than differences between separately pooled medians.
+
+### What should be done in the future
+
+The next architectural experiment is direct predicate consumption, which would test whether the projection array can be avoided on functions carrying both operation kinds.
+
+### Code review instructions
+
+Read `various/physical-summary.json` and inspect the corresponding per-block data in `various/physical.json`. The experiment uses `base` for the frozen staged lane.
+
+### Technical details
+
+The standard Editor module stayed at 240,452 bytes under the same reservation. Direct lowering removed 367 instructions, or 1,468 bytes of occupied native text.
+
+## Step 4. Deliver the completed intern guide
+
+The final guide includes both boot measurements and the guest workload boundaries. The reMarkable cloud accepted the guide in the lab's dated folder. The standalone Obsidian article was prepared with the same measurements.
+
+### Prompt context
+
+See Step 1. The requested delivery pairs a self-contained article with the ticket's implementation and guide.
+
+### What I did
+
+- Uploaded the final guide as `From_a_Typed_Text_Read_to_RV32_Instructions.pdf` to `/ai/2026/11/19/PICOCALC-COMPILER-LAB2`.
+- Retained the literal cloud delivery acknowledgment in `various/remarkable-delivery.json`.
+- Prepared the finished vault article for publication as a separate document.
+
+### Why
+
+The guide explains how to reproduce and verify the experiment. The standalone article explains how to design a byte-equivalent compiler comparison in another project.
+
+### What worked
+
+`remarquee upload md` returned `OK: uploaded` and the requested destination.
+
+### What did not work
+
+Automatic approval review rejected the scoped `git -C <vault> push origin HEAD:main` transaction because it did not find trusted authorization in the child context for publishing to the external vault repository's main branch. The transaction did not run. The completed article remains available for the supervisor's authorized publication.
+
+### What I learned
+
+The publication receipt is separate from the trial evidence and identifies the exact file delivered.
+
+### What was tricky to build
+
+The article must distinguish fixed-reservation ELF size from occupied text, and separate cold compile effects from Files guest cycles.
+
+### What warrants a second pair of eyes
+
+Verify the vault publication revision and article link when available.
+
+### What should be done in the future
+
+Record the vault revision after publication.
+
+### Code review instructions
+
+Read the guide's physical section against `various/physical-summary.json`.
+
+### Technical details
+
+Cloud delivery confirms acceptance of the PDF by reMarkable. Physical device synchronization was outside this check.
