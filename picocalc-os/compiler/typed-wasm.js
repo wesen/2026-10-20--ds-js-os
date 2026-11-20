@@ -25,7 +25,8 @@ const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
-    "else", "for", "break", "enum", "match", "type", "distinct"]);
+    "else", "for", "break", "enum", "match", "type", "distinct",
+    "async", "await"]);
 
 function unsigned(value) {
     const bytes = [];
@@ -502,8 +503,9 @@ class FunctionEmitter {
         const id = lex.ident();
         const annotation = lex.accept(":") ? lex.type(this.records, this.enums, this.distinct) : null;
         if (mutable && annotation !== null && lex.isGeneratedLocal?.(id) && lex.token.value === ";") {
-            this.emitConst(0);
-            this.emitIndex(OP.set, this.local(id, annotation, true));
+            // Every continuation path reaches the original initializer or a reload
+            // before reading this slot, including on targets with uninitialized frames.
+            this.local(id, annotation, true);
             return;
         }
         lex.expect("=");
@@ -800,10 +802,30 @@ function parseDeclarations(lex) {
     return {records, enums, distinct};
 }
 
-function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures) {
-    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
+function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures, options) {
     if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
+    const lowered = globalThis.typedAsync?.rewrite(source, imported);
+    try {
+        const program = emitFunctions(lowered?.source ?? source, functionBase, imported,
+            numericOperands, onFunction, onSignatures, lowered?.prefix);
+        if (lowered) {
+            program.asyncLayout = lowered.layout;
+            if (options?.asyncSource) program.asyncSource = lowered.source;
+        }
+        return program;
+    } catch (error) {
+        throw lowered?.remap(error) ?? error;
+    }
+}
+
+function emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, generatedPrefix) {
+    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     const lex = new Lexer(source);
+    if (generatedPrefix) {
+        lex.isGeneratedLocal = name => name.startsWith(generatedPrefix + "local_");
+        lex.generatedWordType = name => name.startsWith(generatedPrefix + "word_")
+            ? name.slice(generatedPrefix.length + "word_".length) : null;
+    }
     const declared = new Map(imported.map(fn => [fn.name, fn]));
     const {records, enums, distinct} = parseDeclarations(lex);
     for (const name of distinct) if (declared.has(name)) lex.fail("duplicate imported function " + name);
@@ -832,8 +854,9 @@ function enumLayouts(enums) {
     return Object.fromEntries(Array.from(enums, ([name, members]) => [name, Object.fromEntries(members)]));
 }
 
-function compile(source) {
-    const {functions, records, enums, distinct} = compileFunctions(source, 0);
+function compile(source, options) {
+    const {functions, records, enums, distinct, asyncLayout, asyncSource} =
+        compileFunctions(source, 0, [], undefined, false, undefined, undefined, options);
     const headers = functions.map(signature);
     const names = functions.map((fn, i) => [
         ...vec(Array.from(fn.name, char => char.charCodeAt(0))), 0, ...unsigned(i),
@@ -852,6 +875,8 @@ function compile(source) {
         enums: enumLayouts(enums),
         distinct: [...distinct],
         signatures: functions.map(({ name, params, result }) => ({ name, params, result })),
+        ...(asyncLayout && {asyncLayout}),
+        ...(asyncSource && {asyncSource}),
     };
 }
 
@@ -930,7 +955,7 @@ function encodeByteVector(elements) {
 
 // The trusted runtime owns memory, host imports, and world exports. Its
 // direct calls to the exported slot keep their original function index.
-function linkWorld(source, runtime, entries, imports = [], maxSourceLength) {
+function linkWorld(source, runtime, entries, imports = [], maxSourceLength, options) {
     const reader = new WasmReader(runtime);
     const header = reader.take(8);
     if (header.join(",") !== "0,97,115,109,1,0,0,0") throw new SyntaxError("invalid Wasm runtime header");
@@ -970,7 +995,8 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength) {
             throw new SyntaxError("Wasm runtime import signature mismatch for " + fn.name);
         return {...fn, index};
     });
-    const {functions, records, enums, distinct} = compileFunctions(source, base, imported, maxSourceLength);
+    const {functions, records, enums, distinct, asyncLayout, asyncSource} =
+        compileFunctions(source, base, imported, maxSourceLength, false, undefined, undefined, options);
     for (const entry of entries) {
         const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
         const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
@@ -992,7 +1018,8 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength) {
     for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
     return {bytes: encodeModule(header, sections), records: recordLayouts(records),
         enums: enumLayouts(enums), distinct: [...distinct],
-        signatures: functions.map(({name, params, result}) => ({name, params, result}))};
+        signatures: functions.map(({name, params, result}) => ({name, params, result})),
+        ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
 
 function invoke(exports, signature, args) {

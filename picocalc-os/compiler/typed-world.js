@@ -59,15 +59,21 @@
         }
     }
 
-    globalThis.compileTypedWorld = function(source, reactor) {
-        const program = typedWasm.linkWorld(source, reactor, entries, imports, maxSourceLength);
+    function result(bytes, {asyncLayout, asyncSource}) {
+        if (asyncLayout) bytes.asyncLayout = asyncLayout;
+        if (asyncSource) bytes.asyncSource = asyncSource;
+        return bytes;
+    }
+
+    globalThis.compileTypedWorld = function(source, reactor, options) {
+        const program = typedWasm.linkWorld(source, reactor, entries, imports, maxSourceLength, options);
         validate(program);
-        return program.bytes;
+        return result(program.bytes, program);
     };
 
     globalThis.compileTypedWorldRv32 = function(source, reactor, options) {
         const program = typedRv32.compile(source, imports, maxSourceLength, options);
         validate(program);
-        return typedRv32.linkSlot(program, reactor, entries);
+        return result(typedRv32.linkSlot(program, reactor, entries), program);
     };
 })();

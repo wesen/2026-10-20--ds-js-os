@@ -273,8 +273,8 @@ function compile(source, imports = [], maxSourceLength, options) {
     }
 
     const stream = options?.streamFunctions ?? true;
-    const {functions, records, enums, distinct} = typedWasm.compileFunctions(source, imported.length, imported,
-        maxSourceLength, true, stream ? consume : undefined, declare);
+    const {functions, records, enums, distinct, asyncLayout, asyncSource} = typedWasm.compileFunctions(source,
+        imported.length, imported, maxSourceLength, true, stream ? consume : undefined, declare, options);
     if (lowerError) throw lowerError;
     if (!stream) {
         for (const fn of functions) lower(fn);
@@ -306,7 +306,8 @@ function compile(source, imports = [], maxSourceLength, options) {
     }
     return {image, entries, records: typedWasm.recordLayouts(records), enums: typedWasm.enumLayouts(enums),
         distinct: [...distinct], relocations, importCount: imports.length,
-        signatures: functions.map(({name, params, result}) => ({name, params, result}))};
+        signatures: functions.map(({name, params, result}) => ({name, params, result})),
+        ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
 
 // The bundled, already linked SDK reactor reserves this area in executable
