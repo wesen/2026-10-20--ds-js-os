@@ -173,3 +173,43 @@ Read `05-device.py` and the three receipt types. [Physical timing receipt](../va
 ### Technical details
 
 The compile probe used CPU1 with the device's 4 MiB QuickJS limit, with each test launched in a new runtime under the same firmware boot. The writer used CPU1 at 360 MHz, flash-mapped text and a 64-byte-aligned PSRAM destination. This report keeps Flash, PSRAM ELF loading, compilation, and end-to-end game timing distinct.
+
+## Step 4 — Review the commissioned account against the measured artifacts
+
+The Opus High lead received a scoped, tool-free description and the aggregate results after both board probes succeeded. It returned the long-form manuscript. I preserved that draft and edited the published version against the program source, dump and receipt.
+
+### Prompt Context
+
+**Previous prompt** — See Step 2. The final article must distinguish generated extent, the fixed linked file and actual device results.
+
+### What I did
+
+- Replaced the draft's conflation of the 61,022-byte Typed game file with the 16,316-byte painter output.
+- Clarified that a failing range check prevents literal writes while preserving earlier evaluation side effects.
+- Used the emitter's actual signed-low-bit calculation in the code example and replaced typed C aliasing in the word-copy sketch with machine pseudocode.
+- Removed an inferential test that required exchangeability and replaced it with the observed ranges for all arms.
+- Kept instruction-model counts separate from measured flash cycles and linked the exact region hashes.
+
+### Why
+
+The commissioned draft had enough narrative detail to teach the mechanism, but readers need measured scope and correct execution order before acting on a result.
+
+### What worked
+
+The final article gives reproducible code/data accounting, both physical timing boundaries and the limitations of a fixed slot. It credits the researcher and preserves the original draft alongside the editorially checked text.
+
+### What didn't work
+
+The draft called the Chess input a JavaScript source written to the buffer. The staged game and exact source-writer check establish the distinct two sizes. The draft also said the word-arm ranges were unavailable, though the raw receipt has all five samples per arm.
+
+### What I learned
+
+A large out-of-line data transformation can improve compile time and used image extent directly. A small halfword loop can still have more dynamic instructions. The negative host model and fast flash microbenchmark answer different questions.
+
+### What warrants a second pair of eyes
+
+Compare the linked-reservation paragraphs and the physical timing labels against the actual test. A good interpretation distinguishes those measurements from a live-loaded candidate PSRAM execution.
+
+### Code review instructions
+
+Start at the checked article and follow the source and hardware evidence links. [Final article](../analysis/02-literal-data.md) [Commissioned draft](../sources/literal/opus-high-article.md)
