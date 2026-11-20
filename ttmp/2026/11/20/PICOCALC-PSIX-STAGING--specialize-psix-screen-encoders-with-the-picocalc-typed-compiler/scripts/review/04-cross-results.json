@@ -1,0 +1,10 @@
+{
+  "observedCases": 60,
+  "observedHits": 56,
+  "observedFallbacks": 4,
+  "observedInstallations": 4,
+  "staticCases": 294,
+  "compiledWasmModules": 7,
+  "capacityChecks": 294,
+  "rejectedAmbiguousSchemas": 2
+}

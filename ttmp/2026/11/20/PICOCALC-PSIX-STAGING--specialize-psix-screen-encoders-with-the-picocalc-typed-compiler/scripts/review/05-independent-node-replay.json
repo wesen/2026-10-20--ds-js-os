@@ -1,0 +1,139 @@
+{
+  "engine": "v24.18.0",
+  "completeFrames": 427,
+  "completeBytes": 581602,
+  "arms": [
+    "generic",
+    "fixed",
+    "adaptive-cold",
+    "adaptive-prefix"
+  ],
+  "replays": {
+    "sysmon-holdout": {
+      "frames": 45,
+      "streamMedianUs": [
+        3976.26,
+        3147.34,
+        3347.59,
+        2946.34
+      ],
+      "hits": [
+        42,
+        39,
+        43
+      ]
+    },
+    "chess-holdout": {
+      "frames": 24,
+      "streamMedianUs": [
+        1422.7,
+        1484.62,
+        2257.56,
+        2209.96
+      ],
+      "hits": [
+        0,
+        6,
+        7
+      ]
+    },
+    "snake-holdout": {
+      "frames": 118,
+      "streamMedianUs": [
+        3481.61,
+        4221.87,
+        3302.72,
+        3344.0
+      ],
+      "hits": [
+        0,
+        106,
+        107
+      ]
+    },
+    "editor-holdout": {
+      "frames": 22,
+      "streamMedianUs": [
+        999.12,
+        741.58,
+        1025.16,
+        975.23
+      ],
+      "hits": [
+        15,
+        13,
+        15
+      ]
+    },
+    "system-complete-replay": {
+      "frames": 100,
+      "streamMedianUs": [
+        7603.22,
+        7579.02,
+        6908.46,
+        6892.5
+      ],
+      "hits": [
+        0,
+        83,
+        83
+      ]
+    },
+    "all-application-holdouts": {
+      "frames": 209,
+      "streamMedianUs": [
+        10198.17,
+        10073.05,
+        10686.77,
+        11082.2
+      ],
+      "hits": [
+        42,
+        157,
+        161
+      ]
+    },
+    "independent-keys": {
+      "frames": 26,
+      "streamMedianUs": [
+        1277.58,
+        1313.2,
+        1972.3,
+        2138.32
+      ],
+      "hits": [
+        2,
+        4,
+        5
+      ]
+    },
+    "fixed-shape-control": {
+      "frames": 40,
+      "streamMedianUs": [
+        492.33,
+        360.72,
+        365.24,
+        354.14
+      ],
+      "hits": [
+        40,
+        39,
+        40
+      ]
+    },
+    "shape-churn-control": {
+      "frames": 72,
+      "streamMedianUs": [
+        694.27,
+        750.17,
+        1388.6,
+        1435.29
+      ],
+      "hits": [
+        24,
+        0,
+        0
+      ]
+    }
+  }
+}

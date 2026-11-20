@@ -1,0 +1,131 @@
+{
+  "validCases": 299,
+  "invalidCases": 6,
+  "examples": [
+    {
+      "label": "zz",
+      "score": 524287,
+      "bytes": 72,
+      "dictionaryCount": 5,
+      "root": 44,
+      "keyIds": [
+        0,
+        1,
+        2
+      ],
+      "labelId": 3,
+      "scoreTag": 3,
+      "tail": 61
+    },
+    {
+      "label": "aa",
+      "score": 524287,
+      "bytes": 72,
+      "dictionaryCount": 5,
+      "root": 44,
+      "keyIds": [
+        1,
+        2,
+        3
+      ],
+      "labelId": 0,
+      "scoreTag": 3,
+      "tail": 61
+    },
+    {
+      "label": "label",
+      "score": 524287,
+      "bytes": 68,
+      "dictionaryCount": 4,
+      "root": 40,
+      "keyIds": [
+        0,
+        1,
+        2
+      ],
+      "labelId": 0,
+      "scoreTag": 3,
+      "tail": 57
+    },
+    {
+      "label": "lengthy",
+      "score": 524287,
+      "bytes": 77,
+      "dictionaryCount": 5,
+      "root": 49,
+      "keyIds": [
+        0,
+        2,
+        3
+      ],
+      "labelId": 1,
+      "scoreTag": 3,
+      "tail": 66
+    },
+    {
+      "label": "aa",
+      "score": 524288,
+      "bytes": 80,
+      "dictionaryCount": 5,
+      "root": 44,
+      "keyIds": [
+        1,
+        2,
+        3
+      ],
+      "labelId": 0,
+      "scoreTag": 4,
+      "tail": 69
+    },
+    {
+      "label": "",
+      "score": 7,
+      "bytes": 68,
+      "dictionaryCount": 4,
+      "root": 40,
+      "keyIds": [
+        0,
+        1,
+        2
+      ],
+      "labelId": 3,
+      "scoreTag": 3,
+      "tail": 57
+    },
+    {
+      "label": "𐀀",
+      "score": 7,
+      "bytes": 74,
+      "dictionaryCount": 5,
+      "root": 46,
+      "keyIds": [
+        0,
+        1,
+        2
+      ],
+      "labelId": 4,
+      "scoreTag": 3,
+      "tail": 63
+    }
+  ],
+  "staleBody": {
+    "oracleLabel": "aa",
+    "admittedLabel": 524287,
+    "admittedKeys": [
+      "aa",
+      "label",
+      "score"
+    ],
+    "wireDifferences": 4
+  },
+  "utfOrder": {
+    "utf16": [
+      "𐀀",
+      ""
+    ],
+    "utf8": [
+      "",
+      "𐀀"
+    ]
+  }
+}
