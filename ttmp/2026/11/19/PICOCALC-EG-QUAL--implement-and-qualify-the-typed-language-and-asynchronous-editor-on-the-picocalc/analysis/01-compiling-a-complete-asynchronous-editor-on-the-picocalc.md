@@ -78,6 +78,8 @@ The independent host frontend-only test missed the professor's historical absolu
 
 [Original physical trials](../various/physical-original.json) · [E5 native boots](../various/physical-e5.json)
 
+A separate trial repeated the professor's fifteen-sample frontend benchmark on the same pre-E Editor source, pinning all three compiler processes to host CPU 7. The old frontend took 44.73 ms, the staged native token index took 39.28 ms, and reusing token objects at two internal call sites brought that to 35.15 ms. This last figure is 21.4% below the current control and 3.75 ms above the professor's absolute 31.4 ms ceiling. These results apply to parsing, checking and emitting Wasm function bodies for the handwritten source. The following physical experiment includes the generated continuation code and native linking. [Runner and recorded samples](../../../20/PICOCALC-LEXICAL-INDEX--index-typed-source-once-for-the-cold-picocalc-compiler/scripts/12-run-professor-frontend.sh)
+
 ## Reading the physical measurements
 
 The device compiler reports microseconds from the cold compile call, peak QuickJS allocator bytes and output module size. Each trial selects a known firmware image and reboots. For the small interactive workflow we subtract the Editor's starting CPU count from its ending count. This measures all Editor turns while typing, saving, searching, previewing and canceling an edit. It excludes time charged to Files, the compositor and bus drivers. The two captured images show Find and preview. For the strict image comparison the two firmwares receive the same wall time from the port. All timings and timeout decisions still use the monotonic hardware counter.

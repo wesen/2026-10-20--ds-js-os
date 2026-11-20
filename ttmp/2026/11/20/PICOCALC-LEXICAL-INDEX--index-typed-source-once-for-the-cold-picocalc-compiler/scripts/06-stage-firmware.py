@@ -20,6 +20,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("tree",type=Path)
     parser.add_argument("--reuse-token", action="store_true", help="reuse tokens only at non-retaining compiler call sites")
+    parser.add_argument("--indexed-prepass",action="store_true",help="use exact token records when scanning for asynchronous operations")
     args=parser.parse_args()
     tree=args.tree.resolve()
     if tree.is_relative_to(REPO): raise ValueError("use a detached checkout outside the product tree")
@@ -36,6 +37,11 @@ def main():
     subprocess.run(["node",HERE/"02-index-overlay.mjs",compiler],check=True)
     if args.reuse_token:
         subprocess.run(["node",HERE/"10-reuse-token-overlay.mjs",compiler.parent],check=True)
+    if args.indexed_prepass:
+        if not args.reuse_token:
+            raise ValueError("the qualified prepass arm includes internal token reuse")
+        patch, = (REPO/"ttmp/2026/11/19").glob("PICOCALC-LANGUAGE-E--*/scripts/14-indexed-prepass-overlay.mjs")
+        subprocess.run(["node",patch,compiler.parent],check=True)
     print(json.dumps({str(p.relative_to(tree)):hashlib.sha256(p.read_bytes()).hexdigest()
                       for p in [source,header,port/"typed_p4.c",port/"CMakeLists.txt",compiler,
                                 compiler.with_name("typed-async.js")]},indent=2))

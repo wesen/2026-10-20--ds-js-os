@@ -34,9 +34,9 @@ The host check invokes `compileTypedWorldRv32` once per compiler and compares ev
 Capture complete boot logs from the paired phase-probed native images. For each recorded compile keep the existing `editor compile source=bundle status=ok ...` line and the following `eg_compile_phase_v1 {...}` line. The raw `phase_us` and `visits` arrays use the manifest's phase order. Give the summary script one or more matched boot logs for each lane.
 
 ```sh
-python3 "$ticket/scripts/20-summarize-phases.py" \
-  --pre-g-manifest "$wave/phase-pre-g/manifest.json" --pre-g-logs /path/to/pre-g/boot*.log \
-  --g4-manifest "$wave/phase-g4/manifest.json" --g4-logs /path/to/g4/boot*.log
+python3 "$ticket/scripts/20-summarize-phases.py" --last-per-log \
+  --pre-g-manifest "$wave/phase-pre-g/manifest.json" --pre-g-logs "$wave"/phase-cold/phase-pre-g/boot-[123].log \
+  --g4-manifest "$wave/phase-g4/manifest.json" --g4-logs "$wave"/phase-cold/phase-g4/boot-[123].log
 ```
 
 The parser checks the raw integral phase sum against the exact compile total per sample. It cross-checks the non-instrumented manifests and reactor digests across the two builds, and checks the expected streaming and rewrite visits. The group mean deltas add to the mean total change. Per-phase medians describe the individual phase distributions, and the total's median is calculated from the untouched sample totals.
