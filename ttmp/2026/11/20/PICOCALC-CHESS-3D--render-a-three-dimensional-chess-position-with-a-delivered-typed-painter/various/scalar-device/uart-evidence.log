@@ -1,0 +1,17 @@
+i2c0 held between transactions; reboot or flash now
+i2c0 held between transactions; reboot or flash now
+chess3d-target=pie source-bytes=7093 source-fnv=e3c9dfb8 linked-bytes=17456 linked-fnv=d5a226be
+panel: memory keys
+panel capture active
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":1064648,"relocate_us":741,"native_us":488,"raster_us":0,"image_bytes":17456}
+#END 1f17143e 4869
+{"panelCRC":"9bfb0fa8","faults":0,"windows":19,"bytes":585158,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":1,"rejects":0,"compile_us":1064648,"relocate_us":741,"native_us":488,"raster_us":18090,"image_bytes":17456}
+#END b3c7e38d 4869
+{"panelCRC":"372bf81b","faults":0,"windows":21,"bytes":586584,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":2,"calls":2,"paints":2,"rejects":0,"compile_us":1064648,"relocate_us":741,"native_us":592,"raster_us":18049,"image_bytes":17456}
+#END e14e0a05 4869
+{"panelCRC":"65a21193","faults":0,"windows":22,"bytes":589104,"remaining":0}
+{"sources":1,"compiles":1,"installed":true,"packets":3,"calls":3,"paints":3,"rejects":0,"compile_us":1064648,"relocate_us":741,"native_us":593,"raster_us":18070,"image_bytes":17456}
+i2c0 held between transactions; reboot or flash now
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":1012898,"relocate_us":756,"native_us":129,"raster_us":0,"image_bytes":17456}
