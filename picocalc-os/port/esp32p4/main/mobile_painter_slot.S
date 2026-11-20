@@ -1,3 +1,7 @@
+#ifndef MOBILE_PAINTER_NATIVE_SLOT_BYTES
+#define MOBILE_PAINTER_NATIVE_SLOT_BYTES 16384
+#endif
+
     .section .text.painter,"ax",@progbits
     .balign 4
 .Lslot:
@@ -9,6 +13,6 @@
     .type mobile_painter_generated,@function
 mobile_painter_generated:
     .word 0x00100073
-    .space 16384 - (.-.Lslot)
+    .space MOBILE_PAINTER_NATIVE_SLOT_BYTES - (.-.Lslot)
 .Lend:
     .size mobile_painter_generated, .Lend-mobile_painter_generated

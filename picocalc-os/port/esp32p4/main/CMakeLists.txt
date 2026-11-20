@@ -236,12 +236,20 @@ endif()
 if(PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
     set(native_world_reactor "${CMAKE_CURRENT_BINARY_DIR}/typed-world-reactor.elf")
     set(world_runtime "${OS}/sdk/typed/world.c" "${OS}/sdk/typed/chess-psix.c" "${OS}/sdk/typed/rv32-slot.S" "${QJS}/libunicode.c")
-    add_custom_command(OUTPUT "${native_world_reactor}"
-        COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${native_world_reactor}" ${world_runtime} ${OS}/sdk/nw_elf.c
-        DEPENDS ${world_runtime} ${OS}/sdk/typed/chess-psix.h ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
-                ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_utf16.h
-                ${QJS}/cutils.h ${QJS}/libunicode.h ${QJS}/libunicode-table.h
-        VERBATIM)
+    function(add_typed_world_reactor output)
+        add_custom_command(OUTPUT "${output}"
+            COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} ${ARGN} -o "${output}" ${world_runtime} ${OS}/sdk/nw_elf.c
+            DEPENDS ${world_runtime} ${OS}/sdk/typed/chess-psix.h ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
+                    ${OS}/sdk/nw_calls.inc ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_utf16.h
+                    ${QJS}/cutils.h ${QJS}/libunicode.h ${QJS}/libunicode-table.h
+            VERBATIM)
+    endfunction()
+    add_typed_world_reactor("${native_world_reactor}")
+    if(PICOCALC_RV32_CHESS AND PICOCALC_CHESS_3D)
+        set(chess_3d_reactor "${CMAKE_CURRENT_BINARY_DIR}/typed-chess-3d-reactor.elf")
+        # The game embeds the 3D painter as Typed literal writes.
+        add_typed_world_reactor("${chess_3d_reactor}" "-DTYPED_WORLD_NATIVE_SLOT_BYTES=262144")
+    endif()
 endif()
 
 if(PICOCALC_MOBILE_PAINTER)
@@ -251,18 +259,30 @@ if(PICOCALC_MOBILE_PAINTER)
     target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
     set(painter_slot "${CMAKE_CURRENT_BINARY_DIR}/mobile-painter-slot.elf")
     set(painter_sources "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.c" "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.S")
-    add_custom_command(OUTPUT "${painter_slot}"
-        COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${painter_slot}" ${painter_sources}
-        DEPENDS ${painter_sources} VERBATIM)
     set(painter_link "${OS}/compiler/mobile-painter.js")
-    set(painter_source "${OS}/worlds/chess/painter.typed")
+    set(painter_slot_flags)
+    if(PICOCALC_CHESS_3D)
+        target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_CHESS_3D=1)
+        set(painter_source "${OS}/worlds/chess/painter-3d.typed")
+        # Size the native slot separately from the transport source limit.
+        set(painter_slot_flags "-DMOBILE_PAINTER_NATIVE_SLOT_BYTES=32768")
+    else()
+        set(painter_source "${OS}/worlds/chess/painter.typed")
+    endif()
+    add_custom_command(OUTPUT "${painter_slot}"
+        COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} ${painter_slot_flags} -o "${painter_slot}" ${painter_sources}
+        DEPENDS ${painter_sources} VERBATIM)
     list(APPEND BUNDLE_EXTRA "painter/slot.elf=${painter_slot}" "painter/link.js=${painter_link}" "chess/painter.typed=${painter_source}")
     list(APPEND BUNDLE_EXTRA_DEPS "${painter_slot}" "${painter_link}" "${painter_source}")
 endif()
 
 if(PICOCALC_TYPED_CHESS)
     if(PICOCALC_RV32_CHESS)
-        set(chess_reactor "${native_world_reactor}")
+        if(PICOCALC_CHESS_3D)
+            set(chess_reactor "${chess_3d_reactor}")
+        else()
+            set(chess_reactor "${native_world_reactor}")
+        endif()
         set(chess_engine native)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RV32_CHESS=1)
     else()

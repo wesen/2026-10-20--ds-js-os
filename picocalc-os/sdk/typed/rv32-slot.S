@@ -1,3 +1,7 @@
+#ifndef TYPED_WORLD_NATIVE_SLOT_BYTES
+#define TYPED_WORLD_NATIVE_SLOT_BYTES 229376
+#endif
+
     .section .text.typed_world_program,"ax",@progbits
     .balign 4
 .Lprogram:
@@ -48,5 +52,5 @@
     j typedSdkPainterSource
     j typedSdkPainterFrame
     .option pop
-    .space 229376 - (.-.Lprogram)
+    .space TYPED_WORLD_NATIVE_SLOT_BYTES - (.-.Lprogram)
 .Lend:
