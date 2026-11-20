@@ -1,4 +1,5 @@
 /* Included at the end of typed_p4.c in the isolated research firmware. */
+#include <inttypes.h>
 #include "esp_elf.h"
 #include "esp_log.h"
 #include "mbedtls/sha256.h"
@@ -46,7 +47,7 @@ static JSValue editor_prepare(JSContext *ctx,unsigned mode,unsigned edit) {
     return runner;
 }
 
-typedef struct { vtime_t end,load_us,guest_us; int ret; uint32_t writes[5]; } edit_sample;
+typedef struct { vtime_t end,load_us,guest_us; int ret; unsigned writes[5]; } edit_sample;
 
 static bool editor_guest(const uint8_t *bytes,size_t size,unsigned id,edit_sample *sample) {
     if (size<sizeof(elf32_hdr_t) || ((uintptr_t)bytes & 3)) return false;
@@ -115,7 +116,7 @@ static bool editor_measure(unsigned round,unsigned position,unsigned mode,unsign
         mbedtls_sha256(ptr+at,size,digest,0);
         JSValue getter=JS_GetPropertyStr(ctx,runner,"stats");
         JSValue stats=JS_Call(ctx,getter,runner,0,NULL);
-        unsigned counts[4]={0};
+        uint32_t counts[4]={0};
         ok=!JS_IsException(stats);
         for (unsigned i=0;i<4 && ok;i++) {
             JSValue x=JS_GetPropertyUint32(ctx,stats,i);
@@ -124,7 +125,7 @@ static bool editor_measure(unsigned round,unsigned position,unsigned mode,unsign
         }
         JS_FreeValue(ctx,stats); JS_FreeValue(ctx,getter);
         if (ok) {
-            printf("FRAGROW %u %u %u %u %lld %lld %lld %zu %zu %zu %u %u %u %u %d %u %u %u %u %u ",
+            printf("FRAGROW %u %u %u %u %lld %lld %lld %zu %zu %zu %" PRIu32 " %" PRIu32 " %" PRIu32 " %" PRIu32 " %d %u %u %u %u %u ",
                 round,position,mode,edit,(long long)(sample.end-start),(long long)sample.load_us,
                 (long long)sample.guest_us,before,peak,size,counts[0],counts[1],counts[2],counts[3],
                 sample.ret,sample.writes[0],sample.writes[1],sample.writes[2],sample.writes[3],sample.writes[4]);
