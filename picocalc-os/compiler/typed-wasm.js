@@ -8,6 +8,8 @@ const OP = {
 };
 const I32 = 0x7f;
 const VOID = 0x40;
+const LITERAL = Symbol("integer literal");
+const scalarType = type => type === LITERAL ? "i32" : type;
 const BINARY = new Map([
     ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
     ["===", [3, null, "bool", 0x46]], ["!==", [3, null, "bool", 0x47]],
@@ -23,7 +25,7 @@ const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*(?:(?<id>[a-zA-Z_]\w*)|(?<int>\d+)|(
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
-    "else", "for", "break"]);
+    "else", "for", "break", "enum", "match", "type", "distinct"]);
 
 function unsigned(value) {
     const bytes = [];
@@ -101,9 +103,11 @@ class Lexer {
         return value;
     }
 
-    type(records) {
+    type(records, enums, distinct) {
         const { value } = this.token;
-        if (value !== "i32" && value !== "bool" && value !== "string" && value !== "buffer" && !records.has(value)) this.fail("unknown type " + value);
+        if (value !== "i32" && value !== "bool" && value !== "string" && value !== "buffer" &&
+            !records.has(value) && !enums?.has(value) && !distinct?.has(value))
+            this.fail("unknown type " + value);
         this.next();
         return value;
     }
@@ -125,8 +129,10 @@ class Lexer {
 }
 
 class FunctionEmitter {
-    constructor(lexer, functions, records, edges, functionBase) {
+    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set()) {
         this.records = records;
+        this.enums = enums;
+        this.distinct = distinct;
         this.functions = functions;
         this.edges = edges;
         this.functionBase = functionBase;
@@ -147,7 +153,8 @@ class FunctionEmitter {
     }
 
     want(type, expected) {
-        if (type !== expected) this.lex.fail("expected " + expected + ", got " + type);
+        if (type === expected || type === LITERAL && (expected === "i32" || this.distinct.has(expected))) return;
+        this.lex.fail("expected " + expected + ", got " + scalarType(type));
     }
 
     emitConst(value) {
@@ -204,19 +211,20 @@ class FunctionEmitter {
             if (lex.token.kind === "int" && Number(lex.token.value) === 2147483648) {
                 lex.next();
                 this.emitConst(-2147483648);
-            } else {
-                this.emitConst(0);
-                this.want(this.expr(8), "i32");
-                this.code.push(OP.sub);
+                return LITERAL;
             }
-            return "i32";
+            this.emitConst(0);
+            const type = this.expr(8);
+            this.want(type, "i32");
+            this.code.push(OP.sub);
+            return type;
         }
         if (lex.token.kind === "int") {
             const value = Number(lex.token.value);
             if (value > 2147483647) lex.fail("i32 literal out of range");
             this.emitConst(value);
             lex.next();
-            return "i32";
+            return LITERAL;
         }
         if (lex.accept("true")) {
             this.emitConst(1);
@@ -230,9 +238,33 @@ class FunctionEmitter {
             this.minmax();
             return "i32";
         }
+        if (lex.accept("i32")) {
+            lex.expect("(");
+            const type = this.expr();
+            if (!this.enums.has(type) && !this.distinct.has(type))
+                lex.fail("i32 conversion requires an enum or a distinct integer, got " + scalarType(type));
+            lex.expect(")");
+            return "i32";
+        }
         const name = lex.ident();
-        if (lex.accept("(")) return this.call(name);
+        if (lex.accept("(")) {
+            const generatedType = lex.generatedWordType?.(name);
+            if (generatedType || this.distinct.has(name)) {
+                this.want(this.expr(), "i32");
+                lex.expect(")");
+                return generatedType ?? name;
+            }
+            return this.call(name);
+        }
         const binding = this.locals.get(name);
+        if (!binding && this.enums.has(name)) {
+            lex.expect(".");
+            const member = lex.ident();
+            const value = this.enums.get(name).get(member);
+            if (value === undefined) lex.fail("unknown enum member " + name + "." + member);
+            this.emitConst(value);
+            return name;
+        }
         if (!binding) lex.fail("unknown local " + name);
         if (this.records.has(binding.type) && lex.accept(".")) {
             this.emitIndex(OP.get, binding.index);
@@ -272,11 +304,9 @@ class FunctionEmitter {
             const rule = BINARY.get(op);
             if (!rule || rule[0] < minPrecedence) break;
             const [precedence, input, result, opcode] = rule;
-            if (!input && type !== "i32" && type !== "bool") this.lex.fail("expected scalar equality operands");
-            const expected = input ?? type;
-            this.want(type, expected);
-            this.lex.next();
             if (op === "&&" || op === "||") {
+                this.want(type, "bool");
+                this.lex.next();
                 this.code.push(OP.if, I32);
                 if (op === "&&") {
                     this.want(this.expr(precedence + 1), "bool");
@@ -288,11 +318,21 @@ class FunctionEmitter {
                     this.want(this.expr(precedence + 1), "bool");
                 }
                 this.code.push(OP.end);
+                type = "bool";
             } else {
-                this.want(this.expr(precedence + 1), expected);
+                const numeric = precedence === 3 || precedence === 4 || precedence === 6;
+                const nominal = numeric && this.distinct.has(type);
+                if (!input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
+                    this.lex.fail("expected scalar equality operands");
+                let expected = nominal || !input ? scalarType(type) : input;
+                this.want(type, expected);
+                this.lex.next();
+                const right = this.expr(precedence + 1);
+                if (numeric && type === LITERAL && this.distinct.has(right)) expected = right;
+                this.want(right, expected);
                 this.code.push(opcode);
+                type = result === "i32" ? expected : result;
             }
-            type = result;
         }
         this.depth--;
         return type;
@@ -460,7 +500,7 @@ class FunctionEmitter {
         const mutable = lex.token.value === "let";
         lex.next();
         const id = lex.ident();
-        const annotation = lex.accept(":") ? lex.type(this.records) : null;
+        const annotation = lex.accept(":") ? lex.type(this.records, this.enums, this.distinct) : null;
         if (mutable && annotation !== null && lex.isGeneratedLocal?.(id) && lex.token.value === ";") {
             this.emitConst(0);
             this.emitIndex(OP.set, this.local(id, annotation, true));
@@ -469,7 +509,7 @@ class FunctionEmitter {
         lex.expect("=");
         const type = this.expr();
         if (annotation !== null) this.want(type, annotation);
-        this.emitIndex(OP.set, this.local(id, type, mutable));
+        this.emitIndex(OP.set, this.local(id, annotation ?? scalarType(type), mutable));
     }
 
     assignment(id, statement = false) {
@@ -493,10 +533,87 @@ class FunctionEmitter {
         }
     }
 
+    matchGroup(slot, values) {
+        // A contiguous interval can be compared with one unsigned bound check,
+        // including when the declared values cross zero or reach i32's limits.
+        values.sort((a, b) => a - b);
+        let joins = 0;
+        for (let i = 0; i < values.length;) {
+            const first = values[i++];
+            let last = first;
+            while (values[i] === last + 1) last = values[i++];
+            if (first === last) {
+                this.emitIndex(OP.get, slot);
+                this.emitConst(first);
+                this.code.push(0x46);
+            } else {
+                this.emitConst((last - first) | 0);
+                this.emitIndex(OP.get, slot);
+                if (first !== 0) {
+                    this.emitConst(first);
+                    this.code.push(OP.sub);
+                }
+                this.code.push(0x4f);
+            }
+            if (i < values.length) {
+                this.code.push(OP.if, I32);
+                this.emitConst(1);
+                this.code.push(OP.else);
+                joins++;
+            }
+        }
+        while (joins-- > 0) this.code.push(OP.end);
+    }
+
+    match(result) {
+        const lex = this.lex;
+        lex.expect("(");
+        const type = this.expr();
+        const members = this.enums.get(type);
+        if (!members) lex.fail("match requires an enum, got " + scalarType(type));
+        lex.expect(")");
+        const slot = this.nextLocal++;
+        this.emitIndex(OP.set, slot);
+        lex.expect("{");
+        const seen = new Set();
+        const enclosing = this.controls;
+        while (!lex.accept("}")) {
+            const values = [];
+            do {
+                const member = lex.ident();
+                if (!members.has(member)) lex.fail("unknown case " + member + " in " + type);
+                if (seen.has(member)) lex.fail("useless case " + member);
+                seen.add(member);
+                values.push(members.get(member));
+            } while (lex.accept(","));
+            lex.expect(":");
+            this.matchGroup(slot, values);
+            this.code.push(OP.if, VOID);
+            this.controls++;
+            this.block(result);
+            this.code.push(OP.else);
+        }
+        const missing = [...members.keys()].filter(member => !seen.has(member));
+        if (missing.length) lex.fail("match on " + type + " does not cover: " + missing.join(", "));
+        this.code.push(0x00); // A raw ABI word outside the declared domain traps.
+        while (this.controls > enclosing) {
+            this.code.push(OP.end);
+            this.controls--;
+        }
+    }
+
     statement(result) {
         const lex = this.lex;
         if (lex.accept("if")) {
             this.conditional(result);
+            return;
+        }
+        if (lex.accept("match")) {
+            this.match(result);
+            return;
+        }
+        if (lex.token.value === "return") {
+            this.result(result, true);
             return;
         }
         if (lex.token.value === "while" || lex.token.value === "for") {
@@ -559,27 +676,27 @@ class NumericFunctionEmitter extends FunctionEmitter {
     finish(fn) { return fn; }
 }
 
-function scanSignatures(lex, records, declared, functionBase) {
+function scanSignatures(lex, records, declared, functionBase, enums, distinct) {
     const functions = [];
     while (lex.token.kind !== "eof") {
         lex.expect("function");
         const name = lex.ident();
         if (name === "memory") lex.fail("reserved memory export");
-        if (declared.has(name)) lex.fail("duplicate function " + name);
+        if (declared.has(name) || distinct.has(name)) lex.fail("duplicate function " + name);
         const params = [], paramNames = [];
         lex.expect("(");
         if (!lex.accept(")")) {
             do {
                 const id = lex.ident();
                 lex.expect(":");
-                params.push(lex.type(records));
+                params.push(lex.type(records, enums, distinct));
                 if (paramNames.includes(id)) lex.fail("duplicate local " + id);
                 paramNames.push(id);
             } while (lex.accept(","));
             lex.expect(")");
         }
         lex.expect(":");
-        const result = lex.type(records);
+        const result = lex.type(records, enums, distinct);
         if (lex.token.value !== "{") lex.fail("expected {");
         const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
         declared.set(name, fn);
@@ -619,38 +736,88 @@ function checkAcyclic(functions, edges) {
     return order;
 }
 
-function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures) {
-    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
-    if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
-    const lex = new Lexer(source);
-    const declared = new Map(imported.map(fn => [fn.name, fn]));
+function parseEnum(lex, name) {
+    lex.expect("{");
+    const members = new Map();
+    const values = new Set();
+    let next = 0;
+    while (!lex.accept("}")) {
+        const member = lex.ident();
+        if (members.has(member)) lex.fail("duplicate member " + member + " in " + name);
+        if (lex.accept("=")) {
+            const negative = lex.accept("-");
+            if (lex.token.kind !== "int") lex.fail("expected integer enum value");
+            next = Number(lex.token.value) * (negative ? -1 : 1);
+            lex.next();
+        }
+        if (next < -2147483648 || next > 2147483647) lex.fail("i32 enum value out of range");
+        if (values.has(next)) lex.fail("duplicate enum value " + next + " in " + name);
+        members.set(member, next | 0);
+        values.add(next++);
+        if (!lex.accept(",")) {
+            lex.expect("}");
+            break;
+        }
+    }
+    if (!members.size) lex.fail("empty enum " + name);
+    return members;
+}
+
+function parseDeclarations(lex) {
     const records = new Map();
-    while (lex.accept("record")) {
+    const enums = new Map();
+    const distinct = new Set();
+    while (lex.token.value === "record" || lex.token.value === "enum" || lex.token.value === "type") {
+        const kind = lex.token.value;
+        lex.next();
         const name = lex.ident();
-        if (records.has(name)) lex.fail("duplicate record " + name);
+        if (records.has(name) || enums.has(name) || distinct.has(name))
+            lex.fail("duplicate " + kind + " " + name);
+        if (kind === "enum") {
+            enums.set(name, parseEnum(lex, name));
+            continue;
+        }
+        if (kind === "type") {
+            lex.expect("=");
+            lex.expect("distinct");
+            lex.expect("i32");
+            lex.expect(";");
+            distinct.add(name);
+            continue;
+        }
         const fields = new Map();
         lex.expect("{");
         while (!lex.accept("}")) {
             const field = lex.ident();
             if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
             lex.expect(":");
-            const type = lex.type(records);
+            const type = lex.type(records, enums, distinct);
             lex.expect(";");
             fields.set(field, {type, offset: fields.size * 4});
         }
         records.set(name, fields);
     }
-    const functions = scanSignatures(lex, records, declared, functionBase);
+    return {records, enums, distinct};
+}
+
+function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures) {
+    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
+    if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
+    const lex = new Lexer(source);
+    const declared = new Map(imported.map(fn => [fn.name, fn]));
+    const {records, enums, distinct} = parseDeclarations(lex);
+    for (const name of distinct) if (declared.has(name)) lex.fail("duplicate imported function " + name);
+    const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct);
     if (!functions.length) lex.fail("expected a function");
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
-        new Emitter(lex, declared, records, edges[i], functionBase).function(fn);
+        new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct).function(fn);
         if (onFunction) onFunction(fn);
     }
 
     const order = checkAcyclic(functions, edges);
-    return { functions, records, edges, order };
+    return { functions, records, enums, distinct, edges, order };
 }
 
 function signature(fn) {
@@ -661,8 +828,12 @@ function recordLayouts(records) {
     return Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)]));
 }
 
+function enumLayouts(enums) {
+    return Object.fromEntries(Array.from(enums, ([name, members]) => [name, Object.fromEntries(members)]));
+}
+
 function compile(source) {
-    const { functions, records } = compileFunctions(source, 0);
+    const {functions, records, enums, distinct} = compileFunctions(source, 0);
     const headers = functions.map(signature);
     const names = functions.map((fn, i) => [
         ...vec(Array.from(fn.name, char => char.charCodeAt(0))), 0, ...unsigned(i),
@@ -678,6 +849,8 @@ function compile(source) {
     return {
         bytes,
         records: recordLayouts(records),
+        enums: enumLayouts(enums),
+        distinct: [...distinct],
         signatures: functions.map(({ name, params, result }) => ({ name, params, result })),
     };
 }
@@ -797,7 +970,7 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength) {
             throw new SyntaxError("Wasm runtime import signature mismatch for " + fn.name);
         return {...fn, index};
     });
-    const {functions, records} = compileFunctions(source, base, imported, maxSourceLength);
+    const {functions, records, enums, distinct} = compileFunctions(source, base, imported, maxSourceLength);
     for (const entry of entries) {
         const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
         const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
@@ -818,6 +991,7 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength) {
     ]);
     for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
     return {bytes: encodeModule(header, sections), records: recordLayouts(records),
+        enums: enumLayouts(enums), distinct: [...distinct],
         signatures: functions.map(({name, params, result}) => ({name, params, result}))};
 }
 
@@ -834,5 +1008,6 @@ function invoke(exports, signature, args) {
 }
 
 globalThis.compileTyped = source => compile(source).bytes;
-globalThis.typedWasm = { compile, linkWorld, invoke, compileFunctions };
+globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
+    parseDeclarations, inferredType: scalarType, recordLayouts, enumLayouts};
 })();

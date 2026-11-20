@@ -14,15 +14,15 @@
         ["typedSdkView", "buffer,i32", "string"],
         ["typedSdkEventText", "i32,buffer,i32,buffer", "i32"],
         ["typedSdkEventHandle", "buffer,i32", "i32"],
-        ["typedSdkFileRead", "i32", "i32"],
+        ["typedSdkFileRead", "i32", "i32", true],
         ["typedSdkRelease", "i32", "i32"],
         ["typedSdkReply", "buffer,i32", "i32"],
-        ["typedSdkYield", "", "i32"],
+        ["typedSdkYield", "", "i32", true],
         ["typedSdkCapture", "i32,buffer,i32", "i32"],
         ["typedSdkMove", "buffer,i32,i32,i32", "i32"],
         ["typedSdkEventInt", "buffer,i32", "i32"],
         ["typedSdkSend", "buffer,i32,buffer,i32,buffer,i32", "i32"],
-        ["typedSdkWriteSnapshot", "i32,i32", "i32"],
+        ["typedSdkWriteSnapshot", "i32,i32", "i32", true],
         ["typedSdkRestore", "i32,buffer", "i32"],
         ["typedSdkMatches", "i32,buffer,i32", "i32"],
         ["typedSdkError", "buffer", "i32"],
@@ -37,7 +37,10 @@
         ["typedSdkCopySpan", "string,i32,i32,buffer,i32", "i32"],
         ["typedSdkCodePoints", "string,i32,i32", "i32"],
         ["typedSdkPointIndex", "string,i32,i32,i32", "i32"],
-    ].map(([name, params, result]) => ({name, params: params ? params.split(",") : [], result}));
+    ].map(([name, params, result, awaitable = false]) => ({
+        name, params: params ? params.split(",") : [], result, awaitable,
+    }));
+    globalThis.typedWorld = {entries, imports};
 
     function validate(program) {
         const event = Object.entries(program.records.WorldEvent ?? {});
@@ -46,7 +49,8 @@
             name !== expected[i][0] || field.type !== expected[i][1] || field.offset !== i * 4))
             throw new SyntaxError("Typed world requires the shared WorldEvent record");
         const state = Object.values(program.records.WorldState ?? {});
-        if (state.length > 80 || state.some(field => field.type !== "i32" && field.type !== "bool"))
+        if (state.length > 80 || state.some(({type}) => type !== "i32" && type !== "bool" &&
+            !Object.hasOwn(program.enums, type) && !program.distinct.includes(type)))
             throw new SyntaxError("WorldState supports up to 80 scalar fields");
         for (const [name, params] of signatures) {
             const entry = program.signatures.find(fn => fn.name === name);

@@ -273,7 +273,7 @@ function compile(source, imports = [], maxSourceLength, options) {
     }
 
     const stream = options?.streamFunctions ?? true;
-    const {functions, records} = typedWasm.compileFunctions(source, imported.length, imported,
+    const {functions, records, enums, distinct} = typedWasm.compileFunctions(source, imported.length, imported,
         maxSourceLength, true, stream ? consume : undefined, declare);
     if (lowerError) throw lowerError;
     if (!stream) {
@@ -304,8 +304,8 @@ function compile(source, imports = [], maxSourceLength, options) {
         }
         for (let j = 0; j < fn.words.length; j++) view.setUint32(4 * (start + j), fn.words[j], true);
     }
-    const layouts = Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)]));
-    return {image, entries, records: layouts, relocations, importCount: imports.length,
+    return {image, entries, records: typedWasm.recordLayouts(records), enums: typedWasm.enumLayouts(enums),
+        distinct: [...distinct], relocations, importCount: imports.length,
         signatures: functions.map(({name, params, result}) => ({name, params, result}))};
 }
 
