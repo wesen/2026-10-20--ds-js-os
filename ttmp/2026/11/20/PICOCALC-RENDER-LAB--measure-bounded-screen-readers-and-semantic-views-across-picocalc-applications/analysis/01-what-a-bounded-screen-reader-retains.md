@@ -70,8 +70,8 @@ Two costs remain open.
 The corpus contains three ordinary applications (System, Snake, and Chess) and two held-out applications (Keys and a typed Editor). In the table below:
 
 - "States" is the number of screen states.
-- "Calls" is the number of reader calls.
-- "Hits" is the number of cache hits.
+- "Calls" counts calls to the layout measurement function in the frame-local cache experiment.
+- "Hits" counts repeated measurements of the same node at the same available width.
 - Times are median host microseconds.
 - Heap figures are in bytes.
 
@@ -139,7 +139,7 @@ The present comparison sets a JavaScript candidate against a native parser. Its 
 
 ## Limits
 
-The measurements do not establish physical board timings. They do not establish live application memory. A physically paced full panel transfer is a separate cost from every cost reported here.
+This host section measures desktop execution. The following physical trial measures an isolated QuickJS receiver on the P4. They do not establish live application memory. A physically paced full panel transfer is a separate cost from every cost reported here.
 
 ## Sources
 

@@ -67,7 +67,7 @@ Run the bounded-reader comparison on the frozen corpus, compare candidate treatm
 
 ### Code review instructions
 
-Begin with scripts 03 and 04 for pixels, scripts 05 and 06 for the physical control, and the model-attributed public response in various/representation-blind.md. Compare the frozen holdouts to the individual study tickets. Raw serial files stay local to the bench.
+Begin with scripts 03 and 04 for pixels, scripts 05 and 06 for the physical control, and the model-attributed public response in various/01-representation-blind.md. Compare the frozen holdouts to the individual study tickets. Raw serial files stay local to the bench.
 
 ### Technical details
 
@@ -164,3 +164,62 @@ Start with the stage boundaries in scripts 08, 13, 14 and 20. Compare the report
 ### Technical details
 
 Four researcher articles and two figures were published to the go-go-parc vault. Git confirmed remote main at f6350ad094cf91cf98224cffa9e3029ab32e078f and resolved all six paths in that commit. The separate binary article and director synthesis follow after that department returns.
+
+## Step 4: Move the index to the sender and test the application handoff
+
+The binary group studied a complete message that a reader can index after admission. The board operators qualified a JavaScript reader, a native reader, and a complete native sender/receiver route. I applied the same raw byte representation to the semantic views from the first three application studies. This isolated two decisions the applications can make independently, which facts to send and which encoding to use.
+
+### Prompt Context
+
+**User prompt (verbatim):** “can you start one more group that replaces JSON with a binary format that can more easily be indexed as well? If that experiment turns out well, we can pass it on to the other groups to skip the json part too”
+
+**User prompt (verbatim):** “same guidelines reading diary + project report apply”
+
+**Assistant interpretation:** Commission an independent research group, qualify its proposal against our shared controls, and transfer the working API and evidence to the existing groups when the comparison justifies it.
+
+**Inferred user intent:** Let application teams reuse measured improvements while giving a newcomer the design history, competing explanations and sufficient artifacts to repeat the work.
+
+**Commit (code):** The native receiver and heap witnesses landed in 7ffd3a6 and 22031ce. The matched native sender and the seven-block device follow-up landed in 6dbecbb and 400d6db.
+
+### What I did
+
+- Commissioned the fifth Opus High study before disclosing the output measurements. Added isolated physical windows to the existing board operator. The last native run included encoding the same resident cJSON source for both formats.
+- Replayed 100 System, 236 Snake and 47 Chess semantic observations directly through the binary index into their existing resident views. Reproduced the corpus and deployed capsule from a fresh output directory using scripts/30-replay-host.sh.
+- Compared the native producer's raw bytes against the reference encoder, checked the stage receipts against the drawing and scalar checksums and passed the application handoff to the three researchers. Linked the handoff from each ticket.
+- Wrote the director's report after all measured cells were available and produced a figure from three physical framebuffer captures. Corrected the label for the denominator of the Keys layout-cache count in the representation article and its vault copy.
+
+### Why
+
+An offset in a buffer gives a predictable address for an array slot. Finding that address has little value if encoding costs more than locating the field saves, or a property-access layer makes a painter visit it repeatedly. Seven alternating blocks per treatment separate those costs on this device. The app-specific handoff tests whether a smaller semantic message also benefits from a general-purpose binary encoding.
+
+### What worked
+
+All 427 generic screens, including the held-out Editor, produced matching commands and framebuffer bytes on the host. All three semantic consumers reproduced their reference output. The exact capsule produced in the independent replay had SHA-256 ca2d76e538601914a40b88ad12e560456d2b2c8b50a26dbfbaf392333b5ffc01. The native complete-route arm returned 56 valid measurement cells, with eight publications per cell. Its median paired reductions were 71.3% for System, 88.0% for Chess, 80.0% for Snake and 87.9% for Editor. All five physical session restore checks returned the previously qualified playable app.
+
+### What didn't work
+
+Every native binary encoder took longer in isolation than the JSON encoder. The QuickJS binary Proxy path through the first draw into the command sink took approximately four to five times the existing JSON path's time across the four fixtures. The indexed encoding also grew Snake and Chess's already compact semantic payloads. All three findings are reported, including the original control and amount of work charged.
+
+### What I learned
+
+Receiver lifetime dominates the tested native route. A single direct lookup was sufficient to expose that difference because the control builds and releases a tree. The tests do not establish the latency of a complete native render. The QuickJS experiment shows why an implicit conversion to a JavaScript property interface is an expensive way to integrate the format. Base64 enlarged the generic payload on every workload.
+
+### What was tricky to build
+
+Both sides of the comparison needed the same input, the same operation after admission, and an unambiguous end of ownership. An allocator witness alone misses the encoder; a checksum-only comparison misses glyph and clipping errors. Retaining the native and QuickJS measurements as two separate tables in the binary ticket makes the endpoints inspectable. The director report places them side by side with an explicit description of the two endpoints.
+
+### What warrants a second pair of eyes
+
+A reviewer should trace the real NUL-terminated screen path through nw_screen, nat_render, frame_message and kernel_publish. The proposed native trial needs byte lengths and retained ownership through the CJI renderer. The C benchmark begins with a resident cJSON tree. System, Chess and Snake may produce their screens from other representations in production.
+
+### What should be done in the future
+
+Qualify a full Chess cursor update with equal pixels, per-stage timing, key-to-last-SPI timing and peak overlapping generations. Keep the three original application controls available. The proposed trial has a recorded independent baseline and a concrete first action in the application handoff.
+
+### Code review instructions
+
+Begin with scripts/25-semantic-consumer-check.mjs, scripts/29-binary-results.py and scripts/30-replay-host.sh. Read the JSON receipts in the binary ticket's various/device-js-and-native-reader.json and various/device-native-route.json and compare the per-block treatment order to the summaries. The replay script takes an unused directory argument. Check various/independent-host-replay.json for the expected digest and counts.
+
+### Technical details
+
+The native encoder/receiver protocol, initial Opus research brief, implementation, host trace witnesses and both hardware measurement arms are in PICOCALC-RENDER-BINARY. The bulk evidence belongs in that ticket. The director's ticket keeps the cross-study results, the reproducible handoff and the board session scripts. The original four vault articles were verified at f6350ad; the correction was committed in da7ffd6. The first reMarkable volume's upload receipt is in various/remarkable-deliveries.txt.

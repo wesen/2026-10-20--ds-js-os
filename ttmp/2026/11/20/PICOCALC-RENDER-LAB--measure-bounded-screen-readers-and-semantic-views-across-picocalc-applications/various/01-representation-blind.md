@@ -1,3 +1,20 @@
+---
+Title: Blind representation design and first experiment diary
+Ticket: PICOCALC-RENDER-LAB
+Status: active
+Topics:
+    - picocalc
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: ""
+LastUpdated: 2026-11-20T11:33:10.882376838-05:00
+WhatFor: ""
+WhenToUse: ""
+---
+
 # Design: Bounded Token Index vs. Full Materialization for Full-Screen Snapshots
 
 **Status:** Blind prediction, written before any measurement. I have not seen the source or run any benchmark. Each prediction below is a hypothesis for the operator's run to confirm or refute. Where I do not know a fact about the system, I mark it **UNKNOWN** and do not fill it in with a guess.

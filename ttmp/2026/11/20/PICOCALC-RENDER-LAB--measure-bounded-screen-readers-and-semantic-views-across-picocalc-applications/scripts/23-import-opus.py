@@ -12,8 +12,9 @@ article1,log1=host.split('## Experiment log',1);article2,log2=board.split('## Ph
 paper=article1.strip()+'\n\n'+article2.strip()
 # Host-scope text precedes a later physical section.
 paper=paper.replace('No physical board timing is claimed','The host comparison measures Node')
+paper=paper.replace('"Calls" is the number of reader calls.', '"Calls" counts calls to the layout measurement function in the frame-local cache experiment.').replace('"Hits" is the number of cache hits.', '"Hits" counts repeated measurements of the same node at the same available width.').replace('The measurements do not establish physical board timings.', 'This host section measures desktop execution. The following physical trial measures an isolated QuickJS receiver on the P4.')
 write_body(next((t/'analysis').glob('01-*')),paper)
-blind=(t/'various/representation-blind.md').read_text().split('# Step 1 Diary',1)[1].strip()
+blind=(t/'various/01-representation-blind.md').read_text().split('# Step 1 Diary',1)[1].strip()
 diary='''# Representation researcher experiment diary
 
 ## Step 1: Freeze predictions and representation alternatives

@@ -1,0 +1,31 @@
+{
+  "codecSHA256": "5c66f321edfc30154ffa63d68a3ee65e29280a7432c238525ea2cff9b5c25a2d",
+  "scope": "Direct typed byte buffer between encode and resident view on host. Uses original semantic values, before any JSON conversion. Compares reconstructed screens with reference from the same original view. Historical fixture file loading and output verification are outside the wire interval.",
+  "System": {
+    "attempts": 100,
+    "immediateChanges": 82,
+    "jsonPayloadBytes": 64566,
+    "binaryPayloadBytes": 62803,
+    "base64PayloadBytes": 83820,
+    "binaryOverJSON": 0.9726946070687359,
+    "screenSHA256": "62024fa0898bda821c260afa560c66a4ca55079dbb46d4b05302e09fc4258662"
+  },
+  "Snake": {
+    "attempts": 236,
+    "immediateChanges": 224,
+    "jsonPayloadBytes": 28313,
+    "binaryPayloadBytes": 29841,
+    "base64PayloadBytes": 39788,
+    "binaryOverJSON": 1.0539681418429696,
+    "screenSHA256": "c19ff8263f557b645900f953a243bc814e6ed14b2a4c9fc36eaece114f08d657"
+  },
+  "Chess": {
+    "attempts": 47,
+    "immediateChanges": 46,
+    "jsonPayloadBytes": 9192,
+    "binaryPayloadBytes": 10856,
+    "base64PayloadBytes": 14536,
+    "binaryOverJSON": 1.1810269799825936,
+    "screenSHA256": "361956e386fb5907d13669971ae3f33ae867b74a4a3b83b0d8204fbabda738bf"
+  }
+}

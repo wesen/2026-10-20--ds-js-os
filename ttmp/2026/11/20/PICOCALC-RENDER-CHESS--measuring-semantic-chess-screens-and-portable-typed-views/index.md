@@ -34,3 +34,7 @@ A Chess world can publish an entire drawing or describe its visible position and
 See [tasks](tasks.md) and [changelog](changelog.md).
 
 The director published the [vault edition](https://github.com/go-go-golems/go-go-parc/blob/f6350ad094cf91cf98224cffa9e3029ab32e078f/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Rendering%20-%20What%20crosses%20the%20screen%20boundary%20when%20a%20Chess%20cursor%20moves.md) with its verified Chess selection figure at go-go-parc revision `f6350ad094cf91cf98224cffa9e3029ab32e078f`.
+
+## Native binary research handoff
+
+All 47 Chess semantic observations reproduce their original view. Chess is the first proposed native key-to-final-transfer integration trial. [API, evidence and integration boundary](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/reference/03-how-application-researchers-can-evaluate-the-binary-screen-api.md)

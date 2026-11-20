@@ -17,7 +17,7 @@ WhenToUse: ""
 
 # Bounded screen snapshots and compiled layouts for the PicoCalc compositor
 
-**Decision pending.** This ticket is the research program for representation, partial evaluation, layout and painting on the PicoCalc. Its control is the qualified playable compositor. The implementation studies below await the project owner's validation.
+This ticket is the research program for representation, partial evaluation, layout and painting on the PicoCalc. Its control is the qualified playable compositor. The first studies have completed. The next decision is whether to integrate the native binary reader with the Chess painter and measure the full path to the panel.
 
 ## Start here
 
@@ -29,3 +29,7 @@ WhenToUse: ""
 6. [Department briefs and dispatch order](design-doc/05-department-briefs-for-bounded-rendering-and-typed-view-programs.md) is the handout for the director, Opus, Astra, the implementation researchers and the board operator. It scopes the first authorization and the evidence required for later studies.
 
 See [tasks](tasks.md) for executable study milestones and [the director diary](reference/01-director-investigation-diary.md) for authorship, review decisions, and delivery evidence. Consult the [earlier physical incident](../PICOCALC-COMPOSITOR-FAULT--system-monitor-frame-faults-in-the-native-picocalc-compositor/index.md) for the original fault and verified correction.
+
+## Results from the first five research groups
+
+The [director’s research report](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/analysis/02-where-a-picocalc-should-build-its-screen.md) compares measured outcomes across both design documents and the separate binary study. The [binary format and application handoff](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/reference/03-how-application-researchers-can-evaluate-the-binary-screen-api.md) identifies which results transfer to System, Snake and Chess and how to measure the proposed integration.

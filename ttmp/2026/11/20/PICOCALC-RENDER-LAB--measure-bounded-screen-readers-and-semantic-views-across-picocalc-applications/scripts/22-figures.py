@@ -19,3 +19,7 @@ for ax,name,denom,arms,title in zip(axes,['sysmon','snake'],[20,24],
 fig.suptitle('Where semantic screens spend CPU on the ESP32-P4',fontweight='bold')
 axes[0].legend(loc='upper right',fontsize=9)
 fig.savefig(v/'renderer-stage-costs.png',dpi=165);plt.close(fig)
+fig,axes=plt.subplots(1,3,figsize=(10,3.6),layout='constrained')
+for ax,file,label in zip(axes,['system-p4.png','snake-p4.png','chess-p4.png'],['System · Worlds tab','Snake · game over','Chess · legal destinations']):
+    ax.imshow(plt.imread(v/file),interpolation='nearest');ax.set_axis_off();ax.set_title(label,fontsize=11)
+fig.savefig(v/'playable-rendering-controls.png',dpi=165,bbox_inches='tight');plt.close(fig)

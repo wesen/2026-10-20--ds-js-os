@@ -25,3 +25,7 @@ The [project report](analysis/01-what-moves-when-a-snake-advances-one-cell.md) f
 - [Host data](various/summary.json) and [reproduction guide](README.md)
 - [Researcher's diary](reference/02-opus-researcher-investigation-diary.md) and [operator's diary](reference/01-operator-investigation-diary.md)
 - [Director's companion lab](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/index.md)
+
+## Native binary research handoff
+
+All 236 Snake semantic observations reproduce their original views. Include the compact Snake-specific encoding and semantic JSON as controls. [API, evidence and integration boundary](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/reference/03-how-application-researchers-can-evaluate-the-binary-screen-api.md)

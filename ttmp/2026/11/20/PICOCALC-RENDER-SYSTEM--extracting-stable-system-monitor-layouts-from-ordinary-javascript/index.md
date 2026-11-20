@@ -25,3 +25,7 @@ Five matched ESP32-P4 blocks put the median encoding and reconstruction cost at 
 - [Blind design](design-doc/01-blind-system-template-design-and-predictions.md) and [protocol adaptations](reference/03-premeasurement-protocol.md)
 - [Operator investigation diary](reference/01-operator-investigation-diary.md) and [Opus research diary](reference/02-opus-research-diary.md)
 - [Reproduction](reference/04-reproduction.md), [host timing, bytes and parity](various/summary.json) and [predictions and restart audit](various/protocol-audit.json)
+
+## Native binary research handoff
+
+The 100 System semantic observations reproduce their original views. The manual template remains the control for evaluating a native byte path. [API, evidence and integration boundary](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/reference/03-how-application-researchers-can-evaluate-the-binary-screen-api.md)

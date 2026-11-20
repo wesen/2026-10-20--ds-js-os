@@ -4,7 +4,7 @@ from pathlib import Path
 import serial
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('scratch',type=Path);p.add_argument('--preflight',action='store_true');p.add_argument('--port',default='/dev/ttyACM0')
-p.add_argument('--binary',action='store_true',help='indexed binary study without any installation file writes');p.add_argument('--latency',action='store_true',help='independent replay and interactive installation follow-up');p.add_argument('--original',type=Path,default=Path('/tmp/p4-system-fix-final/build'))
+p.add_argument('--native-producer',action='store_true',help='matched native producer, admission and indexed reading');p.add_argument('--binary',action='store_true',help='indexed binary study without any installation file writes');p.add_argument('--latency',action='store_true',help='independent replay and interactive installation follow-up');p.add_argument('--original',type=Path,default=Path('/tmp/p4-system-fix-final/build'))
 p.add_argument('--candidate',type=Path,default=Path('/tmp/pico-render-study-board/build'))
 p.add_argument('--esptool',default='/home/manuel/.espressif/python_env/idf5.4_py3.11_env/bin/esptool.py')
 args=p.parse_args(); out=args.scratch;out.mkdir(exist_ok=True,parents=True)
@@ -64,7 +64,7 @@ wrote=False;own_files=False
 try:
     hold();wrote=True;esp('install','write_flash','0x10000',image)
     info['experimentWorlds']=wait_console();record()
-    if not args.binary:
+    if not (args.binary or args.native_producer):
         base='rlab1120'
         if 'no directory '+base not in console('ls '+base): raise RuntimeError('fixture directory already exists')
         own_files=True
@@ -73,12 +73,21 @@ try:
             t=time.monotonic()
             subprocess.run([sys.executable,'picocalc-os/tools/p4put.py',str(f),base+'/view.'+suffix,'-p',args.port],check=True,timeout=90)
             info.setdefault('serialUploadMs',{})[suffix]=(time.monotonic()-t)*1000
-    if args.binary:
-        names=['sysmon','chess','snake','editor']
+    if args.native_producer:
+        names=['sysmon','snake','chess','editor']
         for b in range(7):
             for n,app in enumerate(names[b%4:]+names[:b%4]):
                 arms=['G','B'] if (b+n)%2==0 else ['B','G']
-                for arm in arms:trial('binary',app+'-'+arm,1,b)
+                for arm in arms:trial('nativeprod',app+'-'+arm,8,b)
+    elif args.binary:
+        names=['sysmon','chess','snake','editor']
+        for b in range(7):
+            for n,app in enumerate(names[b%4:]+names[:b%4]):
+                arms=['G','B','P']
+                off=(b+n)%3
+                for arm in arms[off:]+arms[:off]:trial('binary',app+'-'+arm,1,b)
+                native=['G','B'] if (b+n)%2==0 else ['B','G']
+                for arm in native:trial('nativebin',app+'-'+arm,8,b)
     elif args.latency:
         key('f1')
         def latency(arm):

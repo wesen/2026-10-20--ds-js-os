@@ -1,0 +1,303 @@
+{
+  "JS": {
+    "sysmon": {
+      "P": {
+        "encode": 2.795,
+        "admit": 2.573,
+        "lookup": 0.59,
+        "paint": 30.6,
+        "encodeAdmitPaint": 35.969
+      },
+      "G": {
+        "encode": 2.853,
+        "admit": 20.526,
+        "lookup": 0.172,
+        "paint": 30.533,
+        "encodeAdmitPaint": 53.934
+      },
+      "B": {
+        "encode": 43.034,
+        "admit": 9.894,
+        "lookup": 0.717,
+        "paint": 115.897,
+        "encodeAdmitPaint": 168.723
+      },
+      "pairedBinaryVsG": {
+        "encode": 15.033205173016428,
+        "admit": 0.48103850641773627,
+        "lookup": 4.175141242937853,
+        "paint": 3.795919035765754,
+        "encodeAdmitPaint": 3.143200646215693
+      }
+    },
+    "chess": {
+      "P": {
+        "encode": 3.802,
+        "admit": 4.39,
+        "lookup": 0.543,
+        "paint": 18.509,
+        "encodeAdmitPaint": 26.687
+      },
+      "G": {
+        "encode": 3.803,
+        "admit": 29.087,
+        "lookup": 0.179,
+        "paint": 18.261,
+        "encodeAdmitPaint": 51.114
+      },
+      "B": {
+        "encode": 34.999,
+        "admit": 13.008,
+        "lookup": 0.636,
+        "paint": 86.45,
+        "encodeAdmitPaint": 134.457
+      },
+      "pairedBinaryVsG": {
+        "encode": 9.223507757033921,
+        "admit": 0.44789402876953327,
+        "lookup": 3.6648351648351647,
+        "paint": 4.73335523434078,
+        "encodeAdmitPaint": 2.6313554346549766
+      }
+    },
+    "snake": {
+      "P": {
+        "encode": 1.709,
+        "admit": 1.612,
+        "lookup": 0.528,
+        "paint": 6.56,
+        "encodeAdmitPaint": 9.934
+      },
+      "G": {
+        "encode": 1.705,
+        "admit": 9.607,
+        "lookup": 0.137,
+        "paint": 6.291,
+        "encodeAdmitPaint": 17.576
+      },
+      "B": {
+        "encode": 14.833,
+        "admit": 5.192,
+        "lookup": 0.673,
+        "paint": 28.226,
+        "encodeAdmitPaint": 48.328
+      },
+      "pairedBinaryVsG": {
+        "encode": 8.72140762463343,
+        "admit": 0.5403862126245847,
+        "lookup": 4.850393700787402,
+        "paint": 4.486727070418057,
+        "encodeAdmitPaint": 2.757503138194682
+      }
+    },
+    "editor": {
+      "P": {
+        "encode": 3.956,
+        "admit": 4.137,
+        "lookup": 0.556,
+        "paint": 24.801,
+        "encodeAdmitPaint": 32.855
+      },
+      "G": {
+        "encode": 3.949,
+        "admit": 26.687,
+        "lookup": 0.186,
+        "paint": 24.669,
+        "encodeAdmitPaint": 55.317
+      },
+      "B": {
+        "encode": 29.749,
+        "admit": 11.964,
+        "lookup": 0.643,
+        "paint": 91.382,
+        "encodeAdmitPaint": 133.166
+      },
+      "pairedBinaryVsG": {
+        "encode": 7.533299569511269,
+        "admit": 0.4494199448286286,
+        "lookup": 3.4838709677419355,
+        "paint": 3.713206013815522,
+        "encodeAdmitPaint": 2.4118595258363067
+      }
+    }
+  },
+  "receiverC": {
+    "sysmon": {
+      "G": {
+        "admit": 3.616625,
+        "lookup": 0.016625,
+        "full": 0.362625,
+        "release": 0.948375,
+        "admitFullRelease": 4.9295
+      },
+      "B": {
+        "admit": 0.14125,
+        "lookup": 0.019625,
+        "full": 0.34925,
+        "release": 0.003875,
+        "admitFullRelease": 0.49475
+      },
+      "pairedBinaryVsG": {
+        "admit": 0.03919800194255585,
+        "lookup": 1.1328125,
+        "full": 0.9637931034482758,
+        "release": 0.004103786073603389,
+        "admitFullRelease": 0.10034733666303274
+      }
+    },
+    "chess": {
+      "G": {
+        "admit": 9.595875,
+        "lookup": 0.00875,
+        "full": 1.572625,
+        "release": 2.03825,
+        "admitFullRelease": 13.20325
+      },
+      "B": {
+        "admit": 0.18425,
+        "lookup": 0.0095,
+        "full": 1.6275,
+        "release": 0.004,
+        "admitFullRelease": 1.814875
+      },
+      "pairedBinaryVsG": {
+        "admit": 0.019245032595542024,
+        "lookup": 1.1,
+        "full": 1.0323501427212178,
+        "release": 0.0019624678032626026,
+        "admitFullRelease": 0.13745668680059833
+      }
+    },
+    "snake": {
+      "G": {
+        "admit": 1.7975,
+        "lookup": 0.007875,
+        "full": 0.2855,
+        "release": 0.400125,
+        "admitFullRelease": 2.481
+      },
+      "B": {
+        "admit": 0.072125,
+        "lookup": 0.00975,
+        "full": 0.286125,
+        "release": 0.003875,
+        "admitFullRelease": 0.36225
+      },
+      "pairedBinaryVsG": {
+        "admit": 0.0397644613785937,
+        "lookup": 1.2380952380952381,
+        "full": 0.9982285208148804,
+        "release": 0.009645301804604853,
+        "admitFullRelease": 0.14501253132832082
+      }
+    },
+    "editor": {
+      "G": {
+        "admit": 8.442125,
+        "lookup": 0.0205,
+        "full": 1.257375,
+        "release": 1.72925,
+        "admitFullRelease": 11.42775
+      },
+      "B": {
+        "admit": 0.170875,
+        "lookup": 0.0185,
+        "full": 1.270125,
+        "release": 0.003875,
+        "admitFullRelease": 1.444625
+      },
+      "pairedBinaryVsG": {
+        "admit": 0.020225950219879472,
+        "lookup": 1.0075757575757576,
+        "full": 1.0097697138869504,
+        "release": 0.0022444251375615407,
+        "admitFullRelease": 0.12639462187818204
+      }
+    }
+  },
+  "nativeRoute": {
+    "sysmon": {
+      "G": {
+        "encode": 0.525,
+        "admit": 3.660375,
+        "lookup": 0.016625,
+        "route": 5.174625
+      },
+      "B": {
+        "encode": 1.328,
+        "admit": 0.125,
+        "lookup": 0.01925,
+        "route": 1.483625
+      },
+      "pairedBinaryVsG": {
+        "encode": 2.5304286052569265,
+        "admit": 0.0341646737273659,
+        "lookup": 1.184,
+        "route": 0.2865903713361341
+      }
+    },
+    "chess": {
+      "G": {
+        "encode": 1.816,
+        "admit": 13.11725,
+        "lookup": 0.012625,
+        "route": 16.91475
+      },
+      "B": {
+        "encode": 1.849625,
+        "admit": 0.1615,
+        "lookup": 0.009375,
+        "route": 2.027375
+      },
+      "pairedBinaryVsG": {
+        "encode": 1.0203450408962815,
+        "admit": 0.012333422429264196,
+        "lookup": 0.7075471698113207,
+        "route": 0.11991854868567198
+      }
+    },
+    "snake": {
+      "G": {
+        "encode": 0.359125,
+        "admit": 1.84075,
+        "lookup": 0.007125,
+        "route": 2.618875
+      },
+      "B": {
+        "encode": 0.445125,
+        "admit": 0.063875,
+        "lookup": 0.009,
+        "route": 0.524625
+      },
+      "pairedBinaryVsG": {
+        "encode": 1.2464716006884682,
+        "admit": 0.034731190103989666,
+        "lookup": 1.263157894736842,
+        "route": 0.20044894450281783
+      }
+    },
+    "editor": {
+      "G": {
+        "encode": 1.438125,
+        "admit": 10.858875,
+        "lookup": 0.019375,
+        "route": 14.021125
+      },
+      "B": {
+        "encode": 1.522375,
+        "admit": 0.14825,
+        "lookup": 0.021875,
+        "route": 1.703125
+      },
+      "pairedBinaryVsG": {
+        "encode": 1.0580527594585214,
+        "admit": 0.013666900978347296,
+        "lookup": 1.2237762237762237,
+        "route": 0.12137219619091735
+      }
+    }
+  },
+  "receiverImageSHA256": "576582843e2221f146e32c0babb8d1a163afbd43be388abf10ded8210f2a5b7c",
+  "blocks": 7,
+  "producerImageSHA256": "f8af1bbfd4478e569824512b18017d908217672f87c1ce37b342375cb7162e0d"
+}

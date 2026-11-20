@@ -1,0 +1,15 @@
+{
+  "command": "bash scripts/30-replay-host.sh NEW_DIRECTORY",
+  "drawStates": 453,
+  "drawCommandDigests": {
+    "sysmon": "36e310843a9364a06afd9ed912700913acc2b152dd1d621e0493c89caeac404b",
+    "snake": "76566876d4c9c06b9ff3a0179b6421d1b8fb374c7d75dfb1a759bcb0b72cc5ba",
+    "chess": "123990f88cfafe1be9c697cdc701fc5317fe7c570e561edd94b0dca15dccafcb",
+    "keys": "a06567e8a8a3150368a921bce31d7e0ecfd103e5bde9b4cd37ced8fc55616ba0",
+    "editor": "88e83cc62c71e1621dbe973fe281eda55c5e1b44fef5024d7c5dff3e347805b0"
+  },
+  "editorPixelsReceiptSHA256": "e42414c5d11e24164bc62c929cc322cb69cfc78421c243a992c66a885f5db2ac",
+  "ownershipReceiptSHA256": "c1a4e1ee533d1eff8ddf0f171d57a1cf92a34476579a36e20a5c15beab19bcf6",
+  "binaryCapsuleSHA256": "ca2d76e538601914a40b88ad12e560456d2b2c8b50a26dbfbaf392333b5ffc01",
+  "applicationConsumerReceiptSHA256": "6b1912b7ce18211ae0793baaf98431a63bfc5c7862f3475185ce914958d32625"
+}
