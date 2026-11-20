@@ -42,6 +42,26 @@ test("a publisher cannot cover another app's approval with a forged frame", () =
   assert.equal(sent.at(-1).type, "draw");
 });
 
+test("a malformed Snake position preserves the last admitted screen", () => {
+  const { def, state, sent } = setup();
+  state.focus = "snake";
+  const tree = { t: "snake", v: 1, body: [34, 33, 32, 31], food: 63, score: 0, best: 0, alive: true, auto: false };
+  const publish = (next, from = "snake") => def.handlers.frames(state,
+    { app: "snake", title: "Snake", frame: { tree: next, hints: "steer" } }, { from });
+  publish(tree);
+  const accepted = state.apps.snake;
+  assert.ok(accepted);
+  state.queued = false;
+  sent.length = 0;
+  publish({ ...tree, food: 31 });                       // bit 31 of the first occupancy word
+  publish({ ...tree, body: [32, 31, 32, 33] });        // repeated across the word boundary
+  publish({ ...tree, body: [23, 22, 21, 20] });        // wraps between two board rows
+  publish({ ...tree, v: 2 });
+  publish(tree, "flaky");
+  assert.equal(state.apps.snake, accepted);
+  assert.equal(sent.length, 0);
+});
+
 test("only kernel status may remove an app or overlay a crash banner", () => {
   const { def, state } = setup();
   state.apps.chat = { title: "Agent" };

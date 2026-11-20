@@ -9,33 +9,11 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
+Summary: Production integration decisions, failed attempts, evidence and publication history.
 LastUpdated: 2026-11-20T13:31:12.681578089-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
-
-# Director implementation and integration diary
-
-## Goal
-
-<!-- What is the purpose of this reference document? -->
-
-## Context
-
-<!-- Provide background context needed to use this reference -->
-
-## Quick Reference
-
-<!-- Provide copy/paste-ready content, API contracts, or quick-look tables -->
-
-## Usage Examples
-
-<!-- Show how to use this reference in practice -->
-
-## Related
-
-<!-- Link to related documents or resources -->
 
 # Director implementation and integration diary
 
@@ -148,3 +126,51 @@ Run scripts/01-native-fixture.py from the checkout root with the CJI RV32 test t
 ### Technical details
 
 The first native module's shared unit, allocator and fake-kernel event API match the CJI emulator regression harness. The physical Espressif ELF loader is exercised separately. A correct SDK transcript alone does not render a single pixel.
+
+## Step 3: Compile the compositor and verify the displayed image through the ordinary OS
+
+The first board build exposed a difference between host JavaScript execution and the CJI frontend. I changed the compositor's short-lived validation scratch to a fixed bitset, rebuilt the native world unit, and replayed the application through the Linux PicoCalc simulator. All five captures remained identical to the previous release.
+
+### Prompt Context
+
+See Step 1. Each independent research lane keeps its own diary. This is the director's production integration investigation.
+
+### What I did
+
+The failing command was `node cji/cji.js picocalc-os/js/system/compositor.js --world-unit --emit`. I called the same compiler entry directly to preserve a stack trace, replaced the typed array with thirteen ordinary integer words, and recompiled. I added a normal compositor callback test spanning bit 31, a duplicate cell, a row-wrap adjacency error, a new version and a forged sender. I also ran the complete simulator twice through the same virtual keyboard input, timer schedule, display service and panel model.
+
+### Why
+
+A typed array in this CJI world introduces a class with a method named fill. The compositor already makes many calls to a dynamically dispatched framebuffer method with that name but a different signature. Admission requires 396 Boolean values. A bitset represents them in 13 words and avoids the class-method ambiguity.
+
+### What worked
+
+The new CJI compositor emitted 518,492 bytes of intermediate assembly. The native Snake transcript still matched six expected screens. The compositor test suite passed all eight tests. In the system simulator all RGB pixels matched in the moving, dead, restarted, autopilot and launcher captures. The candidate's virtual trace concluded with zero world crashes.
+
+### What didn't work
+
+CJI reported `Cannot read properties of null (reading 'includes')`. The direct traceback pointed to support() in cji/src/library.js called from dispatch(). The host replay had passed because its JS engine can dispatch those receiver types without the compiler's specialization step. The earlier emulator filename failure is documented in Step 2.
+
+### What I learned
+
+Each resource has a distinct unit. The bitset has 416 bit positions for 396 valid cell IDs. Their physical storage in a particular JS runtime includes the array and element representation. The saved static algorithm does not establish peak world heap. The device report measures what the firmware exposes.
+
+### What was tricky to build
+
+One bitset word can have a negative signed representation when setting bit 31. The duplicate test uses bitwise intersection and tests its truth value. It does not compare that intersection with a positive number.
+
+### What warrants a second pair of eyes
+
+Physical device trials must verify CJI output and state through the actual parser and device drawing. Simulator screenshots cover the product's QuickJS configuration. The board operator owns image identity, UART measurements and post-test health.
+
+### What should be done in the future
+
+Read the physical results and reconcile the observed cost with the expected reduction in pixel writes. Publish the final articles, including evidence that might contradict the expected CPU gain.
+
+### Code review instructions
+
+Run the commands in scripts/01-native-fixture.py and scripts/02-simulate-game.py. For the standalone compositor call, pass --world-unit --emit to the CJI driver. Independent replay tests compare both the received state and the back and presented buffers.
+
+### Technical details
+
+The screenshots are 320×320 unscaled RGB images of the simulated display controller. various/simulator.json stores a SHA-256 of decompressed pixels for each capture. The research-design Opus request used a source-free brief. Automated approval review held a separate request to provide measurements; I requested specific consent and continued locally rather than disclosing internal data.

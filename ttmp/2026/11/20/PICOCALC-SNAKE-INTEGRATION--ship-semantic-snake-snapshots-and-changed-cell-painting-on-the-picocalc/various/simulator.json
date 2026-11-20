@@ -1,0 +1,23 @@
+{
+  "original": {
+    "moving.png": "7d9162164d408b7c8adca5e43b8ba62a2251c957a685cc23b000b86fbafa211c",
+    "game-over.png": "056d776125c1cfd0f56321c76649ce56a0ffcb2fdaa2fad47dc89a532675d768",
+    "restarted.png": "e2cf82ff5cde7378021904be41cc670fab1ee3afe7a620e05cf44c829c268971",
+    "autopilot.png": "317d37e4300aad1d18f69f312b17d4cd54755047e711f2740f5380cc296e34ba",
+    "launcher.png": "51f4125dd26d694316c44dd2cddea97fd958282d058a8aea455e3fca26d4603d"
+  },
+  "candidate": {
+    "moving.png": "7d9162164d408b7c8adca5e43b8ba62a2251c957a685cc23b000b86fbafa211c",
+    "game-over.png": "056d776125c1cfd0f56321c76649ce56a0ffcb2fdaa2fad47dc89a532675d768",
+    "restarted.png": "e2cf82ff5cde7378021904be41cc670fab1ee3afe7a620e05cf44c829c268971",
+    "autopilot.png": "317d37e4300aad1d18f69f312b17d4cd54755047e711f2740f5380cc296e34ba",
+    "launcher.png": "51f4125dd26d694316c44dd2cddea97fd958282d058a8aea455e3fca26d4603d"
+  },
+  "match": {
+    "moving.png": true,
+    "game-over.png": true,
+    "restarted.png": true,
+    "autopilot.png": true,
+    "launcher.png": true
+  }
+}

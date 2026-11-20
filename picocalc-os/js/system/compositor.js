@@ -340,24 +340,27 @@ function batteryGlyph(fb, x, y, p) {   // a 22 x 10 battery outline, filled to t
 // invariants once, before replacing the last accepted app frame.
 const SNAKE_COLS = 22, SNAKE_ROWS = 18, SNAKE_CELL = 13;
 const SNAKE_CELLS = SNAKE_COLS * SNAKE_ROWS;
-const snakeSeen = new Uint8Array(SNAKE_CELLS);
+// Thirteen 32-bit words cover all 396 cells.
+const snakeSeen = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 function validSnakeCell(c) { return (c | 0) === c && c >= 0 && c < SNAKE_CELLS; }
 function validSnake(n) {
   if (n.v !== 1 || !Array.isArray(n.body) || n.body.length < 4 || n.body.length >= SNAKE_CELLS ||
       typeof n.alive !== "boolean" || typeof n.auto !== "boolean" || !validSnakeCell(n.food) ||
       n.score !== (n.body.length - 4) * 10 || (n.best | 0) !== n.best || n.best < 0 ||
       n.best > (SNAKE_CELLS - 5) * 10 || n.best % 10 !== 0) return false;
-  snakeSeen.fill(0);
-  snakeSeen[n.food] = 1;
+  for (let i = 0; i < snakeSeen.length; i++) snakeSeen[i] = 0;
+  snakeSeen[n.food >> 5] = 1 << (n.food & 31);
   for (let i = 0; i < n.body.length; i++) {
     const c = n.body[i];
-    if (!validSnakeCell(c) || snakeSeen[c]) return false;
+    if (!validSnakeCell(c)) return false;
+    const word = c >> 5, bit = 1 << (c & 31);
+    if (snakeSeen[word] & bit) return false;
     if (i) {
       const prev = n.body[i - 1];
       if (Math.abs(c - prev) !== SNAKE_COLS &&
           !(Math.abs(c - prev) === 1 && ((c / SNAKE_COLS) | 0) === ((prev / SNAKE_COLS) | 0))) return false;
     }
-    snakeSeen[c] = 1;
+    snakeSeen[word] = snakeSeen[word] | bit;
   }
   return true;
 }
