@@ -352,3 +352,7 @@ Use the physical transfer commands in `README.md`. Inspect `various/p4-transfer/
 ### Technical details
 
 Image `dac35e2bca871ea6e7d3a389659bd9ab79443e56e6341cd640f8aab71aca4ac7`. The byte-checked factory backup is `6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f`. Both ranked Editor variants produced the registered ELF `06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944`.
+
+## Step 8. Close the completed study and preserve the local supplement
+
+The project contains the complete physical report and evidence at `58897c8`. The original held-out article remains verified on the vault remote at `450e926`. The new device follow-up and figure are retained in local vault commit `0e79c9304bae3c2c86f34ab0e30c92e9a9d2815c`. Automatic approval review rejected the separate push to the vault’s default branch because the physical extension did not explicitly authorize that remote branch mutation. The supervisor is handling publication authorization independently of the completed technical work.
