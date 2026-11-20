@@ -79,7 +79,7 @@ Then we edited `leaf` to call `head`. Typed rejects recursive call cycles. Detec
 
 After `e2e4`, the physical P4 completed three plies and returned `b8c6` at the game's 1,600-node budget. The median search occupied 239.311 ms across three native runs. The isolated runner kept the board buffer in internal memory, executed on core zero at 360 MHz and measured from search initialization to the final slice. That interval includes the timing harness between slices. A player waiting for the displayed reply may also wait for scheduling, drawing and display transfer. Those intervals lie outside this benchmark.
 
-The board also completed depth five in a pawn ending in 142.179 ms. In the opening position, 30,000 nodes bought four full iterations and part of a fifth in 4.322 s. A tactical Kiwipete trial spent approximately 5.683 s on the same 30,000-node allowance. Position-dependent move generation, ordering, check evasion and tactical continuations make a node a variable unit of work.
+The board also completed depth five in a pawn ending in 142.179 ms. In the opening position, 30,000 nodes bought four full iterations and part of a fifth in 4.322 s. A tactical Kiwipete trial spent approximately 5.683 s on the same 30,000-node allowance. Position-dependent move generation, ordering, check evasion and tactical continuations make a node a variable unit of work. [Chess study](04-chess-search.md) · [Physical measurements](../various/chess/summary.json)
 
 ![Hardware time and modeled instructions per search node at depth three](../various/search-cost-per-node.png)
 
@@ -104,7 +104,7 @@ We evaluated the estimates on thirteen different workloads from the other five p
 
 ## Building with a literal pool on the P4
 
-The board operator compiled each full app five times per arm, rotating the stock, halfword and guarded word implementations. Each compile used a fresh QuickJS runtime. Source text and a fixed-size reactor were already available to the caller. A reactor is the existing executable module that reserves a slot and supplies the SDK entry points for the generated program. Compiling and linking into it produces a loadable application. The reported peak measures the compiler's QuickJS allocation. Other live operating-system allocations sit outside that measurement.
+The board operator compiled each full app five times per arm, rotating the stock, halfword and guarded word implementations. Each compile used a fresh QuickJS runtime. Source text and a fixed-size reactor were already available to the caller. A reactor is the existing executable module that reserves a slot and supplies the SDK entry points for the generated program. Compiling and linking into it produces a loadable application. The reported peak measures the compiler's QuickJS allocation. Other live operating-system allocations sit outside that measurement. [Literal study](02-literal-data.md) · [Physical samples](../various/literal/physical.json)
 
 | Outcome | Chess, stock | Chess, halfword | Editor, stock | Editor, halfword |
 |---|---:|---:|---:|---:|
@@ -118,3 +118,28 @@ On Chess the halfword pool reduced fresh build time **49.4%**, measured peak com
 The guarded word-copy variant adds an alignment check and copies more than one code unit per iteration when possible. It compiled Chess in **2.677 s**, produced an **89,084-byte** image, and reproduced the writer's expected output. In a separate native experiment the source and instructions were flash-mapped and the destination was in PSRAM. Median cycles per complete painter-source reconstruction fell from 6,465,714 for the stock writer to 94,909 for halfword copies and 42,300 for guarded word copies. Those medians cover eleven samples of eight calls per sample. Code placement, the instruction cache and memory access dominate this endpoint. The comparison does not tell us how many milliseconds a player saves when the ordinary native loader installs the program. A smaller reserved game slot and a measured first playable frame are the appropriate next integration tests.
 
 The release remains identifiable independently of this research. Its published application and partition match the prior physical readback. A later clean build reproduced the SDK configuration, Chess source, checked component executables and linked Chess and painter identities. Its complete firmware binary had a different hash. The release tag therefore retains the original verified download. [Release receipt](../various/release.json) · [Clean rebuild comparison](../various/release-clean-rebuild.json)
+
+## Rebuilding an edited program on the P4
+
+A separate trial ran the released compiler and the private fragment compiler inside a standalone QuickJS benchmark on the P4. Both arms in each pair received the same edited app source and reactor. The retained arm started with the immediately preceding valid fragment generation already in memory. The clean arm reconstructed the complete module. Three repeated blocks compared the resulting ELF checksum against the reference. The host qualification also compared the complete ELF content and async metadata across the specified edits and examined invalid programs. A fresh host compile and a fragment build also produced the same complete ELF under Node/V8. These paired device times belong to the incremental harness. Its runtime lifetime and instrumentation differ from the fresh-runtime literal trials. [Physical edit and checkpoint measurements](../scripts/incremental/summary.json)
+
+| App and edit | Clean median | Retained median | Change in time |
+|---|---:|---:|---:|
+| Editor, single function body | 2.232 s | 0.878 s | −60.6% |
+| Editor, signature and its call sites | 2.243 s | 2.428 s | +8.2% |
+| Editor, shared record layout | 2.247 s | 2.431 s | +8.2% |
+| Chess, single function body | 3.236 s | 0.591 s | −81.7% |
+| Chess, signature and its call sites | 3.232 s | 3.368 s | +4.2% |
+| Chess, shared record layout | 3.241 s | 3.377 s | +4.2% |
+
+The local changes reused 118 of 119 Editor functions and 81 of 82 Chess functions. Every listed structural edit invalidated the global declaration descriptor, so the prototype rebuilt every function and also paid for cache bookkeeping. Seeding the cache is visible too. In fresh QuickJS processes, building Editor and retaining its fragments took 2.768 s compared with 2.552 s clean. For Chess those single observations were 3.717 s and 3.577 s. The measurements favor retaining fragments across a sequence of edits to a live app. They give little reason to pay the seeding cost on every ordinary boot.
+
+A different experiment serialized the predecessor generation, created a temporary file, wrote and synchronized it, read and validated it, then built the edited program. It used the board's wear-levelled SPI flash FAT partition. The file occupied 292,438 bytes for Editor and 681,313 bytes for Chess. The full routes took 4.622 s and 9.003 s respectively. Writing accounted for 3.151 s and 7.432 s. These were single observations per app. If an earlier session already paid for the checkpoint, adding the measured read, decode and child compilation gives approximately 1.10 s for Editor and 1.06 s for Chess. Whether persistence pays in an actual editing workflow depends on how many future sessions reuse the checkpoint and when the earlier write is charged. SD-card latency would need its own trial.
+
+## What to take into firmware integration
+
+The first candidate I would integrate is literal pooling for sufficiently long writes. The narrow change preserves the existing language and capacity checks, gives Chess a 2.6-second cold-build improvement and makes the machine image small enough to test a smaller reserved slot. Start with the simpler halfword arm. The guarded word arm deserves a direct loaded-module comparison if source reconstruction is material to first playable frame. Both require the same byte-for-byte painter and buffer boundary checks.
+
+For a live editing session I would trial retained fragments on body edits. Preserve the clean path for global declaration changes and make the cost of retaining a generation explicit. Before combining the two optimizations, extend fragment serialization to cover references to immutable literal data. A cached instruction that addresses a pooled string needs a symbolic data reference when the new module lays out its pool. A useful test edits an early literal, leaves a later writer unchanged, changes the pool order, then compares every byte of the freshly linked and incrementally linked programs.
+
+For running search, preserve these fixtures and start the next compiler experiment with the high-frequency coordinate helpers. Compare at the same source, move, score and completed work, record image growth, and time the resulting binary on the board. These are three separate integration decisions. We measured no combined speedup, and the published ordinary firmware is the hardware-qualified release that preceded these experimental compilers.

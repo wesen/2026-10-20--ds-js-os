@@ -71,7 +71,7 @@ Run and independently inspect the experimental outcomes and publish each researc
 
 ### Code review instructions
 
-Start with the release link in the ticket and scripts/director/release-notes.md, then inspect the previous PICOCALC-CHESS-3D smooth-device receipt.
+Start with the release link in the ticket and scripts/director/release-notes.txt, then inspect the previous PICOCALC-CHESS-3D smooth-device receipt.
 
 ### Technical details
 
@@ -272,3 +272,51 @@ Inspect the game.deduplicated arm under game.arms in various/cross-study-images.
 ### Technical details
 
 The source is ASCII and the emitter's read-only literal pool encodes each code unit in two bytes. The qualified source has 16,316 characters. Its generated table section has 1,111 characters. The separate compositor painter occupies 21,920 bytes using the deduplicated, halfword-copy candidate.
+
+## Step 6: Compare the measured workflows and return the board to the playable release
+
+All three departments completed their device windows. Each returned the original firmware before handing off the board. I compared reported endpoints against the harnesses and their receipts, including the cost of persisting an edited program's predecessor. The final install has a successful flash readback and an installed native painter.
+
+### Prompt Context
+
+**User prompt:** See Steps 1, 2 and 5. **Assistant interpretation:** Deliver one documented result for cold builds, real edits and executing chess search. **Inferred user intent:** Maintain a playable release while commissioning experiments that can justify future compiler changes.
+
+### What I did
+
+Inspected the literal trial's five samples per app/arm and the incremental trial's three pairs per edit. Recomputed medians from the incremental serial records. Reviewed the board restoration and receipt from each operator. Replayed all cross-study image checks against the final sources. Classified raw model responses and the release body as plain text to retain their exact bytes while leaving docmgr able to validate managed Markdown documents.
+
+### Why
+
+The literal benchmark starts a fresh QuickJS runtime. The incremental benchmark holds a compiler process and a predecessor generation in memory. The measurements have different starting states and cannot be averaged or multiplied. A successful durable write also charges latency that the RAM-only path avoids.
+
+### What worked
+
+Halfword pooling reduced the physical Chess fresh compile/link median from 5.255 s to 2.659 s. Retained fragments reduced the local Chess edit median from 3.236 s to 0.591 s. A signature edit rebuilt all 82 functions and increased time from 3.232 s to 3.368 s. Checkpoint-to-edited-module took 9.003 s for Chess. All comparisons passed their respective correctness checks. The last operator verified both ordinary flash regions and the native painter after restoration.
+
+### What didn't work
+
+The initial docmgr doctor scan treated four raw Markdown outputs under scripts and various as ticket documents and reported missing frontmatter. Renaming the unmodified bodies to .txt and correcting links removed that ambiguity. The clean release configuration reproduced the partition, checked sources and linked components. Its full firmware SHA differed from the shipped one.
+
+### What I learned
+
+Large per-function reuse and slow persistent writes can occur simultaneously. Which result helps a user depends on whether they edit in the same session and whether someone already paid for a checkpoint. The static image of the timed search engine remained identical across literal-copy algorithms.
+
+### What was tricky to build
+
+A change that combines native fragment reuse and a literal pool must preserve references to data just as it preserves references to functions. Absolute displacements from the prior build can become incorrect when earlier pool contents change. I documented this as a future integration test, separate from the individual results.
+
+### What warrants a second pair of eyes
+
+The benchmark flash mapped source-writer code and wrote to PSRAM. The installed game uses the ordinary native loader. Run an actual startup trial before treating the isolated writer timings as a player-visible gain. The incremental tests used wear-levelled SPI flash for persistence; the SD card has different timing.
+
+### What should be done in the future
+
+Promote long-literal pooling through application loading, a smaller reserved slot and first playable frame. Test retained fragments in a live editing workflow. Compare targeted leaf lowering for the computational search engine using the frozen positions.
+
+### Code review instructions
+
+Read analysis/01-compiling-programs-and-measuring-chess-search-on-a-handheld.md with its three companion studies. Compare hashes in various/cross-study-images.json and various/release.json. Read tasks.md in PICOCALC-RENDER-NEXT for the six gates still open.
+
+### Technical details
+
+The published application SHA-256 starts 134f3a24 and the partition starts 72721dc3. The clean-profile app starts 5a72ae37. The final flash readback identifies the published application. The board was left running that release.

@@ -59,7 +59,7 @@ Read the maintained `chessStartSearch`, `chessSearchSlice` and `chessCompleteNod
 
 ### Technical details
 
-The final suite has 17 cases and 189,951 visited positions per complete pass. The host labels evaluation from the root side's perspective and represents mate separately through scores near 30,000. [Design review by Opus](../various/chess/opus-design.md)
+The final suite has 17 cases and 189,951 visited positions per complete pass. The host labels evaluation from the root side's perspective and represents mate separately through scores near 30,000. [Design review by Opus](../various/chess/opus-design.txt)
 
 ## Step 2. Validate machine work independently of time
 
@@ -107,7 +107,7 @@ Run `scripts/chess/model.sh WORK RV32_GCC` against a generated build. The output
 
 ### Technical details
 
-The emitted raw RV32 image contains 26,580 bytes with SHA-256 `d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4`. The host Wasm module contains 10,623 bytes. These are sizes of different representations, both of the same four-unit search harness. [Opus critique](../various/chess/opus-critique.md)
+The emitted raw RV32 image contains 26,580 bytes with SHA-256 `d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4`. The host Wasm module contains 10,623 bytes. These are sizes of different representations, both of the same four-unit search harness. [Opus critique](../various/chess/opus-critique.txt)
 
 ## Step 3. Time the native search on the board and restore the release
 
