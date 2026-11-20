@@ -52,7 +52,17 @@ function tableWindow(items, sel, capacity) {
 // in plot units so the receiver can decode small integers instead of long decimals.
 function lineGraph(values, max, height, options) {
   const scale = height - 3;
-  const levels = values.map(v => -Math.round(-scale * Math.min(1, v / max)));
+  const levels = [];
+  for (const value of values) {
+    const offset = scale * Math.min(1, value / max);
+    // At a half-pixel boundary the renderer rounds after subtracting from the
+    // absolute screen y. Keep its original operands if that subtraction can
+    // change the rounding decision (the panel is at most 320 pixels high).
+    const half = Math.floor(offset) + 0.5;
+    if (offset !== half && Math.abs(offset - half) <= 320 * Number.EPSILON)
+      return ui.spark(values, { ...options, h: height, max, points: HISTORY });
+    levels.push(-Math.round(-offset));
+  }
   return ui.spark(levels, { ...options, h: height, max: scale, points: HISTORY });
 }
 

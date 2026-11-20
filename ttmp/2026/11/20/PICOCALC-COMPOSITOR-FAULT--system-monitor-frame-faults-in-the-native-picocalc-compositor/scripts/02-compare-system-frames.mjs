@@ -48,3 +48,24 @@ for (const [tab,count] of [[0,worlds.length],[1,handles.length],[2,1]]) {
   summary.push({tab,selections:count,oldBytes:lengths[0],newBytes:lengths[1]});
 }
 console.log(JSON.stringify(summary,null,2));
+
+// Exercise graph rounding at ties, selection transitions, and short or empty tables.
+let edgeCases = 0;
+for (const n of [0,1,7,8,9,13,14,15,28]) {
+  for (const tab of [0,1,2]) {
+    const scale = tab === 0 ? 23 : 27;
+    const ties = Array.from({length:scale}, (_,i) => (i+0.5)/scale);
+    const samples = [0,...ties,1];
+    for (const sel of new Set([0, Math.max(0,n-1), Math.floor(n/2)])) {
+      const scenario = {...state,worlds:worlds.slice(0,n),handles:handles.slice(0,n),lane:samples,i2c:samples,spi:samples,tab,sel};
+      const streams = make.map(fn=>{
+        calls.length=0;
+        render(fn(scenario));
+        return JSON.stringify(calls);
+      });
+      assert.equal(streams[0], streams[1], 'half-pixel fixture / tab '+tab+' / count '+n+' / row '+sel);
+      edgeCases++;
+    }
+  }
+}
+console.error(edgeCases + ' extra boundary comparisons passed');
