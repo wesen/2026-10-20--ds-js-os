@@ -10,7 +10,7 @@ TICKET=Path(__file__).resolve().parents[1]
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("phase",choices=["design","report"])
+    parser.add_argument("phase",choices=["design","report","revised"])
     parser.add_argument("scratch",type=Path)
     parser.add_argument("--evidence",type=Path)
     args=parser.parse_args()
@@ -22,6 +22,8 @@ def main():
         prompt+=" Provide a compact pre-implementation design review, with the fastest falsification tests and a fair time/memory comparison."
     else:
         prompt+=" Write a self-contained project article (900–1400 words, then diary) using only the following verified measurements. Accurately use the provided production selection and hardware status.\n"+args.evidence.read_text()
+        if args.phase=="revised":
+            prompt+="\nIncorporate the scientific corrections in the editor's letter below. Return clean Markdown only.\n"+(TICKET/"sources/review-letter.md").read_text()
     proc=subprocess.run(["claude","-p","--model","claude-opus-4-6","--effort","high","--tools","",
                          "--disable-slash-commands","--setting-sources","","--strict-mcp-config","--no-session-persistence",
                          "--output-format","json"],input=prompt,text=True,capture_output=True,cwd=args.scratch,timeout=900,check=True)

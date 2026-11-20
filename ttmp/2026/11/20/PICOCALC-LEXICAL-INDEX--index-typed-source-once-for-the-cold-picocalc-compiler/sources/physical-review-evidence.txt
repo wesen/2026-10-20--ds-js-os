@@ -1,0 +1,118 @@
+This is a staged experiment. Production selection awaits the full application gates. The four native Editor arms below are measured on one physical ESP32-P4. Each time is a median of three fresh compiles; power-on and explicit reboots are deduplicated. The cap is 4 MiB of compiler heap. Native output size includes a fixed reserved code slot plus reactor. The previous async compiler has identical app behavior and emitted bytes to both indexed arms. The manual control uses an earlier compiler and source. Exact byte equality for the three apps was checked across the staged async compiler arms on the host. Lexical symbol IDs denote spellings including identifier spellings; semantics and binding identities are determined separately. The native index declines ambiguous trailing comments or unsupported input and frees its temporary state on out-of-memory. The ordinary scanner handles a decline. The optional internal token reuse is separate from spelling interning. Do not report an improvement as a production change. The original independent design's proposed exemption for identifier spellings was unnecessary. Do not include simulated tool calls. Return only the article and your diary.
+{
+  "ceiling_us": 2910112.7,
+  "arms": {
+    "manual": {
+      "us": {
+        "samples": [
+          2653065,
+          2645557,
+          2627345
+        ],
+        "median": 2645557
+      },
+      "peak": {
+        "samples": [
+          1493644,
+          1493880,
+          1493532
+        ],
+        "median": 1493644
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      }
+    },
+    "async": {
+      "us": {
+        "samples": [
+          3816925,
+          3834497,
+          3785138
+        ],
+        "median": 3816925
+      },
+      "peak": {
+        "samples": [
+          2256772,
+          2256776,
+          2256812
+        ],
+        "median": 2256776
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      }
+    },
+    "index": {
+      "us": {
+        "samples": [
+          3132429,
+          3131194,
+          3131202
+        ],
+        "median": 3131202
+      },
+      "peak": {
+        "samples": [
+          2685364,
+          2685364,
+          2685364
+        ],
+        "median": 2685364
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      },
+      "change_from_async_percent": -17.965325491069382,
+      "distance_from_gate_us": 221089.2999999998,
+      "passes_cold_gate": false
+    },
+    "index-reuse": {
+      "us": {
+        "samples": [
+          2995217,
+          2993614,
+          2994557
+        ],
+        "median": 2994557
+      },
+      "peak": {
+        "samples": [
+          2686260,
+          2686236,
+          2686260
+        ],
+        "median": 2686260
+      },
+      "bytes": {
+        "samples": [
+          240452,
+          240452,
+          240452
+        ],
+        "median": 240452
+      },
+      "change_from_async_percent": -21.545301518892824,
+      "distance_from_gate_us": 84444.29999999981,
+      "passes_cold_gate": false
+    }
+  }
+}
+{"bounded":9470,"indexedSamples":8,"random":3072,"randomIndexed":271,"compilerCases":73,"indexLifetime":"original and lowered source are separate; fresh after repeat, edit and error"}
+{"checked":2519,"totalTokens":129572,"declined":12,"allocationDeclines":3}

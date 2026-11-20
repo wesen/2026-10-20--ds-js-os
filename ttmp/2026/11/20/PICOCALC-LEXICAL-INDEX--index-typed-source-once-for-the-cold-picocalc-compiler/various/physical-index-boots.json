@@ -1,0 +1,69 @@
+{
+  "original": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "lanes": {
+    "index": {
+      "image_sha256": "9ac3d2041042f9ba9b18bd4dc6d7d014a7e27fa6579ab41b60f2b45dfaece251",
+      "boots": [
+        {
+          "us": 3132429,
+          "peak": 2685364,
+          "bytes": 240452,
+          "phases": []
+        },
+        {
+          "us": 3131194,
+          "peak": 2685364,
+          "bytes": 240452,
+          "phases": []
+        },
+        {
+          "us": 3131202,
+          "peak": 2685364,
+          "bytes": 240452,
+          "phases": []
+        }
+      ]
+    },
+    "index-reuse": {
+      "image_sha256": "623595716509e16b8c9eadef58e651ade71814780d7d6fd8886e7bfdaca05b47",
+      "boots": [
+        {
+          "us": 2995217,
+          "peak": 2686260,
+          "bytes": 240452,
+          "phases": []
+        },
+        {
+          "us": 2993614,
+          "peak": 2686236,
+          "bytes": 240452,
+          "phases": []
+        },
+        {
+          "us": 2994557,
+          "peak": 2686260,
+          "bytes": 240452,
+          "phases": []
+        }
+      ]
+    }
+  },
+  "restored": true,
+  "worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    }
+  }
+}
