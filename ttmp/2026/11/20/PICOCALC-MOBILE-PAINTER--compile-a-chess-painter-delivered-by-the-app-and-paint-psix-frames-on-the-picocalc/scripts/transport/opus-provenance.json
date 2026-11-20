@@ -1,0 +1,33 @@
+{
+  "command": "claude -p --model opus --effort high --tools '' --disable-slash-commands --setting-sources '' --strict-mcp-config --no-session-persistence --output-format json < brief.txt > result.json",
+  "workingDirectory": "/tmp/mobile-painter-transport-opus",
+  "tools": [],
+  "model": "claude-opus-5-5",
+  "result": {
+    "subtype": "success",
+    "duration_ms": 90427,
+    "session_id": "d7e3e981-30e6-4ae6-92a1-d78a615128ef",
+    "modelUsage": {
+      "claude-opus-5-5": {
+        "inputTokens": 2,
+        "outputTokens": 8821,
+        "cacheReadInputTokens": 2386,
+        "cacheCreationInputTokens": 1028,
+        "webSearchRequests": 0,
+        "costUSD": 0.18512920000000005,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 128000,
+        "thinkingTokens": 3738,
+        "cacheCreationEphemeral5mInputTokens": 0,
+        "cacheCreationEphemeral1hInputTokens": 1028,
+        "canonicalModel": "claude-opus-5-5",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "total_cost_usd": 0.18512920000000005
+  },
+  "promptSha256": "53f147d5ea9083e195cd75c0295a924d7baa6f990d7c6b0c630492e358f82a0b",
+  "answerSha256": "6ab4d44a7383bd137dcd1d58e68e0270700e261ae49fa76bf1cab17d95a26614",
+  "sessionExportSha256": "a2e2c9eb277d4b0fa299221c6a80269f368fbae5ef2cc7c0bf4c21cea7766811"
+}

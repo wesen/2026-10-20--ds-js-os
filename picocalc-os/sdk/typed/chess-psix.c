@@ -63,14 +63,22 @@ static void double_write(uint8_t *bytes, double value)
 {
     uint64_t bits;
     memcpy(&bits, &value, sizeof bits);
-    for (unsigned i = 0; i < 8; i++) bytes[i] = bits >> (8 * i);
+    uint32_t lo = (uint32_t)bits, hi = (uint32_t)(bits >> 32);
+    for (unsigned i = 0; i < 4; i++) {
+        bytes[i] = lo >> (8 * i);
+        bytes[4 + i] = hi >> (8 * i);
+    }
 }
 
 static double double_read(const uint8_t *bytes)
 {
-    uint64_t bits = 0;
+    uint32_t lo = 0, hi = 0;
     double value;
-    for (unsigned i = 0; i < 8; i++) bits |= (uint64_t)bytes[i] << (8 * i);
+    for (unsigned i = 0; i < 4; i++) {
+        lo |= (uint32_t)bytes[i] << (8 * i);
+        hi |= (uint32_t)bytes[4 + i] << (8 * i);
+    }
+    uint64_t bits = lo | (uint64_t)hi << 32;
     memcpy(&value, &bits, sizeof value);
     return value;
 }

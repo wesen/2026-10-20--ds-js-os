@@ -1,0 +1,32 @@
+{
+  "sourceBytes": 6204,
+  "sourceSha256": "3b5a98462994c81a02e7264f07de66d86f2397a33428bb3fe9a5e05b3410643f",
+  "sourcePublicationsAllowingResendAndRetry": 3,
+  "liveFrames": 12,
+  "searchSlices": 78,
+  "canonicalFixtures": {
+    "recorded": 47,
+    "boundary": 16,
+    "total": 63,
+    "singleBitMutations": 158776,
+    "admittedMutations": 17913,
+    "rejectedPrefixes": 19847
+  },
+  "mailboxControls": [
+    "counted-copy",
+    "auth",
+    "deferred-turn",
+    "quota",
+    "discard",
+    "sender-epoch",
+    "receiver-epoch",
+    "restart-purge",
+    "ordinary-json"
+  ],
+  "sanitizers": [
+    "ASan",
+    "UBSan"
+  ],
+  "leakSanitizer": "Disabled because sandbox uses ptrace",
+  "normalHostAgentReplay": "Passed; separate live HTTPS tests skipped"
+}
