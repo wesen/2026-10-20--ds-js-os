@@ -1,0 +1,175 @@
+{
+  "workflow": {
+    "rv32": {
+      "us": {
+        "before": [
+          2653065,
+          2645557,
+          2627345
+        ],
+        "after": [
+          2605417,
+          2606165,
+          2606789
+        ],
+        "before_median": 2645557,
+        "after_median": 2606165,
+        "delta": -39392,
+        "percent": -1.488987007272946
+      },
+      "peak_js_bytes": {
+        "before": [
+          1493644,
+          1493880,
+          1493532
+        ],
+        "after": [
+          2538156,
+          2538156,
+          2538156
+        ],
+        "before_median": 1493644,
+        "after_median": 2538156,
+        "delta": 1044512,
+        "percent": 69.9304519684744
+      },
+      "module_bytes": {
+        "before": [
+          240452,
+          240452,
+          240452
+        ],
+        "after": [
+          240452,
+          240452,
+          240452
+        ],
+        "before_median": 240452,
+        "after_median": 240452,
+        "delta": 0,
+        "percent": 0.0
+      },
+      "workflow_cpu_ms": {
+        "before": [
+          33.72,
+          35.03,
+          35.46
+        ],
+        "after": [
+          35.45,
+          36.48,
+          35.8
+        ],
+        "before_median": 35.03,
+        "after_median": 35.8,
+        "delta": 0.769999999999996,
+        "percent": 2.198115900656572
+      },
+      "frame_sha256": {
+        "shot-1.png": [
+          "c62eba2048b9052b2189824683befff48ad67832e7a3131ae9583e5d7189a2ff"
+        ],
+        "shot-2.png": [
+          "b5f8b4fa04179b76d1e0d86c32b6ccabed132aa53c7903b142a72de96e98132f"
+        ]
+      }
+    },
+    "wasm": {
+      "us": {
+        "before": [
+          2025205,
+          2036252,
+          2028286
+        ],
+        "after": [
+          1936301,
+          1935154,
+          1932897
+        ],
+        "before_median": 2028286,
+        "after_median": 1935154,
+        "delta": -93132,
+        "percent": -4.591660150491594
+      },
+      "peak_js_bytes": {
+        "before": [
+          1545880,
+          1545892,
+          1546084
+        ],
+        "after": [
+          2536168,
+          2536168,
+          2536168
+        ],
+        "before_median": 1545892,
+        "after_median": 2536168,
+        "delta": 990276,
+        "percent": 64.05855001513689
+      },
+      "module_bytes": {
+        "before": [
+          88302,
+          88302,
+          88302
+        ],
+        "after": [
+          88969,
+          88969,
+          88969
+        ],
+        "before_median": 88302,
+        "after_median": 88969,
+        "delta": 667,
+        "percent": 0.7553622794500781
+      },
+      "workflow_cpu_ms": {
+        "before": [
+          144.53,
+          144.35,
+          142.84
+        ],
+        "after": [
+          151.95,
+          152.54,
+          153.65
+        ],
+        "before_median": 144.35,
+        "after_median": 152.54,
+        "delta": 8.189999999999998,
+        "percent": 5.673709733287158
+      },
+      "frame_sha256": {
+        "shot-1.png": [
+          "dde3a73798e324687cd565856e7eb446b5176fa63e3ce3ed9e1e9f86aff6b789"
+        ],
+        "shot-2.png": [
+          "b471abae2b39c8cb8ff4f04350539de7e56ed08f5a014f6dff0d751e682199e7"
+        ]
+      }
+    }
+  },
+  "gates": {
+    "rv32_exact_frames": true,
+    "wasm_exact_frames": true,
+    "native_cpu_within_10pct": true,
+    "native_compile_within_10pct": true,
+    "e5_native_within_5pct": true
+  },
+  "e5_native_cold_us": {
+    "before": [
+      2475846,
+      2475289,
+      2476041
+    ],
+    "after": [
+      2539493,
+      2539880,
+      2541431
+    ],
+    "before_median": 2475846,
+    "after_median": 2539880,
+    "delta": 64034,
+    "percent": 2.5863482623717404
+  }
+}

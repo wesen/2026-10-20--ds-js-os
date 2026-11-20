@@ -400,3 +400,31 @@ Finish the queue, review each final gate, apply the exact qualified compiler pat
 ### Code review instructions
 
 Read the original Scope E and Scope G documents in PICOCALC-NATIVE-NEXT and the independent reports linked from this ticket index. The professor source roadmap is in project commit 5d7e0e0, and the companion course is in 65129c7. The portable host replay, source hashes and research index are in 75a8bf9.
+
+## Step 10 — Integrate the compiler that passed both timing experiments
+
+The short real-device trials completed for both candidates. The source-span compiler passed all five gates. The portable parser then lowered native cold time from 2.730 to 2.606 seconds on the matched complete workflow. I applied its six-file integration patch after the last trial, factory restoration and equality of the firmware and source digests.
+
+### What I did and why
+
+Ran scripts/28-check-qualified-integration.py against the rehearsed checkout, applied the exact patch with git apply, and ran the verifier again against the production repository. scripts/31-collect-final-results.sh archived the six physical samples, all five decisions and the clock chart. The integrated compiler commit is e0ad43b. I started a fresh 24-workflow replay against that actual revision.
+
+### What worked
+
+The portable compiler retained streaming RV32 generation. Native median compile time was 2,606,165 µs and workflow CPU was 35.80 ms. Wasm took 1,935,154 µs and 152.54 ms respectively. All compared Find and Preview screenshots matched the handwritten control on the same engine. The exact reference harness's six frontend medians also passed on this compiler, so I checked E5 in the professor's roadmap and closed the language implementation ticket.
+
+### What did not work
+
+The first Chess boot test observed two successful compiles, then received a truncated world-list JSON packet. It restored factory firmware before playing a move. The Chess researcher separated boot and world-list capture, preserved the partial result and reserved a retry. This work uses separate firmware; its ~1.897 s compile is a different workload and compiler revision.
+
+### What warrants a second pair of eyes
+
+Check the saved image digests in various/physical-portable.json against various/integration-portable.json. Examine cold compilation and workflow CPU separately: compiling the generated native Editor is now 1.49% quicker than compiling the handwritten baseline, while workflow CPU is 2.20% higher in the measured samples.
+
+### What should be done in the future
+
+Complete the physical 64 KiB search with the final production compiler, archive the restored receipt, and complete the end-to-end Chess report.
+
+### Code review instructions
+
+Start at e0ad43b and various/workflow-portable.json. The committed code uses a portable scanner in generic QuickJS hosts and the C occurrence index installed by the P4 compiler port. Both produce the same final Editor guest artifacts.

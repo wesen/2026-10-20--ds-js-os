@@ -184,6 +184,23 @@ The source-span compiler then ran the full short workflow three times on each ba
 
 The linked Editor output in this experiment has the same SHA-256 digest as the first generated Editor on each target. Consequently the rise from 34.80 to 36.39 ms in median native workflow CPU cannot be attributed to different guest instructions emitted by the new parser. Small sample sizes and system-level effects still matter with identical guest code. The experiment did not isolate which one accounts for this difference. This is why the raw trials, the program digest and the definition of each clock are all part of the performance record.
 
+## The combined portable and native compiler
+
+The last candidate uses the same portable parser on both machines. The ESP32-P4 also installs the native lexical index. This experiment matters because the portable parser changes how the frontend consumes tokens even when the native index supplies them. Qualifying a host parser and a device scanner independently does not measure their interaction.
+
+| Median of three fresh PicoCalc boots per target | Handwritten Editor | Generated Editor, initial compiler | Generated Editor, combined compiler | Combined vs. handwritten |
+| --- | ---: | ---: | ---: | ---: |
+| Native cold compilation | 2.646 s | 3.817 s | **2.606 s** | −1.49% |
+| Wasm cold compilation | 2.028 s | 3.121 s | **1.935 s** | −4.59% |
+| Native CPU for interactive workflow | 35.03 ms | 34.80 ms | 35.80 ms | +2.20% |
+| Wasm CPU for interactive workflow | 144.35 ms | 144.30 ms | 152.54 ms | +5.67% |
+| Native compiler peak allocation | 1,493,644 B | 2,256,776 B | 2,538,156 B | +69.93% |
+| Wasm compiler peak allocation | 1,545,892 B | 2,263,468 B | 2,536,168 B | +64.06% |
+
+Relative to the first implementation of the same generated Editor, cold compilation improved **31.72% on RV32 and 38.01% on Wasm**. Native compilation used 281,380 additional peak bytes, leaving 1,656,148 bytes below the compiler's four-MiB allowance. A better implementation of the compiler made the *same generated Editor* available sooner. The workflow includes UI and SDK work and was slightly more expensive in these trials. [Combined compiler workflow records](../various/workflow-portable.json)
+
+![Final cold compiler and interactive CPU observations, with each individual boot shown](../various/portable-workflow-clocks.png)
+
 ## How far the result generalizes
 
 Editor is a strong test of suspension and resumption because the original implementation exposes the state that a human programmer chose to keep. Its 64 KiB search stresses long cooperative operations, but the SDK can skip a line in a single call. A native loop that does most of its own integer arithmetic can spend a different fraction of its time in emitted guest code. Compiler speed, native instruction quality and application responsiveness therefore need separate observations even when the application source is identical.

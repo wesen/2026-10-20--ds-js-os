@@ -1,0 +1,262 @@
+{
+  "original": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "kind": "candidate",
+  "images": {
+    "wasm": "1e4cf96eacad169b42023b1f91279e07ddabe6d67ae60d16e9134e3c106c4fe0",
+    "rv32": "4e6ca7b0bc94f356f1c217aa371bb4341b291263c976648d1facbe15f55fe4b8"
+  },
+  "trials": [
+    {
+      "image_sha256": "4e6ca7b0bc94f356f1c217aa371bb4341b291263c976648d1facbe15f55fe4b8",
+      "compiles": [
+        {
+          "us": 2608188,
+          "peak_js_bytes": 2538156,
+          "module_bytes": 240452
+        },
+        {
+          "us": 2605417,
+          "peak_js_bytes": 2538156,
+          "module_bytes": 240452
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3842849,
+          "loader_us": 13761
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2287,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "c62eba2048b9052b2189824683befff48ad67832e7a3131ae9583e5d7189a2ff",
+        "shot-2.png": "b5f8b4fa04179b76d1e0d86c32b6ccabed132aa53c7903b142a72de96e98132f"
+      },
+      "trial": 1,
+      "engine": "rv32",
+      "workflow_cpu_ms": 35.45
+    },
+    {
+      "image_sha256": "1e4cf96eacad169b42023b1f91279e07ddabe6d67ae60d16e9134e3c106c4fe0",
+      "compiles": [
+        {
+          "us": 1932283,
+          "peak_js_bytes": 2536232,
+          "module_bytes": 88969
+        },
+        {
+          "us": 1936301,
+          "peak_js_bytes": 2536168,
+          "module_bytes": 88969
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3189494,
+          "loader_us": 176693
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2321,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "dde3a73798e324687cd565856e7eb446b5176fa63e3ce3ed9e1e9f86aff6b789",
+        "shot-2.png": "b471abae2b39c8cb8ff4f04350539de7e56ed08f5a014f6dff0d751e682199e7"
+      },
+      "trial": 2,
+      "engine": "wasm",
+      "workflow_cpu_ms": 151.95
+    },
+    {
+      "image_sha256": "1e4cf96eacad169b42023b1f91279e07ddabe6d67ae60d16e9134e3c106c4fe0",
+      "compiles": [
+        {
+          "us": 1932564,
+          "peak_js_bytes": 2536232,
+          "module_bytes": 88969
+        },
+        {
+          "us": 1935154,
+          "peak_js_bytes": 2536168,
+          "module_bytes": 88969
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3187354,
+          "loader_us": 176427
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2321,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "dde3a73798e324687cd565856e7eb446b5176fa63e3ce3ed9e1e9f86aff6b789",
+        "shot-2.png": "b471abae2b39c8cb8ff4f04350539de7e56ed08f5a014f6dff0d751e682199e7"
+      },
+      "trial": 3,
+      "engine": "wasm",
+      "workflow_cpu_ms": 152.54
+    },
+    {
+      "image_sha256": "4e6ca7b0bc94f356f1c217aa371bb4341b291263c976648d1facbe15f55fe4b8",
+      "compiles": [
+        {
+          "us": 2607302,
+          "peak_js_bytes": 2538156,
+          "module_bytes": 240452
+        },
+        {
+          "us": 2606165,
+          "peak_js_bytes": 2538156,
+          "module_bytes": 240452
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3842943,
+          "loader_us": 13794
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2296,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "c62eba2048b9052b2189824683befff48ad67832e7a3131ae9583e5d7189a2ff",
+        "shot-2.png": "b5f8b4fa04179b76d1e0d86c32b6ccabed132aa53c7903b142a72de96e98132f"
+      },
+      "trial": 4,
+      "engine": "rv32",
+      "workflow_cpu_ms": 36.48
+    },
+    {
+      "image_sha256": "4e6ca7b0bc94f356f1c217aa371bb4341b291263c976648d1facbe15f55fe4b8",
+      "compiles": [
+        {
+          "us": 2606440,
+          "peak_js_bytes": 2538156,
+          "module_bytes": 240452
+        },
+        {
+          "us": 2606789,
+          "peak_js_bytes": 2538156,
+          "module_bytes": 240452
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3843325,
+          "loader_us": 13802
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2296,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "c62eba2048b9052b2189824683befff48ad67832e7a3131ae9583e5d7189a2ff",
+        "shot-2.png": "b5f8b4fa04179b76d1e0d86c32b6ccabed132aa53c7903b142a72de96e98132f"
+      },
+      "trial": 5,
+      "engine": "rv32",
+      "workflow_cpu_ms": 35.8
+    },
+    {
+      "image_sha256": "1e4cf96eacad169b42023b1f91279e07ddabe6d67ae60d16e9134e3c106c4fe0",
+      "compiles": [
+        {
+          "us": 1933888,
+          "peak_js_bytes": 2536168,
+          "module_bytes": 88969
+        },
+        {
+          "us": 1932897,
+          "peak_js_bytes": 2536168,
+          "module_bytes": 88969
+        }
+      ],
+      "loads": [
+        {
+          "start_after_agenda_compile_us": 3174564,
+          "loader_us": 176695
+        }
+      ],
+      "workflow": "pass",
+      "buses": {
+        "i2c0": [
+          2320,
+          0
+        ],
+        "spi2": [
+          594,
+          0
+        ]
+      },
+      "shots": {
+        "shot-1.png": "dde3a73798e324687cd565856e7eb446b5176fa63e3ce3ed9e1e9f86aff6b789",
+        "shot-2.png": "b471abae2b39c8cb8ff4f04350539de7e56ed08f5a014f6dff0d751e682199e7"
+      },
+      "trial": 6,
+      "engine": "wasm",
+      "workflow_cpu_ms": 153.65
+    }
+  ],
+  "restored": true,
+  "worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    }
+  }
+}

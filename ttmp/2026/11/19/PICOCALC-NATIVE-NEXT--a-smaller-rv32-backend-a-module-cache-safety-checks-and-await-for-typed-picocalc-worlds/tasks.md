@@ -19,7 +19,7 @@
 - [x] E2: Language: for loops (S) <!-- t:2w3r -->
 - [x] E3: Language: break (S) <!-- t:qcyx -->
 - [x] E4: Language: !== (S) <!-- t:ps2t -->
-- [ ] E5: Language: calls to later functions with an explicit call-graph cycle check (S) <!-- t:2p7f -->
+- [x] E5: Language: calls to later functions with an explicit call-graph cycle check (S) <!-- t:2p7f -->
 - [x] E6: Language: enumerations with exhaustive match; Editor findPhase as demonstration (S) <!-- t:s8ld -->
 - [x] E7: Language: distinct integer types with zero change to generated code (S) <!-- t:3brw -->
 - [ ] E8: Language: unsigned index type and guard facts that remove bounds checks; at most 7 / 29 / 373 trap sites (M; needs A3, E7) <!-- t:d5zd -->
