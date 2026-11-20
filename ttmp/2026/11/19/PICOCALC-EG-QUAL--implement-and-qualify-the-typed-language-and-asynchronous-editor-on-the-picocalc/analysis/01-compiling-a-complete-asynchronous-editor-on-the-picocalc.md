@@ -182,6 +182,14 @@ Relative to the original generated implementation, the last compiler recovered 1
 
 The source-span compiler then ran the full short workflow three times on each backend. The native median was 2.730 s to compile (+3.18% against the handwritten control) and 36.39 ms of Editor CPU (+3.88%). Wasm took 2.088 s to compile (+2.94%) and 152.81 ms of Editor CPU (+5.86%). Both captured frames matched the handwritten baseline within each engine on every trial. The team restored the factory firmware and verified Files, Agenda and Editor all booted. This follow-up uses integrated application firmware; the preceding six-arm screening used a frozen application revision to isolate the compiler change. [Source-span workflow and five device gates](../various/workflow-source-spans.json)
 
+The linked Editor output in this experiment has the same SHA-256 digest as the first generated Editor on each target. Consequently the rise from 34.80 to 36.39 ms in median native workflow CPU cannot be attributed to different guest instructions emitted by the new parser. Small sample sizes and system-level effects still matter with identical guest code. The experiment did not isolate which one accounts for this difference. This is why the raw trials, the program digest and the definition of each clock are all part of the performance record.
+
+## How far the result generalizes
+
+Editor is a strong test of suspension and resumption because the original implementation exposes the state that a human programmer chose to keep. Its 64 KiB search stresses long cooperative operations, but the SDK can skip a line in a single call. A native loop that does most of its own integer arithmetic can spend a different fraction of its time in emitted guest code. Compiler speed, native instruction quality and application responsiveness therefore need separate observations even when the application source is identical.
+
+The lab added a typed chess world as a complementary workload. Its iterative-deepening alpha–beta search generates, makes, and undoes moves, and extends captures to avoid evaluating an unfinished exchange. Because typed call graphs exclude recursion, the program keeps search frames in an explicit stack. A fixed search budget gives each compiler the same work. Record the position, move, score, completed depth and number of examined nodes before comparing engine time per node. A changed move or search tree demands an explanation before the timing ratio can represent a code-generation improvement. Chess played no role in selecting the Editor parser parameters. [Chess engine and workload design](../../../20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/analysis/01-chess-search-without-recursion-on-the-picocalc.md)
+
 ## Reproduce the stages
 
 | Source or script | Responsibility |
