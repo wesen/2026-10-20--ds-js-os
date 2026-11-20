@@ -37,16 +37,19 @@ static void advance_character(scan_state *s) {
 
 static void advance_ascii(scan_state *s, unsigned n) { s->pos += n; s->units += n; }
 
-static void skip_trivia(scan_state *s) {
+static int skip_trivia(scan_state *s) {
     const unsigned char *b = s->bytes;
+    int comment = 0;
     while (s->pos < s->length) {
         if (ascii_space(b[s->pos])) {
             advance_ascii(s, 1);
         } else if (s->length - s->pos >= 2 && b[s->pos] == '/' && b[s->pos+1] == '/') {
+            comment = 1;
             advance_ascii(s, 2);
             while (s->pos < s->length && b[s->pos] != '\n') advance_character(s);
         } else break;
     }
+    return comment;
 }
 
 /* For unrecognized input the reference JS scanner supplies original diagnostics. */
@@ -181,13 +184,17 @@ static JSValue make_index(JSContext *ctx, JSValueConst self, int argc, JSValueCo
     (void)self;
     if (argc != 1 || !JS_IsString(argv[0])) return JS_NULL;
     scan_state s = {.ctx = ctx};
-    s.bytes = (const unsigned char *)JS_ToCStringLen2(ctx, &s.length, argv[0], 1);
-    if (!s.bytes) return JS_EXCEPTION;
     JSValue result = JS_NULL;
+    s.bytes = (const unsigned char *)JS_ToCStringLen2(ctx, &s.length, argv[0], 1);
+    if (!s.bytes) { result = JS_EXCEPTION; goto done; }
     if (s.length > 1024 * 1024) goto done;
     for (;;) {
-        skip_trivia(&s);
-        if (s.pos == s.length) break;
+        int comment = skip_trivia(&s);
+        if (s.pos == s.length) {
+            /* The reference sticky expression can backtrack into trailing comments. */
+            if (comment) goto done;
+            break;
+        }
         size_t byte_at = s.pos;
         uint32_t at = s.units;
         enum token_kind kind = scan_token(&s);
@@ -223,7 +230,13 @@ done:
     js_free(ctx, s.rows);
     js_free(ctx, s.table);
     js_free(ctx, s.symbols);
-    JS_FreeCString(ctx, (const char *)s.bytes);
+    if (s.bytes) JS_FreeCString(ctx, (const char *)s.bytes);
+    if (JS_IsException(result)) {
+        /* This accelerator allocates only private records. After reclaiming
+           them the cursor can read the original input under the same limit. */
+        JS_FreeValue(ctx, JS_GetException(ctx));
+        return JS_NULL;
+    }
     return result;
 }
 

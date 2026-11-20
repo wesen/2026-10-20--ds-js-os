@@ -69,3 +69,51 @@ Read the intern guide before inspecting the isolated candidate. The reference fr
 ### Technical details
 
 The original and transformed input strings are distinct. Each can have its own index during one cold compilation. The current Editor compiler has a 4 MiB limit and a six-second watchdog.
+
+## Step 2: Compare native occurrence records with actual QuickJS lexer behavior
+
+I built the C record producer against the production QuickJS allocator and inspected its ownership rules. The reference accepted a trailing-comment case in an unexpected way. The staged scanner now declines that input so the existing lexer owns its interpretation.
+
+### Prompt Context
+
+**User prompt (verbatim).** See Step 1. **Assistant interpretation.** Speed up cold compilation while preserving token behavior, artifacts and diagnostics. **Inferred user intent.** A speed improvement should remain usable under the compiler's existing memory budget. The initial producer is in `16661c5`. The independently qualified JavaScript cursor is in `de07831`.
+
+### What I did
+
+I compared every emitted row, its source interval, identifier ordinal and paired braces against `typedWasm.Lexer` using `scripts/08-check-native-records.js`. I added supplementary Unicode, lone surrogate, malformed escape, comment, low-memory and repeated-call cases. I inspected the vendored `js_array_buffer_constructor3` before committing to ownership transfer of off-heap row storage accounted to the QuickJS allocator.
+
+### Why
+
+The syntax parser revisits the same source with different bounds. A changed position, an incorrect end sentinel or a partial table reused after failure can affect legal-source compilation or change the first reported diagnostic.
+
+### What worked
+
+The actual C producer under 4 MiB matched 129,572 token records from 2,519 accepted sources. It declined twelve unsupported or ambiguous inputs. Three attempts to index 300,000 identifiers exhausted the available space for records and cleanly returned to ordinary scanning. The immediately following small indexes all succeeded. See `various/producer-differential.json`.
+
+### What didn't work
+
+The first implementation treated a final line comment as unconditional end of input. The existing regular expression can backtrack and emit the slash. That divergence was reproduced in the independent cursor tests. Returning an index allocation exception also risked rejecting a program that ordinary streaming could still compile.
+
+### What I learned
+
+Returning an unavailable-index indication is sufficient for these cases. The reference lexer and parser already define the correct observable behavior. The host researcher separately reproduced byte-identical Wasm and RV32 for all three apps.
+
+### What was tricky to build
+
+When creating externally backed ArrayBuffers, the constructor acquires memory on success. On error the caller still owns the raw pointer. The wrapper releases the buffer exactly once, then the optional accelerator clears its allocation exception after releasing its temporary state.
+
+### What warrants a second pair of eyes
+
+Inspect UTF-16 indices for astral characters and inspect the two transfer paths that set ArrayBuffer properties. Confirm that using only retained allocator counters for the heap includes native temporary allocations.
+
+### What should be done in the future
+
+Compare both the indexed implementation and the optional borrowed-token implementation on the board. The fresh QuickJS host comparison showed an 18.8% reduction for the first change in one paired series. A separate series showed a further 5.2% for token reuse. Neither series predicts the board clock by itself.
+
+### Code review instructions
+
+Build with `scripts/04-build-native-host.sh`. Run the resulting executable with `INDEX picocalc-os/compiler/typed-wasm.js scripts/08-check-native-records.js -- EDITOR_SOURCE` using paths resolved from the project and ticket. See the independent cursor diary for full linked artifacts and diagnostic tests.
+
+### Technical details
+
+Each occurrence occupies four unsigned 32-bit words. The algorithm maps a spelling to the first source interval that contains it. Variable binding remains in the typed frontend. Separate staged images pin the C scanner and both JavaScript cursor implementations.

@@ -19,6 +19,7 @@ def edit(path, old, new):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("tree",type=Path)
+    parser.add_argument("--reuse-token", action="store_true", help="reuse tokens only at non-retaining compiler call sites")
     args=parser.parse_args()
     tree=args.tree.resolve()
     if tree.is_relative_to(REPO): raise ValueError("use a detached checkout outside the product tree")
@@ -33,8 +34,11 @@ def main():
     edit(port/"typed_p4.c",'#include "p4.h"', '#include "p4.h"\n#include "typed_lex_index.h"')
     edit(port/"typed_p4.c","  if (!ctx) goto done;", "  if (!ctx) goto done;\n  if (!typed_lex_index_install(ctx)) goto rejected;")
     subprocess.run(["node",HERE/"02-index-overlay.mjs",compiler],check=True)
+    if args.reuse_token:
+        subprocess.run(["node",HERE/"10-reuse-token-overlay.mjs",compiler.parent],check=True)
     print(json.dumps({str(p.relative_to(tree)):hashlib.sha256(p.read_bytes()).hexdigest()
-                      for p in [source,header,port/"typed_p4.c",port/"CMakeLists.txt",compiler]},indent=2))
+                      for p in [source,header,port/"typed_p4.c",port/"CMakeLists.txt",compiler,
+                                compiler.with_name("typed-async.js")]},indent=2))
 
 
 if __name__=="__main__":main()
