@@ -35,7 +35,7 @@ def add_exports(text, additions):
     return text.removesuffix("})();\n") + additions + "\n})();\n"
 
 
-def stage(work):
+def stage(work, endpoint=False):
     stock = work / "stock"
     candidate = work / "candidate"
     stock.mkdir(parents=True, exist_ok=True)
@@ -82,6 +82,8 @@ globalThis.rebuildFrontend = {{Lexer, RebuildEmitter, rebuildRecords, recordLayo
 """))
     for name, source in (("incremental.js", "02-incremental.js"), ("cases.js", "03-cases.js")):
         shutil.copyfile(HERE / source, candidate / name)
+    if endpoint:
+        shutil.copyfile(HERE / "09-endpoint.js", candidate / "endpoint.js")
     manifest = {"revision": CONTROL, "sha256": {
         str(path.relative_to(work)): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in sorted([*stock.iterdir(), *candidate.iterdir()])}}
@@ -92,7 +94,21 @@ def patch(path, old, new):
     path.write_text(exact(path.read_text(), old, new))
 
 
-def p4_tree(work):
+def prepare_resolver(port):
+    native_elf = port / "optional/native_elf/native_elf_p4.c"
+    marker = "// ---- what the kernel gives a module"
+    source = native_elf.read_text()
+    if source.count(marker) != 1:
+        raise ValueError("cannot locate the production symbol resolver")
+    native_elf.write_text(source.replace(marker, """void rebuild_elf_resolver_setup(void) {
+  elf_set_symbol_resolver(resolve);
+  esp_log_level_set("ELF", ESP_LOG_WARN);
+}
+
+""" + marker))
+
+
+def p4_tree(work, endpoint=False):
     tree = work / "tree"
     checkout = tree / "picocalc-os"
     checkout.mkdir(parents=True)
@@ -107,6 +123,7 @@ def p4_tree(work):
             shutil.copytree(path, port / path.name, symlinks=True)
         elif path.is_file():
             shutil.copyfile(path, port / path.name)
+    prepare_resolver(port)
     main = port / "main"
     cmake = main / "CMakeLists.txt"
     patch(cmake, "PRIV_REQUIRES driver", "PRIV_REQUIRES mbedtls driver")
@@ -122,15 +139,20 @@ def p4_tree(work):
     patch(main / "files_p4.c", '"files/compile.js"', '"rebuild/stock-files.js"')
     patch(main / "editor_p4.c", 'char *p4_editor_compile', 'char *rebuild_editor_compile')
     with (main / "typed_p4.c").open("a") as stream:
+        if endpoint:
+            stream.write("\n#define PICOCALC_REBUILD_ENDPOINT 1\n")
         stream.write("\n" + (HERE / "05-p4.c.inc").read_text())
+        if endpoint:
+            stream.write("\n" + (HERE / "10-endpoint.c.inc").read_text())
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("work", type=Path)
     parser.add_argument("--p4", action="store_true")
+    parser.add_argument("--endpoint", action="store_true", help="stage the continuous source-to-entry trial")
     args = parser.parse_args()
     work = args.work.resolve()
-    stage(work)
-    if args.p4:
-        p4_tree(work)
+    stage(work, args.endpoint)
+    if args.p4 or args.endpoint:
+        p4_tree(work, args.endpoint)

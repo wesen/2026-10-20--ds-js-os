@@ -175,3 +175,57 @@ Read `rebuild_guest` in [05-p4.c.inc](../scripts/05-p4.c.inc). The runner checks
 ### Technical details
 
 The stock firmware has `CONFIG_ELF_LOADER_LOAD_PSRAM=1`. The candidate hands the confirmed ELF bytes to that loader, verifies the mapped entry address, records load time, calls the pure entry once with `_Ab`, and frees the mapped ELF after the clock stops. The cache trial's compile times exclude all of that work.
+
+## Step 4: Register the preboot symbol resolver and measure a complete edit
+
+The first PSRAM-loader build compiled and fully linked the initial Files ELF on the device. The guest probe ran during the boot path before the ordinary native backend initialized its resolver. The loader reported `Can't find common strcpy` and ended the trial. The supervisor restored the original partition and verified the normal worlds before retrying.
+
+The lab also needed a single continuous latency from a real changed source arriving at the compiler through native return. The component measurements intentionally stop before guest loading. I staged a second firmware with a small comparison that takes this continuous interval for both the seeded candidate and warm clean compiler.
+
+### Prompt Context
+
+See Step 1. The supervising experimentalist explicitly asked for a separate, continuous endpoint using the ordinary ELF loader, no comparison, JSON or output before the return timestamp, a warm clean control at the same endpoint, and candidate heap without a live oracle.
+
+### What I did
+
+- Traced the failed UART segment to `esp_elf_relocate` returning `-88` after failing to resolve `strcpy`. The ordinary native world loader installs the production resolver lazily at its first load. The compile and benchmark hook runs earlier.
+- Added a staged initializer in the same translation unit as the existing production ELF resolver. Both trial paths call it before any guest loads. The resolver, runtime allocator, board memory configuration and reactor remain as in the stock port.
+- Archived the failed boot and restored ledger under `/tmp/pico-function-rebuild/rejected-72769ef4`. The failed boot log SHA-256 is `a4417677da8dbbf6570c92f24ec8315eb38d2dab1e2af71cb965c8553482896e`. A compact excerpt is in [failed-loader.txt](../various/failed-loader.txt).
+- Added a [separate run wrapper](../scripts/10-endpoint.c.inc), [JS request](../scripts/09-endpoint.js), alternate physical log parser and per-boot paired summary. The continuous clock starts immediately before supplying the changed source to JS and ends immediately after the loaded native entry returns. Verification and output follow the end timestamp.
+- Built fresh images for both paths. The primary image SHA-256 is `cef741f93d6f0322ad8b619ed4d56db62856533fc44464bf463d01b345e9a0b9`. The endpoint image in `/tmp/pico-function-endpoint` has SHA-256 `67773793a4645aaa0063c2dd7532d4222fdaee5b6a9738d67f255a38f17042ae`.
+
+### Why
+
+The fallback archive separates an early firmware harness failure from measured candidate results. The plain rebuild clock exposes what compilation costs, while the continuous clock includes bridge and loader work between a ready source string and a runnable entry. The split measurement cannot be added together as a directly observed endpoint because it runs other work between clocks.
+
+### What worked
+
+The new primary and supplemental images built successfully with the stock memory settings. The compiler and edited source hashes stayed unchanged. The endpoint firmware contains its new script and markers and exports the staged initializer. The previous physical ledger has a verified restoration and zero accepted boots.
+
+### What didn't work
+
+The earlier physical image stopped at `REBUILDERROR guest ELF load -88` following `ELF: Can't find common strcpy`. Its one successful seed output matched the host SHA-256, but the run supplies no accepted component measurements. The failing log and firmware have separate identities from both scheduled images.
+
+### What I learned
+
+A loader can have executable memory available and still require its caller to register framework symbols before mapping even a pure entry. The enclosing ELF contains C runtime code and relocations beyond the function the probe calls. The product's normal resolver configuration is part of the measurement environment.
+
+### What was tricky to build
+
+The comparison needs a warm baseline without preserving a candidate or oracle result in the QuickJS heap. Each endpoint request runs in its own realm. The control performs one clean compile of the initial input and discards the result. The candidate seeds its session on the same input and keeps its intended cache. The controller creates the edited source before timing and hands it to either warmed compiler through the same call. The test alternates order in six paired blocks per boot.
+
+### What warrants a second pair of eyes
+
+Check the start and end timestamps in [10-endpoint.c.inc](../scripts/10-endpoint.c.inc) and [05-p4.c.inc](../scripts/05-p4.c.inc). There is no oracle, checksum, JSON receipt or serial output on the successful measured path. Compare candidate and control allocator intervals under the independently prewarmed runtime settings.
+
+### What should be done in the future
+
+Require two accepted boots and a restored image for both timing boundaries. Compare the body edit with a warm clean compile of exactly the same source and retain the separate reasons that make fixture requests rebuild.
+
+### Code review instructions
+
+Generate the component run with `python3 01-stage.py WORK --p4` and the continuous run with `python3 01-stage.py WORK --endpoint`. Each uses a fresh work directory and the ESP-IDF flags from Step 2. The same [board runner](../scripts/06-board.py) selects the endpoint via `--endpoint` and verifies the complete edited ELF hash and the return result on every sample.
+
+### Technical details
+
+The supplemental request stops at the first return from the tested native `filesName` entry loaded by the normal ELF loader. It excludes editing the file, runtime startup and seed, submitting an OS world, unrelated UI work, output verification, and cleanup after the native return. The record includes both the live JS allocation before and after the request and the request's peak. Only the candidate retains old fragments and its private artifact. ELF loader PSRAM belongs to its own allocator.

@@ -4,9 +4,11 @@
 #include "mbedtls/sha256.h"
 
 char *rebuild_editor_compile(size_t *length);
+void rebuild_elf_resolver_setup(void);
 
 typedef struct { uint32_t length; uint16_t units[96]; } rebuild_string;
 
+#ifndef PICOCALC_REBUILD_ENDPOINT
 static JSValue rebuild_clock(JSContext *ctx, JSValueConst self, int argc, JSValueConst *argv) {
   return JS_NewInt64(ctx, port_clock());
 }
@@ -25,13 +27,21 @@ static JSValue rebuild_heap(JSContext *ctx, JSValueConst self, int argc, JSValue
   return result;
 }
 
+#endif
+
 static void rebuild_hash(const uint8_t *bytes, size_t size) {
   uint8_t digest[32];
   mbedtls_sha256(bytes, size, digest, 0);
   for (size_t i = 0; i < sizeof digest; ++i) printf("%02x", digest[i]);
 }
 
-static bool rebuild_guest(const uint8_t *bytes, size_t size, const char *id) {
+typedef struct {
+  vtime_t end, load_us, run_us;
+  int result;
+  uint16_t units[3];
+} rebuild_guest_sample;
+
+static bool rebuild_run_guest(const uint8_t *bytes, size_t size, rebuild_guest_sample *sample) {
   static const uint32_t magic[] = {0x4147454e, 0x44415256, 0x3332534c};
   size_t entry_offset = 0;
   for (size_t at = 0; at + 36 <= size; at += 4) {
@@ -77,13 +87,29 @@ static bool rebuild_guest(const uint8_t *bytes, size_t size, const char *id) {
   rebuild_string output = {.length = 96};
   const vtime_t start = port_clock();
   const int result = entry(&input, &output);
-  const vtime_t run_us = port_clock() - start;
+  const vtime_t done = port_clock();
   esp_elf_deinit(&elf);
-  printf("REBUILDGUEST %s %lld %lld %d %u %u %u\n", id, (long long)load_us,
-         (long long)run_us, result, output.units[0], output.units[1], output.units[2]);
-  return !strcmp(id, "seed") ? result == -1 :
-      result == 3 && output.units[0] == '_' && output.units[1] == 'A' && output.units[2] == 'b';
+  *sample = (rebuild_guest_sample) {
+    .end = done, .load_us = load_us, .run_us = done - start, .result = result,
+    .units = {output.units[0], output.units[1], output.units[2]},
+  };
+  return true;
 }
+
+static bool rebuild_expected_guest(const rebuild_guest_sample *sample) {
+  return sample->result == 3 && sample->units[0] == '_' && sample->units[1] == 'A' && sample->units[2] == 'b';
+}
+
+#ifndef PICOCALC_REBUILD_ENDPOINT
+static bool rebuild_guest(const uint8_t *bytes, size_t size, const char *id) {
+  rebuild_guest_sample sample;
+  if (!rebuild_run_guest(bytes, size, &sample)) return false;
+  printf("REBUILDGUEST %s %lld %lld %d %u %u %u\n", id, (long long)sample.load_us,
+         (long long)sample.run_us, sample.result, sample.units[0], sample.units[1], sample.units[2]);
+  return !strcmp(id, "seed") ? sample.result == -1 : rebuild_expected_guest(&sample);
+}
+
+#endif
 
 static void rebuild_exception(JSContext *ctx) {
   JSValue error = JS_GetException(ctx);
@@ -93,6 +119,7 @@ static void rebuild_exception(JSContext *ctx) {
   JS_FreeValue(ctx, error);
 }
 
+#ifndef PICOCALC_REBUILD_ENDPOINT
 static bool rebuild_row(JSContext *ctx, JSValueConst row, unsigned block, const char *kind, bool marked) {
   if (JS_IsException(row)) {
     rebuild_exception(ctx);
@@ -214,6 +241,7 @@ char *p4_editor_compile(size_t *length) {
   static bool ran;
   if (!ran) {
     ran = true;
+    rebuild_elf_resolver_setup();
     puts("REBUILDSTART");
     bool ok = true;
     for (unsigned block = 0; block < 4 && ok; ++block) {
@@ -228,3 +256,4 @@ char *p4_editor_compile(size_t *length) {
   }
   return rebuild_editor_compile(length);
 }
+#endif

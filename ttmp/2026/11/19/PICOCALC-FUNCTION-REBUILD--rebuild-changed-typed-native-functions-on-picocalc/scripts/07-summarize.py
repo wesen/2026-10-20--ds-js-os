@@ -33,6 +33,12 @@ def summarize(rows, cold, setups=(), guests=()):
         if "heap" in next(iter(plain.values())):
             summary["live_heap_bytes"] = distribution([row["heap"]["live"] for row in plain.values()])
             summary["peak_heap_bytes"] = distribution([row["heap"]["peak"] for row in plain.values()])
+            summary["heap_by_order"] = {
+                order: {name: distribution([row["heap"][name] for row in plain.values()
+                                            if row["cleanFirst"] == clean_first])
+                        for name in ("live", "peak")}
+                for order, clean_first in (("candidate_first", False), ("clean_first", True))
+            }
         if not next(iter(plain.values())).get("error"):
             summary["mean_phases_us"] = {phase: mean(row["phases"][phase] for row in marked.values())
                                          for phase in next(iter(marked.values()))["phases"]}
@@ -54,10 +60,23 @@ def summarize(rows, cold, setups=(), guests=()):
     return result
 
 
+def summarize_endpoint(rows):
+    lanes = {mode: {row["block"]: row for row in rows if row["mode"] == mode}
+             for mode in ("clean", "rebuild")}
+    return {
+        "lanes": {mode: {name: distribution([row[name] for row in samples.values()])
+                         for name in ("us", "load_us", "run_us", "before", "live", "peak")}
+                  for mode, samples in lanes.items()},
+        "paired_saved_us": distribution([row["us"] - lanes["rebuild"][block]["us"]
+                                         for block, row in lanes["clean"].items()]),
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("host", type=Path)
     parser.add_argument("--board", type=Path)
+    parser.add_argument("--endpoint", type=Path)
     args = parser.parse_args()
     host = read(args.host)
     output = {"host": summarize(host["candidates"], host["cold"])}
@@ -67,6 +86,11 @@ def main():
             raise ValueError("expected a restored board with two complete boots")
         output["board"] = [summarize(boot["rows"], boot["cold"], boot["setups"], boot["guests"])
                            for boot in physical["boots"]]
+    if args.endpoint:
+        endpoint = read(args.endpoint)
+        if not endpoint["restored"] or len(endpoint["boots"]) < 2:
+            raise ValueError("expected the restored endpoint trial and two complete boots")
+        output["endpoint"] = [summarize_endpoint(boot["rows"]) for boot in endpoint["boots"]]
     print(json.dumps(output, indent=2))
 
 

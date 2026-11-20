@@ -101,6 +101,32 @@ def parse(log, evidence):
     return {"rows": rows, "setups": setups, "guests": guests, "cold": cold, "worlds": worlds(log)}
 
 
+def parse_endpoint(log, evidence):
+    body = next(row for row in evidence if (row["kind"], row["id"]) == ("files", "body"))
+    expected = [(block, position, "rebuild" if (block + position) % 2 else "clean")
+                for block in range(6) for position in range(2)]
+    rows = []
+    for line in log.splitlines():
+        if not line.startswith("ENDPOINTROW "):
+            continue
+        _, block, position, mode, us, load_us, run_us, before, live, peak, size, result, x, y, z, digest = line.split()
+        row = dict(block=int(block), position=int(position), mode=mode, us=int(us), load_us=int(load_us),
+                   run_us=int(run_us), before=int(before), live=int(live), peak=int(peak), size=int(size),
+                   result=int(result), units=[int(x), int(y), int(z)], sha256=digest)
+        if len(rows) >= len(expected) or (row["block"], row["position"], row["mode"]) != expected[len(rows)]:
+            raise ValueError(f"unexpected endpoint row {row}")
+        if (row["size"] != body["size"] or digest != body["sha256"] or row["result"] != 3
+            or row["units"] != [95, 65, 98] or row["us"] < row["load_us"] + row["run_us"]
+            or not 0 < row["before"] <= row["peak"] <= 2 * 1024 * 1024
+            or not 0 < row["live"] <= row["peak"]):
+            raise ValueError(f"invalid linked Files endpoint {row}")
+        rows.append(row)
+    if (len(rows) != len(expected) or not {"ENDPOINTSTART", "ENDPOINTDONE"} <= set(log.splitlines())
+        or "ENDPOINTFAIL" in log or "REBUILDERROR" in log):
+        raise ValueError(f"incomplete endpoint trial: {len(rows)}/{len(expected)} rows")
+    return {"rows": rows, "worlds": worlds(log)}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("work", type=Path)
@@ -108,8 +134,11 @@ def main():
     parser.add_argument("--port", required=True)
     parser.add_argument("--esptool", required=True, type=Path)
     parser.add_argument("--boots", type=int, default=2, choices=[1, 2, 3])
-    parser.add_argument("--seconds", type=int, default=48)
+    parser.add_argument("--seconds", type=int)
+    parser.add_argument("--endpoint", action="store_true", help="qualify the continuous Files source-to-entry clock")
     args = parser.parse_args()
+    if args.seconds is None:
+        args.seconds = 25 if args.endpoint else 48
     args.esptool_python = args.esptool.parent / "python"
     work = args.work.resolve()
     image = work / "build/picocalc-os-p4.bin"
@@ -126,6 +155,8 @@ def main():
     physical_scripts = {"candidate/wasm.js", "candidate/rv32.js", "candidate/files.js",
                         "candidate/incremental.js", "candidate/cases.js",
                         "stock/wasm.js", "stock/rv32.js", "stock/files.js", "stock/files.typed"}
+    if args.endpoint:
+        physical_scripts.add("candidate/endpoint.js")
     for name in physical_scripts:
         text = (work / name).read_bytes()
         if sha(text) != manifest["sha256"][name] or text not in contents:
@@ -147,6 +178,8 @@ def main():
             archive.write(log)
         return log
 
+    begin = "ENDPOINTSTART" if args.endpoint else "REBUILDSTART"
+    parse_boot = parse_endpoint if args.endpoint else parse
     save()
     try:
         shared["flash"](args, work, image, "trial")
@@ -154,9 +187,9 @@ def main():
             commands = ["0.4 reboot"] if i else []
             commands.append(f"{args.seconds - 3} worlds")
             log = capture(f"boot-{i + 1}", args.seconds, commands)
-            if not i and "REBUILDSTART" not in log:
+            if not i and begin not in log:
                 log = capture("boot-1-retry", args.seconds, ["0.4 reboot", commands[-1]])
-            result["boots"].append(parse(log, host["evidence"]))
+            result["boots"].append(parse_boot(log, host["evidence"]))
             save()
     finally:
         shared["flash"](args, work, original, "restore")
