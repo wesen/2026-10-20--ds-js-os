@@ -140,3 +140,63 @@ Start with `03-board-qualification.py` for normative workflows. Read `07-time-fi
 ### Technical details
 
 The dense fixture is 851 copies of 75 printable characters plus CR LF, followed by the nine bytes of `needlezzz`. Its last line is 852 and its total size is 65,536 bytes. An early match for `ext` ends at displayed position 1:2. The final unique `needle` starts at 852:1. A miss for `text text z` forces the search to exhaust its candidate positions.
+
+## Step 3: Recheck source-level claims and qualify the production compiler revision
+
+The seven frontend features and both Editor tasks are in the actual compiler and app source. The first combined rewrite passed the complete historical host suite. Independent profiling then exposed two additional costs, and review exposed a correctness edge case when the program calls `start` on a busy task. I selected the corrected compiler revision for physical qualification. The emitted Editor images remain identical.
+
+### Prompt Context
+
+**User prompt (verbatim).**
+
+> going back to the professor phases, say E1-E9 etc... What's the next big chunk we could tackle?
+
+**Assistant interpretation.** Recommend a coherent follow-up with concrete dependencies, evidence and a device finish line. Continue the approved E/G campaign and its publications.
+
+**Inferred user intent.** Prioritize a substantial compiler construction result and track the difference between a measured prototype, an implemented compiler and a physically qualified application.
+
+**Commit (code).** The initial combined app is `7b321a9`; the final continuation and busy-start correctness fix is `2e4fee1`. The isolated header reuse experiment is `4a054d7`. The research index update and first intern synthesis are `b9a308d`.
+
+### What I did
+
+- Read all 41 tasks in the original professor roadmap and reconciled current E/G work with the measured A, bounded-proof and integration studies. Added a proposed D1/D2 → E9/F1/F2/F3 sequence and defined how E8 could be tested on the new source.
+- Ran the 24 historical host cases again on final compiler `2e4fee1`. The continuation implementer checked all three emission modes with 29 deliveries. The Editor implementer repeated five adversarial delivery fixtures and compared the resulting records. The full Wasm and RV32 images still match the first combined source.
+- Recorded the E5 physical series separately from the earlier host frontier. The device medians rose from 2,475,846 to 2,539,880 µs, within the agreed 5% target. The absolute 31.4 ms host threshold was missed.
+- Compared independent authors' claims against actual `FunctionEmitter.call`, native call fixups, the `WorldEvent` ABI and the exact 10,000-unit fixture. Returned written corrections to the same named Opus researchers. Preserved their original outputs and responses. Compiled and executed the corrected forward-call example; the Wasm export returned 42.
+- Published the implementer's language report at vault commit `8689108`; the continuation implementer published `000fa2a`. Published the independent language research at `522f646`. Verified the remote design bundle listing from reMarkable.
+
+### Why
+
+The chip's latency gate applies to the actual compiler interval. A numerical measurement with a correct value but an incorrect interval definition teaches a reader the wrong technique. The same applies to native versus Wasm call resolution and to a completion event's payload type.
+
+### What worked
+
+All 24 workflows passed on the corrected code. The same-Editor host comparison of the two compiler revisions preserved exact linked Wasm and native output. The final compiler avoids evaluating side-effecting start arguments when a task already has an active frame. Reusing discovered signatures in an isolated linked host prototype saved approximately 5–7 ms but left it well above its matched 10 percent host target, so the prototype stayed out of the shipping path.
+
+### What didn't work
+
+The first independent language draft described two simultaneous output streams, a Wasm relocation and a clock measuring full device boot. The implementation selects an engine, encodes a known Wasm function index immediately, and measures the cold compiler call. The first continuation draft treated the Boolean success flag as a handle or byte buffer. I sent precise corrections and requested a rewritten article. The first author's revised example still used `fn`; I changed it to the actual `function` syntax and ran it before publication.
+
+### What I learned
+
+For this compiler, generated-code identity can settle a correctness question about one source program while leaving a substantial question about the compiler's own wall time. The register contents, runtime instructions and persistent app state can all stay the same while a different analysis makes their construction cheaper.
+
+### What was tricky to build
+
+A frozen board job must name the compiler revision selected for the measurement. I replaced only waiting jobs after a check that neither had started using the physical port. The pre-G and final images use the same deterministic wall time and monotonic scheduler. Both search observer builds use that same pre-G or final checkout to keep measurement conditions matched. The test file's name distinguishes both firmware arms and engines.
+
+### What warrants a second pair of eyes
+
+Compare the distinct integer byte identity with the E6 enumeration increase and the physical E5 setup cost. They are three different comparisons. Recompute percentage denominators from the raw series. Inspect receipt `various/host-final.json` and the exact language evidence and author review in `sources/verified/`.
+
+### What should be done in the future
+
+Publish the complete independent search article once the paired physical results are available. Use the ordinary Find, preview and tail-search measurements to decide which resource is the next bottleneck on the device.
+
+### Code review instructions
+
+Start at `scripts/11-compare-workflows.py` for the standard workflow, `14-edit-independent-reports.py` for the peer-review history and `16-compare-search.py` for measured search queries. The report explicitly identifies queries, eyes-on-screen scope and timing boundaries.
+
+### Technical details
+
+The final production Editor has the frozen Wasm module digest `5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65`. The linked RV32 digest for the fixed reactor used by the compiler researcher is `7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd`. Each digest identifies a particular reactor as well as the typed program.

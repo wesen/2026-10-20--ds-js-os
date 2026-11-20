@@ -8,11 +8,12 @@ previous=$3
 port=$4
 esptool=$5
 lock=$6
+candidate_lane=${7:-candidate}
 case "$lane" in
     before-g) images="$work/pre-g/fixed-wall"; result="$work/pre-g/board"; action=03-board-qualification.py; kind=before-g ;;
-    candidate) images="$work/candidate/fixed-wall"; result="$work/candidate/board"; action=03-board-qualification.py; kind=candidate ;;
-    search-control) images="$work/control/observer"; result="$work/control/search"; action=07-time-find.py; kind=control ;;
-    search-candidate) images="$work/candidate/observer"; result="$work/candidate/search"; action=07-time-find.py; kind=candidate ;;
+    candidate) images="$work/$candidate_lane/fixed-wall"; result="$work/$candidate_lane/board"; action=03-board-qualification.py; kind=candidate ;;
+    search-control) images="$work/pre-g/observer"; result="$work/pre-g/search"; action=07-time-find.py; kind=control ;;
+    search-candidate) images="$work/$candidate_lane/observer"; result="$work/$candidate_lane/search"; action=07-time-find.py; kind=candidate ;;
     *) exit 2 ;;
 esac
 for ((attempt=0;attempt<1440;attempt++)); do

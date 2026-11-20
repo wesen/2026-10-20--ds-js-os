@@ -1,0 +1,42 @@
+{
+  "original": "6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f",
+  "kind": "e5",
+  "trials": [
+    {
+      "engine": "rv32",
+      "us": 2539493,
+      "peak": 1465288,
+      "bytes": 240452
+    },
+    {
+      "engine": "rv32",
+      "us": 2539880,
+      "peak": 1465288,
+      "bytes": 240452
+    },
+    {
+      "engine": "rv32",
+      "us": 2541431,
+      "peak": 1465288,
+      "bytes": 240452
+    }
+  ],
+  "restored": true,
+  "worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    }
+  }
+}

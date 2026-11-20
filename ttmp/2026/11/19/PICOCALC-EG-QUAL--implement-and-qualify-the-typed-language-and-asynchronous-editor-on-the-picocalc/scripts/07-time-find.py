@@ -25,7 +25,8 @@ def exercise(args, engine, trial, out):
     app,=(w for w in json.loads(next(x for x in boot.splitlines() if x.startswith('[{"name":'))) if w["name"]=="editor")
     if app["engine"]!=expected_engine or app["last_error"]: raise ValueError("benchmark boot failed")
     # Unique names prevent a saved cursor from giving an earlier trial's position to the next one.
-    tag=f"{args.kind[0]}{engine[0]}{trial}"
+    prefix = "b" if args.kind == "control" else "g"
+    tag=f"{prefix}{engine[0]}{trial}"
     directory="eg-find-"+tag
     leaf=tag+".txt"
     path=directory+"/"+leaf

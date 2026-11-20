@@ -26,6 +26,10 @@ def research(lane, phase, evidence, scratch, model):
         proposal = json.loads((directory / (lane + "-design.json")).read_text())["text"]
         prompt += "\nYour initial design:\n" + proposal + "\nVerified measurements supplied by the implementation team:\n" + (evidence / (lane + ".md")).read_text()
         prompt += "\nAuthor your own standalone pedagogical project report, 900–1500 words, with the diary after it. Explain actual results, limitations and precise implementation references."
+    if phase == "revised":
+        original = json.loads((directory / (lane + "-report.json")).read_text())["text"]
+        prompt += "\nOriginal article you authored:\n" + original
+        prompt += "\nTechnical review from the implementation supervisor. Incorporate each correction in the whole article and diary, then return only the final revised article and diary.\n" + (evidence / (lane + "-review.md")).read_text()
     result = subprocess.run(["claude","-p","--model",model,"--effort","high","--tools","","--disable-slash-commands","--setting-sources","","--strict-mcp-config","--no-session-persistence","--output-format","json"],input=prompt,cwd=scratch,text=True,capture_output=True,timeout=900)
     events=json.loads(result.stdout)
     if not isinstance(events,list): events=[events]
@@ -40,7 +44,7 @@ def research(lane, phase, evidence, scratch, model):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("phase",choices=["design","report"]);p.add_argument("scratch",type=Path);p.add_argument("--evidence",type=Path)
+    p.add_argument("phase",choices=["design","report","revised"]);p.add_argument("scratch",type=Path);p.add_argument("--evidence",type=Path)
     p.add_argument("--model",default="opus")
     p.add_argument("--lane", choices=QUESTIONS, action="append", help="commission one lane when its evidence is ready")
     a=p.parse_args();a.scratch.mkdir(parents=True,exist_ok=True)

@@ -37,10 +37,11 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("work", type=Path)
     p.add_argument("output", type=Path)
+    p.add_argument("--candidate-lane", default="candidate")
     args = p.parse_args()
     work = args.work
     before_g = dict(engine_trials(work/"pre-g/board"))
-    after_g = dict(engine_trials(work/"candidate/board"))
+    after_g = dict(engine_trials(work/args.candidate_lane/"board"))
     original = dict(engine_trials(work/"control/board"))
     result = dict(workflow={}, gates={})
     for engine in before_g:

@@ -70,6 +70,14 @@ We ran the frozen 24-workflow host suite on the original, the pre-await Editor, 
 
 [Pre-await host receipt](../various/host-before-await.json) · [Open receipt](../various/host-open.json) · [Combined host receipt](../various/host-find.json) · [Five real-reactor fixtures](../../PICOCALC-EDITOR-ASYNC--suspend-and-resume-editor-open-and-find-in-typed-source/various/04-combined-event-fixtures.jsonl)
 
+## What forward declarations cost on the actual machine
+
+The single-pass compiler used to require declarations before calls. The new signature pass sees later functions before the emitter encounters their callers. On the ESP32-P4 the median full native compile of the unchanged hand-written Editor increased from 2,475.846 to 2,539.880 ms, a difference of 64.034 ms (+2.59%). Both medians use three cold-boot observations. Peak QuickJS allocator use rose from 1,410,860 to 1,465,288 bytes (+54,428). Each compiler emitted an ELF of 240,452 bytes. This clears the professor's five-percent on-device timing allowance for E5.
+
+The independent host frontend-only test missed the professor's historical absolute threshold of 31.4 ms. In one pinned session the old frontend took 55.89 ms and the E5 frontend 49.18 ms. An unpinned repeat put the E5 result at 50.04 ms between old baselines of 46.16 and 45.86 ms. The old frontend's clock itself varied across sessions. The board's cold clock additionally covers initializing QuickJS, loading the compiler, emitting RV32 and linking the native module.
+
+[Original physical trials](../various/physical-original.json) · [E5 native boots](../various/physical-e5.json)
+
 ## Reading the physical measurements
 
 The device compiler reports microseconds from the cold compile call, peak QuickJS allocator bytes and output module size. Each trial selects a known firmware image and reboots. For the small interactive workflow we subtract the Editor's starting CPU count from its ending count. This measures all Editor turns while typing, saving, searching, previewing and canceling an edit. It excludes time charged to Files, the compositor and bus drivers. The two captured images show Find and preview. For the strict image comparison the two firmwares receive the same wall time from the port. All timings and timeout decisions still use the monotonic hardware counter.
