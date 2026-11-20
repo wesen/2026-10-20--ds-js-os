@@ -1,4 +1,4 @@
-"""Prepare four self-contained, linked research notes and publish their exact files on request."""
+"""Prepare self-contained, linked PicoCalc research notes and publish their exact files on request."""
 
 import argparse
 import hashlib
@@ -16,16 +16,18 @@ parser.add_argument(
     type=Path,
     default=Path("/home/manuel/code/wesen/go-go-golems/go-go-parc"),
 )
+parser.add_argument("--ticket", type=Path, default=Path(__file__).resolve().parents[2])
+parser.add_argument("--series", default="Mobile Painter")
+parser.add_argument("--count", type=int, default=4)
 args = parser.parse_args()
-ticket = Path(__file__).resolve().parents[2]
+ticket = args.ticket.resolve()
+asset_prefix = re.sub(r"[^a-z0-9]+", "-", args.series.lower()).strip("-")
 repo = Path(
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"], text=True).strip()
 )
 day = Path("Projects/2026/11/20")
 articles = sorted((ticket / "analysis").glob("*.md"))
-assert len(articles) == 4, (
-    "wait for the director and three independent research articles"
-)
+assert len(articles) == args.count, "waiting for all commissioned research articles"
 titles, bodies, names, files = {}, {}, {}, {}
 for article in articles:
     body = article.read_text().split("\n---\n", 1)[1].strip()
@@ -34,11 +36,11 @@ for article in articles:
     titles[article] = title
     bodies[article] = body
     names[article] = (
-        "ARTICLE - PicoCalc Mobile Painter - "
+        f"ARTICLE - PicoCalc {args.series} - "
         + re.sub(r'[<>:"/\\|?*]', "", title)
         + ".md"
     )
-assert len(set(names.values())) == 4
+assert len(set(names.values())) == args.count
 for article in articles:
 
     def rewrite(match):
@@ -51,7 +53,7 @@ for article in articles:
             raise ValueError(path)
         if mark:
             assert path.is_relative_to(ticket) and path.suffix in {".png", ".svg"}
-            asset = Path("_assets", "mobile-painter-" + path.name)
+            asset = Path("_assets", asset_prefix + "-" + path.name)
             data = path.read_bytes()
             assert (day / asset) not in files or files[day / asset] == data
             files[day / asset] = data
@@ -117,7 +119,7 @@ if args.publish:
             "commit",
             "--only",
             "-m",
-            "Publish the PicoCalc mobile native painter research lab reports",
+            f"Publish the PicoCalc {args.series} research lab reports",
             "--",
             *paths,
         )

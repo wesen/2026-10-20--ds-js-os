@@ -69,6 +69,28 @@ Two independent comparisons start from the earlier Chess corpus. The compiler st
 
 The transport study starts one step further upstream. It runs the real game publisher, captures the delivered source and canonical frames, and checks a legal player move followed by the engine's reply. It tests every truncated prefix of its sample corpus and mutates individual bits. A mutation can produce a different legal packet. The question for the decoder is whether it admits a canonical encoding for an allowed field value and rejects malformed input. Full chess legality remains the game engine's responsibility. The older archived pixel results also share rendering primitives with the new host replay. They are strong regression evidence, while the device trial tests the remaining message, scheduling, relocation and presentation boundaries.
 
+## What reached the physical display
+
+The matched device images exercised the old screen description and the new native painter using the same key sequence. For each of three positions the observer compared 95,360 pixels from row 22 through row 319. These rows include the application and its rendered hints. It also reconstructed the display controller's write rectangles from completed SPI transactions. The physical captures matched the independently replayed old application and the preceding firmware. The observation point is the completed electrical transfer to the panel driver. This experiment did not measure optical response time.
+
+| State | Completed SPI app CRC32 | Cumulative native calls | Last native invocation | Last raster |
+|---|---|---:|---:|---:|
+| e2 after opening | e7f6b2d0 | 1 | 132 µs | 2,343 µs |
+| e3 after Up | ac694560 | 2 | 192 µs | 2,238 µs |
+| f3 after Right | 478e7dea | 3 | 189 µs | 2,232 µs |
+
+![Opening and cursor positions on the PicoCalc](../various/device/chess-cursor-control.png)
+
+*The matched control at e2, e3 and f3. The new renderer produced identical application pixels in the physical comparison.*
+
+The successful cold trial spent 1,029,397 µs in the measured compile interval and 721 µs relocating the resulting ELF. The compiler's peak tracked JavaScript allocation was 537,692 bytes. These quantities have different units and lifetimes. A cursor move paid neither the cold compile nor the relocation cost. Building commands took roughly eight percent of the sum of invocation and raster time on the two observed moves. That fraction describes two specific frames and excludes publication, validation, copying, queuing, display transfer, and the panel itself. It is too little evidence for a key-to-display speedup claim.
+
+After f3, the operator restarted the compositor and reopened Chess without moving its cursor. The count of received sources increased from one to two. Accepted positions advanced from three to four. Compilation stayed at one and native calls stayed at three. The new compositor painted the retained commands, its paint count advanced to four, and the completed panel CRC returned to 478e7dea. This distinguishes reusing just the binary from reusing an already computed view. The state and decoded commands live in the service, which outlives a restart of the compositor world. A system reboot still requires a fresh install.
+
+An earlier candidate explains why the final scheduling choice matters. Its worker ran concurrently on the other core. It compiled the source in 1,186,403 µs, but the foreground launcher draw exceeded the 80 ms turn limit during that boot. The report records this candidate as a rejected integration. Moving the worker behind the kernel on the same core permits it to make progress when the kernel sleeps. The revised 8-second wall deadline accounts for that preemption. We kept the foreground deadline at 80 ms. Different boots and wall-time limits prevent interpreting the difference in compile times as a controlled throughput improvement. A reusable compile service should measure both its own CPU consumption and request-to-ready delay. The prospective [compiler-service design](../design-doc/05-an-asynchronous-compiler-service-and-the-lifetime-of-a-painter-handle.md) spells out which component must retain the executable when compilation and drawing have distinct owners.
+
+The attached keyboard controller continued to return I²C errors. The paired images substituted key status in the test driver, then ran the real game's key handling, normal compositor and physical display transfer. The ordinary image uses its normal input driver. Readback verified firmware 75c94df7b1aa. It booted the eight checked native worlds with zero restarts, and installed the received painter in 1,022,094 µs of compilation plus 872 µs of relocation. It completed 66 SPI transfers with zero errors. All 24 sampled keyboard transactions failed. The app was at the launcher during this ordinary-image check. Technical equivalence of these test screens and the physical keypad's availability are independent results.
+
 ## How to reproduce the experiment
 
 - Start with the compiler chapter and its replay script. Check the SHA-256 of the source, linked image and RV32 code and the individual command counts. The instruction emulator validates generated output independently of the Wasm execution. [Compiler study](02-compiler.md)

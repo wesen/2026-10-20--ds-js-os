@@ -121,3 +121,51 @@ Read picocalc-os/port/esp32p4/main/painter_service.c starting at compile_worker 
 ### Technical details
 
 The 47 positions exercise 4,211,200 body pixels. The 22-row header and 18-row hints strip are owned by the compositor. The host checks the hints text separately, while the physical comparison includes the rasterized hints. The actual SPI trace can include clock pixels from the top strip which vary independently of Chess.
+
+## Step 3: Qualify the installed screen and publish four accounts of the experiment
+
+The original two-core compilation experiment produced a correct image but missed a foreground draw deadline. I kept the failure in the report and changed the compiler worker to lower priority on the kernel core. The follow-up verified the whole mobile program from delivery to completed panel writes. I published the three independent studies and a director synthesis after the ordinary release readback.
+
+### Prompt Context
+
+See Step 1. During qualification the user proposed an asynchronous compiler service. I wrote the separate service design with a compilation job, a loader-owned executable handle, receiver generations and distinct turnaround/CPU clocks. This is a proposal alongside the measured single-painter service.
+
+### What I did
+
+Coordinated a matched control and candidate, checked the per-position counters and stopped us accepting a cold boot with a compositor fault. Reviewed the screen comparison at rows 22–319, the SPI observer's completed transfers and the restart/reopen case. Added the scheduler adjustment in 5316cc2. The board operator preserved both the rejected candidate and the qualified runs in 8ccdc21. Rebuilt vault notes from the four frozen articles and supplied all five designs plus the four articles as a single reMarkable packet.
+
+### Why
+
+Building on one core while drawing on the other still shares memory and instruction resources. Giving the firmware scheduler the ability to preempt compilation on the foreground core is a direct experiment. Retaining the UI's 80 ms deadline lets the board test distinguish satisfying a deadline from weakening it.
+
+### What worked
+
+F3 recovered after compositor restart with the same SPI CRC 478e7dea, zero rejects, one compile, three native calls and four paints. The final ordinary release readback confirmed 75c94df7b1aa565c8cb7858bea628aa2c9c644ef64cc885b96e1d80088f8af56 and the expected partition. Eight native worlds booted with zero restarts and no last error. The vault publisher verified remote main e06d5823a77b662040fa7a347e7ab6ff15887d5f and compared all five published blobs to the staged bytes. The cloud uploader reported OK: uploaded PicoCalc Mobile Painter Research.pdf -> /ai/2026/11/20/PICOCALC-MOBILE-PAINTER.
+
+### What didn't work
+
+The first native candidate's recorded fault was “compositor crashed handling draw: ran past its turn budget of 80 ms”. Its compilation had completed correctly but that build failed the integration gate. The final ordinary image still reported keyboard I²C failure on 24 of 24 sampled operations. The three actual screen observations therefore use a substituted keyboard status. Draft publishing initially found a missing observed-mobile.json before the physical study copied its frozen evidence. The final publisher validated it successfully.
+
+### What I learned
+
+The warm native procedure took 189–192 µs in the two cursor samples. Producing body pixels cost about 2.23 ms. Eliminating geometry computation alone has a bounded effect on these specific frames. The strong result is a tested separation of application state, drawing policy, compilation and presentation, including exact output and a no-recompile restart.
+
+### What was tricky to build
+
+There are separate observations at the native output list, committed framebuffer, and completed SPI payload. The panel crop deliberately includes hints but excludes a changing clock. In the restart case the retained list can be reused without another native call, so an increased paint count and an unchanged call count are correct.
+
+### What warrants a second pair of eyes
+
+A repeat with a working physical keypad and a dedicated key-to-panel timer would complement the observer image. The same-core trial and rejected second-core boot are individual measurements and do not establish a general contention distribution.
+
+### What should be done in the future
+
+The PICOCALC-CHESS-3D ticket exercises a richer drawing vocabulary; PICOCALC-TYPED-PIE asks which projection loops can be compiled to packed instructions. Both need separate hardware evidence. The proposed general job/handle service has its own lifetime and scheduling tests.
+
+### Code review instructions
+
+Trace the completed implementation using the ticket index, then compare various/device/first-candidate-trace.json, observed-mobile.json, mobile-pixels.json and ordinary-install.json in that order. Use various/publication.json to locate the exact reports delivered.
+
+### Technical details
+
+The compile interval on the accepted instrumented build was 1,029,397 µs, load 721 µs, and the compiled image 17,456 bytes. The ordinary build measured 1,022,094 µs and 872 µs. The successful 2D firmware is the recovery reference for subsequent temporary benchmark images.

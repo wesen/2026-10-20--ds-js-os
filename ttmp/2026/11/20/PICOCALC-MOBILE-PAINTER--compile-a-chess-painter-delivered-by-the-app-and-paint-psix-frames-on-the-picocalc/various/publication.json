@@ -1,0 +1,12 @@
+{
+  "vault": "go-go-golems/go-go-parc",
+  "verifiedRemoteMain": "e06d5823a77b662040fa7a347e7ab6ff15887d5f",
+  "files": {
+    "Projects/2026/11/20/_assets/mobile-painter-chess-cursor-control.png": "551504ae5b34d28111537b9f7bc0f6f0f0192db72dc65f7a8b90a7f80a54459c",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Mobile Painter - From a delivered program to a painted Chess position.md": "711007249a1b41ad677077d023eaf1ffc4b5a63c7d495afcadb0bee385289fa0",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Mobile Painter - From a delivered Chess painter to reusable RISC-V instructions.md": "05ce640cd35ab52cf272c413f6a62f3e348c23903a2fdff33b85aa90a4d75870",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Mobile Painter - Carrying a painter and a Chess position across a mailbox.md": "7ee949b6f2e22fc310013adf8e1faf632c5af9d1f46edbda9c0ebaa2e46a87c2",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Mobile Painter - Following a Chess cursor into the PicoCalc display.md": "e37ea42d9fbcf553a6a652f810ef36929c26ef2e1d30f2c136c0781d024f3e9b"
+  },
+  "remarkable": "OK: uploaded PicoCalc Mobile Painter Research.pdf -> /ai/2026/11/20/PICOCALC-MOBILE-PAINTER"
+}

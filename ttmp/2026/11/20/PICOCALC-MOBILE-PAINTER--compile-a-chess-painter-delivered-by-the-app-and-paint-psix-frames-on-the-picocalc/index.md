@@ -1,7 +1,7 @@
 ---
 Title: Compile a Chess painter delivered by the app and paint PSIX frames on the PicoCalc
 Ticket: PICOCALC-MOBILE-PAINTER
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -34,3 +34,5 @@ Chess sends the UTF-8 text of its painter at startup and publishes counted PSIX 
 3. Read the [compiler-service proposal](design-doc/05-an-asynchronous-compiler-service-and-the-lifetime-of-a-painter-handle.md) for the proposed job and executable handle lifecycle.
 
 The [director diary](reference/01-director-implementation-and-qualification-diary.md) records integration decisions and failures. Reproduction scripts live in scripts/compiler, scripts/transport, scripts/device, and scripts/director. Machine-readable checks and compact images live in various. See [tasks](tasks.md) and the [changelog](changelog.md) for delivery status.
+
+The ordinary image, hardware comparison and verified publication are recorded in the [delivery receipt](various/publication.json) and [device receipt](various/device/ordinary-install.json).
