@@ -82,3 +82,15 @@ The previous ambition of saving 0.5 s on the roughly 2.45 s Editor cold compile 
 - `scripts/01-qualify-staged.py WORK GCC EMULATOR` creates a detached checkout, places the staged compiler in its normal import paths, reuses the host application runtime, and runs the professor’s original replay driver.
 - `scripts/02-independent-opus.py OUT` sends eight separate frozen design questions via Claude Code and saves the reported model and each prompt digest. Treat its output as proposals to test.
 - See the [original eight-study brief](../sources/eight-studies.txt), the [professor’s original task list](../../PICOCALC-NATIVE-NEXT--a-smaller-rv32-backend-a-module-cache-safety-checks-and-await-for-typed-picocalc-worlds/tasks.md) and the [previous comparison](../../PICOCALC-COMPILER-LAB--measure-cold-compilation-and-test-bounded-compiler-designs-on-the-handheld/index.md).
+
+## Replaying the final arithmetic without the board
+
+The board driver checks a full reference ELF digest for every compiler, application and block. The archived observation is `various/combined-physical.json`. The first command below validates its two native boots, 192 cold compiles and 384 guest batches, then computes the within-block distributions again. The second prints the absolute clocks alongside the paired percentages. Use a temporary output directory to compare the new tables or plot with the committed report.
+
+```sh
+# Run in this ticket directory.
+python3 -B scripts/07-combined-results.py various/combined-physical.json /tmp/picocalc-comparison.json
+python3 -B scripts/12-integration-table.py /tmp/picocalc-comparison.json various/combined-physical.json
+```
+
+The returned ELF of the native-only and combined lanes must match exactly for each application. A scanner change that changes those bytes would invalidate the attribution. The aggregation also checks that every arm used the same application source and reactor, every sample has the required digest and size, and every 128-call guest batch has its corresponding control. Each complete boot is summarized independently.

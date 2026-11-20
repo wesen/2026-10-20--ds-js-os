@@ -16,15 +16,47 @@ def paired(left,right):
                 change=median(changes),pct=median(pct),range=[min(changes),max(changes)])
 
 
+def verify_trial(data):
+    if not data["restored"] or len(data["boots"]) != 2:
+        raise ValueError("incomplete board trial")
+    expected_worlds = {app: {"engine": "native", "file": f"{app}/compiled.bin", "last_error": ""}
+                       for app in GUEST}
+    if data["restored_worlds"] != expected_worlds:
+        raise ValueError("factory applications failed restoration")
+    oracle = data["oracle"]
+    if set(oracle) != set(LABELS) or oracle["native"] != oracle["combined"]:
+        raise ValueError("native-only and combined reference outputs must match on all three apps")
+    for app in GUEST:
+        configurations = {(lane[app]["sourceSha256"], lane[app]["reactorSha256"]) for lane in oracle.values()}
+        if len(configurations) != 1:
+            raise ValueError(f"source or reactor differs across compilers for {app}")
+    for boot in data["boots"]:
+        if boot["worlds"] != expected_worlds:
+            raise ValueError("research image failed native smoke test")
+        rows = boot["rows"]
+        samples = {(r["block"], r["lane"], r["app"]) for r in rows}
+        required = {(block, lane, app) for block in range(8) for lane in LABELS for app in GUEST}
+        if len(rows) != len(required) or samples != required:
+            raise ValueError("missing or duplicated cold sample")
+        for row in rows:
+            reference = oracle[row["lane"]][row["app"]]
+            if any(row[key] != reference[key] for key in ("sha256", "bytes", "words")):
+                raise ValueError("cold sample disagrees with full reference image")
+        guest = boot["guest"]
+        batches = {(r["block"], r["lane"], r["op"]) for r in guest}
+        required = {(block, lane, op) for block in range(16) for lane in LABELS for op in GUEST.values()}
+        if len(guest) != len(required) or batches != required or any(r["count"] != 128 for r in guest):
+            raise ValueError("missing, duplicated or short guest batch")
+
+
 def summary(data):
-    if not data["restored"] or len(data["boots"])!=2: raise ValueError("incomplete board trial")
+    verify_trial(data)
     result=[]
     for b,boot in enumerate(data["boots"],1):
         for app,op in GUEST.items():
             def col(lane,metric):
                 if metric=="cycles":
                     rows=boot["guest"]
-                    if not any(r["op"]==op for r in rows): rows=boot.get("editor_guest",[])
                     return {r["block"]:r["cycles"]/r["count"] for r in rows if r["lane"]==lane and r["op"]==op}
                 return {r["block"]:r[metric] for r in boot["rows"] if r["lane"]==lane and r["app"]==app}
             for control,lane in (("base","staged"),("base","native"),("base","combined"),("staged","combined"),("native","combined")):
@@ -53,7 +85,7 @@ def plot(table,out):
         ax.set_xticks(range(3),["Staged","Native","Native\n+ cursor"])
         ax.set_title(ylabel,fontsize=11);ax.spines[['top','right']].set_visible(False)
     axes[0].set_ylabel("Change from production (%)")
-    axes[0].legend(frameon=False,fontsize=8)
+    axes[0].legend(frameon=False,fontsize=8,ncol=3,loc="upper center",bbox_to_anchor=(.50,-.16))
     fig.suptitle("Four compilers on one ESP32-P4 • paired changes across two boots")
     fig.savefig(out,dpi=170)
     plt.close(fig)
