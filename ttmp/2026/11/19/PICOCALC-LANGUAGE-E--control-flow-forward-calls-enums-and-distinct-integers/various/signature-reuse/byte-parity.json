@@ -1,0 +1,48 @@
+{
+  "editor": {
+    "linkedWasm": {
+      "bytes": 88969,
+      "sha256": "5dfeb5713680bc2c475ed5c530209a98cea40ce152faae5fb11c7de1fff04c65"
+    },
+    "linkedRv32": {
+      "bytes": 240452,
+      "sha256": "7c182547f28e7e6d9921f2a7df7472c6a44df184b7e5eb0543b40c523e6253bd"
+    },
+    "raw": {
+      "bytes": 89168,
+      "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4"
+    }
+  },
+  "interleaved": {
+    "linkedWasm": {
+      "bytes": 50270,
+      "sha256": "4e81c0ab7489f1bfd68e452e131b5f4fc3f7674edd70a7560c4b195df0292ba4"
+    },
+    "linkedRv32": {
+      "bytes": 240452,
+      "sha256": "c5519ac9feaacd2a02635817a4ba3d2ac300f9f5a062baecdd6ef76d2880611b"
+    },
+    "raw": {
+      "bytes": 1312,
+      "sha256": "ca4d72a513a357ff6d45fb9a05b3438c5523b48e7e4dcfe85342902deae7f9b2"
+    }
+  },
+  "diagnostics": [
+    [
+      "SyntaxError: 5:20: unknown function missing",
+      "SyntaxError: 5:20: unknown function missing"
+    ],
+    [
+      "SyntaxError: 13:54: expected i32, got bool",
+      "SyntaxError: 13:54: expected i32, got bool"
+    ],
+    [
+      "SyntaxError: recursive call cycle: bridge -> helper -> bridge",
+      "SyntaxError: recursive call cycle: bridge -> helper -> bridge"
+    ],
+    [
+      "SyntaxError: 13:16: duplicate function bridge",
+      "SyntaxError: 13:16: duplicate function bridge"
+    ]
+  ]
+}

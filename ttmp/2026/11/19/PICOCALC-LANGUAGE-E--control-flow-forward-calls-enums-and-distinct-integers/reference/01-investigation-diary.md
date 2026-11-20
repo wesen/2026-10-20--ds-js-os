@@ -331,3 +331,55 @@ Open the imports near the start of each model and the optional fourth compiler f
 ### Technical details
 
 The E4 fixture still reports 19 versus 18 emitted instructions and equal register estimates of 11 and five after the tooling change.
+
+## Step 7: Measure reuse of ordinary signatures after continuation rewriting
+
+The complete G4 compiler reads function signatures once to check the original call graph and again to emit the rewritten program. The emitted ordinary signatures preserve their types and parameter names. The difficult part of reusing them is carrying a valid body position through the rewrite and keeping ABI indexes contiguous after async bodies are removed.
+
+### Prompt Context
+
+See Step 1. The supervisor asked for an isolated QuickJS comparison of `7b321a9` and `1357545` and for a separate measurement of compiler script evaluation. I coordinated shared ownership with the continuation implementer before staging the experiment.
+
+### What I did
+
+- Staged pre-G, G4, and a G4 signature-reuse prototype in temporary directories from frozen Git objects.
+- Recorded each ordinary function's translated body offset during rewriting. The emitter registered those descriptors, checked generated signatures from the appended suffix, and performed the regular body and cycle checks.
+- Compared exact Wasm, raw RV32, and linked ELF bytes for Editor and for interleaved ordinary and async source. Compared layouts, symbols, relocations, edges, order, and diagnostics.
+- Timed linked native compilation with a shared P4 reactor. Separately timed `JS_Eval` in fresh QuickJS contexts using the firmware's file order.
+- Retained the prototype, test harness, and raw receipts in the language ticket.
+
+### Why
+
+The original signature scan is required for the source-level graph. Skipping ordinary headers and body delimiters in the second scan addresses only duplicated work. The rest of continuation analysis remains, which means its contribution to the complete compiler call must be measured.
+
+### What worked
+
+The prototype reproduced the exact Editor artifacts as well as the interleaved fixture and four error cases. Linked CPU-time measurements bracketed G4 at 107.22–108.47 ms and the prototype at 100.65–103.54 ms. The same reactor and host timed pre-G at 75.36–77.18 ms. Within the linked profile, emission signature work fell from 5.887 to 0.675 ms. Separately, native compiler script evaluation rose from 4.515 ms to 7.579 ms between pre-G and G4. `typed-async.js` accounted for about 3.074 ms of native wall time in that measurement.
+
+### What didn't work
+
+The signature experiment missed the +10% linked compiler target even against the slower pre-G baseline. The wall-clock run also drifted strongly during a bracket, with its two pre-G native totals reaching 97.64 and 218.03 ms. The process CPU repeat used the same frozen sources and reactor and returned closer bracketing baselines. No production compiler changes came from this experiment.
+
+### What I learned
+
+Duplicated emission signatures are a real, local cost. The rewrite remains about 29–30 ms in the same linked profiles, with roughly 11 ms reading the original program, 5 ms scanning operations and 11 ms analyzing continuations. Evaluating the additional compiler script is smaller than that work on the host and requires a separate ESP32-P4 measurement for a board allocation.
+
+### What was tricky to build
+
+The translated opening brace is `writer.offset + originalBodyAt - nextOriginalCopyPosition`. A normal function can follow a removed async definition or have a task operation replaced inside its body. The writer's cursor must account for both. Retaining source ordinals without rebasing callable indexes would make forward calls point to the wrong function when an earlier async definition disappears.
+
+### What warrants a second pair of eyes
+
+Check that offset translation is computed before writing the first replacement in each ordinary function and that dead async declarations do not leave unused slots in the ordinary function table. Interpret individual phase rows as nested durations.
+
+### What should be done in the future
+
+Any separate board phase experiment would time each bundle read and `JS_Eval` around the existing `eval_file` entry, then record the compiler call independently. The current cold boot receipt measures the complete port entry.
+
+### Code review instructions
+
+Open the signature-reuse report, review the two prototype transforms in `scripts/05-signature-reuse-experiment.py`, and rerun `scripts/09-run-signature-experiment.sh` with the bundled control reactor ELF.
+
+### Technical details
+
+Pins were `289281ccf97ebe83196ab3c2c38845b99a24a7be`, `13575450d0cd405db2861a8e6e5fecbcbd9904d6`, and `7b321a9163bf31c87461484edc79b6627147a315`. The three commit times and reactor hashes are in `various/signature-reuse/environment.txt`.

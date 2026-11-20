@@ -25,6 +25,7 @@ Production support for E1 through E7 of the PicoCalc language roadmap.
 ## Key Links
 
 - [Intern design](design-doc/01-extending-the-picocalc-streaming-typed-language.md)
+- [Signature reuse and compiler loading experiment](analysis/02-measuring-signature-reuse-in-the-asynchronous-editor-compiler.md)
 - [Implementation report](analysis/01-how-the-picocalc-frontend-adds-language-features-without-buffering-functions.md)
 - [Investigation diary](reference/01-investigation-diary.md)
 
