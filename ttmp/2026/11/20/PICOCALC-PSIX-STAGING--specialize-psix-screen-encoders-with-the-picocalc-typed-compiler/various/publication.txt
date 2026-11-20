@@ -1,0 +1,38 @@
+PicoCalc PSIX specialization publication receipts
+
+Design reading packet
+Order: director design, declared Chess writer, observed shapes, binding boundary, blind independent design.
+Checked all repository-relative document links.
+OK: uploaded PicoCalc PSIX Specialization Designs.pdf -> /ai/2026/11/20/PICOCALC-PSIX-STAGING
+0dd7e12f06a387a802ab1a763808b0bd867c2d77448a2f770f7e497cf3bc23a1  design-doc/01-a-staged-compiler-for-psix-screen-encoders.md
+b3014218848ff9af38923a4dc0ed31d9793029bd4ee52c9106741a40777b7fc4  design-doc/02-static-emitter.md
+35ae16754050469f3292823c1ed59e46478bccc6116efdc9cc0cd7133e480546  design-doc/03-observed-shapes.md
+6a21963efd528b4d4d4b1c02cb9a4e0b742bfe7864072174d2679fde25918e1b  design-doc/04-staging-and-binding.md
+22d92007314cbc304a28a509ed2cfbe10a8e5d2a36509a250bb3dfcfa82b4831  design-doc/07-independent-experimental-design.md
+
+Results reading packet
+Order: director report and chart, declared Chess writer, observed shapes, binding boundary, independent results.
+Checked all repository-relative document links and confirmed the 1584 × 1170 PNG asset.
+OK: uploaded PicoCalc PSIX Specialization Results.pdf -> /ai/2026/11/20/PICOCALC-PSIX-STAGING
+185edf1b48f620b23c139adf77dc30613427d08103016b68475605e3a502d013  analysis/01-compiling-the-screen-writer-on-a-handheld.md
+c3044a5b22b8edfc214610f37d440bac03412a94f209e39d9c9884d2e152211e  analysis/02-static-encoder.md
+0ed4aaa10ed1f439db748b127ba497ef0f14c98745d2b6aefcf953268d850d99  analysis/03-observed-shapes.md
+3353484eef094f3b04c32cfdae9a1ad58120d5e0eb8f02027991a8873e44e22f  analysis/04-staging-and-binding.md
+02a5ea9e59e0ee8de10c16b49dad3ff8e950bbbb24ea4645c0b223952ae1761c  analysis/07-independent-specialization-results.md
+0e44ab96defa9fa433a5a7aa5afb09e9706999c6800aea5d23727a7031b767c7  various/psix-staging-p4.png
+
+Obsidian vault
+Checked article links and compared the verified commit blobs against the staged manifest.
+Verified vault origin/main 41837f84ac32d6482e5ac189ff2d300c5256414e
+7db5796d7c38f6257aa718b36757c6437b8698405dad3527d0ff39585b54074d  Projects/2026/11/20/ARTICLE - PicoCalc PSIX - Compiling the screen writer on a handheld.md
+https://github.com/go-go-golems/go-go-parc/blob/41837f84ac32d6482e5ac189ff2d300c5256414e/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20PSIX%20-%20Compiling%20the%20screen%20writer%20on%20a%20handheld.md
+819d680a092a6fa93db575ef7961726546fbb067f46ee39e57a77c27956f10f6  Projects/2026/11/20/ARTICLE - PicoCalc PSIX - Compiling a PSIX writer for a Chess position.md
+https://github.com/go-go-golems/go-go-parc/blob/41837f84ac32d6482e5ac189ff2d300c5256414e/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20PSIX%20-%20Compiling%20a%20PSIX%20writer%20for%20a%20Chess%20position.md
+eadb0e6760fc2ae42008f99980e032a31487a6c81508672c344c3e9bcd70f627  Projects/2026/11/20/ARTICLE - PicoCalc PSIX - When a handheld screen repeats its shape.md
+https://github.com/go-go-golems/go-go-parc/blob/41837f84ac32d6482e5ac189ff2d300c5256414e/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20PSIX%20-%20When%20a%20handheld%20screen%20repeats%20its%20shape.md
+7dafe5bba1c7939090863bf43c1d4d0dfdcba4955c4b34b013799384de5d580e  Projects/2026/11/20/ARTICLE - PicoCalc PSIX - Why one new label can change four string IDs in a binary screen.md
+https://github.com/go-go-golems/go-go-parc/blob/41837f84ac32d6482e5ac189ff2d300c5256414e/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20PSIX%20-%20Why%20one%20new%20label%20can%20change%20four%20string%20IDs%20in%20a%20binary%20screen.md
+2b9e4a9f463c4f6836be479ce60ef3d98db520c73c538446deb19a9517d7aa6d  Projects/2026/11/20/ARTICLE - PicoCalc PSIX - What a layout table can teach a handheld compiler.md
+https://github.com/go-go-golems/go-go-parc/blob/41837f84ac32d6482e5ac189ff2d300c5256414e/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20PSIX%20-%20What%20a%20layout%20table%20can%20teach%20a%20handheld%20compiler.md
+0e44ab96defa9fa433a5a7aa5afb09e9706999c6800aea5d23727a7031b767c7  Projects/2026/11/20/_assets/psix-staging-p4.png
+https://github.com/go-go-golems/go-go-parc/blob/41837f84ac32d6482e5ac189ff2d300c5256414e/Projects/2026/11/20/_assets/psix-staging-p4.png
