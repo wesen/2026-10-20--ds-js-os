@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const [os,main,elf]=process.argv.slice(2), read=f=>fs.readFileSync(f,'utf8');
+for(const f of ['typed-wasm.js','typed-rv32.js']) vm.runInThisContext(read(path.join(os,'compiler',f)));
+vm.runInThisContext(read(path.join(main,'generator.js')));
+const source=globalThis.psixGenerateSource(read(path.join(main,'primitives.typed')));
+const p=globalThis.typedRv32.compile(source);
+if(p.relocations.length)throw Error('unexpected imports');
+const gold=globalThis.typedRv32.linkSlot(p,fs.readFileSync(elf),['psixEncode']);
+fs.writeFileSync(path.join(main,'expected.elf'),gold);
+console.log(JSON.stringify({sourceBytes:source.length,instructions:p.image.length/4,nativeBytes:p.image.length,entry:p.entries.psixEncode,sha256:createHash('sha256').update(gold).digest('hex')}));
