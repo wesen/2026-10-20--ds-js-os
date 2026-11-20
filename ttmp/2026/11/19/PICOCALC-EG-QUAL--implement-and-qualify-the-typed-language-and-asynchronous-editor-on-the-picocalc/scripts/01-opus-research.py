@@ -42,6 +42,7 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("phase",choices=["design","report"]);p.add_argument("scratch",type=Path);p.add_argument("--evidence",type=Path)
     p.add_argument("--model",default="opus")
+    p.add_argument("--lane", choices=QUESTIONS, action="append", help="commission one lane when its evidence is ready")
     a=p.parse_args();a.scratch.mkdir(parents=True,exist_ok=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
-        list(pool.map(lambda lane:research(lane,a.phase,a.evidence,a.scratch,a.model),QUESTIONS))
+        list(pool.map(lambda lane:research(lane,a.phase,a.evidence,a.scratch,a.model),a.lane or QUESTIONS))

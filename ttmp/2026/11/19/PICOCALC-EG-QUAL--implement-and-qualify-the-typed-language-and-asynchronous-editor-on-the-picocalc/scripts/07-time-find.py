@@ -54,7 +54,9 @@ def exercise(args, engine, trial, out):
         if "crc ok" not in (out/f"{case}-capture.log").read_text(): raise ValueError("unverified screenshot")
         values=dict(wall_us=int(wall),editor_cpu_us=int(cpu),engine_us=int(execution),
                     editor_segments=int(segments),settlements=int(settlements))
-        if not 0<values["engine_us"]<=values["editor_cpu_us"]<=values["wall_us"] or (case!="early" and values["settlements"]<1):
+        # A late unique hit can skip almost a whole line in one SDK seek.
+        # Only the dense miss forces more than one application work slice.
+        if not 0<values["engine_us"]<=values["editor_cpu_us"]<=values["wall_us"] or (case=="miss" and values["settlements"]<1):
             raise ValueError(f"{case}: impossible time accounting or missing yields: {values}")
         rows.append(dict(case=case,query=query,frame=hashlib.sha256(shot.read_bytes()).hexdigest(),**values))
     clean=capture("cleanup",9,["0.4 key esc","1.2 key f5","2 key f5","3.3 key backspace",

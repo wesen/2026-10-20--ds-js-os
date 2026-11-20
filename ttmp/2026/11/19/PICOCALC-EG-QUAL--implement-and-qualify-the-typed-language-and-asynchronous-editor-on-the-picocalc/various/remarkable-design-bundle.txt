@@ -1,0 +1,3 @@
+Remote collection: /ai/2026/11/19/PICOCALC-EG-QUAL
+Document: PicoCalc - Typed Language and Asynchronous Editor Designs
+Verified by remarquee cloud ls after uploading the four bundled design documents, 2026-11-19.

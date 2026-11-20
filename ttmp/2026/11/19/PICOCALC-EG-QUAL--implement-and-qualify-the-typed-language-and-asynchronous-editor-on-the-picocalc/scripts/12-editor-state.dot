@@ -1,0 +1,19 @@
+digraph compiler {
+  graph [rankdir=TB, bgcolor="white", nodesep=0.42, ranksep=0.37, pad=0.18];
+  node [fontname="DejaVu Sans", fontsize=12, shape=box, style="rounded,filled", fillcolor="#eef3f6", color="#70818b", margin="0.16,0.10"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#53616a", arrowsize=0.73];
+  edit [label="Typed Editor source\neditorOpenTask and editorFindTask"];
+  parse [label="Collect function signatures and body spans\nBuild control flow only for async bodies"];
+  live [label="Compute values live at each suspension\nOpen saves 1 or 4 scalars, Find saves 5"];
+  emit [label="Emit ordinary typed functions\nIssue, save, resume or cancel"];
+  wasm [label="Wasm module\n88,969 bytes", fillcolor="#e8f3eb"];
+  native [label="RV32 instructions\n22,292 words", fillcolor="#e8f3eb"];
+  turn [label="Editor event on the ESP32-P4\nThe reactor supplies fresh event and buffer views"];
+  persistent [label="70 persistent 32-bit fields\n57 app fields + 13 generated fields", fillcolor="#f6eddd"];
+  edit -> parse -> live -> emit;
+  emit -> wasm; emit -> native;
+  {rank=same; wasm; native;}
+  wasm -> turn; native -> turn;
+  turn -> persistent [label=" save before returning"];
+  persistent -> turn [label=" load on matching token"];
+}
