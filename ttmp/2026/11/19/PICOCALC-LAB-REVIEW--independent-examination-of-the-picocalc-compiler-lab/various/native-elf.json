@@ -1,0 +1,91 @@
+{
+  "standard": {
+    "bytes": 240452,
+    "sha": "c93d229641c2cc8ff8e8a38364e5e489dec3d9e4cf2dbb6c0b9c740c2fa80439",
+    "payloadSha": "e028ab67aaebce554ef51c2f791c25fa47572280d6a1bfb53a6e7f0641d9aab7",
+    "payloadBytes": 66164,
+    "capacity": 229376,
+    "headerBytes": 140,
+    "paddingBytes": 163072,
+    "entryOffsets": [
+      55984,
+      65120
+    ],
+    "controlTransfers": {
+      "conditional": 1006,
+      "jump_in_code": 747,
+      "jump_to_import": 145,
+      "indirect": 120
+    },
+    "loadSegments": [
+      [
+        0,
+        0,
+        239292,
+        239292,
+        5
+      ],
+      [
+        239296,
+        239296,
+        196,
+        487880,
+        6
+      ]
+    ]
+  },
+  "small": {
+    "bytes": 92996,
+    "sha": "81718435b1d83e79cd8ad11d3f3260aa7978d6eb081cf0a42f9491d112c67bb4",
+    "payloadSha": "e028ab67aaebce554ef51c2f791c25fa47572280d6a1bfb53a6e7f0641d9aab7",
+    "payloadBytes": 66164,
+    "capacity": 81920,
+    "headerBytes": 140,
+    "paddingBytes": 15616,
+    "entryOffsets": [
+      55984,
+      65120
+    ],
+    "controlTransfers": {
+      "conditional": 1006,
+      "jump_in_code": 747,
+      "jump_to_import": 145,
+      "indirect": 120
+    },
+    "loadSegments": [
+      [
+        0,
+        0,
+        91836,
+        91836,
+        5
+      ],
+      [
+        91840,
+        91840,
+        196,
+        487880,
+        6
+      ]
+    ]
+  },
+  "forecast": {
+    "predicted": 2789,
+    "observed": 2793,
+    "totalError": 4,
+    "absoluteErrors": 10,
+    "functions": 34,
+    "exactFunctions": 25,
+    "errors": {
+      "validDate": 1,
+      "leadMinutes": -1,
+      "readDue": 1,
+      "entryRelative": 1,
+      "entryCalendar": 1,
+      "entryDate": -1,
+      "entryYmdShape": 1,
+      "entryNumber": 2,
+      "entryWriteDate": -1
+    }
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "physical.json": {
+    "receiptSha256": "8e2ce8ff59d5adb8ad7a2cd0d5b167551f3c5e27ef65172e381f11313ed8f3c1",
+    "firmware": "dcc8732c7fce2541d5b18968636bfde78f7a2ffb5ccba95d9f142a7490f560ae",
+    "boots": [
+      {
+        "number": 1,
+        "compileSamples": 24,
+        "apps": {
+          "files": {
+            "cursor": {
+              "us": {
+                "referenceMedian": 235859.5,
+                "candidateMedian": 232492.0,
+                "pairedMedian": -3081.5,
+                "pairedRange": [
+                  -6967,
+                  -1355
+                ],
+                "deltaOfMaxima": -4442,
+                "paired": [
+                  -3553,
+                  -6967,
+                  -2610,
+                  -1355
+                ]
+              },
+              "peak": {
+                "referenceMedian": 362616.0,
+                "candidateMedian": 375764.0,
+                "pairedMedian": 13146.0,
+                "pairedRange": [
+                  13136,
+                  13156
+                ],
+                "deltaOfMaxima": 13140,
+                "paired": [
+                  13156,
+                  13144,
+                  13136,
+                  13148
+                ]
+              }
+            }
+          },
+          "agenda": {
+            "cursor": {
+              "us": {
+                "referenceMedian": 661157.0,
+                "candidateMedian": 601679.0,
+                "pairedMedian": -58586.5,
+                "pairedRange": [
+                  -61784,
+                  -57292
+                ],
+                "deltaOfMaxima": -59233,
+                "paired": [
+                  -59233,
+                  -57940,
+                  -57292,
+                  -61784
+                ]
+              },
+              "peak": {
+                "referenceMedian": 578946.0,
+                "candidateMedian": 592086.0,
+                "pairedMedian": 13144.0,
+                "pairedRange": [
+                  13124,
+                  13152
+                ],
+                "deltaOfMaxima": 13140,
+                "paired": [
+                  13144,
+                  13124,
+                  13144,
+                  13152
+                ]
+              }
+            }
+          },
+          "editor": {
+            "cursor": {
+              "us": {
+                "referenceMedian": 2455496.5,
+                "candidateMedian": 2163864.0,
+                "pairedMedian": -292445.0,
+                "pairedRange": [
+                  -309642,
+                  -283856
+                ],
+                "deltaOfMaxima": -303303,
+                "paired": [
+                  -283856,
+                  -286622,
+                  -309642,
+                  -298268
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1410858.0,
+                "candidateMedian": 1419912.0,
+                "pairedMedian": 9066.0,
+                "pairedRange": [
+                  9008,
+                  9424
+                ],
+                "deltaOfMaxima": 9044,
+                "paired": [
+                  9424,
+                  9040,
+                  9092,
+                  9008
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "number": 2,
+        "compileSamples": 24,
+        "apps": {
+          "files": {
+            "cursor": {
+              "us": {
+                "referenceMedian": 236835.5,
+                "candidateMedian": 231730.5,
+                "pairedMedian": -5441.5,
+                "pairedRange": [
+                  -8202,
+                  -2792
+                ],
+                "deltaOfMaxima": -7784,
+                "paired": [
+                  -2792,
+                  -5806,
+                  -8202,
+                  -5077
+                ]
+              },
+              "peak": {
+                "referenceMedian": 362618.0,
+                "candidateMedian": 375768.0,
+                "pairedMedian": 13148.0,
+                "pairedRange": [
+                  13136,
+                  13156
+                ],
+                "deltaOfMaxima": 13144,
+                "paired": [
+                  13156,
+                  13136,
+                  13152,
+                  13144
+                ]
+              }
+            }
+          },
+          "agenda": {
+            "cursor": {
+              "us": {
+                "referenceMedian": 665327.0,
+                "candidateMedian": 602885.5,
+                "pairedMedian": -58950.5,
+                "pairedRange": [
+                  -67257,
+                  -55895
+                ],
+                "deltaOfMaxima": -57644,
+                "paired": [
+                  -67257,
+                  -60716,
+                  -55895,
+                  -57185
+                ]
+              },
+              "peak": {
+                "referenceMedian": 578940.0,
+                "candidateMedian": 592094.0,
+                "pairedMedian": 13156.0,
+                "pairedRange": [
+                  13120,
+                  13164
+                ],
+                "deltaOfMaxima": 13144,
+                "paired": [
+                  13156,
+                  13156,
+                  13164,
+                  13120
+                ]
+              }
+            }
+          },
+          "editor": {
+            "cursor": {
+              "us": {
+                "referenceMedian": 2469738.0,
+                "candidateMedian": 2151387.5,
+                "pairedMedian": -315438.0,
+                "pairedRange": [
+                  -328141,
+                  -288389
+                ],
+                "deltaOfMaxima": -315779,
+                "paired": [
+                  -328141,
+                  -288389,
+                  -306119,
+                  -324757
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1410854.0,
+                "candidateMedian": 1419924.0,
+                "pairedMedian": 9070.0,
+                "pairedRange": [
+                  9016,
+                  9104
+                ],
+                "deltaOfMaxima": 9064,
+                "paired": [
+                  9060,
+                  9104,
+                  9016,
+                  9080
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

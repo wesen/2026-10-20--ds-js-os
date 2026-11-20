@@ -1,0 +1,122 @@
+{
+  "physical.json": {
+    "receiptSha256": "b60ee3f71d6d0c998823570a18bd741d595741edb3159372ed3d50017796f2c9",
+    "firmware": "cf0716373738ac38edff3362937783e18b9e8c2d48e0133b6cc6e6729bdc0ebb",
+    "boots": [
+      {
+        "number": 1,
+        "compileSamples": 24,
+        "apps": {
+          "files": {
+            "replicate": {
+              "us": {
+                "referenceMedian": 236168.0,
+                "candidateMedian": 241261.0,
+                "pairedMedian": 5130.0,
+                "pairedRange": [
+                  4027,
+                  5385
+                ],
+                "deltaOfMaxima": 4101,
+                "paired": [
+                  5381,
+                  5385,
+                  4027,
+                  4879
+                ]
+              },
+              "peak": {
+                "referenceMedian": 362614.0,
+                "candidateMedian": 362622.0,
+                "pairedMedian": 8.0,
+                "pairedRange": [
+                  -12,
+                  24
+                ],
+                "deltaOfMaxima": 8,
+                "paired": [
+                  8,
+                  8,
+                  -12,
+                  24
+                ]
+              }
+            }
+          },
+          "agenda": {
+            "replicate": {
+              "us": {
+                "referenceMedian": 663160.0,
+                "candidateMedian": 668551.5,
+                "pairedMedian": 5633.5,
+                "pairedRange": [
+                  -1141,
+                  10024
+                ],
+                "deltaOfMaxima": -657,
+                "paired": [
+                  1808,
+                  -1141,
+                  10024,
+                  9459
+                ]
+              },
+              "peak": {
+                "referenceMedian": 578948.0,
+                "candidateMedian": 578948.0,
+                "pairedMedian": 0.0,
+                "pairedRange": [
+                  -24,
+                  12
+                ],
+                "deltaOfMaxima": -16,
+                "paired": [
+                  12,
+                  0,
+                  0,
+                  -24
+                ]
+              }
+            }
+          },
+          "editor": {
+            "replicate": {
+              "us": {
+                "referenceMedian": 2455132.5,
+                "candidateMedian": 2456865.5,
+                "pairedMedian": 2163.5,
+                "pairedRange": [
+                  -5155,
+                  6824
+                ],
+                "deltaOfMaxima": -3418,
+                "paired": [
+                  -5155,
+                  6824,
+                  5948,
+                  -1621
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1410918.0,
+                "candidateMedian": 1410874.0,
+                "pairedMedian": -42.0,
+                "pairedRange": [
+                  -300,
+                  336
+                ],
+                "deltaOfMaxima": 244,
+                "paired": [
+                  -96,
+                  12,
+                  -300,
+                  336
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

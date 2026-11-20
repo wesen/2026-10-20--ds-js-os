@@ -1,0 +1,110 @@
+{
+  "source": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+  "reactor": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff",
+  "stagedManifest": {
+    "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+    "sha256": {
+      "candidate/cases.js": "ae14b229a4c9a787917a6dbf5a7b4c64137b6e4ce71b3e273610329080eae1eb",
+      "candidate/files.js": "e5795d348138763cd25dbd603334ca95a7d01d4e08da9a4eedb99986b6a884a7",
+      "candidate/incremental.js": "85a407242982af59b7d36e89955f3d7a5cf4df61f31d3909ccf27909edbe855d",
+      "candidate/rv32.js": "c26019644cf688b45d20104bd985fb1399967772dc7608742449756eacd31bb5",
+      "candidate/wasm.js": "2f9eb74124e918406ffe4f1917c3ff6012bdfe1859e822c910a8c7636fcf98fb",
+      "candidate/world.js": "844428b3b824ab72a43368de3e6fb4b108338e43bef70ba8d013134a4e269977",
+      "stock/files.js": "dc82ece5c9c6f65b4ed3db2b9c742e14463fafc7a6df528c15e356021611103a",
+      "stock/files.typed": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+      "stock/rv32.js": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38",
+      "stock/wasm.js": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+      "stock/world.js": "e655f8250baef1d8247995d8e7c82ace6e9131fad6254e1c7c374b31efa309a3"
+    }
+  },
+  "history": [
+    {
+      "id": "seed",
+      "mode": "fragments",
+      "source": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+      "image": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "bytes": 240452,
+      "rawBytes": 87544,
+      "built": 120,
+      "reused": 0
+    },
+    {
+      "id": "body",
+      "mode": "fragments",
+      "source": "32447ea83c88033dc7071dc02038c91ee6c2ed8bcbb8ef129692936047a64b8b",
+      "image": "980984d77a0eeb36c89edf76a19c016f86ad2036697b801026a04fabb815a9a4",
+      "bytes": 240452,
+      "rawBytes": 87544,
+      "built": 1,
+      "reused": 119,
+      "changedLinkedBodies": 1,
+      "rebuiltButByteIdentical": 0
+    },
+    {
+      "id": "unrepaired signature",
+      "mode": "rejected",
+      "source": "8cfebade80cebba9ea72f9c48a403537540e15829f77ee3107816080dddbe6c3",
+      "diagnostic": {
+        "name": "SyntaxError",
+        "message": "723:53: expected ,"
+      }
+    },
+    {
+      "id": "signature and callers",
+      "mode": "fragments",
+      "source": "02855e445c0e6f298791a1dd207eff359e7086df1fa107d0dcb4640956a4cb2c",
+      "image": "f7d459f585e95cc90f266f3a900a6a9999e58b9608b82c05babd77f4beb05909",
+      "bytes": 240452,
+      "rawBytes": 87572,
+      "built": 4,
+      "reused": 116,
+      "changedLinkedBodies": 42,
+      "rebuiltButByteIdentical": 0
+    },
+    {
+      "id": "reorder state fields",
+      "mode": "fragments",
+      "source": "933eee78a14c4f95d2bb2ab73334195c3f2542da171e4c284b6e9518b1d62049",
+      "image": "b6a7a7da86e6ca2f11c438a7ddd76674d2e94a9d9f0f08aa78e3fc8e249622c4",
+      "bytes": 240452,
+      "rawBytes": 87572,
+      "built": 77,
+      "reused": 43,
+      "changedLinkedBodies": 7,
+      "rebuiltButByteIdentical": 70
+    },
+    {
+      "id": "invalid event ABI",
+      "mode": "rejected",
+      "source": "615e5ae5a3839b1664d7602e36b858d7ed4a645d1b3f1f6ac5fd60728adcf00a",
+      "diagnostic": {
+        "name": "SyntaxError",
+        "message": "Typed world requires the shared WorldEvent record"
+      }
+    },
+    {
+      "id": "offset-shifting comment",
+      "mode": "fragments",
+      "source": "425d8663435f06ae08e02653afecd7cb311156189b3bac7ce2ee9eb7539569e6",
+      "image": "b6a7a7da86e6ca2f11c438a7ddd76674d2e94a9d9f0f08aa78e3fc8e249622c4",
+      "bytes": 240452,
+      "rawBytes": 87572,
+      "built": 0,
+      "reused": 120,
+      "changedLinkedBodies": 0,
+      "rebuiltButByteIdentical": 0
+    },
+    {
+      "id": "undo to original",
+      "mode": "fragments",
+      "source": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+      "image": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+      "bytes": 240452,
+      "rawBytes": 87544,
+      "built": 78,
+      "reused": 42,
+      "changedLinkedBodies": 42,
+      "rebuiltButByteIdentical": 38
+    }
+  ]
+}

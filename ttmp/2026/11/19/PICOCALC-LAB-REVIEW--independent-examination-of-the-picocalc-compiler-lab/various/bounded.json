@@ -1,0 +1,716 @@
+{
+  "physical.json": {
+    "receiptSha256": "23870c3c65e7037eea893d6e887f2a9641b96a0b72827caf80ad78ba7aeb5562",
+    "firmware": "68cee6edc8280690fdc616c9cb42eb9ed8bd914933074a024630bdf683d64c89",
+    "boots": [
+      {
+        "number": 1,
+        "compileSamples": 54,
+        "apps": {
+          "files": {
+            "always": {
+              "us": {
+                "referenceMedian": 236752.0,
+                "candidateMedian": 270396.0,
+                "pairedMedian": 33845.5,
+                "pairedRange": [
+                  28746,
+                  35597
+                ],
+                "deltaOfMaxima": 31627,
+                "paired": [
+                  35442,
+                  28746,
+                  32180,
+                  34609,
+                  33082,
+                  35597
+                ]
+              },
+              "peak": {
+                "referenceMedian": 362618.0,
+                "candidateMedian": 379972.0,
+                "pairedMedian": 17354.0,
+                "pairedRange": [
+                  17344,
+                  17368
+                ],
+                "deltaOfMaxima": 17352,
+                "paired": [
+                  17368,
+                  17344,
+                  17352,
+                  17364,
+                  17356,
+                  17344
+                ]
+              }
+            },
+            "select": {
+              "us": {
+                "referenceMedian": 236752.0,
+                "candidateMedian": 250128.0,
+                "pairedMedian": 12936.5,
+                "pairedRange": [
+                  9781,
+                  14710
+                ],
+                "deltaOfMaxima": 10245,
+                "paired": [
+                  14710,
+                  9781,
+                  13995,
+                  11641,
+                  11878,
+                  14215
+                ]
+              },
+              "peak": {
+                "referenceMedian": 362618.0,
+                "candidateMedian": 379972.0,
+                "pairedMedian": 17354.0,
+                "pairedRange": [
+                  17344,
+                  17364
+                ],
+                "deltaOfMaxima": 17356,
+                "paired": [
+                  17360,
+                  17344,
+                  17364,
+                  17352,
+                  17356,
+                  17344
+                ]
+              }
+            },
+            "selectVsAlways": {
+              "us": {
+                "referenceMedian": 270396.0,
+                "candidateMedian": 250128.0,
+                "pairedMedian": -20968.0,
+                "pairedRange": [
+                  -22968,
+                  -18185
+                ],
+                "deltaOfMaxima": -21382,
+                "paired": [
+                  -20732,
+                  -18965,
+                  -18185,
+                  -22968,
+                  -21204,
+                  -21382
+                ]
+              },
+              "peak": {
+                "referenceMedian": 379972.0,
+                "candidateMedian": 379972.0,
+                "pairedMedian": 0.0,
+                "pairedRange": [
+                  -12,
+                  12
+                ],
+                "deltaOfMaxima": 4,
+                "paired": [
+                  -8,
+                  0,
+                  12,
+                  -12,
+                  0,
+                  0
+                ]
+              }
+            }
+          },
+          "agenda": {
+            "always": {
+              "us": {
+                "referenceMedian": 664440.5,
+                "candidateMedian": 774721.0,
+                "pairedMedian": 109826.0,
+                "pairedRange": [
+                  103023,
+                  119518
+                ],
+                "deltaOfMaxima": 109902,
+                "paired": [
+                  109127,
+                  108018,
+                  110525,
+                  119518,
+                  113345,
+                  103023
+                ]
+              },
+              "peak": {
+                "referenceMedian": 578944.0,
+                "candidateMedian": 591756.0,
+                "pairedMedian": 12806.0,
+                "pairedRange": [
+                  12796,
+                  12820
+                ],
+                "deltaOfMaxima": 12800,
+                "paired": [
+                  12820,
+                  12804,
+                  12796,
+                  12812,
+                  12808,
+                  12796
+                ]
+              }
+            },
+            "select": {
+              "us": {
+                "referenceMedian": 664440.5,
+                "candidateMedian": 721531.0,
+                "pairedMedian": 56717.0,
+                "pairedRange": [
+                  51364,
+                  60832
+                ],
+                "deltaOfMaxima": 58549,
+                "paired": [
+                  56923,
+                  60832,
+                  51364,
+                  56235,
+                  56511,
+                  60128
+                ]
+              },
+              "peak": {
+                "referenceMedian": 578944.0,
+                "candidateMedian": 591758.0,
+                "pairedMedian": 12818.0,
+                "pairedRange": [
+                  12796,
+                  12820
+                ],
+                "deltaOfMaxima": 12808,
+                "paired": [
+                  12820,
+                  12820,
+                  12800,
+                  12820,
+                  12816,
+                  12796
+                ]
+              }
+            },
+            "selectVsAlways": {
+              "us": {
+                "referenceMedian": 774721.0,
+                "candidateMedian": 721531.0,
+                "pairedMedian": -54519.0,
+                "pairedRange": [
+                  -63283,
+                  -42895
+                ],
+                "deltaOfMaxima": -51353,
+                "paired": [
+                  -52204,
+                  -47186,
+                  -59161,
+                  -63283,
+                  -56834,
+                  -42895
+                ]
+              },
+              "peak": {
+                "referenceMedian": 591756.0,
+                "candidateMedian": 591758.0,
+                "pairedMedian": 6.0,
+                "pairedRange": [
+                  0,
+                  16
+                ],
+                "deltaOfMaxima": 8,
+                "paired": [
+                  0,
+                  16,
+                  4,
+                  8,
+                  8,
+                  0
+                ]
+              }
+            }
+          },
+          "editor": {
+            "always": {
+              "us": {
+                "referenceMedian": 2468769.5,
+                "candidateMedian": 2925094.0,
+                "pairedMedian": 460409.0,
+                "pairedRange": [
+                  450022,
+                  476061
+                ],
+                "deltaOfMaxima": 464257,
+                "paired": [
+                  450022,
+                  467908,
+                  476061,
+                  471212,
+                  452910,
+                  452609
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1410876.0,
+                "candidateMedian": 1425780.0,
+                "pairedMedian": 14904.0,
+                "pairedRange": [
+                  14892,
+                  14936
+                ],
+                "deltaOfMaxima": 14908,
+                "paired": [
+                  14892,
+                  14900,
+                  14908,
+                  14900,
+                  14936,
+                  14908
+                ]
+              }
+            },
+            "select": {
+              "us": {
+                "referenceMedian": 2468769.5,
+                "candidateMedian": 2515894.5,
+                "pairedMedian": 49580.0,
+                "pairedRange": [
+                  30511,
+                  124256
+                ],
+                "deltaOfMaxima": 91059,
+                "paired": [
+                  53831,
+                  68218,
+                  124256,
+                  35599,
+                  30511,
+                  45329
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1410876.0,
+                "candidateMedian": 1425796.0,
+                "pairedMedian": 14920.0,
+                "pairedRange": [
+                  14704,
+                  15092
+                ],
+                "deltaOfMaxima": 15076,
+                "paired": [
+                  14876,
+                  14704,
+                  14924,
+                  14916,
+                  14956,
+                  15092
+                ]
+              }
+            },
+            "selectVsAlways": {
+              "us": {
+                "referenceMedian": 2925094.0,
+                "candidateMedian": 2515894.5,
+                "pairedMedian": -403485.0,
+                "pairedRange": [
+                  -435613,
+                  -351805
+                ],
+                "deltaOfMaxima": -373198,
+                "paired": [
+                  -396191,
+                  -399690,
+                  -351805,
+                  -435613,
+                  -422399,
+                  -407280
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1425780.0,
+                "candidateMedian": 1425796.0,
+                "pairedMedian": 16.0,
+                "pairedRange": [
+                  -196,
+                  184
+                ],
+                "deltaOfMaxima": 168,
+                "paired": [
+                  -16,
+                  -196,
+                  16,
+                  16,
+                  20,
+                  184
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "number": 2,
+        "compileSamples": 54,
+        "apps": {
+          "files": {
+            "always": {
+              "us": {
+                "referenceMedian": 236036.0,
+                "candidateMedian": 269361.5,
+                "pairedMedian": 33268.0,
+                "pairedRange": [
+                  32125,
+                  35856
+                ],
+                "deltaOfMaxima": 34632,
+                "paired": [
+                  35856,
+                  34763,
+                  32125,
+                  33240,
+                  33296,
+                  33011
+                ]
+              },
+              "peak": {
+                "referenceMedian": 362624.0,
+                "candidateMedian": 379972.0,
+                "pairedMedian": 17348.0,
+                "pairedRange": [
+                  17336,
+                  17360
+                ],
+                "deltaOfMaxima": 17348,
+                "paired": [
+                  17360,
+                  17336,
+                  17336,
+                  17348,
+                  17348,
+                  17348
+                ]
+              }
+            },
+            "select": {
+              "us": {
+                "referenceMedian": 236036.0,
+                "candidateMedian": 248124.0,
+                "pairedMedian": 12367.5,
+                "pairedRange": [
+                  11826,
+                  13423
+                ],
+                "deltaOfMaxima": 12763,
+                "paired": [
+                  13423,
+                  12776,
+                  12763,
+                  11826,
+                  11972,
+                  11950
+                ]
+              },
+              "peak": {
+                "referenceMedian": 362624.0,
+                "candidateMedian": 379972.0,
+                "pairedMedian": 17348.0,
+                "pairedRange": [
+                  17340,
+                  17368
+                ],
+                "deltaOfMaxima": 17356,
+                "paired": [
+                  17368,
+                  17348,
+                  17340,
+                  17348,
+                  17348,
+                  17348
+                ]
+              }
+            },
+            "selectVsAlways": {
+              "us": {
+                "referenceMedian": 269361.5,
+                "candidateMedian": 248124.0,
+                "pairedMedian": -21369.0,
+                "pairedRange": [
+                  -22433,
+                  -19362
+                ],
+                "deltaOfMaxima": -21869,
+                "paired": [
+                  -22433,
+                  -21987,
+                  -19362,
+                  -21414,
+                  -21324,
+                  -21061
+                ]
+              },
+              "peak": {
+                "referenceMedian": 379972.0,
+                "candidateMedian": 379972.0,
+                "pairedMedian": 2.0,
+                "pairedRange": [
+                  0,
+                  12
+                ],
+                "deltaOfMaxima": 8,
+                "paired": [
+                  8,
+                  12,
+                  4,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          },
+          "agenda": {
+            "always": {
+              "us": {
+                "referenceMedian": 661605.0,
+                "candidateMedian": 773959.0,
+                "pairedMedian": 110682.5,
+                "pairedRange": [
+                  100776,
+                  115356
+                ],
+                "deltaOfMaxima": 104726,
+                "paired": [
+                  104051,
+                  111091,
+                  100776,
+                  115151,
+                  115356,
+                  110274
+                ]
+              },
+              "peak": {
+                "referenceMedian": 578948.0,
+                "candidateMedian": 591760.0,
+                "pairedMedian": 12812.0,
+                "pairedRange": [
+                  12812,
+                  12824
+                ],
+                "deltaOfMaxima": 12824,
+                "paired": [
+                  12824,
+                  12812,
+                  12824,
+                  12812,
+                  12812,
+                  12812
+                ]
+              }
+            },
+            "select": {
+              "us": {
+                "referenceMedian": 661605.0,
+                "candidateMedian": 715210.0,
+                "pairedMedian": 50645.5,
+                "pairedRange": [
+                  45488,
+                  56492
+                ],
+                "deltaOfMaxima": 45862,
+                "paired": [
+                  45488,
+                  50017,
+                  46114,
+                  56216,
+                  56492,
+                  51274
+                ]
+              },
+              "peak": {
+                "referenceMedian": 578948.0,
+                "candidateMedian": 591760.0,
+                "pairedMedian": 12812.0,
+                "pairedRange": [
+                  12812,
+                  12828
+                ],
+                "deltaOfMaxima": 12820,
+                "paired": [
+                  12828,
+                  12812,
+                  12820,
+                  12812,
+                  12812,
+                  12812
+                ]
+              }
+            },
+            "selectVsAlways": {
+              "us": {
+                "referenceMedian": 773959.0,
+                "candidateMedian": 715210.0,
+                "pairedMedian": -58899.5,
+                "pairedRange": [
+                  -61074,
+                  -54662
+                ],
+                "deltaOfMaxima": -58864,
+                "paired": [
+                  -58563,
+                  -61074,
+                  -54662,
+                  -58935,
+                  -58864,
+                  -59000
+                ]
+              },
+              "peak": {
+                "referenceMedian": 591760.0,
+                "candidateMedian": 591760.0,
+                "pairedMedian": 0.0,
+                "pairedRange": [
+                  -4,
+                  4
+                ],
+                "deltaOfMaxima": -4,
+                "paired": [
+                  4,
+                  0,
+                  -4,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          },
+          "editor": {
+            "always": {
+              "us": {
+                "referenceMedian": 2456738.0,
+                "candidateMedian": 2907398.0,
+                "pairedMedian": 450535.0,
+                "pairedRange": [
+                  431285,
+                  453535
+                ],
+                "deltaOfMaxima": 439743,
+                "paired": [
+                  431285,
+                  445346,
+                  452743,
+                  453535,
+                  453401,
+                  448327
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1410858.0,
+                "candidateMedian": 1425788.0,
+                "pairedMedian": 14932.0,
+                "pairedRange": [
+                  14540,
+                  15400
+                ],
+                "deltaOfMaxima": 14880,
+                "paired": [
+                  14932,
+                  14540,
+                  14932,
+                  15400,
+                  15400,
+                  14876
+                ]
+              }
+            },
+            "select": {
+              "us": {
+                "referenceMedian": 2456738.0,
+                "candidateMedian": 2508745.0,
+                "pairedMedian": 54128.0,
+                "pairedRange": [
+                  33892,
+                  55533
+                ],
+                "deltaOfMaxima": 49487,
+                "paired": [
+                  33892,
+                  55090,
+                  53548,
+                  55533,
+                  54708,
+                  49045
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1410858.0,
+                "candidateMedian": 1425796.0,
+                "pairedMedian": 14978.0,
+                "pairedRange": [
+                  14884,
+                  15408
+                ],
+                "deltaOfMaxima": 14976,
+                "paired": [
+                  15028,
+                  14920,
+                  14928,
+                  15408,
+                  15408,
+                  14884
+                ]
+              }
+            },
+            "selectVsAlways": {
+              "us": {
+                "referenceMedian": 2907398.0,
+                "candidateMedian": 2508745.0,
+                "pairedMedian": -398347.5,
+                "pairedRange": [
+                  -399282,
+                  -390256
+                ],
+                "deltaOfMaxima": -390256,
+                "paired": [
+                  -397393,
+                  -390256,
+                  -399195,
+                  -398002,
+                  -398693,
+                  -399282
+                ]
+              },
+              "peak": {
+                "referenceMedian": 1425788.0,
+                "candidateMedian": 1425796.0,
+                "pairedMedian": 8.0,
+                "pairedRange": [
+                  -4,
+                  380
+                ],
+                "deltaOfMaxima": 96,
+                "paired": [
+                  96,
+                  380,
+                  -4,
+                  8,
+                  8,
+                  8
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
