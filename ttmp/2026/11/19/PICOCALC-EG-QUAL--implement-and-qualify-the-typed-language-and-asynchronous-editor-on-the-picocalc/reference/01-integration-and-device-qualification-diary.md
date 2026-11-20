@@ -372,3 +372,31 @@ Run that six-workflow device comparison after the reserved Chess trial. Check it
 ### Code review instructions
 
 Start with the language ticket's scripts/19-stage-register-inequality.patch and scripts/20-execute-register-inequality.mjs. The parser patch is in PICOCALC-PARSER-DISPATCH/sources/03-parser-and-portable-fallback.patch. Qualification scripts 25, 26, 28 and 29 reproduce the combined candidate and compare the actual artifacts.
+
+## Step 9 — Tie the acceptance criteria to source and firmware identities
+
+I reviewed the professor's exact E4, E5 and G4 wording. For E5 I linked the shipping candidate to the historical timing harness by comparing the actual compiler and C/JS harness digests with the timing experiment's input manifest. For G4 I queued a second full physical Find series using the final candidate. The original generated Editor's results provide an independent functional reference for both engines.
+
+### What I did and why
+
+Recovered the supplied roadmap and course sources that previously existed only in the local working tree. Added a final-audit mode to scripts/28-check-qualified-integration.py. It checks the host clock source and each fifteen-sample session, the 71-word layout ceiling, all six physical Find observations, their counters, framebuffer records, shared input bytes and the two observer image digests. scripts/30-run-portable-search.sh uses the same long-search runner after the short workflow and Chess board windows.
+
+### What worked
+
+The exact host candidate passed 24 existing workflow replays with digest d6dc0469… for the typed frontend. The candidate and controls also passed execution and artifact comparison across 13 compiler combinations. The verified output included 70 persistent fields, SHA-256 5dfeb571… for Wasm and 7c182547… for the linked RV32 ELF. The professor harness source matched both archived digests.
+
+### What did not work
+
+The first final-audit rehearsal reached the missing final search receipt and stopped there, as designed. A comparable test of an earlier source revision cannot fill that receipt. The revised normalizer test was needed because a text-replacement oracle had only compared the terminal state. The independent audit now checks all 10,000 units after each of four settlements against the actual preceding Editor implementation.
+
+### What warrants a second pair of eyes
+
+The fixed wall-time fixture stabilizes the displayed clock. Performance samples use the hardware's monotonic clock. Compare native firmware on physical P4 and RV32 emulation on the host separately. Count sampled turns and final screen checks according to the fixtures that observed them.
+
+### What should be done in the future
+
+Finish the queue, review each final gate, apply the exact qualified compiler patch, and publish the measured synthesis and archival bundle.
+
+### Code review instructions
+
+Read the original Scope E and Scope G documents in PICOCALC-NATIVE-NEXT and the independent reports linked from this ticket index. The professor source roadmap is in project commit 5d7e0e0, and the companion course is in 65129c7. The portable host replay, source hashes and research index are in 75a8bf9.
