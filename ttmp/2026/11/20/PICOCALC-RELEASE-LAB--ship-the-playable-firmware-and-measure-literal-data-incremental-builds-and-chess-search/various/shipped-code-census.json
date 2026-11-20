@@ -1,0 +1,48 @@
+{
+  "sourceDigest": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+  "codeDigest": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+  "streamingEqualsBuffered": true,
+  "totalCodeBytes": 256400,
+  "groups": [
+    {
+      "source": "state.typed",
+      "functions": 0,
+      "codeBytes": 0
+    },
+    {
+      "source": "position.typed",
+      "functions": 23,
+      "codeBytes": 8668
+    },
+    {
+      "source": "moves.typed",
+      "functions": 9,
+      "codeBytes": 6772
+    },
+    {
+      "source": "search.typed",
+      "functions": 21,
+      "codeBytes": 11140
+    },
+    {
+      "source": "chess.typed",
+      "functions": 15,
+      "codeBytes": 12592
+    },
+    {
+      "source": "view.typed",
+      "functions": 9,
+      "codeBytes": 17568
+    },
+    {
+      "source": "generated writer",
+      "functions": 1,
+      "codeBytes": 197544
+    },
+    {
+      "source": "mobile-view.typed",
+      "functions": 4,
+      "codeBytes": 2116
+    }
+  ]
+}

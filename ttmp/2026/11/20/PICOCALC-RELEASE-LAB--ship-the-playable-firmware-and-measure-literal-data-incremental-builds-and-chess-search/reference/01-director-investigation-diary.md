@@ -76,3 +76,53 @@ Start with the release link in the ticket and scripts/director/release-notes.md,
 ### Technical details
 
 The tag identifies the shipped source revision. The firmware assets are for already-provisioned ESP32-P4 boards with this partition layout and bootloader. Application address 0x10000; partition table address 0x8000.
+
+## Step 2: Verify the download, count renderer gates and isolate literal expansion
+
+I checked the published files from a fresh download and independently compiled programs whose literal length and repetition count I controlled. The renderer supervisor reconciled the parent roadmap against the narrower child experiments. I used the original task IDs so the reader can distinguish completion of an experiment from deployment across all widgets.
+
+### Prompt Context
+
+**User prompt (verbatim):** “approve sending to anthropic, it's a toy compiler”
+
+**Assistant interpretation:** Authorize the researchers to use project-specific compiler material for the requested Opus studies. **Inferred user intent:** Let Opus reason about the actual implementation and measurements. **Commits:** 24fc00e (release receipt and literal controls), 79574db (render roadmap).
+
+### What I did
+
+Downloaded the application, partition table and checksum manifest from the tagged GitHub release into a fresh temporary directory. Verified both checksums and compared the downloads to the release artifacts. Ran the release frontend and backend on six literal lengths and three function counts with a sentinel just after the destination. Relayed the approval to all three research operators. Reviewed the six open IDs in the reconciled rendering ticket.
+
+### Why
+
+Literal expansion can consume code space before any renderer executes. Generating tiny controlled functions permits attribution that would be difficult in an entire Chess renderer. A recorded device observation and a synthetic host result answer separate questions.
+
+### What worked
+
+All 18 Wasm programs produced the expected UTF-16 values and preserved their sentinels. Four functions each copying 1,022 ASCII units occupied 49,600 native bytes. Both fetched assets matched the saved files byte for byte. The renderer checklist now records eight completed gates and six open gates.
+
+### What didn't work
+
+The initial commit check caught trailing whitespace from the quoted user prompt. Removing line-end whitespace preserved the text and allowed the commit. The first project-specific Claude request was held for external disclosure review. The user subsequently granted the approval quoted above.
+
+### What I learned
+
+The earlier device capture contained keypad NACKs. A new read-only observation of the ordinary firmware recorded 42 additional I2C0 transfers, 169 additional bytes and zero errors. This qualifies peripheral polling during that interval. Testing key-to-app behavior still requires a physical press.
+
+### What was tricky to build
+
+The renderer roadmap pairs multiple scope labels on some lines. Counting the boxes yields fourteen tasks. Counting scope labels individually would give a misleading percentage.
+
+### What warrants a second pair of eyes
+
+The literal control executes emitted Wasm. Its native byte length is a static observation. Native destination bounds and actual native execution are separate candidate acceptance tests.
+
+### What should be done in the future
+
+Compare the candidate against these controls and verify whole-image storage, cold build cost and behavior on the physical target. Compare actual edit latency and search execution under their own input controls.
+
+### Code review instructions
+
+Run the ticket's scripts/director/01-literal-growth.mjs with Node from the repository root, supplying a temporary output filename. Compare it to various/literal-growth.json. Inspect the grouped roadmap in PICOCALC-RENDER-NEXT/index.md and the clean polling interval in various/release-read-only-preflight.json.
+
+### Technical details
+
+The standalone controls pass the destination at address zero, set its 32-bit capacity, fill its 16-bit elements including a trailing sentinel, call each exported writer, then verify returned unit count, destination contents and sentinel. Only the ASCII character x is varied in length. Character encoding or a long displacement can change native instruction selection outside this range.
