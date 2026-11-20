@@ -1,0 +1,255 @@
+{
+  "first": {
+    "G": {
+      "usPerFrame": {
+        "median": 101.28191489361703,
+        "min": 100.43617021276596,
+        "max": 101.53191489361703
+      },
+      "verifiedEncodes": 1316
+    },
+    "N": {
+      "usPerFrame": {
+        "median": 78.24468085106383,
+        "min": 77.62234042553192,
+        "max": 79.49468085106383
+      },
+      "verifiedEncodes": 1316
+    },
+    "T": {
+      "usPerFrame": {
+        "median": 24.71276595744681,
+        "min": 24.56382978723404,
+        "max": 24.79255319148936
+      },
+      "verifiedEncodes": 1316
+    },
+    "installUs": {
+      "prepUs": {
+        "median": 12686,
+        "min": 12384,
+        "max": 13372
+      },
+      "generateUs": {
+        "median": 51808,
+        "min": 51015,
+        "max": 52153
+      },
+      "compileUs": {
+        "median": 537747,
+        "min": 531943,
+        "max": 549601
+      },
+      "qualifyLoadUs": {
+        "median": 1531,
+        "min": 1452,
+        "max": 3031
+      },
+      "totalUs": {
+        "median": 603790,
+        "min": 597152,
+        "max": 616031
+      }
+    }
+  },
+  "followup": {
+    "pG": {
+      "usPerFrame": {
+        "median": 103.97872340425532,
+        "min": 103.40425531914893,
+        "max": 107.70212765957447
+      },
+      "verifiedEncodes": 470
+    },
+    "pN": {
+      "usPerFrame": {
+        "median": 86.84042553191489,
+        "min": 81.31914893617021,
+        "max": 89.08510638297872
+      },
+      "verifiedEncodes": 470
+    },
+    "pR": {
+      "usPerFrame": {
+        "median": 33.670212765957444,
+        "min": 30.680851063829788,
+        "max": 34.08510638297872
+      },
+      "verifiedEncodes": 470
+    },
+    "pT": {
+      "usPerFrame": {
+        "median": 35.670212765957444,
+        "min": 28.148936170212767,
+        "max": 36.12765957446808
+      },
+      "verifiedEncodes": 470
+    },
+    "pF": {
+      "usPerFrame": {
+        "median": 29.78723404255319,
+        "min": 28.74468085106383,
+        "max": 30.06382978723404
+      },
+      "verifiedEncodes": 470,
+      "hitsPerBlock": 40,
+      "missesPerBlock": 7,
+      "cacheBytes": 1192
+    },
+    "cT": {
+      "usPerFrame": {
+        "median": 30.3125,
+        "min": 24.541666666666668,
+        "max": 30.791666666666668
+      },
+      "verifiedEncodes": 240
+    },
+    "cF": {
+      "usPerFrame": {
+        "median": 43.27083333333333,
+        "min": 37.708333333333336,
+        "max": 43.625
+      },
+      "verifiedEncodes": 240,
+      "hitsPerBlock": 0,
+      "missesPerBlock": 24,
+      "cacheBytes": 1192
+    },
+    "sT": {
+      "usPerFrame": {
+        "median": 39.825,
+        "min": 28.1,
+        "max": 42.2
+      },
+      "verifiedEncodes": 200
+    },
+    "sF": {
+      "usPerFrame": {
+        "median": 37.925,
+        "min": 33.85,
+        "max": 38.8
+      },
+      "verifiedEncodes": 200,
+      "hitsPerBlock": 16,
+      "missesPerBlock": 4,
+      "cacheBytes": 1192
+    },
+    "installUs": {
+      "prepUs": {
+        "median": 12734.0,
+        "min": 12454,
+        "max": 13000
+      },
+      "generateUs": {
+        "median": 51490.5,
+        "min": 50890,
+        "max": 51965
+      },
+      "compileUs": {
+        "median": 540006.0,
+        "min": 535407,
+        "max": 543253
+      },
+      "qualifyLoadUs": {
+        "median": 1814.0,
+        "min": 1681,
+        "max": 3247
+      },
+      "totalUs": {
+        "median": 606352.5,
+        "min": 601523,
+        "max": 609851
+      }
+    },
+    "prebuilt": {
+      "loadUs": {
+        "median": 3479.5,
+        "min": 3374,
+        "max": 3740
+      },
+      "elfBytes": 33964
+    },
+    "tableload": {
+      "loadUs": {
+        "median": 869.5,
+        "min": 784,
+        "max": 899
+      },
+      "elfBytes": 3340
+    }
+  },
+  "timeChangePercent": {
+    "pN_vs_pG": {
+      "ratioOfMedians": -16.482504604051574,
+      "pairedBlocks": {
+        "median": -17.396934011686938,
+        "min": -21.760491299897655,
+        "max": -14.50617283950617
+      }
+    },
+    "pT_vs_pG": {
+      "ratioOfMedians": -65.69470022508696,
+      "pairedBlocks": {
+        "median": -66.52610797527757,
+        "min": -73.14250913520097,
+        "max": -65.37520391517128
+      }
+    },
+    "pR_vs_pG": {
+      "ratioOfMedians": -67.6181706568447,
+      "pairedBlocks": {
+        "median": -67.76058230906463,
+        "min": -70.40229885057472,
+        "max": -67.33278955954323
+      }
+    },
+    "pF_vs_pG": {
+      "ratioOfMedians": -71.35256803765091,
+      "pairedBlocks": {
+        "median": -71.43876271831728,
+        "min": -72.56025286448045,
+        "max": -70.92592592592592
+      }
+    },
+    "pF_vs_pT": {
+      "ratioOfMedians": -16.49269311064717,
+      "pairedBlocks": {
+        "median": -16.223809439097714,
+        "min": -17.664493183165387,
+        "max": 6.198034769463345
+      }
+    },
+    "pR_vs_pT": {
+      "ratioOfMedians": -5.60691917685655,
+      "pairedBlocks": {
+        "median": -5.662676019197299,
+        "min": -14.1155449672424,
+        "max": 19.95464852607711
+      }
+    },
+    "pN_vs_pR": {
+      "ratioOfMedians": 157.91469194312796,
+      "pairedBlocks": {
+        "median": 159.70373267592726,
+        "min": 142.51269035532994,
+        "max": 178.7101248266297
+      }
+    },
+    "cF_vs_cT": {
+      "ratioOfMedians": 42.74914089347077,
+      "pairedBlocks": {
+        "median": 41.65640275054541,
+        "min": 24.38692098092643,
+        "max": 76.40067911714769
+      }
+    },
+    "sF_vs_sT": {
+      "ratioOfMedians": -4.770872567482753,
+      "pairedBlocks": {
+        "median": -6.610508902529272,
+        "min": -16.83046683046683,
+        "max": 37.72241992882564
+      }
+    }
+  }
+}

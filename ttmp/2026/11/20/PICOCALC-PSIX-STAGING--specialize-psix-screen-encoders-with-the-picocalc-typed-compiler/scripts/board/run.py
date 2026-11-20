@@ -8,6 +8,7 @@ p.add_argument('output',type=Path)
 p.add_argument('--original',type=Path,default=Path('/tmp/p4-system-fix-final/build'))
 p.add_argument('--port',default='/dev/ttyACM0')
 p.add_argument('--preflight',action='store_true')
+p.add_argument('--followup',action='store_true')
 a=p.parse_args()
 a.output.mkdir(exist_ok=True,parents=True)
 orig=a.original/'picocalc-os-p4.bin'; image=a.build/'picocalc-os-p4.bin'
@@ -61,33 +62,50 @@ wrote=False
 try:
     health();hold();wrote=True;esp('candidate','write_flash',image)
     r['during']=health()
-    for block in range(7):
-        runs=['install','N','T','G'] if block%3==0 else ['install','T','G','N'] if block%3==1 else ['install','G','N','T']
-        for arm in runs:
-            resp=console('psixstudy '+arm+(' 1' if arm=='install' else ' 4'),24)
-            lines=[s for s in resp.splitlines() if s.startswith(('STAGE','stage compile'))]
-            if any('ERROR' in s or 'failed' in s for s in lines):raise RuntimeError(lines)
-            row=next(json.loads(s[11:]) for s in lines if s.startswith('STAGE DATA '))
-            assert row['arm']==arm and (arm=='install' or row['count']==188)
-            r['rows'].append({'block':block,**row})
-            if arm=='install':r.setdefault('compilerLogs',[]).extend(s for s in lines if s.startswith('stage compile'))
-            write(r)
-    expected={'system':(9,15074,'3e515422'),'keys':(6,5797,'98452397')}
-    for block in range(5):
-        apps=['system','keys'] if block%2==0 else ['keys','system']
-        policies=['generic','trained','online','warm']
-        policies=policies[block%4:]+policies[:block%4]
-        if block==0: policies=['verify',*policies]
-        for app in apps:
-            for policy in policies:
-                arm=policy+'-'+app
-                resp=console('psixstudy '+arm+' 1',18)
-                lines=[s for s in resp.splitlines() if s.startswith('STAGE ')]
-                if any('ERROR' in s for s in lines): raise RuntimeError(lines)
+    if a.followup:
+        arms=['pG','pN','pT','pR','pF']
+        for block in range(10):
+            order=arms[block%5:]+arms[:block%5]
+            if block>=5:order=list(reversed(order))
+            secondary=['cT','cF','sT','sF']
+            if block%2:secondary.reverse()
+            for arm in ['install','prebuilt','tableload',*order,*secondary]:
+                resp=console('psixstudy '+arm+' 1',22)
+                lines=[s for s in resp.splitlines() if s.startswith(('STAGE','stage compile'))]
+                if any('ERROR' in s or 'failed' in s for s in lines):raise RuntimeError(lines)
                 row=next(json.loads(s[11:]) for s in lines if s.startswith('STAGE DATA '))
-                assert (row['count'],row['bytes'],row['wireHash'])==expected[app] and row['arm']==arm
-                if policy=='verify': assert row['verified']==3
-                r.setdefault('adaptive',[]).append({'block':block,**row});write(r)
+                assert row['arm']==arm
+                if arm in arms: assert row['count']==47
+                if arm in secondary: assert row['count']==(24 if arm[0]=='c' else 20)
+                r['rows'].append({'block':block,**row});write(r)
+    else:
+        for block in range(7):
+            runs=['install','N','T','G'] if block%3==0 else ['install','T','G','N'] if block%3==1 else ['install','G','N','T']
+            for arm in runs:
+                resp=console('psixstudy '+arm+(' 1' if arm=='install' else ' 4'),24)
+                lines=[s for s in resp.splitlines() if s.startswith(('STAGE','stage compile'))]
+                if any('ERROR' in s or 'failed' in s for s in lines):raise RuntimeError(lines)
+                row=next(json.loads(s[11:]) for s in lines if s.startswith('STAGE DATA '))
+                assert row['arm']==arm and (arm=='install' or row['count']==188)
+                r['rows'].append({'block':block,**row})
+                if arm=='install':r.setdefault('compilerLogs',[]).extend(s for s in lines if s.startswith('stage compile'))
+                write(r)
+        expected={'system':(9,15074,'3e515422'),'keys':(6,5797,'98452397')}
+        for block in range(5):
+            apps=['system','keys'] if block%2==0 else ['keys','system']
+            policies=['generic','trained','online','warm']
+            policies=policies[block%4:]+policies[:block%4]
+            if block==0: policies=['verify',*policies]
+            for app in apps:
+                for policy in policies:
+                    arm=policy+'-'+app
+                    resp=console('psixstudy '+arm+' 1',18)
+                    lines=[s for s in resp.splitlines() if s.startswith('STAGE ')]
+                    if any('ERROR' in s for s in lines): raise RuntimeError(lines)
+                    row=next(json.loads(s[11:]) for s in lines if s.startswith('STAGE DATA '))
+                    assert (row['count'],row['bytes'],row['wireHash'])==expected[app] and row['arm']==arm
+                    if policy=='verify': assert row['verified']==3
+                    r.setdefault('adaptive',[]).append({'block':block,**row});write(r)
 except BaseException as e:
     r['error']=repr(e);write(r);raise
 finally:

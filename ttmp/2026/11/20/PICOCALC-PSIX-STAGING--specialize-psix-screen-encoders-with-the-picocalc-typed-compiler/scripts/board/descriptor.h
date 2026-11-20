@@ -6,6 +6,16 @@
 struct stage_input { uint32_t length; uint16_t words[90]; };
 #include "stage_fixtures.h"
 
+// Emit the exact IEEE-754 binary64 bits of an out-of-line i32. Both GCC
+// controls use this routine, including the freestanding relocatable ELF.
+static void stage_wide_i32(uint8_t *dst,int32_t v) {
+    uint32_t mag=v<0 ? 0u-(uint32_t)v : (uint32_t)v;
+    unsigned exponent=31;
+    while (!(mag & 0x80000000u)) { mag <<= 1; --exponent; }
+    uint32_t high=((uint32_t)(v<0)<<31) | ((1023u+exponent)<<20) | ((mag>>11)&0xfffffu);
+    uint32_t low=mag<<21;
+    for(unsigned i=0;i<4;i++) {dst[i]=low>>(8*i); dst[4+i]=high>>(8*i);}
+}
 static int stage_plan(const struct stage_input *in, uint8_t *output, size_t capacity) {
     if (in->length != 90) return -1;
     static const char hex[]="0123456789abcdef";
@@ -71,7 +81,7 @@ static int stage_plan(const struct stage_input *in, uint8_t *output, size_t capa
     for(unsigned i=0;i<9;i++) {
         int32_t v=numbers[i]; uint8_t *slot=output+body+stage_numbers[i];
         if(v>=-524288 && v<=524287) bp_ref(slot,3,(uint32_t)v&0xfffff);
-        else {double d=v; bp_ref(slot,4,tail); memcpy(output+tail,&d,8); tail+=8;}
+        else {bp_ref(slot,4,tail); stage_wide_i32(output+tail,v); tail+=8;}
     }
     return (int)total;
 }

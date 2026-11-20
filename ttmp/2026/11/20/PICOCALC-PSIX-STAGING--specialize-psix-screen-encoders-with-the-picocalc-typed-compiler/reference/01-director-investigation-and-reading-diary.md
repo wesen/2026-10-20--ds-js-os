@@ -122,3 +122,51 @@ Run scripts/board/prepare.py in an unused directory, inspect scripts/board/stagi
 ### Technical details
 
 The installed ELF is 33,964 bytes including its experimental reserved slot, and the generated RV32 instructions occupy 16,116 bytes. Medians over seven blocks total 603.790 ms, including separate compilation near 537.75 ms. The setup benchmark starts before releasing a previous test installation when one exists, reads and verifies a bundled independent reference, then obtains a callable function. The compiler API's peak JS allocation is separate from the whole-device high water mark.
+
+## Step 3: Distinguish native code placement, ahead-of-time installation, and guarded byte copying
+
+I ran a second board window with the full recorded game in its original order. The follow-up also uses a real Chess position whose legal selections force three packet layouts. It supplies a reproducible case where copying helps and a second case where caching costs more than reconstructing from the descriptor.
+
+### Prompt Context
+
+See the request quoted in Step 1. “Blit straight out” suggested testing reusable wire bytes as well as generating a function. The independent reviewers asked whether the fast C implementation merely benefited from firmware code placement.
+
+### What I did
+
+I packaged the C descriptor writer into a separate GCC ELF and loaded it using the stock ESP loader. I added commands for obtaining a callable pointer from a prebuilt copy of the generated typed ELF and from the smaller C ELF. The static researcher provided a two-entry guarded cache, adversarial width tests and a captured legal rook selection sequence. I incorporated those inputs and rotated five candidates through ten blocks with a fresh cache per stream. I compared every output to the reference bytes and checked the byte immediately after every caller-owned result.
+
+### Why
+
+The first trial repeated each screen four times and the compact table ran as firmware. Application use changes the input from frame to frame. A matched chronological comparison and identical descriptor source in a callable external module narrow two uncertainties. A legal three-layout cycle separates a low-cost hit from the cost of repeated failed specialization.
+
+### What worked
+
+All 3,230 timed outputs in this second window passed byte comparison. On the 47-state replay the two-entry writer took 29.79 µs per call with 40 hits. The directly linked table took 35.67 µs, the relocated table took 33.67 µs, generated RV32 took 86.84 µs and generic native took 103.98 µs. The full typed ELF loaded in 3.480 ms and the small table ELF loaded in 0.870 ms. After the run, the ROM tool verified the playable application and partition table. The compositor, System, Editor, Snake and Chess all answered with clear error fields.
+
+### What didn't work
+
+The first attempt at the separate ELF failed to link. ESP GCC attempted to import an integer-to-double conversion from its non-PIC libgcc archive. The linker reported `relocation R_RISCV_HI20 against __clz_tab can not be used when making a shared object`. I emitted the exact two binary64 words for a wide signed i32 with integer operations in both builds of the table writer. The test exercises only the indirect numeric branch for that helper. The regular trace contained inline values. I reran the standalone C boundary witnesses, and readelf showed only the three expected C library functions as unresolved imports in the final 3,340-byte module.
+
+### What I learned
+
+An 85% hit rate improved the cache median over the firmware table by 16.5% on the 47-frame trace. In two of the ten paired blocks the table won. A 0% hit rate made the cache 42.7% slower and lost every block. Code placement alone cannot explain a 2.58-fold ratio between the generated and relocated table arm. A guard proven for fixed-width disjoint strings still has to account for lexical order, not simply lengths.
+
+### What was tricky to build
+
+The tiny ELF must use the same buffer ABI and descriptor as the firmware arm. The cached writer uses two persistent slots and constructs a miss in bounded scratch. During a replacement it cannot retain an earlier game state's string or score in supposedly immutable template bytes. The host harness exercised overlapping input and output for the cache and compared untouched buffers on refusal. Inspection of the flash/readback receipts is logically separate from validating encoded frames.
+
+### What warrants a second pair of eyes
+
+The two physical experiments have different ordering and firmware. Percentages compare arms inside the same experiment. Upload results distinguish source-to-callable compilation from merely loading an existing ELF. The cache figure is its struct size. The current control leaves the creation of the source array or tree and all compositor work outside the timer.
+
+### What should be done in the future
+
+Prototype the same descriptor over an application writer at an ordinary publication entry point, and lower a coarser packed store operation through the typed backend. Reuse the table-from-ELF control and the churn counterexample. Qualify latency to the first frame, input gathering, and real rendering separately.
+
+### Code review instructions
+
+Review scripts/board/descriptor.h, patch.h, staging_trial.c and run.py alongside scripts/04-results.py. Use the four independent writers and the flat-record derivation before reviewing a timing percentage. scripts/board/patch-fixtures.mjs labels both the actual chronological events and the sampled cyclic control.
+
+### Technical details
+
+`python3 scripts/board/prepare.py /tmp/pico-psix-staging/board` generated the fixtures and signed-off host ELF reference in the isolated source tree. I invoked the shared ESP-IDF 5.4.2 builder, then `python3 scripts/board/run.py /tmp/pico-psix-staging/board/build /tmp/pico-psix-staging/physical-02 --followup`. The archived various/physical-followup.json has 120 trial rows, before/during/after world health and verified restoration. scripts/04-results.py checks both receipts and each expected cache tally, aggregates paired and unpaired statistics and produces the chart.

@@ -51,4 +51,8 @@ slot=work/'golden-slot.elf'
 subprocess.run([candidates[0],'-march=rv32imafc_zicsr_zifencei','-mabi=ilp32f','-Os','-fPIC','-shared','-nostartfiles','-nostdlib','-e','app_main','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-fvisibility=hidden','-Wl,--strip-all','-Wl,-z,max-page-size=16','-Wno-attributes','-o',slot,main/'entry.c',main/'slot.S'],check=True)
 subprocess.run(['node',scripts/'golden.mjs',tree/'picocalc-os',main,slot],check=True)
 subprocess.run(['node',scripts.parent/'runtime/05-build-board.mjs',main/'adaptive.js'],check=True)
+if (scripts/'patch.h').is_file():
+    subprocess.run(['node',scripts/'patch-fixtures.mjs',main],check=True)
+    for name in ['patch.h','relocated-table.c']:
+        shutil.copyfile(scripts/name,main/name)
 print(main)

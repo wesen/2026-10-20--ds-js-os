@@ -96,6 +96,73 @@ static void run_arm(char arm,int repetitions) {
     }
     printf("STAGE DATA {\"arm\":\"%c\",\"encodeUs\":%lld,\"verifyUs\":%lld,\"count\":%u,\"states\":%u}\n",arm,(long long)total,(long long)verify,checked,(unsigned)COUNT);
 }
+#ifdef PSIX_PATCH_FOLLOWUP
+#include "patch.h"
+#include "stage_churn.h"
+typedef int (*plan_fn)(const struct stage_input *,uint8_t *,size_t);
+static plan_fn resident_table;
+static esp_elf_t table_module;
+static void load_table(void) {
+    if(resident_table){esp_elf_deinit(&table_module);resident_table=NULL;}
+    size_t n=0;vtime_t started=port_clock();
+    char *code=p4_bundle_read("stage/table.elf",&n,NULL,0);
+    int rc=code?esp_elf_init(&table_module):-1;
+    if(!rc)rc=esp_elf_relocate(&table_module,(uint8_t *)code,n);
+    if(!rc){char *args[]={(char *)&resident_table};rc=esp_elf_request(&table_module,0,1,args);}
+    if(rc || !resident_table)printf("STAGE ERROR table ELF %d\n",rc);
+    else printf("STAGE DATA {\"arm\":\"tableload\",\"bytes\":%u,\"loadUs\":%lld}\n",(unsigned)n,(long long)(port_clock()-started));
+    free(code);
+}
+static void load_prebuilt(void) {
+    size_t n=0;vtime_t start=port_clock();
+    char *code=p4_bundle_read("stage/expected.elf",&n,NULL,0);
+    esp_elf_t mod={0};encoder_fn prebuilt=NULL;
+    int rc=code?esp_elf_init(&mod):-1;
+    if(!rc)rc=esp_elf_relocate(&mod,(uint8_t *)code,n);
+    if(!rc){char *args[]={(char *)&prebuilt};rc=esp_elf_request(&mod,0,1,args);}
+    vtime_t end=port_clock();struct out_buffer out={.length=288};
+    if(rc || !prebuilt || prebuilt(&stage_cases[0].input,&out,sizeof out.cells)!=(int)stage_cases[0].length ||
+        memcmp(out.cells,stage_cases[0].wire,stage_cases[0].length))puts("STAGE ERROR prebuilt");
+    else printf("STAGE DATA {\"arm\":\"prebuilt\",\"bytes\":%u,\"loadUs\":%lld}\n",(unsigned)n,(long long)(end-start));
+    esp_elf_deinit(&mod);free(code);
+}
+static void patch_trial(char arm, char stream) {
+    if(!entry || !resident_table){puts("STAGE ERROR load both writers first");return;}
+    enum { COUNT=sizeof(stage_cases)/sizeof(*stage_cases) };
+    struct stage_cache cache={0};
+    struct out_buffer out;
+    unsigned calls=0; vtime_t elapsed=0;
+    unsigned count=stream=='c'?24:stream=='s'?20:COUNT;
+    for(unsigned j=0;j<count;j++) {
+        const struct stage_patch_fixture *alternative=stream=='c'? &stage_patch_churn[j%3] :
+                                                       stream=='s'? &stage_patch_replay[j] : NULL;
+        const struct stage_input *in=alternative? &alternative->input : &stage_cases[j].input;
+        size_t length=alternative? alternative->length : stage_cases[j].length;
+        const uint8_t *expected=alternative? alternative->wire : stage_cases[j].wire;
+        const char *json=alternative?alternative->json:stage_cases[j].json;
+        cJSON *tree=arm=='G'?cJSON_Parse(json):NULL;
+        if(arm=='G' && !tree){puts("STAGE ERROR tree");return;}
+        out.length=288;memset(out.cells,0xa5,sizeof out.cells);
+        uint8_t *wire=(uint8_t*)out.cells;int n=-1;
+        vtime_t start=port_clock();
+        switch(arm) {
+        case 'F':n=stage_cached(&cache,in,wire,sizeof out.cells);break;
+        case 'R':n=resident_table(in,wire,sizeof out.cells);break;
+        case 'T':n=stage_plan(in,wire,sizeof out.cells);break;
+        case 'N':n=entry(in,&out,sizeof out.cells);break;
+        case 'G':{size_t size=0,scratch=0;wire=bp_encode(tree,&size,&scratch);n=(int)size;break;}
+        }
+        elapsed+=port_clock()-start;
+        bool ok=wire && n==(int)length && !memcmp(expected,wire,length);
+        if(arm!='G')ok=ok && wire[length]==0xa5;
+        if(arm=='G')free(wire);
+        cJSON_Delete(tree);
+        if(!ok){printf("STAGE ERROR followup %c %u %d\n",arm,j,n);return;}
+        calls++;
+    }
+    printf("STAGE DATA {\"arm\":\"%c%c\",\"encodeUs\":%lld,\"count\":%u,\"hits\":%u,\"misses\":%u,\"cacheBytes\":%u}\n",stream,arm,(long long)elapsed,calls,(unsigned)cache.hits,(unsigned)cache.misses,(unsigned)sizeof cache);
+}
+#endif
 static JSValue stage_clock(JSContext *ctx, JSValueConst thisval, int argc, JSValueConst *args) {
     return JS_NewInt64(ctx,port_clock());
 }
@@ -141,6 +208,11 @@ void staging_trial(const char *arguments) {
     char arm[16]; int repetitions=0;
     if(sscanf(arguments,"%15s %d",arm,&repetitions)!=2) {puts("STAGE ERROR arguments");return;}
     if(!strcmp(arm,"install")) {if(!install_writer())puts("STAGE ERROR compiler install");}
+#ifdef PSIX_PATCH_FOLLOWUP
+    else if(!strcmp(arm,"tableload"))load_table();
+    else if(!strcmp(arm,"prebuilt"))load_prebuilt();
+    else if(strlen(arm)==2 && strchr("psc",arm[0]) && strchr("FRTNG",arm[1]))patch_trial(arm[1],arm[0]);
+#endif
     else if(strlen(arm)==1 && strchr("NTG",arm[0]) && repetitions>=1 && repetitions<=8)run_arm(arm[0],repetitions);
     else if(strchr(arm,'-') && repetitions==1) run_adaptive(arm);
     else puts("STAGE ERROR arm");
