@@ -285,3 +285,51 @@ Inspect wait_for_painter and the ordered installation/status lines, then inspect
 ### Technical details
 
 Observed firmware 6364be0178215b2742c5648c48d657f7e5b9b00cd0bbc898b8b39426ff62e7a2 and ordinary 134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1 contain identical painter and Chess sources.
+
+## Step 6: Check every displayed phase, install the ordinary image and deliver the series
+
+The replay qualified the actual physical display, both rotation keys, all six solid models in a developed position, and normal gameplay through castling. I left the latest ordinary 3D firmware installed and verified the app and unchanged partition by readback.
+
+### Prompt Context
+
+See Steps 3 and 4. The user had previously approved leaving the latest firmware on the board. **Assistant interpretation:** Leave the working camera available for the next physical session and publish the evidence.
+
+### What I did
+
+Ran the repaired hardware driver with the observed and ordinary builds. Shared the absolute physical GIF paths as each became available. Stored exact PNGs, measured animation timing, an independently replayable compressed collection of only camera packets and decoded frames, and the restored-image readback. Added the physical result to the director article and published all five articles. The separate raster department published three articles in its own vault commit.
+
+### Why
+
+A frame captured at compositor commit can precede actual panel completion. Each physical view therefore has three checks: completed SPI payloads, UART framebuffer bytes and a separate host pixel reference. Keeping the return to phase zero catches an extra or missing step.
+
+### What worked
+
+All 12 stable gameplay, selection and cursor checkpoints matched 95,360 app pixels. All 33 rotation captures passed, including the repeated starting view. All 32 decoded GIF frames retained the exact physical colors. Four quarter-turns took 528.919, 515.609, 523.726 and 545.951 ms. The ordinary image SHA-256 134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1 and partition were read back, all eight monitored worlds booted natively and the normal painter installed with zero rejections. The vault remote main was verified at e342a2098571bee081e2d03976306d1410122070, and reMarkable cloud accepted the combined design and research PDF. See various/publication.json.
+
+### What didn't work
+
+The first 3D publication dry run caught a sibling-ticket link one directory short. A later one correctly rejected colliding smooth-rotation.gif asset names for the host preview and physical GIF. Fixed the link and qualified distinct vault attachment names using the source directory on a collision. The normal keyboard controller continued to return NACKs. The recorded key sequence used the real keyboard world and the temporary key-count substitute.
+
+### What I learned
+
+The full same-position GIF contains 32 unique rendered views. Hardware takes about 0.53 seconds for a quarter-turn with observation enabled. Its 67.007 ms median interval includes actual composition and SPI completion. Treating the 5.6 ms body raster as the whole frame would greatly overstate the animation speed.
+
+### What was tricky to build
+
+The UART transfer takes long enough to miss poses if screenshots are requested during the turn. The private observer retains complete frames, associates each with one compositor world, epoch and framebuffer handle, and exports afterward. GIF encoding kept all colors; it replaces operator waits between separate key presses with measured within-turn intervals.
+
+### What warrants a second pair of eyes
+
+Astra independently decoded all original RLE packets and compared all GIF frames. The director replayed that audit a second time from phase-records.tar.gz. Physical keypad presses still require a responding controller.
+
+### What should be done in the future
+
+No requested gameplay, animation, publishing or firmware step remains. A separate uninstrumented measurement could establish the exact cadence of the ordinary release.
+
+### Code review instructions
+
+Begin with various/smooth-device/README.md and its reproduction commands, then analysis/01 and analysis/05. Compare the normal and observed slot receipts in various/camera. Production controls and command validation were committed in 170e90d, mesh geometry in ee4e988 and qualified slot configuration in 7611ade.
+
+### Technical details
+
+The 28 within-quarter SPI intervals ranged from 58.057 to 91.870 ms. The GIF stores physical 320 × 320 pixels and timing in centiseconds. The last ordinary boot reported one source, one native compile, one accepted position and zero rejects.

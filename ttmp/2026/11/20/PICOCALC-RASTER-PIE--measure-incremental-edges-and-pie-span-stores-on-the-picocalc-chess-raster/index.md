@@ -1,7 +1,7 @@
 ---
 Title: Measure incremental edges and PIE span stores on the PicoCalc Chess raster
 Ticket: PICOCALC-RASTER-PIE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - esp32-p4
@@ -13,7 +13,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: Physical comparison of full RGB565 draw optimizations and retained dirty-region repaint.
-LastUpdated: 2026-11-20T16:33:03.538500026-05:00
+LastUpdated: 2026-11-20T17:00:02.011028258-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

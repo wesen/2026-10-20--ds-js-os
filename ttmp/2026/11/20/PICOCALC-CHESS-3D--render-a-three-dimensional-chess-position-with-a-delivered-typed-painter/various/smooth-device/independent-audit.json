@@ -1,0 +1,21 @@
+{
+  "uartImages": 33,
+  "exactGifFrames": 32,
+  "ownerEpochHandle": [
+    3,
+    0,
+    6
+  ],
+  "quarterMs": [
+    528.919,
+    515.609,
+    523.726,
+    545.951
+  ],
+  "spiIntervalMsMinMedianMax": [
+    58.057,
+    67.007,
+    91.87
+  ],
+  "gifSha256": "8d626a9ca9b09abecb624d9899ca17cce43f4ef64c82a920df9958d88acdb4c6"
+}

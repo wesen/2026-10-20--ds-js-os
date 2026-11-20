@@ -55,6 +55,10 @@ for article in articles:
             assert path.is_relative_to(ticket) and path.suffix in {".png", ".svg", ".gif"}
             asset = Path("_assets", asset_prefix + "-" + path.name)
             data = path.read_bytes()
+            if day / asset in files and files[day / asset] != data:
+                # A host preview and a device capture may share a descriptive basename.
+                suffix = "-".join(path.relative_to(ticket).parts)
+                asset = Path("_assets", asset_prefix + "-" + suffix)
             assert (day / asset) not in files or files[day / asset] == data
             files[day / asset] = data
             return f"{mark}[{label}]({quote(asset.as_posix())})"

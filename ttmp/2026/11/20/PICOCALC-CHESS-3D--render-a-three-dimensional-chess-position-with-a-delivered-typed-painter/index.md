@@ -1,7 +1,7 @@
 ---
 Title: Render a three-dimensional Chess position with a delivered Typed painter
 Ticket: PICOCALC-CHESS-3D
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -17,7 +17,7 @@ RelatedFiles:
       Note: Production owner of retained state and asynchronous painter installation
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T16:07:52.936976622-05:00
+LastUpdated: 2026-11-20T17:03:16.408244806-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -39,3 +39,5 @@ The upstream [mobile source and PSIX experiments](../PICOCALC-MOBILE-PAINTER--co
 - [Independent compiler and drawing qualification](design-doc/04-independent-packed-painter-review.md)
 
 The [camera and model guide](design-doc/05-orbit-controls-and-solid-piece-models-in-the-native-chess-painter.md) explains the maintained, display-paced 3D game. The [32-pose host preview](various/smooth-host/smooth-rotation.gif) and [four-turn host game](various/smooth-host/gameplay.gif) show the board after real engine replies. The [raster experiments](../PICOCALC-RASTER-PIE--measure-incremental-edges-and-pie-span-stores-on-the-picocalc-chess-raster/index.md) measure the edge and span algorithm used in the rotating view.
+
+The [physical rotation GIF](various/smooth-device/smooth-rotation.gif) and [four full moves on the PicoCalc](various/smooth-device/gameplay.gif) come from the actual 320 × 320 compositor framebuffer and completed display transfers. The [physical measurement](various/smooth-device/smooth-rotation.json) records 33 observed frames including the wrap. The [solid mesh article](analysis/05-six-chess-solids-and-a-rotating-camera.md) explains the piece models and arbitrary-angle rendering.
