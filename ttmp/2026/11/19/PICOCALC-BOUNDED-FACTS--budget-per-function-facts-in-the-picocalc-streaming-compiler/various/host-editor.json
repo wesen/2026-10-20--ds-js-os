@@ -1,0 +1,5604 @@
+{
+  "revision": "40bcf850a5809ef6d839127869faa952596ed157",
+  "which": "held-out",
+  "sources": {
+    "editor": {
+      "sourceSha256": "f37f60f3b0c646cd35f13c41bc893a136732ebe769e328cfb906b0fe7531a6ed",
+      "sourceBytes": 70859,
+      "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff"
+    }
+  },
+  "outputs": {
+    "editor": {
+      "control": {
+        "raw": "f9d5420fea0eb56a2024515204a3babc92389c4f5d81c38f692fe91e1eb2fa25",
+        "metadata": "54b4331c71093079f36b974d9ab7ce0b1195b8e85cdfc7e2e0f6a576d7ac2ae9",
+        "div": 9,
+        "rem": 10,
+        "traps": 404,
+        "words": 21886,
+        "functions": {
+          "editorHighSurrogate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 21
+          },
+          "editorLowSurrogate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 21
+          },
+          "editorNext": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 83
+          },
+          "editorPrevious": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 80
+          },
+          "editorWrapEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 99
+          },
+          "editorColumn": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 40
+          },
+          "editorOffset": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 62
+          },
+          "editorFold": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 46
+          },
+          "editorEmptyFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 700
+          },
+          "editorWhitespace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "editorMdSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 46
+          },
+          "editorMdSuffix": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 107
+          },
+          "editorIsMarkdown": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 132
+          },
+          "editorMdFence": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 97
+          },
+          "editorMdHeading": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 108
+          },
+          "editorMdColor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 84
+          },
+          "editorMdMarker": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 175
+          },
+          "editorMdListEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 60
+          },
+          "editorMdNextMarker": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 239
+          },
+          "editorMdEmit": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 54
+          },
+          "editorMdOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 225
+          },
+          "editorMdBold": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 182
+          },
+          "editorMdCode": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 112
+          },
+          "editorMdLink": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 185
+          },
+          "editorMdMatch": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 90
+          },
+          "editorMdStep": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 102
+          },
+          "editorHex": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 20
+          },
+          "editorQuoteContent": {
+            "div": 1,
+            "rem": 1,
+            "traps": 11,
+            "words": 230
+          },
+          "editorQuote": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 87
+          },
+          "editorLineEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 37
+          },
+          "editorFirstRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 49
+          },
+          "editorNextRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 114
+          },
+          "editorStoreRow": {
+            "div": 4,
+            "rem": 5,
+            "traps": 23,
+            "words": 320
+          },
+          "editorFrameRow": {
+            "div": 0,
+            "rem": 1,
+            "traps": 10,
+            "words": 232
+          },
+          "editorResetRows": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "editorInvalidateRows": {
+            "div": 0,
+            "rem": 1,
+            "traps": 3,
+            "words": 89
+          },
+          "editorRowAnchor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 53
+          },
+          "editorNeedsRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 41
+          },
+          "editorLocate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 40
+          },
+          "editorFrameNeedsRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 38
+          },
+          "editorFrameLocate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 153
+          },
+          "editorDigits": {
+            "div": 3,
+            "rem": 1,
+            "traps": 8,
+            "words": 95
+          },
+          "editorSavedStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 111
+          },
+          "editorSaveError": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 246
+          },
+          "editorFindMatch": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 122
+          },
+          "editorSetFound": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 102
+          },
+          "editorFindLine": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 29
+          },
+          "editorFindAdvance": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 138
+          },
+          "editorFindStep": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 304
+          },
+          "editorFindNext": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 124
+          },
+          "editorFindInput": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 155
+          },
+          "editorBeginFind": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 11
+          },
+          "editorFindStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 219
+          },
+          "editorFindMark": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 162
+          },
+          "editorFindMarks": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 223
+          },
+          "editorPreviewSlot": {
+            "div": 0,
+            "rem": 1,
+            "traps": 1,
+            "words": 14
+          },
+          "editorPreviewFinish": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 65
+          },
+          "editorPreviewAppend": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 119
+          },
+          "editorPreviewIndent": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "editorPreviewWord": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 180
+          },
+          "editorPreviewStage": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 162
+          },
+          "editorPreviewUpper": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 169
+          },
+          "editorPreviewCooked": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 120
+          },
+          "editorPreviewSource": {
+            "div": 1,
+            "rem": 0,
+            "traps": 5,
+            "words": 506
+          },
+          "editorPreviewReset": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 37
+          },
+          "editorPreviewReady": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 163
+          },
+          "editorPreviewFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 22,
+            "words": 946
+          },
+          "editorBeginPreview": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 17
+          },
+          "editorPreviewKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 106
+          },
+          "editorRowColor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 347
+          },
+          "editorStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 23,
+            "words": 1249
+          },
+          "editorDocumentFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 24,
+            "words": 1187
+          },
+          "editorHints": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 386
+          },
+          "editorShow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 167
+          },
+          "editorPositionDict": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 196
+          },
+          "editorPositionKeyEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 180
+          },
+          "editorPositionNumberStop": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 69
+          },
+          "editorPositionNumber": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 69
+          },
+          "editorPositionTuple": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 307
+          },
+          "editorPositionKeyEqual": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 80
+          },
+          "editorPositionKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 32
+          },
+          "editorPositionApply": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 97
+          },
+          "editorRestorePosition": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 140
+          },
+          "editorPositionNewer": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 134
+          },
+          "editorPositionRank": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 213
+          },
+          "editorPositionCopy": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 63
+          },
+          "editorPositionAppend": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 200
+          },
+          "editorRemember": {
+            "div": 0,
+            "rem": 0,
+            "traps": 10,
+            "words": 422
+          },
+          "editorEqual": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 75
+          },
+          "editorKeyCode": {
+            "div": 0,
+            "rem": 0,
+            "traps": 36,
+            "words": 973
+          },
+          "editorChange": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 28
+          },
+          "editorMakeRoom": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 73
+          },
+          "editorInsert": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 110
+          },
+          "editorDelete": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 100
+          },
+          "editorContinueList": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 278
+          },
+          "editorSplit": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 119
+          },
+          "editorMoveRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 130
+          },
+          "editorJump": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "editorPlainKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 331
+          },
+          "editorSave": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 101
+          },
+          "editorGoFiles": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 291
+          },
+          "editorDiscard": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 75
+          },
+          "editorEscape": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 74
+          },
+          "editorApplyKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 167
+          },
+          "editorInput": {
+            "div": 0,
+            "rem": 0,
+            "traps": 15,
+            "words": 537
+          },
+          "editorWriteDone": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 196
+          },
+          "typedWorldMeta": {
+            "div": 0,
+            "rem": 0,
+            "traps": 10,
+            "words": 712
+          },
+          "editorNormalize": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 128
+          },
+          "editorReplyError": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 141
+          },
+          "editorRefuseOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 325
+          },
+          "editorOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 14,
+            "words": 652
+          },
+          "editorOpened": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 205
+          },
+          "editorOpenFailed": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 199
+          },
+          "editorDeferRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 42
+          },
+          "editorContinueRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 42
+          },
+          "editorReadSuccess": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 83
+          },
+          "editorResumeRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 23
+          },
+          "editorMissingFile": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "editorReadDone": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 251
+          },
+          "typedWorldEvent": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 385
+          }
+        },
+        "sha256": "aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50",
+        "bytes": 240452,
+        "stats": [],
+        "admitted": 0,
+        "candidates": 0,
+        "chargedCells": 0,
+        "peakScratchBytes": 0,
+        "analysisNs": 0,
+        "removedZero": 0,
+        "removedOverflow": 0,
+        "localProofs": 0
+      },
+      "always": {
+        "raw": "8687d8c3b5cbe49e80ce93b9e25437b0e61aec3cd95fd27028849a2fa4b4cacd",
+        "metadata": "d37695ea981dcba2e95793c75135c8c78f76266d3bff0f746a9a1084603bcc83",
+        "div": 9,
+        "rem": 10,
+        "traps": 380,
+        "words": 21803,
+        "functions": {
+          "editorHighSurrogate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 21
+          },
+          "editorLowSurrogate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 21
+          },
+          "editorNext": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 83
+          },
+          "editorPrevious": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 80
+          },
+          "editorWrapEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 99
+          },
+          "editorColumn": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 40
+          },
+          "editorOffset": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 62
+          },
+          "editorFold": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 46
+          },
+          "editorEmptyFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 700
+          },
+          "editorWhitespace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "editorMdSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 46
+          },
+          "editorMdSuffix": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 107
+          },
+          "editorIsMarkdown": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 132
+          },
+          "editorMdFence": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 97
+          },
+          "editorMdHeading": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 108
+          },
+          "editorMdColor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 84
+          },
+          "editorMdMarker": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 175
+          },
+          "editorMdListEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 60
+          },
+          "editorMdNextMarker": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 239
+          },
+          "editorMdEmit": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 54
+          },
+          "editorMdOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 225
+          },
+          "editorMdBold": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 182
+          },
+          "editorMdCode": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 112
+          },
+          "editorMdLink": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 185
+          },
+          "editorMdMatch": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 90
+          },
+          "editorMdStep": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 102
+          },
+          "editorHex": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 20
+          },
+          "editorQuoteContent": {
+            "div": 1,
+            "rem": 1,
+            "traps": 8,
+            "words": 219
+          },
+          "editorQuote": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 87
+          },
+          "editorLineEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 37
+          },
+          "editorFirstRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 49
+          },
+          "editorNextRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 114
+          },
+          "editorStoreRow": {
+            "div": 4,
+            "rem": 5,
+            "traps": 10,
+            "words": 274
+          },
+          "editorFrameRow": {
+            "div": 0,
+            "rem": 1,
+            "traps": 9,
+            "words": 230
+          },
+          "editorResetRows": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "editorInvalidateRows": {
+            "div": 0,
+            "rem": 1,
+            "traps": 2,
+            "words": 87
+          },
+          "editorRowAnchor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 53
+          },
+          "editorNeedsRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 41
+          },
+          "editorLocate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 40
+          },
+          "editorFrameNeedsRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 38
+          },
+          "editorFrameLocate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 153
+          },
+          "editorDigits": {
+            "div": 3,
+            "rem": 1,
+            "traps": 5,
+            "words": 84
+          },
+          "editorSavedStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 111
+          },
+          "editorSaveError": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 246
+          },
+          "editorFindMatch": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 122
+          },
+          "editorSetFound": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 102
+          },
+          "editorFindLine": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 29
+          },
+          "editorFindAdvance": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 138
+          },
+          "editorFindStep": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 304
+          },
+          "editorFindNext": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 124
+          },
+          "editorFindInput": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 155
+          },
+          "editorBeginFind": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 11
+          },
+          "editorFindStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 219
+          },
+          "editorFindMark": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 162
+          },
+          "editorFindMarks": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 223
+          },
+          "editorPreviewSlot": {
+            "div": 0,
+            "rem": 1,
+            "traps": 0,
+            "words": 12
+          },
+          "editorPreviewFinish": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 65
+          },
+          "editorPreviewAppend": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 119
+          },
+          "editorPreviewIndent": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "editorPreviewWord": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 180
+          },
+          "editorPreviewStage": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 162
+          },
+          "editorPreviewUpper": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 169
+          },
+          "editorPreviewCooked": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 120
+          },
+          "editorPreviewSource": {
+            "div": 1,
+            "rem": 0,
+            "traps": 3,
+            "words": 497
+          },
+          "editorPreviewReset": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 37
+          },
+          "editorPreviewReady": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 163
+          },
+          "editorPreviewFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 22,
+            "words": 946
+          },
+          "editorBeginPreview": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 17
+          },
+          "editorPreviewKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 106
+          },
+          "editorRowColor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 347
+          },
+          "editorStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 23,
+            "words": 1249
+          },
+          "editorDocumentFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 24,
+            "words": 1187
+          },
+          "editorHints": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 386
+          },
+          "editorShow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 167
+          },
+          "editorPositionDict": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 196
+          },
+          "editorPositionKeyEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 180
+          },
+          "editorPositionNumberStop": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 69
+          },
+          "editorPositionNumber": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 69
+          },
+          "editorPositionTuple": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 307
+          },
+          "editorPositionKeyEqual": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 80
+          },
+          "editorPositionKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 32
+          },
+          "editorPositionApply": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 97
+          },
+          "editorRestorePosition": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 140
+          },
+          "editorPositionNewer": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 134
+          },
+          "editorPositionRank": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 213
+          },
+          "editorPositionCopy": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 63
+          },
+          "editorPositionAppend": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 200
+          },
+          "editorRemember": {
+            "div": 0,
+            "rem": 0,
+            "traps": 10,
+            "words": 422
+          },
+          "editorEqual": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 75
+          },
+          "editorKeyCode": {
+            "div": 0,
+            "rem": 0,
+            "traps": 36,
+            "words": 973
+          },
+          "editorChange": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 28
+          },
+          "editorMakeRoom": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 73
+          },
+          "editorInsert": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 110
+          },
+          "editorDelete": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 100
+          },
+          "editorContinueList": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 278
+          },
+          "editorSplit": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 119
+          },
+          "editorMoveRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 130
+          },
+          "editorJump": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "editorPlainKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 331
+          },
+          "editorSave": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 101
+          },
+          "editorGoFiles": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 291
+          },
+          "editorDiscard": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 75
+          },
+          "editorEscape": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 74
+          },
+          "editorApplyKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 167
+          },
+          "editorInput": {
+            "div": 0,
+            "rem": 0,
+            "traps": 15,
+            "words": 537
+          },
+          "editorWriteDone": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 196
+          },
+          "typedWorldMeta": {
+            "div": 0,
+            "rem": 0,
+            "traps": 10,
+            "words": 712
+          },
+          "editorNormalize": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 128
+          },
+          "editorReplyError": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 141
+          },
+          "editorRefuseOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 325
+          },
+          "editorOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 14,
+            "words": 652
+          },
+          "editorOpened": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 205
+          },
+          "editorOpenFailed": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 199
+          },
+          "editorDeferRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 42
+          },
+          "editorContinueRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 42
+          },
+          "editorReadSuccess": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 83
+          },
+          "editorResumeRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 23
+          },
+          "editorMissingFile": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "editorReadDone": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 251
+          },
+          "typedWorldEvent": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 385
+          }
+        },
+        "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+        "bytes": 240452,
+        "stats": [
+          {
+            "name": "editorHighSurrogate",
+            "cells": 17,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 34,
+            "scratchBytes": 1280,
+            "analysisNs": 4895945,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorLowSurrogate",
+            "cells": 17,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 34,
+            "scratchBytes": 1280,
+            "analysisNs": 72328,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNext",
+            "cells": 116,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 232,
+            "scratchBytes": 1280,
+            "analysisNs": 181947,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPrevious",
+            "cells": 107,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 214,
+            "scratchBytes": 1280,
+            "analysisNs": 86957,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorWrapEnd",
+            "cells": 142,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 284,
+            "scratchBytes": 1280,
+            "analysisNs": 567530,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorColumn",
+            "cells": 56,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 112,
+            "scratchBytes": 1280,
+            "analysisNs": 499472,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOffset",
+            "cells": 84,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 168,
+            "scratchBytes": 1280,
+            "analysisNs": 44268,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFold",
+            "cells": 50,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 100,
+            "scratchBytes": 1280,
+            "analysisNs": 31176,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorEmptyFrame",
+            "cells": 1598,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 3196,
+            "scratchBytes": 1280,
+            "analysisNs": 207084,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorWhitespace",
+            "cells": 138,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 276,
+            "scratchBytes": 1280,
+            "analysisNs": 4929726,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdSpace",
+            "cells": 65,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 130,
+            "scratchBytes": 1280,
+            "analysisNs": 29805,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdSuffix",
+            "cells": 162,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 324,
+            "scratchBytes": 1280,
+            "analysisNs": 26524,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorIsMarkdown",
+            "cells": 208,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 416,
+            "scratchBytes": 1280,
+            "analysisNs": 26033,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdFence",
+            "cells": 133,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 266,
+            "scratchBytes": 1280,
+            "analysisNs": 18831,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdHeading",
+            "cells": 155,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 310,
+            "scratchBytes": 1280,
+            "analysisNs": 21993,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdColor",
+            "cells": 99,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 198,
+            "scratchBytes": 1280,
+            "analysisNs": 21316,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdMarker",
+            "cells": 254,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 508,
+            "scratchBytes": 1280,
+            "analysisNs": 46541,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdListEnd",
+            "cells": 71,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 142,
+            "scratchBytes": 1280,
+            "analysisNs": 16347,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdNextMarker",
+            "cells": 394,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 788,
+            "scratchBytes": 1280,
+            "analysisNs": 38928,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdEmit",
+            "cells": 75,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 150,
+            "scratchBytes": 1280,
+            "analysisNs": 19205,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdOpen",
+            "cells": 315,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 630,
+            "scratchBytes": 1280,
+            "analysisNs": 47149,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdBold",
+            "cells": 231,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 462,
+            "scratchBytes": 1280,
+            "analysisNs": 41414.000000059605,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdCode",
+            "cells": 124,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 248,
+            "scratchBytes": 1280,
+            "analysisNs": 18530.999999940395,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdLink",
+            "cells": 237,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 474,
+            "scratchBytes": 1280,
+            "analysisNs": 30406.000000059605,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdMatch",
+            "cells": 107,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 214,
+            "scratchBytes": 1280,
+            "analysisNs": 22378,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdStep",
+            "cells": 173,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 346,
+            "scratchBytes": 1280,
+            "analysisNs": 32386.999999940395,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorHex",
+            "cells": 20,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 40,
+            "scratchBytes": 1280,
+            "analysisNs": 13559,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorQuoteContent",
+            "cells": 343,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 686,
+            "scratchBytes": 1280,
+            "analysisNs": 87622,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "editorQuote",
+            "cells": 119,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 238,
+            "scratchBytes": 1280,
+            "analysisNs": 33120.999999940395,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorLineEnd",
+            "cells": 34,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 68,
+            "scratchBytes": 1280,
+            "analysisNs": 17307.999999940395,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFirstRow",
+            "cells": 67,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 134,
+            "scratchBytes": 1280,
+            "analysisNs": 19566.999999940395,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNextRow",
+            "cells": 184,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 368,
+            "scratchBytes": 1280,
+            "analysisNs": 43105,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorStoreRow",
+            "cells": 456,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 912,
+            "scratchBytes": 1280,
+            "analysisNs": 117870.0000000596,
+            "removedZero": 9,
+            "removedOverflow": 4,
+            "localProofs": 0,
+            "usedProofs": 9
+          },
+          {
+            "name": "editorFrameRow",
+            "cells": 361,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 722,
+            "scratchBytes": 1280,
+            "analysisNs": 73261.0000000596,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorResetRows",
+            "cells": 27,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 54,
+            "scratchBytes": 1280,
+            "analysisNs": 16226.999999940395,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorInvalidateRows",
+            "cells": 132,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 264,
+            "scratchBytes": 1280,
+            "analysisNs": 38821.00000011921,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorRowAnchor",
+            "cells": 67,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 134,
+            "scratchBytes": 1280,
+            "analysisNs": 74998.0000000596,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNeedsRow",
+            "cells": 63,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 126,
+            "scratchBytes": 1280,
+            "analysisNs": 5162118,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorLocate",
+            "cells": 46,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 92,
+            "scratchBytes": 1280,
+            "analysisNs": 18205,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFrameNeedsRow",
+            "cells": 50,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 100,
+            "scratchBytes": 1280,
+            "analysisNs": 14872,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFrameLocate",
+            "cells": 219,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 438,
+            "scratchBytes": 1280,
+            "analysisNs": 26531,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDigits",
+            "cells": 105,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 210,
+            "scratchBytes": 1280,
+            "analysisNs": 95197,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "editorSavedStatus",
+            "cells": 189,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 378,
+            "scratchBytes": 1280,
+            "analysisNs": 47377,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSaveError",
+            "cells": 433,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 866,
+            "scratchBytes": 1280,
+            "analysisNs": 85435,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindMatch",
+            "cells": 169,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 338,
+            "scratchBytes": 1280,
+            "analysisNs": 48048,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSetFound",
+            "cells": 152,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 304,
+            "scratchBytes": 1280,
+            "analysisNs": 40419,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindLine",
+            "cells": 35,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 70,
+            "scratchBytes": 1280,
+            "analysisNs": 24049,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindAdvance",
+            "cells": 197,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 394,
+            "scratchBytes": 1280,
+            "analysisNs": 44610,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindStep",
+            "cells": 478,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 956,
+            "scratchBytes": 1280,
+            "analysisNs": 126758,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindNext",
+            "cells": 185,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 370,
+            "scratchBytes": 1280,
+            "analysisNs": 48152,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindInput",
+            "cells": 238,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 476,
+            "scratchBytes": 1280,
+            "analysisNs": 66342,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorBeginFind",
+            "cells": 10,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 20,
+            "scratchBytes": 1280,
+            "analysisNs": 15636,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindStatus",
+            "cells": 393,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 786,
+            "scratchBytes": 1280,
+            "analysisNs": 76242,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindMark",
+            "cells": 252,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 504,
+            "scratchBytes": 1280,
+            "analysisNs": 5649017,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindMarks",
+            "cells": 304,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 608,
+            "scratchBytes": 1280,
+            "analysisNs": 77279,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewSlot",
+            "cells": 9,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 18,
+            "scratchBytes": 1280,
+            "analysisNs": 4345219,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorPreviewFinish",
+            "cells": 103,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 206,
+            "scratchBytes": 1280,
+            "analysisNs": 29647,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewAppend",
+            "cells": 196,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 392,
+            "scratchBytes": 1280,
+            "analysisNs": 41698,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewIndent",
+            "cells": 25,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 50,
+            "scratchBytes": 1280,
+            "analysisNs": 17417,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewWord",
+            "cells": 262,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 524,
+            "scratchBytes": 1280,
+            "analysisNs": 41776,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewStage",
+            "cells": 240,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 480,
+            "scratchBytes": 1280,
+            "analysisNs": 28872,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewUpper",
+            "cells": 267,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 534,
+            "scratchBytes": 1280,
+            "analysisNs": 27508,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewCooked",
+            "cells": 152,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 304,
+            "scratchBytes": 1280,
+            "analysisNs": 20258,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewSource",
+            "cells": 733,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 1466,
+            "scratchBytes": 1280,
+            "analysisNs": 62192,
+            "removedZero": 1,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorPreviewReset",
+            "cells": 69,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 138,
+            "scratchBytes": 1280,
+            "analysisNs": 30182,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewReady",
+            "cells": 239,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 478,
+            "scratchBytes": 1280,
+            "analysisNs": 25630,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewFrame",
+            "cells": 1785,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 3570,
+            "scratchBytes": 1280,
+            "analysisNs": 73403,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorBeginPreview",
+            "cells": 19,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 38,
+            "scratchBytes": 1280,
+            "analysisNs": 22421,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewKey",
+            "cells": 167,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 334,
+            "scratchBytes": 1280,
+            "analysisNs": 21488,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRowColor",
+            "cells": 674,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 1348,
+            "scratchBytes": 1280,
+            "analysisNs": 33258,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorStatus",
+            "cells": 2479,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDocumentFrame",
+            "cells": 2284,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorHints",
+            "cells": 813,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 1626,
+            "scratchBytes": 1280,
+            "analysisNs": 48347,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorShow",
+            "cells": 247,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 494,
+            "scratchBytes": 1280,
+            "analysisNs": 21184,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionDict",
+            "cells": 297,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 594,
+            "scratchBytes": 1280,
+            "analysisNs": 21245,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionKeyEnd",
+            "cells": 272,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 544,
+            "scratchBytes": 1280,
+            "analysisNs": 22937,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionNumberStop",
+            "cells": 105,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 210,
+            "scratchBytes": 1280,
+            "analysisNs": 13370,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionNumber",
+            "cells": 102,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 204,
+            "scratchBytes": 1280,
+            "analysisNs": 33737,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionTuple",
+            "cells": 424,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 848,
+            "scratchBytes": 1280,
+            "analysisNs": 48994,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionKeyEqual",
+            "cells": 112,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 224,
+            "scratchBytes": 1280,
+            "analysisNs": 15537,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionKey",
+            "cells": 29,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 58,
+            "scratchBytes": 1280,
+            "analysisNs": 11361,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionApply",
+            "cells": 131,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 262,
+            "scratchBytes": 1280,
+            "analysisNs": 32722,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRestorePosition",
+            "cells": 174,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 348,
+            "scratchBytes": 1280,
+            "analysisNs": 22439,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionNewer",
+            "cells": 200,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 400,
+            "scratchBytes": 1280,
+            "analysisNs": 20197,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionRank",
+            "cells": 297,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 594,
+            "scratchBytes": 1280,
+            "analysisNs": 26713,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionCopy",
+            "cells": 95,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 190,
+            "scratchBytes": 1280,
+            "analysisNs": 16039,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionAppend",
+            "cells": 253,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 506,
+            "scratchBytes": 1280,
+            "analysisNs": 25496,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRemember",
+            "cells": 598,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 1196,
+            "scratchBytes": 1280,
+            "analysisNs": 39722,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorEqual",
+            "cells": 106,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 212,
+            "scratchBytes": 1280,
+            "analysisNs": 17087,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorKeyCode",
+            "cells": 1470,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 2940,
+            "scratchBytes": 1280,
+            "analysisNs": 79324,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorChange",
+            "cells": 45,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 90,
+            "scratchBytes": 1280,
+            "analysisNs": 16832,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMakeRoom",
+            "cells": 108,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 216,
+            "scratchBytes": 1280,
+            "analysisNs": 17188,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorInsert",
+            "cells": 156,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 312,
+            "scratchBytes": 1280,
+            "analysisNs": 19626,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDelete",
+            "cells": 128,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 256,
+            "scratchBytes": 1280,
+            "analysisNs": 20580,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorContinueList",
+            "cells": 425,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 850,
+            "scratchBytes": 1280,
+            "analysisNs": 32959,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSplit",
+            "cells": 164,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 328,
+            "scratchBytes": 1280,
+            "analysisNs": 22180,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMoveRow",
+            "cells": 196,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 392,
+            "scratchBytes": 1280,
+            "analysisNs": 22668,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorJump",
+            "cells": 20,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 40,
+            "scratchBytes": 1280,
+            "analysisNs": 12222,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPlainKey",
+            "cells": 382,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 764,
+            "scratchBytes": 1280,
+            "analysisNs": 51471,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSave",
+            "cells": 137,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 274,
+            "scratchBytes": 1280,
+            "analysisNs": 21846,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorGoFiles",
+            "cells": 353,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 706,
+            "scratchBytes": 1280,
+            "analysisNs": 25278,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDiscard",
+            "cells": 114,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 228,
+            "scratchBytes": 1280,
+            "analysisNs": 33485,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorEscape",
+            "cells": 110,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 220,
+            "scratchBytes": 1280,
+            "analysisNs": 16813,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorApplyKey",
+            "cells": 190,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 380,
+            "scratchBytes": 1280,
+            "analysisNs": 18304,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorInput",
+            "cells": 817,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 1634,
+            "scratchBytes": 1280,
+            "analysisNs": 43557,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorWriteDone",
+            "cells": 279,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 558,
+            "scratchBytes": 1280,
+            "analysisNs": 24086,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "typedWorldMeta",
+            "cells": 1495,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 2990,
+            "scratchBytes": 1280,
+            "analysisNs": 47035,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNormalize",
+            "cells": 214,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 428,
+            "scratchBytes": 1280,
+            "analysisNs": 48415,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorReplyError",
+            "cells": 246,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 492,
+            "scratchBytes": 1280,
+            "analysisNs": 22646,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRefuseOpen",
+            "cells": 609,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 1218,
+            "scratchBytes": 1280,
+            "analysisNs": 31412,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOpen",
+            "cells": 1185,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 2370,
+            "scratchBytes": 1280,
+            "analysisNs": 49983,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOpened",
+            "cells": 339,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 678,
+            "scratchBytes": 1280,
+            "analysisNs": 28933,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOpenFailed",
+            "cells": 383,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 766,
+            "scratchBytes": 1280,
+            "analysisNs": 22570,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDeferRead",
+            "cells": 52,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 104,
+            "scratchBytes": 1280,
+            "analysisNs": 12763,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorContinueRead",
+            "cells": 40,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 80,
+            "scratchBytes": 1280,
+            "analysisNs": 13934,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorReadSuccess",
+            "cells": 94,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 188,
+            "scratchBytes": 1280,
+            "analysisNs": 28088,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorResumeRead",
+            "cells": 18,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 36,
+            "scratchBytes": 1280,
+            "analysisNs": 12785,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMissingFile",
+            "cells": 18,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 36,
+            "scratchBytes": 1280,
+            "analysisNs": 10366,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorReadDone",
+            "cells": 347,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 694,
+            "scratchBytes": 1280,
+            "analysisNs": 23232,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "typedWorldEvent",
+            "cells": 585,
+            "candidate": false,
+            "admitted": true,
+            "chargedCells": 1170,
+            "scratchBytes": 1280,
+            "analysisNs": 36358,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          }
+        ],
+        "admitted": 118,
+        "candidates": 7,
+        "chargedCells": 60740,
+        "peakScratchBytes": 1280,
+        "analysisNs": 30301002,
+        "removedZero": 17,
+        "removedOverflow": 7,
+        "localProofs": 0
+      },
+      "select": {
+        "raw": "8687d8c3b5cbe49e80ce93b9e25437b0e61aec3cd95fd27028849a2fa4b4cacd",
+        "metadata": "d37695ea981dcba2e95793c75135c8c78f76266d3bff0f746a9a1084603bcc83",
+        "div": 9,
+        "rem": 10,
+        "traps": 380,
+        "words": 21803,
+        "functions": {
+          "editorHighSurrogate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 21
+          },
+          "editorLowSurrogate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 21
+          },
+          "editorNext": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 83
+          },
+          "editorPrevious": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 80
+          },
+          "editorWrapEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 99
+          },
+          "editorColumn": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 40
+          },
+          "editorOffset": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 62
+          },
+          "editorFold": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 46
+          },
+          "editorEmptyFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 700
+          },
+          "editorWhitespace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 116
+          },
+          "editorMdSpace": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 46
+          },
+          "editorMdSuffix": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 107
+          },
+          "editorIsMarkdown": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 132
+          },
+          "editorMdFence": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 97
+          },
+          "editorMdHeading": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 108
+          },
+          "editorMdColor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 84
+          },
+          "editorMdMarker": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 175
+          },
+          "editorMdListEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 60
+          },
+          "editorMdNextMarker": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 239
+          },
+          "editorMdEmit": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 54
+          },
+          "editorMdOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 225
+          },
+          "editorMdBold": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 182
+          },
+          "editorMdCode": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 112
+          },
+          "editorMdLink": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 185
+          },
+          "editorMdMatch": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 90
+          },
+          "editorMdStep": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 102
+          },
+          "editorHex": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 20
+          },
+          "editorQuoteContent": {
+            "div": 1,
+            "rem": 1,
+            "traps": 8,
+            "words": 219
+          },
+          "editorQuote": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 87
+          },
+          "editorLineEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 37
+          },
+          "editorFirstRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 49
+          },
+          "editorNextRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 114
+          },
+          "editorStoreRow": {
+            "div": 4,
+            "rem": 5,
+            "traps": 10,
+            "words": 274
+          },
+          "editorFrameRow": {
+            "div": 0,
+            "rem": 1,
+            "traps": 9,
+            "words": 230
+          },
+          "editorResetRows": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "editorInvalidateRows": {
+            "div": 0,
+            "rem": 1,
+            "traps": 2,
+            "words": 87
+          },
+          "editorRowAnchor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 53
+          },
+          "editorNeedsRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 41
+          },
+          "editorLocate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 40
+          },
+          "editorFrameNeedsRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 38
+          },
+          "editorFrameLocate": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 153
+          },
+          "editorDigits": {
+            "div": 3,
+            "rem": 1,
+            "traps": 5,
+            "words": 84
+          },
+          "editorSavedStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 111
+          },
+          "editorSaveError": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 246
+          },
+          "editorFindMatch": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 122
+          },
+          "editorSetFound": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 102
+          },
+          "editorFindLine": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 29
+          },
+          "editorFindAdvance": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 138
+          },
+          "editorFindStep": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 304
+          },
+          "editorFindNext": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 124
+          },
+          "editorFindInput": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 155
+          },
+          "editorBeginFind": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 11
+          },
+          "editorFindStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 219
+          },
+          "editorFindMark": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 162
+          },
+          "editorFindMarks": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 223
+          },
+          "editorPreviewSlot": {
+            "div": 0,
+            "rem": 1,
+            "traps": 0,
+            "words": 12
+          },
+          "editorPreviewFinish": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 65
+          },
+          "editorPreviewAppend": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 119
+          },
+          "editorPreviewIndent": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "editorPreviewWord": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 180
+          },
+          "editorPreviewStage": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 162
+          },
+          "editorPreviewUpper": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 169
+          },
+          "editorPreviewCooked": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 120
+          },
+          "editorPreviewSource": {
+            "div": 1,
+            "rem": 0,
+            "traps": 3,
+            "words": 497
+          },
+          "editorPreviewReset": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 37
+          },
+          "editorPreviewReady": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 163
+          },
+          "editorPreviewFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 22,
+            "words": 946
+          },
+          "editorBeginPreview": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 17
+          },
+          "editorPreviewKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 106
+          },
+          "editorRowColor": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 347
+          },
+          "editorStatus": {
+            "div": 0,
+            "rem": 0,
+            "traps": 23,
+            "words": 1249
+          },
+          "editorDocumentFrame": {
+            "div": 0,
+            "rem": 0,
+            "traps": 24,
+            "words": 1187
+          },
+          "editorHints": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 386
+          },
+          "editorShow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 167
+          },
+          "editorPositionDict": {
+            "div": 0,
+            "rem": 0,
+            "traps": 8,
+            "words": 196
+          },
+          "editorPositionKeyEnd": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 180
+          },
+          "editorPositionNumberStop": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 69
+          },
+          "editorPositionNumber": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 69
+          },
+          "editorPositionTuple": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 307
+          },
+          "editorPositionKeyEqual": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 80
+          },
+          "editorPositionKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 32
+          },
+          "editorPositionApply": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 97
+          },
+          "editorRestorePosition": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 140
+          },
+          "editorPositionNewer": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 134
+          },
+          "editorPositionRank": {
+            "div": 0,
+            "rem": 0,
+            "traps": 5,
+            "words": 213
+          },
+          "editorPositionCopy": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 63
+          },
+          "editorPositionAppend": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 200
+          },
+          "editorRemember": {
+            "div": 0,
+            "rem": 0,
+            "traps": 10,
+            "words": 422
+          },
+          "editorEqual": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 75
+          },
+          "editorKeyCode": {
+            "div": 0,
+            "rem": 0,
+            "traps": 36,
+            "words": 973
+          },
+          "editorChange": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 28
+          },
+          "editorMakeRoom": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 73
+          },
+          "editorInsert": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 110
+          },
+          "editorDelete": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 100
+          },
+          "editorContinueList": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 278
+          },
+          "editorSplit": {
+            "div": 0,
+            "rem": 0,
+            "traps": 1,
+            "words": 119
+          },
+          "editorMoveRow": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 130
+          },
+          "editorJump": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 19
+          },
+          "editorPlainKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 331
+          },
+          "editorSave": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 101
+          },
+          "editorGoFiles": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 291
+          },
+          "editorDiscard": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 75
+          },
+          "editorEscape": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 74
+          },
+          "editorApplyKey": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 167
+          },
+          "editorInput": {
+            "div": 0,
+            "rem": 0,
+            "traps": 15,
+            "words": 537
+          },
+          "editorWriteDone": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 196
+          },
+          "typedWorldMeta": {
+            "div": 0,
+            "rem": 0,
+            "traps": 10,
+            "words": 712
+          },
+          "editorNormalize": {
+            "div": 0,
+            "rem": 0,
+            "traps": 3,
+            "words": 128
+          },
+          "editorReplyError": {
+            "div": 0,
+            "rem": 0,
+            "traps": 4,
+            "words": 141
+          },
+          "editorRefuseOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 6,
+            "words": 325
+          },
+          "editorOpen": {
+            "div": 0,
+            "rem": 0,
+            "traps": 14,
+            "words": 652
+          },
+          "editorOpened": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 205
+          },
+          "editorOpenFailed": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 199
+          },
+          "editorDeferRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 42
+          },
+          "editorContinueRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 42
+          },
+          "editorReadSuccess": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 83
+          },
+          "editorResumeRead": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 23
+          },
+          "editorMissingFile": {
+            "div": 0,
+            "rem": 0,
+            "traps": 0,
+            "words": 25
+          },
+          "editorReadDone": {
+            "div": 0,
+            "rem": 0,
+            "traps": 7,
+            "words": 251
+          },
+          "typedWorldEvent": {
+            "div": 0,
+            "rem": 0,
+            "traps": 2,
+            "words": 385
+          }
+        },
+        "sha256": "06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944",
+        "bytes": 240452,
+        "stats": [
+          {
+            "name": "editorHighSurrogate",
+            "cells": 17,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorLowSurrogate",
+            "cells": 17,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNext",
+            "cells": 116,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPrevious",
+            "cells": 107,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorWrapEnd",
+            "cells": 142,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorColumn",
+            "cells": 56,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOffset",
+            "cells": 84,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFold",
+            "cells": 50,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorEmptyFrame",
+            "cells": 1598,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorWhitespace",
+            "cells": 138,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdSpace",
+            "cells": 65,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdSuffix",
+            "cells": 162,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorIsMarkdown",
+            "cells": 208,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdFence",
+            "cells": 133,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdHeading",
+            "cells": 155,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdColor",
+            "cells": 99,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdMarker",
+            "cells": 254,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdListEnd",
+            "cells": 71,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdNextMarker",
+            "cells": 394,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdEmit",
+            "cells": 75,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdOpen",
+            "cells": 315,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdBold",
+            "cells": 231,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdCode",
+            "cells": 124,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdLink",
+            "cells": 237,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdMatch",
+            "cells": 107,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMdStep",
+            "cells": 173,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorHex",
+            "cells": 20,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorQuoteContent",
+            "cells": 343,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 686,
+            "scratchBytes": 1280,
+            "analysisNs": 1442736,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "editorQuote",
+            "cells": 119,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorLineEnd",
+            "cells": 34,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFirstRow",
+            "cells": 67,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNextRow",
+            "cells": 184,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorStoreRow",
+            "cells": 456,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 912,
+            "scratchBytes": 1280,
+            "analysisNs": 948214,
+            "removedZero": 9,
+            "removedOverflow": 4,
+            "localProofs": 0,
+            "usedProofs": 9
+          },
+          {
+            "name": "editorFrameRow",
+            "cells": 361,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 722,
+            "scratchBytes": 1280,
+            "analysisNs": 85175,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorResetRows",
+            "cells": 27,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorInvalidateRows",
+            "cells": 132,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 264,
+            "scratchBytes": 1280,
+            "analysisNs": 50280,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorRowAnchor",
+            "cells": 67,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNeedsRow",
+            "cells": 63,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorLocate",
+            "cells": 46,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFrameNeedsRow",
+            "cells": 50,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFrameLocate",
+            "cells": 219,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDigits",
+            "cells": 105,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 210,
+            "scratchBytes": 1280,
+            "analysisNs": 79448,
+            "removedZero": 2,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 2
+          },
+          {
+            "name": "editorSavedStatus",
+            "cells": 189,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSaveError",
+            "cells": 433,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindMatch",
+            "cells": 169,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSetFound",
+            "cells": 152,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindLine",
+            "cells": 35,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindAdvance",
+            "cells": 197,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindStep",
+            "cells": 478,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindNext",
+            "cells": 185,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindInput",
+            "cells": 238,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorBeginFind",
+            "cells": 10,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindStatus",
+            "cells": 393,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindMark",
+            "cells": 252,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorFindMarks",
+            "cells": 304,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewSlot",
+            "cells": 9,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 18,
+            "scratchBytes": 1280,
+            "analysisNs": 61084,
+            "removedZero": 1,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorPreviewFinish",
+            "cells": 103,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewAppend",
+            "cells": 196,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewIndent",
+            "cells": 25,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewWord",
+            "cells": 262,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewStage",
+            "cells": 240,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewUpper",
+            "cells": 267,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewCooked",
+            "cells": 152,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewSource",
+            "cells": 733,
+            "candidate": true,
+            "admitted": true,
+            "chargedCells": 1466,
+            "scratchBytes": 1280,
+            "analysisNs": 173853,
+            "removedZero": 1,
+            "removedOverflow": 1,
+            "localProofs": 0,
+            "usedProofs": 1
+          },
+          {
+            "name": "editorPreviewReset",
+            "cells": 69,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewReady",
+            "cells": 239,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewFrame",
+            "cells": 1785,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorBeginPreview",
+            "cells": 19,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPreviewKey",
+            "cells": 167,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRowColor",
+            "cells": 674,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorStatus",
+            "cells": 2479,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDocumentFrame",
+            "cells": 2284,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorHints",
+            "cells": 813,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorShow",
+            "cells": 247,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionDict",
+            "cells": 297,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionKeyEnd",
+            "cells": 272,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionNumberStop",
+            "cells": 105,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionNumber",
+            "cells": 102,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionTuple",
+            "cells": 424,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionKeyEqual",
+            "cells": 112,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionKey",
+            "cells": 29,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionApply",
+            "cells": 131,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRestorePosition",
+            "cells": 174,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionNewer",
+            "cells": 200,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionRank",
+            "cells": 297,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionCopy",
+            "cells": 95,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPositionAppend",
+            "cells": 253,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRemember",
+            "cells": 598,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorEqual",
+            "cells": 106,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorKeyCode",
+            "cells": 1470,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorChange",
+            "cells": 45,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMakeRoom",
+            "cells": 108,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorInsert",
+            "cells": 156,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDelete",
+            "cells": 128,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorContinueList",
+            "cells": 425,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSplit",
+            "cells": 164,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMoveRow",
+            "cells": 196,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorJump",
+            "cells": 20,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorPlainKey",
+            "cells": 382,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorSave",
+            "cells": 137,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorGoFiles",
+            "cells": 353,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDiscard",
+            "cells": 114,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorEscape",
+            "cells": 110,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorApplyKey",
+            "cells": 190,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorInput",
+            "cells": 817,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorWriteDone",
+            "cells": 279,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "typedWorldMeta",
+            "cells": 1495,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorNormalize",
+            "cells": 214,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorReplyError",
+            "cells": 246,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorRefuseOpen",
+            "cells": 609,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOpen",
+            "cells": 1185,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOpened",
+            "cells": 339,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorOpenFailed",
+            "cells": 383,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorDeferRead",
+            "cells": 52,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorContinueRead",
+            "cells": 40,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorReadSuccess",
+            "cells": 94,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorResumeRead",
+            "cells": 18,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorMissingFile",
+            "cells": 18,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "editorReadDone",
+            "cells": 347,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          },
+          {
+            "name": "typedWorldEvent",
+            "cells": 585,
+            "candidate": false,
+            "admitted": false,
+            "chargedCells": 0,
+            "scratchBytes": 0,
+            "analysisNs": 0,
+            "removedZero": 0,
+            "removedOverflow": 0,
+            "localProofs": 0,
+            "usedProofs": 0
+          }
+        ],
+        "admitted": 7,
+        "candidates": 7,
+        "chargedCells": 4278,
+        "peakScratchBytes": 1280,
+        "analysisNs": 2840790,
+        "removedZero": 17,
+        "removedOverflow": 7,
+        "localProofs": 0
+      }
+    }
+  },
+  "samples": {
+    "editor": [
+      [
+        {
+          "block": 0,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 115208403
+        },
+        {
+          "block": 0,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 161509988
+        },
+        {
+          "block": 0,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 170565657
+        }
+      ],
+      [
+        {
+          "block": 1,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 160817396
+        },
+        {
+          "block": 1,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 178560210
+        },
+        {
+          "block": 1,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 137546356
+        }
+      ],
+      [
+        {
+          "block": 2,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 145932392
+        },
+        {
+          "block": 2,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 96726267
+        },
+        {
+          "block": 2,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 152903254
+        }
+      ],
+      [
+        {
+          "block": 3,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 135943476
+        },
+        {
+          "block": 3,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 177528011
+        },
+        {
+          "block": 3,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 105333310
+        }
+      ],
+      [
+        {
+          "block": 4,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 131154777
+        },
+        {
+          "block": 4,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 91834370
+        },
+        {
+          "block": 4,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 73723641
+        }
+      ],
+      [
+        {
+          "block": 5,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 89377973
+        },
+        {
+          "block": 5,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 105405914
+        },
+        {
+          "block": 5,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 82931379
+        }
+      ],
+      [
+        {
+          "block": 6,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 86991812
+        },
+        {
+          "block": 6,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 98444188
+        },
+        {
+          "block": 6,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 112884865
+        }
+      ],
+      [
+        {
+          "block": 7,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 85458597
+        },
+        {
+          "block": 7,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 147331123
+        },
+        {
+          "block": 7,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 97473972
+        }
+      ],
+      [
+        {
+          "block": 8,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 78845170
+        },
+        {
+          "block": 8,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 84251331
+        },
+        {
+          "block": 8,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 137641346
+        }
+      ],
+      [
+        {
+          "block": 9,
+          "position": 0,
+          "policy": "select",
+          "elapsedNs": 91379140
+        },
+        {
+          "block": 9,
+          "position": 1,
+          "policy": "always",
+          "elapsedNs": 104718335
+        },
+        {
+          "block": 9,
+          "position": 2,
+          "policy": "control",
+          "elapsedNs": 142503441
+        }
+      ],
+      [
+        {
+          "block": 10,
+          "position": 0,
+          "policy": "control",
+          "elapsedNs": 102474801
+        },
+        {
+          "block": 10,
+          "position": 1,
+          "policy": "select",
+          "elapsedNs": 130539927
+        },
+        {
+          "block": 10,
+          "position": 2,
+          "policy": "always",
+          "elapsedNs": 103307588
+        }
+      ],
+      [
+        {
+          "block": 11,
+          "position": 0,
+          "policy": "always",
+          "elapsedNs": 95830590
+        },
+        {
+          "block": 11,
+          "position": 1,
+          "policy": "control",
+          "elapsedNs": 73374284
+        },
+        {
+          "block": 11,
+          "position": 2,
+          "policy": "select",
+          "elapsedNs": 80203918
+        }
+      ]
+    ]
+  }
+}

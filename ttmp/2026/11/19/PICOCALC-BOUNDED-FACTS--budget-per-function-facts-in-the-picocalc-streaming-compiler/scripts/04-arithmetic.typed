@@ -1,0 +1,25 @@
+function fixedDiv(x:i32,y:i32):i32 { return x / 60; }
+function fixedRem(x:i32,y:i32):i32 { return x % -3; }
+function minusOneDiv(x:i32,y:i32):i32 { return x / -1; }
+function minusOneRem(x:i32,y:i32):i32 { return x % -1; }
+function minDiv(x:i32,y:i32):i32 { return x / -2147483648; }
+function zeroDiv(x:i32,y:i32):i32 { return x / 0; }
+function zeroRem(x:i32,y:i32):i32 { return x % 0; }
+function parameterDiv(x:i32,y:i32):i32 { return x / y; }
+function parameterRem(x:i32,y:i32):i32 { return x % y; }
+function localDiv(x:i32,y:i32):i32 { const d=4; return x / d; }
+function negativeLocal(x:i32,y:i32):i32 { const d=-4; return x / d; }
+function singleWriteLet(x:i32,y:i32):i32 { let d=4; return x / d; }
+function parameterThenConst(x:i32,y:i32):i32 { let result=x/y; return result/4; }
+function conditionalWrite(x:i32,y:i32):i32 { let d=4; if (y<1) { d=y; } return x / d; }
+function loopWrite(x:i32,y:i32):i32 { let d=4; let i=0; while (i<2) { d=y; i=i+1; } return x / d; }
+function nestedLocal(x:i32,y:i32):i32 {
+    const d=4;
+    let result=x;
+    if (y<1) { const inner=0; result=x/inner; }
+    return result/d;
+}
+function valueControl(x:i32,y:i32):i32 { return x / Math.max(y,1); }
+function unknownCall(x:i32,y:i32):i32 { return x / valueControl(y,1); }
+function foldedZero(x:i32,y:i32):i32 { return x / -0; }
+function wrappedDivisor(x:i32,y:i32):i32 { return x / (0 - -2147483648); }

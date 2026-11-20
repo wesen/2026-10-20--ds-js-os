@@ -194,3 +194,120 @@ After the study resumed, I ran the three overlays through the real Files and Age
 ### Technical details
 
 - The arithmetic proof scratch uses 1,280 explicit array bytes per admitted function. The host profile hook records charged cells and elapsed helper time separately.
+
+## Step 4. Open Editor and reconcile exact guard removals
+
+After committing the prediction I staged the pinned Editor and checked that its concatenation matched the native CMake build byte-for-byte. Control emitted 21,886 words and both analysis policies emitted 21,803. Always admitted 118 of the 120 functions. Select admitted seven and charged 4,278 cell visits, 7.04% of Always’s 60,740.
+
+### Prompt Context
+
+**User prompt:** See Step 1. The held-out result decides whether the frozen selector transfers.
+
+**Commit (pre-unblinding):** `6e9a637` — Freeze bounded-analysis training and the Editor prediction.
+
+### What I did
+
+- Ran `scripts/00-inputs.py OUT held-out` and `node scripts/03-qualify.mjs LANES REACTORS OUT held-out` through the native typed-world wrapper.
+- Compared instruction-image hashes, linker outputs and buffered versus streamed output. Counted all div, rem and trap words independently from the analysis log.
+- Sent the supervisor exact candidate lane paths and the three app ELF digests for separate physical measurement.
+
+### Why
+
+- An ELF with a fixed-size code section can conceal a change in generated words. The raw instruction image exposes that change while the digest validates the full bundle.
+- Each arithmetic site records its own guard removals. A count mismatch would indicate a compiler or harness fault.
+
+### What worked
+
+- Always and Select omitted the same 17 zero guards and seven overflow guards. The measured reduction of 83 words equals `2 × 17 + 7 × 7`. Both matched their own streamed and buffered builds.
+- The observed 83 words fell within the forecast range of 1–150. Select captured 100% of the reduction within its 32,768-cell budget.
+- The source hash and fully linked ELF hashes are recorded in `various/host-editor.json`.
+
+### What didn't work
+
+- No causal end-to-end timing estimate followed from the rotating host timings. The per-block differences varied in both directions. Device trials are a separate part of the experiment.
+
+### What I learned
+
+- The complete typed Editor has 120 functions, including two over the cap. Only seven contained signed division or remainder. Those seven accounted for every supported omission in the hold-out.
+- The larger app offered fewer static savings than Agenda. With these workloads, site mix predicts useful proofs better than module size alone.
+
+### What was tricky to build
+
+- The native build appends one newline to every entry in Editor’s source list, including the last. The host test asserts identity with the prior native build’s assembled input.
+- The raw image hash changes even though the reactor length remains fixed.
+
+### What warrants a second pair of eyes
+
+- Compare the committed forecast to the source staging and output receipts in Git history.
+- Verify board output against the wrapper-produced ELF digests for its compiled reactor assets.
+
+### What should be done in the future
+
+- Qualify the arithmetic semantics with a different executable path and compare physical end-to-end cold metrics.
+
+### Code review instructions
+
+- Look at `outputs.editor` and `samples.editor` in `various/host-editor.json`. Use `stats` to attribute the raw word savings to functions and arithmetic guard types.
+
+### Technical details
+
+- Control Editor link SHA-256 is `aaf6a21421643c5dbbd9c24379c404698dcf5633f18a9883a3c7906ccefa1f50`. Always and Select link SHA-256 is `06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944`. All linked files are 240,452 bytes.
+
+## Step 5. Exercise returns, traps and proof limits in emulation
+
+I linked the generated RV32 programs into a minimal ELF harness and ran them in the project’s CJI RV32 emulator. A separate WebAssembly execution established the expected arithmetic values. All policies agreed on 733 returning inputs and the required trap at each of 16 isolated vectors. All eight Agenda dates returned the same weekday as the WebAssembly instance.
+
+### Prompt Context
+
+**User prompt:** See Step 1. Verify ordinary program behavior and measure guest instructions where possible.
+
+### What I did
+
+- Added an arithmetic fixture with positive and negative literals, signed overflow, division and remainder by zero, runtime divisors, bounded loops, local mutation and nested control.
+- Generated a separate cap fixture for the 128-local and 128-site limits, 2,048-cell function cap and 32,768-cell module budget.
+- Generated Wasm expectations and native assembly with `scripts/05-guest-inputs.mjs`. Linked and ran each entry with `scripts/06-run-guests.py`.
+
+### Why
+
+- Native image acceptance alone does not establish that the zero and overflow traps behave correctly. Giving each expected trap its own guest invocation ensures an early trap cannot satisfy a later case.
+- A signed divide produces the same mathematical result with and without provably dead guards. A mutation or control-flow bug can lead to a false proof, so the fixture includes those conditions.
+- `entryWeekday` executes an actual Agenda calendar kernel with different month-loop paths and nearby leap-year boundaries.
+
+### What worked
+
+- Each policy matched the arithmetic and Agenda result digests. Every separately launched trap produced an emulator breakpoint report.
+- The fixture confirmed direct literal, negative literal and single-write local proofs. It also confirmed safe fallback when a local exceeded the table, a function exceeded the scan cap, and a later smaller function could fit after repeated budget skips.
+- The Agenda emulator retired 3,719 instructions across the eight calls with Control, and 3,328 with either candidate. The count includes the same harness across all variants.
+
+### What didn't work
+
+- The first fixture declared an inner local with the same name as an enclosing local. Production rejected it with `SyntaxError: 19:25: duplicate local d`. I gave the inner local a distinct name. The earlier design assumed legal nested shadowing. This is a fixture correction, and the compiler overlay and prediction commits were unchanged.
+- The emulator signals both arithmetic traps through the same machine breakpoint. The receipt records the WebAssembly cause separately and validates the observed native trap occurrence.
+
+### What I learned
+
+- The local-slot proof is exercised by the fixtures. Every guard omission in the three shipped applications came from a literal producer.
+- An omitted guard can save a different number of retired instructions from its static length because the guard contains a conditional branch. `entryWeekday` saved between 23 and 81 retired instructions per date.
+
+### What was tricky to build
+
+- The negative literal matcher recognizes a local window of two integer pushes and subtraction. The actual arithmetic retains the wraparound semantics and is still executed by the guest.
+- Slot limits and work limits are independent. The limit fixture exercises each one separately and asserts remaining work never becomes negative.
+
+### What warrants a second pair of eyes
+
+- Inspect `parameterThenConst`, `conditionalWrite`, `loopWrite`, `nestedLocal` and `valueControl` in the fixture to confirm that each case exercises the intended proof boundary.
+- Review that the Agenda instruction counts include exactly the same measurement harness for Control and both candidates.
+
+### What should be done in the future
+
+- Add the physical measurements and state the exact candidate replay scope once the supervisor returns them.
+
+### Code review instructions
+
+- The per-varying-policy comparisons and emulated dynamic counts are in `various/rv32-guests.json`. Run the fixture generator and then the verifier using the SDK’s RV32 GCC and CJI emulator.
+
+### Technical details
+
+- The arithmetic output digest was `8ac3600584cdac84590055039b5fc2462160fafbc9560f9fbfb719c52cb03e05` under all three policies.
+- Agenda’s eight return values, in preregistered date order, were 5, 5, 2, 3, 4, 2, 1 and 5.
