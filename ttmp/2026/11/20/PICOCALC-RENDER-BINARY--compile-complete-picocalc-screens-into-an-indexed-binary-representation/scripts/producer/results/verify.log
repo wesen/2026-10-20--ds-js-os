@@ -1,0 +1,5 @@
+sysmon json=1919 psix=1850 exact=both
+chess json=3443 psix=2761 exact=both
+snake json=758 psix=766 exact=both
+editor json=3105 psix=2572 exact=both
+15 scalar/container cases, canonical object order, duplicate-key refusal passed

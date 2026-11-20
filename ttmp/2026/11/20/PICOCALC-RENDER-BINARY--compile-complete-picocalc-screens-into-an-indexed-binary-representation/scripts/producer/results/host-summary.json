@@ -1,0 +1,106 @@
+{
+  "sysmon": {
+    "G": {
+      "bytes": 1919,
+      "wireHash": 1035267114,
+      "medianUsPerScreen": {
+        "encodeUs": 12.59375,
+        "admitUs": 24.21875,
+        "lookupUs": 0.21875,
+        "releaseUs": 3.25,
+        "routeUs": 40.25
+      }
+    },
+    "B": {
+      "bytes": 1850,
+      "wireHash": 2571018171,
+      "medianUsPerScreen": {
+        "encodeUs": 18.9375,
+        "admitUs": 2.625,
+        "lookupUs": 0.28125,
+        "releaseUs": 0.03125,
+        "routeUs": 21.84375
+      }
+    },
+    "blocks": 9,
+    "medianPairedRouteBOverG": 0.5421875
+  },
+  "chess": {
+    "G": {
+      "bytes": 3443,
+      "wireHash": 1054538192,
+      "medianUsPerScreen": {
+        "encodeUs": 30.6875,
+        "admitUs": 47.0625,
+        "lookupUs": 0.28125,
+        "releaseUs": 6.4375,
+        "routeUs": 85.0
+      }
+    },
+    "B": {
+      "bytes": 2761,
+      "wireHash": 540532891,
+      "medianUsPerScreen": {
+        "encodeUs": 25.3125,
+        "admitUs": 3.875,
+        "lookupUs": 0.0625,
+        "releaseUs": 0.03125,
+        "routeUs": 29.34375
+      }
+    },
+    "blocks": 9,
+    "medianPairedRouteBOverG": 0.32752084912812734
+  },
+  "snake": {
+    "G": {
+      "bytes": 758,
+      "wireHash": 1841395799,
+      "medianUsPerScreen": {
+        "encodeUs": 6.1875,
+        "admitUs": 10.875,
+        "lookupUs": 0.125,
+        "releaseUs": 1.375,
+        "routeUs": 18.53125
+      }
+    },
+    "B": {
+      "bytes": 766,
+      "wireHash": 2766474524,
+      "medianUsPerScreen": {
+        "encodeUs": 5.65625,
+        "admitUs": 1.0,
+        "lookupUs": 0.0625,
+        "releaseUs": 0.03125,
+        "routeUs": 6.78125
+      }
+    },
+    "blocks": 9,
+    "medianPairedRouteBOverG": 0.37719298245614036
+  },
+  "editor": {
+    "G": {
+      "bytes": 3105,
+      "wireHash": 1228237125,
+      "medianUsPerScreen": {
+        "encodeUs": 26.0,
+        "admitUs": 43.5625,
+        "lookupUs": 0.28125,
+        "releaseUs": 5.34375,
+        "routeUs": 74.96875
+      }
+    },
+    "B": {
+      "bytes": 2572,
+      "wireHash": 3886497504,
+      "medianUsPerScreen": {
+        "encodeUs": 18.625,
+        "admitUs": 3.0625,
+        "lookupUs": 0.3125,
+        "releaseUs": 0.0625,
+        "routeUs": 22.125
+      }
+    },
+    "blocks": 9,
+    "medianPairedRouteBOverG": 0.29180602006688966
+  }
+}
