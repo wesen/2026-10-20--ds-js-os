@@ -1,3 +1,6 @@
+type Unit = distinct i32;
+type Point = distinct i32;
+
 record WorldEvent {
     kind: i32;
     ask: bool;
@@ -42,7 +45,7 @@ record WorldState {
     notice: i32;
     leaveAfterSave: bool;
     positionLine: i32;
-    positionColumn: i32;
+    positionColumn: Point;
     positionTop: i32;
     positionTime: i32;
     positionEnd: i32;

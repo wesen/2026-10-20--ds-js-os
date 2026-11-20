@@ -47,7 +47,7 @@ function editorPositionTuple(s: string, start: i32, state: WorldState): bool {
     const next = s.charCodeAt(timeEnd + 1);
     if (!(next === 44 || next === 125)) return false;
     state.positionLine = editorPositionNumber(s, start, rowEnd);
-    state.positionColumn = editorPositionNumber(s, rowEnd + 1, colEnd);
+    state.positionColumn = Point(editorPositionNumber(s, rowEnd + 1, colEnd));
     state.positionTop = editorPositionNumber(s, colEnd + 1, topEnd);
     state.positionTime = topEnd + 1;
     state.positionEnd = timeEnd + 1;
@@ -68,14 +68,14 @@ function editorPositionKey(state: WorldState, key: buffer): i32 {
 
 function editorPositionApply(state: WorldState): i32 {
     const doc = typedSdkView(typedSdkBuffer(0), state.textLength);
-    let start = 0;
+    let start: Unit = 0;
     if (state.positionLine > 0) {
         let newline = typedSdkNthIndex(doc, 0, doc.length, 10, state.positionLine);
         if (newline === doc.length) { newline = typedSdkLastIndex(doc, 0, doc.length, 10); }
-        if (newline < doc.length) { start = newline + 1; }
+        if (newline < doc.length) { start = Unit(newline + 1); }
     }
-    const end = editorLineEnd(doc, start);
-    state.cursor = typedSdkPointIndex(doc, start, end, state.positionColumn);
+    const end = Unit(editorLineEnd(doc, i32(start)));
+    state.cursor = typedSdkPointIndex(doc, i32(start), i32(end), i32(state.positionColumn));
     state.top = state.positionTop;
     return 0;
 }
@@ -160,8 +160,8 @@ function editorPositionAppend(out: buffer, at: i32, json: string, key: buffer, s
 function editorRemember(state: WorldState, out: buffer): i32 {
     if (state.file <= 0 || state.nameLength <= 0) return 0;
     const doc = typedSdkView(typedSdkBuffer(0), state.textLength);
-    let newline = typedSdkLastIndex(doc, 0, state.cursor, 10);
-    if (newline === state.cursor) { newline = -1; }
+    let newline = Unit(typedSdkLastIndex(doc, 0, state.cursor, 10));
+    if (newline === Unit(state.cursor)) { newline = Unit(-1); }
     const key = typedSdkBuffer(4);
     const size = editorPositionKey(state, key);
     const keyText = typedSdkView(key, size);
@@ -170,7 +170,7 @@ function editorRemember(state: WorldState, out: buffer): i32 {
     at = at + out.writeLiteral(at, ":[");
     at = editorDigits(out, at, typedSdkCountUnit(doc, 0, state.cursor, 10));
     out.setCharCodeAt(at, 44);
-    at = editorDigits(out, at + 1, typedSdkCodePoints(doc, newline + 1, state.cursor));
+    at = editorDigits(out, at + 1, typedSdkCodePoints(doc, i32(newline + 1), state.cursor));
     out.setCharCodeAt(at, 44);
     at = editorDigits(out, at + 1, state.top);
     out.setCharCodeAt(at, 44);
