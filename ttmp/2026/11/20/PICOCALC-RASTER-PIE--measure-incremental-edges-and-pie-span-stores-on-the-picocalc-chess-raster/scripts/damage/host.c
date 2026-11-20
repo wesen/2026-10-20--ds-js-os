@@ -22,6 +22,45 @@ static damage_stats step(dmabuf_t *fb,int old,int next,bool force) {
     check(fb,next);
     return stats;
 }
+static void synthetic(dmabuf_t *fb) {
+    enum { degenerate=8, old_count=6+4*degenerate+3*8+2 };
+    uint16_t old[old_count]={1,0,0,320,280,0xf65a};
+    for (int i=0;i<4;i++) old[6+8*i]=5;
+    const uint16_t tail[]={5,19,40,21,40,21,43,0x31d2,
+                           3,20,40,0,0xbd33,6,1,'A',
+                           3,25,40,0,0xaa22,6,1,'B',
+                           4,0};
+    memcpy(old+6+32,tail,sizeof(tail));
+    uint16_t next[old_count];
+    memcpy(next,old,sizeof(old));
+    next[6+32+7]=0x0031;
+    char hints[MOBILE_PAINTER_MAX_TEXT+1];
+    assert(painter_commands_valid(old,old_count,hints));
+    assert(painter_commands_valid(next,old_count,hints));
+    dmabuf_t reference=*fb;
+    reference.back=malloc(fb->bytes);
+    assert(reference.back);
+    memcpy(reference.back,fb->back,fb->bytes);
+    painter_commands_draw(fb,old,old_count);
+    painter_commands_draw(&reference,next,old_count);
+    damage_stats stats;
+    damage_draw(fb,old,old_count,next,old_count,false,&stats);
+    assert(stats.mode==DAMAGE_PARTIAL && stats.body.x1==31 && stats.body.y1==52);
+    assert(memcmp(fb->back,reference.back,fb->bytes)==0);
+    next[5]=0x0031;  /* Palette change forces a complete body repaint. */
+    painter_commands_draw(&reference,next,old_count);
+    damage_draw(fb,old,old_count,next,old_count,false,&stats);
+    assert(stats.mode==DAMAGE_FULL && memcmp(fb->back,reference.back,fb->bytes)==0);
+    const uint16_t rects[]={1,0,0,320,280,0x1cfc,2,120,88,27,29,0xfa8b,4,0};
+    assert(painter_commands_valid(rects,sizeof(rects)/2,hints));
+    painter_commands_draw(&reference,rects,sizeof(rects)/2);
+    damage_draw(fb,next,old_count,rects,sizeof(rects)/2,false,&stats);
+    assert(stats.mode==DAMAGE_FULL && memcmp(fb->back,reference.back,fb->bytes)==0);
+    damage_draw(fb,NULL,0,old,old_count,false,&stats);
+    painter_commands_draw(&reference,old,old_count);
+    assert(stats.mode==DAMAGE_FULL && memcmp(fb->back,reference.back,fb->bytes)==0);
+    free(reference.back);
+}
 int main(int argc,char **argv) {
     assert(argc==3);
     FILE *corpus=fopen(argv[1],"rb"), *references=fopen(argv[2],"rb");
@@ -73,6 +112,7 @@ int main(int argc,char **argv) {
                a,b,st.mode,st.body.x0,st.body.y0,st.body.x1,st.body.y1,st.replayed,count,
                xmin,ymin,xmax+1,ymax+1,strcmp(frames[a].hints,frames[b].hints)!=0,fb.dirty);
     }
+    synthetic(&fb);
     for(int i=0;i<N;i++) free(frames[i].words);
     free(fb.back);
 }

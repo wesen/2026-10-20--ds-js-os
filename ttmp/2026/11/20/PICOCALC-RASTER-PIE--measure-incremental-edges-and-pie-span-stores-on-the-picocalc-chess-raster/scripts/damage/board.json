@@ -1,0 +1,294 @@
+{
+  "schema": 1,
+  "frequencyMHz": 360,
+  "completeRuns": 1,
+  "samplesPerPair": 7,
+  "captureRowsSha256": "fa40ac4773b0840c115c0303bd1b1fe0ac1c473001b0d62ba8f191959ff6dc99",
+  "runs": [
+    {
+      "core": 0,
+      "cases": [
+        {
+          "name": "cursor-up",
+          "mode": "partial",
+          "fnv": "c07bd13b",
+          "full": [
+            6423158,
+            6440340,
+            6447276,
+            6440320,
+            6447334,
+            6441220,
+            6446054
+          ],
+          "damage": [
+            1211368,
+            1185229,
+            1186739,
+            1184715,
+            1185270,
+            1183166,
+            1185323
+          ],
+          "fullMedian": 6441220,
+          "damageMedian": 1185270,
+          "medianPairedSaving": 5258054,
+          "medianPairedRatio": 0.183953,
+          "wins": 7
+        },
+        {
+          "name": "cursor-right",
+          "mode": "partial",
+          "fnv": "1364ac9b",
+          "full": [
+            6426376,
+            6438636,
+            6447412,
+            6437206,
+            6447500,
+            6437146,
+            6448784
+          ],
+          "damage": [
+            1278559,
+            1257095,
+            1254053,
+            1259873,
+            1254567,
+            1257235,
+            1254121
+          ],
+          "fullMedian": 6438636,
+          "damageMedian": 1257095,
+          "medianPairedSaving": 5181541,
+          "medianPairedRatio": 0.195242,
+          "wins": 7
+        },
+        {
+          "name": "unchanged",
+          "mode": "none",
+          "fnv": "2456898b",
+          "full": [
+            6426146,
+            6450120,
+            6451812,
+            6448772,
+            6451502,
+            6450392,
+            6451224
+          ],
+          "damage": [
+            88921,
+            73071,
+            78885,
+            70368,
+            78853,
+            70359,
+            78853
+          ],
+          "fullMedian": 6450392,
+          "damageMedian": 78853,
+          "medianPairedSaving": 6372927,
+          "medianPairedRatio": 0.012222,
+          "wins": 7
+        },
+        {
+          "name": "move-e4",
+          "mode": "partial",
+          "fnv": "22339544",
+          "full": [
+            6420316,
+            6439702,
+            6451070,
+            6439326,
+            6449576,
+            6439668,
+            6449732
+          ],
+          "damage": [
+            5585230,
+            5564094,
+            5563928,
+            5563856,
+            5563880,
+            5563780,
+            5563970
+          ],
+          "fullMedian": 6439702,
+          "damageMedian": 5563928,
+          "medianPairedSaving": 875888,
+          "medianPairedRatio": 0.863986,
+          "wins": 7
+        },
+        {
+          "name": "engine-knight",
+          "mode": "partial",
+          "fnv": "f3cfe3a8",
+          "full": [
+            6424238,
+            6439354,
+            6447970,
+            6439464,
+            6450548,
+            6439374,
+            6447164
+          ],
+          "damage": [
+            3810002,
+            3792982,
+            3785868,
+            3794078,
+            3784310,
+            3792760,
+            3785738
+          ],
+          "fullMedian": 6439464,
+          "damageMedian": 3792760,
+          "medianPairedSaving": 2646614,
+          "medianPairedRatio": 0.588995,
+          "wins": 7
+        },
+        {
+          "name": "promotion",
+          "mode": "partial",
+          "fnv": "3672722d",
+          "full": [
+            4013708,
+            4024712,
+            4031290,
+            4026246,
+            4033512,
+            4026120,
+            4033538
+          ],
+          "damage": [
+            321465,
+            309115,
+            301105,
+            306358,
+            300921,
+            306376,
+            300948
+          ],
+          "fullMedian": 4026246,
+          "damageMedian": 306358,
+          "medianPairedSaving": 3719888,
+          "medianPairedRatio": 0.07609,
+          "wins": 7
+        },
+        {
+          "name": "castle-short",
+          "mode": "partial",
+          "fnv": "8bd60c55",
+          "full": [
+            4301588,
+            4318832,
+            4325938,
+            4319036,
+            4326944,
+            4316832,
+            4327284
+          ],
+          "damage": [
+            1103158,
+            1080943,
+            1075273,
+            1079323,
+            1073311,
+            1080925,
+            1074667
+          ],
+          "fullMedian": 4319036,
+          "damageMedian": 1079323,
+          "medianPairedSaving": 3239713,
+          "medianPairedRatio": 0.249899,
+          "wins": 7
+        },
+        {
+          "name": "castle-long",
+          "mode": "partial",
+          "fnv": "cc431c54",
+          "full": [
+            4307538,
+            4317114,
+            4322388,
+            4316866,
+            4321796,
+            4316240,
+            4321076
+          ],
+          "damage": [
+            2756772,
+            2741656,
+            2734406,
+            2740948,
+            2732776,
+            2739057,
+            2733034
+          ],
+          "fullMedian": 4317114,
+          "damageMedian": 2739057,
+          "medianPairedSaving": 1577183,
+          "medianPairedRatio": 0.634593,
+          "wins": 7
+        },
+        {
+          "name": "en-passant",
+          "mode": "partial",
+          "fnv": "5475903b",
+          "full": [
+            3982836,
+            4001544,
+            4004598,
+            4002536,
+            4005640,
+            4002536,
+            4005432
+          ],
+          "damage": [
+            533212,
+            516659,
+            511730,
+            517828,
+            512701,
+            517672,
+            512791
+          ],
+          "fullMedian": 4002536,
+          "damageMedian": 516659,
+          "medianPairedSaving": 3484885,
+          "medianPairedRatio": 0.129115,
+          "wins": 7
+        },
+        {
+          "name": "camera",
+          "mode": "full",
+          "fnv": "f224bfcc",
+          "full": [
+            4958252,
+            4963850,
+            4982048,
+            4964062,
+            4984312,
+            4963868,
+            4984244
+          ],
+          "damage": [
+            5016219,
+            5016351,
+            5004561,
+            5021123,
+            5002131,
+            5021177,
+            5001433
+          ],
+          "fullMedian": 4964062,
+          "damageMedian": 5016219,
+          "medianPairedSaving": -52501,
+          "medianPairedRatio": 1.010577,
+          "wins": 0
+        }
+      ]
+    }
+  ]
+}
