@@ -1,0 +1,26 @@
+Editor G4 
+{"inputBytes":123,"matchingWasmFramebuffers":3,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":50}
+Editor G4 --large
+{"inputBytes":65536,"matchingWasmFramebuffers":3,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":200}
+Editor G4 --edit
+{"inputBytes":123,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":50}
+Editor G4 --positions
+{"inputBytes":123,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":50}
+Editor G4 --find
+{"inputBytes":65,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":50}
+Editor G4 --markdown
+{"inputBytes":571,"matchingWasmFramebuffers":5,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":50}
+Editor G4 --preview-large
+{"inputBytes":21614,"matchingWasmFramebuffers":6,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":50}
+Editor G4 --preview-line
+{"inputBytes":18047,"matchingWasmFramebuffers":6,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":200}
+Editor G4 --preview-inline
+{"inputBytes":65536,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":200}
+Editor G4 --preview-dense-inline
+{"inputBytes":65536,"matchingWasmFramebuffers":5,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":200}
+Editor G4 --dense-search
+{"inputBytes":65536,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":200}
+Editor G4 --tail-search
+{"inputBytes":65536,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":200}
+Editor G4 --late-navigation
+{"inputBytes":65536,"matchingWasmFramebuffers":6,"rv32Open":true,"wasmBytes":88969,"elfBytes":240452,"wasmTurnBudgetMs":200}

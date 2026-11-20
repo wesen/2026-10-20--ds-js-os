@@ -54,6 +54,7 @@ function editorOpen(event: WorldEvent, state: WorldState, output: buffer, hints:
     // The title uses at most units 0 through 94 of its reserved buffer.
     pendingName.setCharCodeAt(95, size);
     state.opening = true;
+    cancel editorFindTask;
     start editorOpenTask(event, state, output, hints, handle);
     if (state.opening) return 1;
     return 0;
@@ -153,15 +154,11 @@ function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, h
     if (event.kind === 4 && state.writeToken > 0 && event.token === state.writeToken) {
         editorWriteDone(event, state, output, hints);
     }
-    resume();
+    const wasOpening = state.opening;
+    if (resume() && !wasOpening) { editorShow(output, hints, state); }
     if (event.kind === 4 && state.previewToken > 0 && event.token === state.previewToken) {
         state.previewToken = 0;
         if (state.preview && !state.opening) { editorShow(output, hints, state); }
-    }
-    if (event.kind === 4 && state.findToken > 0 && event.token === state.findToken) {
-        state.findToken = 0;
-        editorFindStep(state, typedSdkView(typedSdkBuffer(0), state.textLength));
-        editorShow(output, hints, state);
     }
     if (event.kind === 4 && state.frameToken > 0 && event.token === state.frameToken) {
         state.frameToken = 0;
@@ -172,6 +169,6 @@ function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, h
         const hintLength = hints.writeLiteral(0, "Esc Files");
         typedSdkScreen(output, editorEmptyFrame(output), hints, hintLength);
     }
-    if (pending() || state.findToken > 0 || state.frameToken > 0) return 1;
+    if (pending() || state.frameToken > 0) return 1;
     return 0;
 }

@@ -6,38 +6,14 @@ function editorFindMatch(text: string, at: i32, end: i32, query: buffer, size: i
     return i === size;
 }
 
-function editorSetFound(state: WorldState, text: string, first: i32, end: i32, found: i32): i32 {
-    let at = Math.min(end, first + found);
-    if (at > first && at < end && editorLowSurrogate(text.charCodeAt(at)) &&
+function editorSetFound(state: WorldState, text: string, end: i32, found: i32): i32 {
+    let at = Math.min(end, found);
+    if (at > 0 && at < end && editorLowSurrogate(text.charCodeAt(at)) &&
         editorHighSurrogate(text.charCodeAt(at - 1))) { at = at + 1; }
     state.cursor = at;
     state.goal = -1;
     state.notice = 0;
     return 0;
-}
-
-function editorFindLine(state: WorldState, text: string, start: i32): i32 {
-    state.findStart = start;
-    state.findEnd = editorLineEnd(text, start);
-    state.findAt = start;
-    state.findFolded = 0;
-    return 0;
-}
-
-// Visit the cursor line suffix, following lines, preceding lines, and
-// finally the cursor line prefix. A prefix match may cross the origin.
-function editorFindAdvance(state: WorldState, text: string): i32 {
-    if (state.findPhase === FindPhase.LinePrefix) { state.findPhase = FindPhase.NotFound; }
-    if (state.findPhase === FindPhase.NotFound) return 0;
-    const next = state.findEnd + 1;
-    if (state.findPhase === FindPhase.LineSuffix) { state.findPhase = FindPhase.LaterLines; }
-    if (state.findPhase === FindPhase.LaterLines && next < text.length) return editorFindLine(state, text, next);
-    const wraps = state.findPhase === FindPhase.LaterLines && state.findOrigin > 0;
-    if (wraps) { state.findPhase = FindPhase.EarlierLines; }
-    if (wraps) return editorFindLine(state, text, 0);
-    if (state.findPhase === FindPhase.EarlierLines && next < state.findOrigin) return editorFindLine(state, text, next);
-    state.findPhase = FindPhase.LinePrefix;
-    return editorFindLine(state, text, state.findOrigin);
 }
 
 function editorFindActive(phase: FindPhase): bool {
@@ -48,56 +24,87 @@ function editorFindActive(phase: FindPhase): bool {
     return false;
 }
 
-function editorFindStep(state: WorldState, text: string): i32 {
-    const query = typedSdkBuffer(6);
-    const size = state.queryLength;
-    const low = editorFold(query.charCodeAt(0));
-    let upper = low;
-    if (low >= 97 && low <= 122) { upper = low - 32; }
-    let alternate = low;
-    if (low === 107) { alternate = 8490; }
-    let work = 0;
-    while (editorFindActive(state.findPhase) && work < 1024) {
-        work = work + 1;
-        let candidate = state.findEnd;
-        if (state.findAt < state.findEnd) {
-            candidate = typedSdkSeek(text, state.findAt, state.findEnd, low, upper, alternate, 304);
+function editorFindAdvance(phase: FindPhase, hasFollowingLine: bool): FindPhase {
+    match (phase) {
+        LineSuffix, LaterLines: {
+            if (hasFollowingLine) return FindPhase.LaterLines;
+            return FindPhase.EarlierLines;
         }
-        const folded = state.findFolded + candidate - state.findAt;
-        let limit = state.findEnd;
-        if (state.findPhase === FindPhase.LinePrefix && folded >= state.findFrom) { limit = candidate; }
-        if (candidate >= limit) { editorFindAdvance(state, text); }
-        if (candidate < limit) {
-            const eligible = state.findPhase !== FindPhase.LineSuffix || folded >= state.findFrom;
-            const unit = text.charCodeAt(candidate);
-            state.findAt = candidate + 1;
-            state.findFolded = folded + 1;
-            if (unit === 304) { state.findFolded = state.findFolded + 1; }
-            if (eligible) { work = work + size; }
-            const found = eligible && editorFindMatch(text, candidate, state.findEnd, query, size);
-            if (found) { editorSetFound(state, text, state.findStart, state.findEnd, folded); }
-            if (found) { state.findPhase = FindPhase.Found; }
+        EarlierLines, NotFound, Found: { return phase; }
+        LinePrefix: { return FindPhase.NotFound; }
+    }
+    return phase;
+}
+
+async function editorFindTask(state: WorldState, advance: bool): i32 {
+    const initialText = typedSdkView(typedSdkBuffer(0), state.textLength);
+    const newline = typedSdkLastIndex(initialText, 0, state.cursor, 10);
+    let at = 0;
+    if (newline < state.cursor) { at = newline + 1; }
+    let end = editorLineEnd(initialText, at);
+    let anchor = state.cursor;
+    if (advance) { anchor = Math.min(end, editorNext(initialText, state.cursor)); }
+    let foldedAt = at;
+    let phase = FindPhase.LineSuffix;
+    while (editorFindActive(phase)) {
+        const text = typedSdkView(typedSdkBuffer(0), state.textLength);
+        const query = typedSdkBuffer(6);
+        const size = state.queryLength;
+        const low = editorFold(query.charCodeAt(0));
+        let upper = low;
+        if (low >= 97 && low <= 122) { upper = low - 32; }
+        let alternate = low;
+        if (low === 107) { alternate = 8490; }
+        let work = 0;
+        while (work < 1024) {
+            work = work + 1;
+            let candidate = end;
+            if (at < end) { candidate = typedSdkSeek(text, at, end, low, upper, alternate, 304); }
+            const folded = foldedAt + candidate - at;
+            let limit = end;
+            if (phase === FindPhase.LinePrefix && folded >= anchor) { limit = candidate; }
+            if (candidate >= limit) {
+                let next = end + 1;
+                const following = next < text.length;
+                if (!following && (phase === FindPhase.LineSuffix || phase === FindPhase.LaterLines)) { next = 0; }
+                phase = editorFindAdvance(phase, following);
+                if (phase === FindPhase.NotFound) { break; }
+                end = editorLineEnd(text, next);
+                // On wrap, the line containing the anchor is the cursor line.
+                if (phase === FindPhase.EarlierLines && end >= anchor) { phase = FindPhase.LinePrefix; }
+                at = next;
+                foldedAt = next;
+            } else {
+                const eligible = phase !== FindPhase.LineSuffix || folded >= anchor;
+                at = candidate + 1;
+                foldedAt = folded + 1;
+                if (text.charCodeAt(candidate) === 304) { foldedAt = foldedAt + 1; }
+                if (eligible) { work = work + size; }
+                if (eligible && editorFindMatch(text, candidate, end, query, size)) {
+                    editorSetFound(state, text, end, folded);
+                    phase = FindPhase.Found;
+                    break;
+                }
+            }
+        }
+        if (editorFindActive(phase)) {
+            const paused = await typedSdkYield();
+            if (!paused) {
+                state.notice = 11;
+                return 0;
+            }
         }
     }
-    if (state.findPhase === FindPhase.NotFound) { state.notice = 10; }
-    if (!editorFindActive(state.findPhase)) return 0;
-    state.findToken = typedSdkYield();
-    if (state.findToken <= 0) { state.notice = 11; }
+    if (phase === FindPhase.NotFound) { state.notice = 10; }
     return 0;
 }
 
 function editorFindNext(state: WorldState, advance: bool): i32 {
+    cancel editorFindTask;
     if (state.queryLength <= 0 && advance) { state.notice = 9; }
     if (state.queryLength <= 0) return 0;
-    const text = typedSdkView(typedSdkBuffer(0), state.textLength);
-    const newline = typedSdkLastIndex(text, 0, state.cursor, 10);
-    state.findOrigin = 0;
-    if (newline < state.cursor) { state.findOrigin = newline + 1; }
-    state.findPhase = FindPhase.LineSuffix;
-    editorFindLine(state, text, state.findOrigin);
-    state.findFrom = state.cursor - state.findOrigin;
-    if (advance) { state.findFrom = Math.min(state.findEnd, editorNext(text, state.cursor)) - state.findOrigin; }
-    return editorFindStep(state, text);
+    start editorFindTask(state, advance);
+    return 0;
 }
 
 function editorFindInput(state: WorldState, key: i32, ch: i32, held: bool): i32 {
@@ -123,6 +130,7 @@ function editorFindInput(state: WorldState, key: i32, ch: i32, held: bool): i32 
 }
 
 function editorBeginFind(state: WorldState): i32 {
+    cancel editorFindTask;
     state.finding = true;
     return 0;
 }

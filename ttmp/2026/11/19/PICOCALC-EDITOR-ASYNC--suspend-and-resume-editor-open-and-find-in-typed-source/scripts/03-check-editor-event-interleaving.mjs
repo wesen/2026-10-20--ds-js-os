@@ -68,6 +68,31 @@ const fixtures = [
         settle('first normalization timer fails', 125, large, true, true),
     ]},
 ];
+const incoming = completeLarge(23);
+const oldTimer = incoming.timer + 1;
+const searchKeys = [key('open Find', 'f3'),
+    ...[...'text text z'].map((ch, i) => key('query unit ' + i, ch, ch)),
+    key('start pending search', 'enter')];
+for (const search of [true, false]) {
+    fixtures.push({name:search ? 'replace-search' : 'replace-control', events:[
+        boot(), open('start large read', 23, 'large.txt'), ...incoming.events,
+        ...(search ? searchKeys : []),
+        open('start replacement read', 24, 'replacement.txt'),
+        settle('old timer during replacement', oldTimer),
+        settle('draw replacement', 124, 'replacement text'),
+        settle('old timer after replacement', oldTimer),
+    ]});
+}
+fixtures.push({name:'replace-query', events:[
+    boot(), open('start large read', 23, 'large.txt'), ...incoming.events, ...searchKeys,
+    key('begin replacement query', 'f3'),
+    key('clear previous query', 'esc'),
+    key('enter new query', 'f3'),
+    key('type new query', 'x', 'x'),
+    key('find replacement query', 'enter'),
+    settle('old timer after new query', oldTimer),
+]});
+
 const wasm = new WebAssembly.Module(compileTypedWorld(source,
     readFileSync(join(os, 'build/typed-world-reactor.wasm'))));
 const tmp = mkdtempSync(join(tmpdir(), 'typed-editor-events-'));
@@ -204,6 +229,24 @@ try {
         expectOpen(failures, 'missing file opens empty', 'missing.txt  1:1');
         assert.deepEqual(failures.get('first normalization timer fails').slice(-4),
             ['sleep failed', 'release 25', 'reply {"ok":false,"why":"Invalid file response."}', 'return 0']);
+    }
+    const search = results.get('replace-search')?.steps, control = results.get('replace-control')?.steps;
+    for (const result of [search, control].filter(Boolean)) {
+        assert.deepEqual(result.get('old timer during replacement'), ['return 1']);
+        assert.deepEqual(result.get('old timer after replacement'), ['return 0']);
+        expectOpen(result, 'draw replacement', 'replacement.txt  1:1');
+        assert(result.get('draw replacement').includes('release 23'));
+    }
+    if (search) assert.deepEqual(search.get('start pending search'), ['sleep ' + oldTimer, 'return 1']);
+    if (search && control) assert.deepEqual(search.get('draw replacement'), control.get('draw replacement'));
+    const nextQuery = results.get('replace-query')?.steps;
+    if (nextQuery) {
+        assert.deepEqual(nextQuery.get('start pending search'), ['sleep ' + oldTimer, 'return 1']);
+        assert.equal(nextQuery.get('begin replacement query').at(-1), 'return 0');
+        const match = nextQuery.get('find replacement query').find(line => line.startsWith('screen '));
+        assert(match, 'the new query publishes its match in the existing document');
+        assert.equal(JSON.parse(match.slice(7)).kids[0].s, 'large.txt  1:3');
+        assert.deepEqual(nextQuery.get('old timer after new query'), ['return 0']);
     }
     assert(results.size, 'No fixture selected');
     for (const {summary} of results.values()) console.log(JSON.stringify(summary));
