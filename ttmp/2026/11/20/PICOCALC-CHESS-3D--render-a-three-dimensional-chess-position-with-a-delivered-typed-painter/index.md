@@ -37,3 +37,5 @@ The upstream [mobile source and PSIX experiments](../PICOCALC-MOBILE-PAINTER--co
 - [Scalar graphics and completed display transfers](design-doc/02-implement-and-qualify-the-scalar-scene.md)
 - [Packed geometry and its private workspace](design-doc/03-feed-the-visible-board-from-packed-ground-vertices.md)
 - [Independent compiler and drawing qualification](design-doc/04-independent-packed-painter-review.md)
+
+The [camera and model guide](design-doc/05-orbit-controls-and-solid-piece-models-in-the-native-chess-painter.md) explains the maintained, display-paced 3D game. The [32-pose host preview](various/smooth-host/smooth-rotation.gif) and [four-turn host game](various/smooth-host/gameplay.gif) show the board after real engine replies. The [raster experiments](../PICOCALC-RASTER-PIE--measure-incremental-edges-and-pie-span-stores-on-the-picocalc-chess-raster/index.md) measure the edge and span algorithm used in the rotating view.

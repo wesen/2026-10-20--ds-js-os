@@ -1,0 +1,37 @@
+{
+  "sourceSha256": "6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214",
+  "engine": "maintained full Typed Chess game with semantic state capture via Wasm",
+  "painter": "same maintained Typed source compiled to Wasm; independent pixel-center raster, native resolution",
+  "poses": 32,
+  "artifactOrigin": "host preview",
+  "captureFields": "match.json",
+  "animation": {
+    "gameplay.gif": {
+      "frames": 5,
+      "size": [
+        320,
+        345
+      ],
+      "frameMs": 950,
+      "sha256": "93c1f80389db05d55896076f83a9b041765b8d70d26fefcb89b9a0497124701d"
+    },
+    "rotation.gif": {
+      "frames": 4,
+      "size": [
+        320,
+        345
+      ],
+      "frameMs": 950,
+      "sha256": "a94e666f45181da2c50fdc75b73d21a7449b9bfad118e1eb6766c8574127ae26"
+    },
+    "smooth-rotation.gif": {
+      "frames": 32,
+      "size": [
+        320,
+        345
+      ],
+      "frameMs": 80,
+      "sha256": "3659745001024e6ca6fd52d8327ce3ac03d3440717692bac24b34572ec91e080"
+    }
+  }
+}

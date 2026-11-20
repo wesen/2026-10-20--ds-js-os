@@ -51,13 +51,13 @@ for article in articles:
         path = (article.parent / unquote(target.path)).resolve(strict=True)
         if not path.is_relative_to(repo):
             raise ValueError(path)
-        if mark:
-            assert path.is_relative_to(ticket) and path.suffix in {".png", ".svg"}
+        if mark or path.suffix == ".gif":
+            assert path.is_relative_to(ticket) and path.suffix in {".png", ".svg", ".gif"}
             asset = Path("_assets", asset_prefix + "-" + path.name)
             data = path.read_bytes()
             assert (day / asset) not in files or files[day / asset] == data
             files[day / asset] = data
-            return f"![{label}]({quote(asset.as_posix())})"
+            return f"{mark}[{label}]({quote(asset.as_posix())})"
         if path in names:
             return f"[{label}]({quote(names[path])})"
         return f"{label} (`{path.relative_to(repo).as_posix()}`)"
