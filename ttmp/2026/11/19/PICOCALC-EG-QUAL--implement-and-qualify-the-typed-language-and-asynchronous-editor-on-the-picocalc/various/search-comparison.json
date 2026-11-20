@@ -1,0 +1,221 @@
+{
+  "input_sha256": "c6a6ae33041e4a028ab16d51a734312c9442a463a7ebedd238f80baf6a68069a",
+  "rows": [
+    {
+      "engine": "rv32",
+      "trial": 1,
+      "case": "early",
+      "query": "ext",
+      "wall_us": {
+        "before": 4516,
+        "after": 4086,
+        "delta": -430,
+        "percent": -9.521700620017715
+      },
+      "editor_cpu_us": {
+        "before": 4497,
+        "after": 4055,
+        "delta": -442,
+        "percent": -9.828774738714696
+      },
+      "engine_us": {
+        "before": 4139,
+        "after": 3679,
+        "delta": -460,
+        "percent": -11.113795602802611
+      },
+      "editor_segments": {
+        "before": 1,
+        "after": 1,
+        "delta": 0,
+        "percent": 0.0
+      },
+      "settlements": {
+        "before": 0,
+        "after": 0,
+        "delta": 0,
+        "percent": null
+      }
+    },
+    {
+      "engine": "rv32",
+      "trial": 1,
+      "case": "late",
+      "query": "needle",
+      "wall_us": {
+        "before": 54230,
+        "after": 55810,
+        "delta": 1580,
+        "percent": 2.9135165037802
+      },
+      "editor_cpu_us": {
+        "before": 39537,
+        "after": 39596,
+        "delta": 59,
+        "percent": 0.14922730606772294
+      },
+      "engine_us": {
+        "before": 38364,
+        "after": 38459,
+        "delta": 95,
+        "percent": 0.2476279845688767
+      },
+      "editor_segments": {
+        "before": 27,
+        "after": 27,
+        "delta": 0,
+        "percent": 0.0
+      },
+      "settlements": {
+        "before": 26,
+        "after": 26,
+        "delta": 0,
+        "percent": 0.0
+      }
+    },
+    {
+      "engine": "rv32",
+      "trial": 1,
+      "case": "miss",
+      "query": "text text z",
+      "wall_us": {
+        "before": 183880,
+        "after": 171667,
+        "delta": -12213,
+        "percent": -6.64183162932347
+      },
+      "editor_cpu_us": {
+        "before": 116277,
+        "after": 113120,
+        "delta": -3157,
+        "percent": -2.7150683282162413
+      },
+      "engine_us": {
+        "before": 106289,
+        "after": 102700,
+        "delta": -3589,
+        "percent": -3.376642926361151
+      },
+      "editor_segments": {
+        "before": 297,
+        "after": 297,
+        "delta": 0,
+        "percent": 0.0
+      },
+      "settlements": {
+        "before": 296,
+        "after": 296,
+        "delta": 0,
+        "percent": 0.0
+      }
+    },
+    {
+      "engine": "wasm",
+      "trial": 1,
+      "case": "early",
+      "query": "ext",
+      "wall_us": {
+        "before": 41515,
+        "after": 41608,
+        "delta": 93,
+        "percent": 0.22401541611465348
+      },
+      "editor_cpu_us": {
+        "before": 41492,
+        "after": 41573,
+        "delta": 81,
+        "percent": 0.1952183553456166
+      },
+      "engine_us": {
+        "before": 41101,
+        "after": 41186,
+        "delta": 85,
+        "percent": 0.20680762025255817
+      },
+      "editor_segments": {
+        "before": 1,
+        "after": 1,
+        "delta": 0,
+        "percent": 0.0
+      },
+      "settlements": {
+        "before": 0,
+        "after": 0,
+        "delta": 0,
+        "percent": null
+      }
+    },
+    {
+      "engine": "wasm",
+      "trial": 1,
+      "case": "late",
+      "query": "needle",
+      "wall_us": {
+        "before": 732409,
+        "after": 738086,
+        "delta": 5677,
+        "percent": 0.7751133587927006
+      },
+      "editor_cpu_us": {
+        "before": 604109,
+        "after": 603375,
+        "delta": -734,
+        "percent": -0.121501252257461
+      },
+      "engine_us": {
+        "before": 602510,
+        "after": 601737,
+        "delta": -773,
+        "percent": -0.12829662578214274
+      },
+      "editor_segments": {
+        "before": 27,
+        "after": 27,
+        "delta": 0,
+        "percent": 0.0
+      },
+      "settlements": {
+        "before": 26,
+        "after": 26,
+        "delta": 0,
+        "percent": 0.0
+      }
+    },
+    {
+      "engine": "wasm",
+      "trial": 1,
+      "case": "miss",
+      "query": "text text z",
+      "wall_us": {
+        "before": 1762060,
+        "after": 1656603,
+        "delta": -105457,
+        "percent": -5.984869981725938
+      },
+      "editor_cpu_us": {
+        "before": 1370970,
+        "after": 1277165,
+        "delta": -93805,
+        "percent": -6.8422357892587
+      },
+      "engine_us": {
+        "before": 1359595,
+        "after": 1265821,
+        "delta": -93774,
+        "percent": -6.897201004710962
+      },
+      "editor_segments": {
+        "before": 297,
+        "after": 297,
+        "delta": 0,
+        "percent": 0.0
+      },
+      "settlements": {
+        "before": 296,
+        "after": 296,
+        "delta": 0,
+        "percent": 0.0
+      }
+    }
+  ]
+}

@@ -296,3 +296,27 @@ Start with scripts/25-rehearse-integration.py, then read the source digests and 
 ### Technical details
 
 Chess remains an opt-in firmware world. Its physical bench has a reserved serial-bus slot after the Editor validation jobs. The separate parser-dispatch experiment kept the language and artifacts intact but did not establish the historical 31.4 ms host gate.
+
+## Step 6 — Verify complete searches on the physical board
+
+I collected all six paired Find cases after restoring the original firmware. The verifier matches each serial completion marker to the recorded counters, recomputes the archived screenshot hash, and checks the capture log's transfer checksum. This matters for long searches because timing only the first turn omits up to 296 later settlements.
+
+### What I did
+
+Ran scripts/19-collect-physical.sh and checked the six rows in various/search-comparison.json. Checked task 62t1 and released the measured evidence to the independent report authors.
+
+### What worked
+
+The native generated Editor scanned the dense miss in 171,667 µs versus 183,880 µs by hand. Wasm took 1,656,603 µs versus 1,762,060 µs. The late native hit took 55,810 µs versus 54,230 µs. Each implementation used one, 27 and 297 segments for the early hit, late hit and miss respectively.
+
+### What warrants a second pair of eyes
+
+Each query has one paired observation per backend. Exact work counts and final screen content can be reproduced. Timing variability needs separate repetitions before drawing a general speed conclusion.
+
+### What should be done in the future
+
+Check the composed compiler candidates against the native cold compilation gate and replay the selected candidate's workflows.
+
+### Code review instructions
+
+Read scripts/16-compare-search.py alongside sources/verified/editor.md and various/search-comparison.json. The physical tail screenshot and timing chart are in various/.

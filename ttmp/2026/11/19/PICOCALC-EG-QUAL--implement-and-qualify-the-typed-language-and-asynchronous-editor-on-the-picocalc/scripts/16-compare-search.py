@@ -1,5 +1,6 @@
 """Pair complete, checked searches by query and engine and render the handheld's elapsed and CPU times."""
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from statistics import median
@@ -15,10 +16,22 @@ def read(directory):
     out={}
     for trial in sample["trials"]:
         cases={row["case"]:row for row in trial["rows"]}
-        if set(cases)!={"early","miss","late"}:
+        if len(trial["rows"])!=3 or set(cases)!={"early","miss","late"}:
             raise ValueError("expected all three independently checked terminal frames")
         for case,row in cases.items():
-            out[trial["engine"],trial["trial"],case]=row
+            key=(trial["engine"],trial["trial"],case)
+            if key in out: raise ValueError(f"duplicate observation {key}")
+            capture=directory/f"{key[0]}{key[1]}"
+            image=capture/f"{case}.png"
+            if hashlib.sha256(image.read_bytes()).hexdigest()!=row["frame"]:
+                raise ValueError(f"frame checksum disagrees with {image}")
+            verified=any("crc ok" in log.read_text() for log in capture.glob(f"{case}-shot-*-capture.log"))
+            if not verified: raise ValueError(f"no verified framebuffer transfer for {image}")
+            fields=("wall_us","editor_cpu_us","engine_us","editor_segments","settlements")
+            expected="EGFIND "+case+" "+" ".join(str(row[k]) for k in fields)
+            markers=[line for line in (capture/f"{case}.log").read_text(errors="replace").splitlines() if line.startswith("EGFIND ")]
+            if markers!=[expected]: raise ValueError(f"elapsed or execution counters differ for {key}")
+            out[key]=row
     if {key[0] for key in out}!={"rv32","wasm"}: raise ValueError("missing physical engine")
     return sample["sha256"],out
 

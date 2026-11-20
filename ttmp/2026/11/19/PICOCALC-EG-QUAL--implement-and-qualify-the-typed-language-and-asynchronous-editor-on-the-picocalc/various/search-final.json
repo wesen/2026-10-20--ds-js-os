@@ -1,0 +1,101 @@
+{
+  "kind": "candidate",
+  "input_bytes": 65536,
+  "sha256": "c6a6ae33041e4a028ab16d51a734312c9442a463a7ebedd238f80baf6a68069a",
+  "trials": [
+    {
+      "engine": "wasm",
+      "trial": 1,
+      "document": "gw1.txt",
+      "image": "77c3623c6fff2aeeb2f90094ed0a5008832d966f3ff2cbae4f72e7a680912e60",
+      "rows": [
+        {
+          "case": "early",
+          "query": "ext",
+          "frame": "fd9c0fc8019caceabb8653684e0f9d174bbc2df6307fe6daffa11a252c45554c",
+          "wall_us": 41608,
+          "editor_cpu_us": 41573,
+          "engine_us": 41186,
+          "editor_segments": 1,
+          "settlements": 0
+        },
+        {
+          "case": "miss",
+          "query": "text text z",
+          "frame": "448e70428298935590f9986016dea50fc577522c87825d14f384e0d1c754b122",
+          "wall_us": 1656603,
+          "editor_cpu_us": 1277165,
+          "engine_us": 1265821,
+          "editor_segments": 297,
+          "settlements": 296
+        },
+        {
+          "case": "late",
+          "query": "needle",
+          "frame": "bf6c8a2b41266dd6198fa89548ad281d21a014c5ee9a80f49931623efdffdb80",
+          "wall_us": 738086,
+          "editor_cpu_us": 603375,
+          "engine_us": 601737,
+          "editor_segments": 27,
+          "settlements": 26
+        }
+      ]
+    },
+    {
+      "engine": "rv32",
+      "trial": 1,
+      "document": "gr1.txt",
+      "image": "2c65c803b16a34b686215eef3800b7b2cc1705bff8ef7371af184dd224a0702c",
+      "rows": [
+        {
+          "case": "early",
+          "query": "ext",
+          "frame": "e7ee4267bd972c7cb3460fa9be9ba89c4b0aa44d083715929da2c2e05beb55c8",
+          "wall_us": 4086,
+          "editor_cpu_us": 4055,
+          "engine_us": 3679,
+          "editor_segments": 1,
+          "settlements": 0
+        },
+        {
+          "case": "miss",
+          "query": "text text z",
+          "frame": "448e70428298935590f9986016dea50fc577522c87825d14f384e0d1c754b122",
+          "wall_us": 171667,
+          "editor_cpu_us": 113120,
+          "engine_us": 102700,
+          "editor_segments": 297,
+          "settlements": 296
+        },
+        {
+          "case": "late",
+          "query": "needle",
+          "frame": "41b9081dee90df39f2a1bfd73da9de995f89bad02bebbd6a1ef46decb5fa94e1",
+          "wall_us": 55810,
+          "editor_cpu_us": 39596,
+          "engine_us": 38459,
+          "editor_segments": 27,
+          "settlements": 26
+        }
+      ]
+    }
+  ],
+  "restored": true,
+  "worlds": {
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "last_error": ""
+    },
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "last_error": ""
+    }
+  }
+}
