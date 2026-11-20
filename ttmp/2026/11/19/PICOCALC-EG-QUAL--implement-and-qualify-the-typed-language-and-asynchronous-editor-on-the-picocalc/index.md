@@ -20,12 +20,14 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+The compiler accepts forward calls, typed control flow, exhaustive enums, distinct integers and asynchronous tasks. Editor Open and Find exercise these features on the ESP32-P4. This ticket compares the generated continuations with the handwritten implementation, measures the compiler on the device and preserves the exact experiments used to select a frontend.
 
 ## Key Links
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
+- [Independent language study](analysis/02-independent-language-study.md)
+- [Independent continuation study](analysis/03-independent-continuations-study.md)
+- [Independent complete-search study](analysis/04-independent-editor-study.md)
+- [Cold compiler and memory comparison](../../20/PICOCALC-LEXICAL-INDEX--index-typed-source-once-for-the-cold-picocalc-compiler/various/physical-comparison-composed.json)
 
 ## Read the study
 

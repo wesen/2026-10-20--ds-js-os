@@ -39,6 +39,8 @@ Consider a small search that examines offsets zero through four while staying in
 
 Together these rules separate three jobs. The type checker rejects a wrong unit or a missing search case. Structured control tells the backends where a loop or branch may go. The continuation compiler uses these control paths to determine what must survive when a running function suspends.
 
+The native instructions for inequality illustrate why we test separate uses of each operator. When a caller returns a Boolean, the register backend must materialize 0 or 1. When an `if` immediately consumes that Boolean, the backend can branch on the operands. We compiled both `a !== b` and `!(a === b)` with the staged register emitter. Each value-returning function occupied ten native words and each branching function occupied eleven, including its return path. The stock stack emitter had previously used 18 versus 19 for the branch fixture. We executed the register versions 116 times with Boolean and signed integer inputs, including both signed extremes. [Actual register code and results](../../PICOCALC-LANGUAGE-E--control-flow-forward-calls-enums-and-distinct-integers/various/register-inequality-execution.json)
+
 ## What survives a kernel turn
 
 At the first read suspension, Open must remember the file handle. The call `typedSdkFileRead(handle)` issues the request. A subsequent event identifies its completion by token. Editor obtains text or error information from the *current* event. Saving the old event pointer would give the program a view with the wrong lifetime. A numeric file handle has a different contract. The kernel keeps its resource alive until the owner releases it.
@@ -95,6 +97,8 @@ The independent host frontend-only test missed the professor's historical absolu
 
 A separate trial repeated the professor's fifteen-sample frontend benchmark on the same pre-E Editor source, pinning all three compiler processes to host CPU 7. The old frontend took 44.73 ms, the staged native token index took 39.28 ms, and reusing token objects at two internal call sites brought that to 35.15 ms. This last figure is 21.4% below the current control and 3.75 ms above the professor's absolute 31.4 ms ceiling. These results apply to parsing, checking and emitting Wasm function bodies for the handwritten source. The following physical experiment includes the generated continuation code and native linking. [Runner and recorded samples](../../../20/PICOCALC-LEXICAL-INDEX--index-typed-source-once-for-the-cold-picocalc-compiler/scripts/12-run-professor-frontend.sh)
 
+The portable frontend eventually cleared the historical absolute gate. The experiment used the professor's unchanged QuickJS C host, JavaScript timing driver and original Editor input. A new parser dispatched on the current token directly, and a simpler regular expression supplied portable tokens when the optional native index was absent. Across six interleaved quiet-start sessions, the candidate's fifteen-sample medians were 24.99, 24.89, 25.25, 25.34, 25.68 and 25.55 ms. Their median was **25.30 ms**, 19.4% below the absolute ceiling. The matched original frontend ran at 29.85–30.85 ms. Keeping the source-span compiler with its previous portable scanner instead took 34.57–35.42 ms. The same candidate passed all 24 host workflows. [Host timing records](../../../20/PICOCALC-PARSER-DISPATCH--measure-predictive-token-dispatch-in-the-typed-compiler-frontend/various/professor-bounded/portable-reference-wall.jsonl) · [Compiler identity and full replay](../various/host-integration-portable.json)
+
 ## Reading the physical measurements
 
 The device compiler reports microseconds from the cold compile call, peak QuickJS allocator bytes and output module size. Each trial selects a known firmware image and reboots. For the small interactive workflow we subtract the Editor's starting CPU count from its ending count. This measures all Editor turns while typing, saving, searching, previewing and canceling an edit. It excludes time charged to Files, the compositor and bus drivers. The two captured images show Find and preview. For the strict image comparison the two firmwares receive the same wall time from the port. All timings and timeout decisions still use the monotonic hardware counter.
@@ -126,7 +130,11 @@ A useful execution benchmark holds the input and the visible answer fixed. We ga
 | Late hit | 27 | 54.230 → 55.810 ms | +2.91% | 732.409 → 738.086 ms | +0.78% |
 | Dense miss | 297 | 183.880 → 171.667 ms | −6.64% | 1,762.060 → 1,656.603 ms | −5.98% |
 
-The dense miss requires 296 suspensions and resumptions. The generated version completed it faster on both targets in this run. The late hit was slightly slower on both. Each cell represents one complete search, so the experiment establishes the executed work and observed elapsed time for those particular runs. Repeated trials would be needed to estimate a typical timing difference. All twelve final frames were captured and verified against their recorded checksums. [Search timing chart](../various/search-clocks.png) · [Physical late-hit frame](../various/editor-physical-tail.png)
+The dense miss requires 296 suspensions and resumptions. The generated version completed it faster on both targets in this run. The late hit was slightly slower on both. Each cell represents one complete search, so the experiment establishes the executed work and observed elapsed time for those particular runs. Repeated trials would be needed to estimate a typical timing difference. All twelve final frames were captured and verified against their recorded checksums.
+
+![Elapsed time and guest CPU across three search cases](../various/search-clocks.png)
+
+![PicoCalc Editor showing the verified search result at line 852](../various/editor-physical-tail.png)
 
 ### Where the additional compiler time goes
 
