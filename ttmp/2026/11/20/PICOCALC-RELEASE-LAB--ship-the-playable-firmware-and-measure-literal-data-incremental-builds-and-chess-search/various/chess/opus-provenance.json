@@ -1,0 +1,17 @@
+{
+  "design": {
+    "promptSha256": "7afd1eb95eef2917b7c6edec4856f350e6a8df944e8f3af97c53e51a65f6c58b",
+    "generatedOutputSha256": "4801776d5cec63813fafdcedbc7e14704aebfd592525aa0f1c52784717539218"
+  },
+  "critique": {
+    "promptSha256": "738ca5e9424e55bdacd749af9ee9ca386473a956d807f68540e6199c6cea8c89",
+    "generatedOutputSha256": "da4163d75924f45a118c876f27574fe29d2b6656c6bea55a2ae80110ae9e0a88"
+  },
+  "article": {
+    "promptSha256": "7d4c269b00117c70a100c0172d39f579ec62fea6b35640b86d164bbc60f12147",
+    "generatedOutputSha256": "b001139622b674b5e0ecbcc413fad39a5b8730d71fa64897c9aa106d728edced"
+  },
+  "publishedArticleSha256": "d433383d098218df921c607d1c1bd19a5032942b957a3a05b01c4d97f6f4024e",
+  "invocation": "claude -p --model opus --effort high --tools ''",
+  "publicationEdits": "Reviewed the generated prose against the maintained source and aggregate. Clarified fixture validation, actual board-bound predicate, timing boundary and equivalence scope, corrected cumulative depth wording and inserted the measured opening cap row."
+}
