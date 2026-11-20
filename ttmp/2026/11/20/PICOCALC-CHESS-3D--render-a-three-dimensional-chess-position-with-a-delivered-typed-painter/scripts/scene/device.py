@@ -23,6 +23,8 @@ PARTITION = Path("partition_table/partition-table.bin")
 BODY_TOP = 22 * 320 * 2
 HINT_TOP = 302 * 320 * 2
 KEYS = (("e2", "h"), ("e3", "up"), ("f3", "right"))
+EXCHANGE = (("e2", "h"), ("selected", "enter"), ("e3-ready", "up"), ("e4-ready", "up"),
+            ("white", "enter"), ("reply", "right"))
 
 
 def fnv(payload):
@@ -64,7 +66,8 @@ def run(args):
         raise ValueError("unexpected release identity")
     if (args.image / PARTITION).read_bytes() != partition or len(candidate) >= 0x800000:
         raise ValueError("candidate layout differs from the release")
-    expected = {name:(args.reference / (name + ".rgb565")).read_bytes() for name, _ in KEYS}
+    keys = EXCHANGE if args.exchange else KEYS
+    expected = {name:(args.reference / (name + ".rgb565")).read_bytes() for name, _ in keys}
     source, linked = args.source.read_bytes(), args.linked.read_bytes()
     if any(len(frame) != 298 * 640 for frame in expected.values()):
         raise ValueError("reference must contain the full app body and hint strip")
@@ -108,24 +111,34 @@ def run(args):
             c.command("key f1")
             time.sleep(2)
             previous = None
-            for name, key in KEYS:
+            for name, key in keys:
                 before = c.counters()
                 begin = time.monotonic()
                 c.command("key " + key)
-                time.sleep(1)
+                # The pawn position is transient. Check the panel and issue the
+                # framebuffer copy before waiting for UART or world counters.
+                if name == "white":
+                    time.sleep(args.white_delay)
+                    panel = status(c, "panelobs check", '{"panel')
+                    shot = c.shot(name, args.output)
+                    time.sleep(1)
+                else:
+                    time.sleep(1)
                 after = c.counters()
                 spi = {k:round(v - before["spi2"][k], 3) for k, v in after["spi2"].items()}
                 if not spi["bytes"] or spi["errors"] or any(after[k]["restarts"] != before[k]["restarts"] for k in serial.OBSERVED):
                     raise ValueError(f"{name} invalid SPI or world health")
                 window_ms = round((time.monotonic() - begin) * 1000, 2)
-                shot = c.shot(name, args.output)
+                if name != "white":
+                    shot = c.shot(name, args.output)
+                    panel = status(c, "panelobs check", '{"panel')
                 pixels = (args.output / (name + ".rgb565")).read_bytes()
-                panel = status(c, "panelobs check", '{"panel')
                 native = painter(c)
                 shot.update(panel=panel, painter=native, spi2=spi, hostWindowMs=window_ms,
                             worldDelta={world:{key:round(after[world][key] - before[world][key], 3)
                                                for key in ("turns", "cpu_ms", "restarts")}
                                         for world in sorted(serial.OBSERVED)},
+                            panelCheckBeforeShot=name == "white",
                             bodySha256=serial.digest(pixels[BODY_TOP:HINT_TOP]),
                             hintSha256=serial.digest(pixels[HINT_TOP:]))
                 result["screens"][name] = shot
@@ -183,6 +196,8 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     for name in ("output", "release", "image", "reference", "source", "linked"):
         p.add_argument(name, type=Path)
+    p.add_argument("--exchange", action="store_true", help="play the opening move and check the engine reply")
+    p.add_argument("--white-delay", type=float, default=.18, help="seconds to the transient panel check")
     p.add_argument("--port", default="/dev/ttyACM0")
     p.add_argument("--esptool", type=Path, default=Path("/home/manuel/.espressif/python_env/idf5.4_py3.11_env/bin/esptool.py"))
     def interrupted(*_):

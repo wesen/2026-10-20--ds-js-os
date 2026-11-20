@@ -36,3 +36,14 @@ The opening uses 406 commands and 3,281 words. A legal position can have at most
 4. After taking ownership of the port, run `python3 -B scripts/scene/device.py WORK/observed ORDINARY_BUILD WORK/build-root/build WORK/raster scripts/scene/isometric.typed WORK/scalar.elf`. The runner verifies the ordinary image, modifies only the app partition, opens Chess via the usual key route with an instrumented key-status register, and reads back completed SPI pixels. It restores the ordinary image and verifies both the application and partition table on its way out.
 
 The two native output identity checks cover complementary points. The host compiler can compare exact raw code bytes with the PIE option off and on. The device logs the byte count and a diagnostic FNV-1a digest of the actual linked ELF it compiled from the approved delivered source. That digest can be checked against the host scalar linked ELF. The ELF includes a fixed-size slot, so equal ELF sizes alone convey no information about the bytes generated into it.
+
+
+## Reproduce the opening exchange
+
+Run `python3 -B scripts/scene/exchange-refs.py WORK/poses WORK/exchange-reference` against the generated replay. Its comparison uses complete board snapshots from the game's host replay. The cells at e2 and e4 change from 1 and 0 to 0 and 1 for White's pawn. The cells at b8 and c6 then change from 10 and 0 to 0 and 10 for Black's knight. The last-move fields name the same pairs. The receipt stores the source fixture index and full app-pixel checksum for each checkpoint.
+
+Use `--exchange` with `device.py` and give it the exchange reference directory. The runner opens Chess, selects the pawn with Enter, moves twice with Up and confirms with Enter. It requests the panel checksum and the framebuffer snapshot while the opening engine search is in progress. The UART can take seconds to send a screenshot, but the capture command copies the framebuffer before sending it. The runner then moves Right once to reproduce the host reply frame's cursor position.
+
+## Build a normal-keyboard 3D image
+
+Use `scripts/scene/build.sh WORK/build-root DEPENDENCIES_LOCK ordinary`. The ordinary profile builds the same 3D source and raster extension with the stock compiler, normal keyboard driver and normal console. The observed profile defaults to compiler-fingerprint and SPI capture probes. The physical exchange is a test of the observed image. A normal-keyboard candidate is available at `/tmp/mobile-chess3d-playable/build` for a separate play session.
