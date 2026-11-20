@@ -116,6 +116,18 @@ Both captured frames matched across all runs within each engine. The CPU differe
 
 ![Compiler time and Editor CPU time on both targets](../various/workflow-clocks.png)
 
+### Running the generated search to completion
+
+A useful execution benchmark holds the input and the visible answer fixed. We gave both Editors the same document and the same three queries. Each cell below measures elapsed milliseconds between the final Enter key and the completed Editor frame. Each percentage uses the handwritten time on the same backend as its denominator. [Physical Find records](../various/search-comparison.json)
+
+| Query | Editor turns | RV32 handwritten → generated | Change | Wasm handwritten → generated | Change |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Early hit | 1 | 4.516 → 4.086 ms | −9.52% | 41.515 → 41.608 ms | +0.22% |
+| Late hit | 27 | 54.230 → 55.810 ms | +2.91% | 732.409 → 738.086 ms | +0.78% |
+| Dense miss | 297 | 183.880 → 171.667 ms | −6.64% | 1,762.060 → 1,656.603 ms | −5.98% |
+
+The dense miss requires 296 suspensions and resumptions. The generated version completed it faster on both targets in this run. The late hit was slightly slower on both. Each cell represents one complete search, so the experiment establishes the executed work and observed elapsed time for those particular runs. Repeated trials would be needed to estimate a typical timing difference. All twelve final frames were captured and verified against their recorded checksums. [Search timing chart](../various/search-clocks.png) · [Physical late-hit frame](../various/editor-physical-tail.png)
+
 ### Where the additional compiler time goes
 
 The phase experiment times each operation on the device and pauses the enclosing phase clock when a nested phase starts. Summing the disjoint durations reproduces the outer compiler stopwatch for every sample. Each firmware produced three explicit reboots. In the instrumented comparison, generating synchronous code from asynchronous source accounted for 896.5 ms of the 1,179.7 ms increase, or 76.0%. The ordinary typed frontend added 127.5 ms, and loading the compiler and setting up its arguments added 115.5 ms. Native lowering, assembly, validation and linking together added 15.4 ms. [Paired phase measurements](../various/g4-compile-phases.json)

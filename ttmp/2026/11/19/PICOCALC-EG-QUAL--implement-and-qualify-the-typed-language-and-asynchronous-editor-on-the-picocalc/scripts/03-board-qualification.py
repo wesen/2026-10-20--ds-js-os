@@ -62,9 +62,11 @@ def main():
     args=parser.parse_args()
     args.esptool_python=args.esptool.parent/"python"
     original=validate(args)
+    image_hashes = {target: hashlib.sha256((args.images / target / "picocalc-os-p4.bin").read_bytes()).hexdigest()
+                    for target in ENGINES}
     parent=args.output
     parent.mkdir(parents=True,exist_ok=False)
-    receipt=dict(original=hashlib.sha256(original.read_bytes()).hexdigest(),kind=args.kind,trials=[],restored=False)
+    receipt=dict(original=hashlib.sha256(original.read_bytes()).hexdigest(),kind=args.kind,images=image_hashes,trials=[],restored=False)
     save=lambda:write_json(parent/"physical.json",receipt)
     save()
     capture=BOARD["capture"]
