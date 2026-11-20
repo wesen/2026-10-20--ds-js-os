@@ -1,5 +1,5 @@
 // The kernel lane owns all live UI state. A worker receives one private copy of
-// the approved source and returns an executable through a one-element queue.
+// the approved source and returns a linked image through a one-element queue.
 #include "p4.h"
 #include "painter_service.h"
 #include "mobile_painter_p4.h"
@@ -11,9 +11,9 @@
 #include <string.h>
 
 typedef struct {
-  mobile_painter *program;
+  mobile_painter_image image;
   mobile_painter_install_stats stats;
-} installation;
+} build_result;
 
 typedef struct {
   size_t length;
@@ -31,21 +31,22 @@ static bool compiling, authorized, have_state;
 static int publisher_epoch = -1, announced_epoch = -1, requested_epoch = -1;
 static uint16_t state[MOBILE_PAINTER_STATE_CELLS];
 static display_list *current, *scratch;
-static installation installed;
+static mobile_painter *program;
+static mobile_painter_install_stats install_stats;
 static unsigned sources, compiles, packets, calls, paints, rejects;
 static int64_t last_native_us, last_draw_us;
 
 static void compile_worker(void *arg) {
   install_request *request = arg;
-  installation result = {0};
-  result.program = mobile_painter_install(request->bytes, request->length, &result.stats);
+  build_result result = {0};
+  result.image = mobile_painter_compile(request->bytes, request->length, &result.stats);
   free(request);
   xQueueSend(completed, &result, portMAX_DELAY);
   vTaskDeleteWithCaps(NULL);
 }
 
 static bool start_compile(const uint8_t *data, size_t n) {
-  if (!completed) completed = xQueueCreate(1, sizeof(installation));
+  if (!completed) completed = xQueueCreate(1, sizeof(build_result));
   if (!completed) return false;
   install_request *job = malloc(sizeof(*job) + n + 1);
   if (!job) return false;
@@ -66,7 +67,7 @@ static bool render(const uint16_t *cells) {
   if (!scratch) scratch = port_heap_malloc(sizeof(*scratch));
   if (!scratch) return false;
   calls++;
-  int n = mobile_painter_run(installed.program, cells, scratch->words, &last_native_us);
+  int n = mobile_painter_run(program, cells, scratch->words, &last_native_us);
   if (n <= 0 || !painter_commands_valid(scratch->words, n, scratch->hints)) return false;
   scratch->count = n;
   display_list *old = current;
@@ -90,12 +91,12 @@ void p4_painter_receive(world_t *receiver, world_t *sender, bool source, const u
   if (source) {
     sources++;
     if (!mobile_painter_source_allowed((const char *)data, length) ||
-        (!installed.program && !compiling && !start_compile(data, length))) {
+        (!program && !compiling && !start_compile(data, length))) {
       rejects++;
       return;
     }
     authorized = true;
-    if (installed.program && have_state && (!current || !current->count) && !render(state)) rejects++;
+    if (program && have_state && (!current || !current->count) && !render(state)) rejects++;
     return;
   }
 
@@ -103,7 +104,7 @@ void p4_painter_receive(world_t *receiver, world_t *sender, bool source, const u
   uint16_t candidate[MOBILE_PAINTER_STATE_CELLS];
   if (!chess_psix_decode(data, length, candidate)) { rejects++; return; }
   if (have_state && !memcmp(state, candidate, sizeof(state))) return;
-  if (authorized && installed.program && !render(candidate)) { rejects++; return; }
+  if (authorized && program && !render(candidate)) { rejects++; return; }
   memcpy(state, candidate, sizeof(state));
   have_state = true;
 }
@@ -111,11 +112,13 @@ void p4_painter_receive(world_t *receiver, world_t *sender, bool source, const u
 void p4_painter_poll(void) {
   world_t *chess = world_by_name("chess");
   if (chess && chess->epoch != publisher_epoch) change_publisher(chess->epoch);
-  installation result;
+  build_result result;
   if (compiling && xQueueReceive(completed, &result, 0) == pdTRUE) {
     compiling = false;
-    installed = result;
-    if (!installed.program) {
+    // Relocation invalidates caches and requires the kernel's internal-RAM stack.
+    install_stats = result.stats;
+    if (result.image.bytes) program = mobile_painter_load(result.image, &install_stats);
+    if (!program) {
       rejects++;
       authorized = false;
       klog("painter: native installation failed");
@@ -149,7 +152,7 @@ void p4_painter_status(void) {
   printf("{\"sources\":%u,\"compiles\":%u,\"installed\":%s,\"packets\":%u,\"calls\":%u,"
          "\"paints\":%u,\"rejects\":%u,\"compile_us\":%lld,\"relocate_us\":%lld,"
          "\"native_us\":%lld,\"raster_us\":%lld,\"image_bytes\":%zu}\n",
-         sources, compiles, installed.program ? "true" : "false", packets, calls, paints, rejects,
-         (long long)installed.stats.compile_us, (long long)installed.stats.relocate_us,
-         (long long)last_native_us, (long long)last_draw_us, installed.stats.image_bytes);
+         sources, compiles, program ? "true" : "false", packets, calls, paints, rejects,
+         (long long)install_stats.compile_us, (long long)install_stats.relocate_us,
+         (long long)last_native_us, (long long)last_draw_us, install_stats.image_bytes);
 }

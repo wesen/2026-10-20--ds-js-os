@@ -45,7 +45,7 @@ The painter uses RGB565 color words, body-relative coordinates, and three font I
 
 - The native game's publisher supplies source exactly once per publisher generation and emits complete counted PSIX bytes on updates. The receiver identifies the sender from the kernel message.
 - The compiler accepts the pinned trusted source and generates the native function on the receiving board. The allowed bundle copy supplies an identity check. Its bytes must never replace the delivered source as compiler input.
-- The kernel lane accepts and retains the latest validated input while a separate worker compiles. The worker owns its private source copy and returns an executable handle by queue. Only the kernel lane mutates retained UI state or touches a framebuffer.
+- The kernel lane accepts and retains the latest validated input while a separate worker compiles. The worker owns its private source copy and returns a linked image by queue. The kernel relocates the image on its internal-RAM stack, obtains an entry point and releases the transient image. ESP-IDF cache maintenance during relocation requires an internal stack. Only the kernel lane mutates retained UI state or touches a framebuffer.
 - Rendering writes a scratch list. The complete list must validate before the receiver swaps it with the previous good list. Published snapshots and scratch are independent of the game world's memory.
 - The compositor draws the list between the existing status bar and its banner/hints. It uses the established framebuffer commit and display protocol, including invalidation after a skipped transfer. The display driver determines which rectangles reach the panel.
 
