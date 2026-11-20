@@ -120,3 +120,59 @@ Review the witness under `scripts/packed/03-stage.py` and the timing loop in `sc
 Each arm completes one warmup, then eight measured calls. Arms alternate first position across 11 samples per state. The data buffer allocation is internal and 16-byte aligned. The two comparison entries are generated from the same source as the witnessed entry and relocate together in the widened research slot.
 
 The physical runner exited successfully. Readback verified the application and partition against the previous playable release. All eight monitored worlds were healthy and the 2D painter reinstalled with zero rejects. The serial lock passed to the scalar 3D board operator for the separate move test. [Verified board receipt](../various/packed/physical.json)
+
+## Step 3 — Fit the smooth-camera source into its two native slots
+
+The smooth-camera experiment grew both the mobile painter and the Chess game that delivers its source. I built and qualified its observed and ordinary firmware from a frozen source in the private warm build. The observed firmware carries the camera and panel instrumentation. The ordinary firmware omits those hooks.
+
+### Prompt Context
+
+**Director follow-up** — Build the final smooth renderer in both firmware profiles, preserve the 2D slots and record host linking and PSRAM settings. Expand the game slot only in the 3D lane if necessary.
+
+**Commit (slot sizing)** — `7611ade` Size dedicated native slots for the smooth 3D Chess build.
+
+### What I did
+
+- Compiled the final 16,316-byte source with the stock mobile-painter linker. It emits 23,848 code bytes and exports `paintChess` at native offset 17,564.
+- Replayed the generated source writer as real Typed Wasm and compared all 16,316 reconstructed ASCII bytes against the allowed source.
+- Compiled and linked the composed 61,022-byte Chess game and checked the entry jump destinations, copied native words and relocation count.
+- Built observed and ordinary images with ESP-IDF 5.4.2 in the same warm work directory and copied snapshots before switching profiles.
+- Compared published source and partition bytes and checked that the observed image includes the `camobs` command while the ordinary image omits it.
+
+### Why
+
+The mobile painter's source transport ceiling is separate from its generated code reservation. Additionally, delivery is implemented by a Typed routine in the Chess game, so more source text causes the producer itself to emit more native stores. Both code images have to fit independently.
+
+### What worked
+
+The dedicated 32 KiB mobile-painter slot has 8,896 bytes spare after its entry header and emitted code. The 256 KiB 3D Chess slot has 5,596 bytes spare after its header, import entries and 256,400 code bytes. The game emits 19 imported call relocations and links to the same 30 declared runtime imports. The 2D mobile slot stayed 16 KiB and the ordinary shared world slot stayed 224 KiB in assembled and linked artifacts. Both configurations use 200 MHz PSRAM, a 360 MHz CPU and the PSRAM ELF loader.
+
+### What didn't work
+
+The preliminary host link against the original shared game template returned `SyntaxError: RV32 program does not fit the reactor slot`. The expected 256,548-byte extent exceeds 224 KiB. The CMake 3D lane now builds a dedicated game template at 256 KiB and leaves other worlds on the original template.
+
+The first observed firmware compilation reported duplicate `camera_begin` and `camera_panel_end_window` definitions. Concurrent build-script changes had staged the observer twice. I reduced the observed branch to one call and reran it from the standard restaged inputs. Both profiles then compiled successfully.
+
+### What I learned
+
+The reserved capacity shown in the ELF excludes its unrelated sections. The 32 KiB slot corresponds to a 33,840-byte linked painter ELF. The 256 KiB game slot lives inside a 274,892-byte linked game ELF. Their source limits remain bounded independently.
+
+### What was tricky to build
+
+Game source delivery uses generated `writeLiteral` operations. It preserves the exact authorized source bytes while generating enough machine code to outgrow the game reactor before the static source limit is reached. Checking the draw compiler alone missed the game-side overflow.
+
+### What warrants a second pair of eyes
+
+Actual device compilation latency, runtime heap peak and display acceptance still require the separate physical run. The host qualification confirms linking and exact bytes, and checks the build configuration.
+
+### What should be done in the future
+
+Keep the two independent host linker checks in the firmware build when further changing the painter generator or source.
+
+### Code review instructions
+
+Read `scripts/camera/07-qualify-build.mjs` and the staged CMake slot conditions. [Observed receipt](../various/camera/native-slot-observed.json) [Ordinary receipt](../various/camera/native-slot-ordinary.json)
+
+### Technical details
+
+Both builds contain source SHA-256 `6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214`. Observed app SHA-256 is `6364be0178215b2742c5648c48d657f7e5b9b00cd0bbc898b8b39426ff62e7a2`. Ordinary app SHA-256 is `134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1`. The partition table is identical between builds and to the ordinary recovery app.

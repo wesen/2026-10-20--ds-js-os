@@ -1,0 +1,48 @@
+{
+  "painterSource": {
+    "bytes": 16316,
+    "sha256": "6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214",
+    "embeddedWriterMatches": true
+  },
+  "chessSource": {
+    "bytes": 61022,
+    "sha256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c"
+  },
+  "painter": {
+    "capacity": 32768,
+    "usable": 32744,
+    "codeBytes": 23848,
+    "headroom": 8896,
+    "entries": {
+      "paintChess": 17564
+    },
+    "imports": 0,
+    "relocations": 0,
+    "linkedBytes": 33840,
+    "linkedSHA256": "0284e94c07ec7abebfa23ec1f4f3a2979f70ff03134dab663ae7e2771a260825",
+    "templateSHA256": "a89f0b5956392ed636cdd053e5c5f9c908053913fedd7b0cc41036f445ee418e"
+  },
+  "chess": {
+    "capacity": 262144,
+    "usable": 261996,
+    "codeBytes": 256400,
+    "headroom": 5596,
+    "entries": {
+      "typedWorldMeta": 26580,
+      "typedWorldEvent": 36364
+    },
+    "imports": 30,
+    "relocations": 19,
+    "linkedBytes": 274892,
+    "linkedSHA256": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685",
+    "templateSHA256": "f28687cff3b242c18027dde3ad8b15930108035ca8b416b120071f62e1963630"
+  },
+  "idfConfig": [
+    "CONFIG_SPIRAM=y",
+    "CONFIG_SPIRAM_SPEED=200",
+    "CONFIG_CACHE_L2_CACHE_LINE_SIZE=64",
+    "CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=360"
+  ],
+  "firmwareSHA256": "6364be0178215b2742c5648c48d657f7e5b9b00cd0bbc898b8b39426ff62e7a2",
+  "partitionSHA256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
+}
