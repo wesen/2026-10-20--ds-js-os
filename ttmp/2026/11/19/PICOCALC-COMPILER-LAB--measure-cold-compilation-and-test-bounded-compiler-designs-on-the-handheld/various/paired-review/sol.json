@@ -1,0 +1,7 @@
+{
+  "small": {"time_pct": -3.14, "heap_pct": 6.45},
+  "medium": {"time_pct": -2.60, "heap_pct": 3.20},
+  "large": {"time_pct": -2.59, "heap_pct": -1.74},
+  "limitation": "The marginal medians cannot identify the A+B interaction, especially if the combined compiler reaches its heap peak in a different phase.",
+  "experiment": "Run randomized matched blocks containing production, A, B, and A+B, and record live bytes by compile phase and allocation site. If B saves the same number of output-buffer bytes with and without A and the combined heap interaction appears before emission, that falsifies overlapping output-buffer savings as its cause."
+}

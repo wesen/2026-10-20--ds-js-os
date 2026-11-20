@@ -1,0 +1,16 @@
+{
+  "small": {
+    "time_pct": -3.1,
+    "heap_pct": 6.3
+  },
+  "medium": {
+    "time_pct": -2.7,
+    "heap_pct": 3.6
+  },
+  "large": {
+    "time_pct": -2.8,
+    "heap_pct": -0.9
+  },
+  "limitation": "Only per-app marginal group medians from one boot are available. There are no A+B runs, no block-level dispersion and no allocation trace. So the A-by-B interaction (A's word savings partly vanishing inside fixed 1024-word chunks, a shifting peak phase, and the fixed cost of loading both implementations) is inferred, not measured. Boot-to-boot variance is also unknown.",
+  "experiment": "On a second boot, run four matched blocks per app of production, A, B and A+B. Instrument the peak live heap with its phase tag, and record the count of allocated 32-bit chunks. Mechanism hypothesis: A's heap benefit comes from emitted-word storage. If so, under B it should drop to the chunk-count difference: 0 chunks for small and medium, about 4 KB (one chunk) for large. A+B heap minus B heap should then roughly equal A's fixed implementation overhead (about +10 KB) minus 4096 bytes per saved chunk. Falsified if A+B minus B for large heap is at or below A's marginal saving of about -16 KB, or if the peak-phase tag is outside emission or linking. Either result would mean A's savings come from non-emission allocations and combine additively."
+}
