@@ -112,6 +112,30 @@ const poisoned = rows.find(r => r.name === 'defended-rook').search;
 assert.equal(poisoned[0].move, 'd1d5', 'material-only engine takes the defended pawn');
 assert.notEqual(poisoned[1].move, 'd1d5', 'quiescence sees the rook recapture');
 
+// Change only whether quiet leaves extend captures. Keep activity, ordering and checked evasions.
+const standPatExit = 'if (!state.advanced || capped || stand + 32768 >= board.charCodeAt(frame + 3))';
+assert.equal(source.split(standPatExit).length, 2);
+const noQuietExtension = source.replace(standPatExit,
+    'if (!state.advanced || capped || !check || stand + 32768 >= board.charCodeAt(frame + 3))');
+const control = new WebAssembly.Instance(new WebAssembly.Module(typedWasm.compile(noQuietExtension).bytes)).exports;
+const controlMemory = new DataView(control.memory.buffer);
+controlMemory.setUint32(0, limit, true);
+const defended = positions.find(fixture => fixture.name === 'defended-rook');
+board(defended.fen).forEach((value, i) => controlMemory.setUint16(4 + i * 2, value, true));
+const controlField = name => controlMemory.getInt32(stateAt + offsets[name].offset, true);
+control.chessStartSearch(0, stateAt, 1, 1800, 1);
+let controlSteps = 0;
+while (controlField('running')) {
+    control.chessSearchSlice(0, stateAt, 19);
+    assert(++controlSteps < 10000, 'quiet-leaf control stalled');
+}
+const quietLeafAblation = {
+    target: 'wasm', position: defended.name,
+    withQuietExtension: {move: poisoned[1].move, nodes: poisoned[1].nodes, score: poisoned[1].score},
+    withoutQuietExtension: {move: uci(controlField('bestMove')), nodes: controlField('nodes'), score: controlField('score')},
+};
+assert.deepEqual(quietLeafAblation.withoutQuietExtension, {move:'d1d5',nodes:25,score:456});
+
 const native = typedRv32.compile(source);
 const buffered = typedRv32.compile(source, [], undefined, {streamFunctions:false});
 assert.deepEqual(native.image, buffered.image);
@@ -146,5 +170,5 @@ try {
 } finally {
     rmSync(temp, {recursive:true, force:true});
 }
-console.log(JSON.stringify({reference,targets:['wasm','rv32'],rows,wordsMatched:expected.length,
+console.log(JSON.stringify({reference,targets:['wasm','rv32'],rows,wordsMatched:expected.length,quietLeafAblation,
     engineSourceSha256:createHash('sha256').update(source).digest('hex')}, null, 2));

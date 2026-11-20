@@ -224,3 +224,5 @@ Open scripts/13-measure-host.sh and trace the two separate clocks to scripts/13-
 ### Technical details
 
 The compiler clock includes source parse, code emission and linked-module construction. Setup covers loading the compiler source into an already created QuickJS runtime. The linked Wasm event clock starts after marshalling the event buffer and stops when the reactor returns.
+
+The follow-up source overlay in the engine oracle changes only the quiet-leaf capture extension. The activity-aware control takes the defended pawn d1d5 at +456 with 25 visits. Restoring the extension chooses f2f4 at +342 with 26 visits. Ordering and checked evasions are held constant. A separate exploratory Wasm comparison used Python chess 1.11.2 with seed 20261120, 24 random legal playouts capped at 90 plies, and samples at ply indexes congruent to 4 modulo 5. Move lists were sorted by UCI before selection. The 432 sampled positions matched every legal UCI and all 415,182 depth-two leaves. The committed executable oracle remains the 13-position dual-target qualification.

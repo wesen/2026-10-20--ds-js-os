@@ -30,8 +30,8 @@ def chess_record(log):
     if (row["depth"], row["nodes"], row["score"], row["settlements"]) != (3, 1600, 12, 78):
         raise ValueError(f"Chess differs from the shared-reactor host oracle: {row}")
     if not (0 < row["white_frame_us"] < row["reply_wall_us"]
-            and 0 < row["engine_us"] <= row["world_cpu_us"] <= row["reply_wall_us"]
-            and 0 < row["kernel_render_us"] <= row["world_cpu_us"]
+            and row["engine_us"] > 0 and row["kernel_render_us"] > 0
+            and row["engine_us"] + row["kernel_render_us"] <= row["world_cpu_us"] <= row["reply_wall_us"]
             and row["settlements"] < row["segments"]):
         raise ValueError(f"inconsistent Chess timing/counter boundaries: {row}")
     row["after_white_frame_us"] = row["reply_wall_us"] - row["white_frame_us"]

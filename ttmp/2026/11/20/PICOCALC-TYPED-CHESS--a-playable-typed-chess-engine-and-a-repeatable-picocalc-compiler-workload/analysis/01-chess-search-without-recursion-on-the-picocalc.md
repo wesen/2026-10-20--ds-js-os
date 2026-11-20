@@ -28,16 +28,7 @@ A candidate move has to pass two tests. The first enumerates moves that fit piec
 
 Castling adds an attack test for the starting and crossing squares before the ordinary final-square test. En passant removes the captured pawn from its actual square before the attack test. That distinction matters when the capture opens a rook's file. All four promotion pieces are distinct legal moves, and the human selects one after reaching the final rank. [Official chess rules](https://handbook.fide.com/chapter/e012023) · [Move generator](../../../../../../picocalc-os/worlds/chess/moves.typed) · [Make and unmake](../../../../../../picocalc-os/worlds/chess/position.typed)
 
-~~~mermaid
-flowchart LR
-  Keys["Keyboard and compositor"] --> Event["typedWorldEvent"]
-  Event --> Board["Visible board and legal moves"]
-  Board --> Frame["Board JSON and status"]
-  Board -->|"Copy after White moves"| Work["Search board"]
-  Event -->|"Timer settlement"| Stack["Explicit search frames"]
-  Stack <-->|"Make and unmake"| Work
-  Stack -->|"Completed choice"| Board
-~~~
+![The key and timer paths feed separate game and search boards](../various/chess-turn-flow.png)
 
 The board at a suspended search node can contain an applied speculative move. The renderer always sees the separate game board, so the cursor can move while the engine is thinking. The app uses the generic module load, key message and retained screen interfaces. Its C entry point on ESP32-P4 loads the bundled typed source and reactor and invokes the existing typed compiler. Moves, scoring and the UI stay in typed code. [World event handler](../../../../../../picocalc-os/worlds/chess/chess.typed) · [P4 compiler caller](../../../../../../picocalc-os/port/esp32p4/main/chess_p4.c)
 
@@ -65,7 +56,7 @@ The evaluator prices pawns, knights, bishops, rooks and queens at 100, 320, 335,
 | Defended rook | d1d5, +450, 25 nodes | f2f4, +342, 26 nodes | f2f4, +324, depth 2, 1,600 nodes |
 | Quiet mate in two | d6e6, +950, 32 nodes | d6d5, +1010, 38 nodes | d6c7, +29997, depth 3, 1,344 nodes |
 
-The depth-one comparison changes evaluation, ordering and quiescence together. It demonstrates that the complete leaf policy avoids the poisoned pawn. The quiet mate example tests whether the engine improves when a winning move lies past the capture horizon. Independent enumeration found only **Kd6–c7**, followed by a mate on White's next turn after Black's sole reply. The small hand-picked suite supports these concrete tactical claims. [Search receipts](../various/engine-oracle.json) · [Independent fixture generator](../scripts/02-reference-positions.py)
+The depth-one material comparison changes evaluation, ordering and quiescence together. In a separate Wasm control, disabling only the capture extension at quiet leaves makes the activity-aware engine choose d1d5 at +456 in 25 nodes. Restoring that extension changes its move to f2f4 at +342 in 26 nodes. Evaluation, ordering and checked evasions are identical in those two runs. The quiet mate example tests whether the engine improves when a winning move lies past the capture horizon. Independent enumeration found only **Kd6–c7**, followed by a mate on White's next turn after Black's sole reply. The small hand-picked suite supports these concrete tactical claims. [Search receipts](../various/engine-oracle.json) · [Independent fixture generator](../scripts/02-reference-positions.py)
 
 The app adjudicates checkmate, stalemate, bare kings, a single bishop or knight against a bare king, and bishop-only positions with all bishops on the same square color. It tracks ordinary move clocks in the position record. Repetition claims, the 50/75-move rules, competitive clocks and saving games across app reloads are outside this version.
 

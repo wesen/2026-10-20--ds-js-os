@@ -1,0 +1,20 @@
+digraph chess {
+  graph [rankdir=TB, bgcolor="#f6f8fa", pad=0.3, ranksep=0.6, nodesep=0.6, dpi=150]
+  node [shape=box, style="rounded,filled", fillcolor="#e4f1ec", color="#176659",
+        fontname="DejaVu Sans", fontsize=12, fontcolor="#192c38", margin="0.20,0.12"]
+  edge [color="#425668", fontname="DejaVu Sans", fontsize=9, fontcolor="#314758", arrowsize=0.7]
+  key [label="Keyboard and compositor"]
+  event [label="typedWorldEvent"]
+  board [label="Visible board and legal moves"]
+  frame [label="Retained board frame"]
+  stack [label="Explicit search frames", fillcolor="#f4e9dc", color="#995224"]
+  work [label="Search board", fillcolor="#f4e9dc", color="#995224"]
+  key -> event [label="Key message"]
+  event -> board -> frame
+  event -> stack [label="Timer settlement"]
+  stack -> work [label="Make and unmake", dir=both]
+  board -> work [label="Copy after White moves"]
+  stack -> board [label="Completed choice", constraint=false]
+  { rank=same; board; stack }
+  { rank=same; frame; work }
+}

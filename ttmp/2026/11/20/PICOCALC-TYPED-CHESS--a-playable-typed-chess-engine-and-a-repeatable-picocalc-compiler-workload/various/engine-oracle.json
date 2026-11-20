@@ -631,5 +631,19 @@
     }
   ],
   "wordsMatched": 6981,
+  "quietLeafAblation": {
+    "target": "wasm",
+    "position": "defended-rook",
+    "withQuietExtension": {
+      "move": "f2f4",
+      "nodes": 26,
+      "score": 342
+    },
+    "withoutQuietExtension": {
+      "move": "d1d5",
+      "nodes": 25,
+      "score": 456
+    }
+  },
   "engineSourceSha256": "f665b0291173cb9bcdd85f24f9dfdf7bdf6940aa80bcd09b09c3459e9932e7b5"
 }
