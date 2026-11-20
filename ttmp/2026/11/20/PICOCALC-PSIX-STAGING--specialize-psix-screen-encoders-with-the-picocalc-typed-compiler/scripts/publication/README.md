@@ -1,3 +1,19 @@
+---
+Title: Publish the PicoCalc PSIX studies
+Ticket: PICOCALC-PSIX-STAGING
+Status: complete
+Topics: [picocalc]
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: Reproduction instructions for the publication workflow.
+LastUpdated: 2026-11-20
+WhatFor: Repeat the archived study procedures.
+WhenToUse: When independently replaying the study.
+---
+
 # Publish the PSIX specialization reading packets
 
 Run from the project root after the relevant source documents are final. Use the article headings as the vault note titles. The vault date and the reMarkable destination correspond to this ticket's research date.

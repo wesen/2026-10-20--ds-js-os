@@ -33,3 +33,7 @@ See [tasks](tasks.md) for executable study milestones and [the director diary](r
 ## Results from the first five research groups
 
 The [director’s research report](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/analysis/02-where-a-picocalc-should-build-its-screen.md) compares measured outcomes across both design documents and the separate binary study. The [binary format and application handoff](../PICOCALC-RENDER-LAB--measure-bounded-screen-readers-and-semantic-views-across-picocalc-applications/reference/03-how-application-researchers-can-evaluate-the-binary-screen-api.md) identifies which results transfer to System, Snake and Chess and how to measure the proposed integration.
+
+## Deriving the binary producer from application types
+
+The [PSIX specialization experiment](../PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/analysis/01-compiling-the-screen-writer-on-a-handheld.md) ran the existing compiler on the ESP32-P4 and compared generated Chess writers, compact layout tables and guarded packet copying. Its [research index](../PICOCALC-PSIX-STAGING--specialize-psix-screen-encoders-with-the-picocalc-typed-compiler/index.md) links the independent studies, physical controls and intern guide.

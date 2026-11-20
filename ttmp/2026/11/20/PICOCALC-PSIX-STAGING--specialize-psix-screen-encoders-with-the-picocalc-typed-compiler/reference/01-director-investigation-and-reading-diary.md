@@ -170,3 +170,51 @@ Review scripts/board/descriptor.h, patch.h, staging_trial.c and run.py alongside
 ### Technical details
 
 `python3 scripts/board/prepare.py /tmp/pico-psix-staging/board` generated the fixtures and signed-off host ELF reference in the isolated source tree. I invoked the shared ESP-IDF 5.4.2 builder, then `python3 scripts/board/run.py /tmp/pico-psix-staging/board/build /tmp/pico-psix-staging/physical-02 --followup`. The archived various/physical-followup.json has 120 trial rows, before/during/after world health and verified restoration. scripts/04-results.py checks both receipts and each expected cache tally, aggregates paired and unpaired statistics and produces the chart.
+
+## Step 4: Audit the independent findings, publish the result and close the ticket
+
+The independent reviewer and I checked which claims were proved by the original data and which were illustrated by the source-blind design. The director report combines five native producers, the separate observed-shape study and the automatic derivation from four existing record declarations. The project retains both the positive cache result and its reproducible failure case.
+
+### Prompt Context
+
+See Step 1 for the original request. The previous lab structure includes separate researcher reports, reproducible scripts, an intern guide, publication to go-go-parc and the reMarkable reading set.
+
+### What I did
+
+I commissioned an independent audit of the returned Opus article against the measured evidence. The reviewer preserved the author's prose, checked the original hash, supplied an attributed scope note and documented primary-source verification. I wrote the director report, the reproduction guide and the roadmap cross-reference. The publication researcher built two reading packets from frozen sources, checked the five vault notes and their chart, pushed the scoped vault commit and verified its remote revision. I ran the flat-record derivation again and compared all its output to the checked-in receipt.
+
+### Why
+
+Reading an independently designed experiment alongside the implementation teaches which facts survive measurement. An admitted packet can still encode the wrong value. Case counts can overlap. Differences between encoder time, setup and the entire visible UI turn change the interpretation of the results. Each needed a clear statement in the archive.
+
+### What worked
+
+Both reMarkable uploads reported success under /ai/2026/11/20/PICOCALC-PSIX-STAGING. go-go-parc origin/main was verified at 41837f84ac32d6482e5ac189ff2d300c5256414e with the five articles and the chart. The director report includes the ten-block summary, compiler setup, table placement, cache churn and the flat type derivation. All three ticket tasks were checked and docmgr recorded the close operation.
+
+### What didn't work
+
+docmgr initially attempted to parse the auxiliary scripts/runtime and scripts/publication README files as ticket documents and reported missing metadata. I supplied frontmatter to both. Its remaining two naming warnings concern their conventional README.md names. I kept those names because the archive and published research already refer to them. The upload receipt establishes cloud delivery; the device's reMarkable synchronization state was outside this experiment.
+
+### What I learned
+
+The measurement supports a specific implementation sequence. Emit the descriptor first. Make the generated native backend compete against the loaded-table and mixed-cache controls. In parallel work, discovering layouts in arbitrary JavaScript trees incurred measurable costs even if the eventual plan passed every correctness check.
+
+### What was tricky to build
+
+The published notes must remain readable outside the project checkout. The vault publisher resolves companion reports and existing prior articles, converts source references to repository paths and copies the figure with its source digest. Volume preparation must resolve the image from the original Markdown directory. No private source manuscript, personal raw transcripts or firmware dumps were needed in the published material.
+
+### What warrants a second pair of eyes
+
+The binary producer and the physical compiler are functional research specimens. The production renderer's transport, compositor and panel were outside these clocks. In particular the quick native Chess experiment used a declared semantic envelope, while the larger System study reused guarded plans over already-built JS objects.
+
+### What should be done in the future
+
+Use the [implementation guide](../design-doc/01-a-staged-compiler-for-psix-screen-encoders.md) and the [qualifying milestones](../analysis/01-compiling-the-screen-writer-on-a-handheld.md) when commissioning a production integration trial. The paper identifies both the automatic flat-record subset and the application-specific projection needed by Chess.
+
+### Code review instructions
+
+Start with the director article and run the ticket README's two host commands. Compare the new chart with various/physical-summary.json, the raw trials and the cache control. Read the attributed scope note in analysis/07 before treating the blind design as a description of the current wire format.
+
+### Technical details
+
+Major checkpoints include d8f9810 (first physical run), 32a2c83 (cache and legal churn), d29e30f (five native arms on the machine), e66a640 (independent audit), and 770e488 (publication tools and receipts). The exact PDF names, source digests, vault paths and commit are in [the publication receipt](../various/publication.txt).

@@ -1,3 +1,19 @@
+---
+Title: Reproduce the PSIX runtime shape study
+Ticket: PICOCALC-PSIX-STAGING
+Status: complete
+Topics: [picocalc]
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: Reproduction instructions for the runtime workflow.
+LastUpdated: 2026-11-20
+WhatFor: Repeat the archived study procedures.
+WhenToUse: When independently replaying the study.
+---
+
 # Reproduce the PSIX runtime shape study
 
 From the repository root, use Node.js, Python 3, bash, a C compiler and the vendored QuickJS sources. The archive stores input digests, frozen split positions, all per-block timing samples, observed plan counts, and per-frame byte equality counts.
