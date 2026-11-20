@@ -1,0 +1,17 @@
+{
+  "design": {
+    "effort": "xhigh",
+    "modelsInResponse": [
+      "claude-opus-5-5"
+    ],
+    "publicTextSha256": "c7d704f3d105bd9ee8fd6973e7790b0414ada7cc762f674511628f6fcf221970"
+  },
+  "survey": {
+    "effort": "xhigh",
+    "modelsInResponse": [
+      "claude-haiku-5-5",
+      "claude-opus-5-5"
+    ],
+    "publicTextSha256": "c947b7cf7dfbae7633ea7a4623d6dc4177a84492749dcc62283a441c02d1fc7c"
+  }
+}

@@ -106,3 +106,9 @@ Astra's other proposed controls are in the independent review: authenticate repl
 ### Initial staffing decision
 
 Approve M0–M3 as the first shared milestone, with R0 and T0 design work in parallel. Release R1/R2 and T1 once the control replays. A successful validity/ownership proof can justify a bounded reader even when its time result is neutral. For layout and damage, the gate is empirical: compute the *optimistic ceiling* by removing the entire targeted stage from the paired control. If even this ideal exceeds neither the observed noise floor nor the minimum worthwhile latency change, defer the implementation. Lock that minimum with the director before looking at candidate measurements. Expand only when an unanswered question could change an adoption decision.
+
+### How to interpret the byte ledger
+
+Use two ledgers. The renderer-owned ledger includes the accepted view, the candidate view and scratch. The system ledger groups backing allocations by their actual owner and adds independent storage for pending wrappers, queues and pixel buffers. If two views point to one immutable snapshot, its backing appears once in the system sum. If publication copies the envelope for two subscribers, both copies appear. The proposed proof counts capacity at each simultaneous lifetime state; the measurement uses correlated timestamps to capture what actually happened.
+
+For a sanity check, at the current maximum of 32 worlds, reserving 16 KiB of backing per world would alone reserve 512 KiB. The two RGB565 buffers for 320 × 320 pixels account for another 409,600 bytes. They have a different owner. Neither number is a proposed cap or an observed compositor heap peak. Break the design if its “hard bound” excludes the previous generation while a draw holds it, or if arbitrary producer-side work silently gets counted as bounded by a receiver limit.
