@@ -1,7 +1,7 @@
 ---
 Title: Predict analysis benefit under a fixed compiler work budget
 Ticket: PICOCALC-ANALYSIS-SELECTION
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-19T22:36:14.132881166-05:00
+LastUpdated: 2026-11-19T23:11:08.111967842-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -23,6 +23,7 @@ Study 7 compares source-order, literal-only and estimated-benefit admission for 
 
 - [Preregistered design](design-doc/01-a-preregistered-comparison-of-bounded-function-selectors.md)
 - [Physical transfer protocol](design-doc/02-transfer-frozen-selection-to-the-esp32-p4.md)
+- [Physical transfer results and figure](analysis/02-the-cost-of-ranking-compiler-work-on-the-physical-picocalc.md)
 - [Newcomer article and figure](analysis/01-which-functions-deserve-limited-compiler-analysis.md)
 - [Reproduction guide](README.md)
 - [Investigation diary](reference/01-analysis-selection-investigation-diary.md)

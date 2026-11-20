@@ -19,3 +19,7 @@ Publish the selector article and figure to the go-go-parc vault at 450e926 and v
 ## 2026-11-19
 
 Preregister the separate physical follow-up and build the three-arm ESP32-P4 fixture with full Editor and raw synthetic output preflight.
+
+## 2026-11-19
+
+Verify 144 physical selector compiles and restoration and publish the separate matched phase comparison.

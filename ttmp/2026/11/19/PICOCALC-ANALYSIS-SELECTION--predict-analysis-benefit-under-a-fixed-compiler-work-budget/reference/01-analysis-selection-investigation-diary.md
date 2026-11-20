@@ -299,3 +299,56 @@ Run `08-stage-p4.py WORK`, build with the former frontend study’s `05-build.sh
 The physical-transfer image SHA-256 is `dac35e2bca871ea6e7d3a389659bd9ab79443e56e6341cd640f8aab71aca4ac7`. The density ranked arm uses the exact 32,768 proof-visit budget. Planning is timed independently and does not debit that physical budget.
 
 I also replayed the emitted phase and work callbacks in vendored QuickJS. Editor used 16 comparison calls under the literal rule and 14 under the density rule. Node reported 15 and 14. The synthetic QuickJS counts were 152 and 253, versus Node’s 40 and 229. Feature cells, retained summaries, proof visits and all output digests matched. Sorting API semantics fix the selected set and permit different comparator traffic. The device summarizer checks phase order and the portable work counters and records the physical comparator count separately. [QuickJS phase replay](../various/p4-transfer-quickjs-traces.json).
+
+## Step 7. Verify the phase and cost comparison on the device
+
+Two balanced boots completed all 144 compiles. Editor emitted one full ELF under all three policies. The binding synthetic emitted each policy’s registered raw byte image. The serial owner restored the original factory partition and verified all three applications returned to healthy native status.
+
+### Prompt context
+
+See Step 6. The physical follow-up is a transfer study on existing inputs. The held-out article remains at its published commit.
+
+### What I did
+
+- Increased the capture duration from 145 to 185 seconds before board use after measuring the synthetic/Editor time ratio in vendored QuickJS. Timed compilation alone totaled 160.237 and 160.358 seconds per boot.
+- Parsed every boot twice with the generic receipt and the phase checker. Verified each phase sum and allocator high-water against its outer observed row.
+- Archived both measured log extracts, restored state and complete summary. [Board receipt](../various/p4-transfer/physical.json.gz) · [Phase results](../various/p4-transfer/summary.json.gz).
+- Authored the separate [physical transfer report](../analysis/02-the-cost-of-ranking-compiler-work-on-the-physical-picocalc.md) and its figure.
+
+### Why
+
+The P4 test times the actual setup and planner inside the existing app wrapper, controlling the output on Editor. The exact synthetic order tests a budget that saturates and allows output size to respond to selection.
+
+### What worked
+
+Editor’s paired median ranked costs were +1,311.098 ms for literal only and +1,293.660 ms for words per cell over source order. The feature passes took 1,348.699 and 1,342.500 ms. Setup added 10.235 and 10.455 ms, and ordering took 2.725 and 2.683 ms. Peak increased by 31,674 and 31,658 bytes. Loading the planner raised the setup peak by 20,180 bytes; either feature parse grew live memory by 89,648 bytes over its own phase entry.
+
+The ranked density synthetic emitted 2,358 fewer words than source order and cost a paired +1,927.889 ms. Its peak was 54,438 bytes lower. All 12 blocks in either input showed longer ranked times. Every phase, output and work count matched its oracle. The QuickJS comparison counts repeated exactly across both boots.
+
+### What did not work
+
+The preliminary inspection of one UART log assumed an app field was initialized before a trial marker and raised `NameError: name 'app' is not defined`. The log legitimately contains ordinary app phase metrics before the first trial. Initializing that temporary inspection variable resolved it. The production parser only records phase measurements after a `LABRUN` and includes all 144 rows.
+
+### What I learned
+
+The additional parse dominates total overhead. The few milliseconds of function ordering and about ten extra setup milliseconds are much smaller. Peak and backing allocator operation counts can move in different directions. QuickJS serves many objects from the same arena, and arena and large-block traffic are what this counter measures.
+
+### What was tricky to build
+
+The backends share app source and limits but the synthetic returns raw bytes. Its digest and count have a different oracle from the app ELF. Keeping the raw phase records tied to the actual trial marker preserves that distinction when replaying logs.
+
+### What warrants a second pair of eyes
+
+Check the host-to-device scope and time accounting. The transfer runs equal proof budgets and measures planning separately. The original held-out report also explores debiting planner visits. The transfer provides two measured inputs rather than adding an independent holdout cohort.
+
+### What should be done in the future
+
+Collecting required features during the ordinary parse would address the largest measured cost. This experiment isolates the penalty of the current whole-module prepass.
+
+### Code review instructions
+
+Use the physical transfer commands in `README.md`. Inspect `various/p4-transfer/summary.json.gz` and the two matching boot excerpts. The provisional and final comparisons both use medians of differences within blocks, and the figure’s stacks use mean phases.
+
+### Technical details
+
+Image `dac35e2bca871ea6e7d3a389659bd9ab79443e56e6341cd640f8aab71aca4ac7`. The byte-checked factory backup is `6b0e3ba4a2d4546b5eeae3a608c82b3b0df06034afc5afedcc1e3e264d0b883f`. Both ranked Editor variants produced the registered ELF `06a85ff63c94a9d193a9136f92a2250e6725c5f9df830e9c00aa643d96503944`.

@@ -1,13 +1,20 @@
 ---
 Title: Transfer the frozen function selector to the ESP32-P4
 Ticket: PICOCALC-ANALYSIS-SELECTION
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
     - performance
 DocType: design-doc
+Intent: ""
+Owners: []
+RelatedFiles: []
+ExternalSources: []
 Summary: Preregister the physical time and allocation comparison for the frozen selector.
+LastUpdated: 2026-11-19T23:11:08.175336186-05:00
+WhatFor: ""
+WhenToUse: ""
 ---
 
 # Transfer the frozen function selector to the ESP32-P4

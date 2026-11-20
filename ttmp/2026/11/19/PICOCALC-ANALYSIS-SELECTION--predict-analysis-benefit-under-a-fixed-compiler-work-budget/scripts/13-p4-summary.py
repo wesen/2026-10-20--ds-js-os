@@ -1,6 +1,7 @@
 """Validate phase accounting and calculate matched physical selector costs."""
 import argparse
 from collections import Counter
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -106,6 +107,7 @@ def summarize(boots, apps, lanes):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("work", type=Path)
+    parser.add_argument("--excerpts", type=Path)
     args = parser.parse_args()
     work = args.work.resolve()
     verified = json.loads((work / "transfer-preflight.json").read_text())
@@ -113,12 +115,23 @@ def main():
     assert measured["restored"] and len(measured["boots"]) == 2
     assert measured["firmware"] == verified["firmware"]
     assert measured["compilers"] == verified["compilers"]
+    if args.excerpts:
+        args.excerpts.mkdir(parents=True, exist_ok=True)
     boots = []
     for index, boot in enumerate(measured["boots"], 1):
         complete = work / f"boot-{index}-complete.log"
         log = complete if complete.exists() else work / f"boot-{index}.log"
         raw = log.read_bytes()
-        rows = parse_phases(raw.decode(errors="replace"), boot["rows"], verified)
+        text = raw.decode(errors="replace")
+        rows = parse_phases(text, boot["rows"], verified)
+        if args.excerpts:
+            app_prefix = tuple(app + " " + label for app in LIMITS
+                               for label in ("native compiler functions=", "compile source="))
+            excerpts = "\n".join(line for line in text.splitlines()
+                                 if line.startswith(("LAB", "SEL", *app_prefix))) + "\n"
+            assert parse_phases(excerpts, boot["rows"], verified) == rows
+            (args.excerpts / f"boot-{index}.log.gz").write_bytes(
+                gzip.compress(excerpts.encode(), mtime=0))
         boots.append({**boot, "rows": rows, "serialSha256": hashlib.sha256(raw).hexdigest()})
     apps = tuple(measured["oracle"]["base"])
     names = tuple(measured["compilers"])

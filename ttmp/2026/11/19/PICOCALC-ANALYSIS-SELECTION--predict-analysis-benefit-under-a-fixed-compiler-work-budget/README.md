@@ -45,5 +45,12 @@ Assign `idf` to the installed ESP-IDF export script. Build `quickjs_runner` with
 
 ```sh
 python3 -B "$ticket/scripts/12-p4-board.py" "$transfer" "$backup" --port "$port" --esptool "$esptool" --boots 2
-python3 -B "$ticket/scripts/13-p4-summary.py" "$transfer" > "$transfer/transfer-summary.json"
+python3 -B "$ticket/scripts/13-p4-summary.py" "$transfer" --excerpts "$transfer/evidence" > "$transfer/transfer-summary.json"
+```
+
+The [physical report](analysis/02-the-cost-of-ranking-compiler-work-on-the-physical-picocalc.md) links the verified transfer preflight and the complete compressed measurements. Use the last script on the recorded work directory to rerun the timer, allocator, output and proof checks. The excerpts retain only structured trial measurements and can be re-parsed.
+
+```sh
+gzip -n -c "$transfer/transfer-summary.json" > "$transfer/transfer-summary.json.gz"
+python3 -B "$ticket/scripts/15-p4-figure.py" "$transfer/transfer-summary.json.gz" "$transfer/figure.png"
 ```
