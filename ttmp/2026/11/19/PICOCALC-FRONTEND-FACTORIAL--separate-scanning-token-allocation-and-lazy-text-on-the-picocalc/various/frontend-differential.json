@@ -1,0 +1,47 @@
+{
+  "base": {
+    "frontend": "cc7e638c562655725115e5bd15680c277c90390cb831f6de0dad765dbdda68f2",
+    "nodeSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2",
+    "quickjsSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2"
+  },
+  "lexicalCases": 69643,
+  "compilerCases": 318,
+  "diagnosticCounts": {
+    "wasm": 136,
+    "rv32Buffered": 136,
+    "rv32Streamed": 136
+  },
+  "regex_reuse": {
+    "frontend": "e341d656b9ab21542f8050b28a61821a592d8c0dffee98ed1f0df715c8cde337",
+    "nodeSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2",
+    "quickjsSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2"
+  },
+  "cursor_fresh": {
+    "frontend": "3f58e7baedaa29c722a3813ad2ef9bfa070b91d166e3d554b5b1a3cd297ccb7c",
+    "nodeSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2",
+    "quickjsSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2"
+  },
+  "cursor_reuse": {
+    "frontend": "b9c3c3ee18645f0ee0f9b6461eb0406a94c4bde549a3b61e0c7fb12c11fda396",
+    "nodeSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2",
+    "quickjsSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2"
+  },
+  "lazyDemanded": [
+    "f",
+    "x",
+    "i32",
+    "i32",
+    "gap",
+    "i32",
+    "3",
+    "x",
+    "gap"
+  ],
+  "cursor_lazy": {
+    "frontend": "174b9a27e3c646b8fcd62d1bc5a51b782a9aced3b0f60da5b43867df17215825",
+    "nodeSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2",
+    "quickjsSha": "60336a40b98c518a3c02177c99e7037d4f95835fc9b281a45bbc8378d14445d2"
+  },
+  "backend": "64d5c1550442c161887d29982605cddac7e13237eb3259a5ccd1f3ca03834f38",
+  "quickjs": "1e5a516180d74f68f3f9e648e496c6693255809a4cf4f374baf029fe8c8ab636"
+}

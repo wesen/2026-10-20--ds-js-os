@@ -1,0 +1,73 @@
+{
+  "files": {
+    "cursor_reuse": {
+      "cursorTokens": 700,
+      "fallbackMatches": 0,
+      "slices": 700,
+      "unitsInSlices": 1791,
+      "byKind": {
+        "id": 263,
+        "op": 360,
+        "int": 77
+      }
+    },
+    "cursor_lazy": {
+      "cursorTokens": 700,
+      "fallbackMatches": 0,
+      "slices": 255,
+      "unitsInSlices": 870,
+      "byKind": {
+        "id": 178,
+        "int": 77
+      }
+    }
+  },
+  "agenda": {
+    "cursor_reuse": {
+      "cursorTokens": 4158,
+      "fallbackMatches": 0,
+      "slices": 4158,
+      "unitsInSlices": 11174,
+      "byKind": {
+        "id": 1597,
+        "op": 2176,
+        "int": 385
+      }
+    },
+    "cursor_lazy": {
+      "cursorTokens": 4158,
+      "fallbackMatches": 0,
+      "slices": 1584,
+      "unitsInSlices": 6663,
+      "byKind": {
+        "id": 1199,
+        "int": 385
+      }
+    }
+  },
+  "editor": {
+    "cursor_reuse": {
+      "cursorTokens": 16792,
+      "fallbackMatches": 0,
+      "slices": 16792,
+      "unitsInSlices": 52854,
+      "byKind": {
+        "id": 6738,
+        "op": 8840,
+        "int": 1109,
+        "str": 105
+      }
+    },
+    "cursor_lazy": {
+      "cursorTokens": 16792,
+      "fallbackMatches": 0,
+      "slices": 6496,
+      "unitsInSlices": 34838,
+      "byKind": {
+        "id": 5282,
+        "int": 1109,
+        "str": 105
+      }
+    }
+  }
+}
