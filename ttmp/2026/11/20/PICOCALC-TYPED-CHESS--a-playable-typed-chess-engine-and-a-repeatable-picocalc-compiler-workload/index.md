@@ -1,7 +1,7 @@
 ---
 Title: A playable typed chess engine and a repeatable PicoCalc compiler workload
 Ticket: PICOCALC-TYPED-CHESS
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
@@ -19,7 +19,7 @@ RelatedFiles:
       Note: Frozen perft, legality, score and node comparisons
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T00:32:26.122129692-05:00
+LastUpdated: 2026-11-20T02:21:03.442603053-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -40,6 +40,7 @@ Typed Chess is a launcher app and a fourth PicoCalc compiler workload. The engin
 - [Host performance](./various/host-measurements.json) · [Reproduction guide](./reference/03-reproduce-chess.md)
 - [Physical RV32 run and restoration](./various/physical-rv32.json) · [Serial timing records](./various/physical-rv32-clock.txt)
 - [Implementation diary](./reference/01-typed-chess-investigation-diary.md) · [Supervisor diary](./reference/02-supervisor-experiment-diary.md)
+- [Published vault article](https://github.com/go-go-golems/go-go-parc/blob/bff7217ed2cb2f4e099ba85e4d67430dd829a267/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Chess%20-%20Search%20Without%20Recursion.md) · [Publication receipt](./various/publication.txt)
 
 ## Status
 

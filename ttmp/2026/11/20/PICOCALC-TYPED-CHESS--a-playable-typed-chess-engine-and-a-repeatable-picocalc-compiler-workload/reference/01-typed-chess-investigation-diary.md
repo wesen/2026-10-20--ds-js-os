@@ -379,3 +379,55 @@ Read the capture and restoration path in scripts/11-run-board-chess.py, then the
 ### Technical details
 
 Restoration verified 8,388,608 bytes of the original app partition. The confirmed screenshot SHA-256 is **cf28ae004e436c997b8311a758fa5f63fb0558373fd534315716a35e96da445b**. The final raw records and all digests are preserved in the ticket.
+
+## Step 8: Publish the experiment and preserve the independent review
+
+The independent post-experiment response returned from Claude Opus 4.6 High after 558,108 ms. Commit **666a437** archives the genuine CLI response, article and dated diary. The top of the independent article explains where its interpretation extends beyond the records.
+
+### Prompt Context
+
+See Steps 1 and 7. The supervisor commissioned a follow-up interpretation by the Opus High model that produced the design and asked for its own signed article, dated diary, raw receipt, and publication alongside the implementation report.
+
+### What I did
+
+- Ran **python3 -B scripts/15-independent-interpretation.py /tmp/picocalc-chess-opus-review various/opus-interpretation.json** with the complete earlier design and verified aggregate host and physical evidence.
+- Verified the returned model ID and success flag, reproduced both Markdown bodies verbatim, and attached separate editorial evidence notes.
+- Published the main article, independent article and dated diary with four figures in go-go-parc and delivered the combined reMarkable bundle.
+
+### Why
+
+An independent interpretation can reveal gaps in validation and determine which predictions need more data. Preserving the raw response and marking the implementation team's corrections makes source attribution and the metric boundaries checkable.
+
+### What worked
+
+The vault push succeeded as **bff7217ed2cb2f4e099ba85e4d67430dd829a267**. The reMarkable CLI reported a successful upload to **/ai/2026/11/20/PICOCALC-TYPED-CHESS/PicoCalc Typed Chess - Engine and Physical Results.pdf**. [Delivery receipt](../various/publication.txt)
+
+### What didn't work
+
+The initial vault copy preflight returned exit 1 because the supervisor's prior publication already contained chess-physical-reply.png. A byte comparison matched the two images exactly. The final copy reused the published image and staged only six new files.
+
+Some raw Opus conclusions also needed correction. The defended target was a pawn, the quiet move Ke6 did not capture, and the full suite included a thirteenth position outside the supplied excerpt. The evidence cannot yield per-iteration branching factors or isolate search throughput from frame work. The independent article's evidence note marks these distinctions rather than altering the authored text.
+
+### What I learned
+
+The most direct evidence for comparable runtime behavior is the exact linked-world replay and the physical event counters for the same position. Raw inference needs to preserve the difference between those results and the separate initial-position engine fixture.
+
+### What was tricky to build
+
+The independent article and diary use their own authored Markdown preserved under the ticket. The published copies link to each other and embed the figures while the study links to the frozen source and receipts.
+
+### What warrants a second pair of eyes
+
+Review the source-linked physical table when using the independent article's latency or throughput discussion. The published native rate includes the engine's event and frame work.
+
+### What should be done in the future
+
+The reMarkable upload receipt verifies cloud delivery. The native board result and published paths are permanently recorded alongside the tests.
+
+### Code review instructions
+
+Inspect the structured receipt and compare the Markdown after each editorial note with its corresponding response field. Review the vault commit for only the published notes and their images.
+
+### Technical details
+
+The recorded review model is **claude-opus-4-6** at **high**. The frozen prompt SHA-256 is **fd0135ad9899ae7d7612639e1422f6f5cc203e5cabd802a6b4a8dd87491c822b**. [Raw author receipt](../various/opus-interpretation.json)

@@ -1,0 +1,7 @@
+2026-11-20
+go-go-parc main bff7217ed2cb2f4e099ba85e4d67430dd829a267
+Verified git push HEAD:refs/heads/main from 40faaf5 to bff7217.
+The prior vault commit's physical screenshot matched SHA-256 cf28ae004e436c997b8311a758fa5f63fb0558373fd534315716a35e96da445b.
+Independent research receipt and authored Markdown committed in 666a437.
+Physical RV32 gameplay, serial timings, and restored app receipt committed in ea1e0a6.
+OK: uploaded PicoCalc Typed Chess - Engine and Physical Results.pdf -> /ai/2026/11/20/PICOCALC-TYPED-CHESS

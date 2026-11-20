@@ -11,3 +11,7 @@ Designed and implemented typed Chess, proved rule and linked event parity across
 ## 2026-11-20
 
 Validated the opening exchange on native RV32 hardware, captured exact retained-frame timings and verified the restored factory app partition.
+
+## 2026-11-20
+
+Published the implementation report, independent Opus High interpretation and dated diary in go-go-parc, and delivered the complete study to reMarkable.
