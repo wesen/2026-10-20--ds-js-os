@@ -8,9 +8,15 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-wasm.js
+      Note: Shared typed frontend and function emitter
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: Native RV32 lowering and reactor linkage
+    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+      Note: Device timing and allocation accounting
 ExternalSources: []
-Summary: ""
+Summary: Compare eight typed compiler designs and qualify a combined hardware build on the physical ESP32-P4.
 LastUpdated: 2026-11-19T21:53:48.044137313-05:00
 WhatFor: ""
 WhenToUse: ""

@@ -4,7 +4,7 @@
 - [x] 1. Factor scanner and token representation on P4
 - [x] 2. Compile condition destinations on Wasm and RV32
 - [ ] 3. Compare projection and native consumption of streamed operations
-- [ ] 4. Bound incremental Editor fragments and measure edit to native return
+- [x] 4. Bound incremental Editor fragments and measure edit to native return
 - [ ] 5. Compare two register-local policies using A6
 - [ ] 6. Test two-hop text bounds with dynamic counts
 - [ ] 7. Freeze and evaluate analysis selection on held-out programs

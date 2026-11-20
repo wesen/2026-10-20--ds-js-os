@@ -45,7 +45,7 @@ def figure(result,out):
                 ax.scatter([xi]*len(ys),ys,color="black",s=9,zorder=3)
         ax.set_xticks(range(4),["Body","Signature","Handle\nlayout","Preview\nlayout"])
         ax.set_ylabel(label);ax.set_ylim(bottom=0);ax.spines[['top','right']].set_visible(False)
-    axes[0].legend(frameon=False)
+    axes[0].legend(frameon=False,loc="upper center",bbox_to_anchor=(.5,-.16),ncol=3,fontsize=9)
     fig.suptitle("Rebuilding the typed Editor on the ESP32-P4",fontsize=16)
     fig.savefig(out,dpi=170)
     plt.close(fig)

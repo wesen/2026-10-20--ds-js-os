@@ -8,9 +8,15 @@ Topics:
 DocType: analysis
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-wasm.js
+      Note: Shared typed frontend and function emitter
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: Native RV32 lowering and reactor linkage
+    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+      Note: Device timing and allocation accounting
 ExternalSources: []
-Summary: ""
+Summary: Compare eight typed compiler designs and qualify a combined hardware build on the physical ESP32-P4.
 LastUpdated: 2026-11-19T21:53:49.113821201-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -61,6 +67,8 @@ A separate examiner workload comprises 72 fixed-point arithmetic functions. Plac
 On the host we compiled the actual Editor's 120 functions, changed a body, changed a signature and its callers, then exchanged record field positions. A session stores native instruction fragments together with symbolic calls and dependency fingerprints. After assembling the functions in order, it patches calls using their new byte displacements. This also handles the case where a function keeps its source and its neighbor grows. Fingerprints must cover inputs capable of changing emitted code. Incompletely changing a signature has to give the same error as a clean compile and leave the last valid session intact. Demand and validity are separate design decisions in the incremental-computation literature. [Hammer et al., Adapton](https://matthewhammer.org/adapton/)
 
 At a 40 KiB cap on resident native words, the body edit retained 72 fragments, reused 71 and rebuilt 49. At a 256 KiB cap all 120 fit and it rebuilt one. Both produced exactly the clean ELF of the edited source. Returning from the real Editor preview helper also exercised the altered function. The ring header previously written at UTF-16 index 200 appeared at 198. A separate field-order witness moved the state indices which that helper actually reads. The budget applies to retained word arrays. The compile can temporarily hold other fragments, linker buffers, source and dependency records. Their combined cost appears in the measured heap.
+
+On the P4, the body edit went from 2.288–2.303 s with a warm full build to **487–490 ms** with all function fragments retained. The paired reduction was **78.57–78.78%**. The corresponding signature edit took **576 ms**, nearly 75% faster. Widen the change to a record layout and the improvement fell to roughly 6–8%. At the tighter 40 KiB native-payload cap both layout edits became 1.7–2.5% slower than clean. All 72 edited native executions passed, and the board returned to its original factory image and three native applications. The handoff and return timestamps exclude the cost of initially creating and seeding the editing session.
 
 ## Choose a register for a long-lived local
 

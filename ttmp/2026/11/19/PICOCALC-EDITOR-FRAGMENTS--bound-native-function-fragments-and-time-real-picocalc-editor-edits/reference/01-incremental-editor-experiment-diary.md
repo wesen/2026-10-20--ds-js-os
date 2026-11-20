@@ -173,3 +173,57 @@ Run `scripts/08-replay-native.mjs WORK GCC EMULATOR` and compare its five native
 ### Technical details
 
 Clean ELF size was 240,452 bytes on this reactor. The preview helper file offset is 33,416 for the first body edit and 33,420 after changing its callee signature. The P4 receives these offsets from an independently generated clean header.
+
+## Step 4: Obtain the two device measurements and an independent stale-layout control
+
+Each of the four edits ran three times in each of three modes, on two separate boots. All 72 source-to-native-return intervals produced their independent clean ELF hashes. The tight fragment limit improved local edits and lost on both layout changes.
+
+### Prompt Context
+
+**User prompt (verbatim)** “heap usage is not vitally critical, it's good to keep an eye out but we can definitely trade things off in either direction.”
+
+**Assistant interpretation.** Compare a space-for-latency trade on both a local edit and a wider invalidation. **Inferred user intent.** Explain why a larger active editing session could be worth keeping on a handheld.
+
+### What I did
+
+- Used `scripts/06-physical.py` to run all 72 source changes with the ESP-IDF loader, counting allocator and the real native Editor preview function.
+- Asked the independent examiner to reproduce the host artifacts, attempt a deliberately stale state-layout call and check physical array contents, return, full SHA-256, rotation and retention counts.
+- Compared within-block changes against the warm full compiler and retained separate per-boot medians. Added a publication table renderer which derives the numbers directly from the validated receipt.
+
+### Why
+
+A single frozen program can show both the best and the worst consequence of reuse. The size of a change in characters is a poor guide to the number of code-generation dependencies that it invalidates. Wider storage permits more reuse, and memory measured at the worst point can exceed memory kept between edits.
+
+### What worked
+
+Full retention returned from the real body edit in 487.3/489.9 ms across two boots, a paired 78.78/78.57% reduction. It returned from the signature edit in 576.1/576.0 ms, a 75.11/74.91% reduction. At 40 KiB the body edit saved 31.97/31.85%, but the file-handle layout change cost an additional 2.49/2.39%. The other preview layout change cost an additional 2.28/1.72% at that cap. All 72 full hashes matched.
+
+### What didn't work
+
+The smaller cache could retain 72 functions, yet only 30 reusable fragments were left on either field reordering. It rebuilt 90 bodies. Its earlier memory saving failed to compensate for the additional work in these two measurements.
+
+### What I learned
+
+Changing field order can increase the required compiler work even when the specific endpoint's behavior is invariant. The separate preview-field reorder changes the actual field offsets accessed by the witness. The examiner confirmed that deliberately applying the new field layout to the previous native body traps, while the correct fourth ELF returned and wrote the expected state.
+
+### What was tricky to build
+
+A custom allocator's observed peak is not a fragment-size metric. On the second boot the roomier session used about 1,547 KiB at the body edit peak, but over 1,806 KiB for the record reorder. Retained native code never exceeded 87,572 bytes for that session. Report both dimensions.
+
+### What warrants a second pair of eyes
+
+Sample sizes are three paired rotations per edit per boot on a single physical board. Treat the observed directions as evidence about these edits. The broad record dependencies leave a separate design question about tracking precisely the fields read by each function.
+
+### What should be done in the future
+
+Carry the same fixture and the mutation controls into a future comparison of whole-record fingerprints and field-specific dependencies.
+
+### Code review instructions
+
+Review physical rows before the reduced figures. The metadata and results must agree with `various/host-oracle.json`. Inspect the examiner’s PICOCALC-LAB2-METHODS ticket for the independent stale-field fixture and 8,192-character retained-spelling perturbation.
+
+### Technical details
+
+Negative paired changes denote shorter latency. The former file-handle field reorder rebuilt 77 of 120 functions at the large cap; three callers plus the signature-changing function gave four for the signature edit. All input preparation and the previous revision’s seed build precede the clock.
+
+The original factory partition was restored and Files, Agenda and Editor returned native with empty error fields. The two-boot physical receipt, figure and rendered table were checked. The complete report and its figure were pushed to the vault in `a2fe6cd9e914be7216b640fd9b83f42359ae96cc`; a subsequent remote lookup returned the same main commit.

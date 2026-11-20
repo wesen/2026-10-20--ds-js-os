@@ -8,9 +8,17 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/worlds/editor/preview.typed
+      Note: Runtime witness and edited helper
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: Reference native lowerer, linker and slot ABI
+    - Path: repo://picocalc-os/compiler/typed-world.js
+      Note: World entry and record contracts
+    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+      Note: QuickJS allocator and device compilation wrapper
 ExternalSources: []
-Summary: ""
+Summary: Compare warm, partial and clean rebuilds of the full typed Editor from changed source through native return.
 LastUpdated: 2026-11-19T22:00:36.679431254-05:00
 WhatFor: ""
 WhenToUse: ""

@@ -1,16 +1,24 @@
 ---
 Title: What it costs to rebuild the typed Editor after a real edit
 Ticket: PICOCALC-EDITOR-FRAGMENTS
-Status: active
+Status: complete
 Topics:
     - picocalc
     - performance
 DocType: analysis
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/worlds/editor/preview.typed
+      Note: Runtime witness and edited helper
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: Reference native lowerer, linker and slot ABI
+    - Path: repo://picocalc-os/compiler/typed-world.js
+      Note: World entry and record contracts
+    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+      Note: QuickJS allocator and device compilation wrapper
 ExternalSources: []
-Summary: ""
+Summary: Compare warm, partial and clean rebuilds of the full typed Editor from changed source through native return.
 LastUpdated: 2026-11-19T22:26:37.589607331-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -73,6 +81,33 @@ warm fragment session | validate and lower misses | link | load | call → retur
 ```
 
 The host builds each accepted revision in a separate clean compiler realm. It compares every byte and calculates clean field indices and the internal function offset. The default Editor runtime exposes only metadata and event delivery through public stubs, so test firmware enters the existing preview helper through its independently verified internal address. The experiment leaves the actual native function text unchanged. Five emulated RV32 executions checked the original and four edited native images. A separate negative control applied the final field offsets to its predecessor's code and observed a trap, demonstrating that the final fixture can tell those two revisions apart.
+
+## What the physical board measured
+
+Each cell gives the median for boot one and boot two. The reference is a warmed full compiler that receives the same edited source. There are three counterbalanced measurements per cell per boot. All 72 device executions returned the expected result and wrote the expected Editor state. Each produced the same complete 240,452-byte ELF as its clean host oracle.
+
+| Edit | Warm clean (ms) | 256 KiB cap (ms) | Paired change (%) | 40 KiB cap (ms) | Paired change (%) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Body | 2,302.7 / 2,288.3 | 487.3 / 489.9 | -78.8 / -78.6 | 1,567.6 / 1,571.2 | -32.0 / -31.9 |
+| Signature and callers | 2,309.7 / 2,301.0 | 576.1 / 576.0 | -75.1 / -74.9 | 1,680.3 / 1,663.9 | -27.3 / -27.7 |
+| File handle layout | 2,301.2 / 2,295.0 | 2,135.4 / 2,122.3 | -7.2 / -7.5 | 2,355.5 / 2,345.9 | 2.5 / 2.4 |
+| Preview row layout | 2,306.6 / 2,299.5 | 2,166.2 / 2,151.6 | -5.8 / -6.3 | 2,356.1 / 2,339.1 | 2.3 / 1.7 |
+
+![Physical Editor edit-to-native-return time and QuickJS peak heap](../various/picocalc-editor-fragment-effects.png)
+
+The dots show the two boot medians. The labels 256 KiB and 40 KiB specify how much native instruction payload the session may keep between edits. The peak heap includes the other allocations needed while compiling.
+
+| Edit | Warm clean peak (KiB) | 256 KiB peak (KiB) | 40 KiB peak (KiB) |
+| --- | ---: | ---: | ---: |
+| Body | 1,379.5 / 1,379.5 | 1,547.5 / 1,547.4 | 1,530.7 / 1,530.7 |
+| Signature and callers | 1,380.4 / 1,380.4 | 1,560.0 / 1,560.0 | 1,544.3 / 1,544.3 |
+| File handle layout | 1,380.4 / 1,380.5 | 1,806.3 / 1,806.3 | 1,653.6 / 1,653.6 |
+| Preview row layout | 1,380.4 / 1,380.4 | 1,806.3 / 1,806.3 | 1,653.6 / 1,653.6 |
+
+Before the body edit, live QuickJS memory was about 721 KiB for the warm clean session, 1,190 KiB at the generous cap and 1,006 KiB at the tighter cap. The generous cap bought roughly 1.8 seconds on a one-function change. Both field-order changes still forced it to compile 77 of the 120 functions. The tighter cap had already discarded additional valid fragments and needed 90 compilations in each layout case. Those two cases took longer than the warm full build on both boots.
+
+The observed delay depends on how many valid fragments survive the edit and how many fit before the edit. Holding a full set can make a body or signature edit interactive while exposing the disproportionate cost of conservative record dependencies. The next focused comparison would replace the whole-record fingerprint with a fingerprint of the fields actually used by each function. For that experiment the same four edits, stale-layout witness, complete ELF equality and physical return clock provide a direct control.
+
 
 ## Reproduce the experiment
 
