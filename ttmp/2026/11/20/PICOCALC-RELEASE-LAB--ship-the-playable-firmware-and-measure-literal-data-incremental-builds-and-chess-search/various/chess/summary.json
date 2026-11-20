@@ -1,0 +1,524 @@
+{
+  "digest": "f204dc1ad6f54df3b72cc7ac61871b73ac75db6c412d870d52cd44bd77bfd860",
+  "engineSourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+  "rv32Sha256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+  "wasmBytes": 10623,
+  "rv32Bytes": 26580,
+  "hostCpu": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+  "node": "v24.18.0",
+  "v8": "13.6.233.17-node.50",
+  "hostRepeats": 7,
+  "board": {
+    "cases": 17,
+    "repeats": 3,
+    "cpuHz": 360000000,
+    "sliceSteps": 48,
+    "core": 0,
+    "boardBufferInternal": true
+  },
+  "boardRepeats": 3,
+  "perftGate": {
+    "openingDepth3": 8902,
+    "kiwipeteDepth2": 2039
+  },
+  "sliceInvarianceSteps": [
+    1,
+    48,
+    4096
+  ],
+  "rows": [
+    {
+      "position": "opening",
+      "depth": 3,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 3690,
+        "score": 30,
+        "completed": 3,
+        "nodes": 871,
+        "slices": 41,
+        "uci": "b1c3"
+      },
+      "hostWallUsMinMedianMax": [
+        1319.301,
+        1384.272,
+        1573.086
+      ],
+      "p4WallUsMinMedianMax": [
+        121232,
+        121233,
+        122561
+      ],
+      "p4MaxSliceUs": 3650,
+      "modelInstructions": 31850741,
+      "p4MedianUsPerNode": 139.19,
+      "hostMedianUsPerNode": 1.589,
+      "modelInstructionsPerNode": 36568.01
+    },
+    {
+      "position": "opening",
+      "depth": 4,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 3690,
+        "score": 0,
+        "completed": 4,
+        "nodes": 4438,
+        "slices": 243,
+        "uci": "b1c3"
+      },
+      "hostWallUsMinMedianMax": [
+        7100.672,
+        7306.485,
+        8426.179
+      ],
+      "p4WallUsMinMedianMax": [
+        638376,
+        638433,
+        638436
+      ],
+      "p4MaxSliceUs": 3408,
+      "modelInstructions": 167379205,
+      "p4MedianUsPerNode": 143.86,
+      "hostMedianUsPerNode": 1.646,
+      "modelInstructionsPerNode": 37715.01
+    },
+    {
+      "position": "opening",
+      "depth": 5,
+      "budget": 30000,
+      "stop": "budget",
+      "result": {
+        "bestMove": 3690,
+        "score": 0,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1604,
+        "uci": "b1c3"
+      },
+      "hostWallUsMinMedianMax": [
+        48046.044,
+        50622.637,
+        55449.212
+      ],
+      "p4WallUsMinMedianMax": [
+        4321532,
+        4321864,
+        4322010
+      ],
+      "p4MaxSliceUs": 3463,
+      "modelInstructions": 1132975226,
+      "p4MedianUsPerNode": 144.06,
+      "hostMedianUsPerNode": 1.687,
+      "modelInstructionsPerNode": 37765.84
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 3,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 82,
+        "score": 12,
+        "completed": 3,
+        "nodes": 1458,
+        "slices": 70,
+        "uci": "b8c6"
+      },
+      "hostWallUsMinMedianMax": [
+        2423.67,
+        2505.64,
+        2877.776
+      ],
+      "p4WallUsMinMedianMax": [
+        216923,
+        216928,
+        216929
+      ],
+      "p4MaxSliceUs": 3559,
+      "modelInstructions": 57084113,
+      "p4MedianUsPerNode": 148.78,
+      "hostMedianUsPerNode": 1.719,
+      "modelInstructionsPerNode": 39152.34
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 4,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 82,
+        "score": -18,
+        "completed": 4,
+        "nodes": 14868,
+        "slices": 835,
+        "uci": "b8c6"
+      },
+      "hostWallUsMinMedianMax": [
+        26068.893,
+        27233.414,
+        31324.868
+      ],
+      "p4WallUsMinMedianMax": [
+        2289861,
+        2290074,
+        2290102
+      ],
+      "p4MaxSliceUs": 3559,
+      "modelInstructions": 599378306,
+      "p4MedianUsPerNode": 154.03,
+      "hostMedianUsPerNode": 1.832,
+      "modelInstructionsPerNode": 40313.31
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 5,
+      "budget": 30000,
+      "stop": "budget",
+      "result": {
+        "bestMove": 82,
+        "score": -18,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1674,
+        "uci": "b8c6"
+      },
+      "hostWallUsMinMedianMax": [
+        52225.881,
+        54531.32,
+        71655.698
+      ],
+      "p4WallUsMinMedianMax": [
+        4612888,
+        4613000,
+        4613388
+      ],
+      "p4MaxSliceUs": 3722,
+      "modelInstructions": 1209371942,
+      "p4MedianUsPerNode": 153.77,
+      "hostMedianUsPerNode": 1.818,
+      "modelInstructionsPerNode": 40312.4
+    },
+    {
+      "position": "kiwipete",
+      "depth": 3,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 7194,
+        "slices": 453,
+        "uci": "e2a6"
+      },
+      "hostWallUsMinMedianMax": [
+        15126.194,
+        16057.284,
+        17880.126
+      ],
+      "p4WallUsMinMedianMax": [
+        1334274,
+        1334320,
+        1334353
+      ],
+      "p4MaxSliceUs": 4289,
+      "modelInstructions": 351896816,
+      "p4MedianUsPerNode": 185.48,
+      "hostMedianUsPerNode": 2.232,
+      "modelInstructionsPerNode": 48915.32
+    },
+    {
+      "position": "kiwipete",
+      "depth": 4,
+      "budget": 30000,
+      "stop": "budget",
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 30000,
+        "slices": 2072,
+        "uci": "e2a6"
+      },
+      "hostWallUsMinMedianMax": [
+        64401.654,
+        67541.354,
+        82375.975
+      ],
+      "p4WallUsMinMedianMax": [
+        5682641,
+        5682902,
+        5683012
+      ],
+      "p4MaxSliceUs": 4415,
+      "modelInstructions": 1503799725,
+      "p4MedianUsPerNode": 189.43,
+      "hostMedianUsPerNode": 2.251,
+      "modelInstructionsPerNode": 50126.66
+    },
+    {
+      "position": "kiwipete",
+      "depth": 5,
+      "budget": 30000,
+      "stop": "budget",
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 30000,
+        "slices": 2072,
+        "uci": "e2a6"
+      },
+      "hostWallUsMinMedianMax": [
+        64985.873,
+        73044.915,
+        84056.306
+      ],
+      "p4WallUsMinMedianMax": [
+        5682884,
+        5683202,
+        5683276
+      ],
+      "p4MaxSliceUs": 4416,
+      "modelInstructions": 1503799725,
+      "p4MedianUsPerNode": 189.44,
+      "hostMedianUsPerNode": 2.435,
+      "modelInstructionsPerNode": 50126.66
+    },
+    {
+      "position": "rook-ending",
+      "depth": 3,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 3429,
+        "score": 6,
+        "completed": 3,
+        "nodes": 905,
+        "slices": 49,
+        "uci": "f2f4"
+      },
+      "hostWallUsMinMedianMax": [
+        1077.173,
+        1160.709,
+        1290.551
+      ],
+      "p4WallUsMinMedianMax": [
+        92380,
+        92383,
+        92397
+      ],
+      "p4MaxSliceUs": 2297,
+      "modelInstructions": 24665359,
+      "p4MedianUsPerNode": 102.08,
+      "hostMedianUsPerNode": 1.283,
+      "modelInstructionsPerNode": 27254.54
+    },
+    {
+      "position": "rook-ending",
+      "depth": 4,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 3592,
+        "score": -5,
+        "completed": 4,
+        "nodes": 6313,
+        "slices": 374,
+        "uci": "a1a7"
+      },
+      "hostWallUsMinMedianMax": [
+        7428.364,
+        7983.616,
+        10266.736
+      ],
+      "p4WallUsMinMedianMax": [
+        646091,
+        646094,
+        646127
+      ],
+      "p4MaxSliceUs": 2298,
+      "modelInstructions": 172312580,
+      "p4MedianUsPerNode": 102.34,
+      "hostMedianUsPerNode": 1.265,
+      "modelInstructionsPerNode": 27294.88
+    },
+    {
+      "position": "rook-ending",
+      "depth": 5,
+      "budget": 30000,
+      "stop": "budget",
+      "result": {
+        "bestMove": 3592,
+        "score": -5,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1680,
+        "uci": "a1a7"
+      },
+      "hostWallUsMinMedianMax": [
+        35031.422,
+        35911.571,
+        44537.199
+      ],
+      "p4WallUsMinMedianMax": [
+        3034367,
+        3034556,
+        3034662
+      ],
+      "p4MaxSliceUs": 2383,
+      "modelInstructions": 810038073,
+      "p4MedianUsPerNode": 101.15,
+      "hostMedianUsPerNode": 1.197,
+      "modelInstructionsPerNode": 27001.27
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 3,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 3,
+        "nodes": 148,
+        "slices": 9,
+        "uci": "e3d4"
+      },
+      "hostWallUsMinMedianMax": [
+        163.055,
+        180.935,
+        202.425
+      ],
+      "p4WallUsMinMedianMax": [
+        12052,
+        12052,
+        12052
+      ],
+      "p4MaxSliceUs": 1682,
+      "modelInstructions": 3262534,
+      "p4MedianUsPerNode": 81.43,
+      "hostMedianUsPerNode": 1.223,
+      "modelInstructionsPerNode": 22044.15
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 4,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 4,
+        "nodes": 406,
+        "slices": 24,
+        "uci": "e3d4"
+      },
+      "hostWallUsMinMedianMax": [
+        410.529,
+        446.509,
+        476.129
+      ],
+      "p4WallUsMinMedianMax": [
+        33049,
+        33049,
+        33057
+      ],
+      "p4MaxSliceUs": 1751,
+      "modelInstructions": 8906448,
+      "p4MedianUsPerNode": 81.4,
+      "hostMedianUsPerNode": 1.1,
+      "modelInstructionsPerNode": 21937.06
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 5,
+      "budget": 30000,
+      "stop": "depth",
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 5,
+        "nodes": 1729,
+        "slices": 91,
+        "uci": "e3d4"
+      },
+      "hostWallUsMinMedianMax": [
+        1673.476,
+        1732.956,
+        1954.949
+      ],
+      "p4WallUsMinMedianMax": [
+        142179,
+        142179,
+        142183
+      ],
+      "p4MaxSliceUs": 1821,
+      "modelInstructions": 38445538,
+      "p4MedianUsPerNode": 82.23,
+      "hostMedianUsPerNode": 1.002,
+      "modelInstructionsPerNode": 22235.71
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 4,
+      "budget": 1600,
+      "stop": "budget",
+      "result": {
+        "bestMove": 82,
+        "score": 12,
+        "completed": 3,
+        "nodes": 1600,
+        "slices": 78,
+        "uci": "b8c6"
+      },
+      "hostWallUsMinMedianMax": [
+        2791.838,
+        2887.099,
+        3599.609
+      ],
+      "p4WallUsMinMedianMax": [
+        239308,
+        239311,
+        239313
+      ],
+      "p4MaxSliceUs": 3558,
+      "modelInstructions": 62911885,
+      "p4MedianUsPerNode": 149.57,
+      "hostMedianUsPerNode": 1.804,
+      "modelInstructionsPerNode": 39319.93
+    },
+    {
+      "position": "mate-in-one",
+      "depth": 5,
+      "budget": 30000,
+      "stop": "mate",
+      "result": {
+        "bestMove": 3844,
+        "score": 29999,
+        "completed": 1,
+        "nodes": 21,
+        "slices": 2,
+        "uci": "e1e8"
+      },
+      "hostWallUsMinMedianMax": [
+        27.001,
+        27.673,
+        31.808
+      ],
+      "p4WallUsMinMedianMax": [
+        1873,
+        1873,
+        1873
+      ],
+      "p4MaxSliceUs": 1644,
+      "modelInstructions": 495973,
+      "p4MedianUsPerNode": 89.19,
+      "hostMedianUsPerNode": 1.318,
+      "modelInstructionsPerNode": 23617.76
+    }
+  ]
+}

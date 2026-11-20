@@ -1,0 +1,7 @@
+{
+  "liveFixtureMatchedChessMake": true,
+  "engineSourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+  "rv32Sha256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+  "wasmSha256": "4ae7474e53f70b611036a343e33a58eff7822f8fbce9dbb1e6e730e79cc0033f",
+  "digest": "f204dc1ad6f54df3b72cc7ac61871b73ac75db6c412d870d52cd44bd77bfd860"
+}

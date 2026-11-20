@@ -1,0 +1,45 @@
+{
+  "positions": [
+    {
+      "name": "opening",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    {
+      "name": "after-e2e4",
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
+    },
+    {
+      "name": "kiwipete",
+      "fen": "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
+    },
+    {
+      "name": "rook-ending",
+      "fen": "8/5pk1/6p1/8/2r5/6P1/5PK1/R7 w - - 0 1"
+    },
+    {
+      "name": "pawn-ending",
+      "fen": "8/8/4k3/8/4P3/4K3/8/8 w - - 0 1"
+    },
+    {
+      "name": "mate-in-one",
+      "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1"
+    }
+  ],
+  "fullDepths": [
+    3,
+    4,
+    5
+  ],
+  "fullNodeBudget": 30000,
+  "playable": {
+    "position": 1,
+    "depth": 4,
+    "budget": 1600
+  },
+  "terminal": {
+    "position": 5,
+    "depth": 5,
+    "budget": 30000
+  },
+  "sliceSteps": 48
+}

@@ -1,0 +1,795 @@
+{
+  "engineSourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+  "unitSha256": {
+    "state": "a785237a76bc4ab2084654fa8a2d00d9b7c21420d12ac8fab37f6b3b52807d20",
+    "position": "6378b078de2bebda4f396463b66e81898fdbeb4210f191a796e2b352f390d295",
+    "moves": "ce27a2d61f57b8b1832b7c65b683d4b903f70e3d804c8efa2c44c89d3483d608",
+    "search": "9b67c4ecd115d318335a3900f56d659de397c598ce892e2f22142d3c3c1e23dc"
+  },
+  "rv32Bytes": 26580,
+  "rv32Sha256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+  "wasmBytes": 10623,
+  "wasmSha256": "4ae7474e53f70b611036a343e33a58eff7822f8fbce9dbb1e6e730e79cc0033f",
+  "repeats": 7,
+  "node": "v24.18.0",
+  "v8": "13.6.233.17-node.50",
+  "host": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+  "digest": "f204dc1ad6f54df3b72cc7ac61871b73ac75db6c412d870d52cd44bd77bfd860",
+  "sliceSteps": 48,
+  "perftGate": {
+    "openingDepth3": 8902,
+    "kiwipeteDepth2": 2039
+  },
+  "sliceInvarianceSteps": [
+    1,
+    48,
+    4096
+  ],
+  "expected": [
+    {
+      "position": 0,
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3690,
+        "score": 30,
+        "completed": 3,
+        "nodes": 871,
+        "slices": 41,
+        "uci": "b1c3"
+      },
+      "name": "opening",
+      "samples": [
+        {
+          "wallNs": 1319301,
+          "maxSliceNs": 38747
+        },
+        {
+          "wallNs": 1384272,
+          "maxSliceNs": 47152
+        },
+        {
+          "wallNs": 1384158,
+          "maxSliceNs": 42470
+        },
+        {
+          "wallNs": 1375638,
+          "maxSliceNs": 50097
+        },
+        {
+          "wallNs": 1561939,
+          "maxSliceNs": 44255
+        },
+        {
+          "wallNs": 1573086,
+          "maxSliceNs": 50588
+        },
+        {
+          "wallNs": 1411832,
+          "maxSliceNs": 42016
+        }
+      ],
+      "medianWallNs": 1384272
+    },
+    {
+      "position": 0,
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3690,
+        "score": 0,
+        "completed": 4,
+        "nodes": 4438,
+        "slices": 243,
+        "uci": "b1c3"
+      },
+      "name": "opening",
+      "samples": [
+        {
+          "wallNs": 7100672,
+          "maxSliceNs": 42561
+        },
+        {
+          "wallNs": 7306485,
+          "maxSliceNs": 47636
+        },
+        {
+          "wallNs": 7310700,
+          "maxSliceNs": 42527
+        },
+        {
+          "wallNs": 7267643,
+          "maxSliceNs": 40725
+        },
+        {
+          "wallNs": 8426179,
+          "maxSliceNs": 50968
+        },
+        {
+          "wallNs": 8075073,
+          "maxSliceNs": 62951
+        },
+        {
+          "wallNs": 7279624,
+          "maxSliceNs": 48130
+        }
+      ],
+      "medianWallNs": 7306485
+    },
+    {
+      "position": 0,
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3690,
+        "score": 0,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1604,
+        "uci": "b1c3"
+      },
+      "name": "opening",
+      "samples": [
+        {
+          "wallNs": 48237358,
+          "maxSliceNs": 55332
+        },
+        {
+          "wallNs": 48046044,
+          "maxSliceNs": 51162
+        },
+        {
+          "wallNs": 50622637,
+          "maxSliceNs": 93884
+        },
+        {
+          "wallNs": 54538986,
+          "maxSliceNs": 83051
+        },
+        {
+          "wallNs": 55449212,
+          "maxSliceNs": 73391
+        },
+        {
+          "wallNs": 53804876,
+          "maxSliceNs": 65435
+        },
+        {
+          "wallNs": 49408715,
+          "maxSliceNs": 59696
+        }
+      ],
+      "medianWallNs": 50622637
+    },
+    {
+      "position": 1,
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 82,
+        "score": 12,
+        "completed": 3,
+        "nodes": 1458,
+        "slices": 70,
+        "uci": "b8c6"
+      },
+      "name": "after-e2e4",
+      "samples": [
+        {
+          "wallNs": 2469737,
+          "maxSliceNs": 54724
+        },
+        {
+          "wallNs": 2423670,
+          "maxSliceNs": 42345
+        },
+        {
+          "wallNs": 2503013,
+          "maxSliceNs": 47027
+        },
+        {
+          "wallNs": 2701326,
+          "maxSliceNs": 63912
+        },
+        {
+          "wallNs": 2877776,
+          "maxSliceNs": 58673
+        },
+        {
+          "wallNs": 2681587,
+          "maxSliceNs": 43716
+        },
+        {
+          "wallNs": 2505640,
+          "maxSliceNs": 42723
+        }
+      ],
+      "medianWallNs": 2505640
+    },
+    {
+      "position": 1,
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 82,
+        "score": -18,
+        "completed": 4,
+        "nodes": 14868,
+        "slices": 835,
+        "uci": "b8c6"
+      },
+      "name": "after-e2e4",
+      "samples": [
+        {
+          "wallNs": 26137968,
+          "maxSliceNs": 61318
+        },
+        {
+          "wallNs": 26068893,
+          "maxSliceNs": 56479
+        },
+        {
+          "wallNs": 27233414,
+          "maxSliceNs": 69737
+        },
+        {
+          "wallNs": 28939039,
+          "maxSliceNs": 70461
+        },
+        {
+          "wallNs": 31324868,
+          "maxSliceNs": 65011
+        },
+        {
+          "wallNs": 28382226,
+          "maxSliceNs": 73455
+        },
+        {
+          "wallNs": 26945094,
+          "maxSliceNs": 92003
+        }
+      ],
+      "medianWallNs": 27233414
+    },
+    {
+      "position": 1,
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 82,
+        "score": -18,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1674,
+        "uci": "b8c6"
+      },
+      "name": "after-e2e4",
+      "samples": [
+        {
+          "wallNs": 52522443,
+          "maxSliceNs": 67573
+        },
+        {
+          "wallNs": 54137403,
+          "maxSliceNs": 59369
+        },
+        {
+          "wallNs": 52225881,
+          "maxSliceNs": 60612
+        },
+        {
+          "wallNs": 57763495,
+          "maxSliceNs": 83166
+        },
+        {
+          "wallNs": 71655698,
+          "maxSliceNs": 99953
+        },
+        {
+          "wallNs": 57043108,
+          "maxSliceNs": 82369
+        },
+        {
+          "wallNs": 54531320,
+          "maxSliceNs": 70550
+        }
+      ],
+      "medianWallNs": 54531320
+    },
+    {
+      "position": 2,
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 7194,
+        "slices": 453,
+        "uci": "e2a6"
+      },
+      "name": "kiwipete",
+      "samples": [
+        {
+          "wallNs": 15126194,
+          "maxSliceNs": 61870
+        },
+        {
+          "wallNs": 15870131,
+          "maxSliceNs": 84746
+        },
+        {
+          "wallNs": 15625908,
+          "maxSliceNs": 87025
+        },
+        {
+          "wallNs": 16147984,
+          "maxSliceNs": 62161
+        },
+        {
+          "wallNs": 17880126,
+          "maxSliceNs": 77535
+        },
+        {
+          "wallNs": 16650526,
+          "maxSliceNs": 67873
+        },
+        {
+          "wallNs": 16057284,
+          "maxSliceNs": 68521
+        }
+      ],
+      "medianWallNs": 16057284
+    },
+    {
+      "position": 2,
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 30000,
+        "slices": 2072,
+        "uci": "e2a6"
+      },
+      "name": "kiwipete",
+      "samples": [
+        {
+          "wallNs": 64642989,
+          "maxSliceNs": 93915
+        },
+        {
+          "wallNs": 64401654,
+          "maxSliceNs": 102945
+        },
+        {
+          "wallNs": 67541354,
+          "maxSliceNs": 91863
+        },
+        {
+          "wallNs": 79284108,
+          "maxSliceNs": 104075
+        },
+        {
+          "wallNs": 82375975,
+          "maxSliceNs": 115448
+        },
+        {
+          "wallNs": 69585675,
+          "maxSliceNs": 88883
+        },
+        {
+          "wallNs": 66937746,
+          "maxSliceNs": 69199
+        }
+      ],
+      "medianWallNs": 67541354
+    },
+    {
+      "position": 2,
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 30000,
+        "slices": 2072,
+        "uci": "e2a6"
+      },
+      "name": "kiwipete",
+      "samples": [
+        {
+          "wallNs": 73044915,
+          "maxSliceNs": 92260
+        },
+        {
+          "wallNs": 64985873,
+          "maxSliceNs": 55448
+        },
+        {
+          "wallNs": 67989443,
+          "maxSliceNs": 290183
+        },
+        {
+          "wallNs": 80106449,
+          "maxSliceNs": 97286
+        },
+        {
+          "wallNs": 84056306,
+          "maxSliceNs": 112617
+        },
+        {
+          "wallNs": 75886575,
+          "maxSliceNs": 87906
+        },
+        {
+          "wallNs": 65463281,
+          "maxSliceNs": 75829
+        }
+      ],
+      "medianWallNs": 73044915
+    },
+    {
+      "position": 3,
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3429,
+        "score": 6,
+        "completed": 3,
+        "nodes": 905,
+        "slices": 49,
+        "uci": "f2f4"
+      },
+      "name": "rook-ending",
+      "samples": [
+        {
+          "wallNs": 1110338,
+          "maxSliceNs": 29684
+        },
+        {
+          "wallNs": 1160709,
+          "maxSliceNs": 39752
+        },
+        {
+          "wallNs": 1115040,
+          "maxSliceNs": 28090
+        },
+        {
+          "wallNs": 1290551,
+          "maxSliceNs": 42026
+        },
+        {
+          "wallNs": 1287412,
+          "maxSliceNs": 32431
+        },
+        {
+          "wallNs": 1217084,
+          "maxSliceNs": 40253
+        },
+        {
+          "wallNs": 1077173,
+          "maxSliceNs": 28767
+        }
+      ],
+      "medianWallNs": 1160709
+    },
+    {
+      "position": 3,
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3592,
+        "score": -5,
+        "completed": 4,
+        "nodes": 6313,
+        "slices": 374,
+        "uci": "a1a7"
+      },
+      "name": "rook-ending",
+      "samples": [
+        {
+          "wallNs": 7983616,
+          "maxSliceNs": 48433
+        },
+        {
+          "wallNs": 7679035,
+          "maxSliceNs": 35003
+        },
+        {
+          "wallNs": 7428364,
+          "maxSliceNs": 26768
+        },
+        {
+          "wallNs": 9493486,
+          "maxSliceNs": 54916
+        },
+        {
+          "wallNs": 10266736,
+          "maxSliceNs": 53234
+        },
+        {
+          "wallNs": 8272763,
+          "maxSliceNs": 45872
+        },
+        {
+          "wallNs": 7458973,
+          "maxSliceNs": 34907
+        }
+      ],
+      "medianWallNs": 7983616
+    },
+    {
+      "position": 3,
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3592,
+        "score": -5,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1680,
+        "uci": "a1a7"
+      },
+      "name": "rook-ending",
+      "samples": [
+        {
+          "wallNs": 35911571,
+          "maxSliceNs": 40347
+        },
+        {
+          "wallNs": 35571659,
+          "maxSliceNs": 35347
+        },
+        {
+          "wallNs": 35610288,
+          "maxSliceNs": 40537
+        },
+        {
+          "wallNs": 44537199,
+          "maxSliceNs": 175183
+        },
+        {
+          "wallNs": 43700154,
+          "maxSliceNs": 58294
+        },
+        {
+          "wallNs": 38507028,
+          "maxSliceNs": 48949
+        },
+        {
+          "wallNs": 35031422,
+          "maxSliceNs": 48844
+        }
+      ],
+      "medianWallNs": 35911571
+    },
+    {
+      "position": 4,
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 3,
+        "nodes": 148,
+        "slices": 9,
+        "uci": "e3d4"
+      },
+      "name": "pawn-ending",
+      "samples": [
+        {
+          "wallNs": 169407,
+          "maxSliceNs": 25919
+        },
+        {
+          "wallNs": 168688,
+          "maxSliceNs": 25262
+        },
+        {
+          "wallNs": 195432,
+          "maxSliceNs": 40581
+        },
+        {
+          "wallNs": 187071,
+          "maxSliceNs": 28081
+        },
+        {
+          "wallNs": 202425,
+          "maxSliceNs": 29149
+        },
+        {
+          "wallNs": 180935,
+          "maxSliceNs": 26937
+        },
+        {
+          "wallNs": 163055,
+          "maxSliceNs": 24522
+        }
+      ],
+      "medianWallNs": 180935
+    },
+    {
+      "position": 4,
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 4,
+        "nodes": 406,
+        "slices": 24,
+        "uci": "e3d4"
+      },
+      "name": "pawn-ending",
+      "samples": [
+        {
+          "wallNs": 410529,
+          "maxSliceNs": 21202
+        },
+        {
+          "wallNs": 413975,
+          "maxSliceNs": 21514
+        },
+        {
+          "wallNs": 422414,
+          "maxSliceNs": 21351
+        },
+        {
+          "wallNs": 455940,
+          "maxSliceNs": 24017
+        },
+        {
+          "wallNs": 476129,
+          "maxSliceNs": 24993
+        },
+        {
+          "wallNs": 446509,
+          "maxSliceNs": 23075
+        },
+        {
+          "wallNs": 473367,
+          "maxSliceNs": 28002
+        }
+      ],
+      "medianWallNs": 446509
+    },
+    {
+      "position": 4,
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 5,
+        "nodes": 1729,
+        "slices": 91,
+        "uci": "e3d4"
+      },
+      "name": "pawn-ending",
+      "samples": [
+        {
+          "wallNs": 1685919,
+          "maxSliceNs": 25133
+        },
+        {
+          "wallNs": 1708229,
+          "maxSliceNs": 29872
+        },
+        {
+          "wallNs": 1673476,
+          "maxSliceNs": 30202
+        },
+        {
+          "wallNs": 1885378,
+          "maxSliceNs": 35575
+        },
+        {
+          "wallNs": 1954949,
+          "maxSliceNs": 34804
+        },
+        {
+          "wallNs": 1824997,
+          "maxSliceNs": 35551
+        },
+        {
+          "wallNs": 1732956,
+          "maxSliceNs": 28145
+        }
+      ],
+      "medianWallNs": 1732956
+    },
+    {
+      "position": 1,
+      "depth": 4,
+      "budget": 1600,
+      "result": {
+        "bestMove": 82,
+        "score": 12,
+        "completed": 3,
+        "nodes": 1600,
+        "slices": 78,
+        "uci": "b8c6"
+      },
+      "name": "after-e2e4",
+      "samples": [
+        {
+          "wallNs": 2796042,
+          "maxSliceNs": 50330
+        },
+        {
+          "wallNs": 2804242,
+          "maxSliceNs": 46925
+        },
+        {
+          "wallNs": 2791838,
+          "maxSliceNs": 45360
+        },
+        {
+          "wallNs": 2918775,
+          "maxSliceNs": 58326
+        },
+        {
+          "wallNs": 3599609,
+          "maxSliceNs": 130725
+        },
+        {
+          "wallNs": 3149733,
+          "maxSliceNs": 84654
+        },
+        {
+          "wallNs": 2887099,
+          "maxSliceNs": 52116
+        }
+      ],
+      "medianWallNs": 2887099
+    },
+    {
+      "position": 5,
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3844,
+        "score": 29999,
+        "completed": 1,
+        "nodes": 21,
+        "slices": 2,
+        "uci": "e1e8"
+      },
+      "name": "mate-in-one",
+      "samples": [
+        {
+          "wallNs": 27001,
+          "maxSliceNs": 22163
+        },
+        {
+          "wallNs": 27237,
+          "maxSliceNs": 22501
+        },
+        {
+          "wallNs": 27673,
+          "maxSliceNs": 22652
+        },
+        {
+          "wallNs": 27260,
+          "maxSliceNs": 22000
+        },
+        {
+          "wallNs": 31808,
+          "maxSliceNs": 25967
+        },
+        {
+          "wallNs": 29448,
+          "maxSliceNs": 24210
+        },
+        {
+          "wallNs": 28188,
+          "maxSliceNs": 23375
+        }
+      ],
+      "medianWallNs": 27673
+    }
+  ]
+}
