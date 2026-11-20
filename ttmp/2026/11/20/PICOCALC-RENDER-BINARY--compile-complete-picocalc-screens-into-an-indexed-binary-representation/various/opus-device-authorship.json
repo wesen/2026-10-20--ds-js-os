@@ -1,0 +1,10 @@
+{
+  "model": "claude-opus-5-5",
+  "requestedEffort": "high",
+  "elapsedMilliseconds": 110083,
+  "turns": 1,
+  "prompt": "scripts/11-opus-device-article.txt",
+  "article": "analysis/01-what-an-index-on-the-wire-buys-a-picocalc-renderer.md",
+  "diary": "reference/02-opus-research-diary.md",
+  "operatorReview": "Corrected ratios and treatment boundaries, checked direct lookups and both native paths, linked the final handoff and qualified the blind predictions."
+}

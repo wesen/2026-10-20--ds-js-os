@@ -1,0 +1,9 @@
+{
+  "model": "claude-opus-5-5",
+  "requestedEffort": "high",
+  "toolsEnabled": [],
+  "elapsedMilliseconds": 336319,
+  "turns": 1,
+  "source": "scripts/01-opus-brief.txt",
+  "artifact": "various/01-opus-blind-design.md"
+}

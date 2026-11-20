@@ -1,0 +1,2918 @@
+{
+  "machine": "x86_64",
+  "capsule": {
+    "capsuleBytes": 51519,
+    "capsuleSha256": "ca2d76e538601914a40b88ad12e560456d2b2c8b50a26dbfbaf392333b5ffc01",
+    "fixtures": {
+      "sysmon": {
+        "id": "select-3",
+        "path": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "values",
+          47
+        ],
+        "firstPath": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "values",
+          0
+        ],
+        "indexedItems": 48,
+        "battery": null,
+        "banner": null,
+        "payloadSha256": "fe7534e51b37359ad79652cfdad87dffe2d8d61e7d7295d51cef3c82f3db63d3"
+      },
+      "chess": {
+        "id": "castle-long/003 left",
+        "path": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "ops",
+          100,
+          0
+        ],
+        "firstPath": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "ops",
+          0,
+          0
+        ],
+        "indexedItems": 101,
+        "battery": null,
+        "banner": null,
+        "payloadSha256": "df8b85ad97c3d6e6b6736d6aa3a6b630b26f4c68c36e33789f4f139dfab7c18a"
+      },
+      "snake": {
+        "id": "auto-79",
+        "path": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "ops",
+          13,
+          0
+        ],
+        "firstPath": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "ops",
+          0,
+          0
+        ],
+        "indexedItems": 14,
+        "battery": null,
+        "banner": null,
+        "payloadSha256": "5fd40bd91bf1afb2289f591f32792e26212cc655555e82a00780114fe0f29368"
+      },
+      "editor": {
+        "id": "replace-search/query unit 5",
+        "path": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "marks",
+          111,
+          0
+        ],
+        "firstPath": [
+          "frame",
+          "tree",
+          "kids",
+          1,
+          "marks",
+          0,
+          0
+        ],
+        "indexedItems": 112,
+        "battery": null,
+        "banner": null,
+        "payloadSha256": "f1d1acefe0fd7c039080b3241f7b5752c53f877d62c2f3dcc826257e8eea990b"
+      }
+    }
+  },
+  "raster": {
+    "sysmon": {
+      "frames": 100,
+      "equalRGB565Bytes": 20480000,
+      "pixelSha256": [
+        "a1ce09256a7d5e277aed6d6c2e2e1258712d20956c09069aeaa567c7d4b55743",
+        "c0b9eb6e7aea9a2f5efef623f01520cc3a5c6476eefacefe4fae30b7733e7f02",
+        "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9",
+        "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9",
+        "c651f3490ae638761f5e804ac4110b7b0f4aa7f60b9c859ad3c28cb48780a909",
+        "a71fc269c10722f2eddd94de76214a5671ba43d8ccf20f0e078060cb928b6f7b",
+        "49faf73e29bf269fb485b4c22ff7fe7096d54dcb80510d2e9091e3ada0937367",
+        "2d9740c25b1b69e6b5540cc8853a86cf787030fd41bae2991c9bd089a1fbdff5",
+        "bb6a743ed5dcf6783838b4504c50d7da9dec82955ded53e88cb1336ea1756b24",
+        "ba1193c2c294b7ed911d8b46e4902dad4d5ae139419693485040b382035ac132",
+        "c1abf5ebd754ff0656d99725601551c49c1aae1364c9c129f7feb07f0b2e61ef",
+        "a824816dd7914b76f5a1ec59aae16763a4e507b1f3be3a6a4f844856e316c05a",
+        "913c7af02c6626314ea7455c8e98c9ee292a3755575bf0478766cf686ca9f540",
+        "5728f2709494e539b521051bd783b08dd318a49364a97e7d8d7069bd5319ffab",
+        "aaee6930e90da16589ff23e246eb167640a9f6c13253299f233489a5eac397b5",
+        "5728f2709494e539b521051bd783b08dd318a49364a97e7d8d7069bd5319ffab",
+        "3c483dc371404285240ccbb6a8e116bf826ac30d5ba3e4ee2acb4ea947ff409f",
+        "0586bd2eb1ed909640bcbd3613e6867a1c784d899dbd49294c8089d2f37f7e6d",
+        "309f8336c82650c549dceb95e85024d3ad1ff2c7f0191dd193e9607ee4a14c1c",
+        "a1ce09256a7d5e277aed6d6c2e2e1258712d20956c09069aeaa567c7d4b55743",
+        "f21c3374a065e54417d723ebb3dbf8aef52d9c9feffd21ec0327d7a82c78e929",
+        "67f63345a4f0d105234fdbbc8e62b4b7a0354b7fcd29a4fabdaf76d34750c61d",
+        "95aa4af5d9aad689e01b6e43d840d9a6b95c58b17e449c210df7ccff6e21e57b",
+        "3353815b4bc414ef527bbf5aec8e405259bad6222f64bbe34d782196647e92e4",
+        "e6c6ce3043a023e261f51ca02be2c535ef09bc65e62838e69e6b71e908864ad8",
+        "c410e445767fb73b0d23b11f565210656ae4446a7b3ae9399e7aab9bbe696522",
+        "f18bd49f4bc6a1361266f6533e09ba02873ff9cd0cb62f35828ecb8e9ed1a0e1",
+        "44d8c43d8bdf9b08a029a56149f135df45f1f7be890c617c95b0e101d27bcd07",
+        "2519926ad6517961a78a42af90bb1e3b476d56cd7cc840303f627d0a621c9ceb",
+        "c21f79b2436f99c1b1d78e0717e9c87cc75b0ee3a2184de17eac1b3754e5ec97",
+        "426d2d1e4986cdb208fa267e296189aad9090411c9d2e1216f242cfabbc35fba",
+        "9d04fcc786a0a310524c55c82a9e9c143256aa71ac5f2a8caef3136db819d829",
+        "86155fe31229ad1b1a59b76493870ceee4c5a48c6a503b2823a2f68b9a61f6a4",
+        "99478687820cdccb3c4ed7c522597ee6f6211a95fbb59e65cba92f1c92ed6d3a",
+        "905b0755a9cac8bdfd2da7c1cc5289c7dce279fac59d492e1db1276a61589d7e",
+        "b9a425a0d14d4154e56e64bf3c1b11ead212b09cc439d0b269b424490e9de357",
+        "ef54c6bb99ba2043c90c882a61926aca2787530eedbfaccf6ef498b9d3c9451f",
+        "0d437fc22975958e9f200863d5aee226bc38b620deef80cf1e418028c734c47e",
+        "4be51489e7411520ca218331af2ed943fda6a3069d09cb3c85dcf0ef38f0e339",
+        "8db504708b5089064f55ff361a14e52d1b4b3b2970c46ce736952a6743014081",
+        "ce91dea60fc39cfbdf469e2ff1cd57ddd2a039d33fc31410add6477272995ad7",
+        "13e5f9ee392596965ef14d303086e69b9d9bcddc74d08762b3b72e709d83464a",
+        "b7ebd7aca14dee525fbfb29ed4998ae99a97a57ca8178323860b6fb30b054df0",
+        "f21972da03bf4fb5c0089c90851ae1976953ccc30c03de77d3e84c9a0c909d23",
+        "901f777b14cf48997a6633953d23466fbe18796564f726ff62b1bd21aeab35cd",
+        "4162b0a087fb2a3ae77cddf30689cec04725643dec04533d7990381cb410c1bf",
+        "03385b0767749c656d20b926d990808d3612ddfd653972900c707687661d187f",
+        "75ee0d2d72608e2ecd1d3f6434de385ddb858c371ba38ed7d3d977959fa7f946",
+        "30f00589d66a8b50ad1edc9cee53aa5bf1448c13c41f051c653bd72dc994f11d",
+        "7b16af893cb2e9e17409b2e1c36989b0dc725cacee2ebe658c11ea1233b86097",
+        "793999aa96c854361de63e7f6ca4e06bae977b1c4da884289cef0f2df4aec575",
+        "cffb4400823de16f43878b87b7fd75b6ed0c0368cb2d860cb2e8d7274dd95d6d",
+        "2350979e36c723083512804a066b5472a359d41978c2afbaa5c003b00b70b38c",
+        "6c12db71fc6b31f8e06c96071bf4913f5c45c0342effc339ab4f582e808fa645",
+        "cf4f5b3a1e6cc1d2ac88b6f631f2c372727c1da3a49ebc128847fba607189e1b",
+        "387bfeea2f59ca61268269fde50405dc6d9941446e0153329dd0c3a922330a7e",
+        "af5c20541affd3736e4de1267b0638bcb3c3b8f57dfb2cf06f100c8abfdd6938",
+        "07268285f3c0a71fad8b55d6d8ffeb31a58f1bbd242176619ec005eef3e31f79",
+        "5bb0a909532488065e6bc7e8e1221b846e581caa64f110871ff8d51532798547",
+        "78c86590a49599b9bd6b8778c39282cbeb261cb236034d37ae97dc6abb5db060",
+        "a110af96c1a7e9a111303f812da0b031817262b35d3a0e3aba4bc5e28492944e",
+        "e5177fa4a7a62bb665e1f875d7876988985e8a72519f30b25f8fd2856ff36415",
+        "f6c9d05bcbd658933c6200e68e48a2678707781029eb0111bc0e2a5311237f6a",
+        "277e5418c2241540cda05eaec134e2c519efbb525064f45be456cc4db03506e3",
+        "8c51551e9d3c6882775eedcab3b013843392f471cf32ea6db8826e01270d59bd",
+        "d80cb0e7f385ee689e26a6ff73c4b6c6d67b0ff70a21becd1b79ac225bca5037",
+        "040e7f031bb4645bd08cbce8382f6b316901a7e81a2098470ad4cd8945cc0a62",
+        "9f7ac1e0602addfb73fc6ba6fb2b2c2174257a031bb1ab26c1996a81e59e78f3",
+        "45ff373d6ae848b6339763bedb87dc60b682f9a751473bc4ea77e60550611dd1",
+        "ff060e5c634eeb6a1a40eae59cb44bb7475bf1c9be0ed65d5a4361893deed7a1",
+        "ec273e82cb6ae53b45a4fa8426ad68daa710f3aa060a50abf6e05b235a73d3d2",
+        "1b57b3338b35ec8d9834c24ee26c4c881a3c3fb0e56d72af88b112df582e4b27",
+        "a0595643830bc18eb83f65061e2845f05c3b7605636e43efb69241a3c0591fee",
+        "3cc4ed9b3945e7262e30f8f86ddc7d5ea1f50925c8d39d76285a2219f62375b6",
+        "90d0822723bd0a3c308ca3bd01ced23db5b63c2046d59c2081720fcfa11e3ed3",
+        "8c66c6d753c87006979741771cf74eb156fad232c06b7fbadc733716fad6f662",
+        "54404ab0b683160d73a8d898ce879209607a4607f0a2c5cb4edeafb05642e879",
+        "7ddc2cccaa1f43654ba3a0a1d76b219698d4032cf36fb057cb5f1991d3464a4a",
+        "bab44f3033c3b8dc988b0ddc6882f3a3832e375623cfa59987fa224a1b399e59",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "e381284b5369ad09f0145cf1c9edbaf8bd34b95677c7d7c384cd9f1d974c13a9",
+        "43550a14012e738100c48e2df80eac4be458371044c3e236a3994578206f6383",
+        "9226d8e90bff1cf7273a247a1860044bf0fbc9508bdece22342f22b1c25c343e",
+        "9c0391f155c0899c311b9798e76267eedcb300f67da4a69965843d4faae24639",
+        "3a6baa1b9d0c03eb900dda6ca1dbe17edce9c2d0d4d2bb71eb4dc344e253712d",
+        "f739699673bafba85581f7baf308d270d89917d3905e5f6d046958453a82c429",
+        "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9",
+        "a824816dd7914b76f5a1ec59aae16763a4e507b1f3be3a6a4f844856e316c05a",
+        "0586bd2eb1ed909640bcbd3613e6867a1c784d899dbd49294c8089d2f37f7e6d",
+        "36d72e4392f7e469a26be7725a09710f67f5ba124da9629ce3bd4b0b646e77e9",
+        "a824816dd7914b76f5a1ec59aae16763a4e507b1f3be3a6a4f844856e316c05a"
+      ],
+      "wire": {
+        "jsonBytes": {
+          "total": 179330,
+          "median": 1869.5,
+          "max": 2699
+        },
+        "rawBinaryBytes": {
+          "total": 163672,
+          "median": 1799.5,
+          "max": 2251
+        },
+        "dictionaryBytes": {
+          "total": 65349,
+          "median": 781.0,
+          "max": 819
+        },
+        "dictionaryEntries": {
+          "total": 9013,
+          "median": 109.0,
+          "max": 112
+        },
+        "base64Bytes": {
+          "total": 218388,
+          "median": 2400.0,
+          "max": 3004
+        },
+        "jsonEnvelopeBytes": {
+          "total": 225598,
+          "median": 2472.0,
+          "max": 3076
+        }
+      }
+    },
+    "chess": {
+      "frames": 47,
+      "equalRGB565Bytes": 9625600,
+      "pixelSha256": [
+        "b52b4838f55b4ee55ab3d1f77e7f22890fd738ddfbfce499375f6659e969d42e",
+        "b52b4838f55b4ee55ab3d1f77e7f22890fd738ddfbfce499375f6659e969d42e",
+        "7860e89c426bf1f36a84cd9f06021c818bef6599f9f4f9393eaffca52224f6d7",
+        "54a84e185bad170e5fafc823cce4ec4619aa28dff03995886e6e0f6e500247a6",
+        "88bb0fa159e7867a2b3a4be1d98872fd8fc39b655a0c77d3cff8a06210eda87a",
+        "7590d084e9c331c71909d6fb169539ebb735eed32cccefe54483c15ec432d81b",
+        "b52b4838f55b4ee55ab3d1f77e7f22890fd738ddfbfce499375f6659e969d42e",
+        "7590d084e9c331c71909d6fb169539ebb735eed32cccefe54483c15ec432d81b",
+        "d4d039299c0d376293382144be907fc43985ff388609d1e937bb70d42a5fa735",
+        "a61b5ed2163bb67ed5abf197a06a499a774812cf4067e51aed604471414c78b6",
+        "38daace5403dc5701a95ab7270233dd98c39fa41ca8f98479c799fa9d289e3d8",
+        "fa41a7e15850a9670bda2cc839277615f2f602252b12ebb798ec88a327aa8b24",
+        "67f6f6189f1f9a448dc2246d1064068894b3756a874411355ee5c80fef39b94d",
+        "b52b4838f55b4ee55ab3d1f77e7f22890fd738ddfbfce499375f6659e969d42e",
+        "7590d084e9c331c71909d6fb169539ebb735eed32cccefe54483c15ec432d81b",
+        "d4d039299c0d376293382144be907fc43985ff388609d1e937bb70d42a5fa735",
+        "a61b5ed2163bb67ed5abf197a06a499a774812cf4067e51aed604471414c78b6",
+        "38daace5403dc5701a95ab7270233dd98c39fa41ca8f98479c799fa9d289e3d8",
+        "b52b4838f55b4ee55ab3d1f77e7f22890fd738ddfbfce499375f6659e969d42e",
+        "c3dff7004d76d9e84acc97eed4c1e3dbcda7d9e9e8ee1d702153855c40135289",
+        "615fc8d2038a2207aff870c4911f32189ae88627a10368896c4f3629cf187e01",
+        "a104484d565a41546bccbb6885fa34d9f95c6947baaf37f80411ca95cebcc167",
+        "2bfc7834fa0039b446ef213a102fd9d31cf1d7a620661dacefbe59e36bade4b9",
+        "a104484d565a41546bccbb6885fa34d9f95c6947baaf37f80411ca95cebcc167",
+        "2bfc7834fa0039b446ef213a102fd9d31cf1d7a620661dacefbe59e36bade4b9",
+        "41ed44ea32e5b6b11848ca32bce5c9255dfed82c0ad2d140b287c3c6008cd117",
+        "6fdf6eb5c81f25f1981397a58afe997a7e1700f702844bb5004834ea25273370",
+        "c8f05f72bf2ea202c84b0d88ee8ec4680a53e4d2f2ea0f2025c93f03f84bf314",
+        "9a701126cb700ae6696950e1a88cb92e3bf06ddbdf82421a0d900ef218307ad6",
+        "fc9ad9dd46313fffb4fa0df8ba5f8949b7ee020e08e5b67cf8e5a80542e3fd10",
+        "2c2babc84ab56378fa9e95c9ae5978d70cc2cb8fedb4360e5a062bc3eb157a2b",
+        "9455e127c1def5194a7689a6b1ab88f20daca38dc79c0dccbd422316337ec4cd",
+        "345e8993fc41a5870a10476eadfc0c3c971c7a7a53adc0486b4c4cccca873254",
+        "bc95119e74f5a27db66e9284e6a26d392570bfac71d6ef7cc8e30349b8901bdb",
+        "2f11e55d41b38ee5f78d5af5b4d8781439e307ea21e18035ec3d38b03f554650",
+        "ae06632676047ea7f335619acd7a26f1c6b1e53fcae1b1ea5e2da95701489ff2",
+        "9455e127c1def5194a7689a6b1ab88f20daca38dc79c0dccbd422316337ec4cd",
+        "345e8993fc41a5870a10476eadfc0c3c971c7a7a53adc0486b4c4cccca873254",
+        "abef8453ee3e75de92b73c7412ddc1c5a1e56a23aced91353be7fc19e78f2bbc",
+        "f035fbb539924a6c2f632fd3ea8390725af51c8160b2c05c338fb062980aa972",
+        "4e8221b7e2e7805661f3dff44f546e706db56a8656479960929620dd72e55cd6",
+        "55ff84c1af60b1e42b76a560e54e80434130d18623468f35fb485461629c8e2b",
+        "e8f3d050ca5d59cba83dcd8e797594d9f5c74c444a1ec882de3fe8e254adf286",
+        "66345f600e1e8b88143cfea0522d4514282d5cc0b03a33c6295c9eaedb851f7c",
+        "46012c744fe0d3c847b9f53c053c1c6696d02cbd8dd5642c2c6dbb8580d8b848",
+        "207827c954e3661926a12dff6a041f70dec05f9106bd26835b443ad62205c3a8",
+        "d4ef6d4484f27dbfc959f96deb7d11a7240573b5c42c2b6db3410beee46fe0ca"
+      ],
+      "wire": {
+        "jsonBytes": {
+          "total": 183891,
+          "median": 3443,
+          "max": 5045
+        },
+        "rawBinaryBytes": {
+          "total": 144822,
+          "median": 2761,
+          "max": 3890
+        },
+        "dictionaryBytes": {
+          "total": 15570,
+          "median": 328,
+          "max": 389
+        },
+        "dictionaryEntries": {
+          "total": 2632,
+          "median": 54,
+          "max": 62
+        },
+        "base64Bytes": {
+          "total": 193188,
+          "median": 3684,
+          "max": 5188
+        },
+        "jsonEnvelopeBytes": {
+          "total": 196478,
+          "median": 3754,
+          "max": 5258
+        }
+      }
+    },
+    "snake": {
+      "frames": 236,
+      "equalRGB565Bytes": 48332800,
+      "pixelSha256": [
+        "2855760289105f126b9db524e02834167f76f9bc423cef00ef513b0918f3f278",
+        "2855760289105f126b9db524e02834167f76f9bc423cef00ef513b0918f3f278",
+        "f9d89d5bbf6504f0d2fd752868ae419b0a9c5d863ed4a2e2db3e88ef43231214",
+        "f9d89d5bbf6504f0d2fd752868ae419b0a9c5d863ed4a2e2db3e88ef43231214",
+        "f9d89d5bbf6504f0d2fd752868ae419b0a9c5d863ed4a2e2db3e88ef43231214",
+        "a4b3d8a03b41c3bfcd6c940c16322cc48cc5635486d35e04cb3c83f98fadff22",
+        "a4b3d8a03b41c3bfcd6c940c16322cc48cc5635486d35e04cb3c83f98fadff22",
+        "a4b3d8a03b41c3bfcd6c940c16322cc48cc5635486d35e04cb3c83f98fadff22",
+        "a4b3d8a03b41c3bfcd6c940c16322cc48cc5635486d35e04cb3c83f98fadff22",
+        "a4b3d8a03b41c3bfcd6c940c16322cc48cc5635486d35e04cb3c83f98fadff22",
+        "d738a8478aa8580bc5a0df7c22a79bcd1c4cea42013c0d176cdd68b5b23edb0b",
+        "d738a8478aa8580bc5a0df7c22a79bcd1c4cea42013c0d176cdd68b5b23edb0b",
+        "e0f2f3572afa4f5e1c147a74284312b0e7f85f97d28c4488ff1213f1beba58ec",
+        "e0f2f3572afa4f5e1c147a74284312b0e7f85f97d28c4488ff1213f1beba58ec",
+        "f5363ffecbddf659253a934da9c1710dbc0b754b6bfb5ed6b03c69a0ce9bdc69",
+        "641955acd4d7bd64304fac05c6f9184d3e72fd7f038843ca42a5a64b389ee739",
+        "641955acd4d7bd64304fac05c6f9184d3e72fd7f038843ca42a5a64b389ee739",
+        "56bee2f58381db8df08f7d75a9fe032a36abd70232113fe65400cf0d25790e94",
+        "56bee2f58381db8df08f7d75a9fe032a36abd70232113fe65400cf0d25790e94",
+        "ecfe8778169bdd61bc5c7f9fdc11e938eeccd189a5685cc9db2320179c4f8cdd",
+        "ecfe8778169bdd61bc5c7f9fdc11e938eeccd189a5685cc9db2320179c4f8cdd",
+        "3d7f866546660ea7c8fe44c691c0372918298f70298a9c37eaa2c0f2df16ea3f",
+        "1ba06197827650f560b613efa75dd94cdcb02ddd248ab01131aefacdc095fa96",
+        "7b05aba39eca3f6923f77549fe6aa212c63d5c2eace4ff430dcd73453da510ba",
+        "7140a7e03979a46bd0c2445fa2451aec5e0f63dc1e804de7537112d4d32be9fb",
+        "795d8728608228b209ea77264a10f328e1aaa41a7f58450428a8f3b9cc69980d",
+        "5619856492363a7a495b06788b33dbab65ddacecc5fa707706332799cf4699fe",
+        "7ebcc4a828e02b06e4ca4e73ba2eaec455b23d95c09f106cab10a91d943bacdb",
+        "fb9f3eaed0bb7b8e72b81f8dd957c868fd8bc90de80134491fb1ebda8e49b298",
+        "a9f18097186ba6572fdbd2a6b75f374135e13ae1154a628415b8935d697f57e0",
+        "64a35dc9fedd7cb274fc57639dd04199895ac9d82df3cd1f15cfd7867055b01f",
+        "756e655ca4d042393b9153c0dd9e30ef8533e16bd8adba65166d2d5f0cd4fecd",
+        "91a464910baddf647276399728d53b2449b23ac83f8a397455807d2f3539d5b7",
+        "6bcc705380d0344b1720dbd545ed5b3a3d83efb80cef2ac1f5863a70b986dc00",
+        "9a6c1b3f517e3d7ac85b18b3438487efc49764685ad527f60b21e4261a73e005",
+        "2923000e157e00036bb70bfcef509640033a493bd5d221ba21f9b44052473f7c",
+        "10cb56f67a66b4d17a7d6c5f3063b285db5e00e51c24dac4a516cfe574e8f9ae",
+        "322389f505b0ac8eb2e9913d62882051a1da70ce19ec05652a0b19be8ddcd3ad",
+        "166a506c13c0e4ac4a20eae2d0354dcac26f1931fe335bf5fb64db58ba207958",
+        "c1422e7332dce83bbe165ef78448588e2eaba7af8ce95195d69e771ad9a3dca7",
+        "15c4f62f8ff2f5e9fbd712ca5e29b24e4baacb673d94342bc870d623decc13cb",
+        "fb5ffad405fcd70761e420a5414aa8ccb3f08249e4c281b72bbddbd316403b6a",
+        "3f699887d900571044a5214f1598e302f40283ce357e0327a3bc1397e82aa597",
+        "657cba1847f2c604003086427ead7bb0dcd0e2f1d9b203cc44abe815895369a7",
+        "f11c99b9c58ad5e61c601f6bc1a076ff1ddd7f879d944043aa4c0e294604ba1f",
+        "103c70f87a3fea28fdae8f6689c5136705f9e03bdc4fd0dce4e315ac87c0e549",
+        "4e43bdfa3b697b1776f33ebe8b55c31fd99dc5248323e846028e5eafdd5f4906",
+        "e7d18161868d7c86e902c2c5ff8ea3e80e25db38a9befc9e5fb76eb390ed0af2",
+        "21ef807baac15ec2560a42552660915b0c009819eec7bcf1e00323915660df67",
+        "e7c95fce25823c6755829956a14bb3c669d50ca87443436ce7092503aa934f31",
+        "aa94c6e76a35de60cf9ab73759a3fcd326833321fdd41afe65a7e26ec2ef5695",
+        "a61efa3943351c628b1e17caa66b0d000ab3e593ff4b6a57c5af126100be5b96",
+        "54526aa2e79cf59d759564d8c9ddcc106a65a6cd2b3594e2caa636c0c1c2a212",
+        "d29cc98d9b03d4e2993beb4f6896e36ab1c5a20454be7f6e732b11525aaf071e",
+        "7c835f543db57b66fa89dd8062b0854619efa1fd7ae19688f543ca224f4a9327",
+        "3c8ae328ed2cf639d4e2b2acb5ecb7cb4a5ea653cc3686c46b1f4255b17deeb3",
+        "680613203f9240fc97d4a03918b34356768cbca83d451dff629a4d84b0c8ac31",
+        "c04be0209b543d9f0a7daeb38c66bc58d34f613e5c6eecf258c7e3117aa8f918",
+        "e63b858880b670c4114ce6ecd7d0fc565fb27c495c404ed6402bee9340a921c2",
+        "b45e64fb19bcf10b1ab5387aeb0bb02c8cc6d447bcc0b4513aa16b530d012b25",
+        "742efb0a34a6d4b9c8118908d24e20def6ac85f88c483a2e856908f08711117c",
+        "303412b18dae61d71cf9e9a687dedf60f06670b6100779be9ba5335d4f8fda8d",
+        "5f10b8f0bbeee6adc69ecf21d0ec5d04729313e894a09646e4a8c0d08cc785af",
+        "ba956c7e76ea1e886b3f440382c7908e10fa11c282bc89f58cf2a5f974e6c020",
+        "49525abc01dca218aba62cba1f4ce6133ec89cf2d92528f2dde4ba89426b8a0f",
+        "639b042a4f25240ff798fa91a7d6f20b4ab519f1016fed8fc24956d840ef8148",
+        "64f5042f3782252c5df1bf5c5d12844237158dc063664974d5d199f0dfec574c",
+        "e6cb104778b1597b73005d8c456e935fe12ba1f0dc281e62df5ac580c0a9ef57",
+        "adedb2154fd7a5c6a1ff877e98d3b29f171f1904fc15287d16a8823bcfdf830c",
+        "510ead3dd4133c0813fbaf46fe42638bb56703b0e33e5f49c723f08401da6192",
+        "f2816e49eac6763660f971a718000a888deebba411305d147ff9c952d22792cc",
+        "10841715c5cc42094ac728a272ed30ef57ca1bca6890f1f2f8922bc5169dc9ee",
+        "679e97a8d466abc17f0844eb4af18ac20c8c7c91f950da44f9185c36754032be",
+        "b9219a5aa4d6a74f7ec9f266b5fa5cec69dfa22b1c63afabaa02f73693021952",
+        "e771c625afdbd75676c0217056ac1498b5b5492cb59bd8adb17ddc96e8116c1b",
+        "1eb2003cdba1e9111c4c6846cc97ed7743f70784fbfa9423d5e10ed40139424e",
+        "e290bab0eeba0db17087f97f0804201bfe10b4c2fd5c6325e98583b7235c9be1",
+        "b28e413933ebd4236f07ad0bd478774cfabaec795ccca041aa8bba2271c1a621",
+        "0ca763fb2322c6e3852693295f2cc5e2d0ae3bc47154407dc373d65b20fae21f",
+        "295590d260739b8acc2dbf0dec1398b192ab6f01db1ba0238059163a4cc25b96",
+        "537e6b769e1671cf8fcae3b245b3920ecdec0d20ea61dc8a2432a41515b29bad",
+        "c1cb8e1a00894eaf43551f36f6be50be5452548c51e0466612600f57e9aef1e0",
+        "39b89e5458e6e4ded50d7208d2fe25af23a6c5052b33d8694bb56714392ab808",
+        "04df3f92c2486f293617713478d5092862ca234b15539c11e04f636635b36cd6",
+        "42dd3c6c9a55ee1891c791e02badbce7ac53f7becd7bdec3082fb90c903dee89",
+        "de5c8d6d66aa70500be685656d0f41f1af79eb1f040e8326cfbf3028559ce4e2",
+        "08e15291d13cd0fb6a0330e156e95b03f95a518652db636fc5195fe4d35dd0ae",
+        "6f3ad423312b603fce61cfa773b21ac86627ea53f1deeba20d9ec3a23c8b7050",
+        "512aaa76bef6d84e22b71f31bedca6cc934c52496c7d3556a53e5ead641ac4ce",
+        "202c174269f98ad0f98ce94bb6080bf763ffbd96c12347c4bf54156d65ce800b",
+        "4270325c5b81f326e5b657d55523d0a6c9d605517c99fe905a13b32c67a72347",
+        "3905e1dcb5c2db651c82cebedc42a7af596fc4d065366c316fa3762b105c87e6",
+        "65b42aac10a35d6cd6cb163a7f7a60b5ec5b51c56a2a9272377ee1a91ea1a5bc",
+        "6a5bb84f1e60c3a18906d49ff1c58eae55c2b6a3e1b151b3b8634915342877ef",
+        "5ce5671b923a785f06cc6c2e737156b32166b69d1f17d09a1d95e7cd49a36037",
+        "0701aa2b38a4b08d21693993e1d6c25ea186228639e522e777d365de0b3a3702",
+        "fae317844d6ae524b4eefd78dc7dc1d2482242cd890008802b28e93995683f31",
+        "fd159b8cdbfb52f39f75be5db53cd57fed3f92e8fa48d2753156b0f9c1fd8a16",
+        "753ef258eca5337c2eb23fd4ce8026bfb1fa126bac5e0ef1b3d90adfda30044e",
+        "39ddb36cd681dffccf6e5c3b3f880923294564f074e5605a650e8112a5ef2f5d",
+        "7a2e2e71654a685b0456811bb45f1fb3539fbf2853de1c6e3cbd9d97aa7d5084",
+        "d34123ff99b1566604625b55d33ed1780f3b764c4f8bdc6c6dfec76a8eefa457",
+        "a49e35cff000648913983296252e9aef9cfb4a633d7b450c14f78b0c8bba7478",
+        "26355d991b38217c250a7a7c5c8af99ae58226404887f8a13f687a2e8c7c036a",
+        "de39de35b8fed4d721101bdcab03372b43cf3d5b35924e1c10a3bcc20a51d074",
+        "b6da697ed0e2d506de22196ae0cecebb976e6abbd40ea9eeb970bc8f94fc62e5",
+        "80fbfec04ade50f113b88fbd55be46259c0904f6a89e60529ddeb47c138a3dad",
+        "788451d2d5765046fae317bff43b1101afdad69f683cdafc7ca706f26a69db8f",
+        "9dc02217424f3d558696352d5ee45b016bb23f66645a3a747b1b45c5531a0374",
+        "6a813c6437eaaa15dc1eb3eb3159d7f3af6798117697f58629e93fbe46514d3d",
+        "d3056b099239b7d29fad9ba530fd2b3e108e246c1404cb4674648546fa3ced1b",
+        "c802d064f9306d680fbb8abc9bd17b0bca06d519d3180fa349e05dd6680fe1a8",
+        "6424c33bae0d9a70e33ddd3261efc2b04fcf48fe29796567d2bb6753cae2812e",
+        "e8e97485f7f6458efc3031dfe02234b3ede35f207ae5af0d4bdbbd330b59ab1f",
+        "a5e83641e3b22303c2a0b9d2fc294618cefe0eb4d35a05df42a3181d46af0c42",
+        "d35fdf70594991f1a9b0f982f7cf9ef121785789d6a37b9aac47b57fb0ae9c97",
+        "45d29a1b8727ee16e37e18b5085fec9f6da9b4a5cbdd7e38c67b87ab63ff884f",
+        "2081283d9df1eb3d9ecab7c67cb91c4a5937ce49656aad2a09361b073dbcdefd",
+        "d6f4e8217599d9bad2f6d11eb91b6fe00fed819037429359983c29a0ec3cfa12",
+        "8da10a24397d67921603b02ce4ab4e16d36390e571d65e657eade27991bbe0a6",
+        "8857faf045187fd2208c20c5cc44df4aaf2df644e590f652b15840cd7eeb5d28",
+        "4a1cfa142dd8d16ea70f7b6925cd81323aa070658fb42b1775cb8b035987c6c4",
+        "c9dcbcb4334aa77889876b67bde33d426d6664953234e05ff232ebfd946f6432",
+        "8a26e0a7ec8b630125118c80da66c21cf0e04c07bf8138d3ba2f3c63ad6e4586",
+        "1eedeaed734a39c349d4691a5168b5932ded93a43dcb8beba505eb40d0fb57d9",
+        "28eb7c05f69e07c599170ba6d0699f67741a3c723a7dd6aeba783350e17a77a5",
+        "d49215bd61a783cc739df65727622ba0e24b0f1ec24f33576760bddb46bfa073",
+        "7f48b4d530ae51370a3937b72db9029c2fffbf18906692e69d00b48641239e43",
+        "7c2393c66f51f4b2503b438eea335905575ad406e80c108fb4d32aafd63c6389",
+        "173649edf5292fb063bbf382a030dd89a7dc230895f8ac3caadff2efb61906a0",
+        "bac95045c12cb3da69f96113eee54a3cb89ceeb52e8bfeffe3a35a0c475d57d6",
+        "023d0b8051bf2fe53a85e4ddd26ce39ab246d8791a9ad9a6e839cc8cbe6e2d0f",
+        "1ec834ff4a6fcfae6a3c754449c9a2d0db61813e0df50f63f6430667a387a267",
+        "dc4a343bb028d084f70944f8e5148c60859381b661da093ea5d8824a1b0dd688",
+        "b42861f324db41fa29a0e083b2c8766fe03f1f02c4daf57c42e007e1fc277ae4",
+        "218408582d5a8ce4ccc2e1b3c86c1892236763a44b5c47b48eab0729979191ee",
+        "351bfe6614e9000df0528070e175b7a8a61aecefee10b2d31036ca2ff797a7ee",
+        "3341cd8e316176cfcfd6b5a5ca00a772b69d227e1fa85c0ecd3d461a8529b42d",
+        "35883499729964ec938fb352836ae7cfb35b71441a270ea43e6ffe7b6e76ded2",
+        "bdb92228eb3b90ba4b29a84fadb205788788d91241beca1528f914ba5c2820db",
+        "5c647bb9dc6f74313e46188821bd70ad233725ca4c6516ad521967093a34cbca",
+        "1a9b2740c1c23f6d56b4908b2157e483f5b17c203757bcaabbfd2e8a3336564c",
+        "65c09ff5d20e73ecbd894bae37e9dd81bc93482b12699fcc8cbb9f5fa5ca9f29",
+        "6b8a41800c4a92137897e0e1971983314455aa07f1dc9f978c69ee9af609fce9",
+        "0004206f9effbf6986a7ed7ed7f77ddf746b3a9f2ae1b64d8b43aac645e11ade",
+        "b02e27debb0771d2fa52bec412d8d5283e9a27e66341ead6b4ec6b851d9d47c5",
+        "a218b53036c30de8672ac688af9673d15db84faad7b55773170128712617fd3d",
+        "93e5e32c26869b6af6c48bfaf128a410ec4e5edc4ef60649884dcdaf98d1da9a",
+        "8a0bec189b91d1b02487a6b0bd8ec5f642ace6dc89e99cce35bbb4cceef1fb6d",
+        "47dc010673edf45c15b157966067086b511d77bf5128f2caf1fbd20aaef8b1b2",
+        "84780a86714a92f517acd17c44d44d13091cf05e108e6aee14c5945e2f2e9bec",
+        "6e619751beda3306a04c686ddfdf7ca21fa9810ee8d98adaec2c13efa045aef3",
+        "3e461f8895bdbed9f69066d3e346f60ba0cfde8279c3b8cf787fb09c212c65ed",
+        "c590fe68d8a9e4a69172080550e3ca631015d00fafd451d5a5247dbd039e9bb3",
+        "5650c409bf85d05748e0d783f220ed1d52931a370ba8fff964a6ec72964d362c",
+        "75674b8fd70f39804b9850da01474eedea6cbf3dd0408ad6abf82bf65d1ef424",
+        "71b553aa5298ddcbc2fe07ba3c4d2da36f7629dbdc90a7f3f3abe2b2fc8ffff3",
+        "9b4077a6716b554eebdcc52f6a4fdeadfb23f7dc3ad4b7e0cbeecbf900b4710a",
+        "e0d812151a2933ab9d90ecf6ba005d96f2757dbc6dbc8c6f33897260629572a7",
+        "3891862fa01e4f0303696bed33949d7a348eed6b6ebff4a1530da7ddb50be3c9",
+        "15a8aaba14072d63a0cdb83a5f43792225b68a7570f61bb055ca9c5b6a5ae2c0",
+        "4b614111d1613ef944559fbaafab503cf5bb69a14d9af5b3662171b518d00680",
+        "a3e68f518b5e878e0a5d60544464b62a0c4d36def78d6431910353205a0b9588",
+        "43b4f4240424b89b15536e2ad31acb7b6d15378ac8e9790e2339e2fb6fd6a758",
+        "aa0ad5ba9e6ea3af5ce23f60ea4ef920961ba29c1f54117a3d7c25170d8ce0a2",
+        "8c0a2a54eddb1c99c5b4a46bd159f9f12cd9cef7950c78490238193001332fdf",
+        "55559122062fc0287e5be9f7eec7d1c971e15d0421a07230e725dac2ac119067",
+        "645eb01e04188d4d36abec9ca610996c6957b68d80ef30dec4de100e6e094dde",
+        "9649e4284eb7fc9500d1aa16a39c881da35c504737753f20676cd49efc1cc2e0",
+        "d371e1ec32aca07d2e69c9256f34b95be663708b190df46ff39a58a41ed90758",
+        "e83abb909fe45fdd867dcc46342256a0e06d408f16e297e78180ce2174428525",
+        "cce4c039519d9dbc3b7ac642bb05033314e8e3c3959fbc9d1dc39426e24d91e8",
+        "b061546c150fcd960feae111a8390aa0cd8bd141c763c32a4e8bbd1e43aafab6",
+        "a582d44191827f6336d717ff45857babcfe2805cc0bd78c3d67fa0d5796407d8",
+        "f9920f70e068ca8e96993a19bb7a20176f6569e5a38830832762d302104b4101",
+        "920973d1c0e918aa8e44a73077ca58230cca9ef3bb883bfd5b6979e761a5d96c",
+        "e343398098dd28579239f8a6ddecad44da9f57b11dfdc66b54e94c63a4818576",
+        "ae6ec4de74c4240090aebc2d103af841fd90cf766ce5f5392ce24de4805d0bf3",
+        "3a0d749452c5467c069451a91d1f4c8e91713039291eeec6bcbcda44c0c85f04",
+        "ba63ff1ae470e309739b8e49122a5ac9b12c2fc4ce826889e8f64966fbf973bc",
+        "b94cf05a0f5274506189370a7ac97fc814ce201cc5f79f247af22cdfde403809",
+        "875fbdc546312296860669ed56eb24e3885f2035c558b61899cafb18ca7280d0",
+        "dca17f0f5099a405b7c3117c73853e8101c4e5c63327d67dbfe820e10889a603",
+        "77a1add964bed6d65736eef44df14357641dea4c7528bf45d469621efaf065fc",
+        "597f7e59a5a9f99f9024fc5de7836acf2d429af6b8074eddb819c9b85571391e",
+        "301d1b2a7ecd21795832dbf47464359b2a66b36d1fe56b7f6665e308c60ddc52",
+        "303a8ae9fb8258362f9b00f6f596343c4ec23c831663d2669ddb877aa855f179",
+        "f95bca4005d438e94c22220d930149f58bd09ca4933b9c2e5db1c49460daa86a",
+        "b3480e38a92c302a24eb61bff7742e0ae59f9f41213fe3ece4d186b745f32ca4",
+        "989b103f4982e26841e6f557997a24bbddd445d69882f51ca759aa436621bd11",
+        "d11663ca1d5e188833e9cbdc5b4cbeb1ebe0587379b202abbc6b1384e608c359",
+        "47c2f18bbe529e351e8de819d4b1bbc92791ba437900a867e5f6d2d00482e901",
+        "bc7f7d3e3e9eb645144a25269addceb18f1206881386d1fb823244dab39f2dbb",
+        "e437062f3117ca937119822394fe61716bb35d8bc6ed84d8acb077ab379f6f29",
+        "b9ddd6fb39c8a27a9056c2557427cf6c8ce8dd790ef3cbc2e31d7a34fcad0d5c",
+        "aabb04619e0b8ec661b2883155494d2ecbfac4f1d0f1fe7a1a1a4467a6db9f59",
+        "24060b4f66704e1012732b81329fa304354250dc9b8cc3a4a07ccfdf419d6713",
+        "702cc4b386042248120dae0cb072b2ae60dbe56a58c754441e1b80847a23332d",
+        "e958f9deafa496e6ae264b07017ffc2891eba95b4683508ab0f61eedf175243f",
+        "a76df0f3d49e6d95bf7e0b8e1b25d8cb5e2dc2309c3f3958896b02f676dcbe11",
+        "ae768890cd590cd1cc79a2fe2f416a3dfc2a29f95056bd17436e42a659781b22",
+        "bc360370384084c67e9ab7d37aeddfdf45a424f1ce79aa95828c9512ca401f76",
+        "7f1db93c8a3b5133b8f49d76a30ee6f6d29c6680ac55927f72c12cbb03ef2269",
+        "5eec0e813a8bcefc5b78bd3e12bf1e2a74a76bb3a32a53d20bd0d0e4d4c166a0",
+        "0069454b4b44531dd32d85652d447cbea9ea78b7bcaa6aad53078773c3ff19d9",
+        "f9e47dbbaeb3116817384c4742133659597c6c06e10b212c1fddcc651933fdf2",
+        "e27056ae0e90b90ee0f6fbcc43fe695b270066d809faf19ee307debdc0d478df",
+        "9ba1dde0f9a0d6e3d4f7c8f4493467ca696a5d874d91a99a869ac78fb0170668",
+        "12a170ab019bbcebcbdf3d7bc4fbc65ddd5cbcfa5978b9b90b320c3150a9bd96",
+        "47cb16be86adee229569aefed5016d77097b5971f23cd90cd4942fd187b6b43b",
+        "e3a4b60bfbfa21f36e7fb4c8e753009610695a988706b5e828e2f27c5be86abd",
+        "5b7d89e146cf1b36e322dae8ab8a475bb0238404af456bd046fc92e8ecb2bd14",
+        "c7485c0bf5f0316359a5e31bb4bc556849f35c43466b43330f3090999b0d7aae",
+        "b0c03647eff8aec674bd6b7260b08e251d40d798f213f71d5ee79ab2a7a11972",
+        "97e4f26bf36d8f8f314cef0944e0791b520a9e39ea952def87bb96d425d10a8d",
+        "1d0c8b71d48177efc8343f1ceb6b06a2436c036803b172478984011831a1339e",
+        "b12ef28774130d8e62e208e7779f7832b1069bda2da0116a2aaf8fbc8ebda7e4",
+        "973c3a860d66f24bcaa0be9df5dbda487bdcf92052c7973aaad4022a44cf7f27",
+        "ea1c8ccac65be2f140bbc41fb6edf4493c307299d6f4fc29c7c09b268abeaf6a",
+        "77e0a4939c8e4d3438af8af81c88a2b686e02fbb61d5777f4ce231703166d8ea",
+        "3e1d0d692e4b842c74f4e2cb4e1ad08ce70467613c15bf9c19e00eb059f17a79",
+        "74403d2f386aec9d580cd875d1345eb17021755413ed5c0d8d6fa9aa2481353b",
+        "5b1298fb14202adbd1fd7b262b3b5dbeaf4c0fce9f0f2938bf5df2c6da0f33b5",
+        "2e90c977de2325eeb77cb813a70778b3c6861109498c07d36d6aa2aef5472869",
+        "5ef50cd66d26c894a15073b6ead427f946fafbd37d397a2085275d515d53208a",
+        "273d4a5ae0bccd2d5b906733ea5edec60f3f3fd7a8b1ad39f7113f710cb26c99",
+        "4f0839b504facdc3af3eee2a1b6dc66d89aea03e3a1c0597d954a146df92357d",
+        "f8707ed0fd72923ef56ce171021489c17c34ebf2d0623f2d0f2e83e50077abf0",
+        "8fb2f6e993003011c182b9ae2cee52383e5e404d2d33db9c12ad8d928254f3f5",
+        "0bbbd1003b601c39271897620291b85abc083a2c2b7dfdee17fc8aed67bf9cbf",
+        "1d71104e5179bf48537489e8ad8fe660df628626f786d0cc932a82af1d1da79a",
+        "9774efaab9142ccff208d58851f78979d3ca427a1f6476a75ee4718f1cc01aea",
+        "cb8598b9f8301077a3d6a3e7c604894b92755de79293cdb91384a062c066146b",
+        "1758bf85b1a4ab2fe95541ded3f74bfa0c786c39c653b8087bbdfeb69b40475a",
+        "288f0e5c1c6ccd98a1b28c1f8c1895ee252a7e2b22b59b43cfa643c538ddd8e0",
+        "96b499dc046fa753a89ebf52903742b644c4ba1aba72a8759087b230be8f5e35"
+      ],
+      "wire": {
+        "jsonBytes": {
+          "total": 200508,
+          "median": 757.5,
+          "max": 11520
+        },
+        "rawBinaryBytes": {
+          "total": 196787,
+          "median": 766.0,
+          "max": 9579
+        },
+        "dictionaryBytes": {
+          "total": 63694,
+          "median": 269.0,
+          "max": 313
+        },
+        "dictionaryEntries": {
+          "total": 8313,
+          "median": 35.0,
+          "max": 42
+        },
+        "base64Bytes": {
+          "total": 262688,
+          "median": 1024.0,
+          "max": 12772
+        },
+        "jsonEnvelopeBytes": {
+          "total": 279208,
+          "median": 1094.0,
+          "max": 12842
+        }
+      }
+    },
+    "editor": {
+      "frames": 44,
+      "equalRGB565Bytes": 9011200,
+      "pixelSha256": [
+        "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5",
+        "e0a183a67e6340d3c6b61246e327ffaf41d5370cd35c4a33ee56938fc676f8f6",
+        "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39",
+        "00e5454110839e04d41e3d7cf95e15ab1b0298d93ec13dd8a04f1bcec74457d9",
+        "b82c37e64abbbc9b6202778ab15197d123188f376af3c5172f82291acf188c10",
+        "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5",
+        "0ed7a0ad258fa23bd12a3145d973c38d00a34f4c6bd84ead4c99094db122b20a",
+        "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5",
+        "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39",
+        "983cf0e5129d561b33df6d63ac32cc4aae22e34f13e9b74c0218a1d51297c1b9",
+        "1bf6fc643b5d0262e1bc92d51d0722974a193efc58bfbbea6d9ba2bd780dcc44",
+        "b2946cd38301be1575a412db0a187a53213bca80362729ae71ea90b509134fd3",
+        "083af224ab3eff3f95665e18642da47e59b01f828f601a21266ffd230eaaf954",
+        "5f7527b98ed3609f4852d9221bb8facebefaff075e457acd215857c7f3915451",
+        "dbf3ca98d6da49c2c5dab553987ba1fef8d317e2b2899b0b086ae7891f85507d",
+        "ff2ba4c9b57c188dbb4c16a7612ee4574ea2533438a4527945814aab566a6ce4",
+        "23f2f30dab27c72f088d1782f714bd207585bc75260846c17500f334704f602f",
+        "ceb0f00c6472cb53f12039ba097f159c0b87b45e844651747d515a287869f35c",
+        "0c8569cb47dfc25d7eb98a3396d989f0aa73da0fe6bacff7311cbfe683a9fb62",
+        "cd649f573d3d4f0171b6350102d23193237610f290631313cbc2c33944b7b817",
+        "f14b57cc1bb4efbff66474e5291486c593fc953bb3798c76ea2e92ac825ccafe",
+        "54b74b340848ba8ae00315deb49deddd77b10ed808a682ea5671f465527ad392",
+        "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5",
+        "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39",
+        "54b74b340848ba8ae00315deb49deddd77b10ed808a682ea5671f465527ad392",
+        "bf4d7dc007f8854104533a19909b067c4ec17260fe8aa2c2a0c5017a628db3e5",
+        "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39",
+        "983cf0e5129d561b33df6d63ac32cc4aae22e34f13e9b74c0218a1d51297c1b9",
+        "1bf6fc643b5d0262e1bc92d51d0722974a193efc58bfbbea6d9ba2bd780dcc44",
+        "b2946cd38301be1575a412db0a187a53213bca80362729ae71ea90b509134fd3",
+        "083af224ab3eff3f95665e18642da47e59b01f828f601a21266ffd230eaaf954",
+        "5f7527b98ed3609f4852d9221bb8facebefaff075e457acd215857c7f3915451",
+        "dbf3ca98d6da49c2c5dab553987ba1fef8d317e2b2899b0b086ae7891f85507d",
+        "ff2ba4c9b57c188dbb4c16a7612ee4574ea2533438a4527945814aab566a6ce4",
+        "23f2f30dab27c72f088d1782f714bd207585bc75260846c17500f334704f602f",
+        "ceb0f00c6472cb53f12039ba097f159c0b87b45e844651747d515a287869f35c",
+        "0c8569cb47dfc25d7eb98a3396d989f0aa73da0fe6bacff7311cbfe683a9fb62",
+        "cd649f573d3d4f0171b6350102d23193237610f290631313cbc2c33944b7b817",
+        "f14b57cc1bb4efbff66474e5291486c593fc953bb3798c76ea2e92ac825ccafe",
+        "f14b57cc1bb4efbff66474e5291486c593fc953bb3798c76ea2e92ac825ccafe",
+        "65d70b140fb3a667f0bdcf5c75e1699b3c915a1f562e52989916541e1ab31e39",
+        "983cf0e5129d561b33df6d63ac32cc4aae22e34f13e9b74c0218a1d51297c1b9",
+        "664fd4652f72e734e671edef252efe4c2797973ad94c878549e53afc28b4dc3c",
+        "c3f952dcb0548bc0e606f21a1314155b8f590f33a7c447e8fcc78fa0b7a91a66"
+      ],
+      "wire": {
+        "jsonBytes": {
+          "total": 95708,
+          "median": 2209.0,
+          "max": 5463
+        },
+        "rawBinaryBytes": {
+          "total": 76321,
+          "median": 1626.5,
+          "max": 5049
+        },
+        "dictionaryBytes": {
+          "total": 11873,
+          "median": 281.5,
+          "max": 289
+        },
+        "dictionaryEntries": {
+          "total": 1176,
+          "median": 27.5,
+          "max": 28
+        },
+        "base64Bytes": {
+          "total": 101836,
+          "median": 2170.0,
+          "max": 6732
+        },
+        "jsonEnvelopeBytes": {
+          "total": 105004,
+          "median": 2242.0,
+          "max": 6804
+        }
+      }
+    }
+  },
+  "metrics": {
+    "x86QuickJS": {
+      "sysmon": {
+        "P": [
+          {
+            "resident": 410976,
+            "peakAbove": 29296,
+            "liveAbove": 4528,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 49.90699768066406,
+              "admitUs": 32.885009765625,
+              "lookupUs": 4.7389984130859375,
+              "repeatLookupUs": 22.875,
+              "walkUs": 147.52999877929688,
+              "paintUs": 564.3860015869141,
+              "repeatPaintUs": 913.8059997558594,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 29296,
+            "liveAbove": 4544,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 74.70799255371094,
+              "admitUs": 64.27200317382812,
+              "lookupUs": 5.36700439453125,
+              "repeatLookupUs": 40.00700378417969,
+              "walkUs": 285.3659973144531,
+              "paintUs": 1164.988998413086,
+              "repeatPaintUs": 1579.4620056152344,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 29296,
+            "liveAbove": 4544,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 46.093994140625,
+              "admitUs": 32.540008544921875,
+              "lookupUs": 4.0229949951171875,
+              "repeatLookupUs": 22.804000854492188,
+              "walkUs": 155.56199645996094,
+              "paintUs": 483.5550079345703,
+              "repeatPaintUs": 951.4029998779297,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 29296,
+            "liveAbove": 4544,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 44.85600280761719,
+              "admitUs": 31.92999267578125,
+              "lookupUs": 3.350006103515625,
+              "repeatLookupUs": 36.85798645019531,
+              "walkUs": 145.35501098632812,
+              "paintUs": 548.5970001220703,
+              "repeatPaintUs": 1093.6299896240234,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 29296,
+            "liveAbove": 4544,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 50.131988525390625,
+              "admitUs": 32.70201110839844,
+              "lookupUs": 3.925994873046875,
+              "repeatLookupUs": 23.042007446289062,
+              "walkUs": 144.6009979248047,
+              "paintUs": 551.7339935302734,
+              "repeatPaintUs": 1031.9179992675781,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          }
+        ],
+        "G": [
+          {
+            "resident": 410976,
+            "peakAbove": 54352,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 40.625,
+              "admitUs": 286.41700744628906,
+              "lookupUs": 2.2769927978515625,
+              "repeatLookupUs": 22.710006713867188,
+              "walkUs": 148.5959930419922,
+              "paintUs": 550.8580017089844,
+              "repeatPaintUs": 1063.2559967041016,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54352,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 45.73100280761719,
+              "admitUs": 357.29600524902344,
+              "lookupUs": 3.0879974365234375,
+              "repeatLookupUs": 22.992996215820312,
+              "walkUs": 165.06700134277344,
+              "paintUs": 572.3170013427734,
+              "repeatPaintUs": 1778.3379974365234,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54352,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 45.51499938964844,
+              "admitUs": 323.68299865722656,
+              "lookupUs": 2.3350067138671875,
+              "repeatLookupUs": 23.10400390625,
+              "walkUs": 148.9239959716797,
+              "paintUs": 575.093994140625,
+              "repeatPaintUs": 1053.6790008544922,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54352,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 60.76800537109375,
+              "admitUs": 320.62098693847656,
+              "lookupUs": 2.2960052490234375,
+              "repeatLookupUs": 22.677001953125,
+              "walkUs": 147.43499755859375,
+              "paintUs": 545.0169982910156,
+              "repeatPaintUs": 1158.7760009765625,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54352,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 1919,
+              "encodeUs": 45.154998779296875,
+              "admitUs": 311.3009948730469,
+              "lookupUs": 2.303009033203125,
+              "repeatLookupUs": 22.563995361328125,
+              "walkUs": 155.15899658203125,
+              "paintUs": 548.7900085449219,
+              "repeatPaintUs": 1167.6170043945312,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          }
+        ],
+        "B": [
+          {
+            "resident": 410976,
+            "peakAbove": 70080,
+            "liveAbove": 20880,
+            "result": {
+              "bytes": 1850,
+              "encodeUs": 733.4120025634766,
+              "admitUs": 155.98899841308594,
+              "lookupUs": 8.414993286132812,
+              "repeatLookupUs": 196.02301025390625,
+              "walkUs": 1011.197998046875,
+              "paintUs": 2050.147994995117,
+              "repeatPaintUs": 4085.488998413086,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 70080,
+            "liveAbove": 20880,
+            "result": {
+              "bytes": 1850,
+              "encodeUs": 735.7959899902344,
+              "admitUs": 171.97900390625,
+              "lookupUs": 9.97900390625,
+              "repeatLookupUs": 230.74000549316406,
+              "walkUs": 1122.9679870605469,
+              "paintUs": 1850.8660125732422,
+              "repeatPaintUs": 3893.5279998779297,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 70080,
+            "liveAbove": 20880,
+            "result": {
+              "bytes": 1850,
+              "encodeUs": 703.4140014648438,
+              "admitUs": 171.55899047851562,
+              "lookupUs": 9.97900390625,
+              "repeatLookupUs": 228.96499633789062,
+              "walkUs": 1001.7779998779297,
+              "paintUs": 1842.8190002441406,
+              "repeatPaintUs": 4090.022003173828,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 70080,
+            "liveAbove": 20880,
+            "result": {
+              "bytes": 1850,
+              "encodeUs": 732.9380035400391,
+              "admitUs": 170.75599670410156,
+              "lookupUs": 9.871994018554688,
+              "repeatLookupUs": 228.40699768066406,
+              "walkUs": 1126.1220092773438,
+              "paintUs": 1918.0119934082031,
+              "repeatPaintUs": 4186.313003540039,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 70080,
+            "liveAbove": 20880,
+            "result": {
+              "bytes": 1850,
+              "encodeUs": 735.6679992675781,
+              "admitUs": 172.01199340820312,
+              "lookupUs": 9.957000732421875,
+              "repeatLookupUs": 227.25799560546875,
+              "walkUs": 1039.9940032958984,
+              "paintUs": 1926.2129974365234,
+              "repeatPaintUs": 3747.624008178711,
+              "lookupHash": 1725,
+              "repeatLookupHash": 29792,
+              "walkHash": 1181605381,
+              "paintHash": 624371874,
+              "paintCommands": 174,
+              "repeatPaintHash": 590315716,
+              "repeatPaintCommands": 348,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "select-3"
+            }
+          }
+        ]
+      },
+      "chess": {
+        "P": [
+          {
+            "resident": 410976,
+            "peakAbove": 54608,
+            "liveAbove": 4576,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 65.16600036621094,
+              "admitUs": 58.235992431640625,
+              "lookupUs": 3.91400146484375,
+              "repeatLookupUs": 27.88800048828125,
+              "walkUs": 303.44000244140625,
+              "paintUs": 319.4440002441406,
+              "repeatPaintUs": 628.7649993896484,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54608,
+            "liveAbove": 4576,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 66.99299621582031,
+              "admitUs": 62.51600646972656,
+              "lookupUs": 3.6439971923828125,
+              "repeatLookupUs": 27.179000854492188,
+              "walkUs": 298.364990234375,
+              "paintUs": 326.19300842285156,
+              "repeatPaintUs": 597.5139923095703,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54608,
+            "liveAbove": 4544,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 80.96998596191406,
+              "admitUs": 58.566009521484375,
+              "lookupUs": 3.45599365234375,
+              "repeatLookupUs": 27.85400390625,
+              "walkUs": 300.51600646972656,
+              "paintUs": 322.5,
+              "repeatPaintUs": 618.31298828125,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54608,
+            "liveAbove": 4576,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 65.10700988769531,
+              "admitUs": 58.77299499511719,
+              "lookupUs": 4.2469940185546875,
+              "repeatLookupUs": 27.46600341796875,
+              "walkUs": 302.4250030517578,
+              "paintUs": 326.7239990234375,
+              "repeatPaintUs": 579.0189971923828,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 54608,
+            "liveAbove": 4560,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 58.33599853515625,
+              "admitUs": 56.8280029296875,
+              "lookupUs": 4.1399993896484375,
+              "repeatLookupUs": 28.4639892578125,
+              "walkUs": 293.17201232910156,
+              "paintUs": 316.0489959716797,
+              "repeatPaintUs": 604.4309997558594,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          }
+        ],
+        "G": [
+          {
+            "resident": 410976,
+            "peakAbove": 62768,
+            "liveAbove": 8656,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 56.683990478515625,
+              "admitUs": 371.6210021972656,
+              "lookupUs": 1.889007568359375,
+              "repeatLookupUs": 23.849990844726562,
+              "walkUs": 255.6510009765625,
+              "paintUs": 285.5240020751953,
+              "repeatPaintUs": 661.8639984130859,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 62768,
+            "liveAbove": 8656,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 64.32400512695312,
+              "admitUs": 460.4949951171875,
+              "lookupUs": 2.274993896484375,
+              "repeatLookupUs": 26.934005737304688,
+              "walkUs": 316.53199768066406,
+              "paintUs": 292.8800048828125,
+              "repeatPaintUs": 541.5309906005859,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 62768,
+            "liveAbove": 8656,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 55.98899841308594,
+              "admitUs": 386.66099548339844,
+              "lookupUs": 4.9770050048828125,
+              "repeatLookupUs": 27.15899658203125,
+              "walkUs": 294.9650115966797,
+              "paintUs": 324.5959930419922,
+              "repeatPaintUs": 599.2819976806641,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 62768,
+            "liveAbove": 8656,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 122.67799377441406,
+              "admitUs": 630.1580047607422,
+              "lookupUs": 3.0009918212890625,
+              "repeatLookupUs": 31.589004516601562,
+              "walkUs": 337.45799255371094,
+              "paintUs": 374.885009765625,
+              "repeatPaintUs": 719.6799926757812,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 62768,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 3443,
+              "encodeUs": 64.385009765625,
+              "admitUs": 438.10699462890625,
+              "lookupUs": 2.1819915771484375,
+              "repeatLookupUs": 26.01800537109375,
+              "walkUs": 279.41900634765625,
+              "paintUs": 301.64599609375,
+              "repeatPaintUs": 599.4409942626953,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          }
+        ],
+        "B": [
+          {
+            "resident": 410976,
+            "peakAbove": 59312,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2761,
+              "encodeUs": 581.2429962158203,
+              "admitUs": 221.2989959716797,
+              "lookupUs": 9.488006591796875,
+              "repeatLookupUs": 221.39999389648438,
+              "walkUs": 1482.3450012207031,
+              "paintUs": 1652.6179962158203,
+              "repeatPaintUs": 2844.5230102539062,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 59312,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2761,
+              "encodeUs": 553.9369964599609,
+              "admitUs": 217.7169952392578,
+              "lookupUs": 9.2449951171875,
+              "repeatLookupUs": 250.71400451660156,
+              "walkUs": 1361.3180084228516,
+              "paintUs": 1457.2309875488281,
+              "repeatPaintUs": 2792.134002685547,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 59312,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2761,
+              "encodeUs": 561.9049987792969,
+              "admitUs": 225.10400390625,
+              "lookupUs": 9.634994506835938,
+              "repeatLookupUs": 218.80999755859375,
+              "walkUs": 1453.7900085449219,
+              "paintUs": 1453.4510040283203,
+              "repeatPaintUs": 2755.000991821289,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 59312,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2761,
+              "encodeUs": 555.0510101318359,
+              "admitUs": 222.5889892578125,
+              "lookupUs": 9.514999389648438,
+              "repeatLookupUs": 215.69500732421875,
+              "walkUs": 1459.2039947509766,
+              "paintUs": 1371.8520050048828,
+              "repeatPaintUs": 2568.4239959716797,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 59312,
+            "liveAbove": 20896,
+            "result": {
+              "bytes": 2761,
+              "encodeUs": 568.8410034179688,
+              "admitUs": 215.86000061035156,
+              "lookupUs": 9.375,
+              "repeatLookupUs": 214.93299865722656,
+              "walkUs": 1513.156005859375,
+              "paintUs": 1542.9429931640625,
+              "repeatPaintUs": 3352.167999267578,
+              "lookupHash": 4061638,
+              "repeatLookupHash": 131195120,
+              "walkHash": -1847657730,
+              "paintHash": -392767402,
+              "paintCommands": 112,
+              "repeatPaintHash": 1474954412,
+              "repeatPaintCommands": 224,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "castle-long/003 left"
+            }
+          }
+        ]
+      },
+      "snake": {
+        "P": [
+          {
+            "resident": 410976,
+            "peakAbove": 21712,
+            "liveAbove": 4560,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 24.845001220703125,
+              "admitUs": 17.94000244140625,
+              "lookupUs": 4.0709991455078125,
+              "repeatLookupUs": 27.11199951171875,
+              "walkUs": 65.49200439453125,
+              "paintUs": 117.96299743652344,
+              "repeatPaintUs": 188.6510009765625,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 21712,
+            "liveAbove": 4544,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 29.220001220703125,
+              "admitUs": 21.722991943359375,
+              "lookupUs": 4.3079986572265625,
+              "repeatLookupUs": 34.1300048828125,
+              "walkUs": 81.19099426269531,
+              "paintUs": 140.52099609375,
+              "repeatPaintUs": 235.21400451660156,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 21712,
+            "liveAbove": 4560,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 27.326995849609375,
+              "admitUs": 19.807998657226562,
+              "lookupUs": 4.524993896484375,
+              "repeatLookupUs": 57.53401184082031,
+              "walkUs": 74.0889892578125,
+              "paintUs": 127.93501281738281,
+              "repeatPaintUs": 213.24899291992188,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 21712,
+            "liveAbove": 4560,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 20.716995239257812,
+              "admitUs": 15.242996215820312,
+              "lookupUs": 3.2450103759765625,
+              "repeatLookupUs": 24.12799072265625,
+              "walkUs": 65.26800537109375,
+              "paintUs": 113.74400329589844,
+              "repeatPaintUs": 190.32199096679688,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 21712,
+            "liveAbove": 4544,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 23.353012084960938,
+              "admitUs": 17.314987182617188,
+              "lookupUs": 3.410003662109375,
+              "repeatLookupUs": 30.220001220703125,
+              "walkUs": 65.875,
+              "paintUs": 114.49900817871094,
+              "repeatPaintUs": 186.79299926757812,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          }
+        ],
+        "G": [
+          {
+            "resident": 410976,
+            "peakAbove": 26016,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 23.541000366210938,
+              "admitUs": 131.8699951171875,
+              "lookupUs": 2.24700927734375,
+              "repeatLookupUs": 28.1669921875,
+              "walkUs": 69.42399597167969,
+              "paintUs": 114.04000854492188,
+              "repeatPaintUs": 188.10499572753906,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 26016,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 24.498001098632812,
+              "admitUs": 131.30799865722656,
+              "lookupUs": 2.0800018310546875,
+              "repeatLookupUs": 27.016006469726562,
+              "walkUs": 64.03199768066406,
+              "paintUs": 124.62100219726562,
+              "repeatPaintUs": 189.9709930419922,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 26016,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 25.331008911132812,
+              "admitUs": 137.45199584960938,
+              "lookupUs": 2.1719970703125,
+              "repeatLookupUs": 26.98699951171875,
+              "walkUs": 65.02101135253906,
+              "paintUs": 114.35598754882812,
+              "repeatPaintUs": 190.4130096435547,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 26016,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 23.58599853515625,
+              "admitUs": 129.88600158691406,
+              "lookupUs": 2.139007568359375,
+              "repeatLookupUs": 27.147994995117188,
+              "walkUs": 64.07600402832031,
+              "paintUs": 125.54499816894531,
+              "repeatPaintUs": 188.62599182128906,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 26016,
+            "liveAbove": 8624,
+            "result": {
+              "bytes": 758,
+              "encodeUs": 23.71600341796875,
+              "admitUs": 130.72999572753906,
+              "lookupUs": 2.14801025390625,
+              "repeatLookupUs": 27.485000610351562,
+              "walkUs": 81.13600158691406,
+              "paintUs": 114.218994140625,
+              "repeatPaintUs": 164.61900329589844,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          }
+        ],
+        "B": [
+          {
+            "resident": 410976,
+            "peakAbove": 51232,
+            "liveAbove": 24960,
+            "result": {
+              "bytes": 766,
+              "encodeUs": 236.28399658203125,
+              "admitUs": 94.75999450683594,
+              "lookupUs": 10.358001708984375,
+              "repeatLookupUs": 223.26400756835938,
+              "walkUs": 369.375,
+              "paintUs": 508.14300537109375,
+              "repeatPaintUs": 866.8759918212891,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 51232,
+            "liveAbove": 24960,
+            "result": {
+              "bytes": 766,
+              "encodeUs": 207.885009765625,
+              "admitUs": 82.69200134277344,
+              "lookupUs": 8.858993530273438,
+              "repeatLookupUs": 227.5489959716797,
+              "walkUs": 409.87001037597656,
+              "paintUs": 692.7919921875,
+              "repeatPaintUs": 1023.5500030517578,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 51232,
+            "liveAbove": 24976,
+            "result": {
+              "bytes": 766,
+              "encodeUs": 235.61700439453125,
+              "admitUs": 92.83200073242188,
+              "lookupUs": 10.175994873046875,
+              "repeatLookupUs": 243.06399536132812,
+              "walkUs": 401.01300048828125,
+              "paintUs": 502.8610076904297,
+              "repeatPaintUs": 1002.1089935302734,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 51232,
+            "liveAbove": 24960,
+            "result": {
+              "bytes": 766,
+              "encodeUs": 239.3939971923828,
+              "admitUs": 93.98899841308594,
+              "lookupUs": 9.98199462890625,
+              "repeatLookupUs": 246.8730010986328,
+              "walkUs": 348.3110046386719,
+              "paintUs": 436.7919921875,
+              "repeatPaintUs": 946.3450012207031,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 51232,
+            "liveAbove": 24960,
+            "result": {
+              "bytes": 766,
+              "encodeUs": 235.1439971923828,
+              "admitUs": 93.72900390625,
+              "lookupUs": 9.89599609375,
+              "repeatLookupUs": 242.97000122070312,
+              "walkUs": 396.9570007324219,
+              "paintUs": 498.99000549316406,
+              "repeatPaintUs": 960.6629943847656,
+              "lookupHash": 4138057,
+              "repeatLookupHash": 125584400,
+              "walkHash": 1697411594,
+              "paintHash": -414526446,
+              "paintCommands": 28,
+              "repeatPaintHash": -706437340,
+              "repeatPaintCommands": 56,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "auto-79"
+            }
+          }
+        ]
+      },
+      "editor": {
+        "P": [
+          {
+            "resident": 410976,
+            "peakAbove": 46016,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 67.99800109863281,
+              "admitUs": 52.83799743652344,
+              "lookupUs": 3.95599365234375,
+              "repeatLookupUs": 24.402999877929688,
+              "walkUs": 262.83399963378906,
+              "paintUs": 427.80101013183594,
+              "repeatPaintUs": 818.3899993896484,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 46016,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 71.9110107421875,
+              "admitUs": 51.90299987792969,
+              "lookupUs": 3.8430023193359375,
+              "repeatLookupUs": 23.694000244140625,
+              "walkUs": 270.7899932861328,
+              "paintUs": 390.8869934082031,
+              "repeatPaintUs": 795.281005859375,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 46016,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 67.14500427246094,
+              "admitUs": 52.34199523925781,
+              "lookupUs": 3.720001220703125,
+              "repeatLookupUs": 24.162002563476562,
+              "walkUs": 273.9550018310547,
+              "paintUs": 380.9029998779297,
+              "repeatPaintUs": 738.7590026855469,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 46016,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 68.10099792480469,
+              "admitUs": 52.30799865722656,
+              "lookupUs": 4.451995849609375,
+              "repeatLookupUs": 24.167999267578125,
+              "walkUs": 291.2950134277344,
+              "paintUs": 421.77699279785156,
+              "repeatPaintUs": 808.0740051269531,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 46016,
+            "liveAbove": 8640,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 73.22300720214844,
+              "admitUs": 52.48899841308594,
+              "lookupUs": 4.2030029296875,
+              "repeatLookupUs": 25.086990356445312,
+              "walkUs": 250.9980010986328,
+              "paintUs": 371.12001037597656,
+              "repeatPaintUs": 741.1499938964844,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          }
+        ],
+        "G": [
+          {
+            "resident": 410976,
+            "peakAbove": 50288,
+            "liveAbove": 12720,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 63.18699645996094,
+              "admitUs": 383.989013671875,
+              "lookupUs": 2.2769927978515625,
+              "repeatLookupUs": 23.923004150390625,
+              "walkUs": 265.88299560546875,
+              "paintUs": 435.8529968261719,
+              "repeatPaintUs": 721.6490020751953,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 50288,
+            "liveAbove": 12736,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 68.65000915527344,
+              "admitUs": 377.96099853515625,
+              "lookupUs": 2.4359893798828125,
+              "repeatLookupUs": 23.720001220703125,
+              "walkUs": 268.3310089111328,
+              "paintUs": 383.5709991455078,
+              "repeatPaintUs": 740.7209930419922,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 50288,
+            "liveAbove": 12720,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 67.072998046875,
+              "admitUs": 392.5489959716797,
+              "lookupUs": 2.2519989013671875,
+              "repeatLookupUs": 24.427001953125,
+              "walkUs": 267.4360046386719,
+              "paintUs": 422.2480010986328,
+              "repeatPaintUs": 824.2889862060547,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 50288,
+            "liveAbove": 12720,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 87.76899719238281,
+              "admitUs": 405.48500061035156,
+              "lookupUs": 2.34600830078125,
+              "repeatLookupUs": 24.302993774414062,
+              "walkUs": 328.97999572753906,
+              "paintUs": 431.5870056152344,
+              "repeatPaintUs": 823.2980041503906,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 50288,
+            "liveAbove": 12720,
+            "result": {
+              "bytes": 3105,
+              "encodeUs": 65.73300170898438,
+              "admitUs": 382.6090087890625,
+              "lookupUs": 2.5269927978515625,
+              "repeatLookupUs": 23.91900634765625,
+              "walkUs": 267.13999938964844,
+              "paintUs": 426.4499969482422,
+              "repeatPaintUs": 874.5890045166016,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          }
+        ],
+        "B": [
+          {
+            "resident": 410976,
+            "peakAbove": 74512,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2572,
+              "encodeUs": 431.3419952392578,
+              "admitUs": 204.6750030517578,
+              "lookupUs": 9.83099365234375,
+              "repeatLookupUs": 228.51499938964844,
+              "walkUs": 1457.1610107421875,
+              "paintUs": 1589.8819885253906,
+              "repeatPaintUs": 3104.9029998779297,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 74512,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2572,
+              "encodeUs": 454.7689971923828,
+              "admitUs": 202.23699951171875,
+              "lookupUs": 9.848007202148438,
+              "repeatLookupUs": 231.48899841308594,
+              "walkUs": 1431.9639892578125,
+              "paintUs": 1430.5030059814453,
+              "repeatPaintUs": 2730.697006225586,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 74512,
+            "liveAbove": 20896,
+            "result": {
+              "bytes": 2572,
+              "encodeUs": 593.0910034179688,
+              "admitUs": 206.35899353027344,
+              "lookupUs": 18.6199951171875,
+              "repeatLookupUs": 223.8300018310547,
+              "walkUs": 1451.3160095214844,
+              "paintUs": 1606.1589965820312,
+              "repeatPaintUs": 2805.106002807617,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 74512,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2572,
+              "encodeUs": 465.78900146484375,
+              "admitUs": 203.06700134277344,
+              "lookupUs": 9.6199951171875,
+              "repeatLookupUs": 219.29901123046875,
+              "walkUs": 1495.5039978027344,
+              "paintUs": 1453.5559997558594,
+              "repeatPaintUs": 2910.9850006103516,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          },
+          {
+            "resident": 410976,
+            "peakAbove": 74512,
+            "liveAbove": 20912,
+            "result": {
+              "bytes": 2572,
+              "encodeUs": 554.8280029296875,
+              "admitUs": 218.4550018310547,
+              "lookupUs": 10.071990966796875,
+              "repeatLookupUs": 223.1800079345703,
+              "walkUs": 1567.5399932861328,
+              "paintUs": 1467.2140045166016,
+              "repeatPaintUs": 2736.199996948242,
+              "lookupHash": 1728,
+              "repeatLookupHash": 29840,
+              "walkHash": -551476811,
+              "paintHash": -885553058,
+              "paintCommands": 140,
+              "repeatPaintHash": 151004604,
+              "repeatPaintCommands": 280,
+              "reps": 1,
+              "requested": 1,
+              "fixture": "replace-search/query unit 5"
+            }
+          }
+        ]
+      }
+    },
+    "retained": {
+      "sysmon": {
+        "1": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 22816,
+            "liveAbove": 17104,
+            "result": {
+              "count": 1,
+              "walkHash": 1181605381
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 38064,
+            "liveAbove": 21184,
+            "result": {
+              "count": 1,
+              "walkHash": 1181605381
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 70080,
+            "liveAbove": 36352,
+            "result": {
+              "count": 1,
+              "walkHash": 1181605381
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 22816,
+            "liveAbove": 13280,
+            "result": {
+              "count": 1,
+              "walkHash": 1181605381
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 38064,
+            "liveAbove": 17360,
+            "result": {
+              "count": 1,
+              "walkHash": 1181605381
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 70080,
+            "liveAbove": 34480,
+            "result": {
+              "count": 1,
+              "walkHash": 1181605381
+            }
+          }
+        },
+        "2": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 44000,
+            "liveAbove": 38256,
+            "result": {
+              "count": 2,
+              "walkHash": -1931756534
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 71488,
+            "liveAbove": 54608,
+            "result": {
+              "count": 2,
+              "walkHash": -1931756534
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 94240,
+            "liveAbove": 48256,
+            "result": {
+              "count": 2,
+              "walkHash": -1931756534
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 40176,
+            "liveAbove": 30608,
+            "result": {
+              "count": 2,
+              "walkHash": -1931756534
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 72272,
+            "liveAbove": 42880,
+            "result": {
+              "count": 2,
+              "walkHash": -1931756534
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 88288,
+            "liveAbove": 40432,
+            "result": {
+              "count": 2,
+              "walkHash": -1931756534
+            }
+          }
+        },
+        "3": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 69248,
+            "liveAbove": 63536,
+            "result": {
+              "count": 3,
+              "walkHash": -750151153
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 109536,
+            "liveAbove": 88048,
+            "result": {
+              "count": 3,
+              "walkHash": -750151153
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 131712,
+            "liveAbove": 76448,
+            "result": {
+              "count": 3,
+              "walkHash": -750151153
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 61600,
+            "liveAbove": 52064,
+            "result": {
+              "count": 3,
+              "walkHash": -750151153
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 101888,
+            "liveAbove": 72496,
+            "result": {
+              "count": 3,
+              "walkHash": -750151153
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 129840,
+            "liveAbove": 70832,
+            "result": {
+              "count": 3,
+              "walkHash": -750151153
+            }
+          }
+        }
+      },
+      "chess": {
+        "1": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 46720,
+            "liveAbove": 46720,
+            "result": {
+              "count": 1,
+              "walkHash": -1847657730
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 54880,
+            "liveAbove": 50800,
+            "result": {
+              "count": 1,
+              "walkHash": -1847657730
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 51168,
+            "liveAbove": 38192,
+            "result": {
+              "count": 1,
+              "walkHash": -1847657730
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 46720,
+            "liveAbove": 43248,
+            "result": {
+              "count": 1,
+              "walkHash": -1847657730
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 54880,
+            "liveAbove": 47328,
+            "result": {
+              "count": 1,
+              "walkHash": -1847657730
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 51168,
+            "liveAbove": 35392,
+            "result": {
+              "count": 1,
+              "walkHash": -1847657730
+            }
+          }
+        },
+        "2": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 81136,
+            "liveAbove": 81136,
+            "result": {
+              "count": 2,
+              "walkHash": 599651836
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 93408,
+            "liveAbove": 85216,
+            "result": {
+              "count": 2,
+              "walkHash": 599651836
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 69680,
+            "liveAbove": 43728,
+            "result": {
+              "count": 2,
+              "walkHash": 599651836
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 77664,
+            "liveAbove": 74192,
+            "result": {
+              "count": 2,
+              "walkHash": 599651836
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 89936,
+            "liveAbove": 78272,
+            "result": {
+              "count": 2,
+              "walkHash": 599651836
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 69680,
+            "liveAbove": 38144,
+            "result": {
+              "count": 2,
+              "walkHash": 599651836
+            }
+          }
+        },
+        "3": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 127856,
+            "liveAbove": 127856,
+            "result": {
+              "count": 3,
+              "walkHash": -1248005894
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 148288,
+            "liveAbove": 136016,
+            "result": {
+              "count": 3,
+              "walkHash": -1248005894
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 70480,
+            "liveAbove": 57472,
+            "result": {
+              "count": 3,
+              "walkHash": -1248005894
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 120912,
+            "liveAbove": 117440,
+            "result": {
+              "count": 3,
+              "walkHash": -1248005894
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 141344,
+            "liveAbove": 125600,
+            "result": {
+              "count": 3,
+              "walkHash": -1248005894
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 69680,
+            "liveAbove": 49104,
+            "result": {
+              "count": 3,
+              "walkHash": -1248005894
+            }
+          }
+        }
+      },
+      "snake": {
+        "1": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 12032,
+            "liveAbove": 9744,
+            "result": {
+              "count": 1,
+              "walkHash": 1697411594
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 17904,
+            "liveAbove": 17904,
+            "result": {
+              "count": 1,
+              "walkHash": 1697411594
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 38960,
+            "liveAbove": 30064,
+            "result": {
+              "count": 1,
+              "walkHash": 1697411594
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 12032,
+            "liveAbove": 8192,
+            "result": {
+              "count": 1,
+              "walkHash": 1697411594
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 17904,
+            "liveAbove": 16352,
+            "result": {
+              "count": 1,
+              "walkHash": 1697411594
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 38960,
+            "liveAbove": 29280,
+            "result": {
+              "count": 1,
+              "walkHash": 1697411594
+            }
+          }
+        },
+        "2": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 17664,
+            "liveAbove": 15376,
+            "result": {
+              "count": 2,
+              "walkHash": -900144108
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 35808,
+            "liveAbove": 31728,
+            "result": {
+              "count": 2,
+              "walkHash": -900144108
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 61664,
+            "liveAbove": 47952,
+            "result": {
+              "count": 2,
+              "walkHash": -900144108
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 16112,
+            "liveAbove": 12272,
+            "result": {
+              "count": 2,
+              "walkHash": -900144108
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 34256,
+            "liveAbove": 28624,
+            "result": {
+              "count": 2,
+              "walkHash": -900144108
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 61664,
+            "liveAbove": 46384,
+            "result": {
+              "count": 2,
+              "walkHash": -900144108
+            }
+          }
+        },
+        "3": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 27408,
+            "liveAbove": 25120,
+            "result": {
+              "count": 3,
+              "walkHash": 797267486
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 45552,
+            "liveAbove": 45552,
+            "result": {
+              "count": 3,
+              "walkHash": 797267486
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 72096,
+            "liveAbove": 57712,
+            "result": {
+              "count": 3,
+              "walkHash": 797267486
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 24304,
+            "liveAbove": 20464,
+            "result": {
+              "count": 3,
+              "walkHash": 797267486
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 42448,
+            "liveAbove": 40896,
+            "result": {
+              "count": 3,
+              "walkHash": 797267486
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 72096,
+            "liveAbove": 55360,
+            "result": {
+              "count": 3,
+              "walkHash": 797267486
+            }
+          }
+        }
+      },
+      "editor": {
+        "1": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 38128,
+            "liveAbove": 34048,
+            "result": {
+              "count": 1,
+              "walkHash": -551476811
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 42208,
+            "liveAbove": 42208,
+            "result": {
+              "count": 1,
+              "walkHash": -551476811
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 44320,
+            "liveAbove": 29600,
+            "result": {
+              "count": 1,
+              "walkHash": -551476811
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 38128,
+            "liveAbove": 30912,
+            "result": {
+              "count": 1,
+              "walkHash": -551476811
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 42208,
+            "liveAbove": 39072,
+            "result": {
+              "count": 1,
+              "walkHash": -551476811
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 44320,
+            "liveAbove": 27008,
+            "result": {
+              "count": 1,
+              "walkHash": -551476811
+            }
+          }
+        },
+        "2": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 72176,
+            "liveAbove": 68064,
+            "result": {
+              "count": 2,
+              "walkHash": -1102953622
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 76256,
+            "liveAbove": 76256,
+            "result": {
+              "count": 2,
+              "walkHash": -1102953622
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 68304,
+            "liveAbove": 51104,
+            "result": {
+              "count": 2,
+              "walkHash": -1102953622
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 69040,
+            "liveAbove": 61792,
+            "result": {
+              "count": 2,
+              "walkHash": -1102953622
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 73120,
+            "liveAbove": 69984,
+            "result": {
+              "count": 2,
+              "walkHash": -1102953622
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 68304,
+            "liveAbove": 45920,
+            "result": {
+              "count": 2,
+              "walkHash": -1102953622
+            }
+          }
+        },
+        "3": {
+          "P": {
+            "resident": 412448,
+            "peakAbove": 106192,
+            "liveAbove": 106192,
+            "result": {
+              "count": 3,
+              "walkHash": -1654430433
+            }
+          },
+          "G": {
+            "resident": 412448,
+            "peakAbove": 126640,
+            "liveAbove": 118432,
+            "result": {
+              "count": 3,
+              "walkHash": -1654430433
+            }
+          },
+          "B": {
+            "resident": 412448,
+            "peakAbove": 75120,
+            "liveAbove": 56288,
+            "result": {
+              "count": 3,
+              "walkHash": -1654430433
+            }
+          },
+          "Po": {
+            "resident": 412448,
+            "peakAbove": 99920,
+            "liveAbove": 96784,
+            "result": {
+              "count": 3,
+              "walkHash": -1654430433
+            }
+          },
+          "Go": {
+            "resident": 412448,
+            "peakAbove": 120368,
+            "liveAbove": 109024,
+            "result": {
+              "count": 3,
+              "walkHash": -1654430433
+            }
+          },
+          "Bo": {
+            "resident": 412448,
+            "peakAbove": 69936,
+            "liveAbove": 48512,
+            "result": {
+              "count": 3,
+              "walkHash": -1654430433
+            }
+          }
+        }
+      }
+    },
+    "footprint": {
+      "rawCapsule": {
+        "source": 51519,
+        "bytecode": 117916
+      },
+      "codecOnly": {
+        "source": 15426,
+        "bytecode": 52541
+      },
+      "residentCatalogBytes": 0,
+      "residentTemplateBytes": 0
+    }
+  }
+}

@@ -1,3 +1,20 @@
+---
+Title: Matched native sender and receiver route on the physical PicoCalc
+Ticket: PICOCALC-RENDER-BINARY
+Status: active
+Topics:
+    - picocalc
+DocType: analysis
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: ""
+LastUpdated: 2026-11-20
+WhatFor: ""
+WhenToUse: ""
+---
+
 # What changes when the sender also runs in C?
 
 **Native producer engineer’s appendix to the joint binary-screen study, 20 November 2026.**

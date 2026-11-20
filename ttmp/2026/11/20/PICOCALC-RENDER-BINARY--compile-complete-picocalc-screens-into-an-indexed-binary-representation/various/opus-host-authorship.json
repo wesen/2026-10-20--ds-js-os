@@ -1,0 +1,10 @@
+{
+  "model": "claude-opus-5-5",
+  "requestedEffort": "high",
+  "elapsedMilliseconds": 192627,
+  "turns": 1,
+  "prompt": "scripts/09-opus-host-article.txt",
+  "article": "analysis/01-what-an-index-on-the-wire-buys-a-picocalc-renderer.md",
+  "diary": "reference/02-opus-research-diary.md",
+  "operatorReview": "Checked worked offsets and statistics; corrected the local map lookup and the distinction between component calibration and end-to-end integration."
+}

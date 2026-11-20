@@ -1,0 +1,104 @@
+{
+  "capsuleBytes": 51519,
+  "capsuleSha256": "ca2d76e538601914a40b88ad12e560456d2b2c8b50a26dbfbaf392333b5ffc01",
+  "fixtures": {
+    "sysmon": {
+      "id": "select-3",
+      "path": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "values",
+        47
+      ],
+      "firstPath": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "values",
+        0
+      ],
+      "indexedItems": 48,
+      "battery": null,
+      "banner": null,
+      "payloadSha256": "fe7534e51b37359ad79652cfdad87dffe2d8d61e7d7295d51cef3c82f3db63d3"
+    },
+    "chess": {
+      "id": "castle-long/003 left",
+      "path": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "ops",
+        100,
+        0
+      ],
+      "firstPath": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "ops",
+        0,
+        0
+      ],
+      "indexedItems": 101,
+      "battery": null,
+      "banner": null,
+      "payloadSha256": "df8b85ad97c3d6e6b6736d6aa3a6b630b26f4c68c36e33789f4f139dfab7c18a"
+    },
+    "snake": {
+      "id": "auto-79",
+      "path": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "ops",
+        13,
+        0
+      ],
+      "firstPath": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "ops",
+        0,
+        0
+      ],
+      "indexedItems": 14,
+      "battery": null,
+      "banner": null,
+      "payloadSha256": "5fd40bd91bf1afb2289f591f32792e26212cc655555e82a00780114fe0f29368"
+    },
+    "editor": {
+      "id": "replace-search/query unit 5",
+      "path": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "marks",
+        111,
+        0
+      ],
+      "firstPath": [
+        "frame",
+        "tree",
+        "kids",
+        1,
+        "marks",
+        0,
+        0
+      ],
+      "indexedItems": 112,
+      "battery": null,
+      "banner": null,
+      "payloadSha256": "f1d1acefe0fd7c039080b3241f7b5752c53f877d62c2f3dcc826257e8eea990b"
+    }
+  }
+}

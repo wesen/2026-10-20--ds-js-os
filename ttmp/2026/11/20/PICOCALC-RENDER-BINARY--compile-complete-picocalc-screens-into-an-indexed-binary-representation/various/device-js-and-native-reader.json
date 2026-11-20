@@ -1,0 +1,3542 @@
+{
+  "firmwareSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+  "experimentSha256": "576582843e2221f146e32c0babb8d1a163afbd43be388abf10ded8210f2a5b7c",
+  "startWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "runs": [
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "sysmon-G",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2853,
+        "admitUs": 20073,
+        "lookupUs": 158,
+        "repeatLookupUs": 1316,
+        "walkUs": 8339,
+        "paintUs": 30307,
+        "repeatPaintUs": 56886,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "sysmon-B",
+      "reps": 1,
+      "data": {
+        "bytes": 1850,
+        "encodeUs": 42790,
+        "admitUs": 9811,
+        "lookupUs": 694,
+        "repeatLookupUs": 12569,
+        "walkUs": 61761,
+        "paintUs": 114721,
+        "repeatPaintUs": 224153,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "sysmon-P",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2782,
+        "admitUs": 2573,
+        "lookupUs": 590,
+        "repeatLookupUs": 1355,
+        "walkUs": 8553,
+        "paintUs": 30222,
+        "repeatPaintUs": 56740,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "admitUs": 28955,
+        "lookupUs": 128,
+        "repeatLookupUs": 1425,
+        "walkUs": 2901,
+        "releaseUs": 7587,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "admitUs": 1139,
+        "lookupUs": 246,
+        "repeatLookupUs": 1544,
+        "walkUs": 2788,
+        "releaseUs": 31,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "chess-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2761,
+        "encodeUs": 35192,
+        "admitUs": 13011,
+        "lookupUs": 667,
+        "repeatLookupUs": 12244,
+        "walkUs": 87732,
+        "paintUs": 84330,
+        "repeatPaintUs": 167808,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "chess-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3855,
+        "admitUs": 4390,
+        "lookupUs": 537,
+        "repeatLookupUs": 2293,
+        "walkUs": 17093,
+        "paintUs": 18574,
+        "repeatPaintUs": 34463,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "chess-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3777,
+        "admitUs": 29290,
+        "lookupUs": 182,
+        "repeatLookupUs": 1601,
+        "walkUs": 16939,
+        "paintUs": 18315,
+        "repeatPaintUs": 34312,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "admitUs": 1479,
+        "lookupUs": 77,
+        "repeatLookupUs": 768,
+        "walkUs": 13065,
+        "releaseUs": 29,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "admitUs": 76851,
+        "lookupUs": 70,
+        "repeatLookupUs": 845,
+        "walkUs": 12561,
+        "releaseUs": 16242,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "snake-P",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1719,
+        "admitUs": 1607,
+        "lookupUs": 497,
+        "repeatLookupUs": 1634,
+        "walkUs": 3739,
+        "paintUs": 6668,
+        "repeatPaintUs": 9889,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "snake-G",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1684,
+        "admitUs": 9607,
+        "lookupUs": 137,
+        "repeatLookupUs": 1600,
+        "walkUs": 3624,
+        "paintUs": 6285,
+        "repeatPaintUs": 10162,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "snake-B",
+      "reps": 1,
+      "data": {
+        "bytes": 766,
+        "encodeUs": 14729,
+        "admitUs": 5100,
+        "lookupUs": 612,
+        "repeatLookupUs": 13363,
+        "walkUs": 23484,
+        "paintUs": 27755,
+        "repeatPaintUs": 53986,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "admitUs": 14441,
+        "lookupUs": 64,
+        "repeatLookupUs": 717,
+        "walkUs": 2334,
+        "releaseUs": 3189,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "admitUs": 579,
+        "lookupUs": 77,
+        "repeatLookupUs": 731,
+        "walkUs": 2291,
+        "releaseUs": 33,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "editor-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3910,
+        "admitUs": 26582,
+        "lookupUs": 168,
+        "repeatLookupUs": 1375,
+        "walkUs": 15538,
+        "paintUs": 24696,
+        "repeatPaintUs": 46420,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "editor-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2572,
+        "encodeUs": 29567,
+        "admitUs": 11964,
+        "lookupUs": 639,
+        "repeatLookupUs": 12504,
+        "walkUs": 98508,
+        "paintUs": 91372,
+        "repeatPaintUs": 180249,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 0,
+      "name": "binary",
+      "arm": "editor-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3972,
+        "admitUs": 4063,
+        "lookupUs": 545,
+        "repeatLookupUs": 1415,
+        "walkUs": 15838,
+        "paintUs": 24775,
+        "repeatPaintUs": 46332,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "admitUs": 1402,
+        "lookupUs": 164,
+        "repeatLookupUs": 1567,
+        "walkUs": 10171,
+        "releaseUs": 50,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 0,
+      "name": "nativebin",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "admitUs": 67678,
+        "lookupUs": 129,
+        "repeatLookupUs": 1603,
+        "walkUs": 10050,
+        "releaseUs": 13851,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "chess-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2761,
+        "encodeUs": 34999,
+        "admitUs": 13008,
+        "lookupUs": 618,
+        "repeatLookupUs": 12146,
+        "walkUs": 87302,
+        "paintUs": 86450,
+        "repeatPaintUs": 173177,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "chess-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3818,
+        "admitUs": 4250,
+        "lookupUs": 514,
+        "repeatLookupUs": 2264,
+        "walkUs": 17053,
+        "paintUs": 18464,
+        "repeatPaintUs": 34106,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "chess-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3825,
+        "admitUs": 29009,
+        "lookupUs": 137,
+        "repeatLookupUs": 1597,
+        "walkUs": 16813,
+        "paintUs": 18264,
+        "repeatPaintUs": 33893,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "admitUs": 1474,
+        "lookupUs": 77,
+        "repeatLookupUs": 765,
+        "walkUs": 12900,
+        "releaseUs": 30,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "admitUs": 76546,
+        "lookupUs": 55,
+        "repeatLookupUs": 854,
+        "walkUs": 12537,
+        "releaseUs": 16307,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "snake-P",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1709,
+        "admitUs": 1612,
+        "lookupUs": 528,
+        "repeatLookupUs": 1636,
+        "walkUs": 3797,
+        "paintUs": 6564,
+        "repeatPaintUs": 9901,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "snake-G",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1700,
+        "admitUs": 9641,
+        "lookupUs": 127,
+        "repeatLookupUs": 1582,
+        "walkUs": 3633,
+        "paintUs": 6298,
+        "repeatPaintUs": 10230,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "snake-B",
+      "reps": 1,
+      "data": {
+        "bytes": 766,
+        "encodeUs": 14895,
+        "admitUs": 5206,
+        "lookupUs": 616,
+        "repeatLookupUs": 13337,
+        "walkUs": 23468,
+        "paintUs": 27786,
+        "repeatPaintUs": 53925,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "admitUs": 14435,
+        "lookupUs": 63,
+        "repeatLookupUs": 718,
+        "walkUs": 2301,
+        "releaseUs": 3214,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "admitUs": 574,
+        "lookupUs": 78,
+        "repeatLookupUs": 724,
+        "walkUs": 2288,
+        "releaseUs": 31,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "editor-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3946,
+        "admitUs": 26701,
+        "lookupUs": 186,
+        "repeatLookupUs": 1380,
+        "walkUs": 15514,
+        "paintUs": 24761,
+        "repeatPaintUs": 46566,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "editor-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2572,
+        "encodeUs": 29724,
+        "admitUs": 11987,
+        "lookupUs": 648,
+        "repeatLookupUs": 12426,
+        "walkUs": 102022,
+        "paintUs": 92155,
+        "repeatPaintUs": 178256,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "editor-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3956,
+        "admitUs": 4161,
+        "lookupUs": 556,
+        "repeatLookupUs": 1417,
+        "walkUs": 15907,
+        "paintUs": 24801,
+        "repeatPaintUs": 46235,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "admitUs": 1371,
+        "lookupUs": 142,
+        "repeatLookupUs": 1564,
+        "walkUs": 10163,
+        "releaseUs": 30,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "admitUs": 67565,
+        "lookupUs": 198,
+        "repeatLookupUs": 1594,
+        "walkUs": 10092,
+        "releaseUs": 13939,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "sysmon-B",
+      "reps": 1,
+      "data": {
+        "bytes": 1850,
+        "encodeUs": 43138,
+        "admitUs": 9947,
+        "lookupUs": 739,
+        "repeatLookupUs": 12719,
+        "walkUs": 63926,
+        "paintUs": 118551,
+        "repeatPaintUs": 231899,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "sysmon-P",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2855,
+        "admitUs": 2520,
+        "lookupUs": 561,
+        "repeatLookupUs": 1373,
+        "walkUs": 8748,
+        "paintUs": 31013,
+        "repeatPaintUs": 58187,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 1,
+      "name": "binary",
+      "arm": "sysmon-G",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2875,
+        "admitUs": 20526,
+        "lookupUs": 177,
+        "repeatLookupUs": 1343,
+        "walkUs": 8448,
+        "paintUs": 30533,
+        "repeatPaintUs": 57485,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "admitUs": 28669,
+        "lookupUs": 137,
+        "repeatLookupUs": 1459,
+        "walkUs": 2893,
+        "releaseUs": 7587,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 1,
+      "name": "nativebin",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "admitUs": 1144,
+        "lookupUs": 160,
+        "repeatLookupUs": 1541,
+        "walkUs": 2792,
+        "releaseUs": 33,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "snake-P",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1694,
+        "admitUs": 1558,
+        "lookupUs": 533,
+        "repeatLookupUs": 1633,
+        "walkUs": 3734,
+        "paintUs": 6560,
+        "repeatPaintUs": 9879,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "snake-G",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1705,
+        "admitUs": 9632,
+        "lookupUs": 133,
+        "repeatLookupUs": 1590,
+        "walkUs": 3628,
+        "paintUs": 6242,
+        "repeatPaintUs": 10103,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "snake-B",
+      "reps": 1,
+      "data": {
+        "bytes": 766,
+        "encodeUs": 14870,
+        "admitUs": 5205,
+        "lookupUs": 679,
+        "repeatLookupUs": 13355,
+        "walkUs": 24804,
+        "paintUs": 29073,
+        "repeatPaintUs": 56383,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "admitUs": 14268,
+        "lookupUs": 63,
+        "repeatLookupUs": 734,
+        "walkUs": 2242,
+        "releaseUs": 3202,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "admitUs": 577,
+        "lookupUs": 79,
+        "repeatLookupUs": 724,
+        "walkUs": 2295,
+        "releaseUs": 30,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "editor-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3940,
+        "admitUs": 26687,
+        "lookupUs": 184,
+        "repeatLookupUs": 1388,
+        "walkUs": 15522,
+        "paintUs": 24694,
+        "repeatPaintUs": 46592,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "editor-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2572,
+        "encodeUs": 29730,
+        "admitUs": 12004,
+        "lookupUs": 643,
+        "repeatLookupUs": 12417,
+        "walkUs": 98823,
+        "paintUs": 89264,
+        "repeatPaintUs": 175830,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "editor-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3976,
+        "admitUs": 4121,
+        "lookupUs": 554,
+        "repeatLookupUs": 1419,
+        "walkUs": 15896,
+        "paintUs": 24758,
+        "repeatPaintUs": 46531,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "admitUs": 1353,
+        "lookupUs": 148,
+        "repeatLookupUs": 1557,
+        "walkUs": 10171,
+        "releaseUs": 33,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "admitUs": 67430,
+        "lookupUs": 168,
+        "repeatLookupUs": 1618,
+        "walkUs": 10059,
+        "releaseUs": 13834,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "sysmon-B",
+      "reps": 1,
+      "data": {
+        "bytes": 1850,
+        "encodeUs": 43010,
+        "admitUs": 9879,
+        "lookupUs": 638,
+        "repeatLookupUs": 12686,
+        "walkUs": 63765,
+        "paintUs": 121483,
+        "repeatPaintUs": 231920,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "sysmon-P",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2821,
+        "admitUs": 2425,
+        "lookupUs": 593,
+        "repeatLookupUs": 1382,
+        "walkUs": 8665,
+        "paintUs": 30668,
+        "repeatPaintUs": 57377,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "sysmon-G",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2861,
+        "admitUs": 20652,
+        "lookupUs": 151,
+        "repeatLookupUs": 1347,
+        "walkUs": 8446,
+        "paintUs": 30698,
+        "repeatPaintUs": 57743,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "admitUs": 29082,
+        "lookupUs": 133,
+        "repeatLookupUs": 1428,
+        "walkUs": 2906,
+        "releaseUs": 7587,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "admitUs": 1127,
+        "lookupUs": 136,
+        "repeatLookupUs": 1549,
+        "walkUs": 2811,
+        "releaseUs": 30,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "chess-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3728,
+        "admitUs": 4299,
+        "lookupUs": 543,
+        "repeatLookupUs": 2259,
+        "walkUs": 17113,
+        "paintUs": 18520,
+        "repeatPaintUs": 34353,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "chess-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3766,
+        "admitUs": 29087,
+        "lookupUs": 179,
+        "repeatLookupUs": 1587,
+        "walkUs": 16857,
+        "paintUs": 18261,
+        "repeatPaintUs": 34138,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 2,
+      "name": "binary",
+      "arm": "chess-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2761,
+        "encodeUs": 34959,
+        "admitUs": 13058,
+        "lookupUs": 567,
+        "repeatLookupUs": 12136,
+        "walkUs": 86815,
+        "paintUs": 84422,
+        "repeatPaintUs": 172193,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "admitUs": 1524,
+        "lookupUs": 76,
+        "repeatLookupUs": 766,
+        "walkUs": 12892,
+        "releaseUs": 32,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 2,
+      "name": "nativebin",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "admitUs": 76844,
+        "lookupUs": 71,
+        "repeatLookupUs": 842,
+        "walkUs": 12598,
+        "releaseUs": 16306,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "editor-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3969,
+        "admitUs": 26699,
+        "lookupUs": 203,
+        "repeatLookupUs": 1406,
+        "walkUs": 15504,
+        "paintUs": 24649,
+        "repeatPaintUs": 46569,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "editor-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2572,
+        "encodeUs": 30063,
+        "admitUs": 11953,
+        "lookupUs": 673,
+        "repeatLookupUs": 12431,
+        "walkUs": 98977,
+        "paintUs": 92908,
+        "repeatPaintUs": 180375,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "editor-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3971,
+        "admitUs": 4116,
+        "lookupUs": 567,
+        "repeatLookupUs": 1412,
+        "walkUs": 15840,
+        "paintUs": 24835,
+        "repeatPaintUs": 46310,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "admitUs": 1366,
+        "lookupUs": 183,
+        "repeatLookupUs": 1564,
+        "walkUs": 10161,
+        "releaseUs": 35,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "admitUs": 67537,
+        "lookupUs": 142,
+        "repeatLookupUs": 1600,
+        "walkUs": 10076,
+        "releaseUs": 13809,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "sysmon-B",
+      "reps": 1,
+      "data": {
+        "bytes": 1850,
+        "encodeUs": 43146,
+        "admitUs": 9897,
+        "lookupUs": 697,
+        "repeatLookupUs": 12726,
+        "walkUs": 65015,
+        "paintUs": 115174,
+        "repeatPaintUs": 224580,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "sysmon-P",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2818,
+        "admitUs": 2507,
+        "lookupUs": 576,
+        "repeatLookupUs": 1363,
+        "walkUs": 8650,
+        "paintUs": 30758,
+        "repeatPaintUs": 57625,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "sysmon-G",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2829,
+        "admitUs": 20592,
+        "lookupUs": 185,
+        "repeatLookupUs": 1347,
+        "walkUs": 8483,
+        "paintUs": 30714,
+        "repeatPaintUs": 57442,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "admitUs": 28893,
+        "lookupUs": 124,
+        "repeatLookupUs": 1432,
+        "walkUs": 2891,
+        "releaseUs": 7585,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "admitUs": 1134,
+        "lookupUs": 319,
+        "repeatLookupUs": 1550,
+        "walkUs": 2794,
+        "releaseUs": 30,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "chess-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3802,
+        "admitUs": 4424,
+        "lookupUs": 549,
+        "repeatLookupUs": 2288,
+        "walkUs": 17066,
+        "paintUs": 18572,
+        "repeatPaintUs": 34320,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "chess-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3820,
+        "admitUs": 29023,
+        "lookupUs": 182,
+        "repeatLookupUs": 1604,
+        "walkUs": 16851,
+        "paintUs": 18224,
+        "repeatPaintUs": 33862,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "chess-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2761,
+        "encodeUs": 35232,
+        "admitUs": 13005,
+        "lookupUs": 652,
+        "repeatLookupUs": 12218,
+        "walkUs": 90145,
+        "paintUs": 89161,
+        "repeatPaintUs": 176541,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "admitUs": 1466,
+        "lookupUs": 76,
+        "repeatLookupUs": 763,
+        "walkUs": 13032,
+        "releaseUs": 31,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "admitUs": 76682,
+        "lookupUs": 71,
+        "repeatLookupUs": 850,
+        "walkUs": 12563,
+        "releaseUs": 16405,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "snake-G",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1664,
+        "admitUs": 9571,
+        "lookupUs": 140,
+        "repeatLookupUs": 1608,
+        "walkUs": 3622,
+        "paintUs": 6291,
+        "repeatPaintUs": 10058,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "snake-B",
+      "reps": 1,
+      "data": {
+        "bytes": 766,
+        "encodeUs": 14833,
+        "admitUs": 5269,
+        "lookupUs": 744,
+        "repeatLookupUs": 13412,
+        "walkUs": 24346,
+        "paintUs": 28226,
+        "repeatPaintUs": 54808,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 3,
+      "name": "binary",
+      "arm": "snake-P",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1715,
+        "admitUs": 1665,
+        "lookupUs": 528,
+        "repeatLookupUs": 1623,
+        "walkUs": 3810,
+        "paintUs": 6554,
+        "repeatPaintUs": 10044,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "admitUs": 14566,
+        "lookupUs": 64,
+        "repeatLookupUs": 719,
+        "walkUs": 2284,
+        "releaseUs": 3201,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 3,
+      "name": "nativebin",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "admitUs": 579,
+        "lookupUs": 80,
+        "repeatLookupUs": 722,
+        "walkUs": 2289,
+        "releaseUs": 30,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "sysmon-B",
+      "reps": 1,
+      "data": {
+        "bytes": 1850,
+        "encodeUs": 43348,
+        "admitUs": 9968,
+        "lookupUs": 742,
+        "repeatLookupUs": 12736,
+        "walkUs": 63936,
+        "paintUs": 117822,
+        "repeatPaintUs": 231738,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "sysmon-P",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2795,
+        "admitUs": 2626,
+        "lookupUs": 608,
+        "repeatLookupUs": 1361,
+        "walkUs": 8629,
+        "paintUs": 30598,
+        "repeatPaintUs": 57338,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "sysmon-G",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2770,
+        "admitUs": 20519,
+        "lookupUs": 178,
+        "repeatLookupUs": 1335,
+        "walkUs": 8531,
+        "paintUs": 30680,
+        "repeatPaintUs": 57633,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "admitUs": 28933,
+        "lookupUs": 128,
+        "repeatLookupUs": 1454,
+        "walkUs": 2900,
+        "releaseUs": 7603,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "admitUs": 1121,
+        "lookupUs": 145,
+        "repeatLookupUs": 1555,
+        "walkUs": 2795,
+        "releaseUs": 34,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "chess-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3827,
+        "admitUs": 4471,
+        "lookupUs": 556,
+        "repeatLookupUs": 2283,
+        "walkUs": 17054,
+        "paintUs": 18401,
+        "repeatPaintUs": 33993,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "chess-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3803,
+        "admitUs": 28989,
+        "lookupUs": 194,
+        "repeatLookupUs": 1602,
+        "walkUs": 16827,
+        "paintUs": 18273,
+        "repeatPaintUs": 34036,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "chess-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2761,
+        "encodeUs": 35077,
+        "admitUs": 12984,
+        "lookupUs": 583,
+        "repeatLookupUs": 12159,
+        "walkUs": 88875,
+        "paintUs": 88382,
+        "repeatPaintUs": 174082,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "admitUs": 1468,
+        "lookupUs": 76,
+        "repeatLookupUs": 759,
+        "walkUs": 13036,
+        "releaseUs": 34,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "admitUs": 76660,
+        "lookupUs": 70,
+        "repeatLookupUs": 856,
+        "walkUs": 12581,
+        "releaseUs": 16377,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "snake-G",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1713,
+        "admitUs": 9525,
+        "lookupUs": 145,
+        "repeatLookupUs": 1605,
+        "walkUs": 3627,
+        "paintUs": 6314,
+        "repeatPaintUs": 10030,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "snake-B",
+      "reps": 1,
+      "data": {
+        "bytes": 766,
+        "encodeUs": 14779,
+        "admitUs": 5162,
+        "lookupUs": 657,
+        "repeatLookupUs": 13430,
+        "walkUs": 23561,
+        "paintUs": 27601,
+        "repeatPaintUs": 53847,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "snake-P",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1748,
+        "admitUs": 1651,
+        "lookupUs": 539,
+        "repeatLookupUs": 1637,
+        "walkUs": 3765,
+        "paintUs": 6550,
+        "repeatPaintUs": 9906,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "admitUs": 14335,
+        "lookupUs": 65,
+        "repeatLookupUs": 724,
+        "walkUs": 2258,
+        "releaseUs": 3198,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "admitUs": 552,
+        "lookupUs": 66,
+        "repeatLookupUs": 721,
+        "walkUs": 2254,
+        "releaseUs": 31,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "editor-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2572,
+        "encodeUs": 29749,
+        "admitUs": 11893,
+        "lookupUs": 608,
+        "repeatLookupUs": 12421,
+        "walkUs": 100289,
+        "paintUs": 89684,
+        "repeatPaintUs": 178377,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "editor-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3933,
+        "admitUs": 4137,
+        "lookupUs": 537,
+        "repeatLookupUs": 1409,
+        "walkUs": 15915,
+        "paintUs": 24654,
+        "repeatPaintUs": 46244,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 4,
+      "name": "binary",
+      "arm": "editor-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3949,
+        "admitUs": 26463,
+        "lookupUs": 170,
+        "repeatLookupUs": 1379,
+        "walkUs": 15453,
+        "paintUs": 24542,
+        "repeatPaintUs": 46330,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "admitUs": 1360,
+        "lookupUs": 187,
+        "repeatLookupUs": 1558,
+        "walkUs": 10129,
+        "releaseUs": 31,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 4,
+      "name": "nativebin",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "admitUs": 67509,
+        "lookupUs": 164,
+        "repeatLookupUs": 1604,
+        "walkUs": 10031,
+        "releaseUs": 13812,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "chess-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3780,
+        "admitUs": 4438,
+        "lookupUs": 532,
+        "repeatLookupUs": 2259,
+        "walkUs": 17100,
+        "paintUs": 18469,
+        "repeatPaintUs": 34468,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "chess-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3776,
+        "admitUs": 29277,
+        "lookupUs": 160,
+        "repeatLookupUs": 1601,
+        "walkUs": 16828,
+        "paintUs": 18248,
+        "repeatPaintUs": 33920,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "chess-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2761,
+        "encodeUs": 34965,
+        "admitUs": 13050,
+        "lookupUs": 643,
+        "repeatLookupUs": 12146,
+        "walkUs": 90607,
+        "paintUs": 88602,
+        "repeatPaintUs": 178005,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "admitUs": 1466,
+        "lookupUs": 77,
+        "repeatLookupUs": 758,
+        "walkUs": 13020,
+        "releaseUs": 33,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "admitUs": 76767,
+        "lookupUs": 70,
+        "repeatLookupUs": 868,
+        "walkUs": 12612,
+        "releaseUs": 16247,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "snake-G",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1709,
+        "admitUs": 9398,
+        "lookupUs": 130,
+        "repeatLookupUs": 1591,
+        "walkUs": 3634,
+        "paintUs": 6303,
+        "repeatPaintUs": 10110,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "snake-B",
+      "reps": 1,
+      "data": {
+        "bytes": 766,
+        "encodeUs": 14833,
+        "admitUs": 5188,
+        "lookupUs": 693,
+        "repeatLookupUs": 13410,
+        "walkUs": 24588,
+        "paintUs": 29867,
+        "repeatPaintUs": 58417,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "snake-P",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1693,
+        "admitUs": 1567,
+        "lookupUs": 529,
+        "repeatLookupUs": 1620,
+        "walkUs": 3755,
+        "paintUs": 6494,
+        "repeatPaintUs": 9822,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "admitUs": 14380,
+        "lookupUs": 63,
+        "repeatLookupUs": 731,
+        "walkUs": 2261,
+        "releaseUs": 3207,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "admitUs": 540,
+        "lookupUs": 65,
+        "repeatLookupUs": 713,
+        "walkUs": 2256,
+        "releaseUs": 31,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "editor-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2572,
+        "encodeUs": 29759,
+        "admitUs": 11918,
+        "lookupUs": 634,
+        "repeatLookupUs": 12399,
+        "walkUs": 105424,
+        "paintUs": 98982,
+        "repeatPaintUs": 187481,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "editor-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3925,
+        "admitUs": 4167,
+        "lookupUs": 579,
+        "repeatLookupUs": 1415,
+        "walkUs": 15789,
+        "paintUs": 24825,
+        "repeatPaintUs": 46510,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "editor-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3972,
+        "admitUs": 26917,
+        "lookupUs": 229,
+        "repeatLookupUs": 1393,
+        "walkUs": 15565,
+        "paintUs": 24669,
+        "repeatPaintUs": 46614,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "admitUs": 1412,
+        "lookupUs": 133,
+        "repeatLookupUs": 1551,
+        "walkUs": 10102,
+        "releaseUs": 30,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "admitUs": 67513,
+        "lookupUs": 132,
+        "repeatLookupUs": 1597,
+        "walkUs": 10061,
+        "releaseUs": 13759,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "sysmon-P",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2793,
+        "admitUs": 2609,
+        "lookupUs": 591,
+        "repeatLookupUs": 1379,
+        "walkUs": 8696,
+        "paintUs": 30553,
+        "repeatPaintUs": 57198,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "sysmon-G",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2825,
+        "admitUs": 20568,
+        "lookupUs": 172,
+        "repeatLookupUs": 1338,
+        "walkUs": 8439,
+        "paintUs": 30532,
+        "repeatPaintUs": 57408,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 5,
+      "name": "binary",
+      "arm": "sysmon-B",
+      "reps": 1,
+      "data": {
+        "bytes": 1850,
+        "encodeUs": 42932,
+        "admitUs": 9894,
+        "lookupUs": 717,
+        "repeatLookupUs": 12734,
+        "walkUs": 62422,
+        "paintUs": 115897,
+        "repeatPaintUs": 227214,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "admitUs": 28959,
+        "lookupUs": 176,
+        "repeatLookupUs": 1445,
+        "walkUs": 2908,
+        "releaseUs": 7601,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 5,
+      "name": "nativebin",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "admitUs": 1128,
+        "lookupUs": 157,
+        "repeatLookupUs": 1557,
+        "walkUs": 2789,
+        "releaseUs": 33,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "snake-G",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1744,
+        "admitUs": 9675,
+        "lookupUs": 146,
+        "repeatLookupUs": 1595,
+        "walkUs": 3633,
+        "paintUs": 6238,
+        "repeatPaintUs": 10262,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "snake-B",
+      "reps": 1,
+      "data": {
+        "bytes": 766,
+        "encodeUs": 14784,
+        "admitUs": 5192,
+        "lookupUs": 673,
+        "repeatLookupUs": 13425,
+        "walkUs": 26166,
+        "paintUs": 30149,
+        "repeatPaintUs": 60253,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "snake-P",
+      "reps": 1,
+      "data": {
+        "bytes": 758,
+        "encodeUs": 1692,
+        "admitUs": 1617,
+        "lookupUs": 510,
+        "repeatLookupUs": 1630,
+        "walkUs": 3778,
+        "paintUs": 6627,
+        "repeatPaintUs": 10010,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594,
+        "paintHash": -414526446,
+        "paintCommands": 28,
+        "repeatPaintHash": -706437340,
+        "repeatPaintCommands": 56,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "auto-79"
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "snake-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 758,
+        "admitUs": 14236,
+        "lookupUs": 63,
+        "repeatLookupUs": 724,
+        "walkUs": 2291,
+        "releaseUs": 3197,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "snake-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 766,
+        "admitUs": 577,
+        "lookupUs": 78,
+        "repeatLookupUs": 722,
+        "walkUs": 2305,
+        "releaseUs": 29,
+        "lookupHash": 4138057,
+        "repeatLookupHash": 125584400,
+        "walkHash": 1697411594
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "editor-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2572,
+        "encodeUs": 29808,
+        "admitUs": 11976,
+        "lookupUs": 672,
+        "repeatLookupUs": 12427,
+        "walkUs": 101439,
+        "paintUs": 91382,
+        "repeatPaintUs": 181277,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "editor-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3859,
+        "admitUs": 4148,
+        "lookupUs": 576,
+        "repeatLookupUs": 1416,
+        "walkUs": 15839,
+        "paintUs": 24809,
+        "repeatPaintUs": 46432,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "editor-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3105,
+        "encodeUs": 3957,
+        "admitUs": 26646,
+        "lookupUs": 194,
+        "repeatLookupUs": 1388,
+        "walkUs": 15552,
+        "paintUs": 24610,
+        "repeatPaintUs": 46400,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": -551476811,
+        "paintHash": -885553058,
+        "paintCommands": 140,
+        "repeatPaintHash": 151004604,
+        "repeatPaintCommands": 280,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "replace-search/query unit 5"
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "editor-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2572,
+        "admitUs": 1367,
+        "lookupUs": 146,
+        "repeatLookupUs": 1564,
+        "walkUs": 10157,
+        "releaseUs": 30,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "editor-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3105,
+        "admitUs": 67676,
+        "lookupUs": 177,
+        "repeatLookupUs": 1607,
+        "walkUs": 10057,
+        "releaseUs": 13899,
+        "lookupHash": 1728,
+        "repeatLookupHash": 29840,
+        "walkHash": 3743490485
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "sysmon-P",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2772,
+        "admitUs": 2597,
+        "lookupUs": 562,
+        "repeatLookupUs": 1375,
+        "walkUs": 8628,
+        "paintUs": 30600,
+        "repeatPaintUs": 57431,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "sysmon-G",
+      "reps": 1,
+      "data": {
+        "bytes": 1919,
+        "encodeUs": 2869,
+        "admitUs": 20514,
+        "lookupUs": 167,
+        "repeatLookupUs": 1324,
+        "walkUs": 8452,
+        "paintUs": 30522,
+        "repeatPaintUs": 57401,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "sysmon-B",
+      "reps": 1,
+      "data": {
+        "bytes": 1850,
+        "encodeUs": 43034,
+        "admitUs": 9868,
+        "lookupUs": 737,
+        "repeatLookupUs": 12710,
+        "walkUs": 61782,
+        "paintUs": 114275,
+        "repeatPaintUs": 221612,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381,
+        "paintHash": 624371874,
+        "paintCommands": 174,
+        "repeatPaintHash": 590315716,
+        "repeatPaintCommands": 348,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "select-3"
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "sysmon-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1919,
+        "admitUs": 28828,
+        "lookupUs": 306,
+        "repeatLookupUs": 1422,
+        "walkUs": 2915,
+        "releaseUs": 7554,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "sysmon-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 1850,
+        "admitUs": 1130,
+        "lookupUs": 143,
+        "repeatLookupUs": 1558,
+        "walkUs": 2805,
+        "releaseUs": 31,
+        "lookupHash": 1725,
+        "repeatLookupHash": 29792,
+        "walkHash": 1181605381
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "chess-G",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3814,
+        "admitUs": 29188,
+        "lookupUs": 163,
+        "repeatLookupUs": 1610,
+        "walkUs": 16827,
+        "paintUs": 18233,
+        "repeatPaintUs": 33943,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "chess-B",
+      "reps": 1,
+      "data": {
+        "bytes": 2761,
+        "encodeUs": 34982,
+        "admitUs": 12997,
+        "lookupUs": 636,
+        "repeatLookupUs": 12116,
+        "walkUs": 89927,
+        "paintUs": 85853,
+        "repeatPaintUs": 171767,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 6,
+      "name": "binary",
+      "arm": "chess-P",
+      "reps": 1,
+      "data": {
+        "bytes": 3443,
+        "encodeUs": 3760,
+        "admitUs": 4313,
+        "lookupUs": 551,
+        "repeatLookupUs": 2269,
+        "walkUs": 17076,
+        "paintUs": 18509,
+        "repeatPaintUs": 34179,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": -1847657730,
+        "paintHash": -392767402,
+        "paintCommands": 112,
+        "repeatPaintHash": 1474954412,
+        "repeatPaintCommands": 224,
+        "reps": 1,
+        "requested": 1,
+        "fixture": "castle-long/003 left"
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "chess-B",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 2761,
+        "admitUs": 1479,
+        "lookupUs": 75,
+        "repeatLookupUs": 767,
+        "walkUs": 12944,
+        "releaseUs": 33,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    },
+    {
+      "block": 6,
+      "name": "nativebin",
+      "arm": "chess-G",
+      "reps": 8,
+      "data": {
+        "reps": 8,
+        "bytes": 3443,
+        "admitUs": 76815,
+        "lookupUs": 64,
+        "repeatLookupUs": 871,
+        "walkUs": 12590,
+        "releaseUs": 16159,
+        "lookupHash": 4061638,
+        "repeatLookupHash": 131195120,
+        "walkHash": 2447309566
+      }
+    }
+  ],
+  "failures": [],
+  "experimentWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "restoredWorlds": {
+    "keyboard": [
+      "native",
+      ""
+    ],
+    "power": [
+      "native",
+      ""
+    ],
+    "display": [
+      "native",
+      ""
+    ],
+    "compositor": [
+      "native",
+      ""
+    ],
+    "agent": [
+      "native",
+      ""
+    ],
+    "chat": [
+      "js",
+      ""
+    ],
+    "launcher": [
+      "js",
+      ""
+    ],
+    "files": [
+      "native",
+      ""
+    ],
+    "editor": [
+      "native",
+      ""
+    ],
+    "calc": [
+      "js",
+      ""
+    ],
+    "agenda": [
+      "native",
+      ""
+    ],
+    "settings": [
+      "native",
+      ""
+    ],
+    "logs": [
+      "js",
+      ""
+    ],
+    "loader": [
+      "js",
+      ""
+    ],
+    "sysmon": [
+      "js",
+      ""
+    ],
+    "repl": [
+      "js",
+      ""
+    ],
+    "sandbox": [
+      "js",
+      ""
+    ],
+    "snake": [
+      "native",
+      ""
+    ],
+    "faults": [
+      "js",
+      ""
+    ],
+    "flaky": [
+      "native",
+      ""
+    ],
+    "keys": [
+      "js",
+      ""
+    ],
+    "about": [
+      "js",
+      ""
+    ],
+    "chess": [
+      "native",
+      ""
+    ],
+    "toplog": [
+      "native",
+      ""
+    ],
+    "nat-echo": [
+      "native",
+      ""
+    ],
+    "nat-bench": [
+      "native",
+      ""
+    ],
+    "nat-import": [
+      "native",
+      "it links to path_open, which picocalc-os does not give a module"
+    ],
+    "nat-dial": [
+      "native",
+      ""
+    ]
+  },
+  "restored": true
+}

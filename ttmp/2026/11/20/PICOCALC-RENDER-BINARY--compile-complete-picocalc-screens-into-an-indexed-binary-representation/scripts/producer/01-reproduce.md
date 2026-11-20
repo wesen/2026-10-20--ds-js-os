@@ -1,3 +1,20 @@
+---
+Title: Reproduce the matched native sender and receiver route
+Ticket: PICOCALC-RENDER-BINARY
+Status: active
+Topics:
+    - picocalc
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: ""
+LastUpdated: 2026-11-20
+WhatFor: ""
+WhenToUse: ""
+---
+
 # Native producer from resident cJSON
 
 Compile and run all eight host arms, the exact-byte and boundary qualifications, and the allocation census.

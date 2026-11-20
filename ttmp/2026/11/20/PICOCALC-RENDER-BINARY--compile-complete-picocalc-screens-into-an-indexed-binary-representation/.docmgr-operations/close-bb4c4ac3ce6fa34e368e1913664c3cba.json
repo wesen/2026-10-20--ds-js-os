@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "digest": "0ea388742e9677f234283a8262f1bc29d63e621b1847a1cce3123f62592595eb",
+  "request": {
+    "ticket": "PICOCALC-RENDER-BINARY",
+    "status": "complete",
+    "intent": "",
+    "entry": "Qualified the bounded PSIX codec on all four corpora and P4 component controls. Preserve JSON for the current renderer and hand off a native Chess integration pilot."
+  },
+  "receipt": {
+    "sequence": 1,
+    "operation_id": "close-bb4c4ac3ce6fa34e368e1913664c3cba",
+    "state": "committed",
+    "created_at": "2026-11-20T16:58:12.260645341Z",
+    "changed_paths": [
+      "changelog.md",
+      "index.md"
+    ],
+    "before": {
+      "changelog.md": "510b4959697a22b6b6934464772137a6c64a2929165c9fff706c4b963e386083",
+      "index.md": "3489e0145cd2b31c3fc04a3aa5571d4d6976c322ef67bf991dc1fa33fa5ee8b7"
+    },
+    "after": {
+      "changelog.md": "a644e8f3389f5bc3a234eb38858a581e5967017b3db77e7575718c4e4ddbd4e9",
+      "index.md": "556a88caa7db5cf02f0fb16980f78ec91ef9b1ee3daeedf1e9708a0f7ba3817c"
+    }
+  },
+  "changes": [
+    {
+      "path": "changelog.md",
+      "before": "510b4959697a22b6b6934464772137a6c64a2929165c9fff706c4b963e386083",
+      "after": "IyBDaGFuZ2Vsb2cKCiMjIDIwMjYtMTEtMjAKCi0gSW5pdGlhbCB3b3Jrc3BhY2UgY3JlYXRlZAoKIyMgMjAyNi0xMS0yMAoKUXVhbGlmaWVkIHRoZSBib3VuZGVkIFBTSVggY29kZWMgb24gYWxsIGZvdXIgY29ycG9yYSBhbmQgUDQgY29tcG9uZW50IGNvbnRyb2xzLiBQcmVzZXJ2ZSBKU09OIGZvciB0aGUgY3VycmVudCByZW5kZXJlciBhbmQgaGFuZCBvZmYgYSBuYXRpdmUgQ2hlc3MgaW50ZWdyYXRpb24gcGlsb3QuCg=="
+    },
+    {
+      "path": "index.md",
+      "before": "3489e0145cd2b31c3fc04a3aa5571d4d6976c322ef67bf991dc1fa33fa5ee8b7",
+      "after": "LS0tClRpdGxlOiBDb21waWxlIGNvbXBsZXRlIFBpY29DYWxjIHNjcmVlbnMgaW50byBhbiBpbmRleGVkIGJpbmFyeSByZXByZXNlbnRhdGlvbgpUaWNrZXQ6IFBJQ09DQUxDLVJFTkRFUi1CSU5BUlkKU3RhdHVzOiBjb21wbGV0ZQpUb3BpY3M6CiAgICAtIHBpY29jYWxjCkRvY1R5cGU6IGluZGV4CkludGVudDogbG9uZy10ZXJtCk93bmVyczogW10KUmVsYXRlZEZpbGVzOiBbXQpFeHRlcm5hbFNvdXJjZXM6IFtdClN1bW1hcnk6ICIiCkxhc3RVcGRhdGVkOiAyMDI2LTExLTIwVDExOjU4OjEyLjI2MDU5NzkxLTA1OjAwCldoYXRGb3I6ICIiCldoZW5Ub1VzZTogIiIKLS0tCgojIENvbXBpbGUgY29tcGxldGUgUGljb0NhbGMgc2NyZWVucyBpbnRvIGFuIGluZGV4ZWQgYmluYXJ5IHJlcHJlc2VudGF0aW9uCgpQU0lYIHYxIGFkZHMgZGlyZWN0IGFycmF5IGluZGV4aW5nIGFuZCBib3VuZGVkIG9iamVjdC1rZXkgbG9va3VwIHRvIGFuIGltbXV0YWJsZSBjb21wbGV0ZSBzbmFwc2hvdC4gVGhlIGhvc3QgcmFzdGVyIHJlcHJvZHVjZWQgYWxsIDQyNyB0cmFjZWQgSlNPTiBmcmFtZXMuIE9uIHRoZSBwaHlzaWNhbCBFU1AzMi1QNCwgYSBRdWlja0pTIFBTSVggZW5jb2RlciBhbmQgUHJveHkgcGFpbnRlciB3ZXJlIHNsb3dlciB0aGFuIEpTT04gaW4gZWFjaCBvZiBmb3VyIHdvcmtsb2Fkcy4gVGhlIGNvbXBsZXRlIG5hdGl2ZSBzZW5kZXIsIGNoZWNrZWQgcmVhZGVyIGFuZCBvbmUgbGF0ZSBsb29rdXAgd2VyZSA3MSXigJM4OCUgZmFzdGVyIHRoYW4gdGhlIG1hdGNoZWQgY0pTT04gcm91dGUuIFRoZSBkaXJlY3RvciBzZWxlY3RlZCBhIG5hdGl2ZSBDaGVzcyBpbnRlZ3JhdGlvbiBwaWxvdCBhbmQgcmV0YWluZWQgSlNPTiBvbiB0aGUgZXhpc3RpbmcgcGF0aC4KCi0gW0luZGV4ZWQgZm9ybWF0IGFuZCBleHBlcmltZW50YWwgcHJvdG9jb2xdKGRlc2lnbi1kb2MvMDEtYS1iaW5hcnktc25hcHNob3Qtd2l0aC1kaXJlY3QtaW5kZXhlZC1hY2Nlc3MubWQpCi0gW0hvc3QgYW5kIHBoeXNpY2FsIHJlc3VsdHMgYnkgT3B1cyBIaWdoXShhbmFseXNpcy8wMS13aGF0LWFuLWluZGV4LW9uLXRoZS13aXJlLWJ1eXMtYS1waWNvY2FsYy1yZW5kZXJlci5tZCkKLSBbTmF0aXZlIENoZXNzIHBpbG90IGhhbmRvZmZdKGRlc2lnbi1kb2MvMDItbmF0aXZlLWNoZXNzLWludGVncmF0aW9uLWhhbmRvZmYubWQpCi0gW1JlcHJvZHVjdGlvbiBndWlkZV0oUkVBRE1FLm1kKQotIFtPcGVyYXRvciBpbnZlc3RpZ2F0aW9uIGRpYXJ5XShyZWZlcmVuY2UvMDEtYmluYXJ5LXNjcmVlbi1sYWJvcmF0b3J5LWRpYXJ5Lm1kKQotIFtPcHVzIHJlc2VhcmNoIGRpYXJ5XShyZWZlcmVuY2UvMDItb3B1cy1yZXNlYXJjaC1kaWFyeS5tZCkKLSBbTmF0aXZlIHJlYWRlciBldmlkZW5jZV0ocmVmZXJlbmNlLzA0LW5hdGl2ZS1yZWFkZXItZXZpZGVuY2UubWQpCi0gW01hdGNoZWQgbmF0aXZlIHByb2R1Y2VyIG1lYXN1cmVtZW50XShzY3JpcHRzL3Byb2R1Y2VyLzAyLXBoeXNpY2FsLWFwcGVuZGl4Lm1kKQoKU2VlIFt0YXNrc10odGFza3MubWQpIGFuZCBbY2hhbmdlbG9nXShjaGFuZ2Vsb2cubWQpIGZvciB0aGUgc3R1ZHkgcmVjb3JkLgo="
+    }
+  ]
+}

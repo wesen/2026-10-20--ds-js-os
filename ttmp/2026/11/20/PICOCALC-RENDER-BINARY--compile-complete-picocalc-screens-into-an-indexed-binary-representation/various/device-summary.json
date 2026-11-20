@@ -1,0 +1,1398 @@
+{
+  "runs": [
+    {
+      "firmwareSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+      "experimentSha256": "576582843e2221f146e32c0babb8d1a163afbd43be388abf10ded8210f2a5b7c",
+      "sha256": "29b331d3b917b3a288199200c6682f1e186114bbe9c15e1556389ff7b87bfec6",
+      "restored": true,
+      "trials": 140
+    },
+    {
+      "firmwareSha256": "f12e2f5d6e668ef7d61fa456b69b56bf9f1e976e929672e7df81ac33a2f03f83",
+      "experimentSha256": "f8af1bbfd4478e569824512b18017d908217672f87c1ce37b342375cb7162e0d",
+      "sha256": "d28602467711f7e0a1e7d8d8f54d6744473e8c69efe1a2e87feb34d6cb69f9cc",
+      "restored": true,
+      "trials": 56
+    }
+  ],
+  "summary": {
+    "binary": {
+      "sysmon": {
+        "G": {
+          "bytes": 1919,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 2853.0,
+            "admitUs": 20526.0,
+            "lookupUs": 172.0,
+            "repeatLookupUs": 1338.0,
+            "walkUs": 8448.0,
+            "paintUs": 30533.0,
+            "repeatPaintUs": 57442.0,
+            "admitPaintUs": 51100.0,
+            "routePaintUs": 53934.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              2770.0,
+              2875.0
+            ],
+            "admitUs": [
+              20073.0,
+              20652.0
+            ],
+            "lookupUs": [
+              151.0,
+              185.0
+            ],
+            "repeatLookupUs": [
+              1316.0,
+              1347.0
+            ],
+            "walkUs": [
+              8339.0,
+              8531.0
+            ],
+            "paintUs": [
+              30307.0,
+              30714.0
+            ],
+            "repeatPaintUs": [
+              56886.0,
+              57743.0
+            ],
+            "admitPaintUs": [
+              50380.0,
+              51350.0
+            ],
+            "routePaintUs": [
+              53233.0,
+              54211.0
+            ]
+          },
+          "lookupHash": 1725,
+          "repeatLookupHash": 29792,
+          "walkHash": 1181605381,
+          "paintHash": 624371874,
+          "repeatPaintHash": 590315716
+        },
+        "B": {
+          "bytes": 1850,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 43034.0,
+            "admitUs": 9894.0,
+            "lookupUs": 717.0,
+            "repeatLookupUs": 12719.0,
+            "walkUs": 63765.0,
+            "paintUs": 115897.0,
+            "repeatPaintUs": 227214.0,
+            "admitPaintUs": 125791.0,
+            "routePaintUs": 168723.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              42790.0,
+              43348.0
+            ],
+            "admitUs": [
+              9811.0,
+              9968.0
+            ],
+            "lookupUs": [
+              638.0,
+              742.0
+            ],
+            "repeatLookupUs": [
+              12569.0,
+              12736.0
+            ],
+            "walkUs": [
+              61761.0,
+              65015.0
+            ],
+            "paintUs": [
+              114275.0,
+              121483.0
+            ],
+            "repeatPaintUs": [
+              221612.0,
+              231920.0
+            ],
+            "admitPaintUs": [
+              124143.0,
+              131362.0
+            ],
+            "routePaintUs": [
+              167177.0,
+              174372.0
+            ]
+          },
+          "lookupHash": 1725,
+          "repeatLookupHash": 29792,
+          "walkHash": 1181605381,
+          "paintHash": 624371874,
+          "repeatPaintHash": 590315716
+        },
+        "P": {
+          "bytes": 1919,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 2795.0,
+            "admitUs": 2573.0,
+            "lookupUs": 590.0,
+            "repeatLookupUs": 1373.0,
+            "walkUs": 8650.0,
+            "paintUs": 30600.0,
+            "repeatPaintUs": 57377.0,
+            "admitPaintUs": 33197.0,
+            "routePaintUs": 35969.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              2772.0,
+              2855.0
+            ],
+            "admitUs": [
+              2425.0,
+              2626.0
+            ],
+            "lookupUs": [
+              561.0,
+              608.0
+            ],
+            "repeatLookupUs": [
+              1355.0,
+              1382.0
+            ],
+            "walkUs": [
+              8553.0,
+              8748.0
+            ],
+            "paintUs": [
+              30222.0,
+              31013.0
+            ],
+            "repeatPaintUs": [
+              56740.0,
+              58187.0
+            ],
+            "admitPaintUs": [
+              32795.0,
+              33533.0
+            ],
+            "routePaintUs": [
+              35577.0,
+              36388.0
+            ]
+          },
+          "lookupHash": 1725,
+          "repeatLookupHash": 29792,
+          "walkHash": 1181605381,
+          "paintHash": 624371874,
+          "repeatPaintHash": 590315716
+        }
+      },
+      "chess": {
+        "B": {
+          "bytes": 2761,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 34999.0,
+            "admitUs": 13008.0,
+            "lookupUs": 636.0,
+            "repeatLookupUs": 12146.0,
+            "walkUs": 88875.0,
+            "paintUs": 86450.0,
+            "repeatPaintUs": 173177.0,
+            "admitPaintUs": 99458.0,
+            "routePaintUs": 134457.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              34959.0,
+              35232.0
+            ],
+            "admitUs": [
+              12984.0,
+              13058.0
+            ],
+            "lookupUs": [
+              567.0,
+              667.0
+            ],
+            "repeatLookupUs": [
+              12116.0,
+              12244.0
+            ],
+            "walkUs": [
+              86815.0,
+              90607.0
+            ],
+            "paintUs": [
+              84330.0,
+              89161.0
+            ],
+            "repeatPaintUs": [
+              167808.0,
+              178005.0
+            ],
+            "admitPaintUs": [
+              97341.0,
+              102166.0
+            ],
+            "routePaintUs": [
+              132439.0,
+              137398.0
+            ]
+          },
+          "lookupHash": 4061638,
+          "repeatLookupHash": 131195120,
+          "walkHash": -1847657730,
+          "paintHash": -392767402,
+          "repeatPaintHash": 1474954412
+        },
+        "P": {
+          "bytes": 3443,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 3802.0,
+            "admitUs": 4390.0,
+            "lookupUs": 543.0,
+            "repeatLookupUs": 2269.0,
+            "walkUs": 17076.0,
+            "paintUs": 18509.0,
+            "repeatPaintUs": 34320.0,
+            "admitPaintUs": 22872.0,
+            "routePaintUs": 26687.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              3728.0,
+              3855.0
+            ],
+            "admitUs": [
+              4250.0,
+              4471.0
+            ],
+            "lookupUs": [
+              514.0,
+              556.0
+            ],
+            "repeatLookupUs": [
+              2259.0,
+              2293.0
+            ],
+            "walkUs": [
+              17053.0,
+              17113.0
+            ],
+            "paintUs": [
+              18401.0,
+              18574.0
+            ],
+            "repeatPaintUs": [
+              33993.0,
+              34468.0
+            ],
+            "admitPaintUs": [
+              22714.0,
+              22996.0
+            ],
+            "routePaintUs": [
+              26532.0,
+              26819.0
+            ]
+          },
+          "lookupHash": 4061638,
+          "repeatLookupHash": 131195120,
+          "walkHash": -1847657730,
+          "paintHash": -392767402,
+          "repeatPaintHash": 1474954412
+        },
+        "G": {
+          "bytes": 3443,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 3803.0,
+            "admitUs": 29087.0,
+            "lookupUs": 179.0,
+            "repeatLookupUs": 1601.0,
+            "walkUs": 16828.0,
+            "paintUs": 18261.0,
+            "repeatPaintUs": 33943.0,
+            "admitPaintUs": 47348.0,
+            "routePaintUs": 51114.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              3766.0,
+              3825.0
+            ],
+            "admitUs": [
+              28989.0,
+              29290.0
+            ],
+            "lookupUs": [
+              137.0,
+              194.0
+            ],
+            "repeatLookupUs": [
+              1587.0,
+              1610.0
+            ],
+            "walkUs": [
+              16813.0,
+              16939.0
+            ],
+            "paintUs": [
+              18224.0,
+              18315.0
+            ],
+            "repeatPaintUs": [
+              33862.0,
+              34312.0
+            ],
+            "admitPaintUs": [
+              47247.0,
+              47605.0
+            ],
+            "routePaintUs": [
+              51065.0,
+              51382.0
+            ]
+          },
+          "lookupHash": 4061638,
+          "repeatLookupHash": 131195120,
+          "walkHash": -1847657730,
+          "paintHash": -392767402,
+          "repeatPaintHash": 1474954412
+        }
+      },
+      "snake": {
+        "P": {
+          "bytes": 758,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 1709.0,
+            "admitUs": 1612.0,
+            "lookupUs": 528.0,
+            "repeatLookupUs": 1633.0,
+            "walkUs": 3765.0,
+            "paintUs": 6560.0,
+            "repeatPaintUs": 9901.0,
+            "admitPaintUs": 8201.0,
+            "routePaintUs": 9934.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              1692.0,
+              1748.0
+            ],
+            "admitUs": [
+              1558.0,
+              1665.0
+            ],
+            "lookupUs": [
+              497.0,
+              539.0
+            ],
+            "repeatLookupUs": [
+              1620.0,
+              1637.0
+            ],
+            "walkUs": [
+              3734.0,
+              3810.0
+            ],
+            "paintUs": [
+              6494.0,
+              6668.0
+            ],
+            "repeatPaintUs": [
+              9822.0,
+              10044.0
+            ],
+            "admitPaintUs": [
+              8061.0,
+              8275.0
+            ],
+            "routePaintUs": [
+              9754.0,
+              9994.0
+            ]
+          },
+          "lookupHash": 4138057,
+          "repeatLookupHash": 125584400,
+          "walkHash": 1697411594,
+          "paintHash": -414526446,
+          "repeatPaintHash": -706437340
+        },
+        "G": {
+          "bytes": 758,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 1705.0,
+            "admitUs": 9607.0,
+            "lookupUs": 137.0,
+            "repeatLookupUs": 1595.0,
+            "walkUs": 3628.0,
+            "paintUs": 6291.0,
+            "repeatPaintUs": 10110.0,
+            "admitPaintUs": 15874.0,
+            "routePaintUs": 17576.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              1664.0,
+              1744.0
+            ],
+            "admitUs": [
+              9398.0,
+              9675.0
+            ],
+            "lookupUs": [
+              127.0,
+              146.0
+            ],
+            "repeatLookupUs": [
+              1582.0,
+              1608.0
+            ],
+            "walkUs": [
+              3622.0,
+              3634.0
+            ],
+            "paintUs": [
+              6238.0,
+              6314.0
+            ],
+            "repeatPaintUs": [
+              10030.0,
+              10262.0
+            ],
+            "admitPaintUs": [
+              15701.0,
+              15939.0
+            ],
+            "routePaintUs": [
+              17410.0,
+              17657.0
+            ]
+          },
+          "lookupHash": 4138057,
+          "repeatLookupHash": 125584400,
+          "walkHash": 1697411594,
+          "paintHash": -414526446,
+          "repeatPaintHash": -706437340
+        },
+        "B": {
+          "bytes": 766,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 14833.0,
+            "admitUs": 5192.0,
+            "lookupUs": 673.0,
+            "repeatLookupUs": 13410.0,
+            "walkUs": 24346.0,
+            "paintUs": 28226.0,
+            "repeatPaintUs": 54808.0,
+            "admitPaintUs": 33495.0,
+            "routePaintUs": 48328.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              14729.0,
+              14895.0
+            ],
+            "admitUs": [
+              5100.0,
+              5269.0
+            ],
+            "lookupUs": [
+              612.0,
+              744.0
+            ],
+            "repeatLookupUs": [
+              13337.0,
+              13430.0
+            ],
+            "walkUs": [
+              23468.0,
+              26166.0
+            ],
+            "paintUs": [
+              27601.0,
+              30149.0
+            ],
+            "repeatPaintUs": [
+              53847.0,
+              60253.0
+            ],
+            "admitPaintUs": [
+              32763.0,
+              35341.0
+            ],
+            "routePaintUs": [
+              47542.0,
+              50125.0
+            ]
+          },
+          "lookupHash": 4138057,
+          "repeatLookupHash": 125584400,
+          "walkHash": 1697411594,
+          "paintHash": -414526446,
+          "repeatPaintHash": -706437340
+        }
+      },
+      "editor": {
+        "G": {
+          "bytes": 3105,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 3949.0,
+            "admitUs": 26687.0,
+            "lookupUs": 186.0,
+            "repeatLookupUs": 1388.0,
+            "walkUs": 15522.0,
+            "paintUs": 24669.0,
+            "repeatPaintUs": 46566.0,
+            "admitPaintUs": 51348.0,
+            "routePaintUs": 55317.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              3910.0,
+              3972.0
+            ],
+            "admitUs": [
+              26463.0,
+              26917.0
+            ],
+            "lookupUs": [
+              168.0,
+              229.0
+            ],
+            "repeatLookupUs": [
+              1375.0,
+              1406.0
+            ],
+            "walkUs": [
+              15453.0,
+              15565.0
+            ],
+            "paintUs": [
+              24542.0,
+              24761.0
+            ],
+            "repeatPaintUs": [
+              46330.0,
+              46614.0
+            ],
+            "admitPaintUs": [
+              51005.0,
+              51586.0
+            ],
+            "routePaintUs": [
+              54954.0,
+              55558.0
+            ]
+          },
+          "lookupHash": 1728,
+          "repeatLookupHash": 29840,
+          "walkHash": -551476811,
+          "paintHash": -885553058,
+          "repeatPaintHash": 151004604
+        },
+        "B": {
+          "bytes": 2572,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 29749.0,
+            "admitUs": 11964.0,
+            "lookupUs": 643.0,
+            "repeatLookupUs": 12426.0,
+            "walkUs": 100289.0,
+            "paintUs": 91382.0,
+            "repeatPaintUs": 180249.0,
+            "admitPaintUs": 103358.0,
+            "routePaintUs": 133166.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              29567.0,
+              30063.0
+            ],
+            "admitUs": [
+              11893.0,
+              12004.0
+            ],
+            "lookupUs": [
+              608.0,
+              673.0
+            ],
+            "repeatLookupUs": [
+              12399.0,
+              12504.0
+            ],
+            "walkUs": [
+              98508.0,
+              105424.0
+            ],
+            "paintUs": [
+              89264.0,
+              98982.0
+            ],
+            "repeatPaintUs": [
+              175830.0,
+              187481.0
+            ],
+            "admitPaintUs": [
+              101268.0,
+              110900.0
+            ],
+            "routePaintUs": [
+              130998.0,
+              140659.0
+            ]
+          },
+          "lookupHash": 1728,
+          "repeatLookupHash": 29840,
+          "walkHash": -551476811,
+          "paintHash": -885553058,
+          "repeatPaintHash": 151004604
+        },
+        "P": {
+          "bytes": 3105,
+          "blocks": 7,
+          "repsPerBlock": 1,
+          "medianUs": {
+            "encodeUs": 3956.0,
+            "admitUs": 4137.0,
+            "lookupUs": 556.0,
+            "repeatLookupUs": 1415.0,
+            "walkUs": 15840.0,
+            "paintUs": 24801.0,
+            "repeatPaintUs": 46332.0,
+            "admitPaintUs": 28951.0,
+            "routePaintUs": 32855.0
+          },
+          "rangeUs": {
+            "encodeUs": [
+              3859.0,
+              3976.0
+            ],
+            "admitUs": [
+              4063.0,
+              4167.0
+            ],
+            "lookupUs": [
+              537.0,
+              579.0
+            ],
+            "repeatLookupUs": [
+              1409.0,
+              1419.0
+            ],
+            "walkUs": [
+              15789.0,
+              15915.0
+            ],
+            "paintUs": [
+              24654.0,
+              24835.0
+            ],
+            "repeatPaintUs": [
+              46235.0,
+              46531.0
+            ],
+            "admitPaintUs": [
+              28791.0,
+              28992.0
+            ],
+            "routePaintUs": [
+              32724.0,
+              32922.0
+            ]
+          },
+          "lookupHash": 1728,
+          "repeatLookupHash": 29840,
+          "walkHash": -551476811,
+          "paintHash": -885553058,
+          "repeatPaintHash": 151004604
+        }
+      }
+    },
+    "nativebin": {
+      "sysmon": {
+        "G": {
+          "bytes": 1919,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 3616.625,
+            "lookupUs": 16.625,
+            "repeatLookupUs": 179.0,
+            "walkUs": 362.625,
+            "releaseUs": 948.375,
+            "admitWalkReleaseUs": 4929.5
+          },
+          "rangeUs": {
+            "admitUs": [
+              3583.625,
+              3635.25
+            ],
+            "lookupUs": [
+              15.5,
+              38.25
+            ],
+            "repeatLookupUs": [
+              177.75,
+              182.375
+            ],
+            "walkUs": [
+              361.375,
+              364.375
+            ],
+            "releaseUs": [
+              944.25,
+              950.375
+            ],
+            "admitWalkReleaseUs": [
+              4893.625,
+              4946.875
+            ]
+          },
+          "lookupHash": 1725,
+          "repeatLookupHash": 29792,
+          "walkHash": 1181605381
+        },
+        "B": {
+          "bytes": 1850,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 141.25,
+            "lookupUs": 19.625,
+            "repeatLookupUs": 193.75,
+            "walkUs": 349.25,
+            "releaseUs": 3.875,
+            "admitWalkReleaseUs": 494.75
+          },
+          "rangeUs": {
+            "admitUs": [
+              140.125,
+              143.0
+            ],
+            "lookupUs": [
+              17.0,
+              39.875
+            ],
+            "repeatLookupUs": [
+              192.625,
+              194.75
+            ],
+            "walkUs": [
+              348.5,
+              351.375
+            ],
+            "releaseUs": [
+              3.75,
+              4.25
+            ],
+            "admitWalkReleaseUs": [
+              493.75,
+              496.125
+            ]
+          },
+          "lookupHash": 1725,
+          "repeatLookupHash": 29792,
+          "walkHash": 1181605381
+        }
+      },
+      "chess": {
+        "B": {
+          "bytes": 2761,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 184.25,
+            "lookupUs": 9.5,
+            "repeatLookupUs": 95.625,
+            "walkUs": 1627.5,
+            "releaseUs": 4.0,
+            "admitWalkReleaseUs": 1814.875
+          },
+          "rangeUs": {
+            "admitUs": [
+              183.25,
+              190.5
+            ],
+            "lookupUs": [
+              9.375,
+              9.625
+            ],
+            "repeatLookupUs": [
+              94.75,
+              96.0
+            ],
+            "walkUs": [
+              1611.5,
+              1633.125
+            ],
+            "releaseUs": [
+              3.625,
+              4.25
+            ],
+            "admitWalkReleaseUs": [
+              1800.5,
+              1821.625
+            ]
+          },
+          "lookupHash": 4061638,
+          "repeatLookupHash": 131195120,
+          "walkHash": 2447309566
+        },
+        "G": {
+          "bytes": 3443,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 9595.875,
+            "lookupUs": 8.75,
+            "repeatLookupUs": 106.75,
+            "walkUs": 1572.625,
+            "releaseUs": 2038.25,
+            "admitWalkReleaseUs": 13203.25
+          },
+          "rangeUs": {
+            "admitUs": [
+              9568.25,
+              9606.375
+            ],
+            "lookupUs": [
+              6.875,
+              8.875
+            ],
+            "repeatLookupUs": [
+              105.25,
+              108.875
+            ],
+            "walkUs": [
+              1567.125,
+              1576.5
+            ],
+            "releaseUs": [
+              2019.875,
+              2050.625
+            ],
+            "admitWalkReleaseUs": [
+              13173.75,
+              13218.5
+            ]
+          },
+          "lookupHash": 4061638,
+          "repeatLookupHash": 131195120,
+          "walkHash": 2447309566
+        }
+      },
+      "snake": {
+        "G": {
+          "bytes": 758,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 1797.5,
+            "lookupUs": 7.875,
+            "repeatLookupUs": 90.5,
+            "walkUs": 285.5,
+            "releaseUs": 400.125,
+            "admitWalkReleaseUs": 2481.0
+          },
+          "rangeUs": {
+            "admitUs": [
+              1779.5,
+              1820.75
+            ],
+            "lookupUs": [
+              7.875,
+              8.125
+            ],
+            "repeatLookupUs": [
+              89.625,
+              91.75
+            ],
+            "walkUs": [
+              280.25,
+              291.75
+            ],
+            "releaseUs": [
+              398.625,
+              401.75
+            ],
+            "admitWalkReleaseUs": [
+              2464.0,
+              2506.375
+            ]
+          },
+          "lookupHash": 4138057,
+          "repeatLookupHash": 125584400,
+          "walkHash": 1697411594
+        },
+        "B": {
+          "bytes": 766,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 72.125,
+            "lookupUs": 9.75,
+            "repeatLookupUs": 90.25,
+            "walkUs": 286.125,
+            "releaseUs": 3.875,
+            "admitWalkReleaseUs": 362.25
+          },
+          "rangeUs": {
+            "admitUs": [
+              67.5,
+              72.375
+            ],
+            "lookupUs": [
+              8.125,
+              10.0
+            ],
+            "repeatLookupUs": [
+              89.125,
+              91.375
+            ],
+            "walkUs": [
+              281.75,
+              288.125
+            ],
+            "releaseUs": [
+              3.625,
+              4.125
+            ],
+            "admitWalkReleaseUs": [
+              353.375,
+              363.875
+            ]
+          },
+          "lookupHash": 4138057,
+          "repeatLookupHash": 125584400,
+          "walkHash": 1697411594
+        }
+      },
+      "editor": {
+        "B": {
+          "bytes": 2572,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 170.875,
+            "lookupUs": 18.5,
+            "repeatLookupUs": 195.5,
+            "walkUs": 1270.125,
+            "releaseUs": 3.875,
+            "admitWalkReleaseUs": 1444.625
+          },
+          "rangeUs": {
+            "admitUs": [
+              169.125,
+              176.5
+            ],
+            "lookupUs": [
+              16.625,
+              23.375
+            ],
+            "repeatLookupUs": [
+              193.875,
+              195.875
+            ],
+            "walkUs": [
+              1262.75,
+              1271.375
+            ],
+            "releaseUs": [
+              3.75,
+              6.25
+            ],
+            "admitWalkReleaseUs": [
+              1440.0,
+              1452.875
+            ]
+          },
+          "lookupHash": 1728,
+          "repeatLookupHash": 29840,
+          "walkHash": 3743490485
+        },
+        "G": {
+          "bytes": 3105,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "admitUs": 8442.125,
+            "lookupUs": 20.5,
+            "repeatLookupUs": 200.375,
+            "walkUs": 1257.375,
+            "releaseUs": 1729.25,
+            "admitWalkReleaseUs": 11427.75
+          },
+          "rangeUs": {
+            "admitUs": [
+              8428.75,
+              8459.75
+            ],
+            "lookupUs": [
+              16.125,
+              24.75
+            ],
+            "repeatLookupUs": [
+              199.25,
+              202.25
+            ],
+            "walkUs": [
+              1253.875,
+              1261.5
+            ],
+            "releaseUs": [
+              1719.875,
+              1742.375
+            ],
+            "admitWalkReleaseUs": [
+              11415.375,
+              11454.0
+            ]
+          },
+          "lookupHash": 1728,
+          "repeatLookupHash": 29840,
+          "walkHash": 3743490485
+        }
+      }
+    },
+    "nativeprod": {
+      "sysmon": {
+        "G": {
+          "bytes": 1919,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 525.0,
+            "admitUs": 3660.375,
+            "lookupUs": 16.625,
+            "releaseUs": 972.75,
+            "routeUs": 5174.625
+          },
+          "rangeUs": {
+            "encodeUs": [
+              522.5,
+              528.125
+            ],
+            "admitUs": [
+              3655.375,
+              3663.875
+            ],
+            "lookupUs": [
+              15.625,
+              17.125
+            ],
+            "releaseUs": [
+              972.125,
+              973.125
+            ],
+            "routeUs": [
+              5170.125,
+              5177.25
+            ]
+          },
+          "binaryScratchBytes": 0,
+          "wireHash": 1035267114,
+          "lookupHash": 1725,
+          "walkHash": 1181605381
+        },
+        "B": {
+          "bytes": 1850,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 1328.0,
+            "admitUs": 125.0,
+            "lookupUs": 19.25,
+            "releaseUs": 6.5,
+            "routeUs": 1483.625
+          },
+          "rangeUs": {
+            "encodeUs": [
+              1325.125,
+              1335.75
+            ],
+            "admitUs": [
+              124.375,
+              125.75
+            ],
+            "lookupUs": [
+              17.875,
+              27.5
+            ],
+            "releaseUs": [
+              6.25,
+              7.25
+            ],
+            "routeUs": [
+              1476.375,
+              1487.5
+            ]
+          },
+          "binaryScratchBytes": 588,
+          "wireHash": 2571018171,
+          "lookupHash": 1725,
+          "walkHash": 1181605381
+        }
+      },
+      "snake": {
+        "B": {
+          "bytes": 766,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 445.125,
+            "admitUs": 63.875,
+            "lookupUs": 9.0,
+            "releaseUs": 6.375,
+            "routeUs": 524.625
+          },
+          "rangeUs": {
+            "encodeUs": [
+              439.375,
+              452.625
+            ],
+            "admitUs": [
+              53.5,
+              64.625
+            ],
+            "lookupUs": [
+              7.0,
+              9.375
+            ],
+            "releaseUs": [
+              5.625,
+              6.875
+            ],
+            "routeUs": [
+              506.125,
+              532.875
+            ]
+          },
+          "binaryScratchBytes": 320,
+          "wireHash": 2766474524,
+          "lookupHash": 4138057,
+          "walkHash": 1697411594
+        },
+        "G": {
+          "bytes": 758,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 359.125,
+            "admitUs": 1840.75,
+            "lookupUs": 7.125,
+            "releaseUs": 416.0,
+            "routeUs": 2618.875
+          },
+          "rangeUs": {
+            "encodeUs": [
+              351.0,
+              363.125
+            ],
+            "admitUs": [
+              1834.125,
+              1841.75
+            ],
+            "lookupUs": [
+              5.25,
+              7.875
+            ],
+            "releaseUs": [
+              413.375,
+              417.25
+            ],
+            "routeUs": [
+              2611.5,
+              2626.5
+            ]
+          },
+          "binaryScratchBytes": 0,
+          "wireHash": 1841395799,
+          "lookupHash": 4138057,
+          "walkHash": 1697411594
+        }
+      },
+      "chess": {
+        "G": {
+          "bytes": 3443,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 1816.0,
+            "admitUs": 13117.25,
+            "lookupUs": 12.625,
+            "releaseUs": 1968.5,
+            "routeUs": 16914.75
+          },
+          "rangeUs": {
+            "encodeUs": [
+              1805.75,
+              1819.125
+            ],
+            "admitUs": [
+              13094.5,
+              13236.75
+            ],
+            "lookupUs": [
+              11.875,
+              14.75
+            ],
+            "releaseUs": [
+              1958.5,
+              1970.125
+            ],
+            "routeUs": [
+              16881.25,
+              17027.625
+            ]
+          },
+          "binaryScratchBytes": 0,
+          "wireHash": 1054538192,
+          "lookupHash": 4061638,
+          "walkHash": 2447309566
+        },
+        "B": {
+          "bytes": 2761,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 1849.625,
+            "admitUs": 161.5,
+            "lookupUs": 9.375,
+            "releaseUs": 6.875,
+            "routeUs": 2027.375
+          },
+          "rangeUs": {
+            "encodeUs": [
+              1844.75,
+              1855.875
+            ],
+            "admitUs": [
+              161.125,
+              162.875
+            ],
+            "lookupUs": [
+              8.375,
+              9.75
+            ],
+            "releaseUs": [
+              6.25,
+              7.375
+            ],
+            "routeUs": [
+              2023.125,
+              2033.25
+            ]
+          },
+          "binaryScratchBytes": 304,
+          "wireHash": 540532891,
+          "lookupHash": 4061638,
+          "walkHash": 2447309566
+        }
+      },
+      "editor": {
+        "B": {
+          "bytes": 2572,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 1522.375,
+            "admitUs": 148.25,
+            "lookupUs": 21.875,
+            "releaseUs": 6.625,
+            "routeUs": 1703.125
+          },
+          "rangeUs": {
+            "encodeUs": [
+              1519.25,
+              1530.625
+            ],
+            "admitUs": [
+              147.75,
+              152.0
+            ],
+            "lookupUs": [
+              19.875,
+              39.25
+            ],
+            "releaseUs": [
+              6.25,
+              6.875
+            ],
+            "routeUs": [
+              1696.375,
+              1717.0
+            ]
+          },
+          "binaryScratchBytes": 196,
+          "wireHash": 3886497504,
+          "lookupHash": 1728,
+          "walkHash": 3743490485
+        },
+        "G": {
+          "bytes": 3105,
+          "blocks": 7,
+          "repsPerBlock": 8,
+          "medianUs": {
+            "encodeUs": 1438.125,
+            "admitUs": 10858.875,
+            "lookupUs": 19.375,
+            "releaseUs": 1709.25,
+            "routeUs": 14021.125
+          },
+          "rangeUs": {
+            "encodeUs": [
+              1436.25,
+              1447.625
+            ],
+            "admitUs": [
+              10832.75,
+              10981.375
+            ],
+            "lookupUs": [
+              17.875,
+              20.0
+            ],
+            "releaseUs": [
+              1705.75,
+              1712.125
+            ],
+            "routeUs": [
+              14002.125,
+              14156.375
+            ]
+          },
+          "binaryScratchBytes": 0,
+          "wireHash": 1228237125,
+          "lookupHash": 1728,
+          "walkHash": 3743490485
+        }
+      }
+    }
+  }
+}
