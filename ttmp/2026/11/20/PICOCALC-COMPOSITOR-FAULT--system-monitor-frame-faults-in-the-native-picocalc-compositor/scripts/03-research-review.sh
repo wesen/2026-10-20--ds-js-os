@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -eu
+case "$1" in
+producer) task="Review the producer design and its differential drawing test. Find boundary cases, especially floating-point rounding and changing selection. Suggest a precise amendment if needed." ;;
+receiver) task="Review the native event contract, allocator charge and proposed hardware qualification. Identify an observable guard against false success and suggest a targeted production fix if the smaller frames still fail." ;;
+*) exit 2 ;;
+esac
+cd /tmp
+printf '%s\n' "$task Write a public engineering review and a short lab record of supplied evidence, decisions, limitations and testable recommendations. The initial 28-world System monitor emits all rows, with visible table rows centered around selection. A candidate sends a centered 8-row Worlds window, 14 Handles rows, keeps full source state and global details, and converts the last 48 graph values to integer vertical positions. Local compositor still centers and clips. Host differential tests compared actual draw calls on 28 Worlds selections, 36 Handles selections and Buses: all equal on one fixture. Synthetic tree bytes 4016 to 1766, 2641 to 1529, 2678 to 1166. On the original ESP32-P4 firmware, two frame events exceeded the 80 ms segment allowance and two runtime out-of-memory messages immediately preceded native event return 2. The native runtime deliberately returns 2 after a fatal error. The kernel accepts 0 or 1 only and checks elapsed time first. Native allocation charges module and all live allocations including old and replacement storage. Current source-reported usage at faults was 504 or 512 KB vs a 768 KB allowance. Candidate physical results pending. No security research needed. Provide only reportable technical conclusions and a public work log; no private reasoning." | claude -p --model claude-opus-4-6 --effort high --tools '' --disable-slash-commands --strict-mcp-config --no-session-persistence --output-format json
