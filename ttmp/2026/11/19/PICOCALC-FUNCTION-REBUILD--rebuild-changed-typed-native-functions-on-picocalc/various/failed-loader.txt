@@ -1,16 +1,10 @@
 Rejected physical image SHA-256 72769ef41bf952e4fee37dd5e762404294cc30ec75b78c5e8dd1305d408053af
 UART excerpt from boot 1. The resolver failure ended measurement after the first successful seed ELF.
-files compile source=bundle status=ok us=254555 peak_js_bytes=362612 module_bytes=24424
 REBUILDSTART
 REBUILDCOLDSTART
-files native compiler functions=streamed
-files compile source=bundle status=ok us=236139 peak_js_bytes=362612 module_bytes=24424
 REBUILDCOLD 0 24424 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8
 REBUILDSETUP 0 files 0 174616 404640 404640
 REBUILDROW 0 files 0 1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8 24424 {"id":"seed","elapsed":120183,"cleanUs":105436,"cleanFirst":false,"heap":{"live":476896,"peak":480120},"mode":"fragments","reused":[],"built":[{"name":"filesSpace","reason":"source"},{"name":"filesAlnum","reason":"source"},{"name":"filesName","reason":"source"},{"name":"filesCompare","reason":"source"},{"name":"filesSelect","reason":"source"},{"name":"filesPromptAction","reason":"source"},{"name":"filesAction","reason":"source"}],"instructionBytes":3216,"phases":{"walk":0,"body":0,"lower":0,"assemble":0,"validate":0,"link":0,"publish":0,"fallback":0,"exact":0}}
-I (4411) ELF: ELF loader version: 2.0.0
-I (4414) ELF: elf->entry=0x481ec318
 E (4415) ELF: Can't find common strcpy
 REBUILDERROR guest ELF load -88
 REBUILDFAIL
-editor native compiler functions=streamed

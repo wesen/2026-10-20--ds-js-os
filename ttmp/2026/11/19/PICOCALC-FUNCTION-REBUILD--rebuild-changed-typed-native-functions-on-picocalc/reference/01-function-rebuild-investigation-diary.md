@@ -229,3 +229,60 @@ Generate the component run with `python3 01-stage.py WORK --p4` and the continuo
 ### Technical details
 
 The supplemental request stops at the first return from the tested native `filesName` entry loaded by the normal ELF loader. It excludes editing the file, runtime startup and seed, submitting an OS world, unrelated UI work, output verification, and cleanup after the native return. The record includes both the live JS allocation before and after the request and the request's peak. Only the candidate retains old fragments and its private artifact. ELF loader PSRAM belongs to its own allocator.
+
+## Step 5: Reproduce the Files speedup and retain the fixture crossover
+
+Both corrected firmware trials completed and restored the original factory partition. The component run matched 288 complete output or diagnostic requests across two boots, plus 32 direct guest-entry checks and eight fresh stock Files builds. The supplemental run qualified 12 pairs through native return after an actual edited source handoff. All 24 endpoint executions matched the independent edited ELF digest and returned the expected filename.
+
+Files saved roughly 66 ms before ELF loading and about 63 ms through the separate measured native endpoint. Its candidate seed takes longer than warm clean, and its measured resident compiler state and request peak are higher. The small fixture's body retest was near zero. Repaired signature and shared-layout edits were slightly slower. The report preserves both outcomes.
+
+### Prompt Context
+
+See Step 1. The physical fixture changes that made the run possible were committed in `8cbb4ea`. The supervisor ran the exclusive device queue, including the two captures and verified restoration for each image.
+
+### What I did
+
+- Checked the corrected component ledger from [06-board.py](../scripts/06-board.py) on both boots. Preserved every structured setup, candidate, clean, diagnostic, hash, timing, heap and guest receipt in [p4-rebuild.json.gz](../various/p4-rebuild.json.gz).
+- Checked the second ledger in endpoint mode. Verified 12 rotated pairs across two boots, the same edited ELF hash from both warmed compilers, and the same output code units in every execution. Archived [p4-endpoint.json.gz](../various/p4-endpoint.json.gz).
+- Generated [timing-summary.json](../various/timing-summary.json) with [07-summarize.py](../scripts/07-summarize.py) and rendered the physical phase and edit figure. Kept the full UART logs in the two local scratch directories. The tracked data contains the complete selected measurement series and the focused loader failure receipt.
+- Wrote the [standalone newcomer report](../analysis/01-what-picocalc-can-reuse-after-editing-a-function.md), reread it as a new reader, and reconciled its timing table and worked examples with the raw per-boot results.
+
+### Why
+
+The physical questions concern two distinct boundaries. The component run explains where the candidate spends time and verifies all correctness cases. The separate endpoint applies the same continuous clock to both compilers through a real native return. It also measures candidate heap without a simultaneously live clean ELF.
+
+### What worked
+
+- Files rebuild-to-linked median paired savings were 65,592 and 65,928.5 µs. Every unmarked comparison saved at least 64,938 µs.
+- In the independent endpoint setup, the two paired medians saved 63,346 and 63,538 µs. The smallest saving was 62,157 µs. The isolated candidate peak medians were 477,272 and 477,266 bytes. The clean peaks were 389,448 and 389,446 bytes.
+- Files increased the generated body image from 3,216 to 3,248 bytes while preserving the full 24,424-byte reactor contract. On every component boot the old native filename entry returned −1 for `_Ab` and the edited entry returned three with code units 95, 65 and 98.
+- All recorded frozen diagnostics preserved their original source locations. For example, the changed number of arguments gave `22:18: expected ,`. The tests also saw the previous token rejected and the fresh cache reseeded.
+- The retained original partition was written back and the board runner verified Files, Agenda and Editor running through the original native files in both restoration ledgers.
+
+### What didn't work
+
+The two earlier loader approaches remain documented in Steps 3 and 4. The verified final firmware runs had no loader or diagnostic mismatch. The small fixture did not show an editing-speed benefit on its repaired signature or layout changes. The profiler also exposed a roughly 20 KB difference according to whether the clean oracle was still live in the shared realm, so the report describes that memory by order and relies on the isolated endpoint for the clean/candidate heap comparison.
+
+### What I learned
+
+The fixed cost of walking declarations and relinking the complete reactor nearly covers the clean compiler's time for the fixture. Files has enough long body work to make reuse pay even though the candidate retains more memory and still emits a complete native image. The device supports a useful edit result without establishing a new cold build result.
+
+### What was tricky to build
+
+A per-function output cache still needs to account for changing JAL displacements. The Files body edit forces that relocation in an unchanged caller. The cache for a successful revision also contains a separate immutable ELF copy, so an exact-source cache hit can preserve byte identity independently of later caller mutation.
+
+### What warrants a second pair of eyes
+
+Check that the continuous endpoint starts at source handoff with both compiler realms already warmed. Do not include the physical app-world startup in that result. The full Editor host replay is separate evidence about invalidate-and-relink correctness and conservative layout work.
+
+### What should be done in the future
+
+Field-level dependency precision and resident Editor compiler-cache memory on the actual board remain open research questions beyond the tested Files case.
+
+### Code review instructions
+
+Read the [report](../analysis/01-what-picocalc-can-reuse-after-editing-a-function.md) alongside [timing-summary.json](../various/timing-summary.json). Recompute the summary and figure using the preserved host, physical component and endpoint JSON and their scripts.
+
+### Technical details
+
+The component trial uses four marked and four unmarked blocks per application on each boot. The endpoint trial uses six independently prepared pairs per boot and alternates order. The edited program SHA-256 is `7be267e2787cf2767dc6b94cbc4c4589679d0f2cd5b57fdf11a3f18ca2bed9d9`. Original compiler and stage script hashes are in [sources.json](../various/sources.json) and supplemented by the per-image ledgers.

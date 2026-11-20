@@ -1,0 +1,3796 @@
+{
+  "host": {
+    "by_case": {
+      "files": {
+        "seed": {
+          "candidate_us": {
+            "n": 40,
+            "min": 290,
+            "median": 349.0,
+            "max": 904
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 244,
+            "median": 293.5,
+            "max": 606
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -429,
+            "median": -55.0,
+            "max": 274
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -316,
+            "median": 6.0,
+            "max": 421
+          },
+          "mean_phases_us": {
+            "walk": 57.2,
+            "body": 227.25,
+            "lower": 115.775,
+            "assemble": 16.15,
+            "validate": 3.425,
+            "link": 13,
+            "publish": 3.35,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 438.675
+        },
+        "exact": {
+          "candidate_us": {
+            "n": 40,
+            "min": 2,
+            "median": 4.0,
+            "max": 18
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 233,
+            "median": 261.0,
+            "max": 1007
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": 230,
+            "median": 256.0,
+            "max": 1002
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -14,
+            "median": 0.0,
+            "max": 5
+          },
+          "mean_phases_us": {
+            "walk": 0,
+            "body": 0,
+            "lower": 0,
+            "assemble": 0,
+            "validate": 0,
+            "link": 0,
+            "publish": 0,
+            "fallback": 0,
+            "exact": 3.025
+          },
+          "mean_measured_us": 4.05
+        },
+        "relink": {
+          "candidate_us": {
+            "n": 40,
+            "min": 57,
+            "median": 68.5,
+            "max": 143
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 219,
+            "median": 246.0,
+            "max": 753
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": 140,
+            "median": 180.5,
+            "max": 610
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -73,
+            "median": 2.0,
+            "max": 381
+          },
+          "mean_phases_us": {
+            "walk": 64.375,
+            "body": 0,
+            "lower": 0,
+            "assemble": 13.525,
+            "validate": 2.45,
+            "link": 11.7,
+            "publish": 2.85,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 96.4
+        },
+        "body": {
+          "candidate_us": {
+            "n": 40,
+            "min": 78,
+            "median": 92.5,
+            "max": 227
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 232,
+            "median": 266.5,
+            "max": 703
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": 138,
+            "median": 179.5,
+            "max": 622
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -143,
+            "median": 3.5,
+            "max": 106
+          },
+          "mean_phases_us": {
+            "walk": 49.25,
+            "body": 17.575,
+            "lower": 10.8,
+            "assemble": 11.45,
+            "validate": 2.3,
+            "link": 11.5,
+            "publish": 2.925,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 107.225
+        },
+        "undo": {
+          "candidate_us": {
+            "n": 40,
+            "min": 69,
+            "median": 83.0,
+            "max": 168
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 231,
+            "median": 260.0,
+            "max": 863
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": 130,
+            "median": 183.0,
+            "max": 788
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -77,
+            "median": 2.0,
+            "max": 231
+          },
+          "mean_phases_us": {
+            "walk": 48.65,
+            "body": 11.75,
+            "lower": 8.475,
+            "assemble": 10.9,
+            "validate": 2.375,
+            "link": 10.85,
+            "publish": 2.55,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 96.775
+        }
+      },
+      "fixture": {
+        "seed": {
+          "candidate_us": {
+            "n": 40,
+            "min": 98,
+            "median": 108.5,
+            "max": 275
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 66,
+            "median": 76.5,
+            "max": 453
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -103,
+            "median": -33.0,
+            "max": 348
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -47,
+            "median": 9.0,
+            "max": 401
+          },
+          "mean_phases_us": {
+            "walk": 66.975,
+            "body": 25,
+            "lower": 17.925,
+            "assemble": 12.275,
+            "validate": 18.9,
+            "link": 12.775,
+            "publish": 3.075,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 158.175
+        },
+        "exact": {
+          "candidate_us": {
+            "n": 40,
+            "min": 1,
+            "median": 2.5,
+            "max": 11
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 60,
+            "median": 72.0,
+            "max": 301
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": 58,
+            "median": 68.5,
+            "max": 298
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -9,
+            "median": 1.0,
+            "max": 16
+          },
+          "mean_phases_us": {
+            "walk": 0,
+            "body": 0,
+            "lower": 0,
+            "assemble": 0,
+            "validate": 0,
+            "link": 0,
+            "publish": 0,
+            "fallback": 0,
+            "exact": 2.9
+          },
+          "mean_measured_us": 3.75
+        },
+        "relink": {
+          "candidate_us": {
+            "n": 40,
+            "min": 67,
+            "median": 79.0,
+            "max": 427
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 58,
+            "median": 74.0,
+            "max": 437
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -353,
+            "median": -5.0,
+            "max": 352
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -346,
+            "median": 0.0,
+            "max": 97
+          },
+          "mean_phases_us": {
+            "walk": 67.325,
+            "body": 0,
+            "lower": 0,
+            "assemble": 9.95,
+            "validate": 2.275,
+            "link": 11.775,
+            "publish": 2.8,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 95.55
+        },
+        "body": {
+          "candidate_us": {
+            "n": 40,
+            "min": 69,
+            "median": 82.5,
+            "max": 305
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 68,
+            "median": 75.5,
+            "max": 339
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -217,
+            "median": -6.5,
+            "max": 244
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -211,
+            "median": 1.0,
+            "max": 164
+          },
+          "mean_phases_us": {
+            "walk": 61.1,
+            "body": 4.15,
+            "lower": 5.5,
+            "assemble": 10.575,
+            "validate": 2.475,
+            "link": 12.15,
+            "publish": 2.875,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 99.95
+        },
+        "signature-bad": {
+          "candidate_us": {
+            "n": 40,
+            "min": 107,
+            "median": 129.0,
+            "max": 265
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 46,
+            "median": 51.0,
+            "max": 109
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -161,
+            "median": -79.0,
+            "max": -48
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -78,
+            "median": 2.0,
+            "max": 431
+          }
+        },
+        "signature": {
+          "candidate_us": {
+            "n": 40,
+            "min": 73,
+            "median": 87.5,
+            "max": 398
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 61,
+            "median": 78.0,
+            "max": 240
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -303,
+            "median": -12.0,
+            "max": 35
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -290,
+            "median": 1.5,
+            "max": 342
+          },
+          "mean_phases_us": {
+            "walk": 76.875,
+            "body": 5.9,
+            "lower": 3.85,
+            "assemble": 12.125,
+            "validate": 3,
+            "link": 12.475,
+            "publish": 2.975,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 118.4
+        },
+        "result-bad": {
+          "candidate_us": {
+            "n": 40,
+            "min": 97,
+            "median": 107.0,
+            "max": 453
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 42,
+            "median": 48.0,
+            "max": 496
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -400,
+            "median": -59.5,
+            "max": 384
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -352,
+            "median": 3.0,
+            "max": 115
+          }
+        },
+        "layout": {
+          "candidate_us": {
+            "n": 40,
+            "min": 79,
+            "median": 92.5,
+            "max": 491
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 68,
+            "median": 79.5,
+            "max": 509
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -321,
+            "median": -13.5,
+            "max": 419
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -205,
+            "median": 3.5,
+            "max": 329
+          },
+          "mean_phases_us": {
+            "walk": 76.1,
+            "body": 6.025,
+            "lower": 4.65,
+            "assemble": 12.125,
+            "validate": 2.575,
+            "link": 12.2,
+            "publish": 3.45,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 118.925
+        },
+        "layout-bad": {
+          "candidate_us": {
+            "n": 40,
+            "min": 46,
+            "median": 53.0,
+            "max": 99
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 17,
+            "median": 21.0,
+            "max": 337
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -61,
+            "median": -33.0,
+            "max": 240
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -45,
+            "median": 1.0,
+            "max": 73
+          }
+        },
+        "stale": {
+          "candidate_us": {
+            "n": 40,
+            "min": 79,
+            "median": 94.0,
+            "max": 368
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 65,
+            "median": 79.0,
+            "max": 225
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -282,
+            "median": -19.5,
+            "max": 6
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -172,
+            "median": 0.5,
+            "max": 93
+          },
+          "mean_phases_us": {
+            "walk": 0.325,
+            "body": 0,
+            "lower": 0,
+            "assemble": 0,
+            "validate": 0,
+            "link": 0,
+            "publish": 4.075,
+            "fallback": 104.825,
+            "exact": 0
+          },
+          "mean_measured_us": 109.9
+        },
+        "reseed": {
+          "candidate_us": {
+            "n": 40,
+            "min": 92,
+            "median": 101.5,
+            "max": 270
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 66,
+            "median": 73.5,
+            "max": 160
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -110,
+            "median": -31.5,
+            "max": 6
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -163,
+            "median": 6.5,
+            "max": 125
+          },
+          "mean_phases_us": {
+            "walk": 57.525,
+            "body": 25,
+            "lower": 15.475,
+            "assemble": 9.725,
+            "validate": 2.175,
+            "link": 11.825,
+            "publish": 3.825,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 126.8
+        },
+        "remove": {
+          "candidate_us": {
+            "n": 40,
+            "min": 66,
+            "median": 73.0,
+            "max": 465
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 62,
+            "median": 71.0,
+            "max": 225
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -388,
+            "median": -3.0,
+            "max": 149
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -397,
+            "median": 2.0,
+            "max": 329
+          },
+          "mean_phases_us": {
+            "walk": 66.775,
+            "body": 0,
+            "lower": 0,
+            "assemble": 9.6,
+            "validate": 2.25,
+            "link": 11.9,
+            "publish": 3.45,
+            "fallback": 0,
+            "exact": 0
+          },
+          "mean_measured_us": 95.325
+        },
+        "lex-bad": {
+          "candidate_us": {
+            "n": 40,
+            "min": 139,
+            "median": 155.5,
+            "max": 882
+          },
+          "clean_us": {
+            "n": 40,
+            "min": 61,
+            "median": 69.0,
+            "max": 457
+          },
+          "paired_saved_us": {
+            "n": 40,
+            "min": -684,
+            "median": -88.0,
+            "max": 311
+          },
+          "phase_probe_change_us": {
+            "n": 40,
+            "min": -724,
+            "median": 5.5,
+            "max": 211
+          }
+        }
+      }
+    },
+    "files_fresh_us": {
+      "n": 40,
+      "min": 1925,
+      "median": 2418.0,
+      "max": 6570
+    }
+  },
+  "board": [
+    {
+      "by_case": {
+        "files": {
+          "seed": {
+            "candidate_us": {
+              "n": 4,
+              "min": 118452,
+              "median": 119410.5,
+              "max": 120116
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 105109,
+              "median": 105288.0,
+              "max": 105403
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -14713,
+              "median": -14211.5,
+              "max": -13165
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 29,
+              "median": 3214.0,
+              "max": 8122
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 476884,
+              "median": 491140.0,
+              "max": 505388
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 480108,
+              "median": 494364.0,
+              "max": 508612
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 476884,
+                  "median": 476890.0,
+                  "max": 476896
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 480108,
+                  "median": 480114.0,
+                  "max": 480120
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 505384,
+                  "median": 505386.0,
+                  "max": 505388
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 508608,
+                  "median": 508610.0,
+                  "max": 508612
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 16509.25,
+              "body": 51829.75,
+              "lower": 35632.75,
+              "assemble": 6390,
+              "validate": 482.75,
+              "link": 10874,
+              "publish": 835.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 122992
+          },
+          "exact": {
+            "candidate_us": {
+              "n": 4,
+              "min": 954,
+              "median": 1059.5,
+              "max": 1128
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 105170,
+              "median": 105446.0,
+              "max": 110390
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 104116,
+              "median": 104436.5,
+              "max": 109262
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 230,
+              "median": 272.0,
+              "max": 501
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 480952,
+              "median": 491136.0,
+              "max": 501328
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 480952,
+              "median": 491136.0,
+              "max": 501328
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 480952,
+                  "median": 480954.0,
+                  "max": 480956
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 480952,
+                  "median": 480954.0,
+                  "max": 480956
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 501316,
+                  "median": 501322.0,
+                  "max": 501328
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501316,
+                  "median": 501322.0,
+                  "max": 501328
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 0,
+              "body": 0,
+              "lower": 0,
+              "assemble": 0,
+              "validate": 0,
+              "link": 0,
+              "publish": 0,
+              "fallback": 0,
+              "exact": 829.75
+            },
+            "mean_measured_us": 1369
+          },
+          "relink": {
+            "candidate_us": {
+              "n": 4,
+              "min": 32136,
+              "median": 32285.0,
+              "max": 33097
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 104129,
+              "median": 104736.5,
+              "max": 113868
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 71223,
+              "median": 72356.0,
+              "max": 81732
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -74,
+              "median": 324.5,
+              "max": 1412
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 476884,
+              "median": 491140.0,
+              "max": 505388
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 504540,
+              "median": 518796.0,
+              "max": 533044
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 476884,
+                  "median": 476890.0,
+                  "max": 476896
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 504540,
+                  "median": 504546.0,
+                  "max": 504552
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 505384,
+                  "median": 505386.0,
+                  "max": 505388
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 533040,
+                  "median": 533042.0,
+                  "max": 533044
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 14029,
+              "body": 0,
+              "lower": 0,
+              "assemble": 6499.5,
+              "validate": 440.75,
+              "link": 10796.25,
+              "publish": 783.5,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 32947.5
+          },
+          "body": {
+            "candidate_us": {
+              "n": 4,
+              "min": 40052,
+              "median": 40731.5,
+              "max": 41169
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 105742,
+              "median": 106159.0,
+              "max": 109431
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 65361,
+              "median": 65592.0,
+              "max": 68262
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -186,
+              "median": 358.5,
+              "max": 1305
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 481352,
+              "median": 491536.0,
+              "max": 501728
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 513096,
+              "median": 523280.0,
+              "max": 533472
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 481352,
+                  "median": 481354.0,
+                  "max": 481356
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 513096,
+                  "median": 513098.0,
+                  "max": 513100
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 501716,
+                  "median": 501722.0,
+                  "max": 501728
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 533460,
+                  "median": 533466.0,
+                  "max": 533472
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 14899.5,
+              "body": 4000.75,
+              "lower": 3351,
+              "assemble": 6423.25,
+              "validate": 431,
+              "link": 10734.75,
+              "publish": 869.25,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 41130
+          },
+          "undo": {
+            "candidate_us": {
+              "n": 4,
+              "min": 39075,
+              "median": 40061.0,
+              "max": 40455
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 104985,
+              "median": 105177.5,
+              "max": 105473
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 64530,
+              "median": 65247.0,
+              "max": 66137
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 1,
+              "median": 491.0,
+              "max": 1354
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 477284,
+              "median": 491540.0,
+              "max": 505788
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 508996,
+              "median": 523252.0,
+              "max": 537500
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 477284,
+                  "median": 477290.0,
+                  "max": 477296
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 508996,
+                  "median": 509002.0,
+                  "max": 509008
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 505784,
+                  "median": 505786.0,
+                  "max": 505788
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 537496,
+                  "median": 537498.0,
+                  "max": 537500
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 14965,
+              "body": 3627.25,
+              "lower": 2995,
+              "assemble": 6409.25,
+              "validate": 456.75,
+              "link": 10747.75,
+              "publish": 838.25,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 40497.25
+          }
+        },
+        "fixture": {
+          "seed": {
+            "candidate_us": {
+              "n": 4,
+              "min": 47304,
+              "median": 48748.5,
+              "max": 49465
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35242,
+              "median": 35998.0,
+              "max": 36294
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -13703,
+              "median": -13010.5,
+              "max": -11010
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -300,
+              "median": 1453.0,
+              "max": 4165
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 484692.0,
+              "max": 496912
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 486704.0,
+              "max": 500936
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472472.0,
+                  "max": 472476
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472472.0,
+                  "max": 472476
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496908,
+                  "median": 496910.0,
+                  "max": 496912
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 500932,
+                  "median": 500934.0,
+                  "max": 500936
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 20122,
+              "body": 7500,
+              "lower": 7460.5,
+              "assemble": 2535.75,
+              "validate": 530.25,
+              "link": 10867.5,
+              "publish": 791.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 50259.25
+          },
+          "exact": {
+            "candidate_us": {
+              "n": 4,
+              "min": 678,
+              "median": 906.0,
+              "max": 1120
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35804,
+              "median": 36076.0,
+              "max": 36584
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 35062,
+              "median": 35202.0,
+              "max": 35464
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 128,
+              "median": 236.5,
+              "max": 457
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472476,
+              "median": 484690.0,
+              "max": 496908
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 472476,
+              "median": 484690.0,
+              "max": 496908
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472476,
+                  "median": 472478.0,
+                  "max": 472480
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 472476,
+                  "median": 472478.0,
+                  "max": 472480
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496904.0,
+                  "max": 496908
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496904.0,
+                  "max": 496908
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 0,
+              "body": 0,
+              "lower": 0,
+              "assemble": 0,
+              "validate": 0,
+              "link": 0,
+              "publish": 0,
+              "fallback": 0,
+              "exact": 722.25
+            },
+            "mean_measured_us": 1167
+          },
+          "relink": {
+            "candidate_us": {
+              "n": 4,
+              "min": 32240,
+              "median": 32979.0,
+              "max": 33365
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35500,
+              "median": 36099.5,
+              "max": 36535
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 3006,
+              "median": 3202.5,
+              "max": 3260
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -155,
+              "median": 191.5,
+              "max": 2544
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 484692.0,
+              "max": 496912
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 500924,
+              "median": 513148.0,
+              "max": 525368
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472472.0,
+                  "max": 472476
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 500924,
+                  "median": 500928.0,
+                  "max": 500932
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496908,
+                  "median": 496910.0,
+                  "max": 496912
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 525364,
+                  "median": 525366.0,
+                  "max": 525368
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 18488.25,
+              "body": 0,
+              "lower": 0,
+              "assemble": 2581,
+              "validate": 476.5,
+              "link": 10823.5,
+              "publish": 789.5,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 33583.75
+          },
+          "body": {
+            "candidate_us": {
+              "n": 4,
+              "min": 35119,
+              "median": 35706.5,
+              "max": 36414
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35301,
+              "median": 36094.5,
+              "max": 36416
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -743,
+              "median": 328.0,
+              "max": 1047
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -216,
+              "median": 901.0,
+              "max": 2749
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472476,
+              "median": 484690.0,
+              "max": 496908
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501448,
+              "median": 513662.0,
+              "max": 525880
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472476,
+                  "median": 472478.0,
+                  "max": 472480
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501448,
+                  "median": 501450.0,
+                  "max": 501452
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496904.0,
+                  "max": 496908
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 525872,
+                  "median": 525876.0,
+                  "max": 525880
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 19211.25,
+              "body": 1332.5,
+              "lower": 1147.5,
+              "assemble": 2512.25,
+              "validate": 452,
+              "link": 10872.5,
+              "publish": 832.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 36820.25
+          },
+          "signature-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 25395,
+              "median": 25911.5,
+              "max": 26660
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 11903,
+              "median": 13110.0,
+              "max": 14082
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -14501,
+              "median": -12929.5,
+              "max": -11313
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -110,
+              "median": 323.5,
+              "max": 1619
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448036,
+              "median": 448044.0,
+              "max": 448048
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 448756,
+              "median": 448764.0,
+              "max": 448768
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448036,
+                  "median": 448040.0,
+                  "max": 448044
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448756,
+                  "median": 448760.0,
+                  "max": 448764
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448044,
+                  "median": 448046.0,
+                  "max": 448048
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448764,
+                  "median": 448766.0,
+                  "max": 448768
+                }
+              }
+            }
+          },
+          "signature": {
+            "candidate_us": {
+              "n": 4,
+              "min": 35957,
+              "median": 37534.5,
+              "max": 38897
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35185,
+              "median": 36234.0,
+              "max": 37082
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -3394,
+              "median": -1459.5,
+              "max": 1125
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 359,
+              "median": 1308.5,
+              "max": 2653
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472476,
+              "median": 486702.0,
+              "max": 500932
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501460,
+              "median": 515720.0,
+              "max": 529972
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472476,
+                  "median": 472478.0,
+                  "max": 472480
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501460,
+                  "median": 501468.0,
+                  "max": 501476
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 500924,
+                  "median": 500928.0,
+                  "max": 500932
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 529964,
+                  "median": 529968.0,
+                  "max": 529972
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 19756.25,
+              "body": 1978.75,
+              "lower": 1778.25,
+              "assemble": 2647.5,
+              "validate": 477,
+              "link": 10901.75,
+              "publish": 893.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 38888
+          },
+          "result-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 25405,
+              "median": 26286.5,
+              "max": 27292
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 12048,
+              "median": 13257.0,
+              "max": 14258
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -14904,
+              "median": -13133.5,
+              "max": -11279
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -705,
+              "median": 633.5,
+              "max": 2500
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448352,
+              "median": 448360.0,
+              "max": 448364
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 448360,
+              "median": 448648.0,
+              "max": 448940
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448352,
+                  "median": 448356.0,
+                  "max": 448360
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448932,
+                  "median": 448936.0,
+                  "max": 448940
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448360,
+                  "median": 448362.0,
+                  "max": 448364
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448360,
+                  "median": 448362.0,
+                  "max": 448364
+                }
+              }
+            }
+          },
+          "layout": {
+            "candidate_us": {
+              "n": 4,
+              "min": 36173,
+              "median": 36995.0,
+              "max": 38281
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35389,
+              "median": 36244.5,
+              "max": 37055
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -2793,
+              "median": -800.0,
+              "max": 882
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -99,
+              "median": 1181.0,
+              "max": 3356
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472792,
+              "median": 485006.0,
+              "max": 497224
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501776,
+              "median": 518064.0,
+              "max": 534344
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472792,
+                  "median": 472794.0,
+                  "max": 472796
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501776,
+                  "median": 501784.0,
+                  "max": 501792
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 497216,
+                  "median": 497220.0,
+                  "max": 497224
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 534336,
+                  "median": 534340.0,
+                  "max": 534344
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 19474.25,
+              "body": 1760.75,
+              "lower": 1714.75,
+              "assemble": 2735,
+              "validate": 513.25,
+              "link": 10965,
+              "publish": 890.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 38515.75
+          },
+          "layout-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 8175,
+              "median": 8802.5,
+              "max": 9450
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 2969,
+              "median": 3799.5,
+              "max": 4647
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -6460,
+              "median": -4994.5,
+              "max": -3566
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -79,
+              "median": 133.5,
+              "max": 678
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448400,
+              "median": 448408.0,
+              "max": 448412
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 448408,
+              "median": 448836.0,
+              "max": 449268
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448400,
+                  "median": 448404.0,
+                  "max": 448408
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 449260,
+                  "median": 449264.0,
+                  "max": 449268
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448408,
+                  "median": 448410.0,
+                  "max": 448412
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448408,
+                  "median": 448410.0,
+                  "max": 448412
+                }
+              }
+            }
+          },
+          "stale": {
+            "candidate_us": {
+              "n": 4,
+              "min": 37098,
+              "median": 37173.0,
+              "max": 37387
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 34471,
+              "median": 35564.5,
+              "max": 36287
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -2627,
+              "median": -1700.0,
+              "max": -917
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 325,
+              "median": 1587.0,
+              "max": 3237
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 460736,
+              "median": 472950.0,
+              "max": 485168
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 497272,
+              "median": 509486.0,
+              "max": 521704
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 460736,
+                  "median": 460738.0,
+                  "max": 460740
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 497272,
+                  "median": 497274.0,
+                  "max": 497276
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 485160,
+                  "median": 485164.0,
+                  "max": 485168
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 521696,
+                  "median": 521700.0,
+                  "max": 521704
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 157.25,
+              "body": 0,
+              "lower": 0,
+              "assemble": 0,
+              "validate": 0,
+              "link": 0,
+              "publish": 1065,
+              "fallback": 37350.75,
+              "exact": 0
+            },
+            "mean_measured_us": 38891.75
+          },
+          "reseed": {
+            "candidate_us": {
+              "n": 4,
+              "min": 48456,
+              "median": 48791.0,
+              "max": 49694
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35600,
+              "median": 35927.5,
+              "max": 36587
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -13906,
+              "median": -12840.5,
+              "max": -12103
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 506,
+              "median": 1796.5,
+              "max": 4885
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472832,
+              "median": 485056.0,
+              "max": 497276
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501804,
+              "median": 514028.0,
+              "max": 526248
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472832,
+                  "median": 472836.0,
+                  "max": 472840
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501804,
+                  "median": 501808.0,
+                  "max": 501812
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 497272,
+                  "median": 497274.0,
+                  "max": 497276
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 526244,
+                  "median": 526246.0,
+                  "max": 526248
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 20107.75,
+              "body": 8180.5,
+              "lower": 7807.25,
+              "assemble": 2501.5,
+              "validate": 474.5,
+              "link": 10897.75,
+              "publish": 781.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 51179
+          },
+          "remove": {
+            "candidate_us": {
+              "n": 4,
+              "min": 31119,
+              "median": 31434.0,
+              "max": 32120
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 33704,
+              "median": 34075.5,
+              "max": 34655
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 2185,
+              "median": 2543.5,
+              "max": 3131
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -501,
+              "median": 438.0,
+              "max": 3270
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472840,
+              "median": 485054.0,
+              "max": 497272
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501296,
+              "median": 513510.0,
+              "max": 525728
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472840,
+                  "median": 472842.0,
+                  "max": 472844
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501296,
+                  "median": 501298.0,
+                  "max": 501300
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 497264,
+                  "median": 497268.0,
+                  "max": 497272
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 525720,
+                  "median": 525724.0,
+                  "max": 525728
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 17229.25,
+              "body": 0,
+              "lower": 0,
+              "assemble": 2534.25,
+              "validate": 461,
+              "link": 10939.5,
+              "publish": 829.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 32438
+          },
+          "lex-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 40893,
+              "median": 41613.5,
+              "max": 42511
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 20975,
+              "median": 22348.0,
+              "max": 23876
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -20766,
+              "median": -19522.0,
+              "max": -17274
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -1390,
+              "median": 833.5,
+              "max": 4146
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448400,
+              "median": 448408.0,
+              "max": 448412
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 457340,
+              "median": 457348.0,
+              "max": 457352
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448400,
+                  "median": 448404.0,
+                  "max": 448408
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 457340,
+                  "median": 457344.0,
+                  "max": 457348
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448408,
+                  "median": 448410.0,
+                  "max": 448412
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 457348,
+                  "median": 457350.0,
+                  "max": 457352
+                }
+              }
+            }
+          }
+        }
+      },
+      "files_fresh_us": {
+        "n": 4,
+        "min": 236028,
+        "median": 238487.0,
+        "max": 243851
+      },
+      "files_fresh_peak_bytes": {
+        "n": 4,
+        "min": 362612,
+        "median": 362612.0,
+        "max": 362624
+      },
+      "setup": {
+        "files": {
+          "us": {
+            "n": 4,
+            "min": 174299,
+            "median": 174564.0,
+            "max": 175401
+          },
+          "live": {
+            "n": 4,
+            "min": 404628,
+            "median": 404636.0,
+            "max": 404640
+          },
+          "peak": {
+            "n": 4,
+            "min": 404628,
+            "median": 404636.0,
+            "max": 404640
+          }
+        },
+        "fixture": {
+          "us": {
+            "n": 4,
+            "min": 173547,
+            "median": 173669.5,
+            "max": 173962
+          },
+          "live": {
+            "n": 4,
+            "min": 395220,
+            "median": 395228.0,
+            "max": 395232
+          },
+          "peak": {
+            "n": 4,
+            "min": 398072,
+            "median": 398080.0,
+            "max": 398084
+          }
+        }
+      },
+      "files_guest": {
+        "seed": {
+          "load_us": {
+            "n": 4,
+            "min": 1435,
+            "median": 1497.0,
+            "max": 1564
+          },
+          "run_us": {
+            "n": 4,
+            "min": 13,
+            "median": 13.0,
+            "max": 13
+          }
+        },
+        "body": {
+          "load_us": {
+            "n": 4,
+            "min": 1440,
+            "median": 1494.5,
+            "max": 1563
+          },
+          "run_us": {
+            "n": 4,
+            "min": 4,
+            "median": 8.5,
+            "max": 15
+          }
+        }
+      }
+    },
+    {
+      "by_case": {
+        "files": {
+          "seed": {
+            "candidate_us": {
+              "n": 4,
+              "min": 118797,
+              "median": 119972.0,
+              "max": 120523
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 105427,
+              "median": 105495.0,
+              "max": 105916
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -15009,
+              "median": -14520.5,
+              "max": -12881
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 684,
+              "median": 2487.5,
+              "max": 2974
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 476880,
+              "median": 491138.0,
+              "max": 505412
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 480104,
+              "median": 494362.0,
+              "max": 508636
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 476880,
+                  "median": 476888.0,
+                  "max": 476896
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 480104,
+                  "median": 480112.0,
+                  "max": 480120
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 505380,
+                  "median": 505396.0,
+                  "max": 505412
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 508604,
+                  "median": 508620.0,
+                  "max": 508636
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 15651.25,
+              "body": 51053.5,
+              "lower": 36241,
+              "assemble": 6357.25,
+              "validate": 480,
+              "link": 10985,
+              "publish": 792.25,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 121974.25
+          },
+          "exact": {
+            "candidate_us": {
+              "n": 4,
+              "min": 1061,
+              "median": 1070.5,
+              "max": 1118
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 105326,
+              "median": 105898.5,
+              "max": 110406
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 104252,
+              "median": 104834.5,
+              "max": 109288
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 160,
+              "median": 224.0,
+              "max": 238
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 480948,
+              "median": 491146.0,
+              "max": 501328
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 480948,
+              "median": 491146.0,
+              "max": 501328
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 480948,
+                  "median": 480964.0,
+                  "max": 480980
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 480948,
+                  "median": 480964.0,
+                  "max": 480980
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 501312,
+                  "median": 501320.0,
+                  "max": 501328
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501312,
+                  "median": 501320.0,
+                  "max": 501328
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 0,
+              "body": 0,
+              "lower": 0,
+              "assemble": 0,
+              "validate": 0,
+              "link": 0,
+              "publish": 0,
+              "fallback": 0,
+              "exact": 821.25
+            },
+            "mean_measured_us": 1291.5
+          },
+          "relink": {
+            "candidate_us": {
+              "n": 4,
+              "min": 32161,
+              "median": 32494.5,
+              "max": 33184
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 104967,
+              "median": 105591.0,
+              "max": 114090
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 71783,
+              "median": 73096.5,
+              "max": 81929
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 718,
+              "median": 1481.0,
+              "max": 8425
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 476880,
+              "median": 491138.0,
+              "max": 505412
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 504536,
+              "median": 518794.0,
+              "max": 533068
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 476880,
+                  "median": 476888.0,
+                  "max": 476896
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 504536,
+                  "median": 504544.0,
+                  "max": 504552
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 505380,
+                  "median": 505396.0,
+                  "max": 505412
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 533036,
+                  "median": 533052.0,
+                  "max": 533068
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 15577,
+              "body": 0,
+              "lower": 0,
+              "assemble": 7169.5,
+              "validate": 478.25,
+              "link": 11143.5,
+              "publish": 824.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 35609.75
+          },
+          "body": {
+            "candidate_us": {
+              "n": 4,
+              "min": 39981,
+              "median": 40558.0,
+              "max": 40789
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 105727,
+              "median": 106486.5,
+              "max": 107038
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 64938,
+              "median": 65928.5,
+              "max": 67057
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 12,
+              "median": 1008.5,
+              "max": 1588
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 481348,
+              "median": 491546.0,
+              "max": 501728
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 513092,
+              "median": 523290.0,
+              "max": 533472
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 481348,
+                  "median": 481364.0,
+                  "max": 481380
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 513092,
+                  "median": 513108.0,
+                  "max": 513124
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 501712,
+                  "median": 501720.0,
+                  "max": 501728
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 533456,
+                  "median": 533464.0,
+                  "max": 533472
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 15123.5,
+              "body": 3966,
+              "lower": 3428.75,
+              "assemble": 6395,
+              "validate": 434,
+              "link": 10760,
+              "publish": 847.75,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 41375.75
+          },
+          "undo": {
+            "candidate_us": {
+              "n": 4,
+              "min": 39702,
+              "median": 40127.0,
+              "max": 40329
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 105286,
+              "median": 105946.5,
+              "max": 106737
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 64957,
+              "median": 66080.0,
+              "max": 66514
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 321,
+              "median": 922.0,
+              "max": 2296
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 477280,
+              "median": 491538.0,
+              "max": 505812
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 508992,
+              "median": 523250.0,
+              "max": 537524
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 477280,
+                  "median": 477288.0,
+                  "max": 477296
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 508992,
+                  "median": 509000.0,
+                  "max": 509008
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 505780,
+                  "median": 505796.0,
+                  "max": 505812
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 537492,
+                  "median": 537508.0,
+                  "max": 537524
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 15530.25,
+              "body": 3682.75,
+              "lower": 3072.5,
+              "assemble": 6388.25,
+              "validate": 446.25,
+              "link": 10758.25,
+              "publish": 858.25,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 41186.5
+          }
+        },
+        "fixture": {
+          "seed": {
+            "candidate_us": {
+              "n": 4,
+              "min": 48452,
+              "median": 49060.0,
+              "max": 49439
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35724,
+              "median": 36040.0,
+              "max": 36550
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -13715,
+              "median": -12845.5,
+              "max": -12251
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 11,
+              "median": 1106.5,
+              "max": 1302
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 484700.0,
+              "max": 496932
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 486712.0,
+              "max": 500956
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472484.0,
+                  "max": 472500
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472484.0,
+                  "max": 472500
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496916.0,
+                  "max": 496932
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 500924,
+                  "median": 500940.0,
+                  "max": 500956
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 19798.5,
+              "body": 7446.5,
+              "lower": 7406,
+              "assemble": 2563.75,
+              "validate": 541.75,
+              "link": 10857.75,
+              "publish": 813.5,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 49884.25
+          },
+          "exact": {
+            "candidate_us": {
+              "n": 4,
+              "min": 763,
+              "median": 892.5,
+              "max": 1139
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 36163,
+              "median": 36992.0,
+              "max": 37499
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 35400,
+              "median": 35982.0,
+              "max": 36595
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 162,
+              "median": 227.0,
+              "max": 299
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 484700.0,
+              "max": 496932
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 484700.0,
+              "max": 496932
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472484.0,
+                  "max": 472500
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472484.0,
+                  "max": 472500
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496916.0,
+                  "max": 496932
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496916.0,
+                  "max": 496932
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 0,
+              "body": 0,
+              "lower": 0,
+              "assemble": 0,
+              "validate": 0,
+              "link": 0,
+              "publish": 0,
+              "fallback": 0,
+              "exact": 720.5
+            },
+            "mean_measured_us": 1150.5
+          },
+          "relink": {
+            "candidate_us": {
+              "n": 4,
+              "min": 33069,
+              "median": 33265.0,
+              "max": 34430
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35883,
+              "median": 36413.5,
+              "max": 37305
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 1453,
+              "median": 3218.5,
+              "max": 4096
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -889,
+              "median": 595.0,
+              "max": 1807
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 484700.0,
+              "max": 496932
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 500924,
+              "median": 513156.0,
+              "max": 525388
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472484.0,
+                  "max": 472500
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 500924,
+                  "median": 500940.0,
+                  "max": 500956
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496916.0,
+                  "max": 496932
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 525356,
+                  "median": 525372.0,
+                  "max": 525388
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 18741,
+              "body": 0,
+              "lower": 0,
+              "assemble": 2628,
+              "validate": 489,
+              "link": 10936,
+              "publish": 814,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 34034.25
+          },
+          "body": {
+            "candidate_us": {
+              "n": 4,
+              "min": 36054,
+              "median": 36164.0,
+              "max": 36401
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 36058,
+              "median": 36251.0,
+              "max": 37414
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -343,
+              "median": 98.5,
+              "max": 1337
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 484,
+              "median": 1044.0,
+              "max": 2583
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 484700.0,
+              "max": 496932
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501440,
+              "median": 513672.0,
+              "max": 525904
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472484.0,
+                  "max": 472500
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501440,
+                  "median": 501456.0,
+                  "max": 501472
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 496900,
+                  "median": 496916.0,
+                  "max": 496932
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 525872,
+                  "median": 525888.0,
+                  "max": 525904
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 19791.75,
+              "body": 1356.75,
+              "lower": 1122.75,
+              "assemble": 2591,
+              "validate": 458.5,
+              "link": 10832.75,
+              "publish": 864,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 37484.5
+          },
+          "signature-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 25658,
+              "median": 26086.5,
+              "max": 26786
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 12071,
+              "median": 13600.0,
+              "max": 14374
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -14715,
+              "median": -12486.5,
+              "max": -11284
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 162,
+              "median": 806.5,
+              "max": 2348
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448036,
+              "median": 448052.0,
+              "max": 448068
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 448756,
+              "median": 448772.0,
+              "max": 448788
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448036,
+                  "median": 448052.0,
+                  "max": 448068
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448756,
+                  "median": 448772.0,
+                  "max": 448788
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448036,
+                  "median": 448052.0,
+                  "max": 448068
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448756,
+                  "median": 448772.0,
+                  "max": 448788
+                }
+              }
+            }
+          },
+          "signature": {
+            "candidate_us": {
+              "n": 4,
+              "min": 36819,
+              "median": 37644.0,
+              "max": 39029
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35583,
+              "median": 36487.5,
+              "max": 38231
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -3446,
+              "median": -1083.0,
+              "max": 1265
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 554,
+              "median": 983.5,
+              "max": 2113
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472468,
+              "median": 486712.0,
+              "max": 500956
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501452,
+              "median": 515724.0,
+              "max": 529996
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472468,
+                  "median": 472484.0,
+                  "max": 472500
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501452,
+                  "median": 501468.0,
+                  "max": 501484
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 500924,
+                  "median": 500940.0,
+                  "max": 500956
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 529964,
+                  "median": 529980.0,
+                  "max": 529996
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 19962,
+              "body": 1954.25,
+              "lower": 1728.25,
+              "assemble": 2656.25,
+              "validate": 473.25,
+              "link": 10814.75,
+              "publish": 894.5,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 38942.5
+          },
+          "result-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 26024,
+              "median": 26958.0,
+              "max": 27051
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 11994,
+              "median": 13118.0,
+              "max": 15467
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -15057,
+              "median": -13840.0,
+              "max": -10557
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -580,
+              "median": 715.0,
+              "max": 1034
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448352,
+              "median": 448368.0,
+              "max": 448384
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 448352,
+              "median": 448658.0,
+              "max": 448964
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448352,
+                  "median": 448368.0,
+                  "max": 448384
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448932,
+                  "median": 448948.0,
+                  "max": 448964
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448352,
+                  "median": 448368.0,
+                  "max": 448384
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448352,
+                  "median": 448368.0,
+                  "max": 448384
+                }
+              }
+            }
+          },
+          "layout": {
+            "candidate_us": {
+              "n": 4,
+              "min": 36886,
+              "median": 37567.0,
+              "max": 38293
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35705,
+              "median": 36588.5,
+              "max": 38675
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -2357,
+              "median": -880.0,
+              "max": 1361
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 1053,
+              "median": 1477.5,
+              "max": 2737
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472784,
+              "median": 485016.0,
+              "max": 497248
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501768,
+              "median": 518068.0,
+              "max": 534368
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472784,
+                  "median": 472800.0,
+                  "max": 472816
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501768,
+                  "median": 501784.0,
+                  "max": 501800
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 497216,
+                  "median": 497232.0,
+                  "max": 497248
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 534336,
+                  "median": 534352.0,
+                  "max": 534368
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 19913,
+              "body": 2016.25,
+              "lower": 1814.5,
+              "assemble": 2749.75,
+              "validate": 547.5,
+              "link": 10859.5,
+              "publish": 912.25,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 39264.5
+          },
+          "layout-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 8192,
+              "median": 8802.0,
+              "max": 9496
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 2928,
+              "median": 3843.5,
+              "max": 4840
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -6568,
+              "median": -4958.5,
+              "max": -3352
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 322,
+              "median": 407.5,
+              "max": 515
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448400,
+              "median": 448416.0,
+              "max": 448432
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 448400,
+              "median": 448846.0,
+              "max": 449292
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448400,
+                  "median": 448416.0,
+                  "max": 448432
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 449260,
+                  "median": 449276.0,
+                  "max": 449292
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448400,
+                  "median": 448416.0,
+                  "max": 448432
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 448400,
+                  "median": 448416.0,
+                  "max": 448432
+                }
+              }
+            }
+          },
+          "stale": {
+            "candidate_us": {
+              "n": 4,
+              "min": 37112,
+              "median": 37414.0,
+              "max": 37787
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 34761,
+              "median": 35466.5,
+              "max": 37695
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -3017,
+              "median": -1952.0,
+              "max": 583
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 462,
+              "median": 750.0,
+              "max": 2578
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 460728,
+              "median": 472960.0,
+              "max": 485192
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 497264,
+              "median": 509496.0,
+              "max": 521728
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 460728,
+                  "median": 460744.0,
+                  "max": 460760
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 497264,
+                  "median": 497280.0,
+                  "max": 497296
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 485160,
+                  "median": 485176.0,
+                  "max": 485192
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 521696,
+                  "median": 521712.0,
+                  "max": 521728
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 165.25,
+              "body": 0,
+              "lower": 0,
+              "assemble": 0,
+              "validate": 0,
+              "link": 0,
+              "publish": 1098.25,
+              "fallback": 36983,
+              "exact": 0
+            },
+            "mean_measured_us": 38566.75
+          },
+          "reseed": {
+            "candidate_us": {
+              "n": 4,
+              "min": 48974,
+              "median": 49469.0,
+              "max": 50507
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 35825,
+              "median": 36189.5,
+              "max": 36710
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -14682,
+              "median": -13017.5,
+              "max": -12788
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 770,
+              "median": 1115.5,
+              "max": 1648
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472832,
+              "median": 485064.0,
+              "max": 497296
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501804,
+              "median": 514036.0,
+              "max": 526268
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472832,
+                  "median": 472848.0,
+                  "max": 472864
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501804,
+                  "median": 501820.0,
+                  "max": 501836
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 497264,
+                  "median": 497280.0,
+                  "max": 497296
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 526236,
+                  "median": 526252.0,
+                  "max": 526268
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 20181,
+              "body": 7901,
+              "lower": 7722,
+              "assemble": 2463.5,
+              "validate": 472.25,
+              "link": 10814.25,
+              "publish": 795,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 50767
+          },
+          "remove": {
+            "candidate_us": {
+              "n": 4,
+              "min": 31434,
+              "median": 31585.0,
+              "max": 32315
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 34070,
+              "median": 34385.0,
+              "max": 35402
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": 1923,
+              "median": 2770.5,
+              "max": 3859
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": 39,
+              "median": 669.5,
+              "max": 1264
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 472832,
+              "median": 485064.0,
+              "max": 497296
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 501288,
+              "median": 513520.0,
+              "max": 525752
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 472832,
+                  "median": 472848.0,
+                  "max": 472864
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 501288,
+                  "median": 501304.0,
+                  "max": 501320
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 497264,
+                  "median": 497280.0,
+                  "max": 497296
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 525720,
+                  "median": 525736.0,
+                  "max": 525752
+                }
+              }
+            },
+            "mean_phases_us": {
+              "walk": 17283.25,
+              "body": 0,
+              "lower": 0,
+              "assemble": 2484.75,
+              "validate": 459,
+              "link": 10855,
+              "publish": 840,
+              "fallback": 0,
+              "exact": 0
+            },
+            "mean_measured_us": 32390.25
+          },
+          "lex-bad": {
+            "candidate_us": {
+              "n": 4,
+              "min": 41277,
+              "median": 41891.0,
+              "max": 43278
+            },
+            "clean_us": {
+              "n": 4,
+              "min": 21046,
+              "median": 22488.0,
+              "max": 24031
+            },
+            "paired_saved_us": {
+              "n": 4,
+              "min": -22013,
+              "median": -19393.5,
+              "max": -17484
+            },
+            "phase_probe_change_us": {
+              "n": 4,
+              "min": -173,
+              "median": 1124.0,
+              "max": 2680
+            },
+            "live_heap_bytes": {
+              "n": 4,
+              "min": 448400,
+              "median": 448416.0,
+              "max": 448432
+            },
+            "peak_heap_bytes": {
+              "n": 4,
+              "min": 457340,
+              "median": 457356.0,
+              "max": 457372
+            },
+            "heap_by_order": {
+              "candidate_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448400,
+                  "median": 448416.0,
+                  "max": 448432
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 457340,
+                  "median": 457356.0,
+                  "max": 457372
+                }
+              },
+              "clean_first": {
+                "live": {
+                  "n": 2,
+                  "min": 448400,
+                  "median": 448416.0,
+                  "max": 448432
+                },
+                "peak": {
+                  "n": 2,
+                  "min": 457340,
+                  "median": 457356.0,
+                  "max": 457372
+                }
+              }
+            }
+          }
+        }
+      },
+      "files_fresh_us": {
+        "n": 4,
+        "min": 236253,
+        "median": 238308.0,
+        "max": 239017
+      },
+      "files_fresh_peak_bytes": {
+        "n": 4,
+        "min": 362612,
+        "median": 362616.0,
+        "max": 362616
+      },
+      "setup": {
+        "files": {
+          "us": {
+            "n": 4,
+            "min": 174496,
+            "median": 175204.5,
+            "max": 176265
+          },
+          "live": {
+            "n": 4,
+            "min": 404624,
+            "median": 404638.0,
+            "max": 404644
+          },
+          "peak": {
+            "n": 4,
+            "min": 404624,
+            "median": 404638.0,
+            "max": 404644
+          }
+        },
+        "fixture": {
+          "us": {
+            "n": 4,
+            "min": 173735,
+            "median": 174460.0,
+            "max": 174983
+          },
+          "live": {
+            "n": 4,
+            "min": 395220,
+            "median": 395236.0,
+            "max": 395252
+          },
+          "peak": {
+            "n": 4,
+            "min": 398072,
+            "median": 398088.0,
+            "max": 398104
+          }
+        }
+      },
+      "files_guest": {
+        "seed": {
+          "load_us": {
+            "n": 4,
+            "min": 1433,
+            "median": 1506.5,
+            "max": 1559
+          },
+          "run_us": {
+            "n": 4,
+            "min": 7,
+            "median": 14.0,
+            "max": 15
+          }
+        },
+        "body": {
+          "load_us": {
+            "n": 4,
+            "min": 1445,
+            "median": 1522.0,
+            "max": 1581
+          },
+          "run_us": {
+            "n": 4,
+            "min": 4,
+            "median": 15.0,
+            "max": 19
+          }
+        }
+      }
+    }
+  ],
+  "endpoint": [
+    {
+      "lanes": {
+        "clean": {
+          "us": {
+            "n": 6,
+            "min": 106829,
+            "median": 107396.0,
+            "max": 108863
+          },
+          "load_us": {
+            "n": 6,
+            "min": 1533,
+            "median": 1545.0,
+            "max": 1572
+          },
+          "run_us": {
+            "n": 6,
+            "min": 4,
+            "median": 8.0,
+            "max": 8
+          },
+          "before": {
+            "n": 6,
+            "min": 357268,
+            "median": 357272.0,
+            "max": 357284
+          },
+          "live": {
+            "n": 6,
+            "min": 382100,
+            "median": 382104.0,
+            "max": 382116
+          },
+          "peak": {
+            "n": 6,
+            "min": 389444,
+            "median": 389448.0,
+            "max": 389460
+          }
+        },
+        "rebuild": {
+          "us": {
+            "n": 6,
+            "min": 43067,
+            "median": 44458.5,
+            "max": 45393
+          },
+          "load_us": {
+            "n": 6,
+            "min": 1622,
+            "median": 1635.5,
+            "max": 1652
+          },
+          "run_us": {
+            "n": 6,
+            "min": 4,
+            "median": 6.5,
+            "max": 8
+          },
+          "before": {
+            "n": 6,
+            "min": 424748,
+            "median": 424752.0,
+            "max": 424768
+          },
+          "live": {
+            "n": 6,
+            "min": 446728,
+            "median": 446732.0,
+            "max": 446748
+          },
+          "peak": {
+            "n": 6,
+            "min": 477268,
+            "median": 477272.0,
+            "max": 477288
+          }
+        }
+      },
+      "paired_saved_us": {
+        "n": 6,
+        "min": 62157,
+        "median": 63346.0,
+        "max": 63983
+      }
+    },
+    {
+      "lanes": {
+        "clean": {
+          "us": {
+            "n": 6,
+            "min": 106329,
+            "median": 106815.0,
+            "max": 107543
+          },
+          "load_us": {
+            "n": 6,
+            "min": 1524,
+            "median": 1538.5,
+            "max": 1565
+          },
+          "run_us": {
+            "n": 6,
+            "min": 5,
+            "median": 7.0,
+            "max": 16
+          },
+          "before": {
+            "n": 6,
+            "min": 357268,
+            "median": 357270.0,
+            "max": 357276
+          },
+          "live": {
+            "n": 6,
+            "min": 382100,
+            "median": 382102.0,
+            "max": 382108
+          },
+          "peak": {
+            "n": 6,
+            "min": 389444,
+            "median": 389446.0,
+            "max": 389452
+          }
+        },
+        "rebuild": {
+          "us": {
+            "n": 6,
+            "min": 42904,
+            "median": 43434.5,
+            "max": 44054
+          },
+          "load_us": {
+            "n": 6,
+            "min": 1630,
+            "median": 1646.0,
+            "max": 1824
+          },
+          "run_us": {
+            "n": 6,
+            "min": 4,
+            "median": 5.0,
+            "max": 101
+          },
+          "before": {
+            "n": 6,
+            "min": 424740,
+            "median": 424746.0,
+            "max": 424756
+          },
+          "live": {
+            "n": 6,
+            "min": 446720,
+            "median": 446726.0,
+            "max": 446736
+          },
+          "peak": {
+            "n": 6,
+            "min": 477260,
+            "median": 477266.0,
+            "max": 477276
+          }
+        }
+      },
+      "paired_saved_us": {
+        "n": 6,
+        "min": 62647,
+        "median": 63538.0,
+        "max": 64192
+      }
+    }
+  ]
+}
