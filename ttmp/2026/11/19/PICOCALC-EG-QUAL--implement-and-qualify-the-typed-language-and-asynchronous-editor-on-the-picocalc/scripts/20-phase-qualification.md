@@ -1,3 +1,21 @@
+---
+Title: Native Editor compiler phases on the PicoCalc
+Ticket: PICOCALC-EG-QUAL
+Status: active
+Topics:
+    - picocalc
+    - performance
+DocType: reference
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: Reproduce disjoint compiler phase intervals from matched physical firmware.
+LastUpdated: 2026-11-20T01:07:00-05:00
+WhatFor: Build and inspect the pre-G and G4 native compiler phase probes.
+WhenToUse: Reconciling individual pass times against the cold compilation stopwatch.
+---
+
 # Native Editor compiler phases on the PicoCalc
 
 The phase build measures the interval reported by the existing native Editor compile log. The caller starts that clock before reading the application and reactor from the firmware bundle. The measurement ends after freeing the compiler's QuickJS context and runtime. The interval excludes loading the resulting Editor world and executing its generated program.
