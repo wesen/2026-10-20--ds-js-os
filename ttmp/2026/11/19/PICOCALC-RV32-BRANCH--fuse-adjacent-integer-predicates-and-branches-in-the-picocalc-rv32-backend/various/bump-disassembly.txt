@@ -1,0 +1,64 @@
+function bump(b: i32, c: i32): i32 {
+    let a = b + c;
+    if (a > 0) { a = a + 1; }
+    return a;
+}
+
+baseline with 22 instruction words
+baseline.bin:     file format binary
+
+
+Disassembly of section .data:
+
+00000000 <.data>:
+   0:	ff010113          	addi	sp,sp,-16
+   4:	00112623          	sw	ra,12(sp)
+   8:	00a12023          	sw	a0,0(sp)
+   c:	00b12223          	sw	a1,4(sp)
+  10:	00012283          	lw	t0,0(sp)
+  14:	00412303          	lw	t1,4(sp)
+  18:	006282b3          	add	t0,t0,t1
+  1c:	00512423          	sw	t0,8(sp)
+  20:	00812283          	lw	t0,8(sp)
+  24:	00000313          	addi	t1,zero,0
+  28:	005322b3          	slt	t0,t1,t0
+  2c:	00029463          	bne	t0,zero,0x34
+  30:	0140006f          	jal	zero,0x44
+  34:	00812283          	lw	t0,8(sp)
+  38:	00100313          	addi	t1,zero,1
+  3c:	006282b3          	add	t0,t0,t1
+  40:	00512423          	sw	t0,8(sp)
+  44:	00812283          	lw	t0,8(sp)
+  48:	00028513          	addi	a0,t0,0
+  4c:	00c12083          	lw	ra,12(sp)
+  50:	01010113          	addi	sp,sp,16
+  54:	00008067          	jalr	zero,0(ra)
+
+candidate with 21 instruction words
+candidate.bin:     file format binary
+
+
+Disassembly of section .data:
+
+00000000 <.data>:
+   0:	ff010113          	addi	sp,sp,-16
+   4:	00112623          	sw	ra,12(sp)
+   8:	00a12023          	sw	a0,0(sp)
+   c:	00b12223          	sw	a1,4(sp)
+  10:	00012283          	lw	t0,0(sp)
+  14:	00412303          	lw	t1,4(sp)
+  18:	006282b3          	add	t0,t0,t1
+  1c:	00512423          	sw	t0,8(sp)
+  20:	00812283          	lw	t0,8(sp)
+  24:	00000313          	addi	t1,zero,0
+  28:	00534463          	blt	t1,t0,0x30
+  2c:	0140006f          	jal	zero,0x40
+  30:	00812283          	lw	t0,8(sp)
+  34:	00100313          	addi	t1,zero,1
+  38:	006282b3          	add	t0,t0,t1
+  3c:	00512423          	sw	t0,8(sp)
+  40:	00812283          	lw	t0,8(sp)
+  44:	00028513          	addi	a0,t0,0
+  48:	00c12083          	lw	ra,12(sp)
+  4c:	01010113          	addi	sp,sp,16
+  50:	00008067          	jalr	zero,0(ra)

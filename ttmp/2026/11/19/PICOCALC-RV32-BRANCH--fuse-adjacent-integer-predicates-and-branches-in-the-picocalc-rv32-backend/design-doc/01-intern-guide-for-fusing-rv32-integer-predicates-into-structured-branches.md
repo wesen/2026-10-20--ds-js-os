@@ -7,9 +7,19 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: Current depth-indexed backend and long branch helper
+    - Path: repo://picocalc-os/compiler/typed-wasm.js
+      Note: Frontend comparison and structured-control opcode sources
+    - Path: repo://ttmp/2026/11/19/PICOCALC-RV32-BRANCH--fuse-adjacent-integer-predicates-and-branches-in-the-picocalc-rv32-backend/scripts/02-predicate-fusion.patch
+      Note: Experimental compiler diff against pinned baseline
+    - Path: repo://ttmp/2026/11/19/PICOCALC-RV32-BRANCH--fuse-adjacent-integer-predicates-and-branches-in-the-picocalc-rv32-backend/various/guest.json
+      Note: Paired linked-application guest steps
+    - Path: repo://ttmp/2026/11/19/PICOCALC-RV32-BRANCH--fuse-adjacent-integer-predicates-and-branches-in-the-picocalc-rv32-backend/various/static.json
+      Note: Image and per-function measurements
 ExternalSources: []
-Summary: "Design and qualification guide for the PicoCalc RV32 adjacent predicate experiment."
+Summary: Design and qualification guide for the PicoCalc RV32 adjacent predicate experiment.
 LastUpdated: 2026-11-19T19:30:44.901982139-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -75,3 +85,61 @@ A shallow signed comparison should save one or two words according to its baseli
 5. Record node, cross-GCC, and emulator versions and binary provenance. Keep benchmark scripts, the exact patch and raw outputs together. Report which outcomes came from the isolated source comparison, emulator, or board.
 
 The patch remains experimental in this ticket while the supervisor evaluates the paired hardware result.
+
+## Measured code shape
+
+These counts come from compiler output at `6426798` and the ticket patch. Each word occupies four bytes. One imported call occupies a four-byte relocation placeholder until link time.
+
+| Application | Baseline words | Candidate words | Reduction | Bytes reclaimed inside the slot |
+| --- | ---: | ---: | ---: | ---: |
+| Files | 804 | 738 | 8.21% | 264 |
+| Agenda | 4,058 | 3,784 | 6.75% | 1,096 |
+| Editor | 21,886 | 20,507 | 6.30% | 5,516 |
+
+Conditional branch counts are 75, 323 and 1,037 in both lanes. The candidate emits 25, 100 and 582 signed or unsigned conditional branches respectively. The baseline uses equality conditional opcodes for boolean branches and local trap sequences. The unchanged totals include internal calls, ordinary conditional jumps and import relocations. The shared reactor reserves a fixed code area. Linked ELF sizes remain 24,424 bytes for Files, 66,364 for the locally built Agenda reactor, and 240,452 for Editor. The source bytes, image digests, per-function counts and 31 alternating warm host timing samples are in [static.json](../various/static.json).
+
+The disassembly verifies the example on a real cross-toolchain. The baseline is 22 words with a local branch target at `0x34` and an alternate at `0x44`. The candidate is 21 words with target offsets recomputed at `0x30` and `0x40`.
+
+```text
+baseline  0x28  slt t0,t1,t0
+          0x2c  bne t0,zero,0x34
+          0x30  jal zero,0x44
+
+candidate 0x28  blt t1,t0,0x30
+          0x2c  jal zero,0x40
+```
+
+`t0` is the original signed variable `a`. `t1` holds zero. The candidate reads both operands at the comparison. An `a` greater than zero takes the local branch into the body. Zero and negative `a` fall through to the jump to the alternate. The candidate executes one fewer instruction on either path. [Full bump disassembly](../various/bump-disassembly.txt).
+
+## Host qualification
+
+The focused suite compared 1,343 vectors with an actual WebAssembly instance and both RV32 images, including 24 expected traps. It tested signed i32 extrema, equality, zero as either operand, early return, loop exits, several operand depths through 8, the same memory sentinels after successful and trapping accesses, and the order of side-effecting calls through a short-circuit expression. Its large-arm fixture produced a 12,004-byte `jal` displacement. The 37,445 → 34,526 interpreted steps characterize the selected vectors. Whole linked applications were also run in a separate RV32 emulator. [Differential receipt](../various/differential.json).
+
+| Local guest workflow | Baseline guest steps | Candidate guest steps | Reduction |
+| --- | ---: | ---: | ---: |
+| Files startup, sorting, rounding and directory creation | 88,823 | 88,750 | 0.08% |
+| Agenda persistence, mutations, grouped navigation and refresh | 2,193,310 | 2,132,824 | 2.76% |
+| Editor edit and save | 2,543,239 | 2,376,228 | 6.57% |
+| Editor large open | 7,621,786 | 7,081,589 | 7.09% |
+| Editor dense inline preview | 22,853,317 | 21,519,713 | 5.84% |
+| Editor late navigation | 42,316,056 | 38,662,647 | 8.63% |
+
+Each series used baseline, candidate, candidate, baseline. Every workflow produced the same stdout digest over all four runs. The absolute count includes the driver, reactor and application from entry to completion. Hostcalls run outside the guest and the counter records the guest instructions that reach them. The Files workflow spends relatively little of its 88,823 guest steps in comparisons the compiler can fuse. Editor frequently executes the affected code in rendering and navigation. Different path weights account for different percentage changes. [Paired whole-driver receipt](../various/guest.json).
+
+All 24 existing PicoCalc host replays passed with each compiler bundle. They cover typed Files, Agenda calendar calculations and entry prompts, and complete Editor workflows including editing, search and large previews. [Baseline receipt](../various/baseline-replays.txt) · [Candidate receipt](../various/candidate-replays.txt).
+
+## Reproduce the experiment
+
+From the project root, use the code and app sources from `6426798` and keep the compiled host simulator and typed Wasm reactors available. The application scripts use the RISC-V GCC that built the fixtures and CJI's `rv32emu` with its adjacent support objects. Pass those local paths explicitly. The constructor creates new output directories containing the pinned `wasm.js`, `rv32.js` and `world.js` for each lane. Loading these as the corresponding typed compiler bundle selects the lane through the ordinary runtime entry points.
+
+```bash
+ticket=(ttmp/2026/11/19/PICOCALC-RV32-BRANCH--*)
+work=$(mktemp -d)
+bash "$ticket/scripts/01-construct.sh" "$work/pair"
+node "$ticket/scripts/03-apps.mjs" count "$work/pair"
+node "$ticket/scripts/04-differential.mjs" "$work/pair"
+python3 "$ticket/scripts/05-guest.py" "$P4_GCC" "$RV32EMU" "$work/pair"
+node "$ticket/scripts/08-worked-example.mjs" "$work/pair" "$P4_OBJDUMP"
+```
+
+The constructor's expected baseline and candidate lowerer hashes begin `64d5c155` and `8cdf92a2`. Confirm the full [compiler hashes](../various/compiler-sha256.txt) and take a fresh matched measurement if any application source, SDK, reactor, VM support object, or compiler file differs. These checks establish mechanical fusion and application behavior over the captured workloads. A physical run can measure target compile time, peak runtime heap, and cycles separately.

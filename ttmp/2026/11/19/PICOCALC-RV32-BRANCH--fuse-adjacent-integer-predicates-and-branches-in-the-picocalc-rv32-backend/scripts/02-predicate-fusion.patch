@@ -1,0 +1,80 @@
+--- a/picocalc-os/compiler/typed-rv32.js
++++ b/picocalc-os/compiler/typed-rv32.js
+@@ -20,6 +20,17 @@
+     [0x74,[1,0]], [0x75,[5,0x20]],
+ ]);
+
++// True branch funct3 and whether the instruction's operands are reversed.
++const PREDICATES = new Map([
++    [0x45,[0,false]], // eqz (right operand is zero)
++    [0x46,[0,false]], // eq
++    [0x48,[4,false]], // lt_s
++    [0x4a,[4,true]],  // gt_s
++    [0x4c,[5,true]],  // le_s
++    [0x4e,[5,false]], // ge_s
++    [0x4f,[7,false]], // ge_u
++]);
++
+ class FunctionCode {
+     constructor(program, functions, starts) {
+         this.program = program;
+@@ -128,14 +139,38 @@
+         this.push(out);
+     }
+
+-    begin(op) {
++    begin(op, kind = 0, a, b = ZERO) {
+         const type = this.cell();
+         if (type !== 0x40 && type !== 0x7f) throw new SyntaxError("unsupported RV32 control result");
+-        const condition = op === 0x04 ? this.pop(T5) : ZERO;
++        const condition = op === 0x04 ? a ?? this.pop(T5) : ZERO;
+         const block = {op, depth: this.depth, value: type === 0x7f, start: {}, alternate: {}, end: {}};
+         this.control.push(block);
+         this.mark(block.start);
+-        if (op === 0x04) this.branch(0, condition, ZERO, block.alternate);
++        if (op === 0x04) this.branch(kind, condition, b, block.alternate);
++    }
++
++    branchTarget() {
++        const block = this.control.at(-1 - this.cell());
++        return block.op === 0x03 ? block.start : block.end;
++    }
++
++    fuseBranch(op) {
++        const encoding = PREDICATES.get(op);
++        if (!encoding) return false;
++        const negate = this.program.code[this.at] === 0x45;
++        const consumer = this.program.code[this.at + Number(negate)];
++        if (consumer !== 0x04 && consumer !== 0x0d) return false;
++        this.at += 1 + Number(negate);
++
++        const [kind, swap] = encoding;
++        const right = op === 0x45 ? ZERO : this.pop(T6);
++        const left = this.pop(T5);
++        const a = swap ? right : left;
++        const b = swap ? left : right;
++        const whenTrue = kind ^ Number(negate);
++        if (consumer === 0x04) this.begin(consumer, whenTrue ^ 1, a, b);
++        else this.branch(whenTrue, a, b, this.branchTarget());
++        return true;
+     }
+
+     end() {
+@@ -167,6 +202,7 @@
+     }
+
+     step(op) {
++        if (op >= 0x45 && op <= 0x4f && this.fuseBranch(op)) return false;
+         switch (op) {
+         case 0x00: this.emit(0x00100073); break;  // Wasm unreachable
+         case 0x02: case 0x03: case 0x04: this.begin(op); break;
+@@ -179,8 +215,7 @@
+         }
+         case 0x0b: return this.end();
+         case 0x0c: case 0x0d: {
+-            const block = this.control.at(-1 - this.cell());
+-            const target = block.op === 0x03 ? block.start : block.end;
++            const target = this.branchTarget();
+             if (op === 0x0d) this.branch(1, this.pop(T5), ZERO, target);
+             else this.jump(target);
+             break;

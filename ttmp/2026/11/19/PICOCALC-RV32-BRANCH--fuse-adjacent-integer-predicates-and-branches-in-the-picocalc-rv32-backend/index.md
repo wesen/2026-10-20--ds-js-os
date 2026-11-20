@@ -9,7 +9,7 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
+Summary: "An isolated Scope A2 candidate with static, differential, linked-app and board evidence."
 LastUpdated: 2026-11-19T19:30:35.830243514-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -19,12 +19,15 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+This experiment evaluates direct RV32 conditional branches for adjacent typed integer predicates. The compiler candidate is reproducible from the matched baseline and an experimental ticket-local patch.
 
-## Key Links
+## Evidence
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
+- [Intern guide](design-doc/01-intern-guide-for-fusing-rv32-integer-predicates-into-structured-branches.md)
+- [Investigation diary](reference/01-investigation-diary.md)
+- [Compiler bundle constructor](scripts/01-construct.sh) and [candidate patch](scripts/02-predicate-fusion.patch)
+- [Static and warm compile measurements](various/static.json), [focused differential test](various/differential.json), and [whole guest workflows](various/guest.json)
+- [Baseline host workflows](various/baseline-replays.txt) and [candidate host workflows](various/candidate-replays.txt)
 
 ## Status
 
