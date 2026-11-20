@@ -42,7 +42,7 @@ I interpreted this as a production integration with an independently reproducibl
 
 ### What I did
 
-I read the old producer, the compositor paint and dispatch path, the shared C raster, the normal framebuffer bindings and the earlier replay fixtures. I commissioned Claude with the short prompt in `scripts/replay/01-opus-design.txt`, using `claude -p --model opus --effort high` from `/tmp`, with tools, slash commands and session persistence disabled. The CLI reported `claude-opus-5-5`. The saved response includes the researcher's own dated diary. It describes work completed, assumptions, proposed falsifiers and evidence still needed. [Research design and diary](../scripts/replay/05-opus-design.md) · [Invocation](../scripts/replay/02-commission.sh)
+I read the old producer, the compositor paint and dispatch path, the shared C raster, the normal framebuffer bindings and the earlier replay fixtures. I commissioned Claude with the short prompt in `scripts/replay/01-opus-design.txt`, using `claude -p --model opus --effort high` from `/tmp`, with tools, slash commands and session persistence disabled. The CLI reported `claude-opus-5-5`. The saved response includes the researcher's own dated diary. It describes work completed, assumptions, proposed falsifiers and evidence still needed. [Research design and diary](../scripts/replay/05-opus-design.txt) · [Invocation](../scripts/replay/02-commission.sh)
 
 ### Why
 
@@ -150,7 +150,7 @@ A rejected frame might silently replace the retained object with an equally look
 
 All 34 additional cases passed, including the 10 omitted positions and five service restarts with a single complete retained position. Both injected transfer failures left the modeled panel stale. In each case a second draw at the same position produced the rectangle `[0,0,320,320]` and brought every pixel back into agreement. All 19 refusal checks passed and a fresh valid frame was accepted immediately afterwards. The replay also records the actual head-first lists for the two-fill example.
 
-A second Opus High commission produced a short original theory lesson and a scope-limited author diary. Both successfully sent research briefs used tools-disabled execution. The provenance file includes the model reported by the CLI and SHA-256 hashes of the exact stored briefs and responses. [Opus teaching note and diary](../scripts/replay/09-opus-theory.md) · [Provenance](../scripts/replay/10-opus-provenance.json)
+A second Opus High commission produced a short original theory lesson and a scope-limited author diary. Both successfully sent research briefs used tools-disabled execution. The provenance file includes the model reported by the CLI and SHA-256 hashes of the exact stored briefs and responses. [Opus teaching note and diary](../scripts/replay/09-opus-theory.txt) · [Provenance](../scripts/replay/10-opus-provenance.json)
 
 ### What didn't work
 
@@ -183,3 +183,21 @@ node ttmp/2026/11/20/PICOCALC-SNAKE-INTEGRATION--*/scripts/replay/04-production-
 ### Technical details
 
 At the final run the baseline compositor SHA-256 was `e25a2f94fc9b53845459c27d0cddeacdd07e200ba175380f134bd2ec2418be0b` and the CJI-compatible candidate was `07117cc469fefca6b0b4c493dab190ff4f6891101c207c78adb00794fdb94b52`. The checked production game SHA-256 was `d5b1b9ef08b086c3be08e44c528b10a22b36bd01cef7ae6cf2beb872e36fd4c8`. The article's editing pass checked that a beginner can follow the cell numbering, that bytes and events use the same denominator, and that framebuffer identity and physical panel delivery each carry their own qualifications. [Textbook article](../analysis/03-snake-rendering-correctness.md)
+
+
+## Step 4. Preserve the raw research transcripts as plain text
+
+The ticket doctor interpreted the Markdown filenames of both provider responses as authored docmgr documents. I renamed the transcripts with a plain-text extension and updated publication and provenance references. Their recorded SHA-256 digests remain identical. The JSON envelopes returned by the two original CLI calls can be checked locally against the renamed artifacts with these commands.
+
+```sh
+replay_dir=$(dirname "$(ls ttmp/2026/11/20/PICOCALC-SNAKE-INTEGRATION--*/scripts/replay/02-commission.sh)")
+extract_result() {
+  jq -ejr 'if type == "array" then last(.[] | select(.type == "result")) else . end |
+    select(.is_error == false) | .result | sub("\\s+$"; "") + "\n"' "$1"
+}
+extract_result /tmp/picocalc-snake-independent-opus-design.json | cmp - "$replay_dir/05-opus-design.txt"
+extract_result /tmp/pc-snake-independent-opus-methods.json | cmp - "$replay_dir/09-opus-theory.txt"
+docmgr doctor --ticket PICOCALC-SNAKE-INTEGRATION --fail-on warning
+```
+
+The capture comparison uses the original local provider envelopes. A checkout without these temporary files can verify both saved transcripts against the hashes in the committed provenance receipt.

@@ -6,7 +6,7 @@
     "effortFlag": "high",
     "prompt": "01-opus-design.txt",
     "promptSha256": "09570e3804e56d4683bc04525eb675cb0bbc0db0882a7ce06ff4df40b2a3c23e",
-    "response": "05-opus-design.md",
+    "response": "05-opus-design.txt",
     "responseFileSha256": "3b775da8b2cefb1d24e88ca8143e8ea73064965b892a477ccb41984bce1967f2",
     "tools": "disabled",
     "cliResult": "success"
@@ -18,7 +18,7 @@
     "effortFlag": "high",
     "prompt": "08-opus-methods.txt",
     "promptSha256": "f7e1a9ed6889219198c4d3a5deef38b3c6047c84d94967901d4cb6dcc6b2031e",
-    "response": "09-opus-theory.md",
+    "response": "09-opus-theory.txt",
     "responseFileSha256": "0d402ef5f8e4f1d38b82caec9c236bb4074d2bb0315962d2843eecab5f030585",
     "tools": "disabled",
     "cliResult": "success"
