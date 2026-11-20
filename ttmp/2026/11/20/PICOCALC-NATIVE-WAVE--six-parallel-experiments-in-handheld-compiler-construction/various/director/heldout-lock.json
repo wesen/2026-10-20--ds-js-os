@@ -1,0 +1,28 @@
+{
+  "projectBase": "cb492cebaf45b84c62ed6eda83adf9fcfe1aaec1",
+  "files": {
+    "01-burst-oracle.mjs": "e66fcbc3b614988de480551546dbb8dd33a1db93f5f7622d91454ca2ba8786d2",
+    "burst.typed": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+    "control.json": "55049f276ee9a7fbb724958252fa57f660d05b533960a3972933ddd53aa2f5df",
+    "lifetime-cases.json": "0732c83754dfcb3271d6502f41e14b0cc3e96dc9e0896691da36b1f17e3385db",
+    "manifest-input.json": "9fe0b30db64eb8db63d2be571be6b06f04982c0d3efeb4d31061a9af01da9676"
+  },
+  "control": {
+    "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+    "rv32SHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+    "imageBytes": 2876,
+    "wasmBytes": 1500,
+    "functions": 10,
+    "checks": {
+      "uncheckedRequest": 70,
+      "inspect": 456,
+      "countEvents": 456,
+      "readBurst": 456,
+      "label": 165
+    },
+    "total": 1603,
+    "traps": 101,
+    "rv32Steps": 158570,
+    "orderedDigest": "66d52400302aab0c4c7ef90095ae0167d72deccb0046da99657106ec2e86917d"
+  }
+}
