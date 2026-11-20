@@ -1,0 +1,6 @@
+4000d380 <raster_pie_groups>:
+4000d380:	8602203b          	esp.vldbc.16.ip	q0,a2,0
+4000d384:	8201223b          	esp.vst.128.ip	q0,a0,16
+4000d388:	15fd                	addi	a1,a1,-1
+4000d38a:	fded                	bnez	a1,4000d384 <raster_pie_groups+0x4>
+4000d38c:	8082                	ret

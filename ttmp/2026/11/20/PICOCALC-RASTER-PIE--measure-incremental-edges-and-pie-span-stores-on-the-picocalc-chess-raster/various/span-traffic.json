@@ -1,0 +1,512 @@
+{
+  "e2": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "e3": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "f3": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "low": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 976,
+    "triangleSpans": 4078,
+    "trianglePixels": 23662,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "high": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1992,
+    "triangleSpans": 7098,
+    "trianglePixels": 42658,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-1": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-2": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-3": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-4": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-5": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-6": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-7": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-8": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-9": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-10": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-11": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-12": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-13": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-14": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-15": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-16": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-17": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-18": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1474,
+    "triangleSpans": 5580,
+    "trianglePixels": 33150,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-19": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1301,
+    "triangleSpans": 3188,
+    "trianglePixels": 23047,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-20": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1301,
+    "triangleSpans": 3188,
+    "trianglePixels": 23047,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-21": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1301,
+    "triangleSpans": 3188,
+    "trianglePixels": 23047,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-22": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1301,
+    "triangleSpans": 3188,
+    "trianglePixels": 23047,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-23": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1301,
+    "triangleSpans": 3188,
+    "trianglePixels": 23047,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-24": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1301,
+    "triangleSpans": 3188,
+    "trianglePixels": 23047,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-25": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1305,
+    "triangleSpans": 3212,
+    "trianglePixels": 23237,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-26": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1302,
+    "triangleSpans": 3214,
+    "trianglePixels": 23231,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-27": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1303,
+    "triangleSpans": 3230,
+    "trianglePixels": 23296,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-28": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1303,
+    "triangleSpans": 3230,
+    "trianglePixels": 23296,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-29": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1303,
+    "triangleSpans": 3230,
+    "trianglePixels": 23296,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-30": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1296,
+    "triangleSpans": 3120,
+    "trianglePixels": 22786,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-31": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-32": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-33": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-34": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-35": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-36": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-37": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-38": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-39": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-40": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-41": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1306,
+    "triangleSpans": 3256,
+    "trianglePixels": 23308,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-42": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1306,
+    "triangleSpans": 3256,
+    "trianglePixels": 23308,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-43": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1306,
+    "triangleSpans": 3256,
+    "trianglePixels": 23308,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-44": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1306,
+    "triangleSpans": 3256,
+    "trianglePixels": 23308,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-45": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1301,
+    "triangleSpans": 3188,
+    "trianglePixels": 23047,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  },
+  "pos-46": {
+    "mattePixels": 89600,
+    "matteGroups": 11200,
+    "maxTriangleSpan": 15,
+    "spansWithAlignedGroup": 1320,
+    "triangleSpans": 3496,
+    "trianglePixels": 24566,
+    "vectorableSpans": 0,
+    "triangleGroups": 0
+  }
+}

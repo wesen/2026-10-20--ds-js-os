@@ -46,3 +46,26 @@ Compare every RGB565 byte, hint string, dirty mask and virtual-clock delta to th
 The main P4 comparison uses a 64-byte-aligned PSRAM back buffer, as in the compositor, and command arrays in PSRAM. Measure validation plus complete command rendering, and rendering alone after validation. Allocate and seed buffers before timing. Measure all meaningful costs within the renderer, including the full matte, span accounting and text. Framebuffer allocation, display commit, DMA transfers and panel latency have separate boundaries. Record the actual target frequency and cycles, correction checks, and final restoration.
 
 The usual device profile is exactly 2.5 ns per pixel. A scanline of at most 320 pixels truncates to zero virtual microseconds. The optimized arms specialize that case without dropping observable charge. If the profile differs, they retain the per-span floating-point operation and truncation. The full matte's combined charge uses integer division by 400 at the device profile.
+
+## Reproduce
+
+Generate the frozen input lists with the scalar 3D scene's `scripts/scene/poses.mjs`. Its 47-position transport fixture comes from the 2D Chess replay. The generated folder includes 51 `.words` files and its receipt. From this ticket:
+
+```bash
+python3 -B scripts/02-host.py /tmp/chess3d-silhouette-poses /tmp/pie-raster-host /tmp/pie-raster-host.json
+bash scripts/04-build-board.sh /tmp/pie-raster-board /tmp/chess3d-silhouette-poses \
+  /home/manuel/esp/esp-idf-5.4.2/export.sh
+```
+
+The stage materializes all renderer variants from the same 3D parser and retains that parser's validator once. The board app adds the independent damage comparison. The build uses the product's 360 MHz CPU, 200 MHz PSRAM and compiler performance setting. Check the generated SDK config, since the 200 MHz setting depends on ESP-IDF's experimental feature gate.
+
+```bash
+python3 -B scripts/05-run-board.py \
+  --benchmark /tmp/pie-raster-board/build \
+  --playable /tmp/mobile-painter-production/build \
+  --playable-sha256 75c94df7b1aa565c8cb7858bea628aa2c9c644ef64cc885b96e1d80088f8af56 \
+  --host /tmp/pie-raster-host.json \
+  --output /tmp/pie-raster-repeat --preflight
+```
+
+Preflight verifies the recovery binary and compatible partition without opening serial. The actual measurement needs board ownership and uses the shared lock. The runner writes only the application at the factory offset, compares full raster output against the host receipt, and restores and verifies the preceding playable image. The study assumes the validated framebuffer dimensions and the kernel's exclusive ownership of the back buffer.

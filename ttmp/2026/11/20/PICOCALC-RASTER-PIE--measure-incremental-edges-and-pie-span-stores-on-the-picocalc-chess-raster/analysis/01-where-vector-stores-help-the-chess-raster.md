@@ -2,9 +2,26 @@
 Title: Where vector stores help the Chess raster
 Ticket: PICOCALC-RASTER-PIE
 Status: active
-Topics: [picocalc, esp32-p4, performance, native]
+Topics:
+    - picocalc
+    - esp32-p4
+    - performance
+    - native
 DocType: analysis
 Intent: long-term
+Owners: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RASTER-PIE--measure-incremental-edges-and-pie-span-stores-on-the-picocalc-chess-raster/scripts/edges.inc
+      Note: Exact integer edge traversal and metadata preservation
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RASTER-PIE--measure-incremental-edges-and-pie-span-stores-on-the-picocalc-chess-raster/scripts/span.S
+      Note: ESP32-P4 eight-pixel span writer
+    - Path: repo://ttmp/2026/11/20/PICOCALC-RASTER-PIE--measure-incremental-edges-and-pie-span-stores-on-the-picocalc-chess-raster/various/physical.json
+      Note: Paired full-renderer cycle distributions and recovery evidence
+ExternalSources: []
+Summary: ""
+LastUpdated: 0001-01-01T00:00:00Z
+WhatFor: ""
+WhenToUse: ""
 ---
 
 # Where vector stores help the Chess raster
@@ -36,3 +53,25 @@ A uniform RGB565 span has no per-pixel arithmetic. The work is repeating a 16-bi
 The full-width 320 by 280 matte contains 89,600 pixels. It supplies 11,200 complete eight-pixel groups when aligned. Most individual triangle spans are shorter, and a 128-bit store has little opportunity in a span that cannot supply a complete aligned group. The prototype starts the vector writer at 16 accumulated pixels. For a short span it retains scalar stores. This threshold is an experimental value, and the same guarded scalar work still runs before the vector write.
 
 The four arms identify the contribution of each design change. Stock uses the original row scanning and `gfx_fill`. The edges arm only changes the scan geometry. The scalar arm adds prevalidated spans, a contiguous fill and exact common-profile accounting. The PIE arm changes the stores in that last version. All four use the same command decoder. Tests compared all RGB565 bytes, dirty bands and virtual charges in 51 complete scenes. The same scenes also agreed with an independent edge-function and font implementation. Another 172 triangle windings with and without the matte and 256 span alignment and length combinations checked the conditions that complete scenes could conceal. [Host comparison](../various/host.json)
+
+## The measured work was mostly scalar
+
+An independent count over the accepted lists found a maximum triangle span of 15 pixels across all 51 scenes. The 16-pixel PIE threshold therefore selects the full-width matte alone. At e2, the 89,600-pixel matte supplies 11,200 vector stores. The 5,580 triangle spans cover 33,150 pixel writes, including overdraw. These spans stay scalar. Of those, 1,474 could supply a complete group after alignment if a lower threshold were selected. That potential depends on call, alignment and memory costs, and this experiment did not time it. [Per-scene traffic counts](../various/span-traffic.json)
+
+The revision 1.3 ESP32-P4 ran at 360 MHz. The benchmark used 64-byte-aligned RGB565 back buffers and command lists in PSRAM at the product's configured 200 MHz setting. It drew the frozen lists with the same gfx and font sources compiled at the product's -O2 setting. Each sample timed two full draws after warmup, and the four versions rotated order across 11 samples. The table gives medians in milliseconds per draw with command lists already validated. All 51 board cases compared full framebuffer bytes, exact dirty bits and virtual charge. The board checksums also matched the independent host receipt. [Physical receipt](../various/physical.json)
+
+| Scene | Stock | Stepped edges | Prevalidated scalar | Scalar + PIE |
+| --- | ---: | ---: | ---: | ---: |
+| e2 | 17.589 | 16.025 | 4.301 | 3.897 |
+| Low camera | 13.546 | 12.444 | 3.910 | 3.457 |
+| High camera | 21.768 | 19.750 | 4.766 | 4.406 |
+| Position 23 | 10.797 | 9.923 | 3.258 | 2.834 |
+| Position 46 | 11.655 | 10.695 | 3.400 | 2.954 |
+
+The stepped edge arithmetic saves 1.564 ms in the opening scene. Switching to the prevalidated scalar write path saves a further 11.724 ms with direct writes, contiguous clearing and common-profile accounting combined. PIE brings that from 4.301 ms to 3.897 ms, a 9.4% reduction. The complete draw is 4.51× faster than stock in that scene. Timing command validation and all render work together gives 17.650 ms stock and 3.963 ms for the PIE arm.
+
+The paired comparison includes clear, edge setup, every triangle span, text, and the dirty and virtual-clock updates. It starts with allocated framebuffers and ends before framebuffer commit, DMA, or panel transfer. The prior full render had measured 18.156 ms in the integrated painter, which is close to the isolated stock draw for e2. The standalone result still leaves display traffic and input latency as separate measurements.
+
+The damage study tests another way to reduce work. It preserves earlier pixels and replays only the primitive commands that can change a known region. Cursor motion can touch a small footprint. A changed camera invalidates the retained scene and needs a full draw. On changes that require a large replay, the optimized full draw is a competing path. The measured damage study used the original gfx raster, so combining it with the present draw path requires a new paired comparison. [Independent damage study](03-retained-chess-repaint.md)
+
+The benchmark initializes the standard 2.5 ns fill coefficient and leaves the text coefficient at zero. The real 6 ns text coefficient also truncates to zero for these 6-by-12 glyphs. The pixel loop runs in both cases, while the zero coefficient can affect the cost of its software floating-point arithmetic. The four arms use the same profile. The runner restored and verified the original app and partition, then confirmed the ordinary painter and expected worlds were healthy.
