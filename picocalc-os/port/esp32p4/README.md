@@ -45,6 +45,18 @@ The network build has been cross-compiled with ESP-IDF v5.4.2, ESP-Hosted 1.4.2,
 0.14.0. Physical Wi-Fi, TLS, display responsiveness, storage recovery, and battery behavior still
 need the hardware checks in the guide.
 
+### Typed Chess (optional)
+
+Add **-D PICOCALC_RV32_CHESS=ON** to compile and run the Chess world as RV32.
+For Wasm, build the shared reactor with **make -C picocalc-os typed-world-reactor** from the
+repository root and set **-D PICOCALC_TYPED_CHESS=ON** and **-D PICOCALC_RV32_CHESS=OFF**.
+Chess can be enabled alongside typed Files, Agenda and Editor.
+
+Press **H** from the launcher to play White. Use the arrows and **Enter** to select and move,
+**Q/R/B/N** to choose a promotion, **F2** to restart, and **Esc** to cancel or leave.
+The typed world handles checkmate, stalemate and basic dead material. Games live in memory.
+[Chess design, qualification, and reproduction commands](../../../ttmp/2026/11/20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/index.md)
+
 ## Provisioning and companion firmware
 
 Credentials are entered locally through the native `net` UART commands or the provisioning helper

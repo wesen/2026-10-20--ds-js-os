@@ -1,0 +1,273 @@
+{
+  "host": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "node": "v24.18.0",
+  "revision": "9b6a2f2252da31d15f6a137699145849796a41cc",
+  "compileClock": "process CPU in a fresh QuickJS runtime",
+  "compile": {
+    "wasm": {
+      "artifact": {
+        "sourceBytes": 40767,
+        "sourceSha256": "8cbfecfe4670be1030f72d5af2ec3a8946e064d6dcfd1c92f422c132cc11df11",
+        "target": "wasm",
+        "moduleBytes": 73204,
+        "moduleSha256": "824736351bf622101213166724f199e58bd8ed4bf260e766223f1659b151d513",
+        "reactorSha256": "b17cae463ed83810f8530160e9cf5e525daec031c8a5f9685f5c550165afc85f"
+      },
+      "samples": [
+        {
+          "target": "wasm",
+          "setupMs": 7.3356319999999995,
+          "compileMs": 30.961836,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 6.380529,
+          "compileMs": 30.608656999999997,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 6.391517,
+          "compileMs": 30.737903,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 6.126572,
+          "compileMs": 30.165309999999998,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 6.15707,
+          "compileMs": 29.990620000000003,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 6.401688,
+          "compileMs": 30.753351000000002,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 7.417483000000001,
+          "compileMs": 31.209680999999996,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 6.379216,
+          "compileMs": 30.450575,
+          "moduleBytes": 73204
+        },
+        {
+          "target": "wasm",
+          "setupMs": 6.374028,
+          "compileMs": 30.800981,
+          "moduleBytes": 73204
+        }
+      ],
+      "statistics": {
+        "setupMs": {
+          "median": 6.380529,
+          "min": 6.126572,
+          "max": 7.417483000000001
+        },
+        "compileMs": {
+          "median": 30.737903,
+          "min": 29.990620000000003,
+          "max": 31.209680999999996
+        }
+      }
+    },
+    "rv32": {
+      "artifact": {
+        "sourceBytes": 40767,
+        "sourceSha256": "8cbfecfe4670be1030f72d5af2ec3a8946e064d6dcfd1c92f422c132cc11df11",
+        "target": "rv32",
+        "moduleBytes": 240452,
+        "moduleSha256": "8bbcda63080264b549af63ab6dbce7c09dd462ee9fb5b74a7bb393e3fc8cbc8e",
+        "reactorSha256": "16660a8ab3fb07d5e5d388c21d81868b3f71e325d3a9737dcefc095f7554feff"
+      },
+      "samples": [
+        {
+          "target": "rv32",
+          "setupMs": 7.666010000000001,
+          "compileMs": 41.032495,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.163162000000001,
+          "compileMs": 42.788202,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.425548000000001,
+          "compileMs": 41.940915999999994,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.411708000000001,
+          "compileMs": 41.076262,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.243165,
+          "compileMs": 40.974915,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.200626,
+          "compileMs": 41.048514999999995,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.173978,
+          "compileMs": 40.694362,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.184535,
+          "compileMs": 41.000659,
+          "moduleBytes": 240452
+        },
+        {
+          "target": "rv32",
+          "setupMs": 7.833447,
+          "compileMs": 44.25855,
+          "moduleBytes": 240452
+        }
+      ],
+      "statistics": {
+        "setupMs": {
+          "median": 7.243165,
+          "min": 7.163162000000001,
+          "max": 7.833447
+        },
+        "compileMs": {
+          "median": 41.048514999999995,
+          "min": 40.694362,
+          "max": 44.25855
+        }
+      }
+    }
+  },
+  "runtimeClock": "Node monotonic wall time inside the Wasm reactor; no scheduler, compositor or panel",
+  "firstMove": {
+    "samples": [
+      {
+        "launchFrameMs": 0.5701510000000027,
+        "selectionFrameMs": 0.5594159999999988,
+        "moveAndThinkingFrameMs": 0.22860699999999667,
+        "searchOnlyWakesMs": 6.766254999999994,
+        "longestSearchOnlyWakeMs": 0.4098410000000001,
+        "lastWakeAndReplyFrameMs": 0.09387399999999957
+      },
+      {
+        "launchFrameMs": 0.5493689999999987,
+        "selectionFrameMs": 0.731347999999997,
+        "moveAndThinkingFrameMs": 0.2371259999999893,
+        "searchOnlyWakesMs": 7.372058000000038,
+        "longestSearchOnlyWakeMs": 0.4051720000000074,
+        "lastWakeAndReplyFrameMs": 0.11809499999999673
+      },
+      {
+        "launchFrameMs": 0.5270629999999983,
+        "selectionFrameMs": 0.5366649999999993,
+        "moveAndThinkingFrameMs": 0.25171100000000024,
+        "searchOnlyWakesMs": 7.387821000000002,
+        "longestSearchOnlyWakeMs": 0.39799899999999866,
+        "lastWakeAndReplyFrameMs": 0.10625399999999274
+      },
+      {
+        "launchFrameMs": 0.5316919999999996,
+        "selectionFrameMs": 0.5463160000000045,
+        "moveAndThinkingFrameMs": 0.32790299999999917,
+        "searchOnlyWakesMs": 7.033640999999925,
+        "longestSearchOnlyWakeMs": 0.40597199999999845,
+        "lastWakeAndReplyFrameMs": 0.09521200000000363
+      },
+      {
+        "launchFrameMs": 0.5372249999999994,
+        "selectionFrameMs": 0.5395789999999963,
+        "moveAndThinkingFrameMs": 0.2094860000000054,
+        "searchOnlyWakesMs": 7.119369000000056,
+        "longestSearchOnlyWakeMs": 0.3936339999999987,
+        "lastWakeAndReplyFrameMs": 0.1060590000000019
+      },
+      {
+        "launchFrameMs": 0.527628,
+        "selectionFrameMs": 0.5374589999999984,
+        "moveAndThinkingFrameMs": 0.25987099999999685,
+        "searchOnlyWakesMs": 7.3307900000000075,
+        "longestSearchOnlyWakeMs": 0.3857199999999992,
+        "lastWakeAndReplyFrameMs": 0.09655300000000011
+      },
+      {
+        "launchFrameMs": 0.5122820000000061,
+        "selectionFrameMs": 0.5679750000000041,
+        "moveAndThinkingFrameMs": 0.25524200000000263,
+        "searchOnlyWakesMs": 7.6362650000000585,
+        "longestSearchOnlyWakeMs": 0.41580499999999887,
+        "lastWakeAndReplyFrameMs": 0.11459299999999928
+      },
+      {
+        "launchFrameMs": 0.5409790000000001,
+        "selectionFrameMs": 0.5578119999999984,
+        "moveAndThinkingFrameMs": 0.21809199999999862,
+        "searchOnlyWakesMs": 7.062459999999952,
+        "longestSearchOnlyWakeMs": 0.416246000000001,
+        "lastWakeAndReplyFrameMs": 0.10889799999999639
+      },
+      {
+        "launchFrameMs": 0.5470849999999956,
+        "selectionFrameMs": 0.563482999999998,
+        "moveAndThinkingFrameMs": 0.2298669999999987,
+        "searchOnlyWakesMs": 7.591907999999982,
+        "longestSearchOnlyWakeMs": 0.3970769999999959,
+        "lastWakeAndReplyFrameMs": 0.10472399999999027
+      }
+    ],
+    "statistics": {
+      "launchFrameMs": {
+        "median": 0.5372249999999994,
+        "min": 0.5122820000000061,
+        "max": 0.5701510000000027
+      },
+      "selectionFrameMs": {
+        "median": 0.5578119999999984,
+        "min": 0.5366649999999993,
+        "max": 0.731347999999997
+      },
+      "moveAndThinkingFrameMs": {
+        "median": 0.2371259999999893,
+        "min": 0.2094860000000054,
+        "max": 0.32790299999999917
+      },
+      "searchOnlyWakesMs": {
+        "median": 7.3307900000000075,
+        "min": 6.766254999999994,
+        "max": 7.6362650000000585
+      },
+      "longestSearchOnlyWakeMs": {
+        "median": 0.4051720000000074,
+        "min": 0.3857199999999992,
+        "max": 0.416246000000001
+      },
+      "lastWakeAndReplyFrameMs": {
+        "median": 0.1060590000000019,
+        "min": 0.09387399999999957,
+        "max": 0.11809499999999673
+      }
+    }
+  }
+}

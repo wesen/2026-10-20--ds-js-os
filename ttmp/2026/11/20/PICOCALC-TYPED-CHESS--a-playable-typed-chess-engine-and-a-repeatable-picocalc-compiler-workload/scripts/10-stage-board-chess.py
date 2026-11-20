@@ -21,6 +21,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--idf-export", type=Path, required=True)
+    p.add_argument("--sdkconfig", type=Path,
+                   default=REPO / "picocalc-os/port/esp32p4/sdkconfig.agent-elf")
     p.add_argument("--target", choices=("rv32", "wasm"), default="rv32")
     a = p.parse_args()
     work = a.output.resolve()
@@ -53,7 +55,7 @@ def main():
         shutil.copyfile(REPO / "picocalc-os/build/typed-world-reactor.wasm", reactor)
 
     config = work / "sdkconfig"
-    shutil.copyfile(p4 / "sdkconfig.agent-elf", config)
+    shutil.copyfile(a.sdkconfig, config)
     build = work / "build"
     options = ["-D", f"SDKCONFIG={config}", "-D", "PICOCALC_TYPED_CHESS=ON",
                "-D", f"PICOCALC_RV32_CHESS={'ON' if a.target == 'rv32' else 'OFF'}",

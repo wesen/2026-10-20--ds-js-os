@@ -8,7 +8,15 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/port/esp32p4/main/chess_p4.c
+      Note: Generic firmware compiler invocation
+    - Path: repo://picocalc-os/worlds/chess/chess.typed
+      Note: Typed launcher application and timer-driven state machine
+    - Path: repo://picocalc-os/worlds/chess/search.typed
+      Note: Bounded iterative deepening, alpha–beta and quiescence
+    - Path: repo://ttmp/2026/11/20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/various/engine-oracle.json
+      Note: Frozen perft, legality, score and node comparisons
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-20T00:32:26.122129692-05:00
@@ -20,16 +28,20 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+Typed Chess is a launcher app and a fourth PicoCalc compiler workload. The engine uses an explicit-stack alpha–beta search with iterative deepening and quiescence. It plays Black against a human, with castling, en passant, all four promotions and checkmate/stalemate adjudication. Wasm and RV32 pass the same independent legal fixtures and shared-reactor replay.
 
 ## Key Links
 
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
+- [Newcomer design](./design-doc/01-a-bounded-orthodox-chess-engine-and-typed-world.md)
+- [Technical article](./analysis/01-chess-search-without-recursion-on-the-picocalc.md)
+- [Independent Opus High design receipt](./various/opus-search-design.json)
+- [Engine and world qualification](./various/engine-oracle.json) · [Linked world transcript](./various/world-oracle.json)
+- [Host performance](./various/host-measurements.json) · [Reproduction guide](./reference/03-reproduce-chess.md)
+- [Implementation diary](./reference/01-typed-chess-investigation-diary.md) · [Supervisor diary](./reference/02-supervisor-experiment-diary.md)
 
 ## Status
 
-Current status: **active**
+The host gates passed. The isolated RV32 measurement image passed partition preflight and is queued for physical replay.
 
 ## Topics
 
@@ -46,9 +58,8 @@ See [changelog.md](./changelog.md) for recent changes and decisions.
 
 ## Structure
 
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+- design-doc/ contains the pre-implementation design
+- analysis/ contains the technical article
+- reference/ contains the diaries and reproduction guide
+- scripts/ contains the oracles, benchmarks and measurement-only firmware staging
+- various/ contains independent inputs, receipts and figures

@@ -10,8 +10,9 @@ import '../../../../../../picocalc-os/compiler/typed-rv32.js';
 import '../../../../../../picocalc-os/compiler/typed-async.js';
 import '../../../../../../picocalc-os/compiler/typed-world.js';
 
-const [gcc, emulator, reactor] = process.argv.slice(2).map(x => resolve(x));
-assert(gcc && emulator && reactor, 'pass P4 GCC, CJI RV32 emulator, and shared reactor ELF');
+const timingOnly = process.argv[2] === '--timing-only';
+const [gcc, emulator, reactor] = (timingOnly ? [] : process.argv.slice(2)).map(x => resolve(x));
+assert(timingOnly || (gcc && emulator && reactor), 'pass P4 GCC, CJI RV32 emulator, and shared reactor ELF');
 const sdk = resolve('picocalc-os/sdk');
 const dir = resolve('picocalc-os/worlds/chess');
 const source = readFileSync(join(dir, 'source.list'), 'utf8').trim().split('\n')
@@ -19,7 +20,7 @@ const source = readFileSync(join(dir, 'source.list'), 'utf8').trim().split('\n')
 const operations = [...readFileSync(join(sdk, 'nw_wire.h'), 'utf8').matchAll(/NW_CALL_([A-Z_]+)/g)]
     .map(match => match[1]);
 const wasm = compileTypedWorld(source, readFileSync('picocalc-os/build/typed-world-reactor.wasm'));
-const rv32 = compileTypedWorldRv32(source, readFileSync(reactor));
+const rv32 = timingOnly ? null : compileTypedWorldRv32(source, readFileSync(reactor));
 const trace = [];
 let guest;
 let timer = 2000;
@@ -48,6 +49,7 @@ guest = new WebAssembly.Instance(new WebAssembly.Module(wasm), {nw:{call:syscall
 guest._initialize?.();
 guest.nw_wasm_init();
 const events = [];
+const timings = [];
 function event(label, kind, second, token, type, json, from) {
     events.push({label,kind,second,token,type,json,from});
     const bytes = [type, json, from].map(x => encode.encode(x));
@@ -62,7 +64,9 @@ function event(label, kind, second, token, type, json, from) {
     }
     const offset = trace.length;
     trace.push('event ' + label);
+    const started = timingOnly ? performance.now() : 0;
     const result = guest.nw_wasm_event(kind, second, 0, token, ...lengths);
+    if (timingOnly) timings.push(performance.now() - started);
     trace.push('return ' + result);
     return {result, lines:trace.slice(offset+1,-1)};
 }
@@ -90,6 +94,19 @@ assert.equal(status(wake), 'White to move');
 const reply = JSON.parse(wake.lines.find(line => line.startsWith('screen ')).slice(7)).kids.at(-1).s;
 assert.equal(reply, 'Last b8-c6   Depth 3   Nodes 1600   Eval 12');
 assert.equal(ticks, 78);
+if (timingOnly) {
+    const duration = label => timings[events.findIndex(e => e.label === label)];
+    const workingSlices = timings.filter((_, i) => /^search slice \d+$/.test(events[i].label)).slice(0, -1);
+    console.log(JSON.stringify({
+        launchFrameMs: duration('launch'),
+        selectionFrameMs: duration('enter'),
+        moveAndThinkingFrameMs: duration('white e2e4'),
+        searchOnlyWakesMs: workingSlices.reduce((a, b) => a + b, 0),
+        longestSearchOnlyWakeMs: Math.max(...workingSlices),
+        lastWakeAndReplyFrameMs: duration('search slice ' + (ticks - 1)),
+    }));
+    process.exit(0);
+}
 assert.equal(status(key('f2', '', 'reset')), 'White to move');
 key('enter'); key('up'); key('up');
 assert.equal(key('enter', '', 'start second search').result, 1);
