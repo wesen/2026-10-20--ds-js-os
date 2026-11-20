@@ -10,7 +10,7 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
+Summary: "How a typed Editor suspends and resumes on Wasm and RV32, with separate clocks for cold compilation, guest CPU and complete search."
 LastUpdated: 2026-11-19T23:29:26.570362707-05:00
 WhatFor: ""
 WhenToUse: ""
