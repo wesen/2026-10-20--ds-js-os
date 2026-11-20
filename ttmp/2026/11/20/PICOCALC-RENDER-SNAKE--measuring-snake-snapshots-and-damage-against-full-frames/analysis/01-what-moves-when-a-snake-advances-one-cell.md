@@ -27,7 +27,7 @@ WhenToUse: ""
 
 A snake game on a 320×320 panel changes very little per step. One cell gains a head, another loses its tail, and the rest of the screen stays the same. Between the game's timer and the display, though, that small change passes through several stages. It becomes game state, then a serialized message, then a layout, then a raster image, and finally a comparison of framebuffers. Each stage can carry much more or much less data than the few cells that changed on screen.
 
-This article follows one real turn through each of those stages. It then reports what a host-side study found about message size, decode cost, paint cost and pixel transfer for a snake game on the PicoCalc. All numbers come from hosted runs on a desktop machine. None are timings from the PicoCalc board itself, and physical device measurements are reported separately.
+The measurements below were taken on the host. They follow one game frame from the application to the panel, show the exact bytes of one packed snapshot, report memory use, and describe when the painter redraws the full scene and how it recovers after missing snapshots. An isolated benchmark of QuickJS on physical hardware is scoped separately from the native CJI application and display driver, and its results may follow in a separate silicon sub-study.
 
 ## The game under study
 
@@ -44,11 +44,11 @@ With random seed 5172, the first food lands at (7,8), directly in front of the s
 Before introducing any formats, here is the path a single frame takes.
 
 1. The timer fires and the game updates its state. The state includes the body cells, the food cell, score, best score, direction, the alive flag and the autopilot flag.
-2. The app builds a UI tree that describes the screen, plus a list of key hints. It serializes both together into one string.
-3. The kernel compares that string with the previous one and publishes nothing if they are equal. Otherwise it publishes the string inside an envelope with the fields `app`, `title` and `frame`.
-4. The compositor parses the message and lays out the screen. It places the title, two status texts, the centered board and the hints. Its own chrome is fixed in this study. The clock shows as unavailable, and there is no battery indicator or banner.
-5. A C rasterizer draws the result into a framebuffer, the block of memory holding one 16-bit RGB565 value per panel pixel. Text uses the production antialiased fonts. The board is filled white. Head and body segments are 11×11 squares inside their 13-pixel cells. Food is drawn as a 7×7 center with an 11×11 outline.
-6. `gfx_commit` compares the new frame with the frame previously shown. Within each 16-row band it finds the bounds of the changed pixels, and it may merge adjacent rectangles when that is cheap. It then copies those rectangles toward the panel over SPI, the serial bus to the display.
+2. The application emits a JSON UI tree together with a single hints string.
+3. The kernel compares the complete output string with the previous one. When the string changes, the kernel emits `app/title/frame` and embeds the structured JSON frame body directly in the message, so the body is never re-escaped as a string.
+4. The compositor lays out the status line, score, board and footer. In the benchmark the clock reads `--:--`, the battery appears as an empty outline with no battery readout, and no banner appears.
+5. C code paints the scene in the production antialiased RGB565 style. Each body segment is an 11-pixel square, and food is a 7-pixel square inside an 11-pixel outline. `gfx_commit` then compares the touched 16-row bands of the back plane with the last committed front plane, updates the front plane, and returns the merged changed rectangles. `gfx_commit` itself transmits nothing.
+6. A separate display driver sends those rectangles to the panel. Host replay simulated the physical SPI transfer. If the driver drops a transfer, the logical front plane and the panel diverge, so the front plane must be invalidated whenever the driver reports a drop.
 
 The board origin was verified at panel pixel (17,52). The x coordinate increases to the right across the 320-pixel width, and y increases downward. Cell (x, y) therefore has its 11×11 interior at panel columns 18 + 13x through 28 + 13x, and rows 53 + 13y through 63 + 13y, inclusive. For the initial head at (6,8), this gives columns 96–106 and rows 157–167, which matches the verified position.
 
@@ -101,10 +101,10 @@ offset  size     field
 Every u16 is little-endian, and a cell index is y × 22 + x. For the worked turn, the body is (7,9), (7,8), (6,8), (5,8), (4,8), which gives the indices 205, 183, 182, 181 and 180.
 
 ```
-01 01 05 00 FL FH 0A 00 BL BH CD 00 B7 00 B6 00 B5 00 B4 00
+01 01 05 00 70 00 0A 00 00 00 CD 00 B7 00 B6 00 B5 00 B4 00
 ```
 
-`FL FH` and `BL BH` stand for the food cell and the best score. Their values at this frame are not in the evidence summary I worked from. The record is 20 bytes, which matches the measured T size after the first meal.
+This packed snapshot stores 16-bit fields in little-endian order. Food at cell (2,5) is encoded as index 112 (0x0070). The best score is zero and the score is ten. The body indices run head first as 205, 183, 182, 181 and 180. Every byte comes from a real turn of the fixed-seed run.
 
 T contains no direction, tick count, seed, focus state or autopilot working data. A receiver can draw the screen from it but cannot advance the game.
 
@@ -150,9 +150,9 @@ For all 236 frames, the trees rebuilt from SJ and T equaled the tree from J. Thr
 
 The T decoder rejected all 15 malformed binary cases. They covered bad version, flags, size, count, scores, food position and body positions, as well as overlapping segments and non-adjacent segments. After each rejection, the previously accepted bytes were unchanged.
 
-Several things were not measured. These include the decoder's allocator behavior, JSON admission, any CRC check, the publisher's generation handling, and behavior on a hostile channel.
+The validated packed snapshot is capped at 800 bytes. Two raw records therefore occupy at most 1600 bytes, and a 396-byte occupancy table sits beside them. The JavaScript body list and the UI tree use memory beyond that budget. A separate meter on a 64-bit Linux host ran QuickJS over a 12-state subset in five fresh processes per arm, with the same 260992-byte all-arm corpus resident and garbage-collected in every process. The meter charged each allocation its malloc usable size plus 8 bytes per block. Median high-water excess was 12864 bytes for J and 3888 bytes each for SJ and T, giving total peaks of 273856 bytes for J and 264880 bytes for SJ and T. Each figure covers the entire call, including the benchmark receipt.
 
-For memory, I can report only components whose size is fixed by design, not peak heap use. The current JavaScript decoder uses a 396-byte occupancy map, plus a JavaScript body array and the rebuilt tree. Two raw records at the size cap take 1,600 bytes. The 396-byte map is the only other buffer with a known size, so these figures do not add up to total live memory.
+The meter reports no per-stage allocator peak, no board heap, no 395-segment worst case and no production installation size. Fifteen tests cover the packed schema. No test exercises hostile ingress, and the build enforces neither JSON admission nor sequence ordering.
 
 On the C side, the partial painter described below holds an old and a new role grid of 396 bytes each. The two framebuffers underneath it take 409,600 bytes. The simulated panel used in the instrumented runs adds another 204,800 bytes that a real device would not need.
 
@@ -174,14 +174,9 @@ None of these figures include the game tick, inter-process communication, generi
 
 ## Painting only the cells that changed
 
-The second question was whether the C side could avoid a full repaint on ordinary moves. The partial candidate keeps its own visual occupancy grid for both the previous state and the new state. It compares all 396 cells and fills only the cells that differ. It falls back to a full paint when any of the following holds.
+The second question was whether the C side could avoid a full repaint on ordinary moves. The partial candidate keeps its own visual occupancy grid for both the previous state and the new state. It compares all 396 cells and fills only the cells that differ.
 
-- the alive flag changes
-- any other header field changes
-- the body length changes
-- the scene shows a dead snake
-
-The candidate assumes the compositor chrome is fixed. Every frame it produced was checked for exact equality against a shared full-frame RGB565 reference.
+The painter redraws the full scene on the first draw, whenever the current or prior scene is dead, and whenever autopilot, score, best score or body length changes. A change of food coordinate by itself stays on the partial path, because the painter tracks food through visual cell roles. This comparison uses fixed chrome with no system banner, clock jump or focus transfer. The painter keeps two 396-byte occupancy tables, and they work independently of the wire encoding.
 
 The full-paint control and the partial painter ran in the same C process over 12 runs. Their order was reversed by frame and by trial. The two arms start their timers at different points.
 
@@ -209,7 +204,7 @@ A collision in the source trace changed 14,102 pixels and transferred 16,855. No
 
 Four different events sit between the game and the panel. These are a lost record, a skipped display flush, a repaint, and the timing of when frames are actually scheduled. The study tested the first two directly. It used the third as its repair mechanism and did not test the fourth.
 
-**Lost records.** Additional traces dropped ten publications in a row. Because each T record is a complete snapshot, the next retained record rendered correctly immediately. It did so both from the last painted frame and from a cold start 75 frames into the trace. I had predicted that T would need periodic keyframes. That prediction is falsified for this format.
+One run withheld ten consecutive snapshots. On the next present, the partial painter combined the last occupancy it had actually painted with the new complete state. A separate cold-start run omitted the first 75 observations, and the single retained full record could be drawn on its own. The route uses no keyframe and no retransmission, and every record is a full application snapshot. The host scheduled no automatic idle draw.
 
 **Skipped flushes.** In these tests the framebuffer was current but the panel had not been updated. Stale pixel counts were 558 after a growth step, 363 after a move, 14,102 after a collision and 14,690 after a restart.
 
@@ -219,20 +214,11 @@ Four different events sit between the game and the panel. These are a lost recor
 
 ## Measured, predicted, open
 
-The hosted runs measured the following. They measured message sizes for all four encodings and host codec times. They measured C paint and commit times on a simulated panel, and pixel and transfer counts. They confirmed image equality across three independent arms and decoder rejection of 15 malformed inputs.
-
-Two of my predictions failed. T does not need keyframes, and the 1,014-byte cell figure is not an SPI bound.
-
-Four predictions remain open for physical evaluation.
-
-- whether the physical flush dominates frame cost
-- end-to-end latency
-- endurance across 20 seeds
-- whether the p95 transfer size is acceptable for adoption
+Exact equality and source replay justify testing the semantic formats on a device. The measured codec and CPU costs apply to the host capsule, and the native raster was measured apart from admission, the real scheduler and the actual display. Physical SPI timing and 20-seed endurance remain open. A P95 end-to-end threshold requires matched physical input-to-output timing measured beyond the isolated capsule.
 
 ## Recommendation
 
-I recommend evaluating the simpler semantic JSON format, SJ, on physical hardware. I also recommend building a separate damage prototype that handles motion only. The packed T format saves bytes, but it would need bounded admission and versioning before a receiver could trust it. This study does not justify any rollout or any firmware flash change.
+The next step integrates the simpler SJ format on the device, with T carried alongside it as the competing format wherever payload size matters. Both integrations need explicit admissibility checks and matched deduplication so the two arms stay comparable. Before either format is promoted, the CJI route must be qualified, live overlays must run on the device, and key-to-panel latency must be measured with correlated timestamps. The experimental T build already implements the size caps and version fields.
 
 ## Reproduction
 

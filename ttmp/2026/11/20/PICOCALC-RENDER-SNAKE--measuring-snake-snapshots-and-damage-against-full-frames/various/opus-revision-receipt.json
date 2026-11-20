@@ -1,0 +1,13 @@
+{
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "effort": "high",
+  "turns": 1,
+  "stop": "end_turn",
+  "promptSha256": "97b92a7845f4e2e2328ea98660b74a4cdb7a5f2d855f4415cff887e613ab5be9",
+  "publicReplySha256": "a5e095847c23e695efc6fbda920ff57311628fbd9f9b0636d44954693c89abc1",
+  "beforeRevision": "d581997",
+  "articleSha256": "527673d212598b0ead59fdcf060a053a2bb20162d9408cdd32e73e52c46ab1a8",
+  "diarySha256": "edfc2d0a18b24db60eb557a36962f975160d77dadfbbd3aae9830efb45dca00a"
+}

@@ -76,7 +76,7 @@ I compared the operator's immutable body snapshot, with fields alive, auto, scor
 A complete state record should let any receiver rebuild the frame without history.
 
 ### What worked
-Seed 5172 produced first food at (7,8), self-collision at length 5 after up, down and left, a rejected reverse, a legal entry into the vacated tail at length four, wall collision, a timer pause on blur, and an Enter reset that cleared score while best persisted. The p key toggled autopilot. All 236 regular and constructed controls and independent templated full frames were byte-equal across two independent captures plus the template.
+Seed 5172 produced first food at (7,8), a rejected reverse, a legal entry into the vacated tail at length four, wall collision, a timer pause on blur, and an Enter reset that cleared score while best persisted. The deterministic path down, left and then up drove the snake into its own body, and this self-collision is distinct from the legal tail entry that occurs later in the length-four run. The p key toggled autopilot. All 236 regular and constructed controls and independent templated full frames were byte-equal across two independent captures plus the template.
 
 ### What didn't work
 Two technical failures were operator-reported. The initial importer raised `AttributeError: 'list' object has no attribute 'get'` and was fixed by reading the last result event and the compact public receipt. The Node oracle under sandbox reported `spawnSync git EPERM` and then ran with approved local subprocess access. Neither is a falsified prediction.
@@ -137,3 +137,5 @@ Compare `07-measure.mjs`, `09-damage.c`, `11-run.sh`, `various/summary.json` and
 
 ### Technical details
 C mode median of 12 run medians across 196 changed moves was 34.642 vs 0.388 µs paint and 19.697 vs 5.995 µs production commit plus simulated copy. Transfer median stayed 385 px in both arms. The 24 changed full-fallback medians were about 35 µs in both. Occupancy used two 396-byte arrays. There is no end-to-end P4 panel time, no runtime heap high water and no recommendation to ship.
+
+After this diary closed, the operator supplied later evidence from an isolated x86-64 allocator meter that reported only complete-VM high-water marks. Across 12 states run in five fresh processes per arm, median high-water excess was 12864 bytes for J, 3888 bytes for SJ and 3888 bytes for T. This evidence postdates the diary's findings, and no arm was adopted on the strength of it.
