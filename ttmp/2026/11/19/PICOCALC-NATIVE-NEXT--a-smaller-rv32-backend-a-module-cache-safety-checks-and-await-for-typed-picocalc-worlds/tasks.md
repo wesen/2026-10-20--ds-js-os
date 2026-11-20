@@ -15,13 +15,13 @@
 - [ ] C1: CJI compiler tool out of the default qualification profile, with a check on the built image (S) <!-- t:mle0 -->
 - [ ] D1: Interface description generating the import table, trampolines and C declarations; drift check with six mutations (S) <!-- t:s6i5 -->
 - [ ] D2: Capability, fuel charge and stack use per reactor function in the interface description (S; needs D1) <!-- t:e7ij -->
-- [ ] E1: Language: else and else if (S) <!-- t:vvfx -->
-- [ ] E2: Language: for loops (S) <!-- t:2w3r -->
-- [ ] E3: Language: break (S) <!-- t:qcyx -->
-- [ ] E4: Language: !== (S) <!-- t:ps2t -->
+- [x] E1: Language: else and else if (S) <!-- t:vvfx -->
+- [x] E2: Language: for loops (S) <!-- t:2w3r -->
+- [x] E3: Language: break (S) <!-- t:qcyx -->
+- [x] E4: Language: !== (S) <!-- t:ps2t -->
 - [ ] E5: Language: calls to later functions with an explicit call-graph cycle check (S) <!-- t:2p7f -->
-- [ ] E6: Language: enumerations with exhaustive match; Editor findPhase as demonstration (S) <!-- t:s8ld -->
-- [ ] E7: Language: distinct integer types with zero change to generated code (S) <!-- t:3brw -->
+- [x] E6: Language: enumerations with exhaustive match; Editor findPhase as demonstration (S) <!-- t:s8ld -->
+- [x] E7: Language: distinct integer types with zero change to generated code (S) <!-- t:3brw -->
 - [ ] E8: Language: unsigned index type and guard facts that remove bounds checks; at most 7 / 29 / 373 trap sites (M; needs A3, E7) <!-- t:d5zd -->
 - [ ] E9: Per-world reactor-usage report checked against manifest claims (S; needs D2, E5) <!-- t:dox4 -->
 - [ ] F1: Static stack need per function and program; at most 96 / 320 / 896 bytes of typed frames (S; needs A5, D2, E5) <!-- t:fw2h -->
@@ -30,9 +30,9 @@
 - [ ] F4: Verifier over emitted RV32 with checks V1 to V7; 161 functions accepted, 12 targeted changes rejected (M; needs A7, F1, F3) <!-- t:vaqi -->
 - [ ] F5: Mutation testing of the verifier: 20,000 single-bit mutants per application, none accepted and harmful (S; needs A0, F4) <!-- t:sgz6 -->
 - [ ] F6: Address masking and its verifier check, later and separate (M; needs F5) <!-- t:sslo -->
-- [ ] G1: async and await: statement tree, liveness, rejection of strings and buffers live across a wait, frame layout report (M; needs E1, E5) <!-- t:uqtk -->
-- [ ] G2: State machine generation with start, resume, pending, cancel and the generated dispatcher (L; needs G1) <!-- t:idnx -->
-- [ ] G3: Editor open path rewritten with await; all Editor replays match (M; needs G2) <!-- t:46qu -->
+- [x] G1: async and await: statement tree, liveness, rejection of strings and buffers live across a wait, frame layout report (M; needs E1, E5) <!-- t:uqtk -->
+- [x] G2: State machine generation with start, resume, pending, cancel and the generated dispatcher (L; needs G1) <!-- t:idnx -->
+- [x] G3: Editor open path rewritten with await; all Editor replays match (M; needs G2) <!-- t:46qu -->
 - [ ] G4: Editor find path rewritten with await; at most 71 state fields; device qualification (M; needs G3) <!-- t:dddi -->
 - [ ] M1: Key-to-frame intervals and per-world CPU from kernel timestamps over serial; application share under 10% (S) <!-- t:xleu -->
 - [ ] M2: DEFERRED until a logic analyzer or high-speed camera is available: key press to visible pixels (S; needs M1) <!-- t:4fdd -->
