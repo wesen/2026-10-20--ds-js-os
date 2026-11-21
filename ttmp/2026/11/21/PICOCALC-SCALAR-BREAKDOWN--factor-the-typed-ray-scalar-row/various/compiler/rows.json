@@ -1,0 +1,721 @@
+{
+  "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "scenes": [
+    {
+      "pose": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "counts": {
+        "stock": {
+          "retired": 3608697,
+          "stackLoads": 936328,
+          "stackStores": 353778,
+          "branches": 350258,
+          "boundsTests": 155812,
+          "horizontal": 76800
+        },
+        "checked-stack": {
+          "retired": 3615257,
+          "stackLoads": 936328,
+          "stackStores": 353778,
+          "branches": 352338,
+          "boundsTests": 155812,
+          "horizontal": 76800
+        },
+        "hoisted-stack": {
+          "retired": 3303633,
+          "stackLoads": 936328,
+          "stackStores": 353778,
+          "branches": 196526,
+          "boundsTests": 0,
+          "horizontal": 76800
+        },
+        "checked-register": {
+          "retired": 2953176,
+          "stackLoads": 197447,
+          "stackStores": 172818,
+          "branches": 352338,
+          "boundsTests": 155812,
+          "horizontal": 76800
+        },
+        "hoisted-register": {
+          "retired": 2641552,
+          "stackLoads": 197447,
+          "stackStores": 172818,
+          "branches": 196526,
+          "boundsTests": 0,
+          "horizontal": 76800
+        },
+        "skip": {
+          "retired": 1532782,
+          "stackLoads": 147047,
+          "stackStores": 122418,
+          "branches": 95891,
+          "boundsTests": 0,
+          "horizontal": 26400
+        }
+      }
+    },
+    {
+      "pose": [
+        127,
+        32,
+        0,
+        159
+      ],
+      "counts": {
+        "stock": {
+          "retired": 3619070,
+          "stackLoads": 939034,
+          "stackStores": 354680,
+          "branches": 351160,
+          "boundsTests": 156714,
+          "horizontal": 76800
+        },
+        "checked-stack": {
+          "retired": 3625630,
+          "stackLoads": 939034,
+          "stackStores": 354680,
+          "branches": 353240,
+          "boundsTests": 156714,
+          "horizontal": 76800
+        },
+        "hoisted-stack": {
+          "retired": 3312202,
+          "stackLoads": 939034,
+          "stackStores": 354680,
+          "branches": 196526,
+          "boundsTests": 0,
+          "horizontal": 76800
+        },
+        "checked-register": {
+          "retired": 2961745,
+          "stackLoads": 198349,
+          "stackStores": 173720,
+          "branches": 353240,
+          "boundsTests": 156714,
+          "horizontal": 76800
+        },
+        "hoisted-register": {
+          "retired": 2648317,
+          "stackLoads": 198349,
+          "stackStores": 173720,
+          "branches": 196526,
+          "boundsTests": 0,
+          "horizontal": 76800
+        },
+        "skip": {
+          "retired": 1539547,
+          "stackLoads": 147949,
+          "stackStores": 123320,
+          "branches": 95891,
+          "boundsTests": 0,
+          "horizontal": 26400
+        }
+      }
+    },
+    {
+      "pose": [
+        100,
+        65,
+        80,
+        80
+      ],
+      "counts": {
+        "stock": {
+          "retired": 3579694,
+          "stackLoads": 928762,
+          "stackStores": 351256,
+          "branches": 347736,
+          "boundsTests": 153290,
+          "horizontal": 76800
+        },
+        "checked-stack": {
+          "retired": 3586254,
+          "stackLoads": 928762,
+          "stackStores": 351256,
+          "branches": 349816,
+          "boundsTests": 153290,
+          "horizontal": 76800
+        },
+        "hoisted-stack": {
+          "retired": 3279674,
+          "stackLoads": 928762,
+          "stackStores": 351256,
+          "branches": 196526,
+          "boundsTests": 0,
+          "horizontal": 76800
+        },
+        "checked-register": {
+          "retired": 2929217,
+          "stackLoads": 194925,
+          "stackStores": 170296,
+          "branches": 349816,
+          "boundsTests": 153290,
+          "horizontal": 76800
+        },
+        "hoisted-register": {
+          "retired": 2622637,
+          "stackLoads": 194925,
+          "stackStores": 170296,
+          "branches": 196526,
+          "boundsTests": 0,
+          "horizontal": 76800
+        },
+        "skip": {
+          "retired": 1513867,
+          "stackLoads": 144525,
+          "stackStores": 119896,
+          "branches": 95891,
+          "boundsTests": 0,
+          "horizontal": 26400
+        }
+      }
+    }
+  ],
+  "edgeCases": [
+    {
+      "label": "zero",
+      "trap": false,
+      "counts": {
+        "stock": {
+          "retired": 5475,
+          "stackLoads": 1286,
+          "stackStores": 487,
+          "branches": 483,
+          "boundsTests": 321,
+          "horizontal": 0
+        },
+        "checked-stack": {
+          "retired": 5486,
+          "stackLoads": 1286,
+          "stackStores": 487,
+          "branches": 487,
+          "boundsTests": 321,
+          "horizontal": 0
+        },
+        "hoisted-stack": {
+          "retired": 4844,
+          "stackLoads": 1286,
+          "stackStores": 487,
+          "branches": 166,
+          "boundsTests": 0,
+          "horizontal": 0
+        },
+        "checked-register": {
+          "retired": 4524,
+          "stackLoads": 324,
+          "stackStores": 325,
+          "branches": 487,
+          "boundsTests": 321,
+          "horizontal": 0
+        },
+        "hoisted-register": {
+          "retired": 3882,
+          "stackLoads": 324,
+          "stackStores": 325,
+          "branches": 166,
+          "boundsTests": 0,
+          "horizontal": 0
+        },
+        "skip": {
+          "retired": 3882,
+          "stackLoads": 324,
+          "stackStores": 325,
+          "branches": 166,
+          "boundsTests": 0,
+          "horizontal": 0
+        }
+      }
+    },
+    {
+      "label": "short-partial-trap",
+      "trap": true,
+      "counts": {
+        "stock": {
+          "retired": 202,
+          "stackLoads": 47,
+          "stackStores": 21,
+          "branches": 18,
+          "boundsTests": 12,
+          "horizontal": 0
+        },
+        "checked-stack": {
+          "retired": 206,
+          "stackLoads": 47,
+          "stackStores": 21,
+          "branches": 19,
+          "boundsTests": 12,
+          "horizontal": 0
+        },
+        "hoisted-stack": {
+          "retired": 206,
+          "stackLoads": 47,
+          "stackStores": 21,
+          "branches": 19,
+          "boundsTests": 12,
+          "horizontal": 0
+        },
+        "checked-register": {
+          "retired": 206,
+          "stackLoads": 47,
+          "stackStores": 21,
+          "branches": 19,
+          "boundsTests": 12,
+          "horizontal": 0
+        },
+        "hoisted-register": {
+          "retired": 206,
+          "stackLoads": 47,
+          "stackStores": 21,
+          "branches": 19,
+          "boundsTests": 12,
+          "horizontal": 0
+        },
+        "skip": {
+          "retired": 206,
+          "stackLoads": 47,
+          "stackStores": 21,
+          "branches": 19,
+          "boundsTests": 12,
+          "horizontal": 0
+        }
+      }
+    },
+    {
+      "label": "negative-y",
+      "trap": false,
+      "counts": {
+        "stock": {
+          "retired": 20103,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1938,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "checked-stack": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "hoisted-stack": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "checked-register": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "hoisted-register": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "skip": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        }
+      }
+    },
+    {
+      "label": "min-int-y",
+      "trap": false,
+      "counts": {
+        "stock": {
+          "retired": 20103,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1938,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "checked-stack": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "hoisted-stack": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "checked-register": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "hoisted-register": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        },
+        "skip": {
+          "retired": 20109,
+          "stackLoads": 5186,
+          "stackStores": 1960,
+          "branches": 1940,
+          "boundsTests": 810,
+          "horizontal": 480
+        }
+      }
+    },
+    {
+      "label": "count-fallback",
+      "trap": true,
+      "counts": {
+        "stock": {
+          "retired": 26437,
+          "stackLoads": 6912,
+          "stackStores": 2617,
+          "branches": 2589,
+          "boundsTests": 1227,
+          "horizontal": 480
+        },
+        "checked-stack": {
+          "retired": 26446,
+          "stackLoads": 6912,
+          "stackStores": 2617,
+          "branches": 2592,
+          "boundsTests": 1227,
+          "horizontal": 480
+        },
+        "hoisted-stack": {
+          "retired": 26446,
+          "stackLoads": 6912,
+          "stackStores": 2617,
+          "branches": 2592,
+          "boundsTests": 1227,
+          "horizontal": 480
+        },
+        "checked-register": {
+          "retired": 26446,
+          "stackLoads": 6912,
+          "stackStores": 2617,
+          "branches": 2592,
+          "boundsTests": 1227,
+          "horizontal": 480
+        },
+        "hoisted-register": {
+          "retired": 26446,
+          "stackLoads": 6912,
+          "stackStores": 2617,
+          "branches": 2592,
+          "boundsTests": 1227,
+          "horizontal": 480
+        },
+        "skip": {
+          "retired": 26446,
+          "stackLoads": 6912,
+          "stackStores": 2617,
+          "branches": 2592,
+          "boundsTests": 1227,
+          "horizontal": 480
+        }
+      }
+    },
+    {
+      "label": "center-fallback",
+      "trap": true,
+      "counts": {
+        "stock": {
+          "retired": 5563,
+          "stackLoads": 1312,
+          "stackStores": 500,
+          "branches": 490,
+          "boundsTests": 326,
+          "horizontal": 1
+        },
+        "checked-stack": {
+          "retired": 5577,
+          "stackLoads": 1312,
+          "stackStores": 500,
+          "branches": 495,
+          "boundsTests": 326,
+          "horizontal": 1
+        },
+        "hoisted-stack": {
+          "retired": 5577,
+          "stackLoads": 1312,
+          "stackStores": 500,
+          "branches": 495,
+          "boundsTests": 326,
+          "horizontal": 1
+        },
+        "checked-register": {
+          "retired": 5577,
+          "stackLoads": 1312,
+          "stackStores": 500,
+          "branches": 495,
+          "boundsTests": 326,
+          "horizontal": 1
+        },
+        "hoisted-register": {
+          "retired": 5577,
+          "stackLoads": 1312,
+          "stackStores": 500,
+          "branches": 495,
+          "boundsTests": 326,
+          "horizontal": 1
+        },
+        "skip": {
+          "retired": 5577,
+          "stackLoads": 1312,
+          "stackStores": 500,
+          "branches": 495,
+          "boundsTests": 326,
+          "horizontal": 1
+        }
+      }
+    },
+    {
+      "label": "radius-fallback",
+      "trap": false,
+      "counts": {
+        "stock": {
+          "retired": 23820,
+          "stackLoads": 6194,
+          "stackStores": 2338,
+          "branches": 2316,
+          "boundsTests": 1062,
+          "horizontal": 480
+        },
+        "checked-stack": {
+          "retired": 23837,
+          "stackLoads": 6194,
+          "stackStores": 2338,
+          "branches": 2322,
+          "boundsTests": 1062,
+          "horizontal": 480
+        },
+        "hoisted-stack": {
+          "retired": 23837,
+          "stackLoads": 6194,
+          "stackStores": 2338,
+          "branches": 2322,
+          "boundsTests": 1062,
+          "horizontal": 480
+        },
+        "checked-register": {
+          "retired": 23837,
+          "stackLoads": 6194,
+          "stackStores": 2338,
+          "branches": 2322,
+          "boundsTests": 1062,
+          "horizontal": 480
+        },
+        "hoisted-register": {
+          "retired": 23837,
+          "stackLoads": 6194,
+          "stackStores": 2338,
+          "branches": 2322,
+          "boundsTests": 1062,
+          "horizontal": 480
+        },
+        "skip": {
+          "retired": 23837,
+          "stackLoads": 6194,
+          "stackStores": 2338,
+          "branches": 2322,
+          "boundsTests": 1062,
+          "horizontal": 480
+        }
+      }
+    },
+    {
+      "label": "wide-payloads",
+      "trap": false,
+      "counts": {
+        "stock": {
+          "retired": 26408,
+          "stackLoads": 6902,
+          "stackStores": 2610,
+          "branches": 2588,
+          "boundsTests": 1226,
+          "horizontal": 480
+        },
+        "checked-stack": {
+          "retired": 26449,
+          "stackLoads": 6902,
+          "stackStores": 2610,
+          "branches": 2601,
+          "boundsTests": 1226,
+          "horizontal": 480
+        },
+        "hoisted-stack": {
+          "retired": 23997,
+          "stackLoads": 6902,
+          "stackStores": 2610,
+          "branches": 1375,
+          "boundsTests": 0,
+          "horizontal": 480
+        },
+        "checked-register": {
+          "retired": 21880,
+          "stackLoads": 1853,
+          "stackStores": 1479,
+          "branches": 2601,
+          "boundsTests": 1226,
+          "horizontal": 480
+        },
+        "hoisted-register": {
+          "retired": 19428,
+          "stackLoads": 1853,
+          "stackStores": 1479,
+          "branches": 1375,
+          "boundsTests": 0,
+          "horizontal": 480
+        },
+        "skip": {
+          "retired": 15914,
+          "stackLoads": 1693,
+          "stackStores": 1319,
+          "branches": 1057,
+          "boundsTests": 0,
+          "horizontal": 320
+        }
+      }
+    },
+    {
+      "label": "min-capacity",
+      "trap": false,
+      "counts": {
+        "stock": {
+          "retired": 26349,
+          "stackLoads": 6886,
+          "stackStores": 2604,
+          "branches": 2582,
+          "boundsTests": 1222,
+          "horizontal": 480
+        },
+        "checked-stack": {
+          "retired": 26390,
+          "stackLoads": 6886,
+          "stackStores": 2604,
+          "branches": 2595,
+          "boundsTests": 1222,
+          "horizontal": 480
+        },
+        "hoisted-stack": {
+          "retired": 23946,
+          "stackLoads": 6886,
+          "stackStores": 2604,
+          "branches": 1373,
+          "boundsTests": 0,
+          "horizontal": 480
+        },
+        "checked-register": {
+          "retired": 21828,
+          "stackLoads": 1844,
+          "stackStores": 1473,
+          "branches": 2595,
+          "boundsTests": 1222,
+          "horizontal": 480
+        },
+        "hoisted-register": {
+          "retired": 19384,
+          "stackLoads": 1844,
+          "stackStores": 1473,
+          "branches": 1373,
+          "boundsTests": 0,
+          "horizontal": 480
+        },
+        "skip": {
+          "retired": 15870,
+          "stackLoads": 1684,
+          "stackStores": 1313,
+          "branches": 1055,
+          "boundsTests": 0,
+          "horizontal": 320
+        }
+      }
+    },
+    {
+      "label": "capacity-before-min",
+      "trap": true,
+      "counts": {
+        "stock": {
+          "retired": 5438,
+          "stackLoads": 1279,
+          "stackStores": 483,
+          "branches": 480,
+          "boundsTests": 320,
+          "horizontal": 0
+        },
+        "checked-stack": {
+          "retired": 5442,
+          "stackLoads": 1279,
+          "stackStores": 483,
+          "branches": 481,
+          "boundsTests": 320,
+          "horizontal": 0
+        },
+        "hoisted-stack": {
+          "retired": 5442,
+          "stackLoads": 1279,
+          "stackStores": 483,
+          "branches": 481,
+          "boundsTests": 320,
+          "horizontal": 0
+        },
+        "checked-register": {
+          "retired": 5442,
+          "stackLoads": 1279,
+          "stackStores": 483,
+          "branches": 481,
+          "boundsTests": 320,
+          "horizontal": 0
+        },
+        "hoisted-register": {
+          "retired": 5442,
+          "stackLoads": 1279,
+          "stackStores": 483,
+          "branches": 481,
+          "boundsTests": 320,
+          "horizontal": 0
+        },
+        "skip": {
+          "retired": 5442,
+          "stackLoads": 1279,
+          "stackStores": 483,
+          "branches": 481,
+          "boundsTests": 320,
+          "horizontal": 0
+        }
+      }
+    }
+  ]
+}

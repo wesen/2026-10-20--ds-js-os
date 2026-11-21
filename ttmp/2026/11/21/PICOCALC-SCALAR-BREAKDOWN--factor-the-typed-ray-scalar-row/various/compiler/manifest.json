@@ -1,0 +1,91 @@
+{
+  "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "stockBackendSHA256": "e54c13e78e9e095b2cff687ea505d8ae621486e2ff486e30e3308cc6e971a11a",
+  "variants": {
+    "checked-stack": {
+      "id": 9,
+      "backendSHA256": "dea7be112d86c9737d4c501d84ac251c3e3608bb3c8e85dc3bc1d68c894f9c89",
+      "bytes": 10608,
+      "imageSHA256": "7e59fd852c65173e72b76c75f3f826544a4dbcacfff49277f2fde2904943e7e6",
+      "entryBytes": 3056,
+      "fastAt": 25,
+      "fallbackAt": 261,
+      "fastWords": 236,
+      "fallbackWords": 236,
+      "guardWords": 25,
+      "flags": {
+        "hoist": false,
+        "registers": false,
+        "skip": false
+      }
+    },
+    "hoisted-stack": {
+      "id": 10,
+      "backendSHA256": "e6050a7d5c366dec3597185e4f778ed5eebbe1f60f5d714a1b912213e3f02467",
+      "bytes": 10476,
+      "imageSHA256": "1f92fff08af969b739b814412464a8dc749bdcb0181178a41f2a817f9161a17b",
+      "entryBytes": 3056,
+      "fastAt": 25,
+      "fallbackAt": 228,
+      "fastWords": 203,
+      "fallbackWords": 236,
+      "guardWords": 25,
+      "flags": {
+        "hoist": true,
+        "registers": false,
+        "skip": false
+      }
+    },
+    "checked-register": {
+      "id": 11,
+      "backendSHA256": "d3a6bf6d1fc57127db13d2d3906f946ae130ffeab00746ae1ad7d82785f4995e",
+      "bytes": 10516,
+      "imageSHA256": "80f5457634fb05afc8ab49b348e864344973eceba18a2a670b16fee799c0e25f",
+      "entryBytes": 3056,
+      "fastAt": 25,
+      "fallbackAt": 238,
+      "fastWords": 213,
+      "fallbackWords": 236,
+      "guardWords": 25,
+      "flags": {
+        "hoist": false,
+        "registers": true,
+        "skip": false
+      }
+    },
+    "hoisted-register": {
+      "id": 12,
+      "backendSHA256": "dfb0172bf4c404112cac9af9990cb2faae6f8c0a5d85da263a40af483025b589",
+      "bytes": 10384,
+      "imageSHA256": "dc578a88bb9b297408c7b964a13e4453645e00057370cd3933aa4821d6dc0983",
+      "entryBytes": 3056,
+      "fastAt": 25,
+      "fallbackAt": 205,
+      "fastWords": 180,
+      "fallbackWords": 236,
+      "guardWords": 25,
+      "flags": {
+        "hoist": true,
+        "registers": true,
+        "skip": false
+      }
+    },
+    "skip": {
+      "id": 13,
+      "backendSHA256": "82b2c57158a68b22197ef62f0a1645c56f43a5d1c20a5e9641c26f9a2d17a3e6",
+      "bytes": 10404,
+      "imageSHA256": "d26109121665cfcc7da04fc5884f2f9b607d984ac63e397d9c54284e87969f6b",
+      "entryBytes": 3056,
+      "fastAt": 25,
+      "fallbackAt": 210,
+      "fastWords": 185,
+      "fallbackWords": 236,
+      "guardWords": 25,
+      "flags": {
+        "hoist": true,
+        "registers": true,
+        "skip": true
+      }
+    }
+  }
+}
