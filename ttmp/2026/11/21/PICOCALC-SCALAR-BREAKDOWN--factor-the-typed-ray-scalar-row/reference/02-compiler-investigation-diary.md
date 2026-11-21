@@ -207,3 +207,51 @@ Replay `scripts/device/04-summarize.py` on the operator's completed raw rows and
 ### Technical details
 
 The source remained identical across the five experimental backends. Seven program positions times twelve fixtures times seven repetition blocks gives 588 observations; each observation included native guest and two C controls.
+
+## Step 5. Check the held-out shadow phase on the device
+
+The physical investigator returned 192 successful observations, eight pairs in each of twelve fixtures. I replayed `scripts/device/05-shadow-summary.py /tmp/scalar-breakdown-p4-shadow-1` and verified that its parsed output exactly equals the archived `various/device/shadow-summary.json`. This closes the follow-up from Step 4.
+
+### Prompt Context
+
+See Step 1. The director requested that this physical follow-up be incorporated into the completed host account.
+
+### What I did
+
+Compared the clean, audit, primary and shade segments. Verified that the default time difference was calculated within each paired repetition and that the source-independent primary control straddled zero.
+
+### Why
+
+The preregistered quantity was a retirement change. A physical phase control can test where the savings occur without assuming that time decreases in exact proportion to guest instructions.
+
+### What worked
+
+Default clean elapsed time fell from a median 57.6815 ms to 55.4780 ms, with a paired 2.2085 ms (3.829%) saving. The shade saving was 2.2795 ms. The primary control differed by 0.0070 ms with a range from −0.008 to +0.021 ms. All twelve fixtures improved on clean frame time.
+
+### What didn't work
+
+The simple proportional translation from 2.659% fewer instructions to 2.659% less elapsed time would have underestimated this board's measured 3.829% median clean saving.
+
+### What I learned
+
+The phase that calls the optimized function responds, and the independent primary phase offers a control for small clock variations. That cross-check strengthens the qualitative transfer while preserving the separate units.
+
+### What was tricky to build
+
+Separate medians over each arm give slightly different arithmetic from taking the median after pairing. The article retains both distinct quantities explicitly.
+
+### What warrants a second pair of eyes
+
+Review the three clock boundaries and retain the sign of each primary pair when diagnosing noise. Distinguish the matched stock in the shadow addendum from stock observations in the previous firmware trial.
+
+### What should be done in the future
+
+A general compiler pass would need a broader proof of callee effects and image-size tradeoffs.
+
+### Code review instructions
+
+Inspect the device-owned [shadow measurements](../various/device/shadow-summary.json) alongside [the preregistered host prediction](../various/compiler/shadow-forecast.json).
+
+### Technical details
+
+Two physical programs, twelve fixtures and eight repeated pairs give 192 observations. The article's percentages are medians of within-pair reductions over the same fixture.
