@@ -2,7 +2,7 @@
 Title: Stack certificates investigation diary
 Ticket: PICOCALC-NATIVE-WAVE
 DocType: reference
-Status: active
+Status: complete
 Topics: [picocalc, compiler]
 ---
 
@@ -33,3 +33,9 @@ The committed implementation c07464e was unchanged when the director released th
 The second Opus High call resumed the design writer's session for a substantive critique. It highlighted a formal discrepancy between the preregistered opcode names and the implementation's somewhat broader whitelist. I substituted a well-defined logical shift and signed comparison branch into an ordinary synthetic arithmetic function. The frozen checker accepted both; the design explicitly required Unsupported. No recorded depth underflow occurred, but this is a true failure under the policy as written, recorded in `various/05-stack/policy-audit.json`. The side table exposes only the claim fields it actually emits. Other proposed fields were not emitted, so the article neither claims nor evaluates locals or trap-list verification. I checked all twelve dynamic relocation targets for each actual release ELF and found each outside the reserved typed slot; runtime permissions and OS context still remain external assumptions.
 
 The other material negative result was cost. Editor used 33,050 JSON bytes for 119 functions and 430 direct call sites against an allowance of 11,056 bytes. Chess used 21,267 for 82 functions and 284 sites against 7,520. Shared-host timing was variable, so I preserved the first 7-block wall timing run and repeated the same measurement pinned to CPU 6. The verifier still reads every decoded instruction, and both actual linked images were stock-identical in both runs. The aggregate claims are reported as two observations with separate clocks and workloads. Neither proves hardware checker time. The use of the smaller held-out set and the implementation-order distinction from the preregistration are recorded in the design coverage note.
+
+## Step 4. Publish the lead’s conditional proof and measured rejection
+
+The original Opus High session authored the final article after receiving the locked checker, its own critique, the loader relocation audit, the timed and pinned host runs, the policy-control results and independent oracle totals. The operator reviewed every numerical table against the raw receipts. I corrected three teaching details: RV32 can support compressed instructions outside this backend, a caller can spill still-live register values around a call, and readBurst contains several 16-byte-helper call sites rather than one. I also distinguished the independent Wasm and RV32 compilations and replaced an unsupported claim about all loaders with the observed ELF relocation extent.
+
+The final release article has a worked 48+16-byte chain, a conditional proof over fixed frames and an explicit table of hard-gate outcomes. It records all unexecuted items, the authorship receipt and both exact image identities. No physical timing of certificate generation or validation was collected. The original draft, critique and local checks are preserved in the study directory. The file is ready for the director’s publication workflow.

@@ -1,0 +1,349 @@
+# How much stack can the handheld compiler account for?
+
+*Final project report, stack-use certificate study (checkpoint at implementation lock `c07464e`)*
+
+## 1. Decision first
+
+**The study stops at the preregistered hard gate.** It does not proceed to adoption or to another round of iteration on this candidate. There are three reasons:
+
+1. The checker accepted two RV32 instructions that the design's explicit allowlist classifies as *unsupported*: a logical right shift and a signed less-than branch ([policy-audit.json](../various/05-stack/policy-audit.json)). The preregistered soundness hypothesis required zero such acceptances, so it fails as written.
+2. The certificate metadata exceeds its preregistered size budget for both release applications by roughly a factor of three ([host.json](../various/05-stack/host.json)).
+3. The independent held-out set has one source program and ten functions. The preregistration called for at least 60 sources and 200 mutants ([held-out.json](../various/05-stack/held-out.json)).
+
+Several things did go well:
+- No measurement showed a certified bound below an observed stack depth.
+- Fourteen earlier controls were all rejected; each was a deliberately wrong claim or instruction on ordinary code.
+- The loader does not modify the code the checker reads.
+
+Nothing was deployed at runtime. **There is no physical-board measurement of any certificate in this study.** Every number below comes from host-side builds that use the actual release reactor ELF and the actual generated code, plus host-side RV32 interpretation.
+
+The preregistered design is [05-stack-use-certificates.md](../design-doc/05-stack-use-certificates.md). The emitter is [03-emit.mjs](../scripts/05-stack/03-emit.mjs) and the checker is [04-check.mjs](../scripts/05-stack/04-check.mjs). The working log is [15-stack-certificates-diary.md](../reference/15-stack-certificates-diary.md).
+
+## 2. A worked chain: `readBurst`
+
+The held-out function `readBurst` shows every idea the study depends on.
+
+**Some terms first.** RV32 is the 32-bit RISC-V instruction set, and every instruction in it is one 4-byte word. Register `sp` (the *stack pointer*) holds the address of the lowest stack byte the function currently owns. On RISC-V the stack grows toward lower addresses, so "using more stack" means `sp` gets smaller. Register `ra` (the *return address*) holds the address to continue at when the current function finishes.
+
+A function's **frame** is the block of stack bytes it reserves for itself on entry. The compiler computes the frame size from the source function:
+
+```
+frame = (4 · (locals + spillDepth + 1) + 15) rounded down to a multiple of 16
+```
+
+- *Locals* are parameters plus declared local variables.
+- *SpillDepth* counts temporary values that did not fit in the five scratch registers `t0`–`t4` and had to be stored in memory.
+- The `+1` reserves a word for the saved `ra`.
+
+For example, one parameter, no other locals and no spills gives `4·(1+0+1) = 8`, then `8+15 = 23`, which rounds down to **16**. This explains why many functions in the data have a 16-byte frame.
+
+**The chain.** Let `s₀` be the value of `sp` when the caller transfers control into `readBurst`.
+
+| Step | Instruction(s) | `sp` afterwards | Bytes in use below `s₀` |
+|---|---|---|---|
+| 1 | `addi sp, sp, -48` (prologue, part 1) | `s₀ − 48` | 48 |
+| 2 | `sw ra, 44(sp)` (prologue, part 2) | `s₀ − 48` | 48 |
+| 3 | body work; `sp` unchanged | `s₀ − 48` | 48 |
+| 4 | `jal ra, <callee>` (a call site) | `s₀ − 48` | 48 |
+| 5 | callee's `addi sp, sp, -16` | `s₀ − 64` | **64** |
+| 6 | callee's epilogue: `addi sp, sp, 16` then return | `s₀ − 48` | 48 |
+| 7 | `lw ra, 44(sp)`; `addi sp, sp, 48`; `jalr zero, ra, 0` | `s₀` | 0 |
+
+Steps 1–2 are the **prologue**, the fixed instructions at the start of every function that reserve the frame and save `ra`. Step 7 is the **epilogue**, the fixed instructions at the end that restore `ra`, release the frame and return.
+
+The number `44` in `sw ra, 44(sp)` is an **offset**: a byte distance added to a base register to form a memory address. Here the address is `sp + 44`, which is the last word of the 48-byte frame.
+
+Step 4 is a **call site**. It is the specific instruction (`jal ra`, "jump and link into `ra`") that transfers control to another function and records where to come back to.
+
+The certificate for `readBurst` therefore claims:
+- frame 48
+- one internal call whose callee's certified bound is 16
+- total typed bound 48 + 16 = **64**
+
+During the held-out run, the host interpreter recorded the lowest `sp` reached from this entry as `s₀ − 64`. The bound was not exceeded, and on that path it was exact.
+
+## 3. Remaining vocabulary
+
+- **Symbol map.** A table from function names to byte positions in the final code. The checker uses it to tell which call-site targets are function starts.
+- **ABI** (application binary interface). The rules that compiled functions and the runtime follow when they call each other: which registers carry arguments, which must be preserved, and how `sp` must be aligned. The release reactor uses the ilp32f variant, where `sp` stays 16-byte aligned.
+- **Reactor and slot.** The *reactor* is the prebuilt SDK program (SDK: software development kit, the vendor runtime) that the handheld loads. It contains a reserved region, the *slot*, into which compiled application code is copied. The *loader* is the device software that places the ELF in memory and applies relocations, which are address patches.
+- **SDK boundary.** The point where typed application code calls into SDK code it did not compile. Here that is a `jal ra` to an import trampoline, a one-instruction jump that forwards into the SDK. The checker can see the call site but not the SDK's own stack use.
+
+## 4. What was preregistered
+
+The design ([05-stack-use-certificates.md](../design-doc/05-stack-use-certificates.md)) fixed three hypotheses before any code was written:
+- **H1 (soundness).** Zero certificates accepted when either the metadata or the code is deliberately wrong.
+- **H2 (coverage).** At least 95% of ordinary held-out functions certify.
+- **H3 (cost).** Compile overhead at most 10%, metadata at most 64 B per function plus 8 B per call, and checker time at most 50 ms/KiB.
+
+It also fixed:
+- an explicit instruction allowlist
+- a held-out set of at least 60 sources and 200 mutants, written by someone other than the operator and sealed by hash
+- a rule that any soundness failure means **STOP**
+
+These are *preregistered theoretical claims*: statements of what would count as success, not results.
+
+## 5. What was built, and how it differs from the draft
+
+### 5.1 Emitter
+
+The emitter ([03-emit.mjs](../scripts/05-stack/03-emit.mjs)) records exactly six fields per function: `name`, `start`, `size`, `frame`, `raSlot` and `calls`. The draft also listed `locals`, `spillDepth` and a trap list.
+
+Those three fields are **deviations from the draft, not unchecked claims.** They were never emitted, so there is nothing for the checker to verify about them. This corrects an earlier internal critique, which counted them as unverified fields.
+
+### 5.2 Checker
+
+The checker ([04-check.mjs](../scripts/05-stack/04-check.mjs)) shares no instruction-encoding or lowering helpers with the emitter.
+
+- **What it parses.** For the stock Editor and Chess builds, it parses the final linked ELF. For the closed fixtures, which have no imports, it parses a standalone, fully internally relocated raw program.
+- **What it rejects.** It rejects the whole program if any function is missing or contains an unsupported word.
+- **What it trusts:**
+  - the pinned entry table and import table (the external names arrive in the SDK's ordering and are not cross-checked)
+  - memory isolation as provided by the typed language under the ordinary ABI
+
+### 5.3 Deviations from the design
+
+| # | Design said | Implementation does | Effect |
+|---|---|---|---|
+| D1 | Data-flow analysis of `sp` with an explicit merge-conflict verdict | No instruction except the canonical prologue/epilogue, or `jal ra` at an allowed call site, may write `sp` or `ra`; every branch target must stay inside the function body | `sp` is constant by syntax; merge analysis is unnecessary for this grammar |
+| D2 | Allowlist excludes `srl`, `blt`, `bge`, `bltu`, `bgeu` | Decoder admits branch funct3 values 4–7 and `srl` | Two cases confirmed by audit; reading the code shows that `bge`, `bltu` and `bgeu` are admitted too (not audited) |
+| D3 | Recursion marks only the affected functions unsupported | A cycle rejects the whole program | Coarser, still conservative |
+| D4 | Verdict per function | One verdict per program | Per-function coverage is all-or-nothing |
+| D5 | Each import edge carries an SDK budget `B` | The bound is reported as a typed-only part plus a per-external prefix, with `B` left unknown | No total is computed (see §7.4) |
+| D6 | Trap-list claim | Not emitted | See §5.1 |
+
+None of D1–D6 was tuned after implementation lock `c07464e`.
+
+## 6. A proof for the restricted grammar
+
+This section proves what the checker's acceptance actually guarantees. The proof covers the grammar that **the implementation accepts**, which is larger than the design's allowlist.
+
+### 6.1 Grammar G
+
+A function of `n` bytes starting at `start`, with frame size `F`, is accepted when all of the following hold:
+
+1. **Frame word.** The word at `start` is `addi sp, sp, −F`, where `16 ≤ F ≤ 2032` and `F mod 16 = 0`.
+2. **Saved `ra`.** The word at `start+4` is `sw ra, (F−4)(sp)`.
+3. **Epilogue.** The last three words, at `ep = start+n−12`, are `lw ra, (F−4)(sp)`, then `addi sp, sp, F`, then `jalr zero, ra, 0`.
+4. **No hidden writes to `sp` or `ra`.** Every word strictly between `start+4` and `ep` is one of:
+   - an ALU, immediate or `lui` word whose destination is neither `sp` nor `ra`, and which does not read `sp` or `ra`
+   - a load whose destination is neither `sp` nor `ra`
+   - a store whose data register is neither `sp` nor `ra`
+   - `ebreak`
+   - a conditional branch that compares neither operand against `sp`, and whose target lies in `[start+8, ep]`
+   - `jal zero` with target in `[start+8, ep]`
+   - `jal ra` whose target is a known function start or a known import trampoline
+5. **Stack accesses stay below the saved `ra`.** Every load or store using `sp` as its base has an offset `off ≥ 0`, aligned to its width `w`, with `off + w ≤ F − 4`.
+6. **Acyclic calls.** The graph of internal `jal ra` edges is acyclic.
+
+### 6.2 Assumptions
+
+The proof depends on four assumptions, which the checker does not establish:
+
+- **A1.** The hardware executes these words according to the RV32IM specification.
+- **A2 (memory isolation).** Loads and stores whose base is not `sp` never touch addresses in any active frame. This is taken from the typed language under the ordinary ABI.
+- **A3 (SDK conduct).** Every external call returns to `ra` with `sp` unchanged.
+- **A4 (unmodified bytes).** The bytes executed are the bytes checked. The loader audit supports this for the two release ELFs (§7.5).
+
+Traps, interrupts and callbacks are outside the model.
+
+### 6.3 Definitions
+
+For an accepted function `f`, define:
+
+```
+T(f) = max( F_f , max over internal calls f→g of ( F_f + T(g) ) )
+```
+
+`T(f)` is well defined because of rule 6.
+
+Let `P_x(f)` be the largest sum of frames along any internal call path from `f` down to a call site of external `x`. The checker reports this value in its per-external map.
+
+### 6.4 Lemma 1 (constant `sp`)
+
+*Claim.* Suppose every internal callee returns with `sp` equal to its value at the call. Then at every reached `pc` in `[start+8, ep]`, `sp = s₀ − F`.
+
+*Proof.*
+1. The prologue sets `sp = s₀ − F`.
+2. Rule 4 excludes every instruction that writes `sp`.
+3. Rule 4 keeps all control transfers inside `[start+8, ep]`, so the prologue is never re-executed and no part of the epilogue after `ep` is entered except by falling through from `ep`.
+4. Internal calls preserve `sp` by hypothesis, and external calls preserve it by A3.
+
+So `sp` is unchanged across the body. ∎
+
+### 6.5 Lemma 2 (correct return)
+
+*Claim.* Under the same hypothesis, `f` returns to its caller's `ra` with `sp = s₀`.
+
+*Proof.*
+1. The saved word is at `s₀ − F + F − 4 = s₀ − 4`.
+2. Rule 5 means no `sp`-based store reaches `[s₀ − 4, s₀)`.
+3. A2 excludes stores through any other base register.
+4. Rule 4 forbids loading into `ra`, and the only body instructions that write `ra` are calls, whose effect is overwritten when the epilogue reloads it.
+5. At `ep`, Lemma 1 gives `sp = s₀ − F`, so `lw ra` reads the original return address. The `addi` then restores `s₀`. ∎
+
+### 6.6 Theorem (typed bound)
+
+*Claim.* Ignoring stack used inside external code, the lowest `sp` reached during any execution of `f` is at least `s₀ − T(f)`.
+
+*Proof.* By induction on the height of `f` in the call DAG, which is finite by rule 6.
+
+- **Base case.** If `f` makes no internal calls, Lemma 1 shows that `sp` takes only the values `s₀` and `s₀ − F`.
+- **Inductive step.**
+  1. At an internal call `f → g`, `sp = s₀ − F` by Lemma 1.
+  2. The induction hypothesis applies to `g` from entry value `s₀ − F`, so `g` reaches no lower than `s₀ − F − T(g)`.
+  3. Lemma 2, applied to `g`, discharges the return hypothesis of Lemmas 1 and 2 for `f`.
+  4. Taking the maximum over all call sites gives `T(f)`. ∎
+
+**Corollary.** Let `B_x` be the true stack use of external `x`. The complete bound is:
+
+```
+max( T(f), max_x ( P_x(f) + B_x ) )
+```
+
+No `B_x` is known, so this study proves only the first term.
+
+### 6.7 What the proof says about the policy failure
+
+The proof never uses the meaning of `srl` or `blt`. It uses only two facts about them:
+- neither writes `sp` or `ra`
+- branch targets are confined to the body
+
+**The accepted out-of-list instructions therefore do not invalidate the bound.** They violate the preregistered *allowlist*, and H1 was defined against that allowlist. That is why the hypothesis is **invalid as preregistered**, while correctness under the implemented rules holds **conditionally on A1–A4**.
+
+The study does not substitute this conditional result for the failed gate.
+
+## 7. Measurements
+
+### 7.1 Held-out run ([held-out.json](../various/05-stack/held-out.json))
+
+The held-out run used one source program:
+- 1,500 B of Wasm, compiled to a 2,876 B RV32 image
+- 10 functions
+- 1,603 reference cases, including 101 expected traps
+- 158,570 interpreted RV32 steps
+
+An independent RV32 interpreter, which already existed on a separate branch, monitored the minimum `sp` throughout. Outputs and memory were compared in full against the reference.
+
+| Entry | Frame | Certified | Observed as entry |
+|---|---|---|---|
+| `uncheckedRequest` | 16 | 16 | 16 |
+| `countEvents` | 32 | 32 | 32 |
+| `inspect` | 32 | 32 | 32 |
+| `label` | 48 | 48 | 48 |
+| `readBurst` | 48 | 64 | 64 |
+| `codeValue`, `digit`, `corrected`, `dropped`, `checksum` | 16 each | 16 each | not invoked as entries |
+
+All ten functions certified. Each of the five invoked entries reached exactly its bound.
+
+The `null` values reflect what the monitor records: it reports maxima per invoked entry. It does not mean those five functions failed. They remain certified, but this run gives no direct entry-level observation of them.
+
+### 7.2 Training depth runs ([depth.json](../various/05-stack/depth.json))
+
+There were 24 interpreter runs over twelve conditional call chains, with bounds from 16 to 192 B.
+- On every chain, the branch-taken path reached the certified depth.
+- The early-return path used 16 B.
+
+These runs were development material, not held-out evidence.
+
+### 7.3 Release applications ([host.json](../various/05-stack/host.json), [pinned-host.json](../various/05-stack/pinned-host.json))
+
+| | Editor | Chess |
+|---|---|---|
+| Functions / calls | 119 / 430 | 82 / 284 |
+| Code bytes / image bytes | 89,168 / 242,124 | 256,400 / 274,892 |
+| Largest frame | 192 | 224 |
+| Certificate bytes | 33,050 | 21,267 |
+| Allowance (64·fn + 8·call) | 11,056 | 7,520 |
+| Ratio to allowance | ≈ 2.99× | ≈ 2.83× |
+
+The checker completed on both images. In both runs, the certified image was byte-identical to the stock image from end to end, so certification changed no emitted code.
+
+**Timing.** Medians come from one warm-up followed by seven alternating, same-process paired runs on a shared development host. The JSON records clean and candidate times separately but does not label units.
+
+| Median | Editor (shared) | Editor (pinned) | Chess (shared) | Chess (pinned) |
+|---|---|---|---|---|
+| Stock compile | 64.56 | 18.35 | 29.61 | 8.67 |
+| Certified compile | 74.76 | 16.10 | 47.02 | 16.67 |
+| Change | +15.8% | −12.3% | +58.8% | +92.3% |
+| Checker | 26.47 | 5.13 | 9.34 | 1.73 |
+
+The pinned replay was an independent run after a local image build.
+
+- **Editor.** The sign of the compile overhead flips between the two runs, so its timing gate cannot be decided.
+- **Chess.** It exceeds the 10% ceiling in both runs.
+- **Checker.** It is well under 50 ms/KiB of code bytes in every run, if the units are milliseconds. The timing covers decoding through completion of the call DAG, including the full slot scan.
+- **Unexplained ordering.** Chess has about 2.9× Editor's code bytes but a lower checker time in both runs; it also has fewer functions and calls. The data do not explain this, and no scaling law is claimed.
+
+Scheduling and JIT behaviour affect all of these numbers. **No timing conclusion is drawn for other workloads.**
+
+### 7.4 Bounds on the release applications
+
+- **Closed entries.** Both `typedWorldMeta` entries contain no SDK calls. They are fully closed at **64 B**.
+- **Event entries.** The typed-only bound is **944 B** for Editor and **928 B** for Chess.
+- **SDK prefixes.** Editor reaches the SDK `Buffer` external with at most **800 B** of typed frames already in use. Chess reaches `Screen` with at most **416 B**.
+
+By the corollary, Editor's event bound is `max(944, 800 + B_Buffer, …)`. Because `B_Buffer` is unknown, **the study states no total stack for any native task.** Interrupts, callbacks and SDK internals are also outside every bound.
+
+### 7.5 Loader audit ([loader-audit.json](../various/05-stack/loader-audit.json))
+
+Each release ELF has 12 dynamic relocations. In the RISC-V psABI numbering:
+- five are type 3 (`R_RISCV_RELATIVE`)
+- seven are type 5 (`R_RISCV_JUMP_SLOT`)
+
+The slot spans virtual addresses 7,364–236,740 in Editor and 7,364–269,508 in Chess. The first relocation in each image lies 4,220 bytes beyond the end of the slot. No relocation overlaps the slot, which supports A4 for these two images.
+
+### 7.6 Policy audit ([policy-audit.json](../various/05-stack/policy-audit.json))
+
+The audit used two minimal functions, each with frame 16 and typed bound 16:
+- one containing a logical right shift at offset 40
+- one containing a signed less-than branch at offset 24
+
+The design expected *unsupported* for both. The checker returned *accepted* for both.
+
+Separately, fourteen earlier controls on ordinary code were all rejected. Each was a mutated claim or instruction.
+
+## 8. Three kinds of statement
+
+| Kind | Content in this study |
+|---|---|
+| **Preregistered claim** | H1–H3 and the gate thresholds. H1 fails as written; H2 cannot be evaluated at the held-out size used; H3 fails on metadata. |
+| **Observed fact** | 10/10 held-out functions certified; 5/5 invoked entries reached their bound exactly; no observed depth exceeded any bound; 14/14 earlier controls rejected; 2 out-of-list words accepted; metadata ≈ 3× allowance; no relocation in the slot; certified image identical to stock. |
+| **Proof (this report)** | The typed-only bound `T(f)` is sound for grammar G under A1–A4 (§6). |
+| **OS-level proof** | **None.** Nothing here bounds a whole native task: the SDK, interrupts, callbacks, trap handling and the reactor's own stack use are excluded. |
+
+No observation reported here underestimated a bound. That is an observed fact about the executed paths. It is not a substitute for the failed gate.
+
+## 9. Gate status
+
+| Gate | Requirement | Status |
+|---|---|---|
+| Soundness (hard) | 0 false accepts against the allowlist | **Failed** (2) |
+| Held-out size | ≥ 60 sources, ≥ 200 mutants | **Unfilled** (1 source, 10 functions) |
+| Coverage | ≥ 95% held-out | **Not evaluable** at this size |
+| Metadata | ≤ 64 B/fn + 8 B/call | **Failed** on both applications |
+| Compile overhead | ≤ 10% | **Failed** for Chess; **undecided** for Editor |
+| Checker time | ≤ 50 ms/KiB | Within budget as measured; limited to these workloads |
+| Runtime on hardware | (not preregistered) | **Not performed** |
+
+**Disposition: STOP.**
+
+A future study would need a fresh preregistration that covers:
+- either the allowlist as implemented or a tightened decoder (D2)
+- the coarser recursion and verdict rules (D3, D4)
+- a compact metadata encoding
+- a full independent held-out set
+
+It would be a new study, not a continuation of this one.
+
+## 10. Reproduction
+
+Run from `scripts/05-stack`:
+
+```
+node 05-trial.mjs /tmp/native-wave-deps /tmp/stack-host.json
+node 06-depth.mjs /tmp/depth.json
+python3 09-loader-audit.py /tmp/native-wave-deps /tmp/loader-audit.json
+```
+
+The stored outputs are in [`../various/05-stack/`](../various/05-stack/host.json). The decisions made during the run are recorded in the [diary](../reference/15-stack-certificates-diary.md).
