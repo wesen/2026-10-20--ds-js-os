@@ -1,0 +1,116 @@
+{
+  "mode": "general",
+  "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "imageSHA": "2e33bb648fd24dc470769ef92cb72be3a793cf4a8de4e964cbbed273b91684ac",
+  "imageBytes": 9540,
+  "shadowBytes": 840,
+  "shadow": {
+    "steps": 4232582,
+    "directStackLoads": 393098,
+    "directStackStores": 233145,
+    "absCalls": 0,
+    "boundsTests": 264928,
+    "capacityLoads": 19477
+  },
+  "callSites": [
+    {
+      "tapeOffset": 113,
+      "words": [
+        {
+          "pc": 4688,
+          "executions": 52917,
+          "op": "bge"
+        },
+        {
+          "pc": 4692,
+          "executions": 35366,
+          "op": "sub"
+        }
+      ]
+    },
+    {
+      "tapeOffset": 147,
+      "words": [
+        {
+          "pc": 4784,
+          "executions": 21309,
+          "op": "bge"
+        },
+        {
+          "pc": 4788,
+          "executions": 13322,
+          "op": "sub"
+        }
+      ]
+    }
+  ],
+  "shadowCalls": 19477,
+  "shadowSlotByteOffsets": {
+    "4": {
+      "loads": 29119,
+      "stores": 19477
+    },
+    "8": {
+      "loads": 29119,
+      "stores": 19477
+    },
+    "16": {
+      "loads": 9642,
+      "stores": 19477
+    },
+    "24": {
+      "loads": 9642,
+      "stores": 19477
+    },
+    "32": {
+      "loads": 9642,
+      "stores": 19477
+    },
+    "40": {
+      "loads": 67601,
+      "stores": 19477
+    },
+    "44": {
+      "loads": 52917,
+      "stores": 19477
+    },
+    "48": {
+      "loads": 21309,
+      "stores": 19477
+    },
+    "84": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "92": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "100": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "108": {
+      "loads": 19284,
+      "stores": 9642
+    },
+    "112": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "116": {
+      "loads": 9642,
+      "stores": 9642
+    },
+    "124": {
+      "loads": 19477,
+      "stores": 19477
+    }
+  },
+  "localCount": 30,
+  "inlineSites": 2,
+  "absTotalSteps": 0,
+  "fullFrameSteps": 12531944,
+  "outputSHA": "430f0d5016593f5b5232593107f198e92f6ecdfd88c946b59d0af364e2117625",
+  "ret": 1
+}

@@ -55,8 +55,37 @@ class FunctionCode {
         if (to !== from) this.emit(instruction.i(0x13, to, 0, from, 0));
     }
 
-    readLocal(reg, local) { this.load(reg, 4 * local); }
-    writeLocal(reg, local) { this.store(reg, 4 * local); }
+    readLocal(reg, local) {
+        const home = this.locations?.homes.get(local);
+        if (home !== undefined) this.move(reg, home);
+        else this.load(reg, 4 * local);
+    }
+
+    writeLocal(reg, local) {
+        const home = this.locations?.homes.get(local);
+        if (home !== undefined) this.move(home, reg);
+        else this.store(reg, 4 * local);
+    }
+
+    checkedAddress(receiver, index, constant) {
+        const base = this.locations?.homes.get(receiver) ?? T6;
+        if (base === T6) this.readLocal(base, receiver);
+        const cached = this.locations?.receiver === receiver;
+        const length = cached ? A0 + 7 : A0;
+        if (!cached || !this.capacityReady) this.load(length, 0, base);
+        if (cached) this.capacityReady = true;
+        this.emit(instruction.b(6, index, length, 8));
+        this.emit(0x00100073);
+        const out = this.resultRegister(), tape = this.program.code;
+        if (constant >= 0 && constant <= 1021 && tape[this.at] === 0x2f && tape[this.at+2] === 4) {
+            this.at += 3;
+            this.load(out, 4 + 2 * constant, base, 5);
+        } else {
+            this.emit(instruction.i(0x13, out, 1, index, 1));
+            this.emit(instruction.r(0x33, out, 0, base, out));
+        }
+        this.push(out);
+    }
 
     slot(depth) { return 4 * (this.locals + depth); }
 
@@ -173,6 +202,26 @@ class FunctionCode {
     }
 
     step(op) {
+        const plan = this.locations;
+        if (plan?.forward.has(this.at - 1)) {
+            const constant = op === 0x41 ? this.cell() : undefined;
+            const index = constant === undefined ? this.pop(T5) : T5;
+            if (constant !== undefined) {
+                this.constant(index, constant);
+                this.at++; // local.set opcode following the literal
+            }
+            this.at += 2; // destination local and checked-address opcode
+            const receiver = this.cell();
+            this.at++; // proven single-use index local
+            this.checkedAddress(receiver, index, constant);
+            return false;
+        }
+        if (op === 0x20 && this.capacityReady && this.program.code[this.at] === plan.receiver &&
+            this.program.code[this.at+1] === 0x28 && this.program.code[this.at+3] === 0) {
+            this.at += 4;
+            this.push(A0 + 7);
+            return false;
+        }
         switch (op) {
         case 0x00: this.emit(0x00100073); break;  // Wasm unreachable
         case 0x02: case 0x03: case 0x04: this.begin(op); break;
@@ -232,14 +281,7 @@ class FunctionCode {
         case 0xf1: { // checked UTF-16 address, before any payload load or write RHS
             const receiver = this.cell(), position = this.cell();
             this.readLocal(T5, position);
-            this.readLocal(T6, receiver);
-            this.load(A0, 0, T6);
-            this.emit(instruction.b(6, T5, A0, 8)); // unsigned position < capacity
-            this.emit(0x00100073);
-            const out = this.resultRegister();
-            this.emit(instruction.i(0x13, out, 1, T5, 1));
-            this.emit(instruction.r(0x33, out, 0, T6, out));
-            this.push(out);
+            this.checkedAddress(receiver, T5);
             break;
         }
         case 0xf2: { // ordered UTF-16 stores after the complete range check
@@ -436,6 +478,53 @@ function lowerLeaf(fn, callables, targets) {
     }
 }
 
+// Assign permanent homes only in framed scalar functions with a checked access.
+function planLocations(fn, options, inlineCall) {
+    if (!fn.code.includes(0xf1)) return null;
+    const ops = typedWasm.decodeNumericOperations(fn.code);
+    const reads = new Map(), writes = new Set(), scores = new Map();
+    let receiver, straight = true, pure = true, leaf = true, loops = 0;
+    function read(local) {
+        reads.set(local, (reads.get(local) ?? 0) + 1);
+        scores.set(local, (scores.get(local) ?? 0) + (loops ? 4 : 1));
+    }
+    const blocks = [];
+    for (const {opcode, operands:[a,b]} of ops) {
+        if (opcode === 0xf1) {
+            if (straight && receiver === undefined) receiver = a;
+            read(a); read(b);
+        }
+        if (opcode === 0x20 || opcode === 0xf2) read(a);
+        if (opcode === 0x21) writes.add(a);
+        if (opcode === 0x10 && !inlineCall(a)) leaf = false;
+        if ([0x36,0x3b,0xf2].includes(opcode)) pure = false;
+        if (opcode >= 0x02 && opcode <= 0x04) {
+            blocks.push(opcode);
+            if (opcode === 0x03) loops++;
+        }
+        if (opcode === 0x0b && blocks.pop() === 0x03) loops--;
+        if (opcode >= 0x02 && opcode <= 0x0f) straight = false;
+    }
+    if (!options.capacity || !pure || !leaf || writes.has(receiver)) receiver = undefined;
+    const forward = new Set(), homes = new Map();
+    if (options.forward) for (let i=1; i<ops.length; i++) {
+        const set = ops[i-1], addr = ops[i], id = set.operands[0];
+        if (set.opcode !== 0x21 || addr.opcode !== 0xf1 || addr.operands[1] !== id || reads.get(id) !== 1) continue;
+        const producer = ops[i-2];
+        forward.add(producer?.opcode === 0x41 ? producer.offset : set.offset);
+        scores.delete(id);
+    }
+    if (options.homes && leaf) {
+        let reg = A0 + Math.max(1, fn.params.length);
+        const end = A0 + (receiver === undefined ? 8 : 7);
+        for (const [id,score] of [...scores].sort((a,b)=>b[1]-a[1])) {
+            if (reg >= end || score < 2) break;
+            homes.set(id, reg++);
+        }
+    }
+    return {receiver,forward,homes};
+}
+
 function compile(source, imports = [], maxSourceLength, options) {
     const imported = imports.map((fn, index) => ({...fn, index}));
     const targets = imported.map(fn => ({importIndex: fn.index}));
@@ -474,7 +563,14 @@ function compile(source, imports = [], maxSourceLength, options) {
                 return;
             }
         }
-        code.push(lowerLeaf(fn, callables, targets) ?? new Emitter(fn, callables, targets).lower());
+        let compiled = lowerLeaf(fn, callables, targets);
+        if (!compiled) {
+            const emitter = new Emitter(fn, callables, targets);
+            if (options?.operandLocations) emitter.locations = planLocations(fn, options.operandLocations,
+                index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn);
+            compiled = emitter.lower();
+        }
+        code.push(compiled);
         // The lowered code retains the descriptor, so release the function-local literal table.
         if (fn.literals) fn.literals = null;
     }

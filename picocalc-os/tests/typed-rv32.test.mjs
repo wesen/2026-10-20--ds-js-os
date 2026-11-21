@@ -177,3 +177,17 @@ test("guarded scalar returns are proved from an earlier body and applied to sele
     assert.deepEqual(candidate.image, typedRv32.compile(source, [], undefined, {...options, streamFunctions:false}).image);
     assert.deepEqual(control.image, typedRv32.compile(source, [], undefined, {inlineGuardedReturns:false}).image);
 });
+
+test("a checked constant read can use a halfword displacement and a dominating capacity", () => {
+    const {typedRv32} = compiler();
+    const src = "function read(b:buffer):i32 { return b.charCodeAt(0)+b.charCodeAt(19); }";
+    const emit = operandLocations => words(typedRv32.compile(src, [], undefined, {operandLocations}), "read");
+    const control = emit(undefined);
+    assert.deepEqual(emit({}), control);
+    const optimized = emit({forward:true, capacity:true, homes:true});
+    assert(optimized.length < control.length);
+    const headerLoads = optimized.filter(w => (w & 0x707f) === 0x2003 && ((w >>> 15) & 31) !== 2);
+    assert.equal(headerLoads.length, 1);
+    assert.equal(optimized.filter(w => w === 0x00100073).length, 2);
+    assert(optimized.some(w => (w & 0x707f) === 0x5003 && (w >>> 20) === 42));
+});
