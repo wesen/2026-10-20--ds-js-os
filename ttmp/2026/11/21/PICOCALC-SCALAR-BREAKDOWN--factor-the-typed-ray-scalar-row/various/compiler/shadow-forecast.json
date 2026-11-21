@@ -1,0 +1,25 @@
+{
+  "observed": {
+    "pose": [
+      68,
+      61,
+      31,
+      25
+    ],
+    "stride": 160,
+    "frameRetired": 15532634,
+    "retired": 5528397,
+    "calls": 19477,
+    "boundsTests": 264928,
+    "stackLoads": 1288258,
+    "stackStores": 647710
+  },
+  "hypothetical": {
+    "entryGuard": "length >= 33 and work[16] <= 3, identical generic fallback",
+    "entryFastInstructions": 6,
+    "savedRetired": 412994,
+    "predictedShadowRetired": 5115403,
+    "predictedFullFrameRetired": 15119640,
+    "predictedFullFrameReductionPercent": 2.6588793632812053
+  }
+}

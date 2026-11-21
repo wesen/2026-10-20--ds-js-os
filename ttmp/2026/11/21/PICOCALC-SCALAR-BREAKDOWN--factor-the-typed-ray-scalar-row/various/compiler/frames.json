@@ -1,0 +1,1187 @@
+{
+  "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "arms": {
+    "stock": {
+      "imageSHA256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+      "rows": [
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16920810,
+          "primaryRow": 3608697,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15532634,
+          "primaryRow": 3608697,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16838934,
+          "primaryRow": 3608697,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15450758,
+          "primaryRow": 3608697,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 17118089,
+          "primaryRow": 3628477,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15729913,
+          "primaryRow": 3628477,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 17243036,
+          "primaryRow": 3628477,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15854860,
+          "primaryRow": 3628477,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 16727476,
+          "primaryRow": 3618219,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 15339300,
+          "primaryRow": 3618219,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 16398416,
+          "primaryRow": 3619070,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 15010240,
+          "primaryRow": 3619070,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16429409,
+          "primaryRow": 3579694,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15041233,
+          "primaryRow": 3579694,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16379812,
+          "primaryRow": 3590458,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14991636,
+          "primaryRow": 3590458,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16724287,
+          "primaryRow": 3594046,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15336111,
+          "primaryRow": 3594046,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16713698,
+          "primaryRow": 3594046,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15325522,
+          "primaryRow": 3594046,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16601285,
+          "primaryRow": 3587307,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15213109,
+          "primaryRow": 3587307,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "audit",
+          "retired": 16447407,
+          "primaryRow": 3599842,
+          "shadow": 5157859
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "clean",
+          "retired": 15059231,
+          "primaryRow": 3599842,
+          "shadow": 5157859
+        }
+      ]
+    },
+    "checked-stack": {
+      "imageSHA256": "7e59fd852c65173e72b76c75f3f826544a4dbcacfff49277f2fde2904943e7e6",
+      "rows": [
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16927370,
+          "primaryRow": 3615257,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15539194,
+          "primaryRow": 3615257,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16845494,
+          "primaryRow": 3615257,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15457318,
+          "primaryRow": 3615257,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 17124649,
+          "primaryRow": 3635037,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15736473,
+          "primaryRow": 3635037,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 17249596,
+          "primaryRow": 3635037,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15861420,
+          "primaryRow": 3635037,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 16734036,
+          "primaryRow": 3624779,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 15345860,
+          "primaryRow": 3624779,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 16404976,
+          "primaryRow": 3625630,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 15016800,
+          "primaryRow": 3625630,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16435969,
+          "primaryRow": 3586254,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15047793,
+          "primaryRow": 3586254,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16386372,
+          "primaryRow": 3597018,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14998196,
+          "primaryRow": 3597018,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16730847,
+          "primaryRow": 3600606,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15342671,
+          "primaryRow": 3600606,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16720258,
+          "primaryRow": 3600606,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15332082,
+          "primaryRow": 3600606,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16607845,
+          "primaryRow": 3593867,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15219669,
+          "primaryRow": 3593867,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "audit",
+          "retired": 16453967,
+          "primaryRow": 3606402,
+          "shadow": 5157859
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "clean",
+          "retired": 15065791,
+          "primaryRow": 3606402,
+          "shadow": 5157859
+        }
+      ]
+    },
+    "hoisted-stack": {
+      "imageSHA256": "1f92fff08af969b739b814412464a8dc749bdcb0181178a41f2a817f9161a17b",
+      "rows": [
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16615746,
+          "primaryRow": 3303633,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15227570,
+          "primaryRow": 3303633,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16533870,
+          "primaryRow": 3303633,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15145694,
+          "primaryRow": 3303633,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16809585,
+          "primaryRow": 3319973,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15421409,
+          "primaryRow": 3319973,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16934532,
+          "primaryRow": 3319973,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15546356,
+          "primaryRow": 3319973,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 16420756,
+          "primaryRow": 3311499,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 15032580,
+          "primaryRow": 3311499,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 16091548,
+          "primaryRow": 3312202,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 14703372,
+          "primaryRow": 3312202,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16129389,
+          "primaryRow": 3279674,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14741213,
+          "primaryRow": 3279674,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16077920,
+          "primaryRow": 3288566,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14689744,
+          "primaryRow": 3288566,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16421771,
+          "primaryRow": 3291530,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15033595,
+          "primaryRow": 3291530,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16411182,
+          "primaryRow": 3291530,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15023006,
+          "primaryRow": 3291530,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16299941,
+          "primaryRow": 3285963,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14911765,
+          "primaryRow": 3285963,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "audit",
+          "retired": 16143883,
+          "primaryRow": 3296318,
+          "shadow": 5157859
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "clean",
+          "retired": 14755707,
+          "primaryRow": 3296318,
+          "shadow": 5157859
+        }
+      ]
+    },
+    "checked-register": {
+      "imageSHA256": "80f5457634fb05afc8ab49b348e864344973eceba18a2a670b16fee799c0e25f",
+      "rows": [
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16265289,
+          "primaryRow": 2953176,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14877113,
+          "primaryRow": 2953176,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16183413,
+          "primaryRow": 2953176,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14795237,
+          "primaryRow": 2953176,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16459128,
+          "primaryRow": 2969516,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15070952,
+          "primaryRow": 2969516,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16584075,
+          "primaryRow": 2969516,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 15195899,
+          "primaryRow": 2969516,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 16070299,
+          "primaryRow": 2961042,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 14682123,
+          "primaryRow": 2961042,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 15741091,
+          "primaryRow": 2961745,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 14352915,
+          "primaryRow": 2961745,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15778932,
+          "primaryRow": 2929217,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14390756,
+          "primaryRow": 2929217,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15727463,
+          "primaryRow": 2938109,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14339287,
+          "primaryRow": 2938109,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16071314,
+          "primaryRow": 2941073,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14683138,
+          "primaryRow": 2941073,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16060725,
+          "primaryRow": 2941073,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14672549,
+          "primaryRow": 2941073,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15949484,
+          "primaryRow": 2935506,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14561308,
+          "primaryRow": 2935506,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "audit",
+          "retired": 15793426,
+          "primaryRow": 2945861,
+          "shadow": 5157859
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "clean",
+          "retired": 14405250,
+          "primaryRow": 2945861,
+          "shadow": 5157859
+        }
+      ]
+    },
+    "hoisted-register": {
+      "imageSHA256": "dc578a88bb9b297408c7b964a13e4453645e00057370cd3933aa4821d6dc0983",
+      "rows": [
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15953665,
+          "primaryRow": 2641552,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14565489,
+          "primaryRow": 2641552,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15871789,
+          "primaryRow": 2641552,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14483613,
+          "primaryRow": 2641552,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16144064,
+          "primaryRow": 2654452,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14755888,
+          "primaryRow": 2654452,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 16269011,
+          "primaryRow": 2654452,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14880835,
+          "primaryRow": 2654452,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 15757019,
+          "primaryRow": 2647762,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 14368843,
+          "primaryRow": 2647762,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 15427663,
+          "primaryRow": 2648317,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 14039487,
+          "primaryRow": 2648317,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15472352,
+          "primaryRow": 2622637,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14084176,
+          "primaryRow": 2622637,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15419011,
+          "primaryRow": 2629657,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14030835,
+          "primaryRow": 2629657,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15762238,
+          "primaryRow": 2631997,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14374062,
+          "primaryRow": 2631997,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15751649,
+          "primaryRow": 2631997,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14363473,
+          "primaryRow": 2631997,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15641580,
+          "primaryRow": 2627602,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 14253404,
+          "primaryRow": 2627602,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "audit",
+          "retired": 15483342,
+          "primaryRow": 2635777,
+          "shadow": 5157859
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "clean",
+          "retired": 14095166,
+          "primaryRow": 2635777,
+          "shadow": 5157859
+        }
+      ]
+    },
+    "skip": {
+      "imageSHA256": "d26109121665cfcc7da04fc5884f2f9b607d984ac63e397d9c54284e87969f6b",
+      "rows": [
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 14844895,
+          "primaryRow": 1532782,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "default",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 13456719,
+          "primaryRow": 1532782,
+          "shadow": 5528397
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 14763019,
+          "primaryRow": 1532782,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "lamp-only",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 13374843,
+          "primaryRow": 1532782,
+          "shadow": 5472939
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15035294,
+          "primaryRow": 1545682,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "near-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 13647118,
+          "primaryRow": 1545682,
+          "shadow": 5605213
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 15160241,
+          "primaryRow": 1545682,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "far-corner",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 13772065,
+          "primaryRow": 1545682,
+          "shadow": 5756686
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 14648249,
+          "primaryRow": 1538992,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "left-bottom",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 13260073,
+          "primaryRow": 1538992,
+          "shadow": 5354128
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "audit",
+          "retired": 14318893,
+          "primaryRow": 1539547,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "right-top",
+          "stride": 165,
+          "entry": "clean",
+          "retired": 12930717,
+          "primaryRow": 1539547,
+          "shadow": 4983467
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 14363582,
+          "primaryRow": 1513867,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "blue-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 12975406,
+          "primaryRow": 1513867,
+          "shadow": 5215204
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 14310241,
+          "primaryRow": 1520887,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "gold-overlap",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 12922065,
+          "primaryRow": 1520887,
+          "shadow": 5117916
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 14653468,
+          "primaryRow": 1523227,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "left-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 13265292,
+          "primaryRow": 1523227,
+          "shadow": 5372347
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 14642879,
+          "primaryRow": 1523227,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "right-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 13254703,
+          "primaryRow": 1523227,
+          "shadow": 5429586
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "audit",
+          "retired": 14532810,
+          "primaryRow": 1518832,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "bottom-lamp",
+          "stride": 160,
+          "entry": "clean",
+          "retired": 13144634,
+          "primaryRow": 1518832,
+          "shadow": 5371700
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "audit",
+          "retired": 14374572,
+          "primaryRow": 1527007,
+          "shadow": 5157859
+        },
+        {
+          "fixture": "top-lamp-wide",
+          "stride": 320,
+          "entry": "clean",
+          "retired": 12986396,
+          "primaryRow": 1527007,
+          "shadow": 5157859
+        }
+      ]
+    }
+  }
+}
