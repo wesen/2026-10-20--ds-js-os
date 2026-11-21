@@ -163,6 +163,7 @@ void console_exec(char *line) {
 #if PICOCALC_MOBILE_PAINTER
   else if (!strcmp(cmd, "painter")) p4_painter_status();
 #endif
+  else if (!strcmp(cmd, "raybench")) p4_raybench(rest);
 #if PICOCALC_DEVICE_COMPILER
   else if (!strcmp(cmd, "cji")) compiler_console(rest);
 #endif
@@ -177,7 +178,7 @@ void console_exec(char *line) {
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "cachestat")) p4_cachestat(rest);
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | cachestat loop|fib [default|internal|psram] / start / show | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
+  else if (!strcmp(cmd, "help")) printf("raybench [0..17] | stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | cachestat loop|fib [default|internal|psram] / start / show | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);

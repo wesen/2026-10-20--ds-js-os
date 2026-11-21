@@ -36,7 +36,8 @@ set(AGENT_REQUIRES nvs_flash esp_http_client esp_netif esp_event esp_wifi mbedtl
 
 idf_component_register(
     SRCS
-        "main_p4.c" "port_p4.c" "bus_p4.c" "agent_p4.c" "store_p4.c" "fs_p4.c" "perf_p4.c"
+        "main_p4.c" "raybench_p4.c" "${OS}/nucleus/raytrace_demo.c" "${OS}/nucleus/raytrace_demo_pie.S"
+        "port_p4.c" "bus_p4.c" "agent_p4.c" "store_p4.c" "fs_p4.c" "perf_p4.c"
         "${OS}/nucleus/agent_transport.c" "${OS}/nucleus/kernel.c" "${OS}/nucleus/vm.c" "${OS}/nucleus/hw.c" "${OS}/nucleus/gfx.c" "${OS}/nucleus/util.c" "${OS}/nucleus/fs.c" "${OS}/nucleus/native.c"
         "${OS}/nucleus/native_wasm.c"
         "${QJS}/quickjs.c" "${QJS}/libregexp.c" "${QJS}/libunicode.c" "${QJS}/cutils.c" "${QJS}/dtoa.c"
@@ -45,6 +46,7 @@ idf_component_register(
     PRIV_INCLUDE_DIRS "${WAMR}/iwasm/include"
     PRIV_REQUIRES driver esp_driver_gpio esp_driver_i2c esp_driver_spi esp_driver_uart esp_psram esp_timer esp_mm heap fatfs wear_levelling vfs lwip pthread ${AGENT_REQUIRES}
 )
+target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_RAYTRACE=1)
 set_source_files_properties(${OS}/nucleus/native_wasm.c PROPERTIES COMPILE_DEFINITIONS "NUCLEUS_WASM=1")
 set_source_files_properties(${WAMR_SRCS} PROPERTIES
     COMPILE_DEFINITIONS "${WAMR_DEFS}" INCLUDE_DIRECTORIES "${WAMR_INCS}" COMPILE_OPTIONS "-w")
