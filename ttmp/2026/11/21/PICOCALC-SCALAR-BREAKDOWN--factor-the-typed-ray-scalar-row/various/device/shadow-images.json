@@ -1,0 +1,98 @@
+[
+  {
+    "id": 0,
+    "name": "stock",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "df537a99299ce32c157e6785d1b08850b71aca960c1b273ed10f78db45a929a6",
+    "rvBytes": 9564,
+    "nativeSHA": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+    "elfBytes": 66816,
+    "elfSHA": "084832b9a2c735b111799c7ba4c5b844dd7db6c9290a5f8683b58982a1764e9f",
+    "elfCRC": "0d2e18b8"
+  },
+  {
+    "id": 8,
+    "name": "prior-matched",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "c43fd2e832e0e99524b7d69d53fd51c0a1e20328b2599c3542cbe3c28e9b3d0f",
+    "rvBytes": 10072,
+    "nativeSHA": "8dad00e30c9b1496dec7b8ab322f33e27d4162f78d467ca599941e26c9f4251b",
+    "elfBytes": 66816,
+    "elfSHA": "fd1ee5b291c19d66d3189ca42d7eaa4004b5e049251edcfb110d6be19b18c426",
+    "elfCRC": "600363a6"
+  },
+  {
+    "id": 9,
+    "name": "CHECK_STACK",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "dea7be112d86c9737d4c501d84ac251c3e3608bb3c8e85dc3bc1d68c894f9c89",
+    "rvBytes": 10608,
+    "nativeSHA": "7e59fd852c65173e72b76c75f3f826544a4dbcacfff49277f2fde2904943e7e6",
+    "elfBytes": 66816,
+    "elfSHA": "af4d99c68a7166ff685c0df72b847b19d822799fcf74f32d97fd0f2e639ff13c",
+    "elfCRC": "eaf4f4bf"
+  },
+  {
+    "id": 10,
+    "name": "HOIST_STACK",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "e6050a7d5c366dec3597185e4f778ed5eebbe1f60f5d714a1b912213e3f02467",
+    "rvBytes": 10476,
+    "nativeSHA": "1f92fff08af969b739b814412464a8dc749bdcb0181178a41f2a817f9161a17b",
+    "elfBytes": 66816,
+    "elfSHA": "eddc20e969fb42a7828ce4ba60425945488c1997b8eb32fbd5784595a7ecff73",
+    "elfCRC": "c0ae2888"
+  },
+  {
+    "id": 11,
+    "name": "CHECK_REG",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "d3a6bf6d1fc57127db13d2d3906f946ae130ffeab00746ae1ad7d82785f4995e",
+    "rvBytes": 10516,
+    "nativeSHA": "80f5457634fb05afc8ab49b348e864344973eceba18a2a670b16fee799c0e25f",
+    "elfBytes": 66816,
+    "elfSHA": "948ee1457fb05a4c603cbcd45898676ddebce4a3c750ef50f50014c5ff8b6f0c",
+    "elfCRC": "ae43ecef"
+  },
+  {
+    "id": 12,
+    "name": "HOIST_REG",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "dfb0172bf4c404112cac9af9990cb2faae6f8c0a5d85da263a40af483025b589",
+    "rvBytes": 10384,
+    "nativeSHA": "dc578a88bb9b297408c7b964a13e4453645e00057370cd3933aa4821d6dc0983",
+    "elfBytes": 66816,
+    "elfSHA": "180681ed36331f9b842a620f2e74242b9cdc3aa8bd88ee277e0b109d301fe34d",
+    "elfCRC": "978d3c83"
+  },
+  {
+    "id": 13,
+    "name": "SKIP_REG",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "82b2c57158a68b22197ef62f0a1645c56f43a5d1c20a5e9641c26f9a2d17a3e6",
+    "rvBytes": 10404,
+    "nativeSHA": "d26109121665cfcc7da04fc5884f2f9b607d984ac63e397d9c54284e87969f6b",
+    "elfBytes": 66816,
+    "elfSHA": "5126094cc778aa9083cbd9976c4a28e41c74fcf99edd3c208baeee06447dc9fb",
+    "elfCRC": "966e9c05"
+  },
+  {
+    "id": 14,
+    "name": "SHADOW_HOIST",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "sourceBytes": 10438,
+    "backendSHA": "6aea822dcda5109e71c98243756bb50a7630a856d22ca7e8ad75b0e39d9938e5",
+    "rvBytes": 10512,
+    "nativeSHA": "ceea256c5b62e2a4cc8f209d159188d48da88e64a96cab89796c46691b1806a1",
+    "elfBytes": 66816,
+    "elfSHA": "852d39441af633f5a18e1490380798ba702672cc559194ed57aec76d7cfb1a97",
+    "elfCRC": "c1f6e41d"
+  }
+]

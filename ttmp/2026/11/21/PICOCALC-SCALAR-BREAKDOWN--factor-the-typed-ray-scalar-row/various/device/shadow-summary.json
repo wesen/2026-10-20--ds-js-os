@@ -1,0 +1,506 @@
+{
+  "blue-overlap": {
+    "clean": {
+      "stockUs": 55519.5,
+      "candidateUs": 53630.0,
+      "savedUs": 1894.5,
+      "savedRangeUs": [
+        1864,
+        1922
+      ],
+      "savedPercent": 3.4115156599364576
+    },
+    "audit": {
+      "stockUs": 60688.0,
+      "candidateUs": 58811.5,
+      "savedUs": 1884.0,
+      "savedRangeUs": [
+        1848,
+        1955
+      ],
+      "savedPercent": 3.1040193753431735
+    },
+    "primary": {
+      "stockUs": 17692.5,
+      "candidateUs": 17682.0,
+      "savedUs": 9.5,
+      "savedRangeUs": [
+        -8,
+        21
+      ],
+      "savedPercent": 0.05369419676478811
+    },
+    "shade": {
+      "stockUs": 46514.0,
+      "candidateUs": 44590.0,
+      "savedUs": 1924.0,
+      "savedRangeUs": [
+        1829,
+        2024
+      ],
+      "savedPercent": 4.13829808370356
+    }
+  },
+  "bottom-lamp": {
+    "clean": {
+      "stockUs": 56375.5,
+      "candidateUs": 54382.0,
+      "savedUs": 1988.5,
+      "savedRangeUs": [
+        1954,
+        2008
+      ],
+      "savedPercent": 3.5265531318625936
+    },
+    "audit": {
+      "stockUs": 61542.5,
+      "candidateUs": 59538.0,
+      "savedUs": 1991.0,
+      "savedRangeUs": [
+        1884,
+        2055
+      ],
+      "savedPercent": 3.2369273383205504
+    },
+    "primary": {
+      "stockUs": 17717.5,
+      "candidateUs": 17709.5,
+      "savedUs": 4.5,
+      "savedRangeUs": [
+        -1,
+        22
+      ],
+      "savedPercent": 0.025398856128756933
+    },
+    "shade": {
+      "stockUs": 47332.5,
+      "candidateUs": 45305.5,
+      "savedUs": 2012.5,
+      "savedRangeUs": [
+        1981,
+        2092
+      ],
+      "savedPercent": 4.253498746887139
+    }
+  },
+  "default": {
+    "clean": {
+      "stockUs": 57681.5,
+      "candidateUs": 55478.0,
+      "savedUs": 2208.5,
+      "savedRangeUs": [
+        2197,
+        2236
+      ],
+      "savedPercent": 3.8288848913203246
+    },
+    "audit": {
+      "stockUs": 62865.0,
+      "candidateUs": 60636.0,
+      "savedUs": 2229.5,
+      "savedRangeUs": [
+        2183,
+        2331
+      ],
+      "savedPercent": 3.5441862394224826
+    },
+    "primary": {
+      "stockUs": 17796.0,
+      "candidateUs": 17788.5,
+      "savedUs": 7.0,
+      "savedRangeUs": [
+        -8,
+        21
+      ],
+      "savedPercent": 0.039330262323814716
+    },
+    "shade": {
+      "stockUs": 48551.5,
+      "candidateUs": 46254.5,
+      "savedUs": 2279.5,
+      "savedRangeUs": [
+        2208,
+        2416
+      ],
+      "savedPercent": 4.695837293502879
+    }
+  },
+  "far-corner": {
+    "clean": {
+      "stockUs": 59057.0,
+      "candidateUs": 56595.0,
+      "savedUs": 2473.5,
+      "savedRangeUs": [
+        2394,
+        2487
+      ],
+      "savedPercent": 4.18697958568113
+    },
+    "audit": {
+      "stockUs": 64236.0,
+      "candidateUs": 61788.5,
+      "savedUs": 2444.0,
+      "savedRangeUs": [
+        2405,
+        2547
+      ],
+      "savedPercent": 3.805492328802721
+    },
+    "primary": {
+      "stockUs": 17862.0,
+      "candidateUs": 17855.5,
+      "savedUs": 10.0,
+      "savedRangeUs": [
+        -27,
+        23
+      ],
+      "savedPercent": 0.05596534831917141
+    },
+    "shade": {
+      "stockUs": 49842.0,
+      "candidateUs": 47321.5,
+      "savedUs": 2542.5,
+      "savedRangeUs": [
+        2421,
+        2616
+      ],
+      "savedPercent": 5.09917590297764
+    }
+  },
+  "gold-overlap": {
+    "clean": {
+      "stockUs": 55289.0,
+      "candidateUs": 53446.5,
+      "savedUs": 1833.0,
+      "savedRangeUs": [
+        1805,
+        1855
+      ],
+      "savedPercent": 3.314494527852545
+    },
+    "audit": {
+      "stockUs": 60451.0,
+      "candidateUs": 58599.5,
+      "savedUs": 1825.5,
+      "savedRangeUs": [
+        1805,
+        1900
+      ],
+      "savedPercent": 3.0194965208381728
+    },
+    "primary": {
+      "stockUs": 17723.5,
+      "candidateUs": 17728.0,
+      "savedUs": -1.0,
+      "savedRangeUs": [
+        -23,
+        10
+      ],
+      "savedPercent": -0.00564493022461329
+    },
+    "shade": {
+      "stockUs": 46251.5,
+      "candidateUs": 44365.0,
+      "savedUs": 1900.0,
+      "savedRangeUs": [
+        1852,
+        1941
+      ],
+      "savedPercent": 4.10575249148851
+    }
+  },
+  "lamp-only": {
+    "clean": {
+      "stockUs": 57262.5,
+      "candidateUs": 55154.0,
+      "savedUs": 2104.0,
+      "savedRangeUs": [
+        2056,
+        2134
+      ],
+      "savedPercent": 3.674178549100046
+    },
+    "audit": {
+      "stockUs": 62436.0,
+      "candidateUs": 60329.0,
+      "savedUs": 2119.0,
+      "savedRangeUs": [
+        2026,
+        2194
+      ],
+      "savedPercent": 3.392029049138684
+    },
+    "primary": {
+      "stockUs": 17791.0,
+      "candidateUs": 17787.0,
+      "savedUs": 1.0,
+      "savedRangeUs": [
+        -21,
+        31
+      ],
+      "savedPercent": 0.005616393069286858
+    },
+    "shade": {
+      "stockUs": 48171.0,
+      "candidateUs": 45972.5,
+      "savedUs": 2195.0,
+      "savedRangeUs": [
+        2098,
+        2297
+      ],
+      "savedPercent": 4.55554326403916
+    }
+  },
+  "left-bottom": {
+    "clean": {
+      "stockUs": 56788.5,
+      "candidateUs": 54824.0,
+      "savedUs": 1972.0,
+      "savedRangeUs": [
+        1921,
+        1986
+      ],
+      "savedPercent": 3.472136734437293
+    },
+    "audit": {
+      "stockUs": 62014.0,
+      "candidateUs": 60034.5,
+      "savedUs": 1982.5,
+      "savedRangeUs": [
+        1939,
+        2042
+      ],
+      "savedPercent": 3.1967003829315126
+    },
+    "primary": {
+      "stockUs": 17827.0,
+      "candidateUs": 17822.5,
+      "savedUs": 3.0,
+      "savedRangeUs": [
+        -46,
+        18
+      ],
+      "savedPercent": 0.01681754605292303
+    },
+    "shade": {
+      "stockUs": 47682.5,
+      "candidateUs": 45680.0,
+      "savedUs": 1991.5,
+      "savedRangeUs": [
+        1954,
+        2050
+      ],
+      "savedPercent": 4.1764533422245655
+    }
+  },
+  "left-lamp": {
+    "clean": {
+      "stockUs": 56768.0,
+      "candidateUs": 54724.5,
+      "savedUs": 2037.0,
+      "savedRangeUs": [
+        2020,
+        2087
+      ],
+      "savedPercent": 3.588573114314139
+    },
+    "audit": {
+      "stockUs": 61946.0,
+      "candidateUs": 59882.0,
+      "savedUs": 2059.0,
+      "savedRangeUs": [
+        2011,
+        2167
+      ],
+      "savedPercent": 3.3236234106718423
+    },
+    "primary": {
+      "stockUs": 17743.0,
+      "candidateUs": 17735.0,
+      "savedUs": 6.5,
+      "savedRangeUs": [
+        -4,
+        21
+      ],
+      "savedPercent": 0.03664179171324787
+    },
+    "shade": {
+      "stockUs": 47734.0,
+      "candidateUs": 45534.5,
+      "savedUs": 2139.5,
+      "savedRangeUs": [
+        2084,
+        2265
+      ],
+      "savedPercent": 4.486234651707546
+    }
+  },
+  "near-corner": {
+    "clean": {
+      "stockUs": 58469.0,
+      "candidateUs": 56158.0,
+      "savedUs": 2311.0,
+      "savedRangeUs": [
+        2234,
+        2353
+      ],
+      "savedPercent": 3.953164585647478
+    },
+    "audit": {
+      "stockUs": 63643.5,
+      "candidateUs": 61302.5,
+      "savedUs": 2337.5,
+      "savedRangeUs": [
+        2283,
+        2418
+      ],
+      "savedPercent": 3.6734365057793887
+    },
+    "primary": {
+      "stockUs": 17859.5,
+      "candidateUs": 17858.5,
+      "savedUs": 1.0,
+      "savedRangeUs": [
+        -26,
+        25
+      ],
+      "savedPercent": 0.0055912647190537665
+    },
+    "shade": {
+      "stockUs": 49257.0,
+      "candidateUs": 46833.5,
+      "savedUs": 2417.5,
+      "savedRangeUs": [
+        2323,
+        2519
+      ],
+      "savedPercent": 4.9079701922265855
+    }
+  },
+  "right-lamp": {
+    "clean": {
+      "stockUs": 56697.0,
+      "candidateUs": 54647.0,
+      "savedUs": 2049.5,
+      "savedRangeUs": [
+        2035,
+        2076
+      ],
+      "savedPercent": 3.6141287523696732
+    },
+    "audit": {
+      "stockUs": 61867.0,
+      "candidateUs": 59813.5,
+      "savedUs": 2072.5,
+      "savedRangeUs": [
+        1969,
+        2103
+      ],
+      "savedPercent": 3.3481428241733857
+    },
+    "primary": {
+      "stockUs": 17739.5,
+      "candidateUs": 17741.0,
+      "savedUs": 1.0,
+      "savedRangeUs": [
+        -21,
+        17
+      ],
+      "savedPercent": 0.0056401574403122995
+    },
+    "shade": {
+      "stockUs": 47665.5,
+      "candidateUs": 45492.0,
+      "savedUs": 2144.0,
+      "savedRangeUs": [
+        2067,
+        2241
+      ],
+      "savedPercent": 4.499916584275624
+    }
+  },
+  "right-top": {
+    "clean": {
+      "stockUs": 55520.5,
+      "candidateUs": 53713.5,
+      "savedUs": 1810.0,
+      "savedRangeUs": [
+        1782,
+        1848
+      ],
+      "savedPercent": 3.2597627030928598
+    },
+    "audit": {
+      "stockUs": 60738.5,
+      "candidateUs": 58928.0,
+      "savedUs": 1810.0,
+      "savedRangeUs": [
+        1764,
+        1847
+      ],
+      "savedPercent": 2.9800114138536644
+    },
+    "primary": {
+      "stockUs": 17821.5,
+      "candidateUs": 17823.0,
+      "savedUs": -2.0,
+      "savedRangeUs": [
+        -25,
+        24
+      ],
+      "savedPercent": -0.011223816946173231
+    },
+    "shade": {
+      "stockUs": 46412.0,
+      "candidateUs": 44514.0,
+      "savedUs": 1885.5,
+      "savedRangeUs": [
+        1826,
+        1992
+      ],
+      "savedPercent": 4.062482683184946
+    }
+  },
+  "top-lamp-wide": {
+    "clean": {
+      "stockUs": 55881.0,
+      "candidateUs": 54006.0,
+      "savedUs": 1875.0,
+      "savedRangeUs": [
+        1822,
+        1906
+      ],
+      "savedPercent": 3.3553443295755345
+    },
+    "audit": {
+      "stockUs": 61613.5,
+      "candidateUs": 59760.5,
+      "savedUs": 1878.0,
+      "savedRangeUs": [
+        1732,
+        1999
+      ],
+      "savedPercent": 3.0469203277598194
+    },
+    "primary": {
+      "stockUs": 18222.0,
+      "candidateUs": 18217.5,
+      "savedUs": 4.0,
+      "savedRangeUs": [
+        -5,
+        61
+      ],
+      "savedPercent": 0.02195299321540011
+    },
+    "shade": {
+      "stockUs": 46984.0,
+      "candidateUs": 45047.0,
+      "savedUs": 1943.5,
+      "savedRangeUs": [
+        1909,
+        1969
+      ],
+      "savedPercent": 4.136867498903653
+    }
+  }
+}

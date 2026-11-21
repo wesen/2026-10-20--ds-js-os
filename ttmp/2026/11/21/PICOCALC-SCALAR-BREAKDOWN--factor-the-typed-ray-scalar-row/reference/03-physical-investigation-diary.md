@@ -162,3 +162,53 @@ Recompute the original physical medians with `python3 scripts/device/04-summariz
 ### Technical details
 
 The checked/stack through hoisted/register cells performed exactly 76,800 sphere-column tests per frame. The skip cell performed 26,400 at the default pose. The stock and hoisted/register cells took 57.691 and 53.942 ms per clean frame at default. Image e2a7ce01 is qualified for these numerical observations only. The signed-off prior binary restored on the first retry was db17ab6a. The frozen partition starts 72721dc3.
+
+## Step 4. Test the held-out shadow forecast on the inspector-enabled release
+
+I rebuilt the full ordinary P4 firmware at 4a86f07, with the inspector-enabled compiler embedded for stock and a separately frozen shadow compiler for selector 14. I selected the verified db17ab6a rollback image as the preflight control because the first factorial image had failed its display gate. The later release uses the unchanged SDK configuration and partition.
+
+### Prompt Context
+
+**User prompt (verbatim)** See Step 1. **Assistant interpretation** Test whether a separately forecast reduction in the shadow function changes physical frame time and preserve the handheld for ordinary use. **Inferred user intent** Check a prediction beyond the originally measured primary loop and keep causal comparisons identifiable. **Commit (code)** ed97a48 added the separate selector and protocol. d4feb38 added the matched addendum reducer. 4a86f07 supplied the scoped display correction.
+
+### What I did
+
+I rebuilt the stock and new compiler against the SDK slot, compared every active target CRC with its independently linked ELF and ran eight AB/BA rounds. Each round compiled both treatments from the same ordinary renderer source and measured twelve poses at four entry points alongside the C and C+PIE arms. After 192 blocks I compared all 14 prior selectors to the reference at default. I retained stock and selective cold compile time, tracked QuickJS peak, elapsed install time and resident segment size. I also increased release coverage to compare the full crop before and after app readback and explicitly recheck world health after the last ordinary frame.
+
+### Why
+
+The forecast was expressed in dynamic instructions and the board records elapsed time and core cycles. The primary-only entry does no shadow work and is an independent negative control. Collecting it in the same block helps distinguish a useful renderer change from a broad difference in clock or thermal conditions.
+
+### What worked
+
+Each of the 192 blocks matched the three portable reference plane checksums and all visible words and guards. The default clean frame saved 2.2085 ms per paired trial, the shade call 2.2795 ms. The complete range for the eight primary differences was −0.008 to +0.021 ms. The opening clean speedup was 3.829% versus the prior forecast of 2.659% for dynamic instruction count. All 14 old selectors passed their regression. Before readback the three unmodified viewport captures matched default, Right and W byte for byte on the new firmware. The stock guest ELF was identical across both firmware builds.
+
+### What didn't work
+
+The historical precondition for the staged addendum, an already qualified seven-arm app, was unavailable because of the watchdog failure described in Step 3. I used the truly restored db17ab6a release as the flash baseline, with the same previously frozen image pixels and C fixture checksums. The older numerical evidence remains attached to its actual experimental firmware.
+
+### What I learned
+
+The floor-shadow change accelerated calls that traverse floor shadows while leaving the standalone primary call inside a narrow, sign-changing observation range. The later stock compiler used 34,226 more tracked bytes and 22.367 ms more median compile time than in the first image, while the linked guest bytes remained unchanged. The firmware and source bundles differ in several ways, so that observation cannot identify a cause.
+
+### What was tricky to build
+
+The candidate, the old control and the screenshot reference directory had different roles. The final handoff checker separately validates both app and partition hashes, the ELF before relocation, all numerical controls and each reference viewport from the previously frozen renderer. Raw serial and full-frame dumps remained in the local device-run directory.
+
+### What warrants a second pair of eyes
+
+Check the eight repetition numbers and both AB/BA orders in shadow-loads.json. Inspect the primary-only signed range before assigning the complete-frame savings. A shorter native instruction count and a shorter physical time answer different questions. Preliminary and final screenshots must be accompanied by a liveness check after the real UI interactions.
+
+### What should be done in the future
+
+The tests determine phase-local effects on this board and corpus. Measuring foreground input latency during a first-use compilation or a long-running render would require instrumentation independent of the clean frame clocks.
+
+### Code review instructions
+
+Use `python3 scripts/device/05-shadow-summary.py PHYSICAL_DIR` and `python3 scripts/device/07-check-handoff.py PHYSICAL_DIR REFERENCE_RGB565_DIR` from this ticket. Inspect [the eight-round result](../various/device/shadow-summary.json), [raw cold observations](../various/device/shadow-loads.json), and [the linked images](../various/device/shadow-images.json).
+
+### Technical details
+
+The new app is 4,804,016 bytes, SHA-256 e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5. The full stock ELF CRC was 0d2e18b8, the shadow-only one c1f6e41d. Their emitted native text sizes were 9,564 and 10,512 bytes. Each installed segment used 66,092 bytes. Selector 14 remains an explicit console choice, while ordinary fourth mode continues to run stock selector 0 after a clean boot.
+
+The final verification read all 4,804,016 app bytes and the 3,072-byte partition table and reset the device. Ordinary F1/V/G/G/G then lazily built stock and presented pose (68,61,31,25). Right, W, Left and S exercised moved, relit and restored poses. The second session recorded five presented stock frames, without any compositor fault. The four post-reset crop checks matched all 57,600 words per capture. All eight native worlds passed after the final frame, the painter recorded one successful compile, and I²C and SPI reported no errors. The runner exited 0 and released the serial lock. [Final health and readback](../various/device/final.json) · [Independently checked post-reset capture](../various/device/handoff-audit.json) · [Physical screen](../various/device/handoff.png)

@@ -1,0 +1,73 @@
+{
+  "qualified": true,
+  "appSHA": "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5",
+  "previousSHA": "db17ab6adbcfa32e6a64a311b434562b1f35c12aa415f1ba8a4e838b6386764c",
+  "partitionSHA": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "revision": "4a86f07225de4bb1e9639365ac85e4cae8b49c16",
+  "blocks": 192,
+  "loads": 16,
+  "retained": 14,
+  "health": {
+    "worlds": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 1393670,
+      "relocate_us": 1299,
+      "native_us": 2706,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 8338.55,
+      "transfers": 1476,
+      "bytes": 5931,
+      "errors": 0
+    },
+    "spi": {
+      "busyMs": 355.71,
+      "transfers": 198,
+      "bytes": 1334752,
+      "errors": 0
+    }
+  },
+  "screen": {
+    "framebuffer": {
+      "crc32": "85805f0b",
+      "sha256": "d2c7f7d2754e6a4806d77706ab81e9e527e1d5c70cf3b6f0afb845f510b2535c",
+      "appSha256": "411e8b6c88dc54a80439221476c29aacffe1a61377870d97c7de5b46b3aa0821"
+    },
+    "viewCRC": "4b91a3c8",
+    "pose": [
+      68,
+      61,
+      31,
+      25
+    ],
+    "state": {
+      "frames": 5,
+      "program": 0,
+      "pose": [
+        68,
+        61,
+        31,
+        25
+      ]
+    },
+    "pngSHA": "da636cdda83efcb7cd0496731691fe09e1a29897223271d58a42640cc0c25b56"
+  }
+}

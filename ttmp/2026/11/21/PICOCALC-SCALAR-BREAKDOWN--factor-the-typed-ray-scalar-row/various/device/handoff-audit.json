@@ -1,0 +1,53 @@
+{
+  "app": "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "unchangedStockELF": "084832b9a2c735b111799c7ba4c5b844dd7db6c9290a5f8683b58982a1764e9f",
+  "checksumBlocks": 192,
+  "loads": 16,
+  "ordinaryScreenComparisons": [
+    {
+      "frame": "typed-default",
+      "words": 57600,
+      "crc32": "4b91a3c8",
+      "sha256": "a8a775a41a180ad563a6f8038d4ee258a3ab8b630c40f3e30ce1320bbf5801da"
+    },
+    {
+      "frame": "typed-right",
+      "words": 57600,
+      "crc32": "fa6be88f",
+      "sha256": "2767d895fbee5105f0550c8b8f86f84e60d5fc50063a354f5c68c6f27fde8c72"
+    },
+    {
+      "frame": "typed-relit",
+      "words": 57600,
+      "crc32": "e2bcc3b5",
+      "sha256": "07b7111592feb55eb1cb1024b0fcb391b875b3733e9d9197d79dde1ceb305ced"
+    },
+    {
+      "frame": "handoff",
+      "words": 57600,
+      "crc32": "4b91a3c8",
+      "sha256": "a8a775a41a180ad563a6f8038d4ee258a3ab8b630c40f3e30ce1320bbf5801da"
+    }
+  ],
+  "cold": {
+    "0": {
+      "compilerUs": 452382.5,
+      "elapsedUs": 457727.5,
+      "peakJSBytes": 679950.0,
+      "segmentBytes": 66092.0
+    },
+    "14": {
+      "compilerUs": 469869.5,
+      "elapsedUs": 475219.0,
+      "peakJSBytes": 701618.0,
+      "segmentBytes": 66092.0
+    }
+  },
+  "flashReadbackVerified": [
+    "previous app and partition",
+    "candidate app and partition",
+    "final app and partition"
+  ],
+  "uartSHA256": "e473fc19640dc8d382c6acac56663f460c0bf6d03c39a22fc1088f10b9499560"
+}
