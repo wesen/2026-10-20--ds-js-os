@@ -1,0 +1,145 @@
+{
+  "baseline": {
+    "hardwareType": "object",
+    "hardwareMentionedInRootHelp": false,
+    "validPlanOptions": 1,
+    "descriptionFields": [
+      "arm",
+      "contract",
+      "otherFields",
+      "rowBytes",
+      "rowsVerified",
+      "sampleKeys",
+      "source",
+      "totals"
+    ],
+    "primaryMedianPct": [
+      {
+        "candidate": "scalar",
+        "n": 72,
+        "lower": 7.664130741053818,
+        "upper": 7.664274501009195,
+        "median": 7.664202621031507
+      },
+      {
+        "candidate": "pie",
+        "n": 72,
+        "lower": 8.998654406817671,
+        "upper": 9.000672947510095,
+        "median": 8.999663677163884
+      }
+    ],
+    "defaultPairCount": 6,
+    "rowCount": 99
+  },
+  "candidate": {
+    "hardwareType": "object",
+    "hardwareMentionedInRootHelp": true,
+    "validPlanOptions": 1,
+    "descriptionFields": [
+      "arm",
+      "cannotAttribute",
+      "comparisons",
+      "contract",
+      "countsCover",
+      "fields",
+      "otherFields",
+      "rowBytes",
+      "rowsVerified",
+      "sampleCount",
+      "sampleKeys",
+      "sampleKeysTruncated",
+      "source",
+      "timing",
+      "totals",
+      "treatment",
+      "units"
+    ],
+    "primaryMedianPct": [
+      {
+        "candidate": "scalar",
+        "n": 72,
+        "lower": 7.664130741053818,
+        "upper": 7.664274501009195,
+        "median": 7.664202621031507
+      },
+      {
+        "candidate": "pie",
+        "n": 72,
+        "lower": 8.998654406817671,
+        "upper": 9.000672947510095,
+        "median": 8.999663677163884
+      }
+    ],
+    "defaultPairCount": 6,
+    "rowCount": 144
+  },
+  "removed": [],
+  "added": [
+    23,
+    26,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    137,
+    138,
+    139,
+    144,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    181,
+    182,
+    183
+  ],
+  "addedOutsideLoopSubject": [
+    {
+      "ordinal": 23,
+      "header": "IR Dump After RequireAnalysisPass<llvm::GlobalsAA, llvm::Module, llvm::AnalysisManager<Module>> on [module]",
+      "kind": "module",
+      "changeStatus": "known"
+    },
+    {
+      "ordinal": 26,
+      "header": "IR Dump After RequireAnalysisPass<llvm::ProfileSummaryAnalysis, llvm::Module, llvm::AnalysisManager<Module>> on [module]",
+      "kind": "module",
+      "changeStatus": "gap"
+    },
+    {
+      "ordinal": 144,
+      "header": "IR Dump After RequireAnalysisPass<llvm::ShouldNotRunFunctionPassesAnalysis, llvm::Function, llvm::AnalysisManager<Function>> on row",
+      "kind": "function",
+      "changeStatus": "known"
+    }
+  ]
+}

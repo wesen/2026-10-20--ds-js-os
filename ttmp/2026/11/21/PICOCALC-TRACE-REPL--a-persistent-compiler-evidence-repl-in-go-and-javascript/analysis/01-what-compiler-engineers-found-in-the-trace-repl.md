@@ -9,7 +9,13 @@ Topics:
 DocType: analysis
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/21/PICOCALC-TRACE-REPL--a-persistent-compiler-evidence-repl-in-go-and-javascript/scripts/21-run-trace-persona.py
+      Note: Creates blind sessions and retains actual public query traffic
+    - Path: repo://ttmp/2026/11/21/PICOCALC-TRACE-REPL--a-persistent-compiler-evidence-repl-in-go-and-javascript/scripts/22-audit-persona-receipts.py
+      Note: Checks answers independently against raw compiler data
+    - Path: repo://ttmp/2026/11/21/PICOCALC-TRACE-REPL--a-persistent-compiler-evidence-repl-in-go-and-javascript/scripts/27-verify-loop-witnesses.py
+      Note: Reconciles evaluated classifier with every archived loop witness
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-21T14:23:47.88367247-05:00

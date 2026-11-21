@@ -1,0 +1,42 @@
+{
+  "stage": "publication",
+  "modelAlias": "opus",
+  "effort": "high",
+  "modelUsage": [
+    "claude-opus-5-5"
+  ],
+  "durationMs": 593966,
+  "inputs": [
+    "ARTICLE - Playbook - Improving an Agent-Facing JavaScript API with Persona Runs - Lessons from homolog-bench.md",
+    "ARTICLE - Playbook - Persona Sessions with Agents - Improving Software and APIs from Usability Reports.md",
+    "investigation-entry.md",
+    "SKILL.md",
+    "SKILL.md",
+    "ablation.md",
+    "allocator.md",
+    "brief.md",
+    "catalog.md",
+    "optimization.md",
+    "pass.md",
+    "01-running-blind-compiler-engineer-persona-sessions.md",
+    "08-usability-researcher-diary.md",
+    "01-what-compiler-engineers-found-in-the-trace-repl.md",
+    "baseline-ablation.json",
+    "baseline-catalog.json",
+    "baseline-optimization.json",
+    "baseline-pass.json",
+    "candidate-ablation.json",
+    "candidate-allocator.json",
+    "candidate-catalog.json",
+    "candidate-optimization.json",
+    "candidate-pass.json",
+    "02-research-questions-and-executable-queries-for-the-ray-row.md",
+    "04-usability-diary.md",
+    "10-independent-baseline-grades.md",
+    "usability-loops-baseline.json",
+    "usability-loops-candidate.json",
+    "usability-replay-baseline.json",
+    "usability-replay-candidate.json",
+    "usability-raw-loop-census.json"
+  ]
+}

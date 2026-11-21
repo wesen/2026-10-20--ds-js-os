@@ -271,3 +271,53 @@ Start with `scripts/27-verify-loop-witnesses.py`, `various/usability-loop-reconc
 ### Technical details
 
 The candidate ELF SHA-256 was `523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71`. The checked and unchecked streams each returned 42 loop subjects. Firmware returned 438, covering all 437 explicit preheaders plus invalidated loop ordinal 584. The held-out checked backend property was false at 74 and true at 78.
+
+## Step 6: Check the independent author's final article for publication
+
+The Opus High researcher delivered its technical article and its final diary step after reading the nine public transcripts and the grades. The raw commission finished in 593,966 ms as `claude-opus-5-5`. I verified three disputed factual details before handing the corrected manuscript to the lab director for the combined vault commit and push.
+
+### Prompt Context
+
+See Steps 1 and 3. The requested article should teach new students the fundamentals through real compiler observations and hold causal claims to the units actually collected.
+
+### What I did
+
+- Wrote `scripts/28-reconcile-timeline-revisions.py` to query the baseline and retest public endpoints and to compare full sets of original ordinals. Added concrete links from the article to the graded evidence and protocol.
+- Independently checked presence of the board API, visibility in the initial help, accepted plan options and each descriptor's actual fields. Recomputed conventional even-sample medians by averaging both middle observations on both servers.
+- Amended the article's board-access and options claims, resolved every added observation, and appended a labelled follow-up to the researcher's diary.
+
+### Why
+
+A feature's discoverability, its availability and whether a participant used it are distinct variables. Mistaking one for another would incorrectly attribute the result of an optimization experiment to new measurements.
+
+### What worked
+
+Both servers exposed the same six default clean pairs, and both accepted a plan using existing `bindings` and `maxRows`. Only the candidate root help named the hardware API. The ordinal comparison accounted for all 45 additional rows with zero removals: 42 loop events, module subjects 23/26 and a function-subject analysis at 144.
+
+### What didn't work
+
+The initial article said the baseline participant lacked physical data, presented existing plan options as a new capability and left one of 45 added ordinals unexplained. The independent two-server replay falsified or resolved all three. The participant's own median used the upper middle of an even sample. The corrected article reports exactly which physical medians can be reproduced.
+
+### What I learned
+
+Existing features can become easier to discover without any change in their evidence. Qualifying software should include qualifying the publication's account of the software.
+
+### What was tricky to build
+
+The researcher wrote from its receipts. Some information was absent from the participant's prompt and root help even though the service had it. A separate operator query could determine actual accessibility on both frozen processes.
+
+### What warrants a second pair of eyes
+
+Keep the source links usable from the exported vault article. The conditions and phase names in the article must survive publication.
+
+### What should be done in the future
+
+Future cohorts can use the unchanged cards and released playbook for a wider study. This study did not measure a new register allocation pass.
+
+### Code review instructions
+
+Read article 04 alongside `various/usability-timeline-reconciliation.json`, then consult the case-by-case adjudication in article 01.
+
+### Technical details
+
+For stock→scalar and stock→PIE in the pooled physical primary phase, the conventional median percentage savings were 7.664203% and 8.999664%. They refer to 72 comparisons over twelve poses each, and cannot calibrate a frame-time prediction from one opening-scene interpreter count.
