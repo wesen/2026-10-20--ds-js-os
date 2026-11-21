@@ -1,0 +1,44 @@
+[
+  {
+    "fixture": 0,
+    "weight": 0,
+    "shadowCRC": "416b3ff2",
+    "materialCRC": "31e09814",
+    "shadowPixels": 3339
+  },
+  {
+    "fixture": 0,
+    "weight": 128,
+    "shadowCRC": "416b3ff2",
+    "materialCRC": "68808e17",
+    "shadowPixels": 3339
+  },
+  {
+    "fixture": 0,
+    "weight": 256,
+    "shadowCRC": "416b3ff2",
+    "materialCRC": "d177b319",
+    "shadowPixels": 3339
+  },
+  {
+    "fixture": 1,
+    "weight": 64,
+    "shadowCRC": "416b3ff2",
+    "materialCRC": "b90f21f4",
+    "shadowPixels": 3339
+  },
+  {
+    "fixture": 1,
+    "weight": 73,
+    "shadowCRC": "416b3ff2",
+    "materialCRC": "10a6ee00",
+    "shadowPixels": 3339
+  },
+  {
+    "fixture": 1,
+    "weight": 128,
+    "shadowCRC": "416b3ff2",
+    "materialCRC": "f550057f",
+    "shadowPixels": 3339
+  }
+]

@@ -4,9 +4,9 @@ function linkTypedMaterial(source, template, options) {
         throw new SyntaxError("Typed material benchmark requires a closed synchronous module");
     const signatures = {
         typedRayMaterialFrame: "buffer,buffer,buffer,buffer,buffer,buffer,i32,i32",
-        candelaHandShared: "buffer",
-        candelaHandTile: "buffer",
-        candelaSetParam: "buffer,i32,i32",
+        typedMatBuild: "buffer,i32,i32",
+        typedMatRowPhase: "buffer,buffer,buffer,buffer,buffer,i32,i32",
+        candelaShadeRow: "buffer,buffer,buffer,i32,buffer",
     };
     for (const name of Object.keys(signatures)) {
         const fn = program.signatures.find(candidate => candidate.name === name);

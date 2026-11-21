@@ -278,7 +278,8 @@ if(PICOCALC_CHESS_3D AND PICOCALC_RV32_CHESS)
     add_custom_command(OUTPUT ${ray_material}
         COMMAND ${PYTHON} ${OS}/worlds/raytrace/assemble-material.py ${ray_material}
         DEPENDS ${OS}/worlds/raytrace/assemble-material.py ${OS}/worlds/raytrace/raytrace.typed
-            ${OS}/worlds/raytrace/material-frame.typed ${candela_dir}/builders.typed
+            ${OS}/worlds/raytrace/material-frame.typed ${OS}/worlds/raytrace/material-phases.typed
+            ${candela_dir}/builders.typed
             ${candela_dir}/materials.typed ${candela_dir}/hand.typed VERBATIM)
     list(APPEND BUNDLE_EXTRA "typedmat/main.typed=${ray_material}" "typedmat/link.js=${ray_material_link}")
     list(APPEND BUNDLE_EXTRA_DEPS ${ray_material} ${ray_material_link})

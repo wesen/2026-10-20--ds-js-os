@@ -7,5 +7,5 @@ parser.add_argument('output', type=Path)
 args = parser.parse_args()
 worlds = Path(__file__).resolve().parents[1]
 inputs = ['candela/builders.typed', 'candela/materials.typed', 'candela/hand.typed',
-          'raytrace/raytrace.typed', 'raytrace/material-frame.typed']
+          'raytrace/raytrace.typed', 'raytrace/material-frame.typed', 'raytrace/material-phases.typed']
 args.output.write_text('\n'.join((worlds / name).read_text() for name in inputs))

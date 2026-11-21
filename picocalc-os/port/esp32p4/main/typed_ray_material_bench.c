@@ -11,13 +11,15 @@
 
 typedef struct { uint32_t size; uint16_t cells[]; } buffer;
 typedef int32_t (*frame_fn)(buffer *, buffer *, candela_graph *, buffer *, buffer *, buffer *, int32_t, int32_t);
-typedef int32_t (*builder_fn)(candela_graph *);
-typedef int32_t (*setter_fn)(candela_graph *, int32_t, int32_t);
+typedef int32_t (*builder_fn)(candela_graph *, int32_t, int32_t);
+typedef int32_t (*phase_fn)(buffer *, candela_graph *, buffer *, buffer *, buffer *, int32_t, int32_t);
+typedef int32_t (*material_fn)(candela_graph *, buffer *, buffer *, int32_t, buffer *);
 typedef struct {
     esp_elf_t elf;
     frame_fn render;
-    builder_fn build[2];
-    setter_fn set;
+    builder_fn build;
+    phase_fn row_phase;
+    material_fn shade;
 } material_program;
 
 static material_program *program;
@@ -48,9 +50,9 @@ static bool load_once(void) {
         return false;
     }
     next->render = (frame_fn)entries[0];
-    next->build[0] = (builder_fn)entries[1];
-    next->build[1] = (builder_fn)entries[2];
-    next->set = (setter_fn)entries[3];
+    next->build = (builder_fn)entries[1];
+    next->row_phase = (phase_fn)entries[2];
+    next->shade = (material_fn)entries[3];
     program = next;
     return true;
 }
@@ -64,7 +66,7 @@ static buffer *allocate_buffer(uint32_t size) {
 static void measure(int fixture, int weight, int typed_first) {
     if (!load_once()) { puts("typedmat: could not load closed program"); return; }
     candela_graph graph = {.capacity = CANDELA_GRAPH_CELLS};
-    if (program->build[fixture](&graph) != 1 || program->set(&graph, 0, weight) != 1 ||
+    if (program->build(&graph, fixture, weight) != 1 ||
         !candela_validate(&graph)) { puts("typedmat: invalid scene"); return; }
     enum { MIXED, TYPED, WORK, SHADER, IDS, COLORS, NBUFFERS };
     const uint32_t sizes[NBUFFERS] = {PIXELS, PIXELS, 2048, 192, 160, 320};
@@ -100,6 +102,62 @@ done:
     for (int i = 0; i < NBUFFERS; ++i) port_big_free(b[i]);
 }
 
+typedef struct { uint32_t size; uint16_t cells[SIDE]; } row16;
+typedef struct { uint32_t size; uint16_t cells[2 * SIDE]; } color_row;
+typedef struct { row16 ids, visible, shadow; color_row color; } phase_row;
+
+static void measure_phases(int fixture, int weight, int material_first) {
+    if (!load_once()) { puts("typedmat: could not load phase module"); return; }
+    candela_graph graph = {.capacity = CANDELA_GRAPH_CELLS};
+    if (program->build(&graph, fixture, weight) != 1 || !candela_validate(&graph)) {
+        puts("typedmat: invalid phase graph"); return;
+    }
+    phase_row *rows = port_big_calloc(sizeof(*rows) * SIDE);
+    buffer *work = allocate_buffer(2048), *shader = allocate_buffer(192);
+    if (!rows || !work || !shader) { puts("typedmat: phase allocation failed"); goto done; }
+    for (int y = 0; y < SIDE; ++y) {
+        phase_row *r = rows + y;
+        r->ids.size = r->visible.size = r->shadow.size = SIDE;
+        r->color.size = 2 * SIDE;
+        for (int phase = (y == 0 ? 0 : 1); phase <= 1; ++phase) {
+            if (program->row_phase(work, &graph, (buffer *)&r->ids, (buffer *)&r->visible,
+                    (buffer *)&r->shadow, y, phase) != 1) {
+                puts("typedmat: visibility preparation failed"); goto done;
+            }
+        }
+    }
+    int64_t times[2] = {0};
+    for (int pass = 0; pass < 4; ++pass) {
+        bool material = (pass % 2 == 0) == (material_first != 0);
+        int64_t start = port_clock();
+        for (int y = 0; y < SIDE; ++y) {
+            phase_row *r = rows + y;
+            if (material) {
+                if (program->shade(&graph, shader, (buffer *)&r->ids, y, (buffer *)&r->color) != SIDE) {
+                    puts("typedmat: material row failed"); goto done;
+                }
+            } else if (program->row_phase(work, &graph, (buffer *)&r->ids, (buffer *)&r->visible,
+                        (buffer *)&r->shadow, y, 2) != 1) {
+                puts("typedmat: shadow row failed"); goto done;
+            }
+        }
+        times[material] = port_clock() - start;
+    }
+    uint32_t shadow_crc = 0, color_crc = 0, shadow_count = 0;
+    for (int y = 0; y < SIDE; ++y) {
+        phase_row *r = rows + y;
+        shadow_crc = esp_rom_crc32_le(shadow_crc, (uint8_t *)r->shadow.cells, sizeof(r->shadow.cells));
+        color_crc = esp_rom_crc32_le(color_crc, (uint8_t *)r->color.cells, sizeof(r->color.cells));
+        for (int x = 0; x < SIDE; ++x) shadow_count += r->shadow.cells[x];
+    }
+    printf("TRPHASE {\"fixture\":%d,\"weight\":%d,\"first\":%d,\"shadowUs\":%" PRId64
+        ",\"materialUs\":%" PRId64 ",\"shadowCRC\":\"%08" PRIx32 "\",\"materialCRC\":\"%08" PRIx32
+        "\",\"shadowPixels\":%" PRIu32 "}\n", fixture, weight, material_first, times[0], times[1],
+        shadow_crc, color_crc, shadow_count);
+done:
+    port_big_free(shader); port_big_free(work); port_big_free(rows);
+}
+
 void p4_typed_ray_material_console(const char *args) {
     int fixture, weight, first;
     char tail;
@@ -109,5 +167,8 @@ void p4_typed_ray_material_console(const char *args) {
     } else if (sscanf(args, "bench %d %d %d %c", &fixture, &weight, &first, &tail) == 3 &&
             fixture >= 0 && fixture <= 1 && weight >= 0 && weight <= 256 && (first == 0 || first == 1)) {
         measure(fixture, weight, first);
-    } else puts("typedmat bench FIXTURE WEIGHT TYPED_FIRST | typedmat drop");
+    } else if (sscanf(args, "phases %d %d %d %c", &fixture, &weight, &first, &tail) == 3 &&
+            fixture >= 0 && fixture <= 1 && weight >= 0 && weight <= 256 && (first == 0 || first == 1)) {
+        measure_phases(fixture, weight, first);
+    } else puts("typedmat bench|phases FIXTURE WEIGHT FIRST | typedmat drop");
 }
