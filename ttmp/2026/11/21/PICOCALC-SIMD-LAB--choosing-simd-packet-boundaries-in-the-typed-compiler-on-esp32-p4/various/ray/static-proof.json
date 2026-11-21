@@ -1,0 +1,211 @@
+{
+  "plans": [
+    {
+      "family": "inside",
+      "variant": "scalar",
+      "bytes": 264,
+      "imageSHA": "3e1e1df697b99f74cacd4d597500c5a8859a998dcd17103bc61ac5e9a874f8bc"
+    },
+    {
+      "family": "inside",
+      "variant": "guarded",
+      "bytes": 704,
+      "imageSHA": "1dd56726c63a73cac7010ac8dffc69e0a73f8ee0fb649a2da16fdfb1e96a77bb"
+    },
+    {
+      "family": "inside",
+      "variant": "static",
+      "bytes": 688,
+      "imageSHA": "2b952a2b69ac49f418a6ec4c68acfc05772ee89b9efb31052673fca720653cbf"
+    },
+    {
+      "family": "boundary",
+      "variant": "scalar",
+      "bytes": 264,
+      "imageSHA": "0111a536d0f0a1ab7b50e2b09ffa3b5c0271dddcbf707350d3eb3e9e17ef6903"
+    },
+    {
+      "family": "boundary",
+      "variant": "guarded",
+      "bytes": 704,
+      "imageSHA": "d4124540d986f96f684ff0a6b32f08cdf659ca9b00de5c725181a316b9460590"
+    },
+    {
+      "family": "boundary",
+      "variant": "static",
+      "bytes": 264,
+      "imageSHA": "0111a536d0f0a1ab7b50e2b09ffa3b5c0271dddcbf707350d3eb3e9e17ef6903"
+    },
+    {
+      "family": "dynamic",
+      "variant": "scalar",
+      "bytes": 260,
+      "imageSHA": "386a63f54d8caf5d2ae0943c6d1460ecf0589d8e6dc42bf0589b1f027e1082f0"
+    },
+    {
+      "family": "dynamic",
+      "variant": "guarded",
+      "bytes": 696,
+      "imageSHA": "2a680d92da0e441953e02ee2321599f8ee7d7f23fd063898bba437b674118182"
+    },
+    {
+      "family": "dynamic",
+      "variant": "static",
+      "bytes": 696,
+      "imageSHA": "2a680d92da0e441953e02ee2321599f8ee7d7f23fd063898bba437b674118182"
+    }
+  ],
+  "cases": {
+    "inside_32766": {
+      "cases": 252,
+      "traps": 75,
+      "adverseWrites": 75,
+      "guestSteps": {
+        "scalar": 104217,
+        "guarded": 102121,
+        "static": 101419
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 69,
+        "static": 69
+      }
+    },
+    "boundary_32767": {
+      "cases": 252,
+      "traps": 78,
+      "adverseWrites": 78,
+      "guestSteps": {
+        "scalar": 103197,
+        "guarded": 105663,
+        "static": 103197
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 0,
+        "static": 0
+      }
+    },
+    "dynamic_-1": {
+      "cases": 252,
+      "traps": 36,
+      "adverseWrites": 0,
+      "guestSteps": {
+        "scalar": 88128,
+        "guarded": 90342,
+        "static": 90342
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 0,
+        "static": 0
+      }
+    },
+    "dynamic_0": {
+      "cases": 252,
+      "traps": 72,
+      "adverseWrites": 3,
+      "guestSteps": {
+        "scalar": 88515,
+        "guarded": 85956,
+        "static": 85956
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 72,
+        "static": 72
+      }
+    },
+    "dynamic_1": {
+      "cases": 252,
+      "traps": 75,
+      "adverseWrites": 75,
+      "guestSteps": {
+        "scalar": 91866,
+        "guarded": 90096,
+        "static": 90096
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 69,
+        "static": 69
+      }
+    },
+    "dynamic_32766": {
+      "cases": 252,
+      "traps": 75,
+      "adverseWrites": 75,
+      "guestSteps": {
+        "scalar": 101721,
+        "guarded": 100212,
+        "static": 100212
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 69,
+        "static": 69
+      }
+    },
+    "dynamic_32767": {
+      "cases": 252,
+      "traps": 78,
+      "adverseWrites": 78,
+      "guestSteps": {
+        "scalar": 100842,
+        "guarded": 103056,
+        "static": 103056
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 0,
+        "static": 0
+      }
+    },
+    "dynamic_65535": {
+      "cases": 252,
+      "traps": 78,
+      "adverseWrites": 78,
+      "guestSteps": {
+        "scalar": 109077,
+        "guarded": 111291,
+        "static": 111291
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 0,
+        "static": 0
+      }
+    },
+    "dynamic_-2147483648": {
+      "cases": 252,
+      "traps": 78,
+      "adverseWrites": 78,
+      "guestSteps": {
+        "scalar": 106422,
+        "guarded": 108636,
+        "static": 108636
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 0,
+        "static": 0
+      }
+    },
+    "dynamic_2147483647": {
+      "cases": 252,
+      "traps": 78,
+      "adverseWrites": 78,
+      "guestSteps": {
+        "scalar": 109077,
+        "guarded": 111291,
+        "static": 111291
+      },
+      "packedStores": {
+        "scalar": 0,
+        "guarded": 0,
+        "static": 0
+      }
+    }
+  },
+  "witnessSHA": "08b352c377db7011126139640a5baccd813025a39b55c65bad9aef328ca9808b"
+}

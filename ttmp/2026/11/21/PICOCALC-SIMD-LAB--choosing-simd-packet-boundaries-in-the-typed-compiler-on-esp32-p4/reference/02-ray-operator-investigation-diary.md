@@ -55,3 +55,58 @@ Start at scripts/ray/01-emit-typed.mjs and 02-run-board.py. Inspect the complete
 
 ### Technical details
 The verified REPL endpoint is port 3792. Firmware experiments use only app slot 0x10000; the preceding partition table and the following world and file data are outside the experimental write.
+
+## Step 2: Compare generated ray rows against a guarded expert schedule
+
+I built two matched handwritten schedules and arranged for every generated row function to run on the same physical chip. The first independent researcher session stopped with a provider-side refusal before delivering a file. A separate high-effort Opus researcher received a numerical correctness experiment in its own working directory and REPL session. I wrote the executable timing controls and kept their authorship distinct.
+
+### Prompt Context
+
+**User prompt (verbatim excerpt):** “Write a hand-scheduled PIE version of the hot region and a strong scalar version with hot values kept in registers.”
+**Assistant interpretation:** Find attainable speed and compare packet boundary choices on identical input.
+**Inferred user intent:** Decide what code a compiler should emit before investing in a pass.
+**Commit (code):** 30032c9 established the first host and board controls.
+
+### What I did
+
+- Wrote a preflight checking row, sphere count, center, radius and buffer capacity. An ineligible invocation falls through to the original checked C kernel.
+- Implemented register scalar, input-minimum PIE and input-minimum/maximum PIE schedules. Wrote the horizontal reductions in vendor assembly and verified them with the ESP objdump.
+- Generated all 480 precomputed full-buffer CRC references from the actual Wasm backend on three scenes. Allocated the same aligned, 4,100-byte work object for all nine treatments.
+- Linked the five actual Typed versions along with the C schedules, the physics group's diagnostic and the director's held-out selector into an app-only firmware. Rotated all nine arm positions across nine blocks.
+- Flashed, read back and measured the ESP-IDF 5.4.2 image over USB. Reinstalled the exact verified playable bytes and queried the active world set and painter health. The image and restoration SHA receipts are in various/ray.
+
+### Why
+
+A packed minimum of the original unsigned squared distances decides whether eight subtracts, scratch writes, reloads, tests and dependent lookups can all be skipped. An empty group makes no observable writes. A scalar control with identical guards measures the contribution of classification separately from hoisting checks.
+
+### What worked
+
+All 38,880 timed calls returned success and matched the independent Wasm CRC for their entire output buffer. On opening rows, the minimum schedule saved 12.81% against the strong register scalar control. The new compiler-generated empty-group schedule saved 4.74% against the previous compiler PIE output. These are medians of nine paired percentages.
+
+### What didn't work
+
+The first Opus session returned no usable file. I removed the unimplemented researcher placeholder from the device build and recorded the resource failure. The comparison remained runnable using the clearly identified operator implementation. Percentages aggregated across the three fixture types would conceal the much smaller sparse result.
+
+### What I learned
+
+A small packed classification can avoid thousands of ordinary lane visits. Expert loops with preflighted access contracts also have substantial scalar headroom. The direct native comparison measures the specific emitted images; the handwritten-to-Typed gap combines several changes.
+
+### What was tricky to build
+
+The uint16 work data begins four bytes after its aligned object header. The scalar prefix aligns the actual input address, leaving six pixels before the first eight-wide group and two pixels at the end. I used an unsigned input reduction so that large unsigned squared distances remain misses, independent of signed subtraction saturation.
+
+### What warrants a second pair of eyes
+
+The C preflight's upper bounds must cover each lookup and output index, including a radius of 32 selecting table entry 1024. The row wrapper includes timing reads but excludes buffer restore, CRC and UART. It calls each row from its original snapshot; whole-frame timing belongs to the follow-up image.
+
+### What should be done in the future
+
+Check complete frames on the same original twelve pose/stride fixtures, and separate size, code placement and execution effects.
+
+### Code review instructions
+
+Inspect scripts/ray/board/main/ceiling.c, ceiling_reduce.S, 03-ceiling-fixtures.mjs and 05-score.py. Compare various/ray/ceiling.csv and ceiling-summary.json. Rebuild using 06-stage-board.sh from the checkout root.
+
+### Technical details
+
+Physical ESP32-P4 CPU clock 360 MHz. The typed-stock/typed-scalar/typed-pie module row entry offsets are in typed-images.json. The expert scalar baseline measured 313,477 cycles over the 160 opening rows; input-minimum measured 273,307. Hand minimum/maximum was slower than the simpler minimum schedule.

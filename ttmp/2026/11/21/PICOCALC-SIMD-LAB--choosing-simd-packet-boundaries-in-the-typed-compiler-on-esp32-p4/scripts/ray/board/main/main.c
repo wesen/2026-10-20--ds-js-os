@@ -1,22 +1,29 @@
-#include <inttypes.h>
 #include <stdio.h>
-#include "esp_clk_tree.h"
-#include "esp_cpu.h"
-#include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "trial.h"
 
-void simd_ray_bench(void);
+void simd_ceiling_bench(void);
 void physics_bench_run(void);
 void simd_director_bench(void);
+void simd_director_qjs_bench(void);
+void simd_proof_bench(void);
+void simd_frame_bench(void);
+void simd_gate_bench(void);
 
 void app_main(void) {
-    // Leave a window for the host UART reader after esptool resets the board.
     vTaskDelay(pdMS_TO_TICKS(1300));
     printf("SIMDLAB BEGIN cpu_mhz=%d\n", CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ);
-    simd_ray_bench();
+#if SIMD_FRAME_TRIAL
+    simd_proof_bench();
+    simd_frame_bench();
+    simd_gate_bench();
+#else
+    simd_ceiling_bench();
     physics_bench_run();
     simd_director_bench();
+    simd_director_qjs_bench();
+#endif
     puts("SIMDLAB END");
     fflush(stdout);
 }

@@ -1,0 +1,12 @@
+{
+  "source": "const groups=simd.packets('opening-160-rows').packets; const laneLoads=simd.executions('pie-row','pie-opening','scalar-lane-load'); ({groups:groups.length, empty:groups.filter(x=>x.hitMask===0).length, full:groups.filter(x=>x.hitMask===255).length, scalarLaneLoads:laneLoads.executions})",
+  "evaluation": {
+    "ok": true,
+    "value": {
+      "groups": 3135,
+      "empty": 2111,
+      "full": 742,
+      "scalarLaneLoads": 26070
+    }
+  }
+}
