@@ -1,0 +1,32 @@
+{
+  "originalBackend": "e54c13e78e9e095b2cff687ea505d8ae621486e2ff486e30e3308cc6e971a11a",
+  "candidateBackend": "568b29910f31a36859b402fc10878c21240f2fa5d4a259f4e9d336898336c6cd",
+  "divisors": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    16,
+    31,
+    32,
+    127,
+    255,
+    256,
+    1024,
+    2047,
+    2048,
+    4095,
+    65535,
+    65536,
+    1073741824,
+    2147483647
+  ],
+  "values": 53,
+  "stockImageBytes": 2496,
+  "optimizedImageBytes": 1504,
+  "wasmSHA256": "7586d785d7184275b896c0e94b8b56ebfb9e8b5094b25157cf13d7f414201859",
+  "arithmeticCases": 2014,
+  "guardCases": 161,
+  "effects": 106
+}
