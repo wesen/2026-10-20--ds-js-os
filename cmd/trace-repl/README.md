@@ -32,6 +32,25 @@ go run ./cmd/trace-repl close --addr 127.0.0.1:3794 --session "$sid"
 
 The query counts 9,182 dynamic instructions on the captured opening-scene workload and returns the image digest, the static byte intervals and contributing instruction addresses. The prior packed producer executed 26,070 lane loads on the same fixture. Cross-image address joins fail explicitly. To start an equivalent study or replay its example cells, see the [capture and launch scripts](../../ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/evidence).
 
+For the six SIMD experiments, open a session that also contains the physical frame, particle, contact and collision trials. From the repository root, this loader prints an ID after it verifies the example queries.
+
+~~~sh
+ticket=$(ls -d ttmp/2026/11/21/PICOCALC-SIMD-LAB--*)
+python3 "$ticket/scripts/director/09-open-lab-session.py" --keep
+~~~
+
+Reuse the printed ID with the same `eval --addr 127.0.0.1:3794 --session` command above. These are separate expressions that can be evaluated in any order.
+
+~~~js
+lab.packetPrediction()                        // predicted vs executed scratch loads
+lab.packetCosts("opening", "mixed")           // physical hand kernel cycles per packet
+lab.frame("default","clean","baseline","empty") // paired physical microseconds
+lab.selection("dynamic", 3, 35)              // prediction, image hash and cycles per call
+lab.physicsPair("contact", 128, "grouped-scalar", "grouped-pie")
+~~~
+
+The director loader adds the `lab` binding only in its new session. The `simd` provider is available in every session of the mounted study. [Study index](../../ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/index.md)
+
 ## HTTP protocol
 
 | Request | Response |
