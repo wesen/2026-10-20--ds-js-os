@@ -1,0 +1,16 @@
+{
+  "rows": {
+    "pred": 576,
+    "frame": 864,
+    "chess": 72,
+    "cold": 36
+  },
+  "benchSHA": "1733972bf3afc75cef72923e363abab279f670c902e0d4b1066e25a64d5186f3",
+  "diagnostic": {
+    "sha256": "ebd8b340e97a3e0b4bd095212305656ddddfe11b6f239bc24b72c389bd76f33e",
+    "bytes": 1390560,
+    "port": "/dev/ttyACM0"
+  },
+  "restoreSHA": "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5",
+  "afterHealth": true
+}

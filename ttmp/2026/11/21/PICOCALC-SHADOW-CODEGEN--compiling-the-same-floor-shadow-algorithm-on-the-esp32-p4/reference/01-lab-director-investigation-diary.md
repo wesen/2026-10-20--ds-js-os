@@ -160,3 +160,49 @@ Review checkpoint e54409b for fixture acquisition, 36adac5 for baseline host evi
 ### Technical details
 
 The control visit uses four blocks on the default scene. The main visit uses six blocks on each of twelve fixed fixtures and separate one-sphere path strata. Counts and checksums are checked at import. The optional compiler policy is either true or a function selecting the caller by name.
+
+## Step 4. Reproduce all device effects, check transfer and write the final account
+
+### Prompt Context
+
+The [commission](../sources/commission.txt) requests the scientific outcome, an accessible article, a detailed diary, the runnable JS and publication to the shared vault. The staffing correction remains in effect.
+
+### What I did
+
+Recorded the paired diagnostic at 360 MHz, with 576 predicate batches, 864 frame/primary/shade turns, 72 Chess batches and 36 cold compiler executions. Restored and verified the complete playable firmware, including application health. Replayed the path classifier with independent large-integer arithmetic. Joined each measured block to its treatment in a new live trace REPL. I reviewed the researcher's article and requested two precision edits concerning frontend input and the unmeasured interaction with a register assignment policy.
+
+### Why
+
+The host instruction trace isolates events inside functions; physical device timing determines how much the change matters. A matched isolated predicate, full-frame trial, unaffected stage, cold compile trial and blind Chess score answer different questions.
+
+### What worked
+
+The shadow-only opening predicate saved 12.21% and its complete frame saved 4.68%. Applying the policy generally saved 4.73% on the opening frame and won 72/72 full-frame pairs across the twelve fixed scenes. Advanced Chess improved 4.85–10.22% across three positions. The cold P4 compiler was 0.93% slower on the ray workload. Independent verification agreed on 235,782 floor calls, 666,952 sphere visits and all 25,600 controlled one-sphere classifications.
+
+### What didn't work
+
+General lowering does not close most of the C gap. It leaves the opening Typed renderer at 6.87 times scalar C. The common meter peaked while the compiler bundle was live, precluding a finer claim concerning the transient cost of the rule itself.
+
+### What I learned
+
+The sign of a host compiler-time comparison can differ from the physical result. The whole-frame execution result also differs from a predicate-only result. The six same-image paired blocks establish an effect on these fixtures. They do not establish universal benefit for arbitrary apps, so policy remains opt-in.
+
+### What was tricky to build
+
+A secondary implementation of the branch classifier recovers the exact 74,226 source magnitudes from the geometry alone. Each REPL question has a specific denominator and the workbook rejects unmatched or repeated blocks. The stand-alone vault workbook must also include the old forecast and current three host censuses so the researcher's own queries run outside the live service.
+
+### What warrants a second pair of eyes
+
+The main trial's native code and compiler bundle are pinned to SHA digests; compare various/board/candidate-images.json with the host census and the board receipts. Check that each reported program’s bytes and all 36 cold compiles match their respective treatment.
+
+### What should be done in the future
+
+Measure register forwarding on common X-rejection paths with its own oracle, then evaluate its interaction with the guarded-return pass. Expand catalog qualification before a firmware default change.
+
+### Code review instructions
+
+Use scripts/reports/05-open-repl.py to query the session. The offline notebook is expected to reproduce various/director/summary.json. Read the two articles and the paired plot together with the design and raw rows.
+
+### Technical details
+
+Main diagnostic SHA-256 ebd8b340e97a3e0b4bd095212305656ddddfe11b6f239bc24b72c389bd76f33e. The restored playable firmware was e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5. The assigned programmer completed candidate commit 3d18ebf. Opus High performed the register-home design, ran JS sessions, and wrote the research chapter, with the coordinating implementer adding physical results.

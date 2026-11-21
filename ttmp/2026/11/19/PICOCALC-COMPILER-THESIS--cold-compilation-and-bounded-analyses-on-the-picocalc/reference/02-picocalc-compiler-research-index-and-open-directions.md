@@ -167,3 +167,7 @@ The [GCC and LLVM row study](../../../21/PICOCALC-ROW-IR--trace-the-ray-row-thro
 ## SIMD boundaries, compiler decisions and complete-frame qualification
 
 The optional native compiler now accepts `pie-empty` for a proved eight-lane producer. On the default ray scene it saved 3.35% in primary intersection time and 0.90% in the complete frame against the previous packed producer. A structural physics prototype emitted the measured guarded planar particle kernel (89.30% fewer cycles than matched scalar at 128 particles). The frozen selector equaled always-PIE on the unseen collision workload and lost up to 24.08% at length three. The lab preserves the larger rejected ray treatment, same-order contact loss and all raw trials. [Experimental synthesis and code guide](../../../21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/index.md)
+
+## Scalar shadow code generation on the ESP32-P4
+
+The same Typed frame dropped from 55.6635 to 53.0440 ms with optional guarded-return lowering. Single-caller attribution, two GCC representation controls, 744 semantic cases and a held-out Chess evaluation accompany the twelve-scene physical comparison. Default compilation still follows the earlier backend path. [Shadow study, code, REPL and reports](../../../21/PICOCALC-SHADOW-CODEGEN--compiling-the-same-floor-shadow-algorithm-on-the-esp32-p4/index.md)

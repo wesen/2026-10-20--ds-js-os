@@ -17,7 +17,10 @@ def evaluate(source):
     result=request("POST",url+"/"+sid+"/eval",{"source":source})
     if not result["ok"]: raise ValueError(result)
     return result.get("value")
-evaluate("const lab={rows:[]};undefined")
+prior=next(ticket.parent.glob("PICOCALC-SCALAR-BREAKDOWN--*/various/compiler/shadow-forecast.json"))
+measured=json.loads(prior.read_text())
+opening={mode:json.loads((ticket/"various/compile"/(mode+".json")).read_text()) for mode in ["baseline","shadow","general"]}
+evaluate("const measured="+json.dumps(measured,separators=(",",":"))+";const opening="+json.dumps(opening,separators=(",",":"))+"; const lab={rows:[]};undefined")
 raw=(ticket/"various/board/final/rows.jsonl").read_bytes()
 rows=[json.loads(line) for line in raw.splitlines()]
 for i in range(0,len(rows),48):

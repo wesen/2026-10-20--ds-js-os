@@ -28,6 +28,10 @@ for i,tag in enumerate(["01","03"]):
         link,sep,anchor=value.partition("#")
         dest=(path.parent/link).resolve()
         if not dest.exists():raise ValueError(f"broken manuscript link: {dest}")
+        if dest.suffix.lower()==".png":
+            rel="_assets/shadow-codegen/"+dest.name
+            install(target/rel,dest.read_bytes())
+            return "]("+rel+")"
         return "](<"+str(dest)+(sep+anchor if sep else "")+">)"
     body=re.sub(r"\]\(([^)\n]+)\)",links,body)
     title=next(line[2:] for line in body.splitlines() if line.startswith("# "))
@@ -38,6 +42,9 @@ for i,tag in enumerate(["01","03"]):
     install(target/(names[i]+".md"),("\n".join(front)+"\n\n"+body).encode())
 rows=[json.loads(x) for x in (ticket/"various/board/final/rows.jsonl").read_text().splitlines()]
 paths=json.loads((ticket/"various/board/paths.json").read_text())
-script='"use strict";\nconst lab='+json.dumps(dict(rows=rows,paths=paths),separators=(",",":"))+';\n'
+prior=next(ticket.parent.glob("PICOCALC-SCALAR-BREAKDOWN--*/various/compiler/shadow-forecast.json"))
+measured=json.loads(prior.read_text())
+opening={mode:json.loads((ticket/"various/compile"/(mode+".json")).read_text()) for mode in ["baseline","shadow","general"]}
+script='"use strict";\nconst measured='+json.dumps(measured,separators=(",",":"))+';\nconst opening='+json.dumps(opening,separators=(",",":"))+';\nconst lab='+json.dumps(dict(rows=rows,paths=paths),separators=(",",":"))+';\n'
 script+=(ticket/"scripts/reports/shadow.js").read_text()+'\nconsole.log(JSON.stringify(lab.score(),null,2));\n'
 install(target/"_assets/shadow-codegen/workbook.js",script.encode())

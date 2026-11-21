@@ -34,6 +34,13 @@ expected={"pred":576,"frame":864,"chess":72,"cold":36} if a.candidate else {"pre
 assert counts==expected,(counts,expected)
 unique={tuple(sorted((k,v) for k,v in r.items() if k not in {"us","cycles","totalUs","compileUs","peakBytes"})) for r in rows}
 assert len(unique)==len(rows)
+if a.candidate:
+    manifest=json.loads((Path(__file__).resolve().parents[2]/"various/board/candidate-images.json").read_text())
+    for row in rows:
+        if row["kind"]=="cold":
+            family=["ray","chess"][row["family"]]
+            image=[r for r in manifest["records"] if r["family"]==family][row["arm"]]
+            assert image["bytes"]==row["bytes"],(family,row,image)
 receipt={"rows":dict(counts),"benchSHA":hashlib.sha256(path.read_bytes()).hexdigest(),
          "diagnostic":json.loads((a.capture/"image.json").read_text()),
          "restoreSHA":json.loads((a.capture/"after.json").read_text())["sha256"],
