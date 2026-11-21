@@ -1,0 +1,261 @@
+{
+  "session": "session-69ffe95e-7e47-4fde-9d7e-a717bfb05b73",
+  "scores": {
+    "control": {
+      "predicate": {
+        "control": 382.210222313498,
+        "candidate": 382.210222313498,
+        "savedPct": 0,
+        "wins": 0
+      },
+      "frame": {
+        "control": 53033.5,
+        "candidate": 53033.5,
+        "savedPct": 0,
+        "wins": 0
+      },
+      "primary": {
+        "control": 15790,
+        "candidate": 15790,
+        "savedPct": 0,
+        "wins": 0
+      },
+      "compile": {
+        "control": 298271.5,
+        "candidate": 298271.5,
+        "savedPct": 0,
+        "wins": 0
+      },
+      "peak": {
+        "control": 851168,
+        "candidate": 851168,
+        "savedPct": 0,
+        "wins": 0
+      }
+    },
+    "forward": {
+      "predicate": {
+        "control": 382.210222313498,
+        "candidate": 323.7517071417569,
+        "savedPct": 15.286691750128012,
+        "wins": 6
+      },
+      "frame": {
+        "control": 53033.5,
+        "candidate": 48572,
+        "savedPct": 8.410967166238652,
+        "wins": 6
+      },
+      "primary": {
+        "control": 15790,
+        "candidate": 14607,
+        "savedPct": 7.516692714699136,
+        "wins": 6
+      },
+      "compile": {
+        "control": 298271.5,
+        "candidate": 404327,
+        "savedPct": -35.54944645999591,
+        "wins": 0
+      },
+      "peak": {
+        "control": 851168,
+        "candidate": 851168,
+        "savedPct": 0,
+        "wins": 0
+      }
+    },
+    "capacity": {
+      "predicate": {
+        "control": 382.210222313498,
+        "candidate": 356.724315859732,
+        "savedPct": 6.624513375851675,
+        "wins": 6
+      },
+      "frame": {
+        "control": 53033.5,
+        "candidate": 51528,
+        "savedPct": 2.877660531986337,
+        "wins": 6
+      },
+      "primary": {
+        "control": 15790,
+        "candidate": 15780,
+        "savedPct": 0.022145278135027313,
+        "wins": 3
+      },
+      "compile": {
+        "control": 298271.5,
+        "candidate": 402447,
+        "savedPct": -34.90667913657085,
+        "wins": 0
+      },
+      "peak": {
+        "control": 851168,
+        "candidate": 851168,
+        "savedPct": 0,
+        "wins": 0
+      }
+    },
+    "both": {
+      "predicate": {
+        "control": 382.210222313498,
+        "candidate": 301.07513990861014,
+        "savedPct": 21.185812639635117,
+        "wins": 6
+      },
+      "frame": {
+        "control": 53033.5,
+        "candidate": 47427.5,
+        "savedPct": 10.57291694956411,
+        "wins": 6
+      },
+      "primary": {
+        "control": 15790,
+        "candidate": 14630,
+        "savedPct": 7.36908647634133,
+        "wins": 6
+      },
+      "compile": {
+        "control": 298271.5,
+        "candidate": 404403.5,
+        "savedPct": -35.60991076653525,
+        "wins": 0
+      },
+      "peak": {
+        "control": 851168,
+        "candidate": 851168,
+        "savedPct": 0,
+        "wins": 0
+      }
+    },
+    "homes": {
+      "predicate": {
+        "control": 382.210222313498,
+        "candidate": 276.98223545720595,
+        "savedPct": 27.54852974503547,
+        "wins": 6
+      },
+      "frame": {
+        "control": 53033.5,
+        "candidate": 46051.5,
+        "savedPct": 13.1662059830557,
+        "wins": 6
+      },
+      "primary": {
+        "control": 15790,
+        "candidate": 13992.5,
+        "savedPct": 11.340304027254922,
+        "wins": 6
+      },
+      "compile": {
+        "control": 298271.5,
+        "candidate": 409745.5,
+        "savedPct": -37.36295590498551,
+        "wins": 0
+      },
+      "peak": {
+        "control": 851168,
+        "candidate": 851168,
+        "savedPct": 0,
+        "wins": 0
+      }
+    }
+  },
+  "sceneEffects": [
+    {
+      "name": "default",
+      "control": 53033.5,
+      "candidate": 46051.5,
+      "savedPct": 13.1662059830557,
+      "wins": 6
+    },
+    {
+      "name": "lamp-only",
+      "control": 52774.5,
+      "candidate": 45852,
+      "savedPct": 13.121897779030034,
+      "wins": 6
+    },
+    {
+      "name": "near-corner",
+      "control": 53792.5,
+      "candidate": 46682.5,
+      "savedPct": 13.217455966192832,
+      "wins": 6
+    },
+    {
+      "name": "far-corner",
+      "control": 54428,
+      "candidate": 47229,
+      "savedPct": 13.233024427792634,
+      "wins": 6
+    },
+    {
+      "name": "left-bottom",
+      "control": 52482.5,
+      "candidate": 45669,
+      "savedPct": 12.98607238165329,
+      "wins": 6
+    },
+    {
+      "name": "right-top",
+      "control": 50915.5,
+      "candidate": 44254,
+      "savedPct": 13.091847999406536,
+      "wins": 6
+    },
+    {
+      "name": "blue-overlap",
+      "control": 50810,
+      "candidate": 44115,
+      "savedPct": 13.175243692556847,
+      "wins": 6
+    },
+    {
+      "name": "gold-overlap",
+      "control": 50719,
+      "candidate": 44118,
+      "savedPct": 13.013820808988026,
+      "wins": 6
+    },
+    {
+      "name": "left-lamp",
+      "control": 51901,
+      "candidate": 44913.5,
+      "savedPct": 13.464409925082432,
+      "wins": 6
+    },
+    {
+      "name": "right-lamp",
+      "control": 52163,
+      "candidate": 45272.5,
+      "savedPct": 13.217040749983628,
+      "wins": 6
+    },
+    {
+      "name": "bottom-lamp",
+      "control": 51836,
+      "candidate": 45011.5,
+      "savedPct": 13.173476567793147,
+      "wins": 6
+    },
+    {
+      "name": "top-lamp-wide",
+      "control": 51447,
+      "candidate": 44796,
+      "savedPct": 12.93497982771924,
+      "wins": 6
+    }
+  ],
+  "references": {
+    "scalarCFrameUs": 7721.5,
+    "checkedCPredicateCycles": 135.68126508189147
+  },
+  "chess": {
+    "control": 9876.0625,
+    "candidate": 9617.71875,
+    "savedPct": 2.718727706322477,
+    "wins": 6
+  }
+}

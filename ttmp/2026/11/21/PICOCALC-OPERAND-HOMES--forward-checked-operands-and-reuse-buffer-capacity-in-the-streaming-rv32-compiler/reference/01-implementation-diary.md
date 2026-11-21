@@ -118,3 +118,49 @@ Read the test scripts alongside the local use count, workspace register selectio
 ### Technical details
 
 Each profile executes the entire frame in the RV32 interpreter. The ABI and output are independently checked by the device trial. The compiler options are operandLocations.forward, operandLocations.capacity and operandLocations.homes.
+
+## Step 3. Replay the physical compiler, measure runtime and publish the result
+
+### Prompt context
+
+The requested outcome included implementation evidence, a report for new students and a committed vault publication. The measurement question was whether lowering the same Typed program changed physical execution.
+
+### What I did
+
+Staged the five-mode diagnostic with scripts/01-board.py. Used the previously verified playable ESP32-P4 image for the restore. Captured rotating six-block trials and cold compiles, retaining the compressed serial log, image manifest, restoration receipt, normalized rows and REPL query. Wrote the pedagogical report after inspecting the paired results.
+
+### Why
+
+Forwarding and capacity reuse can eliminate different instructions. Separate treatments distinguish them. Physical results and independent Wasm comparisons address timing and semantics separately.
+
+### What worked
+
+Script 04 imported 768 predicate rows, 1,296 frame-stage rows, 72 chess rows and 180 compiler metrics. Script 06 evaluated the query in a new persistent sandbox. The P4 restored the original playable firmware digest and eight worlds were present after boot. The all-options treatment won all six opening-frame pairs.
+
+### What didn't work
+
+A preliminary text-mode read of the raw UART capture raised UnicodeDecodeError on boot bytes. The importer preserves the original bytes and decodes with replacement for the line protocol. The checksum uses the original bytes.
+
+### What I learned
+
+Opening-frame time fell by 13.17% and predicate cycles by 27.55%. Cold compilation increased by 37.36%. The 851,168-byte allocator peak did not move. That gives applications with many frames and applications that compile frequently different reasons to opt in.
+
+### What was tricky to build
+
+Arm numbers have different offsets for predicates, complete frames and cold builds because the C controls participate in different trials. The query checks for exactly six distinct blocks before computing a paired percentage.
+
+### What warrants a second pair of eyes
+
+The 136-byte LLVM reference from the preceding study and this visit's checked C cycle reference describe different measurements. The complete scalar C frame is a third comparison. Keep these denominators explicit.
+
+### What should be done in the future
+
+Profile tape decoding and fact collection on the device. Test the same policy through a frontend-supplied summary with identical image hashes and cold compile timing.
+
+### Code review instructions
+
+Review the physical image manifest against the host profiles, then compare scripts/04-import.py and 05-query.js with the serial protocol. Recreate the result from the committed rows with python3 scripts/06-repl.py.
+
+### Technical details
+
+The cold ray control generated 10,268 bytes in 298.272 ms. The combined treatment generated 9,540 bytes in 409.746 ms. The digest-verified diagnostic and the restored image are identified separately in various/receipt.json.
