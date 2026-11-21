@@ -167,7 +167,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             return super.step(op);
         }
         pick(reg,v) {
-            if(v.local!==undefined) this.load(reg,4*v.local);
+            if(v.local!==undefined) this.readLocal(reg,v.local);
             else this.constant(reg,v.constant);
         }
         immediate(to,from,n) {this.emit(ins.i(0x13,to,0,from,n));}
@@ -188,14 +188,14 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
                     start,end:this.words.length*4,decisions:[]});
                 start=this.words.length*4;
             };
-            this.load(x,4*p.iv); this.pick(limit,p.bound); this.pick(uniform,p.row);
+            this.readLocal(x,p.iv); this.pick(limit,p.bound); this.pick(uniform,p.row);
             this.branch(4,x,zero,ordinary); // negative induction index
             this.branch(5,x,limit,ordinary);
             this.constant(t5,32766); this.branch(6,t5,uniform,ordinary);
             // Limit index arithmetic before scaling and adding a physical pointer.
             this.constant(t5,0x1fffffff); this.branch(6,t5,limit,ordinary);
             this.pick(t6,p.base); this.branch(6,t5,t6,ordinary);
-            this.plus(t6,t6,limit); this.load(a0,4*p.buffer); this.load(t5,0,a0);
+            this.plus(t6,t6,limit); this.readLocal(a0,p.buffer); this.load(t5,0,a0);
             this.branch(6,t5,t6,ordinary);
             this.twice(t6,t6); this.plus(t6,t6,a0); this.immediate(t6,t6,4);
             this.branch(7,a0,t6,ordinary); // input exclusive end cannot wrap
@@ -207,7 +207,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
                 // Potential stores may target another buffer referencing nearby
                 // memory. Protect the input header as well as unread input cells.
                 this.pick(t6,w.base); this.constant(t5,0x1fffffff); this.branch(6,t5,t6,ordinary);
-                this.load(lanePtr,4*w.buffer);
+                this.readLocal(lanePtr,w.buffer);
                 this.plus(t5,t6,x); this.twice(t5,t5); this.plus(t5,t5,lanePtr); this.immediate(t5,t5,4);
                 this.plus(t6,t6,limit); this.twice(t6,t6); this.plus(t6,t6,lanePtr); this.immediate(t6,t6,4);
                 this.branch(7,lanePtr,t6,ordinary);
@@ -251,7 +251,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             this.mark(got); this.immediate(lanePtr,sp,this.packet);
             this.mark(lane); this.load(t6,0,lanePtr,5);
             this.branch(6,uniform,t6,advance);
-            this.store(t6,4*p.difference);
+            this.writeLocal(t6,p.difference);
             note("halfword producer and sign guard",p.loop,p.consumerStart);
             // Replay ordinary lowering of each effectful scalar operation, in order.
             this.at=p.consumerStart;
@@ -261,13 +261,13 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
                 note("scalar hit continuation",at,this.at);
             }
             this.mark(advance);
-            this.immediate(x,x,1); this.store(x,4*p.iv);
+            this.immediate(x,x,1); this.writeLocal(x,p.iv);
             this.immediate(lanePtr,lanePtr,2); this.immediate(lanes,lanes,-1);
             this.branch(1,lanes,zero,lane); this.jump(group);
             note("packet backedge",p.loop,p.loop+2);
             if(skipEmpty) {
                 this.mark(empty);
-                this.immediate(x,x,8); this.store(x,4*p.iv);
+                this.immediate(x,x,8); this.writeLocal(x,p.iv);
                 this.jump(group);
                 note("advance past eight misses",p.loop,p.loop+2);
             }

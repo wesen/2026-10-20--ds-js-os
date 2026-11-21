@@ -55,6 +55,9 @@ class FunctionCode {
         if (to !== from) this.emit(instruction.i(0x13, to, 0, from, 0));
     }
 
+    readLocal(reg, local) { this.load(reg, 4 * local); }
+    writeLocal(reg, local) { this.store(reg, 4 * local); }
+
     slot(depth) { return 4 * (this.locals + depth); }
 
     spill(depth, reg) {
@@ -193,11 +196,11 @@ class FunctionCode {
         case 0x1a: this.depth--; break;
         case 0x20: {
             const out = this.resultRegister();
-            this.load(out, 4 * this.cell());
+            this.readLocal(out, this.cell());
             this.push(out);
             break;
         }
-        case 0x21: this.store(this.pop(T5), 4 * this.cell()); break;
+        case 0x21: this.writeLocal(this.pop(T5), this.cell()); break;
         case 0x28: case 0x2f: case 0x36: case 0x3b: {
             this.cell(); // alignment hint
             const offset = this.cell();
@@ -228,8 +231,8 @@ class FunctionCode {
         }
         case 0xf1: { // checked UTF-16 address, before any payload load or write RHS
             const receiver = this.cell(), position = this.cell();
-            this.load(T5, 4 * position);
-            this.load(T6, 4 * receiver);
+            this.readLocal(T5, position);
+            this.readLocal(T6, receiver);
             this.load(A0, 0, T6);
             this.emit(instruction.b(6, T5, A0, 8)); // unsigned position < capacity
             this.emit(0x00100073);
@@ -242,7 +245,7 @@ class FunctionCode {
         case 0xf2: { // ordered UTF-16 stores after the complete range check
             const address = this.cell();
             const value = this.program.literals[this.cell()];
-            this.load(T5, 4 * address);
+            this.readLocal(T5, address);
             for (let i = 0; i < value.length; i++) {
                 this.constant(T6, value.charCodeAt(i));
                 this.store(T6, 4 + 2 * i, T5, 1);
@@ -259,7 +262,7 @@ class FunctionCode {
         if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
         this.emit(0);
         this.emit(0);
-        for (let i = 0; i < count; i++) this.store(A0 + i, 4 * i);
+        for (let i = 0; i < count; i++) this.writeLocal(A0 + i, i);
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
         const frame = (4 * (this.locals + this.spillDepth + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
