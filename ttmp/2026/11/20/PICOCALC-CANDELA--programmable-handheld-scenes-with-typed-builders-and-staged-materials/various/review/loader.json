@@ -1,0 +1,35 @@
+[
+  {
+    "stage": "hand",
+    "sourceBytes": 14569,
+    "sourceSHA": "de30faccdc9379bb2e17a385fa243f30b701a87ec71e9b171353ba26735bcee9",
+    "nativeTextBytes": 14736,
+    "rvSHA": "ca1a7e966437e6dc981609657835aba30c0a1036211f0f002390e502bdf76f30",
+    "wasmSHA": "9720caeddca7567281ec80e03b82ba76043ab149d81e10f74b385b6c3aaa8790",
+    "elfBytes": 66816,
+    "elfSHA": "8b2af8dc8412fed635b5c1f02563801cf945a52652bdbd5c124d9822f6a664d6",
+    "stockControl": true
+  },
+  {
+    "stage": "fluent",
+    "sourceBytes": 15367,
+    "sourceSHA": "d3dfffdfaaddcaf88152d233f8146c4b0ab2bda12679347ec02830f6b1ddb558",
+    "nativeTextBytes": 15052,
+    "rvSHA": "06c048bf1afae16d15b9e40b461e730b9656a7bb18a15834533c99446e69ee5a",
+    "wasmSHA": "08959481b0d7ca4e93fb96e6628641e329d1dfca10f67974f8c07fc61d20b290",
+    "elfBytes": 66816,
+    "elfSHA": "84593e35af9ccced085bd3080b0bb94acd72f57dc6ed41edd1b1e1ad7d7d2c21",
+    "stockControl": false
+  },
+  {
+    "stage": "callback",
+    "sourceBytes": 15942,
+    "sourceSHA": "12f276413b30145dd1b00ffe8b80d7ed0d4e698ead30d4a50657765f687969e8",
+    "nativeTextBytes": 15312,
+    "rvSHA": "4af9afa61dc501918a4b0133f757f423991837dbe9e084d2b347c9b6297e6877",
+    "wasmSHA": "e701ecdafcf5f46397291bdbf528886cfcbd975ca2e7c7e7915d24511cb022fd",
+    "elfBytes": 66816,
+    "elfSHA": "1e683bdfabacc78d8426d33162b1c7f747d1dddc2a3a202c82bacdac01e6afc3",
+    "stockControl": false
+  }
+]

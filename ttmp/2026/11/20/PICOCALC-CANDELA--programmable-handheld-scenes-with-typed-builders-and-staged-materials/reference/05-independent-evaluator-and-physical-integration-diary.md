@@ -68,3 +68,49 @@ Begin with the [independent protocol](../design-doc/05-independent-material-agre
 ### Technical details
 
 Prior application SHA-256 efc938724492f1de8f2a0911abd05d09e8692b80872f5da707da1f92dd08a0c9. The prior partition table is 72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30.
+
+## Step 2. Compile three authored programs and test independent geometry and arithmetic
+
+### Prompt Context
+
+**User prompt (verbatim)** [Commission](../sources/commission.txt), Team 4 row. **Assistant interpretation** Compare meanings of built graphs and final frames, then identify precisely when binary32 and Q8 agree. **Inferred user intent** Keep the original handheld operational and attribute any later change to a measured stage. **Commit (code)** 24818ec and e9a4969.
+
+### What I did
+
+I wrote a Python wire interpreter, a second ray evaluator with signed dot products and exact integer roots, separate malformed descriptor tests, and a comparison of the original compiler to the modified compiler. I integrated the SDK ELF loader with the ordinary kernel's bundled Typed compiler, fresh heap and quiescent publication. I ran a full ordinary image build from the committed source and read back the physically installed old application before any candidate write.
+
+### Why
+
+A common C ray implementation can hide a geometry error in two otherwise agreeing shaders. A checksum from two runs of one program can also conceal accidental loss of sharing. Here every tested ray had an independently predicted color and shared node identity had a distinct graph test.
+
+### What worked
+
+Seven independent 25,600-pixel images matched production C geometry with an independent Python color callback. Thirty-eight descriptors agreed, including four accepted controls. Each malformed graph left a filled target untouched. The original compiler at c065dc2 and the final compiler produced byte-identical hand-stage Wasm, RV32 and linked ELF. Four original physical viewports matched the frozen release and the board passed normal health checks.
+
+### What didn't work
+
+The sandbox Node runtime rejected a local Git child-process spawn with EPERM. I reran the identical read-only comparator with approved process access. A naive claim of exact agreement across chained fixed-point scale operators failed at three of 480 tested coordinates. At x=50 with 252/256, 251/256 and 250/256, Q8 gave 47+31/256 and f32 gave 47.1264114; the inclusive 1/8 mask classified these differently.
+
+### What I learned
+
+The direct tile expression gives exact agreement for all 41,120 pairs on one axis. Authoring a nonrepresentable frequency or truncating at multiple intermediate scales creates a threshold error that the same one-operation proof cannot bound.
+
+### What was tricky to build
+
+The SDK uses a linked ELF containing a bounded text slot. Its four typed entry trampolines must match the order used to pass the constructor, color sampler, row sampler and parameter setter back to C. The independent linker test covered both compiler output and final ELF bytes.
+
+### What warrants a second pair of eyes
+
+The physical PSRAM high-water delta counts concurrent system allocation. The compiler's own peak is a separate allocator measurement. Geometry validation applies to arrays of capacity at least 303 and ignores spare cells outside declared counts. Scalar and row paths share the real PIE intersection code.
+
+### What should be done in the future
+
+Use final graph and framebuffer receipts to identify any gap between native C, host Wasm, modeled RV32 and actual loaded RV32. Compare every stage for at least two complete parameter states of both scenes.
+
+### Code review instructions
+
+Inspect [host validator and pixel differential](../scripts/review/03-host.py), [numeric probe](../scripts/review/02-numeric.py) and [link comparison](../scripts/review/04-loader.mjs). The renderer reconstructs the scene in a separate node allocation order.
+
+### Technical details
+
+Run the Python host script under CPython with a system C compiler; run the Node comparator with the SDK build's esp-idf/main directory containing the three assembled sources and slot template. Results are retained in [host](../various/review/host.json), [numerical](../various/review/numeric.json), [loader](../various/review/loader.json) and [physical preflight](../various/review/preflight.json).

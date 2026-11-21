@@ -1,0 +1,310 @@
+{
+  "dyadic1DSamples": 41120,
+  "binary32Operation": "round source and multiply separately",
+  "decimal2D": [
+    {
+      "authored": "1/10",
+      "q8": 26,
+      "cases": 25600,
+      "disagreements": {
+        "f32VsExact": 0,
+        "q8VsExact": 8516,
+        "f32VsQ8": 8516
+      },
+      "boundaryBins": {
+        "further": 6372,
+        "within1over256": 2144
+      },
+      "witnesses": [
+        {
+          "xy": [
+            2,
+            21
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "1/40"
+        },
+        {
+          "xy": [
+            2,
+            31
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "1/40"
+        },
+        {
+          "xy": [
+            2,
+            41
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "1/40"
+        }
+      ]
+    },
+    {
+      "authored": "1/12",
+      "q8": 21,
+      "cases": 25600,
+      "disagreements": {
+        "f32VsExact": 0,
+        "q8VsExact": 8897,
+        "f32VsQ8": 8897
+      },
+      "boundaryBins": {
+        "within1over256": 3445,
+        "further": 5452
+      },
+      "witnesses": [
+        {
+          "xy": [
+            2,
+            12
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        },
+        {
+          "xy": [
+            2,
+            24
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        },
+        {
+          "xy": [
+            2,
+            36
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        }
+      ]
+    },
+    {
+      "authored": "1/7",
+      "q8": 37,
+      "cases": 25600,
+      "disagreements": {
+        "f32VsExact": 0,
+        "q8VsExact": 5832,
+        "f32VsQ8": 5832
+      },
+      "boundaryBins": {
+        "within1over256": 3192,
+        "further": 2640
+      },
+      "witnesses": [
+        {
+          "xy": [
+            1,
+            77
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        },
+        {
+          "xy": [
+            1,
+            84
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        },
+        {
+          "xy": [
+            1,
+            90
+          ],
+          "f32": true,
+          "q8": false,
+          "exact": true,
+          "distance": "1/56"
+        }
+      ]
+    },
+    {
+      "authored": "1/3",
+      "q8": 85,
+      "cases": 25600,
+      "disagreements": {
+        "f32VsExact": 0,
+        "q8VsExact": 14045,
+        "f32VsQ8": 14045
+      },
+      "boundaryBins": {
+        "within1over256": 14045
+      },
+      "witnesses": [
+        {
+          "xy": [
+            1,
+            3
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        },
+        {
+          "xy": [
+            1,
+            6
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        },
+        {
+          "xy": [
+            1,
+            9
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "0"
+        }
+      ]
+    },
+    {
+      "authored": "127/1000",
+      "q8": 33,
+      "cases": 25600,
+      "disagreements": {
+        "f32VsExact": 0,
+        "q8VsExact": 8169,
+        "f32VsQ8": 8169
+      },
+      "boundaryBins": {
+        "within1over256": 399,
+        "further": 7770
+      },
+      "witnesses": [
+        {
+          "xy": [
+            1,
+            32
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "1/500"
+        },
+        {
+          "xy": [
+            1,
+            39
+          ],
+          "f32": true,
+          "q8": false,
+          "exact": true,
+          "distance": "1/500"
+        },
+        {
+          "xy": [
+            1,
+            40
+          ],
+          "f32": false,
+          "q8": true,
+          "exact": false,
+          "distance": "1/500"
+        }
+      ]
+    }
+  ],
+  "chainedScales": [
+    {
+      "weights": [
+        73,
+        129,
+        153
+      ],
+      "samples": 160,
+      "maskDisagreements": 0,
+      "witnesses": []
+    },
+    {
+      "weights": [
+        252,
+        251,
+        250
+      ],
+      "samples": 160,
+      "maskDisagreements": 2,
+      "witnesses": [
+        {
+          "x": 50,
+          "q8": 12063,
+          "fp": 47.12641143798828,
+          "exact": "49415625/1048576"
+        },
+        {
+          "x": 137,
+          "q8": 33055,
+          "fp": 129.12637329101562,
+          "exact": "270797625/2097152"
+        }
+      ]
+    },
+    {
+      "weights": [
+        17,
+        79,
+        177
+      ],
+      "samples": 160,
+      "maskDisagreements": 1,
+      "witnesses": [
+        {
+          "x": 150,
+          "q8": 543,
+          "fp": 2.1253018379211426,
+          "exact": "17828325/8388608"
+        }
+      ]
+    }
+  ],
+  "mixChannels": [
+    {
+      "left": 30,
+      "right": 220,
+      "samples": 257,
+      "byteDisagreements": 0,
+      "maxTruncation": 0.9921875
+    },
+    {
+      "left": 70,
+      "right": 170,
+      "samples": 257,
+      "byteDisagreements": 0,
+      "maxTruncation": 0.984375
+    },
+    {
+      "left": 150,
+      "right": 40,
+      "samples": 257,
+      "byteDisagreements": 0,
+      "maxTruncation": 0.9921875
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "validation": [
+    {
+      "case": "valid",
+      "accepted": true
+    },
+    {
+      "case": "empty-geometry",
+      "accepted": true
+    },
+    {
+      "case": "extended-capacity",
+      "accepted": true
+    },
+    {
+      "case": "short-capacity",
+      "accepted": false
+    },
+    {
+      "case": "wrong-magic",
+      "accepted": false
+    },
+    {
+      "case": "wrong-version",
+      "accepted": false
+    },
+    {
+      "case": "reserved-header",
+      "accepted": false
+    },
+    {
+      "case": "node-count",
+      "accepted": false
+    },
+    {
+      "case": "material-count",
+      "accepted": false
+    },
+    {
+      "case": "sphere-count",
+      "accepted": false
+    },
+    {
+      "case": "param-count",
+      "accepted": false
+    },
+    {
+      "case": "no-material",
+      "accepted": false
+    },
+    {
+      "case": "floor-handle",
+      "accepted": false
+    },
+    {
+      "case": "material-handle",
+      "accepted": false
+    },
+    {
+      "case": "material-type",
+      "accepted": false
+    },
+    {
+      "case": "shape-material",
+      "accepted": false
+    },
+    {
+      "case": "sphere-x",
+      "accepted": false
+    },
+    {
+      "case": "sphere-y",
+      "accepted": false
+    },
+    {
+      "case": "sphere-z-near",
+      "accepted": false
+    },
+    {
+      "case": "sphere-z-far",
+      "accepted": false
+    },
+    {
+      "case": "zero-radius",
+      "accepted": false
+    },
+    {
+      "case": "large-radius",
+      "accepted": false
+    },
+    {
+      "case": "parameter-value",
+      "accepted": false
+    },
+    {
+      "case": "negative-as-uint",
+      "accepted": false
+    },
+    {
+      "case": "unknown-op",
+      "accepted": false
+    },
+    {
+      "case": "color-value",
+      "accepted": false
+    },
+    {
+      "case": "param-slot",
+      "accepted": false
+    },
+    {
+      "case": "param-reserved",
+      "accepted": false
+    },
+    {
+      "case": "position-reserved",
+      "accepted": false
+    },
+    {
+      "case": "scale-reserved",
+      "accepted": false
+    },
+    {
+      "case": "scale-wrong-kind",
+      "accepted": false
+    },
+    {
+      "case": "self-edge",
+      "accepted": false
+    },
+    {
+      "case": "forward-edge",
+      "accepted": false
+    },
+    {
+      "case": "fract-reserved",
+      "accepted": false
+    },
+    {
+      "case": "mask-reserved",
+      "accepted": false
+    },
+    {
+      "case": "mixed-weight-kind",
+      "accepted": false
+    },
+    {
+      "case": "checker-zero-divisor",
+      "accepted": false
+    },
+    {
+      "case": "at-all-limits",
+      "accepted": true
+    }
+  ],
+  "frames": [
+    {
+      "scene": "shared",
+      "weight": 0,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "crc": "9966f38b"
+    },
+    {
+      "scene": "shared",
+      "weight": 128,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "crc": "4cb3abc8"
+    },
+    {
+      "scene": "shared",
+      "weight": 256,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "crc": "a8ef101b"
+    },
+    {
+      "scene": "tile",
+      "weight": 64,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "crc": "c4d23465"
+    },
+    {
+      "scene": "tile",
+      "weight": 73,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "crc": "01f1a48a"
+    },
+    {
+      "scene": "tile",
+      "weight": 128,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "crc": "1561316d"
+    },
+    {
+      "scene": "tile",
+      "weight": 80,
+      "light": [
+        31,
+        17
+      ],
+      "pixels": 25600,
+      "crc": "73acd15d"
+    }
+  ]
+}
