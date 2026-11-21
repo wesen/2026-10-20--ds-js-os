@@ -18,7 +18,7 @@ def call(url,method,data=None):
         raw=r.read()
     return json.loads(raw) if raw else None
 def has_expected(key,v):
-    if key=='01': return v['packetReads']['observed']==16888 and v['completeFrame']['winningBlocks']==6
+    if key=='01': return v['packetReads']['observed']==16888 and v['completeFrame']['winningBlocks']==6 and v['againstC']['scalarC']['blocks']==6
     if key=='02': return [row['packets'] for row in v]==[2111,282,742]
     if key=='03': return [row['executedLoads'] for row in v]==[26070,9182,3246] and all(len(row['imageSHA'])==64 for row in v)
     if key=='04': return v['checkedPlanar']['winningBlocks']==12 and v['identicalContactOrder']['winningBlocks']==0 and v['oneTickIncludingConversion']['winningBlocks']==0

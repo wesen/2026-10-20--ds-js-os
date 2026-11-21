@@ -1,7 +1,7 @@
 [
   {
     "script": "01-boundary.js",
-    "source": "({\n    packetReads: lab.packetPrediction(),\n    completeFrame: lab.frame(\"default\", \"clean\", \"baseline\", \"empty\"),\n    blindChoice: lab.selection(\"dynamic\", 3, 35)\n})\n",
+    "source": "({\n    packetReads: lab.packetPrediction(),\n    completeFrame: lab.frame(\"default\", \"clean\", \"baseline\", \"empty\"),\n    againstC: lab.rayVersusC(\"default\", \"clean\"),\n    blindChoice: lab.selection(\"dynamic\", 3, 35)\n})\n",
     "value": {
       "packetReads": {
         "packets": 3135,
@@ -15,6 +15,23 @@
         "candidateMedian": 55737.5,
         "pairedMedianSavedPct": 0.9039910458733007,
         "winningBlocks": 6
+      },
+      "againstC": {
+        "pose": "default",
+        "phase": "clean",
+        "unit": "microseconds per compiled call to output in memory",
+        "scalarC": {
+          "blocks": 6,
+          "controlMedianUs": 7901.5,
+          "typedMedianUs": 55718,
+          "medianTypedOverControl": 7.05227265228404
+        },
+        "handPieC": {
+          "blocks": 6,
+          "controlMedianUs": 6806,
+          "typedMedianUs": 55718,
+          "medianTypedOverControl": 8.187410608696329
+        }
       },
       "blindChoice": {
         "family": "dynamic",

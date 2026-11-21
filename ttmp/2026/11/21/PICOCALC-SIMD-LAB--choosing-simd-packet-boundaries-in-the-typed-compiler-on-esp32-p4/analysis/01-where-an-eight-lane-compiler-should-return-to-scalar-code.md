@@ -91,6 +91,19 @@ The hand-scheduled comparison gives the compiler team a larger target. On openin
 
 We counted one opportunity directly on the exact fixture buffers. The opening scene has 480 sphere/row pairs, 315 with negative `R`. That accounts for 50,400 of 76,800 inner-loop iterations (65.63%). Dense has 285 negative pairs (59.38%); sparse has 433 (90.21%). On these fixtures every such ray misses. These are source iterations with a provable geometric outcome, not a predicted percentage saving in cycles. A general compiler still needs to prove that skipping the input loads cannot suppress a bounds failure and that subtracting an unsigned halfword from a negative i32 cannot wrap to a positive value. Here the checked geometry bounds the vertical displacement by 159, so the most negative `R` is at least −25,281. Subtracting up to 65,535 stays inside signed i32. Outside the proved input domain the scalar source path must preserve trap and write order. [Source-iteration census](../various/director/negative-rows.json) · [Fixture analyzer](../scripts/director/14-count-negative-rows.py) [Hand controls](../scripts/ray/board/main/ceiling.c)
 
+### How the current Typed renderer compares with C
+
+We conducted a fourth physical trial to obtain a directly paired comparison against the project's actual C renderer. Each of six blocks rotated scalar C, C with hand-written PIE primary geometry, and the supported Typed compiler's exact 10,332-byte `pie-empty` image. All three drew into the same PSRAM output planes. The C renderer used its normal stack workspace; Typed used its checked PSRAM work buffer. After each call we compared complete output bytes, including row padding, against scalar C reference planes, which were independently checked against the Wasm fixture hashes. All 432 observations across both phases and twelve named fixtures passed. The timer includes the entry's own preparation and ends with pixels or intersection planes ready in memory. Display and compilation have separate costs. [Paired C comparison](../various/ray/typed-vs-c-result.json) · [Measurement source](../scripts/ray/board/c_frame.c)
+
+| Default 160×160 scene | Scalar C | C with hand-written PIE | Current Typed | Typed / scalar C | Typed / PIE C |
+|---|---:|---:|---:|---:|---:|
+| Complete RGB565 frame | 7.902 ms | 6.806 ms | 55.718 ms | 7.05× | 8.19× |
+| Primary depth and ID planes | 4.772 ms | 3.673 ms | 15.770 ms | 3.31× | 4.30× |
+
+The ratio is the median of six within-block elapsed-time ratios. Across the twelve complete-frame fixtures, Typed took 6.92–7.35 times scalar C latency and 7.99–8.66 times PIE C latency. The directly paired clean frame medians correspond to about 18, 127 and 147 rendered frames per second for Typed, scalar C and PIE C respectively, before presentation. This is an end-to-end implementation comparison. It includes differences in generated instructions, temporary storage and workspace access. It cannot assign the gap to one feature of the compiler.
+
+An earlier, separately measured Typed source variant projected sphere spans, changed shadow-row traversal, and specialized positive division. It took 29.975 ms on the default frame, or 3.15× the matched scalar C latency and 3.59× the matched PIE C latency in that earlier firmware. The new 55.718 ms result answers the compiler-only question on the original source. We did not mix the earlier faster algorithm with the C control from this run. [Earlier Typed and C experiment](../../../20/PICOCALC-TYPED-RAY--compare-complete-typed-and-c-ray-tracers-on-the-picocalc/analysis/04-how-to-time-a-complete-typed-ray-tracer-on-the-handheld.md)
+
 How expensive is one classification of each kind? A third board image replayed the captured eight-lane groups with an independently checked hand packet routine, using the same initial depth and ID values in each arm. Each of nine blocks timed many packets of one class, including the invocation and its bookkeeping. These medians of block means are P4 cycles per eight-lane packet. The compiler-generated full-frame results above have a different denominator. [Physical packet-class study](../various/ray/packet-classes-summary.json)
 
 | Opening class | Packets in each block | Strong scalar | Unsigned minimum | Minimum plus maximum |
@@ -167,6 +180,7 @@ go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" < "$ticket/s
 ({
     packetReads: lab.packetPrediction(),
     completeFrame: lab.frame("default", "clean", "baseline", "empty"),
+    againstC: lab.rayVersusC("default", "clean"),
     blindChoice: lab.selection("dynamic", 3, 35)
 })
 ~~~

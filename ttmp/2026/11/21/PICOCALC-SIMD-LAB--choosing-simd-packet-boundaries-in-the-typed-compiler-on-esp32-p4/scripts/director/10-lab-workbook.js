@@ -53,4 +53,16 @@ lab.packetCosts = (scene,kind) => {
     return {unit:"P4 cycles per eight-lane packet in hand microbenchmark",
             scene,kind,packetsPerBlock:cell.packets_per_block,schedules:cell.schedules};
 };
+
+// Each ratio pairs current Typed with a C measurement from the same rotated block.
+lab.rayVersusC = (pose,phase) => {
+    const rows=lab.rayControls.filter(r=>r.fixture===pose && r.phase===["clean","primary"].indexOf(phase));
+    const compare=control=>{
+        const p=paired(rows,control,2,r=>r.arm,r=>r.us);
+        return {blocks:p.blocks,controlMedianUs:p.baselineMedian,typedMedianUs:p.candidateMedian,
+                medianTypedOverControl:1-p.pairedMedianSavedPct/100};
+    };
+    return {pose,phase,unit:"microseconds per compiled call to output in memory",
+            scalarC:compare(0),handPieC:compare(1)};
+};
 undefined

@@ -1,4 +1,24 @@
 {
+  "currentCControls": {
+    "js": "lab.rayVersusC(\"default\",\"clean\")",
+    "value": {
+      "pose": "default",
+      "phase": "clean",
+      "unit": "microseconds per compiled call to output in memory",
+      "scalarC": {
+        "blocks": 6,
+        "controlMedianUs": 7901.5,
+        "typedMedianUs": 55718,
+        "medianTypedOverControl": 7.05227265228404
+      },
+      "handPieC": {
+        "blocks": 6,
+        "controlMedianUs": 6806,
+        "typedMedianUs": 55718,
+        "medianTypedOverControl": 8.187410608696329
+      }
+    }
+  },
   "openingFrame": {
     "js": "lab.frame(\"default\",\"clean\",\"baseline\",\"empty\")",
     "value": {
@@ -141,6 +161,10 @@
     }
   },
   "sources": {
+    "rayControls": {
+      "path": "ray/typed-vs-c-rows.json",
+      "sha256": "c8ec6732610f00e4bcaa86195abace5c9c3b4fe1df1dac71502f215045abdc52"
+    },
     "frames": {
       "path": "director/frame-device-rows.json",
       "sha256": "6b86560f295b049d3eeb71bbbca84e074c270593f26dfd66b56077935268dc36"

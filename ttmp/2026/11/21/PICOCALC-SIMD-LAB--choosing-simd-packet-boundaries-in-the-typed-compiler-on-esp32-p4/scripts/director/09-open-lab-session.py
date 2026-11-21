@@ -23,7 +23,7 @@ def evaluate(src):
 retained=False
 try:
     evaluate('const lab = {sources:{}}; undefined')
-    for name,path in {'frames':'director/frame-device-rows.json','lengthGate':'director/gate-device-rows.json',
+    for name,path in {'rayControls':'ray/typed-vs-c-rows.json','frames':'director/frame-device-rows.json','lengthGate':'director/gate-device-rows.json',
                       'collision':'director/selector-device-rows.json','cold':'director/selector-cold-rows.json',
                       'physics':'physics/board-results.json'}.items():
         raw=(ticket/'various'/path).read_bytes(); rows=json.loads(raw)
@@ -40,6 +40,7 @@ try:
     evaluate('lab.sources.packetClasses='+json.dumps({'path':'ray/packet-classes-summary.json','sha256':hashlib.sha256(raw).hexdigest()})+';undefined')
     evaluate((ticket/'scripts/director/10-lab-workbook.js').read_text())
     queries={
+        'currentCControls':'lab.rayVersusC("default","clean")',
         'openingFrame':'lab.frame("default","clean","baseline","empty")',
         'openingPrimary':'lab.frame("default","primary","baseline","empty")',
         'packetPrediction':'lab.packetPrediction()',

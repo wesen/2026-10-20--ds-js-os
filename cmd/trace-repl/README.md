@@ -42,6 +42,7 @@ python3 "$ticket/scripts/director/09-open-lab-session.py" --keep
 Reuse the printed ID with the same `eval --addr 127.0.0.1:3794 --session` command above. These are separate expressions that can be evaluated in any order.
 
 ~~~js
+lab.rayVersusC("default", "clean")            // paired time ratios to scalar and hand-PIE C
 lab.packetPrediction()                        // predicted vs executed scratch loads
 lab.packetCosts("opening", "mixed")           // physical hand kernel cycles per packet
 lab.frame("default","clean","baseline","empty") // paired physical microseconds
