@@ -327,7 +327,7 @@ To repeat the physical trial, supply the qualified shipped build directory, a ma
 
 ```sh
 bash 09-build-board.sh /tmp/inc-replay /tmp/inc-replay-device
-python3 -B 11-device.py /tmp/inc-replay-device/build /tmp/mobile-painter-chess3d/build /tmp/inc-replay/gold.json /tmp/inc-replay-physical
+python3 -B 11-device.py /tmp/inc-replay-device/build /tmp/chess-camera-release/build /tmp/inc-replay/gold.json /tmp/inc-replay-physical
 ```
 
 The study diary records staging dependencies, correctness controls, device recovery and the authorship commissions. [Investigation diary](../reference/04-incremental-build-diary.md)
