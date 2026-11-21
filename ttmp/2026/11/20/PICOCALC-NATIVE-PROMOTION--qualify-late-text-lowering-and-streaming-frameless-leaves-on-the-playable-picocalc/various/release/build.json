@@ -1,0 +1,63 @@
+{
+  "painterSource": {
+    "bytes": 16316,
+    "sha256": "6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214",
+    "embeddedWriterMatches": true
+  },
+  "chessSource": {
+    "bytes": 61022,
+    "sha256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c"
+  },
+  "painter": {
+    "capacity": 32768,
+    "usable": 32744,
+    "codeBytes": 21572,
+    "headroom": 11172,
+    "entries": {
+      "paintChess": 16256
+    },
+    "imports": 0,
+    "relocations": 0,
+    "linkedBytes": 33840,
+    "linkedSHA256": "c8b0f899c0cfc0ca3f496ce3f09ba50251057d053c5616e283345a538b146703",
+    "templateSHA256": "a89f0b5956392ed636cdd053e5c5f9c908053913fedd7b0cc41036f445ee418e"
+  },
+  "chess": {
+    "capacity": 262144,
+    "usable": 261996,
+    "codeBytes": 180860,
+    "headroom": 81136,
+    "entries": {
+      "typedWorldMeta": 22724,
+      "typedWorldEvent": 30808
+    },
+    "imports": 30,
+    "relocations": 19,
+    "linkedBytes": 274892,
+    "linkedSHA256": "8487d9b66d6370e2dd83668904bb493172cee2ab36b5137b8bd3b1b89b87b132",
+    "templateSHA256": "f28687cff3b242c18027dde3ad8b15930108035ca8b416b120071f62e1963630"
+  },
+  "idfConfig": [
+    "CONFIG_SPIRAM=y",
+    "CONFIG_SPIRAM_SPEED=200",
+    "CONFIG_CACHE_L2_CACHE_LINE_SIZE=64",
+    "CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=360"
+  ],
+  "firmwareSHA256": "33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813",
+  "partitionSHA256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "revision": "8052db721eda91720010867915b70064b33912f0",
+  "controlFirmwareSHA256": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "applicationBytes": 4331776,
+  "factoryBytes": 8388608,
+  "embeddedCompilers": {
+    "picocalc-os/compiler/typed-rv32.js": "e54c13e78e9e095b2cff687ea505d8ae621486e2ff486e30e3308cc6e971a11a",
+    "picocalc-os/compiler/typed-wasm.js": "905d54257759e1e192c32dc3d99a7ef8dcf4d322d5ac60187c740269272fca7c"
+  },
+  "identicalInputs": {
+    "esp-idf/main/natives/compositor.elf": "0b98db291f35a7da8534bc35cff95ea1a8aff1b1b5834a1505a16fa8286e69fe",
+    "esp-idf/main/mobile-painter-slot.elf": "a89f0b5956392ed636cdd053e5c5f9c908053913fedd7b0cc41036f445ee418e",
+    "esp-idf/main/typed-world-reactor.elf": "386a56b9e2ae4ff3e3bfb8f431ba315d5fb415b6ba29360b04e7d7e611c3837b",
+    "esp-idf/main/chess.typed": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c"
+  },
+  "psramLoader": true
+}
