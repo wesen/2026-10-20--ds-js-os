@@ -1,0 +1,242 @@
+{
+  "baseline": "5f77855",
+  "releaseSHA256": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "candidateSources": {
+    "compiler/typed-wasm.js": "905d54257759e1e192c32dc3d99a7ef8dcf4d322d5ac60187c740269272fca7c",
+    "compiler/typed-async.js": "7a0524cf89f6f3766cb8b265146d41975eae91a11f34fecacf19e09c922b9f17",
+    "compiler/typed-rv32.js": "e54c13e78e9e095b2cff687ea505d8ae621486e2ff486e30e3308cc6e971a11a",
+    "compiler/typed-world.js": "bdd2a9606eb8bda5c3cfe481aaca94fbb2e63178f334eb9074ce7f36dfa33978",
+    "worlds/files/compile.js": "dc82ece5c9c6f65b4ed3db2b9c742e14463fafc7a6df528c15e356021611103a",
+    "worlds/agenda/compile.js": "52a85f626fc93e33641d7ef3a7452c2b7d94b0163edcb7fca6fdef1c270fcecd"
+  },
+  "heldOut": {
+    "wasmSHA256": "7ba41f90bdf58bda645760202ec8b57aafedec27dc633d1cee164f0963022f33",
+    "modes": {
+      "default": {
+        "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+        "rv32SHA256": "16f1275848fd5990d72d59ef0d4c71b3b329b59066446d8368b6e9ecc7e310e9",
+        "imageBytes": 2332,
+        "wasmBytes": 1500,
+        "functions": 10,
+        "checks": {
+          "uncheckedRequest": 70,
+          "inspect": 456,
+          "countEvents": 456,
+          "readBurst": 456,
+          "label": 165
+        },
+        "total": 1603,
+        "traps": 101,
+        "rv32Steps": 135475,
+        "orderedDigest": "0156e3beaa96748fac3f8ef727af8ac7977e0cf068388cdc8fc10bd7d17bf470"
+      },
+      "buffered": {
+        "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+        "rv32SHA256": "16f1275848fd5990d72d59ef0d4c71b3b329b59066446d8368b6e9ecc7e310e9",
+        "imageBytes": 2332,
+        "wasmBytes": 1500,
+        "functions": 10,
+        "checks": {
+          "uncheckedRequest": 70,
+          "inspect": 456,
+          "countEvents": 456,
+          "readBurst": 456,
+          "label": 165
+        },
+        "total": 1603,
+        "traps": 101,
+        "rv32Steps": 135475,
+        "orderedDigest": "0156e3beaa96748fac3f8ef727af8ac7977e0cf068388cdc8fc10bd7d17bf470"
+      }
+    }
+  },
+  "edges": {
+    "sourceSHA256": "59512c13f1d925e96e8ed4bf77332d155232d5dddd82d1d5794b5d67ec3595de",
+    "wasmSHA256": "aa9c23fe24e8ee6c0c71872c17a1a8f96c0abf29a71339dfbb2c65a8de6b5e7c",
+    "rv32SHA256": "68d32c48fccb8609c0eb94e7733a81e695da090174c5b7ace15f8ea31a309f20",
+    "lengths": [
+      0,
+      1,
+      7,
+      8,
+      511,
+      1022
+    ],
+    "stats": {
+      "write": {
+        "calls": 20,
+        "traps": 14
+      },
+      "nested": {
+        "calls": 4,
+        "traps": 2
+      },
+      "alias": {
+        "calls": 4,
+        "traps": 3
+      },
+      "literal0": {
+        "calls": 7,
+        "traps": 0
+      },
+      "literal1": {
+        "calls": 7,
+        "traps": 4
+      },
+      "literal2": {
+        "calls": 7,
+        "traps": 4
+      },
+      "literal3": {
+        "calls": 7,
+        "traps": 4
+      },
+      "literal4": {
+        "calls": 7,
+        "traps": 4
+      },
+      "literal5": {
+        "calls": 7,
+        "traps": 4
+      },
+      "div": {
+        "calls": 7,
+        "traps": 2
+      },
+      "rem": {
+        "calls": 7,
+        "traps": 1
+      },
+      "chain": {
+        "calls": 7,
+        "traps": 2
+      },
+      "spill": {
+        "calls": 1,
+        "traps": 0
+      },
+      "local": {
+        "calls": 1,
+        "traps": 0
+      },
+      "loop": {
+        "calls": 1,
+        "traps": 0
+      },
+      "abs": {
+        "calls": 4,
+        "traps": 0
+      }
+    },
+    "diagnostics": {
+      "literalLimit": "SyntaxError: 1:58: buffer literal exceeds 1022 UTF-16 units",
+      "nativeArity": "SyntaxError: RV32 supports up to eight register arguments"
+    }
+  },
+  "worlds": {
+    "editor": {
+      "sourceSHA256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+      "reactorSHA256": "386a56b9e2ae4ff3e3bfb8f431ba315d5fb415b6ba29360b04e7d7e611c3837b",
+      "stockELF": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d",
+      "wasmReactorSHA256": "4b9d08ad519a211b00841f5c4e8f2dc99a67afa4c2fdfd35dad2fd364233b83f",
+      "wasmBytes": 92162,
+      "wasmSHA256": "0bd8f379652ac58038bda702dbc60a6e2df270f84f2287365502feb6a283deda",
+      "modes": {
+        "default": {
+          "elfBytes": 242124,
+          "elfSHA256": "eec0fe7392f15dbdf8060c3fe3081619b07995b249fc8c909cd7caaf696fc93d",
+          "imageBytes": 75812,
+          "imageSHA256": "1446a2d1bafb6a6654c62b7a512201132676679ce2ac623e68e21d0fb64de690",
+          "functions": 119,
+          "relocations": 147
+        },
+        "buffered": {
+          "elfBytes": 242124,
+          "elfSHA256": "eec0fe7392f15dbdf8060c3fe3081619b07995b249fc8c909cd7caaf696fc93d",
+          "imageBytes": 75812,
+          "imageSHA256": "1446a2d1bafb6a6654c62b7a512201132676679ce2ac623e68e21d0fb64de690",
+          "functions": 119,
+          "relocations": 147
+        }
+      }
+    },
+    "chess": {
+      "sourceSHA256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+      "reactorSHA256": "f28687cff3b242c18027dde3ad8b15930108035ca8b416b120071f62e1963630",
+      "stockELF": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685",
+      "wasmReactorSHA256": "4b9d08ad519a211b00841f5c4e8f2dc99a67afa4c2fdfd35dad2fd364233b83f",
+      "wasmBytes": 215498,
+      "wasmSHA256": "c789927489d905862baf622d52d14eb867d08a92a69c29e80148aa2dfa18dea8",
+      "modes": {
+        "default": {
+          "elfBytes": 274892,
+          "elfSHA256": "8487d9b66d6370e2dd83668904bb493172cee2ab36b5137b8bd3b1b89b87b132",
+          "imageBytes": 180860,
+          "imageSHA256": "93b4624f5ad049c2fb3f5e2a5ca5a6a023b530fdbcd2a2c3d8cd156d50fa91a0",
+          "functions": 82,
+          "relocations": 19
+        },
+        "buffered": {
+          "elfBytes": 274892,
+          "elfSHA256": "8487d9b66d6370e2dd83668904bb493172cee2ab36b5137b8bd3b1b89b87b132",
+          "imageBytes": 180860,
+          "imageSHA256": "93b4624f5ad049c2fb3f5e2a5ca5a6a023b530fdbcd2a2c3d8cd156d50fa91a0",
+          "functions": 82,
+          "relocations": 19
+        }
+      }
+    },
+    "agenda": {
+      "sourceSHA256": "ba1eefb0315eb1c08f8d3fa1d86b0751aecb30801d6cb26ff5d50081c45fd696",
+      "reactorSHA256": "545301177878640b555e47c34e3b0941fb0e4f22299ccf5a365841afaa47331a",
+      "stockELF": "30c2a2d055db0074b28fb7fa77ff6c9b0d98f137f1d8090b782e3df2dd748454",
+      "wasmReactorSHA256": "35f3bc71177f4310e07cbb1a74f2f7f2c938a0cf409f49c554107019f1e996f6",
+      "wasmBytes": 67429,
+      "wasmSHA256": "1d7f6ecbaaa629e40fe69b67fab9ed62dd596c667f0ab364641ee5cc311ef46a",
+      "modes": {
+        "default": {
+          "elfBytes": 66364,
+          "elfSHA256": "4e385550ad49783d960957844f31f9c4de97ffdfed29d2a4fbeeca6492fd5225",
+          "imageBytes": 15304,
+          "imageSHA256": "ee7a0d7fa202974a4cd81c0be6f71b1a3f460996beb6bbef8af88761c896d912",
+          "functions": 34,
+          "relocations": 0
+        },
+        "buffered": {
+          "elfBytes": 66364,
+          "elfSHA256": "4e385550ad49783d960957844f31f9c4de97ffdfed29d2a4fbeeca6492fd5225",
+          "imageBytes": 15304,
+          "imageSHA256": "ee7a0d7fa202974a4cd81c0be6f71b1a3f460996beb6bbef8af88761c896d912",
+          "functions": 34,
+          "relocations": 0
+        }
+      }
+    },
+    "files": {
+      "sourceSHA256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+      "reactorSHA256": "4c3a4594c7e637a4eae80872de71852cb2c92e74eb29804ce29c1b8e89606c93",
+      "stockELF": "1f7ce7fac0788f3c252b01e4c4be8a982b4eca3ce489c7d49b84ab226163aad8",
+      "wasmReactorSHA256": "f1415095c60135fe29d1043be74023a1fadae92b2f625459b79a70c8566b3420",
+      "wasmBytes": 49089,
+      "wasmSHA256": "c7f8892cd99ed86d9282582cc8c6d797a58cbe39623e8a9512a3bc0fbe90b07a",
+      "modes": {
+        "default": {
+          "elfBytes": 24424,
+          "elfSHA256": "9ec649e9f8846e26d63c4233535e3a7601fc695f16e046666969ed2f9ef8d9d6",
+          "imageBytes": 2980,
+          "imageSHA256": "b96f9877c7027590305807fec600224a7b88803d25eb5ebbd3c5e6e9107f350a",
+          "functions": 7,
+          "relocations": 0
+        },
+        "buffered": {
+          "elfBytes": 24424,
+          "elfSHA256": "9ec649e9f8846e26d63c4233535e3a7601fc695f16e046666969ed2f9ef8d9d6",
+          "imageBytes": 2980,
+          "imageSHA256": "b96f9877c7027590305807fec600224a7b88803d25eb5ebbd3c5e6e9107f350a",
+          "functions": 7,
+          "relocations": 0
+        }
+      }
+    }
+  }
+}

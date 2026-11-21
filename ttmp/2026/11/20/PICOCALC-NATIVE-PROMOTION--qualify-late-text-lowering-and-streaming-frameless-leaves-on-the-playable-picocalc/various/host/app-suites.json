@@ -1,0 +1,38 @@
+{
+  "appSuitePasses": {
+    "editor": 10,
+    "calc": 27,
+    "agenda": 9,
+    "sysapps": 16,
+    "typed-rv32": 3
+  },
+  "engine": {
+    "reference": "chess 1.11.2",
+    "positions": 13,
+    "targets": [
+      "wasm",
+      "rv32"
+    ],
+    "wordsMatched": 6981
+  },
+  "genericWorld": {
+    "reactorSHA256": "386a56b9e2ae4ff3e3bfb8f431ba315d5fb415b6ba29360b04e7d7e611c3837b",
+    "addedHostSymbols": [
+      "strcmp",
+      "__floatsidf"
+    ],
+    "events": 98,
+    "searchSlices": 78,
+    "reply": "Last b8-c6   Depth 3   Nodes 1600   Eval 12",
+    "targets": [
+      "wasm",
+      "rv32"
+    ],
+    "screens": 18,
+    "staleWakeIgnored": true,
+    "failedWakeLegalFallback": true,
+    "traceSha256": "c9ab745684a8c98f44f29e947e855b76dbeec9d53d36c82793a3f93cd07f19b5",
+    "wasmSha256": "714e94a4d2d413ed6acbdde5646ffa47cb6106db86367b55018af81dc100e757",
+    "rv32Sha256": "c4186afc8d1821f68ef8bb3531566b3edb8a1e24f756a17f685f6cd973ca4904"
+  }
+}
