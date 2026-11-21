@@ -1,7 +1,7 @@
 ---
 Title: Trace the ray row through GCC and LLVM optimization passes
 Ticket: PICOCALC-ROW-IR
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -12,45 +12,11 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-21T07:51:09.221205437-05:00
+LastUpdated: 2026-11-21T08:02:24.917793137-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
 
-# Trace the ray row through GCC and LLVM optimization passes
+# Trace the ray row through GCC and LLVM
 
-## Overview
-
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
-
-## Key Links
-
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-- compiler
-- performance
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+Read the [final chapter](analysis/01-from-checked-halfwords-to-a-native-row-loop-in-gcc-and-llvm.md) for the context, pass-by-pass investigation, physical studies and reproduction instructions. The [diary](reference/01-compiler-pass-investigation-diary.md) records decisions and failures. [Experiment scripts](scripts/) and [generated evidence](various/passes/) accompany the chapter.

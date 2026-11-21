@@ -118,3 +118,51 @@ Run scripts 02, 05, 06 and 07 from the repository root. Read the two JSON execut
 ### Technical details
 
 Setup commit 76733ea. GCC uses vendor 14.2.0, Clang/LLVM 18.1.3. The firmware row section digest begins 6cd634da5b60. Encoded widths differ between the compressed scalar C backends and the 32-bit Typed emitter. A count records each executed instruction once at either width.
+
+## Step 3. Write the final comparative chapter after qualification
+
+With the experimental evidence frozen in 662f306, I wrote a new chapter for students encountering ray tracing, Typed JS, PIE and compiler IR for the first time. It develops the sphere equation, follows a sample row through both compilers and distinguishes each Typed implementation by the question it answers.
+
+### Prompt Context
+
+See Step 1. The user requested a complete new final report after the work and asked for a pedagogical introduction to both the project and the compiler fundamentals.
+
+### What I did
+
+Wrote the final chapter, gave its ten-arm C comparison and three-arm Typed comparison the same execution boundary, linked the captured pass outputs, and included separate figures for machine instructions and estimated break-even. Reviewed the chapter against the physical and host receipts and verified the embedded figures, wiki references and local links. Published the completed chapter and its two figures to go-go-parc main. Linked the ticket from the compiler research index.
+
+### Why
+
+A student reading only the final report needs to understand the significance of a zero discriminant, the difference between a primary row and a completed frame, the source of C's explicit packed path, and why counting instructions cannot supply LLVM hardware timings.
+
+### What worked
+
+The new 4,300-plus-word chapter retains the original article as a separate note. The vault push advanced main from 9eab52d to 2c2436a. The comparative chapter includes checked and unchecked baselines, paired pass-off builds, rejected vectorization evidence, actual row bytes and the implementation path suggested by these results.
+
+### What didn't work
+
+The experiments give no P4 execution time for the new GCC/LLVM C proxies. The report uses their guest instruction counts and identifies the independent physical experiments wherever it gives milliseconds.
+
+### What I learned
+
+The opening row term example makes both the C two-loop arrangement and Typed's fused loop understandable before introducing SSA. Comparing bgeu and the capacity load with the register counts explains why substantial optimization remains possible with checked buffers.
+
+### What was tricky to build
+
+The previous template, the new inferred subregion and the source span experiment all concern the primary row but do different amounts of work. The final table identifies which code each treatment changes and labels comparisons across hardware runs.
+
+### What warrants a second pair of eyes
+
+A subsequent device experiment should time the controlled checked C kernels on the P4 and measure a general Typed register policy at fixed traversal. The paired instruction differences in the current report should not be extrapolated directly into frame-rate forecasts.
+
+### What should be done in the future
+
+Use a second unseen kernel as well as the ray row when testing automatic scalar loop scheduling. Keep cold compile cost, guest memory traffic, traps and output agreement in the acceptance criteria.
+
+### Code review instructions
+
+Read analysis/01-from-checked-halfwords-to-a-native-row-loop-in-gcc-and-llvm.md and follow the reproduction commands. The vault version adds direct links to the earlier chapters and packages both figures locally.
+
+### Technical details
+
+The final vault commit is 2c2436a. The additional break-even figure is generated from the earlier paired data by PICOCALC-PIE-LOOPS/scripts/12-session-cost.py. The 44–45 frame figure is an estimate from scene medians. The new study changed no production backend or firmware.
