@@ -182,28 +182,46 @@ function diff(before,after) {
             console.log("  executions",a.executions,"->",b.executions,"delta",b.executions-a.executions);
         const tape=r=>JSON.stringify(r.operations.map(o=>[o.op,o.operands]));
         if(tape(a)!==tape(b)) { console.log("  operation streams differ; inspect each listing for source locations"); continue; }
-        const boundaries=r=>new Set(r.ranges.filter(x=>x.ordinals.length).map(x=>x.ordinals[0]));
-        const aa=boundaries(a),bb=boundaries(b);
-        const dividers=[...aa].filter(n=>bb.has(n)).sort((x,y)=>x-y);
-        dividers.push(a.operations.length);
-        function summary(row,lo,hi) {
-            const rs=row.ranges.filter(r=>r.ordinals.length && lo<=r.ordinals[0] && r.ordinals[0]<hi);
-            return {encoding:rs.map(r=>r.words?r.words.map(w=>w.word).join(","):r.bytes).join("|"),
-                bytes:rs.reduce((n,r)=>n+r.end-r.start,0),hits:row.executions===undefined?undefined:
-                rs.reduce((n,r)=>n+r.words.reduce((s,w)=>s+w.executions,0),0),
-                decisions:[...new Set(rs.flatMap(r=>r.decisions??[]))].join(", ")};
+        // A fused instruction can span several input operations. Cut only where
+        // no mapping in either listing (including a fallback) crosses the cut.
+        const boundaries=new Set(a.operations.map(o=>o.ordinal));
+        for (const row of [a,b]) for (const range of row.ranges)
+            for (const ordinal of range.ordinals.slice(1)) boundaries.delete(ordinal);
+        const groups=[];
+        let group;
+        for (const op of a.operations) {
+            if (boundaries.has(op.ordinal)) { group={first:op.ordinal,ops:[]}; groups.push(group); }
+            group.ops.push(op);
         }
-        for(let i=0;i+1<dividers.length;i++) {
-            const lo=dividers[i],hi=dividers[i+1],x=summary(a,lo,hi),y=summary(b,lo,hi);
-            if(JSON.stringify(x)===JSON.stringify(y)) continue;
-            console.log("  #"+lo+" "+a.operations.slice(lo,hi).map(opText).join(" + "),
-                "bytes",x.bytes,"->",y.bytes,x.hits===undefined?"":"executions "+x.hits+" -> "+y.hits,
-                x.decisions===y.decisions?"":x.decisions+" -> "+y.decisions,
-                x.bytes===y.bytes && x.encoding!==y.encoding?"different encoding":"");
+        const names=new Map(groups.flatMap(g=>g.ops.map(o=>[o.ordinal,"#"+g.first])));
+        function summarize(row) {
+            const result=new Map();
+            for (const range of row.ranges) {
+                const k=names.get(range.ordinals[0])??range.role;
+                if (!result.has(k)) result.set(k,{bytes:0,hits:0,encoding:[],decisions:new Set()});
+                const item=result.get(k);
+                item.bytes+=range.end-range.start;
+                if (range.words) for (const w of range.words) {
+                    item.encoding.push(w.word);
+                    item.hits+=w.executions??0;
+                } else if (range.bytes) item.encoding.push(range.bytes);
+                for (const d of range.decisions??[]) item.decisions.add(d);
+            }
+            return result;
         }
-        for (const role of ["prologue","epilogue","specialized code","local declarations"]) {
-            const size=row=>row.ranges.filter(r=>r.role===role).reduce((total,r)=>total+r.end-r.start,0);
-            if(size(a)!==size(b)) console.log("  "+role,"bytes",size(a),"->",size(b));
+        const before=summarize(a),after=summarize(b);
+        const labels=new Map(groups.map(g=>["#"+g.first,"#"+g.first+" "+g.ops.map(opText).join(" + ")]));
+        for (const k of new Set([...before.keys(),...after.keys()])) {
+            const empty={bytes:0,hits:0,encoding:[],decisions:[]};
+            const x=before.get(k)??empty,y=after.get(k)??empty;
+            const whyX=[...x.decisions].join(", "),whyY=[...y.decisions].join(", ");
+            const changed=x.encoding.join(",")!==y.encoding.join(",");
+            const counted=a.executions!==undefined && b.executions!==undefined;
+            if (x.bytes===y.bytes && !changed && (!counted || x.hits===y.hits) && whyX===whyY) continue;
+            console.log("  "+(labels.get(k)??k),"bytes",x.bytes,"->",y.bytes,
+                counted?"executions "+x.hits+" -> "+y.hits:"",
+                whyX===whyY?"":whyX+" -> "+whyY,
+                x.bytes===y.bytes && changed?"different encoding":"");
         }
     }
 }

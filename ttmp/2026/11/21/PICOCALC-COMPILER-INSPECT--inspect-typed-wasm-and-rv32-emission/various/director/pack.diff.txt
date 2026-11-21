@@ -1,0 +1,9 @@
+wasm/typedRayPack bytes 61 -> 61
+rv32/typedRayPack bytes 392 -> 176
+  executions 1740800 -> 1126400 delta -614400
+  #3 i32.const 255 + i32.div_s bytes 44 -> 8 executions 153600 -> 51200 checked signed arithmetic: emitted trap path -> positive literal divisor: zero and signed division overflow are impossible 
+  #5 i32.const 8 + i32.div_s bytes 44 -> 8 executions 153600 -> 51200 checked signed arithmetic: emitted trap path -> positive literal divisor: zero and signed division overflow are impossible 
+  #11 i32.const 255 + i32.div_s bytes 44 -> 8 executions 153600 -> 51200 checked signed arithmetic: emitted trap path -> positive literal divisor: zero and signed division overflow are impossible 
+  #13 i32.const 4 + i32.div_s bytes 44 -> 8 executions 153600 -> 51200 checked signed arithmetic: emitted trap path -> positive literal divisor: zero and signed division overflow are impossible 
+  #19 i32.const 255 + i32.div_s bytes 44 -> 8 executions 153600 -> 51200 checked signed arithmetic: emitted trap path -> positive literal divisor: zero and signed division overflow are impossible 
+  #21 i32.const 8 + i32.div_s bytes 44 -> 8 executions 153600 -> 51200 checked signed arithmetic: emitted trap path -> positive literal divisor: zero and signed division overflow are impossible 

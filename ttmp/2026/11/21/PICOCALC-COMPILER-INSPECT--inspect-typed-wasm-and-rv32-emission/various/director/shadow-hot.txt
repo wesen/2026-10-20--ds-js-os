@@ -1,0 +1,9 @@
+Executions  Native PC   Stack access and source
+     67601     0x10b4 typedRayInShadow lw t0, 52(sp) [local sphere] original:134:33
+     67601     0x10b8 typedRayInShadow lw t1, 40(sp) [local count] original:134:40
+     52917     0x10d4 typedRayInShadow lw t2, 52(sp) [local sphere] original:135:39
+     52917     0x10e0 typedRayInShadow sw t0, 56(sp) [local shadow] original:135:39
+     52917     0x10e4 typedRayInShadow lw t0, 44(sp) [local scaledX] original:136:33
+     52917     0x10e8 typedRayInShadow lw t1, 56(sp) [local shadow] original:136:57
+     52917     0x10ec typedRayInShadow sw t1, 60(sp) [compiler temporary #15] original:136:58
+     52917     0x10f0 typedRayInShadow lw t5, 60(sp) [compiler temporary #15] original:136:58

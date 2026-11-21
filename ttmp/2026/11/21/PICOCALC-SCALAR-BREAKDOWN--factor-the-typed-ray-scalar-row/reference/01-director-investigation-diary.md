@@ -69,3 +69,51 @@ Start with this ticket’s design and the production typed-wasm.js and typed-rv3
 ### Technical details
 
 Host instrumentation runs in the ordinary JS compiler. Only the device researcher uses the shared ESP32-P4 during physical qualification.
+
+## Step 2. Hold the iteration domain fixed and predict a second kernel
+
+I reviewed the matched experiment, reconciled its frontend and emitted machine ranges with the inspector, and requested an independent paired hardware test of the shadow prediction.
+
+### Prompt Context
+
+The implementation follows both user requests transcribed in Step 1.
+
+### What I did
+
+Froze the controlled arms and the separate empty-row arm. Read the generated standalone backends, their host image digests and the actual fast/fallback range annotations. Recorded a second test on the shadow routine after the forecast was committed at 9d43fba.
+
+### Why
+
+A faster row implementation can execute fewer horizontal tests or pay less per test. Only the latter answers the compiler question at fixed coverage.
+
+### What worked
+
+All four fixed-domain arms visited 76,800 positions in the default frame. Hoisting removed 311,624 guest instructions and register placement removed 662,081 at either setting of the other factor. The held-out shadow prediction matched all 412,994 removed instructions.
+
+### What didn't work
+
+A direct diff of physical addresses would compare unrelated functions after an earlier body changes size. We instead compared per-function operation groups and joined profiles separately against each image.
+
+### What I learned
+
+For the default primary routine 1,290,106 stack accesses fell to 370,265 after changing local homes. Guard hoisting alone did not change that count. Skipping provably empty rows saved another 1,108,770 instructions.
+
+### What was tricky to build
+
+The admission path must transfer to the old checked code before writing any output. Distinct admission conditions apply to the shadow function. Unsupported source edits must keep the ordinary compiler path.
+
+### What warrants a second pair of eyes
+
+Inspect the pre-registered shadow forecast, malformed-input cases, C RGB/depth/object-ID oracle and paired time differences. Check which timers include audit writes.
+
+### What should be done in the future
+
+Retain the specialized implementations as experimental controls while evaluating an inferred proof and a general local allocation rule.
+
+### Code review instructions
+
+Read design-doc/02-reproduce-the-scalar-factorial.md, various/compiler/rows.json, inspection.json and shadow-forecast.json. The physical protocol is in design-doc/03-protocol-for-the-paired-physical-scalar-trial.md.
+
+### Technical details
+
+Host pipeline commits b6cf97c, 9d43fba and dbfb5c4. The physical supervisor reserved the single board, froze the linked images and checked on-device output independently.
