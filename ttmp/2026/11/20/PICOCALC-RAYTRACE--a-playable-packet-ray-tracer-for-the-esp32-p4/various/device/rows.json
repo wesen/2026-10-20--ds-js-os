@@ -1,0 +1,614 @@
+[
+  {
+    "block": 0,
+    "scene": 0,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 0,
+    "setupUs": 28,
+    "frameUs": [
+      8484,
+      7372
+    ],
+    "intersectionUs": [
+      4112,
+      2983
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "ab0a7c80",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4793,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 1,
+    "scene": 0,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 1,
+    "setupUs": 26,
+    "frameUs": [
+      8484,
+      7372
+    ],
+    "intersectionUs": [
+      4100,
+      3000
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "ab0a7c80",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4793,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 2,
+    "scene": 1,
+    "sphere": [
+      32,
+      127
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 0,
+    "setupUs": 27,
+    "frameUs": [
+      8612,
+      7497
+    ],
+    "intersectionUs": [
+      4117,
+      2987
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "343436d9",
+    "depthCRC": "344bc007",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6537,
+    "shadowPixels": 4214,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 3,
+    "scene": 1,
+    "sphere": [
+      32,
+      127
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 1,
+    "setupUs": 31,
+    "frameUs": [
+      8608,
+      7497
+    ],
+    "intersectionUs": [
+      4091,
+      2993
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "343436d9",
+    "depthCRC": "344bc007",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6537,
+    "shadowPixels": 4214,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 4,
+    "scene": 2,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      148,
+      112
+    ],
+    "pieFirst": 0,
+    "setupUs": 25,
+    "frameUs": [
+      8563,
+      7444
+    ],
+    "intersectionUs": [
+      4108,
+      2976
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "05410bc0",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4497,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 5,
+    "scene": 2,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      148,
+      112
+    ],
+    "pieFirst": 1,
+    "setupUs": 35,
+    "frameUs": [
+      8561,
+      7447
+    ],
+    "intersectionUs": [
+      4095,
+      2997
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "05410bc0",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4497,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 6,
+    "scene": 0,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 0,
+    "setupUs": 28,
+    "frameUs": [
+      8483,
+      7366
+    ],
+    "intersectionUs": [
+      4114,
+      2978
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "ab0a7c80",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4793,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 7,
+    "scene": 0,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 1,
+    "setupUs": 24,
+    "frameUs": [
+      8484,
+      7368
+    ],
+    "intersectionUs": [
+      4093,
+      2997
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "ab0a7c80",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4793,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 8,
+    "scene": 1,
+    "sphere": [
+      32,
+      127
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 0,
+    "setupUs": 30,
+    "frameUs": [
+      8616,
+      7496
+    ],
+    "intersectionUs": [
+      4109,
+      2985
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "343436d9",
+    "depthCRC": "344bc007",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6537,
+    "shadowPixels": 4214,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 9,
+    "scene": 1,
+    "sphere": [
+      32,
+      127
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 1,
+    "setupUs": 28,
+    "frameUs": [
+      8615,
+      7499
+    ],
+    "intersectionUs": [
+      4106,
+      3002
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "343436d9",
+    "depthCRC": "344bc007",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6537,
+    "shadowPixels": 4214,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 10,
+    "scene": 2,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      148,
+      112
+    ],
+    "pieFirst": 0,
+    "setupUs": 24,
+    "frameUs": [
+      8561,
+      7448
+    ],
+    "intersectionUs": [
+      4113,
+      2982
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "05410bc0",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4497,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 11,
+    "scene": 2,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      148,
+      112
+    ],
+    "pieFirst": 1,
+    "setupUs": 29,
+    "frameUs": [
+      8562,
+      7449
+    ],
+    "intersectionUs": [
+      4100,
+      2999
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "05410bc0",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4497,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 12,
+    "scene": 0,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 0,
+    "setupUs": 29,
+    "frameUs": [
+      8488,
+      7369
+    ],
+    "intersectionUs": [
+      4115,
+      2986
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "ab0a7c80",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4793,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 13,
+    "scene": 0,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 1,
+    "setupUs": 29,
+    "frameUs": [
+      8489,
+      7368
+    ],
+    "intersectionUs": [
+      4097,
+      3000
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "ab0a7c80",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4793,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 14,
+    "scene": 1,
+    "sphere": [
+      32,
+      127
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 0,
+    "setupUs": 25,
+    "frameUs": [
+      8611,
+      7495
+    ],
+    "intersectionUs": [
+      4112,
+      2980
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "343436d9",
+    "depthCRC": "344bc007",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6537,
+    "shadowPixels": 4214,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 15,
+    "scene": 1,
+    "sphere": [
+      32,
+      127
+    ],
+    "light": [
+      31,
+      25
+    ],
+    "pieFirst": 1,
+    "setupUs": 28,
+    "frameUs": [
+      8611,
+      7497
+    ],
+    "intersectionUs": [
+      4095,
+      2994
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "343436d9",
+    "depthCRC": "344bc007",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6537,
+    "shadowPixels": 4214,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 16,
+    "scene": 2,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      148,
+      112
+    ],
+    "pieFirst": 0,
+    "setupUs": 29,
+    "frameUs": [
+      8565,
+      7448
+    ],
+    "intersectionUs": [
+      4114,
+      2984
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "05410bc0",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4497,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  },
+  {
+    "block": 17,
+    "scene": 2,
+    "sphere": [
+      68,
+      61
+    ],
+    "light": [
+      148,
+      112
+    ],
+    "pieFirst": 1,
+    "setupUs": 27,
+    "frameUs": [
+      8561,
+      7447
+    ],
+    "intersectionUs": [
+      4093,
+      2995
+    ],
+    "equalFrame": 1,
+    "equalDepth": 1,
+    "equalInstrumented": 1,
+    "frameCRC": "05410bc0",
+    "depthCRC": "cd0ef60c",
+    "rays": 25600,
+    "sphereTests": 76800,
+    "sphereHits": 6983,
+    "hitPixels": 6123,
+    "shadowPixels": 4497,
+    "pieGroups": 9600,
+    "pieActiveLanes": 6983
+  }
+]

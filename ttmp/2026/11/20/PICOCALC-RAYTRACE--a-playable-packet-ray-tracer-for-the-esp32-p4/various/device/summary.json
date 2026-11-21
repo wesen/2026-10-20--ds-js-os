@@ -1,0 +1,194 @@
+{
+  "pairedBlocks": 18,
+  "scenes": [
+    {
+      "scene": 0,
+      "pairs": 6,
+      "sphere": [
+        68,
+        61
+      ],
+      "light": [
+        31,
+        25
+      ],
+      "rays": 25600,
+      "sphereTests": 76800,
+      "sphereHits": 6983,
+      "hitPixels": 6123,
+      "shadowPixels": 4793,
+      "pieGroups": 9600,
+      "pieActiveLanes": 6983,
+      "frameCRC": "ab0a7c80",
+      "depthCRC": "cd0ef60c",
+      "survivingFraction": 0.090924,
+      "setupMedianUs": 28.0,
+      "frame": {
+        "scalarMedianUs": 8484.0,
+        "pieMedianUs": 7368.5,
+        "scalarRangeUs": [
+          8483,
+          8489
+        ],
+        "pieRangeUs": [
+          7366,
+          7372
+        ],
+        "medianPairedSavedUs": 1116.5,
+        "medianPairedSpeedup": 1.15155,
+        "pieFasterPairs": 6
+      },
+      "primary": {
+        "scalarMedianUs": 4106.0,
+        "pieMedianUs": 2991.5,
+        "scalarRangeUs": [
+          4093,
+          4115
+        ],
+        "pieRangeUs": [
+          2978,
+          3000
+        ],
+        "medianPairedSavedUs": 1114.5,
+        "medianPairedSpeedup": 1.37238,
+        "pieFasterPairs": 6
+      }
+    },
+    {
+      "scene": 1,
+      "pairs": 6,
+      "sphere": [
+        32,
+        127
+      ],
+      "light": [
+        31,
+        25
+      ],
+      "rays": 25600,
+      "sphereTests": 76800,
+      "sphereHits": 6983,
+      "hitPixels": 6537,
+      "shadowPixels": 4214,
+      "pieGroups": 9600,
+      "pieActiveLanes": 6983,
+      "frameCRC": "343436d9",
+      "depthCRC": "344bc007",
+      "survivingFraction": 0.090924,
+      "setupMedianUs": 28.0,
+      "frame": {
+        "scalarMedianUs": 8611.5,
+        "pieMedianUs": 7497.0,
+        "scalarRangeUs": [
+          8608,
+          8616
+        ],
+        "pieRangeUs": [
+          7495,
+          7499
+        ],
+        "medianPairedSavedUs": 1115.5,
+        "medianPairedSpeedup": 1.14877,
+        "pieFasterPairs": 6
+      },
+      "primary": {
+        "scalarMedianUs": 4107.5,
+        "pieMedianUs": 2990.0,
+        "scalarRangeUs": [
+          4091,
+          4117
+        ],
+        "pieRangeUs": [
+          2980,
+          3002
+        ],
+        "medianPairedSavedUs": 1114.0,
+        "medianPairedSpeedup": 1.37215,
+        "pieFasterPairs": 6
+      }
+    },
+    {
+      "scene": 2,
+      "pairs": 6,
+      "sphere": [
+        68,
+        61
+      ],
+      "light": [
+        148,
+        112
+      ],
+      "rays": 25600,
+      "sphereTests": 76800,
+      "sphereHits": 6983,
+      "hitPixels": 6123,
+      "shadowPixels": 4497,
+      "pieGroups": 9600,
+      "pieActiveLanes": 6983,
+      "frameCRC": "05410bc0",
+      "depthCRC": "cd0ef60c",
+      "survivingFraction": 0.090924,
+      "setupMedianUs": 28.0,
+      "frame": {
+        "scalarMedianUs": 8561.5,
+        "pieMedianUs": 7447.5,
+        "scalarRangeUs": [
+          8561,
+          8565
+        ],
+        "pieRangeUs": [
+          7444,
+          7449
+        ],
+        "medianPairedSavedUs": 1114.0,
+        "medianPairedSpeedup": 1.14959,
+        "pieFasterPairs": 6
+      },
+      "primary": {
+        "scalarMedianUs": 4104.0,
+        "pieMedianUs": 2989.5,
+        "scalarRangeUs": [
+          4093,
+          4114
+        ],
+        "pieRangeUs": [
+          2976,
+          2999
+        ],
+        "medianPairedSavedUs": 1115.5,
+        "medianPairedSpeedup": 1.3729,
+        "pieFasterPairs": 6
+      }
+    }
+  ],
+  "allFrame": {
+    "scalarMedianUs": 8561.5,
+    "pieMedianUs": 7447.5,
+    "scalarRangeUs": [
+      8483,
+      8616
+    ],
+    "pieRangeUs": [
+      7366,
+      7499
+    ],
+    "medianPairedSavedUs": 1115.5,
+    "medianPairedSpeedup": 1.14959,
+    "pieFasterPairs": 18
+  },
+  "allPrimary": {
+    "scalarMedianUs": 4107.0,
+    "pieMedianUs": 2990.0,
+    "scalarRangeUs": [
+      4091,
+      4117
+    ],
+    "pieRangeUs": [
+      2976,
+      3002
+    ],
+    "medianPairedSavedUs": 1114.0,
+    "medianPairedSpeedup": 1.37215,
+    "pieFasterPairs": 18
+  }
+}

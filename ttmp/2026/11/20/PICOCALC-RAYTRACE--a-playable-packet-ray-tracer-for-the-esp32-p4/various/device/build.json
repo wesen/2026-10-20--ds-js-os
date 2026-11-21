@@ -1,0 +1,37 @@
+{
+  "revision": "3a67c10e998914c6fd6c036e25ce71f40a19b8a1",
+  "appSHA256": "efc938724492f1de8f2a0911abd05d09e8692b80872f5da707da1f92dd08a0c9",
+  "appBytes": 4341264,
+  "partitionSHA256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "elfSHA256": "79199d5a1732c73faa90318d331a66151166f4f9216ca229de33c7262ba731cc",
+  "normalProfile": {
+    "PICOCALC_HEADLESS": "OFF",
+    "PICOCALC_CHESS_3D": "ON",
+    "PICOCALC_RV32_CHESS": "ON",
+    "PICOCALC_RV32_EDITOR": "ON",
+    "PICOCALC_RV32_FILES": "ON",
+    "PICOCALC_RV32_AGENDA": "ON",
+    "PICOCALC_MOBILE_PAINTER": "ON"
+  },
+  "sourceDigests": {
+    "cji/src/world-native.js": "3c5a92d8f912c867e72fd7c04ae1cd870bbd26c98468293b4e84e0293f9e81f4",
+    "picocalc-os/js/apps/raytrace.js": "7860e23f98befe7c9c7ac9db7930349b08d7d500ebc26c145be482a7fcc0b70b",
+    "picocalc-os/js/system.json": "e0526f979abddcdab78e3a963849f8229db992691672d3153245bcf9305bf1dc",
+    "picocalc-os/js/system/compositor.js": "c93dc982cf42b2a4e43eaf4c5602291fa8456f3e9ef3ecc1a7416c934192c886",
+    "picocalc-os/nucleus/gfx.c": "882a3f69c11dc06ab2a4d1572f5f185050f3a6b513ab3a85c5c1fa2a2f89de44",
+    "picocalc-os/nucleus/native.c": "07c2e73ba1245e646b498b9dcfcf97354fc384919ea8f770d460c55679c9a914",
+    "picocalc-os/nucleus/raytrace_demo.c": "745d95789cb47c6ea28d161eafac5ab5fb25df1e648d002ab106266ae8d026b3",
+    "picocalc-os/nucleus/raytrace_demo.h": "a2139319b9e31e0c6b2c6a42af666ad129bf92f33e7c819b6f120e483b97c201",
+    "picocalc-os/nucleus/raytrace_demo_pie.S": "dacac86d28a719e30dd49147f1fa4c5baafdc12fd7a59f2cb24f5c215e7a7fc2",
+    "picocalc-os/port/esp32p4/main/raybench_p4.c": "928e6249ecea3c41a2ece41a8b09f10851dfbf9510d07bac4e1b1cd92d0fea81"
+  },
+  "pieDisassembly": [
+    "40010af8:\t8601a03b          \tesp.vldbc.16.ip\tq0,a1,0",
+    "40010afc:\t0201263b          \tesp.vld.128.ip\tq1,a0,16",
+    "40010b00:\t06a406df          \tesp.vsub.s16\tq2,q0,q1",
+    "40010b04:\t82022a3b          \tesp.vst.128.ip\tq2,a2,16",
+    "40010b08:\tfff68693          \taddi\ta3,a3,-1",
+    "40010b0c:\tfe0698e3          \tbnez\ta3,40010afc <raytrace_demo_pie_row+0x4>",
+    "40010b10:\t00008067          \tret"
+  ]
+}

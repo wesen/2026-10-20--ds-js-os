@@ -1,0 +1,48 @@
+{
+  "qualified": true,
+  "appSHA256": "efc938724492f1de8f2a0911abd05d09e8692b80872f5da707da1f92dd08a0c9",
+  "previousSHA256": "33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813",
+  "partitionSHA256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "verifiedFinalAppAndPartition": true,
+  "pairedBlocks": 18,
+  "sceneCount": 3,
+  "uiCaptures": 4,
+  "health": {
+    "worlds": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 1321361,
+      "relocate_us": 1234,
+      "native_us": 2720,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 1243.31,
+      "transfers": 213,
+      "bytes": 855,
+      "errors": 0
+    },
+    "spi": {
+      "busyMs": 115.55,
+      "transfers": 70,
+      "bytes": 401984,
+      "errors": 0
+    }
+  }
+}

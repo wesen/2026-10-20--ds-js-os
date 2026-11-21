@@ -1,0 +1,74 @@
+[
+  {
+    "label": "default",
+    "scene": [
+      68,
+      61,
+      31,
+      25
+    ],
+    "viewportPixels": 57600,
+    "expectedCRC": "4b91a3c8",
+    "actualCRC": "4b91a3c8",
+    "framebuffer": {
+      "crc32": "96d98a98",
+      "sha256": "db1b7c82a5078d1e870d9dd614a8413d452c4904d23e7dd2697420fdf544946a",
+      "appSha256": "79a70f60ff7f2d1d43b6222d102efdc33a594f77ac11c4ca476bb77fd1ec8025"
+    },
+    "pngSHA256": "e754f4272592043103b929b3805ac6c98d1eb6abd7b816894dc3a6c82a8a2342"
+  },
+  {
+    "label": "sphere-right",
+    "scene": [
+      76,
+      61,
+      31,
+      25
+    ],
+    "viewportPixels": 57600,
+    "expectedCRC": "fa6be88f",
+    "actualCRC": "fa6be88f",
+    "framebuffer": {
+      "crc32": "677e036f",
+      "sha256": "7819fd7b4d7444cbc7ad0d18d90a6d4873d1ceca502cbb74cec127c8fe06ce0b",
+      "appSha256": "b1180a9408140b93445e2bc041a28d0f6021e47851932251aa0ba51e3d057203"
+    },
+    "pngSHA256": "83c89ec77f09e7bb083c1826d5e9dcadc05742a45c1143506f60777453d0d956"
+  },
+  {
+    "label": "light-up",
+    "scene": [
+      76,
+      61,
+      31,
+      17
+    ],
+    "viewportPixels": 57600,
+    "expectedCRC": "e2bcc3b5",
+    "actualCRC": "e2bcc3b5",
+    "framebuffer": {
+      "crc32": "a26b7a4c",
+      "sha256": "debab66af6e2030c6d92f9f869f794e152b60a824143726474068f91b5d61835",
+      "appSha256": "c8a1a4ed2cc5dfc2952693a9382f6f04e966472edd6ff3723545c042414bfb6b"
+    },
+    "pngSHA256": "f286bff7c6aa7096b5a2fc658c323f75dce5bd57450e1598a60e7614b590cc2c"
+  },
+  {
+    "label": "reset",
+    "scene": [
+      68,
+      61,
+      31,
+      25
+    ],
+    "viewportPixels": 57600,
+    "expectedCRC": "4b91a3c8",
+    "actualCRC": "4b91a3c8",
+    "framebuffer": {
+      "crc32": "96d98a98",
+      "sha256": "db1b7c82a5078d1e870d9dd614a8413d452c4904d23e7dd2697420fdf544946a",
+      "appSha256": "79a70f60ff7f2d1d43b6222d102efdc33a594f77ac11c4ca476bb77fd1ec8025"
+    },
+    "pngSHA256": "e754f4272592043103b929b3805ac6c98d1eb6abd7b816894dc3a6c82a8a2342"
+  }
+]

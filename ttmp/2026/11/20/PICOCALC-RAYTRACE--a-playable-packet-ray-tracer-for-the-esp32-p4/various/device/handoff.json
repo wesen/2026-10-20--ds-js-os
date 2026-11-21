@@ -1,0 +1,14 @@
+{
+  "appSHA256": "efc938724492f1de8f2a0911abd05d09e8692b80872f5da707da1f92dd08a0c9",
+  "visible": "Ray Tracer",
+  "state": "idle",
+  "engine": "js",
+  "bodySha256": "79a70f60ff7f2d1d43b6222d102efdc33a594f77ac11c4ca476bb77fd1ec8025",
+  "scene": [
+    68,
+    61,
+    31,
+    25
+  ],
+  "qualifiedOpeningConfirmed": true
+}

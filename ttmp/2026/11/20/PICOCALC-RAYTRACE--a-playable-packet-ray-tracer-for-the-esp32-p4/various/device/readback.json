@@ -1,0 +1,20 @@
+{
+  "previous-readback": [
+    "Verifying 0x421900 (4331776) bytes @ 0x00010000 in flash against /tmp/picocalc-native-promotion-rev1/build/picocalc-os-p4.bin...",
+    "-- verify OK (digest matched)",
+    "Verifying 0xc00 (3072) bytes @ 0x00008000 in flash against /tmp/picocalc-native-promotion-rev1/build/partition_table/partition-table.bin...",
+    "-- verify OK (digest matched)"
+  ],
+  "new-readback": [
+    "Verifying 0x423e10 (4341264) bytes @ 0x00010000 in flash against /tmp/picocalc-raytrace-release/build/picocalc-os-p4.bin...",
+    "-- verify OK (digest matched)",
+    "Verifying 0xc00 (3072) bytes @ 0x00008000 in flash against /tmp/picocalc-raytrace-release/build/partition_table/partition-table.bin...",
+    "-- verify OK (digest matched)"
+  ],
+  "final-readback": [
+    "Verifying 0x423e10 (4341264) bytes @ 0x00010000 in flash against /tmp/picocalc-raytrace-release/build/picocalc-os-p4.bin...",
+    "-- verify OK (digest matched)",
+    "Verifying 0xc00 (3072) bytes @ 0x00008000 in flash against /tmp/picocalc-raytrace-release/build/partition_table/partition-table.bin...",
+    "-- verify OK (digest matched)"
+  ]
+}
