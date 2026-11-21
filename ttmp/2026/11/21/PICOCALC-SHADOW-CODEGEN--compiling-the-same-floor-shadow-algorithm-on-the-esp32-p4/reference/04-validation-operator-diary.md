@@ -53,3 +53,7 @@ Compare the extracted names and bodies in `position.typed` and `search.typed` wi
 
 ### Technical details
 The hardware ABI passes a pointer to a length plus halfwords and an i32 positional-scoring flag. The harness validates the entire 133-cell visible board buffer including the two cached king squares.
+
+### Handoff after the supervisor changed to sequential staffing
+
+The transfer freeze was committed as `5d885b0`. After that checkpoint the compiler operator identified the provisional candidate option as `{pieLoops:"pie-empty",registerLocals:true}`. I started a single isolated Opus oracle request with `scripts/validation/01-opus.py oracle`. On notification to end parallel work I stopped that request and its children. The process exited 143 and produced no research deliverable. No candidate image was observed, no device access occurred and no timing or qualification results are claimed by this department. The sequential researcher can use the pinned source, boards and independent expected-value function directly.
