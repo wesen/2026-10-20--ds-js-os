@@ -224,8 +224,8 @@ function $handle(h /*: Any */, type /*: Any */, rights /*: Any */, path /*: Any 
       $coords(x, y, maxw || 0, 0); $hostArg(1, String(t)); $hostArg(2, font || 'm');
       return $check($hostCall(${CJI.TEXT}, h, $ink(c)));
     },
-    raytrace: (sx /*: Any */, sy /*: Any */, lx /*: Any */, ly /*: Any */) => {
-      $coords(sx, sy, lx, ly); return $check($hostCall(${CJI.RAYTRACE}, h, 0));
+    raytrace: (sx /*: Any */, sy /*: Any */, lx /*: Any */, ly /*: Any */, scene /*: Any */) => {
+      $coords(sx, sy, lx, ly); return $check($hostCall(${CJI.RAYTRACE}, h, scene | 0));
     },
     paintView: (yaw /*: Any */) => $check($call(${CJI.PAINTER_DRAW}, h, yaw | 0, undefined, undefined, undefined)),
     commit: () => JSON.parse($check($call(${CJI.COMMIT}, h, 0, undefined, undefined, undefined))),

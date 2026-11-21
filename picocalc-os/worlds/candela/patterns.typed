@@ -15,7 +15,7 @@ function tileMaskExpr(graph: buffer, point: Vec2Expr): ScalarExpr {
 }
 
 function candelaCapturedTile(graph: buffer): i32 {
-    candelaInit(graph);
+    if (candelaInit(graph) === 0) return 0;
     const blue = candelaColor(graph, 30, 70, 150);
     const low = candelaColor(graph, 35, 46, 70);
     const high = candelaColor(graph, 105, 145, 187);
@@ -25,8 +25,7 @@ function candelaCapturedTile(graph: buffer): i32 {
     const floorColor = candelaMix(graph, low, high, i32(mask));
     const sphere = candelaMaterial(graph, blue);
     const floor = candelaMaterial(graph, floorColor);
-    candelaAddSphere(graph, 68, 61, 56, 26, sphere);
-    candelaAddSphere(graph, 100, 65, 105, 32, sphere);
-    candelaFloor(graph, floor);
-    return 1;
+    if (candelaAddSphere(graph, 68, 61, 56, 26, sphere) < 0) return 0;
+    if (candelaAddSphere(graph, 100, 65, 105, 32, sphere) < 0) return 0;
+    return candelaFloor(graph, floor);
 }

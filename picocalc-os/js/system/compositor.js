@@ -410,12 +410,12 @@ function paintSnakeMove(fb, previous, next) {
 function rayCoord(v, lo, hi) { return (v | 0) === v && v >= lo && v <= hi; }
 function validRayScene(n) {
   return n && n.t === "raytrace" && rayCoord(n.sx, 32, 127) && rayCoord(n.sy, 32, 127) &&
-    rayCoord(n.lx, 0, 159) && rayCoord(n.ly, 0, 159);
+    rayCoord(n.lx, 0, 159) && rayCoord(n.ly, 0, 159) && rayCoord(n.scene, 0, 2) && rayCoord(n.weight, 0, 256);
 }
 function drawRayScene(fb, n) {
-  fb.raytrace(n.sx, n.sy, n.lx, n.ly);
+  fb.raytrace(n.sx, n.sy, n.lx, n.ly, n.scene ? (n.scene - 1) * 257 + n.weight + 1 : 0);
   fb.rect(39, 31, 242, 242, C.ink);
-  fb.text(40, 279, "Sphere " + n.sx + ", " + n.sy, "s", C.ink);
+  fb.text(40, 279, n.scene ? (n.scene === 1 ? "Mix " : "Tile ") + n.weight : "Sphere " + n.sx + ", " + n.sy, "s", C.ink);
   fb.text(172, 279, "Light " + n.lx + ", " + n.ly, "s", C.ink);
 }
 

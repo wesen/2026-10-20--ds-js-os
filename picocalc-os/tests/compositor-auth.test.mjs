@@ -202,7 +202,7 @@ test("only the compositor may switch the screen, set the backlight, attach a fra
 
 test("Ray Tracer accepts its own bounded integral scene", () => {
   const { def, state } = setup();
-  const scene = { t: "raytrace", sx: 32, sy: 127, lx: 0, ly: 159 };
+  const scene = { t: "raytrace", sx: 32, sy: 127, lx: 0, ly: 159, scene: 0, weight: 128 };
   const publish = (tree, from = "raytrace") => def.handlers.frames(state,
     { app: "raytrace", title: "Ray Tracer", frame: { tree, hints: "" } }, { from });
   publish(scene, "snake");

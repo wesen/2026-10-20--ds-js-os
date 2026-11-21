@@ -367,7 +367,7 @@ static int64_t cji_graphics(world_t *W, const nw_call_t *c, char *out, size_t ca
   if (op == CJI_RAYTRACE) {
     if (strcmp(W->name, "compositor") || c->n[0] != sizeof rect) return fail(W, "invalid raytrace request");
     memcpy(rect, c->s[0], sizeof rect);
-    if (!gfx_raytrace(b, rect[0], rect[1], rect[2], rect[3])) return fail(W, "invalid raytrace viewport or scene");
+    if (!gfx_raytrace(b, rect[0], rect[1], rect[2], rect[3], arg)) return fail(W, "invalid raytrace viewport or scene");
     return 0;
   }
 #endif

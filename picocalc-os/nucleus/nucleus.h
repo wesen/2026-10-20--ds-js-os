@@ -449,7 +449,7 @@ char *hw_buses_json(void);
 
 // gfx.c
 #if PICOCALC_RAYTRACE
-bool gfx_raytrace(dmabuf_t *b, int sx, int sy, int lx, int ly);
+bool gfx_raytrace(dmabuf_t *b, int sx, int sy, int lx, int ly, int selection);
 #endif
 void gfx_fill(dmabuf_t *b, int x, int y, int w, int h, pixel_t c);
 void gfx_rect(dmabuf_t *b, int x, int y, int w, int h, pixel_t c);

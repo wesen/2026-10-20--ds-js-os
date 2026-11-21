@@ -412,16 +412,25 @@ test("Ray Tracer moves each control within its bounds, then resets", () => {
   const h = load("raytrace.js", {});
   const scene = () => plain(h.def.screen(h.s));
   const start = scene();
-  assert.deepEqual(start, { t: "raytrace", sx: 68, sy: 61, lx: 31, ly: 25 });
+  assert.deepEqual(start, { t: "raytrace", sx: 68, sy: 61, lx: 31, ly: 25, scene: 0, weight: 128 });
   h.key("right"); h.key("up"); h.type("DS");
-  assert.deepEqual(scene(), { t: "raytrace", sx: 76, sy: 53, lx: 39, ly: 33 });
+  assert.deepEqual(scene(), { t: "raytrace", sx: 76, sy: 53, lx: 39, ly: 33, scene: 0, weight: 128 });
   for (let i = 0; i < 30; i++) { h.key("left"); h.key("down"); h.type("aw"); }
-  assert.deepEqual(scene(), { t: "raytrace", sx: 32, sy: 127, lx: 0, ly: 0 });
+  assert.deepEqual(scene(), { t: "raytrace", sx: 32, sy: 127, lx: 0, ly: 0, scene: 0, weight: 128 });
   for (let i = 0; i < 30; i++) { h.key("right"); h.key("up"); h.type("ds"); }
-  assert.deepEqual(scene(), { t: "raytrace", sx: 127, sy: 32, lx: 159, ly: 159 });
+  assert.deepEqual(scene(), { t: "raytrace", sx: 127, sy: 32, lx: 159, ly: 159, scene: 0, weight: 128 });
   h.key("r", "r", "up");
   h.def.handlers.key(h.s, { key: "r", ch: "r", state: "down" }, { from: "logs" });
   assert.equal(scene().sx, 127);
   h.type("R");
   assert.deepEqual(scene(), start);
+});
+
+test("Ray Tracer selects distinct Candela scenes and edits their parameter", () => {
+  const h = load("raytrace.js", {});
+  h.type("g"); h.key("right");
+  assert.equal(h.s.scene, 1); assert.equal(h.s.weight, 144);
+  h.type("g"); h.key("left");
+  assert.equal(h.s.scene, 2); assert.equal(h.s.weight, 48);
+  h.type("g"); assert.equal(h.s.scene, 0);
 });

@@ -1,5 +1,5 @@
 // Coordinates are in the 160-pixel orthographic image. The compositor owns the pixels.
-const startScene = { sx: 68, sy: 61, lx: 31, ly: 25 };
+const startScene = { sx: 68, sy: 61, lx: 31, ly: 25, scene: 0, weight: 128 };
 const step = 8;
 const sphere = (n) => Math.max(32, Math.min(127, n));
 const light = (n) => Math.max(0, Math.min(159, n));
@@ -15,8 +15,9 @@ app("raytrace")
   .on("key", (s, k, msg) => {
     if (msg.from !== "compositor" || k.state === "up") return;
     switch ((k.ch || k.key).toLowerCase()) {
-      case "left":  s.sx = sphere(s.sx - step); break;
-      case "right": s.sx = sphere(s.sx + step); break;
+      case "g":     s.scene = (s.scene + 1) % 3; s.weight = s.scene === 2 ? 64 : 128; break;
+      case "left":  if (s.scene) { s.weight = Math.max(0, s.weight - 16); break; } s.sx = sphere(s.sx - step); break;
+      case "right": if (s.scene) { s.weight = Math.min(256, s.weight + 16); break; } s.sx = sphere(s.sx + step); break;
       case "up":    s.sy = sphere(s.sy - step); break;
       case "down":  s.sy = sphere(s.sy + step); break;
       case "a": s.lx = light(s.lx - step); break;
@@ -26,5 +27,5 @@ app("raytrace")
       case "r": Object.assign(s, startScene); break;
     }
   })
-  .screen((s) => ({ t: "raytrace", sx: s.sx, sy: s.sy, lx: s.lx, ly: s.ly }))
-  .hints("Arrows sphere  WASD light  R reset");
+  .screen((s) => ({ t: "raytrace", sx: s.sx, sy: s.sy, lx: s.lx, ly: s.ly, scene: s.scene, weight: s.weight }))
+  .hints("G scene  Arrows adjust  WASD light  R reset");

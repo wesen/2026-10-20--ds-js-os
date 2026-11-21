@@ -40,13 +40,25 @@ static inline void touch(dmabuf_t *b, int y, int h) {
 }
 
 #if PICOCALC_RAYTRACE
-bool gfx_raytrace(dmabuf_t *b, int sx, int sy, int lx, int ly) {
+bool gfx_raytrace(dmabuf_t *b, int sx, int sy, int lx, int ly, int selection) {
   enum { SIDE = RAYTRACE_DEMO_SIDE * 3 / 2, TOP = 32 };
   if (b->w < SIDE || b->h < TOP + SIDE) return false;
   uint16_t *origin = b->back + TOP * b->w + (b->w - SIDE) / 2;
   raytrace_demo_scene scene = { .sphere_x = sx, .sphere_y = sy, .light_x = lx, .light_y = ly };
   raytrace_demo_mode mode = raytrace_demo_has_pie() ? RAYTRACE_DEMO_PIE : RAYTRACE_DEMO_SCALAR;
-  if (!raytrace_demo_render(origin, b->w, &scene, mode, NULL)) return false;
+  if (selection < 0 || selection > 514) return false;
+  if (selection) {
+    bool ready = false;
+#if PICOCALC_CANDELA
+    extern bool p4_candela_frame(uint16_t *, size_t, int, int, int, int);
+    ready = p4_candela_frame(origin, b->w, (selection - 1) / 257, (selection - 1) % 257, lx, ly);
+#endif
+    if (!ready) {
+      gfx_fill(b, (b->w - SIDE) / 2, TOP, SIDE, SIDE, 0);
+      gfx_text(b, (b->w - SIDE) / 2 + 8, TOP + 8, "Scene renderer unavailable", 0, 0xffff, SIDE - 16);
+      return true;
+    }
+  } else if (!raytrace_demo_render(origin, b->w, &scene, mode, NULL)) return false;
 
   // The input occupies the top left of the same viewport. Read from the bottom
   // right so that an expanded row can never overwrite a source pixel still needed.

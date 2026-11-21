@@ -433,7 +433,7 @@ static JSValue op_gfx_raytrace(JSContext *ctx, world_t *W, int argc, JSValueCons
   if (!b) return JS_EXCEPTION;
   if (strcmp(W->name, "compositor")) return fail(ctx, "raytrace requires the compositor");
   if (!gfx_raytrace(b, iarg(ctx, argv, argc, 1, -1), iarg(ctx, argv, argc, 2, -1),
-                    iarg(ctx, argv, argc, 3, -1), iarg(ctx, argv, argc, 4, -1)))
+                    iarg(ctx, argv, argc, 3, -1), iarg(ctx, argv, argc, 4, -1), iarg(ctx, argv, argc, 5, 0)))
     return fail(ctx, "invalid raytrace viewport or scene");
   return JS_UNDEFINED;
 }
