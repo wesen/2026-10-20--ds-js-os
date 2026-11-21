@@ -1,0 +1,88 @@
+[
+  {
+    "name": "nested record remains one word in outer record",
+    "artifact": {
+      "hash": "ef20f1889c69f84e256e5a4a6212cc5f6ab55296a4f90896a532ec09a1870db3",
+      "meta": "4e73e1e65b54cabfdd004e5cb520eff71803e4e0996d8489546a5786f543da71",
+      "bytes": 72
+    },
+    "stats": {
+      "reused": 2,
+      "rebuilt": 0
+    },
+    "events": [
+      [
+        "get",
+        true
+      ],
+      [
+        "read",
+        true
+      ]
+    ]
+  },
+  {
+    "name": "field kind changes without changing following offset",
+    "error": "SyntaxError: 1:127: expected bool, got i32",
+    "stats": {
+      "reused": 1,
+      "rebuilt": 1
+    }
+  },
+  {
+    "name": "longer literal ahead of still-used helpers and caller",
+    "artifact": {
+      "hash": "3206eafec3dc057f8662f197dc1365aacfe39a50935c83ef7eb5ef58d22aa579",
+      "meta": "5ba05b679ca1e39b4216fb55e4d367efce8fb9f3b94f9bfded5b0525e8b61feb",
+      "bytes": 632
+    },
+    "stats": {
+      "reused": 2,
+      "rebuilt": 1
+    },
+    "events": [
+      [
+        "label",
+        false
+      ],
+      [
+        "digit",
+        true
+      ],
+      [
+        "display",
+        true
+      ]
+    ]
+  },
+  {
+    "name": "renaming a function that a retained caller needs",
+    "error": "SyntaxError: 1:84: unknown function add",
+    "stats": {
+      "reused": 0,
+      "rebuilt": 2
+    }
+  },
+  {
+    "name": "removed declaration with unaffected caller order",
+    "artifact": {
+      "hash": "4666c0bccaf89041676169934dfdb527eb0abf9e3422fd33acf1b9ac53f23e55",
+      "meta": "e75a993ec35d8553f9402d077aa7aebfa8882e6d7aff095fefbe02c6b22e9401",
+      "bytes": 84
+    },
+    "stats": {
+      "reused": 2,
+      "rebuilt": 0
+    },
+    "events": [
+      [
+        "a",
+        true
+      ],
+      [
+        "main",
+        true
+      ]
+    ]
+  }
+]

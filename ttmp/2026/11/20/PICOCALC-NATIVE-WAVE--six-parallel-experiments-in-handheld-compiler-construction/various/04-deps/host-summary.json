@@ -1,0 +1,162 @@
+{
+  "editor": {
+    "body": {
+      "measurementsPerArm": 30,
+      "medianMs": {
+        "clean": {
+          "total": 14.806876999999986,
+          "compile": 14.717675500000041,
+          "link": 0.06180499999999256
+        },
+        "global": {
+          "total": 9.271923999999984,
+          "compile": 7.783894500000059,
+          "link": 0.06464849999997568
+        },
+        "precise": {
+          "total": 8.517304499999995,
+          "compile": 8.43812399999996,
+          "link": 0.0651459999999986
+        }
+      },
+      "preciseMinusGlobalMedianPairedMs": -0.16222550000003366,
+      "bootstrap95WithinRunMs": [
+        -2.6540840000000117,
+        1.758368499999989
+      ],
+      "medianPairedRatio": 0.9861914983906042
+    },
+    "signature": {
+      "measurementsPerArm": 30,
+      "medianMs": {
+        "clean": {
+          "total": 11.195401500000116,
+          "compile": 11.093208999999888,
+          "link": 0.0751874999998563
+        },
+        "global": {
+          "total": 12.780355500000042,
+          "compile": 12.49333549999983,
+          "link": 0.07337900000015907
+        },
+        "precise": {
+          "total": 5.349604499999828,
+          "compile": 5.3049499999999625,
+          "link": 0.028641500000048836
+        }
+      },
+      "preciseMinusGlobalMedianPairedMs": -6.065489000000298,
+      "bootstrap95WithinRunMs": [
+        -8.246548999999732,
+        -5.436879499999918
+      ],
+      "medianPairedRatio": 0.466063947645591
+    },
+    "layout": {
+      "measurementsPerArm": 30,
+      "medianMs": {
+        "clean": {
+          "total": 9.271328499999981,
+          "compile": 8.499758000000156,
+          "link": 0.030468500000097265
+        },
+        "global": {
+          "total": 8.929927500000076,
+          "compile": 8.872340000000122,
+          "link": 0.03363200000012512
+        },
+        "precise": {
+          "total": 6.1842609999998785,
+          "compile": 6.138678000000027,
+          "link": 0.028270000000020445
+        }
+      },
+      "preciseMinusGlobalMedianPairedMs": -3.2430669999998827,
+      "bootstrap95WithinRunMs": [
+        -3.9383280000001832,
+        -2.1214624999997795
+      ],
+      "medianPairedRatio": 0.6460999349035609
+    }
+  },
+  "chess": {
+    "body": {
+      "measurementsPerArm": 30,
+      "medianMs": {
+        "clean": {
+          "total": 6.2653099999999995,
+          "compile": 5.950753999999961,
+          "link": 0.12575149999997848
+        },
+        "global": {
+          "total": 1.773634500000071,
+          "compile": 1.6240670000001955,
+          "link": 0.126796000000013
+        },
+        "precise": {
+          "total": 2.099837500000149,
+          "compile": 1.8611195000000862,
+          "link": 0.12589600000001155
+        }
+      },
+      "preciseMinusGlobalMedianPairedMs": 0.26341600000000653,
+      "bootstrap95WithinRunMs": [
+        0.21385850000001483,
+        0.3027480000000651
+      ],
+      "medianPairedRatio": 1.143490425340668
+    },
+    "signature": {
+      "measurementsPerArm": 30,
+      "medianMs": {
+        "clean": {
+          "total": 6.1153419999996,
+          "compile": 5.978477499999826,
+          "link": 0.10276650000014342
+        },
+        "global": {
+          "total": 7.037599999999884,
+          "compile": 6.920888999999761,
+          "link": 0.10110900000017864
+        },
+        "precise": {
+          "total": 3.2343089999999393,
+          "compile": 3.0615324999998847,
+          "link": 0.10019250000004831
+        }
+      },
+      "preciseMinusGlobalMedianPairedMs": -3.9385270000002492,
+      "bootstrap95WithinRunMs": [
+        -4.15798199999972,
+        -3.716067999999723
+      ],
+      "medianPairedRatio": 0.44048476604278153
+    },
+    "layout": {
+      "measurementsPerArm": 30,
+      "medianMs": {
+        "clean": {
+          "total": 5.863668000000416,
+          "compile": 5.739961000000221,
+          "link": 0.10146549999990384
+        },
+        "global": {
+          "total": 6.999773000000005,
+          "compile": 6.884048500000063,
+          "link": 0.10420449999992343
+        },
+        "precise": {
+          "total": 2.7170569999998406,
+          "compile": 2.5926660000000084,
+          "link": 0.09921449999956167
+        }
+      },
+      "preciseMinusGlobalMedianPairedMs": -4.2662949999999,
+      "bootstrap95WithinRunMs": [
+        -4.442204999999831,
+        -4.122140499999659
+      ],
+      "medianPairedRatio": 0.39043136411778834
+    }
+  }
+}
