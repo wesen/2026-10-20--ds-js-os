@@ -1,3 +1,4 @@
+import {execFileSync} from 'node:child_process';
 /* Compile three equivalent kernels using scalar, runtime and compile-time proofs.
  * Emit externally callable RV32 symbols and prove checks through exact interpreter
  * traces. Use a separate VM realm for the experimental pass so production stays fixed.
@@ -23,7 +24,7 @@ const vendor={};
 for(const variant of ['scalar','guarded','static']) {
   const c=createContext({});
   for(const n of ['typed-wasm','typed-rv32','typed-pie-loops']){
-    let js=read(join(repo,'picocalc-os/compiler/'+n+'.js'),'utf8');
+    let js=execFileSync('git',['show','9a1ff99:picocalc-os/compiler/'+n+'.js'],{cwd:repo,encoding:'utf8'});
     if(n==='typed-pie-loops' && variant==='static'){
       js=replaceOnce(js,'if (p.reason) continue;',
         'if (p.reason) continue;\n        if (p.row.constant!==undefined && (p.row.constant>>>0)>32766) continue;');

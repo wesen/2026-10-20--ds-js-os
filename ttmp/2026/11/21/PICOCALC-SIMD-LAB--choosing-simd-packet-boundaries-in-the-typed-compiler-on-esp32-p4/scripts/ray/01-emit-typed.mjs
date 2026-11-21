@@ -1,3 +1,4 @@
+import {execFileSync} from 'node:child_process';
 // Emit complete position-relative RV32 modules and expose their row entry points
 // to the IDF linker. The C wrapper and Typed entries use the native RISC-V ABI.
 import assert from 'node:assert/strict';
@@ -9,7 +10,7 @@ import { runInThisContext } from 'node:vm';
 const [out] = process.argv.slice(2);
 if (!out) throw new Error('usage: node 01-emit-typed.mjs OUTPUT_DIRECTORY (from repository root)');
 for (const base of ['typed-wasm', 'typed-rv32', 'typed-pie-loops']) {
-    runInThisContext(readFileSync('picocalc-os/compiler/' + base + '.js', 'utf8'));
+    runInThisContext(execFileSync('git', ['show', '9a1ff99:picocalc-os/compiler/' + base + '.js'], {encoding:'utf8'}));
 }
 const source = readFileSync('picocalc-os/worlds/raytrace/raytrace.typed', 'utf8');
 const sha256 = b => createHash('sha256').update(b).digest('hex');

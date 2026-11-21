@@ -1,0 +1,188 @@
+{
+  "opening": {
+    "empty": {
+      "packets_per_block": 2111,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 55.208,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 40.242,
+          "median_saving_vs_scalar_pct": 27.209,
+          "wins_vs_scalar": 9
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 41.23,
+          "median_saving_vs_scalar_pct": 25.425,
+          "wins_vs_scalar": 9
+        }
+      }
+    },
+    "mixed": {
+      "packets_per_block": 282,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 95.11,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 128.259,
+          "median_saving_vs_scalar_pct": -34.367,
+          "wins_vs_scalar": 0
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 126.972,
+          "median_saving_vs_scalar_pct": -33.5,
+          "wins_vs_scalar": 0
+        }
+      }
+    },
+    "full": {
+      "packets_per_block": 742,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 132.745,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 164.982,
+          "median_saving_vs_scalar_pct": -23.36,
+          "wins_vs_scalar": 0
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 151.001,
+          "median_saving_vs_scalar_pct": -13.779,
+          "wins_vs_scalar": 0
+        }
+      }
+    }
+  },
+  "dense": {
+    "empty": {
+      "packets_per_block": 2322,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 55.202,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 40.258,
+          "median_saving_vs_scalar_pct": 27.253,
+          "wins_vs_scalar": 9
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 41.248,
+          "median_saving_vs_scalar_pct": 25.441,
+          "wins_vs_scalar": 9
+        }
+      }
+    },
+    "mixed": {
+      "packets_per_block": 344,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 96.102,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 129.076,
+          "median_saving_vs_scalar_pct": -33.761,
+          "wins_vs_scalar": 0
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 127.387,
+          "median_saving_vs_scalar_pct": -32.554,
+          "wins_vs_scalar": 0
+        }
+      }
+    },
+    "full": {
+      "packets_per_block": 1039,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 132.691,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 165.088,
+          "median_saving_vs_scalar_pct": -23.38,
+          "wins_vs_scalar": 0
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 150.716,
+          "median_saving_vs_scalar_pct": -13.584,
+          "wins_vs_scalar": 0
+        }
+      }
+    }
+  },
+  "sparse": {
+    "empty": {
+      "packets_per_block": 787,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 55.328,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 40.498,
+          "median_saving_vs_scalar_pct": 27.359,
+          "wins_vs_scalar": 9
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 41.159,
+          "median_saving_vs_scalar_pct": 25.529,
+          "wins_vs_scalar": 9
+        }
+      }
+    },
+    "mixed": {
+      "packets_per_block": 80,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 96.838,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 130.887,
+          "median_saving_vs_scalar_pct": -35.304,
+          "wins_vs_scalar": 0
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 128.4,
+          "median_saving_vs_scalar_pct": -31.389,
+          "wins_vs_scalar": 0
+        }
+      }
+    },
+    "full": {
+      "packets_per_block": 26,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 136.154,
+          "median_saving_vs_scalar_pct": 0.0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 167.231,
+          "median_saving_vs_scalar_pct": -22.825,
+          "wins_vs_scalar": 0
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 159.038,
+          "median_saving_vs_scalar_pct": -14.856,
+          "wins_vs_scalar": 0
+        }
+      }
+    }
+  }
+}

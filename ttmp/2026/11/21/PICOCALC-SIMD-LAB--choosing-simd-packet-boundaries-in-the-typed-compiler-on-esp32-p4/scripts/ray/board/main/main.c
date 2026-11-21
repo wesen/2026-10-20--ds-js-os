@@ -3,6 +3,7 @@
 #include "freertos/task.h"
 #include "trial.h"
 
+void simd_packet_classes(void);
 void simd_ceiling_bench(void);
 void physics_bench_run(void);
 void simd_director_bench(void);
@@ -14,7 +15,9 @@ void simd_gate_bench(void);
 void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(1300));
     printf("SIMDLAB BEGIN cpu_mhz=%d\n", CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ);
-#if SIMD_FRAME_TRIAL
+#if SIMD_CLASS_TRIAL
+    simd_packet_classes();
+#elif SIMD_FRAME_TRIAL
     simd_proof_bench();
     simd_frame_bench();
     simd_gate_bench();

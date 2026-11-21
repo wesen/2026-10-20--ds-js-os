@@ -1,0 +1,52 @@
+{
+  "rows": {
+    "flashed_sha256": "f9ad948df76c6dae831778d5eb123383d9f37a7b46cdb394f4019e58a8d6ea4c",
+    "rebuilt_sha256": "6e4f6c1c610d7ebf6c1ef89b997be78eb9ff0e6ed6313b8764587a89a26e785f",
+    "flashed_bytes": 1064016,
+    "rebuilt_bytes": 1064016,
+    "differing_bytes": 69,
+    "differing_ranges": [
+      [
+        115,
+        117
+      ],
+      [
+        118,
+        120
+      ],
+      [
+        176,
+        208
+      ],
+      [
+        1063983,
+        1064016
+      ]
+    ]
+  },
+  "frames": {
+    "flashed_sha256": "6e9ffd864a5de97aabed5112eeef85eed6b2980df78b1a10d36ebd7414f82ba5",
+    "rebuilt_sha256": "feb322ee21277a40ac7fd7e14a9aba3fcf194d169966dbfc112657be9c06cb52",
+    "flashed_bytes": 226752,
+    "rebuilt_bytes": 226752,
+    "differing_bytes": 69,
+    "differing_ranges": [
+      [
+        115,
+        117
+      ],
+      [
+        118,
+        120
+      ],
+      [
+        176,
+        208
+      ],
+      [
+        226719,
+        226752
+      ]
+    ]
+  }
+}

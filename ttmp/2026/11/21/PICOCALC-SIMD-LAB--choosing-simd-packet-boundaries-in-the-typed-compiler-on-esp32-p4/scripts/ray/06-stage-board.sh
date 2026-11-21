@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Run from the project root AFTER sourcing ESP-IDF 5.4.2's export.sh.
-# Usage: bash 06-stage-board.sh {rows|frames} EMPTY_OUTPUT_DIRECTORY
+# Usage: bash 06-stage-board.sh {rows|frames|classes} EMPTY_OUTPUT_DIRECTORY
 set -euo pipefail
 mode=$1
-case "$mode" in rows|frames) ;; *) exit 2 ;; esac
+case "$mode" in rows|frames|classes) ;; *) exit 2 ;; esac
 out=$(realpath -m "$2")
 mkdir "$out" # fresh project: do not mix first- and second-visit sources
 here=$(cd "$(dirname "$0")" && pwd)
@@ -16,6 +16,13 @@ cp "$here/board/CMakeLists.txt" "$here/board/sdkconfig.defaults" picocalc-os/por
 cp "$here/board/main/"{main.c,CMakeLists.txt} picocalc-os/port/esp32p4/main/p4_compat.h "$main/"
 qjs=picocalc-os/third_party/quickjs
 cp "$qjs"/*.h "$qjs"/{quickjs.c,dtoa.c,cutils.c,libregexp.c,libunicode.c,VERSION} "$main/quickjs/"
+if [[ "$mode" == classes ]]; then
+    echo '#define SIMD_CLASS_TRIAL 1' > "$main/trial.h"
+    node "$here/03-ceiling-fixtures.mjs" "$main/ceiling_fixtures.h"
+    cp "$here/board/packet_classes.c" "$here/board/main/ceiling_reduce.S" "$main/"
+    (cd "$out" && idf.py set-target esp32p4 && idf.py build)
+    exit
+fi
 node "$director/02-build-heldout.mjs" "$gen"
 cp "$gen/director.S" "$main/"
 node "$director/04-packet-images.mjs" "$gen"
