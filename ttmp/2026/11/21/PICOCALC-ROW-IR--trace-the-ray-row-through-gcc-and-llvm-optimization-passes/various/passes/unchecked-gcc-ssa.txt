@@ -1,0 +1,198 @@
+;; Function row (row, funcdef_no=1, decl_uid=1354, cgraph_uid=2, symbol_order=1)
+
+int row (struct buffer * work, int y)
+{
+  int old;
+  int z;
+  int d;
+  int x;
+  int horizontal;
+  int term;
+  int r;
+  int cz;
+  int dy;
+  int obj;
+  int s;
+  int x;
+  int count;
+  int _1;
+  long unsigned int _2;
+  u16 * _3;
+  int _4;
+  long unsigned int _5;
+  u16 * _6;
+  u16 * _7;
+  short unsigned int _8;
+  int _9;
+  int _10;
+  long unsigned int _11;
+  u16 * _12;
+  short unsigned int _13;
+  int _14;
+  int _15;
+  long unsigned int _16;
+  u16 * _17;
+  short unsigned int _18;
+  int _19;
+  long unsigned int _20;
+  u16 * _21;
+  short unsigned int _22;
+  int _23;
+  int _24;
+  int _25;
+  int _26;
+  long unsigned int _27;
+  u16 * _28;
+  short unsigned int _29;
+  int _30;
+  long unsigned int d.0_31;
+  long unsigned int _32;
+  u16 * _33;
+  short unsigned int _34;
+  int _35;
+  int _36;
+  long unsigned int _37;
+  u16 * _38;
+  short unsigned int _39;
+  int _40;
+  long unsigned int _41;
+  u16 * _42;
+  short unsigned int _43;
+  signed short _44;
+  signed short _45;
+  int _46;
+  long unsigned int _47;
+  u16 * _48;
+  short unsigned int _49;
+  int _63;
+
+  <bb 2> :
+  x_57 = 0;
+  goto <bb 4>; [INV]
+
+  <bb 3> :
+  _1 = x_50 + 1545;
+  _2 = (long unsigned int) _1;
+  _3 = element (work_59(D), _2);
+  *_3 = 0;
+  _4 = x_50 + 1705;
+  _5 = (long unsigned int) _4;
+  _6 = element (work_59(D), _5);
+  *_6 = 0;
+  x_91 = x_50 + 1;
+
+  <bb 4> :
+  # x_50 = PHI <x_57(2), x_91(3)>
+  if (x_50 <= 159)
+    goto <bb 3>; [INV]
+  else
+    goto <bb 5>; [INV]
+
+  <bb 5> :
+  _7 = element (work_59(D), 16);
+  _8 = *_7;
+  count_61 = (int) _8;
+  s_62 = 0;
+  goto <bb 14>; [INV]
+
+  <bb 6> :
+  _9 = s_51 * 5;
+  obj_64 = _9 + 1;
+  _10 = obj_64 + 1;
+  _11 = (long unsigned int) _10;
+  _12 = element (work_59(D), _11);
+  _13 = *_12;
+  _14 = (int) _13;
+  dy_67 = y_66(D) - _14;
+  _15 = obj_64 + 2;
+  _16 = (long unsigned int) _15;
+  _17 = element (work_59(D), _16);
+  _18 = *_17;
+  cz_69 = (int) _18;
+  _19 = obj_64 + 3;
+  _20 = (long unsigned int) _19;
+  _21 = element (work_59(D), _20);
+  _22 = *_21;
+  r_71 = (int) _22;
+  _23 = r_71 * r_71;
+  _24 = dy_67 * dy_67;
+  term_72 = _23 - _24;
+  _25 = s_51 * 160;
+  horizontal_73 = _25 + 40;
+  x_74 = 0;
+  goto <bb 12>; [INV]
+
+  <bb 7> :
+  _26 = horizontal_73 + x_52;
+  _27 = (long unsigned int) _26;
+  _28 = element (work_59(D), _27);
+  _29 = *_28;
+  _30 = (int) _29;
+  d_77 = term_72 - _30;
+  if (d_77 >= 0)
+    goto <bb 8>; [INV]
+  else
+    goto <bb 11>; [INV]
+
+  <bb 8> :
+  d.0_31 = (long unsigned int) d_77;
+  _32 = d.0_31 + 520;
+  _33 = element (work_59(D), _32);
+  _34 = *_33;
+  _35 = (int) _34;
+  z_79 = cz_69 - _35;
+  _36 = x_52 + 1545;
+  _37 = (long unsigned int) _36;
+  _38 = element (work_59(D), _37);
+  _39 = *_38;
+  old_81 = (int) _39;
+  if (old_81 == 0)
+    goto <bb 10>; [INV]
+  else
+    goto <bb 9>; [INV]
+
+  <bb 9> :
+  if (z_79 < old_81)
+    goto <bb 10>; [INV]
+  else
+    goto <bb 11>; [INV]
+
+  <bb 10> :
+  _40 = x_52 + 1545;
+  _41 = (long unsigned int) _40;
+  _42 = element (work_59(D), _41);
+  _43 = (short unsigned int) z_79;
+  *_42 = _43;
+  _44 = (signed short) s_51;
+  _45 = _44 + 1;
+  _46 = x_52 + 1705;
+  _47 = (long unsigned int) _46;
+  _48 = element (work_59(D), _47);
+  _49 = (short unsigned int) _45;
+  *_48 = _49;
+
+  <bb 11> :
+  x_86 = x_52 + 1;
+
+  <bb 12> :
+  # x_52 = PHI <x_74(6), x_86(11)>
+  if (x_52 <= 159)
+    goto <bb 7>; [INV]
+  else
+    goto <bb 13>; [INV]
+
+  <bb 13> :
+  s_75 = s_51 + 1;
+
+  <bb 14> :
+  # s_51 = PHI <s_62(5), s_75(13)>
+  if (s_51 < count_61)
+    goto <bb 6>; [INV]
+  else
+    goto <bb 15>; [INV]
+
+  <bb 15> :
+  _63 = 1;
+  return _63;
+
+}

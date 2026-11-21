@@ -1,0 +1,220 @@
+;; Function trace_row (trace_row, funcdef_no=9, decl_uid=3423, cgraph_uid=10, symbol_order=9)
+
+unsigned int trace_row (struct trace * work, int y, raytrace_demo_mode mode, _Bool count_hits)
+{
+  const int16_t depth;
+  const int d;
+  int x;
+  int x;
+  const int16_t row_term;
+  const int dy;
+  const struct sphere * object;
+  size_t s;
+  unsigned int hits;
+  int16_t[160] * _1;
+  int _2;
+  int _3;
+  unsigned short _4;
+  int _5;
+  unsigned short _6;
+  unsigned short _7;
+  unsigned short _8;
+  unsigned short _9;
+  unsigned short _10;
+  unsigned short _11;
+  short int _12;
+  int16_t[160] * _13;
+  int16_t[160] * _14;
+  short int row_term.9_15;
+  unsigned short row_term.10_16;
+  short int _17;
+  unsigned short _18;
+  unsigned short _19;
+  short int _20;
+  short int _21;
+  unsigned int _22;
+  int _23;
+  unsigned short _24;
+  unsigned char _25;
+  unsigned short _26;
+  unsigned short _27;
+  short int _28;
+  short int _29;
+  unsigned char _30;
+  unsigned int _31;
+  unsigned int _48;
+
+  <bb 2> :
+  # DEBUG BEGIN_STMT
+  _1 = &work_43(D)->depth;
+  memset (_1, 0, 320);
+  # DEBUG BEGIN_STMT
+  hits_46 = 0;
+  # DEBUG hits => hits_46
+  # DEBUG BEGIN_STMT
+  # DEBUG BEGIN_STMT
+  s_47 = 0;
+  # DEBUG s => s_47
+  goto <bb 17>; [INV]
+
+  <bb 3> :
+  # DEBUG BEGIN_STMT
+  object_49 = &work_43(D)->objects[s_35];
+  # DEBUG object => object_49
+  # DEBUG BEGIN_STMT
+  _2 = object_49->y;
+  dy_51 = y_50(D) - _2;
+  # DEBUG dy => dy_51
+  # DEBUG BEGIN_STMT
+  _3 = object_49->radius;
+  _4 = (unsigned short) _3;
+  _5 = object_49->radius;
+  _6 = (unsigned short) _5;
+  _7 = _4 * _6;
+  _8 = (unsigned short) dy_51;
+  _9 = (unsigned short) dy_51;
+  _10 = _8 * _9;
+  _11 = _7 - _10;
+  _12 = (short int) _11;
+  row_term = _12;
+  # DEBUG BEGIN_STMT
+  if (mode_53(D) == 1)
+    goto <bb 4>; [INV]
+  else
+    goto <bb 5>; [INV]
+
+  <bb 4> :
+  # DEBUG BEGIN_STMT
+  _13 = &work_43(D)->x_squared[s_35];
+  _14 = &work_43(D)->discriminants;
+  raytrace_demo_pie_row (_13, &row_term, _14, 20);
+  goto <bb 8>; [INV]
+
+  <bb 5> :
+  # DEBUG BEGIN_STMT
+  # DEBUG BEGIN_STMT
+  x_54 = 0;
+  # DEBUG x => x_54
+  goto <bb 7>; [INV]
+
+  <bb 6> :
+  # DEBUG BEGIN_STMT
+  row_term.9_15 = row_term;
+  row_term.10_16 = (unsigned short) row_term.9_15;
+  _17 = work_43(D)->x_squared[s_35][x_36];
+  _18 = (unsigned short) _17;
+  _19 = row_term.10_16 - _18;
+  _20 = (short int) _19;
+  work_43(D)->discriminants[x_36] = _20;
+  # DEBUG BEGIN_STMT
+  x_56 = x_36 + 1;
+  # DEBUG x => x_56
+
+  <bb 7> :
+  # x_36 = PHI <x_54(5), x_56(6)>
+  # DEBUG x => x_36
+  # DEBUG BEGIN_STMT
+  if (x_36 <= 159)
+    goto <bb 6>; [INV]
+  else
+    goto <bb 8>; [INV]
+
+  <bb 8> :
+  # DEBUG BEGIN_STMT
+  # DEBUG BEGIN_STMT
+  x_58 = 0;
+  # DEBUG x => x_58
+  goto <bb 15>; [INV]
+
+  <bb 9> :
+  # DEBUG BEGIN_STMT
+  _21 = work_43(D)->discriminants[x_37];
+  d_61 = (const int) _21;
+  # DEBUG d => d_61
+  # DEBUG BEGIN_STMT
+  if (d_61 < 0)
+    goto <bb 10>; [INV]
+  else
+    goto <bb 11>; [INV]
+
+  <bb 10> :
+  # DEBUG BEGIN_STMT
+  // predicted unlikely by continue predictor.
+  goto <bb 14>; [INV]
+
+  <bb 11> :
+  # DEBUG BEGIN_STMT
+  _22 = (unsigned int) count_hits_62(D);
+  hits_63 = hits_33 + _22;
+  # DEBUG hits => hits_63
+  # DEBUG BEGIN_STMT
+  _23 = object_49->z;
+  _24 = (unsigned short) _23;
+  _25 = work_43(D)->roots[d_61];
+  _26 = (unsigned short) _25;
+  _27 = _24 - _26;
+  depth_64 = (const int16_t) _27;
+  # DEBUG depth => depth_64
+  # DEBUG BEGIN_STMT
+  _28 = work_43(D)->depth[x_37];
+  if (_28 == 0)
+    goto <bb 13>; [INV]
+  else
+    goto <bb 12>; [INV]
+
+  <bb 12> :
+  _29 = work_43(D)->depth[x_37];
+  if (depth_64 < _29)
+    goto <bb 13>; [INV]
+  else
+    goto <bb 14>; [INV]
+
+  <bb 13> :
+  # DEBUG BEGIN_STMT
+  work_43(D)->depth[x_37] = depth_64;
+  # DEBUG BEGIN_STMT
+  _30 = (unsigned char) s_35;
+  work_43(D)->object_index[x_37] = _30;
+
+  <bb 14> :
+  # hits_32 = PHI <hits_33(10), hits_63(12), hits_63(13)>
+  # DEBUG hits => hits_32
+  # DEBUG BEGIN_STMT
+  x_67 = x_37 + 1;
+  # DEBUG x => x_67
+
+  <bb 15> :
+  # hits_33 = PHI <hits_34(8), hits_32(14)>
+  # x_37 = PHI <x_58(8), x_67(14)>
+  # DEBUG x => x_37
+  # DEBUG hits => hits_33
+  # DEBUG BEGIN_STMT
+  if (x_37 <= 159)
+    goto <bb 9>; [INV]
+  else
+    goto <bb 16>; [INV]
+
+  <bb 16> :
+  row_term ={v} {CLOBBER(eos)};
+  # DEBUG BEGIN_STMT
+  s_60 = s_35 + 1;
+  # DEBUG s => s_60
+
+  <bb 17> :
+  # hits_34 = PHI <hits_46(2), hits_33(16)>
+  # s_35 = PHI <s_47(2), s_60(16)>
+  # DEBUG s => s_35
+  # DEBUG hits => hits_34
+  # DEBUG BEGIN_STMT
+  _31 = work_43(D)->object_count;
+  if (s_35 < _31)
+    goto <bb 3>; [INV]
+  else
+    goto <bb 18>; [INV]
+
+  <bb 18> :
+  # DEBUG BEGIN_STMT
+  _48 = hits_34;
+  return _48;
+
+}

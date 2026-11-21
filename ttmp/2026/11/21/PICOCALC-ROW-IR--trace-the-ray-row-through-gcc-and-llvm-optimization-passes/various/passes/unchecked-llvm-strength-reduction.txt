@@ -1,0 +1,170 @@
+*** IR Dump After Loop Strength Reduction (loop-reduce) ***
+; Preheader:
+for.body8:                                        ; preds = %for.cond.cleanup28, %for.body8.lr.ph
+  %lsr.iv3 = phi ptr [ %scevgep4, %for.cond.cleanup28 ], [ %invariant.gep69, %for.body8.lr.ph ]
+  %s.072 = phi i32 [ 0, %for.body8.lr.ph ], [ %inc58, %for.cond.cleanup28 ]
+  %1 = mul nuw nsw i32 %s.072, 320
+  %2 = add i32 %1, 404
+  %scevgep7 = getelementptr i8, ptr %work, i32 %2
+  %mul = mul nuw nsw i32 %s.072, 5
+  %gep64 = getelementptr i16, ptr %invariant.gep63, i32 %mul
+  %3 = load i16, ptr %gep64, align 2
+  %conv12 = zext i16 %3 to i32
+  %sub = sub i32 %y, %conv12
+  %gep66 = getelementptr i16, ptr %invariant.gep65, i32 %mul
+  %4 = load i16, ptr %gep66, align 2
+  %conv15 = zext i16 %4 to i32
+  %gep68 = getelementptr i16, ptr %invariant.gep67, i32 %mul
+  %5 = load i16, ptr %gep68, align 2
+  %conv18 = zext i16 %5 to i32
+  %add31 = add i32 %sub, %conv18
+  %sub32 = sub i32 %conv18, %sub
+  %sub21 = mul i32 %add31, %sub32
+  %6 = trunc i32 %s.072 to i16
+  %conv50 = add i16 %6, 1
+  br label %for.body29
+
+; Loop:
+for.body29:                                       ; preds = %if.end53, %for.body8
+  %lsr.iv5 = phi ptr [ %scevgep6, %if.end53 ], [ %lsr.iv3, %for.body8 ]
+  %lsr.iv1 = phi ptr [ %scevgep, %if.end53 ], [ %invariant.gep, %for.body8 ]
+  %7 = load i16, ptr %lsr.iv5, align 2
+  %conv32 = zext i16 %7 to i32
+  %sub33 = sub i32 %sub21, %conv32
+  %cmp34 = icmp sgt i32 %sub33, -1
+  br i1 %cmp34, label %if.then, label %if.end53
+
+if.then:                                          ; preds = %for.body29
+  %gep57 = getelementptr i16, ptr %invariant.gep56, i32 %sub33
+  %8 = load i16, ptr %gep57, align 2
+  %conv38 = zext i16 %8 to i32
+  %sub39 = sub nsw i32 %conv15, %conv38
+  %9 = load i16, ptr %lsr.iv1, align 2
+  %tobool.not = icmp eq i16 %9, 0
+  %conv42 = zext i16 %9 to i32
+  %cmp43 = icmp slt i32 %sub39, %conv42
+  %or.cond = select i1 %tobool.not, i1 true, i1 %cmp43
+  br i1 %or.cond, label %if.then45, label %if.end53
+
+if.then45:                                        ; preds = %if.then
+  %conv46 = trunc i32 %sub39 to i16
+  store i16 %conv46, ptr %lsr.iv1, align 2
+  %scevgep2 = getelementptr i8, ptr %lsr.iv1, i32 320
+  store i16 %conv50, ptr %scevgep2, align 2
+  br label %if.end53
+
+if.end53:                                         ; preds = %if.then45, %if.then, %for.body29
+  %scevgep = getelementptr i8, ptr %lsr.iv1, i32 2
+  %scevgep6 = getelementptr i8, ptr %lsr.iv5, i32 2
+  %lsr_fold_term_cond.replaced_term_cond = icmp eq ptr %scevgep6, %scevgep7
+  br i1 %lsr_fold_term_cond.replaced_term_cond, label %for.cond.cleanup28, label %for.body29, !llvm.loop !7
+
+; Exit blocks
+for.cond.cleanup28:                               ; preds = %if.end53
+  %inc58 = add nuw nsw i32 %s.072, 1
+  %exitcond74.not = icmp eq i32 %inc58, %conv
+  %scevgep4 = getelementptr i8, ptr %lsr.iv3, i32 320
+  br i1 %exitcond74.not, label %for.cond.cleanup7.loopexit, label %for.body8, !llvm.loop !6
+*** IR Dump After Loop Strength Reduction (loop-reduce) ***
+; Preheader:
+for.body8.lr.ph:                                  ; preds = %for.cond.cleanup
+  %invariant.gep56 = getelementptr %struct.buffer, ptr %work, i32 261
+  br label %for.body8
+
+; Loop:
+for.body8:                                        ; preds = %for.cond.cleanup28, %for.body8.lr.ph
+  %lsr.iv3 = phi ptr [ %scevgep4, %for.cond.cleanup28 ], [ %invariant.gep69, %for.body8.lr.ph ]
+  %s.072 = phi i32 [ 0, %for.body8.lr.ph ], [ %inc58, %for.cond.cleanup28 ]
+  %1 = mul nuw nsw i32 %s.072, 320
+  %2 = add i32 %1, 404
+  %scevgep7 = getelementptr i8, ptr %work, i32 %2
+  %mul = mul nuw nsw i32 %s.072, 5
+  %gep64 = getelementptr i16, ptr %invariant.gep63, i32 %mul
+  %3 = load i16, ptr %gep64, align 2
+  %conv12 = zext i16 %3 to i32
+  %sub = sub i32 %y, %conv12
+  %gep66 = getelementptr i16, ptr %invariant.gep65, i32 %mul
+  %4 = load i16, ptr %gep66, align 2
+  %conv15 = zext i16 %4 to i32
+  %gep68 = getelementptr i16, ptr %invariant.gep67, i32 %mul
+  %5 = load i16, ptr %gep68, align 2
+  %conv18 = zext i16 %5 to i32
+  %add31 = add i32 %sub, %conv18
+  %sub32 = sub i32 %conv18, %sub
+  %sub21 = mul i32 %add31, %sub32
+  %6 = trunc i32 %s.072 to i16
+  %conv50 = add i16 %6, 1
+  br label %for.body29
+
+for.body29:                                       ; preds = %if.end53, %for.body8
+  %lsr.iv5 = phi ptr [ %scevgep6, %if.end53 ], [ %lsr.iv3, %for.body8 ]
+  %lsr.iv1 = phi ptr [ %scevgep, %if.end53 ], [ %invariant.gep, %for.body8 ]
+  %7 = load i16, ptr %lsr.iv5, align 2
+  %conv32 = zext i16 %7 to i32
+  %sub33 = sub i32 %sub21, %conv32
+  %cmp34 = icmp sgt i32 %sub33, -1
+  br i1 %cmp34, label %if.then, label %if.end53
+
+if.then:                                          ; preds = %for.body29
+  %gep57 = getelementptr i16, ptr %invariant.gep56, i32 %sub33
+  %8 = load i16, ptr %gep57, align 2
+  %conv38 = zext i16 %8 to i32
+  %sub39 = sub nsw i32 %conv15, %conv38
+  %9 = load i16, ptr %lsr.iv1, align 2
+  %tobool.not = icmp eq i16 %9, 0
+  %conv42 = zext i16 %9 to i32
+  %cmp43 = icmp slt i32 %sub39, %conv42
+  %or.cond = select i1 %tobool.not, i1 true, i1 %cmp43
+  br i1 %or.cond, label %if.then45, label %if.end53
+
+if.then45:                                        ; preds = %if.then
+  %conv46 = trunc i32 %sub39 to i16
+  store i16 %conv46, ptr %lsr.iv1, align 2
+  %scevgep2 = getelementptr i8, ptr %lsr.iv1, i32 320
+  store i16 %conv50, ptr %scevgep2, align 2
+  br label %if.end53
+
+if.end53:                                         ; preds = %if.then45, %if.then, %for.body29
+  %scevgep = getelementptr i8, ptr %lsr.iv1, i32 2
+  %scevgep6 = getelementptr i8, ptr %lsr.iv5, i32 2
+  %lsr_fold_term_cond.replaced_term_cond = icmp eq ptr %scevgep6, %scevgep7
+  br i1 %lsr_fold_term_cond.replaced_term_cond, label %for.cond.cleanup28, label %for.body29, !llvm.loop !7
+
+for.cond.cleanup28:                               ; preds = %if.end53
+  %inc58 = add nuw nsw i32 %s.072, 1
+  %scevgep4 = getelementptr i8, ptr %lsr.iv3, i32 320
+  %exitcond74.not = icmp eq i32 %inc58, %conv
+  br i1 %exitcond74.not, label %for.cond.cleanup7.loopexit, label %for.body8, !llvm.loop !6
+
+; Exit blocks
+for.cond.cleanup7.loopexit:                       ; preds = %for.cond.cleanup28
+  br label %for.cond.cleanup7
+*** IR Dump After Loop Strength Reduction (loop-reduce) ***
+; Preheader:
+entry:
+  %invariant.gep = getelementptr i8, ptr %work, i32 3094
+  %invariant.gep53 = getelementptr i8, ptr %work, i32 3414
+  %scevgep11 = getelementptr i8, ptr %work, i32 3734
+  br label %for.body
+
+; Loop:
+for.body:                                         ; preds = %for.body, %entry
+  %lsr.iv8 = phi ptr [ %scevgep9, %for.body ], [ %invariant.gep53, %entry ]
+  %scevgep10 = getelementptr i8, ptr %lsr.iv8, i32 -320
+  store i16 0, ptr %scevgep10, align 2
+  store i16 0, ptr %lsr.iv8, align 2
+  %scevgep9 = getelementptr i8, ptr %lsr.iv8, i32 2
+  %lsr_fold_term_cond.replaced_term_cond12 = icmp eq ptr %scevgep9, %scevgep11
+  br i1 %lsr_fold_term_cond.replaced_term_cond12, label %for.cond.cleanup, label %for.body, !llvm.loop !4
+
+; Exit blocks
+for.cond.cleanup:                                 ; preds = %for.body
+  %add.ptr.i = getelementptr %struct.buffer, ptr %work, i32 9
+  %0 = load i16, ptr %add.ptr.i, align 2
+  %conv = zext i16 %0 to i32
+  %invariant.gep63 = getelementptr %struct.buffer, ptr %work, i32 2
+  %invariant.gep65 = getelementptr i8, ptr %work, i32 10
+  %invariant.gep67 = getelementptr %struct.buffer, ptr %work, i32 3
+  %invariant.gep69 = getelementptr %struct.buffer, ptr %work, i32 21
+  %cmp571.not = icmp eq i16 %0, 0
+  br i1 %cmp571.not, label %for.cond.cleanup7, label %for.body8.lr.ph

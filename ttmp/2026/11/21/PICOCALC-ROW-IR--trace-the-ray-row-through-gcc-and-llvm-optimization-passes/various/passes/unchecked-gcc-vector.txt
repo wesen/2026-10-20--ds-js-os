@@ -1,0 +1,4 @@
+/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:21:20: missed:   not vectorized: unsupported control flow in loop.
+/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:28:24: missed:   not vectorized: unsupported control flow in loop.
+/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:17:30: missed:   not vectorized: relevant stmt not supported: *_50 = 0;
+/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:15:5: note: vectorized 0 loops in function.

@@ -1,0 +1,60 @@
+Moving statement
+_1 = work_20(D)->objects[s_38].x;
+(cost 20) out of loop 3.
+Moving statement
+_1 = x_35(D) * 32;
+(cost 20) out of loop 1.
+Moving statement
+_6 = y_37(D) * 32;
+(cost 20) out of loop 1.
+Moving statement
+_5 = stats_39(D) != 0B;
+(cost 20) out of loop 1.
+Moving statement
+_113 = lamp.x;
+(cost 20) out of loop 2.
+Moving statement
+_117 = lamp.y;
+(cost 20) out of loop 2.
+Moving statement
+_123 = lamp.norm;
+(cost 20) out of loop 2.
+Moving statement
+_3 = stats_32(D) != 0B;
+(cost 20) out of loop 1.
+Moving statement
+stats__hit_pixels_lsm.204 = stats_32(D)->hit_pixels;
+(cost 0) out of loop 2.
+Moving statement
+stats__checksum_lsm.205 = stats_32(D)->checksum;
+(cost 0) out of loop 2.
+Moving statement
+_89 = lamp.x;
+(cost 20) out of loop 2.
+Moving statement
+_93 = lamp.y;
+(cost 20) out of loop 2.
+Moving statement
+_99 = lamp.norm;
+(cost 20) out of loop 2.
+Moving statement
+_102 = lamp.x;
+(cost 20) out of loop 1.
+Moving statement
+_106 = lamp.y;
+(cost 20) out of loop 1.
+Moving statement
+_112 = lamp.norm;
+(cost 20) out of loop 1.
+Moving statement
+_8 = stats_73(D) != 0B;
+(cost 20) out of loop 2.
+Moving statement
+_132 = lamp.x;
+(cost 20) out of loop 4.
+Moving statement
+_136 = lamp.y;
+(cost 20) out of loop 4.
+Moving statement
+_142 = lamp.norm;
+(cost 20) out of loop 4.

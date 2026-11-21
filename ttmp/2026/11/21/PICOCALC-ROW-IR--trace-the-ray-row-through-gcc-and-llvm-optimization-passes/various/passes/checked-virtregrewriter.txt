@@ -1,0 +1,243 @@
+  bb.0.entry:
+    successors: %bb.5(0x80000000)
+    liveins: $x10, $x11
+
+    %34:gpr = COPY $x11
+    %33:gpr = COPY $x10
+    %0:gpr = nuw ADDI %33, 4
+    %36:gpr = ADDI %33, 2047
+    %3:gpr = ADDI %36, 1367
+    %4:gpr = ADDI $x0, 1545
+    %42:gpr = ADDI $x0, 1705
+    PseudoBR %bb.5
+
+  bb.1.for.cond.cleanup:
+    successors: %bb.3(0x7ffff800), %bb.2(0x00000800)
+
+    %43:gpr = LW %33, 0 :: (load (s32) from %ir.work)
+    %44:gpr = ADDI $x0, 16
+    BLTU %44, %43, %bb.3
+    PseudoBR %bb.2
+
+  bb.2.if.then.i:
+    successors:
+
+    UNIMP
+
+  bb.3.element.exit:
+    successors: %bb.10(0x30000000), %bb.4(0x50000000)
+
+    %2:gpr = LHU %33, 36 :: (load (s16) from %ir.add.ptr.i)
+    BEQ %2, $x0, %bb.10
+    PseudoBR %bb.4
+
+  bb.4.for.body8.preheader:
+    successors: %bb.11(0x80000000)
+
+    %9:gpr = COPY $x0
+    %8:gpr = ADDI $x0, 84
+    %7:gpr = ADDI $x0, 40
+    %63:gpr = LUI 1
+    %55:gpr = ADDI %63, -1002
+    %75:gpr = ADDI $x0, 160
+    PseudoBR %bb.11
+
+  bb.5.for.body:
+    successors: %bb.7(0x7ffff800), %bb.6(0x00000800)
+
+    %37:gpr = LW %33, 0 :: (load (s32) from %ir.work)
+    BLTU %4, %37, %bb.7
+    PseudoBR %bb.6
+
+  bb.6.if.then.i34:
+    successors:
+
+    UNIMP
+
+  bb.7.element.exit37:
+    successors: %bb.9(0x7ffff800), %bb.8(0x00000800)
+
+    SH $x0, %3, -320 :: (store (s16) into %ir.scevgep15)
+    %40:gpr = LW %33, 0 :: (load (s32) from %ir.work)
+    %39:gpr = ADDI %4, 160
+    BLTU %39, %40, %bb.9
+    PseudoBR %bb.8
+
+  bb.8.if.then.i39:
+    successors:
+
+    UNIMP
+
+  bb.9.element.exit42:
+    successors: %bb.1(0x04000000), %bb.5(0x7c000000)
+
+    SH $x0, %3, 0 :: (store (s16) into %ir.lsr.iv13)
+    %4:gpr = nuw nsw ADDI %4, 1
+    %3:gpr = ADDI %3, 2
+    BEQ %4, %42, %bb.1
+    PseudoBR %bb.5
+
+  bb.10.for.cond.cleanup7:
+    $x10 = ADDI $x0, 1
+    PseudoRET implicit $x10
+
+  bb.11.for.body8:
+    successors: %bb.13(0x7ffff800), %bb.12(0x00000800)
+
+    %12:gpr = LW %33, 0 :: (load (s32) from %ir.work)
+    %49:gpr = SLLI %9, 2
+    %10:gpr = ADD %49, %9
+    %11:gpr = nuw nsw ADDI %10, 2
+    BLTU %11, %12, %bb.13
+    PseudoBR %bb.12
+
+  bb.12.if.then.i44:
+    successors:
+
+    UNIMP
+
+  bb.13.element.exit47:
+    successors: %bb.15(0x7ffff800), %bb.14(0x00000800)
+
+    %14:gpr = nuw nsw ADDI %10, 3
+    BLTU %14, %12, %bb.15
+    PseudoBR %bb.14
+
+  bb.14.if.then.i49:
+    successors:
+
+    UNIMP
+
+  bb.15.element.exit52:
+    successors: %bb.17(0x7ffff800), %bb.16(0x00000800)
+
+    %16:gpr = nuw nsw ADDI %10, 4
+    BLTU %16, %12, %bb.17
+    PseudoBR %bb.16
+
+  bb.16.if.then.i54:
+    successors:
+
+    UNIMP
+
+  bb.17.element.exit57:
+    successors: %bb.19(0x80000000)
+
+    %50:gpr = SLLI %11, 1
+    %51:gpr = ADD %0, %50
+    %52:gpr = LHU %51, 0 :: (load (s16) from %ir.add.ptr.i46)
+    %24:gpr = COPY $x0
+    %13:gpr = SUB %34, %52
+    %57:gpr = SLLI %16, 1
+    %58:gpr = ADD %0, %57
+    %59:gpr = LHU %58, 0 :: (load (s16) from %ir.add.ptr.i56)
+    %53:gpr = SLLI %14, 1
+    %54:gpr = ADD %0, %53
+    %15:gpr = LHU %54, 0 :: (load (s16) from %ir.add.ptr.i51)
+    %60:gpr = ADD %13, %59
+    %61:gpr = SUB %59, %13
+    %17:gpr = MUL %60, %61
+    %9:gpr = ADDI %9, 1
+    %22:gpr = COPY %8
+    %23:gpr = COPY %55
+    PseudoBR %bb.19
+
+  bb.18.for.cond.cleanup28:
+    successors: %bb.10(0x04000000), %bb.11(0x7c000000)
+
+    %8:gpr = nuw nsw ADDI %8, 320
+    %7:gpr = nuw nsw ADDI %7, 160
+    BEQ %9, %2, %bb.10
+    PseudoBR %bb.11
+
+  bb.19.for.body29:
+    successors: %bb.21(0x7ffff800), %bb.20(0x00000800)
+
+    %25:gpr = LW %33, 0 :: (load (s32) from %ir.work)
+    %64:gpr = ADD %7, %24
+    BLTU %64, %25, %bb.21
+    PseudoBR %bb.20
+
+  bb.20.if.then.i59:
+    successors:
+
+    UNIMP
+
+  bb.21.element.exit62:
+    successors: %bb.22(0x50000000), %bb.31(0x30000000)
+
+    %65:gpr = ADD %33, %22
+    %66:gpr = LHU %65, 0 :: (load (s16) from %ir.scevgep7)
+    %26:gpr = SUB %17, %66
+    BLT %26, $x0, %bb.31
+    PseudoBR %bb.22
+
+  bb.22.if.then:
+    successors: %bb.24(0x7ffff800), %bb.23(0x00000800)
+
+    %27:gpr = nuw ADDI %26, 520
+    BLTU %27, %25, %bb.24
+    PseudoBR %bb.23
+
+  bb.23.if.then.i64:
+    successors:
+
+    UNIMP
+
+  bb.24.element.exit67:
+    successors: %bb.26(0x7ffff800), %bb.25(0x00000800)
+
+    %70:gpr = ADDI %24, 1545
+    BLTU %70, %25, %bb.26
+    PseudoBR %bb.25
+
+  bb.25.if.then.i69:
+    successors:
+
+    UNIMP
+
+  bb.26.element.exit72:
+    successors: %bb.28(0x20000000), %bb.27(0x60000000)
+
+    %67:gpr = SLLI %27, 1
+    %68:gpr = ADD %0, %67
+    %69:gpr = LHU %68, 0 :: (load (s16) from %ir.add.ptr.i66)
+    %29:gpr = ADD %33, %23
+    %71:gpr = LHU %29, 0 :: (load (s16) from %ir.scevgep)
+    %28:gpr = nsw SUB %15, %69
+    BEQ %71, $x0, %bb.28
+    PseudoBR %bb.27
+
+  bb.27.element.exit72:
+    successors: %bb.28(0x2aaaaaab), %bb.31(0x55555555)
+
+    BGE %28, %71, %bb.31
+    PseudoBR %bb.28
+
+  bb.28.element.exit77:
+    successors: %bb.30(0x7ffff800), %bb.29(0x00000800)
+
+    SH %28, %29, 0 :: (store (s16) into %ir.scevgep)
+    %73:gpr = LW %33, 0 :: (load (s32) from %ir.work)
+    %72:gpr = ADDI %24, 1705
+    BLTU %72, %73, %bb.30
+    PseudoBR %bb.29
+
+  bb.29.if.then.i79:
+    successors:
+
+    UNIMP
+
+  bb.30.element.exit82:
+    successors: %bb.31(0x80000000)
+
+    SH %9, %29, 320 :: (store (s16) into %ir.scevgep2)
+
+  bb.31.if.end53:
+    successors: %bb.18(0x04000000), %bb.19(0x7c000000)
+
+    %24:gpr = nuw nsw ADDI %24, 1
+    %23:gpr = nuw nsw ADDI %23, 2
+    %22:gpr = nuw nsw ADDI %22, 2
+    BEQ %24, %75, %bb.18
+    PseudoBR %bb.19

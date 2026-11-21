@@ -1,0 +1,112 @@
+  bb.0.entry:
+    successors: %bb.3(0x80000000)
+    liveins: $x10, $x11
+
+    %26:gpr = COPY $x11
+    %25:gpr = COPY $x10
+    %27:gpr = ADDI %25, 2047
+    %0:gpr = ADDI %27, 1047
+    %50:gpr = ADDI %27, 1367
+    %2:gpr = ADDI %27, 1687
+    PseudoBR %bb.3
+
+  bb.1.for.cond.cleanup:
+    successors: %bb.4(0x30000000), %bb.2(0x50000000)
+
+    %3:gpr = LHU %25, 36 :: (load (s16) from %ir.add.ptr.i)
+    BEQ %3, $x0, %bb.4
+    PseudoBR %bb.2
+
+  bb.2.for.body8.lr.ph:
+    successors: %bb.5(0x80000000)
+
+    %52:gpr = COPY $x0
+    %4:gpr = ADDI %25, 8
+    %5:gpr = ADDI %25, 10
+    %6:gpr = ADDI %25, 12
+    %51:gpr = ADDI %25, 84
+    %8:gpr = ADDI %25, 1044
+    %31:gpr = ADDI $x0, 320
+    %34:gpr = ADDI $x0, 10
+    PseudoBR %bb.5
+
+  bb.3.for.body:
+    successors: %bb.1(0x04000000), %bb.3(0x7c000000)
+
+    SH $x0, %50, -320 :: (store (s16) into %ir.scevgep10)
+    SH $x0, %50, 0 :: (store (s16) into %ir.lsr.iv8)
+    %50:gpr = ADDI %50, 2
+    BEQ %50, %2, %bb.1
+    PseudoBR %bb.3
+
+  bb.4.for.cond.cleanup7:
+    $x10 = ADDI $x0, 1
+    PseudoRET implicit $x10
+
+  bb.5.for.body8:
+    successors: %bb.7(0x80000000)
+
+    %32:gpr = nuw nsw MUL %52, %31
+    %33:gpr = ADD %32, %25
+    %35:gpr = MUL %52, %34
+    %36:gpr = ADD %4, %35
+    %37:gpr = LHU %36, 0 :: (load (s16) from %ir.gep64)
+    %13:gpr = ADDI %33, 404
+    %40:gpr = ADD %6, %35
+    %41:gpr = LHU %40, 0 :: (load (s16) from %ir.gep68)
+    %38:gpr = SUB %26, %37
+    %39:gpr = ADD %5, %35
+    %14:gpr = LHU %39, 0 :: (load (s16) from %ir.gep66)
+    %42:gpr = ADD %38, %41
+    %43:gpr = SUB %41, %38
+    %15:gpr = MUL %42, %43
+    %52:gpr = ADDI %52, 1
+    %53:gpr = COPY %51
+    %54:gpr = COPY %0
+    PseudoBR %bb.7
+
+  bb.6.for.cond.cleanup28:
+    successors: %bb.4(0x04000000), %bb.5(0x7c000000)
+
+    %51:gpr = ADDI %51, 320
+    BEQ %52, %3, %bb.4
+    PseudoBR %bb.5
+
+  bb.7.for.body29:
+    successors: %bb.8(0x50000000), %bb.11(0x30000000)
+
+    %44:gpr = LHU %53, 0 :: (load (s16) from %ir.lsr.iv5)
+    %21:gpr = SUB %15, %44
+    BLT %21, $x0, %bb.11
+    PseudoBR %bb.8
+
+  bb.8.if.then:
+    successors: %bb.10(0x20000000), %bb.9(0x60000000)
+
+    %46:gpr = SLLI %21, 1
+    %47:gpr = ADD %8, %46
+    %48:gpr = LHU %47, 0 :: (load (s16) from %ir.gep57)
+    %45:gpr = LHU %54, 0 :: (load (s16) from %ir.lsr.iv1)
+    %22:gpr = nsw SUB %14, %48
+    BEQ %45, $x0, %bb.10
+    PseudoBR %bb.9
+
+  bb.9.if.then:
+    successors: %bb.10(0x2aaaaaab), %bb.11(0x55555555)
+
+    BGE %22, %45, %bb.11
+    PseudoBR %bb.10
+
+  bb.10.if.then45:
+    successors: %bb.11(0x80000000)
+
+    SH %22, %54, 0 :: (store (s16) into %ir.lsr.iv1)
+    SH %52, %54, 320 :: (store (s16) into %ir.scevgep2)
+
+  bb.11.if.end53:
+    successors: %bb.6(0x04000000), %bb.7(0x7c000000)
+
+    %53:gpr = ADDI %53, 2
+    %54:gpr = ADDI %54, 2
+    BEQ %53, %13, %bb.6
+    PseudoBR %bb.7

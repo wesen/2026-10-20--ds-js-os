@@ -1,0 +1,159 @@
+;; Function row (row, funcdef_no=1, decl_uid=1354, cgraph_uid=2, symbol_order=1)
+
+Removing basic block 14
+Removing basic block 15
+Removing basic block 16
+Removing basic block 17
+Removing basic block 18
+Removing basic block 19
+Removing basic block 20
+Removing basic block 21
+Removing basic block 22
+int row (struct buffer * work, int y)
+{
+  unsigned int ivtmp.35;
+  sizetype ivtmp.28;
+  unsigned int ivtmp.22;
+  unsigned int ivtmp.21;
+  unsigned int ivtmp.15;
+  int old;
+  int z;
+  int d;
+  int term;
+  int r;
+  int cz;
+  int dy;
+  short unsigned int _5;
+  short unsigned int _9;
+  int _10;
+  short unsigned int _13;
+  short unsigned int _16;
+  short unsigned int _22;
+  int _23;
+  long unsigned int d.0_24;
+  short unsigned int _26;
+  int _27;
+  short unsigned int _30;
+  short unsigned int _31;
+  u16 * _80;
+  unsigned int _88;
+  int powmult_93;
+  int powmult_95;
+  unsigned int _98;
+  void * _99;
+  u16 * _100;
+  short unsigned int _104;
+  unsigned int _106;
+  sizetype _107;
+  void * _109;
+  struct buffer * _114;
+  sizetype _124;
+  long unsigned int _125;
+  void * _126;
+  void * _131;
+
+  <bb 2> [local count: 1327094]:
+  _100 = work_45(D) + 3094;
+  ivtmp.35_101 = (unsigned int) _100;
+  _98 = (unsigned int) work_45(D);
+  _88 = _98 + 3414;
+
+  <bb 3> [local count: 131382344]:
+  # ivtmp.35_103 = PHI <ivtmp.35_102(3), ivtmp.35_101(2)>
+  _99 = (void *) ivtmp.35_103;
+  MEM[(u16 *)_99] = 0;
+  MEM[(u16 *)_99 + 320B] = 0;
+  ivtmp.35_102 = ivtmp.35_103 + 2;
+  if (_88 != ivtmp.35_102)
+    goto <bb 3>; [98.99%]
+  else
+    goto <bb 4>; [1.01%]
+
+  <bb 4> [local count: 1327094]:
+  _5 = MEM[(u16 *)work_45(D) + 36B];
+  if (_5 != 0)
+    goto <bb 5>; [89.00%]
+  else
+    goto <bb 13>; [11.00%]
+
+  <bb 5> [local count: 1181114]:
+  _114 = work_45(D) + 8;
+  ivtmp.22_115 = (unsigned int) _114;
+  _106 = (unsigned int) _5;
+
+  <bb 6> [local count: 10737414]:
+  # ivtmp.21_119 = PHI <ivtmp.21_118(12), 1(5)>
+  # ivtmp.22_117 = PHI <ivtmp.22_116(12), ivtmp.22_115(5)>
+  # ivtmp.28_111 = PHI <ivtmp.28_110(12), 0(5)>
+  _109 = (void *) ivtmp.22_117;
+  _9 = MEM[(u16 *)_109];
+  _10 = (int) _9;
+  dy_48 = y_47(D) - _10;
+  _13 = MEM[(u16 *)_109 + 2B];
+  cz_49 = (int) _13;
+  _16 = MEM[(u16 *)_109 + 4B];
+  r_51 = (int) _16;
+  powmult_93 = r_51 * r_51;
+  powmult_95 = dy_48 * dy_48;
+  term_52 = powmult_93 - powmult_95;
+
+  <bb 7> [local count: 1063004407]:
+  # ivtmp.15_122 = PHI <ivtmp.15_123(11), ivtmp.35_101(6)>
+  _126 = (void *) ivtmp.15_122;
+  _107 = ivtmp.28_111 + 4294964286;
+  _131 = _126 + _107;
+  _22 = MEM[(u16 *)_131];
+  _23 = (int) _22;
+  d_56 = term_52 - _23;
+  if (d_56 >= 0)
+    goto <bb 8>; [59.00%]
+  else
+    goto <bb 11>; [41.00%]
+
+  <bb 8> [local count: 627172604]:
+  d.0_24 = (long unsigned int) d_56;
+  _125 = d.0_24 * 2;
+  _124 = _125 + 1044;
+  _80 = work_45(D) + _124;
+  _26 = *_80;
+  _30 = MEM[(u16 *)_126];
+  old_60 = (int) _30;
+  if (old_60 == 0)
+    goto <bb 10>; [50.00%]
+  else
+    goto <bb 9>; [50.00%]
+
+  <bb 9> [local count: 313586302]:
+  _27 = (int) _26;
+  z_58 = cz_49 - _27;
+  if (z_58 < old_60)
+    goto <bb 10>; [50.00%]
+  else
+    goto <bb 11>; [50.00%]
+
+  <bb 10> [local count: 470379453]:
+  _31 = _13 - _26;
+  MEM[(u16 *)_126] = _31;
+  _104 = (short unsigned int) ivtmp.21_119;
+  MEM[(u16 *)_126 + 320B] = _104;
+
+  <bb 11> [local count: 1063004409]:
+  ivtmp.15_123 = ivtmp.15_122 + 2;
+  if (_88 != ivtmp.15_123)
+    goto <bb 7>; [98.99%]
+  else
+    goto <bb 12>; [1.01%]
+
+  <bb 12> [local count: 10737416]:
+  ivtmp.21_118 = ivtmp.21_119 + 1;
+  ivtmp.22_116 = ivtmp.22_117 + 10;
+  ivtmp.28_110 = ivtmp.28_111 + 320;
+  if (_106 != ivtmp.21_119)
+    goto <bb 6>; [89.00%]
+  else
+    goto <bb 13>; [11.00%]
+
+  <bb 13> [local count: 1327096]:
+  return 1;
+
+}

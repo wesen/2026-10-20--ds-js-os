@@ -1,0 +1,5 @@
+/tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:108:26: missed:  not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+/tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:123:27: missed:   not vectorized: unsupported control flow in loop.
+/tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:120:31: missed:  not vectorized: vectorization not profitable.
+/tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:120:31: missed:  not vectorized: vector version will never be profitable.
+/tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:105:17: note: vectorized 0 loops in function.

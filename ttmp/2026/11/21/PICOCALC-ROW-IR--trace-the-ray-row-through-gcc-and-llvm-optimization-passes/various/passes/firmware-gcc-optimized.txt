@@ -1,0 +1,245 @@
+;; Function trace_row (trace_row, funcdef_no=9, decl_uid=3423, cgraph_uid=10, symbol_order=9)
+
+Removing basic block 17
+Removing basic block 18
+Removing basic block 19
+Removing basic block 20
+Removing basic block 21
+Removing basic block 22
+Removing basic block 23
+Removing basic block 24
+Removing basic block 25
+Removing basic block 26
+unsigned int trace_row (struct trace * work, int y, raytrace_demo_mode mode, _Bool count_hits)
+{
+  unsigned int ivtmp.156;
+  sizetype ivtmp.155;
+  unsigned int ivtmp.150;
+  unsigned int ivtmp.143;
+  unsigned int ivtmp.136;
+  unsigned int ivtmp.134;
+  const int16_t depth;
+  const int d;
+  const int16_t row_term;
+  const int dy;
+  size_t s;
+  unsigned int hits;
+  int16_t[160] * _1;
+  int _2;
+  int _3;
+  unsigned short _4;
+  unsigned short _6;
+  unsigned short _8;
+  short int _9;
+  int16_t[160] * _10;
+  int16_t[160] * _11;
+  short int _12;
+  unsigned short _13;
+  unsigned short _14;
+  short int _15;
+  short int _16;
+  unsigned int _17;
+  int _18;
+  unsigned short _19;
+  unsigned char _20;
+  unsigned short _21;
+  unsigned short _22;
+  short int _23;
+  unsigned int _26;
+  void * _31;
+  struct trace * _35;
+  unsigned int _40;
+  unsigned short powmult_60;
+  void * _63;
+  unsigned int _65;
+  unsigned short powmult_68;
+  void * _91;
+  void * _95;
+  struct trace * _103;
+  unsigned int _109;
+  void * _110;
+  unsigned char _113;
+  unsigned int _114;
+  unsigned int _115;
+
+  <bb 2> [local count: 3579139]:
+  # DEBUG BEGIN_STMT
+  _1 = &work_37(D)->depth;
+  memset (_1, 0, 320);
+  # DEBUG BEGIN_STMT
+  # DEBUG hits => 0
+  # DEBUG BEGIN_STMT
+  # DEBUG BEGIN_STMT
+  # DEBUG s => 0
+  # DEBUG hits => 0
+  # DEBUG BEGIN_STMT
+  _40 = work_37(D)->object_count;
+  if (_40 != 0)
+    goto <bb 3>; [75.00%]
+  else
+    goto <bb 16>; [25.00%]
+
+  <bb 3> [local count: 2684354]:
+  _103 = work_37(D) + 4;
+  ivtmp.150_102 = (unsigned int) _103;
+  _109 = (unsigned int) work_37(D);
+  ivtmp.156_108 = _109 + 416;
+
+  <bb 4> [local count: 10737416]:
+  # hits_69 = PHI <hits_27(15), 0(3)>
+  # s_71 = PHI <s_49(15), 0(3)>
+  # ivtmp.150_100 = PHI <ivtmp.150_101(15), ivtmp.150_102(3)>
+  # ivtmp.155_104 = PHI <ivtmp.155_105(15), 0(3)>
+  # ivtmp.156_106 = PHI <ivtmp.156_107(15), ivtmp.156_108(3)>
+  # DEBUG s => s_71
+  # DEBUG hits => hits_69
+  # DEBUG BEGIN_STMT
+  # DEBUG object => &work_37(D)->objects[s_71]
+  # DEBUG BEGIN_STMT
+  _110 = (void *) ivtmp.150_100;
+  _2 = MEM[(int *)_110];
+  dy_42 = y_41(D) - _2;
+  # DEBUG dy => dy_42
+  # DEBUG BEGIN_STMT
+  _3 = MEM[(int *)_110 + 8B];
+  _4 = (unsigned short) _3;
+  powmult_60 = _4 * _4;
+  _6 = (unsigned short) dy_42;
+  powmult_68 = _6 * _6;
+  _8 = powmult_60 - powmult_68;
+  _9 = (short int) _8;
+  row_term = _9;
+  # DEBUG BEGIN_STMT
+  if (mode_44(D) == 1)
+    goto <bb 5>; [40.69%]
+  else
+    goto <bb 7>; [59.31%]
+
+  <bb 5> [local count: 4369055]:
+  # DEBUG BEGIN_STMT
+  _114 = ivtmp.156_106 + 4294966976;
+  _10 = (int16_t[160] *) _114;
+  _11 = &work_37(D)->discriminants;
+  raytrace_demo_pie_row (_10, &row_term, _11, 20);
+
+  <bb 6> [local count: 10737416]:
+  # DEBUG x => 0
+  # DEBUG hits => hits_69
+  # DEBUG BEGIN_STMT
+  _35 = work_37(D) + 2722;
+  ivtmp.134_36 = (unsigned int) _35;
+  ivtmp.136_61 = (unsigned int) _1;
+  _65 = _109 + 2722;
+  goto <bb 9>; [100.00%]
+
+  <bb 7> [local count: 6368361]:
+  _115 = ivtmp.156_106 + 4294966976;
+
+  <bb 8> [local count: 630467911]:
+  # ivtmp.143_28 = PHI <ivtmp.143_24(8), _115(7)>
+  # DEBUG BEGIN_STMT
+  _91 = (void *) ivtmp.143_28;
+  _12 = MEM[(short int *)_91];
+  _13 = (unsigned short) _12;
+  _14 = _8 - _13;
+  _15 = (short int) _14;
+  _95 = _91 + ivtmp.155_104;
+  MEM[(short int *)_95 + 960B] = _15;
+  # DEBUG BEGIN_STMT
+  # DEBUG BEGIN_STMT
+  ivtmp.143_24 = ivtmp.143_28 + 2;
+  if (ivtmp.143_24 != ivtmp.156_106)
+    goto <bb 8>; [98.99%]
+  else
+    goto <bb 6>; [1.01%]
+
+  <bb 9> [local count: 1063004408]:
+  # hits_67 = PHI <hits_27(14), hits_69(6)>
+  # ivtmp.134_59 = PHI <ivtmp.134_57(14), ivtmp.134_36(6)>
+  # ivtmp.136_33 = PHI <ivtmp.136_32(14), ivtmp.136_61(6)>
+  # DEBUG x => (int) ((ivtmp.134_59 - (unsigned int) work_37(D)) + 4294964574)
+  # DEBUG hits => hits_67
+  # DEBUG BEGIN_STMT
+  _63 = (void *) ivtmp.136_33;
+  _16 = MEM[(short int *)_63 + 4294965950B];
+  d_50 = (const int) _16;
+  # DEBUG d => d_50
+  # DEBUG BEGIN_STMT
+  if (d_50 < 0)
+    goto <bb 14>; [25.50%]
+  else
+    goto <bb 10>; [74.50%]
+
+  <bb 10> [local count: 791938281]:
+  # DEBUG BEGIN_STMT
+  # DEBUG D#11 => (unsigned int) count_hits_51(D)
+  # DEBUG hits => D#11 + hits_67
+  # DEBUG BEGIN_STMT
+  _18 = MEM[(int *)_110 + 4B];
+  _19 = (unsigned short) _18;
+  _20 = work_37(D)->roots[d_50];
+  _21 = (unsigned short) _20;
+  _22 = _19 - _21;
+  depth_53 = (const int16_t) _22;
+  # DEBUG depth => depth_53
+  # DEBUG BEGIN_STMT
+  _23 = MEM[(short int *)_63];
+  if (_23 == 0)
+    goto <bb 12>; [50.00%]
+  else
+    goto <bb 11>; [50.00%]
+
+  <bb 11> [local count: 395969141]:
+  if (_23 > depth_53)
+    goto <bb 12>; [50.00%]
+  else
+    goto <bb 13>; [50.00%]
+
+  <bb 12> [local count: 593953711]:
+  # DEBUG BEGIN_STMT
+  MEM[(short int *)_63] = depth_53;
+  # DEBUG BEGIN_STMT
+  _113 = (unsigned char) s_71;
+  _31 = (void *) ivtmp.134_59;
+  MEM[(unsigned char *)_31] = _113;
+
+  <bb 13> [local count: 197984571]:
+  _17 = (unsigned int) count_hits_51(D);
+  hits_52 = _17 + hits_67;
+
+  <bb 14> [local count: 1063004410]:
+  # hits_27 = PHI <hits_67(9), hits_52(13)>
+  # DEBUG hits => hits_27
+  # DEBUG BEGIN_STMT
+  # DEBUG x => (int) ((ivtmp.134_59 - (unsigned int) work_37(D)) + 4294964575)
+  # DEBUG hits => hits_27
+  # DEBUG BEGIN_STMT
+  ivtmp.134_57 = ivtmp.134_59 + 1;
+  ivtmp.136_32 = ivtmp.136_33 + 2;
+  if (ivtmp.136_32 != _65)
+    goto <bb 9>; [98.99%]
+  else
+    goto <bb 15>; [1.01%]
+
+  <bb 15> [local count: 10737416]:
+  row_term ={v} {CLOBBER(eos)};
+  # DEBUG BEGIN_STMT
+  s_49 = s_71 + 1;
+  # DEBUG s => s_49
+  # DEBUG hits => hits_27
+  # DEBUG BEGIN_STMT
+  _26 = work_37(D)->object_count;
+  ivtmp.150_101 = ivtmp.150_100 + 28;
+  ivtmp.155_105 = ivtmp.155_104 + 4294966976;
+  ivtmp.156_107 = ivtmp.156_106 + 320;
+  if (_26 > s_49)
+    goto <bb 4>; [75.00%]
+  else
+    goto <bb 16>; [25.00%]
+
+  <bb 16> [local count: 3579139]:
+  # hits_70 = PHI <hits_27(15), _40(2)>
+  # DEBUG BEGIN_STMT
+  return hits_70;
+
+}

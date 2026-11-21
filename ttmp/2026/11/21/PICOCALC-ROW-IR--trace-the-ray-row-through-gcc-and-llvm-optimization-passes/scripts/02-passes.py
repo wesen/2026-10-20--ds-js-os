@@ -56,6 +56,10 @@ for name in ('firmware','checked','unchecked'):
         src=row; fn='row'
     run([gcc,*gccargs,*dumpflags,'-c','-o','gcc.o'],folder,stderr='gcc.log')
     llvm(name,src,llvmflags,fn,folder)
+    if name != 'firmware':
+        run([gcc,*gccargs,'-fno-ivopts','-c','-o','gcc-noiv.o'],folder,stderr='ablation.log')
+        for variant,extra in [('llc',[]),('llc-nolsr',['-disable-lsr'])]:
+            run(['llc-18','-O2',*extra,'-filetype=obj','opt.ll','-o',variant+'.o'],folder,stderr='ablation.log')
     for arm in ('gcc','llvm'):
         run([objdump,'-dr','-M','no-aliases',arm+'.o'],folder,stdout=arm+'.asm')
 versions={p:subprocess.check_output([p,'--version'],text=True).splitlines()[0] for p in [gcc,clang,'opt-18','llc-18',objdump]}

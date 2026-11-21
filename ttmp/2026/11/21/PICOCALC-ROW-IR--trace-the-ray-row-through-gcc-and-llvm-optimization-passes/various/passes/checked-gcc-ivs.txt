@@ -1,0 +1,102 @@
+Selected IV set for loop 3 at /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:28, 160 avg niters, 2 IVs:
+Candidate 16:
+  Var befor: ivtmp.22_101
+  Var after: ivtmp.22_102
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) ((u16 *) _113 + 3090)
+    Step:	2
+    Object:	(void *) _113
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+Candidate 24:
+  Var befor: ivtmp.30_114
+  Var after: ivtmp.30_115
+  Incr POS: before exit test
+  IV struct:
+    Type:	long unsigned int
+    Base:	1705
+    Step:	1
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+
+
+
+Selected IV set for loop 2 at /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:21, 10 avg niters, 5 IVs:
+Candidate 3:
+  Var befor: ivtmp.42_130
+  Var after: ivtmp.42_131
+  Incr POS: at end
+  IV struct:
+    Type:	unsigned int
+    Base:	1
+    Step:	1
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+Candidate 5:
+  Var befor: ivtmp.43_132
+  Var after: ivtmp.43_133
+  Incr POS: before exit test
+  IV struct:
+    Type:	long unsigned int
+    Base:	2
+    Step:	5
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+Candidate 13:
+  Var befor: ivtmp.51_134
+  Var after: ivtmp.51_135
+  Incr POS: before exit test
+  IV struct:
+    Type:	sizetype
+    Base:	0
+    Step:	320
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+Candidate 17:
+  Var befor: ivtmp.55_136
+  Var after: ivtmp.55_137
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	0
+    Step:	160
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+Candidate 19:
+  Var befor: ivtmp.57_138
+  Var after: ivtmp.57_139
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) ((u16 *) _113 + 4)
+    Step:	10
+    Object:	(void *) _113
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+
+
+
+Selected IV set for loop 1 at /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:16, 160 avg niters, 2 IVs:
+Candidate 7:
+  Var befor: ivtmp.72_150
+  Var after: ivtmp.72_151
+  Incr POS: before exit test
+  IV struct:
+    Type:	long unsigned int
+    Base:	1545
+    Step:	1
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+Candidate 8:
+  Var befor: ivtmp.73_152
+  Var after: ivtmp.73_153
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) ((u16 *) work_45(D) + 3094)
+    Step:	2
+    Object:	(void *) work_45(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow

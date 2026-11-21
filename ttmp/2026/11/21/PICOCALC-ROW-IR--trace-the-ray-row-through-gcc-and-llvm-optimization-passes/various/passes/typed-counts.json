@@ -1,0 +1,89 @@
+{
+  "stock": {
+    "totals": {
+      "instructions": 3608697,
+      "stackLoads": 936328,
+      "stackStores": 353778,
+      "packets": 0
+    },
+    "samples": {
+      "0": {
+        "instructions": 20103,
+        "stackLoads": 5186,
+        "stackStores": 1960,
+        "packets": 0
+      },
+      "61": {
+        "instructions": 26349,
+        "stackLoads": 6886,
+        "stackStores": 2604,
+        "packets": 0
+      },
+      "109": {
+        "instructions": 22876,
+        "stackLoads": 5938,
+        "stackStores": 2242,
+        "packets": 0
+      }
+    },
+    "rowsVerified": 160
+  },
+  "scalar": {
+    "totals": {
+      "instructions": 3199910,
+      "stackLoads": 729553,
+      "stackStores": 309611,
+      "packets": 0
+    },
+    "samples": {
+      "0": {
+        "instructions": 20130,
+        "stackLoads": 5192,
+        "stackStores": 1960,
+        "packets": 0
+      },
+      "61": {
+        "instructions": 21400,
+        "stackLoads": 4374,
+        "stackStores": 2100,
+        "packets": 0
+      },
+      "109": {
+        "instructions": 20404,
+        "stackLoads": 4685,
+        "stackStores": 1979,
+        "packets": 0
+      }
+    },
+    "rowsVerified": 160
+  },
+  "pie": {
+    "totals": {
+      "instructions": 3131435,
+      "stackLoads": 729553,
+      "stackStores": 309776,
+      "packets": 3135
+    },
+    "samples": {
+      "0": {
+        "instructions": 20130,
+        "stackLoads": 5192,
+        "stackStores": 1960,
+        "packets": 0
+      },
+      "61": {
+        "instructions": 20570,
+        "stackLoads": 4374,
+        "stackStores": 2102,
+        "packets": 38
+      },
+      "109": {
+        "instructions": 19989,
+        "stackLoads": 4685,
+        "stackStores": 1980,
+        "packets": 19
+      }
+    },
+    "rowsVerified": 160
+  }
+}

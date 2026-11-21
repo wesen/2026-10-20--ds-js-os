@@ -1,0 +1,152 @@
+  bb.0.entry:
+    successors: %bb.1(0x30000000), %bb.2(0x50000000)
+    liveins: $x10, $x11, $x12, $x13
+
+    %29:gpr = COPY $x13
+    %27:gpr = COPY $x12
+    %26:gpr = COPY $x11
+    %25:gpr = COPY $x10
+    %31:gpr = ADDI %25, 2047
+    %0:gpr = ADDI %31, 355
+    ADJCALLSTACKDOWN 0, 0, implicit-def dead $x2, implicit $x2
+    $x12 = ADDI $x0, 320
+    %33:gpr = ADDI $x0, 320
+    $x10 = COPY %0
+    $x11 = COPY $x0
+    PseudoCALL target-flags(riscv-call) &memset, csr_ilp32f_lp64f, implicit-def dead $x1, implicit $x10, implicit $x11, implicit $x12, implicit-def $x2, implicit-def dead $x10
+    ADJCALLSTACKUP 0, 0, implicit-def dead $x2, implicit $x2
+    %35:gpr = LW %25, 84 :: (load (s32) from %ir.object_count, !tbaa !18)
+    BNE %35, $x0, %bb.2
+
+  bb.1:
+    successors: %bb.3(0x80000000)
+
+    %76:gpr = COPY $x0
+    PseudoBR %bb.3
+
+  bb.2.for.body.lr.ph:
+    successors: %bb.4(0x80000000)
+
+    %76:gpr = COPY $x0
+    %71:gpr = COPY $x0
+    %1:gpr = nuw ADDI %25, 1056
+    %3:gpr = ADDI %25, 320
+    %4:gpr = ADDI %0, 320
+    %69:gpr = ADDI $x0, 96
+    %39:gpr = ADDI $x0, 28
+    %47:gpr = ADDI $x0, 1
+    PseudoBR %bb.4
+
+  bb.3.for.cond.cleanup:
+    $x10 = COPY %76
+    PseudoRET implicit $x10
+
+  bb.4.for.body:
+    successors: %bb.5(0x40000000), %bb.6(0x40000000)
+
+    %40:gpr = MUL %71, %39
+    %41:gpr = ADD %25, %40
+    %42:gpr = LW %41, 4 :: (load (s32) from %ir.y1, !tbaa !42)
+    %44:gpr = LW %41, 12 :: (load (s32) from %ir.radius, !tbaa !43)
+    %43:gpr = nsw SUB %26, %42
+    %45:gpr = nsw ADD %44, %43
+    %46:gpr = nsw SUB %44, %43
+    %9:gpr = nsw MUL %45, %46
+    SH %9, %stack.0.row_term, 0 :: (store (s16) into %ir.row_term, !tbaa !34)
+    %72:gpr = COPY %25
+    BEQ %27, %47, %bb.5
+    PseudoBR %bb.6
+
+  bb.5.if.then:
+    successors: %bb.7(0x80000000)
+
+    %52:gpr = MUL %71, %33
+    %53:gpr = ADD %25, %52
+    %54:gpr = ADDI %53, 96
+    ADJCALLSTACKDOWN 0, 0, implicit-def dead $x2, implicit $x2
+    $x11 = ADDI %stack.0.row_term, 0
+    $x13 = ADDI $x0, 20
+    $x10 = COPY %54
+    $x12 = COPY %1
+    PseudoCALL target-flags(riscv-call) @raytrace_demo_pie_row, csr_ilp32f_lp64f, implicit-def dead $x1, implicit $x10, implicit $x11, implicit $x12, implicit $x13, implicit-def $x2
+    ADJCALLSTACKUP 0, 0, implicit-def dead $x2, implicit $x2
+    PseudoBR %bb.7
+
+  bb.6.for.body14:
+    successors: %bb.7(0x04000000), %bb.6(0x7c000000)
+
+    %48:gpr = ADD %72, %69
+    %49:gpr = LH %48, 0 :: (load (s16) from %ir.scevgep5, !tbaa !34)
+    %50:gpr = SUB %9, %49
+    SH %50, %72, 1056 :: (store (s16) into %ir.scevgep2, !tbaa !34)
+    %72:gpr = ADDI %72, 2
+    BNE %72, %3, %bb.6
+    PseudoBR %bb.7
+
+  bb.7.if.end:
+    successors: %bb.9(0x80000000)
+
+    %12:gpr = nuw ADDI %41, 8
+    %73:gpr = COPY %0
+    %74:gpr = COPY %4
+    PseudoBR %bb.9
+
+  bb.8.for.cond.cleanup28:
+    successors: %bb.4(0x7c000000), %bb.3(0x04000000)
+
+    %67:gpr = LW %25, 84 :: (load (s32) from %ir.sunkaddr, !tbaa !18)
+    %71:gpr = nuw ADDI %71, 1
+    %69:gpr = ADDI %69, 320
+    BLTU %71, %67, %bb.4
+    PseudoBR %bb.3
+
+  bb.9.for.body29:
+    successors: %bb.14(0x30000000), %bb.10(0x50000000)
+
+    %60:gpr = LH %73, -1346 :: (load (s16) from %ir.scevgep13, !tbaa !34)
+    BGE %60, $x0, %bb.10
+
+  bb.14:
+    successors: %bb.13(0x80000000)
+
+    PseudoBR %bb.13
+
+  bb.10.if.end36:
+    successors: %bb.12(0x30000000), %bb.11(0x50000000)
+
+    %61:gpr = SLLI %60, 16
+    %18:gpr = SRLI %61, 16
+    %62:gpr = LW %12, 0 :: (load (s32) from %ir.z, !tbaa !40)
+    %63:gpr = ADD %25, %18
+    %64:gpr = LBU %63, 1376 :: (load (s8) from %ir.arrayidx39, !tbaa !35)
+    %21:gpr = LH %73, 0 :: (load (s16) from %ir.lsr.iv11, !tbaa !34)
+    %76:gpr = ADD %76, %29
+    %20:gpr = nsw SUB %62, %64
+    BEQ %21, $x0, %bb.12
+    PseudoBR %bb.11
+
+  bb.11.lor.lhs.false:
+    successors: %bb.12(0x40000000), %bb.15(0x40000000)
+
+    %65:gpr = SLLI %20, 16
+    %66:gpr = SRAI %65, 16
+    BLT %66, %21, %bb.12
+
+  bb.15:
+    successors: %bb.13(0x80000000)
+
+    PseudoBR %bb.13
+
+  bb.12.if.then54:
+    successors: %bb.13(0x80000000)
+
+    SH %20, %73, 0 :: (store (s16) into %ir.lsr.iv11, !tbaa !34)
+    SB %71, %74, 0 :: (store (s8) into %ir.lsr.iv8, !tbaa !35)
+
+  bb.13.cleanup:
+    successors: %bb.8(0x04000000), %bb.9(0x7c000000)
+
+    %73:gpr = ADDI %73, 2
+    %74:gpr = ADDI %74, 1
+    BEQ %73, %4, %bb.8
+    PseudoBR %bb.9

@@ -1,0 +1,284 @@
+*** IR Dump After Loop Strength Reduction (loop-reduce) ***
+; Preheader:
+element.exit57:                                   ; preds = %element.exit52
+  %add.ptr.i56 = getelementptr i16, ptr %data.i35, i32 %add16
+  %7 = load i16, ptr %add.ptr.i56, align 2
+  %conv18 = zext i16 %7 to i32
+  %add31 = add i32 %sub, %conv18
+  %sub32 = sub i32 %conv18, %sub
+  %sub21 = mul i32 %add31, %sub32
+  %8 = trunc i32 %s.086 to i16
+  %conv50 = add i16 %8, 1
+  br label %for.body29
+
+; Loop:
+for.body29:                                       ; preds = %if.end53, %element.exit57
+  %lsr.iv5 = phi i32 [ %lsr.iv.next6, %if.end53 ], [ %lsr.iv3, %element.exit57 ]
+  %lsr.iv = phi i32 [ %lsr.iv.next, %if.end53 ], [ 3094, %element.exit57 ]
+  %x24.084 = phi i32 [ 0, %element.exit57 ], [ %inc55, %if.end53 ]
+  %9 = add i32 %lsr.iv8, %x24.084
+  %10 = load i32, ptr %work, align 4
+  %cmp.not.i58 = icmp ugt i32 %10, %9
+  br i1 %cmp.not.i58, label %element.exit62, label %if.then.i59
+
+element.exit62:                                   ; preds = %for.body29
+  %scevgep7 = getelementptr i8, ptr %work, i32 %lsr.iv5
+  %11 = load i16, ptr %scevgep7, align 2
+  %conv32 = zext i16 %11 to i32
+  %sub33 = sub i32 %sub21, %conv32
+  %cmp34 = icmp sgt i32 %sub33, -1
+  br i1 %cmp34, label %if.then, label %if.end53
+
+if.then:                                          ; preds = %element.exit62
+  %add36 = add nuw i32 %sub33, 520
+  %cmp.not.i63 = icmp ugt i32 %10, %add36
+  br i1 %cmp.not.i63, label %element.exit67, label %if.then.i64
+
+element.exit67:                                   ; preds = %if.then
+  %add.ptr.i66 = getelementptr i16, ptr %data.i35, i32 %add36
+  %12 = load i16, ptr %add.ptr.i66, align 2
+  %conv38 = zext i16 %12 to i32
+  %sub39 = sub nsw i32 %conv15, %conv38
+  %13 = add i32 %x24.084, 1545
+  %cmp.not.i68 = icmp ugt i32 %10, %13
+  br i1 %cmp.not.i68, label %element.exit72, label %if.then.i69
+
+element.exit72:                                   ; preds = %element.exit67
+  %scevgep = getelementptr i8, ptr %work, i32 %lsr.iv
+  %14 = load i16, ptr %scevgep, align 2
+  %tobool.not = icmp eq i16 %14, 0
+  %conv42 = zext i16 %14 to i32
+  %cmp43 = icmp slt i32 %sub39, %conv42
+  %or.cond = select i1 %tobool.not, i1 true, i1 %cmp43
+  br i1 %or.cond, label %element.exit77, label %if.end53
+
+element.exit77:                                   ; preds = %element.exit72
+  %conv46 = trunc i32 %sub39 to i16
+  store i16 %conv46, ptr %scevgep, align 2
+  %15 = add i32 %x24.084, 1705
+  %16 = load i32, ptr %work, align 4
+  %cmp.not.i78 = icmp ugt i32 %16, %15
+  br i1 %cmp.not.i78, label %element.exit82, label %if.then.i79
+
+element.exit82:                                   ; preds = %element.exit77
+  %scevgep1 = getelementptr i8, ptr %work, i32 %lsr.iv
+  %scevgep2 = getelementptr i8, ptr %scevgep1, i32 320
+  store i16 %conv50, ptr %scevgep2, align 2
+  br label %if.end53
+
+if.end53:                                         ; preds = %element.exit82, %element.exit72, %element.exit62
+  %inc55 = add nuw nsw i32 %x24.084, 1
+  %lsr.iv.next = add nuw nsw i32 %lsr.iv, 2
+  %lsr.iv.next6 = add nuw nsw i32 %lsr.iv5, 2
+  %exitcond87.not = icmp eq i32 %inc55, 160
+  br i1 %exitcond87.not, label %for.cond.cleanup28, label %for.body29, !llvm.loop !7
+
+; Exit blocks
+if.then.i59:                                      ; preds = %for.body29
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i64:                                      ; preds = %if.then
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i69:                                      ; preds = %element.exit67
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i79:                                      ; preds = %element.exit77
+  tail call void @llvm.trap()
+  unreachable
+
+for.cond.cleanup28:                               ; preds = %if.end53
+  %inc58 = add nuw nsw i32 %s.086, 1
+  %exitcond88.not = icmp eq i32 %inc58, %conv
+  %lsr.iv.next4 = add nuw nsw i32 %lsr.iv3, 320
+  %lsr.iv.next9 = add nuw nsw i32 %lsr.iv8, 160
+  br i1 %exitcond88.not, label %for.cond.cleanup7.loopexit, label %for.body8, !llvm.loop !6
+*** IR Dump After Loop Strength Reduction (loop-reduce) ***
+; Preheader:
+for.body8.preheader:                              ; preds = %element.exit
+  br label %for.body8
+
+; Loop:
+for.body8:                                        ; preds = %for.body8.preheader, %for.cond.cleanup28
+  %lsr.iv8 = phi i32 [ 40, %for.body8.preheader ], [ %lsr.iv.next9, %for.cond.cleanup28 ]
+  %lsr.iv3 = phi i32 [ 84, %for.body8.preheader ], [ %lsr.iv.next4, %for.cond.cleanup28 ]
+  %s.086 = phi i32 [ %inc58, %for.cond.cleanup28 ], [ 0, %for.body8.preheader ]
+  %mul = mul nuw nsw i32 %s.086, 5
+  %add10 = add nuw nsw i32 %mul, 2
+  %4 = load i32, ptr %work, align 4
+  %cmp.not.i43 = icmp ugt i32 %4, %add10
+  br i1 %cmp.not.i43, label %element.exit47, label %if.then.i44
+
+element.exit47:                                   ; preds = %for.body8
+  %add.ptr.i46 = getelementptr i16, ptr %data.i35, i32 %add10
+  %5 = load i16, ptr %add.ptr.i46, align 2
+  %conv12 = zext i16 %5 to i32
+  %sub = sub i32 %y, %conv12
+  %add13 = add nuw nsw i32 %mul, 3
+  %cmp.not.i48 = icmp ugt i32 %4, %add13
+  br i1 %cmp.not.i48, label %element.exit52, label %if.then.i49
+
+element.exit52:                                   ; preds = %element.exit47
+  %add.ptr.i51 = getelementptr i16, ptr %data.i35, i32 %add13
+  %6 = load i16, ptr %add.ptr.i51, align 2
+  %conv15 = zext i16 %6 to i32
+  %add16 = add nuw nsw i32 %mul, 4
+  %cmp.not.i53 = icmp ugt i32 %4, %add16
+  br i1 %cmp.not.i53, label %element.exit57, label %if.then.i54
+
+element.exit57:                                   ; preds = %element.exit52
+  %add.ptr.i56 = getelementptr i16, ptr %data.i35, i32 %add16
+  %7 = load i16, ptr %add.ptr.i56, align 2
+  %conv18 = zext i16 %7 to i32
+  %add31 = add i32 %sub, %conv18
+  %sub32 = sub i32 %conv18, %sub
+  %sub21 = mul i32 %add31, %sub32
+  %8 = trunc i32 %s.086 to i16
+  %conv50 = add i16 %8, 1
+  br label %for.body29
+
+for.body29:                                       ; preds = %if.end53, %element.exit57
+  %lsr.iv5 = phi i32 [ %lsr.iv.next6, %if.end53 ], [ %lsr.iv3, %element.exit57 ]
+  %lsr.iv = phi i32 [ %lsr.iv.next, %if.end53 ], [ 3094, %element.exit57 ]
+  %x24.084 = phi i32 [ 0, %element.exit57 ], [ %inc55, %if.end53 ]
+  %9 = add i32 %lsr.iv8, %x24.084
+  %10 = load i32, ptr %work, align 4
+  %cmp.not.i58 = icmp ugt i32 %10, %9
+  br i1 %cmp.not.i58, label %element.exit62, label %if.then.i59
+
+element.exit62:                                   ; preds = %for.body29
+  %scevgep7 = getelementptr i8, ptr %work, i32 %lsr.iv5
+  %11 = load i16, ptr %scevgep7, align 2
+  %conv32 = zext i16 %11 to i32
+  %sub33 = sub i32 %sub21, %conv32
+  %cmp34 = icmp sgt i32 %sub33, -1
+  br i1 %cmp34, label %if.then, label %if.end53
+
+if.then:                                          ; preds = %element.exit62
+  %add36 = add nuw i32 %sub33, 520
+  %cmp.not.i63 = icmp ugt i32 %10, %add36
+  br i1 %cmp.not.i63, label %element.exit67, label %if.then.i64
+
+element.exit67:                                   ; preds = %if.then
+  %add.ptr.i66 = getelementptr i16, ptr %data.i35, i32 %add36
+  %12 = load i16, ptr %add.ptr.i66, align 2
+  %conv38 = zext i16 %12 to i32
+  %sub39 = sub nsw i32 %conv15, %conv38
+  %13 = add i32 %x24.084, 1545
+  %cmp.not.i68 = icmp ugt i32 %10, %13
+  br i1 %cmp.not.i68, label %element.exit72, label %if.then.i69
+
+element.exit72:                                   ; preds = %element.exit67
+  %scevgep = getelementptr i8, ptr %work, i32 %lsr.iv
+  %14 = load i16, ptr %scevgep, align 2
+  %tobool.not = icmp eq i16 %14, 0
+  %conv42 = zext i16 %14 to i32
+  %cmp43 = icmp slt i32 %sub39, %conv42
+  %or.cond = select i1 %tobool.not, i1 true, i1 %cmp43
+  br i1 %or.cond, label %element.exit77, label %if.end53
+
+element.exit77:                                   ; preds = %element.exit72
+  %conv46 = trunc i32 %sub39 to i16
+  store i16 %conv46, ptr %scevgep, align 2
+  %15 = add i32 %x24.084, 1705
+  %16 = load i32, ptr %work, align 4
+  %cmp.not.i78 = icmp ugt i32 %16, %15
+  br i1 %cmp.not.i78, label %element.exit82, label %if.then.i79
+
+element.exit82:                                   ; preds = %element.exit77
+  %scevgep1 = getelementptr i8, ptr %work, i32 %lsr.iv
+  %scevgep2 = getelementptr i8, ptr %scevgep1, i32 320
+  store i16 %conv50, ptr %scevgep2, align 2
+  br label %if.end53
+
+if.end53:                                         ; preds = %element.exit82, %element.exit72, %element.exit62
+  %inc55 = add nuw nsw i32 %x24.084, 1
+  %lsr.iv.next = add nuw nsw i32 %lsr.iv, 2
+  %lsr.iv.next6 = add nuw nsw i32 %lsr.iv5, 2
+  %exitcond87.not = icmp eq i32 %inc55, 160
+  br i1 %exitcond87.not, label %for.cond.cleanup28, label %for.body29, !llvm.loop !7
+
+for.cond.cleanup28:                               ; preds = %if.end53
+  %inc58 = add nuw nsw i32 %s.086, 1
+  %lsr.iv.next4 = add nuw nsw i32 %lsr.iv3, 320
+  %lsr.iv.next9 = add nuw nsw i32 %lsr.iv8, 160
+  %exitcond88.not = icmp eq i32 %inc58, %conv
+  br i1 %exitcond88.not, label %for.cond.cleanup7.loopexit, label %for.body8, !llvm.loop !6
+
+; Exit blocks
+if.then.i44:                                      ; preds = %for.body8
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i49:                                      ; preds = %element.exit47
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i54:                                      ; preds = %element.exit52
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i59:                                      ; preds = %for.body29
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i64:                                      ; preds = %if.then
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i69:                                      ; preds = %element.exit67
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i79:                                      ; preds = %element.exit77
+  tail call void @llvm.trap()
+  unreachable
+
+for.cond.cleanup7.loopexit:                       ; preds = %for.cond.cleanup28
+  br label %for.cond.cleanup7
+*** IR Dump After Loop Strength Reduction (loop-reduce) ***
+; Preheader:
+entry:
+  %data.i35 = getelementptr inbounds %struct.buffer, ptr %work, i32 0, i32 1
+  %scevgep12 = getelementptr i8, ptr %work, i32 3414
+  br label %for.body
+
+; Loop:
+for.body:                                         ; preds = %element.exit42, %entry
+  %lsr.iv13 = phi ptr [ %scevgep14, %element.exit42 ], [ %scevgep12, %entry ]
+  %lsr.iv10 = phi i32 [ %lsr.iv.next11, %element.exit42 ], [ 1545, %entry ]
+  %2 = load i32, ptr %work, align 4
+  %cmp.not.i33 = icmp ugt i32 %2, %lsr.iv10
+  br i1 %cmp.not.i33, label %element.exit37, label %if.then.i34
+
+element.exit37:                                   ; preds = %for.body
+  %scevgep15 = getelementptr i8, ptr %lsr.iv13, i32 -320
+  store i16 0, ptr %scevgep15, align 2
+  %3 = add i32 %lsr.iv10, 160
+  %4 = load i32, ptr %work, align 4
+  %cmp.not.i38 = icmp ugt i32 %4, %3
+  br i1 %cmp.not.i38, label %element.exit42, label %if.then.i39
+
+element.exit42:                                   ; preds = %element.exit37
+  store i16 0, ptr %lsr.iv13, align 2
+  %lsr.iv.next11 = add nuw nsw i32 %lsr.iv10, 1
+  %scevgep14 = getelementptr i8, ptr %lsr.iv13, i32 2
+  %exitcond.not = icmp eq i32 %lsr.iv.next11, 1705
+  br i1 %exitcond.not, label %for.cond.cleanup, label %for.body, !llvm.loop !4
+
+; Exit blocks
+if.then.i34:                                      ; preds = %for.body
+  tail call void @llvm.trap()
+  unreachable
+
+if.then.i39:                                      ; preds = %element.exit37
+  tail call void @llvm.trap()
+  unreachable
+
+for.cond.cleanup:                                 ; preds = %element.exit42
+  %0 = load i32, ptr %work, align 4
+  %cmp.not.i = icmp ugt i32 %0, 16
+  br i1 %cmp.not.i, label %element.exit, label %if.then.i

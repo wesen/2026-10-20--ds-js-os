@@ -1,0 +1,74 @@
+Selected IV set for loop 3 at /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:28, 160 avg niters, 1 IVs:
+Candidate 9:
+  Var befor: ivtmp.15_122
+  Var after: ivtmp.15_123
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) (work_45(D) + 3094)
+    Step:	2
+    Object:	(void *) work_45(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+
+  allowed multipliers:
+
+
+
+Selected IV set for loop 2 at /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:21, 10 avg niters, 4 IVs:
+Candidate 1:
+  Var befor: ivtmp.21_119
+  Var after: ivtmp.21_118
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	1
+    Step:	1
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+Candidate 3:
+  Var befor: ivtmp.22_117
+  Var after: ivtmp.22_116
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) (work_45(D) + 8)
+    Step:	10
+    Object:	(void *) work_45(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+Candidate 7:
+  Var befor: ivtmp.26_113
+  Var after: ivtmp.26_112
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	40
+    Step:	160
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+Candidate 9:
+  Var befor: ivtmp.28_111
+  Var after: ivtmp.28_110
+  Incr POS: before exit test
+  IV struct:
+    Type:	sizetype
+    Base:	0
+    Step:	320
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+
+
+
+Selected IV set for loop 1 at /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/01-row.c:16, 160 avg niters, 1 IVs:
+Candidate 7:
+  Var befor: ivtmp.35_103
+  Var after: ivtmp.35_102
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) ((u16 *) work_45(D) + 3094)
+    Step:	2
+    Object:	(void *) work_45(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow

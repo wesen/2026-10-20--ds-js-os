@@ -1,0 +1,363 @@
+Selected IV set for loop 3 at /tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:123, 160 avg niters, 2 IVs:
+Candidate 9:
+  Var befor: ivtmp.134_59
+  Var after: ivtmp.134_57
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) (work_37(D) + 2722)
+    Step:	1
+    Object:	(void *) work_37(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+Candidate 11:
+  Var befor: ivtmp.136_33
+  Var after: ivtmp.136_32
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) (work_37(D) + 2402)
+    Step:	2
+    Object:	(void *) work_37(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+
+
+
+Selected IV set for loop 2 at /tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:120, 160 avg niters, 1 IVs:
+Candidate 7:
+  Var befor: ivtmp.143_28
+  Var after: ivtmp.143_24
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) (work_37(D) + ((sizetype) s_71 * 320 + 96))
+    Step:	2
+    Object:	(void *) work_37(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+
+  allowed multipliers:
+
+
+
+Selected IV set for loop 1 at /tmp/picocalc-typed-ray-warm/tree/picocalc-os/nucleus/raytrace_demo.c:108, 3 avg niters, 4 IVs:
+Candidate 2:
+  Var befor: s_71
+  Var after: s_49
+  Incr POS: orig biv
+  IV struct:
+    Type:	size_t
+    Base:	0
+    Step:	1
+    Biv:	N
+    Overflowness wrto loop niter:	No-overflow
+Candidate 3:
+  Var befor: ivtmp.150_100
+  Var after: ivtmp.150_101
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) (work_37(D) + 4)
+    Step:	28
+    Object:	(void *) work_37(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+Candidate 8:
+  Var befor: ivtmp.155_104
+  Var after: ivtmp.155_105
+  Incr POS: before exit test
+  IV struct:
+    Type:	sizetype
+    Base:	0
+    Step:	4294966976
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+Candidate 9:
+  Var befor: ivtmp.156_106
+  Var after: ivtmp.156_107
+  Incr POS: before exit test
+  IV struct:
+    Type:	unsigned int
+    Base:	(unsigned int) work_37(D) + 416
+    Step:	320
+    Object:	(void *) work_37(D)
+    Biv:	N
+    Overflowness wrto loop niter:	Overflow
+
+unsigned int trace_row (struct trace * work, int y, raytrace_demo_mode mode, _Bool count_hits)
+{
+  unsigned int ivtmp.156;
+  sizetype ivtmp.155;
+  unsigned int ivtmp.150;
+  unsigned int ivtmp.143;
+  unsigned int ivtmp.136;
+  unsigned int ivtmp.134;
+  const int16_t depth;
+  const int d;
+  int x;
+  int x;
+  const int16_t row_term;
+  const int dy;
+  size_t s;
+  unsigned int hits;
+  int16_t[160] * _1;
+  int _2;
+  int _3;
+  unsigned short _4;
+  unsigned short _6;
+  unsigned short _8;
+  short int _9;
+  int16_t[160] * _10;
+  int16_t[160] * _11;
+  short int _12;
+  unsigned short _13;
+  unsigned short _14;
+  short int _15;
+  short int _16;
+  unsigned int _17;
+  int _18;
+  unsigned short _19;
+  unsigned char _20;
+  unsigned short _21;
+  unsigned short _22;
+  short int _23;
+  unsigned char _25;
+  unsigned int _26;
+  void * _29;
+  void * _30;
+  void * _31;
+  struct trace * _35;
+  unsigned int _40;
+  unsigned short powmult_60;
+  struct trace * _62;
+  void * _63;
+  unsigned int _64;
+  unsigned int _65;
+  unsigned short powmult_68;
+  void * _91;
+  void * _92;
+  sizetype _93;
+  void * _95;
+  unsigned int _97;
+  struct trace * _103;
+  unsigned int _109;
+  void * _110;
+  void * _111;
+  void * _112;
+  unsigned char _113;
+  unsigned int _114;
+  unsigned int _115;
+
+  <bb 2> [local count: 3579139]:
+  # DEBUG BEGIN_STMT
+  _1 = &work_37(D)->depth;
+  memset (_1, 0, 320);
+  # DEBUG BEGIN_STMT
+  # DEBUG hits => 0
+  # DEBUG BEGIN_STMT
+  # DEBUG BEGIN_STMT
+  # DEBUG s => 0
+  # DEBUG hits => 0
+  # DEBUG BEGIN_STMT
+  _40 = work_37(D)->object_count;
+  if (_40 != 0)
+    goto <bb 14>; [75.00%]
+  else
+    goto <bb 13>; [25.00%]
+
+  <bb 14> [local count: 2684354]:
+  _103 = work_37(D) + 4;
+  ivtmp.150_102 = (unsigned int) _103;
+  _109 = (unsigned int) work_37(D);
+  ivtmp.156_108 = _109 + 416;
+
+  <bb 3> [local count: 10737416]:
+  # hits_69 = PHI <hits_84(16), 0(14)>
+  # s_71 = PHI <s_49(16), 0(14)>
+  # ivtmp.150_100 = PHI <ivtmp.150_101(16), ivtmp.150_102(14)>
+  # ivtmp.155_104 = PHI <ivtmp.155_105(16), 0(14)>
+  # ivtmp.156_106 = PHI <ivtmp.156_107(16), ivtmp.156_108(14)>
+  # DEBUG s => s_71
+  # DEBUG hits => hits_69
+  # DEBUG BEGIN_STMT
+  # DEBUG object => &work_37(D)->objects[s_71]
+  # DEBUG BEGIN_STMT
+  _110 = (void *) ivtmp.150_100;
+  _2 = MEM[(int *)_110];
+  dy_42 = y_41(D) - _2;
+  # DEBUG dy => dy_42
+  # DEBUG BEGIN_STMT
+  _112 = (void *) ivtmp.150_100;
+  _3 = MEM[(int *)_112 + 8B];
+  _4 = (unsigned short) _3;
+  powmult_60 = _4 * _4;
+  _6 = (unsigned short) dy_42;
+  powmult_68 = _6 * _6;
+  _8 = powmult_60 - powmult_68;
+  _9 = (short int) _8;
+  row_term = _9;
+  # DEBUG BEGIN_STMT
+  if (mode_44(D) == 1)
+    goto <bb 4>; [40.69%]
+  else
+    goto <bb 15>; [59.31%]
+
+  <bb 4> [local count: 4369055]:
+  # DEBUG BEGIN_STMT
+  _114 = ivtmp.156_106 + 4294966976;
+  _10 = (int16_t[160] *) _114;
+  _11 = &work_37(D)->discriminants;
+  raytrace_demo_pie_row (_10, &row_term, _11, 20);
+
+  <bb 5> [local count: 10737416]:
+  # DEBUG x => 0
+  # DEBUG hits => hits_69
+  # DEBUG BEGIN_STMT
+  _35 = work_37(D) + 2722;
+  ivtmp.134_36 = (unsigned int) _35;
+  _62 = work_37(D) + 2402;
+  ivtmp.136_61 = (unsigned int) _62;
+  _64 = (unsigned int) work_37(D);
+  _65 = _64 + 2722;
+  goto <bb 7>; [100.00%]
+
+  <bb 15> [local count: 6368361]:
+  _115 = ivtmp.156_106 + 4294966976;
+  ivtmp.143_87 = _115;
+  _97 = (unsigned int) work_37(D);
+
+  <bb 6> [local count: 630467911]:
+  # ivtmp.143_28 = PHI <ivtmp.143_24(18), ivtmp.143_87(15)>
+  # DEBUG x => NULL
+  # DEBUG BEGIN_STMT
+  _91 = (void *) ivtmp.143_28;
+  _12 = MEM[(short int *)_91];
+  _13 = (unsigned short) _12;
+  _14 = _8 - _13;
+  _15 = (short int) _14;
+  _92 = (void *) ivtmp.143_28;
+  _93 = ivtmp.155_104;
+  _95 = _92 + _93;
+  MEM[(short int *)_95 + 960B] = _15;
+  # DEBUG BEGIN_STMT
+  # DEBUG x => NULL
+  # DEBUG BEGIN_STMT
+  ivtmp.143_24 = ivtmp.143_28 + 2;
+  if (ivtmp.143_24 != ivtmp.156_106)
+    goto <bb 18>; [98.99%]
+  else
+    goto <bb 20>; [1.01%]
+
+  <bb 20> [local count: 6368360]:
+  goto <bb 5>; [100.00%]
+
+  <bb 18> [local count: 624099551]:
+  goto <bb 6>; [100.00%]
+
+  <bb 17> [local count: 1052266997]:
+
+  <bb 7> [local count: 1063004408]:
+  # hits_67 = PHI <hits_27(17), hits_69(5)>
+  # ivtmp.134_59 = PHI <ivtmp.134_57(17), ivtmp.134_36(5)>
+  # ivtmp.136_33 = PHI <ivtmp.136_32(17), ivtmp.136_61(5)>
+  # DEBUG x => (int) ((ivtmp.134_59 - (unsigned int) work_37(D)) + 4294964574)
+  # DEBUG hits => hits_67
+  # DEBUG BEGIN_STMT
+  _63 = (void *) ivtmp.136_33;
+  _16 = MEM[(short int *)_63 + 4294965950B];
+  d_50 = (const int) _16;
+  # DEBUG d => d_50
+  # DEBUG BEGIN_STMT
+  if (d_50 < 0)
+    goto <bb 11>; [25.50%]
+  else
+    goto <bb 8>; [74.50%]
+
+  <bb 8> [local count: 791938281]:
+  # DEBUG BEGIN_STMT
+  _17 = (unsigned int) count_hits_51(D);
+  hits_52 = _17 + hits_67;
+  # DEBUG hits => hits_52
+  # DEBUG BEGIN_STMT
+  _111 = (void *) ivtmp.150_100;
+  _18 = MEM[(int *)_111 + 4B];
+  _19 = (unsigned short) _18;
+  _20 = work_37(D)->roots[d_50];
+  _21 = (unsigned short) _20;
+  _22 = _19 - _21;
+  depth_53 = (const int16_t) _22;
+  # DEBUG depth => depth_53
+  # DEBUG BEGIN_STMT
+  _29 = (void *) ivtmp.136_33;
+  _23 = MEM[(short int *)_29];
+  if (_23 == 0)
+    goto <bb 29>; [50.00%]
+  else
+    goto <bb 9>; [50.00%]
+
+  <bb 29> [local count: 395969141]:
+  goto <bb 10>; [100.00%]
+
+  <bb 9> [local count: 395969141]:
+  if (_23 > depth_53)
+    goto <bb 10>; [50.00%]
+  else
+    goto <bb 28>; [50.00%]
+
+  <bb 10> [local count: 593953711]:
+  # DEBUG BEGIN_STMT
+  _30 = (void *) ivtmp.136_33;
+  MEM[(short int *)_30] = depth_53;
+  # DEBUG BEGIN_STMT
+  _113 = (unsigned char) s_71;
+  _25 = _113;
+  _31 = (void *) ivtmp.134_59;
+  MEM[(unsigned char *)_31] = _25;
+
+  <bb 28> [local count: 197984571]:
+
+  <bb 11> [local count: 1063004410]:
+  # hits_27 = PHI <hits_67(7), hits_52(28)>
+  # DEBUG hits => hits_27
+  # DEBUG BEGIN_STMT
+  # DEBUG x => (int) ((ivtmp.134_59 - (unsigned int) work_37(D)) + 4294964575)
+  # DEBUG hits => hits_27
+  # DEBUG BEGIN_STMT
+  ivtmp.134_57 = ivtmp.134_59 + 1;
+  ivtmp.136_32 = ivtmp.136_33 + 2;
+  if (ivtmp.136_32 != _65)
+    goto <bb 17>; [98.99%]
+  else
+    goto <bb 12>; [1.01%]
+
+  <bb 12> [local count: 10737416]:
+  # hits_84 = PHI <hits_27(11)>
+  row_term ={v} {CLOBBER(eos)};
+  # DEBUG BEGIN_STMT
+  s_49 = s_71 + 1;
+  # DEBUG s => s_49
+  # DEBUG hits => hits_84
+  # DEBUG BEGIN_STMT
+  _26 = work_37(D)->object_count;
+  ivtmp.150_101 = ivtmp.150_100 + 28;
+  ivtmp.155_105 = ivtmp.155_104 - 320;
+  ivtmp.156_107 = ivtmp.156_106 + 320;
+  if (_26 > s_49)
+    goto <bb 16>; [75.00%]
+  else
+    goto <bb 25>; [25.00%]
+
+  <bb 25> [local count: 2684354]:
+  # hits_83 = PHI <hits_84(12)>
+  goto <bb 13>; [100.00%]
+
+  <bb 16> [local count: 8053062]:
+  goto <bb 3>; [100.00%]
+
+  <bb 13> [local count: 3579139]:
+  # hits_70 = PHI <hits_83(25), 0(2)>
+  # DEBUG BEGIN_STMT
+  return hits_70;
+
+}

@@ -1,0 +1,275 @@
+;; Function row (row, funcdef_no=1, decl_uid=1354, cgraph_uid=2, symbol_order=1)
+
+Removing basic block 26
+Removing basic block 27
+Removing basic block 28
+Removing basic block 29
+Removing basic block 30
+Removing basic block 31
+Removing basic block 32
+Removing basic block 33
+Removing basic block 34
+Removing basic block 35
+Removing basic block 36
+Removing basic block 37
+Removing basic block 38
+Removing basic block 39
+Removing basic block 40
+Removing basic block 41
+Removing basic block 42
+Removing basic block 43
+int row (struct buffer * work, int y)
+{
+  unsigned int ivtmp.73;
+  long unsigned int ivtmp.72;
+  unsigned int ivtmp.57;
+  unsigned int ivtmp.55;
+  sizetype ivtmp.51;
+  long unsigned int ivtmp.43;
+  unsigned int ivtmp.42;
+  long unsigned int ivtmp.30;
+  unsigned int ivtmp.22;
+  int old;
+  int z;
+  int d;
+  int term;
+  int r;
+  int cz;
+  int dy;
+  short unsigned int _5;
+  short unsigned int _9;
+  int _10;
+  short unsigned int _13;
+  short unsigned int _16;
+  short unsigned int _22;
+  int _23;
+  long unsigned int d.0_24;
+  long unsigned int _25;
+  short unsigned int _26;
+  int _27;
+  short unsigned int _30;
+  short unsigned int _31;
+  long unsigned int prephitmp_36;
+  long unsigned int pretmp_38;
+  long unsigned int pretmp_39;
+  long unsigned int _46;
+  u16[0:] * _53;
+  long unsigned int _58;
+  long unsigned int _65;
+  long unsigned int _76;
+  long unsigned int _84;
+  u16 * _85;
+  long unsigned int _86;
+  u16 * _100;
+  long unsigned int prephitmp_105;
+  int powmult_108;
+  int powmult_111;
+  long unsigned int _119;
+  void * _122;
+  void * _127;
+  long unsigned int _128;
+  sizetype _132;
+  u16 * _141;
+  unsigned int _142;
+  short unsigned int _143;
+  void * _145;
+  long unsigned int _148;
+  long unsigned int _149;
+  u16 * _155;
+  void * _156;
+  long unsigned int _157;
+
+  <bb 2> [local count: 1327094]:
+  _155 = work_45(D) + 3094;
+  ivtmp.73_154 = (unsigned int) _155;
+
+  <bb 3> [local count: 131382344]:
+  # ivtmp.72_150 = PHI <ivtmp.72_151(6), 1545(2)>
+  # ivtmp.73_152 = PHI <ivtmp.73_153(6), ivtmp.73_154(2)>
+  _58 = work_45(D)->capacity;
+  if (_58 <= ivtmp.72_150)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 5>; [100.00%]
+
+  <bb 4> [count: 0]:
+  __builtin_trap ();
+
+  <bb 5> [local count: 131382344]:
+  _156 = (void *) ivtmp.73_152;
+  MEM[(u16 *)_156] = 0;
+  _65 = work_45(D)->capacity;
+  _157 = ivtmp.72_150 + 160;
+  if (_65 <= _157)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 6>; [100.00%]
+
+  <bb 6> [local count: 131382344]:
+  MEM[(u16 *)_156 + 320B] = 0;
+  ivtmp.72_151 = ivtmp.72_150 + 1;
+  ivtmp.73_153 = ivtmp.73_152 + 2;
+  if (ivtmp.72_151 != 1705)
+    goto <bb 3>; [98.99%]
+  else
+    goto <bb 7>; [1.01%]
+
+  <bb 7> [local count: 1327094]:
+  _46 = work_45(D)->capacity;
+  if (_46 <= 16)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 8>; [100.00%]
+
+  <bb 8> [local count: 1327094]:
+  _5 = MEM[(u16 *)work_45(D) + 36B];
+  if (_5 != 0)
+    goto <bb 9>; [89.00%]
+  else
+    goto <bb 25>; [11.00%]
+
+  <bb 9> [local count: 1181114]:
+  _53 = &work_45(D)->data;
+  _141 = work_45(D) + 8;
+  ivtmp.57_140 = (unsigned int) _141;
+  _142 = (unsigned int) _5;
+
+  <bb 10> [local count: 10737414]:
+  # prephitmp_36 = PHI <pretmp_38(24), _46(9)>
+  # ivtmp.42_118 = PHI <ivtmp.42_131(24), 1(9)>
+  # ivtmp.43_43 = PHI <ivtmp.43_133(24), 2(9)>
+  # ivtmp.51_113 = PHI <ivtmp.51_135(24), 0(9)>
+  # ivtmp.55_96 = PHI <ivtmp.55_137(24), 0(9)>
+  # ivtmp.57_17 = PHI <ivtmp.57_139(24), ivtmp.57_140(9)>
+  _145 = (void *) ivtmp.57_17;
+  _9 = MEM[(u16 *)_145];
+  _10 = (int) _9;
+  dy_50 = y_49(D) - _10;
+  _149 = ivtmp.43_43 + 1;
+  if (prephitmp_36 <= _149)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 11>; [100.00%]
+
+  <bb 11> [local count: 10737414]:
+  _13 = MEM[(u16 *)_145 + 2B];
+  cz_52 = (int) _13;
+  _148 = ivtmp.43_43 + 2;
+  if (prephitmp_36 <= _148)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 12>; [100.00%]
+
+  <bb 12> [local count: 10737414]:
+  _16 = MEM[(u16 *)_145 + 4B];
+  r_54 = (int) _16;
+  powmult_108 = r_54 * r_54;
+  powmult_111 = dy_50 * dy_50;
+  term_55 = powmult_108 - powmult_111;
+  _100 = work_45(D) + 3094;
+  ivtmp.22_103 = (unsigned int) _100;
+
+  <bb 13> [local count: 1063004407]:
+  # prephitmp_105 = PHI <pretmp_39(22), prephitmp_36(12)>
+  # ivtmp.22_101 = PHI <ivtmp.22_102(22), ivtmp.22_103(12)>
+  # ivtmp.30_114 = PHI <ivtmp.30_115(22), ivtmp.72_151(12)>
+  _76 = ivtmp.55_96 + 4294965631;
+  _119 = _76 + ivtmp.30_114;
+  if (prephitmp_105 <= _119)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 14>; [100.00%]
+
+  <bb 14> [local count: 1063004407]:
+  _122 = (void *) ivtmp.22_101;
+  _132 = ivtmp.51_113 + 4294964286;
+  _127 = _122 + _132;
+  _22 = MEM[(u16 *)_127];
+  _23 = (int) _22;
+  d_59 = term_55 - _23;
+  if (d_59 >= 0)
+    goto <bb 15>; [59.00%]
+  else
+    goto <bb 21>; [41.00%]
+
+  <bb 15> [local count: 627172604]:
+  d.0_24 = (long unsigned int) d_59;
+  _25 = d.0_24 + 520;
+  if (_25 >= prephitmp_105)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 16>; [100.00%]
+
+  <bb 16> [local count: 627172604]:
+  _84 = _25 * 2;
+  _85 = _53 + _84;
+  _26 = *_85;
+  _128 = ivtmp.30_114 + 4294967136;
+  if (prephitmp_105 <= _128)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 17>; [100.00%]
+
+  <bb 17> [local count: 627172604]:
+  _30 = MEM[(u16 *)_122];
+  old_63 = (int) _30;
+  if (old_63 == 0)
+    goto <bb 19>; [50.00%]
+  else
+    goto <bb 18>; [50.00%]
+
+  <bb 18> [local count: 313586302]:
+  _27 = (int) _26;
+  z_61 = cz_52 - _27;
+  if (z_61 < old_63)
+    goto <bb 19>; [50.00%]
+  else
+    goto <bb 21>; [50.00%]
+
+  <bb 19> [local count: 470379453]:
+  _31 = _13 - _26;
+  MEM[(u16 *)_122] = _31;
+  _86 = work_45(D)->capacity;
+  if (_86 <= ivtmp.30_114)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 20>; [100.00%]
+
+  <bb 20> [local count: 470379453]:
+  _143 = (short unsigned int) ivtmp.42_118;
+  MEM[(u16 *)_122 + 320B] = _143;
+
+  <bb 21> [local count: 1063004409]:
+  ivtmp.22_102 = ivtmp.22_101 + 2;
+  ivtmp.30_115 = ivtmp.30_114 + 1;
+  if (ivtmp.30_115 != 1865)
+    goto <bb 22>; [98.99%]
+  else
+    goto <bb 23>; [1.01%]
+
+  <bb 22> [local count: 1052266996]:
+  pretmp_39 = work_45(D)->capacity;
+  goto <bb 13>; [100.00%]
+
+  <bb 23> [local count: 10737416]:
+  ivtmp.43_133 = ivtmp.43_43 + 5;
+  ivtmp.51_135 = ivtmp.51_113 + 320;
+  ivtmp.55_137 = ivtmp.55_96 + 160;
+  ivtmp.57_139 = ivtmp.57_17 + 10;
+  if (ivtmp.42_118 != _142)
+    goto <bb 24>; [89.00%]
+  else
+    goto <bb 25>; [11.00%]
+
+  <bb 24> [local count: 9556300]:
+  pretmp_38 = work_45(D)->capacity;
+  ivtmp.42_131 = ivtmp.42_118 + 1;
+  if (pretmp_38 <= ivtmp.43_133)
+    goto <bb 4>; [0.00%]
+  else
+    goto <bb 10>; [100.00%]
+
+  <bb 25> [local count: 1327096]:
+  return 1;
+
+}
