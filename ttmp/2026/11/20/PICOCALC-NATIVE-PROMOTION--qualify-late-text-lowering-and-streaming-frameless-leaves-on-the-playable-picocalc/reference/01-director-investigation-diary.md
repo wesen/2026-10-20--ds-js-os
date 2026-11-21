@@ -126,3 +126,56 @@ Run scripts/release/02-attest.py STAGE OUTPUT against a completed release build.
 ### Technical details
 
 The probe runs two arms × six blocks × three positions. The opening and Kiwipete cases search to depth three. The live after-e2e4 fixture uses the game's 1,600-node budget and takes 78 slices. Registers used by the search obey the ordinary RV32 ABI.
+
+## Step 3. Check product behavior independently of its clocks
+
+I reran the normal host tests and build attestation while the device researcher ran matched cold and UI trials. Faster startup changed which UI event was still visible when the capture began. The difference was visible in the actual frame and triggered rollback. We kept the original reference pixels.
+
+### Prompt Context
+
+See Step 1. The ordinary image is meant for everyday use. The interval between a key and an observed frame is a useful separate result from compiler and search time.
+
+**Commit (code)** cb03601 — Build the ordinary compiler promotion and prepare paired PSRAM execution trials.
+
+### What I did
+
+- Ran make -C picocalc-os test-apps and reproduced all 66 successful tests across five suites. Reran scripts/release/02-attest.py and compared the second receipt byte for byte with the committed version.
+- Preserved the local playable application, partition and SHA256SUMS under picocalc-os/build/native-promotion, an ignored build folder. Verified both sums.
+- Delivered the finished implementation guide through the reMarkable service. The upload returned “OK: uploaded PicoCalc_Native_Compiler_Promotion_-_Implementation_Guide.pdf -> /ai/2026/11/20/PICOCALC-NATIVE-PROMOTION”.
+- Reviewed the first UI failure with the device researcher. After shortening compilation, a stock boot notification remained onscreen during the first opening capture. The operator left the timed key sequence and reference comparisons intact and moved the wait into untimed setup.
+
+### Why
+
+A regression in painting and a real change in startup scheduling can both change a screenshot. Comparing the differing pixels with the independently known opening identifies which hypothesis explains the observation.
+
+### What worked
+
+The old firmware was restored and read back by the failure handler. Its app and partition were verified before trying the corrected collector. The device lane acquired three independent cold boots even in the sample discarded for UI qualification. Only the complete subsequent runs count toward the final verdict.
+
+### What didn't work
+
+The first candidate comparison did not match the frozen opening. The device investigator found all differences inside the 312 by 61 boot notification rectangle at x=4, y=26. After this diagnosis, the collector continued to require equality across the full app area before accepting a starting screen.
+
+### What I learned
+
+The UI polling interval bounds what can be said about response latency. Two observed paints and matching pixels can demonstrate a completed move even when the exact time the final pixel reached the display is unknown.
+
+### What was tricky to build
+
+Health checks, screenshots and event timing consume serial bandwidth. The operator records the last pre-completion observation and first successful observation separately, then compares the independent screenshot after the timing interval.
+
+### What warrants a second pair of eyes
+
+Check that the qualification scripts verify full app pixels, preserve the scratch-file contents, and release the serial lock before the supplementary study.
+
+### What should be done in the future
+
+Complete the full-ELF PSRAM comparison and independently publish raw paired values with the final ordinary-image identity.
+
+### Code review instructions
+
+See scripts/device/workflows.py for the untimed opening check and timed move path. Consult the ordinary device diary for the actual commands and receipt names.
+
+### Technical details
+
+The reference app region starts at row 22 of the 320 by 320 framebuffer. The clocks and dynamic system status in the top bar are outside this region. The accepted final reply is compared again against an independent frozen frame.
