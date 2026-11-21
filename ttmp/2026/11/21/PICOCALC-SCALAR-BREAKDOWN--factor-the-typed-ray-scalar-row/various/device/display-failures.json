@@ -1,0 +1,48 @@
+[
+  {
+    "run": "factor-post-matrix",
+    "uartSHA256": "4ddf9e22086934977c9139bfc23781e8dd8cb3eb9816b4dd8ca257f5232d8416",
+    "faultLine": 2830,
+    "actualDiagnostic": "[250861.462] compositor crashed handling draw: ran past its turn budget of 80 ms",
+    "lastLoadLine": 2066,
+    "lastLoad": {
+      "program": 0,
+      "sourceBytes": 10438,
+      "elfBytes": 66816,
+      "segmentBytes": 66092,
+      "elapsedUs": 436146,
+      "elfCRC": "0d2e18b8"
+    },
+    "immediatelyPrecededByLoad": false
+  },
+  {
+    "run": "previous-fixed-release",
+    "uartSHA256": "854e3bf183ac5e2600c2025ebf3d0c41080312341704f90f5332a38cd87f42d4",
+    "faultLine": 4922,
+    "actualDiagnostic": "[ 17630.258] compositor crashed handling draw: ran past its turn budget of 80 ms",
+    "lastLoadLine": 4921,
+    "lastLoad": {
+      "program": 0,
+      "sourceBytes": 10438,
+      "elfBytes": 66816,
+      "segmentBytes": 66092,
+      "elapsedUs": 435538
+    },
+    "immediatelyPrecededByLoad": true
+  },
+  {
+    "run": "previous-material-release",
+    "uartSHA256": "25b6ddb48c257c684d960d2146f9066bb651f41e86b969a58efbeb44fdc5b048",
+    "faultLine": 1249,
+    "actualDiagnostic": "[ 17671.951] compositor crashed handling draw: ran past its turn budget of 80 ms",
+    "lastLoadLine": 1248,
+    "lastLoad": {
+      "program": 0,
+      "sourceBytes": 10438,
+      "elfBytes": 66816,
+      "segmentBytes": 66092,
+      "elapsedUs": 435280
+    },
+    "immediatelyPrecededByLoad": true
+  }
+]

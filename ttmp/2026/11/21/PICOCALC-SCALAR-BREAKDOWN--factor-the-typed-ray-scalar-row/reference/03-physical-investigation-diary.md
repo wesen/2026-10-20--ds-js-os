@@ -114,3 +114,51 @@ Inspect [the independent ELF replay](../scripts/device/03-images.mjs), [produced
 ### Technical details
 
 Physical app e2a7ce01d091008d26d32506079d8b8ff9c873e93d8cb3f705d16e0c819cbd50. The ordinary profile used ESP-IDF 5.4.2, 360 MHz core clock and the prior executable PSRAM loader configuration. The exact target commit and all eleven optional bundle-file hashes are recorded in the [build receipt](../various/device/build.json).
+
+## Step 3. Separate the factorial measurement outcome from the interactive firmware outcome
+
+The seven-arm physical trial completed on image e2a7ce01. Its first interactive handoff attempt then exposed a display deadline violation and activated the rollback. I preserved both outcomes and retrieved the two preceding UART logs to check whether first-focus delays were specific to the large factorial image.
+
+### Prompt Context
+
+**User prompt (verbatim)** See Step 1. **Assistant interpretation** Compare the scalar row variants under identical work and qualify the real program through ordinary controls. **Inferred user intent** Quantify what saves time and retain a usable handheld. **Commit (code)** 4a86f07, “Move fourth-mode Typed ray work outside the compositor draw budget.”
+
+### What I did
+
+I verified the prior app and partition before writing only the candidate app. On the unit the rotated runner built 49 ELFs and checked all 588 timing blocks. Each block contained twelve native invocations. I reduced the raw observations by repetition and pose and retained the older nine-selector regression. I then tested default, Right and W using the real launcher and a full 240×240 RGB565 viewport comparison against the frozen reference. After the Left/Right boundary investigation I replayed the real logs and extracted exact diagnostics, previous loader timings and UART digests in a compact file.
+
+### Why
+
+A correct timed plane, a correct front-buffer screenshot and a live compositor are three different observations. The program and its display service have separate lifetimes and budgets. The statistical unit was a matched rendering condition on one board; corpus cases at different strides and different poses could not be substituted for repetitions at the default pose.
+
+### What worked
+
+Across the twelve poses and all repetition blocks the physical references agreed across every visible color, depth and ID word. The checked/register primary difference versus checked/stack was 3.121 ms at default. Hoisting saved another 0.654 ms once registers were present. The known slower release image was restored and verified, and all eight native worlds passed the health gate. The portable reducer also reconstructed the per-pose interaction values from the receipts.
+
+### What didn't work
+
+The first ordinary default viewport was exact. After the Right key the viewport CRC was 7fb3d50b instead of fa6be88f. The exact UART diagnostic was `compositor crashed handling draw: ran past its turn budget of 80 ms`. In the preceding two archived firmware logs the same diagnostic appeared immediately after the first stock ELF load. This invalidates the previous assumption that their post-readback screenshots alone qualified first-focus world health. The warm failure on the factorial board followed a successful construction of the same stock guest. No cycle breakdown was captured for that particular failed turn.
+
+### What I learned
+
+Cold compilation needs roughly 435 ms on this unit. The trusted compositor's 80 ms turn is a genuine boundary at the normal application entry. Prebuilding a program via the research console would hide the first-focus defect from the final ordinary check. Moving the fourth-mode work to the existing kernel poll preserves both the stock ELF and the display budget. This approach still occupies the single kernel thread while computing, which is visible as first-use latency.
+
+### What was tricky to build
+
+The display-to-compute request must survive a turn without retaining a framebuffer pointer. The revised service stores only four coordinates and the requesting compositor epoch, renders into its owned Typed plane, then requests a fresh composition. It checks the epoch before computing. An identical completed pose reuses the plane, an obsolete queued pose can be replaced, and installing a new compiler program invalidates the frame cache.
+
+### What warrants a second pair of eyes
+
+The host instruction counts were additive; the matched per-block elapsed interaction was consistently negative. Cache and hardware performance counters were not collected. The UI experiment found two historical cold faults and one warm fault. The measurements do not assign the exact excess in the warm draw to a particular source operation.
+
+### What should be done in the future
+
+Exercise the held-out shadow compiler on the inspector-enabled build, including the primary-only negative control. Recheck the real cold default, move and lamp interaction after final app readback, then poll world health after the last displayed frame.
+
+### Code review instructions
+
+Recompute the original physical medians with `python3 scripts/device/04-summarize.py various/device` from this ticket. Examine the [failure extracts](../various/device/display-failures.json), the [numerical observations](../various/device/rows.json), the [recovery health](../various/device/rollback.json) and the [paired figure](../various/device/paired-savings.png). The implementation and strengthened gates are in 4a86f07.
+
+### Technical details
+
+The checked/stack through hoisted/register cells performed exactly 76,800 sphere-column tests per frame. The skip cell performed 26,400 at the default pose. The stock and hoisted/register cells took 57.691 and 53.942 ms per clean frame at default. Image e2a7ce01 is qualified for these numerical observations only. The signed-off prior binary restored on the first retry was db17ab6a. The frozen partition starts 72721dc3.

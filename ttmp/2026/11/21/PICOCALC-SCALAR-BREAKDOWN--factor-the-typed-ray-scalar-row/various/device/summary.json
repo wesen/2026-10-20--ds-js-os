@@ -1,0 +1,3223 @@
+{
+  "unit": "microseconds",
+  "blocks": 588,
+  "poses": {
+    "blue-overlap": {
+      "levels": {
+        "clean": {
+          "0": 55536,
+          "9": 55564,
+          "10": 54286,
+          "11": 52496,
+          "12": 51847,
+          "13": 48340,
+          "8": 44880
+        },
+        "audit": {
+          "0": 60691,
+          "9": 60730,
+          "10": 59469,
+          "11": 57624,
+          "12": 56952,
+          "13": 53471,
+          "8": 50094
+        },
+        "primary": {
+          "0": 17700,
+          "9": 17716,
+          "10": 16435,
+          "11": 14627,
+          "12": 13982,
+          "13": 10469,
+          "8": 7038
+        },
+        "shade": {
+          "0": 46536,
+          "9": 46532,
+          "10": 46503,
+          "11": 46532,
+          "12": 46540,
+          "13": 46530,
+          "8": 46539
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 26,
+            "min": -1,
+            "max": 82
+          },
+          "hoistWhenStack": {
+            "median": 1276,
+            "min": 1235,
+            "max": 1323
+          },
+          "hoistWhenRegisters": {
+            "median": 649,
+            "min": 633,
+            "max": 692
+          },
+          "registersWhenChecked": {
+            "median": 3078,
+            "min": 3057,
+            "max": 3109
+          },
+          "registersWhenHoisted": {
+            "median": 2453,
+            "min": 2420,
+            "max": 2503
+          },
+          "both": {
+            "median": 3733,
+            "min": 3700,
+            "max": 3763
+          },
+          "skip": {
+            "median": 3504,
+            "min": 3478,
+            "max": 3541
+          },
+          "remainingToPriorMatched": {
+            "median": 3460,
+            "min": 3426,
+            "max": 3485
+          },
+          "stockToPriorMatched": {
+            "median": 10662,
+            "min": 10639,
+            "max": 10697
+          },
+          "interaction": {
+            "median": -604,
+            "min": -674,
+            "max": -591
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 16,
+            "min": -50,
+            "max": 62
+          },
+          "hoistWhenStack": {
+            "median": 1273,
+            "min": 1150,
+            "max": 1309
+          },
+          "hoistWhenRegisters": {
+            "median": 684,
+            "min": 602,
+            "max": 719
+          },
+          "registersWhenChecked": {
+            "median": 3077,
+            "min": 3039,
+            "max": 3169
+          },
+          "registersWhenHoisted": {
+            "median": 2496,
+            "min": 2434,
+            "max": 2602
+          },
+          "both": {
+            "median": 3743,
+            "min": 3726,
+            "max": 3824
+          },
+          "skip": {
+            "median": 3488,
+            "min": 3424,
+            "max": 3540
+          },
+          "remainingToPriorMatched": {
+            "median": 3417,
+            "min": 3315,
+            "max": 3510
+          },
+          "stockToPriorMatched": {
+            "median": 10649,
+            "min": 10575,
+            "max": 10736
+          },
+          "interaction": {
+            "median": -564,
+            "min": -671,
+            "max": -459
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 16,
+            "min": 0,
+            "max": 41
+          },
+          "hoistWhenStack": {
+            "median": 1285,
+            "min": 1267,
+            "max": 1292
+          },
+          "hoistWhenRegisters": {
+            "median": 645,
+            "min": 630,
+            "max": 655
+          },
+          "registersWhenChecked": {
+            "median": 3084,
+            "min": 3078,
+            "max": 3104
+          },
+          "registersWhenHoisted": {
+            "median": 2455,
+            "min": 2427,
+            "max": 2467
+          },
+          "both": {
+            "median": 3734,
+            "min": 3719,
+            "max": 3745
+          },
+          "skip": {
+            "median": 3515,
+            "min": 3500,
+            "max": 3524
+          },
+          "remainingToPriorMatched": {
+            "median": 3431,
+            "min": 3414,
+            "max": 3449
+          },
+          "stockToPriorMatched": {
+            "median": 10661,
+            "min": 10640,
+            "max": 10675
+          },
+          "interaction": {
+            "median": -642,
+            "min": -651,
+            "max": -616
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 5,
+            "min": -33,
+            "max": 53
+          },
+          "hoistWhenStack": {
+            "median": 57,
+            "min": -29,
+            "max": 84
+          },
+          "hoistWhenRegisters": {
+            "median": 7,
+            "min": -80,
+            "max": 42
+          },
+          "registersWhenChecked": {
+            "median": -1,
+            "min": -59,
+            "max": 20
+          },
+          "registersWhenHoisted": {
+            "median": -44,
+            "min": -125,
+            "max": 19
+          },
+          "both": {
+            "median": -6,
+            "min": -70,
+            "max": 41
+          },
+          "skip": {
+            "median": 17,
+            "min": -37,
+            "max": 49
+          },
+          "remainingToPriorMatched": {
+            "median": -15,
+            "min": -52,
+            "max": 92
+          },
+          "stockToPriorMatched": {
+            "median": 4,
+            "min": -29,
+            "max": 104
+          },
+          "interaction": {
+            "median": -55,
+            "min": -89,
+            "max": 36
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          8846,
+          11487,
+          4581,
+          7687
+        ],
+        "C_PIE": [
+          7689,
+          10339,
+          3456,
+          7660
+        ]
+      }
+    },
+    "bottom-lamp": {
+      "levels": {
+        "clean": {
+          "0": 56383,
+          "9": 56410,
+          "10": 55113,
+          "11": 53321,
+          "12": 52654,
+          "13": 49159,
+          "8": 45685
+        },
+        "audit": {
+          "0": 61535,
+          "9": 61563,
+          "10": 60300,
+          "11": 58475,
+          "12": 57798,
+          "13": 54325,
+          "8": 50894
+        },
+        "primary": {
+          "0": 17730,
+          "9": 17742,
+          "10": 16455,
+          "11": 14642,
+          "12": 13997,
+          "13": 10485,
+          "8": 7040
+        },
+        "shade": {
+          "0": 47340,
+          "9": 47312,
+          "10": 47294,
+          "11": 47310,
+          "12": 47327,
+          "13": 47318,
+          "8": 47320
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 18,
+            "min": -13,
+            "max": 54
+          },
+          "hoistWhenStack": {
+            "median": 1294,
+            "min": 1260,
+            "max": 1308
+          },
+          "hoistWhenRegisters": {
+            "median": 662,
+            "min": 645,
+            "max": 709
+          },
+          "registersWhenChecked": {
+            "median": 3078,
+            "min": 3057,
+            "max": 3112
+          },
+          "registersWhenHoisted": {
+            "median": 2457,
+            "min": 2442,
+            "max": 2522
+          },
+          "both": {
+            "median": 3761,
+            "min": 3719,
+            "max": 3782
+          },
+          "skip": {
+            "median": 3497,
+            "min": 3439,
+            "max": 3530
+          },
+          "remainingToPriorMatched": {
+            "median": 3475,
+            "min": 3453,
+            "max": 3490
+          },
+          "stockToPriorMatched": {
+            "median": 10706,
+            "min": 10676,
+            "max": 10723
+          },
+          "interaction": {
+            "median": -621,
+            "min": -659,
+            "max": -551
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 31,
+            "min": -21,
+            "max": 64
+          },
+          "hoistWhenStack": {
+            "median": 1272,
+            "min": 1185,
+            "max": 1343
+          },
+          "hoistWhenRegisters": {
+            "median": 667,
+            "min": 655,
+            "max": 783
+          },
+          "registersWhenChecked": {
+            "median": 3052,
+            "min": 2996,
+            "max": 3175
+          },
+          "registersWhenHoisted": {
+            "median": 2488,
+            "min": 2375,
+            "max": 2554
+          },
+          "both": {
+            "median": 3735,
+            "min": 3677,
+            "max": 3839
+          },
+          "skip": {
+            "median": 3453,
+            "min": 3412,
+            "max": 3589
+          },
+          "remainingToPriorMatched": {
+            "median": 3446,
+            "min": 3369,
+            "max": 3481
+          },
+          "stockToPriorMatched": {
+            "median": 10654,
+            "min": 10529,
+            "max": 10766
+          },
+          "interaction": {
+            "median": -597,
+            "min": -676,
+            "max": -478
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 10,
+            "min": -2,
+            "max": 34
+          },
+          "hoistWhenStack": {
+            "median": 1287,
+            "min": 1264,
+            "max": 1298
+          },
+          "hoistWhenRegisters": {
+            "median": 645,
+            "min": 629,
+            "max": 656
+          },
+          "registersWhenChecked": {
+            "median": 3101,
+            "min": 3080,
+            "max": 3111
+          },
+          "registersWhenHoisted": {
+            "median": 2460,
+            "min": 2443,
+            "max": 2470
+          },
+          "both": {
+            "median": 3742,
+            "min": 3730,
+            "max": 3757
+          },
+          "skip": {
+            "median": 3514,
+            "min": 3491,
+            "max": 3535
+          },
+          "remainingToPriorMatched": {
+            "median": 3445,
+            "min": 3424,
+            "max": 3469
+          },
+          "stockToPriorMatched": {
+            "median": 10689,
+            "min": 10669,
+            "max": 10709
+          },
+          "interaction": {
+            "median": -641,
+            "min": -662,
+            "max": -610
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": -13,
+            "min": -58,
+            "max": 24
+          },
+          "hoistWhenStack": {
+            "median": 10,
+            "min": -33,
+            "max": 114
+          },
+          "hoistWhenRegisters": {
+            "median": 0,
+            "min": -80,
+            "max": 9
+          },
+          "registersWhenChecked": {
+            "median": -1,
+            "min": -38,
+            "max": 96
+          },
+          "registersWhenHoisted": {
+            "median": -11,
+            "min": -97,
+            "max": -1
+          },
+          "both": {
+            "median": -29,
+            "min": -44,
+            "max": 103
+          },
+          "skip": {
+            "median": 16,
+            "min": -44,
+            "max": 49
+          },
+          "remainingToPriorMatched": {
+            "median": -3,
+            "min": -61,
+            "max": 99
+          },
+          "stockToPriorMatched": {
+            "median": -2,
+            "min": -49,
+            "max": 134
+          },
+          "interaction": {
+            "median": -43,
+            "min": -107,
+            "max": 0
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9146,
+          11749,
+          4591,
+          7921
+        ],
+        "C_PIE": [
+          7967,
+          10595,
+          3469,
+          7890
+        ]
+      }
+    },
+    "default": {
+      "levels": {
+        "clean": {
+          "0": 57691,
+          "9": 57722,
+          "10": 56424,
+          "11": 54610,
+          "12": 53942,
+          "13": 50436,
+          "8": 46915
+        },
+        "audit": {
+          "0": 62870,
+          "9": 62856,
+          "10": 61568,
+          "11": 59747,
+          "12": 59079,
+          "13": 55577,
+          "8": 52066
+        },
+        "primary": {
+          "0": 17807,
+          "9": 17818,
+          "10": 16511,
+          "11": 14699,
+          "12": 14052,
+          "13": 10542,
+          "8": 7035
+        },
+        "shade": {
+          "0": 48533,
+          "9": 48583,
+          "10": 48502,
+          "11": 48534,
+          "12": 48535,
+          "13": 48533,
+          "8": 48584
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 31,
+            "min": -15,
+            "max": 73
+          },
+          "hoistWhenStack": {
+            "median": 1298,
+            "min": 1256,
+            "max": 1359
+          },
+          "hoistWhenRegisters": {
+            "median": 660,
+            "min": 620,
+            "max": 692
+          },
+          "registersWhenChecked": {
+            "median": 3120,
+            "min": 3089,
+            "max": 3147
+          },
+          "registersWhenHoisted": {
+            "median": 2469,
+            "min": 2421,
+            "max": 2519
+          },
+          "both": {
+            "median": 3781,
+            "min": 3722,
+            "max": 3804
+          },
+          "skip": {
+            "median": 3518,
+            "min": 3492,
+            "max": 3545
+          },
+          "remainingToPriorMatched": {
+            "median": 3521,
+            "min": 3472,
+            "max": 3530
+          },
+          "stockToPriorMatched": {
+            "median": 10779,
+            "min": 10728,
+            "max": 10809
+          },
+          "interaction": {
+            "median": -636,
+            "min": -699,
+            "max": -596
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 8,
+            "min": -72,
+            "max": 83
+          },
+          "hoistWhenStack": {
+            "median": 1284,
+            "min": 1173,
+            "max": 1382
+          },
+          "hoistWhenRegisters": {
+            "median": 678,
+            "min": 668,
+            "max": 697
+          },
+          "registersWhenChecked": {
+            "median": 3074,
+            "min": 3013,
+            "max": 3178
+          },
+          "registersWhenHoisted": {
+            "median": 2489,
+            "min": 2380,
+            "max": 2585
+          },
+          "both": {
+            "median": 3762,
+            "min": 3706,
+            "max": 3856
+          },
+          "skip": {
+            "median": 3515,
+            "min": 3431,
+            "max": 3561
+          },
+          "remainingToPriorMatched": {
+            "median": 3511,
+            "min": 3459,
+            "max": 3558
+          },
+          "stockToPriorMatched": {
+            "median": 10786,
+            "min": 10734,
+            "max": 10849
+          },
+          "interaction": {
+            "median": -607,
+            "min": -685,
+            "max": -489
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 11,
+            "min": -1,
+            "max": 42
+          },
+          "hoistWhenStack": {
+            "median": 1311,
+            "min": 1274,
+            "max": 1322
+          },
+          "hoistWhenRegisters": {
+            "median": 654,
+            "min": 644,
+            "max": 660
+          },
+          "registersWhenChecked": {
+            "median": 3121,
+            "min": 3101,
+            "max": 3126
+          },
+          "registersWhenHoisted": {
+            "median": 2463,
+            "min": 2447,
+            "max": 2481
+          },
+          "both": {
+            "median": 3766,
+            "min": 3755,
+            "max": 3786
+          },
+          "skip": {
+            "median": 3513,
+            "min": 3484,
+            "max": 3520
+          },
+          "remainingToPriorMatched": {
+            "median": 3505,
+            "min": 3502,
+            "max": 3521
+          },
+          "stockToPriorMatched": {
+            "median": 10772,
+            "min": 10754,
+            "max": 10777
+          },
+          "interaction": {
+            "median": -657,
+            "min": -667,
+            "max": -624
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 52,
+            "min": -1,
+            "max": 74
+          },
+          "hoistWhenStack": {
+            "median": 62,
+            "min": 10,
+            "max": 124
+          },
+          "hoistWhenRegisters": {
+            "median": -13,
+            "min": -84,
+            "max": 34
+          },
+          "registersWhenChecked": {
+            "median": 58,
+            "min": -41,
+            "max": 91
+          },
+          "registersWhenHoisted": {
+            "median": -51,
+            "min": -127,
+            "max": 66
+          },
+          "both": {
+            "median": 29,
+            "min": -84,
+            "max": 92
+          },
+          "skip": {
+            "median": 37,
+            "min": -45,
+            "max": 111
+          },
+          "remainingToPriorMatched": {
+            "median": -54,
+            "min": -94,
+            "max": 24
+          },
+          "stockToPriorMatched": {
+            "median": -50,
+            "min": -58,
+            "max": 4
+          },
+          "interaction": {
+            "median": -74,
+            "min": -153,
+            "max": -10
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9516,
+          12126,
+          4605,
+          8182
+        ],
+        "C_PIE": [
+          8350,
+          10983,
+          3476,
+          8156
+        ]
+      }
+    },
+    "far-corner": {
+      "levels": {
+        "clean": {
+          "0": 59066,
+          "9": 59089,
+          "10": 57778,
+          "11": 55964,
+          "12": 55299,
+          "13": 51792,
+          "8": 48234
+        },
+        "audit": {
+          "0": 64205,
+          "9": 64213,
+          "10": 62933,
+          "11": 61120,
+          "12": 60437,
+          "13": 56918,
+          "8": 53384
+        },
+        "primary": {
+          "0": 17865,
+          "9": 17887,
+          "10": 16574,
+          "11": 14750,
+          "12": 14094,
+          "13": 10581,
+          "8": 7034
+        },
+        "shade": {
+          "0": 49846,
+          "9": 49842,
+          "10": 49824,
+          "11": 49858,
+          "12": 49830,
+          "13": 49821,
+          "8": 49841
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 30,
+            "min": -10,
+            "max": 75
+          },
+          "hoistWhenStack": {
+            "median": 1319,
+            "min": 1274,
+            "max": 1383
+          },
+          "hoistWhenRegisters": {
+            "median": 665,
+            "min": 648,
+            "max": 686
+          },
+          "registersWhenChecked": {
+            "median": 3120,
+            "min": 3092,
+            "max": 3179
+          },
+          "registersWhenHoisted": {
+            "median": 2479,
+            "min": 2427,
+            "max": 2532
+          },
+          "both": {
+            "median": 3798,
+            "min": 3751,
+            "max": 3827
+          },
+          "skip": {
+            "median": 3511,
+            "min": 3505,
+            "max": 3529
+          },
+          "remainingToPriorMatched": {
+            "median": 3557,
+            "min": 3527,
+            "max": 3591
+          },
+          "stockToPriorMatched": {
+            "median": 10834,
+            "min": 10792,
+            "max": 10857
+          },
+          "interaction": {
+            "median": -654,
+            "min": -735,
+            "max": -588
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 15,
+            "min": -84,
+            "max": 99
+          },
+          "hoistWhenStack": {
+            "median": 1286,
+            "min": 1191,
+            "max": 1358
+          },
+          "hoistWhenRegisters": {
+            "median": 670,
+            "min": 621,
+            "max": 758
+          },
+          "registersWhenChecked": {
+            "median": 3105,
+            "min": 3016,
+            "max": 3218
+          },
+          "registersWhenHoisted": {
+            "median": 2512,
+            "min": 2398,
+            "max": 2589
+          },
+          "both": {
+            "median": 3790,
+            "min": 3637,
+            "max": 3872
+          },
+          "skip": {
+            "median": 3501,
+            "min": 3411,
+            "max": 3622
+          },
+          "remainingToPriorMatched": {
+            "median": 3525,
+            "min": 3456,
+            "max": 3644
+          },
+          "stockToPriorMatched": {
+            "median": 10818,
+            "min": 10749,
+            "max": 10919
+          },
+          "interaction": {
+            "median": -618,
+            "min": -704,
+            "max": -516
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 18,
+            "min": 9,
+            "max": 45
+          },
+          "hoistWhenStack": {
+            "median": 1313,
+            "min": 1295,
+            "max": 1330
+          },
+          "hoistWhenRegisters": {
+            "median": 661,
+            "min": 637,
+            "max": 673
+          },
+          "registersWhenChecked": {
+            "median": 3133,
+            "min": 3119,
+            "max": 3150
+          },
+          "registersWhenHoisted": {
+            "median": 2475,
+            "min": 2461,
+            "max": 2505
+          },
+          "both": {
+            "median": 3794,
+            "min": 3774,
+            "max": 3806
+          },
+          "skip": {
+            "median": 3509,
+            "min": 3487,
+            "max": 3534
+          },
+          "remainingToPriorMatched": {
+            "median": 3547,
+            "min": 3536,
+            "max": 3563
+          },
+          "stockToPriorMatched": {
+            "median": 10835,
+            "min": 10808,
+            "max": 10853
+          },
+          "interaction": {
+            "median": -653,
+            "min": -676,
+            "max": -633
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 34,
+            "min": -37,
+            "max": 63
+          },
+          "hoistWhenStack": {
+            "median": 47,
+            "min": -54,
+            "max": 82
+          },
+          "hoistWhenRegisters": {
+            "median": 0,
+            "min": -56,
+            "max": 110
+          },
+          "registersWhenChecked": {
+            "median": 12,
+            "min": -28,
+            "max": 41
+          },
+          "registersWhenHoisted": {
+            "median": 6,
+            "min": -91,
+            "max": 71
+          },
+          "both": {
+            "median": 18,
+            "min": -65,
+            "max": 142
+          },
+          "skip": {
+            "median": 0,
+            "min": -128,
+            "max": 120
+          },
+          "remainingToPriorMatched": {
+            "median": 28,
+            "min": -90,
+            "max": 86
+          },
+          "stockToPriorMatched": {
+            "median": 20,
+            "min": -38,
+            "max": 72
+          },
+          "interaction": {
+            "median": -5,
+            "min": -95,
+            "max": 45
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9901,
+          12403,
+          4604,
+          8566
+        ],
+        "C_PIE": [
+          8730,
+          11280,
+          3475,
+          8518
+        ]
+      }
+    },
+    "gold-overlap": {
+      "levels": {
+        "clean": {
+          "0": 55302,
+          "9": 55326,
+          "10": 54034,
+          "11": 52243,
+          "12": 51574,
+          "13": 48082,
+          "8": 44592
+        },
+        "audit": {
+          "0": 60427,
+          "9": 60455,
+          "10": 59172,
+          "11": 57386,
+          "12": 56709,
+          "13": 53205,
+          "8": 49786
+        },
+        "primary": {
+          "0": 17742,
+          "9": 17753,
+          "10": 16458,
+          "11": 14651,
+          "12": 14004,
+          "13": 10497,
+          "8": 7036
+        },
+        "shade": {
+          "0": 46294,
+          "9": 46276,
+          "10": 46221,
+          "11": 46277,
+          "12": 46247,
+          "13": 46264,
+          "8": 46278
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 30,
+            "min": 12,
+            "max": 56
+          },
+          "hoistWhenStack": {
+            "median": 1284,
+            "min": 1262,
+            "max": 1310
+          },
+          "hoistWhenRegisters": {
+            "median": 665,
+            "min": 625,
+            "max": 703
+          },
+          "registersWhenChecked": {
+            "median": 3092,
+            "min": 3072,
+            "max": 3102
+          },
+          "registersWhenHoisted": {
+            "median": 2469,
+            "min": 2414,
+            "max": 2524
+          },
+          "both": {
+            "median": 3755,
+            "min": 3700,
+            "max": 3786
+          },
+          "skip": {
+            "median": 3494,
+            "min": 3450,
+            "max": 3538
+          },
+          "remainingToPriorMatched": {
+            "median": 3483,
+            "min": 3474,
+            "max": 3508
+          },
+          "stockToPriorMatched": {
+            "median": 10697,
+            "min": 10676,
+            "max": 10727
+          },
+          "interaction": {
+            "median": -625,
+            "min": -661,
+            "max": -573
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 29,
+            "min": -49,
+            "max": 58
+          },
+          "hoistWhenStack": {
+            "median": 1286,
+            "min": 1159,
+            "max": 1329
+          },
+          "hoistWhenRegisters": {
+            "median": 677,
+            "min": 582,
+            "max": 779
+          },
+          "registersWhenChecked": {
+            "median": 3056,
+            "min": 3005,
+            "max": 3115
+          },
+          "registersWhenHoisted": {
+            "median": 2470,
+            "min": 2372,
+            "max": 2625
+          },
+          "both": {
+            "median": 3764,
+            "min": 3658,
+            "max": 3784
+          },
+          "skip": {
+            "median": 3500,
+            "min": 3422,
+            "max": 3556
+          },
+          "remainingToPriorMatched": {
+            "median": 3457,
+            "min": 3353,
+            "max": 3578
+          },
+          "stockToPriorMatched": {
+            "median": 10681,
+            "min": 10618,
+            "max": 10760
+          },
+          "interaction": {
+            "median": -583,
+            "min": -704,
+            "max": -380
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 10,
+            "min": -2,
+            "max": 45
+          },
+          "hoistWhenStack": {
+            "median": 1294,
+            "min": 1279,
+            "max": 1308
+          },
+          "hoistWhenRegisters": {
+            "median": 644,
+            "min": 636,
+            "max": 662
+          },
+          "registersWhenChecked": {
+            "median": 3105,
+            "min": 3086,
+            "max": 3116
+          },
+          "registersWhenHoisted": {
+            "median": 2457,
+            "min": 2441,
+            "max": 2465
+          },
+          "both": {
+            "median": 3749,
+            "min": 3736,
+            "max": 3757
+          },
+          "skip": {
+            "median": 3506,
+            "min": 3496,
+            "max": 3536
+          },
+          "remainingToPriorMatched": {
+            "median": 3462,
+            "min": 3441,
+            "max": 3469
+          },
+          "stockToPriorMatched": {
+            "median": 10698,
+            "min": 10684,
+            "max": 10715
+          },
+          "interaction": {
+            "median": -643,
+            "min": -664,
+            "max": -632
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 9,
+            "min": -32,
+            "max": 99
+          },
+          "hoistWhenStack": {
+            "median": 56,
+            "min": -16,
+            "max": 92
+          },
+          "hoistWhenRegisters": {
+            "median": -1,
+            "min": -73,
+            "max": 87
+          },
+          "registersWhenChecked": {
+            "median": 15,
+            "min": -54,
+            "max": 69
+          },
+          "registersWhenHoisted": {
+            "median": -23,
+            "min": -138,
+            "max": 21
+          },
+          "both": {
+            "median": 1,
+            "min": -55,
+            "max": 74
+          },
+          "skip": {
+            "median": 9,
+            "min": -41,
+            "max": 120
+          },
+          "remainingToPriorMatched": {
+            "median": -32,
+            "min": -63,
+            "max": 93
+          },
+          "stockToPriorMatched": {
+            "median": 9,
+            "min": -36,
+            "max": 105
+          },
+          "interaction": {
+            "median": -54,
+            "min": -156,
+            "max": 31
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          8874,
+          11495,
+          4586,
+          7679
+        ],
+        "C_PIE": [
+          7700,
+          10321,
+          3466,
+          7643
+        ]
+      }
+    },
+    "lamp-only": {
+      "levels": {
+        "clean": {
+          "0": 57263,
+          "9": 57290,
+          "10": 55994,
+          "11": 54169,
+          "12": 53517,
+          "13": 50004,
+          "8": 46483
+        },
+        "audit": {
+          "0": 62395,
+          "9": 62419,
+          "10": 61126,
+          "11": 59342,
+          "12": 58614,
+          "13": 55173,
+          "8": 51686
+        },
+        "primary": {
+          "0": 17800,
+          "9": 17821,
+          "10": 16515,
+          "11": 14704,
+          "12": 14051,
+          "13": 10541,
+          "8": 7033
+        },
+        "shade": {
+          "0": 48128,
+          "9": 48154,
+          "10": 48137,
+          "11": 48143,
+          "12": 48138,
+          "13": 48129,
+          "8": 48191
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 25,
+            "min": 2,
+            "max": 53
+          },
+          "hoistWhenStack": {
+            "median": 1292,
+            "min": 1256,
+            "max": 1335
+          },
+          "hoistWhenRegisters": {
+            "median": 656,
+            "min": 627,
+            "max": 675
+          },
+          "registersWhenChecked": {
+            "median": 3119,
+            "min": 3100,
+            "max": 3147
+          },
+          "registersWhenHoisted": {
+            "median": 2482,
+            "min": 2435,
+            "max": 2512
+          },
+          "both": {
+            "median": 3774,
+            "min": 3727,
+            "max": 3803
+          },
+          "skip": {
+            "median": 3507,
+            "min": 3493,
+            "max": 3530
+          },
+          "remainingToPriorMatched": {
+            "median": 3513,
+            "min": 3481,
+            "max": 3542
+          },
+          "stockToPriorMatched": {
+            "median": 10774,
+            "min": 10733,
+            "max": 10793
+          },
+          "interaction": {
+            "median": -646,
+            "min": -667,
+            "max": -612
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 53,
+            "min": -63,
+            "max": 121
+          },
+          "hoistWhenStack": {
+            "median": 1288,
+            "min": 1244,
+            "max": 1400
+          },
+          "hoistWhenRegisters": {
+            "median": 702,
+            "min": 634,
+            "max": 780
+          },
+          "registersWhenChecked": {
+            "median": 3090,
+            "min": 3009,
+            "max": 3197
+          },
+          "registersWhenHoisted": {
+            "median": 2498,
+            "min": 2399,
+            "max": 2571
+          },
+          "both": {
+            "median": 3815,
+            "min": 3749,
+            "max": 3870
+          },
+          "skip": {
+            "median": 3480,
+            "min": 3393,
+            "max": 3516
+          },
+          "remainingToPriorMatched": {
+            "median": 3514,
+            "min": 3390,
+            "max": 3536
+          },
+          "stockToPriorMatched": {
+            "median": 10744,
+            "min": 10669,
+            "max": 10781
+          },
+          "interaction": {
+            "median": -586,
+            "min": -766,
+            "max": -511
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 19,
+            "min": -4,
+            "max": 35
+          },
+          "hoistWhenStack": {
+            "median": 1302,
+            "min": 1281,
+            "max": 1323
+          },
+          "hoistWhenRegisters": {
+            "median": 657,
+            "min": 648,
+            "max": 664
+          },
+          "registersWhenChecked": {
+            "median": 3115,
+            "min": 3107,
+            "max": 3128
+          },
+          "registersWhenHoisted": {
+            "median": 2473,
+            "min": 2454,
+            "max": 2491
+          },
+          "both": {
+            "median": 3772,
+            "min": 3760,
+            "max": 3785
+          },
+          "skip": {
+            "median": 3512,
+            "min": 3498,
+            "max": 3518
+          },
+          "remainingToPriorMatched": {
+            "median": 3508,
+            "min": 3497,
+            "max": 3521
+          },
+          "stockToPriorMatched": {
+            "median": 10770,
+            "min": 10751,
+            "max": 10785
+          },
+          "interaction": {
+            "median": -647,
+            "min": -671,
+            "max": -624
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 56,
+            "min": 4,
+            "max": 78
+          },
+          "hoistWhenStack": {
+            "median": 14,
+            "min": -49,
+            "max": 129
+          },
+          "hoistWhenRegisters": {
+            "median": -10,
+            "min": -85,
+            "max": 58
+          },
+          "registersWhenChecked": {
+            "median": 1,
+            "min": -52,
+            "max": 89
+          },
+          "registersWhenHoisted": {
+            "median": -3,
+            "min": -124,
+            "max": 70
+          },
+          "both": {
+            "median": 7,
+            "min": -93,
+            "max": 84
+          },
+          "skip": {
+            "median": 33,
+            "min": -34,
+            "max": 115
+          },
+          "remainingToPriorMatched": {
+            "median": -52,
+            "min": -93,
+            "max": 97
+          },
+          "stockToPriorMatched": {
+            "median": -54,
+            "min": -64,
+            "max": 22
+          },
+          "interaction": {
+            "median": -20,
+            "min": -160,
+            "max": 58
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9471,
+          12041,
+          4595,
+          8145
+        ],
+        "C_PIE": [
+          8295,
+          10915,
+          3477,
+          8126
+        ]
+      }
+    },
+    "left-bottom": {
+      "levels": {
+        "clean": {
+          "0": 56797,
+          "9": 56825,
+          "10": 55533,
+          "11": 53727,
+          "12": 53046,
+          "13": 49548,
+          "8": 45997
+        },
+        "audit": {
+          "0": 61990,
+          "9": 62003,
+          "10": 60727,
+          "11": 58914,
+          "12": 58256,
+          "13": 54746,
+          "8": 51205
+        },
+        "primary": {
+          "0": 17847,
+          "9": 17868,
+          "10": 16544,
+          "11": 14729,
+          "12": 14069,
+          "13": 10564,
+          "8": 7034
+        },
+        "shade": {
+          "0": 47680,
+          "9": 47690,
+          "10": 47688,
+          "11": 47686,
+          "12": 47687,
+          "13": 47690,
+          "8": 47677
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 19,
+            "min": -7,
+            "max": 69
+          },
+          "hoistWhenStack": {
+            "median": 1294,
+            "min": 1265,
+            "max": 1339
+          },
+          "hoistWhenRegisters": {
+            "median": 677,
+            "min": 649,
+            "max": 691
+          },
+          "registersWhenChecked": {
+            "median": 3109,
+            "min": 3082,
+            "max": 3136
+          },
+          "registersWhenHoisted": {
+            "median": 2494,
+            "min": 2447,
+            "max": 2500
+          },
+          "both": {
+            "median": 3779,
+            "min": 3763,
+            "max": 3810
+          },
+          "skip": {
+            "median": 3502,
+            "min": 3486,
+            "max": 3516
+          },
+          "remainingToPriorMatched": {
+            "median": 3551,
+            "min": 3527,
+            "max": 3583
+          },
+          "stockToPriorMatched": {
+            "median": 10803,
+            "min": 10781,
+            "max": 10838
+          },
+          "interaction": {
+            "median": -627,
+            "min": -662,
+            "max": -584
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 14,
+            "min": -20,
+            "max": 50
+          },
+          "hoistWhenStack": {
+            "median": 1286,
+            "min": 1250,
+            "max": 1317
+          },
+          "hoistWhenRegisters": {
+            "median": 673,
+            "min": 602,
+            "max": 756
+          },
+          "registersWhenChecked": {
+            "median": 3087,
+            "min": 3024,
+            "max": 3139
+          },
+          "registersWhenHoisted": {
+            "median": 2463,
+            "min": 2396,
+            "max": 2585
+          },
+          "both": {
+            "median": 3747,
+            "min": 3703,
+            "max": 3835
+          },
+          "skip": {
+            "median": 3523,
+            "min": 3447,
+            "max": 3603
+          },
+          "remainingToPriorMatched": {
+            "median": 3541,
+            "min": 3425,
+            "max": 3601
+          },
+          "stockToPriorMatched": {
+            "median": 10796,
+            "min": 10721,
+            "max": 10836
+          },
+          "interaction": {
+            "median": -618,
+            "min": -684,
+            "max": -554
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 15,
+            "min": -1,
+            "max": 52
+          },
+          "hoistWhenStack": {
+            "median": 1324,
+            "min": 1273,
+            "max": 1333
+          },
+          "hoistWhenRegisters": {
+            "median": 652,
+            "min": 625,
+            "max": 684
+          },
+          "registersWhenChecked": {
+            "median": 3129,
+            "min": 3112,
+            "max": 3151
+          },
+          "registersWhenHoisted": {
+            "median": 2472,
+            "min": 2446,
+            "max": 2511
+          },
+          "both": {
+            "median": 3784,
+            "min": 3760,
+            "max": 3814
+          },
+          "skip": {
+            "median": 3510,
+            "min": 3475,
+            "max": 3535
+          },
+          "remainingToPriorMatched": {
+            "median": 3529,
+            "min": 3490,
+            "max": 3551
+          },
+          "stockToPriorMatched": {
+            "median": 10797,
+            "min": 10786,
+            "max": 10832
+          },
+          "interaction": {
+            "median": -652,
+            "min": -705,
+            "max": -601
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 10,
+            "min": -46,
+            "max": 73
+          },
+          "hoistWhenStack": {
+            "median": 5,
+            "min": -46,
+            "max": 69
+          },
+          "hoistWhenRegisters": {
+            "median": 5,
+            "min": -39,
+            "max": 76
+          },
+          "registersWhenChecked": {
+            "median": 14,
+            "min": -7,
+            "max": 37
+          },
+          "registersWhenHoisted": {
+            "median": -5,
+            "min": -62,
+            "max": 78
+          },
+          "both": {
+            "median": 5,
+            "min": -25,
+            "max": 112
+          },
+          "skip": {
+            "median": -2,
+            "min": -83,
+            "max": 40
+          },
+          "remainingToPriorMatched": {
+            "median": 50,
+            "min": -65,
+            "max": 75
+          },
+          "stockToPriorMatched": {
+            "median": 0,
+            "min": -60,
+            "max": 124
+          },
+          "interaction": {
+            "median": -11,
+            "min": -73,
+            "max": 51
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9468,
+          11774,
+          4307,
+          8170
+        ],
+        "C_PIE": [
+          8289,
+          10604,
+          3197,
+          8153
+        ]
+      }
+    },
+    "left-lamp": {
+      "levels": {
+        "clean": {
+          "0": 56773,
+          "9": 56799,
+          "10": 55515,
+          "11": 53718,
+          "12": 53050,
+          "13": 49544,
+          "8": 46053
+        },
+        "audit": {
+          "0": 61913,
+          "9": 61928,
+          "10": 60635,
+          "11": 58916,
+          "12": 58176,
+          "13": 54708,
+          "8": 51260
+        },
+        "primary": {
+          "0": 17757,
+          "9": 17768,
+          "10": 16480,
+          "11": 14669,
+          "12": 14013,
+          "13": 10505,
+          "8": 7036
+        },
+        "shade": {
+          "0": 47701,
+          "9": 47711,
+          "10": 47710,
+          "11": 47720,
+          "12": 47686,
+          "13": 47722,
+          "8": 47722
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 17,
+            "min": -21,
+            "max": 60
+          },
+          "hoistWhenStack": {
+            "median": 1295,
+            "min": 1259,
+            "max": 1307
+          },
+          "hoistWhenRegisters": {
+            "median": 681,
+            "min": 629,
+            "max": 702
+          },
+          "registersWhenChecked": {
+            "median": 3083,
+            "min": 3052,
+            "max": 3129
+          },
+          "registersWhenHoisted": {
+            "median": 2468,
+            "min": 2441,
+            "max": 2506
+          },
+          "both": {
+            "median": 3758,
+            "min": 3729,
+            "max": 3786
+          },
+          "skip": {
+            "median": 3516,
+            "min": 3457,
+            "max": 3535
+          },
+          "remainingToPriorMatched": {
+            "median": 3491,
+            "min": 3467,
+            "max": 3519
+          },
+          "stockToPriorMatched": {
+            "median": 10716,
+            "min": 10697,
+            "max": 10752
+          },
+          "interaction": {
+            "median": -623,
+            "min": -668,
+            "max": -557
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 17,
+            "min": -121,
+            "max": 64
+          },
+          "hoistWhenStack": {
+            "median": 1285,
+            "min": 1162,
+            "max": 1341
+          },
+          "hoistWhenRegisters": {
+            "median": 708,
+            "min": 622,
+            "max": 788
+          },
+          "registersWhenChecked": {
+            "median": 3025,
+            "min": 2952,
+            "max": 3135
+          },
+          "registersWhenHoisted": {
+            "median": 2463,
+            "min": 2418,
+            "max": 2578
+          },
+          "both": {
+            "median": 3748,
+            "min": 3715,
+            "max": 3778
+          },
+          "skip": {
+            "median": 3503,
+            "min": 3413,
+            "max": 3547
+          },
+          "remainingToPriorMatched": {
+            "median": 3445,
+            "min": 3357,
+            "max": 3483
+          },
+          "stockToPriorMatched": {
+            "median": 10657,
+            "min": 10635,
+            "max": 10734
+          },
+          "interaction": {
+            "median": -553,
+            "min": -708,
+            "max": -374
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 11,
+            "min": -10,
+            "max": 42
+          },
+          "hoistWhenStack": {
+            "median": 1287,
+            "min": 1261,
+            "max": 1296
+          },
+          "hoistWhenRegisters": {
+            "median": 657,
+            "min": 644,
+            "max": 664
+          },
+          "registersWhenChecked": {
+            "median": 3097,
+            "min": 3090,
+            "max": 3105
+          },
+          "registersWhenHoisted": {
+            "median": 2467,
+            "min": 2453,
+            "max": 2480
+          },
+          "both": {
+            "median": 3754,
+            "min": 3740,
+            "max": 3767
+          },
+          "skip": {
+            "median": 3506,
+            "min": 3489,
+            "max": 3517
+          },
+          "remainingToPriorMatched": {
+            "median": 3471,
+            "min": 3455,
+            "max": 3478
+          },
+          "stockToPriorMatched": {
+            "median": 10719,
+            "min": 10687,
+            "max": 10738
+          },
+          "interaction": {
+            "median": -631,
+            "min": -644,
+            "max": -617
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 13,
+            "min": -25,
+            "max": 71
+          },
+          "hoistWhenStack": {
+            "median": 9,
+            "min": -22,
+            "max": 31
+          },
+          "hoistWhenRegisters": {
+            "median": 15,
+            "min": -81,
+            "max": 83
+          },
+          "registersWhenChecked": {
+            "median": 11,
+            "min": -58,
+            "max": 132
+          },
+          "registersWhenHoisted": {
+            "median": 23,
+            "min": -59,
+            "max": 95
+          },
+          "both": {
+            "median": 26,
+            "min": -49,
+            "max": 110
+          },
+          "skip": {
+            "median": -8,
+            "min": -85,
+            "max": 65
+          },
+          "remainingToPriorMatched": {
+            "median": -1,
+            "min": -52,
+            "max": 91
+          },
+          "stockToPriorMatched": {
+            "median": 8,
+            "min": -28,
+            "max": 36
+          },
+          "interaction": {
+            "median": 8,
+            "min": -59,
+            "max": 88
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9178,
+          11754,
+          4588,
+          7931
+        ],
+        "C_PIE": [
+          7991,
+          10619,
+          3456,
+          7888
+        ]
+      }
+    },
+    "near-corner": {
+      "levels": {
+        "clean": {
+          "0": 58486,
+          "9": 58520,
+          "10": 57198,
+          "11": 55383,
+          "12": 54719,
+          "13": 51208,
+          "8": 47647
+        },
+        "audit": {
+          "0": 63606,
+          "9": 63676,
+          "10": 62354,
+          "11": 60531,
+          "12": 59860,
+          "13": 56365,
+          "8": 52806
+        },
+        "primary": {
+          "0": 17866,
+          "9": 17893,
+          "10": 16578,
+          "11": 14753,
+          "12": 14095,
+          "13": 10583,
+          "8": 7041
+        },
+        "shade": {
+          "0": 49234,
+          "9": 49250,
+          "10": 49236,
+          "11": 49250,
+          "12": 49293,
+          "13": 49251,
+          "8": 49256
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 34,
+            "min": -16,
+            "max": 59
+          },
+          "hoistWhenStack": {
+            "median": 1313,
+            "min": 1271,
+            "max": 1371
+          },
+          "hoistWhenRegisters": {
+            "median": 656,
+            "min": 610,
+            "max": 691
+          },
+          "registersWhenChecked": {
+            "median": 3137,
+            "min": 3097,
+            "max": 3170
+          },
+          "registersWhenHoisted": {
+            "median": 2467,
+            "min": 2415,
+            "max": 2517
+          },
+          "both": {
+            "median": 3788,
+            "min": 3762,
+            "max": 3814
+          },
+          "skip": {
+            "median": 3511,
+            "min": 3487,
+            "max": 3549
+          },
+          "remainingToPriorMatched": {
+            "median": 3576,
+            "min": 3525,
+            "max": 3608
+          },
+          "stockToPriorMatched": {
+            "median": 10840,
+            "min": 10817,
+            "max": 10916
+          },
+          "interaction": {
+            "median": -676,
+            "min": -722,
+            "max": -580
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 38,
+            "min": -52,
+            "max": 107
+          },
+          "hoistWhenStack": {
+            "median": 1316,
+            "min": 1290,
+            "max": 1369
+          },
+          "hoistWhenRegisters": {
+            "median": 679,
+            "min": 594,
+            "max": 717
+          },
+          "registersWhenChecked": {
+            "median": 3109,
+            "min": 3054,
+            "max": 3211
+          },
+          "registersWhenHoisted": {
+            "median": 2468,
+            "min": 2358,
+            "max": 2567
+          },
+          "both": {
+            "median": 3788,
+            "min": 3648,
+            "max": 3864
+          },
+          "skip": {
+            "median": 3506,
+            "min": 3393,
+            "max": 3629
+          },
+          "remainingToPriorMatched": {
+            "median": 3554,
+            "min": 3514,
+            "max": 3596
+          },
+          "stockToPriorMatched": {
+            "median": 10801,
+            "min": 10763,
+            "max": 10917
+          },
+          "interaction": {
+            "median": -634,
+            "min": -743,
+            "max": -580
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 28,
+            "min": -2,
+            "max": 45
+          },
+          "hoistWhenStack": {
+            "median": 1315,
+            "min": 1294,
+            "max": 1332
+          },
+          "hoistWhenRegisters": {
+            "median": 660,
+            "min": 654,
+            "max": 667
+          },
+          "registersWhenChecked": {
+            "median": 3140,
+            "min": 3122,
+            "max": 3148
+          },
+          "registersWhenHoisted": {
+            "median": 2489,
+            "min": 2467,
+            "max": 2496
+          },
+          "both": {
+            "median": 3797,
+            "min": 3785,
+            "max": 3808
+          },
+          "skip": {
+            "median": 3506,
+            "min": 3497,
+            "max": 3522
+          },
+          "remainingToPriorMatched": {
+            "median": 3538,
+            "min": 3526,
+            "max": 3567
+          },
+          "stockToPriorMatched": {
+            "median": 10834,
+            "min": 10801,
+            "max": 10843
+          },
+          "interaction": {
+            "median": -655,
+            "min": -678,
+            "max": -629
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 21,
+            "min": -48,
+            "max": 62
+          },
+          "hoistWhenStack": {
+            "median": 19,
+            "min": -47,
+            "max": 89
+          },
+          "hoistWhenRegisters": {
+            "median": -12,
+            "min": -78,
+            "max": 124
+          },
+          "registersWhenChecked": {
+            "median": -3,
+            "min": -75,
+            "max": 99
+          },
+          "registersWhenHoisted": {
+            "median": -52,
+            "min": -123,
+            "max": 68
+          },
+          "both": {
+            "median": 8,
+            "min": -87,
+            "max": 141
+          },
+          "skip": {
+            "median": -8,
+            "min": -80,
+            "max": 113
+          },
+          "remainingToPriorMatched": {
+            "median": 46,
+            "min": -30,
+            "max": 104
+          },
+          "stockToPriorMatched": {
+            "median": 26,
+            "min": -23,
+            "max": 91
+          },
+          "interaction": {
+            "median": -12,
+            "min": -158,
+            "max": 119
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9723,
+          12243,
+          4603,
+          8360
+        ],
+        "C_PIE": [
+          8553,
+          11102,
+          3469,
+          8357
+        ]
+      }
+    },
+    "right-lamp": {
+      "levels": {
+        "clean": {
+          "0": 56711,
+          "9": 56731,
+          "10": 55448,
+          "11": 53648,
+          "12": 52979,
+          "13": 49472,
+          "8": 45987
+        },
+        "audit": {
+          "0": 61862,
+          "9": 61865,
+          "10": 60575,
+          "11": 58836,
+          "12": 58124,
+          "13": 54596,
+          "8": 51199
+        },
+        "primary": {
+          "0": 17754,
+          "9": 17765,
+          "10": 16474,
+          "11": 14667,
+          "12": 14010,
+          "13": 10503,
+          "8": 7040
+        },
+        "shade": {
+          "0": 47649,
+          "9": 47647,
+          "10": 47652,
+          "11": 47656,
+          "12": 47611,
+          "13": 47647,
+          "8": 47642
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 21,
+            "min": -2,
+            "max": 75
+          },
+          "hoistWhenStack": {
+            "median": 1289,
+            "min": 1259,
+            "max": 1329
+          },
+          "hoistWhenRegisters": {
+            "median": 672,
+            "min": 623,
+            "max": 689
+          },
+          "registersWhenChecked": {
+            "median": 3087,
+            "min": 3072,
+            "max": 3113
+          },
+          "registersWhenHoisted": {
+            "median": 2471,
+            "min": 2418,
+            "max": 2517
+          },
+          "both": {
+            "median": 3762,
+            "min": 3710,
+            "max": 3778
+          },
+          "skip": {
+            "median": 3512,
+            "min": 3473,
+            "max": 3553
+          },
+          "remainingToPriorMatched": {
+            "median": 3485,
+            "min": 3457,
+            "max": 3502
+          },
+          "stockToPriorMatched": {
+            "median": 10732,
+            "min": 10695,
+            "max": 10753
+          },
+          "interaction": {
+            "median": -606,
+            "min": -672,
+            "max": -581
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": -6,
+            "min": -93,
+            "max": 65
+          },
+          "hoistWhenStack": {
+            "median": 1286,
+            "min": 1163,
+            "max": 1338
+          },
+          "hoistWhenRegisters": {
+            "median": 730,
+            "min": 579,
+            "max": 784
+          },
+          "registersWhenChecked": {
+            "median": 3029,
+            "min": 2964,
+            "max": 3163
+          },
+          "registersWhenHoisted": {
+            "median": 2463,
+            "min": 2364,
+            "max": 2576
+          },
+          "both": {
+            "median": 3748,
+            "min": 3651,
+            "max": 3759
+          },
+          "skip": {
+            "median": 3500,
+            "min": 3419,
+            "max": 3647
+          },
+          "remainingToPriorMatched": {
+            "median": 3445,
+            "min": 3370,
+            "max": 3481
+          },
+          "stockToPriorMatched": {
+            "median": 10698,
+            "min": 10628,
+            "max": 10715
+          },
+          "interaction": {
+            "median": -578,
+            "min": -747,
+            "max": -391
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 13,
+            "min": -11,
+            "max": 31
+          },
+          "hoistWhenStack": {
+            "median": 1292,
+            "min": 1274,
+            "max": 1297
+          },
+          "hoistWhenRegisters": {
+            "median": 651,
+            "min": 642,
+            "max": 661
+          },
+          "registersWhenChecked": {
+            "median": 3097,
+            "min": 3091,
+            "max": 3119
+          },
+          "registersWhenHoisted": {
+            "median": 2460,
+            "min": 2445,
+            "max": 2482
+          },
+          "both": {
+            "median": 3752,
+            "min": 3742,
+            "max": 3766
+          },
+          "skip": {
+            "median": 3508,
+            "min": 3496,
+            "max": 3522
+          },
+          "remainingToPriorMatched": {
+            "median": 3465,
+            "min": 3452,
+            "max": 3481
+          },
+          "stockToPriorMatched": {
+            "median": 10716,
+            "min": 10706,
+            "max": 10736
+          },
+          "interaction": {
+            "median": -638,
+            "min": -649,
+            "max": -624
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 11,
+            "min": -56,
+            "max": 31
+          },
+          "hoistWhenStack": {
+            "median": 4,
+            "min": -57,
+            "max": 26
+          },
+          "hoistWhenRegisters": {
+            "median": 25,
+            "min": -73,
+            "max": 75
+          },
+          "registersWhenChecked": {
+            "median": -3,
+            "min": -37,
+            "max": 121
+          },
+          "registersWhenHoisted": {
+            "median": 37,
+            "min": -25,
+            "max": 111
+          },
+          "both": {
+            "median": 38,
+            "min": -82,
+            "max": 115
+          },
+          "skip": {
+            "median": -27,
+            "min": -96,
+            "max": 53
+          },
+          "remainingToPriorMatched": {
+            "median": 19,
+            "min": -81,
+            "max": 95
+          },
+          "stockToPriorMatched": {
+            "median": 7,
+            "min": -18,
+            "max": 90
+          },
+          "interaction": {
+            "median": 25,
+            "min": -16,
+            "max": 83
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9278,
+          11900,
+          4592,
+          8051
+        ],
+        "C_PIE": [
+          8121,
+          10741,
+          3468,
+          8031
+        ]
+      }
+    },
+    "right-top": {
+      "levels": {
+        "clean": {
+          "0": 55546,
+          "9": 55577,
+          "10": 54281,
+          "11": 52468,
+          "12": 51793,
+          "13": 48296,
+          "8": 44728
+        },
+        "audit": {
+          "0": 60729,
+          "9": 60762,
+          "10": 59467,
+          "11": 57688,
+          "12": 56963,
+          "13": 53461,
+          "8": 49955
+        },
+        "primary": {
+          "0": 17845,
+          "9": 17869,
+          "10": 16553,
+          "11": 14737,
+          "12": 14090,
+          "13": 10565,
+          "8": 7041
+        },
+        "shade": {
+          "0": 46416,
+          "9": 46414,
+          "10": 46420,
+          "11": 46420,
+          "12": 46408,
+          "13": 46413,
+          "8": 46413
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 32,
+            "min": -47,
+            "max": 52
+          },
+          "hoistWhenStack": {
+            "median": 1290,
+            "min": 1229,
+            "max": 1351
+          },
+          "hoistWhenRegisters": {
+            "median": 674,
+            "min": 659,
+            "max": 694
+          },
+          "registersWhenChecked": {
+            "median": 3111,
+            "min": 3054,
+            "max": 3160
+          },
+          "registersWhenHoisted": {
+            "median": 2490,
+            "min": 2453,
+            "max": 2530
+          },
+          "both": {
+            "median": 3780,
+            "min": 3719,
+            "max": 3820
+          },
+          "skip": {
+            "median": 3495,
+            "min": 3476,
+            "max": 3532
+          },
+          "remainingToPriorMatched": {
+            "median": 3567,
+            "min": 3552,
+            "max": 3574
+          },
+          "stockToPriorMatched": {
+            "median": 10820,
+            "min": 10793,
+            "max": 10850
+          },
+          "interaction": {
+            "median": -607,
+            "min": -665,
+            "max": -564
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 26,
+            "min": -12,
+            "max": 104
+          },
+          "hoistWhenStack": {
+            "median": 1312,
+            "min": 1230,
+            "max": 1364
+          },
+          "hoistWhenRegisters": {
+            "median": 699,
+            "min": 678,
+            "max": 768
+          },
+          "registersWhenChecked": {
+            "median": 3071,
+            "min": 2986,
+            "max": 3200
+          },
+          "registersWhenHoisted": {
+            "median": 2524,
+            "min": 2424,
+            "max": 2547
+          },
+          "both": {
+            "median": 3754,
+            "min": 3736,
+            "max": 3899
+          },
+          "skip": {
+            "median": 3490,
+            "min": 3403,
+            "max": 3565
+          },
+          "remainingToPriorMatched": {
+            "median": 3535,
+            "min": 3448,
+            "max": 3562
+          },
+          "stockToPriorMatched": {
+            "median": 10774,
+            "min": 10735,
+            "max": 10833
+          },
+          "interaction": {
+            "median": -599,
+            "min": -665,
+            "max": -462
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 27,
+            "min": -15,
+            "max": 105
+          },
+          "hoistWhenStack": {
+            "median": 1327,
+            "min": 1281,
+            "max": 1397
+          },
+          "hoistWhenRegisters": {
+            "median": 637,
+            "min": 623,
+            "max": 680
+          },
+          "registersWhenChecked": {
+            "median": 3133,
+            "min": 3107,
+            "max": 3229
+          },
+          "registersWhenHoisted": {
+            "median": 2469,
+            "min": 2431,
+            "max": 2512
+          },
+          "both": {
+            "median": 3792,
+            "min": 3736,
+            "max": 3866
+          },
+          "skip": {
+            "median": 3532,
+            "min": 3497,
+            "max": 3543
+          },
+          "remainingToPriorMatched": {
+            "median": 3523,
+            "min": 3514,
+            "max": 3542
+          },
+          "stockToPriorMatched": {
+            "median": 10805,
+            "min": 10785,
+            "max": 10827
+          },
+          "interaction": {
+            "median": -670,
+            "min": -760,
+            "max": -604
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": -2,
+            "min": -59,
+            "max": 36
+          },
+          "hoistWhenStack": {
+            "median": -3,
+            "min": -19,
+            "max": 40
+          },
+          "hoistWhenRegisters": {
+            "median": 7,
+            "min": 3,
+            "max": 64
+          },
+          "registersWhenChecked": {
+            "median": -8,
+            "min": -58,
+            "max": 52
+          },
+          "registersWhenHoisted": {
+            "median": 10,
+            "min": -20,
+            "max": 25
+          },
+          "both": {
+            "median": 8,
+            "min": -7,
+            "max": 55
+          },
+          "skip": {
+            "median": 3,
+            "min": -93,
+            "max": 16
+          },
+          "remainingToPriorMatched": {
+            "median": -1,
+            "min": -31,
+            "max": 87
+          },
+          "stockToPriorMatched": {
+            "median": 3,
+            "min": -48,
+            "max": 143
+          },
+          "interaction": {
+            "median": 12,
+            "min": -37,
+            "max": 83
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9090,
+          11381,
+          4336,
+          7782
+        ],
+        "C_PIE": [
+          7893,
+          10249,
+          3206,
+          7777
+        ]
+      }
+    },
+    "top-lamp-wide": {
+      "levels": {
+        "clean": {
+          "0": 55898,
+          "9": 55924,
+          "10": 54653,
+          "11": 52830,
+          "12": 52177,
+          "13": 48670,
+          "8": 45156
+        },
+        "audit": {
+          "0": 61537,
+          "9": 61587,
+          "10": 60390,
+          "11": 58574,
+          "12": 57936,
+          "13": 54432,
+          "8": 50810
+        },
+        "primary": {
+          "0": 18150,
+          "9": 18181,
+          "10": 16961,
+          "11": 15144,
+          "12": 14502,
+          "13": 10986,
+          "8": 7428
+        },
+        "shade": {
+          "0": 46883,
+          "9": 46908,
+          "10": 46990,
+          "11": 46980,
+          "12": 46994,
+          "13": 46982,
+          "8": 46890
+        }
+      },
+      "pairedSavings": {
+        "clean": {
+          "initialAdmissionCost": {
+            "median": 23,
+            "min": 20,
+            "max": 47
+          },
+          "hoistWhenStack": {
+            "median": 1274,
+            "min": 1264,
+            "max": 1303
+          },
+          "hoistWhenRegisters": {
+            "median": 649,
+            "min": 626,
+            "max": 664
+          },
+          "registersWhenChecked": {
+            "median": 3094,
+            "min": 3088,
+            "max": 3114
+          },
+          "registersWhenHoisted": {
+            "median": 2469,
+            "min": 2449,
+            "max": 2488
+          },
+          "both": {
+            "median": 3746,
+            "min": 3726,
+            "max": 3772
+          },
+          "skip": {
+            "median": 3507,
+            "min": 3485,
+            "max": 3547
+          },
+          "remainingToPriorMatched": {
+            "median": 3509,
+            "min": 3482,
+            "max": 3529
+          },
+          "stockToPriorMatched": {
+            "median": 10739,
+            "min": 10724,
+            "max": 10745
+          },
+          "interaction": {
+            "median": -639,
+            "min": -645,
+            "max": -603
+          }
+        },
+        "audit": {
+          "initialAdmissionCost": {
+            "median": 30,
+            "min": -90,
+            "max": 156
+          },
+          "hoistWhenStack": {
+            "median": 1269,
+            "min": 1130,
+            "max": 1400
+          },
+          "hoistWhenRegisters": {
+            "median": 637,
+            "min": 533,
+            "max": 663
+          },
+          "registersWhenChecked": {
+            "median": 3096,
+            "min": 2978,
+            "max": 3209
+          },
+          "registersWhenHoisted": {
+            "median": 2460,
+            "min": 2355,
+            "max": 2484
+          },
+          "both": {
+            "median": 3742,
+            "min": 3614,
+            "max": 3781
+          },
+          "skip": {
+            "median": 3533,
+            "min": 3339,
+            "max": 3640
+          },
+          "remainingToPriorMatched": {
+            "median": 3510,
+            "min": 3505,
+            "max": 3635
+          },
+          "stockToPriorMatched": {
+            "median": 10732,
+            "min": 10591,
+            "max": 10849
+          },
+          "interaction": {
+            "median": -636,
+            "min": -743,
+            "max": -498
+          }
+        },
+        "primary": {
+          "initialAdmissionCost": {
+            "median": 47,
+            "min": -86,
+            "max": 121
+          },
+          "hoistWhenStack": {
+            "median": 1296,
+            "min": 1183,
+            "max": 1388
+          },
+          "hoistWhenRegisters": {
+            "median": 648,
+            "min": 554,
+            "max": 662
+          },
+          "registersWhenChecked": {
+            "median": 3117,
+            "min": 3000,
+            "max": 3203
+          },
+          "registersWhenHoisted": {
+            "median": 2456,
+            "min": 2378,
+            "max": 2483
+          },
+          "both": {
+            "median": 3757,
+            "min": 3643,
+            "max": 3777
+          },
+          "skip": {
+            "median": 3527,
+            "min": 3403,
+            "max": 3629
+          },
+          "remainingToPriorMatched": {
+            "median": 3487,
+            "min": 3479,
+            "max": 3569
+          },
+          "stockToPriorMatched": {
+            "median": 10730,
+            "min": 10613,
+            "max": 10837
+          },
+          "interaction": {
+            "median": -665,
+            "min": -742,
+            "max": -540
+          }
+        },
+        "shade": {
+          "initialAdmissionCost": {
+            "median": 1,
+            "min": -79,
+            "max": 127
+          },
+          "hoistWhenStack": {
+            "median": 1,
+            "min": -112,
+            "max": 122
+          },
+          "hoistWhenRegisters": {
+            "median": -4,
+            "min": -115,
+            "max": 9
+          },
+          "registersWhenChecked": {
+            "median": 1,
+            "min": -97,
+            "max": 122
+          },
+          "registersWhenHoisted": {
+            "median": -3,
+            "min": -119,
+            "max": 17
+          },
+          "both": {
+            "median": 3,
+            "min": -112,
+            "max": 30
+          },
+          "skip": {
+            "median": 5,
+            "min": -127,
+            "max": 124
+          },
+          "remainingToPriorMatched": {
+            "median": -8,
+            "min": -18,
+            "max": 120
+          },
+          "stockToPriorMatched": {
+            "median": -7,
+            "min": -114,
+            "max": 103
+          },
+          "interaction": {
+            "median": 2,
+            "min": -126,
+            "max": 97
+          }
+        }
+      },
+      "controls": {
+        "C": [
+          9249,
+          12249,
+          4921,
+          8004
+        ],
+        "C_PIE": [
+          8075,
+          11088,
+          3800,
+          8005
+        ]
+      }
+    }
+  },
+  "cold": {
+    "0": {
+      "compilerUs": 430016,
+      "elapsedUs": 435376,
+      "peakJSBytes": 645724,
+      "segmentBytes": 66092
+    },
+    "9": {
+      "compilerUs": 465218,
+      "elapsedUs": 470608,
+      "peakJSBytes": 676680,
+      "segmentBytes": 66092
+    },
+    "10": {
+      "compilerUs": 464674,
+      "elapsedUs": 470151,
+      "peakJSBytes": 676440,
+      "segmentBytes": 66092
+    },
+    "11": {
+      "compilerUs": 465769,
+      "elapsedUs": 471222,
+      "peakJSBytes": 676512,
+      "segmentBytes": 66092
+    },
+    "12": {
+      "compilerUs": 465825,
+      "elapsedUs": 471104,
+      "peakJSBytes": 676232,
+      "segmentBytes": 66092
+    },
+    "13": {
+      "compilerUs": 467591,
+      "elapsedUs": 472845,
+      "peakJSBytes": 676296,
+      "segmentBytes": 66092
+    },
+    "8": {
+      "compilerUs": 445480,
+      "elapsedUs": 450718,
+      "peakJSBytes": 654436,
+      "segmentBytes": 66092
+    }
+  },
+  "coreMHz": [
+    359.4641098730241,
+    359.9570367952259,
+    360.010101010101
+  ]
+}
