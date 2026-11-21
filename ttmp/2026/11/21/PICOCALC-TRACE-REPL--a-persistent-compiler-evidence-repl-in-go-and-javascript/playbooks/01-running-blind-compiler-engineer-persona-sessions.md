@@ -40,7 +40,7 @@ Launch the runner from the repository, using a distinct receipt filename for eve
 ```sh
 TICKET=ttmp/2026/11/21/PICOCALC-TRACE-REPL--a-persistent-compiler-evidence-repl-in-go-and-javascript
 python3 "$TICKET/scripts/21-run-trace-persona.py" pass \
-  "$TICKET/various/personas/baseline-pass.json" --port 3791
+  "$TICKET/various/personas/baseline-pass.json" --port 3791 --build "$SERVER_REVISION"
 ```
 
 Each runner creates its own VM with `POST /sessions`. Pi receives the common brief, one task card and one tool taking a string of JavaScript. Its working directory is empty. Project context, skills, built-in tools and MCP discovery are disabled. The provider extension supplies the model. A task-specific extension fixes the target session and limits evaluations. HTTP source is always sent to the service's public evaluation endpoint. Use the same command in parallel for the other cards.

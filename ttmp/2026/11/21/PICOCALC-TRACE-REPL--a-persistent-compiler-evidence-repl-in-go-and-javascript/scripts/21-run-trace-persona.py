@@ -20,15 +20,18 @@ def main():
     p.add_argument("card", choices=["catalog", "pass", "ablation"])
     p.add_argument("receipt", type=Path)
     p.add_argument("--port", default=3791, type=int)
+    p.add_argument("--build", required=True, help="Git revision or binary SHA for the serving process")
     p.add_argument("--provider-extension", type=Path,
                    default=Path.home() / ".pi/agent/npm/node_modules/@lunaroute/pi-extension")
     args = p.parse_args()
     args.receipt.parent.mkdir(parents=True, exist_ok=True)
+    if args.receipt.exists():
+        p.error("choose a new receipt path so an earlier run stays intact")
     origin = f"http://127.0.0.1:{args.port}/sessions"
     session = json.loads(request(origin, "POST"))["id"]
     endpoint = f"{origin}/{session}"
     result = {"provider": "lunaroute", "model": MODEL, "thinking": "high", "card": args.card,
-              "limit": 14, "steps": [], "answer": "", "errors": []}
+              "build": args.build, "limit": 14, "steps": [], "answer": "", "errors": []}
     cmd = ["pi", "--mode", "json", "--no-session", "--no-extensions", "--no-mcp",
            "--no-context-files", "--no-skills", "--no-prompt-templates", "--no-builtin-tools",
            "--extension", str(args.provider_extension), "--extension", str(SCRIPTS / "20-trace-persona-tool.ts"),
@@ -37,7 +40,13 @@ def main():
            "--print", (SCRIPTS / "personas" / f"{args.card}.md").read_text()]
     active = {}
     begun = time.monotonic()
+    def checkpoint():
+        result["seconds"] = round(time.monotonic() - begun, 2)
+        temporary = args.receipt.with_suffix(".tmp")
+        temporary.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n")
+        temporary.replace(args.receipt)
     try:
+        checkpoint()
         # A private empty cwd and disabled context discovery keep the task key out of the prompt.
         with tempfile.TemporaryDirectory(prefix="trace-persona-") as work:
             proc = subprocess.Popen(["timeout", "--kill-after=5", "480", *cmd], cwd=work,
@@ -52,12 +61,14 @@ def main():
                     step = {"tool": e["toolName"], "source": e["args"].get("source", "")}
                     active[e["toolCallId"]] = step
                     result["steps"].append(step)
+                    checkpoint()
                 elif t == "tool_execution_end":
                     step = active.get(e["toolCallId"])
                     if step is not None:
                         r = e.get("result", {})
                         step.update(reply="".join(i["text"] for i in r.get("content", []) if i.get("type") == "text"),
                                     error=e.get("isError", False), details=r.get("details", {}))
+                        checkpoint()
                 elif t == "message_end":
                     m = e.get("message", {})
                     if m.get("role") == "assistant":
@@ -74,8 +85,7 @@ def main():
         try:
             request(endpoint, "DELETE")
         finally:
-            result["seconds"] = round(time.monotonic() - begun, 2)
-            args.receipt.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n")
+            checkpoint()
     print(f"{args.card}: {len(result['steps'])} calls, {result['seconds']}s, "
           f"answer={bool(result['answer'])}, exit={result.get('exit')}")
     if result.get("exit") or not result["steps"] or not result["answer"]:
