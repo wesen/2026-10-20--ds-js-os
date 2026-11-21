@@ -32,7 +32,7 @@ All frame outputs use Typed buffers with a four-byte capacity followed by 16-bit
 - `typedRayTrace(depths,ids,work,sphereX,sphereY)` writes the primary results without lighting.
 - `typedRayShade(pixels,depths,ids,work,sphereX,sphereY,lightX,lightY)` applies the same shader to precomputed planes.
 
-All four return one on success and zero on invalid inputs. The shade-only entry receives depths and IDs already emitted by Typed Trace or its C control for the given sphere configuration. The three output regions are distinct. The audited path accepts eight native word arguments, which is the existing backend's limit.
+All four return one on success and zero on invalid inputs. The shade-only entry receives depths and IDs already emitted by Typed Trace or its C control for the given sphere configuration. An inconsistent trace plane may cause an early return after preceding pixels have been drawn. The three output regions are distinct. The audited path accepts eight native word arguments, which is the existing backend's limit.
 
 ## Arithmetic order
 
