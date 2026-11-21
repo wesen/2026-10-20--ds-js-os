@@ -236,3 +236,7 @@ Open the published synthesis first, then run the included `01-boundary.js` cell 
 ### Technical details
 
 The design delivery is a single cloud PDF containing the five guides in order. The Git publication contains six Markdown files, six standalone JavaScript files and one PNG. Scalar C and C PIE preserved their own scratch behavior, sharing PSRAM output and timed output contract with Typed. The final report distinguishes on-device compile milliseconds, render-to-memory microseconds, cycles per packet, executed guest instructions and static code bytes.
+
+### Follow-up on the core loops
+
+The user asked why the current Typed renderer remains slower and specifically asked about its core loops. I decoded the exact instruction words named by each opening-scene trace and summed physical-register-2 scalar memory operations (RV32 stack pointer). In the 160 calls to the supported skip-empty row there were 729,553 direct stack loads, 294,999 direct stack stores, 1,024 executions of the packed subtraction, and 2,983,602 total guest steps. These counts corroborate scalar lowering as an opportunity. They measure guest work on the opening input and cannot assign the full hardware gap to stack operations. The paired scalar factorial and shadow-only build independently measure runtime effects. Reproduce the new count with [the short JS analyzer](../scripts/director/15-core-loop-census.mjs); compare with [the captured results](../various/director/core-loop-census.json).

@@ -1,0 +1,57 @@
+[
+  {
+    "trace": "stock-opening",
+    "image": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+    "steps": 3608697,
+    "directStackLoads": 936328,
+    "directStackStores": 353778,
+    "directStackTotal": 1290106,
+    "roles": {}
+  },
+  {
+    "trace": "scalar-opening",
+    "image": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+    "steps": 3199910,
+    "directStackLoads": 729553,
+    "directStackStores": 309611,
+    "directStackTotal": 1039164,
+    "roles": {
+      "scalar-lane-load": 26070
+    }
+  },
+  {
+    "trace": "pie-opening",
+    "image": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+    "steps": 3131435,
+    "directStackLoads": 729553,
+    "directStackStores": 309776,
+    "directStackTotal": 1039329,
+    "roles": {
+      "scalar-lane-load": 26070
+    }
+  },
+  {
+    "trace": "empty-opening",
+    "image": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+    "steps": 2983602,
+    "directStackLoads": 729553,
+    "directStackStores": 294999,
+    "directStackTotal": 1024552,
+    "roles": {
+      "packed-subtraction": 1024,
+      "scalar-lane-load": 9182
+    }
+  },
+  {
+    "trace": "full-opening",
+    "image": "55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa",
+    "steps": 2954486,
+    "directStackLoads": 729553,
+    "directStackStores": 294999,
+    "directStackTotal": 1024552,
+    "roles": {
+      "packed-subtraction": 1024,
+      "scalar-lane-load": 3246
+    }
+  }
+]
