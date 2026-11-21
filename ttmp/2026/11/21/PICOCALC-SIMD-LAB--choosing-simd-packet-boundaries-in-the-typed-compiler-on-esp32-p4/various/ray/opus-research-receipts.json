@@ -1,0 +1,32 @@
+[
+  {
+    "deliverable": "short-domain",
+    "model": [
+      "claude-opus-5-5"
+    ],
+    "effort": "high",
+    "stop_reason": "end_turn",
+    "duration_ms": 21430,
+    "outcome": "success"
+  },
+  {
+    "deliverable": "compact",
+    "model": [
+      "claude-opus-5-5"
+    ],
+    "effort": "high",
+    "stop_reason": "end_turn",
+    "duration_ms": 60594,
+    "outcome": "success"
+  },
+  {
+    "deliverable": "diary",
+    "model": [
+      "claude-opus-5-5"
+    ],
+    "effort": "high",
+    "stop_reason": "end_turn",
+    "duration_ms": 35814,
+    "outcome": "success"
+  }
+]

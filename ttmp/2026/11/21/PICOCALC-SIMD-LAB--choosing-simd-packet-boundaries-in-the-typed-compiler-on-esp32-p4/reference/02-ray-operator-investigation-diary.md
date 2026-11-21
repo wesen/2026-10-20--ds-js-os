@@ -282,3 +282,57 @@ Physical image 92125987b5e653b8381abdc6a1dab49347402e188382cdce269d08250576d499,
 The third physical restoration completed with the same playable SHA and a successful native painter status query. See various/ray/third-restoration.json.
 
 I repeated the fresh build for this third image too. Its 196,576 bytes had 70 differences, confined to application description and firmware/ELF integrity data; its executable payload matched. I also loaded all 81 opening class rows into the researcher's isolated REPL session and joined them to the evidence team's independent masks. Scripts/ray/08-repl-ray.py reproduces the per-block census check. This work follows the physical study commit 1f9f4ef.
+
+## Step 6: Obtain and independently validate the researcher's final artifacts
+
+The external high-effort Opus research team delivered an executable arithmetic experiment, an article and its own factual investigation diary. I verified the program locally, edited the manuscript for numerical scope and added the independently run hardware procedures.
+
+### Prompt Context
+
+**User prompt (verbatim excerpt):** “Each researchers when done, and you once you have all the results: write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style.”
+
+**Assistant interpretation:** Deliver a researcher's authored and reviewable account of design, execution and outcomes for a new compiler student.
+
+**Inferred user intent:** Preserve both the scientific evidence and the reasoning needed to revisit it.
+
+### What I did
+
+- Replaced an open-ended Opus request with two small output- and spend-bounded Opus High commissions. One returned a self-contained arithmetic program, the other an independently written interpretation of the measured packet schedules. An additional bounded handoff supplied the researcher's own skill-format diary.
+- Inspected the program before executing Node. It performs numeric arithmetic only, with no network or filesystem operations. Ran it and saved its complete seven-row result. Kept machine-readable success, model and duration receipts.
+- Reviewed the author’s article, distinguishing signed i32 source semantics from the admitted unsigned halfword predicate. Added the literal proof, actual machine-code oracle, P4 row methodology, direct references and restoration checks.
+
+### Why
+
+The historical compiler trace, the operator's board experiment and the researcher's all-input arithmetic sweep are independent evidence types. Keeping their authorship and assumptions explicit makes the chapter reproducible.
+
+### What worked
+
+The compact numerical request completed in approximately 21 seconds and the compact article in approximately 61 seconds. All seven threshold sweeps ran. At 32767 there are exactly 32,768 false admissions, starting at 32768. Six legal thresholds had no mismatches. No timing claims rely on this arithmetic model.
+
+### What didn't work
+
+The first broad session stopped at the provider before creating an artifact. Another numerical session reached its 128,000-token response limit before producing a file. I stopped its continuation and the simultaneous unbounded writing request, then used small concrete assignments and budget limits. The narrowly scoped requests produced independent usable work.
+
+### What I learned
+
+An exhaustive 16-bit model can give a direct count of the unsafe boundary even if real scene inputs do not exercise it. It complements the independent actual machine-code and on-device checks rather than replacing either.
+
+### What was tricky to build
+
+Fixing an exact scope matters for both the arithmetic oracle and the article. The model exhausts all inputs at seven chosen thresholds; a three-case mathematical argument covers the entire admitted threshold interval. I removed an incorrect tentative reference to an XOR bias from the study instructions before publication; the actual shipped instructions subtract signed halfwords directly.
+
+### What warrants a second pair of eyes
+
+Cross-check the percentages and denominators against exported rows. The 126 µs full-versus-empty default result is paired. Verify that students can distinguish the independent hand region, actual generated code and non-timing mathematical model.
+
+### What should be done in the future
+
+Measure instruction locality directly if the project pursues the full-packet schedule further. The measured complete-frame results support the compact empty exit.
+
+### Code review instructions
+
+Run scripts/ray/09-opus-exhaustive-lanes.mjs and compare various/ray/opus-exhaustive-halfwords.json. Read reference/02-ray-opus-investigation-diary.md, the implementation guide and analysis/02-compiling-an-empty-packet-exit-for-the-picocalc-ray-tracer.md together.
+
+### Technical details
+
+research-receipts: various/ray/opus-research-receipts.json. The completed author, experiment and diary calls used Claude Opus 5.5 at high effort. The decision to split and cap the calls was made by the operator.
