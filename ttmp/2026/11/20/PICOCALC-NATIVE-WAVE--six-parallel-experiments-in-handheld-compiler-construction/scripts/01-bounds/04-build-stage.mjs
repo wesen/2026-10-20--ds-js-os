@@ -45,4 +45,5 @@ replace("CMakeLists.txt","    target_include_directories(${COMPONENT_LIB} PRIVAT
     programs.map(arm=>"${CMAKE_CURRENT_LIST_DIR}/wave-"+arm+".bin").join(";")+"\")");
 replace("main_p4.c",'  else if (!strcmp(cmd, "painter")) p4_painter_status();',
     '  else if (!strcmp(cmd, "painter")) p4_painter_status();\n'+
-    '  else if (!strcmp(cmd, "wave12")) { extern void wave12_bench(void); wave12_bench(); }');
+    '  else if (!strcmp(cmd, "wave12")) { extern void wave12_bench(bool); wave12_bench(false); }\n'+
+    '  else if (!strcmp(cmd, "wave12short")) { extern void wave12_bench(bool); wave12_bench(true); }');

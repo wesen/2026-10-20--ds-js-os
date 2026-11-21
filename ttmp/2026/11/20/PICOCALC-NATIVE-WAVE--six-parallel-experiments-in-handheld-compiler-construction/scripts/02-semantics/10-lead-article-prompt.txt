@@ -1,0 +1,96 @@
+You are the independent Opus High research lead. Your tool-free original design is already archived. Write the full article now based on these completed experiments. Use 1,700 to 2,300 words. Audience is a capable software intern who has never seen this compiler. Markdown for Obsidian, no YAML. Open with the result and explain the Typed checked access, numeric streamed tape, RV32 emission and exactly what was compared. Include worked code and numeric examples, scope and failed hypotheses, a method-reader can reproduce, one modest follow-up. No analogies, no semicolons in prose, no colon-led explanations, no rhetorical contrast formulas. Do not fabricate citations, timings, mechanism, corpus, or feature support. Full product compile code-size rows are unlinked image byte counts, distinct from device firmware, editor rendering or gameplay. Include a short heading named 'Physical board' with one paragraph on director heldout. The operator will append coordinated physical compiler/positive controls after the experiment. No placeholders elsewhere. No operator conversational framing.
+
+Topic: How long to retain two checked source operations before expansion in streamed RV32. The actual frozen study is narrower than original Opus design; it omits generalized copy, user-branch fusion or dispatch, early peephole and late-generic controls. Early arm exactly byte-identical to stock RV32. Late retains only a checked UTF-16 address descriptor and an ordered already-checked literal write descriptor. Position evaluated once before guard. Capacity is u32 at address+0. BLTU skips exactly EBREAK on success, then SLLI by one and ADD make header-relative address; existing lhu/sh access uses payload displacement +4. Existing early code computes a boolean then branches. In a write, check occurs before RHS. Literal frontend leaves existing bounds guards in all arms. Native lowering loads the saved address once and emits same immediate halfword stores in order, counts UTF-16 units, no payload or data segments. Empty literal still has normal semantics. Static selected policy retains address for reads only and literal stores at >=8 UTF-16 units. Normal Wasm unchanged. At function completion it frees the optional ordinal table. No language/ABI changes. The current actual Chess source has a 16,316-byte nested painter literal in the game, so extent for Chess is heavily affected by that special writer, not an indication average memory shrinks similarly. Do not conflate this with prior literal pooling. Independent held-out source keeps all 1,603 outcomes including 101 traps with full byte comparisons, plus 243 operator-directed fixture states per arm, checking negatives, extreme positions, alias header effects and 7 vs 8 UTF16 units. Compare empirical always-late and static selected, not a universal codegen claim. Director already ran 231 physical rows on seven arms of heldout. Report medians per paired cycle measurement (late parse/count/label falls 4.982%,15.901%,21.267%; selected 4.937%,15.901%,16.742%). These loops are publicly reproducible representative directed calls, not whole-app speed. Director controls exact host-exported image and normal firmware restored. Include exact native image byte ratios, interpreter steps, and proper memory/trap sequencing.
+
+[
+  {
+    "control": {
+      "semantics-early": {
+        "bytes": 3268,
+        "addresses": 0,
+        "literals": 0
+      },
+      "semantics-late": {
+        "bytes": 2832,
+        "addresses": 16,
+        "literals": 2
+      },
+      "semantics-selected": {
+        "bytes": 2952,
+        "addresses": 12,
+        "literals": 1
+      }
+    },
+    "editor": {
+      "semantics-early": {
+        "bytes": 89168,
+        "addresses": 0,
+        "literals": 0
+      },
+      "semantics-late": {
+        "bytes": 75932,
+        "addresses": 268,
+        "literals": 107
+      },
+      "semantics-selected": {
+        "bytes": 80444,
+        "addresses": 109,
+        "literals": 52
+      }
+    },
+    "chess": {
+      "semantics-early": {
+        "bytes": 256400,
+        "addresses": 0,
+        "literals": 0
+      },
+      "semantics-late": {
+        "bytes": 181184,
+        "addresses": 256,
+        "literals": 80
+      },
+      "semantics-selected": {
+        "bytes": 185820,
+        "addresses": 84,
+        "literals": 52
+      }
+    },
+    "painter": {
+      "semantics-early": {
+        "bytes": 23848,
+        "addresses": 0,
+        "literals": 0
+      },
+      "semantics-late": {
+        "bytes": 21644,
+        "addresses": 52,
+        "literals": 12
+      },
+      "semantics-selected": {
+        "bytes": 22644,
+        "addresses": 11,
+        "literals": 11
+      }
+    }
+  },
+  {
+    "semantics-early": {
+      "bytes": 2876,
+      "steps": 158570,
+      "addresses": 0,
+      "literals": 0
+    },
+    "semantics-late": {
+      "bytes": 2396,
+      "steps": 144166,
+      "addresses": 7,
+      "literals": 3
+    },
+    "semantics-selected": {
+      "bytes": 2468,
+      "steps": 145024,
+      "addresses": 4,
+      "literals": 3
+    }
+  }
+]

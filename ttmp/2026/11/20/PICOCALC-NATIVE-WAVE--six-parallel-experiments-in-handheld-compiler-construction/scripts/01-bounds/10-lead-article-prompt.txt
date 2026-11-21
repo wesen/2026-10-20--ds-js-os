@@ -1,0 +1,369 @@
+You have no tools or repository access. Emit the complete manuscript directly in your response, first line # Choosing when to analyze repeated bounds checks. Never claim to create or investigate a file. Use only supplied evidence. The reproduction entry points are scripts/01-bounds/02-heldout.mjs, 03-host.mjs, 06-prior-engine.mjs; summary receipts various/01-bounds/{heldout,host,older-editor}.json. Do not assume other paths. Follow the remainder of this request.
+You are the independent Opus High research lead. Your tool-free original design is already archived. Write the full article now based on these completed experiments. Use 1,700 to 2,300 words. Audience is a capable software intern who has never seen this compiler. Markdown for Obsidian, no YAML. Open with the result and explain the Typed checked access, numeric streamed tape, RV32 emission and exactly what was compared. Include worked code and numeric examples, scope and failed hypotheses, a method-reader can reproduce, one modest follow-up. No analogies, no semicolons in prose, no colon-led explanations, no rhetorical contrast formulas. Do not fabricate citations, timings, mechanism, corpus, or feature support. Full product compile code-size rows are unlinked image byte counts, distinct from device firmware, editor rendering or gameplay. Include a short heading named 'Physical board' with one paragraph on director heldout. The operator will append coordinated physical compiler/positive controls after the experiment. No placeholders elsewhere. No operator conversational framing.
+
+Topic: Decide whether to repeat-bound-check analysis during streaming. Preserve research integrity. These exact frozen operator rules were chosen narrower than your proposed gate/proportional credit. Use 640 numeric cells per compilation with source-order greedy reject-then-continue. Selected also checks tape 24..192 inclusive and a buffer/string parameter. Always runs on all and Never none. Analysis decodes numeric instruction widths, compares a native UTF-16 guard pattern after a saved index-copy local or constant, uses versioned locals and clears known guards at control, writes and calls. It removes only second guard, not recalculation or another load. Release product remains unchanged. Distinguish independent proof classes. Primary pass cannot exploit inequalities from conditional control. Older Editor two-guard engine tests actual prior edge search. For that supplement, collect per-read immutable edge-array refs and already versioned identifiers while parsing, defer each original search to function completion and mark the existing compact read operand's proven bit; exact never/always bytes match original old compiler. Fixed policies gate search, not unconditional tracking, snapshots or inherited loop lexer lookahead. Older guarded Editor sole successful proof consumes five examined edges in the 263-cell editorPreviewAppend. No selection could recover a proof absent from current holdout, 1603 exact independent outcomes/101 traps on each arm with unchanged Wasm. Targeted corpus has 243 test states each arm, compares trap and whole buffer, including mutable index, branch bypass, aliases, call/store and short/long literals. Director heldout physically uses median paired generated-workload trials, bounds image and point estimate of median effects all identical/zero. Do not imply microsecond savings from charged cells or cite guessed cycle cost. The two charged budget arms both miss the useful check in current Chess chessMake, always saves 32 bytes there. Positive repeated function used for purpose-built admission contrast. Numeric sizes and counts below.
+
+[
+  {
+    "control": {
+      "bounds-never": {
+        "bytes": 3268,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 9,
+          "accepted": 0,
+          "charged": 0,
+          "visited": 0,
+          "guards": 0,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-always": {
+        "bytes": 3204,
+        "changedFunctions": [
+          "repeated"
+        ],
+        "bounds": {
+          "functions": 9,
+          "accepted": 9,
+          "charged": 1153,
+          "visited": 1153,
+          "guards": 16,
+          "removed": 2,
+          "bailed": 0
+        }
+      },
+      "bounds-order": {
+        "bytes": 3204,
+        "changedFunctions": [
+          "repeated"
+        ],
+        "bounds": {
+          "functions": 9,
+          "accepted": 3,
+          "charged": 600,
+          "visited": 600,
+          "guards": 3,
+          "removed": 2,
+          "bailed": 0
+        }
+      },
+      "bounds-selected": {
+        "bytes": 3204,
+        "changedFunctions": [
+          "repeated"
+        ],
+        "bounds": {
+          "functions": 9,
+          "accepted": 6,
+          "charged": 447,
+          "visited": 447,
+          "guards": 14,
+          "removed": 2,
+          "bailed": 0
+        }
+      }
+    },
+    "editor": {
+      "bounds-never": {
+        "bytes": 89168,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 119,
+          "accepted": 0,
+          "charged": 0,
+          "visited": 0,
+          "guards": 0,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-always": {
+        "bytes": 89168,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 119,
+          "accepted": 119,
+          "charged": 35883,
+          "visited": 35883,
+          "guards": 204,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-order": {
+        "bytes": 89168,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 119,
+          "accepted": 10,
+          "charged": 636,
+          "visited": 636,
+          "guards": 2,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-selected": {
+        "bytes": 89168,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 119,
+          "accepted": 8,
+          "charged": 633,
+          "visited": 633,
+          "guards": 3,
+          "removed": 0,
+          "bailed": 0
+        }
+      }
+    },
+    "chess": {
+      "bounds-never": {
+        "bytes": 256400,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 82,
+          "accepted": 0,
+          "charged": 0,
+          "visited": 0,
+          "guards": 0,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-always": {
+        "bytes": 256368,
+        "changedFunctions": [
+          "chessMake"
+        ],
+        "bounds": {
+          "functions": 82,
+          "accepted": 82,
+          "charged": 137531,
+          "visited": 137531,
+          "guards": 141,
+          "removed": 1,
+          "bailed": 0
+        }
+      },
+      "bounds-order": {
+        "bytes": 256400,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 82,
+          "accepted": 11,
+          "charged": 639,
+          "visited": 639,
+          "guards": 10,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-selected": {
+        "bytes": 256400,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 82,
+          "accepted": 9,
+          "charged": 637,
+          "visited": 637,
+          "guards": 5,
+          "removed": 0,
+          "bailed": 0
+        }
+      }
+    },
+    "painter": {
+      "bounds-never": {
+        "bytes": 23848,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 24,
+          "accepted": 0,
+          "charged": 0,
+          "visited": 0,
+          "guards": 0,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-always": {
+        "bytes": 23848,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 24,
+          "accepted": 24,
+          "charged": 7332,
+          "visited": 7332,
+          "guards": 28,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-order": {
+        "bytes": 23848,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 24,
+          "accepted": 6,
+          "charged": 640,
+          "visited": 640,
+          "guards": 1,
+          "removed": 0,
+          "bailed": 0
+        }
+      },
+      "bounds-selected": {
+        "bytes": 23848,
+        "changedFunctions": [],
+        "bounds": {
+          "functions": 24,
+          "accepted": 7,
+          "charged": 497,
+          "visited": 497,
+          "guards": 0,
+          "removed": 0,
+          "bailed": 0
+        }
+      }
+    }
+  },
+  {
+    "bounds-never": {
+      "bytes": 2876,
+      "steps": 158570,
+      "bounds": {
+        "functions": 10,
+        "accepted": 0,
+        "charged": 0,
+        "visited": 0,
+        "guards": 0,
+        "removed": 0,
+        "bailed": 0
+      }
+    },
+    "bounds-always": {
+      "bytes": 2876,
+      "steps": 158570,
+      "bounds": {
+        "functions": 10,
+        "accepted": 10,
+        "charged": 1175,
+        "visited": 1175,
+        "guards": 7,
+        "removed": 0,
+        "bailed": 0
+      }
+    },
+    "bounds-order": {
+      "bytes": 2876,
+      "steps": 158570,
+      "bounds": {
+        "functions": 10,
+        "accepted": 9,
+        "charged": 460,
+        "visited": 460,
+        "guards": 4,
+        "removed": 0,
+        "bailed": 0
+      }
+    },
+    "bounds-selected": {
+      "bytes": 2876,
+      "steps": 158570,
+      "bounds": {
+        "functions": 10,
+        "accepted": 3,
+        "charged": 201,
+        "visited": 201,
+        "guards": 3,
+        "removed": 0,
+        "bailed": 0
+      }
+    }
+  },
+  {
+    "never": {
+      "bytes": 64856,
+      "sha256": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+      "functions": 120,
+      "accepted": 0,
+      "charged": 0,
+      "candidates": 116,
+      "attempted": 0,
+      "examined": 0,
+      "proven": 0,
+      "exhausted": 0,
+      "preview": {
+        "size": 263,
+        "reads": 2,
+        "accepted": false,
+        "proven": 0,
+        "examined": 0,
+        "exhausted": 0
+      }
+    },
+    "always": {
+      "bytes": 64840,
+      "sha256": "31c735244aab03adc01165475232d2439aad5dfa5b3924016fe1ef099b9e0a8d",
+      "functions": 120,
+      "accepted": 120,
+      "charged": 33195,
+      "candidates": 116,
+      "attempted": 116,
+      "examined": 32,
+      "proven": 1,
+      "exhausted": 0,
+      "preview": {
+        "size": 263,
+        "reads": 2,
+        "accepted": true,
+        "proven": 1,
+        "examined": 5,
+        "exhausted": 0
+      }
+    },
+    "order": {
+      "bytes": 64856,
+      "sha256": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+      "functions": 120,
+      "accepted": 11,
+      "charged": 638,
+      "candidates": 116,
+      "attempted": 9,
+      "examined": 3,
+      "proven": 0,
+      "exhausted": 0,
+      "preview": {
+        "size": 263,
+        "reads": 2,
+        "accepted": false,
+        "proven": 0,
+        "examined": 0,
+        "exhausted": 0
+      }
+    },
+    "selected": {
+      "bytes": 64856,
+      "sha256": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+      "functions": 120,
+      "accepted": 8,
+      "charged": 619,
+      "candidates": 116,
+      "attempted": 12,
+      "examined": 3,
+      "proven": 0,
+      "exhausted": 0,
+      "preview": {
+        "size": 263,
+        "reads": 2,
+        "accepted": false,
+        "proven": 0,
+        "examined": 0,
+        "exhausted": 0
+      }
+    }
+  }
+]

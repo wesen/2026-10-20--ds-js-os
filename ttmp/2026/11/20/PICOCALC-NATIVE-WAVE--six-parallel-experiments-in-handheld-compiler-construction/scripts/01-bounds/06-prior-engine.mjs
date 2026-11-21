@@ -28,6 +28,7 @@ function run(mode,policy) {
             code = replace(code,"        if (this.bounds) fn.bounds =",
                 `        const size=this.code.length;
         const reads=this.readFacts ?? [];
+        const before=policy==='order' || policy==='selected' ? remaining : null;
         const accepted= policy==="always" || (policy!=="never" && size<=remaining &&
             (policy!=="selected" || (size>=24 && size<=192 &&
                 fn.params.some(t=>t==="buffer" || t==="string"))));
@@ -50,7 +51,7 @@ function run(mode,policy) {
         counts.proven+=b.proven;
         counts.exhausted+=b.exhausted;
         if (reads.length || fn.name==="editorPreviewAppend")
-            counts.rows[fn.name]={size,reads:reads.length,accepted,
+            counts.rows[fn.name]={size,before,reads:reads.length,accepted,
                 proven:b.proven,examined:b.examined,exhausted:b.exhausted};
         if (this.bounds) fn.bounds =`);
         }

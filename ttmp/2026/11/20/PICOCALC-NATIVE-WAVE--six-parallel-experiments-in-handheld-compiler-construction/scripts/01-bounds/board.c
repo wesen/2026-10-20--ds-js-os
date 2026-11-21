@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum { SAMPLES = 11, CALLS = 256, COMPILES = 5 };
+enum { SAMPLES = 11, CALLS = 256, COMPILES = 5, SHORT_COMPILES = 1 };
 typedef struct { uint32_t capacity; uint16_t data[8]; } text;
 typedef int (*read_fn)(const text *, int);
 typedef int (*copy_fn)(text *, int, int);
@@ -70,7 +70,7 @@ static bool native_trials(void) {
     return pass;
 }
 
-static bool compile_trials(const char *world) {
+static bool compile_trials(const char *world, unsigned rounds) {
     char path[64], label[64];
     size_t source_len=0, reactor_len=0;
     snprintf(path,sizeof(path),"%s/%s.typed",world,world);
@@ -84,7 +84,7 @@ static bool compile_trials(const char *world) {
     static const p4_compile_limits limits={.heap_bytes=4*1024*1024,.duration_us=9000000};
     bool pass=source && reactor;
     if (pass) {
-        for(unsigned sample=0;sample<COMPILES;sample++) {
+        for(unsigned sample=0;sample<rounds;sample++) {
             for(unsigned offset=0;offset<6;offset++) {
                 unsigned arm=(sample+offset)%6;
                 snprintf(label,sizeof(label),"wave-%s-%s",world,names[arm]);
@@ -102,20 +102,21 @@ static bool compile_trials(const char *world) {
     return pass;
 }
 static void wave_task(void *unused) {
-    (void)unused;
+    const unsigned rounds=unused ? SHORT_COMPILES : COMPILES;
     printf("WAVE_BEGIN core=%d cpu_hz=%d native_samples=%u calls=%u compile_samples=%u\n",
-        xPortGetCoreID(),esp_clk_cpu_freq(),(unsigned)SAMPLES,(unsigned)CALLS,(unsigned)COMPILES);
+        xPortGetCoreID(),esp_clk_cpu_freq(),(unsigned)SAMPLES,(unsigned)CALLS,rounds);
     bool native=native_trials();
-    bool chess=compile_trials("chess");
-    bool editor=compile_trials("editor");
+    printf("WAVE_NATIVE_CHECK %s\n",native ? "ok":"FAIL");
+    bool chess=compile_trials("chess",rounds);
+    bool editor=compile_trials("editor",rounds);
     printf("WAVE_DONE %s\n",native && chess && editor ? "ok":"FAIL");
     fflush(stdout);
     vTaskDeleteWithCaps(NULL);
 }
-void wave12_bench(void) {
+void wave12_bench(bool short_run) {
     static bool started;
     if(!started)
-        started=xTaskCreatePinnedToCoreWithCaps(wave_task,"wave12",80*1024,NULL,2,NULL,1,
+        started=xTaskCreatePinnedToCoreWithCaps(wave_task,"wave12",80*1024,short_run ? (void *)1 : NULL,2,NULL,1,
                       MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT)==pdPASS;
     if(!started) puts("WAVE_DONE task-allocation-failed");
 }

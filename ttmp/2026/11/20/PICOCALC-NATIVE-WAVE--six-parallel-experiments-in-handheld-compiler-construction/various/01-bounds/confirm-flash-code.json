@@ -1,0 +1,27 @@
+{
+  "stock": {
+    "vma": "0x400b7bf0",
+    "size": 3268,
+    "sha256": "ed124b40b79143c12b09420393e1aeae0510907e8998eb1504fc7bed737d616a"
+  },
+  "bounds-order": {
+    "vma": "0x400b88c0",
+    "size": 3204,
+    "sha256": "5b831c3e97a908dadfec2bce13784de41f18489b4f64f3621cdfd43d85489465"
+  },
+  "bounds-selected": {
+    "vma": "0x400b9550",
+    "size": 3204,
+    "sha256": "5b831c3e97a908dadfec2bce13784de41f18489b4f64f3621cdfd43d85489465"
+  },
+  "semantics-late": {
+    "vma": "0x400ba1e0",
+    "size": 2832,
+    "sha256": "75de4ea36ff597aaeeb8737c52986a3b88aa4a9008ff470f438be36283424730"
+  },
+  "semantics-selected": {
+    "vma": "0x400bacf0",
+    "size": 2952,
+    "sha256": "f3e524ec8ce6386857bcfa6d8248200f1c6be74a445e4debf2dd59a193872668"
+  }
+}

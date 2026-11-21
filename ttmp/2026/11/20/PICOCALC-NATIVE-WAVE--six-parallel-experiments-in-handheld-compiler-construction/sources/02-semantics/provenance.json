@@ -1,0 +1,39 @@
+{
+  "command": [
+    "claude",
+    "-p",
+    "--model",
+    "opus",
+    "--effort",
+    "high",
+    "--tools",
+    "",
+    "--setting-sources",
+    ""
+  ],
+  "separateInvocations": true,
+  "authorization": "User approved releasing scoped toy compiler material to Anthropic.",
+  "inputs": "Compiler details and aggregate evidence. No raw UART logs or credentials.",
+  "files": {
+    "designPrompt": {
+      "path": "scripts/02-semantics/00-lead-design-prompt.txt",
+      "bytes": 1560,
+      "sha256": "8b38b591a9fdd750f9488ae1ff62a63be6f1a4ed44884353e1340606b117ff2a"
+    },
+    "designResponse": {
+      "path": "sources/02-semantics/01-lead-design.md",
+      "bytes": 22668,
+      "sha256": "850f1afed5240f0aa08a5a1c045a46e580c5322073610780a0ea88f2921b606c"
+    },
+    "articlePrompt": {
+      "path": "scripts/02-semantics/10-lead-article-prompt.txt",
+      "bytes": 5051,
+      "sha256": "09367ccce5917ffaa108df194d3267f4aa39f551fe57d9d26719aadc18742dc9"
+    },
+    "articleResponse": {
+      "path": "sources/02-semantics/02-lead-article.md",
+      "bytes": 13657,
+      "sha256": "19a9f0a66f87ac2d19feba2afe9e11426dafb5b2a741a9b262ea3138b6dfcc37"
+    }
+  }
+}

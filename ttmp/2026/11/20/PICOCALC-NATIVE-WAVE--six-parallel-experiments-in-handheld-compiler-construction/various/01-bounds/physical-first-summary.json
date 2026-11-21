@@ -1,0 +1,440 @@
+{
+  "native": {
+    "repeated": {
+      "stock": {
+        "cyclesPerCall": {
+          "min": 86.11328125,
+          "median": 86.1640625,
+          "max": 94.67578125
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        }
+      },
+      "bounds-order": {
+        "cyclesPerCall": {
+          "min": 68.078125,
+          "median": 68.1015625,
+          "max": 68.22265625
+        },
+        "pairedTimeReductionPct": {
+          "min": 20.85071648830038,
+          "median": 20.981049959198472,
+          "max": 27.94075174320254
+        }
+      },
+      "bounds-selected": {
+        "cyclesPerCall": {
+          "min": 68.078125,
+          "median": 68.0859375,
+          "max": 76.2734375
+        },
+        "pairedTimeReductionPct": {
+          "min": 19.43722407888765,
+          "median": 20.979369757424614,
+          "max": 21.20253164556962
+        }
+      },
+      "semantics-late": {
+        "cyclesPerCall": {
+          "min": 65.0546875,
+          "median": 65.06640625,
+          "max": 70.2109375
+        },
+        "pairedTimeReductionPct": {
+          "min": 24.44091630755273,
+          "median": 24.485447456705046,
+          "max": 25.840656846969512
+        }
+      },
+      "semantics-selected": {
+        "cyclesPerCall": {
+          "min": 65.06640625,
+          "median": 65.06640625,
+          "max": 65.3359375
+        },
+        "pairedTimeReductionPct": {
+          "min": 24.127920163302342,
+          "median": 24.485447456705046,
+          "max": 31.257993976152164
+        }
+      }
+    },
+    "literal": {
+      "stock": {
+        "cyclesPerCall": {
+          "min": 83.078125,
+          "median": 83.1171875,
+          "max": 91.6796875
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        }
+      },
+      "bounds-order": {
+        "cyclesPerCall": {
+          "min": 83.08203125,
+          "median": 83.08984375,
+          "max": 89.26953125
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.07521978280287112,
+          "median": 0.03289782874330571,
+          "max": 2.6288879420536815
+        }
+      },
+      "bounds-selected": {
+        "cyclesPerCall": {
+          "min": 83.078125,
+          "median": 83.08984375,
+          "max": 86.29296875
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.01410569870228251,
+          "median": 0.028198138922830296,
+          "max": 5.875585854282061
+        }
+      },
+      "semantics-late": {
+        "cyclesPerCall": {
+          "min": 69.09375,
+          "median": 69.09375,
+          "max": 69.19921875
+        },
+        "pairedTimeReductionPct": {
+          "min": 16.823396652247514,
+          "median": 16.862487075852993,
+          "max": 24.52066467831274
+        }
+      },
+      "semantics-selected": {
+        "cyclesPerCall": {
+          "min": 76.05078125,
+          "median": 76.05078125,
+          "max": 76.15234375
+        },
+        "pairedTimeReductionPct": {
+          "min": 8.444945721133513,
+          "median": 8.48883666274971,
+          "max": 16.936514699616534
+        }
+      }
+    },
+    "write": {
+      "stock": {
+        "cyclesPerCall": {
+          "min": 80.0703125,
+          "median": 80.078125,
+          "max": 82.5390625
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        }
+      },
+      "bounds-order": {
+        "cyclesPerCall": {
+          "min": 80.0859375,
+          "median": 80.1171875,
+          "max": 86.30078125
+        },
+        "pairedTimeReductionPct": {
+          "min": -7.77073170731708,
+          "median": -0.014634860237094927,
+          "max": 2.920018930430668
+        }
+      },
+      "bounds-selected": {
+        "cyclesPerCall": {
+          "min": 80.0859375,
+          "median": 80.0859375,
+          "max": 80.11328125
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.034146341463414664,
+          "median": -0.009756097560975618,
+          "max": 2.9389493610979645
+        }
+      },
+      "semantics-late": {
+        "cyclesPerCall": {
+          "min": 59.0625,
+          "median": 59.0625,
+          "max": 59.09375
+        },
+        "pairedTimeReductionPct": {
+          "min": 26.236706020099522,
+          "median": 26.243902439024392,
+          "max": 28.405111216280165
+        }
+      },
+      "semantics-selected": {
+        "cyclesPerCall": {
+          "min": 73.09765625,
+          "median": 73.11328125,
+          "max": 73.1484375
+        },
+        "pairedTimeReductionPct": {
+          "min": 8.66871554709986,
+          "median": 8.71262012781111,
+          "max": 11.377188831045903
+        }
+      }
+    }
+  },
+  "cold": {
+    "chess": {
+      "stock": {
+        "compileMillis": {
+          "min": 5289.287,
+          "median": 5341.519,
+          "max": 5418.353
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        },
+        "peakJsBytes": {
+          "min": 3184852,
+          "median": 3185084.0,
+          "max": 3185116
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "bounds-always": {
+        "compileMillis": {
+          "min": 6853.011,
+          "median": 6884.663500000001,
+          "max": 6896.672
+        },
+        "pairedTimeReductionPct": {
+          "min": -30.3894456852124,
+          "median": -28.54088252367646,
+          "max": -27.16511825641481
+        },
+        "peakJsBytes": {
+          "min": 3185076,
+          "median": 3185086.0,
+          "max": 3185096
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "bounds-order": {
+        "compileMillis": {
+          "min": 5325.797,
+          "median": 5356.9015,
+          "max": 5397.986
+        },
+        "pairedTimeReductionPct": {
+          "min": -1.1304229878028593,
+          "median": -0.7449823438020808,
+          "max": 1.7081943535240285
+        },
+        "peakJsBytes": {
+          "min": 3185080,
+          "median": 3185096.0,
+          "max": 3186052
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "bounds-selected": {
+        "compileMillis": {
+          "min": 5359.224,
+          "median": 5369.5075,
+          "max": 5378.555
+        },
+        "pairedTimeReductionPct": {
+          "min": -1.3222387062755248,
+          "median": -0.6049196710329219,
+          "max": 0.8941093354382756
+        },
+        "peakJsBytes": {
+          "min": 3185096,
+          "median": 3185106.0,
+          "max": 3185132
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "semantics-late": {
+        "compileMillis": {
+          "min": 3036.97,
+          "median": 3038.0434999999998,
+          "max": 3050.113
+        },
+        "pairedTimeReductionPct": {
+          "min": 42.58262030402208,
+          "median": 43.01664922144087,
+          "max": 43.91947147038962
+        },
+        "peakJsBytes": {
+          "min": 1947788,
+          "median": 1948022.0,
+          "max": 1948108
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "semantics-selected": {
+        "compileMillis": {
+          "min": 3175.372,
+          "median": 3186.154,
+          "max": 3192.845
+        },
+        "pairedTimeReductionPct": {
+          "min": 39.84525702613604,
+          "median": 40.41079565986847,
+          "max": 41.07351440557675
+        },
+        "peakJsBytes": {
+          "min": 1983564,
+          "median": 1983680.0,
+          "max": 1983772
+        },
+        "reactorBytes": [
+          274892
+        ]
+      }
+    },
+    "editor": {
+      "stock": {
+        "compileMillis": {
+          "min": 4513.982,
+          "median": 4544.849,
+          "max": 4596.696
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        },
+        "peakJsBytes": {
+          "min": 2573860,
+          "median": 2574214.0,
+          "max": 2574252
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "bounds-always": {
+        "compileMillis": {
+          "min": 5181.322,
+          "median": 5232.1044999999995,
+          "max": 5241.669
+        },
+        "pairedTimeReductionPct": {
+          "min": -15.850639191738036,
+          "median": -14.591532526974339,
+          "max": -14.031230257558903
+        },
+        "peakJsBytes": {
+          "min": 2578236,
+          "median": 2578258.0,
+          "max": 2578316
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "bounds-order": {
+        "compileMillis": {
+          "min": 4567.821,
+          "median": 4568.772999999999,
+          "max": 4611.461
+        },
+        "pairedTimeReductionPct": {
+          "min": -1.5302431242208758,
+          "median": -0.8250801418871689,
+          "max": 0.60234568481361
+        },
+        "peakJsBytes": {
+          "min": 2578004,
+          "median": 2578262.0,
+          "max": 2578352
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "bounds-selected": {
+        "compileMillis": {
+          "min": 4597.769,
+          "median": 4621.6605,
+          "max": 4644.73
+        },
+        "pairedTimeReductionPct": {
+          "min": -2.1327076745812246,
+          "median": -1.7532997993987554,
+          "max": -0.6462250277155634
+        },
+        "peakJsBytes": {
+          "min": 2578244,
+          "median": 2578280.0,
+          "max": 2578312
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "semantics-late": {
+        "compileMillis": {
+          "min": 4119.38,
+          "median": 4164.0560000000005,
+          "max": 4181.579
+        },
+        "pairedTimeReductionPct": {
+          "min": 7.851138972197935,
+          "median": 8.684609242179487,
+          "max": 9.303872911198209
+        },
+        "peakJsBytes": {
+          "min": 2496312,
+          "median": 2496368.0,
+          "max": 2496372
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "semantics-selected": {
+        "compileMillis": {
+          "min": 4255.842,
+          "median": 4309.788500000001,
+          "max": 4328.618
+        },
+        "pairedTimeReductionPct": {
+          "min": 4.527798294277652,
+          "median": 5.5278598806653925,
+          "max": 6.299397748724234
+        },
+        "peakJsBytes": {
+          "min": 2528620,
+          "median": 2528662.0,
+          "max": 2528680
+        },
+        "reactorBytes": [
+          242124
+        ]
+      }
+    }
+  },
+  "settings": "WAVE_BEGIN core=1 cpu_hz=360000000 native_samples=11 calls=256 compile_samples=5",
+  "nativeChecked": null,
+  "coldBlocksUsed": 4,
+  "compileRowsCaptured": 59
+}

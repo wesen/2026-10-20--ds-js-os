@@ -1,0 +1,49 @@
+{
+  "sourceSHA256": "10cd8de064d2d7223d3cb67c52f1c86f8d4bbcb47e30674b74f8cbfa87945654",
+  "lengths": [
+    0,
+    1,
+    7,
+    8,
+    511,
+    1022
+  ],
+  "results": {
+    "early": {
+      "cases": 66,
+      "traps": 36,
+      "steps": 16315,
+      "bytes": 20016,
+      "wasmSHA256": "124d7f793b0acf9c1744c56ccbffb7d953f05e772fc29f24a2ce7ba67502ed51",
+      "rv32SHA256": "a61b4cc873e21ac2f09c846fdc056601025342b43762e5bfa78b26ecc5ee1482",
+      "kept": {
+        "addresses": 0,
+        "literals": 0
+      }
+    },
+    "late": {
+      "cases": 66,
+      "traps": 36,
+      "steps": 11145,
+      "bytes": 13536,
+      "wasmSHA256": "124d7f793b0acf9c1744c56ccbffb7d953f05e772fc29f24a2ce7ba67502ed51",
+      "rv32SHA256": "c5008ae86dedc7bd8cb86d1df19376f922e69ac37051e80b81bb2428f998741a",
+      "kept": {
+        "addresses": 10,
+        "literals": 5
+      }
+    },
+    "selected": {
+      "cases": 66,
+      "traps": 36,
+      "steps": 11589,
+      "bytes": 13752,
+      "wasmSHA256": "124d7f793b0acf9c1744c56ccbffb7d953f05e772fc29f24a2ce7ba67502ed51",
+      "rv32SHA256": "d9691e5af1257901914cd9bc31cd524e09ff4ac7f8f0c2987203cfa7814b82ad",
+      "kept": {
+        "addresses": 2,
+        "literals": 3
+      }
+    }
+  }
+}

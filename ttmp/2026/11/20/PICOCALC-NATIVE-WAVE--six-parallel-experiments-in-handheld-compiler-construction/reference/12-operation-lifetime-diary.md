@@ -100,3 +100,49 @@ Run `scripts/01-bounds/02-heldout.mjs` and `03-host.mjs`. Their combined receipt
 ### Technical details
 
 The late arm retained seven addresses and three ordered literal writers on the director program. Selected retained four addresses and the same three writers. The stock and literal bytes are instructions in this experiment. Separate literal-data lowering is a different study.
+
+## 2026-11-20 — Step 3. Review the physical trial and independent article
+
+### Prompt Context
+
+This study shares one serial visit with bounds admission. The physical deliverables include matched positive native code, real fresh Chess/Editor compilation, and preservation of the installed playable release.
+
+### What I did
+
+I obtained the native words directly from the host-qualified generated program and embedded those exact bytes into flash text. The board executes the usual expanded and retained routines through identical function pointer signatures. In the cold loop the ordinary sandbox records elapsed time and peak JS allocator bytes for each compiler arm. I commissioned a fresh tool-free Opus High article with the actual host and independent physical aggregates and reviewed every technical claim against source.
+
+### Why
+
+The native and cold results have different scopes. The native test starts around repeated calls to code already in flash. The cold sample creates the QuickJS runtime, installs parser services, loads JavaScript, compiles and links, then returns and destroys the isolated context.
+
+### What worked
+
+Both semantic policies improve the small repeated-read routine by roughly 24.5%. Full late lowering improves the literal routine by 16.9% and checked write by 26.2%, compared with 8.5% and 8.7% for selected. All native checks used complete payloads. The director independently measured 231 physical rows on the held-out circuit.
+
+### What didn’t work
+
+The initial independent manuscript incorrectly counted retention of empty literals and assigned the full held-out label difference to address sites despite distinct flash addresses. It also called the earlier independent ROM timer rows cycle measurements. I corrected those passages with the actual frontend, timer, and arm evidence. Operator timing tables are based on the new separate device receipt.
+
+### What I learned
+
+The literal path reloads an address once per chunk in late mode. Chess uses a series of explicit chunks to reconstruct a larger source. Its large code and time reductions are specific to that source, and a real native app response measurement would require a different observable.
+
+### What was tricky to build
+
+The comparison times positive runs and checks results and touched memory after the timer. Cold time includes normal JS teardown and the C output copy. The separate host differential is the qualified trap and memory comparison.
+
+### What warrants a second pair of eyes
+
+Use `typed_p4.c` to inspect the time and allocation scope. Inspect the physical JSON distinction between fixed reactor bytes and host-emitted native text extent. Confirm hashes at the embedded byte slices.
+
+### What should be done in the future
+
+A replay through a separately designed early peephole would resolve the remaining attribution question. A product integration would need separate native app regression and loader qualification.
+
+### Code review instructions
+
+Review the staging and receipts in the bounds lane using `reference/16-reproduce-bounds-and-operation-lifetime.md`. The semantic source and original independent design and article are under `scripts/02-semantics` and `sources/02-semantics`.
+
+### Technical details
+
+Both device lanes used one candidate app. The 280-second host deadline expired with 59 of 60 cold samples and 165 of 165 native timing rows. It missed Editor bounds-selected in the fifth block and the combined device correctness line. Native timers measure 256 calls in each row at nominal 360 MHz. The cold build expects exact reactor byte size per app throughout.

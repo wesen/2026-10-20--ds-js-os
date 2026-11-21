@@ -100,3 +100,49 @@ Run `02-heldout.mjs`, `03-host.mjs` and `06-prior-engine.mjs` using the ticket's
 ### Technical details
 
 The original guarded Editor source has SHA-256 `2931cb22790b7eebf1a29e9071b7e3b17a0ff31dd6e41bedbea7a68e7ed4626f`. It is distinct from the current 69,884-byte Editor build. The old engine's native sizes are 64,856 and 64,840 bytes. The new study uses the normal streamed path and never reaches back to a previous function.
+
+## 2026-11-20 — Step 3. Separate the native and cold compile timings
+
+### Prompt Context
+
+The director requested an independent physical trial of the positive control and fresh compilation, in addition to a separate shared held-out native trial. He handed serial ownership back only after his app and partition readback completed.
+
+### What I did
+
+I staged a private firmware build in the shared warm tree under its build lock. The single firmware carried byte-exact flash text for all five tested positive compiler arms. Under the serial lock I ran eleven rotating blocks of 256 successful native calls per entry point and five rotating fresh-engine compile blocks per app and arm. Three native endpoints checked the delayed guard, ordered UTF-16 literal and scalar write boundaries. Editor and Chess used the same original source and reactor in every arm.
+
+### Why
+
+An isolated timing loop isolates the machine code's local effect. A real cold compile exposes the cost of the admission pass itself and of the rest of the compiler. The generated native test uses no altered runtime allocator or private opcode interpreter.
+
+### What worked
+
+The host-output compare and linked flash text hashes matched every compiled positive arm. Order and selected gave the repeated-read endpoint essentially the same roughly 21% reduction. The literal and scalar write controls were effectively unchanged in the bounds outcomes. The director's separately measured held-out program is byte-identical in all bounds arms and had zero median paired improvement.
+
+### What didn’t work
+
+The first bounds article response offered a status statement and invented paths instead of a manuscript. The CLI had tools disabled and no such files were present. I discarded that statement as evidence and retried from `/tmp` with the exact reproduction paths and an explicit request for complete Markdown on standard output.
+
+### What I learned
+
+A 640-cell debit and a 1.5-second whole-compile cost answer separate questions. Bounded cell charges explain which functions could run the scan. Physical elapsed samples are available from the real QuickJS path with the staged compiler.
+
+### What was tricky to build
+
+The warm tree need not use the recovery app itself. Its artifact has the same Chess and Editor source hashes used in host measurements and uses the normal reactor layout, while the application image has a unique hash and benchmark command. I extracted the five embedded programs from the app's flash segments for bitwise checks.
+
+### What warrants a second pair of eyes
+
+Review the timer scope, call counts and exact payload compares in `board.c`. Bounds analysis on the real application can be mechanically correct and still be a poor default: compare each full compile against its own stock block baseline.
+
+### What should be done in the future
+
+A follow-up can test a smaller proof-producing diagnostic before allocating and scanning maps. That would need its own frozen budget and an independent holdout.
+
+### Code review instructions
+
+Follow `reference/16-reproduce-bounds-and-operation-lifetime.md`. The device runner validates sample counts, status, partition and restored app. The first acquisition timed out at 280 seconds, missing the fifth Editor Selected compile and aggregate correctness marker. The offline receipt excludes UART and preserves the completed 59 cold-compile rows and 165 native timings. Analysis uses four complete paired blocks for both apps.
+
+### Technical details
+
+Physical candidate SHA-256 `5a5629a4e8f11814c5b46045ece9b7d182bacb6254061b6348904f77780346c3`. Code placement uses flash text, with constant input and PSRAM stack outputs. The logged core is 1 at 360 MHz. The candidate's generated code is validated on the host before the physical trial.

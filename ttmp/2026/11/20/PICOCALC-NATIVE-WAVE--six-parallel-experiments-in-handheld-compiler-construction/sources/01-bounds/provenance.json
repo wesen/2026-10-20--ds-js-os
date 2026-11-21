@@ -1,0 +1,40 @@
+{
+  "command": [
+    "claude",
+    "-p",
+    "--model",
+    "opus",
+    "--effort",
+    "high",
+    "--tools",
+    "",
+    "--setting-sources",
+    ""
+  ],
+  "separateInvocations": true,
+  "authorization": "User approved releasing scoped toy compiler material to Anthropic.",
+  "inputs": "Compiler details and aggregate evidence. No raw UART logs or credentials.",
+  "files": {
+    "designPrompt": {
+      "path": "scripts/01-bounds/00-lead-design-prompt.txt",
+      "bytes": 1751,
+      "sha256": "d8c9b8cbda340f3cec654aa754182ab3e788f470428d16febb89a60e16e9490c"
+    },
+    "designResponse": {
+      "path": "sources/01-bounds/01-lead-design.md",
+      "bytes": 21086,
+      "sha256": "095015d01072f5ce6619cadad7f6146134e68e3e507eb1636fa0c5bb55ead15d"
+    },
+    "articlePrompt": {
+      "path": "scripts/01-bounds/10-lead-article-prompt.txt",
+      "bytes": 11500,
+      "sha256": "19a1c478b3db439090938965484024a3cdfc1401f621c4714dc549100cc499bf"
+    },
+    "articleResponse": {
+      "path": "sources/01-bounds/02-lead-article.md",
+      "bytes": 13079,
+      "sha256": "2f14671afebe407551c9644333b58a49809388d2b4d7a6928689b5968922cbe8"
+    }
+  },
+  "articleRetry": "The first invocation supplied a status summary and did not supply a manuscript. The archived response is the independent retry."
+}

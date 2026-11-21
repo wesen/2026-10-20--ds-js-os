@@ -1,0 +1,717 @@
+{
+  "candidate": "5a5629a4e8f11814c5b46045ece9b7d182bacb6254061b6348904f77780346c3",
+  "release": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "restoreReadback": true,
+  "restoredWorlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 2074575,
+    "relocate_us": 1376,
+    "native_us": 2919,
+    "raster_us": 0,
+    "image_bytes": 33840
+  },
+  "nativeBatchCycles": {
+    "repeated": {
+      "stock": [
+        24237,
+        22080,
+        22058,
+        22058,
+        22120,
+        22052,
+        22058,
+        22058,
+        22045,
+        22055,
+        22055
+      ],
+      "bounds-order": [
+        17465,
+        17434,
+        17434,
+        17430,
+        17434,
+        17454,
+        17428,
+        17428,
+        17434,
+        17454,
+        17428
+      ],
+      "bounds-selected": [
+        19526,
+        17432,
+        17436,
+        17430,
+        17430,
+        17430,
+        17430,
+        17428,
+        17430,
+        17428,
+        17430
+      ],
+      "semantics-late": [
+        17974,
+        16669,
+        16658,
+        16657,
+        16657,
+        16654,
+        16657,
+        16657,
+        16657,
+        16654,
+        16657
+      ],
+      "semantics-selected": [
+        16661,
+        16661,
+        16657,
+        16657,
+        16657,
+        16657,
+        16657,
+        16657,
+        16726,
+        16657,
+        16657
+      ]
+    },
+    "literal": {
+      "stock": [
+        23470,
+        21296,
+        21278,
+        21278,
+        21290,
+        21271,
+        21272,
+        21275,
+        21279,
+        21275,
+        21268
+      ],
+      "bounds-order": [
+        22853,
+        21276,
+        21271,
+        21271,
+        21269,
+        21287,
+        21273,
+        21269,
+        21269,
+        21287,
+        21269
+      ],
+      "bounds-selected": [
+        22091,
+        21268,
+        21272,
+        21274,
+        21268,
+        21271,
+        21271,
+        21269,
+        21268,
+        21271,
+        21271
+      ],
+      "semantics-late": [
+        17715,
+        17694,
+        17690,
+        17688,
+        17688,
+        17688,
+        17688,
+        17688,
+        17688,
+        17688,
+        17690
+      ],
+      "semantics-selected": [
+        19495,
+        19481,
+        19469,
+        19469,
+        19470,
+        19469,
+        19469,
+        19469,
+        19482,
+        19470,
+        19469
+      ]
+    },
+    "write": {
+      "stock": [
+        21130,
+        20513,
+        20505,
+        20500,
+        20524,
+        20500,
+        20498,
+        20499,
+        20505,
+        20500,
+        20499
+      ],
+      "bounds-order": [
+        20513,
+        20566,
+        20502,
+        20502,
+        20510,
+        22087,
+        20513,
+        20502,
+        20507,
+        22093,
+        20502
+      ],
+      "bounds-selected": [
+        20509,
+        20507,
+        20502,
+        20502,
+        20502,
+        20507,
+        20502,
+        20502,
+        20502,
+        20507,
+        20502
+      ],
+      "semantics-late": [
+        15128,
+        15124,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120
+      ],
+      "semantics-selected": [
+        18726,
+        18725,
+        18717,
+        18717,
+        18713,
+        18717,
+        18719,
+        18713,
+        18717,
+        18717,
+        18722
+      ]
+    }
+  },
+  "compileSamples": [
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5418353,
+      "peakJsBytes": 3185116,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 6890255,
+      "peakJsBytes": 3185076,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 5325797,
+      "peakJsBytes": 3186052,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 5369907,
+      "peakJsBytes": 3185112,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 3038641,
+      "peakJsBytes": 1947788,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 3192845,
+      "peakJsBytes": 1983756,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 6896672,
+      "peakJsBytes": 3185092,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 5338163,
+      "peakJsBytes": 3185108,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 5359224,
+      "peakJsBytes": 3185132,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 3036970,
+      "peakJsBytes": 1948020,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 3181757,
+      "peakJsBytes": 1983604,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5289287,
+      "peakJsBytes": 3185056,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 5375640,
+      "peakJsBytes": 3185084,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 5378555,
+      "peakJsBytes": 3185100,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 3050113,
+      "peakJsBytes": 1948108,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 3175372,
+      "peakJsBytes": 1983772,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5345390,
+      "peakJsBytes": 3184852,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 6879072,
+      "peakJsBytes": 3185096,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 5369108,
+      "peakJsBytes": 3185096,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 3037446,
+      "peakJsBytes": 1948024,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 3190551,
+      "peakJsBytes": 1983564,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5337648,
+      "peakJsBytes": 3185112,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 6853011,
+      "peakJsBytes": 3185080,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 5397986,
+      "peakJsBytes": 3185080,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 3003662,
+      "peakJsBytes": 1948040,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 3181800,
+      "peakJsBytes": 1983776,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5322199,
+      "peakJsBytes": 3185068,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 6885298,
+      "peakJsBytes": 3185088,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 5381461,
+      "peakJsBytes": 3185104,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 5369546,
+      "peakJsBytes": 3185108,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4547740,
+      "peakJsBytes": 2573860,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 5234732,
+      "peakJsBytes": 2578236,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 4567821,
+      "peakJsBytes": 2578004,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 4644730,
+      "peakJsBytes": 2578296,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 4168529,
+      "peakJsBytes": 2496364,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 4328618,
+      "peakJsBytes": 2528620,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 5241669,
+      "peakJsBytes": 2578316,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 4569008,
+      "peakJsBytes": 2578352,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 4626401,
+      "peakJsBytes": 2578312,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 4181579,
+      "peakJsBytes": 2496312,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 4309979,
+      "peakJsBytes": 2528680,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4596696,
+      "peakJsBytes": 2574220,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 4568538,
+      "peakJsBytes": 2578260,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 4597769,
+      "peakJsBytes": 2578264,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 4159583,
+      "peakJsBytes": 2496372,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 4309598,
+      "peakJsBytes": 2528676,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4513982,
+      "peakJsBytes": 2574208,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 5229477,
+      "peakJsBytes": 2578268,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 4616920,
+      "peakJsBytes": 2578244,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 4119380,
+      "peakJsBytes": 2496372,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 4255842,
+      "peakJsBytes": 2528648,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4541958,
+      "peakJsBytes": 2574252,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 5181322,
+      "peakJsBytes": 2578248,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 4611461,
+      "peakJsBytes": 2578264,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 4141750,
+      "peakJsBytes": 2496252,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 4301004,
+      "peakJsBytes": 2528584,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4610661,
+      "peakJsBytes": 2574244,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 5221180,
+      "peakJsBytes": 2578240,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 4604289,
+      "peakJsBytes": 2578292,
+      "linkedBytes": 242124
+    }
+  ],
+  "nativeChecked": null,
+  "completed": false,
+  "passed": false,
+  "missing": {
+    "world": "editor",
+    "arm": "bounds-selected",
+    "block": 5
+  },
+  "observation": "The original reader's 280s deadline expired before the final result and combined completion check.",
+  "settings": "WAVE_BEGIN core=1 cpu_hz=360000000 native_samples=11 calls=256 compile_samples=5"
+}

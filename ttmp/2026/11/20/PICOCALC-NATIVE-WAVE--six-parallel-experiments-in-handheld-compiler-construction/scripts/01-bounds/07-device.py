@@ -1,5 +1,6 @@
 """Measure native admission and operation lifetime under an approved board handoff, then restore release."""
 import argparse
+from collections import Counter
 import fcntl
 import hashlib
 import importlib.util
@@ -24,33 +25,41 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def bench(console):
-    received = list(console.command("wave12", timeout=10))
-    deadline = time.monotonic() + 280
-    result = {"nativeBatchCycles": {}, "compileSamples": []}
+def observations(result, text):
+    if text.startswith("WAVE_BEGIN"):
+        result["settings"] = text
+    elif text.startswith("WAVE_NATIVE "):
+        _, endpoint, arm, *values = text.split()
+        result["nativeBatchCycles"].setdefault(endpoint, {})[arm] = list(map(int,values))
+    elif text.startswith("WAVE_NATIVE_CHECK "):
+        result["nativeChecked"] = text == "WAVE_NATIVE_CHECK ok"
+    elif match := COMPILE.search(text):
+        world, arm, status, us, heap, size = match.groups()
+        result["compileSamples"].append(
+            {"world":world,"arm":arm,"status":status,"us":int(us),"peakJsBytes":int(heap),"linkedBytes":int(size)})
+    elif text.startswith("WAVE_DONE"):
+        result["completed"] = text == "WAVE_DONE ok"
+        return True
+    return False
+
+
+def bench(console, result, short):
+    received = list(console.command("wave12short" if short else "wave12", timeout=10))
+    deadline = time.monotonic() + 480
+    result.update({"nativeBatchCycles": {}, "compileSamples": []})
     while time.monotonic() < deadline:
         text = received.pop(0) if received else console.line(deadline).decode(errors="replace")
-        if text.startswith("WAVE_BEGIN"):
-            result["settings"] = text
-        elif text.startswith("WAVE_NATIVE"):
-            _, endpoint, arm, *values = text.split()
-            result["nativeBatchCycles"].setdefault(endpoint, {})[arm] = list(map(int,values))
-        elif match := COMPILE.search(text):
-            world, arm, status, us, heap, size = match.groups()
-            result["compileSamples"].append(
-                {"world":world,"arm":arm,"status":status,"us":int(us),"peakJsBytes":int(heap),"linkedBytes":int(size)})
-        elif text.startswith("WAVE_DONE"):
+        if observations(result,text):
             runs = result["nativeBatchCycles"]
             expected = {"stock","bounds-order","bounds-selected","semantics-late","semantics-selected"}
-            from collections import Counter
             observed = Counter((s["world"],s["arm"]) for s in result["compileSamples"])
-            result["passed"] = (text == "WAVE_DONE ok"
+            result["passed"] = (result["completed"] and result["nativeChecked"]
                 and set(runs) == {"repeated","literal","write"}
                 and all(set(arms) == expected and all(len(v)==11 for v in arms.values()) for arms in runs.values())
                 and all(s["status"]=="ok" for s in result["compileSamples"])
                 and set(observed) == {(app,arm) for app in ["chess","editor"] for arm in expected|{"bounds-always"}}
-                and all(v==5 for v in observed.values()))
-            return result
+                and all(v==(1 if short else 5) for v in observed.values()))
+            return
     raise TimeoutError("native wave benchmark did not finish")
 
 
@@ -81,7 +90,7 @@ def run(args):
             board.esp(args,"verify_flash",args.image,"wave-verify")
             ready = connect()
             ready.health()
-            result.update(bench(ready))
+            bench(ready, result, args.short)
             save()
             if not result["passed"]:
                 raise ValueError("wave board evidence failed")
@@ -118,6 +127,7 @@ if __name__ == "__main__":
     cli.add_argument("--port",default="/dev/ttyACM0")
     cli.add_argument("--esptool",type=Path,default=Path("/home/manuel/.espressif/python_env/idf5.4_py3.11_env/bin/esptool.py"))
     cli.add_argument("--preflight",action="store_true")
+    cli.add_argument("--short",action="store_true")
     def interrupted(_signal,_frame):
         raise KeyboardInterrupt
     signal.signal(signal.SIGTERM,interrupted)
