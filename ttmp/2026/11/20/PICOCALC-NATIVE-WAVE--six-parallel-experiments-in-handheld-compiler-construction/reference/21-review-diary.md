@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Original numerical oracle replayed from the maintained compiler.
 ExternalSources: []
 Summary: Chronology of the raw-timing recomputation, control comparisons and review of the six decisions.
-LastUpdated: 2026-11-20T19:24:21-05:00
+LastUpdated: 2026-11-20T19:32:19-05:00
 WhatFor: Reproduce the audit and identify which future device measurements could change the decisions.
 WhenToUse: When revisiting this independent review.
 ---
@@ -78,3 +78,13 @@ The physical edit study times a resident compiler call. Confirm its timer and sa
 ### Review instructions and technical details
 
 For timing, compute `median(100 * (stock_us - candidate_us) / stock_us)` on matched blocks. For the direct treatment comparison, use `median(selected_us - all_late_us)`. Use the ordered first-capture rows to identify the six-arm round per app. Compare the frozen host summary as a parsed object, including code, source and ordered-case hashes. Use the study receipts linked beside each decision in the memorandum.
+
+## Step 3. Audit the completed edit and composition windows
+
+On November 20, 2026, at 19:32 EST, both outstanding sets of device observations were available. I verified their numerical summaries independently, including the comparison of each combined treatment with the matching late-only control. I sent the director the measured body-edit gate failures and the limits on attributing their overhead.
+
+**Prompt context.** The director asked for an audit of the final cells and the generalizations in the revised synthesis, continuing the review in Step 1. I used the original edit receipt and the crossed run in `/tmp/native-wave-cross-physical/physical.json` (candidate image `d1769084…`).
+
+**Method and result.** A local Python calculation keyed edit records by app, edit, arm and block. All 90 keys were unique. Checksums agreed within each cell, and all six paired ratios and all 18 arm medians reproduced. Each repetition reused its fixed parent root. The one fresh Chess build with an empty precise cache took 3.961 s for runtime creation, compiler loading and compilation/linking. Its clock stopped before checksum verification and teardown. The 231 crossed telemetry keys were unique, with matching within-endpoint checksums. All 21 time medians and paired medians and ranges reproduced.
+
+**Review checkpoint.** The component comparison resolves the potential ambiguity in “helped only parsing.” Relative to late-only, adding frameless leaves saved 240–252 µs per parse batch, and adding inlining with frameless leaves saved 360–372 µs. Both comparisons gave zero median change on the two other endpoints. For the cache, both body-edit arms reused the same function counts, which establishes the measured cost of the entire precise implementation. The individual cost of recording and checking dependencies is still unmeasured. Compare the block keys and controls in the [edit summary](../various/04-deps/physical-summary.json) and the [crossed telemetry summary](../various/director/composed/paired-results.json) before generalizing either result.
