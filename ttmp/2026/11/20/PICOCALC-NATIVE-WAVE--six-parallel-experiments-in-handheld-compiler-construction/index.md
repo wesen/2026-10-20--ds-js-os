@@ -9,7 +9,13 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-rv32.js
+      Note: Generates native instructions and fixes function and import calls.
+    - Path: repo://picocalc-os/compiler/typed-wasm.js
+      Note: Checks Typed source and emits the numeric operations examined by the lowering studies.
+    - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-WAVE--six-parallel-experiments-in-handheld-compiler-construction/scripts/director/10-replay-host.sh
+      Note: Reproduces the independent held-out treatments and instruction counts.
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-20T18:54:30.271263216-05:00
@@ -31,6 +37,21 @@ Which compiler decisions improve the complete experience of building, editing an
 | 4 · Incremental dependencies | Compare clean compilation, the global descriptor and a precise per-function invalidation rule. | Edited native output identity, diagnostics, edit latency and retained bytes. |
 | 5 · Stack certificates | Compare an independently checked emitted native stack bound with the compiler's declared bound. | Coverage, certificate size, checking cost and assumptions for imported calls. |
 | 6 · Turn lifetimes | Compare explicit contracts and inference for references whose storage expires on a turn boundary. | Correct classifications across callers, aliases, joins and suspension. |
+
+## Read the research
+
+Start with [What a handheld compiler should remember](analysis/07-what-a-handheld-compiler-should-remember.md) for the common experiment, application results and release recommendations. The six teams used the same current compiler and separate research prototypes.
+
+| Study | Intern guide | Research report | Work diary |
+|---|---|---|---|
+| Selecting bounds proofs | [Admission policy](design-doc/01-select-bounds-analysis-while-streaming.md) | [Where the fixed budget goes](analysis/01-streamed-bounds-admission.md) | [Investigation](reference/11-bounds-admission-diary.md) |
+| Retaining checked operations | [Frontend to RV32](design-doc/02-preserve-checked-operations-to-native-lowering.md) | [Operation lifetime](analysis/02-checked-operation-lifetime.md) | [Investigation](reference/12-operation-lifetime-diary.md) |
+| Leaf functions and inlining | [Register and call conventions](design-doc/03-leaf-functions-and-selective-inlining.md) | [Generated Chess execution](analysis/03-leaf-lowering-and-selective-inlining.md) | [Investigation](reference/13-leaf-lowering-diary.md) |
+| Dependency tracking | [Invalidation and relinking](design-doc/04-precise-fragment-dependencies.md) | [Edit evidence](various/04-deps/clean-fragments.json) | [Investigation](reference/14-dependency-reuse-diary.md) |
+| Stack-use certificates | [Claims and independent checks](design-doc/05-stack-use-certificates.md) | [Stack bounds and rejected candidate](analysis/05-stack-use-certificates.md) | [Investigation](reference/15-stack-certificates-diary.md) |
+| Buffer lifetimes | [Borrowed values across turns](design-doc/06-infer-turn-lifetime-parameters.md) | [Inferred continuation lifetimes](analysis/06-turn-lifetime-inference.md) | [Investigation](reference/16-turn-lifetime-diary.md) |
+
+The [six-guide reMarkable book](various/director/remarkable.json) is filed under `/ai/2026/11/20/PICOCALC-NATIVE-WAVE`. The [first physical matrix](various/director/paired-results.json) measures the guest after compilation. The [balanced fresh-compiler comparison](various/01-bounds/physical-first-summary.json) measures time spent producing a complete native world.
 
 ## Shared evaluation
 
