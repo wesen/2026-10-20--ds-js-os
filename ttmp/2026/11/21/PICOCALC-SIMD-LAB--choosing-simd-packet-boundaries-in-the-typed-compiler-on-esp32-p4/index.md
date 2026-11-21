@@ -1,7 +1,7 @@
 ---
 Title: Choosing SIMD packet boundaries in the Typed compiler on ESP32-P4
 Ticket: PICOCALC-SIMD-LAB
-Status: active
+Status: complete
 Topics:
     - compiler
     - performance
@@ -11,8 +11,8 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: "Six physical and compiler experiments on packet boundaries, legality, layout and held-out prediction."
-LastUpdated: 2026-11-21T16:31:19.984888317-05:00
+Summary: Six physical and compiler experiments on packet boundaries, legality, layout and held-out prediction.
+LastUpdated: 2026-11-21T17:15:09.118107833-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

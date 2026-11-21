@@ -1,0 +1,22 @@
+{
+  "repository": "go-go-golems/go-go-parc",
+  "branch": "main",
+  "verifiedRemoteCommit": "c0180a68473d660448dd76492acefb7b3efdd596",
+  "notesAndAssets": [
+    "Projects/2026/11/21/ARTICLE - PicoCalc SIMD Lab - Following a SIMD Decision to Executed Instructions.md",
+    "Projects/2026/11/21/ARTICLE - PicoCalc SIMD Lab - Independent Replication of Frames and Effect Order.md",
+    "Projects/2026/11/21/ARTICLE - PicoCalc SIMD Lab - Independent Review of the Compiler Measurements.md",
+    "Projects/2026/11/21/ARTICLE - PicoCalc SIMD Lab - Instruction Scheduling and Exact Narrowing for a Ray Row.md",
+    "Projects/2026/11/21/ARTICLE - PicoCalc SIMD Lab - Particle Layouts and Contact Scheduling.md",
+    "Projects/2026/11/21/ARTICLE - PicoCalc SIMD Lab - Where an Eight-Lane Compiler Should Return to Scalar Code.md",
+    "Projects/2026/11/21/_assets/picocalc-simd-lab-packet-boundaries.png",
+    "Projects/2026/11/21/_assets/picocalc-simd-lab/01-boundary.js",
+    "Projects/2026/11/21/_assets/picocalc-simd-lab/02-ray-packets.js",
+    "Projects/2026/11/21/_assets/picocalc-simd-lab/03-instruction-evidence.js",
+    "Projects/2026/11/21/_assets/picocalc-simd-lab/04-physics.js",
+    "Projects/2026/11/21/_assets/picocalc-simd-lab/05-independent-review.js",
+    "Projects/2026/11/21/_assets/picocalc-simd-lab/06-frame-replication.js"
+  ],
+  "service": "127.0.0.1:3794",
+  "workbookSession": "session-b0cfa51a-1d3d-45e5-b069-4795fd7bddb0"
+}

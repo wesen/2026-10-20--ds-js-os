@@ -180,3 +180,59 @@ Review `typed-pie-loops.js` with the byte-locked regression test, then compare `
 ### Technical details
 
 The best integrated choice adds 24 bytes to the measured row. The complete image digest is `9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f`. The whole-frame witness checks a 32-bit FNV-1a per output plane and end sentinels; host tests compare complete visible memory. The frame timer excludes output validation, workspace initialization, serial logging and display presentation.
+
+## Step 4: Publish the research and answer the direct C comparison
+
+The director, three Opus High researchers, an independent Opus reviewer and an Astra examiner produced six articles. The examiner independently repeated the paired frame calculations and generated a separate Typed input with live values, spills and a trap following a write. I added runnable report-specific JavaScript and requested a fourth physical experiment when the user asked for the current C comparison.
+
+### Prompt Context
+
+**User prompts (verbatim):** “do the reports include the repl commands JS scripts?” and “how fast is our raytracer compared to the C version?” The user also confirmed “Upload the five guides”.
+
+**Assistant interpretation:** Include a usable command, a complete query and its saved source with each article. Obtain a directly paired answer for the compiler's current image and publish the actual measurements. **Inferred user intent:** Enable researchers to rerun each result, learn from the compiler work, and understand the current product gap.
+
+**Commit (code):** `140b2a9` records the ray research; `548348b` adds six tested in-article cells; `3d40a97` records the new C comparison in the report and live worksheet. The vault's verified remote commit is `c0180a68473d660448dd76492acefb7b3efdd596`.
+
+### What I did
+
+1. Reviewed the departments' articles against their scripts and independent measurements. Recorded the failed attempt at the outcome-review article and recovered the successful resubmission's public JSON correctly even though it included introductory and trailing prose. The protocol and results review each retain the author's verifiable queries.
+2. Commissioned a separate examiner and corrected the number of distinct primary inputs. Made the units explicit on each frame and length summary record. Summed matched class-microbenchmark timings by scene and block. Counted the opening 50,400 negative-row iterations from board fixture bytes. Replayed the numerical researcher's 458,752-case saturation oracle.
+3. Added one standalone JS file per article. The shell command opens a fresh stateful workbench and feeds the file into `go run ./cmd/trace-repl eval`. Executed every cell against a separate session and checked its result. I also fed all six through the actual CLI and compared their JSON values with the saved replies. After adding the C treatment I repeated the six session checks and explicitly ran the updated director file through the CLI. The final director sandbox is `session-b0cfa51a-1d3d-45e5-b069-4795fd7bddb0` on `127.0.0.1:3794`.
+4. Published all articles, the actual JS sources and the chart to `go-go-parc`. Verified the remote main hash using `git ls-remote origin refs/heads/main` and confirmed a clean vault. The five design guides were separately uploaded to the user's authorized reMarkable folder. The service returned `OK: uploaded Choosing SIMD Packet Boundaries on the ESP32-P4 - Design Guides.pdf -> /ai/2026/11/21/PICOCALC-SIMD-LAB`.
+5. Compared the exact supported Typed image with optimized production C and hand-PIE C in six treatment orders, on twelve fixture labels, with complete-frame and primary entry points. The operator verified each actual output byte against the scalar reference, including padding and guards; the independent Wasm output checks were also applied. I independently parsed the 432 raw rows and obtained identical medians and ratio ranges. The final diagnostic was replaced with the verified playable application and partition table.
+
+### Why
+
+Historical C timings differ across builds. Dividing the most recent Typed time by a C time from a previous firmware gave an approximate answer that understated both directly paired ratios. Same-run controls answer the user's actual question.
+
+### What worked
+
+On the opening frame the new unmodified-source Typed image took 55.718 ms, scalar C took 7.9015 ms and C with the PIE row took 6.806 ms. The median paired Typed/C ratios were 7.0523 and 8.1874. On the primary entry they were 3.3063 and 4.2950. The final health check saw the original playable image SHA-256 `e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5` and all eight worlds.
+
+### What didn't work
+
+The initial reMarkable upload was held by automatic review because the current lab commission named the vault; the user explicitly requested the five-guide upload and the next attempt succeeded. The standalone class-cost model also failed to predict the sign of the whole hand-row comparison on opening and dense. The article publishes those failures alongside the positive results.
+
+### What I learned
+
+The compiler-only experiment and the fastest earlier rewritten-Typed program answer different questions. The earlier combination of projected sphere spans, scheduled shadow rows and specialized division produced 29.975 ms and needs its own paired C controls. The full C gap includes workspace and control-flow differences. The next compiler study should isolate a general, legal way to skip sphere rows or retain loop invariants.
+
+### What was tricky to build
+
+Benchmark counts, ratios, reciprocal throughput and end-to-end display times have different units. I kept the raw phase and arm in each programmatic result and tested the JS cells against the published values. The example code in the vault is also linked as a separate local asset. Both the ticket and the vault can be read independently.
+
+### What warrants a second pair of eyes
+
+The single physical target and fixed placement of each linked arm bound the conclusions. Current C scratch uses its normal stack and Typed scratch uses its usual external buffer. This comparison measures those real implementations together. It does not identify one isolated cause of the difference.
+
+### What should be done in the future
+
+Add a separate proof for whole-row elimination and test it against plain scalar, empty-packet and hand-scheduled controls, including a first-invalid-access case. Freeze a second physics or collision workload before fitting a new cost model.
+
+### Code review instructions
+
+Open the published synthesis first, then run the included `01-boundary.js` cell in a fresh session. Verify source and code fingerprints, compare physical raw records in `various/ray/typed-vs-c-rows.json` with the matched scorer, and follow the separate operator and reader diaries. All ephemeral firmware and publication staging can be regenerated from the checked-in sources.
+
+### Technical details
+
+The design delivery is a single cloud PDF containing the five guides in order. The Git publication contains six Markdown files, six standalone JavaScript files and one PNG. Scalar C and C PIE preserved their own scratch behavior, sharing PSRAM output and timed output contract with Typed. The final report distinguishes on-device compile milliseconds, render-to-memory microseconds, cycles per packet, executed guest instructions and static code bytes.
