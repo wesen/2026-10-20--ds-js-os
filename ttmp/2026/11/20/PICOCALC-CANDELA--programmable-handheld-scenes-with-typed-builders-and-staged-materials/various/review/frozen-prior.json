@@ -1,0 +1,65 @@
+{
+  "firmware": "efc938724492f1de8f2a0911abd05d09e8692b80872f5da707da1f92dd08a0c9",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "revision": "3a67c10e998914c6fd6c036e25ce71f40a19b8a1",
+  "priorPhysicalHandoff": {
+    "appSHA256": "efc938724492f1de8f2a0911abd05d09e8692b80872f5da707da1f92dd08a0c9",
+    "visible": "Ray Tracer",
+    "state": "idle",
+    "engine": "js",
+    "bodySha256": "79a70f60ff7f2d1d43b6222d102efdc33a594f77ac11c4ca476bb77fd1ec8025",
+    "scene": [
+      68,
+      61,
+      31,
+      25
+    ],
+    "qualifiedOpeningConfirmed": true
+  },
+  "screens": [
+    {
+      "label": "default",
+      "scene": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "actualCRC": "4b91a3c8",
+      "pngSHA256": "e754f4272592043103b929b3805ac6c98d1eb6abd7b816894dc3a6c82a8a2342"
+    },
+    {
+      "label": "sphere-right",
+      "scene": [
+        76,
+        61,
+        31,
+        25
+      ],
+      "actualCRC": "fa6be88f",
+      "pngSHA256": "83c89ec77f09e7bb083c1826d5e9dcadc05742a45c1143506f60777453d0d956"
+    },
+    {
+      "label": "light-up",
+      "scene": [
+        76,
+        61,
+        31,
+        17
+      ],
+      "actualCRC": "e2bcc3b5",
+      "pngSHA256": "f286bff7c6aa7096b5a2fc658c323f75dce5bd57450e1598a60e7614b590cc2c"
+    },
+    {
+      "label": "reset",
+      "scene": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "actualCRC": "4b91a3c8",
+      "pngSHA256": "e754f4272592043103b929b3805ac6c98d1eb6abd7b816894dc3a6c82a8a2342"
+    }
+  ]
+}
