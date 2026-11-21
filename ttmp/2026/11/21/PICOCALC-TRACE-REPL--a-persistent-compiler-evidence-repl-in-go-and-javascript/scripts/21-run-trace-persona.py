@@ -17,7 +17,7 @@ def request(url, method):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("card", choices=["catalog", "pass", "ablation", "allocator"])
+    p.add_argument("card", choices=["catalog", "pass", "ablation", "allocator", "optimization"])
     p.add_argument("receipt", type=Path)
     p.add_argument("--port", default=3791, type=int)
     p.add_argument("--build", required=True, help="Git revision or binary SHA for the serving process")

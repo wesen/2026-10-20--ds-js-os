@@ -56,3 +56,17 @@ For each card, compare the final numerical answers with the supervisor's key, id
 Read failed actions in sequence. Record the first guess, exact reply and next action. Classify the finding as a harness error, archive defect, evaluator defect, API discoverability problem, missing scientific observation, or erroneous persona interpretation. Prioritize a demonstrated incorrect result over the number of wasted calls. Reproduce the issue with the smallest query at the normal entry point, write a regression case and record its result. Log cases contradicted by the replay.
 
 Repeat an affected card in a fresh VM and a fresh Pi session. Keep its wording, inputs and call budget identical. The tester's independent result matters even when a subsequent persona avoids the formerly failing sequence. Counts across a single run per role are descriptive. To estimate whether a change improves an agent population, repeat each version multiple times, pair by scenario, and include an unused scenario and model. Conclude a round with fixed findings, open findings and unreproduced claims.
+
+## Protocol revision after the task was clarified
+
+The three discovery cards and the reserved register-rewriter card remain frozen. The additional “optimization” card asks a researcher to decide whether to prototype a two-register temporary cache. This addition addresses a different outcome from successful lookup. Score the five following properties individually from the final answer and its query trace. Mark an unasked item in earlier cards as “not elicited”.
+
+| Property | Observable condition |
+|---|---|
+| Measured premise | A returned query or receipt establishes a relevant numeric claim with its unit, region and workload. |
+| Mechanism | The investigator explains how the proposed lowering or analysis could change generated operations on this workload. |
+| Discriminating evidence | The investigator identifies an observation that would separate the preferred mechanism from an alternative, such as loads of recurrent temporary slots versus mandatory saves around calls. |
+| Controlled validation | A proposed replay changes the compiler mechanism while fixing source, input and target. It includes output equivalence and measures the relevant unit. |
+| Refutation | The proposal identifies a concrete outcome that would reverse the recommendation or narrow its applicability. |
+
+A claim about a prospective change stays a hypothesis until that change is executed in an appropriate matched experiment. A tool can help a researcher design such an experiment even when its current captures cannot validate the change. Report these two achievements separately.

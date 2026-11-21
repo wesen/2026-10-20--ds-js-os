@@ -43,7 +43,10 @@ def read_ground_truth():
     assert hashlib.sha256(backend).hexdigest() == manifest["checked"]["backend"]["sha256"]
     backend_index = json.loads(gzip.decompress((pipeline / "checked-backend.index.json.gz").read_bytes()))
     positions = [i for i, event in enumerate(backend_index) if "Virtual Register Rewriter" in event["header"]]
+    stock = json.loads((base / "passes/typed-counts.json").read_text())["stock"]["totals"]
     return {
+        "optimization": {"stockInstructions":stock["instructions"],
+                         "stockMemoryOps":stock["stackLoads"] + stock["stackStores"]},
         "allocator": {"first": positions[0], "last": positions[1], "property":"NoVRegs"},
         "catalog": {"overall": sum(p["dumps"] for v in manifest.values() for p in v.values()),
                     "checkedMiddle": manifest["checked"]["middle"]["dumps"],
