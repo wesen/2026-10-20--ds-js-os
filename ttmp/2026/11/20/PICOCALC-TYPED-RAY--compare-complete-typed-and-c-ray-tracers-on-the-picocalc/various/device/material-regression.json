@@ -1,0 +1,56 @@
+[
+  {
+    "fixture": 0,
+    "weight": 0,
+    "first": 0,
+    "mixedUs": 28839,
+    "typedUs": 71295,
+    "crc": "9966f38b",
+    "equal": 1
+  },
+  {
+    "fixture": 0,
+    "weight": 128,
+    "first": 0,
+    "mixedUs": 28790,
+    "typedUs": 71321,
+    "crc": "4cb3abc8",
+    "equal": 1
+  },
+  {
+    "fixture": 0,
+    "weight": 256,
+    "first": 0,
+    "mixedUs": 28807,
+    "typedUs": 71311,
+    "crc": "a8ef101b",
+    "equal": 1
+  },
+  {
+    "fixture": 1,
+    "weight": 64,
+    "first": 0,
+    "mixedUs": 18166,
+    "typedUs": 60633,
+    "crc": "c4d23465",
+    "equal": 1
+  },
+  {
+    "fixture": 1,
+    "weight": 73,
+    "first": 0,
+    "mixedUs": 18349,
+    "typedUs": 60843,
+    "crc": "01f1a48a",
+    "equal": 1
+  },
+  {
+    "fixture": 1,
+    "weight": 128,
+    "first": 0,
+    "mixedUs": 17813,
+    "typedUs": 60245,
+    "crc": "1561316d",
+    "equal": 1
+  }
+]

@@ -89,7 +89,7 @@ The first archived build named a newly created generator file that existed in th
 
 ### What I learned
 
-The proposed independent [Opus High research design](../various/commission/measurement.md) explains that terminal checks and differing buffer traffic are central measurement confounders. The physical protocol takes its matched-input, independent intermediate and rotated-order suggestions. It records hardware core-cycle deltas and elapsed microseconds on a pinned kernel task. All variants share a fixed data layout within a block. The study samples a single binary placement per configuration.
+The proposed independent [Opus High research design](../various/commission/03-measurement-design.md) explains that terminal checks and differing buffer traffic are central measurement confounders. The physical protocol takes its matched-input, independent intermediate and rotated-order suggestions. It records hardware core-cycle deltas and elapsed microseconds on a pinned kernel task. All variants share a fixed data layout within a block. The study samples a single binary placement per configuration.
 
 ### What was tricky to build
 
@@ -156,3 +156,51 @@ Read [all raw fixed clocks](../various/device/rows.json), [the median reducer](.
 ### Technical details
 
 The first accepted matrix used exact production revision 03db803388c88fe51a78cfd534777b8590d4ffdc and application fc4f0302259a533a4c5ad75a791ebf2735db19e4059e93cce15ba987f043513c. The previous Candela binary was preserved independently. All three candidate RGB565 viewports and the classic reset matched the same references used for the original release.
+
+## Step 4. Isolate shadows from material evaluation on the same visible hits
+
+### Prompt Context
+
+**User prompt (verbatim)** “Then measure intersections, shadows, material evaluation and the whole frame separately.” **Assistant interpretation** Supply the same real winning materials and visibility masks to two isolated kernels. **Inferred user intent** Distinguish shadow geometry from expression evaluation without disturbing the clean unit. **Commit (code)** eebb722 contains phase entries and independent oracles; 2b00101 wraps the physical release and regressions.
+
+### What I did
+
+I preserved the verified prior fixed-matrix app as an independent rollback binary, built the director's four-entry diagnostic module and flashed only the application. The test prepared row geometry once, warmed each phase, executed the device-timed shadow and material kernels, and compared the resulting full-mask and unlit-color CRCs to an independent Python oracle. After collecting all 36 samples it repeated six complete material frames and all nine fixed programs at the default pose.
+
+### Why
+
+The warm frame includes lights, material shading, shadow geometry, pixel quantization and stores. Separate clocks with real visible masks make the contributions intelligible. Reusing the full fixture graph avoids creating a probe in which the shadow or color decision is artificially trivial.
+
+### What worked
+
+Both fixture families and all six weights produced the reference mask: 3,339 shadowed visible floor pixels. The shadow pass medians were 24.570 ms (shared) and 24.573 ms (tile). The actual Typed unlit material medians were 20.327 and 9.720 ms. All 36 shadow and material checks passed, as did all six complete-frame regressions and all nine fixed clean/audit/primary/shade regressions.
+
+### What didn't work
+
+It would be incorrect to treat these independent pass times as a literal decomposition of clean frame latency. They execute 160 module calls per pass, materialize intermediate rows and omit downstream illumination and packing. Their cache access pattern differs from the streaming clean program.
+
+### What I learned
+
+Changing only the material weight preserved the diagnostic shadow stream across all six combinations. The shader's optimized canonical tile row produced substantially lower material-clock times under identical geometry.
+
+### What was tricky to build
+
+The first full matrix used a prior ordinary image. Updating a reused build tree while the first runner still needed its final flash readback would break the release audit. The second build ran only after the first verified reboot and handoff. The prior app and table were copied to independent paths before any build directory reuse.
+
+### What warrants a second pair of eyes
+
+The phase receipt covers all unlit channels via a CRC on the P4 and direct complete-byte host checks. The full frame probes use on-device byte-for-byte comparison before hashing. Preserve that distinction when interpreting agreement probabilities.
+
+### What should be done in the future
+
+Repeat on a second board or with different code placement before interpreting sub-percent effects. A more general material graph can test whether row-specialization speedups persist with composed or user-defined operators.
+
+### Code review instructions
+
+Read [phase guest entries](../../../../../../picocalc-os/worlds/raytrace/material-phases.typed), the [independent CRC construction and serial replay](../scripts/director/phase-check.py) and the [release and regression runner](../scripts/device/05-phase-device.py).
+
+### Technical details
+
+Physical probe revision 2b001015f21fac8314e942298e65cbdd31d30b78. The 4,633,344-byte application is db17ab6adbcfa32e6a64a311b434562b1f35c12aa415f1ba8a4e838b6386764c. Both builds retained the partition table with SHA-256 72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30. No client filesystem file was changed by these tests.
+
+The final runner exited successfully, verified the 4,633,344-byte application and unchanged partition by readback, rebooted and left the actual complete Typed opening scene visible. The actual guest display counter was 1, program 0, pose (68,61,31,25); the 57,600 viewport pixels matched the accepted prior image byte for byte. [Final handoff](../various/device/final.json) [Unaltered physical screen](../various/device/handoff.png)
