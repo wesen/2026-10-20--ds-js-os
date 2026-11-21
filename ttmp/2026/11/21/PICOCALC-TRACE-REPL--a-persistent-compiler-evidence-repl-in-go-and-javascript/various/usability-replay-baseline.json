@@ -1,0 +1,33 @@
+{
+  "build": "d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4",
+  "examples": [
+    {
+      "source": "q.run(profiles.arm(\"checked-llc-nolsr\").describe())",
+      "reply": {
+        "ok": false,
+        "error": "QueryError: [notAPlan] q.run expects a plan (from a.events(), q.ir\u2026, profiles\u2026, q.bundle\u2026); got object\n  fix: q.run(a.events().count()) at QueryError (trace/query.js:13:15(22))"
+      }
+    },
+    {
+      "source": "profiles.arm(\"checked-llc-nolsr\").describe().arm",
+      "reply": {
+        "ok": true,
+        "value": "checked-llc-nolsr"
+      }
+    },
+    {
+      "source": "q.help(\"profiles\")",
+      "reply": {
+        "ok": true,
+        "value": "Execution summaries: dynamic totals of executed work (not static sites). Sources: execution, typed, metrics (q: profiles.sources()).\n  profiles.arms()      profiles.arm(\"checked-gcc\").describe()      profiles.workloads()      profiles.regions()\n  q.run(profiles.arm(\"checked-gcc\").region(\"row\").workload(\"opening-160-rows\").total(\"instructions\"))\n  stock = profiles.arm(\"typed-stock\").region(\"row\").workload(\"opening-160-rows\")\n  q.run(q.add(stock.total(\"stackLoads\"), stock.total(\"stackStores\")).label(\"direct stack accesses\"))\nTyped-summary entries are arms with the prefix \"typed-\" (typed-stock = typed[\"stock\"]). Workload \"opening-160-rows\" is verified by rowsVerified === 160.\nArms now: checked-gcc, checked-gcc-noiv, checked-llc, checked-llc-nolsr, checked-llvm, unchecked-gcc, unchecked-gcc-noiv, unchecked-llc, unchecked-llc-nolsr, unchecked-llvm, typed-pie, typed-scalar, typed-stock"
+      }
+    },
+    {
+      "source": "q.help(\"errors\")",
+      "reply": {
+        "ok": true,
+        "value": "Errors are thrown as \"[code] message\\n  fix: \u2026\". Codes: unknownVariant unknownPhase unknownFunction unknownOpcode unknownProperty\nunknownArm unknownRegion unknownWorkload unknownTotal unknownMatchKey unknownField unknownTopic ordinalOutOfRange notInSelection\nambiguousStream ambiguous noEvent needFunction functionMismatch notAPlan badArgument badType typeError incompatibleUnits\nincompatibleScope doubleCount percentBaselineRequired undeclaredParam unboundParam badBinding unsupported noBridge bridge.\nScientific gaps are NOT errors: they come back as results with status absent / unavailable / unsupported and a reason."
+      }
+    }
+  ]
+}

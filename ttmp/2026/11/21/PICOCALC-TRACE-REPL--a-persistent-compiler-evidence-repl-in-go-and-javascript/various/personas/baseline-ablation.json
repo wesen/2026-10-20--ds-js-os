@@ -1,0 +1,191 @@
+{
+  "provider": "lunaroute",
+  "model": "deepseek-4.1-flash",
+  "thinking": "high",
+  "card": "ablation",
+  "build": "d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4",
+  "limit": 14,
+  "steps": [
+    {
+      "tool": "trace_eval",
+      "source": "q.help()",
+      "reply": "{\"ok\":true,\"value\":\"q — compiler-evidence queries over the PicoCalc LLVM row archive (release 0.1.0). Globals: q, a (archive), profiles.\\nPlans are lazy; evaluate synchronously with q.run(plan) or plan.run(). Results are plain objects with status, unit and witnesses.\\n  q.run(a.events().count())                                  // all header records, with byStream\\n  run = a.variant(\\\"checked\\\"); row = run.function(\\\"row\\\"); middle = row.timeline(\\\"middle\\\")\\n  q.run(run.events(\\\"middle\\\").at(74).select(\\\"ordinal\\\", \\\"header\\\", \\\"ref\\\"))\\n  hdr = q.ir.instructions().opcode(\\\"load\\\").resultType(\\\"i32\\\").pointer(row.argument(0)).count()\\n  q.run(hdr.at(middle.at(74).after))                         // static sites, with witnesses\\n  q.run(middle.measure(hdr).changes().where(c =\\u003e c.status === \\\"known\\\" \\u0026\\u0026 c.delta \\u003c 0).first())\\n  q.run(profiles.arm(\\\"checked-gcc\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\").total(\\\"instructions\\\"))\\nTopics: q.help(\\\"events\\\" | \\\"timeline\\\" | \\\"states\\\" | \\\"metrics\\\" | \\\"changes\\\" | \\\"machine\\\" | \\\"profiles\\\" | \\\"compare\\\" | \\\"capabilities\\\" | \\\"params\\\" | \\\"results\\\" | \\\"errors\\\" | \\\"cache\\\").\\nEvery object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1329,
+        "fullReplySHA256": "64d75262ad687acc794a2139f7b685a2f4495da80f691b1d72fd41be12099768",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[q.help(\"compare\"), q.help(\"profiles\")]",
+      "reply": "{\"ok\":true,\"value\":[\"q.bundle({ name: plan, … }) keeps outputs separate. q.add(t1, t2) sums disjoint categories of one dimension and scope.\\nq.compare(before, after) → delta (counts), equal/transition (booleans), matchedOn; .matchOn(keys…), .percentChange({ denominator: \\\"before\\\"|\\\"after\\\" }), .asEndpoints().\\n  q.run(q.compare(total(\\\"checked-llc-nolsr\\\"), total(\\\"checked-llc\\\")).matchOn(\\\"workload\\\", \\\"region\\\", \\\"checkedContract\\\", \\\"unit\\\").percentChange({ denominator: \\\"before\\\" }))\\n  q.run(q.compare(np.at(machine.at(74).after), np.at(machine.at(78).after)).asEndpoints())   // interval + intervening events\\nMatch keys: workload, region, checkedContract, unit, metric, function, phase, variant, stream. A mismatch → status incomparable, delta null. percentChange on booleans → [typeError].\\nq.explain(plan) lists plan nodes, inputs and shared consumers.\",\"Execution summaries: dynamic totals of executed work (not static sites). Sources: execution, typed, metrics (q: profiles.sources()).\\n  profiles.arms()      profiles.arm(\\\"checked-gcc\\\").describe()      profiles.workloads()      profiles.regions()\\n  q.run(profiles.arm(\\\"checked-gcc\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\").total(\\\"instructions\\\"))\\n  stock = profiles.arm(\\\"typed-stock\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\")\\n  q.run(q.add(stock.total(\\\"stackLoads\\\"), stock.total(\\\"stackStores\\\")).label(\\\"direct stack accesses\\\"))\\nTyped-summary entries are arms with the prefix \\\"typed-\\\" (typed-stock = typed[\\\"stock\\\"]). Workload \\\"opening-160-rows\\\" is verified by rowsVerified === 160.\\nArms now: checked-gcc, checked-gcc-noiv, checked-llc, checked-llc-nolsr, checked-llvm, unchecked-gcc, unchecked-gcc-noiv, unchecked-llc, unchecked-llc-nolsr, unchecked-llvm, typed-pie, typed-scalar, typed-stock\"]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1810,
+        "fullReplySHA256": "63dd573498764954e75299de161bcd352551fcd1b9e24f10ba8f672caa1106fe",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[q.help(\"metrics\"), q.help(\"changes\")]",
+      "reply": "{\"ok\":true,\"value\":[\"Static IR metrics (unit: static instruction sites) evaluated on one function snapshot.\\n  m = q.ir.instructions().opcode(\\\"load\\\").resultType(\\\"i32\\\").pointer(row.argument(0)).count()\\n  q.run(m.at(middle.at(74).after))      q.run(m.at(loopPrint.after).requireCoverage(\\\"function\\\"))\\n  q.run(q.ir.instructions().opcode(\\\"alloca\\\", \\\"phi\\\").sites().at(state))     // the matching lines themselves\\n  q.run(state.instructions().opcode(\\\"load\\\").pointer(row.argument(0)).uses().select(\\\"userOpcode\\\", \\\"operandIndex\\\", \\\"ref\\\"))\\npointer(v): row.argument(i) (resolved per snapshot from the define line) or a global \\\"@g\\\". Printed \\\"%x\\\" names are refused.\\nresultType: derived for load, binary ops, casts, cmp (i1), phi, select, freeze, alloca, gep, call; other forms → unsupported.\\nRecognized body lines: labels, #dbg_* records, instructions. Opcodes: ret br switch indirectbr invoke callbr resume unreachable cleanupret catchret catchswitch fneg add fadd sub fsub mul fmul udiv sdiv fdiv urem srem frem shl lshr ashr and or xor extractelement insertelement shufflevector extractvalue insertvalue alloca load store fence cmpxchg atomicrmw getelementptr trunc zext sext fptrunc fpext fptoui fptosi uitofp sitofp ptrtoint inttoptr bitcast addrspacecast icmp fcmp phi select freeze call va_arg landingpad catchpad cleanuppad\\nOpaque-pointer IR only; an unrecognized line makes the snapshot unsupported (never a silent zero).\",\"timeline.measure(metric) → one row per event: ordinal, pass, status, value, reason, coverage, unit, ref.\\n.changes() → lazy rows: ordinal, pass, from, fromPass, before, after, delta, changed, status, reason, unit, ref (+ skipped, endpointDelta for gaps).\\nstatus: known (adjacent full prints) · first · unavailable (this print) · unknown (previous print unavailable; predecessor reset) · gap (rows not adjacent in the function timeline).\\n  q.run(middle.measure(hdr).changes().where(c =\\u003e c.status === \\\"known\\\" \\u0026\\u0026 c.delta \\u003c 0).first())\\n  q.run(middle.measure(hdr).changes().table(\\\"ordinal\\\", \\\"pass\\\", \\\"before\\\", \\\"after\\\", \\\"delta\\\", \\\"status\\\"))\\nFiltering before differencing changes the question: middle.where(e =\\u003e e.pass === \\\"EarlyCSEPass\\\").measure(hdr).changes() yields gaps.\"]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 2271,
+        "fullReplySHA256": "89e937a89d210a5c341c5148d6fdcfd5e14907c2d6f13b53939e6b722686b9f1",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.run(profiles.arm(\"checked-llc-nolsr\").describe())",
+      "reply": "{\"ok\":false,\"error\":\"QueryError: [notAPlan] q.run expects a plan (from a.events(), q.ir…, profiles…, q.bundle…); got object\\n  fix: q.run(a.events().count()) at QueryError (trace/query.js:13:15(22))\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 207,
+        "fullReplySHA256": "ea858162bee3a0d9c78d9e7d22055eff8a649110d761c46a19479ebfd33cf169",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.run(profiles.arm(\"checked-llc\").describe())",
+      "reply": "{\"ok\":false,\"error\":\"QueryError: [notAPlan] q.run expects a plan (from a.events(), q.ir…, profiles…, q.bundle…); got object\\n  fix: q.run(a.events().count()) at QueryError (trace/query.js:13:15(22))\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 207,
+        "fullReplySHA256": "ea858162bee3a0d9c78d9e7d22055eff8a649110d761c46a19479ebfd33cf169",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[profiles.arm(\"checked-llc-nolsr\").describe(), profiles.arm(\"checked-llc\").describe()]",
+      "reply": "{\"ok\":true,\"value\":[{\"arm\":\"checked-llc-nolsr\",\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\"},\"totals\":{\"instructions\":1275560,\"stackLoads\":0,\"stackStores\":0},\"rowsVerified\":160,\"rowBytes\":268,\"sampleKeys\":[\"0\",\"61\",\"109\"],\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"otherFields\":[]},{\"arm\":\"checked-llc\",\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\"},\"totals\":{\"instructions\":1233611,\"stackLoads\":320,\"stackStores\":320},\"rowsVerified\":160,\"rowBytes\":296,\"sampleKeys\":[\"0\",\"61\",\"109\"],\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"otherFields\":[]}]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 782,
+        "fullReplySHA256": "d9baaa5ab240b049251e69154e627d8097c054a97adeb8c435e95ef28fa6571b",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.run(profiles.arm(\"checked-llc-nolsr\").region(\"row\").workload(\"opening-160-rows\").total(\"instructions\"))",
+      "reply": "{\"ok\":true,\"value\":{\"kind\":\"total\",\"status\":\"available\",\"arm\":\"checked-llc-nolsr\",\"metric\":\"instructions\",\"value\":1275560,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc-nolsr\\\"].totals.instructions\"}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 775,
+        "fullReplySHA256": "6e22554d6dce3d6649c0f7c5c24210d2a76eecfa1af73a9a3f510ac6ea5749fc",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "before = profiles.arm(\"checked-llc-nolsr\").region(\"row\").workload(\"opening-160-rows\").total(\"instructions\");\nafter  = profiles.arm(\"checked-llc\").region(\"row\").workload(\"opening-160-rows\").total(\"instructions\");\ncmp = q.compare(before, after).matchOn(\"workload\",\"region\",\"checkedContract\",\"unit\");\nq.run(q.bundle({ cmp, pct: cmp.percentChange({denominator:\"before\"}) }))",
+      "reply": "{\"ok\":true,\"value\":{\"kind\":\"bundle\",\"outputs\":{\"cmp\":{\"kind\":\"comparison\",\"status\":\"available\",\"before\":{\"kind\":\"total\",\"status\":\"available\",\"arm\":\"checked-llc-nolsr\",\"metric\":\"instructions\",\"value\":1275560,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc-nolsr\\\"].totals.instructions\"}},\"after\":{\"kind\":\"total\",\"status\":\"available\",\"arm\":\"checked-llc\",\"metric\":\"instructions\",\"value\":1233611,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc\\\"].totals.instructions\"}},\"valueType\":\"count\",\"unit\":\"executed guest instructions\",\"delta\":-41949,\"matchedOn\":{\"workload\":{\"before\":\"opening-160-rows\",\"after\":\"opening-160-rows\",\"equal\":true},\"region\":{\"before\":\"row\",\"after\":\"row\",\"equal\":true},\"checkedContract\":{\"before\":\"checked\",\"after\":\"checked\",\"equal\":true},\"unit\":{\"before\":\"executed guest instructions\",\"after\":\"executed guest instructions\",\"equal\":true}}},\"pct\":{\"kind\":\"comparison\",\"status\":\"available\",\"before\":{\"kind\":\"total\",\"status\":\"available\",\"arm\":\"checked-llc-nolsr\",\"metric\":\"instructions\",\"value\":1275560,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc-nolsr\\\"].totals.instructions\"}},\"after\":{\"kind\":\"total\",\"status\":\"available\",\"arm\":\"checked-llc\",\"metric\":\"instructions\",\"value\":1233611,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc\\\"].totals.instructions\"}},\"valueType\":\"count\",\"unit\":\"executed guest instructions\",\"delta\":-41949,\"matchedOn\":{\"workload\":{\"before\":\"opening-160-rows\",\"after\":\"opening-160-rows\",\"equal\":true},\"region\":{\"before\":\"row\",\"after\":\"row\",\"equal\":true},\"checkedContract\":{\"before\":\"checked\",\"after\":\"checked\",\"equal\":true},\"unit\":{\"before\":\"executed guest instructions\",\"after\":\"executed guest instructions\",\"equal\":true}},\"percent\":-3.288673210197874,\"denominator\":{\"side\":\"before\",\n[OUTPUT ABBREVIATED: inspect a smaller projection or a single row]",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 4042,
+        "fullReplySHA256": "87d19075105b80d71adf3fa374b279be5d3576e053fd9edd5d27abe56ab3bce5",
+        "abbreviated": true
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.help(\"capabilities\")",
+      "reply": "{\"ok\":true,\"value\":\"What this archive cannot answer is returned as status unavailable with a reason — never as an empty or zero result.\\n  q.run(run.initialModule().sourceLocations({ function: \\\"row\\\" }))    // missingDebugLocations + module digest\\n  q.run(run.remarks().forEvent(vectorEvent))                         // missingRemarksArtifact (not \\\"zero remarks\\\")\\n  q.run(q.joinPCs(profiles.arm(\\\"checked-llvm\\\"), run.finalImage()).requireMatch(\\\"imageSHA\\\", \\\"addressSpace\\\"))   // missingPCSamples, missingInput\\n  q.capabilities()   lists every capability with status and the call to use\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 600,
+        "fullReplySHA256": "271b6fb6a90192dd7f2403760534466eb5936e37205d3ffe175844bff5cdc8c2",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.capabilities()",
+      "reply": "{\"ok\":true,\"value\":[{\"capability\":\"event headers, prints, original ordinals\",\"status\":\"available\",\"use\":\"a.events(), run.events(phase).at(n).text()\"},{\"capability\":\"static IR metrics on full function or module prints\",\"status\":\"available\",\"use\":\"q.ir.instructions()….count().at(state)\"},{\"capability\":\"IR metrics on loop fragments\",\"status\":\"unavailable\",\"reason\":\"loopFragment\"},{\"capability\":\"def-use edges inside one snapshot\",\"status\":\"available (opcode subset for operandIndex)\",\"use\":\"state.instructions()….uses()\"},{\"capability\":\"machine-function properties\",\"status\":\"available\",\"use\":\"q.machine.property(name).at(state)\"},{\"capability\":\"machine instruction metrics (spills, copies, MIR opcodes)\",\"status\":\"unsupported\",\"reason\":\"no MIR body parser in this release\"},{\"capability\":\"dynamic totals per arm (execution, typed)\",\"status\":\"available\",\"use\":\"profiles.arms()\"},{\"capability\":\"per-row samples\",\"status\":\"inspect\",\"use\":\"profiles.arm(name).describe().sampleKeys / .samples()\"},{\"capability\":\"PC samples and PC joins\",\"status\":\"unavailable\",\"reason\":\"missingPCSamples; no final image registered\",\"use\":\"q.joinPCs(…)\"},{\"capability\":\"source locations\",\"status\":\"unavailable unless the module has debug info\",\"reason\":\"missingDebugLocations\",\"use\":\"run.initialModule().sourceLocations({ function })\"},{\"capability\":\"optimization remarks\",\"status\":\"unavailable\",\"reason\":\"missingRemarksArtifact\",\"use\":\"run.remarks().forEvent(e)\"},{\"capability\":\"fragments, params, explain, session pins\",\"status\":\"available\",\"use\":\"q.fragment, q.param, q.explain, q.session\"}]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1580,
+        "fullReplySHA256": "bd17dfb01c19db61926bf31c56c2df5d5169f060d1b786b79ccfbb3265a22c42",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[1233611/1275560 - 1, (1275560-1233611)/1275560*100, 1275560/160, 1233611/160, (1275560-1233611)/160]",
+      "reply": "{\"ok\":true,\"value\":[-0.03288673210197879,3.288673210197874,7972.25,7710.06875,262.18125]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 90,
+        "fullReplySHA256": "bdda330dac98794f939133823523802e593219731f6ae9eeb2819615119df2a0",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "try { q.run(q.joinPCs(profiles.arm(\"checked-llvm\"), a.variant(\"checked\").finalImage()).requireMatch(\"imageSHA\",\"addressSpace\")) } catch(e) { \"THREW: \" + e.message }",
+      "reply": "{\"ok\":true,\"value\":{\"kind\":\"join\",\"status\":\"unavailable\",\"reasons\":[{\"reason\":\"missingPCSamples\",\"arm\":\"checked-llvm\",\"detail\":\"the summary holds aggregate totals and samples keyed by 0, 61, 109, not per-PC samples\"},{\"reason\":\"missingInput\",\"input\":\"finalImage\",\"detail\":\"no final image with an imageSHA and address map is registered for this archive\"}],\"required\":[\"imageSHA\",\"addressSpace\"],\"note\":\"a PC join needs PC samples, a known image identity, address normalization and symbol bounds; a matching function name alone is not a join\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 543,
+        "fullReplySHA256": "5860a3e495635d2641d1ed514771f2461cc550f81f7553bed95031de63d633c9",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "s = profiles.arm(\"checked-llc\").samples(); [typeof s, Array.isArray(s)? s.length : Object.keys(s)]",
+      "reply": "{\"ok\":true,\"value\":[\"object\",[\"0\",\"61\",\"109\"]]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 48,
+        "fullReplySHA256": "a071081173a73afb67fa7325d4a6dc019514cb67139c1d689038d6ac5893e98b",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "a1 = profiles.arm(\"checked-llc-nolsr\").samples(); b1 = profiles.arm(\"checked-llc\").samples(); JSON.stringify({nolsr:a1,llc:b1}).slice(0,1200)",
+      "reply": "{\"ok\":true,\"value\":\"{\\\"nolsr\\\":{\\\"0\\\":{\\\"instructions\\\":7137,\\\"stackLoads\\\":0,\\\"stackStores\\\":0},\\\"61\\\":{\\\"instructions\\\":9275,\\\"stackLoads\\\":0,\\\"stackStores\\\":0},\\\"109\\\":{\\\"instructions\\\":8077,\\\"stackLoads\\\":0,\\\"stackStores\\\":0}},\\\"llc\\\":{\\\"0\\\":{\\\"instructions\\\":6995,\\\"stackLoads\\\":2,\\\"stackStores\\\":2},\\\"61\\\":{\\\"instructions\\\":8837,\\\"stackLoads\\\":2,\\\"stackStores\\\":2},\\\"109\\\":{\\\"instructions\\\":7794,\\\"stackLoads\\\":2,\\\"stackStores\\\":2}}}\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 442,
+        "fullReplySHA256": "549c7f59a805030b1c3d67ab0f371ea6c3c73424d6ae661cca8fe6209ef46dbf",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.help(\"results\")",
+      "reply": "The 14-query session budget is complete. Submit the findings you have.",
+      "error": true,
+      "details": {}
+    }
+  ],
+  "answer": "## 1. Findings\n\n**Matched experiment.** I paired the two llc arms that differ only in the strength-reduction flag: `checked-llc-nolsr` (before, LSR off) → `checked-llc` (after, LSR on). Profile source: `execution`, arms named as above. Matching was done on the four declared keys, all equal on both sides: workload `opening-160-rows`, region `row`, checkedContract `checked`, unit `executed guest instructions`.\n\n| Quantity | Value | Evidence |\n|---|---|---|\n| Before, executed instructions | **1,275,560** | `execution[\"checked-llc-nolsr\"].totals.instructions` |\n| After, executed instructions | **1,233,611** | `execution[\"checked-llc\"].totals.instructions` |\n| Absolute change | **−41,949** instructions | `q.compare(...)` `delta: -41949` |\n| Percentage change | **−3.2887 %** | `percent: -3.288673210197874`, denominator side `\"before\"` |\n| Denominator | **1,275,560** (before side) | `percentChange({denominator:\"before\"})` |\n| Independently recomputed | 41,949 ⁄ 1,275,560 = 0.0328867 → 3.2887 %; also 1,233,611 ⁄ 1,275,560 − 1 = −0.0328867 | separate arithmetic evaluation |\n| Per-row mean (160 rows verified) | 7,972.25 → 7,710.07, i.e. −262.18 instr/row | 1,275,560/160, 1,233,611/160, 41,949/160 |\n\n**Units and scope of the claim.** The unit is *executed guest instructions* (`unit: \"executed guest instructions\"`, `scope: \"dynamic (executed work, summed over the workload)\"`) — not static IR sites, not cycles, not wall time. Scope is bounded twice: it is collected *inside the region* `row` (\"the measured row symbol; summary totals are collected inside it\") and summed over the workload `opening-160-rows`, whose coverage is verified (`rowsVerified: 160, verified: true`). Both sides are `checked` contract. So the honest statement is: *for the checked-contract llc pair, executed guest instructions measured inside the `row` kernel fell by 41,949 (−3.29 %, before-denominator 1,275,560) over the 160-row opening-scene workload.* It is **not** a whole-scene or whole-frame claim, not a claim about gcc arms or the noiv arms, and not a claim about static code size. The summary also does not say the change was purely subtractive: the same describe() output shows `stackLoads 0→320`, `stackStores 0→320` and `rowBytes 268→296` (observation, not diagnosis). Both arm entries also report the *same* source digest (`42a8a43d…`), so that digest does not by itself distinguish the two variants; the match rests on the four declared keys.\n\n**Per-row samples (context, not a decomposition).** Three sampled rows are captured: row 0: 7,137→6,995 (−142); row 61: 9,275→8,837 (−438); row 109: 8,077→7,794 (−283). These are 3 of 160 rows; their mean delta (−287.7) is not the total's mean (−262.2), and they must not be extrapolated.\n\n**Program-counter attribution: not supported by the captured evidence.** `q.capabilities()` reports `PC samples and PC joins — status unavailable, reason missingPCSamples; no final image registered`. Attempting the documented call `q.joinPCs(profiles.arm(\"checked-llvm\"), a.variant(\"checked\").finalImage()).requireMatch(\"imageSHA\",\"addressSpace\")` returns `status: \"unavailable\"` with `missingPCSamples` (\"the summary holds aggregate totals and samples keyed by 0, 61, 109, not per-PC samples\") and `missingInput: finalImage` (\"no final image with an imageSHA and address map is registered\"). I confirmed the samples are keyed by row index only (`[\"0\",\"61\",\"109\"]`), each holding `instructions/stackLoads/stackStores`. There is therefore **no observation in this archive** that can name the PC with the largest share of the 41,949-instruction gain, and no sum of per-PC contributions can be reconciled against it. I am not substituting zero for any per-PC value. **The missing observation:** a per-PC executed-instruction profile (PC samples) for *both* arms over the same 160-row workload, plus a registered final image carrying an `imageSHA` and address map so addresses can be normalized and bounded to the `row` symbol; only then could the per-PC before/after deltas be differenced and the top contributor named.\n\n## 2. Usability diary (chronological, keyed to calls)\n\n1. `q.help()` — orientation; learned the plan/`q.run` idiom and the status vocabulary (`available/absent/unavailable/unsupported`).\n2. `q.help(\"compare\")` + `q.help(\"profiles\")` — got the match-key list and the arm inventory (spotted the `checked-llc-nolsr` / `checked-llc` pair as the LSR-contrast), plus the warning that summaries are dynamic totals.\n3. `q.help(\"metrics\")` + `q.help(\"changes\")` — confirmed metrics are *static sites on one snapshot*; that is what made me keep the static IR tool out of the dynamic instruction claim.\n4. **Failed guess:** `q.run(profiles.arm(\"checked-llc-nolsr\").describe())` → `QueryError: [notAPlan] … got object`. Recovery in the next call: `describe()` returns a plain object, so I read it directly without `q.run`. Same mistake repeated on the `checked-llc` arm in the same batch.\n5. `q.run(...total(\"instructions\"))` on the nolsr arm — clean single total, with `unit`, `scope`, `region.evidence`, `workload.rowsVerified` and the exact `source.path`.\n6. `q.compare(before, after).matchOn(...)` bundled with `.percentChange({denominator:\"before\"})` — succeeded but the output was abbreviated mid-object, so I could not read the `percent`/`denominator` fields from that call alone.\n7. `q.capabilities()` — the decisive evidence for the PC question: PC samples unavailable, plus reasons for the other gaps.\n8. Recomputed the deltas and rates in raw JS separately — this is the independent check of −41,949 and −3.2887 % (and the per-row means), rather than trusting the abbreviated compare object.\n9. Deliberately exercised `q.joinPCs(...)` to see whether the PC join fails loudly; it returned a structured `unavailable` with two named reasons and a `note` explaining why a matching function name is not a join.\n10. Inspected `profiles.arm(\"checked-llc\").samples()` shape, then read both arms' samples to confirm they are row-keyed (`0, 61, 109`), which corroborates `missingPCSamples` rather than just accepting the label.\n11. `q.help(\"results\")` — returned \"The 14-query session budget is complete\"; no further probing was possible, which is why the per-row sample comparison is reported descriptively and not decomposed.\n\n## 3. One sentence on what to improve\n\nThe two most costly moments were the `q.run(describe())` type error and the abbreviated compare output that hid exactly the `percent`/`denominator` fields I needed; the API should either make non-plan accessors throw a pointed \"call directly, not via q.run\" hint and let me project comparison results to named fields (`cmp.select(\"delta\",\"percent\",\"denominator\")`), so an exact numerical claim can be read off in one call without re-deriving it.",
+  "errors": [],
+  "seconds": 97.52,
+  "observedModel": "deepseek-4.1-flash",
+  "observedProvider": "lunaroute",
+  "exit": 0
+}

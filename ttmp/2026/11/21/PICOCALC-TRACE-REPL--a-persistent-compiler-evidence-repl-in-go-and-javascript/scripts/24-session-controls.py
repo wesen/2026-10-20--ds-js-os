@@ -39,6 +39,9 @@ def main():
         value=root.get("value")
         # Discover topic names from the public entry point if provided as structured data.
         topics=value.get("topics",[]) if isinstance(value,dict) else []
+        if isinstance(value, str):
+            topic_line = next((ln for ln in value.splitlines() if ln.startswith("Topics:")), "")
+            topics = re.findall(r'"([a-zA-Z]+)"', topic_line)
         if isinstance(topics,dict):
             topics=list(topics)
         help_texts={"root":json.dumps(value,ensure_ascii=False)}
@@ -50,8 +53,12 @@ def main():
         for name,content in help_texts.items():
             normalized=re.sub(r"(?<=\d)[,_](?=\d)","",content)
             matches[name]=[n for n in KEY_NUMBERS if re.search(r"(?<!\d)"+str(n)+r"(?!\d)",normalized)]
+        cue_words = ["EarlyCSEPass", "SROAPass", "NoVRegs", "virtregrewriter", "at(73)", "at(74)", "at(78)",
+                     "missingDebugLocations", "per-PC", "checked-llc-nolsr"]
+        cues = {name: [term for term in cue_words if term.lower() in content.lower()]
+                for name,content in help_texts.items()}
         out={"build":args.build,"persistent":persisted["value"],"isolatedType":isolated["value"],
-             "helpKeys":list(value) if isinstance(value,dict) else [],"helpNumericalLeaks":matches,
+             "helpKeys":list(value) if isinstance(value,dict) else [],"helpNumericalLeaks":matches,"helpTerminologyCues":cues,
              "helpReplySHA256":{k:hashlib.sha256(v.encode()).hexdigest() for k,v in help_texts.items()}}
         http(base+"/"+a,"DELETE");contexts.remove(a)
         survivor=ev(b,"13+4")

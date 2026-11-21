@@ -1,0 +1,184 @@
+{
+  "provider": "lunaroute",
+  "model": "deepseek-4.1-flash",
+  "thinking": "high",
+  "card": "catalog",
+  "build": "d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4",
+  "limit": 14,
+  "steps": [
+    {
+      "tool": "trace_eval",
+      "source": "q.help()",
+      "reply": "{\"ok\":true,\"value\":\"q — compiler-evidence queries over the PicoCalc LLVM row archive (release 0.1.0). Globals: q, a (archive), profiles.\\nPlans are lazy; evaluate synchronously with q.run(plan) or plan.run(). Results are plain objects with status, unit and witnesses.\\n  q.run(a.events().count())                                  // all header records, with byStream\\n  run = a.variant(\\\"checked\\\"); row = run.function(\\\"row\\\"); middle = row.timeline(\\\"middle\\\")\\n  q.run(run.events(\\\"middle\\\").at(74).select(\\\"ordinal\\\", \\\"header\\\", \\\"ref\\\"))\\n  hdr = q.ir.instructions().opcode(\\\"load\\\").resultType(\\\"i32\\\").pointer(row.argument(0)).count()\\n  q.run(hdr.at(middle.at(74).after))                         // static sites, with witnesses\\n  q.run(middle.measure(hdr).changes().where(c =\\u003e c.status === \\\"known\\\" \\u0026\\u0026 c.delta \\u003c 0).first())\\n  q.run(profiles.arm(\\\"checked-gcc\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\").total(\\\"instructions\\\"))\\nTopics: q.help(\\\"events\\\" | \\\"timeline\\\" | \\\"states\\\" | \\\"metrics\\\" | \\\"changes\\\" | \\\"machine\\\" | \\\"profiles\\\" | \\\"compare\\\" | \\\"capabilities\\\" | \\\"params\\\" | \\\"results\\\" | \\\"errors\\\" | \\\"cache\\\").\\nEvery object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1329,
+        "fullReplySHA256": "64d75262ad687acc794a2139f7b685a2f4495da80f691b1d72fd41be12099768",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "return {eventsHelp: q.help(\"events\"), total: q.run(a.events().count())}",
+      "reply": "{\"ok\":false,\"error\":\"SyntaxError: \\u003ctrace-cell\\u003e: Line 1:1 Illegal return statement\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 94,
+        "fullReplySHA256": "bd0dec7071727800d3eb3dccb28e45724d12d10270c6bc4ad0c2add5a7b962f9",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "({eventsHelp: q.help(\"events\"), total: q.run(a.events().count())})",
+      "reply": "{\"ok\":true,\"value\":{\"eventsHelp\":\"Events = header records of print-after-all streams; one stream per (variant, phase); ordinals restart at 0 per stream.\\n  a.variants()  a.streams()  a.events().count()  a.variant(\\\"checked\\\").events(\\\"middle\\\").count()\\n  run.events(\\\"backend\\\").at(78)            // absolute ordinal in its original stream; out of range → [ordinalOutOfRange]\\n  run.events(\\\"middle\\\").where(e =\\u003e e.pass === \\\"LoopVectorizePass\\\").first()   // .first() .last() .one() (.one() reports ambiguous)\\n  .select(\\\"ordinal\\\", \\\"pass\\\", \\\"scope\\\", \\\"ref\\\")  .limit(10)  .count()  .ordinals()  .text()\\nEvent fields: variant, phase, ordinal, header, pass, passId, passName, when, scope, function, ref (+ host fields). pass = new-PM class (EarlyCSEPass) or llc pass ID (virtregrewriter); passId = pass.\\nscope.kind: function · module · cgscc (functions) · loop (loop, function) · machineFunction · unresolved (llc header; resolved from the print).\\nVariants now: checked, firmware, unchecked. Phases: backend, middle.\",\"total\":{\"kind\":\"count\",\"value\":4133,\"unit\":\"events\",\"of\":\"a.events()\",\"streams\":6,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"backend\",\"streamSHA\":\"8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca\",\"events\":116},{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"events\":195},{\"variant\":\"firmware\",\"phase\":\"backend\",\"streamSHA\":\"e1eabbaadea131365f48553d4a07b92c2ba5fb49d5db7cf17e0962599bdd915c\",\"events\":1450},{\"variant\":\"firmware\",\"phase\":\"middle\",\"streamSHA\":\"eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38\",\"events\":2061},{\"variant\":\"unchecked\",\"phase\":\"backend\",\"streamSHA\":\"98517d51246b17f8ec72298250f962b05b837b12cd955a4c4c3bbf4b4fe540f5\",\"events\":116},{\"variant\":\"unchecked\",\"phase\":\"middle\",\"streamSHA\":\"d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4\",\"events\":195}]}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1934,
+        "fullReplySHA256": "b7f64832a4acf7c6d115b1d00c99191d4339432d69984fb9fa37407b7e7fc89b",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "({checkedBackend: q.run(a.variant(\"checked\").events(\"backend\").count()), checkedMiddle: q.run(a.variant(\"checked\").events(\"middle\").count()), checkedStreamList: a.variant(\"checked\").events ? \"ok\" : \"missing\"})",
+      "reply": "{\"ok\":true,\"value\":{\"checkedBackend\":{\"kind\":\"count\",\"value\":116,\"unit\":\"events\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"backend\\\")\",\"streams\":1,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"backend\",\"streamSHA\":\"8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca\",\"events\":116}]},\"checkedMiddle\":{\"kind\":\"count\",\"value\":195,\"unit\":\"events\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"middle\\\")\",\"streams\":1,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"events\":195}]},\"checkedStreamList\":\"ok\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 582,
+        "fullReplySHA256": "93b1c5dcbf8d2547582b4d3e7b2b98474b7f10dcf53bf3025979d82d4a67e15d",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const m = a.variant(\"checked\").events(\"middle\").at(74); const r = q.run(m.select(\"ordinal\",\"pass\",\"passId\",\"passName\",\"when\",\"scope\",\"function\",\"header\",\"ref\")); return r; })()",
+      "reply": "{\"ok\":true,\"value\":{\"ordinal\":74,\"pass\":\"EarlyCSEPass\",\"passId\":\"EarlyCSEPass\",\"passName\":\"EarlyCSEPass\",\"when\":\"after\",\"scope\":{\"kind\":\"function\",\"function\":\"row\"},\"function\":\"row\",\"header\":\"IR Dump After EarlyCSEPass on row\",\"ref\":{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"ordinal\":74,\"start\":240363,\"end\":248127}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 394,
+        "fullReplySHA256": "ab7f7e50bab2f121f537308e933ebf258bac5ffc7fb559c4dbb75b291f829af1",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const mid = a.variant(\"checked\").events(\"middle\"); globalThis.mid74 = mid.at(74).select(\"ordinal\",\"pass\",\"when\",\"scope\",\"ref\"); const ords = q.run(mid.ordinals()); return {ordFirst: ords && ords.value ? ords.value.slice(0,3) : ords, ordLast: ords && ords.value ? ords.value.slice(-3) : null, leq74: q.run(mid.where(e => e.ordinal <= 74).count()), bound: typeof mid74, boundOrdinal: mid74 && mid74.ordinal}; })()",
+      "reply": "{\"ok\":true,\"value\":{\"ordFirst\":{\"kind\":\"ordinals\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"middle\\\")\",\"count\":195,\"ordinals\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194]},\"ordLast\":null,\"leq74\":{\"kind\":\"count\",\"value\":75,\"unit\":\"events\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"middle\\\").where(e =\\u003e e.ordinal \\u003c= 74)\",\"streams\":1,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"events\":75}]},\"bound\":\"object\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1123,
+        "fullReplySHA256": "2b272354bd1d03b1de001dcdd34cde6eac4264b4d6bbf1b78e2e087be5e0ff3d",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const mid = a.variant(\"checked\").events(\"middle\"); const t = q.run(mid.at(74).text()); const s = typeof t === \"string\" ? t : (t && (t.value || t.text)) || JSON.stringify(t).slice(0,300); return {mid74keys: Object.keys(mid74||{}), mid74ordinal: mid74 && mid74.ordinal, preview: String(s).slice(0,220), cseInMiddle: q.run(mid.where(e => e.pass === \"EarlyCSEPass\").count()), firstCSE: q.run(mid.where(e => e.pass === \"EarlyCSEPass\").select(\"ordinal\",\"when\"))}; })()",
+      "reply": "{\"ok\":true,\"value\":{\"mid74keys\":[\"_kind\",\"_label\",\"_fn\"],\"preview\":\"{\\\"kind\\\":\\\"text\\\",\\\"ordinal\\\":74,\\\"variant\\\":\\\"checked\\\",\\\"phase\\\":\\\"middle\\\",\\\"header\\\":\\\"IR Dump After EarlyCSEPass on row\\\",\\\"print\\\":\\\"; *** IR Dump After EarlyCSEPass on row ***\\\\n; Function Attrs: nounwind\\\\ndefine dso_local i32 @row(pt\",\"cseInMiddle\":{\"kind\":\"count\",\"value\":4,\"unit\":\"events\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"middle\\\").where(e =\\u003e e.pass === \\\"EarlyCSEPass\\\")\",\"streams\":1,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"events\":4}]},\"firstCSE\":{\"kind\":\"rows\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"middle\\\").where(e =\\u003e e.pass === \\\"EarlyCSEPass\\\").select(ordinal, when)\",\"unit\":\"events\",\"count\":4,\"rows\":[{\"ordinal\":7,\"when\":\"after\"},{\"ordinal\":11,\"when\":\"after\"},{\"ordinal\":31,\"when\":\"after\"},{\"ordinal\":74,\"when\":\"after\"}]}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 917,
+        "fullReplySHA256": "65db7f7404306576f4f561eaa3cde398481cd99575098df8e8ee44e14f5be6e1",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { if (typeof mid74 === \"undefined\" || mid74 === null) return {survived: false}; const r = q.run(mid74); return {survived: true, kind: r.kind, unit: r.unit, count: r.count, rows: r.rows}; })()",
+      "reply": "{\"ok\":true,\"value\":{\"survived\":true}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 38,
+        "fullReplySHA256": "693492a16b80b56f47920f3013d0d47af66392fdccb6d449a5d30b1ec0fd7c1a",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const r = q.run(mid74); return {type: typeof r, isArray: Array.isArray(r), keys: r && typeof r === \"object\" ? Object.keys(r) : null, json: JSON.stringify(r).slice(0,400)}; })()",
+      "reply": "{\"ok\":true,\"value\":{\"type\":\"object\",\"isArray\":false,\"keys\":[\"ordinal\",\"pass\",\"when\",\"scope\",\"ref\"],\"json\":\"{\\\"ordinal\\\":74,\\\"pass\\\":\\\"EarlyCSEPass\\\",\\\"when\\\":\\\"after\\\",\\\"scope\\\":{\\\"kind\\\":\\\"function\\\",\\\"function\\\":\\\"row\\\"},\\\"ref\\\":{\\\"variant\\\":\\\"checked\\\",\\\"phase\\\":\\\"middle\\\",\\\"streamSHA\\\":\\\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\\\",\\\"ordinal\\\":74,\\\"start\\\":240363,\\\"end\\\":248127}}\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 412,
+        "fullReplySHA256": "e39cee9a1966527d312b1d1761f9c010acb814ed03006e4cf3e6bd7f7cb43d8e",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const out = []; for (const v of [\"checked\",\"unchecked\",\"firmware\"]) for (const p of [\"middle\",\"backend\"]) { const plan = a.variant(v).events(p); const c = q.run(plan.count()).value; let at74 = null; try { at74 = q.run(plan.at(74).select(\"ordinal\",\"pass\",\"when\",\"scope\")); } catch(e) { at74 = \"err: \" + e.message; } out.push({variant: v, phase: p, events: c, at74}); } return out; })()",
+      "reply": "{\"ok\":true,\"value\":[{\"variant\":\"checked\",\"phase\":\"middle\",\"events\":195,\"at74\":{\"ordinal\":74,\"pass\":\"EarlyCSEPass\",\"when\":\"after\",\"scope\":{\"kind\":\"function\",\"function\":\"row\"}}},{\"variant\":\"checked\",\"phase\":\"backend\",\"events\":116,\"at74\":{\"ordinal\":74,\"pass\":\"virtregrewriter\",\"when\":\"after\",\"scope\":{\"kind\":\"machineFunction\",\"function\":\"row\",\"resolvedFrom\":\"print\"}}},{\"variant\":\"unchecked\",\"phase\":\"middle\",\"events\":195,\"at74\":{\"ordinal\":74,\"pass\":\"EarlyCSEPass\",\"when\":\"after\",\"scope\":{\"kind\":\"function\",\"function\":\"row\"}}},{\"variant\":\"unchecked\",\"phase\":\"backend\",\"events\":116,\"at74\":{\"ordinal\":74,\"pass\":\"virtregrewriter\",\"when\":\"after\",\"scope\":{\"kind\":\"machineFunction\",\"function\":\"row\",\"resolvedFrom\":\"print\"}}},{\"variant\":\"firmware\",\"phase\":\"middle\",\"events\":2061,\"at74\":{\"ordinal\":74,\"pass\":\"SROAPass\",\"when\":\"after\",\"scope\":{\"kind\":\"function\",\"function\":\"raytrace_demo_shade_audit\"}}},{\"variant\":\"firmware\",\"phase\":\"backend\",\"events\":1450,\"at74\":{\"ordinal\":74,\"pass\":\"codegenprepare\",\"when\":\"after\",\"scope\":{\"kind\":\"function\",\"function\":\"raytrace_demo_object_fits\",\"resolvedFrom\":\"print\"}}}]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1100,
+        "fullReplySHA256": "d97ea60b02a0c4f9af4fe106f4757f748c443d7d63346c25249fa18fcb09b0dd",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const t = q.run(a.variant(\"checked\").events(\"middle\").at(74).text()); const print = t.print || t.value || \"\"; const span = 248127 - 240363; return {textKind: t.kind, printLen: String(print).length, refSpan: span, match: String(print).length === span, firstLine: String(print).split(\"\\n\")[0], defineLine: String(print).split(\"\\n\").find(l => l.startsWith(\"define\"))}; })()",
+      "reply": "{\"ok\":true,\"value\":{\"textKind\":\"text\",\"printLen\":7764,\"refSpan\":7764,\"match\":true,\"firstLine\":\"; *** IR Dump After EarlyCSEPass on row ***\",\"defineLine\":\"define dso_local i32 @row(ptr nocapture noundef %work, i32 noundef %y) local_unnamed_addr #0 {\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 252,
+        "fullReplySHA256": "5e9e7f68470036c6eaf01dc1e55076dd0c004a9719029552ca7ad8dbaeac9d71",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const s = a.streams(); const streams = q.run(s); const byStream = (q.run(a.events().count())).byStream; const sum = byStream.reduce((t, x) => t + x.events, 0); const checked = byStream.filter(x => x.variant === \"checked\").reduce((t, x) => t + x.events, 0); return {streamCount: streams.count !== undefined ? streams.count : (Array.isArray(streams) ? streams.length : streams), streamRows: typeof streams === \"object\" && streams.rows ? streams.rows : streams, phaseSum: sum, checkedSum: checked, totalReported: 4133}; })()",
+      "reply": "{\"ok\":false,\"error\":\"QueryError: [notAPlan] q.run expects a plan (from a.events(), q.ir…, profiles…, q.bundle…); got object\\n  fix: q.run(a.events().count()) at QueryError (trace/query.js:13:15(22))\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 207,
+        "fullReplySHA256": "ea858162bee3a0d9c78d9e7d22055eff8a649110d761c46a19479ebfd33cf169",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const streams = a.streams(); const byStream = q.run(a.events().count()).byStream; return {streamsType: typeof streams, isArray: Array.isArray(streams), streams: Array.isArray(streams) ? streams : (streams.rows || streams.value || streams), phaseSum: byStream.reduce((t, x) => t + x.events, 0), checkedSum: byStream.filter(x => x.variant === \"checked\").reduce((t, x) => t + x.events, 0), nonCheckedSum: byStream.filter(x => x.variant !== \"checked\").reduce((t, x) => t + x.events, 0)}; })()",
+      "reply": "{\"ok\":true,\"value\":{\"streamsType\":\"object\",\"isArray\":true,\"streams\":[{\"variant\":\"checked\",\"phase\":\"middle\",\"events\":195,\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\"},{\"variant\":\"checked\",\"phase\":\"backend\",\"events\":116,\"streamSHA\":\"8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca\"},{\"variant\":\"firmware\",\"phase\":\"middle\",\"events\":2061,\"streamSHA\":\"eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38\"},{\"variant\":\"firmware\",\"phase\":\"backend\",\"events\":1450,\"streamSHA\":\"e1eabbaadea131365f48553d4a07b92c2ba5fb49d5db7cf17e0962599bdd915c\"},{\"variant\":\"unchecked\",\"phase\":\"middle\",\"events\":195,\"streamSHA\":\"d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4\"},{\"variant\":\"unchecked\",\"phase\":\"backend\",\"events\":116,\"streamSHA\":\"98517d51246b17f8ec72298250f962b05b837b12cd955a4c4c3bbf4b4fe540f5\"}],\"phaseSum\":4133,\"checkedSum\":311,\"nonCheckedSum\":3822}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 923,
+        "fullReplySHA256": "804aee142ae82f4f6510632d73cde42a16bd1507de00998a912e67993e1c270d",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "(() => { const mid = a.variant(\"checked\").events(\"middle\"); const rows = q.run(mid.select(\"pass\")).rows || []; const uniq = [...new Set(rows.map(r => r.pass))]; const fnRows = q.run(mid.select(\"function\")).rows || []; const uniqFn = [...new Set(fnRows.map(r => r.function))]; return {events: q.run(mid.count()).value, distinctPasses: uniq.length, distinctFunctions: uniqFn.length, passes: uniq.slice(0, 40)}; })()",
+      "reply": "{\"ok\":true,\"value\":{\"events\":195,\"distinctPasses\":77,\"distinctFunctions\":9,\"passes\":[\"Annotation2MetadataPass\",\"ForceFunctionAttrsPass\",\"InferFunctionAttrsPass\",\"CoroEarlyPass\",\"LowerExpectIntrinsicPass\",\"SimplifyCFGPass\",\"SROAPass\",\"EarlyCSEPass\",\"OpenMPOptPass\",\"IPSCCPPass\",\"CalledValuePropagationPass\",\"GlobalOptPass\",\"PromotePass\",\"InstCombinePass\",\"AlwaysInlinerPass\",\"RequireAnalysisPass\\u003cllvm::GlobalsAA, llvm::Module, llvm::AnalysisManager\\u003cModule\\u003e\\u003e\",\"InvalidateAnalysisPass\\u003cllvm::AAManager\\u003e\",\"RequireAnalysisPass\\u003cllvm::ProfileSummaryAnalysis, llvm::Module, llvm::AnalysisManager\\u003cModule\\u003e\\u003e\",\"InlinerPass\",\"PostOrderFunctionAttrsPass\",\"OpenMPOptCGSCCPass\",\"SpeculativeExecutionPass\",\"JumpThreadingPass\",\"CorrelatedValuePropagationPass\",\"AggressiveInstCombinePass\",\"LibCallsShrinkWrapPass\",\"TailCallElimPass\",\"ReassociatePass\",\"ConstraintEliminationPass\",\"LoopSimplifyPass\",\"LCSSAPass\",\"VectorCombinePass\",\"MergedLoadStoreMotionPass\",\"GVNPass\",\"SCCPPass\",\"BDCEPass\",\"ADCEPass\",\"MemCpyOptPass\",\"DSEPass\",\"MoveAutoInitPass\"]}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1079,
+        "fullReplySHA256": "11be2282f8f79ac5a0d0bb159a0ef50b3f06a2ff2c9e17dab05666a0f818d887",
+        "abbreviated": false
+      }
+    }
+  ],
+  "answer": "## 1. Findings\n\n**Total archived pass observations: 4,133 events** across 6 streams.\nEvidence: `q.run(a.events().count())` → `{value: 4133, unit: \"events\", streams: 6}`, with `byStream` = checked/middle 195, checked/backend 116, firmware/middle 2061, firmware/backend 1450, unchecked/middle 195, unchecked/backend 116. Independent arithmetic from the same `byStream` array in call 11: 195+116+2061+1450+195+116 = **4133** (checked 311 + non-checked 3822 = 4133). `a.streams()` returns the identical 6 rows. Units are **events = print-header records**, not passes and not functions.\n\n**Checked build, by phase (total 311):**\n| variant/phase | events | streamSHA |\n|---|---|---|\n| checked / middle | **195** | `bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4` |\n| checked / backend | **116** | `8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca` |\n\nMeasured twice: per-stream `byStream` entries (call 3/11) and `a.variant(\"checked\").events(\"middle\"|\"backend\").count()` (call 3) — both give 195 and 116. If \"all archived observations\" is meant archive-wide, the firmware variant dominates with 3,511 of 4,133.\n\n**Relocating the checked middle-end observation at ordinal 74** (from `at(74).select(...)` plus `ref`):\n- variant `checked`, phase `middle`, stream `bbd3b98…95b4`, **ordinal 74**, pass `EarlyCSEPass`, `when: \"after\"`, header `IR Dump After EarlyCSEPass on row`\n- byte span in stream: **start 240363, end 248127** = 7,764 bytes; the retrieved print text is exactly **7,764** characters (match confirmed, call 10)\n- first line `; *** IR Dump After EarlyCSEPass on row ***`; unit: `define dso_local i32 @row(ptr nocapture noundef %work, i32 noundef %y) local_unnamed_addr #0`\n\n**Unit of work:** `scope: {kind: \"function\", function: \"row\"}` — one **function-level** print of function `row`, i.e. EarlyCSE's *after* print on that single function. Pass name alone is not a locator: `EarlyCSEPass` occurs 4× in this stream, at ordinals 7, 11, 31, 74 (call 6), so the pass name is ambiguous and stream+ordinal is required. Ordinals are **stream-local**: in the same archive, firmware/middle ordinal 74 is `SROAPass` on `raytrace_demo_shade_audit`, and checked/backend ordinal 74 is `virtregrewriter` on a `machineFunction` (call 9). Ordinals are contiguous 0–194 with count 195, so ordinal 74 is the **75th** record; 75 events satisfy `ordinal <= 74` (call 5).\n\n**What the event count represents:** events are the `print-after-all`/`print-before-all` *header records* of a stream, one stream per (variant, phase), ordinals restarting at 0 per stream (`q.help(\"events\")`). So 4,133 counts (pass-print, unit) pairs, not pass executions and not unique passes: checked/middle's 195 events cover only **77 distinct pass names on 9 distinct functions** (call 12). A pass that prints per function inflates the count once per function.\n\n**What I could not establish:** the archive records headers and text, so I have no evidence of *how many distinct pass executions* or *whether IR actually changed* at ordinal 74 — the payload alone doesn't distinguish a no-op print from a real transform. That would be answerable by running a change query, e.g. `q.run(middle.measure(hdr).changes().where(c => c.status === \"known\" && c.delta < 0).first())` as the help suggests, or diffing ordinal 74's print against the previous print of `row`.\n\n**Binding survival (colleague's question): yes.** `mid74` was bound in call 5 as a *lazy plan* (`Object.keys` = `[\"_kind\",\"_label\",\"_fn\"]`, call 6); in call 7 `q.run(mid74)` succeeded and call 8 showed it re-resolving to the same row — ordinal 74, EarlyCSEPass, `{kind: \"function\", function: \"row\"}`, same ref span 240363–248127. Note the envelope changes on reuse: the `q.run(mid74)` result is the bare row (`keys: [\"ordinal\",\"pass\",\"when\",\"scope\",\"ref\"]`), not the `{kind, unit, count, rows}` envelope returned for the first-run query.\n\n## 2. Usability diary (chronological)\n1. `q.help()` — entry point; learned plan/`q.run` model, status vocabulary, and the exact example lines for this task.\n2. Tried a `return {...}` cell → **SyntaxError: Illegal return statement**. Recovery: emit a bare object/IIFE expression, since the last value is what's returned.\n3. `({eventsHelp: q.help(\"events\"), total: q.run(a.events().count())})` — got 4,133 and the 6-stream `byStream` split; help text clarified ordinals restart per stream.\n4. Per-phase checked counts (116 / 195) — matched `byStream`, giving two independent readings.\n5. `at(74).select(...)` — got EarlyCSEPass/`row` plus a `ref` with byte offsets; offsets were new information not in help's field list.\n6. Bound `mid74` and checked ordinal contiguity — 0..194, 195 count, 75 events ≤ 74.\n7. `.text()` preview plus pass-frequency check — found 4 EarlyCSEPass prints (7, 11, 31, 74), so pass name alone is insufficient.\n8. Re-`q.run(mid74)` — `survived: true` but `kind/unit/count` undefined; briefly looked like a lossy binding.\n9. Inspected it directly — it was the bare row; the plan survived intact, only the envelope differs.\n10. Cross-stream ordinal-74 sweep — confirmed ordinals are stream-local (SROAPass vs virtregrewriter vs EarlyCSEPass).\n11. Validated `ref` byte span vs print length — both 7,764, so offsets are trustworthy.\n12. `q.run(a.streams())` → **QueryError: [notAPlan]**, because `a.streams()` returns a raw array while `a.events()` returns a plan. Recovery: read `a.streams()` directly; the failure itself clarified the API's inconsistent return kinds.\n13. Final independent sums from `byStream` (4,133) and distinct pass/function counts (77 / 9).\n\n## 3. What to improve\nMake the archive's discovery accessors return plans like everything else (`q.run(a.streams())` fails with `[notAPlan]` while `a.events()` works) and have `q.run` of a bound `.select(...)` plan keep the same `{kind, unit, count, rows}` envelope as a first run, so a persisted binding can't look like it lost data.",
+  "errors": [],
+  "seconds": 197.74,
+  "observedModel": "deepseek-4.1-flash",
+  "observedProvider": "lunaroute",
+  "exit": 0
+}

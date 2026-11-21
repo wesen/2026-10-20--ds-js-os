@@ -1,0 +1,17 @@
+{
+  "firmware": {
+    "sha256": "eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38",
+    "withExplicitPreheader": 437,
+    "exampleOrdinal": 479
+  },
+  "checked": {
+    "sha256": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+    "withExplicitPreheader": 42,
+    "exampleOrdinal": 88
+  },
+  "unchecked": {
+    "sha256": "d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4",
+    "withExplicitPreheader": 42,
+    "exampleOrdinal": 88
+  }
+}

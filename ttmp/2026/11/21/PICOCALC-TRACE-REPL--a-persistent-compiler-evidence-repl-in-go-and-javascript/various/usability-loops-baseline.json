@@ -1,0 +1,40 @@
+{
+  "build": "d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4",
+  "examples": [
+    {
+      "source": "q.run(a.variant(\"checked\").events(\"middle\").at(88).select(\"ordinal\",\"pass\",\"header\",\"scope\",\"ref\"))",
+      "reply": {
+        "ok": true,
+        "value": {
+          "ordinal": 88,
+          "pass": "LoopInstSimplifyPass",
+          "header": "IR Dump After LoopInstSimplifyPass on for.cond",
+          "scope": {
+            "kind": "function",
+            "function": "for.cond"
+          },
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+            "ordinal": 88,
+            "start": 346976,
+            "end": 348729
+          }
+        }
+      }
+    },
+    {
+      "source": "q.run(a.variant(\"checked\").events(\"middle\").where(e => e.scope.kind === \"loop\").count())",
+      "reply": {
+        "ok": true,
+        "value": {
+          "kind": "count",
+          "value": 0,
+          "unit": "events",
+          "of": "a.variant(\"checked\").events(\"middle\").where(e => e.scope.kind === \"loop\")"
+        }
+      }
+    }
+  ]
+}

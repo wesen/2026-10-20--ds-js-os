@@ -1,0 +1,83 @@
+{
+  "build": "d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4",
+  "persistent": 17,
+  "isolatedType": "undefined",
+  "helpKeys": [],
+  "helpNumericalLeaks": {
+    "root": [],
+    "events": [],
+    "timeline": [],
+    "states": [],
+    "metrics": [],
+    "changes": [],
+    "machine": [],
+    "profiles": [],
+    "compare": [],
+    "capabilities": [],
+    "params": [],
+    "results": [],
+    "errors": [],
+    "cache": []
+  },
+  "helpTerminologyCues": {
+    "root": [
+      "at(74)"
+    ],
+    "events": [
+      "EarlyCSEPass",
+      "virtregrewriter",
+      "at(78)"
+    ],
+    "timeline": [
+      "virtregrewriter",
+      "at(74)"
+    ],
+    "states": [
+      "at(74)"
+    ],
+    "metrics": [
+      "at(74)"
+    ],
+    "changes": [
+      "EarlyCSEPass"
+    ],
+    "machine": [
+      "NoVRegs",
+      "at(78)"
+    ],
+    "profiles": [
+      "checked-llc-nolsr"
+    ],
+    "compare": [
+      "at(74)",
+      "at(78)",
+      "checked-llc-nolsr"
+    ],
+    "capabilities": [
+      "missingDebugLocations"
+    ],
+    "params": [
+      "checked-llc-nolsr"
+    ],
+    "results": [],
+    "errors": [],
+    "cache": []
+  },
+  "helpReplySHA256": {
+    "root": "a31b1c4e2aae3607c7909031e05061eb4be8a955bb27d320b0e5a2be799ec347",
+    "events": "856f8c96d25f7a568f93fb1c687a76e13a285551536efdec95fbbf59c78ec499",
+    "timeline": "20a2ff12b2ce0c1ff384e3190e9dbbcecbff875f12f91569f08228cd85e0eebd",
+    "states": "c5bbca21baa7ccbf17bbf0b45fa793a8b406c506a8bbf2219ae17bdf0d793ec6",
+    "metrics": "fd57b51eb0ed7b06fe6ac1cf8c73e9f0286131b8f4e4e21a9865982577a859f6",
+    "changes": "1fc7b490b06eef02998bfcebc9b74a3d742bece2739d6926dda51cdedeb9db54",
+    "machine": "ec8d4fe16bc7a18636a8a21a9a8d5f1fa29858ab94288c050f266422404a474b",
+    "profiles": "f44f5f62b0ce06a28aaea81011087a286ca6f63991b6d295c12022a08dc8e730",
+    "compare": "ce1025399e3488a65bf720e0126545d673e2b0c53ff25e2af950be30f3534aab",
+    "capabilities": "29f0d9910b77bf33e04246154ac4c49f2082e68c6c8a97305bc36a836c54b1c5",
+    "params": "ca19889cc2760be931a23165b0dfea34ec74740946d69b2380de8e714a2f95e8",
+    "results": "b90d3a9b77f944d1f77e36bed7a868aeba05c652b5bb86a6eaec66f766e946e5",
+    "errors": "24b4d6f7299e23c7e29a91c9f87fa43654ea0ba9824152a6e5e63e9532e77f20",
+    "cache": "3402ff3db4b18102a266d04a0baa91a507eb093a943282bb6081f9b6836262a4"
+  },
+  "afterOtherSessionClosed": 17
+}
