@@ -1,0 +1,48 @@
+{
+  "baseline": "c065dc2",
+  "ordinaryWorlds": {
+    "editor": {
+      "sourceSHA256": "0d72870b35479c867905feb9f3822b18e069027dc9aa5a4d3434ddca770652b8",
+      "rv32": {
+        "bytes": 75812,
+        "sha256": "1446a2d1bafb6a6654c62b7a512201132676679ce2ac623e68e21d0fb64de690"
+      },
+      "linkedWasm": {
+        "bytes": 92162,
+        "sha256": "0bd8f379652ac58038bda702dbc60a6e2df270f84f2287365502feb6a283deda"
+      }
+    },
+    "chess": {
+      "sourceSHA256": "0c0b4491f98258ebc959845dc3ccd5299d2e825b175a7e0e433c71c24d4fc115",
+      "rv32": {
+        "bytes": 46928,
+        "sha256": "fc3af804b0d41351b86c5816b67689b4f9e19f41478e83524b9d773d9ca18860"
+      },
+      "linkedWasm": {
+        "bytes": 76616,
+        "sha256": "714e94a4d2d413ed6acbdde5646ffa47cb6106db86367b55018af81dc100e757"
+      }
+    }
+  },
+  "historicalLargeUpdate": {
+    "bytes": 248108,
+    "sha256": "9031b6d47ec3877399feff116bec43b4d4bbb2f0657ac95bc0eca89bbeb9a4e3"
+  },
+  "quickJS": {
+    "sourceSHA256": "d3dfffdfaaddcaf88152d233f8146c4b0ab2bda12679347ec02830f6b1ddb558",
+    "wasm": {
+      "bytes": 7157,
+      "sha256": "08959481b0d7ca4e93fb96e6628641e329d1dfca10f67974f8c07fc61d20b290"
+    },
+    "rv32": {
+      "bytes": 15052,
+      "sha256": "06c048bf1afae16d15b9e40b461e730b9656a7bb18a15834533c99446e69ee5a"
+    }
+  },
+  "async": {
+    "linkedWasm": "1ebe85402e934f92cd9b0b9531a69e533a1b568ab02ceb574bbfec8843818c37",
+    "rv32": "295795073cace0c4617cae3a3d16fb745aa7c1c76a82ecda099d4baa2fc66acd",
+    "recursiveAliasRejected": true
+  },
+  "declarationAndScopeFailures": 7
+}

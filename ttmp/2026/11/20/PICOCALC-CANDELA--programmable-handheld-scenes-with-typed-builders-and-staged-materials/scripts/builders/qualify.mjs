@@ -72,6 +72,8 @@ for (const [variant,p,entry] of [["hand",sugar,"candelaHandShared"],["fluent",su
     const words = new DataView(bytes.buffer,bytes.byteOffset+graph+4,count*2);
     const cell = i => words.getUint16(i*2,true);
     assert.deepEqual(Array.from({length:8},(_,i)=>cell(i)),[0x4341,1,7,3,2,1,2,0]);
+    assert.deepEqual(Array.from({length:4},(_,i)=>cell(280+i)),[68,61,56,26]);
+    assert.deepEqual(Array.from({length:4},(_,i)=>cell(285+i)),[100,65,105,32]);
     const left = cell(284), right = cell(289), floor = cell(6);
     assert.notEqual(left,right);
     const leftNode = cell(264+left), rightNode = cell(264+right);

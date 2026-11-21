@@ -2,16 +2,16 @@
   "compilerSHA256": "01ed39d12dd6c0238d8fa11f16d2ccf883e792c783a916c31e36f8349b179cb6",
   "sources": {
     "builders.typed": "93acb5dafde9d8744ddba48b7d51111a4f4ff3492d3e43e60af1d97c8d9c3680",
-    "materials.typed": "31be5ce21cb0dcc6421b5a5083b243294a12f2422edf5d2820b48b6380d079f0",
+    "materials.typed": "521dcb6dc591f6fe894d7a7d1cb0873be4213b2d0fadd0e5f8e29165259a3083",
     "hand.typed": "5fd296646cbb28240ff6a9241572fd5c90beea64a5c21be3a5e8305eaf084acd"
   },
   "wasm": {
-    "bytes": 6462,
-    "sha256": "51e3e0020556f7daa43736a980ee169e9191a76cbbea4310ee6afba43f4f548b"
+    "bytes": 7334,
+    "sha256": "7eae5dcb92ac9741e9461ad6c3775cc2680038922a5262d8c2f1cb7b471c7a99"
   },
   "rv32": {
-    "bytes": 13884,
-    "sha256": "b7a870603ea0385462d8484afa827f2a4eee963cdbee68bfbfd106eb7b6f1019"
+    "bytes": 15640,
+    "sha256": "c44e46b9c707f3bd0e0fe74822823501cb113e44f90bcaa2296a56bb342db6d4"
   },
   "orderedLiteralMatchesDirectImages": true,
   "modes": [
