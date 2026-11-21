@@ -91,6 +91,17 @@ Compilation also happens on the P4. The ordinary scalar compiler interval took a
 
 The programmable comparison repeated 36 pairs across two fixtures and three parameter values per fixture. With the shared checker scene, mixed C/PIE geometry plus the Typed material shader took 28.759 ms and the complete Typed frame took 71.307 ms. With the captured tile shader the corresponding medians were 18.137 and 60.666 ms. Both returned the expected pixels. The complete Typed cost increased by about 42.5 ms in both comparisons even though the material formula changed. That consistency motivates measuring the geometry and lighting paths independently on more scenes. [Physical experiment and scope](04-how-to-time-a-complete-typed-ray-tracer-on-the-handheld.md)
 
+### Timing shadows and materials independently
+
+The follow-up firmware prepares the real visibility and winning material rows before either clock starts. One entry queries shadows only for visible plane pixels and emits a 16-bit mask. The other calls the Typed scanline shader on those material IDs and retains the unlit RGB888 channels. Each pass processes 160 rows. A separate evaluator predicted both byte streams. All 36 phase observations matched, including 3,339 visible shadow pixels in each fixture.
+
+| Material graph | Shadow-mask pass | Unlit material pass |
+|---|---:|---:|
+| Shared colors and checker floor | 24.570 ms | 20.327 ms |
+| Captured tile floor | 24.573 ms | 9.720 ms |
+
+The practically identical shadow timings reflect the shared sphere positions and light. Changing the material graph changed the unlit material time by 10.607 ms. This directly explains most of the 10.641 ms difference between the two complete Typed programmable frames. The isolated calls materialize intermediates and make 160 native-to-Typed calls per pass, so adding them together does not reproduce the single-entry full-frame clock. [Diagnostic interface and verified physical data](04-how-to-time-a-complete-typed-ray-tracer-on-the-handheld.md)
+
 ## Which improvement earns another experiment?
 
 The positive-divisor proof has the clearest path into the general compiler. It improves generated frames across all 36 matched pose/repetition pairs and reduces image size. The next step is to apply the same edge-case checks to the normal app catalog and reproduce the physical gain on another program. The strongest source-level improvement is the row-oriented traversal. It makes the current renderer substantially faster and preserves images, but its geometric proof depends on this orthographic scene. Promoting it as the Ray Tracer implementation and claiming a general compiler optimization would be two different decisions.

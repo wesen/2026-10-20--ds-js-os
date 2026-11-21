@@ -1,0 +1,14 @@
+{
+  "repository": "go-go-golems/go-go-parc",
+  "branch": "main",
+  "commit": "1440d663ab467ba9c5e0a83a475c4468d2dfaa2c",
+  "files": {
+    "Projects/2026/11/21/_assets/typed-ray-tracer-lab-typed-relit.png": "440b2137490dc3188786bc2c51381f642f10342741e165b42b1b2c334e5c95c2",
+    "Projects/2026/11/21/_assets/typed-ray-tracer-lab-physical-frames.png": "b878e17ce9c56b1d99aab96af9b513ccdb3261a28b1365d835b4153f059465fd",
+    "Projects/2026/11/21/ARTICLE - PicoCalc Typed Ray Tracer Lab - Which work survives compilation in a handheld ray tracer.md": "b20cdb4b9bd8a7c48f277892d25bb258b958efe646aa33b904ab41a2fb5cf6b8",
+    "Projects/2026/11/21/ARTICLE - PicoCalc Typed Ray Tracer Lab - A complete ray tracer in Typed.md": "e01dd11309db1434471cae1b55d3aa522c4a68c4cf5e9495e476d3600caefe72",
+    "Projects/2026/11/21/ARTICLE - PicoCalc Typed Ray Tracer Lab - What eight lanes save in a complete Typed ray tracer.md": "3bcce3291d91ed12762edd3877856b93874fa7104a0c52d123c4d90940a19923",
+    "Projects/2026/11/21/_assets/typed-ray-tracer-lab-handoff.png": "da636cdda83efcb7cd0496731691fe09e1a29897223271d58a42640cc0c25b56",
+    "Projects/2026/11/21/ARTICLE - PicoCalc Typed Ray Tracer Lab - How to time a complete Typed ray tracer on the handheld.md": "7430086475fa0319b74b4dd932d56135ca9ce1848d6aa6fffc71516826fa1c52"
+  }
+}
