@@ -1,0 +1,63 @@
+{
+  "addr": "http://127.0.0.1:3792",
+  "tmux": "picocalc-trace-repl-retest",
+  "binarySHA256": "523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71",
+  "sourceQuerySHA256": "482260a431634db8de4dcea6f17d8600dc4fc75b1e1d9ce2feca023db7f25dea",
+  "embeddedBytesMatched": true,
+  "headAtLaunch": "14d8f335faca1dd58455371a924e30bbfb4aabe5",
+  "launchArgs": [
+    "serve",
+    "--addr",
+    "127.0.0.1:3792",
+    "--archive",
+    "ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes",
+    "--device-study",
+    "ttmp/2026/11/21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs"
+  ],
+  "readiness": {
+    "verifiedStreams": 6,
+    "verifiedBytes": 30912391,
+    "reportedLoadElapsedMs": 106.820212,
+    "pairedTrials": 864,
+    "loadRecords": 18
+  },
+  "smoke": {
+    "ordinal88": {
+      "ordinal": 88,
+      "pass": "LoopInstSimplifyPass",
+      "scope": {
+        "kind": "loop",
+        "loop": "for.cond",
+        "function": null,
+        "functionEvidence": {
+          "method": "none",
+          "note": "the header names only the loop header block, so ownership is not shown; function is null and every function timeline keeps this event (scope.ownerHint is a tentative proximity hint, not an owner)"
+        },
+        "ownerHint": {
+          "function": "row",
+          "tentative": true,
+          "method": "passManagerAdjacency",
+          "anchorOrdinal": 87,
+          "provenance": "the nearest earlier event (ordinal 87) of this checked/middle stream scoped to exactly one function; proximity only, not proof of ownership",
+          "headerBlockInAnchorPrint": true
+        },
+        "classifiedBy": "\"for.cond\" is not a function of the module given to the pipeline",
+        "print": "loopFragment",
+        "headerBlockInPrint": true
+      },
+      "function": null,
+      "ref": {
+        "variant": "checked",
+        "phase": "middle",
+        "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+        "ordinal": 88,
+        "start": 346976,
+        "end": 348729
+      }
+    },
+    "directHeaderLoadsAt73And74": [
+      11,
+      6
+    ]
+  }
+}

@@ -188,3 +188,54 @@ Read `various/session-lifetime/baseline-service.json`, `live-query.json`, and th
 ### Technical details
 
 `Archive.Verify` accounts for upfront stream validation; it does not populate each session's JS caches. Within one VM the first two semantic queries missed the text, snapshot and measurement caches twice each. Later VM-local hits can bypass reading the shared native stream at all. The observed two-hit transition is independent of operating system page cache warmth and of the 127.13 ms server preflight on this launch.
+
+## Step 4: Operate a second immutable build for the retest
+
+After the baseline persona round, the supervisor commissioned a second frozen service on port 3792. Keeping both processes live lets a reviewer replay the same source against each without changing a running participant's session state.
+
+### Prompt Context
+
+See the [supervisor diary](01-supervisor-investigation-diary.md). The retest asks whether corrected loop-print evidence helps the researcher separate compiler facts from provisional guesses.
+
+### What I did
+
+- Started `picocalc-trace-repl-retest` in tmux with the same two evidence roots and port 3792 and recorded the readiness log.
+- Opened a fresh HTTP session. Queried the 88th zero-based ordinal of the checked middle stream and counted the direct row capacity loads at ordinals 73 and 74. Closed the session.
+- Used the PID listening on the test port to hash its executable and confirmed that its raw bytes contain the complete expected JavaScript implementation. Sent the receipt and address to the blind trial operator.
+
+### Why
+
+The working tree contained reviewed changes beyond the base commit when this build started. The executable digest identifies what served the researchers. Verifying the embedded JS bytes ties the observed behavior to one particular query implementation.
+
+### What worked
+
+- The candidate loaded 30,912,391 verified bytes across 6 streams, 864 paired records and 18 load records. The stream verification log reported 106.82 ms. No cold-start speed comparison was made.
+- `scope.kind` was `loop` for event 88 (`LoopInstSimplifyPass`, block `for.cond`). The definitive function was JSON null. A separate `ownerHint` proposed `row`, flagged it as tentative and located its adjacency evidence at ordinal 87. The returned direct row header counts at 73 and 74 were 11 and 6.
+
+### What didn't work
+
+No failure in candidate startup or either independent HTTP probe. Two existing test expectations about definite ownership were under separate implementation-owner review when this immutable binary was frozen.
+
+### What I learned
+
+A query can provide a useful lead without asserting that a nearby print proves it. A comparison that equated a nearby function with definitive ownership would assign false evidence to a user's optimization proposal.
+
+### What was tricky to build
+
+The repository commit at launch covered the earlier baseline and research documents. The candidate executable has SHA-256 `523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71`; its embedded query has SHA-256 `482260a431634db8de4dcea6f17d8600dc4fc75b1e1d9ce2feca023db7f25dea`. The baseline continued running on 3791.
+
+### What warrants a second pair of eyes
+
+Use the corrected candidate address for the second round. A successful HTTP response from the baseline would otherwise look like a passing transport test while returning the old evidence interpretation.
+
+### What should be done in the future
+
+Keep `candidate-service.json` with the blinded retest records. The supervisor and usability researcher own candidate interpretation and final release decisions.
+
+### Code review instructions
+
+Compare `various/session-lifetime/candidate-service.json` to `baseline-service.json`. For event 88, read both `scope.functionEvidence` and `scope.ownerHint`, then inspect its byte range in the underlying archive.
+
+### Technical details
+
+The readiness and smoke receipts give archive sizes, server arguments, executable identity and a concrete scope response. They do not identify a unique function for every printed loop.
