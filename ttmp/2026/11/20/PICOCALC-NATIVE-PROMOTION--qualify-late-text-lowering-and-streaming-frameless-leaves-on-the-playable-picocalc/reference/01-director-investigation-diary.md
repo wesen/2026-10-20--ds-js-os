@@ -179,3 +179,56 @@ See scripts/device/workflows.py for the untimed opening check and timed move pat
 ### Technical details
 
 The reference app region starts at row 22 of the 320 by 320 framebuffer. The clocks and dynamic system status in the top bar are outside this region. The accepted final reply is compared again against an independent frozen frame.
+
+## Step 4. Measure the actual output, restore the playable release and publish
+
+The physical operator handed off the ordinary board after three successful candidate boots, three matching Chess replies, and an Editor edit, save, reopen and cleanup. The independent qualifier then ran the six-block crossover. The normal device and the standalone test gave consistent improvements on the 1,600-node workload. I accepted the combined change for this board.
+
+### Prompt Context
+
+See Step 1. I treated the promotion as a release to the attached device and publication of the research material to the authorized vault.
+
+**Commit (code)** 75ccb43 — Qualify the playable firmware and document its on-device compile and move times.
+
+### What I did
+
+- Reviewed various/device/comparison.json and independently recomputed the changes from the three cold boots per image and three moves per image. The candidate screenshot showed the board after b8c6 and the expected turn indicator.
+- Checked the PSRAM collector's clock, treatment order, loaded entry addresses, tuples and six pairs per position. Confirmed that every pair favored the candidate. Used scripts/release/03-plot.py to draw the per-pair reductions directly from various/psram/physical.json.
+- Verified the physical receipt records a readback of the ordinary application and partition and a fresh startup with eight native worlds, a working keyboard and a painter installed with zero rejects.
+- Reviewed the three researchers' articles and wrote the director article. Staged four articles and three figures through scripts/release/04-publish.sh. Published them to go-go-parc main, verified the remote ref and every committed article/figure, and linked the results from the project research index. The publication manifest is various/release/publication.json.
+
+### Why
+
+The everyday firmware, the guest ELF, and the CPU counter each have different measurement boundaries. Pairing a deterministic search benchmark with an actual played turn and exact UI behavior lets a reader assess both product value and what the evidence establishes about the compiler.
+
+### What worked
+
+The median cold Chess compile fell from 3.638 s to 1.894 s, and Editor fell from 2.585 s to 2.358 s. The ordinary Chess world used 246.665 ms before and 212.009 ms after. In the supplementary trial, median paired time reductions were 14.16% for the opening, 14.12% for Kiwipete and 14.23% for the ordinary reply after e2e4. All 36 searches matched the Wasm oracle and the 135 checked root cells. The go-go-parc push was verified at 139fb1f4751c8e677302687350eeff58454f1240.
+
+### What didn't work
+
+Files cold compilation rose 6.880 ms, from 273.617 to 280.497 ms. Its peak tracked compiler heap grew by 10,384 bytes. Cold tests run sequentially by firmware, and the design does not identify which of the two optimization implementations accounts for that small change. We retained the result and accepted this tradeoff.
+
+### What I learned
+
+On the ordinary move, the world CPU saved 34.656 ms. The separate search saved 34.288 ms at the median. That agreement supports the search as the main measured contributor on this position. It does not partition a single turn into perfectly additive components. Recorded paint completion brackets overlap, precluding a precise claim about panel timing.
+
+### What was tricky to build
+
+The test had two different return paths to an ordinary firmware. Failure during candidate qualification restored the previous release. Finishing the later temporary timing probe restored the newly qualified release. Attesting each image by its full hash and serializing board ownership ensured the final device state followed that order.
+
+### What warrants a second pair of eyes
+
+Physical evidence covers one board, three selected search positions and the joint compiler treatment. Existing slots continue to reserve the original memory. The design and articles document these restrictions, plus the absence of clock-level timestamps for the last displayed pixel.
+
+### What should be done in the future
+
+To isolate the contribution of frameless leaves to real search time, add the two single-change complete Chess ELFs to this same fixed-work PSRAM harness. The six-arm predecessor supplied static counts. The present release trial supplies real paired timings for the combined treatment.
+
+### Code review instructions
+
+Read analysis/01 for the synthesis and the other three articles for the mechanisms, oracle and ordinary UI evidence. Run scripts/device/04-summarize.py against various/device, inspect various/psram/physical.json, then reproduce the plotted points with scripts/release/03-plot.py. Vault and reMarkable delivery identities are in various/release/publication.json.
+
+### Technical details
+
+All twelve ELF loads used 0x48008fc0 as their PSRAM segment base on core 0 at 360 MHz. Both images were verified at the normal app offset 0x10000 and the production partition map at 0x8000. The promoted app SHA-256 starts with 33b439d0a7bcdf85. The ignored local image and its SHA256SUMS are under picocalc-os/build/native-promotion.

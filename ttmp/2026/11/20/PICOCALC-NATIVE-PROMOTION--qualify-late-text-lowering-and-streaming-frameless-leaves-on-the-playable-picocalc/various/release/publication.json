@@ -1,0 +1,21 @@
+{
+  "vaultRepository": "go-go-golems/go-go-parc",
+  "remoteBranch": "main",
+  "verifiedRemoteCommit": "139fb1f4751c8e677302687350eeff58454f1240",
+  "directorArticle": "https://github.com/go-go-golems/go-go-parc/blob/139fb1f4751c8e677302687350eeff58454f1240/Projects/2026/11/20/ARTICLE%20-%20PicoCalc%20Native%20Compiler%20Promotion%20-%20How%20two%20streaming%20compiler%20changes%20affect%20a%20playable%20handheld.md",
+  "manifest": {
+    "Projects/2026/11/20/_assets/native-compiler-promotion-psram-search.png": "88481062e8acd979d7b06b3c902a8725869b51a0bb969a243ae0c3f858166d26",
+    "Projects/2026/11/20/_assets/native-compiler-promotion-candidate-chess-reply.png": "68a0f3371728831784ad305ad16ddfcc0f66a77bf3452ec9a2f7d2d763a5ba57",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Promotion - How two streaming compiler changes affect a playable handheld.md": "0b3cf97b3d1b1d27e6bfd48d649d3b7082d339228d035eaed6a0c00da83845c2",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Promotion - How fast does the PicoCalc search when its Chess world executes from PSRAM.md": "870dd6295fab3d9c8ca4c8f98b3944b649a786952d41368d8e3a78117d641cd6",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Promotion - From Typed operations to smaller RV32 functions.md": "b1a5937fbe4ca6a7d0d798fda8e2434bf9c9c1712d3bdf350ebe9e18765c7638",
+    "Projects/2026/11/20/_assets/native-compiler-promotion-baseline-editor-screen.png": "be4e4ec525ccb44a869dfd7a2ce0a7ce31ae0cd8410de4065aae8dd6bead3b90",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Promotion - What changes for the person playing Chess.md": "b0eab5615419f3fb97073549e6e84164043acbba279ea3f7692fcb4ad446e9f8"
+  },
+  "remarkable": {
+    "remoteDirectory": "/ai/2026/11/20/PICOCALC-NATIVE-PROMOTION",
+    "remoteDocument": "PicoCalc_Native_Compiler_Promotion_-_Implementation_Guide.pdf",
+    "confirmation": "OK: uploaded",
+    "verified": "cloud delivery"
+  }
+}

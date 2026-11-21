@@ -31,6 +31,8 @@ The two-boot study and its independent examination are published in go-go-parc. 
 
 The follow-up [combined integration trial](../../PICOCALC-RV32-COMBINED--qualify-branch-fusion-with-compact-output-in-the-streamed-picocalc-compiler/analysis/01-what-happens-when-two-native-compiler-optimizations-share-the-same-output.md) measured the joint backend on two physical boots. Relative to the streamed control, Editor saved 88–95 ms and about 2.8 KB of peak compiler heap. Files and Agenda compiled faster with roughly 19 KB higher peaks. The candidates remain in the ticket. [Published combined-trial report](https://github.com/go-go-golems/go-go-parc/blob/ded463fd50ead0a38f6b7ff898f82ffdad423900/Projects/2026/11/19/PROJECT%20REPORT%20-%20PicoCalc%20Compiler%20-%20Integrating%20Branch%20Fusion%20and%20Compact%20Output.md).
 
+The [playable firmware qualification](../../../20/PICOCALC-NATIVE-PROMOTION--qualify-late-text-lowering-and-streaming-frameless-leaves-on-the-playable-picocalc/analysis/01-promoting-two-native-compiler-changes-to-the-playable-picocalc.md) follows late checked-text lowering and streaming frameless leaves through the production compiler, complete Chess and Editor ELFs, and physical ESP32-P4 execution. It includes cold compiler timings, generated-code timings, and the firmware identity.
+
 ## Where to start
 
 | If you want to know… | Open this first |

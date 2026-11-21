@@ -17,7 +17,7 @@ assert receipt['probePassed'] and receipt['restoredReadback']
 fig,ax=plt.subplots(figsize=(8.6,3.7))
 names=['Opening · 871 nodes','Kiwipete · 7,194 nodes','After e2e4 · 1,600 nodes']
 offsets=[-.15,-.09,-.03,.03,.09,.15]
-xs=[0.]
+xs=[]
 for y,(case,name) in enumerate(zip(('0','6','15'),names,strict=True)):
     vals=receipt['cases'][case]['reductionsByBlockPct']
     assert len(vals)==len(offsets)
@@ -25,12 +25,12 @@ for y,(case,name) in enumerate(zip(('0','6','15'),names,strict=True)):
     ax.plot([min(vals),max(vals)],[y,y],color='#285061',lw=1.5)
     ax.plot(median(vals),y,'D',color='#193b50',ms=7,zorder=5)
     xs.extend(vals)
-xmin=min(xs); xmax=max(xs); width=max(1,xmax-xmin)
+xmin=min(xs); xmax=max(xs); width=max(.07,xmax-xmin)
 ax.set_xlim(xmin-.045*width,xmax+.07*width)
-ax.axvline(0,color='#929ca3',lw=1)
+
 ax.set_yticks(range(3),names)
 ax.set_ylim(2.48,-.48)
-ax.xaxis.set_major_formatter(PercentFormatter(xmax=100,decimals=0))
+ax.xaxis.set_major_formatter(PercentFormatter(xmax=100,decimals=2))
 ax.set_xlabel('Reduction in search time relative to the stock ELF')
 ax.grid(axis='x',alpha=.2)
 ax.spines[['top','right','left']].set_visible(False)
