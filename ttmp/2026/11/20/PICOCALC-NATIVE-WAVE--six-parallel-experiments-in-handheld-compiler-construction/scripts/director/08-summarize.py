@@ -55,7 +55,10 @@ for axis, endpoint in zip(axes, ("parse", "count", "label")):
     axis.set_xlabel("Reduction from stock (%)")
 axes[0].set_yticks(range(len(display)),display)
 axes[0].invert_yaxis()
-fig.suptitle("Generated telemetry code on the ESP32-P4", fontsize=14)
+composed = arms[0]["arm"] == "early-stock"
+title = "Combining late lowering and leaf optimization on the ESP32-P4" if composed else "Generated telemetry code on the ESP32-P4"
+fig.suptitle(title, fontsize=14)
 fig.text(.5,.015,"Dot: median of 11 paired timing changes   |   Line: observed range   |   Cross: modeled instruction reduction",ha="center")
 fig.tight_layout(rect=(0,.055,1,.93))
-fig.savefig(args.output/"telemetry-native-runtime.png", dpi=160, bbox_inches="tight")
+filename = "telemetry-composed-runtime.png" if composed else "telemetry-native-runtime.png"
+fig.savefig(args.output/filename, dpi=160, bbox_inches="tight")

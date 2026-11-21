@@ -267,3 +267,51 @@ Run scripts/director/11-compose-release-worlds.mjs with the exact ordinary appli
 ### Technical details
 
 The two release sources are 69,884 and 61,022 bytes. The checked ELFs are 242,124 and 274,892 bytes. Inline currently uses a buffered compilation path; frameless standalone keeps streaming available.
+
+## Step 6: Independently audit the conclusions and run the crossed hardware comparison
+
+The researchers' raw receipts made it possible to compare the stock control, two separate transformations and their actual combination on the board. I also asked an independent Astra reviewer to recompute the principal outcomes from raw observations and audit what the firmware timers include.
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Supervise independent research and publish the strong results and their limits together. **Inferred user intent:** Give the reader evidence for adopting, testing or rejecting each idea. **Previous commit:** 772f6ef — Explain the six compiler studies and put the measured tradeoffs in the research index.
+
+### What I did
+
+Ran the second physical matrix after the dependency study returned the ordinary firmware. Checked the six machine images, expected values, capacities and complete scope of all 231 observations. Brought the full-world link results, both telemetry matrices, balanced compiler timings and the 90 observed edits into the director synthesis. Added an explicit account of differences between experimental and production loading. Reviewed evidence for gate failures and safe conservative rejections.
+
+### Why
+
+A result from a small isolated loop cannot answer the user's product question unless the actual execution environment is accounted for. An independent reviewer can also detect a claim that sounds plausible but doesn't follow from the control.
+
+### What worked
+
+Late plus frameless reduced telemetry parse time by 16.071%. Late plus inlining reduced it by 21.558%. Separator-count and label-write reductions stayed at 15.901% and 21.267% in both combinations. The stock repeat measured a median change of 0.045% in parsing. The independent review replicated all 21 cells from the first matrix and all five Chess comparisons. Recorder receipts from the dependency study contain all 90 verified edits.
+
+### What didn't work
+
+The initial synthesis undercounted the valid held-out edits by one, described an arity diagnostic imprecisely and gave the fresh-engine cold endpoint too little detail. I corrected the report against the original artifact and the reviewer's readings of the production and probe code. The first experiment did not separately distinguish the semantic representation from the specialized instruction selection; the revised report explicitly leaves their individual contributions open.
+
+### What I learned
+
+The standalone native benchmark code executes in mapped flash, while the normal runtime places native worlds in PSRAM. Matched flash controls establish a useful difference, but they cannot demonstrate the latency seen by the ordinary loaded app. Similarly, a cache's fast structural edit and slower body edit call for separate deployment decisions.
+
+### What was tricky to build
+
+The CPU comparison had to preserve the actual emitted instructions, including branch layout and the entry of every compared function. Each one of the four overlapping stock or single-change compiler outputs reproduced the source of the first physical comparison. The independent execution replay excludes the test driver initialization and checks returned values before accepting timings.
+
+### What warrants a second pair of eyes
+
+Eleven repeated blocks on one physical board are descriptive, not independent devices. Whole-app size reduction does not release a fixed native slot by itself. The five physical Chess trials used three repeated timings per case, enough to support a qualification experiment but too little for a general performance model.
+
+### What should be done in the future
+
+Measure the normally loaded apps under the release scheduler with the validated two-operation change and streaming frameless lowering, and include a same-output full guest replay as well as boot and render measurements.
+
+### Code review instructions
+
+Inspect reference/20-independent-scientific-review.md and the balanced original compiler receipt in various/01-bounds. Compare various/director/composed/paired-results.json against the standalone model, then follow the full application linker measurement in various/director/composed-release-worlds.json.
+
+### Technical details
+
+The second physical matrix uses early/stock as the paired baseline, 11 blocks, 48 replays per block, one 360 MHz P4 core. All complete edit builds were checked byte for byte against the clean linked ELF. Their edit timer excludes cache commit and output comparison.

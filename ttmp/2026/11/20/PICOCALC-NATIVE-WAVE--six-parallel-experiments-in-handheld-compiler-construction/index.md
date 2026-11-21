@@ -47,7 +47,7 @@ Start with [What a handheld compiler should remember](analysis/07-what-a-handhel
 | Selecting bounds proofs | [Admission policy](design-doc/01-select-bounds-analysis-while-streaming.md) | [Where the fixed budget goes](analysis/01-streamed-bounds-admission.md) | [Investigation](reference/11-bounds-admission-diary.md) |
 | Retaining checked operations | [Frontend to RV32](design-doc/02-preserve-checked-operations-to-native-lowering.md) | [Operation lifetime](analysis/02-checked-operation-lifetime.md) | [Investigation](reference/12-operation-lifetime-diary.md) |
 | Leaf functions and inlining | [Register and call conventions](design-doc/03-leaf-functions-and-selective-inlining.md) | [Generated Chess execution](analysis/03-leaf-lowering-and-selective-inlining.md) | [Investigation](reference/13-leaf-lowering-diary.md) |
-| Dependency tracking | [Invalidation and relinking](design-doc/04-precise-fragment-dependencies.md) | [Edit evidence](various/04-deps/clean-fragments.json) | [Investigation](reference/14-dependency-reuse-diary.md) |
+| Dependency tracking | [Invalidation and relinking](design-doc/04-precise-fragment-dependencies.md) | [Rebuild time and invalidation](analysis/04-precise-fragment-dependencies.md) | [Investigation](reference/14-dependency-reuse-diary.md) |
 | Stack-use certificates | [Claims and independent checks](design-doc/05-stack-use-certificates.md) | [Stack bounds and rejected candidate](analysis/05-stack-use-certificates.md) | [Investigation](reference/15-stack-certificates-diary.md) |
 | Buffer lifetimes | [Borrowed values across turns](design-doc/06-infer-turn-lifetime-parameters.md) | [Inferred continuation lifetimes](analysis/06-turn-lifetime-inference.md) | [Investigation](reference/16-turn-lifetime-diary.md) |
 
