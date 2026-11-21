@@ -1,0 +1,57 @@
+[
+  {
+    "label": "shared",
+    "viewCRC": "bf6f23f4",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "ff3499b1",
+      "sha256": "e6baaea44089899937a820f08958d1176fdb9f54eae90eb23226591759abedaf",
+      "appSha256": "d11d7425b97ec9bb939e0e66bfa9ab4622c99ddb8eec43179387e8857601f73b"
+    },
+    "pngSHA": "7cba4dd7e010bdc2e8a82143270e5ece64eff5e5f2d55d3aac5ec35bac60cda0"
+  },
+  {
+    "label": "shared-edited",
+    "viewCRC": "b3f18828",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "8b6a661c",
+      "sha256": "264ef197f634f65e70d60ff7a6df8e3bbdd5edd532f66f477c9cac1b86974a68",
+      "appSha256": "1c7a73687f81e005e0270554e0c5f18dd01e2f20bf52ec57ccc360b978f56016"
+    },
+    "pngSHA": "baf9917df47e7eed72cd0e5a1d337e1dbcd53bdbc6b16c5b3f7c96b817c7e3f3"
+  },
+  {
+    "label": "tiles",
+    "viewCRC": "e5fa37f6",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "4d64e712",
+      "sha256": "b4a37c4b32c5d0e405b667a38003cf5484c46f8c3a4aa814c42a86c6e870f21c",
+      "appSha256": "5e7f31aaf1c14bec2e4009a4f9072abd31e5f83ad29b69d1e13ef70ea04d9d4f"
+    },
+    "pngSHA": "8749907218c7108416711220f23339d272136305b22c126c6864edca3fa422b5"
+  },
+  {
+    "label": "tiles-edited",
+    "viewCRC": "d0e423a8",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "708d3ac8",
+      "sha256": "685779da149c7ee254e87c8089584bdf9f0a69ae00fa987b4eddb37b8b22e404",
+      "appSha256": "c674744aa08e4827f78d72b2f1d4a2700a99b55cd4b9361a0217adcb186be0fc"
+    },
+    "pngSHA": "7ac6c129d81a80d4097c50fda17d1593e230589aa74a5e4ac4e0e68ebf47cc16"
+  },
+  {
+    "label": "tiles-relit",
+    "viewCRC": "dbd8f98b",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "0b899515",
+      "sha256": "6c15a3005a05472dac023a617c4f5e1ae3ba1420858ef5a458f4246de8b7a59a",
+      "appSha256": "5b189ffd24b60e4a7379e5f59b181b5118016eda863e41db63fe2d3ca379bf12"
+    },
+    "pngSHA": "487eb1119ce5bfb80494be1cd28308ed9f5157adadb53fb1ec6e8bd85aa6617e"
+  }
+]

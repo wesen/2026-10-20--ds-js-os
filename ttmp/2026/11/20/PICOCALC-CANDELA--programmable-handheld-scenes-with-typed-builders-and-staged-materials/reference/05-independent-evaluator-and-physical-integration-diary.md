@@ -114,3 +114,49 @@ Inspect [host validator and pixel differential](../scripts/review/03-host.py), [
 ### Technical details
 
 Run the Python host script under CPython with a system C compiler; run the Node comparator with the SDK build's esp-idf/main directory containing the three assembled sources and slot template. Results are retained in [host](../various/review/host.json), [numerical](../various/review/numeric.json), [loader](../various/review/loader.json) and [physical preflight](../various/review/preflight.json).
+
+## Step 3. Qualify three resident native stages and return to ordinary play
+
+### Prompt Context
+
+**User prompt (verbatim)** [Commission](../sources/commission.txt), Team 4. **Assistant interpretation** Measure the complete authoring, update and rendering path on real hardware and verify native pixels independently. **Inferred user intent** Preserve the latest working ordinary firmware when the research ends. **Commit (code)** e9a4969 release inputs, 4bdc872 qualification harness.
+
+### What I did
+
+I acquired the single serial lock, verified the previous application and partition by flash readback, installed the candidate application only, verified it, and rendered both fixtures at three weights per stage in three rotated blocks. Each trial exercised both scalar-per-pixel and guest-per-row orderings at one output address. After the benchmark I reinstalled the final stage in the loader, navigated through the real app, compared five enlarged viewports to the independent oracle, reset, read back both flash regions and rechecked native health.
+
+### Why
+
+A per-pixel color sample may miss a shadow, a lost shared node or a wrong row expansion. The physical checks include whole buffers, the graph's active and spare cells, unlit samples and the enlarged compositor view. Full source digests make attribution possible.
+
+### What worked
+
+All 108 paired frames passed byte comparison and matched the independent reference CRC. All nine cold installs produced valid scenes. Five normal viewports matched all 57,600 pixels. R restored the classic viewport. The callback stage compiled in a median 543.594 ms with 738,460 bytes peak tracked heap. Shared and patterned rows completed in 28.877 and 18.202 ms respectively. Callback setter calls averaged about 0.73 µs in their batches.
+
+### What didn't work
+
+At weight 128, alternating the weight with its complement repeats the same value. That stratum measures legitimate invocation and a same-value guest store. Other weights and physical Right-key edits demonstrate actual changed values. We measured renderer latency, not controller-to-photon timing.
+
+### What I learned
+
+Three ways to author the same graph have measurable cold compiler overhead but similar steady rendering. Structurally resolving the canonical tile row and reducing per-pixel cross-language calls saves considerably more per frame than changing the authoring syntax. A Q8 value can remain valid in the graph even when a prospective ideal decimal produces different tile boundaries.
+
+### What was tricky to build
+
+Physical stage changes replace a program while its predecessor still exists. The temporary module had to survive full graph checks before replacing the predecessor; a fresh process would have understated required simultaneous storage.
+
+### What warrants a second pair of eyes
+
+Read the measurement boundaries, especially system PSRAM during relocation and caller-preallocated frame memory. The graph capture is complete for 18 stage/fixture/weight combinations; the 108 frames and five viewports are distinct kinds of observations.
+
+### What should be done in the future
+
+Measure multiple chained transforms and more complex materials before extending the numerical agreement claim. If user-visible latency is needed, synchronize key events with completed display transfers rather than inferring latency from a native renderer clock.
+
+### Code review instructions
+
+Check [all device steps](../scripts/review/05-device.py), [whole graph dumps](../various/review/graphs.json) and [standalone report](../analysis/05-what-does-it-cost-to-change-a-material-on-a-handheld.md). Raw serial and RGB565 files remained local in /tmp/candela-physical-final.
+
+### Technical details
+
+Verified application SHA-256 f3dc689a28dc1db1d3e91a44a288a87144b63e7b3005c3eefbec71d844008951, 4,472,704 bytes. Verified unchanged 3,072-byte partition table SHA-256 72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30. Reproduce with scripts/review/05-device.py qualify OUT --candidate BUILD --sha256 SHA. The shipped scene remains selectable via F1, V, G.
