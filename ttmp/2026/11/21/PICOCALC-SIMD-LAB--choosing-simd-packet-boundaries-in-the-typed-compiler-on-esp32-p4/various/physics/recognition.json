@@ -1,0 +1,365 @@
+{
+  "calibratedLinkedImageSHA256": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+  "originalAutoLinkedSHA256": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+  "relocatedImageSHA256": "d5c3665e73a9850b109022d8e9b5a4b701cc34639a78c70afe05b4c7a312a583",
+  "originalBytes": 3400,
+  "decisionRecords": {
+    "particleAoS": {
+      "name": "particleAoS",
+      "tapeWords": 145,
+      "layout": "aos",
+      "reads": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          1
+        ]
+      ],
+      "writes": [
+        [
+          2,
+          0,
+          0
+        ]
+      ],
+      "widthBits": 16,
+      "signedness": "explicit sign extension",
+      "arithmetic": "widen, add, saturate i16",
+      "aliases": "even positions and odd velocities",
+      "entry": "guarded_aos_pie"
+    },
+    "particleSoA": {
+      "name": "particleSoA",
+      "tapeWords": 136,
+      "layout": "soa",
+      "reads": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ],
+      "writes": [
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "widthBits": 16,
+      "signedness": "explicit sign extension",
+      "arithmetic": "widen, add, saturate i16",
+      "aliases": "position interval [0,n) disjoint from velocity interval [n,2n)",
+      "entry": "guarded_soa_pie"
+    },
+    "contacts": {
+      "name": "contacts",
+      "tapeWords": 176,
+      "decline": "ABI outside candidate class",
+      "entry": "physics_typed_contacts"
+    }
+  },
+  "relocatedDecisions": {
+    "relocate": {
+      "name": "relocate",
+      "tapeWords": 6,
+      "decline": "ABI outside candidate class",
+      "entry": "physics_typed_relocate"
+    },
+    "renamed": {
+      "name": "renamed",
+      "tapeWords": 136,
+      "layout": "soa",
+      "reads": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ],
+      "writes": [
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "widthBits": 16,
+      "signedness": "explicit sign extension",
+      "arithmetic": "widen, add, saturate i16",
+      "aliases": "position interval [0,n) disjoint from velocity interval [n,2n)",
+      "entry": "guarded_soa_pie"
+    },
+    "commute": {
+      "name": "commute",
+      "tapeWords": 136,
+      "layout": "soa",
+      "reads": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ],
+      "writes": [
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "widthBits": 16,
+      "signedness": "explicit sign extension",
+      "arithmetic": "widen, add, saturate i16",
+      "aliases": "position interval [0,n) disjoint from velocity interval [n,2n)",
+      "entry": "guarded_soa_1_pie"
+    },
+    "swapped": {
+      "name": "swapped",
+      "tapeWords": 136,
+      "layout": "soa",
+      "reads": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "writes": [
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "widthBits": 16,
+      "signedness": "explicit sign extension",
+      "arithmetic": "widen, add, saturate i16",
+      "aliases": "position interval [0,n) disjoint from velocity interval [n,2n)",
+      "entry": "guarded_soa_2_pie"
+    },
+    "affine_aos": {
+      "name": "affine_aos",
+      "tapeWords": 145,
+      "layout": "aos",
+      "reads": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          1
+        ]
+      ],
+      "writes": [
+        [
+          2,
+          0,
+          0
+        ]
+      ],
+      "widthBits": 16,
+      "signedness": "explicit sign extension",
+      "arithmetic": "widen, add, saturate i16",
+      "aliases": "even positions and odd velocities",
+      "entry": "guarded_aos_pie"
+    },
+    "shifted_read": {
+      "name": "shifted_read",
+      "tapeWords": 139,
+      "decline": "address families lack a qualified independence and disjointness proof",
+      "entry": "physics_typed_shifted_read"
+    },
+    "overlap": {
+      "name": "overlap",
+      "tapeWords": 136,
+      "decline": "address families lack a qualified independence and disjointness proof",
+      "entry": "physics_typed_overlap"
+    },
+    "wrong_destination": {
+      "name": "wrong_destination",
+      "tapeWords": 139,
+      "decline": "address families lack a qualified independence and disjointness proof",
+      "entry": "physics_typed_wrong_destination"
+    },
+    "bad_sign": {
+      "name": "bad_sign",
+      "tapeWords": 136,
+      "decline": "expected i32.ge_s",
+      "entry": "physics_typed_bad_sign"
+    },
+    "bad_ceiling": {
+      "name": "bad_ceiling",
+      "tapeWords": 136,
+      "decline": "expected i32.const 32767",
+      "entry": "physics_typed_bad_ceiling"
+    },
+    "bad_floor": {
+      "name": "bad_floor",
+      "tapeWords": 136,
+      "decline": "expected i32.const 32768",
+      "entry": "physics_typed_bad_floor"
+    },
+    "duplicate_lane": {
+      "name": "duplicate_lane",
+      "tapeWords": 136,
+      "decline": "sum does not consume both signed loads",
+      "entry": "physics_typed_duplicate_lane"
+    },
+    "extra_write": {
+      "name": "extra_write",
+      "tapeWords": 148,
+      "decline": "expected local.get 7",
+      "entry": "physics_typed_extra_write"
+    },
+    "different_return": {
+      "name": "different_return",
+      "tapeWords": 139,
+      "decline": "expected end",
+      "entry": "physics_typed_different_return"
+    },
+    "nonlinear": {
+      "name": "nonlinear",
+      "tapeWords": 136,
+      "decline": "product of two variable indices",
+      "entry": "physics_typed_nonlinear"
+    },
+    "budget": {
+      "name": "budget",
+      "tapeWords": 486,
+      "decline": "per-function tape budget exceeded",
+      "entry": "physics_typed_budget"
+    }
+  },
+  "outcomes": {
+    "particleAoS": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 34
+    },
+    "particleSoA": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 34
+    },
+    "renamed": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 34
+    },
+    "commute": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 34
+    },
+    "swapped": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 34
+    },
+    "affine_aos": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 34
+    },
+    "shifted_read": {
+      "comparisons": 120,
+      "firstTraps": 58,
+      "packedAdds": 0
+    },
+    "overlap": {
+      "comparisons": 120,
+      "firstTraps": 54,
+      "packedAdds": 0
+    },
+    "wrong_destination": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "bad_sign": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "bad_ceiling": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "bad_floor": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "duplicate_lane": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "extra_write": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "different_return": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "nonlinear": {
+      "comparisons": 120,
+      "firstTraps": 82,
+      "packedAdds": 0
+    },
+    "budget": {
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    }
+  },
+  "policyControls": {
+    "scalar": {
+      "entry": "guarded_soa_scalar",
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    },
+    "stock": {
+      "entry": "physics_typed_particleSoA",
+      "comparisons": 120,
+      "firstTraps": 60,
+      "packedAdds": 0
+    }
+  },
+  "comparisons": 2280,
+  "temporalScope": "host recognition and native image replay; runtime board timings refer to original calibrated code"
+}
