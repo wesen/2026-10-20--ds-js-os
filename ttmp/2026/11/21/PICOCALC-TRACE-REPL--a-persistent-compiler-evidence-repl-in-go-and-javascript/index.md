@@ -1,7 +1,7 @@
 ---
 Title: A persistent compiler evidence REPL in Go and JavaScript
 Ticket: PICOCALC-TRACE-REPL
-Status: active
+Status: complete
 Topics:
     - compiler
     - performance
@@ -11,8 +11,8 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: "A persistent workbench for formulating, testing and qualifying compiler optimizations against archived LLVM, emulator and ESP32-P4 evidence."
-LastUpdated: 2026-11-21T14:19:59.182733114-05:00
+Summary: A persistent workbench for formulating, testing and qualifying compiler optimizations against archived LLVM, emulator and ESP32-P4 evidence.
+LastUpdated: 2026-11-21T15:49:53.499749905-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -37,6 +37,8 @@ This workbench hosts a JavaScript query language in Go with go-go-goja. The oper
 ## Study results
 
 The release replays all 26 original workbook programs. The [raw-evidence study](analysis/02-evidence-from-compiler-passes-to-physical-frames.md) connects LLVM and Typed observations to paired ESP32-P4 measurements. The [runtime study](analysis/03-persistent-investigations-in-a-goja-runtime.md) measures what persists when a query is repeated. The [usability researcher’s textbook case study](analysis/04-using-blind-compiler-engineers-to-qualify-an-evidence-api.md) explains how to qualify such an interface. The [blind evaluation](analysis/01-what-compiler-engineers-found-in-the-trace-repl.md) records which conclusions changed when the interface changed. The director's [synthesis and next compiler experiment](analysis/05-designing-and-validating-compiler-optimizations-with-a-trace-repl.md) walks through the findings for newcomers.
+
+The four articles were published together in [go-go-parc revision 9114af1](https://github.com/go-go-golems/go-go-parc/commit/9114af1a208584e44e5f0557314a97c774047bba). The corrected research service was left running on `127.0.0.1:3792` and the original study control on `127.0.0.1:3791`.
 
 ## Ownership and evaluation
 

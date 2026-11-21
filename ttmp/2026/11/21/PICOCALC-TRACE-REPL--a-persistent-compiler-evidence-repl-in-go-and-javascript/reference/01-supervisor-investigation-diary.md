@@ -437,3 +437,60 @@ Read `scripts/32-replay-director-article.py`, the nine public receipts, the Opus
 ### Technical details
 
 The candidate binary was frozen while its source was in the working tree. The committed `pkg/traceapi/query.js` at `6494e30` hashes to `482260a431634db8de4dcea6f17d8600dc4fc75b1e1d9ce2feca023db7f25dea`, the same full JavaScript bytes found in the executable on 3792.
+
+## Step 8: Reconcile the final manuscript and publish four vault articles
+
+The final Opus High article returned with enough detail to reproduce the candidate pass query. During editorial review I asked the researcher to check which board data the baseline process supplied, whether the original service already accepted plan options, and the larger checked-row timeline. The author and operator checked the live services before publishing.
+
+### Prompt Context
+
+**User prompt:** “Each researchers when done, and you once you have all the results: write a detailed project report for the obsidian vault ... Commit and push ...”
+
+**Assistant interpretation:** Publish the three researcher articles and the director's final synthesis together, with individual authorship, reproducible evidence and source revisions.
+
+**Inferred user intent:** Make each investigation accessible to newcomers and give future researchers enough detail to audit the lab's conclusions.
+
+**Commit (code):** `1fdb07f` for the reviewed usability study and `4b436b2` for the final director synthesis and publication preparation. The remote vault commit is `9114af1a208584e44e5f0557314a97c774047bba`.
+
+### What I did
+
+- Checked the final opus-authored study against the running baseline and candidate receipts. Both processes returned physical observations. Only the candidate root help mentioned hardware. Valid bindings and maxRows already worked in both. The revised text records the differences participants actually experienced.
+- Read the exact 99→144 checked timeline reconciliation: 42 loop events, two module events and function-subject event 144. Included the independently recovered remainder in the director’s article.
+- Staged four vault notes from their committed manuscript bytes with `scripts/31-stage-vault-articles.py`. Checked relative research links before copying, added author and source-revision metadata and linked each article to the other three.
+- Copied four new notes into the user's 2026/11/21 vault folder. Checked source and destination bytes, committed only the four notes, pushed main and read back the remote branch head. The vault working tree was clean and matched origin/main.
+
+### Why
+
+A researcher’s failure to find a provider is evidence about discovery. Treating it as proof of missing measurement data would change how a reader interprets the two builds. The correction and the final note revisions belong in the reproducible study.
+
+### What worked
+
+The publications are distinct studies of the underlying observations, the Goja runtime, the behavior of research users, and the compiler experiment suggested by all three. Original query bindings and both service processes remain available to their existing users.
+
+### What didn't work
+
+The first draft treated differences in visible help as differences in access. A first accounting of the timeline change also left one event unexplained. The live readback resolved both before publication.
+
+### What I learned
+
+The release identifier and original ordinals allowed an unexplained single-event discrepancy to be settled after the main experiment had ended. A qualitative research report can benefit from the same replay discipline as a numerical benchmark.
+
+### What was tricky to build
+
+A ticket-relative source link is correct in the project and can point to a nonexistent file in another Git repository. The publishing script resolves such links against the checkout while retaining a source path and revision in each note.
+
+### What warrants a second pair of eyes
+
+The three long researcher articles distinguish captured experiments from proposed future ones. PC-level evidence and new physical timings still have to be collected before claiming a speedup for a two-register cache.
+
+### What should be done in the future
+
+The proposed compiler experiment and the remaining usability findings are documented for a separately commissioned investigation.
+
+### Code review instructions
+
+Compare the four manuscript revisions in the publication metadata with the note bodies in the vault commit. Read `various/usability-timeline-reconciliation.json` for the live control comparison and `various/director-article-cells.json` for the numerical examples in the director's report.
+
+### Technical details
+
+The vault's local and remote SHA-1 were identical after the push. The project has local implementation and documentation commits. This publication touched only the four new files in the vault.
