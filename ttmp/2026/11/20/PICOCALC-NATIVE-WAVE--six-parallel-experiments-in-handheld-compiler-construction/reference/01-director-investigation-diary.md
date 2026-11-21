@@ -169,3 +169,49 @@ Inspect scripts/director/07-verify-flash-images.py, then run scripts/director/08
 ### Technical details
 
 360 MHz, one core, eleven blocks, 48 repetitions per endpoint, seven arms. Stock median times were 2,208 µs for parse, 893 µs for count and 221 µs for label per timed batch. The measured image starts with SHA-256 419817c7; the ordinary release starts with 134f3a24. Device logs remained local.
+
+## Step 4: Combine two lowering changes and publish the six designs
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Own the experimental comparison across research groups and make each design accessible. **Inferred user intent:** Use the independent studies to identify combinations worth testing. **Earlier commit:** 243aebc — Measure native guest execution across six compiler outputs on the P4.
+
+### What I did
+
+Asked the leaf researcher to expose a source-injection argument in the ticket staging tool. Built a two-by-three comparison of early/late operations with ordinary, frameless and inlined calls. Reused each researcher's actual lowering implementation and the locked independent test program. Delivered the six final designs as a single reMarkable book with contents and verified its remote listing.
+
+### Why
+
+Both changes accelerate the same parse entry through different kinds of instructions. The most important unknown was whether changing the input operations disrupts leaf recognition or changes the benefits seen individually. A host comparison can reject a bad combination before a device window is booked.
+
+### What worked
+
+All six generated programs passed 1,603 differential cases each. The four overlapping individual-control images matched the existing hardware evidence byte for byte. On the complete modeled suite, late/stock executed 144,166 instructions; late/leaf 135,475; late/inline 132,105, compared with 158,570 for early/stock. A fresh staged build linked every arm at the verified entry offsets. Ten independent functions remain in every program because inlining at selected call sites leaves callable external entries intact.
+
+### What didn't work
+
+Node could not resolve an absolute filesystem import from an in-memory data URL on the first combined run. Passing its file URL corrected module resolution. The dependency did not change the expected behavior or comparison rule.
+
+### What I learned
+
+The reductions in modeled instruction count for these two transformations add exactly on this fixture. This is a statement about the emitted paths and this replay. Cycle counts include branch and memory costs that can change with the placement of the code. The second physical matrix tests that separate question.
+
+### What was tricky to build
+
+A meaningful composition must first reproduce the individual movements. The script checks the four overlapping single-study SHA-256 values before it accepts the two new combinations. A new output directory and independent model replay reproduce the six digests and the 21 endpoint counts.
+
+### What warrants a second pair of eyes
+
+The combined trial was added after seeing the first physical results. Reusing the same program makes the within-program comparison meaningful but cannot validate a prediction on another workload. The inline prototype uses buffering during compilation. It cannot inherit the production streaming memory behavior.
+
+### What should be done in the future
+
+Record physical cycle or elapsed-time outcomes for the combined code and reconcile them with the single-arm effects and each lab's application results.
+
+### Code review instructions
+
+Run scripts/director/10-replay-host.sh with a new scratch directory and a RISC-V ESP GCC path. It rebuilds the frozen stock oracle, all six native variants, and the independent C-driven RV32 instruction study from scratch, then compares both receipts byte for byte.
+
+### Technical details
+
+The fourth physical candidate has SHA-256 d1769084266e3c475f463a01009fa5d46c2f4c29e9b7e0abe718f28a560551a6. The reMarkable cloud directory and per-design source hashes are in various/director/remarkable.json.

@@ -1,0 +1,13 @@
+{
+  "cloudDirectory": "/ai/2026/11/20/PICOCALC-NATIVE-WAVE",
+  "document": "PicoCalc Native Compiler Wave - Six Study Designs",
+  "verifiedByCloudListing": true,
+  "sourceSHA256": {
+    "01-select-bounds-analysis-while-streaming.md": "7799dc80367a0deab12e326d5bedcfc4de1d80bde5d3720a47fd73d26dd0b661",
+    "02-preserve-checked-operations-to-native-lowering.md": "16402ac06e277053dfff52e150dbc3a23c0f6c81b26ceb0c801312570f688f2c",
+    "03-leaf-functions-and-selective-inlining.md": "0c1a6d2dd82e3bfe61dc4fde51a46be188ab739b1375a4909c7fb0bafa7aa16f",
+    "04-precise-fragment-dependencies.md": "ca4912f62de0f075edce1ecb610bd9f0eff06c4a2f56e38e150735eb94ab8a75",
+    "05-stack-use-certificates.md": "6bbf842606bab4322f989ec0e77aeb270cb66fcc716a25548b9c3e97d7b95942",
+    "06-infer-turn-lifetime-parameters.md": "e696dcf34f1e128d3b50558b5bb0bb1d66dd71f47329e6ffe13dfafc2bef454f"
+  }
+}

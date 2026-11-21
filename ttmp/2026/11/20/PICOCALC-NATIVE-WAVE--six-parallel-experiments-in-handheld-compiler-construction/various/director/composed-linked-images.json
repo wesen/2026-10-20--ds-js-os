@@ -1,0 +1,41 @@
+{
+  "firmwareSHA256": "d1769084266e3c475f463a01009fa5d46c2f4c29e9b7e0abe718f28a560551a6",
+  "arms": [
+    {
+      "name": "early-stock",
+      "addr": 1073786752,
+      "section": ".flash.text",
+      "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e"
+    },
+    {
+      "name": "early-leaf",
+      "addr": 1073789632,
+      "section": ".flash.text",
+      "imageSHA256": "03cc90a712bfdc960508e1c8dc37b2e78b964c91d9d3a27aef55929f1c3e5707"
+    },
+    {
+      "name": "early-inline",
+      "addr": 1073792448,
+      "section": ".flash.text",
+      "imageSHA256": "21fab97772d854ccafd0bbddcaae2c0117cc93e58bb5dffabdecd2673c3a3973"
+    },
+    {
+      "name": "late-stock",
+      "addr": 1073795424,
+      "section": ".flash.text",
+      "imageSHA256": "554be22d57c3df914858ce9dd4c242270e54b9a4b12b80ce9eb96cb1828f2f5e"
+    },
+    {
+      "name": "late-leaf",
+      "addr": 1073797824,
+      "section": ".flash.text",
+      "imageSHA256": "16f1275848fd5990d72d59ef0d4c71b3b329b59066446d8368b6e9ecc7e310e9"
+    },
+    {
+      "name": "late-inline",
+      "addr": 1073800160,
+      "section": ".flash.text",
+      "imageSHA256": "7b6ac4faece0165c8fe54245b65bc150e0ef191198315811c42ad934797ac355"
+    }
+  ]
+}

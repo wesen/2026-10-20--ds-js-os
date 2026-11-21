@@ -60,6 +60,7 @@ for i,path in enumerate(args.arms):
     meta=json.loads(path.read_text())
     assert meta['sourceSHA256']==source_hash
     blob=path.with_suffix('.bin').read_bytes()
+    assert sha(blob)==meta['imageSHA256'], path
     if i==0:assert sha(blob)==lock['control']['rv32SHA256'], 'first arm must be the frozen stock control'
     binary=main/f'arm{i}.bin'
     binary.write_bytes(blob)
