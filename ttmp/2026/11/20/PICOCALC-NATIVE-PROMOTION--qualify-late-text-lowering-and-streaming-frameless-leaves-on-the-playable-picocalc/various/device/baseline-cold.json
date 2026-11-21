@@ -1,0 +1,187 @@
+{
+  "application": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "cold": [
+    {
+      "apps": {
+        "agenda": {
+          "source": "bundle",
+          "us": 575149,
+          "peakJSBytes": 771420,
+          "moduleBytes": 66364
+        },
+        "files": {
+          "source": "bundle",
+          "us": 273668,
+          "peakJSBytes": 480392,
+          "moduleBytes": 24424
+        },
+        "editor": {
+          "source": "bundle",
+          "us": 2584555,
+          "peakJSBytes": 2543412,
+          "moduleBytes": 242124
+        },
+        "chess": {
+          "source": "bundle",
+          "us": 3639349,
+          "peakJSBytes": 3170172,
+          "moduleBytes": 274892
+        },
+        "mobile-painter": {
+          "source": "screen-message",
+          "us": 1361773,
+          "peakJSBytes": 693292,
+          "moduleBytes": 33840
+        }
+      },
+      "rebootToLastCompilerLineMs": 12969.53,
+      "rebootToPolledHealthyMs": 13676.86,
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 1,
+        "calls": 1,
+        "paints": 0,
+        "rejects": 0,
+        "compile_us": 1366108,
+        "relocate_us": 1262,
+        "native_us": 2918,
+        "raster_us": 0,
+        "image_bytes": 33840
+      },
+      "nativeWorlds": [
+        "agenda",
+        "chess",
+        "compositor",
+        "display",
+        "editor",
+        "files",
+        "keyboard",
+        "snake"
+      ]
+    },
+    {
+      "apps": {
+        "agenda": {
+          "source": "bundle",
+          "us": 574761,
+          "peakJSBytes": 771420,
+          "moduleBytes": 66364
+        },
+        "files": {
+          "source": "bundle",
+          "us": 273516,
+          "peakJSBytes": 480392,
+          "moduleBytes": 24424
+        },
+        "editor": {
+          "source": "bundle",
+          "us": 2585077,
+          "peakJSBytes": 2543412,
+          "moduleBytes": 242124
+        },
+        "chess": {
+          "source": "bundle",
+          "us": 3637659,
+          "peakJSBytes": 3170172,
+          "moduleBytes": 274892
+        },
+        "mobile-painter": {
+          "source": "screen-message",
+          "us": 1362095,
+          "peakJSBytes": 693340,
+          "moduleBytes": 33840
+        }
+      },
+      "rebootToLastCompilerLineMs": 12969.31,
+      "rebootToPolledHealthyMs": 13677.76,
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 1,
+        "calls": 1,
+        "paints": 0,
+        "rejects": 0,
+        "compile_us": 1366380,
+        "relocate_us": 1200,
+        "native_us": 2920,
+        "raster_us": 0,
+        "image_bytes": 33840
+      },
+      "nativeWorlds": [
+        "agenda",
+        "chess",
+        "compositor",
+        "display",
+        "editor",
+        "files",
+        "keyboard",
+        "snake"
+      ]
+    },
+    {
+      "apps": {
+        "agenda": {
+          "source": "bundle",
+          "us": 574635,
+          "peakJSBytes": 771420,
+          "moduleBytes": 66364
+        },
+        "files": {
+          "source": "bundle",
+          "us": 273617,
+          "peakJSBytes": 480392,
+          "moduleBytes": 24424
+        },
+        "editor": {
+          "source": "bundle",
+          "us": 2584212,
+          "peakJSBytes": 2543412,
+          "moduleBytes": 242124
+        },
+        "chess": {
+          "source": "bundle",
+          "us": 3637156,
+          "peakJSBytes": 3170172,
+          "moduleBytes": 274892
+        },
+        "mobile-painter": {
+          "source": "screen-message",
+          "us": 1366606,
+          "peakJSBytes": 693300,
+          "moduleBytes": 33840
+        }
+      },
+      "rebootToLastCompilerLineMs": 12973.53,
+      "rebootToPolledHealthyMs": 13674.91,
+      "painter": {
+        "sources": 1,
+        "compiles": 1,
+        "installed": true,
+        "packets": 1,
+        "calls": 1,
+        "paints": 0,
+        "rejects": 0,
+        "compile_us": 1368074,
+        "relocate_us": 1191,
+        "native_us": 2919,
+        "raster_us": 0,
+        "image_bytes": 33840
+      },
+      "nativeWorlds": [
+        "agenda",
+        "chess",
+        "compositor",
+        "display",
+        "editor",
+        "files",
+        "keyboard",
+        "snake"
+      ]
+    }
+  ],
+  "preflightVerified": true
+}

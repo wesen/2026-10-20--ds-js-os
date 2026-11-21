@@ -1,0 +1,17 @@
+{
+  "firstSaveHostMs": 465.594,
+  "expectedFirst": "alpha text\nbeTa",
+  "readback": [
+    "I (291870) fs: op 3 on qcprobe7/qcheck7.txt took 373 ms",
+    "alpha text",
+    "beTa"
+  ],
+  "editorWorldCpuMs": 18.811,
+  "editorWorldTurns": 19,
+  "editedScreen": "f1ec6af4664d0f92c9a291fd7c39afd1397030e167c929a8edf81b01b2c6c412",
+  "reopenedReadback": [
+    "alpha text",
+    "beTa7"
+  ],
+  "scratchRemoved": true
+}

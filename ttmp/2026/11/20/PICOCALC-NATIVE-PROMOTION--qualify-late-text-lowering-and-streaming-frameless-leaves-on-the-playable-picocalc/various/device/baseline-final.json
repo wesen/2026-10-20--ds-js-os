@@ -1,0 +1,27 @@
+{
+  "worlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "painter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 38,
+    "calls": 36,
+    "paints": 38,
+    "rejects": 0,
+    "compile_us": 1368074,
+    "relocate_us": 1191,
+    "native_us": 3170,
+    "raster_us": 5656,
+    "image_bytes": 33840
+  },
+  "qualified": true
+}
