@@ -1,0 +1,46 @@
+# Post-Implementation Critique: Static Stack-Use Certificates (Frozen Candidate)
+
+**Bottom line: this candidate cannot be adopted.** The cost gate failed, the soundness gate has no held-out evidence, and the checker departs from the frozen §4 rules in ways that must be resolved first.
+
+## 1. Spec differences in the checker
+
+1. **No data-flow analysis.** §4.3 required abstract interpretation with Reject(merge). The checker instead bans `sp` in every body instruction: no writes to it, and no use as an ALU, branch or store operand. It also pins the epilogue at `end−12` and limits branch targets to `[start+8, ep]`. This keeps `spOff` constant by construction, so it is probably stronger for this lowering, but it is a different rule. Merge-conflict mutants now fail as "unsupported word", so the verdict classes no longer match the preregistered expectations.
+2. **Wider instruction subset.** The checker accepts `blt/bge/bltu/bgeu` and `srl`, which §4.2 excluded and the lowering never emits. Mutants using them were expected to be Unsupported and would now be accepted. This does not threaten stack soundness, but it does change the mutant scoring.
+3. **Recursion handling.** §4.6 required Unsupported(recursion) for the cycle's functions and their callers only. The checker throws and rejects the whole program.
+4. **One verdict per program.** Every `need` aborts the whole check, so per-function coverage (§7) can only be all-or-nothing. Unsupported subclasses can only be told apart by message strings, and that mapping was never preregistered.
+5. **Unchecked claim fields.** The checker never verifies `locals`, `spillDepth`, the prologue/epilogue indices or `traps`. Mutating these fields will be accepted. Either remove them from the certificate or check them.
+6. **Import budgets are left out.** The bound only covers the typed code, plus a separate depth recorded at each import call site. `B_import` is never applied. That is a reasonable way to present it, but "certified" must not be read as including SDK stack.
+7. **Slot checks are looser than `linkSlot`.** `checkedSlot` does not check `e_type`, the ilp32f flag, `capacity % 4` or the 1 MiB cap, so the ABI boundary in §5.5 is never confirmed. Trampolines are checked only by shape: each must jump to an executable address outside the slot. The name attached to each import comes from the emitter's `importNames` and is not cross-checked. If those names were permuted, the checker would still accept, and the wrong budget would be applied.
+
+## 2. Credible falsifiers to test next
+
+- **Wasm memory ops use the popped register as a raw address.** Nothing stops one of those stores from hitting the stack, including the saved `ra` slot. The bound therefore holds only if memory isolation is enforced somewhere else (§5.4). This is the main condition on every certificate.
+- **Reported checker times do not scale with code size.** Chess reports about 2.9× editor's code bytes but about 0.35× the checker time. Either `codeBytes` measures something other than the checked image, or the checker skipped bytes. This needs to be reconciled before any cost or coverage claim relies on it.
+- **The bytes checked may not be the bytes that run.** `linkSlot` notes that the native loader still relocates the ELF, and the checker runs on the pre-loader image. Show that the loader leaves the slot text alone, or check after loading.
+- **Permuted `importNames`** and **mutated unchecked claim fields** (items 1.5 and 1.7) are expected false accepts.
+
+## 3. What the aggregates do and don't support
+
+| Gate | Evidence | Status |
+|---|---|---|
+| Soundness (hard) | No false-accept count reported; no held-out mutants listed | **Not shown** |
+| Held-out size | 1 source, 10 functions vs. the preregistered ≥60 sources / ≥200 mutants | **Undersized** |
+| Coverage | 10/10 certified on that set | Can't be evaluated at that size |
+| Compile overhead (≤10%) | editor +15.8%, chess +58.8% | **Fail** |
+| Metadata (≤64 B/fn + 8 B/call) | editor 33,050 vs 11,056 B (≈3.0×); chess 21,267 vs 7,520 B (≈2.8×) | **Fail** |
+| Checker time (≤50 ms/KiB) | ≈0.30 and ≈0.04 per KiB, if the units are ms | Pass, but see the anomaly above |
+
+**Dynamic cross-check.** Five entries were run, and in each the observed depth equals the certified depth. That includes `readBurst`: frame 48, certified 64, observed 64, so the call-chain composition was tight on that path. This is evidence against overestimation on those paths only. Five entries (`codeValue`, `digit`, `corrected`, `dropped`, `checksum`) have no observation as entries. No variance or iteration counts are reported for the timing medians.
+
+## 4. How the claims change
+
+- **Weaker:** "certified stack bound" now means a bound for typed code only. It holds only if memory is isolated, the loader leaves slot text unchanged, and SDK, trap-handler and caller stack are excluded.
+- **Weaker:** "independent checker." The code shares no helpers with the compiler. However, the entries, claim order and import names all come from the emitter. The function partition is rechecked by structure, but import identity is not.
+- **Stronger (narrowly):** `sp` invariance is guaranteed by syntax rather than inferred, which removes merge analysis as a source of error. The cost is that any future shrink-wrapping, dynamic allocation or tail calls will be Unsupported.
+
+## 5. Required disposition
+
+1. **Record the outcome as "Not Adopt — soundness not demonstrated; cost gate failed."** Under §8 the best result reachable later is *Iterate*.
+2. **Settle the freeze timing.** If the §1 deviations were made after the held-out hash was committed, §8 voids the run. Otherwise, write them up as an amended preregistration: new verdict taxonomy, subset and recursion rule.
+3. **Rerun with a fresh, full-size held-out set** against the amended specification, with mutants covering every item in §2, before any soundness claim is made.
+4. **Bring the costs within budget before re-evaluation.** Compile overhead fails on both benchmarks and metadata is about 3× over budget, so both need fixing first.

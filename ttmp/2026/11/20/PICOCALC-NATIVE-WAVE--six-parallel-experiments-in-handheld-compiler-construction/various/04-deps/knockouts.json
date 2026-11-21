@@ -1,0 +1,38 @@
+[
+  {
+    "name": "used field offset",
+    "caught": true,
+    "stock": "2ed09c7b56339dd6432f5cf8d374e372fce4c0c090b7ca7282ca4ce554b74c36",
+    "mutant": "6e600b3f7a25eb37b591562edf6606b9232c6c984b0e7fb66f4b3f9f6baedc13"
+  },
+  {
+    "name": "enum values",
+    "caught": true,
+    "stock": "bbd97b43aa0595e86aaf00a02fb173b667807da032d737fcf1c9ea04f3607f04",
+    "mutant": "562c07cf66c8fc6300e5f82c93a783f35ad5df6d02eefcf3f37b71d737568df3"
+  },
+  {
+    "name": "call signature",
+    "caught": true,
+    "stock": "SyntaxError: 1:99: expected ,",
+    "mutant": "8c48d1921f43f32fa189d7e63de22e136695c143622516c77152d2d139cf6285"
+  },
+  {
+    "name": "symbolic graph edge",
+    "caught": true,
+    "stock": "SyntaxError: recursive call cycle: leaf -> caller -> leaf",
+    "mutant": "df928a1bae62189bff0f14bd039e602e8c21e1ab692507cafaee64ea7ef1a03c"
+  },
+  {
+    "name": "own parameter bindings",
+    "caught": true,
+    "stock": "SyntaxError: 1:38: unknown local x",
+    "mutant": "a789cf1ad012f76b37643b8b89daa4007205a122f464af8a2d9b142ad3500c90"
+  },
+  {
+    "name": "exact body",
+    "caught": true,
+    "stock": "fd85f91e653576051538498a5e312c412530fe1c087af416ae47f171a3745739",
+    "mutant": "fada8054fde28901b38466749cab90566a46fb88172d7ab6d70cc34336716204"
+  }
+]

@@ -1,0 +1,349 @@
+Continue your independent study as lead. The measured candidate is frozen; the following approved code and aggregate measurements include independent held-out results. Deliver a concise substantive post-implementation critique (450–750 words) for the operator. Identify credible falsifiers and spec differences, claims whose strength changes, and necessary disposition; do not assume additional data. Do not invent new results. Do not direct exploits. No tools.
+// In-memory fragments are private to this compiler instance and its release scalar backend.
+(() => {
+    const brand = {};
+    globalThis.dependencySession = function(prior) {
+        const items=Object.create(null), events=[], facts=new Map();
+        let names, functions, records, enums, distinct, generated, ordinals, symbolIndex;
+        let current, reused=false, captured;
+        const fnShape=f=>f?[f.params,f.result,!!f.awaitable]:null;
+        function init(imported,declared,r,e,d,lowered) {
+            names=[...imported,...declared].map(f=>f.name);
+            functions=new Map([...imported,...declared].map(f=>[f.name,f]));
+            ordinals=new Map(declared.map((f,i)=>[f.name,i]));
+            symbolIndex=new Map(names.map((name,i)=>[name,i]));
+            records=r;enums=e;distinct=d;
+            generated=JSON.stringify(lowered?[lowered.prefix,[...lowered.startFields]]:null);
+        }
+        function fact(key) {
+            if(facts.has(key))return facts.get(key);
+            const [kind,name,field]=key.split('/'); let value;
+            switch(kind) {
+            case 'fn': value=[ordinals.has(name),fnShape(functions.get(name))];break;
+            case 'record': value=records.has(name);break;
+            case 'field': {const f=records.get(name)?.get(field);value=f?[f.type,f.offset]:null;break;}
+            case 'enum': value=enums.has(name);break;
+            case 'members': {const table=enums.get(name);value=table?[...table]:null;break;}
+            case 'distinct': value=distinct.has(name);break;
+            default: throw Error('unregistered lookup '+kind);
+            }
+            const answer=JSON.stringify(value);facts.set(key,answer);return answer;
+        }
+        function watch(kind,name,field) {
+            // The frontend's integer literal marker is a Symbol and cannot denote a declaration.
+            if(typeof name!=='string')return;
+            const key=kind+'/'+name+(field===undefined?'':'/'+field);
+            if(!captured.has(key))captured.set(key,fact(key));
+        }
+        function lookup(lex,fn,edges) {
+            const old=prior?.brand===brand && prior.items[fn.name];
+            const signature=JSON.stringify([fn.params,fn.paramNames,fn.result]);
+            reused=!!(old && prior.generated===generated && old.signature===signature &&
+                lex.source.startsWith(old.body,fn.bodyAt) && old.deps.every(([key,value])=>fact(key)===value)
+                && old.edges.every(name=>ordinals.has(name)));
+            events.push([fn.name,reused]);
+            if(reused) {
+                current=items[fn.name]=old;
+                for(const name of old.edges)edges.push(ordinals.get(name));
+                return true;
+            }
+            lex.offset=fn.bodyAt;lex.next();const end=lex.skipBody();
+            current={body:end===undefined?null:lex.source.slice(fn.bodyAt,end),signature,edgeBuffer:edges};
+            captured=new Map();
+            if(current.body!==null)items[fn.name]=current;
+            return false;
+        }
+        function emit(Emitter,lex,declared,r,edges,base,e,d,fn) {
+            const trackedFunctions={get(name){watch('fn',name);return declared.get(name);}};
+            const trackedRecords={
+                has(name){watch('record',name);return r.has(name);},
+                get(name){watch('record',name);const fields=r.get(name);return fields&&{
+                    get(field){watch('field',name,field);return fields.get(field);}
+                };}
+            };
+            const trackedEnums={has(name){watch('enum',name);return e.has(name);},
+                get(name){watch('members',name);return e.get(name);}};
+            const trackedDistinct={has(name){watch('distinct',name);return d.has(name);}};
+            new Emitter(lex,trackedFunctions,trackedRecords,edges,base,trackedEnums,trackedDistinct).function(fn);
+            current.deps=[...captured];
+        }
+        function lower(fn,targets,build) {
+            if(current!==items[fn.name] && current.body!==null)throw Error('emission order differs');
+            if(reused) return {words:current.words.slice(),calls:current.calls.map(([from,name,at,rd])=>({
+                from, target:name===null?{at}:targets[symbolIndex.get(name)], rd
+            }))};
+            const built=build();
+            current.words=built.words.slice();
+            current.calls=built.calls.map(({from,target,rd})=>{
+                const i=targets.indexOf(target);
+                if(i<0 && !Number.isInteger(target.at))throw Error('unknown relocation');
+                return [from,i<0?null:names[i],i<0?target.at:0,rd];
+            });
+            current.edges=current.edgeBuffer.map(i=>names[names.length-ordinals.size+i]);
+            delete current.edgeBuffer;
+            return built;
+        }
+        return {init,lookup,emit,lower,commit:()=>({brand,generated,items}),
+            stats:()=>({reused:events.filter(x=>x[1]).length,rebuilt:events.filter(x=>!x[1]).length}),
+            events:()=>events};
+    };
+})();
+
+{"editor": {"body": {"one": [{"block": 0, "arm": "clean", "ms": 101.51835900000003}, {"block": 0, "arm": "global", "ms": 54.1186899999999, "stats": {"reused": 118, "rebuilt": 1}}, {"block": 0, "arm": "precise", "ms": 73.86556399999995, "stats": {"reused": 118, "rebuilt": 1}}], "rebuilt": ["editorPreviewSlot"]}, "signature": {"one": [{"block": 0, "arm": "clean", "ms": 102.2732930000002}, {"block": 0, "arm": "global", "ms": 83.45643999999993, "stats": {"reused": 0, "rebuilt": 119}}, {"block": 0, "arm": "precise", "ms": 46.68450500000017, "stats": {"reused": 115, "rebuilt": 4}}], "rebuilt": ["editorPreviewSlot", "editorPreviewFinish", "editorPreviewAppend", "editorPreviewFrame"]}, "layout": {"one": [{"block": 0, "arm": "clean", "ms": 81.46919100000014}, {"block": 0, "arm": "global", "ms": 56.50196800000049, "stats": {"reused": 0, "rebuilt": 119}}, {"block": 0, "arm": "precise", "ms": 25.98795699999937, "stats": {"reused": 109, "rebuilt": 10}}], "rebuilt": ["editorShow", "editorRemember", "editorSave", "editorApplyKey", "editorInput", "editorOpen", "editorOpened", "editorOpenFailed", "typedWorldEvent", "__typed_async_2_editorOpenTask_editorOpenTask_step"]}, "bad": {"one": [{"block": 0, "arm": "clean"}, {"block": 0, "arm": "global", "stats": {"reused": 0, "rebuilt": 56}}, {"block": 0, "arm": "precise", "stats": {"reused": 54, "rebuilt": 2}}], "rebuilt": null}}, "chess": {"body": {"one": [{"block": 0, "arm": "clean", "ms": 49.76560400000017}, {"block": 0, "arm": "global", "ms": 7.323002000000088, "stats": {"reused": 81, "rebuilt": 1}}, {"block": 0, "arm": "precise", "ms": 16.01762300000064, "stats": {"reused": 81, "rebuilt": 1}}], "rebuilt": ["chessFrom"]}, "signature": {"one": [{"block": 0, "arm": "clean", "ms": 46.52651800000058}, {"block": 0, "arm": "global", "ms": 33.65624899999966, "stats": {"reused": 0, "rebuilt": 82}}, {"block": 0, "arm": "precise", "ms": 15.395809999999983, "stats": {"reused": 72, "rebuilt": 10}}], "rebuilt": ["chessFrom", "chessMake", "chessUnmake", "chessCapture", "chessPriority", "chessSelectedMove", "chessMarkDestinations", "chessAppendTile", "chessRenderTree", "chessRender"]}, "layout": {"one": [{"block": 0, "arm": "clean", "ms": 37.04892800000016}, {"block": 0, "arm": "global", "ms": 49.95426099999986, "stats": {"reused": 0, "rebuilt": 82}}, {"block": 0, "arm": "precise", "ms": 19.35121699999945, "stats": {"reused": 76, "rebuilt": 6}}], "rebuilt": ["chessNewGame", "chessPlay", "chessControl", "chessAppendTile", "chessRenderTree", "chessRender"]}, "bad": {"one": [{"block": 0, "arm": "clean"}, {"block": 0, "arm": "global", "stats": {"reused": 0, "rebuilt": 22}}, {"block": 0, "arm": "precise", "stats": {"reused": 20, "rebuilt": 2}}], "rebuilt": null}}}
+{
+  "base": {
+    "hash": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+    "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+    "bytes": 2876
+  },
+  "edits": [
+    {
+      "name": "change correction body",
+      "artifact": {
+        "hash": "cbac02ce895d982bde9806bb9f64ebb4353fd0fe0c57bad88e73f00bbf36dddf",
+        "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+        "bytes": 2876
+      },
+      "global": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          false
+        ],
+        [
+          "dropped",
+          true
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "reorder fields",
+      "artifact": {
+        "hash": "77359fd3637ae48c4e0bf19de72426892f6f18f92009c160ac4167b81fa65a70",
+        "meta": "2f9382e1a12f2b66c99ae1ae14d5e8bdfe9fb9bf9d4d531427d1a4456e5cf2df",
+        "bytes": 2876
+      },
+      "global": {
+        "reused": 0,
+        "rebuilt": 10
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          false
+        ],
+        [
+          "dropped",
+          true
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "lengthen pooled literal",
+      "artifact": {
+        "hash": "9625c3cf128c03f8bedeac73219dad3eef1182efb39a7efc4b4a5dc55e33e36a",
+        "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+        "bytes": 3176
+      },
+      "global": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          true
+        ],
+        [
+          "dropped",
+          true
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          false
+        ]
+      ]
+    },
+    {
+      "name": "fresh independent declaration",
+      "artifact": {
+        "hash": "8a4ff97020617af874cdc9840e88c4cb451e77758f80be3d68ba58d9ff7eace1",
+        "meta": "b10ff2b4256eb7fac8c8c4eb9dd6ec1a42c00927eec7b5055f798517c2c91f80",
+        "bytes": 2880
+      },
+      "global": {
+        "reused": 0,
+        "rebuilt": 10
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          true
+        ],
+        [
+          "dropped",
+          false
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "invalid signature edit",
+      "error": "SyntaxError: 57:47: expected ,",
+      "global": {
+        "reused": 0,
+        "rebuilt": 9
+      },
+      "precise": {
+        "reused": 7,
+        "rebuilt": 2
+      }
+    }
+  ],
+  "unchanged": {
+    "reused": 10,
+    "rebuilt": 0
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "base": {
+    "hash": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+    "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+    "bytes": 2876
+  },
+  "edits": [
+    {
+      "name": "change correction body",
+      "artifact": {
+        "hash": "cbac02ce895d982bde9806bb9f64ebb4353fd0fe0c57bad88e73f00bbf36dddf",
+        "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+        "bytes": 2876
+      },
+      "global": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          false
+        ],
+        [
+          "dropped",
+          true
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "reorder fields",
+      "artifact": {
+        "hash": "77359fd3637ae48c4e0bf19de72426892f6f18f92009c160ac4167b81fa65a70",
+        "meta": "2f9382e1a12f2b66c99ae1ae14d5e8bdfe9fb9bf9d4d531427d1a4456e5cf2df",
+        "bytes": 2876
+      },
+      "global": {
+        "reused": 0,
+        "rebuilt": 10
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          false
+        ],
+        [
+          "dropped",
+          true
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "lengthen pooled literal",
+      "artifact": {
+        "hash": "9625c3cf128c03f8bedeac73219dad3eef1182efb39a7efc4b4a5dc55e33e36a",
+        "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+        "bytes": 3176
+      },
+      "global": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          true
+        ],
+        [
+          "dropped",
+          true
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          false
+        ]
+      ]
+    },
+    {
+      "name": "fresh independent declaration",
+      "artifact": {
+        "hash": "8a4ff97020617af874cdc9840e88c4cb451e77758f80be3d68ba58d9ff7eace1",
+        "meta": "b10ff2b4256eb7fac8c8c4eb9dd6ec1a42c00927eec7b5055f798517c2c91f80",
+        "bytes": 2880
+      },
+      "global": {
+        "reused": 0,
+        "rebuilt": 10
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "codeValue",
+          true
+        ],
+        [
+          "digit",
+          true
+        ],
+        [
+          "corrected",
+          true
+        ],
+        [
+          "dropped",
+          false
+        ],
+        [
+          "checksum",
+          true
+        ],
+        [
+          "countEvents",
+          true
+        ],
+        [
+          "inspect",
+          true
+        ],
+        [
+          "uncheckedRequest",
+          true
+        ],
+        [
+          "readBurst",
+          true
+        ],
+        [
+          "label",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "invalid signature edit",
+      "error": "SyntaxError: 57:47: expected ,",
+      "global": {
+        "reused": 0,
+        "rebuilt": 9
+      },
+      "precise": {
+        "reused": 7,
+        "rebuilt": 2
+      }
+    }
+  ],
+  "unchanged": {
+    "reused": 10,
+    "rebuilt": 0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "session": "03a9980e-802d-46a2-8855-92397991da5e",
+  "tools": [
+    "mcp__claude_ai_Claude_Docs__batch",
+    "mcp__claude_ai_Claude_Docs__create",
+    "mcp__claude_ai_Claude_Docs__delete",
+    "mcp__claude_ai_Claude_Docs__export",
+    "mcp__claude_ai_Claude_Docs__guide",
+    "mcp__claude_ai_Claude_Docs__query",
+    "mcp__claude_ai_Claude_Docs__read",
+    "mcp__claude_ai_Claude_Docs__update"
+  ],
+  "publicTextSHA256": "636e31546cf61462cb0ad8233f0c8038415bb41fe7d4062f7884b2a9d6ef35c6"
+}

@@ -1,0 +1,112 @@
+{
+  "editor": {
+    "slotVirtualStart": 7364,
+    "slotVirtualEnd": 236740,
+    "dynamicRelocations": [
+      {
+        "address": 240960,
+        "type": 3
+      },
+      {
+        "address": 240964,
+        "type": 3
+      },
+      {
+        "address": 240968,
+        "type": 3
+      },
+      {
+        "address": 240972,
+        "type": 3
+      },
+      {
+        "address": 240976,
+        "type": 3
+      },
+      {
+        "address": 241136,
+        "type": 5
+      },
+      {
+        "address": 241140,
+        "type": 5
+      },
+      {
+        "address": 241144,
+        "type": 5
+      },
+      {
+        "address": 241148,
+        "type": 5
+      },
+      {
+        "address": 241152,
+        "type": 5
+      },
+      {
+        "address": 241156,
+        "type": 5
+      },
+      {
+        "address": 241160,
+        "type": 5
+      }
+    ],
+    "overlap": false
+  },
+  "chess": {
+    "slotVirtualStart": 7364,
+    "slotVirtualEnd": 269508,
+    "dynamicRelocations": [
+      {
+        "address": 273728,
+        "type": 3
+      },
+      {
+        "address": 273732,
+        "type": 3
+      },
+      {
+        "address": 273736,
+        "type": 3
+      },
+      {
+        "address": 273740,
+        "type": 3
+      },
+      {
+        "address": 273744,
+        "type": 3
+      },
+      {
+        "address": 273904,
+        "type": 5
+      },
+      {
+        "address": 273908,
+        "type": 5
+      },
+      {
+        "address": 273912,
+        "type": 5
+      },
+      {
+        "address": 273916,
+        "type": 5
+      },
+      {
+        "address": 273920,
+        "type": 5
+      },
+      {
+        "address": 273924,
+        "type": 5
+      },
+      {
+        "address": 273928,
+        "type": 5
+      }
+    ],
+    "overlap": false
+  }
+}

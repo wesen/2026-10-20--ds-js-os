@@ -1,0 +1,267 @@
+[
+  {
+    "app": "editor",
+    "key": "base",
+    "image": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+    "metadata": "f280de19ee99f5e24461e37ecba13590fda1e6bdfe22cd910645d4b109b6c7d3",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures",
+      "asyncLayout",
+      "asyncSource"
+    ],
+    "elf": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d"
+  },
+  {
+    "app": "editor",
+    "key": "body",
+    "image": "c2001a5d5177e00429befbaff74610069e6c5b57d39da504ab57217a029a5a8b",
+    "metadata": "fcc8b8704d21ab114956556ac8665574f885379d45e19de1f641e01abeca3c50",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures",
+      "asyncLayout",
+      "asyncSource"
+    ],
+    "elf": "3a2a453f73210b40d8d1873752501449125b3cb6cc1c66dfe70563274ad4d858"
+  },
+  {
+    "app": "editor",
+    "key": "bad",
+    "error": "SyntaxError: 730:53: expected ,"
+  },
+  {
+    "app": "editor",
+    "key": "signature",
+    "image": "39a162209df983a1363c772363081eae541d71fc88152044d0d45adf99ff1265",
+    "metadata": "9a8f974c99e446111c946e0942ce27b7edfe0f08107aaac63cb7a9d9ecba06a8",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures",
+      "asyncLayout",
+      "asyncSource"
+    ],
+    "elf": "442e54e58c295e816ada52a398691197d3f1d35a82c0be3f15f1748008abdf3a"
+  },
+  {
+    "app": "editor",
+    "key": "layout",
+    "image": "c0fe928fff614c7192b6c55bd8f0da2478f68cb1a4df4f375ab18cdc3b69f671",
+    "metadata": "98286b676d47142ab529e111d58740ec4a9eac03b87bc19b656b6504556a6b3a",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures",
+      "asyncLayout",
+      "asyncSource"
+    ],
+    "elf": "6911edc15c18f699983d69a8e3d260e8b5e9e58819d6b82cd23b94d59d58d3ce"
+  },
+  {
+    "app": "editor",
+    "key": "base",
+    "image": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+    "metadata": "f280de19ee99f5e24461e37ecba13590fda1e6bdfe22cd910645d4b109b6c7d3",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures",
+      "asyncLayout",
+      "asyncSource"
+    ],
+    "elf": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d"
+  },
+  {
+    "app": "chess",
+    "key": "base",
+    "image": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+    "metadata": "14265dde4a6ce0f1dd4279acb2cf92b7cc82cf7b12a2b33964be015c0b35233d",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685"
+  },
+  {
+    "app": "chess",
+    "key": "body",
+    "image": "71e4d9e63c50e56b49db271b45f1a91a3ab80d4c59ab8905aef5f82a575e83e6",
+    "metadata": "0005783408a5440294d9774e36ea427539fc27e93d045eed05f8d78e9e78fdda",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": "1dbe9a9379ddd392250fb306bb4f3c60ce8437b7b0eed0cab65b6e653fb37ff7"
+  },
+  {
+    "app": "chess",
+    "key": "bad",
+    "error": "SyntaxError: 146:32: expected ,"
+  },
+  {
+    "app": "chess",
+    "key": "signature",
+    "image": "226db0b81ee3f922bc4cbaa2f5e8056333ee79e7c8073381d6779ee6e9e92536",
+    "metadata": "88382784ba649b1d28749a221efe739c1bc3fd9d6c6ca5a857dc48b66ac8ba16",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": "5f6bb7a5a3aa85ea586de328bdf2e3e47a3f2f4b2d7112a5d4f0e270965304ea"
+  },
+  {
+    "app": "chess",
+    "key": "layout",
+    "image": "75862e5517d6da1475f873d984119fb3e4d926dc81f46b178dd454f4a94901b7",
+    "metadata": "05fced87cc49346ea9e8c08c4c8f0ebb0869c40888c31f68b7fadb07d75260e0",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": "9c527677c57ea6b569afcc68a820a11b3c7e0f2d4c14e4a808cd3b907dc5306a"
+  },
+  {
+    "app": "chess",
+    "key": "base",
+    "image": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+    "metadata": "14265dde4a6ce0f1dd4279acb2cf92b7cc82cf7b12a2b33964be015c0b35233d",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685"
+  },
+  {
+    "app": "burst",
+    "key": "base",
+    "image": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+    "metadata": "eab600cb9dbf1e1810d3b56e4b98491ffcc65a738a5db9257beaeee1b7311928",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": null
+  },
+  {
+    "app": "burst",
+    "key": "change correction body",
+    "image": "cbac02ce895d982bde9806bb9f64ebb4353fd0fe0c57bad88e73f00bbf36dddf",
+    "metadata": "eab600cb9dbf1e1810d3b56e4b98491ffcc65a738a5db9257beaeee1b7311928",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": null
+  },
+  {
+    "app": "burst",
+    "key": "reorder fields",
+    "image": "77359fd3637ae48c4e0bf19de72426892f6f18f92009c160ac4167b81fa65a70",
+    "metadata": "2463d0cf3de58e76dd5b97b921a65ab8d55b5194888fa0a27a81f7dea3634651",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": null
+  },
+  {
+    "app": "burst",
+    "key": "lengthen pooled literal",
+    "image": "9625c3cf128c03f8bedeac73219dad3eef1182efb39a7efc4b4a5dc55e33e36a",
+    "metadata": "eab600cb9dbf1e1810d3b56e4b98491ffcc65a738a5db9257beaeee1b7311928",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": null
+  },
+  {
+    "app": "burst",
+    "key": "fresh independent declaration",
+    "image": "8a4ff97020617af874cdc9840e88c4cb451e77758f80be3d68ba58d9ff7eace1",
+    "metadata": "6328919e4a8b4eac7dc9e11183a74d3cd8b36bd3d2995b94e0798db8a47c0f5f",
+    "keys": [
+      "entries",
+      "records",
+      "enums",
+      "distinct",
+      "relocations",
+      "importCount",
+      "signatures"
+    ],
+    "elf": null
+  },
+  {
+    "app": "burst",
+    "key": "invalid signature edit",
+    "error": "SyntaxError: 57:47: expected ,"
+  }
+]

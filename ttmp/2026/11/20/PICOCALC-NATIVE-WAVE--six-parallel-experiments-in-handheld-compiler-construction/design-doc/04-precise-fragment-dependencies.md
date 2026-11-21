@@ -151,3 +151,9 @@ After the lock, a delegate who has not read the Precise implementation authors a
 - The oracle is computed from the sealed source, and the study is run once.
 - Results are reported whether they pass or fail, with no tuning afterward.
 - A held-out P1 failure overrides any primary-fixture pass.
+
+## Operator implementation and coverage note
+
+The lead-authored design above records the original criteria. The implementation and stricter clean-compiler comparisons are documented in [the investigation diary](../reference/14-dependency-reuse-diary.md). The operator locked the policy, then the implementation, before the director released a ten-function standalone source with five independent edits. The compiler-side artifacts read complete async-generated text and regenerate async metadata on every build. They conservatively compare the generated lexical prefix and start-field mapping, capture nominal membership, every concrete record field actually accessed, and complete tables of consulted enums. Symbolic imports, internal functions and local jumps share the ordinary release linker. The shipped scalar backend spells literal writes using immediate constants and halfword stores. Its source contains no shared data pool.
+
+The independent clean raw-word and symbolic-relocation oracle was added after the read-set implementation froze. This ordering makes it a retrospective test of precision. Host measurements used seven rotated observations per valid arm and edit. The device protocol has five rotated blocks for each of 18 app/edit/arm cells. Those sample counts and a combined compile/link clock differ from the proposed 30 observations and timing split. The report will name each unexecuted design gate; the experiment does not claim the preregistered timing confidence criterion. The user-facing entry point, return metadata, final program image and complete reactor ELF remain available for each comparison.

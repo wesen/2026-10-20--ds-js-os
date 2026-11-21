@@ -1,0 +1,25 @@
+{
+  "applicationSHA256": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "files": {
+    "editor.typed": {
+      "bytes": 69884,
+      "sha256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+      "releaseOffset": 630604
+    },
+    "chess.typed": {
+      "bytes": 61022,
+      "sha256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+      "releaseOffset": 978728
+    },
+    "editor.elf": {
+      "bytes": 242124,
+      "sha256": "386a56b9e2ae4ff3e3bfb8f431ba315d5fb415b6ba29360b04e7d7e611c3837b",
+      "releaseOffset": 388476
+    },
+    "chess.elf": {
+      "bytes": 274892,
+      "sha256": "f28687cff3b242c18027dde3ad8b15930108035ca8b416b120071f62e1963630",
+      "releaseOffset": 703832
+    }
+  }
+}

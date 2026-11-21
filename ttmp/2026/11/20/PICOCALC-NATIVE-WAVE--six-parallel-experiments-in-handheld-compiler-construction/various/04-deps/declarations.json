@@ -1,0 +1,610 @@
+[
+  {
+    "name": "SDK import permutation",
+    "artifact": {
+      "hash": "a6210cf3260e2e657430c686fc2a1877dc46a2946c2be666a9c249586ef2a663",
+      "meta": "2e88194c3b3068de0743d0bc819cd227d5278df93f7caed7152a4594bec22aa7",
+      "bytes": 84
+    },
+    "stats": {
+      "reused": 2,
+      "rebuilt": 0
+    },
+    "events": [
+      [
+        "use",
+        true
+      ],
+      [
+        "spare",
+        true
+      ]
+    ]
+  },
+  {
+    "name": "import changes awaitable flag",
+    "artifact": {
+      "hash": "a6210cf3260e2e657430c686fc2a1877dc46a2946c2be666a9c249586ef2a663",
+      "meta": "2e88194c3b3068de0743d0bc819cd227d5278df93f7caed7152a4594bec22aa7",
+      "bytes": 84
+    },
+    "stats": {
+      "reused": 1,
+      "rebuilt": 1
+    },
+    "events": [
+      [
+        "use",
+        false
+      ],
+      [
+        "spare",
+        true
+      ]
+    ]
+  },
+  {
+    "name": "former import becomes an internal leaf",
+    "artifact": {
+      "hash": "d5c4bcaa719b57ce25d81d81795837d37ab2e33bb540195eaf46b41137010585",
+      "meta": "b230726ec746d0c1dd40038a79a2e225d9394d3642b367190e02d9f2ae09382c",
+      "bytes": 116
+    },
+    "stats": {
+      "reused": 1,
+      "rebuilt": 2
+    },
+    "events": [
+      [
+        "external",
+        false
+      ],
+      [
+        "use",
+        false
+      ],
+      [
+        "spare",
+        true
+      ]
+    ]
+  },
+  {
+    "name": "a new global shares the local spelling",
+    "artifact": {
+      "hash": "91beeef0eb3242b1ae5b4c1f254b8dd544a2af978b60e6a21797bbe891ee2bc2",
+      "meta": "53aecc8490727d206cec4f1c8e3a7441997ba510ba2ac1b49d6a688293dacba6",
+      "bytes": 60
+    },
+    "stats": {
+      "reused": 1,
+      "rebuilt": 1
+    },
+    "events": [
+      [
+        "n",
+        false
+      ],
+      [
+        "f",
+        true
+      ]
+    ]
+  },
+  {
+    "name": "distinct nominal type becomes an enum",
+    "artifact": {
+      "hash": "a789cf1ad012f76b37643b8b89daa4007205a122f464af8a2d9b142ad3500c90",
+      "meta": "d77a30312382e2be69fcd1019101484c534d012e6e1ab2f9503d4b9b20bb42d6",
+      "bytes": 32
+    },
+    "stats": {
+      "reused": 0,
+      "rebuilt": 1
+    },
+    "events": [
+      [
+        "f",
+        false
+      ]
+    ]
+  },
+  {
+    "name": "enum exhaustiveness",
+    "error": "SyntaxError: 1:80: match on T does not cover: C",
+    "stats": {
+      "reused": 0,
+      "rebuilt": 1
+    }
+  },
+  {
+    "name": "existing async task adds a suspension",
+    "artifact": {
+      "hash": "19e20d000e830c2d13233a64e4d2d4e4bdbd413ea63c50dfdd78fadf876d4125",
+      "meta": "d2339266f5ef35fbb812e89ddc20b5dc14c35ce46616e9811d07aa6f29bdbbe8",
+      "bytes": 242124
+    },
+    "stats": {
+      "reused": 118,
+      "rebuilt": 1
+    },
+    "events": [
+      [
+        "editorHighSurrogate",
+        true
+      ],
+      [
+        "editorLowSurrogate",
+        true
+      ],
+      [
+        "editorNext",
+        true
+      ],
+      [
+        "editorPrevious",
+        true
+      ],
+      [
+        "editorWrapEnd",
+        true
+      ],
+      [
+        "editorColumn",
+        true
+      ],
+      [
+        "editorOffset",
+        true
+      ],
+      [
+        "editorFold",
+        true
+      ],
+      [
+        "editorEmptyFrame",
+        true
+      ],
+      [
+        "editorWhitespace",
+        true
+      ],
+      [
+        "editorMdSpace",
+        true
+      ],
+      [
+        "editorMdSuffix",
+        true
+      ],
+      [
+        "editorIsMarkdown",
+        true
+      ],
+      [
+        "editorMdFence",
+        true
+      ],
+      [
+        "editorMdHeading",
+        true
+      ],
+      [
+        "editorMdColor",
+        true
+      ],
+      [
+        "editorMdMarker",
+        true
+      ],
+      [
+        "editorMdListEnd",
+        true
+      ],
+      [
+        "editorMdNextMarker",
+        true
+      ],
+      [
+        "editorMdEmit",
+        true
+      ],
+      [
+        "editorMdOpen",
+        true
+      ],
+      [
+        "editorMdBold",
+        true
+      ],
+      [
+        "editorMdCode",
+        true
+      ],
+      [
+        "editorMdLink",
+        true
+      ],
+      [
+        "editorMdMatch",
+        true
+      ],
+      [
+        "editorMdStep",
+        true
+      ],
+      [
+        "editorHex",
+        true
+      ],
+      [
+        "editorQuoteContent",
+        true
+      ],
+      [
+        "editorQuote",
+        true
+      ],
+      [
+        "editorLineEnd",
+        true
+      ],
+      [
+        "editorFirstRow",
+        true
+      ],
+      [
+        "editorNextRow",
+        true
+      ],
+      [
+        "editorStoreRow",
+        true
+      ],
+      [
+        "editorFrameRow",
+        true
+      ],
+      [
+        "editorResetRows",
+        true
+      ],
+      [
+        "editorInvalidateRows",
+        true
+      ],
+      [
+        "editorRowAnchor",
+        true
+      ],
+      [
+        "editorNeedsRow",
+        true
+      ],
+      [
+        "editorLocate",
+        true
+      ],
+      [
+        "editorFrameNeedsRow",
+        true
+      ],
+      [
+        "editorFrameLocate",
+        true
+      ],
+      [
+        "editorDigits",
+        true
+      ],
+      [
+        "editorSavedStatus",
+        true
+      ],
+      [
+        "editorSaveError",
+        true
+      ],
+      [
+        "editorFindMatch",
+        true
+      ],
+      [
+        "editorSetFound",
+        true
+      ],
+      [
+        "editorFindActive",
+        true
+      ],
+      [
+        "editorFindAdvance",
+        true
+      ],
+      [
+        "editorFindNext",
+        true
+      ],
+      [
+        "editorFindInput",
+        true
+      ],
+      [
+        "editorBeginFind",
+        true
+      ],
+      [
+        "editorFindStatus",
+        true
+      ],
+      [
+        "editorFindMark",
+        true
+      ],
+      [
+        "editorFindMarks",
+        true
+      ],
+      [
+        "editorPreviewSlot",
+        true
+      ],
+      [
+        "editorPreviewFinish",
+        true
+      ],
+      [
+        "editorPreviewAppend",
+        true
+      ],
+      [
+        "editorPreviewIndent",
+        true
+      ],
+      [
+        "editorPreviewWord",
+        true
+      ],
+      [
+        "editorPreviewStage",
+        true
+      ],
+      [
+        "editorPreviewUpper",
+        true
+      ],
+      [
+        "editorPreviewCooked",
+        true
+      ],
+      [
+        "editorPreviewSource",
+        true
+      ],
+      [
+        "editorPreviewReset",
+        true
+      ],
+      [
+        "editorPreviewReady",
+        true
+      ],
+      [
+        "editorPreviewFrame",
+        true
+      ],
+      [
+        "editorBeginPreview",
+        true
+      ],
+      [
+        "editorPreviewKey",
+        true
+      ],
+      [
+        "editorRowColor",
+        true
+      ],
+      [
+        "editorStatus",
+        true
+      ],
+      [
+        "editorDocumentFrame",
+        true
+      ],
+      [
+        "editorHints",
+        true
+      ],
+      [
+        "editorShow",
+        true
+      ],
+      [
+        "editorPositionDict",
+        true
+      ],
+      [
+        "editorPositionKeyEnd",
+        true
+      ],
+      [
+        "editorPositionNumberStop",
+        true
+      ],
+      [
+        "editorPositionNumber",
+        true
+      ],
+      [
+        "editorPositionTuple",
+        true
+      ],
+      [
+        "editorPositionKeyEqual",
+        true
+      ],
+      [
+        "editorPositionKey",
+        true
+      ],
+      [
+        "editorPositionApply",
+        true
+      ],
+      [
+        "editorRestorePosition",
+        true
+      ],
+      [
+        "editorPositionNewer",
+        true
+      ],
+      [
+        "editorPositionRank",
+        true
+      ],
+      [
+        "editorPositionCopy",
+        true
+      ],
+      [
+        "editorPositionAppend",
+        true
+      ],
+      [
+        "editorRemember",
+        true
+      ],
+      [
+        "editorEqual",
+        true
+      ],
+      [
+        "editorKeyCode",
+        true
+      ],
+      [
+        "editorChange",
+        true
+      ],
+      [
+        "editorMakeRoom",
+        true
+      ],
+      [
+        "editorInsert",
+        true
+      ],
+      [
+        "editorDelete",
+        true
+      ],
+      [
+        "editorContinueList",
+        true
+      ],
+      [
+        "editorSplit",
+        true
+      ],
+      [
+        "editorMoveRow",
+        true
+      ],
+      [
+        "editorJump",
+        true
+      ],
+      [
+        "editorPlainKey",
+        true
+      ],
+      [
+        "editorSave",
+        true
+      ],
+      [
+        "editorGoFiles",
+        true
+      ],
+      [
+        "editorDiscard",
+        true
+      ],
+      [
+        "editorEscape",
+        true
+      ],
+      [
+        "editorApplyKey",
+        true
+      ],
+      [
+        "editorInput",
+        true
+      ],
+      [
+        "editorWriteDone",
+        true
+      ],
+      [
+        "typedWorldMeta",
+        true
+      ],
+      [
+        "editorReplyError",
+        true
+      ],
+      [
+        "editorRefuseOpen",
+        true
+      ],
+      [
+        "editorOpen",
+        true
+      ],
+      [
+        "editorOpened",
+        true
+      ],
+      [
+        "editorOpenFailed",
+        true
+      ],
+      [
+        "typedWorldEvent",
+        true
+      ],
+      [
+        "__typed_async_1_editorFindTask_editorFindTask_step",
+        false
+      ],
+      [
+        "__typed_async_2_editorOpenTask_editorOpenTask_step",
+        true
+      ],
+      [
+        "__typed_async_1_editorFindTask_editorFindTask_start",
+        true
+      ],
+      [
+        "__typed_async_1_editorFindTask_editorFindTask_cancel",
+        true
+      ],
+      [
+        "__typed_async_2_editorOpenTask_editorOpenTask_start",
+        true
+      ],
+      [
+        "__typed_async_pending",
+        true
+      ],
+      [
+        "__typed_async_resume",
+        true
+      ]
+    ]
+  }
+]

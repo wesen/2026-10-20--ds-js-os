@@ -1,0 +1,18 @@
+[
+  {
+    "name": "logical right shift outside design list",
+    "at": 40,
+    "designExpects": "unsupported",
+    "actual": "accepted",
+    "frame": 16,
+    "typed": 16
+  },
+  {
+    "name": "signed less-than branch outside design list",
+    "at": 24,
+    "designExpects": "unsupported",
+    "actual": "accepted",
+    "frame": 16,
+    "typed": 16
+  }
+]

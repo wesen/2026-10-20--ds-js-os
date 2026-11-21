@@ -1,0 +1,279 @@
+Write your final pedagogical project report in Markdown (2000–2600 words) as the actual lead researcher of this stack certificate study. Audience is a newcomer to native compilers; use no analogies. Intro with a concrete worked chain, include what a frame/offset/map/ABI/call site/SDK boundary means when first used, develop a proof for a restricted grammar, and explain specific measurements, implementation deviations and unfilled gates. No YAML. Title 'How much stack can the handheld compiler account for?' Numbered examples or short tables welcome. Cite relative source links ../design-doc/05-stack-use-certificates.md, ../scripts/05-stack/04-check.mjs, ../scripts/05-stack/03-emit.mjs, ../various/05-stack/host.json, pinned-host.json, depth.json, held-out.json, policy-audit.json, loader-audit.json in their actual relative directory; ../reference/15-stack-certificates-diary.md. Do not invent commands or assume total task stack. No serial/credentials supplied. The adopted experimental decision must be STOP at the original hard gate for the checkpoint: two formally outside-list pure non-SP opcodes accepted, plus measured JSON over budget, and a smaller independent heldout than preregistered. No observed stack-bound underestimation, and no runtime deployment. Preregistered theoretical claim vs observed fact vs OS proof must be clear. State that there is no physical board runtime measurement of this stack certificate, the output came from actual release reactor and generated code. New data follows.
+
+Operator source points: the emitter records only actually claimed fields (name,start,size,frame,raSlot,calls), so missing locals/spillDepth/trap-list fields are deviations from draft not latent claims. Decoder independently parses final linked ELF for stock Editor/Chess and standalone fully internally relocated raw program for closed/no-import fixtures. It rejects combined-program on missing or unsupported, trusts the pinned entries/import table and memory isolation from typed ordinary ABI; no direct writes to SP/RA except canonical prologue/epilogue or allowed call. The acceptance of two well-defined RV32 instructions is a false acceptance relative to explicit design allowlist: less-than branch and logical right shift. Neither changes SP. H1 invalid as preregistered, correctness over supported rules conditional. Fourteen earlier ordinary mutated claims/instruction controls rejected. Source maps checked by syntax, external names supplied by SDK trusted ordering; full native task plus interrupts/callbacks/SDK cannot be certified. Loader audit of all 12 dynamic relocation destinations per release ELF found none in entire reserved typed code slot; all checked images equal stock end-to-end. Checker's elapsed measurements cover decoding through DAG finish, the full slot scan for application trials. One warm-up and seven observed alternating same-process paired runs, shared development host. An additional independent pinned replay after local image build recorded separate results. In both cases output byte identity to stock checked. Store JSON data include explicit clean vs candidate times. Timings vary with scheduling/JIT; cannot infer timing gate for all workloads. Metadata ceilings = 64 bytes/function+8 bytes/call, Editor allowance 11,056, Chess 7,520. Neither actual JSON fits. Reserved local frames 16–192 (max Editor) / 224 max Chess. Both typedWorldMeta entries SDK-free, closed 64 bytes; event typed-only Editor 944, Chess 928. For Editor SDK Buffer reached with at most 800 typed bytes, Chess SDK Screen 416. Exact formula max of typed-only branch and typed prefix + unknown budget per external. On 24 independent interpreter training runs for twelve conditional chains, bound 16..192B branch-taken reaches certified depth, early return 16B. Model counts for held-out are actual dynamic min SP monitored using existing independent branch RV32 interpreter throughout 1,603 reference cases, 101 expected traps, full observed output/memory comparisons. All five invoked entry maxes equal bound (entries-only issue), ten functions remain certified. Independent holdout 1 source, not 60 sources or 200 independent mutants. No tuning after implementation lock c07464e. Separate critique forked from same Anthropic session pointed out unfilled goals; write as substantive lead author. Commands from scripts/05-stack: node 05-trial.mjs /tmp/native-wave-deps /tmp/stack-host.json; node 06-depth.mjs /tmp/depth.json; python3 09-loader-audit.py /tmp/native-wave-deps /tmp/loader-audit.json. No need for extensive acknowledgment prose.
+{
+  "host.json": {
+    "editor": {
+      "functions": 119,
+      "codeBytes": 89168,
+      "imageBytes": 242124,
+      "imageSHA256": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d",
+      "certificateBytes": 33050,
+      "calls": 430,
+      "maxFrame": 192,
+      "medians": {
+        "stock": 64.56435600000009,
+        "cert": 74.76436600000011,
+        "checker": 26.471074000000044
+      }
+    },
+    "chess": {
+      "functions": 82,
+      "codeBytes": 256400,
+      "imageBytes": 274892,
+      "imageSHA256": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685",
+      "certificateBytes": 21267,
+      "calls": 284,
+      "maxFrame": 224,
+      "medians": {
+        "stock": 29.614834999999402,
+        "cert": 47.01909799999976,
+        "checker": 9.335253000000193
+      }
+    }
+  },
+  "pinned-host.json": {
+    "editor": {
+      "functions": 119,
+      "codeBytes": 89168,
+      "imageBytes": 242124,
+      "imageSHA256": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d",
+      "certificateBytes": 33050,
+      "calls": 430,
+      "maxFrame": 192,
+      "medians": {
+        "stock": 18.349095000000034,
+        "cert": 16.097351000000003,
+        "checker": 5.1315550000000485
+      }
+    },
+    "chess": {
+      "functions": 82,
+      "codeBytes": 256400,
+      "imageBytes": 274892,
+      "imageSHA256": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685",
+      "certificateBytes": 21267,
+      "calls": 284,
+      "maxFrame": 224,
+      "medians": {
+        "stock": 8.665664000000106,
+        "cert": 16.66722500000003,
+        "checker": 1.726131000000123
+      }
+    }
+  }
+}
+{
+  "held-out.json": {
+    "summary": {
+      "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+      "rv32SHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+      "imageBytes": 2876,
+      "wasmBytes": 1500,
+      "functions": 10,
+      "checks": {
+        "uncheckedRequest": 70,
+        "inspect": 456,
+        "countEvents": 456,
+        "readBurst": 456,
+        "label": 165
+      },
+      "total": 1603,
+      "traps": 101,
+      "rv32Steps": 158570,
+      "orderedDigest": "66d52400302aab0c4c7ef90095ae0167d72deccb0046da99657106ec2e86917d"
+    },
+    "entries": {
+      "codeValue": {
+        "frame": 16,
+        "certified": 16,
+        "observedEntry": null,
+        "externals": []
+      },
+      "digit": {
+        "frame": 16,
+        "certified": 16,
+        "observedEntry": null,
+        "externals": []
+      },
+      "corrected": {
+        "frame": 16,
+        "certified": 16,
+        "observedEntry": null,
+        "externals": []
+      },
+      "dropped": {
+        "frame": 16,
+        "certified": 16,
+        "observedEntry": null,
+        "externals": []
+      },
+      "checksum": {
+        "frame": 16,
+        "certified": 16,
+        "observedEntry": null,
+        "externals": []
+      },
+      "countEvents": {
+        "frame": 32,
+        "certified": 32,
+        "observedEntry": 32,
+        "externals": []
+      },
+      "inspect": {
+        "frame": 32,
+        "certified": 32,
+        "observedEntry": 32,
+        "externals": []
+      },
+      "uncheckedRequest": {
+        "frame": 16,
+        "certified": 16,
+        "observedEntry": 16,
+        "externals": []
+      },
+      "readBurst": {
+        "frame": 48,
+        "certified": 64,
+        "observedEntry": 64,
+        "externals": []
+      },
+      "label": {
+        "frame": 48,
+        "certified": 48,
+        "observedEntry": 48,
+        "externals": []
+      }
+    }
+  },
+  "policy-audit.json": [
+    {
+      "name": "logical right shift outside design list",
+      "at": 40,
+      "designExpects": "unsupported",
+      "actual": "accepted",
+      "frame": 16,
+      "typed": 16
+    },
+    {
+      "name": "signed less-than branch outside design list",
+      "at": 24,
+      "designExpects": "unsupported",
+      "actual": "accepted",
+      "frame": 16,
+      "typed": 16
+    }
+  ],
+  "loader-audit.json": {
+    "editor": {
+      "slotVirtualStart": 7364,
+      "slotVirtualEnd": 236740,
+      "dynamicRelocations": [
+        {
+          "address": 240960,
+          "type": 3
+        },
+        {
+          "address": 240964,
+          "type": 3
+        },
+        {
+          "address": 240968,
+          "type": 3
+        },
+        {
+          "address": 240972,
+          "type": 3
+        },
+        {
+          "address": 240976,
+          "type": 3
+        },
+        {
+          "address": 241136,
+          "type": 5
+        },
+        {
+          "address": 241140,
+          "type": 5
+        },
+        {
+          "address": 241144,
+          "type": 5
+        },
+        {
+          "address": 241148,
+          "type": 5
+        },
+        {
+          "address": 241152,
+          "type": 5
+        },
+        {
+          "address": 241156,
+          "type": 5
+        },
+        {
+          "address": 241160,
+          "type": 5
+        }
+      ],
+      "overlap": false
+    },
+    "chess": {
+      "slotVirtualStart": 7364,
+      "slotVirtualEnd": 269508,
+      "dynamicRelocations": [
+        {
+          "address": 273728,
+          "type": 3
+        },
+        {
+          "address": 273732,
+          "type": 3
+        },
+        {
+          "address": 273736,
+          "type": 3
+        },
+        {
+          "address": 273740,
+          "type": 3
+        },
+        {
+          "address": 273744,
+          "type": 3
+        },
+        {
+          "address": 273904,
+          "type": 5
+        },
+        {
+          "address": 273908,
+          "type": 5
+        },
+        {
+          "address": 273912,
+          "type": 5
+        },
+        {
+          "address": 273916,
+          "type": 5
+        },
+        {
+          "address": 273920,
+          "type": 5
+        },
+        {
+          "address": 273924,
+          "type": 5
+        },
+        {
+          "address": 273928,
+          "type": 5
+        }
+      ],
+      "overlap": false
+    }
+  }
+}

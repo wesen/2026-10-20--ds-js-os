@@ -1,0 +1,72 @@
+# Post-Implementation Critique: Precise Dependency Session
+
+**Bottom line:** retention is demonstrated, but soundness is not established. The precise arm should stay behind a flag, with the conservative arm as the default, until the gaps below are closed.
+
+## What the data supports
+
+- **Retention after signature and layout edits is real, at least by count.** The global arm rebuilds everything on these steps. The precise arm retains most functions:
+  - Editor signature: 115/119; layout: 109/119.
+  - Chess signature: 72/82; layout: 76/82.
+- **The rebuild sets look plausible.**
+  - Editor signature rebuilt the callee plus three callers, matching the three edited call sites.
+  - Editor layout rebuilt `__typed_async_2_editorOpenTask_editorOpenTask_step`, so the generated async step functions do pass through dependency capture.
+- **Held-out "unchanged" is 10/0,** and "fresh independent declaration" rebuilt only `dropped`. The image grew by 4 bytes, and reused functions emitted after `dropped` still had to be correctly re-relocated.
+- **P2 survives in its weak form:** precise retains more than conservative on every signature and layout step.
+  - Strong P2 (precision against the word-diff oracle) cannot be evaluated, because no oracle "unchanged" sets were supplied.
+
+## Unverified claims (claim strength drops)
+
+1. **P1 soundness is untested in the supplied material.**
+   - No primary fixture reports precise-vs-clean byte equality.
+   - The held-out file gives one artifact hash per edit. It does not say whether that hash is precise, clean, or a verified match of both.
+   - Retention counts say nothing about correctness. P1 must be reported as **not evaluated**, not as passed.
+2. **P4 timing cannot be evaluated.**
+   - Every cell is a single block with n=1, against the preregistered 30 interleaved runs with a bootstrap CI.
+   - Clean times alone vary from 81 to 102 ms for Editor, so the noise is comparable to the effects.
+   - **Point estimates (indicative only):**
+     - On body edits, precise is slower than global: 73.9 vs 54.1 ms, and 16.0 vs 7.3 ms. That is well beyond the 10% allowance, which makes it a credible P4 falsifier pending a proper run.
+     - Precise is faster on signature and layout steps.
+     - Precise was never slower than clean.
+3. **P3 knockout mutants and the §6 adversarial suite are absent.** Nothing can be claimed for S1–S3, I1–I2, E1–E2, D1, A1–A2, or K3.
+
+## Spec differences in the frozen code
+
+| Spec | Implementation | Consequence |
+|---|---|---|
+| ABI identity in the key | Per-instance `brand` object | Acceptable for an in-memory session only. Cannot persist. Log as a deviation. |
+| Own signature includes `awaitable` | `[params, paramNames, result]` only | A sync↔async toggle with unchanged body text is covered only if `generated` changes. Untested. |
+| Record layout: size, align, offsets | `record` is presence only; `field` is `[type, offset]` | Code that depends on record size without reading a changed field's offset (copies, frame allocation, appended fields) has no captured dependency. |
+| Distinct: underlying type | Presence only | A D1 edit to the underlying type is invisible to the key. Correct only if the frontend resolves distinct types through another tracked channel. Unverified. |
+| Async slices tracked | Only global `generated`; `asyncLayout` and `asyncSource` untracked | A1 (a body edit in one async function affecting another's cached words) remains open. |
+| All query sites instrumented or listed as fallbacks | `base`, `lex`, and `edges` are passed to the Emitter untracked; no fallback list | Any declaration fact that reaches the Emitter through these channels escapes capture. |
+| Literal pools keyed and relocated | No pool mechanism. `calls` admits only J targets and integer `at`. | See below. |
+| No commit on failure | Commit is the harness's decision | If a failed `bad` step is committed, the next session reads entries whose `deps` were never written. Commit behaviour must be confirmed. |
+
+## Literal pools are emitted
+
+The held-out edit "lengthen pooled literal" grew the image from 2876 to 3176 bytes. The preregistered audit question is therefore answered: pooled literal data exists, so fixture P1 applies.
+
+The held-out edit is weak for this purpose:
+
+- The rebuilt function `label` is last in emission order, so no reused code was displaced.
+- No shared or deduplicated literal was exercised.
+
+Soundness for pools rests on an unstated assumption: that pool references are intra-function and PC-relative.
+
+## Held-out coverage
+
+The delegated director covered body, layout, pool, a new declaration, and an invalid edit. The held-out fixture did not cover signature, import, enum, distinct, or async edits, or jump range. Its results are worth having but are narrow.
+
+## Required disposition
+
+1. **Status:** mark the study *retention: supported; soundness: unverified; timing: not evaluated (body-overhead risk)*. Keep conservative as the default.
+2. **Report P1 from existing artifacts.** If clean hashes exist for every step on every fixture, report precise==clean per output field and for the linked ELF. Otherwise, rerun only this comparison.
+3. **Add the missing fixtures:**
+   - pool growth in a non-final function, followed by reused functions;
+   - a literal shared across functions;
+   - an appended record field combined with a by-value use;
+   - a change to a distinct type's underlying type;
+   - a sync↔async toggle on a function's own signature;
+   - A1.
+4. **Run the P3 knockouts and the P4 protocol exactly as preregistered.**
+5. **Log deviations** in the dated record: `brand` in place of an ABI id, n=1 timing, no fallback list, missing suites. No threshold may change.

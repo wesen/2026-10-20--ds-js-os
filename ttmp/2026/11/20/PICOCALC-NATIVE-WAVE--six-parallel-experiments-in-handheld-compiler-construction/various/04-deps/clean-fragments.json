@@ -1,0 +1,80 @@
+{
+  "editor": {
+    "body": {
+      "unchanged": 118,
+      "retained": 118,
+      "conservativelyRebuilt": [],
+      "changed": [
+        "editorPreviewSlot"
+      ]
+    },
+    "signature": {
+      "unchanged": 115,
+      "retained": 115,
+      "conservativelyRebuilt": [],
+      "changed": [
+        "editorPreviewSlot",
+        "editorPreviewFinish",
+        "editorPreviewAppend",
+        "editorPreviewFrame"
+      ]
+    },
+    "layout": {
+      "unchanged": 109,
+      "retained": 109,
+      "conservativelyRebuilt": [],
+      "changed": [
+        "editorShow",
+        "editorRemember",
+        "editorSave",
+        "editorApplyKey",
+        "editorInput",
+        "editorOpen",
+        "editorOpened",
+        "editorOpenFailed",
+        "typedWorldEvent",
+        "__typed_async_2_editorOpenTask_editorOpenTask_step"
+      ]
+    }
+  },
+  "chess": {
+    "body": {
+      "unchanged": 81,
+      "retained": 81,
+      "conservativelyRebuilt": [],
+      "changed": [
+        "chessFrom"
+      ]
+    },
+    "signature": {
+      "unchanged": 72,
+      "retained": 72,
+      "conservativelyRebuilt": [],
+      "changed": [
+        "chessFrom",
+        "chessMake",
+        "chessUnmake",
+        "chessCapture",
+        "chessPriority",
+        "chessSelectedMove",
+        "chessMarkDestinations",
+        "chessAppendTile",
+        "chessRenderTree",
+        "chessRender"
+      ]
+    },
+    "layout": {
+      "unchanged": 76,
+      "retained": 76,
+      "conservativelyRebuilt": [],
+      "changed": [
+        "chessNewGame",
+        "chessPlay",
+        "chessControl",
+        "chessAppendTile",
+        "chessRenderTree",
+        "chessRender"
+      ]
+    }
+  }
+}
