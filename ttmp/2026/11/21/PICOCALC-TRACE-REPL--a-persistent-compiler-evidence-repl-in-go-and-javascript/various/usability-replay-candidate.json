@@ -1,0 +1,137 @@
+{
+  "build": "523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71",
+  "examples": [
+    {
+      "source": "q.run(profiles.arm(\"checked-llc-nolsr\").describe())",
+      "reply": {
+        "ok": true,
+        "value": {
+          "arm": "checked-llc-nolsr",
+          "source": {
+            "profile": "execution",
+            "entry": "checked-llc-nolsr",
+            "digest": "42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8"
+          },
+          "totals": {
+            "instructions": 1275560,
+            "stackLoads": 0,
+            "stackStores": 0
+          },
+          "units": {
+            "instructions": "executed guest instructions",
+            "stackLoads": "executed direct stack loads",
+            "stackStores": "executed direct stack stores"
+          },
+          "rowsVerified": 160,
+          "rowBytes": 268,
+          "sampleKeys": [
+            "0",
+            "61",
+            "109"
+          ],
+          "sampleCount": 3,
+          "sampleKeysTruncated": false,
+          "contract": {
+            "value": "checked",
+            "evidence": "arm name prefix \"checked-\""
+          },
+          "otherFields": [],
+          "treatment": {
+            "id": "checked-llc-nolsr",
+            "status": "described",
+            "role": "LSR-off arm of the llc LSR ablation",
+            "design": "checked C model of the Typed row (01-row.c, hand-written, not Typed compiler output): each element access calls a capacity check that traps on failure",
+            "build": "LLVM 18 llc -disable-lsr, from the same optimized module as the llc arm",
+            "notA": null,
+            "provenance": {
+              "kind": "study/capture metadata",
+              "measured": false,
+              "catalog": "picocalc-row-treatments.v1",
+              "basis": [
+                "execute.py (link, workload, counters)",
+                "evidence.md \u00a73 (build table, LSR pairs)"
+              ],
+              "note": "curated from the attached study and capture sources; not read from the profile entry and not covered by source.digest"
+            }
+          },
+          "countsCover": {
+            "treatment": "checked-llc-nolsr",
+            "role": "LSR-off arm of the llc LSR ablation",
+            "verifiedBy": "rowsVerified",
+            "workload": "one qemu-riscv32-static run of the linked executable per fixture row (fixtures/<y>.in on stdin); stdout must equal fixtures/<y>.gold",
+            "counter": "QEMU exec trace (-one-insn-per-tb -d exec,nochain); only PCs inside the nm -S range of symbol row are counted"
+          },
+          "fields": {
+            "totals.instructions": {
+              "scope": "dynamic",
+              "meaning": "QEMU guest instructions executed with PC inside the linked row symbol, summed over the workload",
+              "isNot": "ESP32-P4 cycles or board time"
+            },
+            "totals.stackLoads": {
+              "scope": "dynamic",
+              "meaning": "executed lw/lh/lhu whose operand text contains (sp), summed over the workload",
+              "isNot": "a stack-slot or spill count; byte, FP and copied-sp accesses are not counted"
+            },
+            "totals.stackStores": {
+              "scope": "dynamic",
+              "meaning": "executed sw/sh whose operand text contains (sp), summed over the workload",
+              "isNot": "a stack-slot or spill count; byte, FP and copied-sp accesses are not counted"
+            },
+            "rowBytes": {
+              "scope": "static",
+              "meaning": "bytes of linked machine code: the size of the C row symbol from nm -S on the linked executable",
+              "isNot": "output bytes, the .gold file length, a checksum, or an execution count"
+            },
+            "samples": {
+              "scope": "dynamic",
+              "meaning": "per-row totals for a few fixture rows, keyed by row index",
+              "isNot": "PC samples"
+            },
+            "rowsVerified": {
+              "scope": "workload",
+              "meaning": "row inputs whose output equalled fixtures/<y>.gold",
+              "isNot": "a count of output bytes"
+            }
+          },
+          "comparisons": [
+            {
+              "before": "checked-llc-nolsr",
+              "after": "checked-llc",
+              "isolates": "LLVM backend Loop Strength Reduction: its net effect through the rest of the llc pipeline",
+              "heldEqual": "optimized module, contract, link, workload, counters; only -disable-lsr differs"
+            }
+          ],
+          "cannotAttribute": [
+            "an individual stack slot, frame offset or PC: totals and row samples carry no addresses (see q.joinPCs)",
+            "spill vs prologue/epilogue save vs local stack home vs scratch: the predicate sees only the base register sp",
+            "an individual optimization inside a treatment that bundles several changes",
+            "cycles or ESP32-P4 board time: these are emulator counts",
+            "trap-path behaviour: every workload input is a valid row"
+          ],
+          "timing": "emulator counts only; ESP32-P4 timings are a separate study layer, not loaded as a profile"
+        }
+      }
+    },
+    {
+      "source": "profiles.arm(\"checked-llc-nolsr\").describe().arm",
+      "reply": {
+        "ok": true,
+        "value": "checked-llc-nolsr"
+      }
+    },
+    {
+      "source": "q.help(\"profiles\")",
+      "reply": {
+        "ok": true,
+        "value": "Execution summaries: dynamic totals of executed work (not static sites). Sources: execution, typed, metrics (q: profiles.sources()).\n  eager, values now:  profiles.arms()   profiles.arm(\"checked-gcc\").describe()   .totals()   .samples()   profiles.workloads()   profiles.regions()\n  lazy, use q.run:    .total(name)   q.add(\u2026)   q.compare(\u2026).  q.run(<a describe() descriptor>) returns it unchanged; see q.help(\"plans\").\n  q.run(profiles.arm(\"checked-gcc\").region(\"row\").workload(\"opening-160-rows\").total(\"instructions\"))\n  stock = profiles.arm(\"typed-stock\").region(\"row\").workload(\"opening-160-rows\")\n  q.run(q.add(stock.total(\"stackLoads\"), stock.total(\"stackStores\")).label(\"direct stack accesses\"))\nTyped-summary entries are arms with the prefix \"typed-\" (typed-stock = typed[\"stock\"]). Workload \"opening-160-rows\" is verified by rowsVerified === 160.\nWhat an arm IS: profiles.arm(\"typed-scalar\").describe().treatment \u2192 role, design, build, notA, provenance.\n  Treatment labels are study/capture metadata (provenance.measured === false), not measurements; status \"partial\"/\"undescribed\" means the sources say no more.\n  .describe().countsCover (treatment, workload, counter) \u00b7 .fields (scope static|dynamic, meaning, isNot) \u00b7 .comparisons (what a pair isolates) \u00b7 .cannotAttribute\n  .describe().units (one per total) \u00b7 .sampleKeys (first 40) with .sampleCount and .sampleKeysTruncated; .samples() returns every sample\nTotals are dynamic emulator counts: QEMU guest instructions inside the C row symbol, or RV32 interpreter steps for Typed. Neither is cycles or board time.\nrowBytes is static: the nm -S size of the linked C row symbol, not output bytes or the .gold length. Typed summaries carry no code size.\nStack totals are direct sp-based accesses summed over the workload; they cannot be attributed to a stack slot, a spill, or one optimization in a bundled treatment.\nArms now: checked-gcc, checked-gcc-noiv, checked-llc, checked-llc-nolsr, checked-llvm, unchecked-gcc, unchecked-gcc-noiv, unchecked-llc, unchecked-llc-nolsr, unchecked-llvm, typed-pie, typed-scalar, typed-stock"
+      }
+    },
+    {
+      "source": "q.help(\"errors\")",
+      "reply": {
+        "ok": true,
+        "value": "Errors are thrown as \"[code] message\\n  fix: \u2026\". Codes: unknownVariant unknownPhase unknownFunction unknownOpcode unknownProperty\nunknownArm unknownRegion unknownWorkload unknownTotal unknownMatchKey unknownField unknownTopic ordinalOutOfRange notInSelection\nambiguousStream ambiguous noEvent needFunction functionMismatch notAPlan badArgument badType typeError incompatibleUnits\nincompatibleScope doubleCount percentBaselineRequired undeclaredParam unboundParam badBinding unknownOption alreadyMaterialized\nnotEvaluated (a result field such as .value read on a plan: q.run(plan).value) noSuchArgument unknownCoverage unknownProfile needState\nunknownTarget noPaths unavailable (profiles.source(name) could not read that source)\nunsupported noBridge bridge. q.run refusals (notAPlan, badArgument, alreadyMaterialized) carry err.got and err.fix: q.help(\"plans\").\nScientific gaps are NOT errors: they come back as results with status absent / unavailable / unsupported and a reason."
+      }
+    }
+  ]
+}

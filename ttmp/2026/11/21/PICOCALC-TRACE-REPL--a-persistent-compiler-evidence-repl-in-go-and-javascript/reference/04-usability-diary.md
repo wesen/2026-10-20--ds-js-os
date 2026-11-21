@@ -220,3 +220,54 @@ Start with `various/personas/baseline-pass.json`, especially the scope-filter qu
 ### Technical details
 
 For the checked stream, the original ordinal is 88, the start is 346976 and the exclusive end is 348729. The independent census found explicit preheaders in at least 42 checked, 42 unchecked and 437 firmware middle-end prints. The `typed-stock` direct stack-access pool is 1,290,106 across the opening scene's 160 verified row outputs; it does not classify accessible temporaries by depth.
+
+## Step 5: Reconcile the repaired classifier and grade the optimization decisions
+
+The service operator launched a second frozen executable while the baseline remained available. I started five fresh Pi participants with identical common instructions. Four had the same cards as the baseline. The allocator received its reserved card for the first time. A separate Opus High model scored the four baseline receipts with the first manual scores withheld.
+
+### Prompt Context
+
+See Step 1 and Step 3. The supervisor asked to preserve loop evidence identity across the repair and to judge the ability to design or reject an optimization. The baseline independent review and protocol amendments were committed at `a3faf2c`.
+
+### What I did
+
+- Compared ordinal 88 on both processes. The reference, range and digest matched. The candidate reported a loop, null function owner and an explicitly tentative nearby-function hint.
+- Reconciled all materialized candidate ordinals with the raw checked, unchecked and firmware bytes. The 438th firmware event is an invalidated loop whose replacement print is a module.
+- Repeated the formerly failing `q.run(arm.describe())` on the candidate. It returned the correctly identified descriptor including treatment metadata. The fresh ablation user separately discovered that a bundle of already evaluated descriptors still gets a diagnostic.
+- Applied the independent lexical checker to all nine completed receipts and read each final against the actual tool actions. Supplied the completed receipts and adjudication to the final Opus High author only once the last participant finished.
+
+### Why
+
+An implementation can “fix” counts by renumbering, excluding records, or inferring identities beyond the input. The study checks stable pointers back to raw bytes. Usability improvement requires a later researcher to avoid the misleading conclusion, not simply a green API unit test.
+
+### What worked
+
+The fresh pass researcher reported 11→6, observed a real fragment at 88, handled an unknown predecessor at 106 and declined to attribute an endpoint over skipped ordinals. The fresh optimization researcher identified the treatment bundle and the difference between 19.45% of original traffic and a share of a total-instruction difference. The held-out allocator separately established the two machine properties using actual dumps. All runs reached a final answer.
+
+### What didn't work
+
+My initial ordinal-reconciliation script called `.select("ordinal")` and iterated its 200 default materialized rows. It therefore reported a firmware cardinality of 200 despite a separate `.count()` of 438. I corrected it to request `maxRows:5000` and assert equality of the full count and the unique row set. The corrected committed receipt contains all 438. The new optimization researcher's calculation of a possible full-frame speedup from pooled primary-stage timings and one opening-scene guest count remains unsupported. Those are different units and populations.
+
+### What I learned
+
+A counter can motivate a compiler change, bound its opportunity, reveal a missing distinction, or disprove a claim. The stock 35.75% stack-access share motivated discrimination of accesses by slot and use. Neither study participant ran a changed register allocator. The corrected comparison established properties of the evidence workbench. It did not establish a runtime improvement for that prospective allocator.
+
+### What was tricky to build
+
+The original capture calls the invalidated subject a loop while printing the consequent module's state. A scope field for the subject and a coverage field for the print refer to different observations. A validated subject classification does not establish an unknown function owner.
+
+### What warrants a second pair of eyes
+
+Check the file at firmware ordinal 584 and the SSA owner hint on the candidate for ordinal 88. Review mathematical claims about proposed register reservation against actual phase boundaries and workload identities. A few panels of model-generated text cannot be treated as an estimate of human researcher success.
+
+### What should be done in the future
+
+Use identical per-pose data when testing a particular relationship between guest steps and hardware time. Instrument slot use and pressure if the lab decides to test the two-register proposal. To estimate usability across a population, collect independent repeats per card and include human students.
+
+### Code review instructions
+
+Start with `scripts/27-verify-loop-witnesses.py`, `various/usability-loop-reconciliation.json`, the live candidate receipts, the independent baseline grades and the final decision report. Compare `candidate-pass.json` with `baseline-pass.json` at the first partial print.
+
+### Technical details
+
+The candidate ELF SHA-256 was `523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71`. The checked and unchecked streams each returned 42 loop subjects. Firmware returned 438, covering all 437 explicit preheaders plus invalidated loop ordinal 584. The held-out checked backend property was false at 74 and true at 78.

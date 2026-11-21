@@ -1,0 +1,148 @@
+{
+  "provider": "lunaroute",
+  "model": "deepseek-4.1-flash",
+  "thinking": "high",
+  "card": "catalog",
+  "build": "523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71",
+  "limit": 14,
+  "steps": [
+    {
+      "tool": "trace_eval",
+      "source": "q.help()",
+      "reply": "{\"ok\":true,\"value\":\"q — compiler-evidence queries over the PicoCalc LLVM row archive (release 0.1.0). Globals: q, a (archive), profiles.\\nPlans are lazy; evaluate synchronously with q.run(plan) or plan.run(). Results are plain objects with status, unit and witnesses.\\nEager calls (….describe(), profiles.arms(), run.functions()) return values at once; q.run returns a describe() descriptor unchanged (q.help(\\\"plans\\\")).\\n  q.run(a.events().count())                                // all header records, with byStream\\n  run = a.variant(\\\"checked\\\"); row = run.function(\\\"row\\\"); middle = row.timeline(\\\"middle\\\")\\n  q.run(run.events(\\\"middle\\\").at(74).select(\\\"ordinal\\\", \\\"header\\\", \\\"ref\\\"))\\n  hdr = q.ir.instructions().opcode(\\\"load\\\").resultType(\\\"i32\\\").pointer(row.argument(0)).count()\\n  q.run(hdr.at(middle.at(74).after))                         // static sites, with witnesses\\n  q.run(middle.measure(hdr).changes().where(c =\\u003e c.status === \\\"known\\\" \\u0026\\u0026 c.delta \\u003c 0).first())\\n  q.run(profiles.arm(\\\"checked-gcc\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\").total(\\\"instructions\\\"))\\nTopics: q.help(\\\"plans\\\" | \\\"events\\\" | \\\"timeline\\\" | \\\"states\\\" | \\\"metrics\\\" | \\\"changes\\\" | \\\"machine\\\" | \\\"profiles\\\" | \\\"compare\\\" | \\\"capabilities\\\" | \\\"params\\\" | \\\"results\\\" | \\\"errors\\\" | \\\"cache\\\").\\nEvery object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).\\nPhysical ESP32-P4 timings are a separate global, never mixed into profiles (guest instruction counts): hardware.help() (available in this session).\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1644,
+        "fullReplySHA256": "758ec04daea383abfd3057e80a65bbf61c659bd33129cdb3b2d418327fa35ac5",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[q.help(\"events\"), q.help(\"timeline\")]",
+      "reply": "{\"ok\":true,\"value\":[\"Events = header records of print-after-all streams; one stream per (variant, phase); ordinals restart at 0 per stream.\\n  a.variants()  a.streams()  a.events().count()  a.variant(\\\"checked\\\").events(\\\"middle\\\").count()\\n  run.events(\\\"backend\\\").at(78)            // absolute ordinal in its original stream; out of range → [ordinalOutOfRange]\\n  run.events(\\\"middle\\\").where(e =\\u003e e.pass === \\\"LoopVectorizePass\\\").first()   // .first() .last() .one() (.one() reports ambiguous)\\n  .select(\\\"ordinal\\\", \\\"pass\\\", \\\"scope\\\", \\\"ref\\\")  .limit(10)  .count()  .ordinals()  .text()\\nEvent fields: variant, phase, ordinal, header, pass, passId, passName, when, scope, function, ref (+ host fields). pass = new-PM class (EarlyCSEPass) or llc pass ID (virtregrewriter); passId = pass.\\nscope.kind: function · module · cgscc (functions) · loop (loop, function) · machineFunction · unresolved (llc header; resolved from the print).\\nA loop header names only the loop's header block (\\\"on for.body29\\\"). A name the initial module does not define is a loop; its owner is not shown,\\nso scope.function is null and every function timeline keeps the event. scope.ownerHint { function, tentative: true, method, anchorOrdinal,\\nheaderBlockInAnchorPrint, provenance } is the nearest earlier single-function event: a proximity hint, never an owner. \\\"loop %L in function F\\\" headers\\ndo name the owner (functionEvidence.method \\\"header\\\"). Loop prints are fragments: whole-function metrics on them are unavailable, so the next\\nchange in a timeline that keeps one is \\\"unknown\\\", never \\\"known\\\".\\nA print ends before the next pass's \\\"Running pass: …\\\" announcement; that tail is never searched or measured (see trailer/excluded).\\nVariants now: checked, firmware, unchecked. Phases: backend, middle.\",\"A function timeline = the events of one stream whose print can contain the function (its function/cgscc events, loops it is shown to own,\\nloops whose owner is not shown, and module prints).\\n  row = a.variant(\\\"checked\\\").function(\\\"row\\\"); middle = row.timeline(\\\"middle\\\"); machine = row.timeline(\\\"backend\\\")\\n  middle.at(74)   // same original ordinal as run.events(\\\"middle\\\").at(74); an ordinal of another function → [notInSelection]\\n  machine.where(e =\\u003e e.passId === \\\"virtregrewriter\\\").select(\\\"ordinal\\\", \\\"passId\\\", \\\"scope\\\", \\\"ref\\\")\\n  run.functions()   row.argument(0)   row.initialState()   row.with(q.fragment(\\\"name.v1\\\").on(\\\"irFunction\\\", { m: fn =\\u003e metric }))\\nFiltering never renumbers. Measuring a filtered timeline marks non-adjacent pairs as gaps (see q.help(\\\"changes\\\")).\"]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 2635,
+        "fullReplySHA256": "695af4b98fdb64ad12b9695093867b74edbd4b8d639b72aef1a95732d39e3ca8",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.run(a.events().count())",
+      "reply": "{\"ok\":true,\"value\":{\"kind\":\"count\",\"value\":4133,\"unit\":\"events\",\"of\":\"a.events()\",\"streams\":6,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"backend\",\"streamSHA\":\"8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca\",\"events\":116},{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"events\":195},{\"variant\":\"firmware\",\"phase\":\"backend\",\"streamSHA\":\"e1eabbaadea131365f48553d4a07b92c2ba5fb49d5db7cf17e0962599bdd915c\",\"events\":1450},{\"variant\":\"firmware\",\"phase\":\"middle\",\"streamSHA\":\"eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38\",\"events\":2061},{\"variant\":\"unchecked\",\"phase\":\"backend\",\"streamSHA\":\"98517d51246b17f8ec72298250f962b05b837b12cd955a4c4c3bbf4b4fe540f5\",\"events\":116},{\"variant\":\"unchecked\",\"phase\":\"middle\",\"streamSHA\":\"d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4\",\"events\":195}]}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 906,
+        "fullReplySHA256": "2c226859c6f9d3746aa4b1e949f074625421d853b9fdf7eccc507766985f8b1e",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "run = a.variant(\"checked\");\n[ q.run(run.events(\"middle\").count()), q.run(run.events(\"backend\").count()),\n  q.run(run.events(\"middle\").at(74).select(\"variant\",\"phase\",\"ordinal\",\"header\",\"pass\",\"passId\",\"passName\",\"when\",\"scope\",\"function\",\"ref\")) ]",
+      "reply": "{\"ok\":true,\"value\":[{\"kind\":\"count\",\"value\":195,\"unit\":\"events\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"middle\\\")\",\"streams\":1,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"events\":195}]},{\"kind\":\"count\",\"value\":116,\"unit\":\"events\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"backend\\\")\",\"streams\":1,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"backend\",\"streamSHA\":\"8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca\",\"events\":116}]},{\"variant\":\"checked\",\"phase\":\"middle\",\"ordinal\":74,\"header\":\"IR Dump After EarlyCSEPass on row\",\"pass\":\"EarlyCSEPass\",\"passId\":\"EarlyCSEPass\",\"passName\":\"EarlyCSEPass\",\"when\":\"after\",\"scope\":{\"kind\":\"function\",\"function\":\"row\"},\"function\":\"row\",\"ref\":{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"ordinal\":74,\"start\":240363,\"end\":248127}}]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 935,
+        "fullReplySHA256": "81c8638f5d007d9ade8b0e7fdedf8bbc05375c1c3a81e30213d940ad0a7f7edc",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[ a.streams(),\n  q.run(run.events(\"backend\").at(74).select(\"phase\",\"ordinal\",\"header\",\"passId\",\"scope\")),\n  q.run(run.events(\"middle\").at(74).text()).length ]",
+      "reply": "{\"ok\":true,\"value\":[[{\"variant\":\"checked\",\"phase\":\"middle\",\"events\":195,\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\"},{\"variant\":\"checked\",\"phase\":\"backend\",\"events\":116,\"streamSHA\":\"8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca\"},{\"variant\":\"firmware\",\"phase\":\"middle\",\"events\":2061,\"streamSHA\":\"eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38\"},{\"variant\":\"firmware\",\"phase\":\"backend\",\"events\":1450,\"streamSHA\":\"e1eabbaadea131365f48553d4a07b92c2ba5fb49d5db7cf17e0962599bdd915c\"},{\"variant\":\"unchecked\",\"phase\":\"middle\",\"events\":195,\"streamSHA\":\"d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4\"},{\"variant\":\"unchecked\",\"phase\":\"backend\",\"events\":116,\"streamSHA\":\"98517d51246b17f8ec72298250f962b05b837b12cd955a4c4c3bbf4b4fe540f5\"}],{\"phase\":\"backend\",\"ordinal\":74,\"header\":\"IR Dump After Virtual Register Rewriter (virtregrewriter) ***:\",\"passId\":\"virtregrewriter\",\"scope\":{\"kind\":\"machineFunction\",\"function\":\"row\",\"resolvedFrom\":\"print\"}},null]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1035,
+        "fullReplySHA256": "6ca741b3d7893532fc6d1beeb339d87048f03bfd9be0032c1bd00d2860532fc5",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "t74 = q.run(run.events(\"middle\").at(74).text());\n[ typeof t74, t74 && t74.length,\n  q.run(run.events(\"middle\").ordinals()).slice(0,3),\n  q.run(run.events(\"middle\").ordinals()).slice(-3),\n  q.run(run.events(\"middle\").ordinals()).length,\n  a.streams().reduce((s,x)=>s+x.events,0) ]",
+      "reply": "{\"ok\":false,\"error\":\"TypeError: Object has no member 'slice' at \\u003ctrace-cell\\u003e:3:47(35)\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 98,
+        "fullReplySHA256": "c4baaacbf49bfcf01f0f9cf3e55a52b253fc5a9590218b1468fbea66769736c9",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "t74 = q.run(run.events(\"middle\").at(74).text());\no = q.run(run.events(\"middle\").ordinals());\n[typeof t74, t74 && t74.length, Array.isArray(t74), typeof o, Array.isArray(o), o && Object.keys(o)]",
+      "reply": "{\"ok\":true,\"value\":[\"object\",null,false,\"object\",false,[\"kind\",\"of\",\"count\",\"ordinals\"]]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 90,
+        "fullReplySHA256": "d200a1487e13b524959ab2b7671045c76a29a3eebafdb6b7b86e8dfc69b7e44a",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[ Object.keys(t74), t74.text && t74.text.length,\n  o.count, o.ordinals.slice(0,3), o.ordinals.slice(-2), o.ordinals.length,\n  a.streams().reduce((s,x)=>s+x.events,0) ]",
+      "reply": "{\"ok\":true,\"value\":[[\"kind\",\"ordinal\",\"variant\",\"phase\",\"header\",\"print\",\"ref\",\"trailer\"],null,195,[0,1,2],[193,194],195,4133]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 128,
+        "fullReplySHA256": "cb44b595246de384ae8db2f9930fe982b5933a681398fde512f3cade9661fa39",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[ t74.kind, t74.ref, t74.ref.end - t74.ref.start,\n  t74.print.length, t74.trailer,\n  q.run(run.events(\"middle\").where(e => e.pass === \"EarlyCSEPass\").count()),\n  q.run(run.events(\"middle\").where(e => e.pass === \"EarlyCSEPass\").ordinals()).map(x=>x) ]",
+      "reply": "{\"ok\":false,\"error\":\"TypeError: Object has no member 'map' at \\u003ctrace-cell\\u003e:4:83(49)\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 96,
+        "fullReplySHA256": "ceebe7f59f1332692e3a5be4c8b9894ad8fbb1911cd962091eb4f8e80f612573",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[ t74.kind, t74.ref, t74.ref.end - t74.ref.start,\n  t74.print.length, JSON.stringify(t74.trailer).slice(0,200),\n  q.run(run.events(\"middle\").where(e => e.pass === \"EarlyCSEPass\").count()) ]",
+      "reply": "{\"ok\":true,\"value\":[\"text\",{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"ordinal\":74,\"start\":240363,\"end\":248127},7764,7699,\"{\\\"lines\\\":1,\\\"note\\\":\\\"pass-manager output after this print (it announces the next pass); excluded from this snapshot's evidence\\\"}\",{\"kind\":\"count\",\"value\":4,\"unit\":\"events\",\"of\":\"a.variant(\\\"checked\\\").events(\\\"middle\\\").where(e =\\u003e e.pass === \\\"EarlyCSEPass\\\")\",\"streams\":1,\"byStream\":[{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"events\":4}]}]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 624,
+        "fullReplySHA256": "ea2127e21021200c170e721634c5d1cd2816bbfe602c77e47c0da851d36a97c2",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "row = run.function(\"row\");\nmid = row.timeline(\"middle\");\n[ q.run(run.events(\"middle\").at(74).select(\"phase\",\"ordinal\",\"header\",\"pass\",\"scope\",\"ref\")),\n  q.run(mid.at(74).select(\"ordinal\",\"header\",\"passId\",\"scope\")),\n  q.run(run.events(\"middle\").count()).value ]",
+      "reply": "{\"ok\":true,\"value\":[{\"phase\":\"middle\",\"ordinal\":74,\"header\":\"IR Dump After EarlyCSEPass on row\",\"pass\":\"EarlyCSEPass\",\"scope\":{\"kind\":\"function\",\"function\":\"row\"},\"ref\":{\"variant\":\"checked\",\"phase\":\"middle\",\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"ordinal\":74,\"start\":240363,\"end\":248127}},{\"ordinal\":74,\"header\":\"IR Dump After EarlyCSEPass on row\",\"passId\":\"EarlyCSEPass\",\"scope\":{\"kind\":\"function\",\"function\":\"row\"}},195]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 464,
+        "fullReplySHA256": "22680ecbb99830ac72d01d8b3a29b7a9f30ecbf3795efaaf09e53f67a19efa49",
+        "abbreviated": false
+      }
+    }
+  ],
+  "answer": "FINDINGS\n\n1. Total archived pass observations (whole archive)\n   - `a.events().count()` → value **4133**, unit **events**, `of: a.events()`, streams: **6**.\n   - Independent recomputation: `a.streams().reduce((s,x)=>s+x.events,0)` → **4133** (matches, so nothing double-counted between the two routes).\n   - What an event is: a *header record* of a print-after-all stream — one line like “IR Dump After <pass> …”. So 4133 = number of captured pass-manager print headers, not passes executed, not IR instructions, not elapsed time. One stream per (variant, phase); ordinals restart at 0 in each stream. Variants in the archive: checked, firmware, unchecked; phases: middle, backend.\n   - byStream witness (a.events().count().byStream, identical to a.streams()):\n     checked/middle 195 · checked/backend 116 · firmware/middle 2061 · firmware/backend 1450 · unchecked/middle 195 · unchecked/backend 116.\n     Sum check: 195+116+2061+1450+195+116 = 4133. Note firmware is 3511 of the 4133; the checked build is only 311 of the archive total.\n\n2. Enumerated by phase of the checked build\n   - checked, **middle**: 195 events. Witnesses: `a.variant(\"checked\").events(\"middle\").count()` → 195 (1 stream, streamSHA bbd3b983…95b4); `…events(\"middle\").ordinals()` → 195 ordinals, first [0,1,2], last [193,194] (0-based, no renumbering).\n   - checked, **backend**: 116 events (`…events(\"backend\").count()` → 116, streamSHA 8139296…c8ca).\n   - Checked-build subtotal: 195 + 116 = **311** events, which equals the checked rows in byStream (195 + 116). Those are the only two phases that exist for any variant in this archive, so the phase enumeration is complete for the checked build.\n\n3. Relocating the checked middle-end observation at ordinal 74\n   - Coordinates: variant `checked`, phase `middle`, stream SHA `bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4`, **ordinal 74** (0-based, absolute in that stream, in range 0…194), byte span `ref.start=240363`, `ref.end=248127`.\n   - Header: “IR Dump After EarlyCSEPass on row”; pass = passId = passName = `EarlyCSEPass`, `when: \"after\"`.\n   - Unit of work: `scope.kind = \"function\"`, `scope.function = \"row\"` — i.e. one function-level print of the single LLVM function `row` (not a module print, not a loop, not a machineFunction). Confirmed from the function timeline: `row.timeline(\"middle\").at(74)` returns the same header/pass/scope (`function row`).\n   - Size witnesses: ref span = 248127 − 240363 = **7764 bytes**; `text().print` length = **7699 characters**; `text().trailer` = `{\"lines\":1,\"note\":\"pass-manager output after this print … excluded from this snapshot's evidence\"}` — so the 1 trailer line after the print is not part of the measured snapshot. (The 65-unit gap between the byte span and the character count is consistent with non-ASCII bytes in the print, but the archive exposes no charset field, so I can't prove the cause; a raw byte dump or an encoding field on `ref` would make that answerable.)\n   - Ordinal alone is not enough: checked/**backend** ordinal 74 is a *different* observation — header “IR Dump After Virtual Register Rewriter (virtregrewriter) ***:”, passId `virtregrewriter`, `scope.kind = \"machineFunction\"` (function `row`, resolvedFrom `print`). Always pair ordinal with (variant, phase) or the streamSHA.\n   - Context: `EarlyCSEPass` occurs 4 times in the checked/middle stream (`where(e=>e.pass===\"EarlyCSEPass\").count()` → 4), so “EarlyCSE” alone doesn't identify this print; ordinal 74 does.\n\n4. Binding survival\n   - `run` was bound in call 4 and re-used unchanged in call 10 (after calls 5–9); `q.run(run.events(\"middle\").at(74).select(...))` returned the identical event (ordinal 74, EarlyCSEPass on row, ref 240363–248127) and `run.events(\"middle\").count()` still returned 195. REPL bindings survive across evaluations in this session; the named query is stable/reproducible.\n\nUSABILITY DIARY (chronological, by call)\n1. `q.help()` — entry point; learned the archive is “PicoCalc LLVM row archive 0.1.0”, plans are lazy and need `q.run`, statuses available/absent/unavailable/unsupported.\n2. `[q.help(\"events\"), q.help(\"timeline\")]` — learned events = header records, one stream per (variant, phase), ordinals restart at 0; learned function timelines and that loop prints make whole-function metrics unavailable.\n3. `q.run(a.events().count())` — got 4133/events with all six byStream rows; this is where I realized the archive total and the checked-build total are different numbers and that I must report both.\n4. Bound `run = a.variant(\"checked\")`; ran `events(\"middle\").count()` → 195, `events(\"backend\").count()` → 116, and `events(\"middle\").at(74).select(...)` → EarlyCSEPass on row. First pass at both questions in one cell.\n5. `a.streams()` (6 rows, sum 4133) + checked/backend `at(74)` for contrast (virtregrewriter, machineFunction) + attempted `q.run(...at(74).text()).length` → returned **null**: `text()` is itself a descriptor, so `.length` on it was meaningless. Failed guess.\n6. Retried with `.ordinals().slice(...)` → **TypeError: Object has no member 'slice'**. Recovery: `ordinals()` also returns a descriptor, not an array.\n7. Inspected shapes instead of guessing: `Object.keys` showed `text()` = {kind, ordinal, variant, phase, header, print, ref, trailer} and `ordinals()` = {kind, of, count, ordinals…}. Recovered the data: `o.count`=195, ordinals 0…194, and Σ streams = 4133 (independent check of 4133).\n8. One more shape error (`.map` on `where(...).ordinals()`) — same lesson; re-ran without it and got ref span 7764 bytes, print length 7699 chars, trailer 1 line, EarlyCSEPass count 4.\n9. (Only after intervening calls 5–8) re-ran the named query under the persisted `run` binding, plus `row.timeline(\"middle\").at(74)`: same event, count still 195 → binding and reproducibility confirmed.\n\nWHAT TO IMPROVE (one sentence)\nMake the lazy result types self-describing at the point of failure — e.g. have `.text()`/`.ordinals()` return run-ready arrays or echo “descriptor: run me / read `.print`, `.ordinals`” in their TypeError — and default count output to label which variant/phase scope it covers, since the archive total (4133) and the checked-build total (311) are trivially conflatable.",
+  "errors": [],
+  "seconds": 114.59,
+  "observedModel": "deepseek-4.1-flash",
+  "observedProvider": "lunaroute",
+  "exit": 0
+}

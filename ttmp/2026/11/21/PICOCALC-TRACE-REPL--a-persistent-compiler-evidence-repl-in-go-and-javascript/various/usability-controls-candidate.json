@@ -1,0 +1,88 @@
+{
+  "build": "523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71",
+  "persistent": 17,
+  "isolatedType": "undefined",
+  "helpKeys": [],
+  "helpNumericalLeaks": {
+    "root": [],
+    "plans": [],
+    "events": [],
+    "timeline": [],
+    "states": [],
+    "metrics": [],
+    "changes": [],
+    "machine": [],
+    "profiles": [],
+    "compare": [],
+    "capabilities": [],
+    "params": [],
+    "results": [],
+    "errors": [],
+    "cache": []
+  },
+  "helpTerminologyCues": {
+    "root": [
+      "at(74)"
+    ],
+    "plans": [
+      "checked-llc-nolsr"
+    ],
+    "events": [
+      "EarlyCSEPass",
+      "virtregrewriter",
+      "at(78)"
+    ],
+    "timeline": [
+      "virtregrewriter",
+      "at(74)"
+    ],
+    "states": [
+      "at(74)"
+    ],
+    "metrics": [
+      "at(74)"
+    ],
+    "changes": [
+      "EarlyCSEPass"
+    ],
+    "machine": [
+      "NoVRegs",
+      "at(78)"
+    ],
+    "profiles": [
+      "checked-llc-nolsr"
+    ],
+    "compare": [
+      "at(74)",
+      "at(78)",
+      "checked-llc-nolsr"
+    ],
+    "capabilities": [
+      "missingDebugLocations"
+    ],
+    "params": [
+      "checked-llc-nolsr"
+    ],
+    "results": [],
+    "errors": [],
+    "cache": []
+  },
+  "helpReplySHA256": {
+    "root": "2be196ca46732e465cd3bab906b509d672c4b39e3071e658d73eda5cf69199c1",
+    "plans": "4f478285d1541ac004fd9a9d89df742ac3d1a3149f0132f9830c0769c9d59054",
+    "events": "1a8ff7360c028b49afafd7888eb5df9726ff06669507fead482f299e30c74578",
+    "timeline": "bc8cdb702395a6c961b6af4c612475a6c636541d63ed42cc1c188de6863930b9",
+    "states": "c5bbca21baa7ccbf17bbf0b45fa793a8b406c506a8bbf2219ae17bdf0d793ec6",
+    "metrics": "fd57b51eb0ed7b06fe6ac1cf8c73e9f0286131b8f4e4e21a9865982577a859f6",
+    "changes": "be58c32d88dc12301a5d20fc8269046f83a98a69c3a0b11e947a1f4390cf72e0",
+    "machine": "ec8d4fe16bc7a18636a8a21a9a8d5f1fa29858ab94288c050f266422404a474b",
+    "profiles": "8c8a5b4c4875c7d2dc024fbbe1312d086ba7947d19f61345327a6869390a57c8",
+    "compare": "70c444aae51e5e0d5796279ed1c88e086bb96548aac57aa53a7052a2d5a1f71e",
+    "capabilities": "29f0d9910b77bf33e04246154ac4c49f2082e68c6c8a97305bc36a836c54b1c5",
+    "params": "ca19889cc2760be931a23165b0dfea34ec74740946d69b2380de8e714a2f95e8",
+    "results": "860de278bb1d2b254543a2568fa4b8f9647c09551f14de4df9bf9305d7bfcacc",
+    "errors": "8024150f37e77c25ac7e2dff7f33282e209f9c25481bea207a8d57020414e863",
+    "cache": "3402ff3db4b18102a266d04a0baa91a507eb093a943282bb6081f9b6836262a4"
+  },
+  "afterOtherSessionClosed": 17
+}

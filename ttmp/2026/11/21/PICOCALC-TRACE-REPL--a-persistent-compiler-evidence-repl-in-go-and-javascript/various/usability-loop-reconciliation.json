@@ -1,0 +1,36 @@
+{
+  "checked": {
+    "count": 42,
+    "missingExplicitPreheaderOrdinals": [],
+    "additional": [],
+    "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4"
+  },
+  "unchecked": {
+    "count": 42,
+    "missingExplicitPreheaderOrdinals": [],
+    "additional": [],
+    "streamSHA": "d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4"
+  },
+  "firmware": {
+    "count": 438,
+    "missingExplicitPreheaderOrdinals": [],
+    "additional": [
+      {
+        "ordinal": 584,
+        "header": "IR Dump After LoopFullUnrollPass on for.cond1.preheader.i (invalidated)",
+        "start": 2871284,
+        "end": 2966489,
+        "firstBodyLine": "; ModuleID = 'raw.ll'",
+        "firstSixBodyLines": [
+          "; ModuleID = 'raw.ll'",
+          "source_filename = \"firmware.i\"",
+          "target datalayout = \"e-m:e-p:32:32-i64:64-n32-S128\"",
+          "target triple = \"riscv32-unknown-unknown-elf\"",
+          "",
+          "%struct.raytrace_demo_scene = type { i32, i32, i32, i32 }"
+        ]
+      }
+    ],
+    "streamSHA": "eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38"
+  }
+}

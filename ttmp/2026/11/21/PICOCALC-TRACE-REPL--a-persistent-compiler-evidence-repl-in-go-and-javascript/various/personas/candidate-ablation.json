@@ -1,0 +1,191 @@
+{
+  "provider": "lunaroute",
+  "model": "deepseek-4.1-flash",
+  "thinking": "high",
+  "card": "ablation",
+  "build": "523f185499f3b3fb48d1a25f7792d1993294aa93695034babe153559652e5d71",
+  "limit": 14,
+  "steps": [
+    {
+      "tool": "trace_eval",
+      "source": "q.help()",
+      "reply": "{\"ok\":true,\"value\":\"q — compiler-evidence queries over the PicoCalc LLVM row archive (release 0.1.0). Globals: q, a (archive), profiles.\\nPlans are lazy; evaluate synchronously with q.run(plan) or plan.run(). Results are plain objects with status, unit and witnesses.\\nEager calls (….describe(), profiles.arms(), run.functions()) return values at once; q.run returns a describe() descriptor unchanged (q.help(\\\"plans\\\")).\\n  q.run(a.events().count())                                // all header records, with byStream\\n  run = a.variant(\\\"checked\\\"); row = run.function(\\\"row\\\"); middle = row.timeline(\\\"middle\\\")\\n  q.run(run.events(\\\"middle\\\").at(74).select(\\\"ordinal\\\", \\\"header\\\", \\\"ref\\\"))\\n  hdr = q.ir.instructions().opcode(\\\"load\\\").resultType(\\\"i32\\\").pointer(row.argument(0)).count()\\n  q.run(hdr.at(middle.at(74).after))                         // static sites, with witnesses\\n  q.run(middle.measure(hdr).changes().where(c =\\u003e c.status === \\\"known\\\" \\u0026\\u0026 c.delta \\u003c 0).first())\\n  q.run(profiles.arm(\\\"checked-gcc\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\").total(\\\"instructions\\\"))\\nTopics: q.help(\\\"plans\\\" | \\\"events\\\" | \\\"timeline\\\" | \\\"states\\\" | \\\"metrics\\\" | \\\"changes\\\" | \\\"machine\\\" | \\\"profiles\\\" | \\\"compare\\\" | \\\"capabilities\\\" | \\\"params\\\" | \\\"results\\\" | \\\"errors\\\" | \\\"cache\\\").\\nEvery object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).\\nPhysical ESP32-P4 timings are a separate global, never mixed into profiles (guest instruction counts): hardware.help() (available in this session).\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1644,
+        "fullReplySHA256": "758ec04daea383abfd3057e80a65bbf61c659bd33129cdb3b2d418327fa35ac5",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[q.help(\"profiles\"), q.help(\"compare\")]",
+      "reply": "{\"ok\":true,\"value\":[\"Execution summaries: dynamic totals of executed work (not static sites). Sources: execution, typed, metrics (q: profiles.sources()).\\n  eager, values now:  profiles.arms()   profiles.arm(\\\"checked-gcc\\\").describe()   .totals()   .samples()   profiles.workloads()   profiles.regions()\\n  lazy, use q.run:    .total(name)   q.add(…)   q.compare(…).  q.run(\\u003ca describe() descriptor\\u003e) returns it unchanged; see q.help(\\\"plans\\\").\\n  q.run(profiles.arm(\\\"checked-gcc\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\").total(\\\"instructions\\\"))\\n  stock = profiles.arm(\\\"typed-stock\\\").region(\\\"row\\\").workload(\\\"opening-160-rows\\\")\\n  q.run(q.add(stock.total(\\\"stackLoads\\\"), stock.total(\\\"stackStores\\\")).label(\\\"direct stack accesses\\\"))\\nTyped-summary entries are arms with the prefix \\\"typed-\\\" (typed-stock = typed[\\\"stock\\\"]). Workload \\\"opening-160-rows\\\" is verified by rowsVerified === 160.\\nWhat an arm IS: profiles.arm(\\\"typed-scalar\\\").describe().treatment → role, design, build, notA, provenance.\\n  Treatment labels are study/capture metadata (provenance.measured === false), not measurements; status \\\"partial\\\"/\\\"undescribed\\\" means the sources say no more.\\n  .describe().countsCover (treatment, workload, counter) · .fields (scope static|dynamic, meaning, isNot) · .comparisons (what a pair isolates) · .cannotAttribute\\n  .describe().units (one per total) · .sampleKeys (first 40) with .sampleCount and .sampleKeysTruncated; .samples() returns every sample\\nTotals are dynamic emulator counts: QEMU guest instructions inside the C row symbol, or RV32 interpreter steps for Typed. Neither is cycles or board time.\\nrowBytes is static: the nm -S size of the linked C row symbol, not output bytes or the .gold length. Typed summaries carry no code size.\\nStack totals are direct sp-based accesses summed over the workload; they cannot be attributed to a stack slot, a spill, or one optimization in a bundled treatment.\\nArms now: checked-gcc, checked-gcc-noiv, checked-llc, checked-llc-nolsr, checked-llvm, unchecked-gcc, unchecked-gcc-noiv, unchecked-llc, unchecked-llc-nolsr, unchecked-llvm, typed-pie, typed-scalar, typed-stock\",\"q.bundle({ name: plan, … }) keeps outputs separate. q.add(t1, t2) sums disjoint categories of one dimension and scope.\\nq.compare(before, after) → delta (counts), equal/transition (booleans), matchedOn; .matchOn(keys…), .percentChange({ denominator: \\\"before\\\"|\\\"after\\\" }), .asEndpoints().\\n  t = arm =\\u003e profiles.arm(arm).region(\\\"row\\\").workload(\\\"opening-160-rows\\\").total(\\\"instructions\\\")\\n  q.run(q.compare(t(\\\"checked-llc-nolsr\\\"), t(\\\"checked-llc\\\")).matchOn(\\\"workload\\\", \\\"region\\\", \\\"checkedContract\\\", \\\"unit\\\").percentChange({ denominator: \\\"before\\\" }))\\n  q.run(q.compare(np.at(machine.at(74).after), np.at(machine.at(78).after)).asEndpoints())   // interval + intervening events\\nMatch keys: workload, region, checkedContract, unit, metric, function, phase, variant, stream. A mismatch → status incomparable, delta null. percentChange on booleans → [typeError].\\nq.explain(plan) lists plan nodes, inputs and shared consumers.\"]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 3143,
+        "fullReplySHA256": "6748394ac70e789a2ffd941d154e2b3031da4bb3a208cb5c3202a96d280c8dba",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "profiles.arms()",
+      "reply": "{\"ok\":true,\"value\":[{\"arm\":\"checked-gcc\",\"source\":\"execution\",\"entry\":\"checked-gcc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"checked\"},{\"arm\":\"checked-gcc-noiv\",\"source\":\"execution\",\"entry\":\"checked-gcc-noiv\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"checked\"},{\"arm\":\"checked-llc\",\"source\":\"execution\",\"entry\":\"checked-llc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"checked\"},{\"arm\":\"checked-llc-nolsr\",\"source\":\"execution\",\"entry\":\"checked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"checked\"},{\"arm\":\"checked-llvm\",\"source\":\"execution\",\"entry\":\"checked-llvm\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"checked\"},{\"arm\":\"unchecked-gcc\",\"source\":\"execution\",\"entry\":\"unchecked-gcc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"unchecked\"},{\"arm\":\"unchecked-gcc-noiv\",\"source\":\"execution\",\"entry\":\"unchecked-gcc-noiv\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"unchecked\"},{\"arm\":\"unchecked-llc\",\"source\":\"execution\",\"entry\":\"unchecked-llc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"unchecked\"},{\"arm\":\"unchecked-llc-nolsr\",\"source\":\"execution\",\"entry\":\"unchecked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"unchecked\"},{\"arm\":\"unchecked-llvm\",\"source\":\"execution\",\"entry\":\"unchecked-llvm\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"totals\":[\"instructions\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":\"unchecked\"},{\"arm\":\"typed-pie\",\"source\":\"typed\",\"entry\":\"pie\",\"digest\":\"119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984\",\"totals\":[\"instructions\",\"packets\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":null},{\"arm\":\"typed-scalar\",\"source\":\"typed\",\"entry\":\"scalar\",\"digest\":\"119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984\",\"totals\":[\"instructions\",\"packets\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":null},{\"arm\":\"typed-stock\",\"source\":\"typed\",\"entry\":\"stock\",\"digest\":\"119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984\",\"totals\":[\"instructions\",\"packets\",\"stackLoads\",\"stackStores\"],\"rowsVerified\":160,\"contract\":null}]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 3125,
+        "fullReplySHA256": "133243b18f868f05d5741a9819ecb88c1f19741b16e59894d2c127597ef25079",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.bundle({nolsr: profiles.arm(\"checked-llc-nolsr\").describe(), lsr: profiles.arm(\"checked-llc\").describe()})",
+      "reply": "{\"ok\":false,\"error\":\"QueryError: [notAPlan] bundle output \\\"nolsr\\\" is the descriptor profiles.arm(\\\"checked-llc-nolsr\\\").describe() (already a value; pass the plan itself), not a plan\\n  fix: q.bundle({ nolsr: somePlan }) at QueryError (trace/query.js:13:15(22))\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 266,
+        "fullReplySHA256": "a551b14e0faef0b6f0bddb760227f1fbb1b3937e81594ba5aa64195d40f75525",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "t = arm => profiles.arm(arm).region(\"row\").workload(\"opening-160-rows\").total(\"instructions\");\nq.run(q.compare(t(\"checked-llc-nolsr\"), t(\"checked-llc\")).matchOn(\"workload\",\"region\",\"checkedContract\",\"unit\").percentChange({denominator:\"before\"}))",
+      "reply": "{\"ok\":true,\"value\":{\"kind\":\"comparison\",\"status\":\"available\",\"before\":{\"kind\":\"total\",\"status\":\"available\",\"reason\":null,\"arm\":\"checked-llc-nolsr\",\"metric\":\"instructions\",\"value\":1275560,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc-nolsr\\\"].totals.instructions\"}},\"after\":{\"kind\":\"total\",\"status\":\"available\",\"reason\":null,\"arm\":\"checked-llc\",\"metric\":\"instructions\",\"value\":1233611,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc\\\"].totals.instructions\"}},\"valueType\":\"count\",\"unit\":\"executed guest instructions\",\"delta\":-41949,\"matchedOn\":{\"workload\":{\"before\":\"opening-160-rows\",\"after\":\"opening-160-rows\",\"equal\":true},\"region\":{\"before\":\"row\",\"after\":\"row\",\"equal\":true},\"checkedContract\":{\"before\":\"checked\",\"after\":\"checked\",\"equal\":true},\"unit\":{\"before\":\"executed guest instructions\",\"after\":\"executed guest instructions\",\"equal\":true}},\"percent\":-3.288673210197874,\"denominator\":{\"side\":\"before\",\"value\":1275560}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 2066,
+        "fullReplySHA256": "012a5eb5bfd922e31a8b84b75d0253cb7f78715d33707d43d7fc7e1f05cb2709",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "d1 = profiles.arm(\"checked-llc-nolsr\").describe(); d2 = profiles.arm(\"checked-llc\").describe();\n({nolsr:{treatment:d1.treatment, fields:d1.fields, countsCover:d1.countsCover, cannotAttribute:d1.cannotAttribute, comparisons:d1.comparisons}, lsr:{treatment:d2.treatment}})",
+      "reply": "{\"ok\":true,\"value\":{\"nolsr\":{\"treatment\":{\"id\":\"checked-llc-nolsr\",\"status\":\"described\",\"role\":\"LSR-off arm of the llc LSR ablation\",\"design\":\"checked C model of the Typed row (01-row.c, hand-written, not Typed compiler output): each element access calls a capacity check that traps on failure\",\"build\":\"LLVM 18 llc -disable-lsr, from the same optimized module as the llc arm\",\"notA\":null,\"provenance\":{\"kind\":\"study/capture metadata\",\"measured\":false,\"catalog\":\"picocalc-row-treatments.v1\",\"basis\":[\"execute.py (link, workload, counters)\",\"evidence.md §3 (build table, LSR pairs)\"],\"note\":\"curated from the attached study and capture sources; not read from the profile entry and not covered by source.digest\"}},\"fields\":{\"totals.instructions\":{\"scope\":\"dynamic\",\"meaning\":\"QEMU guest instructions executed with PC inside the linked row symbol, summed over the workload\",\"isNot\":\"ESP32-P4 cycles or board time\"},\"totals.stackLoads\":{\"scope\":\"dynamic\",\"meaning\":\"executed lw/lh/lhu whose operand text contains (sp), summed over the workload\",\"isNot\":\"a stack-slot or spill count; byte, FP and copied-sp accesses are not counted\"},\"totals.stackStores\":{\"scope\":\"dynamic\",\"meaning\":\"executed sw/sh whose operand text contains (sp), summed over the workload\",\"isNot\":\"a stack-slot or spill count; byte, FP and copied-sp accesses are not counted\"},\"rowBytes\":{\"scope\":\"static\",\"meaning\":\"bytes of linked machine code: the size of the C row symbol from nm -S on the linked executable\",\"isNot\":\"output bytes, the .gold file length, a checksum, or an execution count\"},\"samples\":{\"scope\":\"dynamic\",\"meaning\":\"per-row totals for a few fixture rows, keyed by row index\",\"isNot\":\"PC samples\"},\"rowsVerified\":{\"scope\":\"workload\",\"meaning\":\"row inputs whose output equalled fixtures/\\u003cy\\u003e.gold\",\"isNot\":\"a count of output bytes\"}},\"countsCover\":{\"treatment\":\"checked-llc-nolsr\",\"role\":\"LSR-off arm of the llc LSR ablation\",\"verifiedBy\":\"rowsVerified\",\"workload\":\"one qemu-riscv32-static run of the linked executable per fixture row (fixtures/\\u003cy\\u003e.in on stdin); stdout must equal fixtures/\\u003cy\\u003e.gold\",\"counter\":\"QEMU exec trace (-one-insn-per-tb -d exec,nochain); only PCs inside the nm -S range of symbol row are counted\"},\"cannotAttribute\":[\"an individual stack slot, frame offset or PC: totals and row samples carry no addresses (see q.joinPCs)\",\"spill vs prologue/epilogue save vs local stack home vs scratch: the predicate sees only the base register sp\",\"an individual optimization inside a treatment that bundles several changes\",\"cycles or ESP32-P4 board time: these are emulator counts\",\"trap-path behaviour: every workload input is a valid row\"],\"comparisons\":[{\"before\":\"checked-llc-nolsr\",\"after\":\"checked-llc\",\"isolates\":\"LLVM backend Loop Strength Reduction: its net effect through the rest of the llc pipeline\",\"heldEqual\":\"optimized module, contract, link, workload, counters; only -disable-lsr differs\"}]},\"lsr\":{\"treatment\":{\"id\":\"checked-llc\",\"status\":\"described\",\"role\":\"LSR-on arm of the llc LSR ablation\",\"design\":\"checked C model of the Typed row (01-row.c, hand-written, not Typed compiler output): each element access calls a capacity check that traps on failure\",\"build\":\"LLVM 18 llc, Loop Strength Reduction on\",\"notA\":null,\"provenance\":{\"kind\":\"study/capture metadata\",\"measured\":false,\"catalog\":\"picocalc-row-treatments.v1\",\"basis\":[\"execute.py (link, workload, counters)\",\"evidence.md §3 (build table, LSR pairs)\"],\"note\":\"curated from the attached study and capture sources; not read from the profile entry and not covered by source.digest\"}}}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 3590,
+        "fullReplySHA256": "a2157852c9cf7d8e5b77fbfbe553a9db2b3d7b3400be0b1cb22881f51486bac5",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.bundle({c: q.compare(t(\"checked-llc-nolsr\"), t(\"checked-llc\"))})",
+      "reply": "{\"ok\":true,\"value\":{\"plan\":\"q.bundle({ c })\",\"kind\":\"bundle\",\"note\":\"not evaluated yet: q.run(plan) or plan.run()\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 117,
+        "fullReplySHA256": "656bf9de12f25bcb9cf111d72fb95a3762b4202bb791e4b93eaed57ea0b4c07a",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.bundle({c: q.compare(t(\"checked-llc-nolsr\"), t(\"checked-llc\")).matchOn(\"workload\",\"region\",\"checkedContract\",\"unit\")})",
+      "reply": "{\"ok\":true,\"value\":{\"plan\":\"q.bundle({ c })\",\"kind\":\"bundle\",\"note\":\"not evaluated yet: q.run(plan) or plan.run()\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 117,
+        "fullReplySHA256": "656bf9de12f25bcb9cf111d72fb95a3762b4202bb791e4b93eaed57ea0b4c07a",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "[q.help(\"machine\"), q.help(\"capabilities\")]",
+      "reply": "{\"ok\":true,\"value\":[\"Machine-function properties from \\\"# Machine code for function f: …\\\" (LLVM prints only set properties).\\n  np = q.machine.property(\\\"NoVRegs\\\"); q.run(np.at(row.timeline(\\\"backend\\\").at(78).after))   // boolean, witness line\\n  q.run(q.machine.properties().at(state))        q.machine.names()\\nNames: IsSSA, NoPHIs, TracksLiveness, NoVRegs, FailedISel, Legalized, RegBankSelected, Selected, TiedOpsRewritten, FailsVerification, FailedRegAlloc, TracksDebugUserValues. IR prints in the backend stream → unavailable (irPrintNotMachineCode).\\nUnsupported in this release: MIR instruction metrics (spills, copies, opcodes). Boolean metrics have no percentages.\",\"What this archive cannot answer is returned as status unavailable with a reason — never as an empty or zero result.\\n  q.run(run.initialModule().sourceLocations({ function: \\\"row\\\" }))    // missingDebugLocations + module digest\\n  q.run(run.remarks().forEvent(vectorEvent))                         // missingRemarksArtifact (not \\\"zero remarks\\\")\\n  q.run(q.joinPCs(profiles.arm(\\\"checked-llvm\\\"), run.finalImage()).requireMatch(\\\"imageSHA\\\", \\\"addressSpace\\\"))   // missingPCSamples, missingInput\\n  q.capabilities()   lists every capability with status and the call to use\"]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1265,
+        "fullReplySHA256": "cad9264d9a23e9ce22189edc3a8359e992e0c13c41110a5f03a48fb344680c12",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.capabilities()",
+      "reply": "{\"ok\":true,\"value\":[{\"capability\":\"event headers, prints, original ordinals\",\"status\":\"available\",\"use\":\"a.events(), run.events(phase).at(n).text()\"},{\"capability\":\"static IR metrics on full function or module prints\",\"status\":\"available\",\"use\":\"q.ir.instructions()….count().at(state)\"},{\"capability\":\"IR metrics on loop fragments\",\"status\":\"unavailable\",\"reason\":\"loopFragment\"},{\"capability\":\"def-use edges inside one snapshot\",\"status\":\"available (opcode subset for operandIndex)\",\"use\":\"state.instructions()….uses()\"},{\"capability\":\"machine-function properties\",\"status\":\"available\",\"use\":\"q.machine.property(name).at(state)\"},{\"capability\":\"machine instruction metrics (spills, copies, MIR opcodes)\",\"status\":\"unsupported\",\"reason\":\"no MIR body parser in this release\"},{\"capability\":\"dynamic totals per arm (execution, typed)\",\"status\":\"available\",\"use\":\"profiles.arms()\"},{\"capability\":\"per-row samples\",\"status\":\"inspect\",\"use\":\"profiles.arm(name).describe().sampleKeys / .samples()\"},{\"capability\":\"PC samples and PC joins\",\"status\":\"unavailable\",\"reason\":\"missingPCSamples; no final image registered\",\"use\":\"q.joinPCs(…)\"},{\"capability\":\"source locations\",\"status\":\"unavailable unless the module has debug info\",\"reason\":\"missingDebugLocations\",\"use\":\"run.initialModule().sourceLocations({ function })\"},{\"capability\":\"optimization remarks\",\"status\":\"unavailable\",\"reason\":\"missingRemarksArtifact\",\"use\":\"run.remarks().forEvent(e)\"},{\"capability\":\"fragments, params, explain, session pins\",\"status\":\"available\",\"use\":\"q.fragment, q.param, q.explain, q.session\"}]}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 1580,
+        "fullReplySHA256": "bd17dfb01c19db61926bf31c56c2df5d5169f060d1b786b79ccfbb3265a22c42",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "run = a.variant(\"checked\");\nq.run(q.joinPCs(profiles.arm(\"checked-llc-nolsr\"), run.finalImage()).requireMatch(\"imageSHA\",\"addressSpace\"))",
+      "reply": "{\"ok\":true,\"value\":{\"kind\":\"join\",\"status\":\"unavailable\",\"reasons\":[{\"reason\":\"missingPCSamples\",\"arm\":\"checked-llc-nolsr\",\"detail\":\"the summary holds aggregate totals and samples keyed by 0, 61, 109, not per-PC samples\"},{\"reason\":\"missingInput\",\"input\":\"finalImage\",\"detail\":\"no final image with an imageSHA and address map is registered for this archive\"}],\"required\":[\"imageSHA\",\"addressSpace\"],\"note\":\"a PC join needs PC samples, a known image identity, address normalization and symbol bounds; a matching function name alone is not a join\"}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 548,
+        "fullReplySHA256": "41353c29e675e1728e2d003e710982a4860e496809968217498c6e6277683b32",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "A = profiles.arm(\"checked-llc-nolsr\"); B = profiles.arm(\"checked-llc\");\nta = A.totals(); tb = B.totals();\nsa = A.samples(); sb = B.samples();\nindep = {ta, tb, instrDelta: ta.instructions - tb.instructions, pct: 100*(ta.instructions - tb.instructions)/ta.instructions};\n({indep, nolsrSamples: sa.slice(0,5), lsrSamples: sb.slice(0,5), nA: sa.length, nB: sb.length})",
+      "reply": "{\"ok\":false,\"error\":\"TypeError: Object has no member 'slice' at \\u003ctrace-cell\\u003e:5:32(63)\"}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 98,
+        "fullReplySHA256": "ad01b82ac0978b94f0d7cc7ec4e2b4599a05855dd00f5602612b3f263d7c8123",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "q.run(q.compare(t(\"checked-llc-nolsr\"), t(\"checked-llc\")).matchOn(\"workload\",\"region\",\"checkedContract\",\"unit\").asEndpoints())",
+      "reply": "{\"ok\":true,\"value\":{\"kind\":\"endpoints\",\"status\":\"available\",\"before\":{\"kind\":\"total\",\"status\":\"available\",\"reason\":null,\"arm\":\"checked-llc-nolsr\",\"metric\":\"instructions\",\"value\":1275560,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc-nolsr\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc-nolsr\\\"].totals.instructions\"}},\"after\":{\"kind\":\"total\",\"status\":\"available\",\"reason\":null,\"arm\":\"checked-llc\",\"metric\":\"instructions\",\"value\":1233611,\"unit\":\"executed guest instructions\",\"dimension\":\"executed guest instructions\",\"category\":null,\"scope\":\"dynamic (executed work, summed over the workload)\",\"region\":{\"name\":\"row\",\"requested\":true,\"evidence\":\"the measured row symbol (summary totals are collected inside it)\"},\"workload\":{\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true,\"evidence\":\"rowsVerified=160\"},\"contract\":{\"value\":\"checked\",\"evidence\":\"arm name prefix \\\"checked-\\\"\"},\"source\":{\"profile\":\"execution\",\"entry\":\"checked-llc\",\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"path\":\"execution[\\\"checked-llc\\\"].totals.instructions\"}},\"valueType\":\"count\",\"unit\":\"executed guest instructions\",\"delta\":-41949,\"matchedOn\":{\"workload\":{\"before\":\"opening-160-rows\",\"after\":\"opening-160-rows\",\"equal\":true},\"region\":{\"before\":\"row\",\"after\":\"row\",\"equal\":true},\"checkedContract\":{\"before\":\"checked\",\"after\":\"checked\",\"equal\":true},\"unit\":{\"before\":\"executed guest instructions\",\"after\":\"executed guest instructions\",\"equal\":true}},\"interval\":{\"status\":\"unknown\",\"note\":\"endpoints are not in one function timeline\"}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 2072,
+        "fullReplySHA256": "1ff97660db1be50a4b8ccecd8a67dd5101851c79010cc64a347ae91dec47e770",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "A = profiles.arm(\"checked-llc-nolsr\"); B = profiles.arm(\"checked-llc\");\nsa = A.samples(); sb = B.samples();\n({type: typeof sa, keys: Object.keys(sa).slice(0,10), sample: sa})",
+      "reply": "{\"ok\":true,\"value\":{\"type\":\"object\",\"keys\":[\"0\",\"61\",\"109\"],\"sample\":{\"0\":{\"instructions\":7137,\"stackLoads\":0,\"stackStores\":0},\"61\":{\"instructions\":9275,\"stackLoads\":0,\"stackStores\":0},\"109\":{\"instructions\":8077,\"stackLoads\":0,\"stackStores\":0}}}}\n",
+      "error": false,
+      "details": {
+        "httpStatus": 200,
+        "bytes": 247,
+        "fullReplySHA256": "352e8d1f8f88851488a44fcf5797923657db91462398d0311e57d2092066be52",
+        "abbreviated": false
+      }
+    },
+    {
+      "tool": "trace_eval",
+      "source": "A = profiles.arm(\"checked-llc-nolsr\"); B = profiles.arm(\"checked-llc\");\nta = A.totals(); tb = B.totals();\nsa = A.samples(); sb = B.samples();\nrows = Object.keys(sa).map(k => ({row:k, before:sa[k].instructions, after:sb[k].instructions, delta:sa[k].instructions - sb[k].instructions}));\n({before:ta.instructions, after:tb.instructions, delta:ta.instructions-tb.instructions, pctOfBefore: 100*(ta.instructions-tb.instructions)/ta.instructions, pctOfAfter: 100*(ta.instructions-tb.instructions)/tb.instructions, ratio: ta.instructions/tb.instructions, rows, sampleKeysA: A.describe().sampleKeys, sampleCountA: A.describe().sampleCount, truncA: A.describe().sampleKeysTruncated})",
+      "reply": "The 14-query session budget is complete. Submit the findings you have.",
+      "error": true,
+      "details": {}
+    }
+  ],
+  "answer": "## 1. Findings\n\n**Experiment (matched pair).** I used the llc LSR ablation already curated in the archive: `checked-llc-nolsr` (LLVM 18 `llc -disable-lsr`) vs `checked-llc` (LLVM 18 `llc`, LSR on). Both arms are the *checked C model* of the Typed row (01-row.c, hand-written, not Typed compiler output), same optimized module, same link, same workload, same counter, identical source digest `42a8a43d…b816d8` for every checked arm. The treatment metadata states this pair \"isolates LLVM backend Loop Strength Reduction: its net effect through the rest of the llc pipeline,\" with `heldEqual: optimized module, contract, link, workload, counters; only -disable-lsr differs`. (Treatment/provenance is study/capture metadata, `provenance.measured === false` — it labels the pair, it is not itself a measurement.)\n\n**Measured counts (dynamic, executed guest instructions; PASS positions = the endpoints of the matched comparison):**\n\n| endpoint | arm | executed guest instructions |\n|---|---|---|\n| before | `checked-llc-nolsr` (LSR off) | **1,275,560** |\n| after | `checked-llc` (LSR on) | **1,233,611** |\n\n- **Absolute change:** **−41,949** instructions (plan-reported `delta: -41949`; consistent with 1,275,560 − 1,233,611 by hand).\n- **Percentage change:** **−3.2887%**, `denominator: {side: \"before\", value: 1,275,560}` → 41,949 / 1,275,560. (For reference only, as hand arithmetic on the two reported counts, not tool-returned: the same absolute change is ≈3.40% of the after count, 1,233,611.)\n- **Denominator/side:** before side, because `percentChange({denominator:\"before\"})` was requested; the plan echoed `denominator.value = 1275560`.\n- **Unit and unit meaning:** \"executed guest instructions\" — QEMU guest instructions executed with PC inside the linked `row` symbol (QEMU exec trace, `-one-insn-per-tb -d exec,nochain`; only PCs inside the `nm -S` range of symbol `row` counted). It is explicitly **not** ESP32-P4 cycles or board time.\n- **Workload:** `opening-160-rows`, `rowsVerified: 160`, `verified: true` (`evidence: rowsVerified=160`); one `qemu-riscv32-static` run of the linked executable per fixture row, stdout required to equal `fixtures/<y>.gold`.\n- **Match check:** `matchedOn` workload / region / checkedContract / unit all `equal: true`; `asEndpoints()` gave `interval.status: \"unknown\"` (\"endpoints are not in one function timeline\"), which is expected and does not affect the two endpoint totals.\n\n**Scope of the claim.** The result holds for: the *checked contract only*, the *hand-written checked C model* (not Typed compiler output), LLVM 18 `llc` with only `-disable-lsr` differing, the `row` symbol, and the 160-row opening workload. It does **not** carry to the `unchecked-*` arms, the `gcc`/`-noiv` arms, the `typed-*` arms (separate RV32 interpreter source, no code size), to other workloads, to physical ESP32-P4 timing, or to trap-path behaviour (every workload input is a valid row). Totals also cannot be split into an individual optimization inside a bundled treatment.\n\n**The colleague's PC request: not supported by this capture.** `q.joinPCs(profiles.arm(\"checked-llc-nolsr\"), run.finalImage()).requireMatch(\"imageSHA\",\"addressSpace\")` returned `status: \"unavailable\"` with two reasons: `missingPCSamples` (\"the summary holds aggregate totals and samples keyed by 0, 61, 109, not per-PC samples\") and `missingInput: finalImage` (\"no final image with an imageSHA and address map is registered for this archive\"). `q.capabilities()` likewise lists \"PC samples and PC joins\" as `unavailable`, reason `missingPCSamples; no final image registered`. The arm's own `cannotAttribute` list says the same: \"an individual stack slot, frame offset or PC: totals and row samples carry no addresses (see q.joinPCs)\". Direct inspection confirmed the shape: `checked-llc-nolsr.samples()` is an object keyed by row index with keys `\"0\"`, `\"61\"`, `\"109\"` (instructions 7137, 9275, 8077) — per-*row* samples, not per-PC samples. So the 41,949-instruction gain cannot be attributed to any program counter, and it must not be read as \"0 gain at every other PC.\"\n\n**Missing observation that would make it answerable:** per-PC executed-instruction samples for *both* LSR arms (e.g. a `-d exec` PC histogram over the same 160 fixture runs, same predicate on the `row` symbol bounds), plus a registered final image carrying an `imageSHA` and address map so the join can `requireMatch(\"imageSHA\",\"addressSpace\")`; then rank PCs by their share of the 41,949 delta. Static IR sites are not a substitute — the archive distinguishes static sites from dynamic executed-work totals, and a static site has no execution weight here.\n\n## 2. Chronological usability diary (keyed to calls)\n\n1. `q.help()` — good entry point; learned globals, status vocabulary, and the exact LSR-pair recipe (`checked-llc-nolsr` vs `checked-llc`). No guessing needed yet.\n2. `q.help(\"profiles\")` + `q.help(\"compare\")` together with `profiles.arms()` — found all 13 arms, all `rowsVerified: 160`; identified the two relevant arms and learned totals are dynamic emulator counts, not cycles.\n3. **Failed guess:** `q.bundle({nolsr: profiles.arm(...).describe(), lsr: ...})` → `QueryError: [notAPlan] … describe() (already a value; pass the plan itself)`. Recovery: `.describe()` is eager, so I bound `d1`/`d2` and returned a plain object literal instead. The error message was clear.\n4. `q.compare(nolsr, llc).matchOn(...).percentChange({denominator:\"before\"})` → 1,275,560 vs 1,233,611, delta −41,949, −3.2887%, denominator 1,275,560 — the core answer in one call, with provenance paths attached.\n5. `describe()` on both arms → confirmed the pair isolates LSR, `heldEqual` everything else, and that PCs are explicitly in `cannotAttribute`. This is where the colleague's request started looking unanswerable.\n6. **Slipped guess:** `q.bundle({c: q.compare(...)})` → returned `\"not evaluated yet\"` (a lazy plan, not a result).\n7. **Repeated the same mistake** with the identical wrapped bundle — pure waste of a call; recovery was to stop wrapping and call `q.run(...)` directly.\n8. `q.help(\"machine\")` + `q.help(\"capabilities\")` → found the `q.joinPCs` recipe and that MIR instruction metrics are unsupported.\n9. `q.capabilities()` and the `joinPCs` call together → definitive `unavailable` with `missingPCSamples` + `missingInput`, naming the real obstacle rather than returning zero.\n10. `asEndpoints()` → sane `interval.status: \"unknown\"`; confirmed the endpoints are aggregates, not one timeline.\n11. **Failed guess:** `samples().slice(0,5)` → `TypeError: Object has no member 'slice'`. Recovery: inspected `typeof`/`Object.keys`, learned `samples()` is an object keyed by row index (`\"0\"`, `\"61\"`, `\"109\"`) — which is itself the evidence that no PC dimension exists.\n12. The final independent re-check call (recomputing delta/percent from `totals()`, per-row deltas, `sampleKeys`/`sampleCount`) hit the 14-call budget and never returned. Consequence: the before-denominator figures above are the plan's own output plus hand arithmetic on the two reported counts; the percent-with-after-denominator and per-row *after* values are **not** tool-verified, and I report no row-level gain figures at all.\n\n## 3. Improvement\n\nMake shapes self-describing and cheap to confirm: `samples()` should declare itself as a keyed object (or return an array), `describe()` values should be accepted inside `q.bundle`/`q.run` without a `notAPlan` round trip, and one call should be able to bundle several independent plans — here, a single query returning totals, percent changes, sample keys and the PC-join status would have replaced roughly half the session.",
+  "errors": [],
+  "seconds": 99.94,
+  "observedModel": "deepseek-4.1-flash",
+  "observedProvider": "lunaroute",
+  "exit": 0
+}
