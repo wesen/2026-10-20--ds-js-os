@@ -142,6 +142,12 @@
       "trap": false
     }
   ],
+  "sourceSpelledIntrinsic": {
+    "function": "rayRowS16x8Intrinsic",
+    "sourceSHA256": "ad943a5ddd1c843cb36a240d221483c5dce766beaded37ece48d52b7eda09919",
+    "imageSHA256": "886680c7c8aebaacd1ccacf330214cc68cead69a04cdd73aaa4b2655569f7203",
+    "unmarkedUsesStock": true
+  },
   "pie": [
     "esp.vldbc.16.ip",
     "esp.vld.128.ip",

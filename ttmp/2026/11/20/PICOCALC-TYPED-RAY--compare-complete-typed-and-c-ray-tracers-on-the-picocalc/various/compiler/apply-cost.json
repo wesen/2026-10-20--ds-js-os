@@ -1,0 +1,565 @@
+{
+  "runtime": "v24.18.0",
+  "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "images": {
+    "stock": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+    "div": "a09dfa960349225b74c07964dccbc69d41a26c6b08574d269f2a99e0e08d842d",
+    "explicit": "886680c7c8aebaacd1ccacf330214cc68cead69a04cdd73aaa4b2655569f7203",
+    "inferred": "886680c7c8aebaacd1ccacf330214cc68cead69a04cdd73aaa4b2655569f7203",
+    "matched": "8dad00e30c9b1496dec7b8ab322f33e27d4162f78d467ca599941e26c9f4251b"
+  },
+  "medians": {
+    "stock": {
+      "backendSourceBytes": 19062,
+      "evaluateUs": 57.951,
+      "compileUs": 4439.118
+    },
+    "div": {
+      "backendSourceBytes": 19875,
+      "evaluateUs": 52.313,
+      "compileUs": 4433.141
+    },
+    "explicit": {
+      "backendSourceBytes": 21716,
+      "evaluateUs": 52.264,
+      "compileUs": 4538.97
+    },
+    "inferred": {
+      "backendSourceBytes": 21680,
+      "evaluateUs": 54.144,
+      "compileUs": 4890.453
+    },
+    "matched": {
+      "backendSourceBytes": 21989,
+      "evaluateUs": 57.624,
+      "compileUs": 4469.539
+    }
+  },
+  "samples": [
+    {
+      "arm": "stock",
+      "round": 0,
+      "slot": 0,
+      "evaluateUs": 562.673,
+      "compileUs": 10548.274
+    },
+    {
+      "arm": "div",
+      "round": 0,
+      "slot": 1,
+      "evaluateUs": 600.193,
+      "compileUs": 5518.965
+    },
+    {
+      "arm": "explicit",
+      "round": 0,
+      "slot": 2,
+      "evaluateUs": 600.775,
+      "compileUs": 6462.937
+    },
+    {
+      "arm": "inferred",
+      "round": 0,
+      "slot": 3,
+      "evaluateUs": 603.14,
+      "compileUs": 5929.931
+    },
+    {
+      "arm": "matched",
+      "round": 0,
+      "slot": 4,
+      "evaluateUs": 615.02,
+      "compileUs": 6540.099
+    },
+    {
+      "arm": "div",
+      "round": 1,
+      "slot": 0,
+      "evaluateUs": 48.927,
+      "compileUs": 4201.713
+    },
+    {
+      "arm": "explicit",
+      "round": 1,
+      "slot": 1,
+      "evaluateUs": 51.397,
+      "compileUs": 4801.635
+    },
+    {
+      "arm": "inferred",
+      "round": 1,
+      "slot": 2,
+      "evaluateUs": 50.672,
+      "compileUs": 4016.592
+    },
+    {
+      "arm": "matched",
+      "round": 1,
+      "slot": 3,
+      "evaluateUs": 49.123,
+      "compileUs": 4321.674
+    },
+    {
+      "arm": "stock",
+      "round": 1,
+      "slot": 4,
+      "evaluateUs": 69.525,
+      "compileUs": 4439.118
+    },
+    {
+      "arm": "explicit",
+      "round": 2,
+      "slot": 0,
+      "evaluateUs": 52.349,
+      "compileUs": 4101.288
+    },
+    {
+      "arm": "inferred",
+      "round": 2,
+      "slot": 1,
+      "evaluateUs": 47.949,
+      "compileUs": 5077.973
+    },
+    {
+      "arm": "matched",
+      "round": 2,
+      "slot": 2,
+      "evaluateUs": 51.423,
+      "compileUs": 3985.855
+    },
+    {
+      "arm": "stock",
+      "round": 2,
+      "slot": 3,
+      "evaluateUs": 50.221,
+      "compileUs": 4683.138
+    },
+    {
+      "arm": "div",
+      "round": 2,
+      "slot": 4,
+      "evaluateUs": 57.182,
+      "compileUs": 3927.07
+    },
+    {
+      "arm": "inferred",
+      "round": 3,
+      "slot": 0,
+      "evaluateUs": 58.243,
+      "compileUs": 3995.31
+    },
+    {
+      "arm": "matched",
+      "round": 3,
+      "slot": 1,
+      "evaluateUs": 657.332,
+      "compileUs": 3605.937
+    },
+    {
+      "arm": "stock",
+      "round": 3,
+      "slot": 2,
+      "evaluateUs": 50.515,
+      "compileUs": 3492.456
+    },
+    {
+      "arm": "div",
+      "round": 3,
+      "slot": 3,
+      "evaluateUs": 52.313,
+      "compileUs": 3779.323
+    },
+    {
+      "arm": "explicit",
+      "round": 3,
+      "slot": 4,
+      "evaluateUs": 54.376,
+      "compileUs": 3935.043
+    },
+    {
+      "arm": "matched",
+      "round": 4,
+      "slot": 0,
+      "evaluateUs": 53.024,
+      "compileUs": 5409.761
+    },
+    {
+      "arm": "stock",
+      "round": 4,
+      "slot": 1,
+      "evaluateUs": 84.929,
+      "compileUs": 3821.586
+    },
+    {
+      "arm": "div",
+      "round": 4,
+      "slot": 2,
+      "evaluateUs": 48.147,
+      "compileUs": 3587.834
+    },
+    {
+      "arm": "explicit",
+      "round": 4,
+      "slot": 3,
+      "evaluateUs": 46.905,
+      "compileUs": 3648.646
+    },
+    {
+      "arm": "inferred",
+      "round": 4,
+      "slot": 4,
+      "evaluateUs": 49.871,
+      "compileUs": 4365.123
+    },
+    {
+      "arm": "stock",
+      "round": 5,
+      "slot": 0,
+      "evaluateUs": 47.436,
+      "compileUs": 3890.439
+    },
+    {
+      "arm": "div",
+      "round": 5,
+      "slot": 1,
+      "evaluateUs": 46.068,
+      "compileUs": 4285.209
+    },
+    {
+      "arm": "explicit",
+      "round": 5,
+      "slot": 2,
+      "evaluateUs": 50.741,
+      "compileUs": 4688.226
+    },
+    {
+      "arm": "inferred",
+      "round": 5,
+      "slot": 3,
+      "evaluateUs": 72.412,
+      "compileUs": 5915.145
+    },
+    {
+      "arm": "matched",
+      "round": 5,
+      "slot": 4,
+      "evaluateUs": 102.138,
+      "compileUs": 8280.825
+    },
+    {
+      "arm": "div",
+      "round": 6,
+      "slot": 0,
+      "evaluateUs": 53.883,
+      "compileUs": 3712.628
+    },
+    {
+      "arm": "explicit",
+      "round": 6,
+      "slot": 1,
+      "evaluateUs": 49.392,
+      "compileUs": 3798.835
+    },
+    {
+      "arm": "inferred",
+      "round": 6,
+      "slot": 2,
+      "evaluateUs": 46.199,
+      "compileUs": 4074.261
+    },
+    {
+      "arm": "matched",
+      "round": 6,
+      "slot": 3,
+      "evaluateUs": 47.773,
+      "compileUs": 4346.606
+    },
+    {
+      "arm": "stock",
+      "round": 6,
+      "slot": 4,
+      "evaluateUs": 75.804,
+      "compileUs": 5434.852
+    },
+    {
+      "arm": "explicit",
+      "round": 7,
+      "slot": 0,
+      "evaluateUs": 52.264,
+      "compileUs": 3840.847
+    },
+    {
+      "arm": "inferred",
+      "round": 7,
+      "slot": 1,
+      "evaluateUs": 48.142,
+      "compileUs": 3939.332
+    },
+    {
+      "arm": "matched",
+      "round": 7,
+      "slot": 2,
+      "evaluateUs": 57.624,
+      "compileUs": 6416.855
+    },
+    {
+      "arm": "stock",
+      "round": 7,
+      "slot": 3,
+      "evaluateUs": 83.863,
+      "compileUs": 9945.27
+    },
+    {
+      "arm": "div",
+      "round": 7,
+      "slot": 4,
+      "evaluateUs": 121.292,
+      "compileUs": 5731.788
+    },
+    {
+      "arm": "inferred",
+      "round": 8,
+      "slot": 0,
+      "evaluateUs": 93.542,
+      "compileUs": 4890.453
+    },
+    {
+      "arm": "matched",
+      "round": 8,
+      "slot": 1,
+      "evaluateUs": 52.389,
+      "compileUs": 4379.838
+    },
+    {
+      "arm": "stock",
+      "round": 8,
+      "slot": 2,
+      "evaluateUs": 55.029,
+      "compileUs": 4004.377
+    },
+    {
+      "arm": "div",
+      "round": 8,
+      "slot": 3,
+      "evaluateUs": 49.515,
+      "compileUs": 4778.033
+    },
+    {
+      "arm": "explicit",
+      "round": 8,
+      "slot": 4,
+      "evaluateUs": 57.318,
+      "compileUs": 4732.466
+    },
+    {
+      "arm": "matched",
+      "round": 9,
+      "slot": 0,
+      "evaluateUs": 59.418,
+      "compileUs": 4877.235
+    },
+    {
+      "arm": "stock",
+      "round": 9,
+      "slot": 1,
+      "evaluateUs": 57.951,
+      "compileUs": 5221.858
+    },
+    {
+      "arm": "div",
+      "round": 9,
+      "slot": 2,
+      "evaluateUs": 62.049,
+      "compileUs": 5085.965
+    },
+    {
+      "arm": "explicit",
+      "round": 9,
+      "slot": 3,
+      "evaluateUs": 98.166,
+      "compileUs": 5750.339
+    },
+    {
+      "arm": "inferred",
+      "round": 9,
+      "slot": 4,
+      "evaluateUs": 50.009,
+      "compileUs": 5452.02
+    },
+    {
+      "arm": "stock",
+      "round": 10,
+      "slot": 0,
+      "evaluateUs": 49.812,
+      "compileUs": 4533.477
+    },
+    {
+      "arm": "div",
+      "round": 10,
+      "slot": 1,
+      "evaluateUs": 49.161,
+      "compileUs": 4433.141
+    },
+    {
+      "arm": "explicit",
+      "round": 10,
+      "slot": 2,
+      "evaluateUs": 84.122,
+      "compileUs": 4850.374
+    },
+    {
+      "arm": "inferred",
+      "round": 10,
+      "slot": 3,
+      "evaluateUs": 60.297,
+      "compileUs": 4660.501
+    },
+    {
+      "arm": "matched",
+      "round": 10,
+      "slot": 4,
+      "evaluateUs": 59.67,
+      "compileUs": 4277.78
+    },
+    {
+      "arm": "div",
+      "round": 11,
+      "slot": 0,
+      "evaluateUs": 62.146,
+      "compileUs": 4793.588
+    },
+    {
+      "arm": "explicit",
+      "round": 11,
+      "slot": 1,
+      "evaluateUs": 54.936,
+      "compileUs": 4904.302
+    },
+    {
+      "arm": "inferred",
+      "round": 11,
+      "slot": 2,
+      "evaluateUs": 55.148,
+      "compileUs": 5725.968
+    },
+    {
+      "arm": "matched",
+      "round": 11,
+      "slot": 3,
+      "evaluateUs": 52.74,
+      "compileUs": 4469.539
+    },
+    {
+      "arm": "stock",
+      "round": 11,
+      "slot": 4,
+      "evaluateUs": 48.203,
+      "compileUs": 4721.145
+    },
+    {
+      "arm": "explicit",
+      "round": 12,
+      "slot": 0,
+      "evaluateUs": 51.139,
+      "compileUs": 4395.806
+    },
+    {
+      "arm": "inferred",
+      "round": 12,
+      "slot": 1,
+      "evaluateUs": 53.181,
+      "compileUs": 4895.207
+    },
+    {
+      "arm": "matched",
+      "round": 12,
+      "slot": 2,
+      "evaluateUs": 50.016,
+      "compileUs": 4558.498
+    },
+    {
+      "arm": "stock",
+      "round": 12,
+      "slot": 3,
+      "evaluateUs": 52.497,
+      "compileUs": 3901.356
+    },
+    {
+      "arm": "div",
+      "round": 12,
+      "slot": 4,
+      "evaluateUs": 56.788,
+      "compileUs": 5169.282
+    },
+    {
+      "arm": "inferred",
+      "round": 13,
+      "slot": 0,
+      "evaluateUs": 68.975,
+      "compileUs": 4840.185
+    },
+    {
+      "arm": "matched",
+      "round": 13,
+      "slot": 1,
+      "evaluateUs": 62.292,
+      "compileUs": 5313.359
+    },
+    {
+      "arm": "stock",
+      "round": 13,
+      "slot": 2,
+      "evaluateUs": 97.39,
+      "compileUs": 3880.868
+    },
+    {
+      "arm": "div",
+      "round": 13,
+      "slot": 3,
+      "evaluateUs": 49.981,
+      "compileUs": 4167.608
+    },
+    {
+      "arm": "explicit",
+      "round": 13,
+      "slot": 4,
+      "evaluateUs": 49.043,
+      "compileUs": 4031.145
+    },
+    {
+      "arm": "matched",
+      "round": 14,
+      "slot": 0,
+      "evaluateUs": 60.565,
+      "compileUs": 4209.958
+    },
+    {
+      "arm": "stock",
+      "round": 14,
+      "slot": 1,
+      "evaluateUs": 84.023,
+      "compileUs": 4324.529
+    },
+    {
+      "arm": "div",
+      "round": 14,
+      "slot": 2,
+      "evaluateUs": 50.07,
+      "compileUs": 4445.193
+    },
+    {
+      "arm": "explicit",
+      "round": 14,
+      "slot": 3,
+      "evaluateUs": 52.144,
+      "compileUs": 4538.97
+    },
+    {
+      "arm": "inferred",
+      "round": 14,
+      "slot": 4,
+      "evaluateUs": 54.144,
+      "compileUs": 5342.766
+    }
+  ]
+}

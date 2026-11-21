@@ -6,9 +6,10 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createContext,runInContext} from 'node:vm';
-const [toolchain,typed,mode,output]=process.argv.slice(2);
+const [toolchain,typed,mode,output,intrinsicName='typedRayComputeRow']=process.argv.slice(2);
+if(!/^[a-zA-Z_]\w*$/.test(intrinsicName)) throw Error('invalid explicit intrinsic function name');
 if (!['explicit','inferred','matched'].includes(mode) || !output)
-    throw Error('usage: node make-row.mjs TOOL-PREFIX FROZEN.typed explicit|inferred|matched BACKEND.js');
+    throw Error('usage: node make-row.mjs TOOL-PREFIX FROZEN.typed explicit|inferred|matched BACKEND.js [intrinsicName]');
 const work=mkdtempSync(join(tmpdir(),'typed-ray-kernel-'));
 const file=name=>join(work,name);
 const src=fileURLToPath(new URL('./guarded-row.S',import.meta.url));
@@ -32,7 +33,7 @@ const backend=readFileSync('picocalc-os/compiler/typed-rv32.js','utf8');
 if(backend.split(old).length!==2) throw Error('unexpected backend');
 const definitions='const rowIR='+JSON.stringify(expected)+';\nconst rowPrefix='+JSON.stringify(words)+';\n';
 const inject=`        const result = lowerLeaf(fn, callables, targets) ?? new FunctionCode(fn, callables, targets).lower();
-        if (${mode==='inferred'?'':'fn.name === "typedRayComputeRow" && '}fn.params.length === 2 && fn.params[0] === "buffer" && fn.params[1] === "i32" &&
+        if (${mode==='inferred'?'':'fn.name === '+JSON.stringify(intrinsicName)+' && '}fn.params.length === 2 && fn.params[0] === "buffer" && fn.params[1] === "i32" &&
             fn.result === "i32" && fn.nlocals === ${fn.nlocals} && fn.code.length === rowIR.length &&
             rowIR.every((cell, i) => fn.code[i] === cell)) {
             // Local labels stay relative to the stock body; global relative jumps move with it.

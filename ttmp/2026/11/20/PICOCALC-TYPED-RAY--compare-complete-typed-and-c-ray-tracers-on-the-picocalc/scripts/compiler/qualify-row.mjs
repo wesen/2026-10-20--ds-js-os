@@ -6,7 +6,7 @@ import {createHash} from 'node:crypto';
 import {createContext,runInContext} from 'node:vm';
 import {decode} from '../../../PICOCALC-TYPED-PIE--lower-bounded-scalar-typed-vertex-loops-to-esp32-p4-pie-instructions/scripts/review/decode.mjs';
 import {runRv32} from '../../../PICOCALC-TYPED-PIE--lower-bounded-scalar-typed-vertex-loops-to-esp32-p4-pie-instructions/scripts/review/run-rv32.mjs';
-const [prefix,source,explicit,inferred,matched,output]=process.argv.slice(2);
+const [prefix,source,explicit,inferred,matched,output,spelledBackend]=process.argv.slice(2);
 const read=p=>readFileSync(p,'utf8'),sha=b=>createHash('sha256').update(b).digest('hex');
 const src=read(source);
 const orig='picocalc-os/compiler/typed-rv32.js';
@@ -31,6 +31,16 @@ for(const mode of ['explicit','inferred','matched']){
     assert.equal(sha(compilers[mode].compile(altered).image),sha(compilers.stock.compile(altered).image));
     const want=mode==='inferred'?images.inferred:images.stock;
     assert.equal(sha(compilers[mode].compile(renamed).image),sha(want.image));
+}
+if(spelledBackend){
+    const ctx=createContext({});
+    runInContext(front,ctx);runInContext(read(spelledBackend),ctx);
+    const marked=src.replaceAll('typedRayComputeRow','rayRowS16x8Intrinsic');
+    const explicitImage=ctx.typedRv32.compile(marked);
+    assert.equal(sha(ctx.typedRv32.compile(src).image),sha(images.stock.image));
+    assert.equal(sha(explicitImage.image),sha(images.inferred.image));
+    report.sourceSpelledIntrinsic={function:'rayRowS16x8Intrinsic',sourceSHA256:sha(marked),
+        imageSHA256:sha(explicitImage.image),unmarkedUsesStock:true};
 }
 const vm=createContext({});runInContext(front,vm);
 const wasm=new WebAssembly.Instance(new WebAssembly.Module(vm.typedWasm.compile(src).bytes)).exports;

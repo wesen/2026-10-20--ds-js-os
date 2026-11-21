@@ -1,0 +1,148 @@
+{
+  "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "modelSHA256": "7044fa8e873f27c6929e0dbe59baae043eb98f476c1b856f6dfdc797a1b6184e",
+  "arms": {
+    "packed": {
+      "imageSHA256": "886680c7c8aebaacd1ccacf330214cc68cead69a04cdd73aaa4b2655569f7203",
+      "rows": [
+        {
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "entry": "typedRayFrame",
+          "retired": 12354971,
+          "packetStores": 3135
+        },
+        {
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "entry": "typedRayRender",
+          "retired": 13743147,
+          "packetStores": 3135
+        },
+        {
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "entry": "typedRayFrame",
+          "retired": 12479907,
+          "packetStores": 3135
+        },
+        {
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "entry": "typedRayRender",
+          "retired": 13868083,
+          "packetStores": 3135
+        },
+        {
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "entry": "typedRayFrame",
+          "retired": 13129315,
+          "packetStores": 3135
+        },
+        {
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "entry": "typedRayRender",
+          "retired": 14517491,
+          "packetStores": 3135
+        }
+      ]
+    },
+    "matched": {
+      "imageSHA256": "8dad00e30c9b1496dec7b8ab322f33e27d4162f78d467ca599941e26c9f4251b",
+      "rows": [
+        {
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "entry": "typedRayFrame",
+          "retired": 12464201,
+          "packetStores": 0
+        },
+        {
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "entry": "typedRayRender",
+          "retired": 13852377,
+          "packetStores": 0
+        },
+        {
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "entry": "typedRayFrame",
+          "retired": 12589137,
+          "packetStores": 0
+        },
+        {
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "entry": "typedRayRender",
+          "retired": 13977313,
+          "packetStores": 0
+        },
+        {
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "entry": "typedRayFrame",
+          "retired": 13238545,
+          "packetStores": 0
+        },
+        {
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "entry": "typedRayRender",
+          "retired": 14626721,
+          "packetStores": 0
+        }
+      ]
+    }
+  }
+}
