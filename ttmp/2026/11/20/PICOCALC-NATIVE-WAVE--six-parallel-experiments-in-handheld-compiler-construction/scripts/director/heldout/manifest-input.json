@@ -1,0 +1,11 @@
+{
+  "revision":1,
+  "inputs":["","3","52;61;2",";1;;8;","92;5x;","6;6;6;0","009;1;200;","123456789012345678901234;1;","8;\u0000;","7;\ud83d\ude04","31;4;15;9;26;5;35;8;97;93;23;84;62;64;33;83;27;95;02;88;41;97;16;93;99;37;51;0;"],
+  "edits":[
+    ["change correction body","return raw * c.scale + c.offset;","return raw * c.scale - c.offset;"],
+    ["reorder fields","    offset: i32;\n    scale: i32;\n    dropped: i32;","    scale: i32;\n    offset: i32;\n    dropped: i32;"],
+    ["lengthen pooled literal","No events in this window","No recorded telemetry events within this interval"],
+    ["fresh independent declaration","function dropped(c: Calibration): i32","function dropped(c: Calibration, reason: i32): i32"],
+    ["invalid signature edit","function codeValue(ch: i32): i32","function codeValue(ch: i32, base: i32): i32"]
+  ]
+}

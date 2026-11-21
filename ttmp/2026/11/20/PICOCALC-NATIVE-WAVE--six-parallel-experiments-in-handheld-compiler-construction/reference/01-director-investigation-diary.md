@@ -75,3 +75,51 @@ Check the hash commitment, then reproduce the director's test oracle once the co
 ### Technical details
 
 The telemetry state uses a length-prefixed UTF-16 payload, three i32 calibration fields and a destination with a trailing canary. Scripted structural edits include a moved pair of fields, a changed literal, a changed uncalled signature and an inconsistent used signature.
+
+## Step 2: Fix the evaluation policies and build a common execution harness
+
+The operators reported six research policy locks. Two studies used a declared policy before seeing the held-out program, while the other four also supplied implementation hashes. I wrote a second, independent harness to evaluate native execution of three different operations in the same telemetry workload and on the same device.
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Coordinate physical research while keeping the researchers' designs independent. **Inferred user intent:** Make results comparable across compiler approaches. **Earlier commit:** 89b8fc6 — Commission six compiler studies and freeze the independent evaluation inputs.
+
+### What I did
+
+Produced a common raw-image descriptor with exact code identity and function entry offsets. A C driver calls readBurst, countEvents and label through the corresponding native symbols. Independent expected values come from a Python implementation operating on the original inputs. The reference collector verifies all copied UTF-16 units and surrounding sentinels before timing. The stock entry points are repeated as a timing control at the same addresses. A freestanding second driver executes these exact programs under the CJI RV32 model and counts executed instructions between emulator clock requests.
+
+### Why
+
+The full differential suite includes invalid inputs that trap. Physical timing instead uses successful workloads with reproducible results. The model counts include the C iteration and calling overhead within each endpoint. A compile-time difference in a byte-identical image cannot establish a guest execution benefit.
+
+### What worked
+
+Four independently provided pilot arms linked successfully. Stock execution took 13,498 modeled instructions to parse the valid and malformed input set, 5,424 to count separators, and 1,495 for the label replay. The all-late semantic candidate used 12,610, 4,518 and 1,149 respectively. Stock and selected bounds images produced equal instruction counts.
+
+### What didn't work
+
+The first ESP-IDF link failed with “section .flash.text VMA [40000040,40018e2b] overlaps section .flash_rodata_dummy VMA [40000020,4002001f]”. A requested 64-byte assembly alignment had advanced the entire output text section beyond the default 0x20 offset. Reducing the input alignment to 32 preserved the linker layout.
+
+### What I learned
+
+A single function can differ between compiler arms for one endpoint while another endpoint's code is unchanged. Preserve the three endpoints in the results. Any positive timing on unchanged code is a useful check on layout and measurement variability.
+
+### What was tricky to build
+
+All imported symbols must resolve to the actual machine image at the offsets declared by the compiler. Function offsets can change between arms. The benchmark aligns each image separately and charges all branches and calls that occur inside the measured guest entry.
+
+### What warrants a second pair of eyes
+
+The cases represent one independent application. Studies 1 and 2 locked their rules before disclosure, but implementation was still in progress. Studies 3–6 supplied implementation identities as well. A positive transfer in this application only supports a limited empirical claim.
+
+### What should be done in the future
+
+Add the final leaf-lowering images to the same build, compare host and on-device behavior, and record the verified release restoration.
+
+### Code review instructions
+
+Start with scripts/director/heldout/01-burst-oracle.mjs and the receipt it produced. Run 02-prepare-matrix.py and 05-model-matrix.py on the raw compiler arms. Check the output of the no-change stock replay before claiming a runtime gain.
+
+### Technical details
+
+The standalone binary runs on a single 360 MHz core. Each timed sample replays its input set 48 times. Eleven rotated blocks include a warm call before timing. This measures guest execution with the machine image in linked flash text. It excludes cold compilation, normal native ELF loading, window compositing and SPI transfer.

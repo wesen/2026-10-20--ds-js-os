@@ -1,0 +1,14 @@
+import {readFileSync, writeFileSync} from "node:fs";
+import {createHash} from "node:crypto";
+import {runInThisContext} from "node:vm";
+import assert from "node:assert/strict";
+const [src, output] = process.argv.slice(2);
+assert(src && output && process.argv.length===4);
+for(const name of ['typed-wasm','typed-rv32'])runInThisContext(readFileSync('picocalc-os/compiler/'+name+'.js','utf8'),{filename:name});
+const source=readFileSync(src,'utf8');
+const program=typedRv32.compile(source);
+assert.equal(program.importCount,0);
+assert.equal(program.relocations.length,0);
+const sha=x=>createHash('sha256').update(x).digest('hex');
+writeFileSync(output+'.bin',program.image);
+writeFileSync(output+'.json',JSON.stringify({entries:program.entries,sourceSHA256:sha(source),imageSHA256:sha(program.image)},null,2)+'\n');

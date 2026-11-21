@@ -1,0 +1,13 @@
+{
+  "notation":"Each line describes an operation, independent of frontend syntax. An input and a newly allocated turn buffer may alias after assignment. A copied numeric observation has value semantics. End of event and await expire references to turn storage.",
+  "cases":[
+    {"name":"parse then yield","operations":["p = turn buffer","n = p.length","await next segment","consume n"],"accept":true},
+    {"name":"resume through alias","operations":["p = turn buffer","q = p","consume p","await next segment","consume q.length"],"accept":false},
+    {"name":"overwrite alias with durable","operations":["p = turn buffer","q = p","q = durable input","await next segment","consume q.length"],"accept":true},
+    {"name":"conditional replacement","operations":["q = turn buffer","if flag: q = durable input","await next segment","consume q.length"],"accept":false},
+    {"name":"borrow helper","operations":["p = turn buffer","helper(p) reads first code unit and returns scalar","save returned scalar in state","end turn"],"accept":true},
+    {"name":"escaping helper","operations":["p = turn buffer","helper(p) stores argument in persistent state","end turn"],"accept":false},
+    {"name":"dead alternate arm","operations":["if flag: p = turn buffer; consume p; return","await next segment","consume durable input"],"accept":true},
+    {"name":"loop-carried borrowed value","operations":["q = durable input","while condition: q = turn buffer","await next segment","consume q.length"],"accept":false}
+  ]
+}
