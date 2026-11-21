@@ -321,7 +321,12 @@ function observeSteps(fn) {
             decisions.push("preserve " + Math.min(Math.max(0, live - args), STACK_REGISTERS.length) +
                 " register-held operands across call");
         }
-        ranges.push({inputStart, inputEnd: this.at, start, end: this.words.length * 4,
+        if (this.loopRanges) {
+            ranges.push(...this.loopRanges);
+            this.loopRanges = null;
+        }
+        const ordinaryStart = ranges.at(-1)?.end ?? start;
+        ranges.push({inputStart, inputEnd: this.at, start: Math.max(ordinaryStart, start), end: this.words.length * 4,
             role: "operation", decisions});
         return done;
     };
@@ -346,14 +351,14 @@ function nativeEmission(fn, start, inspect) {
             const lo = segment.offset + r.start, hi = segment.offset + r.end;
             if (lo < cursor || hi < lo || hi > length) throw new Error("invalid RV32 inspection segment");
             gap(lo, ordinary && !fn.inspectionSegments ? "prologue" : "specialized code");
-            ranges.push({...r, start: start + lo, end: start + hi, segment: segment.label});
+            ranges.push({...r, start: start + lo, end: start + hi, segment: segment.label ?? r.segment});
             cursor = hi;
         }
     }
     gap(length, ordinary && !fn.inspectionSegments ? "epilogue" : "specialized code");
     inspect.emit({kind: "emission", target: "rv32", function: fn.program.name,
         start, end: start + length, localCount: fn.locals, frame: fn.frameless ? "leaf" : "framed",
-        leafDecision: fn.program.nativeInspection.leafDecision, ranges});
+        leafDecision: fn.program.nativeInspection.leafDecision, loops: fn.program.loopDecisions, ranges});
 }
 
 function declineLeaf(fn, reason) {
@@ -396,6 +401,17 @@ function compile(source, imports = [], maxSourceLength, options) {
     function lower(fn) {
         if (inspect && (inspect.function === undefined || inspect.function === fn.name))
             fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
+        const mode = options?.pieLoops;
+        if (mode !== undefined) {
+            if (mode !== "scalar" && mode !== "pie") throw new TypeError("unknown PIE loop compilation mode");
+            if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
+            const selected = typedPieLoops.lower(fn, callables, targets, mode, FunctionCode, instruction);
+            if (selected) {
+                code.push(selected);
+                if (fn.literals) fn.literals = null;
+                return;
+            }
+        }
         code.push(lowerLeaf(fn, callables, targets) ?? new FunctionCode(fn, callables, targets).lower());
         // The lowered code retains the descriptor, so release the function-local literal table.
         if (fn.literals) fn.literals = null;

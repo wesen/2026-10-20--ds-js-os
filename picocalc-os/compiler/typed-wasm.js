@@ -1063,7 +1063,7 @@ function inspectOperations(tape, numeric) {
         const operands = formats.map(operand);
         if (at > tape.length) throw new Error("truncated Typed inspection operation");
         operations.push({ordinal: operations.length, offset, length: at - offset,
-            op, opcode, operands, source: {...tape.spans[offset]}});
+            op, opcode, operands, source: tape.spans ? {...tape.spans[offset]} : undefined});
     }
     return operations;
 }
@@ -1662,6 +1662,6 @@ globalThis.compileTyped = (source, options) => {
     if (asyncSource) bytes.asyncSource = asyncSource;
     return bytes;
 };
-globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
+globalThis.typedWasm = {decodeNumericOperations: tape => inspectOperations(tape, true), compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
     parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices};
 })();

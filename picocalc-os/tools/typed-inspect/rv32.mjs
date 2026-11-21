@@ -3,12 +3,19 @@
 const registers = "zero ra sp gp tp t0 t1 t2 s0 s1 a0 a1 a2 a3 a4 a5 a6 a7 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 t3 t4 t5 t6".split(" ");
 const sext = (n, bits) => (n << (32-bits)) >> (32-bits);
 export const hex = n => "0x" + n.toString(16);
+const pieWords = new Map([
+    [0x8607203b,"esp.vldbc.16.ip q0, t5, 0"],
+    [0x0203a63b,"esp.vld.128.ip q1, a5, 16"],
+    [0x06a406df,"esp.vsub.s16 q2, q0, q1"],
+    [0x82072a3b,"esp.vst.128.ip q2, t5, 16"],
+]);
 export function decode(word, pc, relocation) {
     const opcode=word&127, rd=(word>>>7)&31, f=(word>>>12)&7, rs=(word>>>15)&31;
     const rt=(word>>>20)&31, top=word>>>25, imm=word>>20;
     const [d,a,b]=[rd,rs,rt].map(i=>registers[i]);
     const fmt=(mnemonic,...args)=>mnemonic+" "+args.join(", ");
     if (relocation !== undefined) return {text:"call import["+relocation+"]"};
+    if (pieWords.has(word)) return {text:pieWords.get(word)};
     if (word===0x00100073) return {text:"ebreak"};
     if (opcode===3 || opcode===35) {
         const load=opcode===3;

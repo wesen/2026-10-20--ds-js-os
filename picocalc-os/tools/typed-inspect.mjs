@@ -8,7 +8,7 @@ import {decode,hex} from "./typed-inspect/rv32.mjs";
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const read = file => fs.readFileSync(file,"utf8");
 const usage = `node picocalc-os/tools/typed-inspect.mjs SOURCE [--function NAME] [--target both|wasm|rv32]
-    [--jsonl] [--profile PC-COUNTS.json] [--backend RV32.js] [--buffered] [--imports SDK.json] [--hot N]
+    [--jsonl] [--profile PC-COUNTS.json] [--backend RV32.js] [--buffered] [--pie-loops scalar|pie] [--imports SDK.json] [--hot N]
 node picocalc-os/tools/typed-inspect.mjs diff BEFORE.jsonl AFTER.jsonl
 
 Offsets are bytes in the final Wasm module or RV32 image. A profile supplies
@@ -96,7 +96,7 @@ function functionDump(front, emission, program, bytes, counts, source) {
             bytes:Buffer.from(bytes.subarray(emission.start,emission.instructionsStart)).toString("hex")});
     return {kind:"function",target:emission.target,name:front.function,start:emission.start,end:emission.end,
         instructionsStart:emission.instructionsStart,frame:emission.frame,leafDecision:emission.leafDecision,
-        locals:front.locals,operations,sourceText:front.sourceText,ranges,
+        loops:emission.loops,locals:front.locals,operations,sourceText:front.sourceText,ranges,
         executions:counts?observed:undefined,stackExecutions:counts?stackAccesses:undefined};
 }
 
@@ -106,14 +106,15 @@ function inspect(file,v) {
     if (v.imports && target!=="rv32") throw Error("--imports requires --target rv32");
     if ((v.backend || v.profile) && target==="wasm") throw Error("--backend and --profile require a native target");
     const source=read(file), ctx=vm.createContext({});
-    for(const name of ["typed-wasm","typed-async","typed-rv32"]) {
+    if (v["pie-loops"] && target==="wasm") throw Error("--pie-loops requires a native target");
+    for(const name of ["typed-wasm","typed-async",...(v["pie-loops"]?["typed-pie-loops"]:[]),"typed-rv32"]) {
         const path=name==="typed-rv32" && v.backend?v.backend:new URL("../compiler/"+name+".js",import.meta.url);
         vm.runInContext(read(path),ctx,{filename:String(path)});
     }
     const output=[];
     for(const name of target==="both"?["wasm","rv32"]:[target]) {
         const events=[];
-        const options={inspect:{function:v.function,emit:e=>events.push(e)},streamFunctions:!v.buffered};
+        const options={inspect:{function:v.function,emit:e=>events.push(e)},pieLoops:name==="rv32"?v["pie-loops"]:undefined,streamFunctions:!v.buffered};
         const program=name==="wasm"?ctx.typedWasm.compile(source,options):
             ctx.typedRv32.compile(source,v.imports?JSON.parse(read(v.imports)):[],undefined,options);
         const bytes=program.image??program.bytes;
@@ -133,6 +134,7 @@ function listing(rows) {
         if(row.kind==="module") {console.log(row.target+"  "+row.bytes+" bytes  sha256 "+row.imageSha256); continue;}
         console.log("\n"+row.name+"  ["+hex(row.start)+", "+hex(row.end)+")",row.frame??"",row.leafDecision??"");
         console.log("locals",row.locals.map(l=>l.index+"="+l.name+":"+l.type).join("  "));
+        for(const loop of row.loops??[]) console.log("loop at tape cell",loop.loop,loop.reason??JSON.stringify(loop));
         for(const r of row.ranges) {
             const ops=r.ordinals.map(i=>row.operations[i]);
             const span=ops[0]?.source;
@@ -229,7 +231,7 @@ function diff(before,after) {
 try {
     const {values:v,positionals:p}=parseArgs({allowPositionals:true,options:{
         function:{type:"string"},target:{type:"string"},profile:{type:"string"},backend:{type:"string"},
-        hot:{type:"string"},imports:{type:"string"},buffered:{type:"boolean"},jsonl:{type:"boolean"},help:{type:"boolean"}}});
+        "pie-loops":{type:"string"},hot:{type:"string"},imports:{type:"string"},buffered:{type:"boolean"},jsonl:{type:"boolean"},help:{type:"boolean"}}});
     if(v.help) console.log(usage);
     else if(p[0]==="diff" && p.length===3) diff(readDump(p[1]),readDump(p[2]));
     else if(p.length===1) {
