@@ -152,3 +152,28 @@ function mark(out: buffer, n: i32): i32 {
         assert.throws(() => typedRv32.compile(body(expr)), message);
     }
 });
+
+test("guarded scalar returns are proved from an earlier body and applied to selected callers", () => {
+    const {typedRv32} = compiler();
+    const source = `
+        function early(x:i32):i32 {return normalize(x);}
+        function normalize(x:i32):i32 {if(x<0)return -x;return x;}
+        function selected(x:i32):i32 {return normalize(x);}
+        function ordinary(x:i32):i32 {return normalize(x);}
+    `;
+    const events = [];
+    const control = typedRv32.compile(source);
+    const options = {inlineGuardedReturns: name => name === "selected" || name === "early",
+        inspect:{function:"selected",emit:e => events.push(e)}};
+    const candidate = typedRv32.compile(source, [], undefined, options);
+    const calls = (p, fn) => words(p, fn).filter(w => opcode(w) === 0x6f && destination(w) === 1).length;
+    assert.equal(calls(control, "selected"), 1);
+    assert.equal(calls(candidate, "selected"), 0);
+    assert.equal(calls(candidate, "ordinary"), 1);
+    assert.equal(calls(candidate, "early"), 1);
+    assert.deepEqual(words(control, "normalize"), words(candidate, "normalize"));
+    const emission = events.find(e => e.target === "rv32" && e.kind === "emission");
+    assert(emission.ranges.some(r => r.decisions?.some(d => d.includes("guarded return"))));
+    assert.deepEqual(candidate.image, typedRv32.compile(source, [], undefined, {...options, streamFunctions:false}).image);
+    assert.deepEqual(control.image, typedRv32.compile(source, [], undefined, {inlineGuardedReturns:false}).image);
+});

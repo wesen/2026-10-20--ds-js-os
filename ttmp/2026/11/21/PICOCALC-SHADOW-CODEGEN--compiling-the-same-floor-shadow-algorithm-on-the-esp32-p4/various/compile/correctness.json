@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "truthTable": 360,
+    "spill": 360,
+    "trapAndPrefixWrites": 4,
+    "shortCircuit": 8,
+    "exactlyOnce": 8,
+    "imports": 1,
+    "forward": 1,
+    "rejected": 2
+  },
+  "total": 744,
+  "engines": [
+    "RV32/PIE interpreter with ABI checks",
+    "host WebAssembly"
+  ]
+}

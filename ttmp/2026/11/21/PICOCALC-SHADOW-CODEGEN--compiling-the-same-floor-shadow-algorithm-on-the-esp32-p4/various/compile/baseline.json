@@ -3,7 +3,7 @@
   "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
   "imageSHA": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
   "imageBytes": 10332,
-  "shadeBytes": 1068,
+  "shadowBytes": 1068,
   "shadow": {
     "steps": 5528397,
     "directStackLoads": 1288258,
@@ -139,6 +139,7 @@
     }
   },
   "localCount": 30,
+  "inlineSites": 0,
   "absTotalSteps": 691244,
   "fullFrameSteps": 14879359,
   "outputSHA": "430f0d5016593f5b5232593107f198e92f6ecdfd88c946b59d0af364e2117625",

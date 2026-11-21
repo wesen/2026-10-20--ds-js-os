@@ -1,0 +1,565 @@
+{
+  "node": "v24.18.0",
+  "method": "30 rotated triplets, fresh V8 context per arm; compilation only",
+  "medians": {
+    "baseline": 6.194149999999979,
+    "shadow": 6.6110175000000595,
+    "general": 6.360852999999977
+  },
+  "paired": {
+    "baseline": {
+      "medianDeltaMs": 0,
+      "negativePairs": 0
+    },
+    "shadow": {
+      "medianDeltaMs": 0.24640899999995725,
+      "negativePairs": 13
+    },
+    "general": {
+      "medianDeltaMs": -0.03202700000002778,
+      "negativePairs": 16
+    }
+  },
+  "runs": [
+    {
+      "round": 0,
+      "arm": "baseline",
+      "ms": 19.419118999999995,
+      "bytes": 10332
+    },
+    {
+      "round": 0,
+      "arm": "shadow",
+      "ms": 10.231606999999997,
+      "bytes": 10324
+    },
+    {
+      "round": 0,
+      "arm": "general",
+      "ms": 6.894463999999999,
+      "bytes": 10268
+    },
+    {
+      "round": 1,
+      "arm": "shadow",
+      "ms": 6.522173000000009,
+      "bytes": 10324
+    },
+    {
+      "round": 1,
+      "arm": "general",
+      "ms": 5.329302999999996,
+      "bytes": 10268
+    },
+    {
+      "round": 1,
+      "arm": "baseline",
+      "ms": 5.853381999999996,
+      "bytes": 10332
+    },
+    {
+      "round": 2,
+      "arm": "general",
+      "ms": 5.148246999999998,
+      "bytes": 10268
+    },
+    {
+      "round": 2,
+      "arm": "baseline",
+      "ms": 6.149925999999994,
+      "bytes": 10332
+    },
+    {
+      "round": 2,
+      "arm": "shadow",
+      "ms": 6.204361000000006,
+      "bytes": 10324
+    },
+    {
+      "round": 3,
+      "arm": "baseline",
+      "ms": 5.8940139999999985,
+      "bytes": 10332
+    },
+    {
+      "round": 3,
+      "arm": "shadow",
+      "ms": 5.2806679999999915,
+      "bytes": 10324
+    },
+    {
+      "round": 3,
+      "arm": "general",
+      "ms": 5.7407149999999945,
+      "bytes": 10268
+    },
+    {
+      "round": 4,
+      "arm": "shadow",
+      "ms": 8.11639599999998,
+      "bytes": 10324
+    },
+    {
+      "round": 4,
+      "arm": "general",
+      "ms": 5.068259000000012,
+      "bytes": 10268
+    },
+    {
+      "round": 4,
+      "arm": "baseline",
+      "ms": 5.1936819999999955,
+      "bytes": 10332
+    },
+    {
+      "round": 5,
+      "arm": "general",
+      "ms": 5.469168999999994,
+      "bytes": 10268
+    },
+    {
+      "round": 5,
+      "arm": "baseline",
+      "ms": 6.339089999999999,
+      "bytes": 10332
+    },
+    {
+      "round": 5,
+      "arm": "shadow",
+      "ms": 5.774027000000018,
+      "bytes": 10324
+    },
+    {
+      "round": 6,
+      "arm": "baseline",
+      "ms": 7.060494000000006,
+      "bytes": 10332
+    },
+    {
+      "round": 6,
+      "arm": "shadow",
+      "ms": 7.4074329999999975,
+      "bytes": 10324
+    },
+    {
+      "round": 6,
+      "arm": "general",
+      "ms": 5.872762999999992,
+      "bytes": 10268
+    },
+    {
+      "round": 7,
+      "arm": "shadow",
+      "ms": 5.467337000000015,
+      "bytes": 10324
+    },
+    {
+      "round": 7,
+      "arm": "general",
+      "ms": 6.372180999999983,
+      "bytes": 10268
+    },
+    {
+      "round": 7,
+      "arm": "baseline",
+      "ms": 7.7991600000000005,
+      "bytes": 10332
+    },
+    {
+      "round": 8,
+      "arm": "general",
+      "ms": 8.812219999999996,
+      "bytes": 10268
+    },
+    {
+      "round": 8,
+      "arm": "baseline",
+      "ms": 5.067289000000017,
+      "bytes": 10332
+    },
+    {
+      "round": 8,
+      "arm": "shadow",
+      "ms": 6.621258000000012,
+      "bytes": 10324
+    },
+    {
+      "round": 9,
+      "arm": "baseline",
+      "ms": 6.621983999999998,
+      "bytes": 10332
+    },
+    {
+      "round": 9,
+      "arm": "shadow",
+      "ms": 6.616159000000039,
+      "bytes": 10324
+    },
+    {
+      "round": 9,
+      "arm": "general",
+      "ms": 6.320938999999953,
+      "bytes": 10268
+    },
+    {
+      "round": 10,
+      "arm": "shadow",
+      "ms": 6.040564000000018,
+      "bytes": 10324
+    },
+    {
+      "round": 10,
+      "arm": "general",
+      "ms": 6.641795000000002,
+      "bytes": 10268
+    },
+    {
+      "round": 10,
+      "arm": "baseline",
+      "ms": 6.662732000000005,
+      "bytes": 10332
+    },
+    {
+      "round": 11,
+      "arm": "general",
+      "ms": 6.349524999999971,
+      "bytes": 10268
+    },
+    {
+      "round": 11,
+      "arm": "baseline",
+      "ms": 6.3926420000000235,
+      "bytes": 10332
+    },
+    {
+      "round": 11,
+      "arm": "shadow",
+      "ms": 6.335775000000012,
+      "bytes": 10324
+    },
+    {
+      "round": 12,
+      "arm": "baseline",
+      "ms": 6.391292999999962,
+      "bytes": 10332
+    },
+    {
+      "round": 12,
+      "arm": "shadow",
+      "ms": 6.278992000000017,
+      "bytes": 10324
+    },
+    {
+      "round": 12,
+      "arm": "general",
+      "ms": 6.607281999999998,
+      "bytes": 10268
+    },
+    {
+      "round": 13,
+      "arm": "shadow",
+      "ms": 9.079988999999955,
+      "bytes": 10324
+    },
+    {
+      "round": 13,
+      "arm": "general",
+      "ms": 5.524808999999948,
+      "bytes": 10268
+    },
+    {
+      "round": 13,
+      "arm": "baseline",
+      "ms": 5.263668999999993,
+      "bytes": 10332
+    },
+    {
+      "round": 14,
+      "arm": "general",
+      "ms": 5.711743000000013,
+      "bytes": 10268
+    },
+    {
+      "round": 14,
+      "arm": "baseline",
+      "ms": 5.585093000000029,
+      "bytes": 10332
+    },
+    {
+      "round": 14,
+      "arm": "shadow",
+      "ms": 6.349109999999996,
+      "bytes": 10324
+    },
+    {
+      "round": 15,
+      "arm": "baseline",
+      "ms": 7.239935000000003,
+      "bytes": 10332
+    },
+    {
+      "round": 15,
+      "arm": "shadow",
+      "ms": 6.864185999999961,
+      "bytes": 10324
+    },
+    {
+      "round": 15,
+      "arm": "general",
+      "ms": 7.1123079999999845,
+      "bytes": 10268
+    },
+    {
+      "round": 16,
+      "arm": "shadow",
+      "ms": 6.0533550000000105,
+      "bytes": 10324
+    },
+    {
+      "round": 16,
+      "arm": "general",
+      "ms": 5.997785999999962,
+      "bytes": 10268
+    },
+    {
+      "round": 16,
+      "arm": "baseline",
+      "ms": 5.247386000000006,
+      "bytes": 10332
+    },
+    {
+      "round": 17,
+      "arm": "general",
+      "ms": 5.174832000000038,
+      "bytes": 10268
+    },
+    {
+      "round": 17,
+      "arm": "baseline",
+      "ms": 6.074058999999977,
+      "bytes": 10332
+    },
+    {
+      "round": 17,
+      "arm": "shadow",
+      "ms": 5.970040999999981,
+      "bytes": 10324
+    },
+    {
+      "round": 18,
+      "arm": "baseline",
+      "ms": 8.758604999999989,
+      "bytes": 10332
+    },
+    {
+      "round": 18,
+      "arm": "shadow",
+      "ms": 8.134501999999998,
+      "bytes": 10324
+    },
+    {
+      "round": 18,
+      "arm": "general",
+      "ms": 7.83461299999999,
+      "bytes": 10268
+    },
+    {
+      "round": 19,
+      "arm": "shadow",
+      "ms": 6.71171099999998,
+      "bytes": 10324
+    },
+    {
+      "round": 19,
+      "arm": "general",
+      "ms": 7.731779000000017,
+      "bytes": 10268
+    },
+    {
+      "round": 19,
+      "arm": "baseline",
+      "ms": 6.2263940000000275,
+      "bytes": 10332
+    },
+    {
+      "round": 20,
+      "arm": "general",
+      "ms": 7.665955000000054,
+      "bytes": 10268
+    },
+    {
+      "round": 20,
+      "arm": "baseline",
+      "ms": 7.047515999999973,
+      "bytes": 10332
+    },
+    {
+      "round": 20,
+      "arm": "shadow",
+      "ms": 6.684449000000086,
+      "bytes": 10324
+    },
+    {
+      "round": 21,
+      "arm": "baseline",
+      "ms": 6.060038000000077,
+      "bytes": 10332
+    },
+    {
+      "round": 21,
+      "arm": "shadow",
+      "ms": 6.2059169999999995,
+      "bytes": 10324
+    },
+    {
+      "round": 21,
+      "arm": "general",
+      "ms": 6.945696999999996,
+      "bytes": 10268
+    },
+    {
+      "round": 22,
+      "arm": "shadow",
+      "ms": 7.260183999999981,
+      "bytes": 10324
+    },
+    {
+      "round": 22,
+      "arm": "general",
+      "ms": 6.756271999999967,
+      "bytes": 10268
+    },
+    {
+      "round": 22,
+      "arm": "baseline",
+      "ms": 6.288855000000012,
+      "bytes": 10332
+    },
+    {
+      "round": 23,
+      "arm": "general",
+      "ms": 8.916935999999964,
+      "bytes": 10268
+    },
+    {
+      "round": 23,
+      "arm": "baseline",
+      "ms": 5.91720399999997,
+      "bytes": 10332
+    },
+    {
+      "round": 23,
+      "arm": "shadow",
+      "ms": 6.60587600000008,
+      "bytes": 10324
+    },
+    {
+      "round": 24,
+      "arm": "baseline",
+      "ms": 5.2979159999999865,
+      "bytes": 10332
+    },
+    {
+      "round": 24,
+      "arm": "shadow",
+      "ms": 7.699613999999997,
+      "bytes": 10324
+    },
+    {
+      "round": 24,
+      "arm": "general",
+      "ms": 5.840471999999977,
+      "bytes": 10268
+    },
+    {
+      "round": 25,
+      "arm": "shadow",
+      "ms": 6.990159000000062,
+      "bytes": 10324
+    },
+    {
+      "round": 25,
+      "arm": "general",
+      "ms": 7.19686999999999,
+      "bytes": 10268
+    },
+    {
+      "round": 25,
+      "arm": "baseline",
+      "ms": 6.527524000000085,
+      "bytes": 10332
+    },
+    {
+      "round": 26,
+      "arm": "general",
+      "ms": 7.3190570000000434,
+      "bytes": 10268
+    },
+    {
+      "round": 26,
+      "arm": "baseline",
+      "ms": 5.946378999999979,
+      "bytes": 10332
+    },
+    {
+      "round": 26,
+      "arm": "shadow",
+      "ms": 6.31717900000001,
+      "bytes": 10324
+    },
+    {
+      "round": 27,
+      "arm": "baseline",
+      "ms": 6.0964629999999715,
+      "bytes": 10332
+    },
+    {
+      "round": 27,
+      "arm": "shadow",
+      "ms": 6.834877000000006,
+      "bytes": 10324
+    },
+    {
+      "round": 27,
+      "arm": "general",
+      "ms": 7.261529999999993,
+      "bytes": 10268
+    },
+    {
+      "round": 28,
+      "arm": "shadow",
+      "ms": 8.408362000000011,
+      "bytes": 10324
+    },
+    {
+      "round": 28,
+      "arm": "general",
+      "ms": 5.458268000000089,
+      "bytes": 10268
+    },
+    {
+      "round": 28,
+      "arm": "baseline",
+      "ms": 6.161905999999931,
+      "bytes": 10332
+    },
+    {
+      "round": 29,
+      "arm": "general",
+      "ms": 6.066307000000052,
+      "bytes": 10268
+    },
+    {
+      "round": 29,
+      "arm": "baseline",
+      "ms": 7.54339600000003,
+      "bytes": 10332
+    },
+    {
+      "round": 29,
+      "arm": "shadow",
+      "ms": 5.777042000000051,
+      "bytes": 10324
+    }
+  ]
+}

@@ -65,3 +65,64 @@ so is the next topic to target how goo the shadow code is getting compiled?”
 ### Technical details
 
 - The shadow caller's closure over its two helper calls excludes the helper PCs from the 5,528,397 count. Its 264,928 unsigned text-buffer checks all execute in the candidate specification. All arms keep `pieLoops: "pie-empty"`. The treatment uses `inlineGuardedReturns` with either `true` or a predicate selecting a single caller.
+
+## Step 2: Emit a certified guarded return at its call site
+
+The parent and I chose a typed-tape summary for one bounded class of unary scalar functions. The actual integration, testing and host profiling were performed by the compiler coordinator. The Opus High researcher's second commission returned no implementation: its public response explicitly stated that none of its tool calls ran. I continued the approved compiler experiment locally. Credit for the executable register-home scorer, its private REPL tests and its public research notes remains with the Opus High researcher.
+
+### Prompt Context
+
+**User prompt:** See Step 1. The director requested one mechanism with the primary-stage compiler held fixed, and independent hardware validation.
+**Assistant interpretation:** Recompile the same application under three policies, using a predictor cheap enough for streaming.
+**Inferred user intent:** Determine the execution cost attributable to general scalar code generation.
+**Commit (baseline):** `36adac5` — “research(shadow): reproduce dynamic caller costs and native GCC control”.
+
+### What I did
+
+- Added `guardedReturnSummary` and `GuardedReturnCode.call` in `picocalc-os/compiler/typed-rv32.js` plus an inspection decision on the exact call operation. Internal definition targets carry summaries. External import descriptors cannot set them.
+- Added a normal compiler-entry test and `scripts/compile/04-correctness.mjs` for RV32 versus Wasm, including six predicate relations, i32 minimum, immediate encodings, live stack spills, effects of argument evaluation, bounds/division traps and short-circuiting.
+- Replayed the three exact images using `scripts/compile/02-profile.mjs`. Ran `scripts/compile/05-host-cost.mjs` for 30 rotated host compile triplets.
+- Sent the image-generation interface and full-frame count deltas to the director for independent board measurements.
+
+### Why
+
+- Keeping the callee's typed tape after function emission violates the compiler's existing memory discipline. Its summary fits a handful of scalar fields; an unresolved target simply takes the ordinary call path.
+- Explicitly checking every operation in the body lets us move the result computation into the caller without duplicating side effects or skipping traps.
+
+### What worked
+
+- Candidate and baseline match Wasm return/trap and byte effects in the covered cases. The shadow-only image removes all 74,226 opening-frame calls at the two rewritten sites, accounting for 790,948 fewer guest instructions. The 264,928 executed bounds checks remain.
+- The same option enabled for every caller admits other matching call sites and saves a further 102 dynamic instructions. Module size drops from 10,332 to 10,268 bytes; full observable-memory SHA-256 matches across all three images.
+- On Node the median *paired* compile-time change of the general arm was −0.032 ms over 30 triplets. The active compiler is V8 on this host; this is not a P4 compile-cost measurement.
+
+### What didn't work
+
+- The Opus High implementation commission did not generate the requested code or run the proposed truth table. The coordinator implemented and verified the change and requested a separate authoring contribution.
+- An informal ceiling from the register scorer used the old scalar-primary full-frame denominator. All implementation percentages use the current pie-empty control's 14,879,359 retired instructions.
+
+### What I learned
+
+- The helper disappears from the shadow path even though bounds checks and its two measured stack traffic counts remain exactly the same. The reduction comes from the caller's call sequence and the instructions inside the callee.
+
+### What was tricky to build
+
+- Branch operand order matters. For example the false condition of `x > K` is `bge K,x`, while the false condition of `x < K` is `bge x,K`. An action materializing a large literal may use two words, so patch the branch after emitting the action.
+- Rejected forward calls must stay ordinary even in buffered mode. Summarizing in source emission order for both entry modes makes their output identical.
+
+### What warrants a second pair of eyes
+
+- Target selection, the end of the signed literal action, input argument identity in the spill case, and inspection ranges.
+- A future proposed default should measure P4 compilation time; the firmware running precompiled test images measures execution.
+
+### What should be done in the future
+
+- Compare physical stage and full-frame time, adverse scenes and the Chess transfer selected before implementation.
+
+### Code review instructions
+
+- Run `node picocalc-os/tests/typed-rv32.test.mjs` and `node scripts/compile/04-correctness.mjs` (prefix the ticket path from the repository root).
+- Compare the complete image hashes in the three `various/compile/*.json` captures to the board experiment's manifest.
+
+### Technical details
+
+- Six guard operators use equality, signed less-than and signed greater-or-equal branch encodings. The compare constant can use x0 or temporary t6. Only a constant return or wrapping negation is admitted. The argument already resides in its expression slot on function entry to the lowering rule.
