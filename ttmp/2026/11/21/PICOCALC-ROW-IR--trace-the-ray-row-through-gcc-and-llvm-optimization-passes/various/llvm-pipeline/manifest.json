@@ -1,0 +1,86 @@
+{
+  "firmware": {
+    "middle": {
+      "command": [
+        "opt-18",
+        "-passes=default<O2>",
+        "-debug-pass-manager",
+        "-print-after-all",
+        "-disable-output",
+        "raw.ll"
+      ],
+      "sha256": "eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38",
+      "rawBytes": 13257970,
+      "dumps": 2061
+    },
+    "backend": {
+      "command": [
+        "llc-18",
+        "-O2",
+        "-print-after-all",
+        "opt.ll",
+        "-o",
+        "/dev/null"
+      ],
+      "sha256": "e1eabbaadea131365f48553d4a07b92c2ba5fb49d5db7cf17e0962599bdd915c",
+      "rawBytes": 14420051,
+      "dumps": 1450
+    }
+  },
+  "checked": {
+    "middle": {
+      "command": [
+        "opt-18",
+        "-passes=default<O2>",
+        "-debug-pass-manager",
+        "-print-after-all",
+        "-disable-output",
+        "raw.ll"
+      ],
+      "sha256": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+      "rawBytes": 1027953,
+      "dumps": 195
+    },
+    "backend": {
+      "command": [
+        "llc-18",
+        "-O2",
+        "-print-after-all",
+        "opt.ll",
+        "-o",
+        "/dev/null"
+      ],
+      "sha256": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+      "rawBytes": 961648,
+      "dumps": 116
+    }
+  },
+  "unchecked": {
+    "middle": {
+      "command": [
+        "opt-18",
+        "-passes=default<O2>",
+        "-debug-pass-manager",
+        "-print-after-all",
+        "-disable-output",
+        "raw.ll"
+      ],
+      "sha256": "d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4",
+      "rawBytes": 684903,
+      "dumps": 195
+    },
+    "backend": {
+      "command": [
+        "llc-18",
+        "-O2",
+        "-print-after-all",
+        "opt.ll",
+        "-o",
+        "/dev/null"
+      ],
+      "sha256": "98517d51246b17f8ec72298250f962b05b837b12cd955a4c4c3bbf4b4fe540f5",
+      "rawBytes": 559866,
+      "dumps": 116
+    }
+  }
+}

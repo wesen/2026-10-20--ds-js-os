@@ -166,3 +166,51 @@ Read analysis/01-from-checked-halfwords-to-a-native-row-loop-in-gcc-and-llvm.md 
 ### Technical details
 
 The final vault commit is 2c2436a. The additional break-even figure is generated from the earlier paired data by PICOCALC-PIE-LOOPS/scripts/12-session-cost.py. The 44–45 frame figure is an estimate from scene medians. The new study changed no production backend or firmware.
+
+## Step 4. Extend the LLVM capture and preserve the physical study
+
+The first experiment printed all default O2 middle-end pass invocations for the selected row functions and retained selected evidence in Git. That was a filtered capture. I regenerated the three inputs without a function filter and included the RV32 backend printer, then tested the compressed files and indices against their original byte streams.
+
+### Prompt Context
+
+User (verbatim): “did you dump all the LLVM IR passes / optimizations and such”, “You should also look up the llvm code to show the original algorithms used, etc...” and “you can checkout the source, but also, how much do you have in /tmp that risks getting wiped?”
+
+### What I did
+
+Counted allocated bytes in readable temporary files, exported the complete pass logs with per-header offsets, checked out the upstream tag sparsely outside /tmp, and saved the current physical and compiler experiment outside /tmp in a private local archive.
+
+### Why
+
+Selected function dumps are sufficient for a specific comparison but cannot answer questions about other functions or late machine passes. Preserving a compact replay and original physical inputs avoids reliance on machine cleanup policy.
+
+### What worked
+
+Verified 4,133 pass headers, their offsets and all six stream digests. The 102 MiB private archive was compared against its source files and passed its SHA-256 check. The tagged checkout at c13b7485 matched all twelve independently downloaded source files byte for byte.
+
+### What didn't work
+
+The default sandbox failed before shell startup: “remount /newroot/mnt/pico: No such device”. I used scoped permission requests for local inventory, archival and verification. Twelve directories under /tmp were unreadable to the current account.
+
+### What I learned
+
+At the first inventory, readable regular files in /tmp occupied 29.641 GiB. A named-project heuristic identified 13.660 GiB of PicoCalc trees. The largest, picocalc-eg-wave, contained many separate historical build directories. The current IR directory grew from 15.89 MiB to approximately 46 MiB when the full logs were generated. These numbers describe a point-in-time sample.
+
+### What was tricky to build
+
+The two pass managers print different header prefixes. The index records the byte position in the uncompressed stream, and verification opens each indexed header. A repeated pass on separate functions or loops produces separate entries.
+
+### What warrants a second pair of eyes
+
+The local archive covers this study and its SDK and firmware dependencies. Earlier projects in /tmp have separate retention histories. An archive on the same disk protects against temporary-file cleanup, not disk failure.
+
+### What should be done in the future
+
+Use the permanent pass index and upstream commit when discussing exactly which algorithm a particular dump supports.
+
+### Code review instructions
+
+Run scripts/09-archive-llvm.py on the full experiment directory. Check various/llvm-pipeline/manifest.json. The archive and checkout paths are recorded in the follow-up report.
+
+### Technical details
+
+The firmware TU produced 2,061 opt and 1,450 llc dump headers. Both controlled kernels each produced 195 opt and 116 llc headers. These are emitted snapshots for the chosen O2/target configurations.
