@@ -268,11 +268,20 @@ if(PICOCALC_CHESS_3D AND PICOCALC_RV32_CHESS)
     list(APPEND BUNDLE_EXTRA "candela/slot.elf=${candela_slot}" "candela/link.js=${candela_link}")
     list(APPEND BUNDLE_EXTRA_DEPS ${candela_slot} ${candela_link})
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_RAY=1)
-    target_sources(${COMPONENT_LIB} PRIVATE typed_ray_p4.c)
+    target_sources(${COMPONENT_LIB} PRIVATE typed_ray_p4.c typed_ray_material_bench.c)
     set(ray_source ${OS}/worlds/raytrace/raytrace.typed)
     set(ray_linker ${OS}/compiler/raytrace.js)
     list(APPEND BUNDLE_EXTRA "typed-ray/main.typed=${ray_source}" "typed-ray/link.js=${ray_linker}")
     list(APPEND BUNDLE_EXTRA_DEPS ${ray_source} ${ray_linker})
+    set(ray_material ${CMAKE_CURRENT_BINARY_DIR}/typed-ray-material.typed)
+    set(ray_material_link ${OS}/compiler/raytrace-material.js)
+    add_custom_command(OUTPUT ${ray_material}
+        COMMAND ${PYTHON} ${OS}/worlds/raytrace/assemble-material.py ${ray_material}
+        DEPENDS ${OS}/worlds/raytrace/assemble-material.py ${OS}/worlds/raytrace/raytrace.typed
+            ${OS}/worlds/raytrace/material-frame.typed ${candela_dir}/builders.typed
+            ${candela_dir}/materials.typed ${candela_dir}/hand.typed VERBATIM)
+    list(APPEND BUNDLE_EXTRA "typedmat/main.typed=${ray_material}" "typedmat/link.js=${ray_material_link}")
+    list(APPEND BUNDLE_EXTRA_DEPS ${ray_material} ${ray_material_link})
     foreach(variant DIV SPAN PACKED INFERRED SHADOW)
         if(PICOCALC_TYPED_RAY_${variant})
             list(APPEND BUNDLE_EXTRA "typed-ray/${variant}=${PICOCALC_TYPED_RAY_${variant}}")

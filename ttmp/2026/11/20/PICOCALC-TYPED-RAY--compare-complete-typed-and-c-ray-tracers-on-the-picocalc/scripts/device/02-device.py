@@ -79,18 +79,38 @@ with acquire(),(a.out/'uart.log').open('wb',buffering=0) as log:
                     rows.append(row|{'rep':rep,'fixture':case['name']});save(a.out/'rows.json',rows)
                 print(rep,program,'poses',len(rows),flush=True)
         load(c,0)
+        candela=next(ticket.parent.glob('PICOCALC-CANDELA--*'))
+        controls=json.loads((candela/'various/review/rows.json').read_text())
+        expected={(x['fixture'],x['weight']):x['crc'] for x in controls}
+        material=[]
+        for block in range(3):
+            for (fixture,weight),crc in expected.items():
+                for first in ((block+fixture)%2,1-(block+fixture)%2):
+                    row=parse(c.command(f'typedmat bench {fixture} {weight} {first}',timeout=25),'TRMAT ')
+                    assert (row['fixture'],row['weight'],row['first'])==(fixture,weight,first),row
+                    assert row['equal'] and row['crc']==crc and min(row['typedUs'],row['mixedUs'])>0,row
+                    material.append(row|{'block':block});save(a.out/'materials.json',material)
+        c.command('typedmat drop')
         controls=[('typed-default',('f1','v','g','g','g'),[68,61,31,25]),
                   ('typed-right',('right',),[76,61,31,25]),('typed-relit',('w',),[76,61,31,17]),
                   ('classic-reset',('r',),[68,61,31,25])]
         screens=[]
+        prior=parse(c.command('typedray status'),'TRSTATUS ')
         for label,keys,pose in controls:
-            screens.append(capture(c,label,keys,pose));save(a.out/'screens.json',screens)
+            screen=capture(c,label,keys,pose)
+            status=parse(c.command('typedray status'),'TRSTATUS ')
+            if label.startswith('typed'):
+                assert status['program']==0 and status['pose']==pose and status['frames']>prior['frames'],status
+            else:assert status['frames']==prior['frames']
+            screens.append(screen|{'typedState':status});prior=status;save(a.out/'screens.json',screens)
         assert [s['viewCRC'] for s in screens]==[s['actualCRC'] for s in json.loads((ray/'various/device/screens.json').read_text())]
         c.command('key f1');health(c);release.hold(c);esp('verify_flash',a.build,'final-readback')
         c=connect();live=health(c)
         # Re-enter the normal Typed screen after flash readback and leave it visible for the user.
         live_screen=capture(c,'handoff',('f1','v','g','g','g'),[68,61,31,25])
-        save(a.out/'final.json',dict(qualified=True,revision=(a.build.parent/'revision').read_text().strip(),appSHA=a.sha,
+        state=parse(c.command('typedray status'),'TRSTATUS ')
+        assert state['frames'] and state['pose']==[68,61,31,25] and state['program']==0
+        save(a.out/'final.json',dict(qualified=True,typedState=state,revision=(a.build.parent/'revision').read_text().strip(),appSHA=a.sha,
              previousSHA=a.previous_sha,partitionSHA=release.PART_SHA,programs=programs,poseBlocks=len(rows),health=live,liveScreen=live_screen))
         print('QUALIFIED',a.sha,flush=True)
     except BaseException as exc:

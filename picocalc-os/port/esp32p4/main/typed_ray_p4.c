@@ -25,6 +25,8 @@ typedef struct {
 
 static module *installed;
 static buffer *display_plane, *display_work;
+static unsigned display_frames;
+static raytrace_demo_scene display_pose;
 static buffer *new_buffer(uint32_t capacity) {
     buffer *b = port_big_calloc(sizeof(*b) + 2u * (capacity+1));
     if (b) { b->capacity = capacity; b->cells[capacity] = 0xc35a; }
@@ -74,6 +76,8 @@ bool p4_typed_ray_frame(uint16_t *pixels,size_t stride,int sx,int sy,int lx,int 
     display_work->cells[0]=SIDE;
     if(installed->frame(display_plane,display_work,sx,sy,lx,ly)!=1) return false;
     for(int y=0;y<SIDE;y++) memcpy(pixels+y*stride,display_plane->cells+y*SIDE,SIDE*2);
+    display_frames++;
+    display_pose=(raytrace_demo_scene){sx,sy,lx,ly};
     return true;
 }
 
@@ -153,7 +157,9 @@ done:
 
 void p4_typed_ray_console(const char *args) {
     int program,stride,rotation;char tail;raytrace_demo_scene s;
-    if(sscanf(args,"load %d %c",&program,&tail)==1){if(!install(program))puts("typedray: source or backend unavailable");}
+    if(!strcmp(args,"status"))printf("TRSTATUS {\"frames\":%u,\"program\":%d,\"pose\":[%d,%d,%d,%d]}\n",display_frames,
+            installed ? installed->program : -1,display_pose.sphere_x,display_pose.sphere_y,display_pose.light_x,display_pose.light_y);
+    else if(sscanf(args,"load %d %c",&program,&tail)==1){if(!install(program))puts("typedray: source or backend unavailable");}
     else if(sscanf(args,"bench %d %d %d %d %d %d %c",&s.sphere_x,&s.sphere_y,&s.light_x,&s.light_y,&stride,&rotation,&tail)==6)measure(s,stride,rotation);
     else puts("typedray load PROGRAM | typedray bench SX SY LX LY STRIDE ROTATION");
 }

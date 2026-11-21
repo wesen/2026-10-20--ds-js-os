@@ -167,6 +167,10 @@ void console_exec(char *line) {
   else if (!strcmp(cmd, "painter")) p4_painter_status();
 #endif
 #if PICOCALC_TYPED_RAY
+  else if (!strcmp(cmd, "typedmat")) {
+    extern void p4_typed_ray_material_console(const char *);
+    p4_typed_ray_material_console(rest);
+  }
   else if (!strcmp(cmd, "typedray")) {
     extern void p4_typed_ray_console(const char *);
     p4_typed_ray_console(rest);

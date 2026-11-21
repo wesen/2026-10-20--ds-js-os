@@ -64,3 +64,49 @@ Start with [the physical protocol](../design-doc/04-measuring-a-whole-typed-ray-
 ### Technical details
 
 The ELF follows ilp32f. On RV32 the eight audit arguments can occupy a0 through a7. All four Typed arguments that represent buffers point to a capacity header followed by little-endian 16-bit cells.
+
+## Step 2. Pair C and native guest work at every stage
+
+### Prompt Context
+
+**User prompt (verbatim)** [Director's diary](01-director-investigation-diary.md). **Assistant interpretation** The same input, output and instrumentation obligations must hold independently for each implementation. **Inferred user intent** Establish where the compiler and handheld spend time and keep the playable display path entirely in the tested module. **Commit (code)** 15c3a06, 38d617b.
+
+### What I did
+
+I implemented an eight-register guest audit call, a clean frame call, a primary-only call and a shade-from-two-planes call. A closed Typed module returns four addresses to the trusted loader. The benchmark first produces an untimed scalar C reference with all three planes. It then rotates C scalar, C PIE and guest order, timing each operation on the same output pointers. I freeze the three input variables separately: baseline source, span/ray algorithm and compiler backend. The build accepts locally generated closed backend variants as optional bundles.
+
+### Why
+
+The physical framebuffer and both the C and Typed audit planes live in ordinary PSRAM. Moving source evaluation or lighting into the native wrapper would understate the guest cost. Four independent entry clocks can be audited without subtracting a checksum run from an unrelated time.
+
+### What worked
+
+The independent qualification data covers a lamp-only change, overlapping objects, legal near/far corners and an output stride as wide as 320. The test puts opposite byte patterns in the C and guest outputs, checks every visible word, checks each untouched pad, checks the end canary and compares the physical C model to a separately compiled host C model.
+
+### What didn't work
+
+The first archived build named a newly created generator file that existed in the working tree but was absent from commit 223e017. The stage generator failed before any board write. The director promptly committed both algorithm transformations at 669f242. I began a clean ordinary candidate from the complete scalar production commit while preserving the Candela rollback tree.
+
+### What I learned
+
+The proposed independent [Opus High research design](../various/commission/measurement.md) explains that terminal checks and differing buffer traffic are central measurement confounders. The physical protocol takes its matched-input, independent intermediate and rotated-order suggestions. It records elapsed microseconds on a pinned kernel task and a single memory layout; it does not sample hardware cycle counters or a distribution of linked layouts.
+
+### What was tricky to build
+
+Classic C and complete Typed render the exact same visible scene. A pixel match alone could occur if a switch request never selected the Typed renderer. The ordinary UI now increments a success counter only after its guest frame returns and its pixels have been copied. The runner checks the observed pose and counter movement at each step and again after the final reboot.
+
+### What warrants a second pair of eyes
+
+The fixed algorithm precomputes per-row scratch in every entry call. The shade-only clock includes relevant setup and copying geometric inputs. The sum of isolated phase times need not equal a clean-frame observation. The C watchdog and input scheduler continue their ordinary work outside these calls.
+
+### What should be done in the future
+
+Compare both semantically identical packed backends at their first successful physical build. Preserve negative outcomes if a new backend fails any intermediate or pixel gate.
+
+### Code review instructions
+
+Review [the ordinary build helper](../scripts/device/01-build.py) and [physical tests](../scripts/device/02-device.py). Compare the checked number of returned pixel words with the dimensions of each physical phase; the extra guard after the last row is outside the reported CRC.
+
+### Technical details
+
+Cold compile uses a fresh 4 MiB-bounded QuickJS allocator and an 8 s deadline. Fixed output surfaces each reserve a 4-byte header, 2*(159*stride+160) output bytes and one final guard. Scratch reserves 2,048 words plus header and guard. A separate material program uses the 303-cell scene graph and existing native Candela row control.
