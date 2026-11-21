@@ -1,0 +1,155 @@
+// The C renderer validates the graph's node shapes and bounds before calling these entries.
+function candelaBlend(a: i32, b: i32, weight: i32): i32 {
+    return ((256 - weight) * a + weight * b) / 256;
+}
+
+function candelaCompute(graph: buffer, work: buffer, target: i32, x: i32, y: i32): i32 {
+    const targetAt = 8 + 4 * target;
+    if (graph.charCodeAt(targetAt) === 1) {
+        return graph.charCodeAt(targetAt + 1) * 65536 +
+            graph.charCodeAt(targetAt + 2) * 256 + graph.charCodeAt(targetAt + 3);
+    }
+    for (let index = 0; index <= target; index = index + 1) {
+        const node = 8 + 4 * index;
+        const at = 3 * index;
+        const opcode = graph.charCodeAt(node);
+        const a = graph.charCodeAt(node + 1);
+        const b = graph.charCodeAt(node + 2);
+        const c = graph.charCodeAt(node + 3);
+        if (opcode === 1) {
+            work.setCharCodeAt(at, a);
+            work.setCharCodeAt(at + 1, b);
+            work.setCharCodeAt(at + 2, c);
+        }
+        if (opcode === 2) { work.setCharCodeAt(at, graph.charCodeAt(295 + a)); }
+        if (opcode === 3) {
+            const weight = work.charCodeAt(3 * c);
+            for (let channel = 0; channel < 3; channel = channel + 1) {
+                work.setCharCodeAt(at + channel, candelaBlend(
+                    work.charCodeAt(3 * a + channel), work.charCodeAt(3 * b + channel), weight));
+            }
+        }
+        if (opcode === 4) {
+            let choice = a;
+            if ((x / c + y / c) % 2 === 1) { choice = b; }
+            for (let channel = 0; channel < 3; channel = channel + 1) {
+                work.setCharCodeAt(at + channel, work.charCodeAt(3 * choice + channel));
+            }
+        }
+        if (opcode === 5) {
+            work.setCharCodeAt(at, 256 * x);
+            work.setCharCodeAt(at + 1, 256 * y);
+        }
+        if (opcode === 6) {
+            const amount = work.charCodeAt(3 * b);
+            work.setCharCodeAt(at, work.charCodeAt(3 * a) * amount / 256);
+            work.setCharCodeAt(at + 1, work.charCodeAt(3 * a + 1) * amount / 256);
+        }
+        if (opcode === 7) {
+            work.setCharCodeAt(at, work.charCodeAt(3 * a) % 256);
+            work.setCharCodeAt(at + 1, work.charCodeAt(3 * a + 1) % 256);
+        }
+        if (opcode === 8) {
+            let mask = 0;
+            if (work.charCodeAt(3 * a) % 256 >= 32 && work.charCodeAt(3 * a + 1) % 256 >= 32) { mask = 256; }
+            work.setCharCodeAt(at, mask);
+        }
+    }
+    const result = 3 * target;
+    return work.charCodeAt(result) * 65536 + work.charCodeAt(result + 1) * 256 + work.charCodeAt(result + 2);
+}
+
+function candelaColorAt(graph: buffer, work: buffer, material: i32, x: i32, y: i32): i32 {
+    if (work.length < 192 || !candelaHeader(graph) || material < 0 ||
+        material >= graph.charCodeAt(3) || x < 0 || x >= 160 || y < 0 || y >= 160) return -1;
+    const target = graph.charCodeAt(264 + material);
+    if (candelaNodeKind(graph, target) !== 1) return -1;
+    return candelaCompute(graph, work, target, x, y);
+}
+
+// Nonzero periods certify reuse within one row on a validated graph. Any other
+// material shape uses a fresh evaluation for every hit, even if it looks uniform.
+function candelaRowPeriod(graph: buffer, target: i32): i32 {
+    const at = 8 + 4 * target;
+    const opcode = graph.charCodeAt(at);
+    if (opcode === 1) return 160;
+    if (opcode === 3 || opcode === 4) {
+        const a = graph.charCodeAt(at + 1);
+        const b = graph.charCodeAt(at + 2);
+        const c = graph.charCodeAt(at + 3);
+        if (graph.charCodeAt(8 + 4 * a) === 1 && graph.charCodeAt(8 + 4 * b) === 1) {
+            if (opcode === 4) return c;
+            if (graph.charCodeAt(8 + 4 * c) === 2) return 160;
+        }
+    }
+    return 0;
+}
+
+// Recognize MIX(COLOR,COLOR,TILEMASK(FRACT(SCALE(POSITION,PARAM)))).
+// Validation ensures each operand is a backward reference of the right kind.
+function candelaTileParam(graph: buffer, target: i32): i32 {
+    const mix = 8 + 4 * target;
+    if (graph.charCodeAt(mix) !== 3) return -1;
+    const low = 8 + 4 * graph.charCodeAt(mix + 1);
+    const high = 8 + 4 * graph.charCodeAt(mix + 2);
+    if (graph.charCodeAt(low) !== 1 || graph.charCodeAt(high) !== 1) return -1;
+    const mask = 8 + 4 * graph.charCodeAt(mix + 3);
+    if (graph.charCodeAt(mask) !== 8) return -1;
+    const fractional = 8 + 4 * graph.charCodeAt(mask + 1);
+    if (graph.charCodeAt(fractional) !== 7) return -1;
+    const scaled = 8 + 4 * graph.charCodeAt(fractional + 1);
+    if (graph.charCodeAt(scaled) !== 6) return -1;
+    const pos = 8 + 4 * graph.charCodeAt(scaled + 1);
+    const weight = 8 + 4 * graph.charCodeAt(scaled + 2);
+    if (graph.charCodeAt(pos) !== 5 || graph.charCodeAt(weight) !== 2) return -1;
+    return graph.charCodeAt(weight + 1);
+}
+
+function candelaShadeRow(graph: buffer, work: buffer, materials: buffer, y: i32, out: buffer): i32 {
+    if (!candelaHeader(graph) || work.length < 192 || materials.length < 160 ||
+        out.length < 320 || y < 0 || y >= 160) return 0;
+    const materialCount = graph.charCodeAt(3);
+    let previous = -1;
+    let part = -1;
+    let target = 0;
+    let period = 0;
+    let rgb = 0;
+    let tileWeight = -1;
+    let tileRow = false;
+    let tileLow = 0;
+    let tileHigh = 0;
+    for (let x = 0; x < 160; x = x + 1) {
+        const material = materials.charCodeAt(x);
+        if (material !== previous) {
+            if (material >= materialCount) return 0;
+            target = graph.charCodeAt(264 + material);
+            if (candelaNodeKind(graph, target) !== 1) return 0;
+            period = candelaRowPeriod(graph, target);
+            tileWeight = -1;
+            if (period === 0) {
+                const tileParameter = candelaTileParam(graph, target);
+                if (tileParameter >= 0) {
+                    tileWeight = graph.charCodeAt(295 + tileParameter);
+                    tileRow = y * tileWeight % 256 >= 32;
+                    tileLow = candelaCompute(graph, work, graph.charCodeAt(9 + 4 * target), x, y);
+                    tileHigh = candelaCompute(graph, work, graph.charCodeAt(10 + 4 * target), x, y);
+                }
+            }
+            previous = material;
+            part = -1;
+        }
+        if (tileWeight >= 0) {
+            rgb = tileLow;
+            if (tileRow && x * tileWeight % 256 >= 32) { rgb = tileHigh; }
+        } else if (period > 0) {
+            const slice = x / period;
+            if (slice !== part) {
+                rgb = candelaCompute(graph, work, target, x, y);
+                part = slice;
+            }
+        } else { rgb = candelaCompute(graph, work, target, x, y); }
+        out.setCharCodeAt(2 * x, rgb / 256);
+        out.setCharCodeAt(2 * x + 1, rgb % 256);
+    }
+    return 160;
+}

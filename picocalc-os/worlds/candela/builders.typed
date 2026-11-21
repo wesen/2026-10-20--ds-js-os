@@ -1,0 +1,145 @@
+// Candela graph format version 1, all indices count uint16 payload cells.
+function candelaHeader(graph: buffer): bool {
+    return graph.length >= 303 && graph.charCodeAt(0) === 17217 && graph.charCodeAt(1) === 1 &&
+        graph.charCodeAt(2) <= 64 && graph.charCodeAt(3) <= 16 && graph.charCodeAt(4) <= 3 &&
+        graph.charCodeAt(5) <= 8 && graph.charCodeAt(7) === 0;
+}
+
+function candelaInit(graph: buffer): i32 {
+    if (graph.length < 303) return 0;
+    for (let i = 0; i < 303; i = i + 1) { graph.setCharCodeAt(i, 0); }
+    graph.setCharCodeAt(1, 1);
+    graph.setCharCodeAt(6, 65535);
+    graph.setCharCodeAt(0, 17217);
+    return 1;
+}
+
+function candelaNodeKind(graph: buffer, handle: i32): i32 {
+    if (handle < 0 || handle >= graph.charCodeAt(2)) return 0;
+    const opcode = graph.charCodeAt(8 + 4 * handle);
+    if (opcode === 1 || opcode === 3 || opcode === 4) return 1; // RGB
+    if (opcode === 2 || opcode === 8) return 2; // scalar
+    if (opcode === 5 || opcode === 6 || opcode === 7) return 3; // vec2
+    return 0;
+}
+
+function candelaAppend(graph: buffer, opcode: i32, a: i32, b: i32, c: i32): i32 {
+    const handle = graph.charCodeAt(2);
+    if (handle >= 64) return -1;
+    const at = 8 + 4 * handle;
+    graph.setCharCodeAt(at, opcode);
+    graph.setCharCodeAt(at + 1, a);
+    graph.setCharCodeAt(at + 2, b);
+    graph.setCharCodeAt(at + 3, c);
+    graph.setCharCodeAt(2, handle + 1);
+    return handle;
+}
+
+function candelaColor(graph: buffer, red: i32, green: i32, blue: i32): i32 {
+    if (!candelaHeader(graph) || red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) return -1;
+    return candelaAppend(graph, 1, red, green, blue);
+}
+
+function candelaParameter(graph: buffer, initial: i32): i32 {
+    if (!candelaHeader(graph) || initial < 0 || initial > 256) return -1;
+    const slot = graph.charCodeAt(5);
+    if (slot >= 8) return -1;
+    graph.setCharCodeAt(295 + slot, initial);
+    graph.setCharCodeAt(5, slot + 1);
+    return slot;
+}
+
+function candelaSetParam(graph: buffer, slot: i32, value: i32): i32 {
+    if (!candelaHeader(graph) || slot < 0 || slot >= graph.charCodeAt(5) || value < 0 || value > 256) return 0;
+    graph.setCharCodeAt(295 + slot, value);
+    return 1;
+}
+
+function candelaParam(graph: buffer, slot: i32): i32 {
+    if (!candelaHeader(graph) || slot < 0 || slot >= graph.charCodeAt(5)) return -1;
+    return candelaAppend(graph, 2, slot, 0, 0);
+}
+
+function candelaMix(graph: buffer, a: i32, b: i32, amount: i32): i32 {
+    if (!candelaHeader(graph) || candelaNodeKind(graph, a) !== 1 ||
+        candelaNodeKind(graph, b) !== 1 || candelaNodeKind(graph, amount) !== 2) return -1;
+    return candelaAppend(graph, 3, a, b, amount);
+}
+
+function candelaChecker(graph: buffer, a: i32, b: i32, size: i32): i32 {
+    if (!candelaHeader(graph) || candelaNodeKind(graph, a) !== 1 ||
+        candelaNodeKind(graph, b) !== 1 || size < 1 || size > 65535) return -1;
+    return candelaAppend(graph, 4, a, b, size);
+}
+
+function candelaPosition(graph: buffer): i32 {
+    if (!candelaHeader(graph)) return -1;
+    return candelaAppend(graph, 5, 0, 0, 0);
+}
+
+function candelaScale(graph: buffer, v: i32, amount: i32): i32 {
+    if (!candelaHeader(graph) || candelaNodeKind(graph, v) !== 3 || candelaNodeKind(graph, amount) !== 2) return -1;
+    return candelaAppend(graph, 6, v, amount, 0);
+}
+
+function candelaFract(graph: buffer, v: i32): i32 {
+    if (!candelaHeader(graph) || candelaNodeKind(graph, v) !== 3) return -1;
+    return candelaAppend(graph, 7, v, 0, 0);
+}
+
+function candelaTileMask(graph: buffer, v: i32): i32 {
+    if (!candelaHeader(graph) || candelaNodeKind(graph, v) !== 3) return -1;
+    return candelaAppend(graph, 8, v, 0, 0);
+}
+
+function candelaMaterial(graph: buffer, expression: i32): i32 {
+    if (!candelaHeader(graph) || candelaNodeKind(graph, expression) !== 1) return -1;
+    const material = graph.charCodeAt(3);
+    if (material >= 16) return -1;
+    graph.setCharCodeAt(264 + material, expression);
+    graph.setCharCodeAt(3, material + 1);
+    return material;
+}
+
+function candelaSphereFits(x: i32, y: i32, z: i32, radius: i32): bool {
+    return x >= 32 && x <= 127 && y >= 32 && y <= 127 &&
+        radius >= 1 && radius <= 32 && z > radius && z < 156 - radius;
+}
+
+function candelaAddSphere(graph: buffer, x: i32, y: i32, z: i32, radius: i32, material: i32): i32 {
+    if (!candelaHeader(graph) || !candelaSphereFits(x, y, z, radius) ||
+        material < 0 || material >= graph.charCodeAt(3)) return -1;
+    const sphere = graph.charCodeAt(4);
+    if (sphere >= 3) return -1;
+    const at = 280 + 5 * sphere;
+    graph.setCharCodeAt(at, x);
+    graph.setCharCodeAt(at + 1, y);
+    graph.setCharCodeAt(at + 2, z);
+    graph.setCharCodeAt(at + 3, radius);
+    graph.setCharCodeAt(at + 4, material);
+    graph.setCharCodeAt(4, sphere + 1);
+    return sphere;
+}
+
+function candelaSphereAt(graph: buffer, sphere: i32, x: i32, y: i32, z: i32): i32 {
+    if (!candelaHeader(graph) || sphere < 0 || sphere >= graph.charCodeAt(4)) return -1;
+    const at = 280 + 5 * sphere;
+    if (!candelaSphereFits(x, y, z, graph.charCodeAt(at + 3))) return -1;
+    graph.setCharCodeAt(at, x);
+    graph.setCharCodeAt(at + 1, y);
+    graph.setCharCodeAt(at + 2, z);
+    return sphere;
+}
+
+function candelaSphereMaterial(graph: buffer, sphere: i32, material: i32): i32 {
+    if (!candelaHeader(graph) || sphere < 0 || sphere >= graph.charCodeAt(4) ||
+        material < 0 || material >= graph.charCodeAt(3)) return -1;
+    graph.setCharCodeAt(284 + 5 * sphere, material);
+    return sphere;
+}
+
+function candelaFloor(graph: buffer, material: i32): i32 {
+    if (!candelaHeader(graph) || material < 0 || material >= graph.charCodeAt(3)) return 0;
+    graph.setCharCodeAt(6, material);
+    return 1;
+}

@@ -15,7 +15,7 @@ void raytrace_demo_pie_row(const int16_t *x_squared, const int16_t *row_term,
 #define RAYTRACE_PIE 0
 #endif
 
-enum { SIDE = RAYTRACE_DEMO_SIDE, SPHERES = 3, LANES = 8, MAX_RADIUS = 32, FLOOR_Z = 156 };
+enum { SIDE = RAYTRACE_DEMO_SIDE, SPHERES = RAYTRACE_DEMO_MAX_SPHERES, LANES = 8, MAX_RADIUS = 32, FLOOR_Z = 156 };
 
 typedef struct {
     int x, y, z, radius;
@@ -24,6 +24,7 @@ typedef struct {
 
 typedef struct {
     sphere objects[SPHERES];
+    size_t object_count;
     _Alignas(16) int16_t x_squared[SPHERES][SIDE];
     _Alignas(16) int16_t discriminants[SIDE];
     uint8_t roots[MAX_RADIUS * MAX_RADIUS + 1];
@@ -48,23 +49,32 @@ bool raytrace_demo_has_pie(void) {
     return RAYTRACE_PIE;
 }
 
-static bool valid(const void *output, size_t stride, const raytrace_demo_scene *scene,
-                  raytrace_demo_mode mode) {
+static bool valid_output(const void *output, size_t stride, int light_x, int light_y,
+                         raytrace_demo_mode mode) {
     return output && (uintptr_t)output % _Alignof(uint16_t) == 0 &&
            stride >= SIDE && stride <= (SIZE_MAX / sizeof(uint16_t) - SIDE) / (SIDE - 1) &&
-           scene && scene->sphere_x >= RAYTRACE_DEMO_SPHERE_MIN &&
-           scene->sphere_x <= RAYTRACE_DEMO_SPHERE_MAX &&
-           scene->sphere_y >= RAYTRACE_DEMO_SPHERE_MIN &&
-           scene->sphere_y <= RAYTRACE_DEMO_SPHERE_MAX &&
-           scene->light_x >= 0 && scene->light_x < SIDE && scene->light_y >= 0 && scene->light_y < SIDE &&
+           light_x >= 0 && light_x < SIDE && light_y >= 0 && light_y < SIDE &&
            (mode == RAYTRACE_DEMO_SCALAR || (mode == RAYTRACE_DEMO_PIE && RAYTRACE_PIE));
 }
 
-static void prepare(trace *work, const raytrace_demo_scene *scene) {
-    work->objects[0] = (sphere){scene->sphere_x, scene->sphere_y, 56, 26, 245, 83, 67};
-    work->objects[1] = (sphere){100, 65, 105, 32, 48, 197, 213};
-    work->objects[2] = (sphere){58, 109, 86, 23, 245, 182, 58};
-    for (unsigned s = 0; s < SPHERES; ++s) {
+static bool valid(const void *output, size_t stride, const raytrace_demo_scene *scene,
+                  raytrace_demo_mode mode) {
+    return scene && scene->sphere_x >= RAYTRACE_DEMO_SPHERE_MIN &&
+           scene->sphere_x <= RAYTRACE_DEMO_SPHERE_MAX &&
+           scene->sphere_y >= RAYTRACE_DEMO_SPHERE_MIN &&
+           scene->sphere_y <= RAYTRACE_DEMO_SPHERE_MAX &&
+           valid_output(output, stride, scene->light_x, scene->light_y, mode);
+}
+
+bool raytrace_demo_object_fits(const raytrace_demo_object *object) {
+    return object && object->x >= RAYTRACE_DEMO_SPHERE_MIN && object->x <= RAYTRACE_DEMO_SPHERE_MAX &&
+           object->y >= RAYTRACE_DEMO_SPHERE_MIN && object->y <= RAYTRACE_DEMO_SPHERE_MAX &&
+           object->radius >= 1 && object->radius <= MAX_RADIUS &&
+           object->z > object->radius && object->z < FLOOR_Z - object->radius;
+}
+
+static void prepare_tables(trace *work) {
+    for (size_t s = 0; s < work->object_count; ++s) {
         for (int x = 0; x < SIDE; ++x) {
             const int dx = x - work->objects[s].x;
             work->x_squared[s][x] = (int16_t)(dx * dx);
@@ -80,10 +90,18 @@ static void prepare(trace *work, const raytrace_demo_scene *scene) {
     }
 }
 
+static void prepare(trace *work, const raytrace_demo_scene *scene) {
+    work->object_count = SPHERES;
+    work->objects[0] = (sphere){scene->sphere_x, scene->sphere_y, 56, 26, 245, 83, 67};
+    work->objects[1] = (sphere){100, 65, 105, 32, 48, 197, 213};
+    work->objects[2] = (sphere){58, 109, 86, 23, 245, 182, 58};
+    prepare_tables(work);
+}
+
 static unsigned trace_row(trace *work, int y, raytrace_demo_mode mode, bool count_hits) {
     memset(work->depth, 0, sizeof(work->depth));
     unsigned hits = 0;
-    for (unsigned s = 0; s < SPHERES; ++s) {
+    for (size_t s = 0; s < work->object_count; ++s) {
         const sphere *object = &work->objects[s];
         const int dy = y - object->y;
         const int16_t row_term = (int16_t)(object->radius * object->radius - dy * dy);
@@ -112,16 +130,16 @@ static unsigned trace_row(trace *work, int y, raytrace_demo_mode mode, bool coun
     return hits;
 }
 
-static light prepare_light(const trace *work, const raytrace_demo_scene *scene) {
+static light prepare_light(const trace *work, int light_x, int light_y) {
     light lamp = {
-        .x = (scene->light_x - SIDE / 2) * 3 / 10,
-        .y = (scene->light_y - SIDE / 2) * 3 / 10,
+        .x = (light_x - SIDE / 2) * 3 / 10,
+        .y = (light_y - SIDE / 2) * 3 / 10,
     };
     lamp.norm_squared = lamp.x * lamp.x + lamp.y * lamp.y + 32 * 32;
     lamp.norm = 32;
     while ((lamp.norm + 1) * (lamp.norm + 1) <= lamp.norm_squared) ++lamp.norm;
 
-    for (unsigned s = 0; s < SPHERES; ++s) {
+    for (size_t s = 0; s < work->object_count; ++s) {
         const sphere *object = &work->objects[s];
         const int dz = FLOOR_Z - object->z;
         lamp.projected_x[s] = 32 * object->x - dz * lamp.x;
@@ -134,7 +152,7 @@ static light prepare_light(const trace *work, const raytrace_demo_scene *scene) 
 }
 
 static bool in_shadow(const trace *work, const light *lamp, int x, int y) {
-    for (unsigned s = 0; s < SPHERES; ++s) {
+    for (size_t s = 0; s < work->object_count; ++s) {
         if (abs(32 * x - lamp->projected_x[s]) > lamp->reach_x[s] ||
             abs(32 * y - lamp->projected_y[s]) > lamp->reach_y[s]) continue;
 
@@ -155,13 +173,17 @@ static uint16_t rgb565(int red, int green, int blue, int scale) {
     return (uint16_t)(((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3));
 }
 
-static uint16_t shade_sphere(const trace *work, const light *lamp, int x, int y) {
-    const sphere *object = &work->objects[work->object_index[x]];
-    const int height = object->z - work->depth[x];
+static int sphere_scale(const sphere *object, const light *lamp, int depth, int x, int y) {
+    const int height = object->z - depth;
     const int dot = (x - object->x) * lamp->x + (y - object->y) * lamp->y + 32 * height;
     const int bound = object->radius * lamp->norm;
     const int lit = dot <= 0 ? 0 : dot >= bound ? 183 : dot * 183 / bound;
-    return rgb565(object->red, object->green, object->blue, 62 + lit);
+    return 62 + lit;
+}
+
+static uint16_t shade_sphere(const trace *work, const light *lamp, int x, int y) {
+    const sphere *object = &work->objects[work->object_index[x]];
+    return rgb565(object->red, object->green, object->blue, sphere_scale(object, lamp, work->depth[x], x, y));
 }
 
 static uint16_t shade_floor(int x, int y, bool shadow) {
@@ -170,11 +192,11 @@ static uint16_t shade_floor(int x, int y, bool shadow) {
     return rgb565(105, 134, 158, shadow ? level / 3 : level);
 }
 
-static void start_stats(raytrace_demo_stats *stats, raytrace_demo_mode mode) {
+static void start_stats(raytrace_demo_stats *stats, raytrace_demo_mode mode, size_t object_count) {
     *stats = (raytrace_demo_stats){
         .rays = SIDE * SIDE,
-        .sphere_tests = SIDE * SIDE * SPHERES,
-        .pie_groups = mode == RAYTRACE_DEMO_PIE ? SIDE * SIDE * SPHERES / LANES : 0,
+        .sphere_tests = (uint32_t)(SIDE * SIDE * object_count),
+        .pie_groups = mode == RAYTRACE_DEMO_PIE ? (uint32_t)(SIDE * SIDE * object_count / LANES) : 0,
         .checksum = UINT32_C(2166136261),
     };
 }
@@ -190,8 +212,8 @@ bool raytrace_demo_render(uint16_t *pixels, size_t stride_pixels, const raytrace
 
     trace work;
     prepare(&work, scene);
-    const light lamp = prepare_light(&work, scene);
-    if (stats) start_stats(stats, mode);
+    const light lamp = prepare_light(&work, scene->light_x, scene->light_y);
+    if (stats) start_stats(stats, mode, work.object_count);
 
     for (int y = 0; y < SIDE; ++y) {
         const unsigned hits = trace_row(&work, y, mode, stats != NULL);
@@ -219,7 +241,7 @@ bool raytrace_demo_intersections(int16_t *depth, size_t stride_pixels, const ray
 
     trace work;
     prepare(&work, scene);
-    if (stats) start_stats(stats, mode);
+    if (stats) start_stats(stats, mode, work.object_count);
     for (int y = 0; y < SIDE; ++y) {
         const unsigned hits = trace_row(&work, y, mode, stats != NULL);
         memcpy(depth + (size_t)y * stride_pixels, work.depth, sizeof(work.depth));
@@ -228,6 +250,49 @@ bool raytrace_demo_intersections(int16_t *depth, size_t stride_pixels, const ray
             for (int x = 0; x < SIDE; ++x) {
                 stats->hit_pixels += work.depth[x] != 0;
                 hash_pixel(stats, (uint16_t)work.depth[x]);
+            }
+        }
+    }
+    if (stats && mode == RAYTRACE_DEMO_PIE) stats->pie_active_lanes = stats->sphere_hits;
+    return true;
+}
+
+bool raytrace_demo_render_materials(uint16_t *pixels, size_t stride_pixels,
+                                  const raytrace_demo_object *objects, size_t object_count,
+                                  uint16_t floor_material, int light_x, int light_y,
+                                  raytrace_demo_mode mode, raytrace_demo_material_row sample,
+                                  void *context, raytrace_demo_stats *stats) {
+    if (!sample || !objects || object_count > SPHERES ||
+        !valid_output(pixels, stride_pixels, light_x, light_y, mode)) return false;
+    trace work;
+    work.object_count = object_count;
+    for (size_t s = 0; s < object_count; ++s) {
+        const raytrace_demo_object *object = &objects[s];
+        if (!raytrace_demo_object_fits(object)) return false;
+        work.objects[s] = (sphere){.x=object->x, .y=object->y, .z=object->z, .radius=object->radius};
+    }
+    prepare_tables(&work);
+    const light lamp = prepare_light(&work, light_x, light_y);
+    uint16_t materials[SIDE], colors[2 * SIDE];
+    if (stats) start_stats(stats, mode, work.object_count);
+    for (int y = 0; y < SIDE; ++y) {
+        const unsigned hits = trace_row(&work, y, mode, stats != NULL);
+        uint16_t *row = pixels + (size_t)y * stride_pixels;
+        for (int x = 0; x < SIDE; ++x)
+            materials[x] = work.depth[x] != 0 ? objects[work.object_index[x]].material : floor_material;
+        if (!sample(context, y, materials, colors)) return false;
+        if (stats) stats->sphere_hits += hits;
+        for (int x = 0; x < SIDE; ++x) {
+            const bool hit = work.depth[x] != 0;
+            const bool shadow = !hit && in_shadow(&work, &lamp, x, y);
+            const int scale = hit ? sphere_scale(&work.objects[work.object_index[x]], &lamp, work.depth[x], x, y) :
+                shadow ? 85 : 255;
+            const uint16_t rg = colors[2*x], b = colors[2*x+1];
+            row[x] = rgb565(rg >> 8, rg & 255, b, scale);
+            if (stats) {
+                stats->hit_pixels += hit;
+                stats->shadow_pixels += shadow;
+                hash_pixel(stats, row[x]);
             }
         }
     }

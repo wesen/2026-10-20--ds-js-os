@@ -1,0 +1,37 @@
+function candelaHandShared(graph: buffer): i32 {
+    if (candelaInit(graph) === 0) return 0;
+    const blue = candelaColor(graph, 30, 70, 150);
+    const shared = candelaMaterial(graph, blue);
+    const left = candelaAddSphere(graph, 68, 61, 56, 26, shared);
+    const right = candelaAddSphere(graph, 100, 65, 105, 32, shared);
+    const gold = candelaColor(graph, 220, 170, 40);
+    const slot = candelaParameter(graph, 0);
+    const amount = candelaParam(graph, slot);
+    const mix = candelaMix(graph, blue, gold, amount);
+    const varied = candelaMaterial(graph, mix);
+    const low = candelaColor(graph, 48, 61, 72);
+    const high = candelaColor(graph, 72, 93, 109);
+    const checker = candelaChecker(graph, low, high, 12);
+    const floor = candelaMaterial(graph, checker);
+    if (left < 0 || candelaSphereMaterial(graph, right, varied) < 0) return 0;
+    return candelaFloor(graph, floor);
+}
+
+function candelaHandTile(graph: buffer): i32 {
+    if (candelaInit(graph) === 0) return 0;
+    const blue = candelaColor(graph, 30, 70, 150);
+    const low = candelaColor(graph, 35, 46, 70);
+    const high = candelaColor(graph, 105, 145, 187);
+    const slot = candelaParameter(graph, 64);
+    const weight = candelaParam(graph, slot);
+    const position = candelaPosition(graph);
+    const scaled = candelaScale(graph, position, weight);
+    const fractional = candelaFract(graph, scaled);
+    const mask = candelaTileMask(graph, fractional);
+    const tiles = candelaMix(graph, low, high, mask);
+    const sphereMaterial = candelaMaterial(graph, blue);
+    const floor = candelaMaterial(graph, tiles);
+    if (candelaAddSphere(graph, 68, 61, 56, 26, sphereMaterial) < 0) return 0;
+    if (candelaAddSphere(graph, 100, 65, 105, 32, sphereMaterial) < 0) return 0;
+    return candelaFloor(graph, floor);
+}
