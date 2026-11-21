@@ -1,0 +1,9 @@
+# Tasks
+
+## TODO
+- [ ] Freeze the algorithm, treatment contracts, path definitions and transfer fixture before candidate timing <!-- t:vyjm -->
+- [ ] Trace the Typed and C code for real floor pixels and classify the exact shadow paths <!-- t:tmwc -->
+- [ ] Implement and verify an optional general native compiler candidate while preserving source and checked semantics <!-- t:im6o -->
+- [ ] Measure qualified P4 kernels, frames, startup cost and register traffic with paired controls <!-- t:xw35 -->
+- [ ] Independently verify semantics, held-out chess code and limits of attribution <!-- t:q46h -->
+- [ ] Publish all articles, runnable JS and the supervisor synthesis to go-go-parc main and record delivery <!-- t:id59 -->
