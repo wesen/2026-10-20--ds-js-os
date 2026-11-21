@@ -84,7 +84,7 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   if (!typed_lex_index_install(ctx)) goto rejected;
   if (!eval_file(ctx, "typed/wasm.js") ||
       (!strcmp(linker, "typed/world.js") && !eval_file(ctx, "typed/async.js")) ||
-      (engine == ENG_NATIVE && !eval_file(ctx, "typed/rv32.js")) ||
+      (engine == ENG_NATIVE && !eval_file(ctx, limits && limits->rv32_backend ? limits->rv32_backend : "typed/rv32.js")) ||
       !eval_file(ctx, linker)) goto rejected;
   JSValue global = JS_GetGlobalObject(ctx);
   JSValue function = JS_GetPropertyStr(ctx, global, entry);

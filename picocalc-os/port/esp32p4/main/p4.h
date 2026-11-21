@@ -48,6 +48,7 @@ void p4_agent_console(const char *args); // secret values are accepted but never
 typedef struct {
   size_t heap_bytes;
   vtime_t duration_us;
+  const char *rv32_backend;  // optional bundled backend for comparative compiler studies
 } p4_compile_limits;
 char *p4_typed_compile(const char *app, const char *source_kind, const char *source,
                        size_t source_length, const char *linker, const char *entry, int engine,

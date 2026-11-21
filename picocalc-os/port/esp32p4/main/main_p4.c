@@ -166,6 +166,12 @@ void console_exec(char *line) {
 #if PICOCALC_MOBILE_PAINTER
   else if (!strcmp(cmd, "painter")) p4_painter_status();
 #endif
+#if PICOCALC_TYPED_RAY
+  else if (!strcmp(cmd, "typedray")) {
+    extern void p4_typed_ray_console(const char *);
+    p4_typed_ray_console(rest);
+  }
+#endif
   else if (!strcmp(cmd, "raybench")) p4_raybench(rest);
 #if PICOCALC_CANDELA
   else if (!strcmp(cmd, "candela")) p4_candela_console(rest);
