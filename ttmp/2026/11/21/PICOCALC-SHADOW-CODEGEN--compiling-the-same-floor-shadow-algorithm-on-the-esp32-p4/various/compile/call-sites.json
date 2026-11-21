@@ -1,0 +1,216 @@
+{
+  "baseline": {
+    "imageSHA": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+    "sites": [
+      {
+        "tapeOffset": 113,
+        "words": [
+          {
+            "pc": 5140,
+            "hex": "00028513",
+            "text": "addi x10,x5,0"
+          },
+          {
+            "pc": 5144,
+            "hex": "da5fe0ef",
+            "text": "jal x1,1bc <.text+0x1bc>"
+          },
+          {
+            "pc": 5148,
+            "hex": "00050293",
+            "text": "addi x5,x10,0"
+          }
+        ]
+      },
+      {
+        "tapeOffset": 147,
+        "words": [
+          {
+            "pc": 5272,
+            "hex": "00028513",
+            "text": "addi x10,x5,0"
+          },
+          {
+            "pc": 5276,
+            "hex": "d21fe0ef",
+            "text": "jal x1,1bc <.text+0x1bc>"
+          },
+          {
+            "pc": 5280,
+            "hex": "00050293",
+            "text": "addi x5,x10,0"
+          }
+        ]
+      }
+    ],
+    "helper": [
+      {
+        "pc": 444,
+        "hex": "00050293",
+        "text": "addi x5,x10,0"
+      },
+      {
+        "pc": 448,
+        "hex": "00000313",
+        "text": "addi x6,x0,0"
+      },
+      {
+        "pc": 452,
+        "hex": "0062a2b3",
+        "text": "slt x5,x5,x6"
+      },
+      {
+        "pc": 456,
+        "hex": "00029463",
+        "text": "bne x5,x0,1d0 <.text+0x1d0>"
+      },
+      {
+        "pc": 460,
+        "hex": "0180006f",
+        "text": "jal x0,1e4 <.text+0x1e4>"
+      },
+      {
+        "pc": 464,
+        "hex": "00000293",
+        "text": "addi x5,x0,0"
+      },
+      {
+        "pc": 468,
+        "hex": "00050313",
+        "text": "addi x6,x10,0"
+      },
+      {
+        "pc": 472,
+        "hex": "406282b3",
+        "text": "sub x5,x5,x6"
+      },
+      {
+        "pc": 476,
+        "hex": "00028513",
+        "text": "addi x10,x5,0"
+      },
+      {
+        "pc": 480,
+        "hex": "00c0006f",
+        "text": "jal x0,1ec <.text+0x1ec>"
+      },
+      {
+        "pc": 484,
+        "hex": "00050293",
+        "text": "addi x5,x10,0"
+      },
+      {
+        "pc": 488,
+        "hex": "00028513",
+        "text": "addi x10,x5,0"
+      },
+      {
+        "pc": 492,
+        "hex": "00008067",
+        "text": "jalr x0,0(x1)"
+      }
+    ]
+  },
+  "shadow": {
+    "imageSHA": "e2fa128bb8f0a4eaf0ec04fca02546efd6b071df2272562c97f445767d55ef27",
+    "sites": [
+      {
+        "tapeOffset": 113,
+        "words": [
+          {
+            "pc": 5140,
+            "hex": "0002d463",
+            "text": "bge x5,x0,141c <.text+0x141c>"
+          },
+          {
+            "pc": 5144,
+            "hex": "405002b3",
+            "text": "sub x5,x0,x5"
+          }
+        ]
+      },
+      {
+        "tapeOffset": 147,
+        "words": [
+          {
+            "pc": 5268,
+            "hex": "0002d463",
+            "text": "bge x5,x0,149c <.text+0x149c>"
+          },
+          {
+            "pc": 5272,
+            "hex": "405002b3",
+            "text": "sub x5,x0,x5"
+          }
+        ]
+      }
+    ],
+    "helper": [
+      {
+        "pc": 444,
+        "hex": "00050293",
+        "text": "addi x5,x10,0"
+      },
+      {
+        "pc": 448,
+        "hex": "00000313",
+        "text": "addi x6,x0,0"
+      },
+      {
+        "pc": 452,
+        "hex": "0062a2b3",
+        "text": "slt x5,x5,x6"
+      },
+      {
+        "pc": 456,
+        "hex": "00029463",
+        "text": "bne x5,x0,1d0 <.text+0x1d0>"
+      },
+      {
+        "pc": 460,
+        "hex": "0180006f",
+        "text": "jal x0,1e4 <.text+0x1e4>"
+      },
+      {
+        "pc": 464,
+        "hex": "00000293",
+        "text": "addi x5,x0,0"
+      },
+      {
+        "pc": 468,
+        "hex": "00050313",
+        "text": "addi x6,x10,0"
+      },
+      {
+        "pc": 472,
+        "hex": "406282b3",
+        "text": "sub x5,x5,x6"
+      },
+      {
+        "pc": 476,
+        "hex": "00028513",
+        "text": "addi x10,x5,0"
+      },
+      {
+        "pc": 480,
+        "hex": "00c0006f",
+        "text": "jal x0,1ec <.text+0x1ec>"
+      },
+      {
+        "pc": 484,
+        "hex": "00050293",
+        "text": "addi x5,x10,0"
+      },
+      {
+        "pc": 488,
+        "hex": "00028513",
+        "text": "addi x10,x5,0"
+      },
+      {
+        "pc": 492,
+        "hex": "00008067",
+        "text": "jalr x0,0(x1)"
+      }
+    ]
+  }
+}
