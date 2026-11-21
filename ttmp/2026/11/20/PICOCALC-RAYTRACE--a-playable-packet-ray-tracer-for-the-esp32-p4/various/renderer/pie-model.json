@@ -1,0 +1,72 @@
+{
+  "imageSHA256": "fe7749e331f4819d0e637aeaaafad0e8bba8c8723978326fa37dc9a2a9bf746b",
+  "instructions": [
+    {
+      "word": 2248253499,
+      "op": "esp.vldbc.16.ip",
+      "args": [
+        "q0",
+        "x11",
+        "0"
+      ]
+    },
+    {
+      "word": 33629755,
+      "op": "esp.vld.128.ip",
+      "args": [
+        "q1",
+        "x10",
+        "16"
+      ]
+    },
+    {
+      "word": 111412959,
+      "op": "esp.vsub.s16",
+      "args": [
+        "q2",
+        "q0",
+        "q1"
+      ]
+    },
+    {
+      "word": 2181179963,
+      "op": "esp.vst.128.ip",
+      "args": [
+        "q2",
+        "x12",
+        "16"
+      ]
+    },
+    {
+      "word": 4294346387,
+      "op": "addi",
+      "args": [
+        "x13",
+        "x13",
+        "-1"
+      ]
+    },
+    {
+      "word": 4261845219,
+      "op": "bne",
+      "args": [
+        "x13",
+        "x0",
+        "4 <raytrace_demo_pie_row+0x4>"
+      ]
+    },
+    {
+      "word": 32871,
+      "op": "jalr",
+      "args": [
+        "x0",
+        "0(x1)"
+      ]
+    }
+  ],
+  "cases": 754,
+  "packedOps": 45424,
+  "packedStores": 14890,
+  "signedMinimum": -31729,
+  "signedMaximum": 1024
+}

@@ -1,0 +1,14 @@
+{"hostPackedModel":false,"cases":[
+{"case":"default","scene":[68,61,31,25],"pixels":"2f75a8a5","depth":"ee9a0b05","sphereHits":6983,"hitPixels":6123,"shadowPixels":4793},
+{"case":"move lamp","scene":[68,61,128,25],"pixels":"97296759","depth":"ee9a0b05","sphereHits":6983,"hitPixels":6123,"shadowPixels":3923},
+{"case":"scene control","scene":[32,32,0,0],"pixels":"75c96e1e","depth":"67fe4ead","sphereHits":6983,"hitPixels":6983,"shadowPixels":5221},
+{"case":"scene control","scene":[127,127,159,159],"pixels":"f5e76cb3","depth":"cf23bc7d","sphereHits":6983,"hitPixels":6983,"shadowPixels":5974},
+{"case":"scene control","scene":[32,127,159,0],"pixels":"8f52db52","depth":"394814df","sphereHits":6983,"hitPixels":6537,"shadowPixels":1976},
+{"case":"scene control","scene":[127,32,0,159],"pixels":"404bb0b9","depth":"11324306","sphereHits":6983,"hitPixels":6574,"shadowPixels":1011},
+{"case":"scene control","scene":[100,65,80,80],"pixels":"d6d1c0de","depth":"a6a98964","sphereHits":6983,"hitPixels":4862,"shadowPixels":0},
+{"case":"scene control","scene":[58,109,79,79],"pixels":"b69b46b9","depth":"c4cc4292","sphereHits":6983,"hitPixels":5330,"shadowPixels":0},
+{"case":"scene control","scene":[80,80,0,80],"pixels":"db9a2b3c","depth":"22685ab3","sphereHits":6983,"hitPixels":5486,"shadowPixels":3887},
+{"case":"scene control","scene":[80,80,159,80],"pixels":"69acee82","depth":"22685ab3","sphereHits":6983,"hitPixels":5486,"shadowPixels":4246},
+{"case":"scene control","scene":[95,52,80,159],"pixels":"061c35c4","depth":"14fec2b1","sphereHits":6983,"hitPixels":5193,"shadowPixels":3612},
+{"case":"scene control","scene":[85,97,80,0],"pixels":"3b0e6bef","depth":"e01cf913","sphereHits":6983,"hitPixels":5738,"shadowPixels":3027}
+],"modeledGroups":0}
