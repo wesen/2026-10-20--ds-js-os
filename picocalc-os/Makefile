@@ -126,12 +126,13 @@ shots: $(BIN)
 	@for s in $(SCRIPTS)/*.txt; do echo "== $$s"; rm -rf $(BUILD)/fs && cp -r fs-seed $(BUILD)/fs && \
 	  ./$(BIN) -j $(JSROOT) -o $(OUT) -f $(BUILD)/fs $$s || exit 1; done
 
-# The editor's, calculator's, agenda's and system apps' logic in Node, each app in a VM with fakes for the kernel (no binary needed).
+# App logic and Typed compiler checks in Node (no host binary needed).
 test-apps:
 	$(NODE) tests/editor.test.mjs
 	$(NODE) tests/calc.test.mjs
 	$(NODE) tests/agenda.test.mjs
 	$(NODE) tests/sysapps.test.mjs
+	$(NODE) tests/typed-rv32.test.mjs
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
 test-clock: $(BIN)
