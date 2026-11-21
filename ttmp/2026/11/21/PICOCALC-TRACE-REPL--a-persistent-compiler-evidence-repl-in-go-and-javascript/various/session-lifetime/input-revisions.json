@@ -1,0 +1,15 @@
+{
+  "sourceSHA256": {
+    "pkg/tracerepl/service.go": "65e6dc1641a642500a75ef8ef006e728331c4bd1b54e40c84f2dabc7ef9c585f",
+    "pkg/tracerepl/service_test.go": "86ed13ebe34562f607b44f9f717e1884e6e371f0d5e37887fd30ff0c8486b601",
+    "pkg/tracerepl/http.go": "bf13d4d2af467f429bc299e9e0fea0cc22fc3317ef26a03c48da42bb104fc5c6",
+    "pkg/tracearchive/archive.go": "d187e62aead6adc002a9224805fcb3e18a5fd0815b3a9c199ec396cdac3b627c",
+    "pkg/tracearchive/archive_test.go": "327b884e71393a644aa75769222d53193fb94773a7ede2239050a1acce21d532"
+  },
+  "binarySHA256": {
+    "sessions": "ae05e57d38067064597e1166a54b798158abbdf49175a81ce4a09f9fb97cdf48",
+    "archive": "cc8e9b47580feee8c94f82478c23b5fd4c3931aee132f74a8952d7952fc9dce3"
+  },
+  "goToolchain": "go1.26.10 linux/amd64",
+  "assays": "compiled with go test -c; unmodified working-tree files listed above"
+}

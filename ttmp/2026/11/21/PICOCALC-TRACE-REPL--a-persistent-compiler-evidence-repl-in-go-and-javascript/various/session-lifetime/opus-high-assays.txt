@@ -1,0 +1,31 @@
+=== RUN   TestPersistentSessionBoundary
+--- PASS: TestPersistentSessionBoundary (0.00s)
+=== RUN   TestTimeoutDuringComputationAndResultSerialization
+--- PASS: TestTimeoutDuringComputationAndResultSerialization (0.20s)
+=== RUN   TestSameSessionSerializesEvaluations
+--- PASS: TestSameSessionSerializesEvaluations (0.00s)
+=== RUN   TestHTTPProtocol
+--- PASS: TestHTTPProtocol (0.00s)
+=== RUN   TestClosingSessionInterruptsActiveCell
+--- PASS: TestClosingSessionInterruptsActiveCell (0.00s)
+PASS
+=== RUN   TestArchivedPassesAndEvidenceRanges
+--- PASS: TestArchivedPassesAndEvidenceRanges (0.08s)
+=== RUN   TestConcurrentReadsShareSuccessfulInflation
+--- PASS: TestConcurrentReadsShareSuccessfulInflation (0.01s)
+=== RUN   TestArchivedPassesAndEvidenceRanges
+--- PASS: TestArchivedPassesAndEvidenceRanges (0.08s)
+=== RUN   TestConcurrentReadsShareSuccessfulInflation
+--- PASS: TestConcurrentReadsShareSuccessfulInflation (0.01s)
+goos: linux
+goarch: amd64
+pkg: github.com/go-go-golems/picocalc-trace/pkg/tracearchive
+cpu: 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+BenchmarkCheckedMiddleDump
+BenchmarkCheckedMiddleDump/open-and-first-read
+BenchmarkCheckedMiddleDump/open-and-first-read-8         	      10	   6918053 ns/op	 5948150 B/op	    4799 allocs/op
+BenchmarkCheckedMiddleDump/open-and-first-read-8         	      10	   7413779 ns/op	 5948123 B/op	    4799 allocs/op
+BenchmarkCheckedMiddleDump/resident-read
+BenchmarkCheckedMiddleDump/resident-read-8               	      10	       186.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCheckedMiddleDump/resident-read-8               	      10	       172.4 ns/op	       0 B/op	       0 allocs/op
+PASS
