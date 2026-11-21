@@ -1,0 +1,2594 @@
+{
+  "poseBlocks": 324,
+  "observedMHz": {
+    "min": 359.72,
+    "median": 359.96,
+    "max": 360.01
+  },
+  "programs": {
+    "0": {
+      "N": 36,
+      "medianCompilerUs": 429863,
+      "maxTrackedJSBytes": 645728,
+      "medianAll": {
+        "cleanUs": 56725.0,
+        "auditUs": 61877.0,
+        "primaryUs": 17808.5,
+        "shadeUs": 47662.0
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 57674,
+          "auditUs": 62847,
+          "primaryUs": 17811,
+          "shadeUs": 48560
+        },
+        "cScalar": {
+          "cleanUs": 9521,
+          "auditUs": 12055,
+          "primaryUs": 4596,
+          "shadeUs": 8265
+        },
+        "cPIE": {
+          "cleanUs": 8350,
+          "auditUs": 10926,
+          "primaryUs": 3468,
+          "shadeUs": 8244
+        },
+        "cleanGuestOverC": 6.0559
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 55528,
+            "auditUs": 60656,
+            "primaryUs": 17708,
+            "shadeUs": 46516
+          },
+          "cScalar": {
+            "cleanUs": 8858,
+            "auditUs": 11440,
+            "primaryUs": 4592,
+            "shadeUs": 7640
+          },
+          "cPIE": {
+            "cleanUs": 7702,
+            "auditUs": 10311,
+            "primaryUs": 3459,
+            "shadeUs": 7645
+          },
+          "cleanGuestOverC": 6.2687
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 56378,
+            "auditUs": 61496,
+            "primaryUs": 17724,
+            "shadeUs": 47295
+          },
+          "cScalar": {
+            "cleanUs": 9149,
+            "auditUs": 11674,
+            "primaryUs": 4584,
+            "shadeUs": 7852
+          },
+          "cPIE": {
+            "cleanUs": 7973,
+            "auditUs": 10546,
+            "primaryUs": 3454,
+            "shadeUs": 7853
+          },
+          "cleanGuestOverC": 6.1622
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 57674,
+            "auditUs": 62847,
+            "primaryUs": 17811,
+            "shadeUs": 48560
+          },
+          "cScalar": {
+            "cleanUs": 9521,
+            "auditUs": 12055,
+            "primaryUs": 4596,
+            "shadeUs": 8265
+          },
+          "cPIE": {
+            "cleanUs": 8350,
+            "auditUs": 10926,
+            "primaryUs": 3468,
+            "shadeUs": 8244
+          },
+          "cleanGuestOverC": 6.0559
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 59063,
+            "auditUs": 64229,
+            "primaryUs": 17875,
+            "shadeUs": 49848
+          },
+          "cScalar": {
+            "cleanUs": 9909,
+            "auditUs": 12419,
+            "primaryUs": 4607,
+            "shadeUs": 8578
+          },
+          "cPIE": {
+            "cleanUs": 8719,
+            "auditUs": 11284,
+            "primaryUs": 3469,
+            "shadeUs": 8549
+          },
+          "cleanGuestOverC": 5.9605
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 55308,
+            "auditUs": 60455,
+            "primaryUs": 17735,
+            "shadeUs": 46270
+          },
+          "cScalar": {
+            "cleanUs": 8872,
+            "auditUs": 11475,
+            "primaryUs": 4585,
+            "shadeUs": 7699
+          },
+          "cPIE": {
+            "cleanUs": 7702,
+            "auditUs": 10311,
+            "primaryUs": 3454,
+            "shadeUs": 7666
+          },
+          "cleanGuestOverC": 6.234
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 57253,
+            "auditUs": 62405,
+            "primaryUs": 17806,
+            "shadeUs": 48151
+          },
+          "cScalar": {
+            "cleanUs": 9480,
+            "auditUs": 12048,
+            "primaryUs": 4600,
+            "shadeUs": 8216
+          },
+          "cPIE": {
+            "cleanUs": 8309,
+            "auditUs": 10908,
+            "primaryUs": 3464,
+            "shadeUs": 8180
+          },
+          "cleanGuestOverC": 6.04
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 56796,
+            "auditUs": 61979,
+            "primaryUs": 17843,
+            "shadeUs": 47672
+          },
+          "cScalar": {
+            "cleanUs": 9470,
+            "auditUs": 11767,
+            "primaryUs": 4312,
+            "shadeUs": 8174
+          },
+          "cPIE": {
+            "cleanUs": 8269,
+            "auditUs": 10635,
+            "primaryUs": 3180,
+            "shadeUs": 8154
+          },
+          "cleanGuestOverC": 5.9983
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 56761,
+            "auditUs": 61898,
+            "primaryUs": 17750,
+            "shadeUs": 47724
+          },
+          "cScalar": {
+            "cleanUs": 9155,
+            "auditUs": 11736,
+            "primaryUs": 4588,
+            "shadeUs": 7944
+          },
+          "cPIE": {
+            "cleanUs": 7997,
+            "auditUs": 10608,
+            "primaryUs": 3454,
+            "shadeUs": 7909
+          },
+          "cleanGuestOverC": 6.2015
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 58449,
+            "auditUs": 63634,
+            "primaryUs": 17869,
+            "shadeUs": 49273
+          },
+          "cScalar": {
+            "cleanUs": 9725,
+            "auditUs": 12231,
+            "primaryUs": 4609,
+            "shadeUs": 8411
+          },
+          "cPIE": {
+            "cleanUs": 8548,
+            "auditUs": 11110,
+            "primaryUs": 3473,
+            "shadeUs": 8381
+          },
+          "cleanGuestOverC": 6.0122
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 56683,
+            "auditUs": 61845,
+            "primaryUs": 17766,
+            "shadeUs": 47651
+          },
+          "cScalar": {
+            "cleanUs": 9294,
+            "auditUs": 11896,
+            "primaryUs": 4592,
+            "shadeUs": 8076
+          },
+          "cPIE": {
+            "cleanUs": 8099,
+            "auditUs": 10743,
+            "primaryUs": 3459,
+            "shadeUs": 8035
+          },
+          "cleanGuestOverC": 6.0989
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 55545,
+            "auditUs": 60707,
+            "primaryUs": 17834,
+            "shadeUs": 46416
+          },
+          "cScalar": {
+            "cleanUs": 9071,
+            "auditUs": 11345,
+            "primaryUs": 4312,
+            "shadeUs": 7797
+          },
+          "cPIE": {
+            "cleanUs": 7888,
+            "auditUs": 10225,
+            "primaryUs": 3191,
+            "shadeUs": 7790
+          },
+          "cleanGuestOverC": 6.1231
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 55888,
+            "auditUs": 61643,
+            "primaryUs": 18248,
+            "shadeUs": 46975
+          },
+          "cScalar": {
+            "cleanUs": 9248,
+            "auditUs": 12333,
+            "primaryUs": 5003,
+            "shadeUs": 8167
+          },
+          "cPIE": {
+            "cleanUs": 8060,
+            "auditUs": 11190,
+            "primaryUs": 3871,
+            "shadeUs": 8139
+          },
+          "cleanGuestOverC": 6.0433
+        }
+      }
+    },
+    "1": {
+      "N": 36,
+      "medianCompilerUs": 433356,
+      "maxTrackedJSBytes": 646540,
+      "medianAll": {
+        "cleanUs": 53949.5,
+        "auditUs": 59091.5,
+        "primaryUs": 17790.0,
+        "shadeUs": 44709.5
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 54948,
+          "auditUs": 60055,
+          "primaryUs": 17791,
+          "shadeUs": 45594
+        },
+        "cScalar": {
+          "cleanUs": 9503,
+          "auditUs": 12084,
+          "primaryUs": 4596,
+          "shadeUs": 8238
+        },
+        "cPIE": {
+          "cleanUs": 8338,
+          "auditUs": 10918,
+          "primaryUs": 3471,
+          "shadeUs": 8207
+        },
+        "cleanGuestOverC": 5.7822
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 52911,
+            "auditUs": 58066,
+            "primaryUs": 17688,
+            "shadeUs": 43677
+          },
+          "cScalar": {
+            "cleanUs": 8856,
+            "auditUs": 11509,
+            "primaryUs": 4583,
+            "shadeUs": 7685
+          },
+          "cPIE": {
+            "cleanUs": 7680,
+            "auditUs": 10345,
+            "primaryUs": 3448,
+            "shadeUs": 7649
+          },
+          "cleanGuestOverC": 5.977
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 53616,
+            "auditUs": 58755,
+            "primaryUs": 17714,
+            "shadeUs": 44344
+          },
+          "cScalar": {
+            "cleanUs": 9099,
+            "auditUs": 11735,
+            "primaryUs": 4588,
+            "shadeUs": 7856
+          },
+          "cPIE": {
+            "cleanUs": 7971,
+            "auditUs": 10632,
+            "primaryUs": 3455,
+            "shadeUs": 7833
+          },
+          "cleanGuestOverC": 5.8925
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 54948,
+            "auditUs": 60055,
+            "primaryUs": 17791,
+            "shadeUs": 45594
+          },
+          "cScalar": {
+            "cleanUs": 9503,
+            "auditUs": 12084,
+            "primaryUs": 4596,
+            "shadeUs": 8238
+          },
+          "cPIE": {
+            "cleanUs": 8338,
+            "auditUs": 10918,
+            "primaryUs": 3471,
+            "shadeUs": 8207
+          },
+          "cleanGuestOverC": 5.7822
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 56265,
+            "auditUs": 61381,
+            "primaryUs": 17860,
+            "shadeUs": 46905
+          },
+          "cScalar": {
+            "cleanUs": 9917,
+            "auditUs": 12413,
+            "primaryUs": 4608,
+            "shadeUs": 8513
+          },
+          "cPIE": {
+            "cleanUs": 8728,
+            "auditUs": 11261,
+            "primaryUs": 3475,
+            "shadeUs": 8476
+          },
+          "cleanGuestOverC": 5.6736
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 52675,
+            "auditUs": 57814,
+            "primaryUs": 17725,
+            "shadeUs": 43430
+          },
+          "cScalar": {
+            "cleanUs": 8867,
+            "auditUs": 11459,
+            "primaryUs": 4585,
+            "shadeUs": 7664
+          },
+          "cPIE": {
+            "cleanUs": 7694,
+            "auditUs": 10325,
+            "primaryUs": 3456,
+            "shadeUs": 7657
+          },
+          "cleanGuestOverC": 5.9419
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 54571,
+            "auditUs": 59670,
+            "primaryUs": 17789,
+            "shadeUs": 45236
+          },
+          "cScalar": {
+            "cleanUs": 9465,
+            "auditUs": 12025,
+            "primaryUs": 4594,
+            "shadeUs": 8197
+          },
+          "cPIE": {
+            "cleanUs": 8279,
+            "auditUs": 10906,
+            "primaryUs": 3463,
+            "shadeUs": 8167
+          },
+          "cleanGuestOverC": 5.7634
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 54192,
+            "auditUs": 59448,
+            "primaryUs": 17825,
+            "shadeUs": 44856
+          },
+          "cScalar": {
+            "cleanUs": 9467,
+            "auditUs": 11769,
+            "primaryUs": 4305,
+            "shadeUs": 8199
+          },
+          "cPIE": {
+            "cleanUs": 8282,
+            "auditUs": 10636,
+            "primaryUs": 3175,
+            "shadeUs": 8160
+          },
+          "cleanGuestOverC": 5.7235
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 53988,
+            "auditUs": 59138,
+            "primaryUs": 17733,
+            "shadeUs": 44737
+          },
+          "cScalar": {
+            "cleanUs": 9152,
+            "auditUs": 11736,
+            "primaryUs": 4590,
+            "shadeUs": 7921
+          },
+          "cPIE": {
+            "cleanUs": 7999,
+            "auditUs": 10604,
+            "primaryUs": 3456,
+            "shadeUs": 7889
+          },
+          "cleanGuestOverC": 5.896
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 55726,
+            "auditUs": 60841,
+            "primaryUs": 17857,
+            "shadeUs": 46349
+          },
+          "cScalar": {
+            "cleanUs": 9714,
+            "auditUs": 12205,
+            "primaryUs": 4608,
+            "shadeUs": 8345
+          },
+          "cPIE": {
+            "cleanUs": 8548,
+            "auditUs": 11088,
+            "primaryUs": 3479,
+            "shadeUs": 8344
+          },
+          "cleanGuestOverC": 5.7348
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 53924,
+            "auditUs": 59035,
+            "primaryUs": 17733,
+            "shadeUs": 44689
+          },
+          "cScalar": {
+            "cleanUs": 9263,
+            "auditUs": 11830,
+            "primaryUs": 4593,
+            "shadeUs": 8065
+          },
+          "cPIE": {
+            "cleanUs": 8099,
+            "auditUs": 10699,
+            "primaryUs": 3469,
+            "shadeUs": 8024
+          },
+          "cleanGuestOverC": 5.8208
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 52889,
+            "auditUs": 58087,
+            "primaryUs": 17824,
+            "shadeUs": 43599
+          },
+          "cScalar": {
+            "cleanUs": 9056,
+            "auditUs": 11384,
+            "primaryUs": 4302,
+            "shadeUs": 7831
+          },
+          "cPIE": {
+            "cleanUs": 7903,
+            "auditUs": 10235,
+            "primaryUs": 3167,
+            "shadeUs": 7793
+          },
+          "cleanGuestOverC": 5.838
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 53245,
+            "auditUs": 58975,
+            "primaryUs": 18223,
+            "shadeUs": 44070
+          },
+          "cScalar": {
+            "cleanUs": 9241,
+            "auditUs": 12310,
+            "primaryUs": 5009,
+            "shadeUs": 8160
+          },
+          "cPIE": {
+            "cleanUs": 8070,
+            "auditUs": 11188,
+            "primaryUs": 3876,
+            "shadeUs": 8124
+          },
+          "cleanGuestOverC": 5.7618
+        }
+      }
+    },
+    "2": {
+      "N": 36,
+      "medianCompilerUs": 432319,
+      "maxTrackedJSBytes": 647332,
+      "medianAll": {
+        "cleanUs": 49455.0,
+        "auditUs": 54608.0,
+        "primaryUs": 10515.5,
+        "shadeUs": 47665.5
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 50410,
+          "auditUs": 55550,
+          "primaryUs": 10510,
+          "shadeUs": 48529
+        },
+        "cScalar": {
+          "cleanUs": 9522,
+          "auditUs": 12065,
+          "primaryUs": 4596,
+          "shadeUs": 8229
+        },
+        "cPIE": {
+          "cleanUs": 8343,
+          "auditUs": 10921,
+          "primaryUs": 3463,
+          "shadeUs": 8208
+        },
+        "cleanGuestOverC": 5.2942
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 48248,
+            "auditUs": 53410,
+            "primaryUs": 10414,
+            "shadeUs": 46511
+          },
+          "cScalar": {
+            "cleanUs": 8851,
+            "auditUs": 11465,
+            "primaryUs": 4583,
+            "shadeUs": 7694
+          },
+          "cPIE": {
+            "cleanUs": 7696,
+            "auditUs": 10313,
+            "primaryUs": 3447,
+            "shadeUs": 7673
+          },
+          "cleanGuestOverC": 5.4506
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 49092,
+            "auditUs": 54212,
+            "primaryUs": 10453,
+            "shadeUs": 47299
+          },
+          "cScalar": {
+            "cleanUs": 9132,
+            "auditUs": 11688,
+            "primaryUs": 4597,
+            "shadeUs": 7870
+          },
+          "cPIE": {
+            "cleanUs": 7957,
+            "auditUs": 10572,
+            "primaryUs": 3471,
+            "shadeUs": 7839
+          },
+          "cleanGuestOverC": 5.3758
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 50410,
+            "auditUs": 55550,
+            "primaryUs": 10510,
+            "shadeUs": 48529
+          },
+          "cScalar": {
+            "cleanUs": 9522,
+            "auditUs": 12065,
+            "primaryUs": 4596,
+            "shadeUs": 8229
+          },
+          "cPIE": {
+            "cleanUs": 8343,
+            "auditUs": 10921,
+            "primaryUs": 3463,
+            "shadeUs": 8208
+          },
+          "cleanGuestOverC": 5.2942
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 51783,
+            "auditUs": 56904,
+            "primaryUs": 10591,
+            "shadeUs": 49813
+          },
+          "cScalar": {
+            "cleanUs": 9903,
+            "auditUs": 12392,
+            "primaryUs": 4608,
+            "shadeUs": 8515
+          },
+          "cPIE": {
+            "cleanUs": 8731,
+            "auditUs": 11249,
+            "primaryUs": 3468,
+            "shadeUs": 8522
+          },
+          "cleanGuestOverC": 5.229
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 48017,
+            "auditUs": 53160,
+            "primaryUs": 10468,
+            "shadeUs": 46273
+          },
+          "cScalar": {
+            "cleanUs": 8868,
+            "auditUs": 11442,
+            "primaryUs": 4591,
+            "shadeUs": 7687
+          },
+          "cPIE": {
+            "cleanUs": 7690,
+            "auditUs": 10316,
+            "primaryUs": 3469,
+            "shadeUs": 7649
+          },
+          "cleanGuestOverC": 5.4146
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 49964,
+            "auditUs": 55112,
+            "primaryUs": 10522,
+            "shadeUs": 48121
+          },
+          "cScalar": {
+            "cleanUs": 9469,
+            "auditUs": 12003,
+            "primaryUs": 4598,
+            "shadeUs": 8148
+          },
+          "cPIE": {
+            "cleanUs": 8299,
+            "auditUs": 10884,
+            "primaryUs": 3477,
+            "shadeUs": 8135
+          },
+          "cleanGuestOverC": 5.2766
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 49546,
+            "auditUs": 54723,
+            "primaryUs": 10554,
+            "shadeUs": 47709
+          },
+          "cScalar": {
+            "cleanUs": 9463,
+            "auditUs": 11755,
+            "primaryUs": 4303,
+            "shadeUs": 8209
+          },
+          "cPIE": {
+            "cleanUs": 8282,
+            "auditUs": 10588,
+            "primaryUs": 3182,
+            "shadeUs": 8169
+          },
+          "cleanGuestOverC": 5.2375
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 49486,
+            "auditUs": 54645,
+            "primaryUs": 10466,
+            "shadeUs": 47704
+          },
+          "cScalar": {
+            "cleanUs": 9172,
+            "auditUs": 11753,
+            "primaryUs": 4592,
+            "shadeUs": 7916
+          },
+          "cPIE": {
+            "cleanUs": 8010,
+            "auditUs": 10598,
+            "primaryUs": 3454,
+            "shadeUs": 7916
+          },
+          "cleanGuestOverC": 5.3947
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 51194,
+            "auditUs": 56302,
+            "primaryUs": 10582,
+            "shadeUs": 49245
+          },
+          "cScalar": {
+            "cleanUs": 9715,
+            "auditUs": 12211,
+            "primaryUs": 4606,
+            "shadeUs": 8377
+          },
+          "cPIE": {
+            "cleanUs": 8551,
+            "auditUs": 11088,
+            "primaryUs": 3471,
+            "shadeUs": 8378
+          },
+          "cleanGuestOverC": 5.2696
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 49420,
+            "auditUs": 54598,
+            "primaryUs": 10477,
+            "shadeUs": 47651
+          },
+          "cScalar": {
+            "cleanUs": 9274,
+            "auditUs": 11871,
+            "primaryUs": 4592,
+            "shadeUs": 8072
+          },
+          "cPIE": {
+            "cleanUs": 8127,
+            "auditUs": 10750,
+            "primaryUs": 3458,
+            "shadeUs": 8034
+          },
+          "cleanGuestOverC": 5.3289
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 48259,
+            "auditUs": 53445,
+            "primaryUs": 10572,
+            "shadeUs": 46410
+          },
+          "cScalar": {
+            "cleanUs": 9077,
+            "auditUs": 11350,
+            "primaryUs": 4308,
+            "shadeUs": 7816
+          },
+          "cPIE": {
+            "cleanUs": 7894,
+            "auditUs": 10227,
+            "primaryUs": 3180,
+            "shadeUs": 7787
+          },
+          "cleanGuestOverC": 5.3149
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 48615,
+            "auditUs": 54366,
+            "primaryUs": 10961,
+            "shadeUs": 46981
+          },
+          "cScalar": {
+            "cleanUs": 9232,
+            "auditUs": 12329,
+            "primaryUs": 5010,
+            "shadeUs": 8163
+          },
+          "cPIE": {
+            "cleanUs": 8066,
+            "auditUs": 11187,
+            "primaryUs": 3876,
+            "shadeUs": 8143
+          },
+          "cleanGuestOverC": 5.2656
+        }
+      }
+    },
+    "3": {
+      "N": 36,
+      "medianCompilerUs": 432320,
+      "maxTrackedJSBytes": 648128,
+      "medianAll": {
+        "cleanUs": 46658.5,
+        "auditUs": 51825.5,
+        "primaryUs": 10514.0,
+        "shadeUs": 44696.0
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 47649,
+          "auditUs": 52829,
+          "primaryUs": 10513,
+          "shadeUs": 45583
+        },
+        "cScalar": {
+          "cleanUs": 9535,
+          "auditUs": 12119,
+          "primaryUs": 4594,
+          "shadeUs": 8205
+        },
+        "cPIE": {
+          "cleanUs": 8333,
+          "auditUs": 10947,
+          "primaryUs": 3465,
+          "shadeUs": 8177
+        },
+        "cleanGuestOverC": 4.9971
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 45626,
+            "auditUs": 50764,
+            "primaryUs": 10398,
+            "shadeUs": 43656
+          },
+          "cScalar": {
+            "cleanUs": 8845,
+            "auditUs": 11463,
+            "primaryUs": 4582,
+            "shadeUs": 7683
+          },
+          "cPIE": {
+            "cleanUs": 7687,
+            "auditUs": 10325,
+            "primaryUs": 3446,
+            "shadeUs": 7643
+          },
+          "cleanGuestOverC": 5.1575
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 46334,
+            "auditUs": 51529,
+            "primaryUs": 10426,
+            "shadeUs": 44348
+          },
+          "cScalar": {
+            "cleanUs": 9126,
+            "auditUs": 11738,
+            "primaryUs": 4583,
+            "shadeUs": 7893
+          },
+          "cPIE": {
+            "cleanUs": 7957,
+            "auditUs": 10612,
+            "primaryUs": 3456,
+            "shadeUs": 7877
+          },
+          "cleanGuestOverC": 5.0771
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 47649,
+            "auditUs": 52829,
+            "primaryUs": 10513,
+            "shadeUs": 45583
+          },
+          "cScalar": {
+            "cleanUs": 9535,
+            "auditUs": 12119,
+            "primaryUs": 4594,
+            "shadeUs": 8205
+          },
+          "cPIE": {
+            "cleanUs": 8333,
+            "auditUs": 10947,
+            "primaryUs": 3465,
+            "shadeUs": 8177
+          },
+          "cleanGuestOverC": 4.9971
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 48978,
+            "auditUs": 54107,
+            "primaryUs": 10586,
+            "shadeUs": 46897
+          },
+          "cScalar": {
+            "cleanUs": 9896,
+            "auditUs": 12379,
+            "primaryUs": 4608,
+            "shadeUs": 8551
+          },
+          "cPIE": {
+            "cleanUs": 8719,
+            "auditUs": 11260,
+            "primaryUs": 3478,
+            "shadeUs": 8541
+          },
+          "cleanGuestOverC": 4.9473
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 45377,
+            "auditUs": 50524,
+            "primaryUs": 10444,
+            "shadeUs": 43429
+          },
+          "cScalar": {
+            "cleanUs": 8856,
+            "auditUs": 11477,
+            "primaryUs": 4585,
+            "shadeUs": 7661
+          },
+          "cPIE": {
+            "cleanUs": 7688,
+            "auditUs": 10350,
+            "primaryUs": 3458,
+            "shadeUs": 7658
+          },
+          "cleanGuestOverC": 5.1239
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 47262,
+            "auditUs": 52425,
+            "primaryUs": 10517,
+            "shadeUs": 45215
+          },
+          "cScalar": {
+            "cleanUs": 9452,
+            "auditUs": 12038,
+            "primaryUs": 4597,
+            "shadeUs": 8172
+          },
+          "cPIE": {
+            "cleanUs": 8309,
+            "auditUs": 10866,
+            "primaryUs": 3477,
+            "shadeUs": 8173
+          },
+          "cleanGuestOverC": 5.0007
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 46898,
+            "auditUs": 52109,
+            "primaryUs": 10545,
+            "shadeUs": 44885
+          },
+          "cScalar": {
+            "cleanUs": 9454,
+            "auditUs": 11739,
+            "primaryUs": 4303,
+            "shadeUs": 8217
+          },
+          "cPIE": {
+            "cleanUs": 8295,
+            "auditUs": 10592,
+            "primaryUs": 3178,
+            "shadeUs": 8178
+          },
+          "cleanGuestOverC": 4.9613
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 46692,
+            "auditUs": 51896,
+            "primaryUs": 10455,
+            "shadeUs": 44738
+          },
+          "cScalar": {
+            "cleanUs": 9147,
+            "auditUs": 11787,
+            "primaryUs": 4586,
+            "shadeUs": 7903
+          },
+          "cPIE": {
+            "cleanUs": 7983,
+            "auditUs": 10635,
+            "primaryUs": 3461,
+            "shadeUs": 7903
+          },
+          "cleanGuestOverC": 5.1035
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 48445,
+            "auditUs": 53592,
+            "primaryUs": 10574,
+            "shadeUs": 46326
+          },
+          "cScalar": {
+            "cleanUs": 9711,
+            "auditUs": 12220,
+            "primaryUs": 4599,
+            "shadeUs": 8369
+          },
+          "cPIE": {
+            "cleanUs": 8544,
+            "auditUs": 11102,
+            "primaryUs": 3466,
+            "shadeUs": 8338
+          },
+          "cleanGuestOverC": 4.9869
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 46615,
+            "auditUs": 51779,
+            "primaryUs": 10460,
+            "shadeUs": 44641
+          },
+          "cScalar": {
+            "cleanUs": 9274,
+            "auditUs": 11892,
+            "primaryUs": 4588,
+            "shadeUs": 8034
+          },
+          "cPIE": {
+            "cleanUs": 8107,
+            "auditUs": 10740,
+            "primaryUs": 3457,
+            "shadeUs": 8002
+          },
+          "cleanGuestOverC": 5.0264
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 45599,
+            "auditUs": 50808,
+            "primaryUs": 10545,
+            "shadeUs": 43611
+          },
+          "cScalar": {
+            "cleanUs": 9059,
+            "auditUs": 11344,
+            "primaryUs": 4304,
+            "shadeUs": 7838
+          },
+          "cPIE": {
+            "cleanUs": 7896,
+            "auditUs": 10203,
+            "primaryUs": 3170,
+            "shadeUs": 7816
+          },
+          "cleanGuestOverC": 5.0309
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 45943,
+            "auditUs": 51688,
+            "primaryUs": 10941,
+            "shadeUs": 44085
+          },
+          "cScalar": {
+            "cleanUs": 9231,
+            "auditUs": 12331,
+            "primaryUs": 5010,
+            "shadeUs": 8165
+          },
+          "cPIE": {
+            "cleanUs": 8062,
+            "auditUs": 11189,
+            "primaryUs": 3878,
+            "shadeUs": 8130
+          },
+          "cleanGuestOverC": 4.9775
+        }
+      }
+    },
+    "4": {
+      "N": 36,
+      "medianCompilerUs": 443191,
+      "maxTrackedJSBytes": 653968,
+      "medianAll": {
+        "cleanUs": 45621.0,
+        "auditUs": 50816.0,
+        "primaryUs": 6671.5,
+        "shadeUs": 47679.5
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 46535,
+          "auditUs": 51726,
+          "primaryUs": 6661,
+          "shadeUs": 48540
+        },
+        "cScalar": {
+          "cleanUs": 9507,
+          "auditUs": 12129,
+          "primaryUs": 4603,
+          "shadeUs": 8226
+        },
+        "cPIE": {
+          "cleanUs": 8346,
+          "auditUs": 10951,
+          "primaryUs": 3463,
+          "shadeUs": 8193
+        },
+        "cleanGuestOverC": 4.8943
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 44507,
+            "auditUs": 49655,
+            "primaryUs": 6659,
+            "shadeUs": 46556
+          },
+          "cScalar": {
+            "cleanUs": 8843,
+            "auditUs": 11497,
+            "primaryUs": 4581,
+            "shadeUs": 7716
+          },
+          "cPIE": {
+            "cleanUs": 7681,
+            "auditUs": 10317,
+            "primaryUs": 3452,
+            "shadeUs": 7696
+          },
+          "cleanGuestOverC": 5.0285
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 45307,
+            "auditUs": 50480,
+            "primaryUs": 6676,
+            "shadeUs": 47306
+          },
+          "cScalar": {
+            "cleanUs": 9136,
+            "auditUs": 11736,
+            "primaryUs": 4585,
+            "shadeUs": 7949
+          },
+          "cPIE": {
+            "cleanUs": 7965,
+            "auditUs": 10571,
+            "primaryUs": 3456,
+            "shadeUs": 7918
+          },
+          "cleanGuestOverC": 4.9577
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 46535,
+            "auditUs": 51726,
+            "primaryUs": 6661,
+            "shadeUs": 48540
+          },
+          "cScalar": {
+            "cleanUs": 9507,
+            "auditUs": 12129,
+            "primaryUs": 4603,
+            "shadeUs": 8226
+          },
+          "cPIE": {
+            "cleanUs": 8346,
+            "auditUs": 10951,
+            "primaryUs": 3463,
+            "shadeUs": 8193
+          },
+          "cleanGuestOverC": 4.8943
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 47875,
+            "auditUs": 53025,
+            "primaryUs": 6679,
+            "shadeUs": 49878
+          },
+          "cScalar": {
+            "cleanUs": 9884,
+            "auditUs": 12460,
+            "primaryUs": 4605,
+            "shadeUs": 8596
+          },
+          "cPIE": {
+            "cleanUs": 8721,
+            "auditUs": 11288,
+            "primaryUs": 3468,
+            "shadeUs": 8557
+          },
+          "cleanGuestOverC": 4.8437
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 44220,
+            "auditUs": 49383,
+            "primaryUs": 6672,
+            "shadeUs": 46282
+          },
+          "cScalar": {
+            "cleanUs": 8862,
+            "auditUs": 11478,
+            "primaryUs": 4587,
+            "shadeUs": 7701
+          },
+          "cPIE": {
+            "cleanUs": 7684,
+            "auditUs": 10302,
+            "primaryUs": 3459,
+            "shadeUs": 7675
+          },
+          "cleanGuestOverC": 4.9898
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 46120,
+            "auditUs": 51285,
+            "primaryUs": 6674,
+            "shadeUs": 48151
+          },
+          "cScalar": {
+            "cleanUs": 9470,
+            "auditUs": 12048,
+            "primaryUs": 4596,
+            "shadeUs": 8185
+          },
+          "cPIE": {
+            "cleanUs": 8305,
+            "auditUs": 10895,
+            "primaryUs": 3475,
+            "shadeUs": 8172
+          },
+          "cleanGuestOverC": 4.8725
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 45616,
+            "auditUs": 50841,
+            "primaryUs": 6671,
+            "shadeUs": 47712
+          },
+          "cScalar": {
+            "cleanUs": 9445,
+            "auditUs": 11748,
+            "primaryUs": 4309,
+            "shadeUs": 8216
+          },
+          "cPIE": {
+            "cleanUs": 8278,
+            "auditUs": 10632,
+            "primaryUs": 3181,
+            "shadeUs": 8186
+          },
+          "cleanGuestOverC": 4.8277
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 45699,
+            "auditUs": 50841,
+            "primaryUs": 6671,
+            "shadeUs": 47697
+          },
+          "cScalar": {
+            "cleanUs": 9165,
+            "auditUs": 11751,
+            "primaryUs": 4590,
+            "shadeUs": 7949
+          },
+          "cPIE": {
+            "cleanUs": 8002,
+            "auditUs": 10592,
+            "primaryUs": 3455,
+            "shadeUs": 7916
+          },
+          "cleanGuestOverC": 4.9863
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 47273,
+            "auditUs": 52455,
+            "primaryUs": 6670,
+            "shadeUs": 49256
+          },
+          "cScalar": {
+            "cleanUs": 9715,
+            "auditUs": 12239,
+            "primaryUs": 4604,
+            "shadeUs": 8417
+          },
+          "cPIE": {
+            "cleanUs": 8569,
+            "auditUs": 11101,
+            "primaryUs": 3470,
+            "shadeUs": 8393
+          },
+          "cleanGuestOverC": 4.8678
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 45626,
+            "auditUs": 50800,
+            "primaryUs": 6669,
+            "shadeUs": 47646
+          },
+          "cScalar": {
+            "cleanUs": 9279,
+            "auditUs": 11883,
+            "primaryUs": 4589,
+            "shadeUs": 8078
+          },
+          "cPIE": {
+            "cleanUs": 8122,
+            "auditUs": 10722,
+            "primaryUs": 3459,
+            "shadeUs": 8057
+          },
+          "cleanGuestOverC": 4.919
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 44353,
+            "auditUs": 49617,
+            "primaryUs": 6671,
+            "shadeUs": 46421
+          },
+          "cScalar": {
+            "cleanUs": 9072,
+            "auditUs": 11371,
+            "primaryUs": 4304,
+            "shadeUs": 7840
+          },
+          "cPIE": {
+            "cleanUs": 7911,
+            "auditUs": 10207,
+            "primaryUs": 3179,
+            "shadeUs": 7810
+          },
+          "cleanGuestOverC": 4.8931
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 44795,
+            "auditUs": 50549,
+            "primaryUs": 7143,
+            "shadeUs": 46981
+          },
+          "cScalar": {
+            "cleanUs": 9228,
+            "auditUs": 12351,
+            "primaryUs": 5004,
+            "shadeUs": 8167
+          },
+          "cPIE": {
+            "cleanUs": 8072,
+            "auditUs": 11190,
+            "primaryUs": 3878,
+            "shadeUs": 8131
+          },
+          "cleanGuestOverC": 4.8542
+        }
+      }
+    },
+    "5": {
+      "N": 36,
+      "medianCompilerUs": 444272,
+      "maxTrackedJSBytes": 653888,
+      "medianAll": {
+        "cleanUs": 45625.0,
+        "auditUs": 50821.0,
+        "primaryUs": 6683.5,
+        "shadeUs": 47671.0
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 46560,
+          "auditUs": 51739,
+          "primaryUs": 6690,
+          "shadeUs": 48527
+        },
+        "cScalar": {
+          "cleanUs": 9517,
+          "auditUs": 12084,
+          "primaryUs": 4596,
+          "shadeUs": 8250
+        },
+        "cPIE": {
+          "cleanUs": 8347,
+          "auditUs": 10929,
+          "primaryUs": 3465,
+          "shadeUs": 8232
+        },
+        "cleanGuestOverC": 4.8928
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 44522,
+            "auditUs": 49716,
+            "primaryUs": 6685,
+            "shadeUs": 46543
+          },
+          "cScalar": {
+            "cleanUs": 8846,
+            "auditUs": 11506,
+            "primaryUs": 4582,
+            "shadeUs": 7705
+          },
+          "cPIE": {
+            "cleanUs": 7681,
+            "auditUs": 10334,
+            "primaryUs": 3449,
+            "shadeUs": 7682
+          },
+          "cleanGuestOverC": 5.033
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 45319,
+            "auditUs": 50498,
+            "primaryUs": 6680,
+            "shadeUs": 47312
+          },
+          "cScalar": {
+            "cleanUs": 9134,
+            "auditUs": 11772,
+            "primaryUs": 4595,
+            "shadeUs": 7939
+          },
+          "cPIE": {
+            "cleanUs": 7945,
+            "auditUs": 10603,
+            "primaryUs": 3465,
+            "shadeUs": 7911
+          },
+          "cleanGuestOverC": 4.9593
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 46560,
+            "auditUs": 51739,
+            "primaryUs": 6690,
+            "shadeUs": 48527
+          },
+          "cScalar": {
+            "cleanUs": 9517,
+            "auditUs": 12084,
+            "primaryUs": 4596,
+            "shadeUs": 8250
+          },
+          "cPIE": {
+            "cleanUs": 8347,
+            "auditUs": 10929,
+            "primaryUs": 3465,
+            "shadeUs": 8232
+          },
+          "cleanGuestOverC": 4.8928
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 47878,
+            "auditUs": 53075,
+            "primaryUs": 6676,
+            "shadeUs": 49850
+          },
+          "cScalar": {
+            "cleanUs": 9906,
+            "auditUs": 12450,
+            "primaryUs": 4608,
+            "shadeUs": 8591
+          },
+          "cPIE": {
+            "cleanUs": 8743,
+            "auditUs": 11283,
+            "primaryUs": 3475,
+            "shadeUs": 8573
+          },
+          "cleanGuestOverC": 4.8331
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 44244,
+            "auditUs": 49371,
+            "primaryUs": 6687,
+            "shadeUs": 46274
+          },
+          "cScalar": {
+            "cleanUs": 8870,
+            "auditUs": 11518,
+            "primaryUs": 4588,
+            "shadeUs": 7692
+          },
+          "cPIE": {
+            "cleanUs": 7688,
+            "auditUs": 10343,
+            "primaryUs": 3453,
+            "shadeUs": 7672
+          },
+          "cleanGuestOverC": 4.9888
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 46128,
+            "auditUs": 51282,
+            "primaryUs": 6680,
+            "shadeUs": 48136
+          },
+          "cScalar": {
+            "cleanUs": 9486,
+            "auditUs": 12049,
+            "primaryUs": 4598,
+            "shadeUs": 8216
+          },
+          "cPIE": {
+            "cleanUs": 8284,
+            "auditUs": 10884,
+            "primaryUs": 3464,
+            "shadeUs": 8189
+          },
+          "cleanGuestOverC": 4.8629
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 45624,
+            "auditUs": 50856,
+            "primaryUs": 6702,
+            "shadeUs": 47703
+          },
+          "cScalar": {
+            "cleanUs": 9453,
+            "auditUs": 11792,
+            "primaryUs": 4311,
+            "shadeUs": 8202
+          },
+          "cPIE": {
+            "cleanUs": 8266,
+            "auditUs": 10624,
+            "primaryUs": 3184,
+            "shadeUs": 8159
+          },
+          "cleanGuestOverC": 4.8263
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 45694,
+            "auditUs": 50834,
+            "primaryUs": 6677,
+            "shadeUs": 47707
+          },
+          "cScalar": {
+            "cleanUs": 9171,
+            "auditUs": 11759,
+            "primaryUs": 4587,
+            "shadeUs": 7951
+          },
+          "cPIE": {
+            "cleanUs": 8016,
+            "auditUs": 10612,
+            "primaryUs": 3457,
+            "shadeUs": 7923
+          },
+          "cleanGuestOverC": 4.9844
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 47288,
+            "auditUs": 52440,
+            "primaryUs": 6675,
+            "shadeUs": 49267
+          },
+          "cScalar": {
+            "cleanUs": 9740,
+            "auditUs": 12231,
+            "primaryUs": 4604,
+            "shadeUs": 8410
+          },
+          "cPIE": {
+            "cleanUs": 8567,
+            "auditUs": 11074,
+            "primaryUs": 3469,
+            "shadeUs": 8386
+          },
+          "cleanGuestOverC": 4.855
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 45626,
+            "auditUs": 50807,
+            "primaryUs": 6679,
+            "shadeUs": 47634
+          },
+          "cScalar": {
+            "cleanUs": 9285,
+            "auditUs": 11920,
+            "primaryUs": 4588,
+            "shadeUs": 8069
+          },
+          "cPIE": {
+            "cleanUs": 8120,
+            "auditUs": 10774,
+            "primaryUs": 3467,
+            "shadeUs": 8047
+          },
+          "cleanGuestOverC": 4.9144
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 44365,
+            "auditUs": 49613,
+            "primaryUs": 6701,
+            "shadeUs": 46418
+          },
+          "cScalar": {
+            "cleanUs": 9074,
+            "auditUs": 11366,
+            "primaryUs": 4301,
+            "shadeUs": 7832
+          },
+          "cPIE": {
+            "cleanUs": 7900,
+            "auditUs": 10199,
+            "primaryUs": 3168,
+            "shadeUs": 7801
+          },
+          "cleanGuestOverC": 4.8892
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 44797,
+            "auditUs": 50557,
+            "primaryUs": 7143,
+            "shadeUs": 46976
+          },
+          "cScalar": {
+            "cleanUs": 9228,
+            "auditUs": 12343,
+            "primaryUs": 5003,
+            "shadeUs": 8165
+          },
+          "cPIE": {
+            "cleanUs": 8058,
+            "auditUs": 11191,
+            "primaryUs": 3878,
+            "shadeUs": 8135
+          },
+          "cleanGuestOverC": 4.8545
+        }
+      }
+    },
+    "6": {
+      "N": 36,
+      "medianCompilerUs": 467000,
+      "maxTrackedJSBytes": 676316,
+      "medianAll": {
+        "cleanUs": 32336.5,
+        "auditUs": 37813.5,
+        "primaryUs": 10507.5,
+        "shadeUs": 30392.0
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 33268,
+          "auditUs": 38431,
+          "primaryUs": 10508,
+          "shadeUs": 31250
+        },
+        "cScalar": {
+          "cleanUs": 9512,
+          "auditUs": 12095,
+          "primaryUs": 4594,
+          "shadeUs": 8237
+        },
+        "cPIE": {
+          "cleanUs": 8352,
+          "auditUs": 10922,
+          "primaryUs": 3466,
+          "shadeUs": 8216
+        },
+        "cleanGuestOverC": 3.4984
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 31200,
+            "auditUs": 36320,
+            "primaryUs": 10401,
+            "shadeUs": 29294
+          },
+          "cScalar": {
+            "cleanUs": 8805,
+            "auditUs": 11481,
+            "primaryUs": 4577,
+            "shadeUs": 7704
+          },
+          "cPIE": {
+            "cleanUs": 7674,
+            "auditUs": 10322,
+            "primaryUs": 3446,
+            "shadeUs": 7674
+          },
+          "cleanGuestOverC": 3.5434
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 31661,
+            "auditUs": 36781,
+            "primaryUs": 10436,
+            "shadeUs": 29704
+          },
+          "cScalar": {
+            "cleanUs": 9135,
+            "auditUs": 11739,
+            "primaryUs": 4591,
+            "shadeUs": 7927
+          },
+          "cPIE": {
+            "cleanUs": 7952,
+            "auditUs": 10580,
+            "primaryUs": 3458,
+            "shadeUs": 7899
+          },
+          "cleanGuestOverC": 3.4654
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 33268,
+            "auditUs": 38431,
+            "primaryUs": 10508,
+            "shadeUs": 31250
+          },
+          "cScalar": {
+            "cleanUs": 9512,
+            "auditUs": 12095,
+            "primaryUs": 4594,
+            "shadeUs": 8237
+          },
+          "cPIE": {
+            "cleanUs": 8352,
+            "auditUs": 10922,
+            "primaryUs": 3466,
+            "shadeUs": 8216
+          },
+          "cleanGuestOverC": 3.4984
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 34293,
+            "auditUs": 39453,
+            "primaryUs": 10581,
+            "shadeUs": 32208
+          },
+          "cScalar": {
+            "cleanUs": 9887,
+            "auditUs": 12428,
+            "primaryUs": 4605,
+            "shadeUs": 8579
+          },
+          "cPIE": {
+            "cleanUs": 8723,
+            "auditUs": 11244,
+            "primaryUs": 3466,
+            "shadeUs": 8555
+          },
+          "cleanGuestOverC": 3.4671
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 31422,
+            "auditUs": 36568,
+            "primaryUs": 10437,
+            "shadeUs": 29485
+          },
+          "cScalar": {
+            "cleanUs": 8841,
+            "auditUs": 11415,
+            "primaryUs": 4583,
+            "shadeUs": 7685
+          },
+          "cPIE": {
+            "cleanUs": 7688,
+            "auditUs": 10320,
+            "primaryUs": 3455,
+            "shadeUs": 7655
+          },
+          "cleanGuestOverC": 3.5553
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 33170,
+            "auditUs": 38333,
+            "primaryUs": 10507,
+            "shadeUs": 31139
+          },
+          "cScalar": {
+            "cleanUs": 9459,
+            "auditUs": 12034,
+            "primaryUs": 4593,
+            "shadeUs": 8195
+          },
+          "cPIE": {
+            "cleanUs": 8301,
+            "auditUs": 10885,
+            "primaryUs": 3463,
+            "shadeUs": 8176
+          },
+          "cleanGuestOverC": 3.5047
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 32750,
+            "auditUs": 37962,
+            "primaryUs": 10571,
+            "shadeUs": 30697
+          },
+          "cScalar": {
+            "cleanUs": 9447,
+            "auditUs": 11757,
+            "primaryUs": 4307,
+            "shadeUs": 8205
+          },
+          "cPIE": {
+            "cleanUs": 8285,
+            "auditUs": 10589,
+            "primaryUs": 3196,
+            "shadeUs": 8176
+          },
+          "cleanGuestOverC": 3.4667
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 31973,
+            "auditUs": 37081,
+            "primaryUs": 10449,
+            "shadeUs": 29997
+          },
+          "cScalar": {
+            "cleanUs": 9151,
+            "auditUs": 11750,
+            "primaryUs": 4588,
+            "shadeUs": 7933
+          },
+          "cPIE": {
+            "cleanUs": 7975,
+            "auditUs": 10576,
+            "primaryUs": 3465,
+            "shadeUs": 7910
+          },
+          "cleanGuestOverC": 3.4939
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 34103,
+            "auditUs": 39262,
+            "primaryUs": 10575,
+            "shadeUs": 32001
+          },
+          "cScalar": {
+            "cleanUs": 9731,
+            "auditUs": 12239,
+            "primaryUs": 4603,
+            "shadeUs": 8405
+          },
+          "cPIE": {
+            "cleanUs": 8560,
+            "auditUs": 11090,
+            "primaryUs": 3472,
+            "shadeUs": 8391
+          },
+          "cleanGuestOverC": 3.5046
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 32120,
+            "auditUs": 37246,
+            "primaryUs": 10451,
+            "shadeUs": 30150
+          },
+          "cScalar": {
+            "cleanUs": 9278,
+            "auditUs": 11892,
+            "primaryUs": 4587,
+            "shadeUs": 8069
+          },
+          "cPIE": {
+            "cleanUs": 8113,
+            "auditUs": 10729,
+            "primaryUs": 3454,
+            "shadeUs": 8037
+          },
+          "cleanGuestOverC": 3.4614
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 32562,
+            "auditUs": 37785,
+            "primaryUs": 10547,
+            "shadeUs": 30532
+          },
+          "cScalar": {
+            "cleanUs": 9074,
+            "auditUs": 11377,
+            "primaryUs": 4306,
+            "shadeUs": 7829
+          },
+          "cPIE": {
+            "cleanUs": 7896,
+            "auditUs": 10203,
+            "primaryUs": 3166,
+            "shadeUs": 7813
+          },
+          "cleanGuestOverC": 3.5916
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 32069,
+            "auditUs": 37814,
+            "primaryUs": 10952,
+            "shadeUs": 30255
+          },
+          "cScalar": {
+            "cleanUs": 9223,
+            "auditUs": 12354,
+            "primaryUs": 5003,
+            "shadeUs": 8169
+          },
+          "cPIE": {
+            "cleanUs": 8065,
+            "auditUs": 11191,
+            "primaryUs": 3869,
+            "shadeUs": 8145
+          },
+          "cleanGuestOverC": 3.4771
+        }
+      }
+    },
+    "7": {
+      "N": 36,
+      "medianCompilerUs": 464018,
+      "maxTrackedJSBytes": 677076,
+      "medianAll": {
+        "cleanUs": 29107.0,
+        "auditUs": 34572.5,
+        "primaryUs": 10519.0,
+        "shadeUs": 26974.5
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 29975,
+          "auditUs": 35145,
+          "primaryUs": 10517,
+          "shadeUs": 27755
+        },
+        "cScalar": {
+          "cleanUs": 9513,
+          "auditUs": 12084,
+          "primaryUs": 4596,
+          "shadeUs": 8225
+        },
+        "cPIE": {
+          "cleanUs": 8334,
+          "auditUs": 10930,
+          "primaryUs": 3479,
+          "shadeUs": 8187
+        },
+        "cleanGuestOverC": 3.151
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 27969,
+            "auditUs": 33155,
+            "primaryUs": 10414,
+            "shadeUs": 25874
+          },
+          "cScalar": {
+            "cleanUs": 8860,
+            "auditUs": 11519,
+            "primaryUs": 4581,
+            "shadeUs": 7727
+          },
+          "cPIE": {
+            "cleanUs": 7699,
+            "auditUs": 10322,
+            "primaryUs": 3464,
+            "shadeUs": 7688
+          },
+          "cleanGuestOverC": 3.1568
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 28338,
+            "auditUs": 33536,
+            "primaryUs": 10436,
+            "shadeUs": 26154
+          },
+          "cScalar": {
+            "cleanUs": 9142,
+            "auditUs": 11804,
+            "primaryUs": 4598,
+            "shadeUs": 7858
+          },
+          "cPIE": {
+            "cleanUs": 7958,
+            "auditUs": 10657,
+            "primaryUs": 3468,
+            "shadeUs": 7862
+          },
+          "cleanGuestOverC": 3.0998
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 29975,
+            "auditUs": 35145,
+            "primaryUs": 10517,
+            "shadeUs": 27755
+          },
+          "cScalar": {
+            "cleanUs": 9513,
+            "auditUs": 12084,
+            "primaryUs": 4596,
+            "shadeUs": 8225
+          },
+          "cPIE": {
+            "cleanUs": 8334,
+            "auditUs": 10930,
+            "primaryUs": 3479,
+            "shadeUs": 8187
+          },
+          "cleanGuestOverC": 3.151
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 31025,
+            "auditUs": 36166,
+            "primaryUs": 10574,
+            "shadeUs": 28707
+          },
+          "cScalar": {
+            "cleanUs": 9888,
+            "auditUs": 12416,
+            "primaryUs": 4602,
+            "shadeUs": 8549
+          },
+          "cPIE": {
+            "cleanUs": 8738,
+            "auditUs": 11294,
+            "primaryUs": 3471,
+            "shadeUs": 8517
+          },
+          "cleanGuestOverC": 3.1374
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 28235,
+            "auditUs": 33416,
+            "primaryUs": 10454,
+            "shadeUs": 26099
+          },
+          "cScalar": {
+            "cleanUs": 8868,
+            "auditUs": 11546,
+            "primaryUs": 4599,
+            "shadeUs": 7619
+          },
+          "cPIE": {
+            "cleanUs": 7693,
+            "auditUs": 10399,
+            "primaryUs": 3468,
+            "shadeUs": 7613
+          },
+          "cleanGuestOverC": 3.1839
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 29904,
+            "auditUs": 35063,
+            "primaryUs": 10521,
+            "shadeUs": 27703
+          },
+          "cScalar": {
+            "cleanUs": 9439,
+            "auditUs": 11995,
+            "primaryUs": 4596,
+            "shadeUs": 8213
+          },
+          "cPIE": {
+            "cleanUs": 8282,
+            "auditUs": 10915,
+            "primaryUs": 3467,
+            "shadeUs": 8183
+          },
+          "cleanGuestOverC": 3.1666
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 29582,
+            "auditUs": 34746,
+            "primaryUs": 10545,
+            "shadeUs": 27355
+          },
+          "cScalar": {
+            "cleanUs": 9440,
+            "auditUs": 11747,
+            "primaryUs": 4306,
+            "shadeUs": 8169
+          },
+          "cPIE": {
+            "cleanUs": 8268,
+            "auditUs": 10616,
+            "primaryUs": 3176,
+            "shadeUs": 8171
+          },
+          "cleanGuestOverC": 3.1337
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 28646,
+            "auditUs": 33840,
+            "primaryUs": 10464,
+            "shadeUs": 26468
+          },
+          "cScalar": {
+            "cleanUs": 9179,
+            "auditUs": 11807,
+            "primaryUs": 4597,
+            "shadeUs": 7873
+          },
+          "cPIE": {
+            "cleanUs": 7987,
+            "auditUs": 10683,
+            "primaryUs": 3468,
+            "shadeUs": 7838
+          },
+          "cleanGuestOverC": 3.1207
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 30844,
+            "auditUs": 36029,
+            "primaryUs": 10590,
+            "shadeUs": 28566
+          },
+          "cScalar": {
+            "cleanUs": 9721,
+            "auditUs": 12267,
+            "primaryUs": 4604,
+            "shadeUs": 8407
+          },
+          "cPIE": {
+            "cleanUs": 8539,
+            "auditUs": 11112,
+            "primaryUs": 3470,
+            "shadeUs": 8381
+          },
+          "cleanGuestOverC": 3.1725
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 28792,
+            "auditUs": 33981,
+            "primaryUs": 10464,
+            "shadeUs": 26601
+          },
+          "cScalar": {
+            "cleanUs": 9293,
+            "auditUs": 11938,
+            "primaryUs": 4597,
+            "shadeUs": 8004
+          },
+          "cPIE": {
+            "cleanUs": 8121,
+            "auditUs": 10806,
+            "primaryUs": 3467,
+            "shadeUs": 8004
+          },
+          "cleanGuestOverC": 3.0986
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 29395,
+            "auditUs": 34614,
+            "primaryUs": 10554,
+            "shadeUs": 27202
+          },
+          "cScalar": {
+            "cleanUs": 9071,
+            "auditUs": 11372,
+            "primaryUs": 4307,
+            "shadeUs": 7834
+          },
+          "cPIE": {
+            "cleanUs": 7882,
+            "auditUs": 10234,
+            "primaryUs": 3177,
+            "shadeUs": 7807
+          },
+          "cleanGuestOverC": 3.2423
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 28818,
+            "auditUs": 34569,
+            "primaryUs": 10946,
+            "shadeUs": 26750
+          },
+          "cScalar": {
+            "cleanUs": 9233,
+            "auditUs": 12337,
+            "primaryUs": 5011,
+            "shadeUs": 8160
+          },
+          "cPIE": {
+            "cleanUs": 8054,
+            "auditUs": 11198,
+            "primaryUs": 3881,
+            "shadeUs": 8124
+          },
+          "cleanGuestOverC": 3.1209
+        }
+      }
+    },
+    "8": {
+      "N": 36,
+      "medianCompilerUs": 444925,
+      "maxTrackedJSBytes": 654480,
+      "medianAll": {
+        "cleanUs": 45977.0,
+        "auditUs": 51185.5,
+        "primaryUs": 7037.0,
+        "shadeUs": 47660.5
+      },
+      "default": {
+        "guest": {
+          "cleanUs": 46918,
+          "auditUs": 52091,
+          "primaryUs": 7037,
+          "shadeUs": 48546
+        },
+        "cScalar": {
+          "cleanUs": 9504,
+          "auditUs": 12077,
+          "primaryUs": 4601,
+          "shadeUs": 8254
+        },
+        "cPIE": {
+          "cleanUs": 8337,
+          "auditUs": 10937,
+          "primaryUs": 3478,
+          "shadeUs": 8227
+        },
+        "cleanGuestOverC": 4.9367
+      },
+      "byPose": {
+        "blue-overlap": {
+          "guest": {
+            "cleanUs": 44871,
+            "auditUs": 50036,
+            "primaryUs": 7029,
+            "shadeUs": 46566
+          },
+          "cScalar": {
+            "cleanUs": 8849,
+            "auditUs": 11495,
+            "primaryUs": 4578,
+            "shadeUs": 7697
+          },
+          "cPIE": {
+            "cleanUs": 7674,
+            "auditUs": 10351,
+            "primaryUs": 3454,
+            "shadeUs": 7692
+          },
+          "cleanGuestOverC": 5.0707
+        },
+        "bottom-lamp": {
+          "guest": {
+            "cleanUs": 45687,
+            "auditUs": 50863,
+            "primaryUs": 7037,
+            "shadeUs": 47319
+          },
+          "cScalar": {
+            "cleanUs": 9140,
+            "auditUs": 11766,
+            "primaryUs": 4579,
+            "shadeUs": 7939
+          },
+          "cPIE": {
+            "cleanUs": 7979,
+            "auditUs": 10596,
+            "primaryUs": 3453,
+            "shadeUs": 7903
+          },
+          "cleanGuestOverC": 4.998
+        },
+        "default": {
+          "guest": {
+            "cleanUs": 46918,
+            "auditUs": 52091,
+            "primaryUs": 7037,
+            "shadeUs": 48546
+          },
+          "cScalar": {
+            "cleanUs": 9504,
+            "auditUs": 12077,
+            "primaryUs": 4601,
+            "shadeUs": 8254
+          },
+          "cPIE": {
+            "cleanUs": 8337,
+            "auditUs": 10937,
+            "primaryUs": 3478,
+            "shadeUs": 8227
+          },
+          "cleanGuestOverC": 4.9367
+        },
+        "far-corner": {
+          "guest": {
+            "cleanUs": 48221,
+            "auditUs": 53406,
+            "primaryUs": 7037,
+            "shadeUs": 49842
+          },
+          "cScalar": {
+            "cleanUs": 9899,
+            "auditUs": 12393,
+            "primaryUs": 4603,
+            "shadeUs": 8553
+          },
+          "cPIE": {
+            "cleanUs": 8725,
+            "auditUs": 11272,
+            "primaryUs": 3467,
+            "shadeUs": 8554
+          },
+          "cleanGuestOverC": 4.8714
+        },
+        "gold-overlap": {
+          "guest": {
+            "cleanUs": 44610,
+            "auditUs": 49757,
+            "primaryUs": 7034,
+            "shadeUs": 46284
+          },
+          "cScalar": {
+            "cleanUs": 8867,
+            "auditUs": 11511,
+            "primaryUs": 4582,
+            "shadeUs": 7712
+          },
+          "cPIE": {
+            "cleanUs": 7705,
+            "auditUs": 10340,
+            "primaryUs": 3454,
+            "shadeUs": 7690
+          },
+          "cleanGuestOverC": 5.0316
+        },
+        "lamp-only": {
+          "guest": {
+            "cleanUs": 46497,
+            "auditUs": 51637,
+            "primaryUs": 7032,
+            "shadeUs": 48126
+          },
+          "cScalar": {
+            "cleanUs": 9448,
+            "auditUs": 12014,
+            "primaryUs": 4591,
+            "shadeUs": 8184
+          },
+          "cPIE": {
+            "cleanUs": 8286,
+            "auditUs": 10868,
+            "primaryUs": 3464,
+            "shadeUs": 8144
+          },
+          "cleanGuestOverC": 4.9225
+        },
+        "left-bottom": {
+          "guest": {
+            "cleanUs": 45975,
+            "auditUs": 51194,
+            "primaryUs": 7040,
+            "shadeUs": 47718
+          },
+          "cScalar": {
+            "cleanUs": 9443,
+            "auditUs": 11734,
+            "primaryUs": 4311,
+            "shadeUs": 8189
+          },
+          "cPIE": {
+            "cleanUs": 8289,
+            "auditUs": 10600,
+            "primaryUs": 3200,
+            "shadeUs": 8190
+          },
+          "cleanGuestOverC": 4.8719
+        },
+        "left-lamp": {
+          "guest": {
+            "cleanUs": 46060,
+            "auditUs": 51203,
+            "primaryUs": 7030,
+            "shadeUs": 47679
+          },
+          "cScalar": {
+            "cleanUs": 9160,
+            "auditUs": 11760,
+            "primaryUs": 4587,
+            "shadeUs": 7918
+          },
+          "cPIE": {
+            "cleanUs": 8012,
+            "auditUs": 10647,
+            "primaryUs": 3454,
+            "shadeUs": 7926
+          },
+          "cleanGuestOverC": 5.0284
+        },
+        "near-corner": {
+          "guest": {
+            "cleanUs": 47653,
+            "auditUs": 52790,
+            "primaryUs": 7043,
+            "shadeUs": 49253
+          },
+          "cScalar": {
+            "cleanUs": 9707,
+            "auditUs": 12234,
+            "primaryUs": 4605,
+            "shadeUs": 8360
+          },
+          "cPIE": {
+            "cleanUs": 8542,
+            "auditUs": 11088,
+            "primaryUs": 3473,
+            "shadeUs": 8325
+          },
+          "cleanGuestOverC": 4.908
+        },
+        "right-lamp": {
+          "guest": {
+            "cleanUs": 45979,
+            "auditUs": 51151,
+            "primaryUs": 7034,
+            "shadeUs": 47605
+          },
+          "cScalar": {
+            "cleanUs": 9294,
+            "auditUs": 11872,
+            "primaryUs": 4590,
+            "shadeUs": 8061
+          },
+          "cPIE": {
+            "cleanUs": 8115,
+            "auditUs": 10766,
+            "primaryUs": 3455,
+            "shadeUs": 8052
+          },
+          "cleanGuestOverC": 4.9472
+        },
+        "right-top": {
+          "guest": {
+            "cleanUs": 44741,
+            "auditUs": 49976,
+            "primaryUs": 7045,
+            "shadeUs": 46437
+          },
+          "cScalar": {
+            "cleanUs": 9054,
+            "auditUs": 11370,
+            "primaryUs": 4309,
+            "shadeUs": 7822
+          },
+          "cPIE": {
+            "cleanUs": 7888,
+            "auditUs": 10216,
+            "primaryUs": 3175,
+            "shadeUs": 7785
+          },
+          "cleanGuestOverC": 4.9416
+        },
+        "top-lamp-wide": {
+          "guest": {
+            "cleanUs": 45167,
+            "auditUs": 50921,
+            "primaryUs": 7499,
+            "shadeUs": 46981
+          },
+          "cScalar": {
+            "cleanUs": 9228,
+            "auditUs": 12335,
+            "primaryUs": 5013,
+            "shadeUs": 8158
+          },
+          "cPIE": {
+            "cleanUs": 8063,
+            "auditUs": 11192,
+            "primaryUs": 3879,
+            "shadeUs": 8132
+          },
+          "cleanGuestOverC": 4.895
+        }
+      }
+    }
+  },
+  "material": {
+    "0": {
+      "mixedUs": 28758.5,
+      "typedUs": 71306.5
+    },
+    "1": {
+      "mixedUs": 18136.5,
+      "typedUs": 60666.0
+    }
+  }
+}

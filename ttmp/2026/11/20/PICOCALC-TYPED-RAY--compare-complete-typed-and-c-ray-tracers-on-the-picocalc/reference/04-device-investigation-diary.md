@@ -110,3 +110,49 @@ Review [the ordinary build helper](../scripts/device/01-build.py) and [physical 
 ### Technical details
 
 Cold compile uses a fresh 4 MiB-bounded QuickJS allocator and an 8 s deadline. Fixed output surfaces each reserve a 4-byte header, 2*(159*stride+160) output bytes and one final guard. Scratch reserves 2,048 words plus header and guard. A separate material program uses the 303-cell scene graph and existing native Candela row control.
+
+## Step 3. Execute the fixed and programmable frame matrix on the physical P4
+
+### Prompt Context
+
+**User prompt (verbatim)** [Original measurement brief](../sources/commission.txt). **Assistant interpretation** Compare clean whole-frame timing on the physical board before attributing any speedup to PIE, then run like-for-like programmable materials. **Inferred user intent** See which investment helps actual frames while maintaining a stable playable firmware. **Commit (code)** 03db803 build, a4bf5fa archived image hashes.
+
+### What I did
+
+Ran nine closed programs at twelve poses, three repetitions each. For every block I timed four separate operations in each of three arms, checked output bytes, guards and host reference CRC, and verified the core counter against the microsecond clock. I ran 36 separate programmable shader pairs. I exercised F1,V,G,G,G,Right,W,R with five state checks including boot handoff. The baseline frame counter advanced through 1, 2 and 3 as the scene entered, moved and was relit. It remained at 3 when reset switched away from the guest.
+
+### Why
+
+Identical pictures can be produced by different paths. The state counters target that specific failure mode. Preserving an equivalent scalar row detects whether a speedup truly comes from vector instructions. Host and native reference planes independently check the byte layout of the audited data.
+
+### What worked
+
+All 324 blocks passed; each contained 12 successful timed calls. The tracked cycle frequency ranged from 359.72 to 360.01 cycles/µs. Clean opening times were 9.521 ms for scalar C, 8.350 ms for PIE C, and 57.674 ms for stock Typed. The strongest source/compiler combination used 29.975 ms. Explicit vectorization saved 0.383 ms of clean time compared with the matched scheduled scalar primary row.
+
+### What didn't work
+
+The broad conclusion that eight packed lanes explain the entire stock-to-optimized difference failed the matched scalar test. Both forms improved substantially from the original source; only part of the remaining difference belongs to the packed instructions. Complete Typed still took more time than C on every tested pose.
+
+### What I learned
+
+The slowest isolated region in the baseline was shading, including shadow resolution. Changing shadow traversal reduced more time than further refining the already improved primary row. Two guarded recognition policies generated identical machine code and produced slightly different sample times; image identity does not remove ordinary timing variation.
+
+### What was tricky to build
+
+The actual ordinary display consumed the guest under compositor control. The active program had to be switched back to the unmodified source before testing the daily-use UI. The physical three-plane oracle includes sentinel-filled padding and the raw C host oracle deliberately used another fill, so only active native pixels were copied into the normalized host CRC buffer.
+
+### What warrants a second pair of eyes
+
+Check median denominators and compare each performance conclusion to its intended control. Retired instructions came from an interpreter in the compiler report; this investigation uses core cycles and elapsed time from the real P4. Packed and inferred produce identical text digests.
+
+### What should be done in the future
+
+Collect separate shadow-mask and material-evaluation clocks on the same accepted visible geometry. Keep those diagnostics out of the measured ordinary frame. Do not change the firmware file under the active physical suite before its final readback.
+
+### Code review instructions
+
+Read [all raw fixed clocks](../various/device/rows.json), [the median reducer](../scripts/device/03-summarize.py), [the hardware screenshot receipts](../various/device/screens.json) and [the programmable paired measurements](../various/device/materials.json).
+
+### Technical details
+
+The first accepted matrix used exact production revision 03db803388c88fe51a78cfd534777b8590d4ffdc and application fc4f0302259a533a4c5ad75a791ebf2735db19e4059e93cce15ba987f043513c. The previous Candela binary was preserved independently. All three candidate RGB565 viewports and the classic reset matched the same references used for the original release.

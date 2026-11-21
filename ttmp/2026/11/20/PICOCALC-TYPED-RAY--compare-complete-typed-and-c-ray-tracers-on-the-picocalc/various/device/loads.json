@@ -1,0 +1,272 @@
+[
+  {
+    "program": 0,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 433323,
+    "compilerUs": 429863,
+    "quickjsPeakBytes": 645716,
+    "rep": 0
+  },
+  {
+    "program": 1,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 433929,
+    "compilerUs": 430314,
+    "quickjsPeakBytes": 646532,
+    "rep": 0
+  },
+  {
+    "program": 2,
+    "sourceBytes": 10709,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 434982,
+    "compilerUs": 431677,
+    "quickjsPeakBytes": 647332,
+    "rep": 0
+  },
+  {
+    "program": 3,
+    "sourceBytes": 10709,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 435898,
+    "compilerUs": 432320,
+    "quickjsPeakBytes": 648120,
+    "rep": 0
+  },
+  {
+    "program": 4,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 447843,
+    "compilerUs": 444412,
+    "quickjsPeakBytes": 653968,
+    "rep": 0
+  },
+  {
+    "program": 5,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 447871,
+    "compilerUs": 444272,
+    "quickjsPeakBytes": 653856,
+    "rep": 0
+  },
+  {
+    "program": 8,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 447215,
+    "compilerUs": 443882,
+    "quickjsPeakBytes": 654480,
+    "rep": 0
+  },
+  {
+    "program": 6,
+    "sourceBytes": 12652,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 470545,
+    "compilerUs": 467000,
+    "quickjsPeakBytes": 676296,
+    "rep": 0
+  },
+  {
+    "program": 7,
+    "sourceBytes": 12652,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 467223,
+    "compilerUs": 463968,
+    "quickjsPeakBytes": 676948,
+    "rep": 0
+  },
+  {
+    "program": 1,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 436975,
+    "compilerUs": 433356,
+    "quickjsPeakBytes": 646532,
+    "rep": 1
+  },
+  {
+    "program": 2,
+    "sourceBytes": 10709,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 435684,
+    "compilerUs": 432319,
+    "quickjsPeakBytes": 647304,
+    "rep": 1
+  },
+  {
+    "program": 3,
+    "sourceBytes": 10709,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 438164,
+    "compilerUs": 434648,
+    "quickjsPeakBytes": 648108,
+    "rep": 1
+  },
+  {
+    "program": 4,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 446764,
+    "compilerUs": 443191,
+    "quickjsPeakBytes": 653936,
+    "rep": 1
+  },
+  {
+    "program": 5,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 450817,
+    "compilerUs": 447244,
+    "quickjsPeakBytes": 653844,
+    "rep": 1
+  },
+  {
+    "program": 8,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 448312,
+    "compilerUs": 444925,
+    "quickjsPeakBytes": 654460,
+    "rep": 1
+  },
+  {
+    "program": 6,
+    "sourceBytes": 12652,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 470717,
+    "compilerUs": 467157,
+    "quickjsPeakBytes": 676276,
+    "rep": 1
+  },
+  {
+    "program": 7,
+    "sourceBytes": 12652,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 469085,
+    "compilerUs": 465548,
+    "quickjsPeakBytes": 677076,
+    "rep": 1
+  },
+  {
+    "program": 0,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 431164,
+    "compilerUs": 427645,
+    "quickjsPeakBytes": 645728,
+    "rep": 1
+  },
+  {
+    "program": 2,
+    "sourceBytes": 10709,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 437881,
+    "compilerUs": 434540,
+    "quickjsPeakBytes": 647292,
+    "rep": 2
+  },
+  {
+    "program": 3,
+    "sourceBytes": 10709,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 434300,
+    "compilerUs": 430759,
+    "quickjsPeakBytes": 648128,
+    "rep": 2
+  },
+  {
+    "program": 4,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 444490,
+    "compilerUs": 441145,
+    "quickjsPeakBytes": 653948,
+    "rep": 2
+  },
+  {
+    "program": 5,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 447531,
+    "compilerUs": 443925,
+    "quickjsPeakBytes": 653888,
+    "rep": 2
+  },
+  {
+    "program": 8,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 450212,
+    "compilerUs": 446697,
+    "quickjsPeakBytes": 654440,
+    "rep": 2
+  },
+  {
+    "program": 6,
+    "sourceBytes": 12652,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 470390,
+    "compilerUs": 466884,
+    "quickjsPeakBytes": 676316,
+    "rep": 2
+  },
+  {
+    "program": 7,
+    "sourceBytes": 12652,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 467477,
+    "compilerUs": 464018,
+    "quickjsPeakBytes": 676992,
+    "rep": 2
+  },
+  {
+    "program": 0,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 436929,
+    "compilerUs": 433415,
+    "quickjsPeakBytes": 645720,
+    "rep": 2
+  },
+  {
+    "program": 1,
+    "sourceBytes": 10438,
+    "elfBytes": 66816,
+    "segmentBytes": 66092,
+    "elapsedUs": 437251,
+    "compilerUs": 433660,
+    "quickjsPeakBytes": 646540,
+    "rep": 2
+  }
+]

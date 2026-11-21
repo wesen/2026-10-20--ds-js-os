@@ -1,0 +1,110 @@
+[
+  {
+    "label": "typed-default",
+    "scene": [
+      68,
+      61,
+      31,
+      25
+    ],
+    "viewCRC": "4b91a3c8",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "85805f0b",
+      "sha256": "d2c7f7d2754e6a4806d77706ab81e9e527e1d5c70cf3b6f0afb845f510b2535c",
+      "appSha256": "411e8b6c88dc54a80439221476c29aacffe1a61377870d97c7de5b46b3aa0821"
+    },
+    "pngSHA": "da636cdda83efcb7cd0496731691fe09e1a29897223271d58a42640cc0c25b56",
+    "typedState": {
+      "frames": 1,
+      "program": 0,
+      "pose": [
+        68,
+        61,
+        31,
+        25
+      ]
+    }
+  },
+  {
+    "label": "typed-right",
+    "scene": [
+      76,
+      61,
+      31,
+      25
+    ],
+    "viewCRC": "fa6be88f",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "88eaf1ad",
+      "sha256": "58c6a9283a7b37c804521fc5039ed3ef806693963350fe539c3a3ddd392cdc0d",
+      "appSha256": "a2e8f4d27a49be7deaeb9f32fc9b3519fd1f7e94fa2a6e3722cf109187cc8b21"
+    },
+    "pngSHA": "9f060dea19dfaefb15774458a5d49a6b6b00fb32825cacfde6a4297ab0cb9267",
+    "typedState": {
+      "frames": 2,
+      "program": 0,
+      "pose": [
+        76,
+        61,
+        31,
+        25
+      ]
+    }
+  },
+  {
+    "label": "typed-relit",
+    "scene": [
+      76,
+      61,
+      31,
+      17
+    ],
+    "viewCRC": "e2bcc3b5",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "4dff888e",
+      "sha256": "2c9fae8247fe068f09b587db9c6ac0e647071fee68ec3590ab7633eda0762f42",
+      "appSha256": "07128b60be87bf36e002032c6e9fe17dec7ba4a70c6d617662de55f5ed8a2f76"
+    },
+    "pngSHA": "440b2137490dc3188786bc2c51381f642f10342741e165b42b1b2c334e5c95c2",
+    "typedState": {
+      "frames": 3,
+      "program": 0,
+      "pose": [
+        76,
+        61,
+        31,
+        17
+      ]
+    }
+  },
+  {
+    "label": "classic-reset",
+    "scene": [
+      68,
+      61,
+      31,
+      25
+    ],
+    "viewCRC": "4b91a3c8",
+    "pixels": 57600,
+    "framebuffer": {
+      "crc32": "788a496b",
+      "sha256": "e3d76ad0e3e9ad0dbbe6671b4a79ae19cb894dd534e916230342f55bc1ed6b6e",
+      "appSha256": "efc33a85a550b58fc0ab4330e70e463c0495ccfeb4f0e3987cb62458553de69f"
+    },
+    "pngSHA": "c0681baf6b29dffbe376194a66f1644a0c7b1216b8459e1607ff831ff347e391",
+    "typedState": {
+      "frames": 3,
+      "program": 0,
+      "pose": [
+        76,
+        61,
+        31,
+        17
+      ]
+    }
+  }
+]
