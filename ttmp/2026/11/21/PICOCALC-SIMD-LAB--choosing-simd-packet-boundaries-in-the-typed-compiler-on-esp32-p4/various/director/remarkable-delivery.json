@@ -1,0 +1,12 @@
+{
+  "document": "Choosing SIMD Packet Boundaries on the ESP32-P4 - Design Guides.pdf",
+  "remoteDirectory": "/ai/2026/11/21/PICOCALC-SIMD-LAB",
+  "inputs": [
+    "design-doc/01-choosing-the-scalar-boundary-of-a-packed-loop-on-a-handheld.md",
+    "design-doc/02-ray-schedule-and-exact-narrowing.md",
+    "design-doc/03-verifying-image-addresses-and-packet-evidence.md",
+    "design-doc/04-fixed-point-particle-layout-and-contact-order.md",
+    "design-doc/05-frozen-held-out-protocol.md"
+  ],
+  "receipt": "OK: uploaded Choosing SIMD Packet Boundaries on the ESP32-P4 - Design Guides.pdf -> /ai/2026/11/21/PICOCALC-SIMD-LAB"
+}

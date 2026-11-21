@@ -1,0 +1,20 @@
+{
+  "opening": {
+    "sphereRows": 480,
+    "negativeSphereRows": 315,
+    "iterationsWithProvedNegativeRow": 50400,
+    "allSourceIterations": 76800
+  },
+  "dense": {
+    "sphereRows": 480,
+    "negativeSphereRows": 285,
+    "iterationsWithProvedNegativeRow": 45600,
+    "allSourceIterations": 76800
+  },
+  "sparse": {
+    "sphereRows": 480,
+    "negativeSphereRows": 433,
+    "iterationsWithProvedNegativeRow": 69280,
+    "allSourceIterations": 76800
+  }
+}
