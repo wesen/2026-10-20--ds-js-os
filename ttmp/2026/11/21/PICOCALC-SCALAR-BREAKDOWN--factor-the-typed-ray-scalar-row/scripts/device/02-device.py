@@ -16,6 +16,8 @@ check_build(a.previous,old['appSHA']);check_build(a.build,a.sha);assert a.sha!=o
 controls=[r for r in json.loads((previous/'various/device/rows.json').read_text()) if r['rep']==0 and r['program']==0]
 assert len(controls)==12
 programs=[0,9,10,11,12,13,8]
+images={r['id']:r for r in json.loads((a.build.parent/'factor-images.json').read_text())}
+assert set(images)==set(programs)
 a.out.mkdir(parents=True,exist_ok=False)
 def parse(c,cmd,key):
     lines=c.command(cmd,timeout=25);v=[json.loads(s[len(key):]) for s in lines if s.startswith(key)]
@@ -25,6 +27,8 @@ def load(c,id):
     result=[json.loads(s[len('TRLOAD '):]) for s in lines if s.startswith('TRLOAD ')]
     compile=[m for s in lines if (m:=release.COMPILE.match(s))]
     assert len(result)==len(compile)==1 and result[0]['program']==id and compile[0][3]=='ok',lines[-4:]
+    if id in images:
+        assert result[0]['elfCRC']==images[id]['elfCRC'] and result[0]['sourceBytes']==images[id]['sourceBytes'],(id,result[0],images[id])
     return result[0]|{'compilerUs':int(compile[0][4]),'peakJSBytes':int(compile[0][5])}
 def viewport(raw):return b''.join(raw[2*((32+y)*320+40):2*((32+y)*320+280)] for y in range(240))
 def check_ui(c,label,expected_crc,pose,keys):

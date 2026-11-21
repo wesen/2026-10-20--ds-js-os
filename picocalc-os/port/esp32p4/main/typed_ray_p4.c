@@ -62,6 +62,7 @@ static bool install(int program) {
     char *image=source && slot ? p4_typed_compile("typed-ray",source_name,source,ns,"typed-ray/link.js",
              "linkTypedRay",ENG_NATIVE,slot,nt,&ni,begin,&limits) : NULL;
     free(source); free(slot);
+    const uint32_t image_crc=image ? esp_rom_crc32_le(0,(const uint8_t*)image,ni) : 0;
     module *next=image ? port_big_calloc(sizeof(*next)) : NULL;
     bool init=next && esp_elf_init(&next->elf)==0;
     uintptr_t entries[4]={0};
@@ -78,8 +79,8 @@ static bool install(int program) {
     next->trace=(trace_fn)entries[2]; next->shade=(audit_fn)entries[3]; next->program=program;
     module *old=installed; installed=next;
     if(old){esp_elf_deinit(&old->elf);port_big_free(old);}
-    printf("TRLOAD {\"program\":%d,\"sourceBytes\":%zu,\"elfBytes\":%zu,\"segmentBytes\":%zu,\"elapsedUs\":%" PRId64 "}\n",
-           program,ns,ni,next->elf.segment_size,port_clock()-begin);
+    printf("TRLOAD {\"program\":%d,\"sourceBytes\":%zu,\"elfBytes\":%zu,\"segmentBytes\":%zu,\"elapsedUs\":%" PRId64 ",\"elfCRC\":\"%08" PRIx32 "\"}\n",
+           program,ns,ni,next->elf.segment_size,port_clock()-begin,image_crc);
     return true;
 }
 

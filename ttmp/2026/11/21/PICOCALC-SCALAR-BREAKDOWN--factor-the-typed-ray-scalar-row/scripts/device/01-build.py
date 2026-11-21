@@ -39,4 +39,8 @@ app=stage/'build/picocalc-os-p4.bin';part=stage/'build/partition_table/partition
 assert sha(part)=='72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30'
 receipt=dict(revision=revision,appSHA=sha(app),appBytes=app.stat().st_size,partitionSHA=sha(part),sdkconfigSHA=sha(stage/'build/sdkconfig.smooth-chess'),sources={k:sha(v) for k,v in settings.items()})
 (stage/'factor-build.json').write_text(json.dumps(receipt,indent=2)+'\n')
+image_rows=subprocess.check_output(['node',Path(__file__).with_name('03-images.mjs'),stage],text=True)
+images=json.loads(image_rows)
+assert len(images)==len(set(x['nativeSHA'] for x in images))==7
+(stage/'factor-images.json').write_text(image_rows)
 print('FACTOR_BUILD',sha(app))
