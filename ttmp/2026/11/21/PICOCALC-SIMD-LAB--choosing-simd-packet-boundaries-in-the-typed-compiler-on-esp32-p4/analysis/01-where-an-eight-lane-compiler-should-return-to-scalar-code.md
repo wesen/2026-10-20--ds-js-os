@@ -152,3 +152,23 @@ lab.selection("dynamic",3,35)
 I would advance two changes in this order. First, teach the compiler to hoist a whole-row admission check and keep base addresses and loop invariants live, with the hand scalar row as its target and scalar effect-prefix tests as its qualification. That targets the largest measured gap. Second, bring the particle recognizer into the streaming frontend and measure its recognition cost and guarded execution on a different layout-preserving physics kernel. For the selector, publish the simple policies as competitors and freeze a new test workload before tuning another weight. The existing evidence already supports a useful default for this particular decision: when a complete ray packet is proved empty, end the packed work there.
 
 The independent outcome review also caught missing units in the exported summary tables. The scorer now records the units and the compiled frame entry point alongside each result. The examiner independently reproduced all 24 per-fixture paired frame/primary medians and forced spills, alignment fallback, a short output and an arithmetic failure in a separate accepted loop. [Independent outcome review](05-independent-review-of-the-compiler-measurements.md) · [Independent replication](06-independent-replication.md)
+
+## Run this article's JavaScript
+
+From the compiler checkout, the following commands open a fresh stateful session on port 3794 and run the exact cell printed below. The shell variable `sid` retains the session ID for follow-up queries. If the service has stopped, its [launcher](../scripts/evidence/06-start-workbench.sh) accepts `candidates` to mount the combined study.
+
+~~~sh
+ticket=$(ls -d ttmp/2026/11/21/PICOCALC-SIMD-LAB--*)
+sid=$(python3 "$ticket/scripts/director/09-open-lab-session.py" --keep | awk '{print $NF}')
+go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" < "$ticket/scripts/reports/01-boundary.js"
+~~~
+
+~~~js
+({
+    packetReads: lab.packetPrediction(),
+    completeFrame: lab.frame("default", "clean", "baseline", "empty"),
+    blindChoice: lab.selection("dynamic", 3, 35)
+})
+~~~
+
+[Standalone JavaScript file](../scripts/reports/01-boundary.js) · [Checked replies from all six articles](../various/director/report-cell-replies.json)

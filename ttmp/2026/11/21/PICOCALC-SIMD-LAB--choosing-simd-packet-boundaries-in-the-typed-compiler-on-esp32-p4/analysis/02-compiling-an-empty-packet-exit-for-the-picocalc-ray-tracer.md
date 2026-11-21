@@ -105,3 +105,24 @@ The three diagnostic visits all ended with flash verification of the original 4,
 Paths beginning with `scripts/` belong to docmgr ticket `PICOCALC-SIMD-LAB` in the PicoCalc checkout. Its `various/ray/` directory contains the raw numeric records, independent output witnesses and flash restoration receipts. Its `various/director/` directory contains the 432 frame and primary-phase measurements on the twelve pose/stride fixtures.
 
 *Research credits.* The external Opus High team authored the packet-schedule analysis and the independent exhaustive-lane script. The ray operator built the hand-scheduled row and packet trials, literal-specialization compiler comparison, ordered-effect oracle and firmware procedures, then extended the article with their measurements. The lab director implemented the candidate Typed emitters and complete-frame harness. The evidence researcher reconstructed dynamic guest counts from traced native addresses.
+
+## Run this article's JavaScript
+
+From the compiler checkout, the following commands open a fresh stateful session on port 3794 and run the exact cell printed below. The shell variable `sid` retains the session ID for follow-up queries. If the service has stopped, its [launcher](../scripts/evidence/06-start-workbench.sh) accepts `candidates` to mount the combined study.
+
+~~~sh
+ticket=$(ls -d ttmp/2026/11/21/PICOCALC-SIMD-LAB--*)
+sid=$(python3 "$ticket/scripts/director/09-open-lab-session.py" --keep | awk '{print $NF}')
+go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" < "$ticket/scripts/reports/02-ray-packets.js"
+~~~
+
+~~~js
+["empty", "mixed", "full"].map(kind => {
+    const row = lab.packetCosts("opening", kind);
+    return {kind, packets:row.packetsPerBlock, unit:row.unit,
+        scalar:row.schedules.scalar.cycles_per_packet_median,
+        minimum:row.schedules.empty.cycles_per_packet_median};
+})
+~~~
+
+[Standalone JavaScript file](../scripts/reports/02-ray-packets.js) · [Checked replies from all six articles](../various/director/report-cell-replies.json)

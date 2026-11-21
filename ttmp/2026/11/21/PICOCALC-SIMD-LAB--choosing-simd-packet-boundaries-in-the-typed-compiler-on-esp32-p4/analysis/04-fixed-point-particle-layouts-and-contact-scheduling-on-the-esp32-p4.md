@@ -420,3 +420,23 @@ See `physics.typed` for ordinary source, `physics.S` for the scalar and PIE bodi
 
 - Erin Catto describes incremental contact coloring and the representation used by a production physics solver. [SIMD Matters, Box2D](https://box2d.org/posts/2024/08/simd-matters/)
 - Espressif documents the processor’s PIE registers, instruction families and vector load constraints. [Introduction to the PIE, Espressif](https://developer.espressif.com/blog/2024/12/pie-introduction/)
+
+## Run this article's JavaScript
+
+From the compiler checkout, the following commands open a fresh stateful session on port 3794 and run the exact cell printed below. The shell variable `sid` retains the session ID for follow-up queries. If the service has stopped, its [launcher](../scripts/evidence/06-start-workbench.sh) accepts `candidates` to mount the combined study.
+
+~~~sh
+ticket=$(ls -d ttmp/2026/11/21/PICOCALC-SIMD-LAB--*)
+sid=$(python3 "$ticket/scripts/director/09-open-lab-session.py" --keep | awk '{print $NF}')
+go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" < "$ticket/scripts/reports/04-physics.js"
+~~~
+
+~~~js
+({
+    checkedPlanar: lab.physicsPair("particle", 128, "guarded-soa-scalar", "guarded-soa-pie"),
+    oneTickIncludingConversion: lab.physicsPair("particle", 128, "aos-scalar", "convert-pie-roundtrip"),
+    identicalContactOrder: lab.physicsPair("contact", 128, "grouped-scalar", "grouped-pie")
+})
+~~~
+
+[Standalone JavaScript file](../scripts/reports/04-physics.js) · [Checked replies from all six articles](../various/director/report-cell-replies.json)

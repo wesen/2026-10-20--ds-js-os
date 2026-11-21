@@ -121,3 +121,27 @@ The experiment tests the instruction-fetch explanation directly, as a 2×2 paire
 4. Report `incrementalFull` with empty as the denominator, separately for flash and for RAM.
 
 Decide the rule before running. If the RAM pair's loss is under one third of the flash pair's loss in at least 10 of 12 poses, fetch cost explains the frame result. If the loss stays at about −120 in RAM, the cost is in executing full's extracts, and the row-level benchmark is missing it for some other reason.
+
+## Run this article's JavaScript
+
+From the compiler checkout, the following commands open a fresh stateful session on port 3794 and run the exact cell printed below. The shell variable `sid` retains the session ID for follow-up queries. If the service has stopped, its [launcher](../scripts/evidence/06-start-workbench.sh) accepts `candidates` to mount the combined study.
+
+~~~sh
+ticket=$(ls -d ttmp/2026/11/21/PICOCALC-SIMD-LAB--*)
+sid=$(python3 "$ticket/scripts/director/09-open-lab-session.py" --keep | awk '{print $NF}')
+go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" < "$ticket/scripts/reports/05-independent-review.js"
+~~~
+
+~~~js
+(() => {
+    const trials = lab.scores.cases;
+    const misses = trials.filter(t => t.predicted !== t.best);
+    return {cases:trials.length, winners:trials.length-misses.length,
+        distinctPredictions:[...new Set(trials.map(t=>t.predicted))],
+        misses:misses.map(t=>({n:t.n, reach:t.reach, excessPercent:t.regretPct})),
+        laneLoads:["pie","empty","full"].map(k=>
+            simd.executions(k+"-row", k+"-opening", "scalar-lane-load").executions)};
+})()
+~~~
+
+[Standalone JavaScript file](../scripts/reports/05-independent-review.js) · [Checked replies from all six articles](../various/director/report-cell-replies.json)

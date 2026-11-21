@@ -266,3 +266,22 @@ The five independent candidate cells and their full replies are in `various/evid
 - The scalar-to-PIE gap of 68,475 instructions is −68,970 in the producer and +495 in packet control. The scalar consumer was unchanged.
 - Lane loads equal eight per consumed full group plus 990 leading lanes. The mask census predicted the candidates' savings of 16,888 and 5,936 exactly.
 - The physical opening-row test measured a 4.74% cycle saving for the empty classifier and 4.90% for empty plus full. The corresponding guest instruction reductions were 4.72% and 5.65%. Each quantity has its own unit and denominator.
+
+## Run this article's JavaScript
+
+From the compiler checkout, the following commands open a fresh stateful session on port 3794 and run the exact cell printed below. The shell variable `sid` retains the session ID for follow-up queries. If the service has stopped, its [launcher](../scripts/evidence/06-start-workbench.sh) accepts `candidates` to mount the combined study.
+
+~~~sh
+ticket=$(ls -d ttmp/2026/11/21/PICOCALC-SIMD-LAB--*)
+sid=$(python3 "$ticket/scripts/director/09-open-lab-session.py" --keep | awk '{print $NF}')
+go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" < "$ticket/scripts/reports/03-instruction-evidence.js"
+~~~
+
+~~~js
+["pie", "empty", "full"].map(plan => {
+    const row = simd.executions(plan+"-row", plan+"-opening", "scalar-lane-load");
+    return {plan, imageSHA:row.imageSHA, executedLoads:row.executions};
+})
+~~~
+
+[Standalone JavaScript file](../scripts/reports/03-instruction-evidence.js) · [Checked replies from all six articles](../various/director/report-cell-replies.json)

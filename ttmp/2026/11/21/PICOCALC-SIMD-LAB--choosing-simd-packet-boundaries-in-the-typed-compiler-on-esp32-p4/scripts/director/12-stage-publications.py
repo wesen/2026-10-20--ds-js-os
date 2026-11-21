@@ -47,6 +47,14 @@ def main():
             path, separator, anchor = target.partition("#")
             resolved = (src.parent / path).resolve(strict=True)
             resolved.relative_to(repo)
+            if resolved.parent == (ticket/"scripts/reports").resolve() and resolved.suffix == ".js":
+                asset_relative = "_assets/picocalc-simd-lab/" + resolved.name
+                asset_out = args.directory/asset_relative
+                asset_out.parent.mkdir(parents=True,exist_ok=True)
+                if asset_out.exists() and asset_out.read_bytes() != resolved.read_bytes():
+                    raise ValueError("existing JS asset differs: " + str(asset_out))
+                asset_out.write_bytes(resolved.read_bytes())
+                return "]("+asset_relative+")"
             if resolved == figure_source.resolve():
                 figure_out = args.directory/figure_relative
                 figure_out.parent.mkdir(exist_ok=True)

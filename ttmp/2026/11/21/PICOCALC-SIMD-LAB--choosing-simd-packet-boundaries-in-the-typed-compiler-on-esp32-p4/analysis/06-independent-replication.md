@@ -34,3 +34,28 @@ Treatment order rotates across blocks. Code placement stays fixed per treatment 
 A fast path must preserve the input pointer, uniform row term, index, lane count and scratch pointer while ordinary compiled code handles a hit. I wrote a separate accepted loop that reads unsigned input, conditionally writes to a second buffer, and immediately reads that value back. Its nested arithmetic keeps more operands live than the five registers available to the scalar expression stack. Division, bounds checks and spills exercise the scratch registers. The packet state lives in x12–x17, while the scalar expression stack uses x5–x7 and x28–x29 with x30, x31 and x10 available for scratch. The recognizer rejects a call inside the copied continuation, where that register arrangement would need a separate preservation rule. [Probe source](../scripts/examiner/probe.typed) · [Comparison driver](../scripts/examiner/probe.mjs)
 
 On 24 aligned lanes the packed loop executed three packet minima and 50 scalar spill writes in its hit continuations. It returned 124,130 and changed 20 of the 400 supplied bytes. Stock RV32 and Wasm returned the same result and agreed byte-for-byte. A short-output fixture trapped after one two-byte write. All three executions preserved the same write before the trap. A zero divisor trapped before the first store, a misaligned start with a scalar tail returned 68,302, and a zero-trip call returned zero. I found no register-clobber or skipped-effect counterexample in these five host cases. They are semantic checks on an additional admitted program. The timing measurements above come from the original physical ray trial. [Probe results and image identities](../various/examiner/probe.json)
+
+## Run this article's JavaScript
+
+From the compiler checkout, the following commands open a fresh stateful session on port 3794 and run the exact cell printed below. The shell variable `sid` retains the session ID for follow-up queries. If the service has stopped, its [launcher](../scripts/evidence/06-start-workbench.sh) accepts `candidates` to mount the combined study.
+
+~~~sh
+ticket=$(ls -d ttmp/2026/11/21/PICOCALC-SIMD-LAB--*)
+sid=$(python3 "$ticket/scripts/director/09-open-lab-session.py" --keep | awk '{print $NF}')
+go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" < "$ticket/scripts/reports/06-frame-replication.js"
+~~~
+
+~~~js
+(() => {
+    const clean = lab.frames.filter(r=>r.phase===0);
+    const pairs = clean.filter(r=>r.arm===0).map(base=>{
+        const candidates = clean.filter(r=>r.fixture===base.fixture && r.block===base.block && r.arm===1);
+        if (candidates.length!==1) throw Error("missing or duplicate candidate");
+        return {fixture:base.fixture, block:base.block, savedUs:base.us-candidates[0].us};
+    });
+    return {pairs:pairs.length, wins:pairs.filter(p=>p.savedUs>0).length,
+        opening:pairs.filter(p=>p.fixture==="default").map(p=>p.savedUs)};
+})()
+~~~
+
+[Standalone JavaScript file](../scripts/reports/06-frame-replication.js) · [Checked replies from all six articles](../various/director/report-cell-replies.json)
