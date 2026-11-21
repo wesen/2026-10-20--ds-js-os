@@ -1,0 +1,55 @@
+{
+  "metric": "host HTTP round trip, ms including identical serialized witness",
+  "archiveState": "shared process cache may already be warm; only the session was fresh",
+  "firstEvaluationMs": 123.18413,
+  "samples": {
+    "repeatPlanMs": [
+      2.557766,
+      1.969471,
+      1.870597,
+      1.882555,
+      1.935995,
+      1.798117,
+      1.754183
+    ],
+    "savedBindingMs": [
+      0.561915,
+      0.382744,
+      0.343612,
+      0.311065,
+      0.427199,
+      0.393342,
+      0.325417
+    ]
+  },
+  "medianMs": {
+    "repeatPlanMs": 1.882555,
+    "savedBindingMs": 0.382744
+  },
+  "witness": {
+    "ordinal": 74,
+    "pass": "EarlyCSEPass",
+    "header": "IR Dump After EarlyCSEPass on row",
+    "from": 73,
+    "fromPass": "SROAPass",
+    "before": 11,
+    "after": 6,
+    "delta": -5,
+    "changed": true,
+    "transition": null,
+    "status": "known",
+    "reason": null,
+    "skipped": null,
+    "skippedOrdinals": null,
+    "endpointDelta": null,
+    "unit": "static instruction sites",
+    "ref": {
+      "variant": "checked",
+      "phase": "middle",
+      "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+      "ordinal": 74,
+      "start": 240363,
+      "end": 248127
+    }
+  }
+}

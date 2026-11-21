@@ -1,0 +1,175 @@
+{
+  "claim": "PIE versus matched scalar saves at least the threshold on every measured pose",
+  "thresholdPct": 1,
+  "unit": "complete clean frame, ESP32-P4, percent of its paired baseline",
+  "supportedOnThisCorpus": false,
+  "belowThreshold": [
+    "blue-overlap",
+    "bottom-lamp",
+    "default",
+    "far-corner",
+    "gold-overlap",
+    "lamp-only",
+    "left-bottom",
+    "left-lamp",
+    "near-corner",
+    "right-lamp",
+    "right-top",
+    "top-lamp-wide"
+  ],
+  "poses": [
+    {
+      "pose": "blue-overlap",
+      "pairs": 6,
+      "medianSavedUs": 243.5,
+      "medianSavedPct": 0.44929552605103057,
+      "exampleRawRowIndices": [
+        18,
+        30
+      ]
+    },
+    {
+      "pose": "bottom-lamp",
+      "pairs": 6,
+      "medianSavedUs": 256.5,
+      "medianSavedPct": 0.46632366035079786,
+      "exampleRawRowIndices": [
+        22,
+        34
+      ]
+    },
+    {
+      "pose": "default",
+      "pairs": 6,
+      "medianSavedUs": 242,
+      "medianSavedPct": 0.4295228146712761,
+      "exampleRawRowIndices": [
+        12,
+        24
+      ]
+    },
+    {
+      "pose": "far-corner",
+      "pairs": 6,
+      "medianSavedUs": 248.5,
+      "medianSavedPct": 0.43037696292006583,
+      "exampleRawRowIndices": [
+        15,
+        27
+      ]
+    },
+    {
+      "pose": "gold-overlap",
+      "pairs": 6,
+      "medianSavedUs": 229.5,
+      "medianSavedPct": 0.4255039599846561,
+      "exampleRawRowIndices": [
+        19,
+        31
+      ]
+    },
+    {
+      "pose": "lamp-only",
+      "pairs": 6,
+      "medianSavedUs": 251.5,
+      "medianSavedPct": 0.45006331577316777,
+      "exampleRawRowIndices": [
+        13,
+        25
+      ]
+    },
+    {
+      "pose": "left-bottom",
+      "pairs": 6,
+      "medianSavedUs": 237.5,
+      "medianSavedPct": 0.4284217636113357,
+      "exampleRawRowIndices": [
+        16,
+        28
+      ]
+    },
+    {
+      "pose": "left-lamp",
+      "pairs": 6,
+      "medianSavedUs": 233.5,
+      "medianSavedPct": 0.4212713024080195,
+      "exampleRawRowIndices": [
+        20,
+        32
+      ]
+    },
+    {
+      "pose": "near-corner",
+      "pairs": 6,
+      "medianSavedUs": 254.5,
+      "medianSavedPct": 0.44534317687092717,
+      "exampleRawRowIndices": [
+        14,
+        26
+      ]
+    },
+    {
+      "pose": "right-lamp",
+      "pairs": 6,
+      "medianSavedUs": 226.5,
+      "medianSavedPct": 0.40951050493363267,
+      "exampleRawRowIndices": [
+        21,
+        33
+      ]
+    },
+    {
+      "pose": "right-top",
+      "pairs": 6,
+      "medianSavedUs": 224.5,
+      "medianSavedPct": 0.4143432275186273,
+      "exampleRawRowIndices": [
+        17,
+        29
+      ]
+    },
+    {
+      "pose": "top-lamp-wide",
+      "pairs": 6,
+      "medianSavedUs": 241,
+      "medianSavedPct": 0.4418450487924659,
+      "exampleRawRowIndices": [
+        23,
+        35
+      ]
+    }
+  ],
+  "input": {
+    "width": 160,
+    "height": 160,
+    "timerArm": 2,
+    "firmwareSHA": "5dbcfe59f0faf987974c3d559600ac98725f2e98d34992ed06194139fc1c864e",
+    "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "images": {
+      "pie": {
+        "program": 5,
+        "imageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+        "elfSHA": "149759d71de003452abf87086d71a91033facba2a92b94bde1e59dfb24a4d0cf",
+        "elfCRC": "ab91b817"
+      },
+      "scalar": {
+        "program": 8,
+        "imageSHA": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+        "elfSHA": "e47c40a80dddf0237fa60268e2d6b228070389331d0238807574f291e69e41c5",
+        "elfCRC": "bd9a8467"
+      },
+      "stock": {
+        "program": 0,
+        "imageSHA": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+        "elfSHA": "084832b9a2c735b111799c7ba4c5b844dd7db6c9290a5f8683b58982a1764e9f",
+        "elfCRC": "0d2e18b8"
+      }
+    },
+    "artifactSHA": {
+      "build.json": "c5fd38169549e3c189e48e0c8c214f21356721acc33318d579777d07b31cafb8",
+      "images.json": "96410c2cbcb75f443a907cda6c10db8c0f4c486da878534ad425bf9b16a843db",
+      "loads.json": "5fd1e36ad53c735e08061b65e9ceb7c360135f0324b9f0ec1bfd7af79400dd38",
+      "rows.json": "263cfa046e8a315cc3d81423f9115a4d312453717321e8d8554584899aee9f85"
+    }
+  }
+}

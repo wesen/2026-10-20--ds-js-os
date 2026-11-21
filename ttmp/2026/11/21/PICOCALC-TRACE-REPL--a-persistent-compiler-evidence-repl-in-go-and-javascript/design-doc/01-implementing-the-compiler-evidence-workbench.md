@@ -142,3 +142,49 @@ The workbench reads captured evidence. To validate a new compiler change, a rese
 6. **Make the decision explicit.** Report whether the observations support the hypothesized mechanism, whether the matched outcome improved, and whether that improvement matters for the stated use case. A result can justify collecting a better profile, dropping a candidate, or qualifying it on broader programs.
 
 In particular, the 1,290,106 direct stack accesses in stock Typed justify investigating register pressure. They do not identify two particular values that merit registers. The paired hardware rows, by contrast, can directly test an existing candidate's complete-frame effect. The [executable decision cell](../scripts/11-test-optimization-claim.js) shows how to reject a specified performance claim and cite the input used to reject it.
+
+## What persists in the running implementation
+
+The command verifies all six compressed compiler streams before accepting its first user session. In the frozen baseline it authenticated 30,912,391 inflated bytes and loaded the optional P4 study. The standalone Go archive reader also supports lazy access when embedded in a different application. Timing the reader's cold operation and timing a first query against the serving command therefore measure different paths.
+
+A query plan is a value an investigator can bind before evaluating it. `q.run(plan)` evaluates it synchronously. A materialized result is ordinary JavaScript data. It may be saved in the same session, inspected with property access, or used as input to a new calculation. Public calls such as `profiles.arm("checked-llc").describe()` provide metadata immediately. The session service returns the final expression of each cell as JSON. Open a new session to have independent bindings; keep using the same session ID to continue a prior analysis.
+
+```js
+const makeWork = arm => profiles.arm(arm).region("row")
+  .workload("opening-160-rows").total("instructions")
+const lsr = q.compare(makeWork("checked-llc-nolsr"), makeWork("checked-llc"))
+  .matchOn("workload", "region", "checkedContract", "unit")
+const outcome = q.run(lsr.percentChange({denominator: "before"}))
+outcome
+```
+
+In another cell of the same session, simply evaluating `outcome` reads the saved comparison. For a microscopic example of the lifetime distinction, the baseline `73→74` load comparison measured eleven and six static sites. Reading the materialized answer again left the archive, decoded text and value-cache counters unchanged. Re-evaluating the same two facts increased the hit counters for snapshots and values by two each and required zero further text reads. The exact public replay is archived in [the session study](../analysis/03-persistent-investigations-in-a-goja-runtime.md).
+
+The CLI startup, evaluation and close commands are documented in [the operator README](../../../../../../cmd/trace-repl/README.md). The usable host dependency in this checkout is the adjacent `../go-go-golems/go-go-goja` source tree at `v0.10.7`. Booting the workbench does not contact a compiler or a PicoCalc. The selected archive and optional board-study directory define its available observations.
+
+## Reading an answer produced by the qualified release
+
+A pass event identifies the compiler transformation that just ran and the subject LLVM printed. A function snapshot is one possible subject. Checked-middle event 88 contains a loop headed by `for.cond`. The text names the block. Another function could use that same block name. Earlier in the stream, event 87 names `row`. The two events support different statements about ownership. Inspect the event directly:
+
+```js
+const checked = a.variant("checked")
+q.run(checked.events("middle").at(88).select("ordinal", "scope", "ref"))
+```
+
+The result's `scope.kind` is `"loop"`, its `scope.function` is `null`, and its `scope.ownerHint` gives the tentative adjacent function and anchor ordinal. A whole-function load count at the loop returns `unavailable` with reason `loopFragment`. Reading the operand loads of a function that LLVM printed in full and obtaining zero would establish a different observation.
+
+A change between two measurements can be attributed to one pass only if both endpoints support that measurement, they refer to the same function and stream, and their original event ordinals are consecutive. The evaluator preserves those ordinals even after the researcher filters the timeline. For example, restricting the selection to EarlyCSE invocations leaves events 7 and 74 adjacent on the screen. Other passes ran between them. Their endpoint difference belongs to the interval. Events 73 and 74, in contrast, give two complete consecutive measurements of 11 and 6 direct argument loads in `row`.
+
+Profile metadata answers a separate question. `profiles.arm("typed-scalar").describe()` describes how the treatment was built, how the fixture counts were obtained, and which causal claims the archived arms can support. A descriptor is ready to inspect immediately. Passing the same descriptor to `q.run(d)` returns it unchanged. Passing parameter bindings to an already computed descriptor yields a diagnostic. Bindings take effect on deferred query plans at evaluation time.
+
+### Qualification from the project checkout
+
+The ticket contains the original 26 modules in a concordance and a script that evaluates the originals in one session. To replay the released investigation against a running server:
+
+```sh
+ticket=ttmp/2026/11/21/PICOCALC-TRACE-REPL--a-persistent-compiler-evidence-repl-in-go-and-javascript
+python3 "$ticket/scripts/10-replay-workbook.py" --addr http://127.0.0.1:3792
+python3 "$ticket/scripts/12-session-reuse.py" --addr http://127.0.0.1:3792
+```
+
+All 26 modules returned a result on the corrected process. Four examples demonstrate the value of reporting missing evidence. Example 12 reports missing source locations, example 13 refuses a whole-function measurement on a loop fragment, example 17 returns machine state and reports missing allocator remarks, and example 22 refuses a join without PC samples. Example 26 binds a parameter twice and yields separate results for loop-strength reduction enabled and disabled. The executable, embedded language digest and archive identity are recorded together by the service operator. [Workbook replay](../various/workbook-release.json) · [Service record](../various/session-lifetime/candidate-service.json)

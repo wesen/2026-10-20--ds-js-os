@@ -262,3 +262,120 @@ Inspect the original and resumed briefs together with the small operational rece
 ### Technical details
 
 The resumed session ID was `29795c5a-0bc3-4d46-a5b4-e7e7972ec2c9`. The public result of the interrupted CLI invocation was empty.
+
+## Step 5: Freeze the service and test what researchers conclude
+
+The resumed Opus query implementer delivered an embeddable language. The initial Goja integration exposed a discrepancy between LLVM's printed header and the normalized header stored in the event directory. After the Opus product owner repaired it, I froze the service for independent researchers. The scientific errors in their reports turned out to be more consequential than the first syntax errors.
+
+### Prompt Context
+
+**User prompt:** See Steps 1–3 for the implementation, ownership and scientist-report instructions.
+
+**Assistant interpretation:** Qualify the real product on research decisions as well as query results.
+
+**Inferred user intent:** Identify changes that make it easier to design and validate optimizations without teaching investigators to draw unsupported conclusions.
+
+**Commit (code):** `df7a7b6` — Integrate the Opus compiler evidence language and verified persistent service.
+
+### What I did
+
+- Independently ran the archive, physical provider and session race suites after the Opus owner's review. The first integrated query run failed with `[unknownFunction] function in variant checked "row" is unknown. Valid:`. Examined checked event headers directly; the stored middle-end header reads `IR Dump After EarlyCSEPass on row`, while the query parser had required trailing asterisks.
+- Resumed the Opus owner with the failing test, normalized headers, and the distinction between a loop block and a function. Re-ran the query suite in the actual repository before freezing its binary.
+- Launched the blind baseline through the service operator. Executable SHA-256 starts `d8a8b5ae1c6f`. Startup verified all six streams (30,912,391 bytes). The serving process and the tests used the actual go-go-goja dependency.
+- Ran the original 26 modules through HTTP, the saved-binding benchmark and the board-claim decision cell. Independently confirmed the default hardware result and twelve out of twelve poses below the example one-percent criterion. The preserved initial replay includes both an adapter failure at example 13 and a harness binding mistake at 26.
+- Commissioned Opus fixes for three distinct issues: loop evidence and adjacency, attempted re-execution of already materialized descriptors, and ambiguous treatment/field descriptions. The baseline remains an immutable reference.
+
+### Why
+
+The baseline should capture the user's experience with a named executable. Modifying help or scope resolution in the live process during the first batch would invalidate comparisons between participants.
+
+### What worked
+
+The full `go test -race -count=1 ./...` passed on all five packages with loopback permitted. The first-decrease cell reported 73→74, 11→6 static sites. A fresh HTTP session took 170.56 ms to evaluate it. Median repeat-plan and saved-binding round trips were 2.26 ms and 0.52 ms across seven samples each. These timings include identical evidence serialization and measure this host under the study load.
+
+### What didn't work
+
+- The first sandboxed full race run failed at `listen tcp 127.0.0.1:0: socket: operation not permitted`. The loopback-enabled rerun passed. This was a transport test setup failure.
+- A DeepSeek participant queried `scope.kind === "loop"`, obtained zero and included that false conclusion in its report. The raw compiler stream contains 42 checked-middle prints whose first nonempty body line is `; Preheader:`. Ordinal 88 identifies one by its byte range.
+- Another investigator counted null owners and block names as functions. A researcher designing a two-register experiment interpreted `rowBytes` as a correctness artifact, although the original C capture defines this field as linked code size. A numeric answer checker alone passed these participants' numerical tasks.
+- My first HTTP workbook wrapper invoked example 26 without binding its symbolic arm. The published example says to run it twice. Corrected the validation script to run both requested treatments.
+
+### What I learned
+
+The strongest finding concerned silent misclassification. A rejected type of input costs an extra query. A plausible zero with the wrong scientific meaning can survive into the final report.
+
+### What was tricky to build
+
+Headers for loop passes sometimes name only a basic block, while module and function prints use different scopes. A missing ownership fact should interrupt a pass-attribution claim; it cannot be filled by the investigator's confidence. The physical clock, emulated counts, linked symbol size and verified output size also require distinct labels.
+
+### What warrants a second pair of eyes
+
+Retest original ordinal 88 and the two-function checked module against the repaired process. Verify any proposed attribution to an individual pass across a gap in original ordinals. Compare descriptor diagnostics and treatment metadata directly before judging the fresh personas.
+
+### What should be done in the future
+
+Freeze the converged release, run the same probes and a held-out allocator question, then record independently graded outcomes and remaining problems.
+
+### Code review instructions
+
+Inspect the two physical/raw fixture producers, `pkg/traceapi/query.js`, the public receipts under `various/personas/`, and the exact operational scripts. The young library's own integration tests and the direct archive oracle provide independent ways to check the same research claim.
+
+### Technical details
+
+Both ablation inputs are checked LLVM builds on the same 160 opening-scene rows. A 41,949-instruction reduction describes this controlled pipeline comparison; attributing the entire gain to a specific PC requires data absent from its published aggregates.
+
+## Step 6: Qualify a second frozen executable and replay the research decisions
+
+The corrected service keeps source facts, tentative interpretations, and experimental treatments separate in its public answers. I kept the baseline live and checked the new process first with user programs written before this implementation. This gave the usability researchers two independently addressable builds with the same underlying evidence.
+
+### Prompt Context
+
+**User prompt:** “what's the response limit, can't we just resume ?”
+
+**Assistant interpretation:** Check the actual Opus CLI receipt and continue the original implementing session across an output cutoff. Preserve the lab director's ownership of scientific review.
+
+**Inferred user intent:** A per-response limit should not interrupt a multi-step experiment or transfer implementation to the director.
+
+### What I did
+
+- Coordinated a second release from four Opus implementation work areas. Qualified the three integration intersections covering loop provenance, materialized values, and treatment descriptions. Required a conservative distinction between an adjacent owner and an owner actually named by a loop header.
+- Left the original process on port 3791 and received the corrected executable on port 3792. The on-disk executable hashes begin `d8a8b5ae1c6f` and `523f185499f3` respectively. The candidate embeds the query library beginning `482260a43163`.
+- Ran the original 26 modules through one named HTTP session. Each returned a result. Read the absence diagnostics in examples 12, 13, 17 and 22 and checked that example 26 received both parameter bindings. Kept full small responses and a digest plus excerpt for larger ones.
+- Independently replayed the device decision cell and the session-reuse measurement. The candidate reproduced the rejection of the one-percent claim on all twelve poses. For an already running host server, seven repetitions returned the identical witness. Median end-to-end times were 1.883 ms for rerunning the plan and 0.383 ms for reading the saved result.
+- Checked the service operator's executable identity and asked the usability lane to conduct four fresh blind retests and a held-out allocator question against that immutable process.
+
+### Why
+
+The workstation runs several builds of the same experiment. A listening port or an invocation of the latest source alone cannot establish which language answered a blind question. The executable digest, embedded JavaScript digest and archive digests distinguish the relevant variables.
+
+### What worked
+
+The original workbook reached the genuine evidence boundary at checked event 88. The new API answers the function-wide question with a typed absence and preserves the exact loop evidence. Static and dynamic ablation estimates and physical paired measurements remain independently reproducible.
+
+### What didn't work
+
+Two tests from an intermediate work area required ownership from pass-manager adjacency. Those expectations contradicted the integrated conservative semantics. I returned the failures to the Opus author to keep their positive coverage for names and anchors while checking uncertainty explicitly. The manuscript for the baseline service was already final, so it stays labelled with its baseline digest.
+
+### What I learned
+
+An invalidated loop pass can print the containing module while the event's subject still names a loop. This accounts for the 438th firmware loop event beyond 437 explicit preheader prints. Subject attribution and measurement coverage require separate fields.
+
+### What was tricky to build
+
+Reconciling public query behavior, the pass-manager evidence and tests developed against earlier prototypes required retaining a single frozen candidate during the persona sessions. An implementation note from a scratch checkout records the author's local results, while the independent release receipts describe the code the participants exercised.
+
+### What warrants a second pair of eyes
+
+Review adjudications for causal claims and for quantities labelled as output correctness. Compare observed agent behavior with the scientific controls independently of task completion.
+
+### What should be done in the future
+
+Complete the authored usability report and synthesize the conclusions across the archive, runtime and investigator studies. An independently observed behavior change is stronger evidence than a help change that only looks clearer.
+
+### Code review instructions
+
+Start with `pkg/traceapi/release_test.go`, then the checked-loop fixture and the three release replay files in `various/`. The panel's answers belong to the usability report.
+
+### Technical details
+
+The workbook verifies executable programs and defined absence results, without asserting that every possible compiler question has a corresponding captured observation. Runtime measurements include transport and serialization. The shared archive could already be warm when the fresh VM was opened.

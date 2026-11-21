@@ -1,0 +1,1820 @@
+[
+  {
+    "example": 1,
+    "file": "01-count-observations-before-interpreting-them.mjs",
+    "ok": true,
+    "value": {
+      "kind": "count",
+      "value": 4133,
+      "unit": "events",
+      "of": "a.events()",
+      "streams": 6,
+      "byStream": [
+        {
+          "variant": "checked",
+          "phase": "backend",
+          "streamSHA": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+          "events": 116
+        },
+        {
+          "variant": "checked",
+          "phase": "middle",
+          "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+          "events": 195
+        },
+        {
+          "variant": "firmware",
+          "phase": "backend",
+          "streamSHA": "e1eabbaadea131365f48553d4a07b92c2ba5fb49d5db7cf17e0962599bdd915c",
+          "events": 1450
+        },
+        {
+          "variant": "firmware",
+          "phase": "middle",
+          "streamSHA": "eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38",
+          "events": 2061
+        },
+        {
+          "variant": "unchecked",
+          "phase": "backend",
+          "streamSHA": "98517d51246b17f8ec72298250f962b05b837b12cd955a4c4c3bbf4b4fe540f5",
+          "events": 116
+        },
+        {
+          "variant": "unchecked",
+          "phase": "middle",
+          "streamSHA": "d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4",
+          "events": 195
+        }
+      ]
+    }
+  },
+  {
+    "example": 2,
+    "file": "02-select-a-run-and-phase.mjs",
+    "ok": true,
+    "value": {
+      "kind": "count",
+      "value": 195,
+      "unit": "events",
+      "of": "a.variant(\"checked\").events(\"middle\")",
+      "streams": 1,
+      "byStream": [
+        {
+          "variant": "checked",
+          "phase": "middle",
+          "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+          "events": 195
+        }
+      ]
+    }
+  },
+  {
+    "example": 3,
+    "file": "03-retrieve-one-observation-with-its-byte-range.mjs",
+    "ok": true,
+    "value": {
+      "ordinal": 74,
+      "header": "IR Dump After EarlyCSEPass on row",
+      "ref": {
+        "variant": "checked",
+        "phase": "middle",
+        "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+        "ordinal": 74,
+        "start": 240363,
+        "end": 248127
+      }
+    }
+  },
+  {
+    "example": 4,
+    "file": "04-inspect-evidence-before-counting.mjs",
+    "ok": true,
+    "value": {
+      "kind": "excerpt",
+      "status": "available",
+      "query": {
+        "contains": "load i32, ptr %work"
+      },
+      "scope": "function row",
+      "searchedLines": [
+        3,
+        199
+      ],
+      "hitCount": 6,
+      "hits": [
+        {
+          "line": 13,
+          "column": 8,
+          "text": "  %0 = load i32, ptr %work, align 4",
+          "offsetInPrint": 502,
+          "streamOffset": 240865
+        },
+        {
+          "line": 30,
+          "column": 8,
+          "text": "  %2 = load i32, ptr %work, align 4",
+          "offsetInPrint": 1156,
+          "streamOffset": 241519
+        },
+        {
+          "line": 43,
+          "column": 8,
+          "text": "  %3 = load i32, ptr %work, align 4",
+          "offsetInPrint": 1691,
+          "streamOffset": 242054
+        },
+        {
+          "line": 68,
+          "column": 8,
+          "text": "  %4 = load i32, ptr %work, align 4",
+          "offsetInPrint": 2663,
+          "streamOffset": 243026
+        },
+        {
+          "line": 123,
+          "column": 8,
+          "text": "  %8 = load i32, ptr %work, align 4",
+          "offsetInPrint": 4752,
+          "streamOffset": 245115
+        },
+        {
+          "line": 183,
+          "column": 9,
+          "text": "  %13 = load i32, ptr %work, align 4",
+          "offsetInPrint": 7055,
+          "streamOffset": 247418
+        }
+      ],
+      "truncated": false,
+      "source": {
+        "variant": "checked",
+        "phase": "middle",
+        "ordinal": 74,
+        "pass": "EarlyCSEPass",
+        "header": "IR Dump After EarlyCSEPass on row",
+        "ref": {
+          "variant": "checked",
+          "phase": "middle",
+          "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+          "ordinal": 74,
+          "start": 240363,
+          "end": 248127
+        }
+      },
+      "offsetBasis": "ref span equals the bytes read (the print keeps their prefix)",
+      "excluded": null,
+      "note": "a text search over printed IR; printed local names are not operand identities"
+    }
+  },
+  {
+    "example": 5,
+    "file": "05-count-a-precise-instruction-pattern.mjs",
+    "ok": true,
+    "value": {
+      "kind": "measurement",
+      "metric": "q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()",
+      "definition": "ir.instructions(opcode=load,resultType=i32,pointer=arg(row,0)).count",
+      "unit": "static instruction sites",
+      "valueType": "count",
+      "state": {
+        "variant": "checked",
+        "phase": "middle",
+        "ordinal": 74,
+        "pass": "EarlyCSEPass",
+        "header": "IR Dump After EarlyCSEPass on row",
+        "ref": {
+          "variant": "checked",
+          "phase": "middle",
+          "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+          "ordinal": 74,
+          "start": 240363,
+          "end": 248127
+        },
+        "function": "row",
+        "side": "after",
+        "coverage": "function",
+        "lineRange": [
+          3,
+          199
+        ]
+      },
+      "status": "available",
+      "value": 6,
+      "count": 6,
+      "resolved": {
+        "row.argument(0)": "%work"
+      },
+      "witnesses": [
+        {
+          "line": 13,
+          "block": "for.cond.cleanup",
+          "text": "%0 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 30,
+          "block": "for.body",
+          "text": "%2 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 43,
+          "block": "element.exit37",
+          "text": "%3 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 68,
+          "block": "for.body8",
+          "text": "%4 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 123,
+          "block": "for.body29",
+          "text": "%8 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 183,
+          "block": "element.exit77",
+          "text": "%13 = load i32, ptr %work, align 4"
+        }
+      ],
+      "witnessesTruncated": false,
+      "coverageRequired": "function"
+    }
+  },
+  {
+    "example": 6,
+    "file": "06-reuse-a-metric-at-two-boundaries.mjs",
+    "ok": true,
+    "value": {
+      "kind": "bundle",
+      "outputs": {
+        "earlier": {
+          "kind": "measurement",
+          "metric": "q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()",
+          "definition": "ir.instructions(opcode=load,resultType=i32,pointer=arg(row,0)).count",
+          "unit": "static instruction sites",
+          "valueType": "count",
+          "state": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 73,
+            "pass": "SROAPass",
+            "header": "IR Dump After SROAPass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 73,
+              "start": 231496,
+              "end": 240363
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "function",
+            "lineRange": [
+              3,
+              215
+            ]
+          },
+          "status": "available",
+          "value": 11,
+          "count": 11,
+          "resolved": {
+            "row.argument(0)": "%work"
+          },
+          "witnesses": [
+            {
+              "line": 13,
+              "block": "for.cond.cleanup",
+              "text": "%0 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 30,
+              "block": "for.body",
+              "text": "%2 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 43,
+              "block": "element.exit37",
+              "text": "%3 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 69,
+              "block": "for.body8",
+              "text": "%4 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 84,
+              "block": "element.exit47",
+              "text": "%6 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 98,
+              "block": "element.exit52",
+              "text": "%8 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 129,
+              "block": "for.body29",
+              "text": "%10 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 148,
+              "block": "if.then",
+              "text": "%12 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 163,
+              "block": "element.exit67",
+              "text": "%14 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 183,
+              "block": "if.then45",
+              "text": "%16 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 198,
+              "block": "element.exit77",
+              "text": "%18 = load i32, ptr %work, align 4"
+            }
+          ],
+          "witnessesTruncated": false,
+          "coverageRequired": "function"
+        },
+        "later": {
+          "kind": "measurement",
+          "metric": "q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()",
+          "definition": "ir.instructions(opcode=load,resultType=i32,pointer=arg(row,0)).count",
+          "unit": "static instruction sites",
+          "valueType": "count",
+          "state": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 74,
+            "pass": "EarlyCSEPass",
+            "header": "IR Dump After EarlyCSEPass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 74,
+              "start": 240363,
+              "end": 248127
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "function",
+            "lineRange": [
+              3,
+              199
+            ]
+          },
+          "status": "available",
+          "value": 6,
+          "count": 6,
+          "resolved": {
+            "row.argument(0)": "%work"
+          },
+          "witnesses": [
+            {
+              "line": 13,
+              "block": "for.cond.cleanup",
+              "text": "%0 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 30,
+              "block": "for.body",
+              "text": "%2 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 43,
+              "block": "element.exit37",
+              "text": "%3 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 68,
+              "block": "for.body8",
+              "text": "%4 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 123,
+              "block": "for.body29",
+              "text": "%8 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 183,
+              "block": "element.exit77",
+              "text": "%13 = load i32, ptr %work, align 4"
+            }
+          ],
+          "witnessesTruncated": false,
+          "coverageRequired": "function"
+        }
+      },
+      "keys": [
+        "earlier",
+        "later"
+      ]
+    }
+  },
+  {
+    "example": 7,
+    "file": "07-find-the-first-observed-reduction.mjs",
+    "ok": true,
+    "value": {
+      "ordinal": 74,
+      "pass": "EarlyCSEPass",
+      "header": "IR Dump After EarlyCSEPass on row",
+      "from": 73,
+      "fromPass": "SROAPass",
+      "before": 11,
+      "after": 6,
+      "delta": -5,
+      "changed": true,
+      "transition": null,
+      "status": "known",
+      "reason": null,
+      "skipped": null,
+      "skippedOrdinals": null,
+      "endpointDelta": null,
+      "unit": "static instruction sites",
+      "ref": {
+        "variant": "checked",
+        "phase": "middle",
+        "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+        "ordinal": 74,
+        "start": 240363,
+        "end": 248127
+      }
+    }
+  },
+  {
+    "example": 8,
+    "file": "08-demonstrate-an-unsafe-query-rewrite.mjs",
+    "ok": true,
+    "value": {
+      "kind": "rows",
+      "of": "a.variant(\"checked\").function(\"row\").timeline(\"middle\").where(e => e.pass === \"EarlyCSEPass\").measure(q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()).changes()",
+      "unit": "static instruction sites",
+      "count": 2,
+      "rows": [
+        {
+          "ordinal": 7,
+          "pass": "EarlyCSEPass",
+          "header": "IR Dump After EarlyCSEPass on row",
+          "from": null,
+          "fromPass": null,
+          "before": null,
+          "after": 0,
+          "delta": null,
+          "changed": null,
+          "transition": null,
+          "status": "first",
+          "reason": "no earlier row in this selection",
+          "skipped": null,
+          "skippedOrdinals": null,
+          "endpointDelta": null,
+          "unit": "static instruction sites",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+            "ordinal": 7,
+            "start": 79277,
+            "end": 83764
+          }
+        },
+        {
+          "ordinal": 74,
+          "pass": "EarlyCSEPass",
+          "header": "IR Dump After EarlyCSEPass on row",
+          "from": 7,
+          "fromPass": "EarlyCSEPass",
+          "before": 0,
+          "after": 6,
+          "delta": null,
+          "changed": null,
+          "transition": null,
+          "status": "gap",
+          "reason": "rows are not adjacent in the function timeline; intervening events may have changed the value",
+          "skipped": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            22,
+            23,
+            24,
+            26,
+            70,
+            71,
+            72,
+            73
+          ],
+          "skippedOrdinals": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73
+          ],
+          "endpointDelta": 6,
+          "unit": "static instruction sites",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+            "ordinal": 74,
+            "start": 240363,
+            "end": 248127
+          }
+        }
+      ]
+    }
+  },
+  {
+    "example": 9,
+    "file": "09-measure-two-different-operations-from-one-snapshot.mjs",
+    "ok": true,
+    "value": {
+      "kind": "bundle",
+      "outputs": {
+        "allocations": {
+          "kind": "measurement",
+          "metric": "q.ir.instructions().opcode(\"alloca\").count()",
+          "definition": "ir.instructions(opcode=alloca).count",
+          "unit": "static instruction sites",
+          "valueType": "count",
+          "state": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 6,
+            "pass": "SROAPass",
+            "header": "IR Dump After SROAPass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 6,
+              "start": 74783,
+              "end": 79277
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "function",
+            "lineRange": [
+              3,
+              112
+            ]
+          },
+          "status": "available",
+          "value": 0,
+          "count": 0,
+          "resolved": {},
+          "witnesses": [],
+          "witnessesTruncated": false,
+          "coverageRequired": "function"
+        },
+        "merges": {
+          "kind": "measurement",
+          "metric": "q.ir.instructions().opcode(\"phi\").count()",
+          "definition": "ir.instructions(opcode=phi).count",
+          "unit": "static instruction sites",
+          "valueType": "count",
+          "state": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 6,
+            "pass": "SROAPass",
+            "header": "IR Dump After SROAPass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 6,
+              "start": 74783,
+              "end": 79277
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "function",
+            "lineRange": [
+              3,
+              112
+            ]
+          },
+          "status": "available",
+          "value": 3,
+          "count": 3,
+          "resolved": {},
+          "witnesses": [
+            {
+              "line": 8,
+              "block": "for.cond",
+              "text": "%x.0 = phi i32 [ 0, %entry ], [ %inc, %for.body ]"
+            },
+            {
+              "line": 29,
+              "block": "for.cond4",
+              "text": "%s.0 = phi i32 [ 0, %for.cond.cleanup ], [ %inc58, %for.cond.cleanup28 ]"
+            },
+            {
+              "line": 60,
+              "block": "for.cond25",
+              "text": "%x24.0 = phi i32 [ 0, %for.body8 ], [ %inc55, %if.end53 ]"
+            }
+          ],
+          "witnessesTruncated": false,
+          "coverageRequired": "function"
+        }
+      },
+      "keys": [
+        "allocations",
+        "merges"
+      ]
+    }
+  },
+  {
+    "example": 10,
+    "file": "10-compare-adjacent-program-representations.mjs",
+    "ok": true,
+    "value": {
+      "kind": "comparison",
+      "status": "available",
+      "before": {
+        "kind": "measurement",
+        "metric": "q.ir.instructions().opcode(\"alloca\").count()",
+        "definition": "ir.instructions(opcode=alloca).count",
+        "unit": "static instruction sites",
+        "valueType": "count",
+        "state": {
+          "variant": "checked",
+          "phase": "middle",
+          "ordinal": 5,
+          "pass": "SimplifyCFGPass",
+          "header": "IR Dump After SimplifyCFGPass on row",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+            "ordinal": 5,
+            "start": 66228,
+            "end": 74783
+          },
+          "function": "row",
+          "side": "after",
+          "coverage": "function",
+          "lineRange": [
+            3,
+            216
+          ]
+        },
+        "status": "available",
+        "value": 16,
+        "count": 16,
+        "resolved": {},
+        "witnesses": [
+          {
+            "line": 5,
+            "block": "entry",
+            "text": "%work.addr = alloca ptr, align 4"
+          },
+          {
+            "line": 6,
+            "block": "entry",
+            "text": "%y.addr = alloca i32, align 4"
+          },
+          {
+            "line": 7,
+            "block": "entry",
+            "text": "%x = alloca i32, align 4"
+          },
+          {
+            "line": 8,
+            "block": "entry",
+            "text": "%count = alloca i32, align 4"
+          },
+          {
+            "line": 9,
+            "block": "entry",
+            "text": "%s = alloca i32, align 4"
+          },
+          {
+            "line": 10,
+            "block": "entry",
+            "text": "%cleanup.dest.slot = alloca i32, align 4"
+          },
+          {
+            "line": 11,
+            "block": "entry",
+            "text": "%obj = alloca i32, align 4"
+          },
+          {
+            "line": 12,
+            "block": "entry",
+            "text": "%dy = alloca i32, align 4"
+          },
+          {
+            "line": 13,
+            "block": "entry",
+            "text": "%cz = alloca i32, align 4"
+          },
+          {
+            "line": 14,
+            "block": "entry",
+            "text": "%r = alloca i32, align 4"
+          },
+          {
+            "line": 15,
+            "block": "entry",
+            "text": "%term = alloca i32, align 4"
+          },
+          {
+            "line": 16,
+            "block": "entry",
+            "text": "%horizontal = alloca i32, align 4"
+          },
+          {
+            "line": 17,
+            "block": "entry",
+            "text": "%x24 = alloca i32, align 4"
+          },
+          {
+            "line": 18,
+            "block": "entry",
+            "text": "%d = alloca i32, align 4"
+          },
+          {
+            "line": 19,
+            "block": "entry",
+            "text": "%z = alloca i32, align 4"
+          },
+          {
+            "line": 20,
+            "block": "entry",
+            "text": "%old = alloca i32, align 4"
+          }
+        ],
+        "witnessesTruncated": false,
+        "coverageRequired": "function"
+      },
+      "after": {
+        "kind": "measurement",
+        "metric": "q.ir.instructions().opcode(\"alloca\").count()",
+        "definition": "ir.instructions(opcode=alloca).count",
+        "unit": "static instruction sites",
+        "valueType": "count",
+        "state": {
+          "variant": "checked",
+          "phase": "middle",
+          "ordinal": 6,
+          "pass": "SROAPass",
+          "header": "IR Dump After SROAPass on row",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+            "ordinal": 6,
+            "start": 74783,
+            "end": 79277
+          },
+          "function": "row",
+          "side": "after",
+          "coverage": "function",
+          "lineRange": [
+            3,
+            112
+          ]
+        },
+        "status": "available",
+        "value": 0,
+        "count": 0,
+        "resolved": {},
+        "witnesses": [],
+        "witnessesTruncated": false,
+        "coverageRequired": "function"
+      },
+      "valueType": "count",
+      "unit": "static instruction sites",
+      "delta": -16,
+      "matchedOn": {
+        "unit": {
+          "before": "static instruction sites",
+          "after": "static instruction sites",
+          "equal": true
+        },
+        "metric": {
+          "before": "ir.instructions(opcode=alloca).count",
+          "after": "ir.instructions(opcode=alloca).count",
+          "equal": true
+        }
+      },
+      "note": "matched on unit and metric only; use .matchOn(\"workload\", \"region\", \"checkedContract\", \"unit\") for cross-run work"
+    }
+  },
+  {
+    "example": 11,
+    "file": "11-follow-definitions-instead-of-matching-printed-names.mjs",
+    "ok": true,
+    "jsonBytes": 3652,
+    "sha256": "6f8656ae9559602a6b9e6b9c220f1bd1935b1cc3887751968df3d17060a2de1e",
+    "preview": "{\"count\":10,\"kind\":\"rows\",\"of\":\"a.variant(\\\"checked\\\").function(\\\"row\\\").timeline(\\\"middle\\\").at(74).after.instructions().opcode(\\\"load\\\").resultType(\\\"i32\\\").pointer(row.argument(0)).uses().select(userOpcode, operandIndex, ref)\",\"rows\":[{\"operandIndex\":0,\"ref\":{\"header\":\"IR Dump After EarlyCSEPass on row\",\"line\":14,\"ordinal\":74,\"pass\":\"EarlyCSEPass\",\"phase\":\"middle\",\"ref\":{\"end\":248127,\"ordinal\":74,\"phase\":\"middle\",\"start\":240363,\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"variant\":\"checked\"},\"variant\":\"checked\"},\"userOpcode\":\"icmp\"},{\"operandIndex\":0,\"ref\":{\"header\":\"IR Dump After EarlyCSEPass on row\",\"line\":31,\"ordinal\":74,\"pass\":\"EarlyCSEPass\",\"phase\":\"middle\",\"ref\":{\"end\":248127,\"ordinal\":74,\"phase\":\"middle\",\"start\":240363,\"streamSHA\":\"bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4\",\"variant\":\"checked\"},\"variant\":\"checked\"},\"user"
+  },
+  {
+    "example": 12,
+    "file": "12-ask-what-is-missing.mjs",
+    "ok": true,
+    "value": {
+      "kind": "sourceLocations",
+      "status": "unavailable",
+      "reason": "missingDebugLocations",
+      "checked": {
+        "variant": "checked",
+        "function": "row",
+        "moduleDigest": "20b53964f1918ed6348c3bec6df1bda351a3fd1580759a198eb4c45599e28f9f",
+        "functionDefined": true,
+        "dbgAttachmentsInFunction": 0,
+        "compileUnits": 0,
+        "diLocations": 0,
+        "debugRecords": 0
+      },
+      "why": "the module carries no debug locations/compile unit, so source lines cannot be derived; this is not an empty set of lines"
+    }
+  },
+  {
+    "example": 13,
+    "file": "13-request-whole-function-coverage-explicitly.mjs",
+    "ok": true,
+    "value": {
+      "kind": "measurement",
+      "metric": "q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()",
+      "definition": "ir.instructions(opcode=load,resultType=i32,pointer=arg(row,0)).count",
+      "unit": "static instruction sites",
+      "valueType": "count",
+      "state": {
+        "variant": "checked",
+        "phase": "middle",
+        "ordinal": 88,
+        "pass": "LoopInstSimplifyPass",
+        "header": "IR Dump After LoopInstSimplifyPass on for.cond",
+        "ref": {
+          "variant": "checked",
+          "phase": "middle",
+          "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+          "ordinal": 88,
+          "start": 346976,
+          "end": 348729
+        },
+        "function": "row",
+        "side": "after",
+        "coverage": "loop"
+      },
+      "status": "unavailable",
+      "value": null,
+      "reason": "loopFragment",
+      "why": "the print is a loop fragment; whole-function metrics need a function or module print"
+    }
+  },
+  {
+    "example": 14,
+    "file": "14-make-repeated-machine-passes-visible.mjs",
+    "ok": true,
+    "value": {
+      "kind": "rows",
+      "of": "a.variant(\"checked\").function(\"row\").timeline(\"backend\").where(e => e.passId === \"virtregrewriter\").select(ordinal, passId, scope, ref)",
+      "unit": "events",
+      "count": 2,
+      "rows": [
+        {
+          "ordinal": 74,
+          "passId": "virtregrewriter",
+          "scope": {
+            "kind": "machineFunction",
+            "function": "row",
+            "resolvedFrom": "print"
+          },
+          "ref": {
+            "variant": "checked",
+            "phase": "backend",
+            "streamSHA": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+            "ordinal": 74,
+            "start": 560481,
+            "end": 568252
+          }
+        },
+        {
+          "ordinal": 78,
+          "passId": "virtregrewriter",
+          "scope": {
+            "kind": "machineFunction",
+            "function": "row",
+            "resolvedFrom": "print"
+          },
+          "ref": {
+            "variant": "checked",
+            "phase": "backend",
+            "streamSHA": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+            "ordinal": 78,
+            "start": 591543,
+            "end": 602219
+          }
+        }
+      ]
+    }
+  },
+  {
+    "example": 15,
+    "file": "15-compare-the-two-register-rewriter-occurrences.mjs",
+    "ok": true,
+    "value": {
+      "kind": "bundle",
+      "outputs": {
+        "first": {
+          "kind": "measurement",
+          "metric": "q.machine.property(\"NoVRegs\")",
+          "definition": "machine.property(NoVRegs)",
+          "unit": "machine-function property",
+          "valueType": "boolean",
+          "state": {
+            "variant": "checked",
+            "phase": "backend",
+            "ordinal": 74,
+            "pass": "virtregrewriter",
+            "header": "IR Dump After Virtual Register Rewriter (virtregrewriter) ***:",
+            "ref": {
+              "variant": "checked",
+              "phase": "backend",
+              "streamSHA": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+              "ordinal": 74,
+              "start": 560481,
+              "end": 568252
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "machineFunction"
+          },
+          "status": "available",
+          "value": false,
+          "witnesses": [
+            {
+              "line": 2,
+              "text": "# Machine code for function row: NoPHIs, TracksLiveness, TiedOpsRewritten, TracksDebugUserValues"
+            }
+          ],
+          "note": "LLVM prints the set properties only; a missing name means the property is not set",
+          "coverageRequired": "machine property line"
+        },
+        "last": {
+          "kind": "measurement",
+          "metric": "q.machine.property(\"NoVRegs\")",
+          "definition": "machine.property(NoVRegs)",
+          "unit": "machine-function property",
+          "valueType": "boolean",
+          "state": {
+            "variant": "checked",
+            "phase": "backend",
+            "ordinal": 78,
+            "pass": "virtregrewriter",
+            "header": "IR Dump After Virtual Register Rewriter (virtregrewriter) ***:",
+            "ref": {
+              "variant": "checked",
+              "phase": "backend",
+              "streamSHA": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+              "ordinal": 78,
+              "start": 591543,
+              "end": 602219
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "machineFunction"
+          },
+          "status": "available",
+          "value": true,
+          "witnesses": [
+            {
+              "line": 2,
+              "text": "# Machine code for function row: NoPHIs, TracksLiveness, NoVRegs, TiedOpsRewritten, TracksDebugUserValues"
+            }
+          ],
+          "note": "LLVM prints the set properties only; a missing name means the property is not set",
+          "coverageRequired": "machine property line"
+        }
+      },
+      "keys": [
+        "first",
+        "last"
+      ]
+    }
+  },
+  {
+    "example": 16,
+    "file": "16-compare-endpoints-across-a-gap-deliberately.mjs",
+    "ok": true,
+    "value": {
+      "kind": "endpoints",
+      "status": "available",
+      "before": {
+        "kind": "measurement",
+        "metric": "q.machine.property(\"NoVRegs\")",
+        "definition": "machine.property(NoVRegs)",
+        "unit": "machine-function property",
+        "valueType": "boolean",
+        "state": {
+          "variant": "checked",
+          "phase": "backend",
+          "ordinal": 74,
+          "pass": "virtregrewriter",
+          "header": "IR Dump After Virtual Register Rewriter (virtregrewriter) ***:",
+          "ref": {
+            "variant": "checked",
+            "phase": "backend",
+            "streamSHA": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+            "ordinal": 74,
+            "start": 560481,
+            "end": 568252
+          },
+          "function": "row",
+          "side": "after",
+          "coverage": "machineFunction"
+        },
+        "status": "available",
+        "value": false,
+        "witnesses": [
+          {
+            "line": 2,
+            "text": "# Machine code for function row: NoPHIs, TracksLiveness, TiedOpsRewritten, TracksDebugUserValues"
+          }
+        ],
+        "note": "LLVM prints the set properties only; a missing name means the property is not set",
+        "coverageRequired": "machine property line"
+      },
+      "after": {
+        "kind": "measurement",
+        "metric": "q.machine.property(\"NoVRegs\")",
+        "definition": "machine.property(NoVRegs)",
+        "unit": "machine-function property",
+        "valueType": "boolean",
+        "state": {
+          "variant": "checked",
+          "phase": "backend",
+          "ordinal": 78,
+          "pass": "virtregrewriter",
+          "header": "IR Dump After Virtual Register Rewriter (virtregrewriter) ***:",
+          "ref": {
+            "variant": "checked",
+            "phase": "backend",
+            "streamSHA": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+            "ordinal": 78,
+            "start": 591543,
+            "end": 602219
+          },
+          "function": "row",
+          "side": "after",
+          "coverage": "machineFunction"
+        },
+        "status": "available",
+        "value": true,
+        "witnesses": [
+          {
+            "line": 2,
+            "text": "# Machine code for function row: NoPHIs, TracksLiveness, NoVRegs, TiedOpsRewritten, TracksDebugUserValues"
+          }
+        ],
+        "note": "LLVM prints the set properties only; a missing name means the property is not set",
+        "coverageRequired": "machine property line"
+      },
+      "valueType": "boolean",
+      "unit": "machine-function property",
+      "delta": null,
+      "matchedOn": {
+        "unit": {
+          "before": "machine-function property",
+          "after": "machine-function property",
+          "equal": true
+        },
+        "metric": {
+          "before": "machine.property(NoVRegs)",
+          "after": "machine.property(NoVRegs)",
+          "equal": true
+        }
+      },
+      "note": "matched on unit and metric only; use .matchOn(\"workload\", \"region\", \"checkedContract\", \"unit\") for cross-run work",
+      "equal": false,
+      "transition": "false→true",
+      "interval": {
+        "status": "known",
+        "from": 74,
+        "to": 78,
+        "intervening": [
+          {
+            "ordinal": 75,
+            "pass": "virtregmap"
+          },
+          {
+            "ordinal": 76,
+            "pass": "liveregmatrix"
+          },
+          {
+            "ordinal": 77,
+            "pass": "greedy"
+          }
+        ],
+        "note": "the difference belongs to the whole interval (4 events after 74); it cannot be assigned to the final event alone"
+      }
+    }
+  },
+  {
+    "example": 17,
+    "file": "17-ask-for-a-decision-and-its-explanation-separately.mjs",
+    "ok": true,
+    "value": {
+      "kind": "bundle",
+      "outputs": {
+        "state": {
+          "kind": "excerpt",
+          "status": "available",
+          "query": {
+            "contains": "define"
+          },
+          "scope": "function row",
+          "searchedLines": [
+            3,
+            189
+          ],
+          "hitCount": 1,
+          "hits": [
+            {
+              "line": 3,
+              "column": 1,
+              "text": "define dso_local noundef i32 @row(ptr nocapture noundef %work, i32 noundef %y) local_unnamed_addr #0 {",
+              "offsetInPrint": 126,
+              "streamOffset": 806478
+            }
+          ],
+          "truncated": false,
+          "source": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 166,
+            "pass": "LoopVectorizePass",
+            "header": "IR Dump After LoopVectorizePass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 166,
+              "start": 806352,
+              "end": 814146
+            }
+          },
+          "offsetBasis": "ref span equals the bytes read (the print keeps their prefix)",
+          "excluded": null,
+          "note": "a text search over printed IR; printed local names are not operand identities"
+        },
+        "reasons": {
+          "kind": "remarks",
+          "status": "unavailable",
+          "reason": "missingRemarksArtifact",
+          "variant": "checked",
+          "why": "no LLVM optimization-remarks artifact was captured for this archive; that is different from an imported artifact with zero matching remarks",
+          "note": "remarks from another compiler (e.g. GCC) carry their own provenance and are never attributed to LLVM",
+          "event": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 166,
+            "pass": "LoopVectorizePass",
+            "header": "IR Dump After LoopVectorizePass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 166,
+              "start": 806352,
+              "end": 814146
+            }
+          }
+        }
+      },
+      "keys": [
+        "state",
+        "reasons"
+      ]
+    }
+  },
+  {
+    "example": 18,
+    "file": "18-import-an-execution-summary.mjs",
+    "ok": true,
+    "value": {
+      "kind": "total",
+      "status": "available",
+      "reason": null,
+      "arm": "checked-gcc",
+      "metric": "instructions",
+      "value": 1136142,
+      "unit": "executed guest instructions",
+      "dimension": "executed guest instructions",
+      "category": null,
+      "scope": "dynamic (executed work, summed over the workload)",
+      "region": {
+        "name": "row",
+        "requested": true,
+        "evidence": "the measured row symbol (summary totals are collected inside it)"
+      },
+      "workload": {
+        "label": "opening-160-rows",
+        "rowsVerified": 160,
+        "verified": true,
+        "evidence": "rowsVerified=160"
+      },
+      "contract": {
+        "value": "checked",
+        "evidence": "arm name prefix \"checked-\""
+      },
+      "source": {
+        "profile": "execution",
+        "entry": "checked-gcc",
+        "digest": "42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8",
+        "path": "execution[\"checked-gcc\"].totals.instructions"
+      }
+    }
+  },
+  {
+    "example": 19,
+    "file": "19-compose-metrics-with-compatible-units.mjs",
+    "ok": true,
+    "value": {
+      "kind": "sum",
+      "label": "direct stack accesses",
+      "parts": [
+        {
+          "kind": "total",
+          "status": "available",
+          "reason": null,
+          "arm": "typed-stock",
+          "metric": "stackLoads",
+          "value": 936328,
+          "unit": "executed direct stack loads",
+          "dimension": "executed direct stack accesses",
+          "category": "loads",
+          "scope": "dynamic (executed work, summed over the workload)",
+          "region": {
+            "name": "row",
+            "requested": true,
+            "evidence": "the measured row symbol (summary totals are collected inside it)"
+          },
+          "workload": {
+            "label": "opening-160-rows",
+            "rowsVerified": 160,
+            "verified": true,
+            "evidence": "rowsVerified=160"
+          },
+          "contract": {
+            "value": null,
+            "evidence": "the summary does not state a checked/unchecked contract for this arm"
+          },
+          "source": {
+            "profile": "typed",
+            "entry": "stock",
+            "digest": "119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984",
+            "path": "typed[\"stock\"].totals.stackLoads"
+          }
+        },
+        {
+          "kind": "total",
+          "status": "available",
+          "reason": null,
+          "arm": "typed-stock",
+          "metric": "stackStores",
+          "value": 353778,
+          "unit": "executed direct stack stores",
+          "dimension": "executed direct stack accesses",
+          "category": "stores",
+          "scope": "dynamic (executed work, summed over the workload)",
+          "region": {
+            "name": "row",
+            "requested": true,
+            "evidence": "the measured row symbol (summary totals are collected inside it)"
+          },
+          "workload": {
+            "label": "opening-160-rows",
+            "rowsVerified": 160,
+            "verified": true,
+            "evidence": "rowsVerified=160"
+          },
+          "contract": {
+            "value": null,
+            "evidence": "the summary does not state a checked/unchecked contract for this arm"
+          },
+          "source": {
+            "profile": "typed",
+            "entry": "stock",
+            "digest": "119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984",
+            "path": "typed[\"stock\"].totals.stackStores"
+          }
+        }
+      ],
+      "value": 1290106,
+      "unit": "executed direct stack accesses",
+      "status": "available",
+      "formula": "stackLoads=936328 + stackStores=353778 = 1290106"
+    }
+  },
+  {
+    "example": 20,
+    "file": "20-compare-two-compilers-on-equivalent-inputs.mjs",
+    "ok": true,
+    "value": {
+      "kind": "comparison",
+      "status": "available",
+      "before": {
+        "kind": "total",
+        "status": "available",
+        "reason": null,
+        "arm": "checked-gcc",
+        "metric": "instructions",
+        "value": 1136142,
+        "unit": "executed guest instructions",
+        "dimension": "executed guest instructions",
+        "category": null,
+        "scope": "dynamic (executed work, summed over the workload)",
+        "region": {
+          "name": "row",
+          "requested": true,
+          "evidence": "the measured row symbol (summary totals are collected inside it)"
+        },
+        "workload": {
+          "label": "opening-160-rows",
+          "rowsVerified": 160,
+          "verified": true,
+          "evidence": "rowsVerified=160"
+        },
+        "contract": {
+          "value": "checked",
+          "evidence": "arm name prefix \"checked-\""
+        },
+        "source": {
+          "profile": "execution",
+          "entry": "checked-gcc",
+          "digest": "42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8",
+          "path": "execution[\"checked-gcc\"].totals.instructions"
+        }
+      },
+      "after": {
+        "kind": "total",
+        "status": "available",
+        "reason": null,
+        "arm": "checked-llvm",
+        "metric": "instructions",
+        "value": 1233611,
+        "unit": "executed guest instructions",
+        "dimension": "executed guest instructions",
+        "category": null,
+        "scope": "dynamic (executed work, summed over the workload)",
+        "region": {
+          "name": "row",
+          "requested": true,
+          "evidence": "the measured row symbol (summary totals are collected inside it)"
+        },
+        "workload": {
+          "label": "opening-160-rows",
+          "rowsVerified": 160,
+          "verified": true,
+          "evidence": "rowsVerified=160"
+        },
+        "contract": {
+          "value": "checked",
+          "evidence": "arm name prefix \"checked-\""
+        },
+        "source": {
+          "profile": "execution",
+          "entry": "checked-llvm",
+          "digest": "42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8",
+          "path": "execution[\"checked-llvm\"].totals.instructions"
+        }
+      },
+      "valueType": "count",
+      "unit": "executed guest instructions",
+      "delta": 97469,
+      "matchedOn": {
+        "workload": {
+          "before": "opening-160-rows",
+          "after": "opening-160-rows",
+          "equal": true
+        },
+        "region": {
+          "before": "row",
+          "after": "row",
+          "equal": true
+        },
+        "checkedContract": {
+          "before": "checked",
+          "after": "checked",
+          "equal": true
+        },
+        "unit": {
+          "before": "executed guest instructions",
+          "after": "executed guest instructions",
+          "equal": true
+        }
+      }
+    }
+  },
+  {
+    "example": 21,
+    "file": "21-isolate-a-pass-with-an-ablation.mjs",
+    "ok": true,
+    "value": {
+      "kind": "comparison",
+      "status": "available",
+      "before": {
+        "kind": "total",
+        "status": "available",
+        "reason": null,
+        "arm": "checked-llc-nolsr",
+        "metric": "instructions",
+        "value": 1275560,
+        "unit": "executed guest instructions",
+        "dimension": "executed guest instructions",
+        "category": null,
+        "scope": "dynamic (executed work, summed over the workload)",
+        "region": {
+          "name": "row",
+          "requested": true,
+          "evidence": "the measured row symbol (summary totals are collected inside it)"
+        },
+        "workload": {
+          "label": "opening-160-rows",
+          "rowsVerified": 160,
+          "verified": true,
+          "evidence": "rowsVerified=160"
+        },
+        "contract": {
+          "value": "checked",
+          "evidence": "arm name prefix \"checked-\""
+        },
+        "source": {
+          "profile": "execution",
+          "entry": "checked-llc-nolsr",
+          "digest": "42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8",
+          "path": "execution[\"checked-llc-nolsr\"].totals.instructions"
+        }
+      },
+      "after": {
+        "kind": "total",
+        "status": "available",
+        "reason": null,
+        "arm": "checked-llc",
+        "metric": "instructions",
+        "value": 1233611,
+        "unit": "executed guest instructions",
+        "dimension": "executed guest instructions",
+        "category": null,
+        "scope": "dynamic (executed work, summed over the workload)",
+        "region": {
+          "name": "row",
+          "requested": true,
+          "evidence": "the measured row symbol (summary totals are collected inside it)"
+        },
+        "workload": {
+          "label": "opening-160-rows",
+          "rowsVerified": 160,
+          "verified": true,
+          "evidence": "rowsVerified=160"
+        },
+        "contract": {
+          "value": "checked",
+          "evidence": "arm name prefix \"checked-\""
+        },
+        "source": {
+          "profile": "execution",
+          "entry": "checked-llc",
+          "digest": "42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8",
+          "path": "execution[\"checked-llc\"].totals.instructions"
+        }
+      },
+      "valueType": "count",
+      "unit": "executed guest instructions",
+      "delta": -41949,
+      "matchedOn": {
+        "workload": {
+          "before": "opening-160-rows",
+          "after": "opening-160-rows",
+          "equal": true
+        },
+        "region": {
+          "before": "row",
+          "after": "row",
+          "equal": true
+        },
+        "checkedContract": {
+          "before": "checked",
+          "after": "checked",
+          "equal": true
+        },
+        "unit": {
+          "before": "executed guest instructions",
+          "after": "executed guest instructions",
+          "equal": true
+        }
+      },
+      "percent": -3.288673210197874,
+      "denominator": {
+        "side": "before",
+        "value": 1275560
+      }
+    }
+  },
+  {
+    "example": 22,
+    "file": "22-ask-for-a-pc-join-the-input-cannot-answer.mjs",
+    "ok": true,
+    "value": {
+      "kind": "join",
+      "status": "unavailable",
+      "reasons": [
+        {
+          "reason": "missingPCSamples",
+          "arm": "checked-llvm",
+          "detail": "the summary holds aggregate totals and samples keyed by 0, 61, 109, not per-PC samples"
+        },
+        {
+          "reason": "missingInput",
+          "input": "finalImage",
+          "detail": "no final image with an imageSHA and address map is registered for this archive"
+        }
+      ],
+      "required": [
+        "imageSHA",
+        "addressSpace"
+      ],
+      "note": "a PC join needs PC samples, a known image identity, address normalization and symbol bounds; a matching function name alone is not a join"
+    }
+  },
+  {
+    "example": 23,
+    "file": "23-extend-a-component-with-a-scoped-fragment.mjs",
+    "ok": true,
+    "value": {
+      "kind": "measurement",
+      "metric": "q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count() /* picocalc.row.v1.capacityMetric */",
+      "definition": "ir.instructions(opcode=load,resultType=i32,pointer=arg(row,0)).count",
+      "unit": "static instruction sites",
+      "valueType": "count",
+      "state": {
+        "variant": "checked",
+        "phase": "middle",
+        "ordinal": 74,
+        "pass": "EarlyCSEPass",
+        "header": "IR Dump After EarlyCSEPass on row",
+        "ref": {
+          "variant": "checked",
+          "phase": "middle",
+          "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+          "ordinal": 74,
+          "start": 240363,
+          "end": 248127
+        },
+        "function": "row",
+        "side": "after",
+        "coverage": "function",
+        "lineRange": [
+          3,
+          199
+        ]
+      },
+      "status": "available",
+      "value": 6,
+      "count": 6,
+      "resolved": {
+        "row.argument(0)": "%work"
+      },
+      "witnesses": [
+        {
+          "line": 13,
+          "block": "for.cond.cleanup",
+          "text": "%0 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 30,
+          "block": "for.body",
+          "text": "%2 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 43,
+          "block": "element.exit37",
+          "text": "%3 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 68,
+          "block": "for.body8",
+          "text": "%4 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 123,
+          "block": "for.body29",
+          "text": "%8 = load i32, ptr %work, align 4"
+        },
+        {
+          "line": 183,
+          "block": "element.exit77",
+          "text": "%13 = load i32, ptr %work, align 4"
+        }
+      ],
+      "witnessesTruncated": false,
+      "coverageRequired": "function"
+    }
+  },
+  {
+    "example": 24,
+    "file": "24-bind-a-slider-without-reading-the-archive-again.mjs",
+    "ok": true,
+    "value": {
+      "kind": "rows",
+      "of": "a.variant(\"checked\").function(\"row\").timeline(\"middle\").measure(q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()).changes().where((r, ctx) => r.status === \"known\" && -r.delta >= ctx.param...)",
+      "unit": "static instruction sites",
+      "count": 1,
+      "rows": [
+        {
+          "ordinal": 74,
+          "pass": "EarlyCSEPass",
+          "header": "IR Dump After EarlyCSEPass on row",
+          "from": 73,
+          "fromPass": "SROAPass",
+          "before": 11,
+          "after": 6,
+          "delta": -5,
+          "changed": true,
+          "transition": null,
+          "status": "known",
+          "reason": null,
+          "skipped": null,
+          "skippedOrdinals": null,
+          "endpointDelta": null,
+          "unit": "static instruction sites",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+            "ordinal": 74,
+            "start": 240363,
+            "end": 248127
+          }
+        }
+      ]
+    }
+  },
+  {
+    "example": 25,
+    "file": "25-branch-a-shared-query-into-an-interactive-result.mjs",
+    "ok": true,
+    "value": {
+      "kind": "explain",
+      "root": 1,
+      "nodes": [
+        {
+          "id": 1,
+          "kind": "bundle",
+          "label": "q.bundle({ timeline, first })",
+          "inputs": [
+            2,
+            6
+          ],
+          "consumers": 0
+        },
+        {
+          "id": 2,
+          "kind": "rows",
+          "label": "a.variant(\"checked\").function(\"row\").timeline(\"middle\").measure(q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()).changes().select(ordinal, before, after, delta)",
+          "inputs": [
+            3
+          ],
+          "consumers": 1
+        },
+        {
+          "id": 3,
+          "kind": "changes",
+          "label": "a.variant(\"checked\").function(\"row\").timeline(\"middle\").measure(q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()).changes()",
+          "inputs": [
+            4
+          ],
+          "consumers": 2
+        },
+        {
+          "id": 4,
+          "kind": "measurements",
+          "label": "a.variant(\"checked\").function(\"row\").timeline(\"middle\").measure(q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count())",
+          "inputs": [
+            5
+          ],
+          "consumers": 1
+        },
+        {
+          "id": 5,
+          "kind": "events",
+          "label": "a.variant(\"checked\").function(\"row\").timeline(\"middle\")",
+          "inputs": [],
+          "consumers": 1
+        },
+        {
+          "id": 6,
+          "kind": "pick",
+          "label": "a.variant(\"checked\").function(\"row\").timeline(\"middle\").measure(q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()).changes().where(r => r.status === \"known\" && r.delta < 0).first()",
+          "inputs": [
+            7
+          ],
+          "consumers": 1
+        },
+        {
+          "id": 7,
+          "kind": "changes",
+          "label": "a.variant(\"checked\").function(\"row\").timeline(\"middle\").measure(q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()).changes().where(r => r.status === \"known\" && r.delta < 0)",
+          "inputs": [
+            3
+          ],
+          "consumers": 1
+        }
+      ],
+      "shared": [
+        3
+      ],
+      "sources": [
+        "a.variant(\"checked\").function(\"row\").timeline(\"middle\")"
+      ],
+      "evaluation": "synchronous; a shared terminal plan is evaluated once per q.run; shared row sources may be re-iterated, but prints, snapshots and metric values come from bounded session caches"
+    }
+  },
+  {
+    "example": 26,
+    "file": "26-design-a-research-comparison-with-a-falsifiable-prediction.mjs",
+    "ok": true,
+    "jsonBytes": 3546,
+    "sha256": "2e8cbba30e39143687094ba8623cd35ecd165968b95b1cb48ad456b50bf1176d",
+    "preview": "{\"disabled\":{\"keys\":[\"normalBuildHasPhysicalRegisters\",\"executedRowWork\"],\"kind\":\"bundle\",\"outputs\":{\"executedRowWork\":{\"arm\":\"checked-llc-nolsr\",\"category\":null,\"contract\":{\"evidence\":\"arm name prefix \\\"checked-\\\"\",\"value\":\"checked\"},\"dimension\":\"executed guest instructions\",\"kind\":\"total\",\"metric\":\"instructions\",\"reason\":null,\"region\":{\"evidence\":\"the measured row symbol (summary totals are collected inside it)\",\"name\":\"row\",\"requested\":true},\"scope\":\"dynamic (executed work, summed over the workload)\",\"source\":{\"digest\":\"42a8a43d34e6b35e17bae2742ec0a2942b5d0bb6698c4331138c8b313ab816d8\",\"entry\":\"checked-llc-nolsr\",\"path\":\"execution[\\\"checked-llc-nolsr\\\"].totals.instructions\",\"profile\":\"execution\"},\"status\":\"available\",\"unit\":\"executed guest instructions\",\"value\":1275560,\"workload\":{\"evidence\":\"rowsVerified=160\",\"label\":\"opening-160-rows\",\"rowsVerified\":160,\"verified\":true}},\"normalBuild"
+  }
+]

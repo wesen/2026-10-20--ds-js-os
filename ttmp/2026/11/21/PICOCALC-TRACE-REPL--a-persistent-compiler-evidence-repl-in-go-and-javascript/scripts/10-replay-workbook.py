@@ -62,7 +62,12 @@ def main():
         for n, module in enumerate(modules, start=1):
             function = module.read_text().split("export default ", 1)[1].strip()
             expression = f"({function})(workbookCtx)"
-            if n not in (24, 25):
+            if n == 26:
+                # The workbook asks the operator to run this parameterized plan for both arms.
+                expression = ("((plan) => ({ enabled: q.run(plan, {bindings: {arm: 'checked-llc'}}),"
+                              "disabled: q.run(plan, {bindings: {arm: 'checked-llc-nolsr'}}) }))"
+                              + f"({expression})")
+            elif n not in (24, 25):
                 expression = f"q.run({expression})"
             reply = evaluate(expression)
             record = {"example": n, "file": module.name, "ok": reply.get("ok", False)}
