@@ -93,3 +93,5 @@ The operator gathered 3,135 opening, 3,705 dense and 893 sparse packets per bloc
 | Full | 742 | 132.745 | 164.982 | 151.001 |
 
 Empty classification saves ordinary lane tests. A mixed packet still pays for classification, scalar lane tests and some hit consumers. A full packet can use the maximum to avoid the per-lane sign test, but the extra reduction and calls also cost cycles. This timing includes a function call per packet with separately initialized state; the complete row uses an inlined inner loop and real accumulated depth history. Use `scripts/ray/07-score-classes.py` to regenerate the evidence and the measured whole rows to select the actual compiler treatment.
+
+For a live cross-check, run `python3 T/scripts/ray/08-repl-ray.py --addr http://127.0.0.1:3794`. The script loads the 81 opening records into its own JavaScript sandbox, joins all nine blocks against `simd.packets('opening-160-rows')`, verifies the three independently obtained denominators, and computes the same per-class medians from raw cycles. The captured response is in `various/ray/repl-classes.json`.

@@ -1,0 +1,34 @@
+{
+  "source": "(()=>{\n const maskRecords=simd.packets('opening-160-rows').packets;\n const observed=[0,0,0];\n for (const p of maskRecords) observed[p.hitMask===0?0:p.hitMask===255?2:1]++;\n const result=[];\n const median=xs=>xs.slice().sort((a,b)=>a-b)[xs.length>>1];\n for(let group=0;group<3;group++) {\n   const byArm=[];\n   for(let arm=0;arm<3;arm++) {\n     const rows=rayOpeningClassRows.filter(r=>r.class===group&&r.schedule===arm);\n     if(rows.length!==9||rows.some(r=>r.packets!==observed[group]||r.all_passed!==1))\n       throw Error('arm or packet census mismatch');\n     byArm.push(median(rows.map(r=>r.cycles/r.packets)));\n   }\n   result.push({group,packets:observed[group],medianCyclesPerPacket:byArm});\n }\n return result;\n})()",
+  "result": [
+    {
+      "group": 0,
+      "packets": 2111,
+      "medianCyclesPerPacket": [
+        55.20843202273804,
+        40.24159166271909,
+        41.22974893415443
+      ]
+    },
+    {
+      "group": 1,
+      "packets": 282,
+      "medianCyclesPerPacket": [
+        95.10992907801419,
+        128.25886524822695,
+        126.97163120567376
+      ]
+    },
+    {
+      "group": 2,
+      "packets": 742,
+      "medianCyclesPerPacket": [
+        132.74528301886792,
+        164.98247978436657,
+        151.00134770889488
+      ]
+    }
+  ],
+  "input": "various/ray/packet-classes.csv (scene=0)",
+  "capturedMasks": "simd.packets('opening-160-rows')"
+}

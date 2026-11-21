@@ -48,5 +48,34 @@
         226752
       ]
     ]
+  },
+  "classes": {
+    "flashed_sha256": "92125987b5e653b8381abdc6a1dab49347402e188382cdce269d08250576d499",
+    "rebuilt_sha256": "dc01bd5e78db0fba2fc4ae034f391d54ed3eb2afa35a366f7965badd21041427",
+    "flashed_bytes": 196576,
+    "rebuilt_bytes": 196576,
+    "differing_bytes": 70,
+    "differing_ranges": [
+      [
+        113,
+        114
+      ],
+      [
+        115,
+        117
+      ],
+      [
+        118,
+        120
+      ],
+      [
+        176,
+        208
+      ],
+      [
+        196543,
+        196576
+      ]
+    ]
   }
 }

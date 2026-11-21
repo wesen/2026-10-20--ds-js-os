@@ -280,3 +280,5 @@ Review scripts/ray/board/packet_classes.c, the classes branch in 06-stage-board.
 Physical image 92125987b5e653b8381abdc6a1dab49347402e188382cdce269d08250576d499, 196,576 bytes. Each arm saw 3,135 + 3,705 + 893 = 7,733 aligned packets per block. Three arms across nine blocks yield the independent reference comparison count.
 
 The third physical restoration completed with the same playable SHA and a successful native painter status query. See various/ray/third-restoration.json.
+
+I repeated the fresh build for this third image too. Its 196,576 bytes had 70 differences, confined to application description and firmware/ELF integrity data; its executable payload matched. I also loaded all 81 opening class rows into the researcher's isolated REPL session and joined them to the evidence team's independent masks. Scripts/ray/08-repl-ray.py reproduces the per-block census check. This work follows the physical study commit 1f9f4ef.
