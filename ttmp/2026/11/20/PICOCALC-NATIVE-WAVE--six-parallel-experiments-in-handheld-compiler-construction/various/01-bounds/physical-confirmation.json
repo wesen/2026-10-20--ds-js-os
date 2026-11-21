@@ -1,0 +1,335 @@
+{
+  "candidate": "004de7f006e23abf91b1e51c300d6633446136cdb8fe06a072f5fde0dee79816",
+  "release": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "nativeBatchCycles": {
+    "repeated": {
+      "stock": [
+        24247,
+        22052,
+        22068,
+        22066,
+        22058,
+        22053,
+        22058,
+        22061,
+        22061,
+        22046,
+        22067
+      ],
+      "bounds-order": [
+        19623,
+        17439,
+        17434,
+        17434,
+        17428,
+        17432,
+        17430,
+        17430,
+        17493,
+        17428,
+        17434
+      ],
+      "bounds-selected": [
+        17446,
+        18262,
+        17430,
+        17430,
+        17528,
+        17430,
+        17430,
+        17430,
+        17430,
+        17430,
+        17432
+      ],
+      "semantics-late": [
+        16662,
+        16673,
+        16677,
+        16657,
+        16657,
+        16673,
+        16657,
+        16657,
+        16657,
+        16673,
+        16670
+      ],
+      "semantics-selected": [
+        16665,
+        16665,
+        16657,
+        16657,
+        16657,
+        16657,
+        16657,
+        16657,
+        16657,
+        16657,
+        16675
+      ]
+    },
+    "literal": {
+      "stock": [
+        24344,
+        21278,
+        21288,
+        21276,
+        21276,
+        21268,
+        21272,
+        21276,
+        21276,
+        21278,
+        21349
+      ],
+      "bounds-order": [
+        22663,
+        21275,
+        21272,
+        21269,
+        21269,
+        21271,
+        21277,
+        21269,
+        21282,
+        21267,
+        21269
+      ],
+      "bounds-selected": [
+        21271,
+        25225,
+        21269,
+        21268,
+        21294,
+        21274,
+        21276,
+        21269,
+        21271,
+        21268,
+        21268
+      ],
+      "semantics-late": [
+        17698,
+        17692,
+        17696,
+        17688,
+        17688,
+        17696,
+        17688,
+        17688,
+        17688,
+        17696,
+        17688
+      ],
+      "semantics-selected": [
+        19493,
+        19487,
+        19476,
+        19469,
+        19470,
+        19473,
+        19469,
+        19469,
+        19469,
+        19474,
+        19483
+      ]
+    },
+    "write": {
+      "stock": [
+        20513,
+        20508,
+        20518,
+        20505,
+        20500,
+        20508,
+        20503,
+        20505,
+        20500,
+        20502,
+        20514
+      ],
+      "bounds-order": [
+        20517,
+        20513,
+        20500,
+        20502,
+        20502,
+        20502,
+        20526,
+        20502,
+        20515,
+        20502,
+        20504
+      ],
+      "bounds-selected": [
+        20509,
+        20546,
+        20502,
+        20502,
+        20532,
+        20502,
+        20513,
+        20502,
+        20502,
+        20502,
+        20499
+      ],
+      "semantics-late": [
+        15134,
+        15124,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120,
+        15120,
+        16644,
+        15120
+      ],
+      "semantics-selected": [
+        18719,
+        18720,
+        18717,
+        18717,
+        18713,
+        18726,
+        18717,
+        18713,
+        18713,
+        18726,
+        18722
+      ]
+    }
+  },
+  "compileSamples": [
+    {
+      "world": "chess",
+      "arm": "stock",
+      "status": "ok",
+      "us": 5403629,
+      "peakJsBytes": 3185080,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 6839306,
+      "peakJsBytes": 3185076,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 5331546,
+      "peakJsBytes": 3185068,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 5359783,
+      "peakJsBytes": 3185152,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 3067086,
+      "peakJsBytes": 1948000,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "chess",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 3184503,
+      "peakJsBytes": 1983752,
+      "linkedBytes": 274892
+    },
+    {
+      "world": "editor",
+      "arm": "stock",
+      "status": "ok",
+      "us": 4548592,
+      "peakJsBytes": 2573852,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-always",
+      "status": "ok",
+      "us": 5228611,
+      "peakJsBytes": 2578260,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-order",
+      "status": "ok",
+      "us": 4587680,
+      "peakJsBytes": 2577992,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "bounds-selected",
+      "status": "ok",
+      "us": 4562489,
+      "peakJsBytes": 2578312,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-late",
+      "status": "ok",
+      "us": 4139521,
+      "peakJsBytes": 2496344,
+      "linkedBytes": 242124
+    },
+    {
+      "world": "editor",
+      "arm": "semantics-selected",
+      "status": "ok",
+      "us": 4268826,
+      "peakJsBytes": 2528612,
+      "linkedBytes": 242124
+    }
+  ],
+  "settings": "WAVE_BEGIN core=1 cpu_hz=360000000 native_samples=11 calls=256 compile_samples=1",
+  "nativeChecked": true,
+  "completed": true,
+  "passed": true,
+  "restoreReadback": true,
+  "restoredWorlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 2075029,
+    "relocate_us": 1195,
+    "native_us": 2922,
+    "raster_us": 0,
+    "image_bytes": 33840
+  }
+}

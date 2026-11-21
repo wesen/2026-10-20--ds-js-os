@@ -146,3 +146,7 @@ Follow `reference/16-reproduce-bounds-and-operation-lifetime.md`. The device run
 ### Technical details
 
 Physical candidate SHA-256 `5a5629a4e8f11814c5b46045ece9b7d182bacb6254061b6348904f77780346c3`. Code placement uses flash text, with constant input and PSRAM stack outputs. The logged core is 1 at 360 MHz. The candidate's generated code is validated on the host before the physical trial.
+
+### Confirmation at the next available board window
+
+I added a dedicated native correctness line before starting cold compilation, retained observations immediately, increased the timeout to 480 seconds, and added a shorter trial that measures one paired block per app. The five generated positive programs were unchanged byte for byte and their flash addresses moved by 128 bytes. This run explicitly passed the native correctness line and the final completion line. It recorded 165 native rows and 12 fresh compiler rows. The first run remains incomplete and supplies only the four balanced compile blocks. The second run independently validates positive native output and provides a separate cold comparison. After both runs I verified the ordinary app and partition and checked eight restored native worlds, the installed painter, and zero painter rejects.

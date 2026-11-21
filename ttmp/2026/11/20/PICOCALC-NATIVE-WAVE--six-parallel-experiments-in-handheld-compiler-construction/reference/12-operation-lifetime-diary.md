@@ -146,3 +146,7 @@ Review the staging and receipts in the bounds lane using `reference/16-reproduce
 ### Technical details
 
 Both device lanes used one candidate app. The 280-second host deadline expired with 59 of 60 cold samples and 165 of 165 native timing rows. It missed Editor bounds-selected in the fifth block and the combined device correctness line. Native timers measure 256 calls in each row at nominal 360 MHz. The cold build expects exact reactor byte size per app throughout.
+
+### Confirmation and editorial review
+
+The independent short trial reached both correctness markers and confirmed returned totals and complete output buffers for all positive timings. It recorded 165 native rows and one fresh compile block per app, without supplying the missing cell in the first trial. Both firmware restorations passed exact release and partition readback, eight native-world checks and successful painter installation. The operation-lifetime contract also now passes a separate 66-state matrix in each arm, including 36 traps, an effectful RHS call, six pending operands before a checked load, and literal lengths from zero to 1,022 units. A second independent Opus High pass reviewed the actual four-block cold table and flagged ambiguity in the original article about partial captures and linked extents. The edited article distinguishes cold wall time, the fixed linked reactor size and unlinked instruction bytes.

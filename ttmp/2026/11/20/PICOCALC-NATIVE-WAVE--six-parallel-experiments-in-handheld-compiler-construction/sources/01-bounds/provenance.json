@@ -34,6 +34,16 @@
       "path": "sources/01-bounds/02-lead-article.md",
       "bytes": 13079,
       "sha256": "2f14671afebe407551c9644333b58a49809388d2b4d7a6928689b5968922cbe8"
+    },
+    "reviewPrompt": {
+      "path": "scripts/01-bounds/14-lead-review-prompt.txt",
+      "bytes": 19777,
+      "sha256": "b63665dfa9a2e92b5dd5116cccfd132f50a3741e9efb17edfc65c1b442e3b267"
+    },
+    "reviewResponse": {
+      "path": "sources/01-bounds/03-lead-review.md",
+      "bytes": 5874,
+      "sha256": "0f89925e00301e509f1891923e785499a6d2441a4cb78e7311920594a1be829f"
     }
   },
   "articleRetry": "The first invocation supplied a status summary and did not supply a manuscript. The archived response is the independent retry."

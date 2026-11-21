@@ -1,0 +1,440 @@
+{
+  "native": {
+    "repeated": {
+      "stock": {
+        "cyclesPerCall": {
+          "min": 86.1171875,
+          "median": 86.17578125,
+          "max": 94.71484375
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        }
+      },
+      "bounds-order": {
+        "cyclesPerCall": {
+          "min": 68.078125,
+          "median": 68.1015625,
+          "max": 76.65234375
+        },
+        "pairedTimeReductionPct": {
+          "min": 19.07040046191282,
+          "median": 20.981049959198472,
+          "max": 20.99873119448976
+        }
+      },
+      "bounds-selected": {
+        "cyclesPerCall": {
+          "min": 68.0859375,
+          "median": 68.0859375,
+          "max": 71.3359375
+        },
+        "pairedTimeReductionPct": {
+          "min": 17.186649736985306,
+          "median": 20.991795476179686,
+          "max": 28.048830783189672
+        }
+      },
+      "semantics-late": {
+        "cyclesPerCall": {
+          "min": 65.06640625,
+          "median": 65.0859375,
+          "max": 65.14453125
+        },
+        "pairedTimeReductionPct": {
+          "min": 24.37176812120112,
+          "median": 24.485447456705046,
+          "max": 31.282220480884238
+        }
+      },
+      "semantics-selected": {
+        "cyclesPerCall": {
+          "min": 65.06640625,
+          "median": 65.06640625,
+          "max": 65.13671875
+        },
+        "pairedTimeReductionPct": {
+          "min": 24.428623254126613,
+          "median": 24.485447456705046,
+          "max": 31.269847816224683
+        }
+      }
+    },
+    "literal": {
+      "stock": {
+        "cyclesPerCall": {
+          "min": 83.078125,
+          "median": 83.109375,
+          "max": 95.09375
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        }
+      },
+      "bounds-order": {
+        "cyclesPerCall": {
+          "min": 83.07421875,
+          "median": 83.08984375,
+          "max": 88.52734375
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.028200789622112588,
+          "median": 0.03290092122579802,
+          "max": 6.905192244495561
+        }
+      },
+      "bounds-selected": {
+        "cyclesPerCall": {
+          "min": 83.078125,
+          "median": 83.08984375,
+          "max": 98.53515625
+        },
+        "pairedTimeReductionPct": {
+          "min": -18.54967572140238,
+          "median": 0.03290092122579802,
+          "max": 12.623233651002296
+        }
+      },
+      "semantics-late": {
+        "cyclesPerCall": {
+          "min": 69.09375,
+          "median": 69.09375,
+          "max": 69.1328125
+        },
+        "pairedTimeReductionPct": {
+          "min": 16.79518525484296,
+          "median": 16.86407219402143,
+          "max": 27.30036148537628
+        }
+      },
+      "semantics-selected": {
+        "cyclesPerCall": {
+          "min": 76.05078125,
+          "median": 76.06640625,
+          "max": 76.14453125
+        },
+        "pairedTimeReductionPct": {
+          "min": 8.417144468465077,
+          "median": 8.49313780785862,
+          "max": 19.92688136707197
+        }
+      }
+    },
+    "write": {
+      "stock": {
+        "cyclesPerCall": {
+          "min": 80.078125,
+          "median": 80.09765625,
+          "max": 80.1484375
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        }
+      },
+      "bounds-order": {
+        "cyclesPerCall": {
+          "min": 80.078125,
+          "median": 80.0859375,
+          "max": 80.1796875
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.11217870555528808,
+          "median": 0.0,
+          "max": 0.08772784871819983
+        }
+      },
+      "bounds-selected": {
+        "cyclesPerCall": {
+          "min": 80.07421875,
+          "median": 80.0859375,
+          "max": 80.2578125
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.18529354398284514,
+          "median": 0.014630577907825959,
+          "max": 0.07798030997173688
+        }
+      },
+      "semantics-late": {
+        "cyclesPerCall": {
+          "min": 59.0625,
+          "median": 59.0625,
+          "max": 65.015625
+        },
+        "pairedTimeReductionPct": {
+          "min": 18.817676324261047,
+          "median": 26.254694434960733,
+          "max": 26.30860707671313
+        }
+      },
+      "semantics-selected": {
+        "cyclesPerCall": {
+          "min": 73.09765625,
+          "median": 73.11328125,
+          "max": 73.1484375
+        },
+        "pairedTimeReductionPct": {
+          "min": 8.662569505414108,
+          "median": 8.718548858981856,
+          "max": 8.777658641193097
+        }
+      }
+    }
+  },
+  "cold": {
+    "chess": {
+      "stock": {
+        "compileMillis": {
+          "min": 5403.629,
+          "median": 5403.629,
+          "max": 5403.629
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        },
+        "peakJsBytes": {
+          "min": 3185080,
+          "median": 3185080,
+          "max": 3185080
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "bounds-always": {
+        "compileMillis": {
+          "min": 6839.306,
+          "median": 6839.306,
+          "max": 6839.306
+        },
+        "pairedTimeReductionPct": {
+          "min": -26.568755923102792,
+          "median": -26.568755923102792,
+          "max": -26.568755923102792
+        },
+        "peakJsBytes": {
+          "min": 3185076,
+          "median": 3185076,
+          "max": 3185076
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "bounds-order": {
+        "compileMillis": {
+          "min": 5331.546,
+          "median": 5331.546,
+          "max": 5331.546
+        },
+        "pairedTimeReductionPct": {
+          "min": 1.33397389050951,
+          "median": 1.33397389050951,
+          "max": 1.33397389050951
+        },
+        "peakJsBytes": {
+          "min": 3185068,
+          "median": 3185068,
+          "max": 3185068
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "bounds-selected": {
+        "compileMillis": {
+          "min": 5359.783,
+          "median": 5359.783,
+          "max": 5359.783
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.8114176602427747,
+          "median": 0.8114176602427747,
+          "max": 0.8114176602427747
+        },
+        "peakJsBytes": {
+          "min": 3185152,
+          "median": 3185152,
+          "max": 3185152
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "semantics-late": {
+        "compileMillis": {
+          "min": 3067.086,
+          "median": 3067.086,
+          "max": 3067.086
+        },
+        "pairedTimeReductionPct": {
+          "min": 43.24025576145216,
+          "median": 43.24025576145216,
+          "max": 43.24025576145216
+        },
+        "peakJsBytes": {
+          "min": 1948000,
+          "median": 1948000,
+          "max": 1948000
+        },
+        "reactorBytes": [
+          274892
+        ]
+      },
+      "semantics-selected": {
+        "compileMillis": {
+          "min": 3184.503,
+          "median": 3184.503,
+          "max": 3184.503
+        },
+        "pairedTimeReductionPct": {
+          "min": 41.06732716106157,
+          "median": 41.06732716106157,
+          "max": 41.06732716106157
+        },
+        "peakJsBytes": {
+          "min": 1983752,
+          "median": 1983752,
+          "max": 1983752
+        },
+        "reactorBytes": [
+          274892
+        ]
+      }
+    },
+    "editor": {
+      "stock": {
+        "compileMillis": {
+          "min": 4548.592,
+          "median": 4548.592,
+          "max": 4548.592
+        },
+        "pairedTimeReductionPct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        },
+        "peakJsBytes": {
+          "min": 2573852,
+          "median": 2573852,
+          "max": 2573852
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "bounds-always": {
+        "compileMillis": {
+          "min": 5228.611,
+          "median": 5228.611,
+          "max": 5228.611
+        },
+        "pairedTimeReductionPct": {
+          "min": -14.950098843774073,
+          "median": -14.950098843774073,
+          "max": -14.950098843774073
+        },
+        "peakJsBytes": {
+          "min": 2578260,
+          "median": 2578260,
+          "max": 2578260
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "bounds-order": {
+        "compileMillis": {
+          "min": 4587.68,
+          "median": 4587.68,
+          "max": 4587.68
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.8593428471931563,
+          "median": -0.8593428471931563,
+          "max": -0.8593428471931563
+        },
+        "peakJsBytes": {
+          "min": 2577992,
+          "median": 2577992,
+          "max": 2577992
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "bounds-selected": {
+        "compileMillis": {
+          "min": 4562.489,
+          "median": 4562.489,
+          "max": 4562.489
+        },
+        "pairedTimeReductionPct": {
+          "min": -0.3055231157246041,
+          "median": -0.3055231157246041,
+          "max": -0.3055231157246041
+        },
+        "peakJsBytes": {
+          "min": 2578312,
+          "median": 2578312,
+          "max": 2578312
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "semantics-late": {
+        "compileMillis": {
+          "min": 4139.521,
+          "median": 4139.521,
+          "max": 4139.521
+        },
+        "pairedTimeReductionPct": {
+          "min": 8.993354427040279,
+          "median": 8.993354427040279,
+          "max": 8.993354427040279
+        },
+        "peakJsBytes": {
+          "min": 2496344,
+          "median": 2496344,
+          "max": 2496344
+        },
+        "reactorBytes": [
+          242124
+        ]
+      },
+      "semantics-selected": {
+        "compileMillis": {
+          "min": 4268.826,
+          "median": 4268.826,
+          "max": 4268.826
+        },
+        "pairedTimeReductionPct": {
+          "min": 6.15060660529676,
+          "median": 6.15060660529676,
+          "max": 6.15060660529676
+        },
+        "peakJsBytes": {
+          "min": 2528612,
+          "median": 2528612,
+          "max": 2528612
+        },
+        "reactorBytes": [
+          242124
+        ]
+      }
+    }
+  },
+  "settings": "WAVE_BEGIN core=1 cpu_hz=360000000 native_samples=11 calls=256 compile_samples=1",
+  "nativeChecked": true,
+  "coldBlocksUsed": 1,
+  "compileRowsCaptured": 12
+}

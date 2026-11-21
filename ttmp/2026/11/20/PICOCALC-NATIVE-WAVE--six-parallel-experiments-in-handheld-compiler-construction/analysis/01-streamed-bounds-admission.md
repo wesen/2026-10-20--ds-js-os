@@ -13,15 +13,15 @@ The two bounded policies produced stock-identical code on current Editor, Chess,
 
 ## Three terms to know first
 
-A typed checked access is a read such as `s.charCodeAt(i)` where `s` has a buffer or string type. The compiler must make sure `i` is in range before it loads, so it emits a guard for every such read. On the native target each guard follows a fixed pattern that compares the index against the length in UTF-16 units and traps when the index is out of range.
+A typed checked access is a read such as `s.charCodeAt(i)` where `s` has a buffer or string type. The compiler must make sure `i` is in range before it loads, so it emits a guard for every such read. On the native target each guard follows a fixed pattern that compares the index against the string length or buffer capacity, both counted in UTF-16 units and traps when the index is out of range.
 
-The numeric streamed tape is the form the compiler works on while it streams a function. Each instruction is written as a run of numeric cells, and different instructions occupy different numbers of cells. An analysis that walks the tape has to decode each instruction's width to find the next one. A function's tape size is its length in cells. The cost figures in this article count the cells the analysis visited.
+The numeric streamed tape is the form the compiler works on while it streams a function. Each instruction is written as a run of numeric cells, and different instructions occupy different numbers of cells. An analysis that walks the tape has to decode each instruction's width to find the next one. A function's tape size is its length in cells. For the current compiler, charged cells and visited cells coincide in these runs.
 
 RV32 emission is the backend that turns the tape into 32-bit RISC-V machine code. The main size comparison counts emitted instruction bytes before linking into a fixed-size reactor. Application response requires a distinct timing experiment.
 
 ## The analysis under test
 
-The analysis walks a function's tape and keeps a set of known guards. When it finds a guard whose index comes from a saved index-copy local or a constant, it records the pair of base and index. The analysis assigns a fresh identity to an unrecognized local assignment. A direct local or constant copy can carry a known value identity, allowing different private saved-index locals to refer to the same value. The known set is cleared at control flow, at writes and at calls. When a second guard matches a known one, the analysis removes that second guard. The address recalculation and the second load stay in the emitted code.
+The analysis walks a function's tape and keeps a set of known guards. When it finds a guard whose index comes from a saved index-copy local or a constant, it records the pair of base and index. The analysis assigns a fresh identity to an unrecognized local assignment. A direct local or constant copy can carry a known value identity, allowing different private saved-index locals to refer to the same value. The known set is cleared at control flow, at writes and at calls. When a second guard matches a known one, the analysis removes that second guard. The address recalculation and the second load stay in the emitted code. The proof assumes the existing Typed object ABI, with no concurrent external mutation of an object between two guest instructions.
 
 The following pseudocode illustrates the rule. It is not the compiler's source syntax.
 
@@ -103,13 +103,13 @@ Charged cells equal visited cells in every row. No row records a bailout. Neithe
 
 The control program is the positive case for admission. Always visits 1,153 cells, sees 16 guards and removes 2, which shrinks the image from 3,268 to 3,204 bytes. Order admits 3 functions, sees 3 guards and removes the same 2 for 600 cells. Selected admits 6 functions, sees 14 guards and removes the same 2 for 447 cells. That is 38.8 percent of Always's charged work. Only the function `repeated` changes in each arm.
 
-The current applications contain few repeats that the recognizer can prove. Editor under Always visits 35,883 cells and sees 204 guards with no removal. Painter visits 7,332 cells and sees 28 guards with no removal. In both programs Always proves nothing, so no admission policy built on this analysis could remove anything there. Chess under Always sees 141 guards and removes one in `chessMake`. Both removals in the control and the one in Chess each account for 32 bytes of image. Order and Selected admit 11 and 9 Chess functions and see 10 and 5 guards. Both miss `chessMake`. A separate diagnostic callback replays the policy using the same emitted descriptors. `chessMake` has 1,139 cells, above the entire 640-cell budget. On arrival Order had one cell left and Selected had 447. [Admission replay](../various/01-bounds/chess-admission-ledger.json) The independent held-out program has identical bytes and 158,570 steps in every arm. Always sees 7 guards there and removes none.
+The current applications contain few repeats that the recognizer can prove. Editor under Always visits 35,883 cells and sees 204 guards with no removal. Painter visits 7,332 cells and sees 28 guards with no removal. In both programs Always proves nothing, so no admission policy built on this analysis could remove anything there. Chess under Always sees 141 guards and removes one in `chessMake`. The two removals save 64 bytes in the control. The Chess removal saves 32 bytes. Order and Selected admit 11 and 9 Chess functions and see 10 and 5 guards. Both miss `chessMake`. A separate diagnostic callback replays the policy using the same emitted descriptors. `chessMake` has 1,139 cells, above the entire 640-cell budget. On arrival Order had one cell left and Selected had 447. The tape also exceeds Selected's 192-cell ceiling. [Admission replay](../various/01-bounds/chess-admission-ledger.json) The independent held-out program has identical bytes and 158,570 steps in every arm. Always sees 7 guards there and removes none.
 
 Charged cells measure the tape extent handed to the analysis. They do not weight one primitive operation differently from another. Use elapsed-time measurements to evaluate actual compile overhead.
 
 ## The older Editor engine
 
-The older compiler could prove a first read on a path where source branches collectively establish `0 <= i < length`. In guarded Editor, the outer guard contributes `end <= text.length`, while the loop guard supplies `0 <= i` and `i < end`. Following the two upper-bound edges proves `i < text.length`. This supplement tests the same admission policies against that actual search. During parsing the supplement collects, for each read, an immutable reference to the edge array and the identifiers that were already versioned. It defers each original search to function completion. When a search succeeds it sets the proven bit on the existing compact read operand. The Never and Always images match the original older compiler byte for byte.
+The older compiler could prove a first read on a path where source branches collectively establish `0 <= i < length`. In guarded Editor, the outer guard contributes `end <= text.length`, while the loop guard supplies `0 <= i` and `i < end`. Following the two upper-bound edges proves `i < text.length`. This supplement tests the same admission policies against that actual search. During parsing the supplement collects, for each read, an immutable reference to the edge array and the identifiers that were already versioned. It defers each original search to function completion. When a search succeeds it sets the proven bit on the existing compact read operand. Deferred Never matches the older compiler with checks enabled and no proof search. Deferred Always matches the older compiler with its bounded proof search enabled. Both matches are byte for byte.
 
 The fixed policies gate only the search. Unconditional tracking, snapshots and the inherited loop lexer lookahead run in every arm, and the debit uses the full accepted function's tape length even when a search inspects only a few edges.
 
@@ -126,7 +126,7 @@ The sole proof is in `editorPreviewAppend`, a 263-cell function with two reads. 
 
 ## Correctness evidence
 
-The held-out behavior check produces 1,603 exact independent outcomes on each arm, 101 of them traps, and the Wasm output is unchanged across arms. A targeted corpus runs 243 test states on each arm. Each state compares whether a trap occurred and the whole buffer contents. The states cover a mutable index, a branch that bypasses a guard, aliases, calls and stores between reads, and short and long literals. The summary receipts named above do not carry per-state results for the targeted corpus, so this article reports its design and size only.
+The held-out behavior check produces 1,603 exact independent outcomes on each arm, 101 of them traps, and the Wasm output is unchanged across arms. A targeted corpus runs 243 test states on each arm. Each state compares whether a trap occurred and the whole buffer contents. The states cover a mutable index, a branch that bypasses a guard, aliases, calls and stores between reads, and short and long literals. All 243 cases per arm, including 163 expected traps, matched returns, trap states, and byte buffers. The receipt keeps aggregate case and trap counts per named endpoint.
 
 ## Physical board
 
@@ -135,20 +135,20 @@ The director ran the independent held-out program on the physical board as paire
 
 ### Running the proof on the PicoCalc
 
-The positive endpoint is the same `repeated` routine used in the host matrix. Each board row encloses a loop of 256 successful calls. The eleven paired rows rotate arm order at 360 MHz on core 1. The stock median was 86.16 cycles per call including the loop. Order and Selected were about 68.1 cycles, a paired reduction of 20.98% each. Their native outputs have the same SHA-256 and occupy distinct aligned flash addresses. Native literal and scalar-write comparison medians were within 0.04% of stock.
+The positive endpoint is the same `repeated` routine used in the host matrix. Each board row encloses a loop of 256 successful calls. The eleven paired blocks rotate five arms from the two studies at 360 MHz on core 1. The completed short confirmation records a stock median of 86.18 cycles per call including the loop. Order and Selected were about 68.1 cycles, for paired reductions of 20.98% and 20.99%. Their native outputs have the same SHA-256 and occupy distinct aligned flash addresses. Always emits the same bytes for this control and was omitted as a duplicate from this native timing loop. The dedicated device marker confirms native returns and complete buffers for the short run. Native literal and scalar-write comparison medians were within 0.04% of stock. Trap validation remains on the host.
 
 ### Charging analysis during cold compilation
 
-Each fresh QuickJS invocation loads the compiler, runs the full source through streaming lowering, links the same reactor, and copies the output before sandbox teardown. It measures simulator-free time for choosing and running the analysis on normal app source. These are median seconds and ranges from the first four complete paired blocks.
+Each fresh QuickJS invocation loads the compiler, runs the full source through streaming lowering, links the same reactor, and copies the output before sandbox teardown. This is cold compile wall time as observed by the application port. The physical stock comparator disables both experiments in the same staged firmware. Host verification establishes its native output identity to stock. Shared experimental compiler JavaScript still loads into each sandbox. These are median seconds and ranges from the first four complete paired blocks.
 
 | App | Stock | Always | Order | Selected |
 |---|---:|---:|---:|---:|
 | Chess | 5.342 (5.289–5.418) | 6.885 (6.853–6.897) | 5.357 (5.326–5.398) | 5.370 (5.359–5.379) |
 | Editor | 4.545 (4.514–4.597) | 5.232 (5.181–5.242) | 4.569 (4.568–4.611) | 4.622 (4.598–4.645) |
 
-Always cost a median 28.54% more time on Chess and 14.59% on Editor in paired comparisons. The two bounded policies cost 0.60% to 1.75% more in these four placements. Their compiled bytes were the same as stock. Always on Chess used an extra 1.54 seconds by the difference of arm medians, for the 32-byte reduction in `chessMake`. The experiment counts compile wall time and return of the fixed-size reactor, independently of the positive kernel's native cycles.
+Always cost a median 28.54% more time on Chess and 14.59% on Editor in paired comparisons. Median paired time for each bounded arm and app rose by 0.60% to 1.75%. Some individual blocks were faster than stock, so those small shifts carry limited evidence with four samples. The host matrix shows stock-identical instruction images for these two arms. The Chess difference in medians for Always was 1.54 seconds. The 32-byte reduction in `chessMake` is in the host's unlinked native extent. Each physical compile returned the same fixed reactor size for its app.
 
-The first host reader stopped after 59 of its planned 60 compile rows. The missing row was Editor Selected in block five. The receipt preserves every completed row and all 165 native timings. The first run did not reach the combined device correctness marker. Product cold timing above uses exactly four complete blocks for both apps. [First capture](../various/01-bounds/physical-first.json) · [Balanced summary](../various/01-bounds/physical-first-summary.json) · [Director held-out comparison](../various/director/paired-results.json)
+The shared run planned two apps × six compiler configurations × five blocks. The first host reader stopped after 59 of its planned 60 compile rows. The missing row was Editor Selected in block five. The receipt preserves every completed row and all 165 native timings. The first run did not reach the combined device correctness marker. Product cold timing above uses exactly four complete blocks for both apps, excluding the complete fifth Chess block. The short run separately recorded all 165 native timings, passed the native correctness marker, and completed one six-arm cold block per app. It does not replace any row in the first capture. [Confirmation](../various/01-bounds/physical-confirmation.json) · [First capture](../various/01-bounds/physical-first.json) · [Balanced summary](../various/01-bounds/physical-first-summary.json) · [Director held-out comparison](../various/director/paired-results.json)
 
 ## What each proof requires
 
@@ -158,13 +158,13 @@ A known successful checked operation supplies the fact for the current straight-
 
 The first hypothesis held that a 640-cell budget would capture the real opportunities that Always finds. Both budget arms missed `chessMake` in current Chess and `editorPreviewAppend` in the older Editor.
 
-The second held that Selected's filters would steer the budget toward functions with guards. On the control program Selected saw 14 guards for 447 cells against Order's 3 guards for 600. On held-out code it saw 5 guards to Order's 10 in Chess, 0 to 1 in Painter and 3 to 2 in Editor, and neither arm removed anything.
+Selected had mixed success steering its budget to guard-bearing functions. On the control it saw 14 guards for 447 cells against Order's 3 for 600. On current product sources it saw 5 to Order's 10 in Chess, 0 to 1 in Painter, and 3 to 2 in Editor. Neither budgeted arm removed a guard from those apps. [Host matrix](../various/01-bounds/host.json)
 
 The independent held-out program ran the same instructions in every bounds arm. The native experiment on positive repeat guards measures the consequence of a proved removal, while the independent program measures a workload outside that proof's effective coverage.
 
 ## Reproducing the method
 
-Run the holdout and host matrix from the repository root. Use the held-out receipt to confirm 2,876 bytes and 158,570 steps for all bounds arms. The host matrix records `repeated` and `chessMake` as the two changed functions. Rebuilding the older engine using the separate reconstruction verifies the one proof with five examined edges in `editorPreviewAppend`. The board section gives the different timing boundaries and qualification. [Commands, inputs and checks](../reference/16-reproduce-bounds-and-operation-lifetime.md)
+Run the holdout and host matrix from the repository root. Use the held-out receipt to confirm 2,876 bytes and 158,570 steps for all bounds arms. The host matrix records `repeated` and `chessMake` as the two changed functions. Rebuilding the older engine using the separate reconstruction reproduces the two image hashes and the one proof with five examined edges in `editorPreviewAppend`. The board section gives the different timing boundaries and qualification. [Commands, inputs and checks](../reference/16-reproduce-bounds-and-operation-lifetime.md)
 
 ## Follow-up
 
