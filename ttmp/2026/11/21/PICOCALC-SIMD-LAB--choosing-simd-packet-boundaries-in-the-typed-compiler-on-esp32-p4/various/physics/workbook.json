@@ -1,0 +1,74 @@
+{
+  "physicalCaptureSHA": "77d3d84b0c60e95fe0efa23a3f9a91d9235f948eb4c615da6e50095c32f4c6eb",
+  "rows": 818,
+  "cells": {
+    "checkedPlanar": {
+      "source": "pairedPhysics(\"particle\",128,\"guarded-soa-scalar\",\"guarded-soa-pie\")",
+      "result": {
+        "blocks": 12,
+        "medianSavedPct": 89.29531837089212,
+        "winningBlocks": 12,
+        "unit": "physical P4 cycles, percent of matched baseline"
+      }
+    },
+    "conversion": {
+      "source": "pairedPhysics(\"particle\",128,\"aos-scalar\",\"convert-pie-roundtrip\")",
+      "result": {
+        "blocks": 12,
+        "medianSavedPct": -47.184320300061856,
+        "winningBlocks": 0,
+        "unit": "physical P4 cycles, percent of matched baseline"
+      }
+    },
+    "contact": {
+      "source": "pairedPhysics(\"contact\",128,\"grouped-scalar\",\"grouped-pie\")",
+      "result": {
+        "blocks": 14,
+        "medianSavedPct": -43.891611096783706,
+        "winningBlocks": 0,
+        "unit": "physical P4 cycles, percent of matched baseline"
+      }
+    },
+    "packedArithmetic": {
+      "source": "simd.executions(\"physics-guarded_soa_pie\",\"physics-guarded_soa_pie-particle-n128\",\"packed-arithmetic\")",
+      "result": {
+        "decision": "physics-guarded_soa_pie",
+        "function": "guarded_soa_pie",
+        "source": {
+          "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/board/physics_checked.S",
+          "sha256": "939ed0076fafbc60fa394db2ff841696f68a8d291233e986f416ba6cf29cf0f2",
+          "lineStart": 35,
+          "lineEnd": 35
+        },
+        "trace": "physics-guarded_soa_pie-particle-n128",
+        "workload": "particle-n128",
+        "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+        "role": "packed-arithmetic",
+        "ranges": [
+          {
+            "start": 740,
+            "end": 744,
+            "role": "packed-arithmetic"
+          },
+          {
+            "start": 924,
+            "end": 928,
+            "role": "packed-arithmetic"
+          }
+        ],
+        "staticInstructions": 2,
+        "executedPCs": 1,
+        "executions": 16,
+        "unit": "guest instruction executions: retired RV32 instructions whose PC lies in the role's byte ranges, summed over the trace's complete per-PC histogram",
+        "traceSteps": 126,
+        "witnesses": [
+          {
+            "pc": 740,
+            "executions": 16
+          }
+        ],
+        "omittedPCsMean": "the histogram is complete for this trace: a PC inside its image that is not listed executed zero times in this trace; it says nothing about other traces, workloads or images"
+      }
+    }
+  }
+}

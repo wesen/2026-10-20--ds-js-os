@@ -128,3 +128,60 @@ Run `node 02-build-typed.mjs`, `python3 03-qualify.py` and `python3 04-export-ev
 ### Technical details
 
 The host-native complete image is 1,652 bytes, stock Typed 1,476 bytes, and the combined checked experiment 3,400 bytes. Only exact PC/image joins can relate the 70 traces to static instruction ranges.
+
+## Step 3: Pair the physical cycle measurements and verify them through the REPL
+
+The board operator returned a complete trial of 818 cells. I extracted only the physics UART records and checked that the observed block, size and treatment keys exactly equal the preregistered matrix. Each record carries the batch cycle delta and an aggregate Boolean produced by comparing every one of twelve freshly initialized buffers after the timer stopped.
+
+### Prompt Context
+
+**User prompt:** See Step 1 for the request; the lead experimenter requested common board access for all three lanes.
+
+**Assistant interpretation:** Establish what actually ran, calculate effects within matched blocks and separate repeated copies of identical state from independent input cases.
+
+**Inferred user intent:** Identify which compiled programs are plausible on the ESP32-P4, preserving negative results.
+
+**Commit (code):** `f5e983c` — Qualify checked particle plans and conflict-free contact execution by exact RV32 image.
+
+### What I did
+
+- Read back the independent board operator's image receipt: SHA-256 `f9ad948df76c6dae831778d5eb123383d9f37a7b46cdb394f4019e58a8d6ea4c`, 1,064,016 bytes, /dev/ttyACM0.
+- Extracted the 821 lines between the physics section markers, including the begin, batches and done markers. Verified all 818 result records and each record's composite correctness check.
+- Ran `05-physical-results.py` and retained all raw paired inputs, the 67 arm-size medians and 54 matched comparisons. Formed per-block relative effects before taking the median.
+- Loaded the raw trial rows into a private REPL session with `07-physics-workbook.py`. The article author received a separate session linked to the same immutable evidence study.
+
+### Why
+
+The original ray experiments report microseconds per frame; the physics trials time a batch of small kernels by the P4 cycle counter. The unit for this experiment is cycles per call, averaged over twelve fresh invocations within one trial row. Pairing is across arm treatments within the same rotated block.
+
+### What worked
+
+The guarded 128-particle planar implementation wins 12/12 blocks; median paired saving is 89.30%, compared with 33.83% for guarded interleaved. On an interleaved caller the explicit convert-update-convert implementation loses 12/12 against native interleaved scalar. The full group-scheduled contact PIE implementation loses 14/14 against scalar in the identical group order. The 128-pair contact mesh splits into 57, 41 and 30 contacts with 107 of 128 body values differing between sequential original and sequential scheduled relaxation.
+
+### What didn't work
+
+The contact packed arm was a losing optimization by both executed instruction counts and physical cycles. The median scheduled scalar call takes about 2,262 cycles and the packed one about 3,255. Reordering independent operations within a color is valid, but that validity does not remove its gather, scratch and scatter costs.
+
+### What I learned
+
+At seven positions, the planar packed wrapper also pays a small overhead with zero full packets. At 127 positions the second plane starts at a non-vector-aligned address, so the prepared packed implementation takes its scratch path; a single count threshold cannot predict layout profitability. The all-aligned 128-position trial answers a different question from the one-tick roundtrip.
+
+### What was tricky to build
+
+The grouping benchmark includes deterministic pair generation, greedy coloring and stable scattering. Since it times all three, it cannot isolate the price of a real game's incremental graph coloring. Its velocity checksum verifies unchanged state for the grouping-only control while the grouped solver comparisons validate the resulting schedule.
+
+### What warrants a second pair of eyes
+
+Confirm even-sample medians, pair orientation, cycle units, shader/physics image identity, match of grouped scalar and PIE traversal sequence, and the 12 identical input copies per timed batch.
+
+### What should be done in the future
+
+Benchmark repeated ticks from persistent planar state with freshly integrated dynamic inputs before claiming an observed amortization threshold. Collect additional contact graph families on hardware before recommending a general fixed-point kernel policy.
+
+### Code review instructions
+
+The audited public workbook is `scripts/physics/07-physics-workbook.py`. Read its `pairedPhysics` definition and compare `various/physics/workbook.json` with `various/physics/physical.log`. The checked physical arm implementations and verification loops are in `board/physics_bench.c`.
+
+### Technical details
+
+The complete row key is (kind, n, arm, block). No key was missing, extra or duplicated. Firmware SHA and the filtered UART hash are retained separately because a host evidence image encodes only the experimental function region, while the physical firmware digest covers the full flashed image.
