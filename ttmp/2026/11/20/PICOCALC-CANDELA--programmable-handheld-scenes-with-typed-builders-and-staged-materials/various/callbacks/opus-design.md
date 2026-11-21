@@ -1,3 +1,11 @@
+---
+Title: Opus staged pattern design consultation
+Ticket: PICOCALC-CANDELA
+DocType: reference
+Topics: [compiler]
+Status: complete
+---
+
 # Staged Pattern Callbacks for Typed JavaScript: An Implementable Design
 
 ## 0. Core idea
