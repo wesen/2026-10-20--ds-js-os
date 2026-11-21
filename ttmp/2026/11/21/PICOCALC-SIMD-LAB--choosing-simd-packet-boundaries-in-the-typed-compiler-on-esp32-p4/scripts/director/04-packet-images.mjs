@@ -1,0 +1,32 @@
+import {readFileSync as read,writeFileSync as write,mkdirSync,copyFileSync} from "node:fs";
+import {resolve,dirname,join} from "node:path";
+import {fileURLToPath} from "node:url";
+import {execFileSync} from "node:child_process";
+import vm from "node:vm";
+import assert from "node:assert/strict";
+import {createHash} from "node:crypto";
+const here=dirname(fileURLToPath(import.meta.url)),root=resolve(here,"../../../../../../..");
+const out=resolve(process.argv[2]);
+const os=join(root,"picocalc-os"),base=join(os,"compiler"),name="typedRayComputeRow";
+const source=read(join(os,"worlds/raytrace/raytrace.typed"),"utf8");
+const realm=vm.createContext({});
+mkdirSync(out,{recursive:true});
+copyFileSync(join(base,"typed-pie-loops.js"),join(out,"packet-candidate.js"));
+execFileSync("patch",["--batch",join(out,"packet-candidate.js"),join(here,"packet-emitter.patch")]);
+for(const f of [join(base,"typed-wasm.js"),join(base,"typed-rv32.js"),join(out,"packet-candidate.js")])vm.runInContext(read(f,"utf8"),realm);
+let asm=".section .text.simd_packet_trials,\"ax\",@progbits\n.option push\n.option norvc\n";
+const sha=b=>createHash("sha256").update(b).digest("hex"), result={sourceSHA:sha(source),arms:{}};
+for(const v of ["baseline","empty","full"]) {
+    realm.packetResearchVariant=v;
+    const resultImage=realm.typedRv32.compile(source,[],undefined,{pieLoops:"pie"});
+    const start=resultImage.entries[name],end=Math.min(...Object.values(resultImage.entries).filter(x=>x>start));
+    const bytes=Buffer.from(resultImage.image).subarray(start,end);
+    assert(!resultImage.relocations.some(r=>r.offset>=start && r.offset<end));
+    assert(!bytes.some((_,off)=>off%4===0 && (bytes.readUInt32LE(off)&0xfff)===0xef),"row must have no calls to other functions");
+    result.arms[v]={imageSHA:sha(resultImage.image),start,end,rowSHA:sha(bytes),rowBytes:bytes.length};
+    if(v==="baseline")continue;
+    asm+=".balign 16\n.global simd_typed_"+v+"\nsimd_typed_"+v+":\n";
+    for(let i=0;i<bytes.length;i+=4)asm+=".4byte 0x"+bytes.readUInt32LE(i).toString(16)+"\n";
+}
+write(join(out,"packet_extras.S"),asm+".option pop\n");
+write(join(out,"packet-images.json"),JSON.stringify(result,null,2)+"\n");

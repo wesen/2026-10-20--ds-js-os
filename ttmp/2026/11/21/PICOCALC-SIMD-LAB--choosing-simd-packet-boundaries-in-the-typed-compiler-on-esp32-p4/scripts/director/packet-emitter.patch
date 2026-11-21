@@ -1,0 +1,65 @@
+--- typed-pie-loops.js
++++ typed-pie-loops.js
+@@ -157,6 +157,7 @@
+     class PackedFunction extends FunctionCode {
+         constructor() {
+             super(fn,callables,targets);
++            this.variant=globalThis.packetResearchVariant;
+             this.packet=(4*this.locals+15)&-16;
+             this.locals=this.packet/4+5; // aligned packet, then broadcast slot
+         }
+@@ -176,6 +177,9 @@
+ 
+         grouped(p) {
+             const selectedMode=p.selectedMode ?? mode;
++            const classify=this.variant==="empty" || this.variant==="full";
++            const fullPath=this.variant==="full";
++            const empty={}, allHit={};
+             const saved=this.at, ordinary={}, group={}, single={}, got={}, lane={}, advance={};
+             const regions=[];
+             let start=this.words.length*4;
+@@ -225,7 +229,17 @@
+             note("admission and packet control",p.loop,p.loop+2);
+             this.immediate(t5,sp,this.packet);
+             if(selectedMode==="pie") {
+-                this.emit(packetLoad); this.emit(subtract); this.emit(packetStore);
++                this.emit(packetLoad); // post-increments input by 16 bytes
++                if(classify) {
++                    this.emit(0x919057db); // min.u16.a q1,t6
++                    this.branch(6,uniform,t6,empty);
++                }
++                this.emit(subtract);
++                if(fullPath) {
++                    this.emit(0x918057db); // max.u16.a q1,t6
++                    this.branch(7,uniform,t6,allHit);
++                }
++                this.emit(packetStore);
+             } else {
+                 for(let i=0;i<8;i++) {
+                     this.load(t6,2*i,input,5); this.minus(t6,uniform,t6); this.store(t6,2*i,t5,1);
+@@ -251,7 +265,24 @@
+             this.mark(advance);
+             this.immediate(x,x,1); this.store(x,4*p.iv);
+             this.immediate(lanePtr,lanePtr,2); this.immediate(lanes,lanes,-1);
+-            this.branch(1,lanes,zero,lane); this.jump(group); this.mark(ordinary);
++            this.branch(1,lanes,zero,lane); this.jump(group);
++            if(classify) {
++                this.mark(empty);
++                this.immediate(x,x,8); this.store(x,4*p.iv);
++                this.jump(group);
++            }
++            if(fullPath) {
++                this.mark(allHit);
++                for(let i=0;i<8;i++) {
++                    this.emit(0x08c007df | (i<<15)); // movi.16.a q2,t6,i
++                    this.store(t6,4*p.difference);
++                    this.at=p.consumerStart;
++                    while(this.at<p.consumerEnd) FunctionCode.prototype.step.call(this,this.cell());
++                    this.immediate(x,x,1); this.store(x,4*p.iv);
++                }
++                this.jump(group);
++            }
++            this.mark(ordinary);
+             note("packet backedge",p.loop,p.loop+2);
+             this.at=saved;
+             if(this.inspection) this.loopRanges=regions;

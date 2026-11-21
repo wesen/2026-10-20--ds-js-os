@@ -1,0 +1,124 @@
+{
+  "groups": {
+    "opening": {
+      "calls": 160,
+      "traps": 0,
+      "steps": {
+        "baseline": 3131435,
+        "empty": 2983602,
+        "full": 2954486
+      },
+      "packedStores": {
+        "baseline": 3135,
+        "empty": 1024,
+        "full": 282
+      },
+      "reductions": {
+        "baseline": 0,
+        "empty": 3135,
+        "full": 4159
+      },
+      "extractions": {
+        "baseline": 0,
+        "empty": 0,
+        "full": 5936
+      }
+    },
+    "partial": {
+      "calls": 1,
+      "traps": 1,
+      "steps": {
+        "baseline": 202,
+        "empty": 202,
+        "full": 202
+      },
+      "packedStores": {
+        "baseline": 0,
+        "empty": 0,
+        "full": 0
+      },
+      "reductions": {
+        "baseline": 0,
+        "empty": 0,
+        "full": 0
+      },
+      "extractions": {
+        "baseline": 0,
+        "empty": 0,
+        "full": 0
+      }
+    },
+    "alias": {
+      "calls": 1,
+      "traps": 1,
+      "steps": {
+        "baseline": 20667,
+        "empty": 19210,
+        "full": 18698
+      },
+      "packedStores": {
+        "baseline": 38,
+        "empty": 17,
+        "full": 4
+      },
+      "reductions": {
+        "baseline": 0,
+        "empty": 38,
+        "full": 55
+      },
+      "extractions": {
+        "baseline": 0,
+        "empty": 0,
+        "full": 104
+      }
+    },
+    "highHalf": {
+      "calls": 1,
+      "traps": 0,
+      "steps": {
+        "baseline": 20570,
+        "empty": 19113,
+        "full": 18601
+      },
+      "packedStores": {
+        "baseline": 38,
+        "empty": 17,
+        "full": 4
+      },
+      "reductions": {
+        "baseline": 0,
+        "empty": 38,
+        "full": 55
+      },
+      "extractions": {
+        "baseline": 0,
+        "empty": 0,
+        "full": 104
+      }
+    },
+    "boundaries": {
+      "calls": 210,
+      "traps": 73,
+      "steps": {
+        "baseline": 54009,
+        "empty": 54105,
+        "full": 54201
+      },
+      "packedStores": {
+        "baseline": 48,
+        "empty": 48,
+        "full": 48
+      },
+      "reductions": {
+        "baseline": 0,
+        "empty": 48,
+        "full": 96
+      },
+      "extractions": {
+        "baseline": 0,
+        "empty": 0,
+        "full": 0
+      }
+    }
+  }
+}

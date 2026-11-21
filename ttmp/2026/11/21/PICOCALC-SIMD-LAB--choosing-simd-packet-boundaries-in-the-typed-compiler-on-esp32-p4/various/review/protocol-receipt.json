@@ -1,0 +1,14 @@
+{
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "effort": "high",
+  "inputs": [
+    "README.md",
+    "05-frozen-held-out-protocol.md",
+    "selector.js",
+    "01-what-an-inferred-packed-subtraction-buys-on-the-esp32-p4.md",
+    "investigation-entry.md"
+  ],
+  "stop": "end_turn"
+}

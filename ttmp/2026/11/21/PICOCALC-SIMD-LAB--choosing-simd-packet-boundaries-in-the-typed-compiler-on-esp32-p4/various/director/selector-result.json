@@ -1,0 +1,290 @@
+{
+  "metric": "cycles per call in P4 flash-resident held-out code; regret against fastest median per input",
+  "winnerCount": 12,
+  "medianRegretPct": 0.0,
+  "worstRegretPct": 24.083606301669015,
+  "cases": [
+    {
+      "family": "short",
+      "n": 8,
+      "reach": 0,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 334.21484375,
+        "scalar": 213.84375,
+        "pie": 190.984375
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 74.9959093512231
+    },
+    {
+      "family": "short",
+      "n": 8,
+      "reach": 35,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 355.32421875,
+        "scalar": 226.38671875,
+        "pie": 209.765625
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 69.39106145251397
+    },
+    {
+      "family": "short",
+      "n": 8,
+      "reach": 96,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 390.23046875,
+        "scalar": 269.703125,
+        "pie": 250.01953125
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 56.07999375048824
+    },
+    {
+      "family": "long",
+      "n": 96,
+      "reach": 0,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 3607.25390625,
+        "scalar": 1708.65234375,
+        "pie": 1370.19140625
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 163.26642320159422
+    },
+    {
+      "family": "long",
+      "n": 96,
+      "reach": 35,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 3877.25,
+        "scalar": 1986.18359375,
+        "pie": 1645.2734375
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 135.6599159524205
+    },
+    {
+      "family": "long",
+      "n": 96,
+      "reach": 96,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 4262.203125,
+        "scalar": 2521.78125,
+        "pie": 2196.4296875
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 94.05142578687713
+    },
+    {
+      "family": "dynamic",
+      "n": 3,
+      "reach": 0,
+      "predicted": "pie",
+      "best": "stock",
+      "medianCycles": {
+        "stock": 150.2578125,
+        "scalar": 183.40234375,
+        "pie": 186.4453125
+      },
+      "regretPct": 24.083606301669015,
+      "regretStockPct": 0.0
+    },
+    {
+      "family": "dynamic",
+      "n": 3,
+      "reach": 35,
+      "predicted": "pie",
+      "best": "stock",
+      "medianCycles": {
+        "stock": 157.21875,
+        "scalar": 190.453125,
+        "pie": 193.4765625
+      },
+      "regretPct": 23.062015503875966,
+      "regretStockPct": 0.0
+    },
+    {
+      "family": "dynamic",
+      "n": 3,
+      "reach": 96,
+      "predicted": "pie",
+      "best": "stock",
+      "medianCycles": {
+        "stock": 171.19921875,
+        "scalar": 208.25390625,
+        "pie": 211.31640625
+      },
+      "regretPct": 23.433043557624302,
+      "regretStockPct": 0.0
+    },
+    {
+      "family": "dynamic",
+      "n": 17,
+      "reach": 0,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 685.26953125,
+        "scalar": 406.26171875,
+        "pie": 356.2265625
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 92.36901550540605
+    },
+    {
+      "family": "dynamic",
+      "n": 17,
+      "reach": 35,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 736.1953125,
+        "scalar": 445.17578125,
+        "pie": 393.2265625
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 87.21912065642819
+    },
+    {
+      "family": "dynamic",
+      "n": 17,
+      "reach": 96,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 804.1953125,
+        "scalar": 531.55859375,
+        "pie": 476.7109375
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 68.69663547419655
+    },
+    {
+      "family": "dynamic",
+      "n": 96,
+      "reach": 0,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 3702.2578125,
+        "scalar": 1708.70703125,
+        "pie": 1370.203125
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 170.19773528103727
+    },
+    {
+      "family": "dynamic",
+      "n": 96,
+      "reach": 35,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 3974.21875,
+        "scalar": 1986.1796875,
+        "pie": 1645.26171875
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 141.55541362862576
+    },
+    {
+      "family": "dynamic",
+      "n": 96,
+      "reach": 96,
+      "predicted": "pie",
+      "best": "pie",
+      "medianCycles": {
+        "stock": 4359.19140625,
+        "scalar": 2522.796875,
+        "pie": 2197.375
+      },
+      "regretPct": 0.0,
+      "regretStockPct": 98.38176944081005
+    }
+  ],
+  "cold": "four rotated blocks, fresh QuickJS runtime with SPIRAM allocator for each observation",
+  "coldMedians": {
+    "short": {
+      "stock": {
+        "compileUs": 14920.0,
+        "totalUs": 280962.0,
+        "peakBytes": 814020.0
+      },
+      "scalar": {
+        "compileUs": 23507.5,
+        "totalUs": 289496.5,
+        "peakBytes": 814020.0
+      },
+      "pie": {
+        "compileUs": 23282.5,
+        "totalUs": 289271.5,
+        "peakBytes": 814020.0
+      },
+      "auto": {
+        "compileUs": 23395.5,
+        "totalUs": 289449.0,
+        "peakBytes": 814020.0
+      },
+      "autoMinusForcedPieUsPaired": 106.0
+    },
+    "long": {
+      "stock": {
+        "compileUs": 14910.5,
+        "totalUs": 281057.0,
+        "peakBytes": 814020.0
+      },
+      "scalar": {
+        "compileUs": 23547.0,
+        "totalUs": 289588.5,
+        "peakBytes": 814020.0
+      },
+      "pie": {
+        "compileUs": 23322.0,
+        "totalUs": 289381.0,
+        "peakBytes": 814020.0
+      },
+      "auto": {
+        "compileUs": 23457.5,
+        "totalUs": 289599.5,
+        "peakBytes": 814020.0
+      },
+      "autoMinusForcedPieUsPaired": 142.5
+    },
+    "dynamic": {
+      "stock": {
+        "compileUs": 14915.5,
+        "totalUs": 280993.0,
+        "peakBytes": 814020.0
+      },
+      "scalar": {
+        "compileUs": 23454.0,
+        "totalUs": 289436.0,
+        "peakBytes": 814020.0
+      },
+      "pie": {
+        "compileUs": 23278.0,
+        "totalUs": 289350.5,
+        "peakBytes": 814020.0
+      },
+      "auto": {
+        "compileUs": 23358.5,
+        "totalUs": 289412.0,
+        "peakBytes": 814020.0
+      },
+      "autoMinusForcedPieUsPaired": 75.0
+    }
+  }
+}

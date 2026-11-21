@@ -1,0 +1,183 @@
+# Independent review: PicoCalc packed-subtraction study and frozen held-out protocol
+
+Scope: I checked `01-what-an-inferred-packed-subtraction-buys-on-the-esp32-p4.md`, `05-frozen-held-out-protocol.md` and `selector.js` against my own trace-repl session. The session loaded the LLVM row archive, `profiles`, and the PIE-LOOPS device study (`hardware.help().available === true`). Everything I call an observation below comes from a query I ran. Everything I call a recommendation is my proposal.
+
+## 1. Claims that reproduce
+
+**Device timing table (opening scene, `pose === 'default'`, n = 6 blocks per comparison):**
+
+| Phase | Stock median | Scalar median | PIE median | Paired stock to PIE | Paired scalar to PIE |
+|---|---:|---:|---:|---:|---:|
+| clean | 57.692 ms | 56.3395 ms | 56.069 ms | 2.801% (1,616 us) | 0.430% (242 us) |
+| audit | 62.863 ms | 61.4945 ms | 61.215 ms | 2.600% | 0.406% |
+| primary | 17.7905 ms | 16.429 ms | 16.1845 ms | 9.045% | 1.527% |
+| shade | 48.575 ms | 48.5615 ms | 48.5635 ms | 0.025% | 0.001% |
+
+- Every table value matches after rounding. The six clean scalar-to-PIE savings are 217, 221, 307, 260, 299 and 224 us, as stated.
+- The twelve-scene ranges reproduce: 2.659% to 2.888% over stock and 0.410% to 0.466% over matched scalar.
+- **Sign consistency:** for clean, audit and primary, all 72 of 72 pairs favour the candidate in all three comparisons (stock to scalar, scalar to PIE, stock to PIE). Shade splits 38/33/1, 37/35/0 and 38/30/4 (positive/negative/zero), so it behaves as a null control.
+- **Counterbalancing:** the six blocks cover all six orderings of (stock, scalar, PIE).
+  - The median deviation of a treatment from its pose median, by load position, ranges from -7.25 to +6 us. The effect being measured is about 240 us.
+- **Noise floor:**
+  - Shade paired savings have SD 37 to 42 us (0.077% to 0.088%), range -114 to +126 us.
+  - Clean scalar-to-PIE has a within-pose residual SD of 26.4 us.
+- **Host guest counts** (`profiles`, workload `opening-160-rows`, `rowsVerified === 160`): stock 3,608,697, scalar 3,199,910, PIE 3,131,435 instructions; packets 3,135.
+  - Clean-frame differences: 494,092 and 72,105.
+  - Image and row-size deltas: 744 bytes and 744 bytes.
+- **Typed versus C ratio:** 56.069 / 9.535 = 5.880.
+- **Cold compile, first trial** (`hardware.loads()`):
+  - Medians: stock 454.1325 ms, PIE (program 5) 658.027 ms.
+  - Each treatment has a single ELF CRC across its 6 loads, and it equals the metadata (`0d2e18b8`, `bd9a8467`, `ab91b817`).
+  - The PIE minus stock compile time within each block is 201.8 to 206.8 ms.
+
+## 2. Problems with evidence, units and omissions
+
+1. **`outputCRC` does not show that the timed runs produced correct output.**
+   - Each pair record holds one shared CRC triple, not one per treatment.
+   - For the default pose the triple is identical across clean, audit, primary and shade (`ab0a7c80,cd0ef60c,bf111cbb`).
+   - So it is a fixture-level reference value, not a CRC captured from each measurement.
+   - The statement that outputs agree across treatments cannot be checked from this view. Recommendation: record a CRC for each run and each treatment next to `baselineUs` and `candidateUs`.
+2. **The column labelled 'Packed groups' has the wrong unit.**
+   - The archive defines `packets` as executed 16-byte packed scratch stores, with `isNot: a separately counted number of packed groups`. Relabel the column, or count groups separately.
+3. **The clean frame's 3,300 packed stores is unexplained.**
+   - A 160x160 frame has at most 160 x 20 = 3,200 aligned eight-lane groups in the primary row loop.
+   - Buffer placement and alignment can only lower that count. A value above 3,200 means the producer loop ran more times than once per row, or over more elements.
+   - The document's explanation (different placement and alignment) does not account for this. Recommendation: report loop entries and trip counts for each frame type.
+4. **The device ELF size does not tell the treatments apart.**
+   - `elfBytes` = 66,816 and `segmentBytes` = 66,092 for all three treatments.
+   - The host images are 9,564, 10,384 and 10,308 bytes.
+   - Either the device field measures a fixed-size container, or the sizes need explaining. Until then, the size claims rest on host artifacts only.
+5. **The prefilter compile follow-up is not in this archive.**
+   - `hardware.loads()` contains only programs 0, 8 and 5 from the first trial.
+   - None of these can be checked here: 523.692 ms, 70.324 ms (range 67.246 to 73.560), the 134.625 ms filter saving, the stock 454.095 ms re-run, or the byte-identical 10,308-byte image from both PIE compilers.
+6. **The break-even estimate needs qualifying.**
+   - 70.324 / 1.616 = 43.5 frames, which is correct for the prefilter compiler.
+   - For the compiler actually timed in the first trial it is (658.027 - 454.133) / 1.616 = 126.2 frames.
+   - Of the 1.616 ms, a median 1.3565 ms comes from the shared lowering (stock to scalar). The packed producer contributes 0.242 ms.
+   - The matched-scalar compiler costs the same as PIE (658.5085 vs 658.027 ms), because it runs the full analyzer. The cold cost of a scalar-only lowering pass without vector recognition was never measured.
+   - `elapsedUs` exceeds `compilerUs` by about 5.40 to 5.55 ms in every load. The document should say which of the two it calls cold cost.
+7. **Attribution to the shared lowering is supported only in aggregate.**
+   - Stack loads: 936,328 (stock), then 729,553 for both scalar and PIE. Stack stores: 353,778, then 309,611 (scalar) and 309,776 (PIE).
+   - The archive's `cannotAttribute` says these totals cannot be split among the bundled changes (interval reuse, register-held induction, scratch). The document's call for a separate experiment is the right conclusion, not a finding.
+8. **There is measurable overhead when no group is admitted.**
+   - Row 0 executes 0 packets. Stock takes 20,103 steps; scalar and PIE take 20,130.
+   - This matches the host misaligned transfer (stock 282, scalar 305, PIE 308) and should be counted as a cost in boundary and selector work.
+9. **C comparisons use different counters.**
+   - The C arms count QEMU guest instructions inside the row symbol; the Typed arms count interpreter steps over the whole call. Neither is device time, and the two cannot be compared directly.
+   - In the LLVM capture, the C `row` instruction count does not change across LoopVectorize (122 checked, 73 unchecked).
+   - After LoopVectorize, SLP and LoopUnroll there are zero `<8 x i16>`, zero `<4 x i32>` and zero `shufflevector` sites.
+   - Remarks are `unavailable (missingRemarksArtifact)`, so the reason is not observable.
+   - The hand-PIE C result (8.363 ms) and the scalar C result (9.535 ms) are not in this archive and remain unverified here.
+10. **The transfer loop was chosen after the compiler freeze.** The document itself says the earlier independent commitment was never opened. The transfer result is exploratory, not a held-out test.
+
+## 3. Do the measurements identify compiler effects?
+
+- **Producer substitution (scalar to PIE):** identified for this binary, board and workload.
+  - The control is matched (same admission, intervals, consumer and fallback), the order is counterbalanced, and all 72 clean pairs are positive.
+  - The effect (median 242 us) is about 9 times the within-pose residual SD.
+- **Region lowering (stock to scalar):** identified as one bundle, not as separate mechanisms.
+- **Cold compile:** identified for the full-scan compiler. The prefilter result is not checkable here.
+- **Generality:** not identified. There is one board, one source (SHA prefix `b0a7c02b`), three strides (160, 165 and 320, with 320 used only by `top-lamp-wide`), and one firmware build.
+
+## 4. Frozen held-out protocol (05) and `selector.js`
+
+Observations from running `simdChoose`:
+
+- **For the planned variants it always picks PIE.**
+  - It selects `pie` for constant 8, constant 96 and dynamic (prior 32), at `writeStreams` 0, 1, 2 and 4.
+  - Example with writeStreams = 1, n = 8: stock 144, scalar 117, pie 99.
+- **It can never pick `scalar`.**
+  - For any n from 1 to 200 and writeStreams from 0 to 8, scalar minus pie = 21 x groups - 3, which is greater than 0 whenever groups is at least 1.
+- **Consequences:**
+  - On every planned variant the frozen policy is identical to the constant-PIE policy. The comparison the protocol itself asks for (frozen versus constant PIE) is therefore known in advance to show no difference.
+  - The model has no term for alignment or hit density. Varying hit density can only test robustness, not selection.
+  - For n = 8 misaligned, the host evidence orders the arms stock < scalar < PIE, but the selector picks PIE.
+  - For a dynamic bound of 3 at runtime, groups = 0 but the prior of 32 picks PIE. Expect guard and broadcast overhead with no packed work.
+- **The regret estimator is biased.** Taking the minimum of three noisy medians as 'best' pushes regret upward when the arms differ by about the noise floor (shade SD about 40 us). The protocol states no regret margin and no failure threshold.
+- **The freeze is not verifiable.** The supplied material records no hash of `selector.js`.
+
+## 5. Pre-measurement controls and failure conditions (recommendations)
+
+Common to all six studies:
+- Commit SHA-256 digests of the sources, selector and harness before any run.
+- Pin the firmware SHA and require each image SHA to match the treatment.
+- Rotate all six orderings in each block, with at least 6 blocks.
+- Record a CRC for each run and each treatment.
+- Declare the practical margin before running. Recommended: max(3 x the shade-control paired SD on the same entry point, 0.25% of the baseline).
+- Report units as P4 us, interpreter steps, or QEMU instructions, never mixed.
+
+**1. Hand ray row (C scalar, hand-PIE C, Typed)**
+- Controls:
+  - The same fixture rows and strides as the Typed run, rotated within each measurement.
+  - The `nm -S` row symbol size and ELF identity for each C build.
+  - LLVM remarks enabled so the absence of vectorization can be explained.
+- Failure conditions:
+  - Any output CRC mismatch.
+  - Hand-PIE not faster than scalar C beyond the margin in at least 5 of 6 blocks.
+  - Any claim that compares QEMU counts with interpreter steps.
+
+**2. Packet boundary**
+- Controls:
+  - A grid of element offsets 0 to 7, trip counts 0 to 24 plus 95, 96 and 97, and strides 160, 165 and 320.
+  - Before running, predict the number of packed stores for each call from the admission rule.
+  - Explain the 3,300 count before running.
+- Failure conditions:
+  - Any call where the measured packed-store count differs from the prediction.
+  - Zero-group overhead above the declared bound (currently observed as +27 steps on row 0 and +23 to +26 instructions in the transfer).
+  - The device break-even trip count differs from the host prediction by more than one group.
+
+**3. Range and trap safety**
+- Controls:
+  - u16 inputs at 0, 32,765, 32,766, 32,767 and 65,535, and row terms at each side of the saturation-proof bound.
+  - Short outputs that trap at every lane position inside a group.
+  - Aliases shifted by -8 to +8 elements.
+  - Compare the full mutable memory, the write prefix and the trap kind and location against both the Wasm and C oracles.
+- Failure conditions:
+  - Any byte or trap-point divergence.
+  - Any admission where the static range proof does not hold.
+  - Any fast-path execution on an overlapping alias.
+
+**4. Particle layout (AoS vs SoA)**
+- Controls:
+  - The same algorithm, inputs and output, with layout as the only factor.
+  - Log the admission or rejection reason for each loop.
+  - Use an equal number of particles and the same field widths in both layouts.
+- Failure conditions:
+  - A layout is rejected with no recorded reason.
+  - An admitted layout loses to stock beyond the margin.
+  - Output differs between layouts.
+
+**5. Conflict-free contacts**
+- Controls:
+  - Index streams with 0%, 1%, 50% and 100% duplicate targets, including duplicates within one group and across group boundaries.
+  - Measure the runtime conflict check alone, with the vector work disabled.
+- Failure conditions:
+  - Any vector path taken while duplicates are present in a group.
+  - Any accumulated-value mismatch.
+  - The check costs more than the packed saving at 0% duplicates.
+
+**6. Held-out regret and cold compile**
+- Controls:
+  - Fix the alignment offsets and the two or more hit densities, by value, before running.
+  - Publish, before running, the selector outputs for every variant (shown above: all PIE).
+  - Add either a variant where the model predicts stock or scalar, or a revised model frozen under a hash.
+  - Estimate regret from paired within-block differences with a bootstrap or exact interval, not from the minimum of medians.
+  - Run cold compile in an independent VM for each mode, with `compilerUs` and `elapsedUs` both reported.
+- Failure conditions:
+  - Regret above the margin on any variant.
+  - Frozen selection is not distinguishable from constant PIE. This is predicted, so the protocol cannot test switching as written.
+  - The image SHA does not match the selected arm.
+  - Cold compile cost not recovered within the declared frame budget.
+
+## 6. Engineering claims
+
+- **Supported for this board, binary and workload:**
+  - PIE beats matched scalar by about 0.43% per clean frame.
+  - Most of the improvement comes from the shared lowering.
+  - The Typed frame is 5.88 times the scalar C frame.
+- **Not supported by evidence checkable here:**
+  - The prefilter numbers and the 44-frame recovery estimate.
+  - Per-run output identity.
+  - C hand-PIE timing.
+  - The size claims at the ELF level on the device.
+- **Not supported in general:** the 744-byte text growth is a fixed cost paid by every opted-in app, and the 0.242 ms producer gain recovers the prefilter's extra cold compile cost only after about 290 frames.

@@ -1,0 +1,26 @@
+{
+  "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "arms": {
+    "baseline": {
+      "imageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+      "start": 3056,
+      "end": 4744,
+      "rowSHA": "20a6f004c0123edebdc703d5a5ace28b946164d0aba0cf6c46a565379e6ad58e",
+      "rowBytes": 1688
+    },
+    "empty": {
+      "imageSHA": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+      "start": 3056,
+      "end": 4768,
+      "rowSHA": "a35b9a1bd2adb8fb82e89ccdba29d8ae1c221edf4dbd29769c4fff2952a3ca06",
+      "rowBytes": 1712
+    },
+    "full": {
+      "imageSHA": "55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa",
+      "start": 3056,
+      "end": 7120,
+      "rowSHA": "f9787eaec1e0b62b2e66d694939db0ce3ba8e041d32e1104d572c75c10566af7",
+      "rowBytes": 4064
+    }
+  }
+}

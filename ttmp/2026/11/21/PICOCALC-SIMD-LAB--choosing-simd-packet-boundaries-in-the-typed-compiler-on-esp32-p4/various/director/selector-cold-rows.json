@@ -1,0 +1,482 @@
+[
+  {
+    "block": 0,
+    "family": 0,
+    "arm": 0,
+    "compileUs": 14920,
+    "totalUs": 280862,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 0,
+    "arm": 1,
+    "compileUs": 23500,
+    "totalUs": 289296,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 0,
+    "arm": 2,
+    "compileUs": 23307,
+    "totalUs": 289237,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 0,
+    "arm": 3,
+    "compileUs": 23411,
+    "totalUs": 289461,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 1,
+    "arm": 0,
+    "compileUs": 14910,
+    "totalUs": 280943,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 1,
+    "arm": 1,
+    "compileUs": 23543,
+    "totalUs": 289625,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 1,
+    "arm": 2,
+    "compileUs": 23325,
+    "totalUs": 289275,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 1,
+    "arm": 3,
+    "compileUs": 23474,
+    "totalUs": 289666,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 2,
+    "arm": 0,
+    "compileUs": 14917,
+    "totalUs": 281039,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 2,
+    "arm": 1,
+    "compileUs": 23450,
+    "totalUs": 289400,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 2,
+    "arm": 2,
+    "compileUs": 23279,
+    "totalUs": 289357,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 0,
+    "family": 2,
+    "arm": 3,
+    "compileUs": 23314,
+    "totalUs": 289347,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 0,
+    "arm": 1,
+    "compileUs": 23519,
+    "totalUs": 289791,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 0,
+    "arm": 2,
+    "compileUs": 23274,
+    "totalUs": 289349,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 0,
+    "arm": 3,
+    "compileUs": 23393,
+    "totalUs": 289435,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 0,
+    "arm": 0,
+    "compileUs": 14923,
+    "totalUs": 280965,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 1,
+    "arm": 1,
+    "compileUs": 23551,
+    "totalUs": 289585,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 1,
+    "arm": 2,
+    "compileUs": 23309,
+    "totalUs": 289265,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 1,
+    "arm": 3,
+    "compileUs": 23460,
+    "totalUs": 289533,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 1,
+    "arm": 0,
+    "compileUs": 14914,
+    "totalUs": 281167,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 2,
+    "arm": 1,
+    "compileUs": 23454,
+    "totalUs": 289464,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 2,
+    "arm": 2,
+    "compileUs": 23275,
+    "totalUs": 289215,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 2,
+    "arm": 3,
+    "compileUs": 23366,
+    "totalUs": 289506,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 1,
+    "family": 2,
+    "arm": 0,
+    "compileUs": 14914,
+    "totalUs": 280967,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 0,
+    "arm": 2,
+    "compileUs": 23291,
+    "totalUs": 289257,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 0,
+    "arm": 3,
+    "compileUs": 23398,
+    "totalUs": 289601,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 0,
+    "arm": 0,
+    "compileUs": 14916,
+    "totalUs": 280959,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 0,
+    "arm": 1,
+    "compileUs": 23515,
+    "totalUs": 289468,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 1,
+    "arm": 2,
+    "compileUs": 23319,
+    "totalUs": 289487,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 1,
+    "arm": 3,
+    "compileUs": 23455,
+    "totalUs": 289494,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 1,
+    "arm": 0,
+    "compileUs": 14911,
+    "totalUs": 281081,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 1,
+    "arm": 1,
+    "compileUs": 23559,
+    "totalUs": 289349,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 2,
+    "arm": 2,
+    "compileUs": 23277,
+    "totalUs": 289347,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 2,
+    "arm": 3,
+    "compileUs": 23402,
+    "totalUs": 289477,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 2,
+    "arm": 0,
+    "compileUs": 14931,
+    "totalUs": 280986,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 2,
+    "family": 2,
+    "arm": 1,
+    "compileUs": 23454,
+    "totalUs": 289408,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 0,
+    "arm": 3,
+    "compileUs": 23367,
+    "totalUs": 289437,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 0,
+    "arm": 0,
+    "compileUs": 14920,
+    "totalUs": 281103,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 0,
+    "arm": 1,
+    "compileUs": 23482,
+    "totalUs": 289525,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 0,
+    "arm": 2,
+    "compileUs": 23262,
+    "totalUs": 289286,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 1,
+    "arm": 3,
+    "compileUs": 23439,
+    "totalUs": 289784,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 1,
+    "arm": 0,
+    "compileUs": 14889,
+    "totalUs": 281033,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 1,
+    "arm": 1,
+    "compileUs": 23523,
+    "totalUs": 289592,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 1,
+    "arm": 2,
+    "compileUs": 23355,
+    "totalUs": 289711,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 2,
+    "arm": 3,
+    "compileUs": 23351,
+    "totalUs": 289280,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 2,
+    "arm": 0,
+    "compileUs": 14913,
+    "totalUs": 281000,
+    "peakBytes": 814020,
+    "bytes": 212,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 2,
+    "arm": 1,
+    "compileUs": 23458,
+    "totalUs": 289504,
+    "peakBytes": 814020,
+    "bytes": 580,
+    "match": true
+  },
+  {
+    "block": 3,
+    "family": 2,
+    "arm": 2,
+    "compileUs": 23292,
+    "totalUs": 289354,
+    "peakBytes": 814020,
+    "bytes": 504,
+    "match": true
+  }
+]

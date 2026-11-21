@@ -1,0 +1,2702 @@
+[
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 42818,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 29061,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 24425,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 45510,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 29020,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 26839,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 49951,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 34519,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 0,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 31961,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 462311,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218793,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 177797,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 496323,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254257,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210595,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 545558,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322929,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 0,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 283147,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 19252,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 23522,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 23854,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 20150,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 24414,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 24742,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 21918,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 28855,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 0,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 27851,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 87714,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 51899,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 45955,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 94266,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 56867,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 50317,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 102938,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 68036,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 0,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 61005,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 473628,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218780,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175361,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 508697,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254228,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210585,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 557974,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322923,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 0,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281252,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254241,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210582,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 496276,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322902,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281112,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 545583,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218788,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175381,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 463255,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 24388,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 24735,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 20130,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 26665,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 27045,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 21915,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 23483,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 23871,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 19235,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 56882,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 50313,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 94227,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 68066,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 61011,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 102941,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 52137,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 45452,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 87710,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254216,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210586,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 508704,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322939,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281253,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 557984,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218808,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175417,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 473628,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 28981,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 26841,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 45481,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 34536,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 31992,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 49951,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 27544,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 24471,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 1,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 42778,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 27047,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 21907,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 26655,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 23871,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 19222,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 23482,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 24767,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 20127,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 2,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 24381,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 61184,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 102933,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 68057,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 45733,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 87715,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 51848,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 50320,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 94236,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 2,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 56845,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281272,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 557971,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322913,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175120,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 474159,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218631,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210599,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 508700,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 2,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254231,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 32014,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 49939,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 34504,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 24441,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 42783,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 27357,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 26870,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 45467,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 2,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 28970,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281120,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 545566,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322762,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175388,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 461723,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218629,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210584,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 496285,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 2,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254231,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 45461,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 52104,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 87705,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 50583,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 57083,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 94233,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 61010,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 68021,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 3,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 102936,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175375,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218649,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 474139,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210603,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254231,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 508700,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281275,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322877,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 3,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 557978,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 24451,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 27357,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 42781,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 26857,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 28972,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 45485,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 32012,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 34525,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 3,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 49952,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175144,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218647,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 461732,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210595,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254232,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 498347,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281146,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322749,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 3,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 545556,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 23859,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 23469,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 19237,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 24785,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 24342,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 20121,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 27052,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 26644,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 3,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 21912,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 508695,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210605,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254238,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 557975,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281275,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322879,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 473639,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175428,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218636,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 45482,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 26868,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 28974,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 49948,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 31993,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 34481,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 42771,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 24496,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 27349,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 496291,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210600,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254231,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 545558,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281140,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322741,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 461212,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175156,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218633,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 20117,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 24770,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 24348,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 21917,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 27050,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 26658,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 19231,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 23877,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 23464,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 94231,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 50346,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 57103,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 102941,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 61038,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 68020,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 87717,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 45987,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 4,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 52111,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 34531,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 49942,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 32013,
+    "calls": 128,
+    "value": 25052
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 27387,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 42769,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 24408,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 28981,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 45477,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 5,
+    "fixture": 0,
+    "n": 8,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 26843,
+    "calls": 128,
+    "value": 1170
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 322814,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 545572,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 283174,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218768,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 461725,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175396,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254230,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 496285,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 5,
+    "fixture": 1,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 212639,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 26653,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 21907,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 27034,
+    "calls": 128,
+    "value": 10049
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 23468,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 19228,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 23859,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 24375,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 20121,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 5,
+    "fixture": 2,
+    "n": 3,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 24763,
+    "calls": 128,
+    "value": 361
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 68043,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 102934,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 61027,
+    "calls": 128,
+    "value": 48613
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 51896,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 87715,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 45196,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 57110,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 94233,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 5,
+    "fixture": 3,
+    "n": 17,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 50570,
+    "calls": 128,
+    "value": 1895
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 1,
+    "cycles": 323221,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 0,
+    "cycles": 557996,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 96,
+    "arm": 2,
+    "cycles": 281256,
+    "calls": 128,
+    "value": 290700
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 1,
+    "cycles": 218799,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 0,
+    "cycles": 474149,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 0,
+    "arm": 2,
+    "cycles": 175397,
+    "calls": 128,
+    "value": 0
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 1,
+    "cycles": 254231,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 0,
+    "cycles": 508711,
+    "calls": 128,
+    "value": 13821
+  },
+  {
+    "block": 5,
+    "fixture": 4,
+    "n": 96,
+    "reach": 35,
+    "arm": 2,
+    "cycles": 210588,
+    "calls": 128,
+    "value": 13821
+  }
+]
