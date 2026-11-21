@@ -97,7 +97,7 @@ How expensive is one classification of each kind? A third board image replayed t
 | Mixed | 282 | 95.11 | 128.26 | 126.97 |
 | Full | 742 | 132.75 | 164.98 | 151.00 |
 
-The minimum saved 27.21% against hand scalar on an empty packet. When a packet was mixed or full, the same schedule cost 34.37% or 23.36% more than scalar. The high empty fraction makes a whole-row improvement possible; a transfer to a denser workload needs a new observation of the class distribution. The conditional timings supply a mechanism to test. Applying them as universal costs for the compiled machine image would mix two implementations.
+The minimum saved 27.21% against hand scalar on an empty packet. When a packet was mixed or full, the same schedule cost 34.37% or 23.36% more than scalar. We tested how far the class costs transfer. For each schedule and block, sum the three separately timed class totals. This weights each class by its observed frequency before pairing and taking the median. The minimum-only hand schedule came out 0.27% slower on opening (three wins in nine blocks), 2.92% slower on dense, and 15.50% faster on sparse. The complete hand row improved on all three. Application order, call granularity and code placement differ between the class harness and the row harness. A compiler that merely multiplies class frequencies by isolated packet timings would miss the sign of two observed whole-row results. Include application-level validation in any cost model built from these measurements. [Mixture calculation and raw-block totals](../various/director/packet-mixtures.json)
 
 ## Prove the narrower arithmetic at its exact boundary
 
@@ -136,6 +136,9 @@ lab.packetPrediction()
 lab.frame("default","clean","baseline","empty")
 // 6 paired blocks, 0.904% median time saved
 
+lab.packetCosts("opening","mixed")
+// 282 packets per block; scalar 95.11 and minimum 128.26 cycles per packet.
+
 lab.physicsPair("contact",128,"grouped-scalar","grouped-pie")
 // 14 paired blocks, -43.892% saved
 
@@ -145,3 +148,5 @@ lab.selection("dynamic",3,35)
 ~~~
 
 I would advance two changes in this order. First, teach the compiler to hoist a whole-row admission check and keep base addresses and loop invariants live, with the hand scalar row as its target and scalar effect-prefix tests as its qualification. That targets the largest measured gap. Second, bring the particle recognizer into the streaming frontend and measure its recognition cost and guarded execution on a different layout-preserving physics kernel. For the selector, publish the simple policies as competitors and freeze a new test workload before tuning another weight. The existing evidence already supports a useful default for this particular decision: when a complete ray packet is proved empty, end the packed work there.
+
+The independent outcome review also caught missing units in the exported summary tables. The scorer now records the units and the compiled frame entry point alongside each result. The examiner independently reproduced all 24 per-fixture paired frame/primary medians and forced spills, alignment fallback, a short output and an arithmetic failure in a separate accepted loop. [Independent outcome review](05-independent-review-of-the-compiler-measurements.md) · [Independent replication](06-independent-replication.md)

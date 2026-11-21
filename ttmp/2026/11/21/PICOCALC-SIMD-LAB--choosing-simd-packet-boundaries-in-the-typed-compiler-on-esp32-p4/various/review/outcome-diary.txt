@@ -1,0 +1,29 @@
+# Lab notebook: SIMD packet-boundary review, 2026-11-21
+
+## API calls performed
+
+1. `mcp__review__eval`, source: `["pie","empty","full"].map(k => simd.executions(k+"-row",k+"-opening","scalar-lane-load").executions)`. Result: `{"ok":true,"value":[26070,9182,3246]}`.
+2. `mcp__review__eval`, the same three `simd.executions` calls, this time projecting imageSHA, workload, traceSteps, staticInstructions, executedPCs and unit. Results:
+   - pie: 8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a, 3,131,435 steps
+   - empty: 9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f, 2,983,602 steps
+   - full: 55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa, 2,954,486 steps
+   - All three: workload opening-160-rows, staticInstructions 1, executedPCs 1, unit = retired RV32 guest instruction executions.
+
+## Measurements checked
+
+- Lane loads, image digests and step totals match candidate-workbook.json for all three arms.
+- 26070 − 9182 = 16888, which equals predicted[0]. The full image's extracts, 5936, equal predicted[1]. 3246 + 5936 = 9182.
+- Recomputed the step change relative to pie steps: empty −4.7209%, full −5.6507%. Both match the workbook.
+- Frame, default pose: recomputed pct = saved/before for the empty, full and incrementalFull rows in the clean and primary phases. Noted that saved (508.5) differs from the difference of medians (506.0). Scanned all 24 pose-phase rows: incrementalFull wins = 0 in every row, with a range of −102.0 to −138.5 (clean) and −120.0 to −150.5 (primary).
+- Ceiling: read the control field of each row. Computed the unpaired full-minus-empty median differences: opening −5,959, dense −7,763, sparse +624 cycles.
+- Selector: predicted = pie in 15/15 cases. Recomputed regret for dynamic n=3 reach 0: (186.4453125 − 150.2578125)/150.2578125 = 24.08%.
+- Gate: recomputed n=0 gateOverBestFixedPct = 8.45% and gateVsPie pct = 6.94%.
+- Physics cells and the packedArithmetic cell were read from workbook.json and not re-queried.
+
+## Not performed
+
+- No hardware.* calls. All device cycle figures come from the supplied JSON tables.
+
+## Tool failures
+
+- None. Both calls returned ok:true.

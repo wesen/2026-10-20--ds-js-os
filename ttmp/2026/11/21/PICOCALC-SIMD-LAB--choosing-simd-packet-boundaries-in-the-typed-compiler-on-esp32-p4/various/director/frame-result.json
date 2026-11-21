@@ -2,6 +2,9 @@
   {
     "pose": "default",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 56243.5,
       "after": 55737.5,
@@ -27,6 +30,9 @@
   {
     "pose": "default",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16337.5,
       "after": 15791.0,
@@ -52,6 +58,9 @@
   {
     "pose": "lamp-only",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 55775.0,
       "after": 55252.5,
@@ -77,6 +86,9 @@
   {
     "pose": "lamp-only",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16358.0,
       "after": 15819.0,
@@ -102,6 +114,9 @@
   {
     "pose": "near-corner",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 57035.5,
       "after": 56527.5,
@@ -127,6 +142,9 @@
   {
     "pose": "near-corner",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16402.0,
       "after": 15862.0,
@@ -152,6 +170,9 @@
   {
     "pose": "far-corner",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 57596.5,
       "after": 57071.5,
@@ -177,6 +198,9 @@
   {
     "pose": "far-corner",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16427.0,
       "after": 15886.0,
@@ -202,6 +226,9 @@
   {
     "pose": "left-bottom",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 55347.5,
       "after": 54849.5,
@@ -227,6 +254,9 @@
   {
     "pose": "left-bottom",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16379.5,
       "after": 15831.5,
@@ -252,6 +282,9 @@
   {
     "pose": "right-top",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 54088.0,
       "after": 53561.0,
@@ -277,6 +310,9 @@
   {
     "pose": "right-top",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16401.0,
       "after": 15847.5,
@@ -302,6 +338,9 @@
   {
     "pose": "blue-overlap",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 54102.0,
       "after": 53597.0,
@@ -327,6 +366,9 @@
   {
     "pose": "blue-overlap",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16234.5,
       "after": 15690.5,
@@ -352,6 +394,9 @@
   {
     "pose": "gold-overlap",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 53829.5,
       "after": 53299.0,
@@ -377,6 +422,9 @@
   {
     "pose": "gold-overlap",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16291.0,
       "after": 15753.5,
@@ -402,6 +450,9 @@
   {
     "pose": "left-lamp",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 55333.5,
       "after": 54822.0,
@@ -427,6 +478,9 @@
   {
     "pose": "left-lamp",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16283.5,
       "after": 15738.5,
@@ -452,6 +506,9 @@
   {
     "pose": "right-lamp",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 55231.5,
       "after": 54705.0,
@@ -477,6 +534,9 @@
   {
     "pose": "right-lamp",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16305.0,
       "after": 15765.5,
@@ -502,6 +562,9 @@
   {
     "pose": "bottom-lamp",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 54940.0,
       "after": 54428.5,
@@ -527,6 +590,9 @@
   {
     "pose": "bottom-lamp",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16257.5,
       "after": 15716.0,
@@ -552,6 +618,9 @@
   {
     "pose": "top-lamp-wide",
     "phase": "clean",
+    "entry": "typedRayFrame",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 54496.5,
       "after": 53953.5,
@@ -577,6 +646,9 @@
   {
     "pose": "top-lamp-wide",
     "phase": "primary",
+    "entry": "typedRayTrace",
+    "unit": "microseconds per compiled call; output ready in memory",
+    "percent": "median of paired within-block time saved divided by its baseline",
     "empty": {
       "before": 16762.0,
       "after": 16228.5,

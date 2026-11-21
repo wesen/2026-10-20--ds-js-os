@@ -1,6 +1,7 @@
 [
   {
     "n": 0,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 36.16145833333333,
       "pie": 42.125,
@@ -18,6 +19,7 @@
   },
   {
     "n": 1,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 74.13541666666667,
       "pie": 110.38802083333334,
@@ -35,6 +37,7 @@
   },
   {
     "n": 3,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 157.17708333333334,
       "pie": 193.38020833333334,
@@ -52,6 +55,7 @@
   },
   {
     "n": 5,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 233.109375,
       "pie": 269.2734375,
@@ -69,6 +73,7 @@
   },
   {
     "n": 7,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 320.59895833333337,
       "pie": 352.2395833333333,
@@ -86,6 +91,7 @@
   },
   {
     "n": 8,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 364.15364583333337,
       "pie": 210.625,
@@ -103,6 +109,7 @@
   },
   {
     "n": 9,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 405.16666666666663,
       "pie": 251.75260416666666,
@@ -120,6 +127,7 @@
   },
   {
     "n": 15,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 650.1302083333334,
       "pie": 492.8098958333333,
@@ -137,6 +145,7 @@
   },
   {
     "n": 16,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 695.0677083333333,
       "pie": 352.0520833333333,
@@ -154,6 +163,7 @@
   },
   {
     "n": 17,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 736.0416666666666,
       "pie": 394.0885416666667,
@@ -171,6 +181,7 @@
   },
   {
     "n": 33,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 1389.1145833333333,
       "pie": 655.0520833333334,
@@ -188,6 +199,7 @@
   },
   {
     "n": 96,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 3974.083333333333,
       "pie": 1646.1302083333335,
@@ -205,6 +217,7 @@
   },
   {
     "n": 127,
+    "unit": "P4 cycles per compiled call",
     "medians": {
       "stock": 5245.138020833334,
       "pie": 2346.088541666667,

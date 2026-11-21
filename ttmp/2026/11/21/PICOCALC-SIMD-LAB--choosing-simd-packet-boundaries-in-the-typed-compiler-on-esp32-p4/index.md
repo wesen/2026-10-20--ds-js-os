@@ -32,4 +32,6 @@ For the project result and the experiments behind it, start with [Where an eight
 | Whole frames and selection on unseen inputs | [Device frame results](various/director/frame-result.json) · [Blind result](various/director/selector-result.json) · [Length dispatch follow-up](various/director/gate-result.json) |
 | Verify or extend the measurements | [Open a research session](scripts/director/09-open-lab-session.py) · [Executable JS cells](scripts/director/10-lab-workbook.js) · [Verified live worksheet](various/director/final-live-workbook.json) |
 
+The [independent results review](analysis/05-independent-review-of-the-compiler-measurements.md) and the [Astra examiner’s separate replay](analysis/06-independent-replication.md) distinguish the application results from source-level correctness, evidence identity and code-placement effects.
+
 Each department's guide is in [design-doc](design-doc), the articles are in [analysis](analysis), each diary is under [reference](reference), and source, compiler fixtures and physical replay programs are in [scripts](scripts). [Task completion](tasks.md) · [Changelog](changelog.md).

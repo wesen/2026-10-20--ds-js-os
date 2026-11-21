@@ -26,8 +26,11 @@ if isinstance(response,list): response=next(item for item in reversed(response) 
 out=response.get("result","").strip()
 (room/"public-result.txt").write_text(out)
 if not out: raise SystemExit(str({k:response.get(k) for k in ["subtype","is_error","stop_reason"]}))
-if out.startswith("```"): out=out.split("\n",1)[1].rsplit("```",1)[0]
-obj=json.loads(out)
+# A result may include a short preface and an explanatory trailer around the JSON.
+fence = chr(96)*3 + "json" + chr(10)
+if fence in out: out = out.split(fence,1)[1]
+elif out.startswith(chr(96)*3): out = out.split(chr(10),1)[1]
+obj,_ = json.JSONDecoder().raw_decode(out.lstrip())
 if not (room/"review-repl.jsonl").exists(): raise SystemExit("no independent live REPL receipt")
 target=t/"various/review"
 for key in ("review","diary"): (target/(args.phase+"-"+key+".txt")).write_text(obj[key].rstrip()+"\n")

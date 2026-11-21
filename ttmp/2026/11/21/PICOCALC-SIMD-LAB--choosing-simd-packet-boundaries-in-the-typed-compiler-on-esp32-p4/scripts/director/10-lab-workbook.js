@@ -19,8 +19,9 @@ const paired = (rows, a, b, key, value) => {
 };
 lab.frame = (pose,phase,a,b) => {
     const ix=["clean","primary"].indexOf(phase);
-    return paired(lab.frames.filter(r=>r.fixture===pose && r.phase===ix),a,b,
-                  r=>["baseline","empty","full"][r.arm],r=>r.us);
+    const result=paired(lab.frames.filter(r=>r.fixture===pose && r.phase===ix),a,b,
+                        r=>["baseline","empty","full"][r.arm],r=>r.us);
+    return {unit:"microseconds per compiled call", ...result};
 };
 lab.physicsPair = (kernel,n,a,b) => paired(lab.physics.filter(r=>r.kind===kernel && r.n===n),a,b,r=>r.name,r=>r.cycles/r.repeats);
 lab.collisionCosts = (fixture,reach) => ["stock","scalar","pie"].map((arm,i)=>({arm,cycles:median(
@@ -44,5 +45,12 @@ lab.selection = (family,n,reach) => {
         throw Error("selected and forced compiler images differ");
     return {family, n, reach, decision, imageSHA256:build.sha, codeBytes:build.len,
             unit:"physical P4 cycles per call", measured:trial.medianCycles, regretPct:trial.regretPct};
+};
+
+lab.packetCosts = (scene,kind) => {
+    const cell = lab.packetClasses[scene]?.[kind];
+    if (!cell) throw Error("unknown packet scene or class");
+    return {unit:"P4 cycles per eight-lane packet in hand microbenchmark",
+            scene,kind,packetsPerBlock:cell.packets_per_block,schedules:cell.schedules};
 };
 undefined

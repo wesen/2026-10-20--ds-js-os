@@ -35,6 +35,9 @@ try:
         raw=(ticket/'various/director'/file).read_bytes()
         evaluate('lab.'+key+'='+raw.decode()+';undefined')
         evaluate('lab.sources.'+key+'='+json.dumps({'path':'director/'+file,'sha256':hashlib.sha256(raw).hexdigest()})+';undefined')
+    raw=(ticket/'various/ray/packet-classes-summary.json').read_bytes()
+    evaluate('lab.packetClasses='+raw.decode()+';undefined')
+    evaluate('lab.sources.packetClasses='+json.dumps({'path':'ray/packet-classes-summary.json','sha256':hashlib.sha256(raw).hexdigest()})+';undefined')
     evaluate((ticket/'scripts/director/10-lab-workbook.js').read_text())
     queries={
         'openingFrame':'lab.frame("default","clean","baseline","empty")',
@@ -43,7 +46,7 @@ try:
         'heldOutShort':'lab.collisionCosts(2,35)',
         'physicsParticle':'lab.physicsPair("particle",128,"guarded-soa-scalar","guarded-soa-pie")',
         'physicsContact':'lab.physicsPair("contact",128,"grouped-scalar","grouped-pie")',
-        'gateN3':'lab.gateCosts(3)', 'blindPrediction':'lab.selection("dynamic",3,35)'}
+        'gateN3':'lab.gateCosts(3)', 'mixedPacket':'lab.packetCosts("opening","mixed")', 'blindPrediction':'lab.selection("dynamic",3,35)'}
     result={k:{'js':js,'value':evaluate(js)} for k,js in queries.items()}
     result['sources']=evaluate('lab.sources')
     if args.out:args.out.write_text(json.dumps(result,indent=2)+'\n')

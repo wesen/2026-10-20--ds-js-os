@@ -2,6 +2,7 @@
   "openingFrame": {
     "js": "lab.frame(\"default\",\"clean\",\"baseline\",\"empty\")",
     "value": {
+      "unit": "microseconds per compiled call",
       "blocks": 6,
       "baselineMedian": 56243.5,
       "candidateMedian": 55737.5,
@@ -12,6 +13,7 @@
   "openingPrimary": {
     "js": "lab.frame(\"default\",\"primary\",\"baseline\",\"empty\")",
     "value": {
+      "unit": "microseconds per compiled call",
       "blocks": 6,
       "baselineMedian": 16337.5,
       "candidateMedian": 15791,
@@ -81,6 +83,32 @@
       }
     ]
   },
+  "mixedPacket": {
+    "js": "lab.packetCosts(\"opening\",\"mixed\")",
+    "value": {
+      "unit": "P4 cycles per eight-lane packet in hand microbenchmark",
+      "scene": "opening",
+      "kind": "mixed",
+      "packetsPerBlock": 282,
+      "schedules": {
+        "scalar": {
+          "cycles_per_packet_median": 95.11,
+          "median_saving_vs_scalar_pct": 0,
+          "wins_vs_scalar": 0
+        },
+        "empty": {
+          "cycles_per_packet_median": 128.259,
+          "median_saving_vs_scalar_pct": -34.367,
+          "wins_vs_scalar": 0
+        },
+        "empty-full": {
+          "cycles_per_packet_median": 126.972,
+          "median_saving_vs_scalar_pct": -33.5,
+          "wins_vs_scalar": 0
+        }
+      }
+    }
+  },
   "blindPrediction": {
     "js": "lab.selection(\"dynamic\",3,35)",
     "value": {
@@ -140,6 +168,10 @@
     "scores": {
       "path": "director/selector-result.json",
       "sha256": "5baea910c8ad2f9a49087cd587dbf43e1b72293b9e040ae5c85ea771e27f01e2"
+    },
+    "packetClasses": {
+      "path": "ray/packet-classes-summary.json",
+      "sha256": "8c34b1fdfb95e17113f7e5ce831e5f0efd349d0c18b64c7884b37ae8a52be4fb"
     }
   }
 }

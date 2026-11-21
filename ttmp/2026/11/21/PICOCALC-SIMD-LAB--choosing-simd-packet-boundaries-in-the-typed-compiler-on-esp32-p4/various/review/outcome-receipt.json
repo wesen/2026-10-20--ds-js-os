@@ -1,0 +1,22 @@
+{
+  "command": [
+    "claude",
+    "-p",
+    "--model",
+    "opus",
+    "--effort",
+    "high"
+  ],
+  "evidence": "completed public manuscript and diary with two independently logged live MCP calls",
+  "inputs": [
+    "REPL README",
+    "selector-result",
+    "frame-result",
+    "gate-result",
+    "ceiling-summary",
+    "proof-summary",
+    "physics/workbook",
+    "evidence/candidate-workbook"
+  ],
+  "recovery": "Extracted the complete object from the public JSON code fence. CLI returned surrounding prose."
+}

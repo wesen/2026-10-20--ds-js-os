@@ -21,7 +21,8 @@ results=[]
 for f in frames:
     for phase in (0,1):
         treatments=[[r[f['fixture'],phase,b,a]['us'] for b in range(6)] for a in range(3)]
-        entry={'pose':f['fixture'],'phase':['clean','primary'][phase]}
+        entry={'pose':f['fixture'],'phase':['clean','primary'][phase], 'entry':['typedRayFrame','typedRayTrace'][phase],
+               'unit':'microseconds per compiled call; output ready in memory', 'percent':'median of paired within-block time saved divided by its baseline'}
         for name,i,j in [('empty',0,1),('full',0,2),('incrementalFull',1,2)]:entry[name]=pairs(treatments[i],treatments[j])
         results.append(entry)
 g={(x['n'],x['block'],x['arm']):x['cycles']/x['calls'] for x in gate}
@@ -30,7 +31,7 @@ lengths=[]
 for n in [0,1,3,5,7,8,9,15,16,17,33,96,127]:
     times=[[g[n,b,a] for b in range(6)] for a in range(3)]
     med=list(map(statistics.median,times)); best=min(med[:2])
-    lengths.append({'n':n,'medians':dict(zip(['stock','pie','gated'],med)),'gateOverBestFixedPct':100*(med[2]/best-1),
+    lengths.append({'n':n,'unit':'P4 cycles per compiled call','medians':dict(zip(['stock','pie','gated'],med)),'gateOverBestFixedPct':100*(med[2]/best-1),
                     'pieOverBestFixedPct':100*(med[1]/best-1),'gateVsPie':pairs(times[1],times[2])})
 write('frame-device-rows',rows);write('gate-device-rows',gate);write('frame-result',results);write('gate-result',lengths)
 for ph in ('clean','primary'):
