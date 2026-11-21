@@ -25,7 +25,7 @@ The handheld began on the published smooth-Chess application. I acquired the USB
 
 ### Prompt Context
 
-**User prompt (verbatim)** See the [director's investigation diary](01-director-investigation-diary.md) for the user-authored release request. This investigator received the following **delegated assignment (verbatim)**.
+**User prompt (verbatim)** “ok, advance both.” See the [director's investigation diary](01-director-investigation-diary.md) for the user-authored release request. This investigator received the following **delegated assignment (verbatim)**.
 
 > Own board qualification and all serial use for this release. New ticket ttmp/2026/11/20/PICOCALC-NATIVE-PROMOTION--qualify-late-text-lowering-and-streaming-frameless-leaves-on-the-playable-picocalc. Begin now with actual installed (previous 134f3a24) ordinary release preflight, collect repeatable baseline app cold boot/compile timing and normally loaded PSRAM Chess fixed-work move (UI end-to-end with state/nodes if available) + Editor workflows editing using temporary safe scratch data, plus native health and painter. Make a meaningful baseline vs candidate using normal apps, capture observables and compare, distinguish guest vs UI time, no destructive user file edits. Preserve scripts, compact evidence and full diary under scripts/device, various/device and reference/03-device-investigation-diary.md. Once I supply built candidate path flash app only with hash/partition safeguards; leave latest qualified candidate on device if passes, restore verified ordinary release on failure. If device unavailable register evidence and coordinate. No source compiler edits. Commit your owned files; signal when baseline is running. I own official build/package. If additional targeted PSRAM fixed work is needed coordinate with me.
 
@@ -33,7 +33,7 @@ The handheld began on the published smooth-Chess application. I acquired the USB
 
 **Inferred user intent** Decide whether the production compiler can ship on an everyday playable handheld using repeatable physical evidence.
 
-**Commit (code)** See repository history for the present investigation and its bundled runner.
+**Commit (code)** af8d35e — Qualify the installed PicoCalc and measure its ordinary Chess and Editor paths.
 
 ### What I did
 
@@ -87,7 +87,7 @@ I exercised a complete opening move in the real Chess application and compared t
 
 **Inferred user intent** Verify that generated code handles actual play and editing and quantify the effect on normal latency.
 
-**Commit (code)** See repository history for the qualification runner and reference fixtures.
+**Commit (code)** af8d35e — Qualify the installed PicoCalc and measure its ordinary Chess and Editor paths.
 
 ### What I did
 
@@ -128,3 +128,57 @@ Inspect the `play`, `match`, `edit` and `remove_owned` functions. Regenerate the
 ### Technical details
 
 The first revision is `alpha text\nbeTa`; the second is `alpha text\nbeTa7`. The captured foreground body begins at row 22. The reference tuple's final three fields are completed depth 3, 1,600 nodes and score 12. Ordinary guest timing is the native Chess world's kernel CPU accumulator difference, with 0.001 ms presentation precision. SPI traffic covers the same interval plus the counter queries.
+
+## Step 3. Check the official image against the ordinary startup notification
+
+The director provided the compiled candidate and its SHA-256. I verified it against the supplied digest, checked the matching partition table and ran the release script. The first complete candidate boot series exposed a difference in observation time. Faster startup let the measurement reach the opening board while a stock diagnostic banner was still visible. The script restored the published image on that mismatch.
+
+### Prompt Context
+
+**User prompt (verbatim)** See Step 1.
+
+**Assistant interpretation** Preserve the ordinary system image and verify the actual visible application before measuring its move.
+
+**Inferred user intent** Keep the production device usable even when a qualification harness detects a difference.
+
+**Commit (code)** af8d35e introduced the app-only qualification and automatic rollback. The follow-up changes the untimed wait for the opening pose.
+
+### What I did
+
+I compared the two failed opening reference images before changing any gate. The candidate showed the stock red `nat-import stopped after 5 crashes in 10 s` notification. A comparison of all 320×320 pixels put every difference inside x=4…315, y=26…86. I added a bounded observation period before the first timed move. It accepts the opening only when the entire 320×298 expected body and hint row match.
+
+### Why
+
+The desktop reference draws a settled Chess board. A timed system notification from an unrelated demonstration module shares the same compositor. Starting the motion clock with such a notification would mix system startup and game behavior.
+
+### What worked
+
+The initial installed release, candidate and rollback each had application and partition bytes checked with esptool. The candidate completed all five compilations on three reboots before the opening gate. The failure exercised the real rollback path without touching the filesystem.
+
+### What didn't work
+
+Before changing flash I noticed that an independent system log line could occur between the console's file-read lines. The first preflight was stopped after the old image had been verified and before any write. The readback parser now discards only the explicitly recognized filesystem timing record for this test file. On the next attempt the actual opening mismatch reported `AssertionError: initial-chess differs from opening`; the retained failed screenshot established the banner bounds. The test now waits for its expiry and compares every byte. The clock for move execution starts later.
+
+### What I learned
+
+Optimizing startup changes which asynchronous tasks and notifications are still active when the five compiler lines have arrived. A faster compiler does not imply a semantically different board. A screenshot with a banner is nevertheless a genuinely different screen, so the stable observation needs an explicit condition.
+
+### What was tricky to build
+
+The ordinary serial status commands, startup diagnostics and application payloads share UART output. Some text lines are application data. The filter recognizes the exact ESP-IDF filesystem timing syntax including the test path, then requires the remaining two lines to exactly match the expected document. A missing or extra data line still fails.
+
+### What warrants a second pair of eyes
+
+Review the opening wait's deadline, lower-body comparison and full final equality, and the rollback order. Waiting cannot change the input keys, expected pixels or timing of the subsequent move. The documented 5,000 ms is a system-banner duration and the bounded observer allows time for redraw.
+
+### What should be done in the future
+
+A future release with a different startup notification can retain the full equality gate and examine the complete failed snapshot to identify the cause.
+
+### Code review instructions
+
+Inspect `opening` in the workflow and the candidate runner's exception handler. The first failed physical screenshot preserves the unaltered notification. [Failed opening screen](../various/device/opening-with-boot-notice.png) [Candidate runner](../scripts/device/03-candidate.py) [Workflow](../scripts/device/workflows.py)
+
+### Technical details
+
+The attested candidate contains 4,331,776 bytes. Its app digest is `33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813`. The release profile is built at revision `8052db721eda91720010867915b70064b33912f0`. The ordinary prior application contains 4,328,368 bytes. esptool verifies the 3,072-byte partition table separately from either application.

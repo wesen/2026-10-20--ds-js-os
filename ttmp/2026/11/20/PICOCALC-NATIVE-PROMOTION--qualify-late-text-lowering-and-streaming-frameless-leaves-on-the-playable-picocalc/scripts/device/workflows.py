@@ -31,6 +31,24 @@ def snapshot(c, out, label):
     return shot, (out / (label + ".rgb565")).read_bytes()
 
 
+def opening(c, out):
+    # The ordinary image shows its intentionally denied demo module at boot.
+    # Wait only before the timed trials, without masking any application pixel.
+    expected = zlib.decompress((MATCH / "opening.ref.z").read_bytes())
+    deadline = time.monotonic() + 20
+    while True:
+        shot, raw = snapshot(c, out, "initial-chess")
+        if raw[22 * 320 * 2 :] == expected:
+            return shot["appSha256"]
+        start = 87 * 320 * 2
+        if (
+            raw[start:] != expected[start - 22 * 320 * 2 :]
+            or time.monotonic() > deadline
+        ):
+            raise AssertionError("opening body never reached the frozen reference")
+        time.sleep(1)
+
+
 def match(c, out, label, ref):
     shot, raw = snapshot(c, out, label)
     assert raw[22 * 320 * 2 :] == zlib.decompress(
@@ -57,7 +75,7 @@ def play(c, out, reps):
     key(c, "h", 0.6)
     key(c, "f2", 0.4)
     source = json.loads((MATCH / "match.json").read_text())[:2]
-    shots = {"opening": match(c, out, "initial-chess", "opening")}
+    shots = {"opening": opening(c, out)}
     measured = []
     for i in range(reps):
         key(c, "f2", 0.35)

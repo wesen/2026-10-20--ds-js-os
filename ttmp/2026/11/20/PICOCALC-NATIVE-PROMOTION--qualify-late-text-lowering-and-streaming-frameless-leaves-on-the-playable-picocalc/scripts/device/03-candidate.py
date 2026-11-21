@@ -28,9 +28,18 @@ parser.add_argument("build", type=Path)
 parser.add_argument("expected_sha256")
 parser.add_argument("baseline_ui", type=Path)
 parser.add_argument("out", type=Path)
+parser.add_argument(
+    "--previous-build",
+    type=Path,
+    default=RELEASE,
+    help="directory of the published baseline app and partition table",
+)
 parser.add_argument("--port", default="/dev/ttyACM0")
 args = parser.parse_args()
-assert sha(RELEASE / APP) == RELEASE_SHA and sha(RELEASE / PART) == PART_SHA
+assert (
+    sha(args.previous_build / APP) == RELEASE_SHA
+    and sha(args.previous_build / PART) == PART_SHA
+)
 assert sha(args.build / PART) == PART_SHA
 assert sha(args.build / APP) == args.expected_sha256 != RELEASE_SHA
 assert 0 < (args.build / APP).stat().st_size <= 8 * 1024 * 1024
@@ -51,7 +60,7 @@ with acquire(), (args.out / "uart.log").open("wb", buffering=0) as log:
 
     c = connect()
     hold(c)
-    flash("verify_flash", RELEASE, "previous-verified")
+    flash("verify_flash", args.previous_build, "previous-verified")
     c = connect()
     ready(c)
     hold(c)
@@ -101,8 +110,8 @@ with acquire(), (args.out / "uart.log").open("wb", buffering=0) as log:
                 hold(c)
         except Exception as err:
             print("could not hold before rollback:", err, flush=True)
-        flash("write_flash", RELEASE, "restore-previous")
-        flash("verify_flash", RELEASE, "restore-verified")
+        flash("write_flash", args.previous_build, "restore-previous")
+        flash("verify_flash", args.previous_build, "restore-verified")
         c = connect()
         worlds, painter = ready(c)
         c.input_ready()

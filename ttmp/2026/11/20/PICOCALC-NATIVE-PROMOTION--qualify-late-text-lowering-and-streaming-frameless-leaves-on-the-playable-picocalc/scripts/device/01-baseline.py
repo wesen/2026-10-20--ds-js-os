@@ -18,15 +18,24 @@ from common import (
 
 p = argparse.ArgumentParser()
 p.add_argument("out", type=Path)
+p.add_argument(
+    "--previous-build",
+    type=Path,
+    default=RELEASE,
+    help="directory of the published baseline app and partition table",
+)
 p.add_argument("--port", default="/dev/ttyACM0")
 a = p.parse_args()
-assert sha(RELEASE / APP) == RELEASE_SHA and sha(RELEASE / PART) == PART_SHA
+assert (
+    sha(a.previous_build / APP) == RELEASE_SHA
+    and sha(a.previous_build / PART) == PART_SHA
+)
 a.out.mkdir(parents=True, exist_ok=False)
 r = {"application": RELEASE_SHA, "partition": PART_SHA, "cold": []}
 with acquire(), (a.out / "uart.log").open("wb", buffering=0) as log:
     c = unit.Console(a.port, log)
     hold(c)
-    esp("verify_flash", RELEASE, a.out, "baseline-before", a.port)
+    esp("verify_flash", a.previous_build, a.out, "baseline-before", a.port)
     r["preflightVerified"] = True
     save(a.out / "cold.json", r)
     c = unit.Console(a.port, log)
