@@ -17,6 +17,11 @@ PLAYABLE = Path("/tmp/picocalc-native-promotion-rev1/build")
 PLAYABLE_SHA = "33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813"
 
 
+def acquire():
+    release.unit.LOCK.parent.mkdir(parents=True, exist_ok=True)
+    return release.acquire()
+
+
 def check_build(build, digest):
     assert release.sha(build / release.APP) == digest
     assert release.sha(build / release.PART) == release.PART_SHA

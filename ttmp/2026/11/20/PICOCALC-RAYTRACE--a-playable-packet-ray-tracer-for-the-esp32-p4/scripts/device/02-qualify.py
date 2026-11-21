@@ -7,6 +7,7 @@ import time
 import zlib
 from pathlib import Path
 from board_common import (
+    acquire,
     PLAYABLE,
     PLAYABLE_SHA,
     REPO,
@@ -95,8 +96,10 @@ def capture(c, label, scene):
         if time.monotonic() >= limit:
             difference = next(
                 i // 2
-                for i, (l, r) in enumerate(zip(view, expected, strict=True))
-                if l != r
+                for i, (actual_byte, expected_byte) in enumerate(
+                    zip(view, expected, strict=True)
+                )
+                if actual_byte != expected_byte
             )
             raise AssertionError(
                 (label, "viewport", difference, "CRC", crc(view), crc(expected))
@@ -154,7 +157,7 @@ def run_bench(c):
     return rows
 
 
-with release.acquire(), (a.out / "uart.log").open("wb", buffering=0) as log:
+with acquire(), (a.out / "uart.log").open("wb", buffering=0) as log:
 
     def connect():
         return release.unit.Console(a.port, log)
