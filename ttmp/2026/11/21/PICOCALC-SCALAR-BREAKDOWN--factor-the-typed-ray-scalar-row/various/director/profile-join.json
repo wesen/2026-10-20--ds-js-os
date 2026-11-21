@@ -1,0 +1,52 @@
+{
+  "checked-stack": {
+    "nativeSHA": "7e59fd852c65173e72b76c75f3f826544a4dbcacfff49277f2fde2904943e7e6",
+    "rowRetired": 3615257,
+    "stackAccesses": 1290106,
+    "segments": {
+      "specialized code": 7680,
+      "fast": 3607577,
+      "fallback": 0
+    }
+  },
+  "hoisted-stack": {
+    "nativeSHA": "1f92fff08af969b739b814412464a8dc749bdcb0181178a41f2a817f9161a17b",
+    "rowRetired": 3303633,
+    "stackAccesses": 1290106,
+    "segments": {
+      "specialized code": 7680,
+      "fast": 3295953,
+      "fallback": 0
+    }
+  },
+  "checked-register": {
+    "nativeSHA": "80f5457634fb05afc8ab49b348e864344973eceba18a2a670b16fee799c0e25f",
+    "rowRetired": 2953176,
+    "stackAccesses": 370265,
+    "segments": {
+      "specialized code": 7680,
+      "fast": 2945496,
+      "fallback": 0
+    }
+  },
+  "hoisted-register": {
+    "nativeSHA": "dc578a88bb9b297408c7b964a13e4453645e00057370cd3933aa4821d6dc0983",
+    "rowRetired": 2641552,
+    "stackAccesses": 370265,
+    "segments": {
+      "specialized code": 7680,
+      "fast": 2633872,
+      "fallback": 0
+    }
+  },
+  "skip": {
+    "nativeSHA": "d26109121665cfcc7da04fc5884f2f9b607d984ac63e397d9c54284e87969f6b",
+    "rowRetired": 1532782,
+    "stackAccesses": 269465,
+    "segments": {
+      "specialized code": 7680,
+      "fast": 1525102,
+      "fallback": 0
+    }
+  }
+}

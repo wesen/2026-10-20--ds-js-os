@@ -6,6 +6,8 @@ be scripted and have its screen captured without the hardware.
 
 The [compiler research index](../ttmp/2026/11/19/PICOCALC-COMPILER-THESIS--cold-compilation-and-bounded-analyses-on-the-picocalc/reference/02-picocalc-compiler-research-index-and-open-directions.md) connects the native roadmap, language designs, and measured results for CJI, Wasm, and RV32.
 
+To inspect generated code from the repository root, run `node picocalc-os/tools/typed-inspect.mjs SOURCE --function NAME`. The [inspector guide](../ttmp/2026/11/21/PICOCALC-COMPILER-INSPECT--inspect-typed-wasm-and-rv32-emission/design-doc/01-experimental-design-and-implementation-guide.md) covers Wasm byte offsets, RV32 disassembly, and joining execution counts to a source line.
+
 Every driver, the compositor and every app is a *world*: its own QuickJS runtime, heap limit and turn
 budget. A small C nucleus runs them on a virtual clock, delivers their messages, hands out hardware as
 *handles*, and supervises them. The keyboard, power and display drivers are JavaScript that talks to

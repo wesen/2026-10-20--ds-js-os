@@ -117,3 +117,25 @@ Run bash scripts/02-replay-inspection.sh from the repository root with its full 
 ### Technical details
 
 The six division groups each fall from 44 to 8 native bytes. Total packer executions fall from 1,740,800 to 1,126,400, while its Wasm body remains 61 bytes.
+
+## Step 3. Qualify and publish the inspector
+
+I replayed the packer comparison with the shipped CLI. The frontend researcher verified 75 app tests including both new inspector suites. The source-preserving host tool and the newcomer guides are available independently of the target benchmark.
+
+### Prompt Context
+
+See both requests transcribed in Step 1.
+
+### Evidence and commits
+
+- Commit b3f9efe includes the two-target packer replay, sparse profile capture, final diff and ranked shadow loads. Commit 6de1145 integrates both inspector suites into test-apps.
+- The go-go-parc publication script computed a manifest for two articles, committed exactly those paths and verified remote main at da38c929c2643e22421db03e0371715c69350043.
+- reMarkable reported `OK: uploaded PicoCalc Compiler Inspection Guides.pdf -> /ai/2026/11/21/PICOCALC-COMPILER-INSPECT`.
+
+### Noteworthy decisions or failures
+
+The resident device compiler can run without the host tools. Profiles for this study came from exact host instruction fetches. A board PC sampler would be a separate instrument.
+
+### Remaining requirements and next action
+
+The companion scalar ticket records physical clocks, controls and the independent shadow trial. The inspector ticket is complete.

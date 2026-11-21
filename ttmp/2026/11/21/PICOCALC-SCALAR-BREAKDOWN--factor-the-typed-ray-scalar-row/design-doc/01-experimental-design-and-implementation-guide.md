@@ -58,3 +58,11 @@ Start with the sibling guide `02-reproduce-the-scalar-factorial.md` for the prec
 The host gate compares payload, depth, ID and padding with the C oracle over twelve poses and both rendering entry points. Negative tests exercise admission and failure behavior. Separately, the P4 runs candidate and reference implementations with the same inputs; it checks outputs before accepting timings. Use per-pose paired differences, state the denominator for percentages and distinguish clean timings from instrumented audit calls. The C scalar and C+PIE variants measure a further implementation gap. An instruction count alone cannot assign that gap to pipeline stalls or bus traffic.
 
 The transfer test uses a different function, `typedRayInShadow`. Identify its visited descriptor fields and prove their highest index from the capacity and sphere count. Preregister how many executed comparisons, capacity loads and entry operations that transformation should change. Build the candidate from the frozen source and compare the prediction with observed guest instructions, then with physical wall time. A successful prediction in this function warrants investigating reusable bounded-region lowering. The row and shadow candidates currently select reviewed kernels and retain their fallback. Widening the compiler pass requires an independent way to recognize and validate other source programs.
+
+To verify the connection between the inspector and this particular board matrix, run the following in the repository root. The script rebuilds all five observed compilers, executes a whole default frame for each, joins its exact PC counts to final emission ranges, and compares the function totals with independent isolated-row counters. It also compares each emitted digest with the host digest used in physical qualification. Each retained fallback has zero recorded operations executed in this valid scene.
+
+```sh
+python3 ttmp/2026/11/21/PICOCALC-SCALAR-BREAKDOWN*/scripts/director/01-join-inspector.py /tmp/scalar-inspect
+```
+
+The compact result is in `various/director/profile-join.json`. Synthetic preflight and function setup have their own ranges and contribute to the function total.
