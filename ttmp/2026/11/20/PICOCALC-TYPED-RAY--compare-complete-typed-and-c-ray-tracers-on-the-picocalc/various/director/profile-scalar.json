@@ -1,0 +1,177 @@
+{
+  "frameFnv": "2f75a8a5",
+  "instructions": 15532624,
+  "bytes": 9564,
+  "functions": [
+    {
+      "name": "typedRayInShadow",
+      "bytes": 1068,
+      "instructions": 5528397,
+      "loads": 1818114,
+      "stores": 647710,
+      "spAccesses": 1935968,
+      "branches": 457647,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayComputeRow",
+      "bytes": 944,
+      "instructions": 3608697,
+      "loads": 1184506,
+      "stores": 417224,
+      "spAccesses": 1290106,
+      "branches": 350258,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayPack",
+      "bytes": 392,
+      "instructions": 1740800,
+      "loads": 256000,
+      "stores": 204800,
+      "spAccesses": 460800,
+      "branches": 307200,
+      "divRem": 153600
+    },
+    {
+      "name": "typedRayPixel",
+      "bytes": 604,
+      "instructions": 1564356,
+      "loads": 219718,
+      "stores": 193778,
+      "spAccesses": 413496,
+      "branches": 181650,
+      "divRem": 63224
+    },
+    {
+      "name": "typedRayLitRow",
+      "bytes": 324,
+      "instructions": 1539680,
+      "loads": 615040,
+      "stores": 231520,
+      "spAccesses": 692960,
+      "branches": 102560,
+      "divRem": 0
+    },
+    {
+      "name": "typedRaySphereScale",
+      "bytes": 608,
+      "instructions": 810424,
+      "loads": 273029,
+      "stores": 116337,
+      "spAccesses": 303644,
+      "branches": 65465,
+      "divRem": 5488
+    },
+    {
+      "name": "typedRayAbs",
+      "bytes": 52,
+      "instructions": 691244,
+      "loads": 0,
+      "stores": 0,
+      "spAccesses": 0,
+      "branches": 74232,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayBuildGeometry",
+      "bytes": 536,
+      "instructions": 43670,
+      "loads": 14639,
+      "stores": 5082,
+      "spAccesses": 16703,
+      "branches": 4047,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayFrame",
+      "bytes": 408,
+      "instructions": 4232,
+      "loads": 1296,
+      "stores": 169,
+      "spAccesses": 1464,
+      "branches": 165,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayBuildLight",
+      "bytes": 1200,
+      "instructions": 691,
+      "loads": 221,
+      "stores": 94,
+      "spAccesses": 257,
+      "branches": 44,
+      "divRem": 2
+    },
+    {
+      "name": "typedRaySetObject",
+      "bytes": 332,
+      "instructions": 234,
+      "loads": 81,
+      "stores": 57,
+      "spAccesses": 108,
+      "branches": 15,
+      "divRem": 0
+    },
+    {
+      "name": "typedRaySetObjects",
+      "bytes": 300,
+      "instructions": 74,
+      "loads": 15,
+      "stores": 12,
+      "spAccesses": 25,
+      "branches": 1,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayStride",
+      "bytes": 212,
+      "instructions": 31,
+      "loads": 8,
+      "stores": 4,
+      "spAccesses": 9,
+      "branches": 3,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayPrepare",
+      "bytes": 108,
+      "instructions": 27,
+      "loads": 7,
+      "stores": 6,
+      "spAccesses": 13,
+      "branches": 0,
+      "divRem": 0
+    },
+    {
+      "name": "typedRaySphereFits",
+      "bytes": 120,
+      "instructions": 24,
+      "loads": 0,
+      "stores": 0,
+      "spAccesses": 0,
+      "branches": 3,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayLampFits",
+      "bytes": 112,
+      "instructions": 22,
+      "loads": 0,
+      "stores": 0,
+      "spAccesses": 0,
+      "branches": 3,
+      "divRem": 0
+    },
+    {
+      "name": "typedRayBuildTables",
+      "bytes": 84,
+      "instructions": 21,
+      "loads": 5,
+      "stores": 4,
+      "spAccesses": 9,
+      "branches": 0,
+      "divRem": 0
+    }
+  ]
+}

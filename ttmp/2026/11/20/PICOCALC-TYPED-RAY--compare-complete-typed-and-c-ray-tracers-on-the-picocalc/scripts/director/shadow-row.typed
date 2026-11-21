@@ -1,0 +1,40 @@
+// Mark the shadow of each sphere on a single row of the plane.
+// Scratch cells 1865..2024 are reserved for this experimental arm.
+function typedRayShadowRow(work: buffer, y: i32): i32 {
+    for (let x = 0; x < 160; x = x + 1) { work.setCharCodeAt(1865 + x, 0); }
+    const lx = work.charCodeAt(17) - 32;
+    const ly = work.charCodeAt(18) - 32;
+    const norm = work.charCodeAt(19);
+    const count = work.charCodeAt(16);
+    const scaledY = 4096 + 32 * y;
+    for (let sphere = 0; sphere < count; sphere = sphere + 1) {
+        const shadow = 21 + 4 * sphere;
+        const projectedY = work.charCodeAt(shadow + 1);
+        if (typedRayAbs(scaledY - projectedY) <= work.charCodeAt(shadow + 3)) {
+            const projectedX = work.charCodeAt(shadow) - 4096;
+            const reach = work.charCodeAt(shadow + 2);
+            let left = 0;
+            if (projectedX - reach > 0) { left = (projectedX - reach + 31) / 32; }
+            const high = projectedX + reach;
+            if (high >= 0) {
+                let right = high / 32;
+                if (right > 159) { right = 159; }
+                const object = 1 + 5 * sphere;
+                const cx = work.charCodeAt(object);
+                const dy = work.charCodeAt(object + 1) - y;
+                const dz = 156 - work.charCodeAt(object + 2);
+                const radius = work.charCodeAt(object + 3);
+                const dotBase = dy * ly + 32 * dz;
+                const distanceBase = dy * dy + dz * dz - radius * radius;
+                for (let x = left; x <= right; x = x + 1) {
+                    const dx = cx - x;
+                    const dot = dx * lx + dotBase;
+                    if (dot > 0 && (dx * dx + distanceBase) * norm <= dot * dot) {
+                        work.setCharCodeAt(1865 + x, 1);
+                    }
+                }
+            }
+        }
+    }
+    return 1;
+}

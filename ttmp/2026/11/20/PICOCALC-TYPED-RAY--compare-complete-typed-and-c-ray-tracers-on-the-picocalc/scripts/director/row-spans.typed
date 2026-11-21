@@ -1,0 +1,32 @@
+// On a validated scene the centers are in [32,127] and r <= 32,
+// so every closed interval below stays inside [0,159].
+function typedRayComputeRow(work: buffer, y: i32): i32 {
+    for (let x = 0; x < 160; x = x + 1) {
+        work.setCharCodeAt(1545 + x, 0);
+        work.setCharCodeAt(1705 + x, 0);
+    }
+    const count = work.charCodeAt(16);
+    for (let sphere = 0; sphere < count; sphere = sphere + 1) {
+        const object = 1 + 5 * sphere;
+        const cx = work.charCodeAt(object);
+        const dy = y - work.charCodeAt(object + 1);
+        const cz = work.charCodeAt(object + 2);
+        const radius = work.charCodeAt(object + 3);
+        const row = radius * radius - dy * dy;
+        if (row >= 0) {
+            const extent = work.charCodeAt(520 + row);
+            const right = cx + extent;
+            const horizontal = 40 + sphere * 160;
+            for (let x = cx - extent; x <= right; x = x + 1) {
+                const discriminant = row - work.charCodeAt(horizontal + x);
+                const depth = cz - work.charCodeAt(520 + discriminant);
+                const previous = work.charCodeAt(1545 + x);
+                if (previous === 0 || depth < previous) {
+                    work.setCharCodeAt(1545 + x, depth);
+                    work.setCharCodeAt(1705 + x, sphere + 1);
+                }
+            }
+        }
+    }
+    return 1;
+}

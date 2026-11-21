@@ -1,0 +1,68 @@
+{
+  "executed": "WebAssembly",
+  "compiledRv32Bytes": 24684,
+  "wasmBytes": 12089,
+  "stride": 163,
+  "cases": [
+    {
+      "scene": "shared",
+      "weight": 0,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "sha256": "6e4e632198afa69a93308d4f09f14bb2446433809da469007e1ff2aae0776163"
+    },
+    {
+      "scene": "shared",
+      "weight": 128,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "sha256": "89237a4470b5bcf2245e80f889be8ff04716cdaf5d090ae875161f1557a559f7"
+    },
+    {
+      "scene": "shared",
+      "weight": 256,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "sha256": "5d43eccb343c8d89a59df1036a8c26c649c15c55af843fd4c7050846e9eeac55"
+    },
+    {
+      "scene": "tile",
+      "weight": 64,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "sha256": "edac9ed52fbbe66d0dbd8f52d06dcbb319400f344526135314f300bf82f74632"
+    },
+    {
+      "scene": "tile",
+      "weight": 73,
+      "light": [
+        31,
+        17
+      ],
+      "pixels": 25600,
+      "sha256": "95bea3750cc45f8cd4d6693b7c0a0f41887e9afc89dbdb28b4fd47c600fed24c"
+    },
+    {
+      "scene": "tile",
+      "weight": 128,
+      "light": [
+        31,
+        25
+      ],
+      "pixels": 25600,
+      "sha256": "4ded2d1aad0fd93a7e19b6d7d144f997053057ab1bfbcf9ff9ffcd9632c307f0"
+    }
+  ]
+}
