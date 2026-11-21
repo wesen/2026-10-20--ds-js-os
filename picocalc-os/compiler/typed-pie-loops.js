@@ -120,7 +120,22 @@ function analyze(fn) {
 const broadcast=0x8607203b, packetLoad=0x0203a63b, subtract=0x06a406df, packetStore=0x82072a3b;
 const zero=0, sp=2, a0=10, x=12, lanes=13, uniform=14, input=15, lanePtr=16, limit=17, t5=30,t6=31;
 
+// Every admitted producer contains this exact opcode/immediate suffix. A raw
+// cell match is only a necessary condition: an immediate can look like an
+// opcode. The structural analyzer still decides every acceptance.
+function mayContainProducer(tape) {
+    for (let at=tape.indexOf(0x2f); at>=0; at=tape.indexOf(0x2f,at+1)) {
+        if (tape[at+1]===1 && tape[at+2]===4 && tape[at+3]===0x6b &&
+            tape[at+4]===set && tape[at+6]===get && tape[at+5]===tape[at+7] &&
+            tape[at+8]===literal && tape[at+9]===0 && tape[at+10]===0x4e &&
+            tape[at+11]===0x04 && tape[at+12]===64) return true;
+    }
+    return false;
+}
+
 function lower(fn,callables,targets,mode,FunctionCode,ins) {
+    // An explicitly observed function still reports the reason for each rejection.
+    if (!fn.nativeInspection && !mayContainProducer(fn.code)) return null;
     const decisions=analyze(fn);
     if (fn.nativeInspection) fn.loopDecisions=decisions;
     const plans=new Map(decisions.filter(p=>!p.reason).map(p=>[p.loop,p]));

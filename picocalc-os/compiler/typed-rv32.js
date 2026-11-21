@@ -312,7 +312,7 @@ function observeSteps(fn) {
     fn.inspection = {ranges, trackedWords: fn.words};
     fn.step = function(op) {
         const inputStart = this.at - 1;
-        const start = this.words.length * 4;
+        let start = this.words.length * 4;
         const live = this.depth;
         const done = step.call(this, op);
         const decisions = [];
@@ -323,10 +323,10 @@ function observeSteps(fn) {
         }
         if (this.loopRanges) {
             ranges.push(...this.loopRanges);
+            start = ranges.at(-1).end;
             this.loopRanges = null;
         }
-        const ordinaryStart = ranges.at(-1)?.end ?? start;
-        ranges.push({inputStart, inputEnd: this.at, start: Math.max(ordinaryStart, start), end: this.words.length * 4,
+        ranges.push({inputStart, inputEnd: this.at, start, end: this.words.length * 4,
             role: "operation", decisions});
         return done;
     };

@@ -16,6 +16,8 @@ build=json.loads((artifact/'build.json').read_text())
 ids={i['id']:i for i in json.loads((artifact/'images.json').read_text())}
 controls=[r for r in json.loads((next(nov20.glob('PICOCALC-TYPED-RAY--*'))/'various/device/rows.json').read_text()) if r['rep']==0 and r['program']==0]
 assert len(controls)==12
+if sys.argv[6:] == ['--cold-only']:
+    controls=controls[:1]
 check_build(previous,build['baseAppSHA']);check_build(trial,build['appSHA'])
 out.mkdir(parents=True,exist_ok=False)
 with acquire(), (out/'uart.log').open('wb',buffering=0) as log:
