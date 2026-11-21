@@ -6,19 +6,27 @@ ticket=here.parents[2]
 repo=next(p for p in here.parents if (p/'.git').is_dir())
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('revision');p.add_argument('stage',type=Path);p.add_argument('managed',type=Path)
+p.add_argument('--reuse-stage',action='store_true',help='reuse a prior isolated build from the normal release builder')
 p.add_argument('--idf',type=Path,default=Path('/home/manuel/esp/esp-idf-5.4.2/export.sh'))
 p.add_argument('--matched-backend',type=Path)
 p.add_argument('--packed-backend',type=Path);p.add_argument('--inferred-backend',type=Path)
 
 a=p.parse_args()
 rev=subprocess.check_output(['git','rev-parse',a.revision+'^{commit}'],text=True).strip()
-stage=a.stage.resolve();stage.mkdir(parents=True,exist_ok=False)
-tree=stage/'tree';tree.mkdir()
-with subprocess.Popen(['git','archive',rev,'cji','picocalc-os',str(ticket.relative_to(repo)/'scripts')],stdout=subprocess.PIPE) as arch:
+stage=a.stage.resolve();tree=stage/'tree'
+if a.reuse_stage:
+    assert stage!=repo and (stage/'revision').is_file() and (stage/'build/picocalc-os-p4.bin').is_file()
+    helper=next(ticket.parent.glob('PICOCALC-RAYTRACE--*'))/'scripts/device/03-rebuild-stage.py'
+    subprocess.run(['python3',helper,stage,rev],check=True)
+    paths=[str(ticket.relative_to(repo)/'scripts')]
+else:
+    stage.mkdir(parents=True,exist_ok=False);tree.mkdir()
+    paths=['cji','picocalc-os',str(ticket.relative_to(repo)/'scripts')]
+with subprocess.Popen(['git','archive',rev,*paths],stdout=subprocess.PIPE) as arch:
     subprocess.run(['tar','-xC',str(tree)],stdin=arch.stdout,check=True);assert arch.wait()==0
 source=tree/'picocalc-os';port=source/'port/esp32p4';out=stage/'build'
-shutil.copytree(a.managed,port/'managed_components')
-experiments=stage/'arms';experiments.mkdir()
+if not a.reuse_stage:shutil.copytree(a.managed,port/'managed_components')
+experiments=stage/'arms';experiments.mkdir(exist_ok=a.reuse_stage)
 scripts=tree/ticket.relative_to(repo)/'scripts'
 div=experiments/'typed-rv32-div.js'
 subprocess.run(['node',scripts/'compiler/positive-divisors.mjs',source/'compiler/typed-rv32.js',div],check=True)
