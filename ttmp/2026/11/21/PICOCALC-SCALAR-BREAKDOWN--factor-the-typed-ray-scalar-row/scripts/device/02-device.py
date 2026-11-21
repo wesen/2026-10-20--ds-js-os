@@ -10,6 +10,7 @@ p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('build',type=Path);p.add_argument('sha');p.add_argument('out',type=Path)
 p.add_argument('--previous',type=Path,default=Path('/tmp/picocalc-typed-ray-verified-final/build'))
 p.add_argument('--addendum-control',type=Path,help='qualified physical factors directory for the held-out shadow trial')
+p.add_argument('--reference-views',type=Path,help='directory of previously verified full RGB565 captures')
 p.add_argument('--port',default='/dev/ttyACM0')
 a=p.parse_args()
 old=json.loads(((a.addendum_control or previous/'various/device')/'final.json').read_text())
@@ -40,10 +41,10 @@ def check_ui(c,label,expected_crc,pose,keys):
         screen=c.shot(label,a.out);raw=viewport((a.out/(label+'.rgb565')).read_bytes())
         if f'{zlib.crc32(raw):08x}'==expected_crc:break
         time.sleep(.3)
-    assert f'{zlib.crc32(raw):08x}'==expected_crc
-    if a.addendum_control:
+    assert f'{zlib.crc32(raw):08x}'==expected_crc,(label,expected_crc,f'{zlib.crc32(raw):08x}')
+    if a.reference_views:
         # The addendum can also compare the complete viewport captured in its predecessor.
-        reference=viewport((a.addendum_control/(label+'.rgb565')).read_bytes())
+        reference=viewport((a.reference_views/(label+'.rgb565')).read_bytes())
         assert raw==reference
     status=parse(c,'typedray status','TRSTATUS ')
     assert status['pose']==pose and status['program']==0 and status['frames']>0
@@ -85,7 +86,12 @@ with acquire(),(a.out/'uart.log').open('wb',buffering=0) as log:
         assert all(after['state']['frames']>before['state']['frames'] for before,after in zip(ui,ui[1:]))
         save(a.out/'screens.json',ui)
         c.command('key f1');health(c);release.hold(c);flash('verify_flash',a.build,'final-readback')
-        c=connect();normal=health(c);screen=check_ui(c,'handoff','4b91a3c8',[68,61,31,25],('f1','v','g','g','g'))
+        c=connect();health(c)
+        for ref,keys in zip(screens[:3],[('f1','v','g','g','g'),('right',),('w',)],strict=True):
+            check_ui(c,ref['label'],ref['viewCRC'],ref['scene'],keys)
+        screen=check_ui(c,'handoff','4b91a3c8',[68,61,31,25],('left','s'))
+        normal=health(c)
+        assert b'compositor crashed' not in (a.out/'uart.log').read_bytes()
         save(a.out/'final.json',dict(qualified=True,appSHA=a.sha,previousSHA=old['appSHA'],partitionSHA=release.PART_SHA,
             revision=(a.build.parent/'revision').read_text().strip(),blocks=len(rows),loads=len(loads),retained=len(regress),health=normal,screen=screen))
         print('QUALIFIED',a.sha,flush=True)

@@ -267,6 +267,9 @@ static void kernel_task(void *arg) {
     p4_painter_poll();
 #endif
     kernel_run_until(port_clock());
+#if PICOCALC_TYPED_RAY
+    p4_typed_ray_poll();
+#endif
 #if PICOCALC_TYPED_AGENDA
     p4_agenda_report_boot();
 #endif

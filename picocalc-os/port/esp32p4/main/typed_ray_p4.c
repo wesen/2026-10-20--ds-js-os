@@ -27,7 +27,14 @@ typedef struct {
 static module *installed;
 static buffer *display_plane, *display_work;
 static unsigned display_frames;
-static raytrace_demo_scene display_pose;
+static raytrace_demo_scene display_pose, requested_pose;
+static bool frame_ready, frame_pending, frame_failed;
+static int request_epoch;
+
+static bool same_pose(raytrace_demo_scene a, raytrace_demo_scene b) {
+    return a.sphere_x == b.sphere_x && a.sphere_y == b.sphere_y &&
+           a.light_x == b.light_x && a.light_y == b.light_y;
+}
 static buffer *new_buffer(uint32_t capacity) {
     buffer *b = port_big_calloc(sizeof(*b) + 2u * (capacity+1));
     if (b) { b->capacity = capacity; b->cells[capacity] = 0xc35a; }
@@ -79,22 +86,51 @@ static bool install(int program) {
     next->frame=(frame_fn)entries[0]; next->audit=(audit_fn)entries[1];
     next->trace=(trace_fn)entries[2]; next->shade=(audit_fn)entries[3]; next->program=program;
     module *old=installed; installed=next;
+    frame_ready = frame_failed = false;
     if(old){esp_elf_deinit(&old->elf);port_big_free(old);}
     printf("TRLOAD {\"program\":%d,\"sourceBytes\":%zu,\"elfBytes\":%zu,\"segmentBytes\":%zu,\"elapsedUs\":%" PRId64 ",\"elfCRC\":\"%08" PRIx32 "\"}\n",
            program,ns,ni,next->elf.segment_size,port_clock()-begin,image_crc);
     return true;
 }
 
+// The ordinary compositor has an 80 ms turn. First use compiles the stock guest;
+// scheduling that work here also keeps slow physical frame computations outside draw.
+void p4_typed_ray_poll(void) {
+    if (!frame_pending) return;
+    frame_pending = false;
+    world_t *view = world_by_name("compositor");
+    if (!view || view->epoch != request_epoch) return;
+    if (!display_plane) display_plane = new_buffer(SIDE * SIDE);
+    if (!display_work) display_work = new_buffer(WORK);
+    frame_ready = false;
+    if ((installed || install(0)) && display_plane && display_work) {
+        display_work->cells[0] = SIDE;
+        const raytrace_demo_scene s = requested_pose;
+        frame_ready = installed->frame(display_plane, display_work, s.sphere_x, s.sphere_y,
+                                       s.light_x, s.light_y) == 1;
+        if (frame_ready) display_pose = s;
+    }
+    frame_failed = !frame_ready;
+    defer_deliver(view, new_msg(M_ON, "draw", "null", view->id));
+}
+
 bool p4_typed_ray_frame(uint16_t *pixels,size_t stride,int sx,int sy,int lx,int ly) {
-    if(!pixels || stride<SIDE || (!installed && !install(0))) return false;
-    if(!display_plane) display_plane=new_buffer(SIDE*SIDE);
-    if(!display_work) display_work=new_buffer(WORK);
-    if(!display_plane || !display_work) return false;
-    display_work->cells[0]=SIDE;
-    if(installed->frame(display_plane,display_work,sx,sy,lx,ly)!=1) return false;
-    for(int y=0;y<SIDE;y++) memcpy(pixels+y*stride,display_plane->cells+y*SIDE,SIDE*2);
-    display_frames++;
-    display_pose=(raytrace_demo_scene){sx,sy,lx,ly};
+    world_t *view = world_by_name("compositor");
+    if (!pixels || stride < SIDE || !view || view != K.cur) return false;
+    const raytrace_demo_scene pose = {sx, sy, lx, ly};
+    if (frame_failed && view->epoch == request_epoch && same_pose(pose, requested_pose)) return false;
+    if (!frame_ready || !same_pose(pose, display_pose)) {
+        requested_pose = pose;
+        request_epoch = view->epoch;
+        frame_pending = true;
+    } else {
+        frame_pending = false;
+        display_frames++;
+    }
+    for (int y = 0; y < SIDE; y++) {
+        if (frame_ready) memcpy(pixels + y * stride, display_plane->cells + y * SIDE, SIDE * sizeof(*pixels));
+        else memset(pixels + y * stride, 0, SIDE * sizeof(*pixels));
+    }
     return true;
 }
 

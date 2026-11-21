@@ -25,6 +25,10 @@ typedef struct {
 } kmsg_t;
 extern QueueHandle_t p4_kq;
 
+#if PICOCALC_TYPED_RAY
+void p4_typed_ray_poll(void);
+#endif
+
 void bus_p4_init(void);
 void bus_p4_done(const kmsg_t *m);    // the kernel task's side of a finished transfer
 void bus_p4_inject_key(int state, int code);
