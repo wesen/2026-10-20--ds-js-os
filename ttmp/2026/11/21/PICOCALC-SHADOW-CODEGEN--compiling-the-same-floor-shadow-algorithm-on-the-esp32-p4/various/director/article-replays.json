@@ -1,0 +1,69 @@
+[
+  {
+    "chapter": "01-from-a-shadow-ray-to-an-esp32-p4-instruction-budget.md",
+    "value": [
+      {
+        "mode": "baseline",
+        "calls": 74226,
+        "instructions": 14879359,
+        "bytes": 10332
+      },
+      {
+        "mode": "shadow",
+        "calls": 0,
+        "instructions": 14088411,
+        "bytes": 10324
+      },
+      {
+        "mode": "general",
+        "calls": 0,
+        "instructions": 14088309,
+        "bytes": 10268
+      }
+    ]
+  },
+  {
+    "chapter": "03-choosing-a-compiler-optimization-from-the-cost-of-a-floor-shadow.md",
+    "value": {
+      "images": [
+        "9a4a2356",
+        "e2fa128b",
+        "c31e75ee"
+      ],
+      "sameOutput": true,
+      "saved": {
+        "shadow": 790948,
+        "general": 791050
+      },
+      "percentOfCurrentControl": {
+        "shadow": 5.32,
+        "general": 5.32
+      },
+      "attribution": {
+        "callerBody": 99764,
+        "helper": 691184,
+        "rest": 0,
+        "generalExtra": 102
+      },
+      "stackAndChecksUnchanged": true,
+      "bytes": {
+        "image": [
+          10332,
+          10324,
+          10268
+        ],
+        "shadowFn": [
+          1068,
+          1060,
+          1060
+        ]
+      },
+      "priorForecast": {
+        "historicalPct": 2.66,
+        "historicalDenom": 15532634,
+        "currentDenom": 14879359,
+        "sameShadowBody": true
+      }
+    }
+  }
+]

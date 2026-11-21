@@ -93,20 +93,20 @@ The last command opens a new persistent session in the running trace service, lo
 
 ~~~javascript
 // How many of the opening queries reached each part of the predicate?
-lab.mix("default")
+lab.mix("default");
 
 // What does the same-layout, explicitly checked GCC binary cost per query?
-lab.pred("default", "natural", "checked-c", "typed")
+lab.pred("default", "natural", "checked-c", "typed");
 
 // Does the improvement reach the complete frame? What about the unaffected primary path?
-lab.frame("default", "full", "typed", "shadow-only")
-lab.frame("default", "primary", "typed", "shadow-only")
+lab.frame("default", "full", "typed", "shadow-only");
+lab.frame("default", "primary", "typed", "shadow-only");
 
 // Does it transfer to advanced evaluation of a played Chess position?
-lab.chess(1, 1)
+lab.chess(1, 1);
 
 // What does general selection cost in a fresh compiler invocation on the P4?
-lab.cold(0, "compileUs")
+lab.cold(0, "compileUs");
 
 // Report what the host observed separately from those physical measurements.
 [opening.baseline, opening.shadow, opening.general].map(r => ({
