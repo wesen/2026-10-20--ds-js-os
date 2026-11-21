@@ -70,3 +70,51 @@ Run scripts/01-check-evidence.mjs with Node and follow its references into the s
 ### Technical details
 
 Baseline project revision 6de1090. The production query library has not been requested in this ticket.
+
+## Step 2. Publish the design and example ladder
+
+I wrote two chapters that can be read in sequence. The first introduces the observed ray program, the compiler capture and the proposed query engine. The second presents the design as a series of increasingly demanding user programs. Both chapters use the same delta sign, callback phases, evidence rules and archive identity.
+
+### Prompt Context
+
+See Step 1 for the user's request. Commit 42134cf established the evidence and ticket before the guide and workbook were finalized.
+
+### What I did
+
+Defined the grammar, observation contract, parameter binding, query plan, caching and session effects. Wrote 26 examples and generated individual JS modules that match the workbook text. Extended the independent verifier to walk earlier complete states, resetting at coverage gaps. Inspected the guide again for comparability and added join grain, duplicate-key handling, zero denominators and operator signatures. Ran docmgr doctor, validated local links and code fences, and compared the verifier's output with the saved receipt.
+
+### Why
+
+The shared buffer and repeated register rewriter expose two different failure modes. One requires understanding the operand being measured and one requires identification of an exact pass invocation. A library should express both through the same archive, timeline, selection and evidence primitives.
+
+### What worked
+
+All 26 modules matched the chapter and passed Node syntax checks. The independent script verified all six uncompressed hashes, 4,133 headers and the first observed direct header-load decrease from 11 to 6 at ordinals 73–74. It reproduced the trace and execution assertions recorded in various/verified-facts.json. Docmgr checks passed.
+
+### What didn't work
+
+No delivery failure occurred. There is no installed JS query engine for these example programs; the workbook marks its design contracts and the verifier separately.
+
+### What I learned
+
+A proposal can distinguish attribution, comparison and explanation through its operator contracts. The unchecked or disabled compiler arm requires its own capture if an analyst wants to attribute a machine-state property to that arm.
+
+### What was tricky to build
+
+The examples had to stay composable while remaining readable in a PDF. I used a single documented context, generated one module per example, and verified the correspondence so the source files and printed program bodies agree.
+
+### What warrants a second pair of eyes
+
+During implementation, review callback cache invalidation, operand resolution across snapshots and missing measurements in per-pose joins. Query latency remains unmeasured.
+
+### What should be done in the future
+
+The design's six increments start with a digest-checked archive adapter and end with fragments and interactive parameters. Use the checked-row, machine-rewriter and stack-count examples as the initial end-to-end tests.
+
+### Code review instructions
+
+Read design-doc/01 then design-doc/02. Run node scripts/01-check-evidence.mjs and python3 scripts/02-workbook-modules.py from the ticket. The design and examples were committed at 0d85ccd.
+
+### Technical details
+
+Delivery receipt: OK: uploaded PicoCalc Compiler Trace Queries - Intern Guide and Workbook.pdf -> /ai/2026/11/21/PICOCALC-TRACE-QUERY. This receipt confirms delivery to the reMarkable cloud library.

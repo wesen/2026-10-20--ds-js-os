@@ -1,7 +1,7 @@
 ---
 Title: Design a composable JavaScript query API for compiler traces
 Ticket: PICOCALC-TRACE-QUERY
-Status: active
+Status: complete
 Topics:
     - compiler
     - picocalc
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-21T12:28:22.985667446-05:00
+LastUpdated: 2026-11-21T12:34:54.644855874-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
