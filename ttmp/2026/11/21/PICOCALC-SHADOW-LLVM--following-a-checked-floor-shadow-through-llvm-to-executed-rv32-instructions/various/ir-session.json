@@ -1,0 +1,194 @@
+{
+  "session": "session-dace7618-15a6-4cf9-9a99-56c55fa0a8fb",
+  "address": "http://127.0.0.1:3795/sessions",
+  "cells": [
+    {
+      "question": "Set up the two names LLVM uses for the same function across GlobalOpt.",
+      "js": "const run = a.variant(\"checked\");\nconst early = run.function(\"checked_shadow\"), late = run.function(\"kernel\");\nconst E = early.timeline(\"middle\"), M = late.timeline(\"middle\"), B = late.timeline(\"backend\");\nconst metric = (op, state) => q.run(q.ir.instructions().opcode(op).count().at(state));\nconst headers = q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(late.argument(0)).count();\nconst value = r => { if (r.status !== \"ok\" && typeof r.value !== \"number\" && typeof r.value !== \"boolean\") throw Error(JSON.stringify(r)); return r.value; };\n\"ready\";",
+      "value": "ready"
+    },
+    {
+      "question": "Show which pass first removed the local stack objects.",
+      "js": "[5,6].map(i => ({ordinal:i, stackObjects:value(metric(\"alloca\",E.at(i).after)),\n    phi:value(metric(\"phi\",E.at(i).after))}));",
+      "value": [
+        {
+          "ordinal": 5,
+          "stackObjects": 18,
+          "phi": 0
+        },
+        {
+          "ordinal": 6,
+          "stackObjects": 0,
+          "phi": 9
+        }
+      ]
+    },
+    {
+      "question": "Count reads of the capacity word at the base pointer, including the adjacent predecessor.",
+      "js": "[73,77,78,80,171].map(i => ({ordinal:i,capacityLoads:value(q.run(headers.at(M.at(i).after))),\n    conditionalAndUnconditionalBranches:value(metric(\"br\",M.at(i).after))}));",
+      "value": [
+        {
+          "ordinal": 73,
+          "capacityLoads": 12,
+          "conditionalAndUnconditionalBranches": 20
+        },
+        {
+          "ordinal": 77,
+          "capacityLoads": 12,
+          "conditionalAndUnconditionalBranches": 20
+        },
+        {
+          "ordinal": 78,
+          "capacityLoads": 1,
+          "conditionalAndUnconditionalBranches": 20
+        },
+        {
+          "ordinal": 80,
+          "capacityLoads": 1,
+          "conditionalAndUnconditionalBranches": 17
+        },
+        {
+          "ordinal": 171,
+          "capacityLoads": 1,
+          "conditionalAndUnconditionalBranches": 18
+        }
+      ]
+    },
+    {
+      "question": "Find the physical register rewrite in the machine-function snapshots.",
+      "js": "[69,70,73,74].map(i => ({ordinal:i,noVirtualRegisters:q.run(q.machine.property(\"NoVRegs\").at(B.at(i).after)).value}));",
+      "value": [
+        {
+          "ordinal": 69,
+          "noVirtualRegisters": false
+        },
+        {
+          "ordinal": 70,
+          "noVirtualRegisters": false
+        },
+        {
+          "ordinal": 73,
+          "noVirtualRegisters": false
+        },
+        {
+          "ordinal": 74,
+          "noVirtualRegisters": true
+        }
+      ]
+    },
+    {
+      "question": "Return the original pass references for the stages cited in the manuscript.",
+      "js": "q.run(run.events(\"middle\").where(e=>[5,6,17,73,77,78,79,80,171].includes(e.ordinal))\n    .select(\"ordinal\",\"pass\",\"ref\")).rows;",
+      "value": [
+        {
+          "ordinal": 5,
+          "pass": "SimplifyCFGPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 5,
+            "start": 70700,
+            "end": 80387
+          }
+        },
+        {
+          "ordinal": 6,
+          "pass": "SROAPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 6,
+            "start": 80387,
+            "end": 85479
+          }
+        },
+        {
+          "ordinal": 17,
+          "pass": "GlobalOptPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 17,
+            "start": 130046,
+            "end": 139576
+          }
+        },
+        {
+          "ordinal": 73,
+          "pass": "InlinerPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 73,
+            "start": 218022,
+            "end": 227666
+          }
+        },
+        {
+          "ordinal": 77,
+          "pass": "SROAPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 77,
+            "start": 256687,
+            "end": 266345
+          }
+        },
+        {
+          "ordinal": 78,
+          "pass": "EarlyCSEPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 78,
+            "start": 266345,
+            "end": 275445
+          }
+        },
+        {
+          "ordinal": 79,
+          "pass": "SpeculativeExecutionPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 79,
+            "start": 275445,
+            "end": 284557
+          }
+        },
+        {
+          "ordinal": 80,
+          "pass": "JumpThreadingPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 80,
+            "start": 284557,
+            "end": 292708
+          }
+        },
+        {
+          "ordinal": 171,
+          "pass": "AnnotationRemarksPass",
+          "ref": {
+            "variant": "checked",
+            "phase": "middle",
+            "streamSHA": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+            "ordinal": 171,
+            "start": 1071865,
+            "end": 1080603
+          }
+        }
+      ]
+    }
+  ]
+}

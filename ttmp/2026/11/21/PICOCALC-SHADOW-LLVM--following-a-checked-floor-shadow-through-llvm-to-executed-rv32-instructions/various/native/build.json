@@ -1,0 +1,25 @@
+{
+  "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+  "sourceSHA": "f514119baae4394cb4aa9b8bc14ff7df770eebf69eec2c759a6d199fbfcf54a8",
+  "objects": {
+    "llvm": "f651f1ba79aaff0d7f110640e6a0768894c12ed204622dd37f6f42a933a97bb7",
+    "nolsr": "10cd4478060c8503b5419d7d1ba7f7a0c0a4816dda14a19db5aa6235ca90aa4e",
+    "fastreg": "7c6c27c92d32b09e3d0c3b4d2bff818fa9c87679b1765321e8bad0e5fd2c8dd9",
+    "wrap": "794d3efbf01227f47a197e7ab6c2ed5e03ece3cb003ade3c5297390966ae0e77"
+  },
+  "commands": [
+    "clang-18 --target=riscv32-unknown-elf -march=rv32imafc -mabi=ilp32f -ffreestanding -ffunction-sections -O3 -Xclang -disable-llvm-passes -fno-discard-value-names -S -emit-llvm kernel.c -o checked-raw.ll",
+    "opt-18 '-passes=default<O3>' -print-after-all -S checked-raw.ll -o checked-opt.ll",
+    "llc-18 -O3 -print-after-all -filetype=obj checked-opt.ll -o llvm.o",
+    "llc-18 -O3 checked-opt.ll -o llvm.s",
+    "llc-18 -O3 -disable-lsr -print-after-all -filetype=obj checked-opt.ll -o nolsr.o",
+    "llc-18 -O3 -disable-lsr checked-opt.ll -o nolsr.s",
+    "llc-18 -O3 -regalloc=fast -optimize-regalloc=false -print-after-all -filetype=obj checked-opt.ll -o fastreg.o",
+    "llc-18 -O3 -regalloc=fast -optimize-regalloc=false checked-opt.ll -o fastreg.s",
+    "clang-18 --target=riscv32-unknown-elf -march=rv32imafc -mabi=ilp32f -ffreestanding -ffunction-sections -O3 -fwrapv -Xclang -disable-llvm-passes -fno-discard-value-names -S -emit-llvm kernel.c -o wrap-raw.ll",
+    "opt-18 '-passes=default<O3>' -print-after-all -S wrap-raw.ll -o wrap-opt.ll",
+    "llc-18 -O3 -print-after-all -filetype=obj wrap-opt.ll -o wrap.o",
+    "llc-18 -O3 wrap-opt.ll -o wrap.s",
+    "clang-18 --version"
+  ]
+}

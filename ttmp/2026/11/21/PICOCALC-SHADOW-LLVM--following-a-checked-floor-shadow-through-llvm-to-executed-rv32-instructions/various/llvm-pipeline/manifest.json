@@ -1,0 +1,62 @@
+{
+  "checked": {
+    "middle": {
+      "command": [
+        "opt-18",
+        "-passes=default<O3>",
+        "-print-after-all",
+        "-S",
+        "checked-raw.ll",
+        "-o",
+        "checked-opt.ll"
+      ],
+      "sha256": "662e16ce4a44f61b170945d1ec0d028f0dea575486597523b24bc94b8ec7245f",
+      "rawBytes": 1080603,
+      "dumps": 172
+    },
+    "backend": {
+      "command": [
+        "llc-18",
+        "-O3",
+        "-print-after-all",
+        "-filetype=obj",
+        "checked-opt.ll",
+        "-o",
+        "llvm.o"
+      ],
+      "sha256": "38d67731f4778b7a0475cebcf898c4a512002e6d2c3ec9983055e0fc298c69a4",
+      "rawBytes": 1019397,
+      "dumps": 112
+    }
+  },
+  "wrap": {
+    "middle": {
+      "command": [
+        "opt-18",
+        "-passes=default<O3>",
+        "-print-after-all",
+        "-S",
+        "wrap-raw.ll",
+        "-o",
+        "wrap-opt.ll"
+      ],
+      "sha256": "745c512051c7aa1db2735fab743ac50f7947dac2bed48e0bc24ebeef4418a199",
+      "rawBytes": 1065022,
+      "dumps": 172
+    },
+    "backend": {
+      "command": [
+        "llc-18",
+        "-O3",
+        "-print-after-all",
+        "-filetype=obj",
+        "wrap-opt.ll",
+        "-o",
+        "wrap.o"
+      ],
+      "sha256": "ad6ac92006767bed959a8a730486a3c0eb314e087b63f82215e968cf41205a6d",
+      "rawBytes": 1008640,
+      "dumps": 112
+    }
+  }
+}
