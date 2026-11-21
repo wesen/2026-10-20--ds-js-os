@@ -11,6 +11,48 @@
     "absCalls": 74226,
     "boundsTests": 264928
   },
+  "callSites": [
+    {
+      "tapeOffset": 113,
+      "words": [
+        {
+          "pc": 5140,
+          "executions": 52917,
+          "op": "addi"
+        },
+        {
+          "pc": 5144,
+          "executions": 52917,
+          "op": "jal"
+        },
+        {
+          "pc": 5148,
+          "executions": 52917,
+          "op": "addi"
+        }
+      ]
+    },
+    {
+      "tapeOffset": 147,
+      "words": [
+        {
+          "pc": 5272,
+          "executions": 21309,
+          "op": "addi"
+        },
+        {
+          "pc": 5276,
+          "executions": 21309,
+          "op": "jal"
+        },
+        {
+          "pc": 5280,
+          "executions": 21309,
+          "op": "addi"
+        }
+      ]
+    }
+  ],
   "shadowCalls": 19477,
   "shadowSlotByteOffsets": {
     "0": {

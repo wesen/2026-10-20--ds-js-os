@@ -11,6 +11,38 @@
     "absCalls": 0,
     "boundsTests": 264928
   },
+  "callSites": [
+    {
+      "tapeOffset": 113,
+      "words": [
+        {
+          "pc": 5140,
+          "executions": 52917,
+          "op": "bge"
+        },
+        {
+          "pc": 5144,
+          "executions": 35366,
+          "op": "sub"
+        }
+      ]
+    },
+    {
+      "tapeOffset": 147,
+      "words": [
+        {
+          "pc": 5268,
+          "executions": 21309,
+          "op": "bge"
+        },
+        {
+          "pc": 5272,
+          "executions": 13322,
+          "op": "sub"
+        }
+      ]
+    }
+  ],
   "shadowCalls": 19477,
   "shadowSlotByteOffsets": {
     "0": {

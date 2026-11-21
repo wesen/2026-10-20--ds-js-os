@@ -43,9 +43,14 @@ for(let pc=ev.start;pc<ev.end;pc+=4){
     }
     if(op===0x63 && raw.readUInt32LE(pc+4)===0x00100073)shadowCounts.boundsTests+=n;
 }
+const callSites=ev.ranges.filter(r=>r.decisions?.some(d=>d.includes('across call')||d.includes('guarded return'))).map(r=>{
+    const words=[];
+    for(let pc=r.start;pc<r.end;pc+=4)words.push({pc,executions:pcCounts[pc/4],op:dis.get(pc).op});
+    return {tapeOffset:r.inputStart,words};
+});
 const frameEnd=img.entries.typedRaySetObject,absStart=img.entries.typedRayAbs;
 const summary={mode,sourceSHA:sha(source),imageSHA:sha(raw),imageBytes:raw.length,shadowBytes:ev.end-ev.start,
- shadow:shadowCounts,shadowCalls:pcCounts[ev.start/4],shadowSlotByteOffsets:slots,localCount:ev.localCount,inlineSites:ev.ranges.filter(r=>r.decisions?.some(d=>d.includes("guarded return"))).length,
+ shadow:shadowCounts,callSites,shadowCalls:pcCounts[ev.start/4],shadowSlotByteOffsets:slots,localCount:ev.localCount,inlineSites:ev.ranges.filter(r=>r.decisions?.some(d=>d.includes("guarded return"))).length,
  absTotalSteps:pcCounts.slice(absStart/4,frameEnd/4).reduce((a,b)=>a+b,0),
  fullFrameSteps:r.steps,outputSHA:sha(r.bytes),ret: r.result};
 writeFileSync(out,JSON.stringify(summary,null,2)+'\n');

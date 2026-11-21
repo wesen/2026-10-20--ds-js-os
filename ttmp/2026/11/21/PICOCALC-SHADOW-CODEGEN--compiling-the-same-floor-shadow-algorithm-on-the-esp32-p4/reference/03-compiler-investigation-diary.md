@@ -126,3 +126,57 @@ The parent and I chose a typed-tape summary for one bounded class of unary scala
 ### Technical details
 
 - Six guard operators use equality, signed less-than and signed greater-or-equal branch encodings. The compare constant can use x0 or temporary t6. Only a constant return or wrapping negation is admitted. The argument already resides in its expression slot on function entry to the lowering rule.
+
+## Step 3: Verify the two machine paths and finish the researcher chapter
+
+The compiler implementation is in `3d18ebf`. The newcomer's guide and actual instruction words are in `33a7a42`. I profiled the individual branches that replaced the original two helper calls, supervised the sole Opus High author in a private REPL and incorporated the director's physical results into the researcher's chapter.
+
+### Prompt Context
+
+**User prompt:** See Step 1; the same user requested a pedagogical report and a detailed diary.
+**Assistant interpretation:** Deliver a reproducible explanation with exact distinctions among guest instructions, guest cycles and compiler cost.
+**Inferred user intent:** A reader can retrace why this particular mechanism was chosen, including the opportunity we deferred.
+
+### What I did
+
+- Matched the two sites by numeric-operation tape position and recorded disassembled words and executed word counts per linked binary.
+- Recovered the second part of the researcher's chapter and its public diary from a partially returned CLI result; commissioned the same Opus High researcher for the introduction. Both private JS session transcripts are archived. The director seeded the same input data in the public-workbook design.
+- Corrected technical terminology and attribution in the edited manuscript and added the independently reported P4 and Chess results. The researcher drafted the introduction, discussion of its own prototype, and host evidence section. The coordinator wrote the integration, tests, guide and physical follow-up.
+
+### Why
+
+- A machine opcode can appear in the candidate without ever executing. Dynamic counts distinguish the horizontal and vertical tests and the negative and nonnegative paths.
+- The host wide-interval instruction estimate cannot predict the exact cost of a P4 branch. The natural-predicate and full-frame device measurements answer those separately.
+
+### What worked
+
+- Exact first site: offset 113 on the tape, 52,917 dynamic comparisons and 35,366 negations; second site: offset 147, 21,309 comparisons and 13,322 negations. Their total of 74,226 comparisons matches the removed calls.
+- The director measured 4.73% median paired complete-frame improvement for general mode at the opening pose, with a 0.93% cold-build slowdown. All 72 full-frame pairs across twelve scenes favored general. The advanced Chess opening improved 10.22%.
+
+### What didn't work
+
+- The Opus CLI returned the second half of its JSON article in isolation, starting inside a string. The complete results section and diary were recovered, and a separate bounded authoring call supplied the missing introduction. Raw outputs preserve the author's original prose. The coordinator corrected an archive claim about the earlier entry-guard study and replaced two unsupported inferences about register promotion.
+
+### What I learned
+
+- The compiler removed a source helper that GCC already turned into local arithmetic. The current compiled Typed frame still takes approximately 6.87 times the C frame duration. Any next optimization has a substantial residual to explain.
+
+### What was tricky to build
+
+- The researcher's cell originally used both current and historical denominators. Keeping `opening` and `measured` distinct prevents an earlier, slower build being used as the current comparison.
+
+### What warrants a second pair of eyes
+
+- The paired percent and absolute medians are separate statistics. Read the director's board workbook when recomputing either.
+
+### What should be done in the future
+
+- Evaluate register homes with load-role attribution, a fixed scoring policy and four treatment arms to test interaction.
+
+### Code review instructions
+
+- Run `scripts/compile/07-chapter.py` to assemble the edited manuscript from the archived researcher prose and coordinator addendum. The matching JS and diary are in `various/compile/opus-article-*` and `opus-introduction-*`.
+
+### Technical details
+
+- The cold build trades about 2.6 ms extra compiler time for about 2.6 ms per opening frame. Both measurements refer to the P4, though their sampling and timing boundaries differ.

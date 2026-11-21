@@ -1,0 +1,46 @@
+## Step 3: Recompute guarded-return effects and write the researcher chapter
+
+I recomputed the dynamic-instruction effects of the coordinator's guarded-return change from the bound `opening` fixture, then wrote the participating-researcher chapter. I did not implement guarded returns. The coordinator did. My contribution is the register-home scorer and its design notes.
+
+### Prompt Context
+**User prompt (abridged):** "Write the participating researcher's chapter... Explain your alternative, why the group chose arithmetic call substitution first, the implementation and its verified effects... Return valid JSON {article:string,diary:string}."
+**Assistant interpretation:** Write a 1200–1600 word textbook chapter from verified REPL numbers, with correct credit and units.
+**Inferred user intent:** A record a reader new to compilers can reproduce, which neither overstates promotion nor claims board time.
+**Commit (code):** N/A (no repository changes)
+
+### What I did
+- Listed the REPL globals: `opening`, `measured`, `profiles`, `hardware`, `q`, `a`, `simd`. Confirmed that `opening` has the keys {baseline, shadow, general}.
+- Checked that the image hashes, steps, stack counters and byte sizes in `opening` match `various/compile/baseline.json`, `shadow.json` and `general.json`.
+- Ran one cell for savings, attribution, code sizes and denominators. The same cell appears in the chapter.
+- Read `hardware.help()` and `hardware.metadata()` to find out whether board data for these images exists.
+
+### Why
+- Earlier drafts mixed the historical denominator (15,532,634) with the current pie-empty control (14,879,359). Both controls share the 5,528,397-instruction shadow body.
+
+### What worked
+- The shadow-only arm saves 790,948 dynamic instructions and the all-callers arm saves 791,050. Both are 5.32% of the current control.
+- Attribution: 99,764 from the caller body, 691,184 from the helper, 0 from the rest of the frame. The general arm saves 102 more.
+- Stack loads, stack stores, bounds tests and output hashes are identical across the three arms. Image sizes are 10,332, 10,324 and 10,268 bytes; the shadow function goes from 1,068 to 1,060 bytes.
+
+### What didn't work
+- No failures. The `hardware` timings cover only the stock, scalar and pie images, so there is no time result yet for these three images.
+
+### What I learned
+- The call substitution removes call overhead and helper work but leaves every stack access in place. The promotion ceiling of 1,268,781 loads is unchanged.
+
+### What was tricky to build
+- Keeping dynamic instructions, P4 time and host compile time apart, along with the historical and current denominators.
+
+### What warrants a second pair of eyes
+- Whether `absTotalSteps` counts every helper PC across the frame. The attribution assumes it does.
+- The diagram assumes the helper has the form `x < 0 → -x`. I have not checked that against the Typed source.
+
+### What should be done in the future
+- Wait for the director's board pairs for images `9a4a2356`, `e2fa128b` and `c31e75ee`.
+- Run `scoreLocals` on real tapes after agreeing on register use with `typed-pie-loops`.
+
+### Code review instructions
+- Rerun the cell in the chapter and compare its output with the three `various/compile/*.json` captures.
+
+### Technical details
+- Per-call figures: the helper averaged 9.31 retired instructions per shadow-site call (691,184 / 74,226). The caller saves a net 1.34 instructions per former call.

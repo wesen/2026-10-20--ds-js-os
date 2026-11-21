@@ -1,0 +1,33 @@
+# Shadows, Helpers, and Where a Value Lives
+
+## The Default Ray/Shadow Loop
+
+A raytracer works out the color of each pixel by sending a ray into the scene. Once a ray hits a surface, the renderer has to know whether light reaches that point. To find out, it sends a second ray toward the light, called a shadow ray. If anything blocks that ray, the point is in shadow. Shadow rays run for a large share of the pixels in a frame, so the code that traces them is one of the hottest paths in the program.
+
+In our default workload, `opening-160-rows`, the shadow routine runs 19,477 times per frame. Each run steps through a loop. The loop checks positions against the scene's bounds and repeatedly takes the absolute value of a signed quantity. The workload is fixed, and the output image's hash must stay the same. That lets us change the compiler and attribute every change in retired instructions to the compiler alone.
+
+## Source Helpers and Stack Registers
+
+The program reaches our compiler as WebAssembly, and the compiler turns it into RV32 machine code. A **source helper** is a small function written in the original program, not one the compiler made up. Here it is the absolute-value function. The shadow loop calls it from two places. In the baseline build, each call costs three instructions at the call site: move the argument into `a0`, `jal` to the helper, and move the result back. The helper body then runs about nine more instructions before `jalr` returns.
+
+WebAssembly computes with an operand stack, a last-in, first-out list of intermediate values. Our compiler keeps the top of that stack in fixed **stack registers**, `t0` through `t4`, with `t5` and `t6` set aside as scratch. Named variables, called locals, are not kept in registers. Each one lives in a memory slot at a fixed offset from the stack pointer `sp`. Every read of a local is a `lw` from that slot, and every write is a `sw` to it.
+
+## The Register-Home Experiment
+
+Those loads looked like the obvious target, because the shadow loop does over 1.28 million of them per frame. I built a prototype that scores each scalar local and gives the best ones a permanent **register home** for the whole function. Call-free functions get homes in `a1`–`a7`. Functions that make calls get homes in `s1`–`s11`, which the function must save and restore. The scorer counted how often each local is read and written, weighting reads and writes inside loops more heavily, and then picked homes.
+
+The ceiling was large. Nearly every stack load in the shadow routine could in principle be removed. That figure comes from the historical counters. The fresh baseline totals a slightly different frame count, so percentages should only be compared against numbers from the same source. Writing the design showed three costs behind the ceiling:
+
+- Replacing a `lw` with a `mv` saves no instructions. Real savings need forwarding: consumers read the home register directly, and producers write into it.
+- Each `s`-register home costs two instructions every time the function is called.
+- Correctness needs a complete lowering contract covering block joins, calls, and returns, plus a differential test on held-out code.
+
+The scorer had only been run on synthetic instruction sequences. It had never seen the compiler's real decoded output.
+
+## Why the Group Chose the Pure Helper Rule
+
+The other proposal was far smaller. If the compiler can prove that a helper is pure, it can replace each call with the helper's logic inline. The compiler coordinator integrated this guarded-return lowering, and a fresh run measured it from start to finish. All 74,226 helper calls disappear. The full-frame count falls from 14,879,359 to 14,088,411 retired instructions, and the output hash does not change. Stack loads are untouched, so the rule takes nothing away from a later register-home pass. That pass remains available, and its gains would add to this one. The group preferred a measured, verified, local change over a larger forecast that still depended on forwarding work nobody had built.
+
+## How the Proof and Lowering Work
+
+The proof checks the helper's body. It reads only its single parameter. It makes no memory accesses and no calls, and it cannot trap. It has exactly two return paths: if the value is negative, return zero minus the value; otherwise return the value unchanged. When those checks pass, the compiler replaces the three-word call sequence with two words that act on the operand already in `t0`: `bge t0, zero, +8` skips ahead when the value is non-negative, and `sub t0, zero, t0` negates it otherwise. The subtraction wraps the same way the original helper does. So even the most negative 32-bit integer gives the same result as the original call.

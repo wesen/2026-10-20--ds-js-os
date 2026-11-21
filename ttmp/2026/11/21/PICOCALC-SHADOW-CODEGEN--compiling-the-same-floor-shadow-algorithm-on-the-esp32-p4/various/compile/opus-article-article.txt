@@ -1,0 +1,51 @@
+## 6. Verified effects
+
+I recomputed the effects in a fresh trace REPL from the bound object `opening`. Its three entries match the archived fixtures `various/compile/baseline.json`, `various/compile/shadow.json` and `various/compile/general.json` (images `9a4a2356`, `e2fa128b`, `c31e75ee`). This is the exact cell I ran:
+
+```js
+(() => {
+  const {baseline: b, shadow: s, general: g} = opening;
+  const pct = (n, d) => +(100 * n / d).toFixed(2);
+  const other = x => x.fullFrameSteps - x.shadow.steps - x.absTotalSteps;
+  return {
+    images: [b, s, g].map(x => x.imageSHA.slice(0, 8)),
+    sameOutput: new Set([b, s, g].map(x => x.outputSHA)).size === 1,
+    saved: {shadow: b.fullFrameSteps - s.fullFrameSteps, general: b.fullFrameSteps - g.fullFrameSteps},
+    percentOfCurrentControl: {shadow: pct(b.fullFrameSteps - s.fullFrameSteps, b.fullFrameSteps),
+                              general: pct(b.fullFrameSteps - g.fullFrameSteps, b.fullFrameSteps)},
+    attribution: {callerBody: b.shadow.steps - s.shadow.steps, helper: b.absTotalSteps - s.absTotalSteps,
+                  rest: other(b) - other(s), generalExtra: s.fullFrameSteps - g.fullFrameSteps},
+    stackAndChecksUnchanged: ["directStackLoads", "directStackStores", "boundsTests"]
+      .every(k => b.shadow[k] === s.shadow[k] && s.shadow[k] === g.shadow[k]),
+    bytes: {image: [b, s, g].map(x => x.imageBytes), shadowFn: [b, s, g].map(x => x.shadowBytes)},
+    priorForecast: {historicalPct: +measured.hypothetical.predictedFullFrameReductionPercent.toFixed(2),
+                    historicalDenom: measured.observed.frameRetired, currentDenom: b.fullFrameSteps,
+                    sameShadowBody: measured.observed.retired === b.shadow.steps},
+  };
+})()
+```
+
+**Instruction reduction.** The shadow-only arm retires 790,948 fewer dynamic instructions than the control, and the all-callers arm retires 791,050 fewer. Both are 5.32% of the current control.
+
+**Attribution.**
+
+- 99,764 instructions come from the shadow body: the call sequences were replaced by inline arithmetic, a net 1.34 instructions per former call.
+- 691,184 come from helper instructions that no longer run.
+- None come from the rest of the frame.
+- The 60 helper instructions still executed in the shadow arm belong to another caller. The general arm removes those 60 plus 42 more elsewhere, which is the 102-instruction difference between the two arms.
+
+**Unchanged.** Stack loads (1,288,258), stack stores (647,710) and the 264,928 bounds tests are identical in all three images, and the output hashes match.
+
+**Code size.** The image shrinks from 10,332 to 10,324 bytes (shadow-only arm) and to 10,268 bytes (all-callers arm). The shadow function shrinks from 1,068 to 1,060 bytes.
+
+The prior entry-guard forecast predicted 2.66% of the **historical** frame. The guarded return removes 5.32% of the **current** frame. These are different mechanisms measured against different denominators, so this is not a test of the forecast's accuracy. The entry guard was never implemented. Host compile time on Node (`host-cost.json`, 30 rotated triplets) changed by a paired median of +0.25 ms for the shadow-only arm and −0.03 ms for the all-callers arm. Those timings come from V8 on the host, not from the P4.
+
+## 7. What remains open
+
+The director's board timings for these three images are still pending. The `hardware` object in my REPL holds P4 timings only for the earlier stock, scalar and pie images. Their image hashes differ from these three, so they cannot stand in for the board result.
+
+The promotion opportunity is untouched: stack traffic is unchanged, so the 1,268,781-load ceiling still applies to the treated body. Promotion still has to pass three steps:
+
+1. Run `scoreLocals` on real `decodeNumericOperations` tapes.
+2. Agree on register use with `typed-pie-loops`.
+3. Freeze `loopWeight = 8`, then run the held-out differential gates: no correctness differences, no function whose retired count rises, and a measured drop in stack loads that tracks the estimate.
