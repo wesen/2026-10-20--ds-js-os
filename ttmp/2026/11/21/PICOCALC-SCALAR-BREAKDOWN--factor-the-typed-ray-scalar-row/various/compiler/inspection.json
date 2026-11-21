@@ -1,0 +1,132 @@
+{
+  "checked-stack": {
+    "imageSHA256": "7e59fd852c65173e72b76c75f3f826544a4dbcacfff49277f2fde2904943e7e6",
+    "rowStart": 3056,
+    "rowEnd": 5044,
+    "bySegment": {
+      "specialized code": {
+        "bytes": 156,
+        "checks": 0,
+        "traps": 0,
+        "registerReads": 0
+      },
+      "fast": {
+        "bytes": 916,
+        "checks": 11,
+        "traps": 11,
+        "registerReads": 0
+      },
+      "fallback": {
+        "bytes": 916,
+        "checks": 0,
+        "traps": 11,
+        "registerReads": 0
+      }
+    },
+    "syntheticOperations": 0
+  },
+  "hoisted-stack": {
+    "imageSHA256": "1f92fff08af969b739b814412464a8dc749bdcb0181178a41f2a817f9161a17b",
+    "rowStart": 3056,
+    "rowEnd": 4912,
+    "bySegment": {
+      "specialized code": {
+        "bytes": 156,
+        "checks": 0,
+        "traps": 0,
+        "registerReads": 0
+      },
+      "fast": {
+        "bytes": 784,
+        "checks": 11,
+        "traps": 0,
+        "registerReads": 0
+      },
+      "fallback": {
+        "bytes": 916,
+        "checks": 0,
+        "traps": 11,
+        "registerReads": 0
+      }
+    },
+    "syntheticOperations": 0
+  },
+  "checked-register": {
+    "imageSHA256": "80f5457634fb05afc8ab49b348e864344973eceba18a2a670b16fee799c0e25f",
+    "rowStart": 3056,
+    "rowEnd": 4952,
+    "bySegment": {
+      "specialized code": {
+        "bytes": 156,
+        "checks": 0,
+        "traps": 0,
+        "registerReads": 0
+      },
+      "fast": {
+        "bytes": 824,
+        "checks": 11,
+        "traps": 11,
+        "registerReads": 12
+      },
+      "fallback": {
+        "bytes": 916,
+        "checks": 0,
+        "traps": 11,
+        "registerReads": 0
+      }
+    },
+    "syntheticOperations": 0
+  },
+  "hoisted-register": {
+    "imageSHA256": "dc578a88bb9b297408c7b964a13e4453645e00057370cd3933aa4821d6dc0983",
+    "rowStart": 3056,
+    "rowEnd": 4820,
+    "bySegment": {
+      "specialized code": {
+        "bytes": 156,
+        "checks": 0,
+        "traps": 0,
+        "registerReads": 0
+      },
+      "fast": {
+        "bytes": 692,
+        "checks": 11,
+        "traps": 0,
+        "registerReads": 12
+      },
+      "fallback": {
+        "bytes": 916,
+        "checks": 0,
+        "traps": 11,
+        "registerReads": 0
+      }
+    },
+    "syntheticOperations": 0
+  },
+  "skip": {
+    "imageSHA256": "d26109121665cfcc7da04fc5884f2f9b607d984ac63e397d9c54284e87969f6b",
+    "rowStart": 3056,
+    "rowEnd": 4840,
+    "bySegment": {
+      "specialized code": {
+        "bytes": 156,
+        "checks": 0,
+        "traps": 0,
+        "registerReads": 0
+      },
+      "fast": {
+        "bytes": 712,
+        "checks": 11,
+        "traps": 0,
+        "registerReads": 12
+      },
+      "fallback": {
+        "bytes": 916,
+        "checks": 0,
+        "traps": 11,
+        "registerReads": 0
+      }
+    },
+    "syntheticOperations": 5
+  }
+}

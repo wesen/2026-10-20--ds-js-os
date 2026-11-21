@@ -1,0 +1,188 @@
+{
+  "images": [
+    {
+      "bytes": 9564,
+      "sha256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4"
+    },
+    {
+      "bytes": 10512,
+      "sha256": "ceea256c5b62e2a4cc8f209d159188d48da88e64a96cab89796c46691b1806a1"
+    }
+  ],
+  "pureCalleeEditRejected": true,
+  "summary": [
+    {
+      "capacity": 2048,
+      "count": 3,
+      "x": 80,
+      "y": 80,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        564,
+        522
+      ]
+    },
+    {
+      "capacity": 33,
+      "count": 3,
+      "x": 80,
+      "y": 80,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        564,
+        522
+      ]
+    },
+    {
+      "capacity": 32,
+      "count": 3,
+      "x": 80,
+      "y": 80,
+      "trap": true,
+      "retired": [
+        541,
+        544
+      ]
+    },
+    {
+      "capacity": 32,
+      "count": 3,
+      "x": 0,
+      "y": 0,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        250,
+        253
+      ]
+    },
+    {
+      "capacity": 32,
+      "count": 0,
+      "x": -2147483648,
+      "y": 2147483647,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        76,
+        79
+      ]
+    },
+    {
+      "capacity": 20,
+      "count": 0,
+      "x": 80,
+      "y": 80,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        76,
+        79
+      ]
+    },
+    {
+      "capacity": 19,
+      "count": 0,
+      "x": 80,
+      "y": 80,
+      "trap": true,
+      "retired": [
+        36,
+        39
+      ]
+    },
+    {
+      "capacity": 18,
+      "count": 3,
+      "x": 80,
+      "y": 80,
+      "trap": true,
+      "retired": [
+        24,
+        27
+      ]
+    },
+    {
+      "capacity": 17,
+      "count": 3,
+      "x": 80,
+      "y": 80,
+      "trap": true,
+      "retired": [
+        12,
+        15
+      ]
+    },
+    {
+      "capacity": 0,
+      "count": 0,
+      "x": 80,
+      "y": 80,
+      "trap": true,
+      "retired": [
+        12,
+        15
+      ]
+    },
+    {
+      "capacity": 33,
+      "count": 4,
+      "x": 80,
+      "y": 80,
+      "trap": true,
+      "retired": [
+        572,
+        578
+      ]
+    },
+    {
+      "capacity": 50,
+      "count": 4,
+      "x": 80,
+      "y": 80,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        760,
+        766
+      ]
+    },
+    {
+      "capacity": 33,
+      "count": 65535,
+      "x": 0,
+      "y": 0,
+      "trap": true,
+      "retired": [
+        258,
+        264
+      ]
+    },
+    {
+      "capacity": 2048,
+      "count": 0,
+      "x": 80,
+      "y": 80,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        76,
+        74
+      ]
+    },
+    {
+      "capacity": 33,
+      "count": 3,
+      "x": 2147483647,
+      "y": -2147483648,
+      "trap": false,
+      "result": 0,
+      "retired": [
+        250,
+        236
+      ]
+    }
+  ]
+}

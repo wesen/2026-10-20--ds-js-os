@@ -15,7 +15,11 @@ if(sha(ir)!=='ab7c7d8c0cd05beb8adb7e1a08368191cd044635da386677fed6d7156ad55477')
 const start='function compile(source,';
 const old='lowerLeaf(fn, callables, targets) ?? new FunctionCode(fn, callables, targets).lower()';
 if(stock.split(start).length!==2 || stock.split(old).length!==2) throw Error('backend entry changed');
-const pass=read(new URL('./row-pass.js',import.meta.url));
+let pass=read(new URL('./row-pass.js',import.meta.url));
+if(stock.includes('function nativeEmission(')){
+    const observer=read(new URL('./inspection-segments.js',import.meta.url));
+    pass=observer+'\n'+pass.replace('    guard.words.push', '    factorInspection(guard,fast,fallback,fastAt,fallbackAt,fn.code);\n    guard.words.push');
+}
 const variants=[
     ['checked-stack',9,false,false,false],['hoisted-stack',10,true,false,false],
     ['checked-register',11,false,true,false],['hoisted-register',12,true,true,false],['skip',13,true,true,true]
