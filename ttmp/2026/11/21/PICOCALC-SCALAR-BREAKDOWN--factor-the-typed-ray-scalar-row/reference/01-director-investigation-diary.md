@@ -117,3 +117,121 @@ Read design-doc/02-reproduce-the-scalar-factorial.md, various/compiler/rows.json
 ### Technical details
 
 Host pipeline commits b6cf97c, 9d43fba and dbfb5c4. The physical supervisor reserved the single board, froze the linked images and checked on-device output independently.
+
+## Step 3. Reconcile executed code with physical timing
+
+The first P4 trial completed 588 blocks. I used the five independently qualified images to replay a whole default frame with the new inspector, then compared the function-level counts with the isolated-row results. The measurements show where counting instructions predicts the right direction and where it misses a timing interaction.
+
+### Prompt Context
+
+See Step 1. The purpose of inspecting emission on both targets was to make a performance explanation reproducible.
+
+### What I did
+
+Ran the profile join in `scripts/director/01-join-inspector.py` and checked the final stock, controlled and hand-scheduled primary and clean-frame times. Compared raw counts and per-block paired medians. Published the two compiler-inspection articles while the device researcher ran release checks on the benchmark firmware.
+
+### Why
+
+A percentage depends on its denominator. I report primary time, complete-frame time and guest fetch counts separately. The fast path's fallback also needs to be accounted for in static bytes even when it executes zero operations in a particular frame.
+
+### What worked
+
+All five observed compilers emitted the images in the physical manifest; isolated-row and whole-frame primary counters agreed exactly. P4 default clean time was 57.691 ms for stock, 53.942 ms with both factors, 50.436 ms with skipping added and 46.915 ms with the prior hand-scheduled row. The physical interaction across the two fixed-domain factors was −0.657 ms for the primary call. Twelve pose medians had the same sign.
+
+### What didn't work
+
+The physical operator's post-matrix Right-key playability check reported `compositor crashed handling draw: ran past its turn budget of 80 ms`. A previous first-frame-only check could miss it. The initial timings had already been independently recorded with checked RGB, depth, object IDs and guard bytes. The operator rolled back to the verified release before additional diagnosis. Rechecking earlier UART captures also found a draw fault during first-use compilation.
+
+### What I learned
+
+On these kernels, replacing stack traffic and hoisting bounds checks have additive effects on retired instructions but overlapping effects on wall time. An approximately 430 ms first-use compile cannot fit in an 80 ms compositor turn. A completed correct image by itself does not establish that the ordinary UI survives the following input.
+
+### What was tricky to build
+
+The source-mapping experiment measures the same frontend operations twice when they exist in fast and fallback copies. Grouping by source alone would hide that the fallback was never taken. The director replay retains explicit segment totals and checks image identity before comparing with the other researcher's counters.
+
+### What warrants a second pair of eyes
+
+The physical effects use the median of within-repetition differences. Confirm the numbers using the raw rows, rather than subtracting rounded per-arm medians. For the UI, check compositor health after a movement and re-entry into the fourth mode.
+
+### What should be done in the future
+
+Close out the shadow AB/BA measurement, verify the latest playable firmware or its rollback, and record the outcome in the director article.
+
+### Code review instructions
+
+Start with `various/director/profile-join.json` and `various/device/summary.json`. The first trial's cold compilation, heap and static image sizes are separately available in the device evidence.
+
+### Technical details
+
+The common-guard primary took 17.818 ms. The median paired savings for the joint primary change was 3.766 ms. Comparing the two clean medians for ordinary and combined gives a 6.5% shorter rendered frame. The new source and evidence were committed in 06c69ca.
+
+## Step 4. Check the held-out prediction on the ESP32-P4
+
+The board completed every block of the independently ordered shadow trial. A correct prediction of guest instructions explained the direction of the physical result, while the size of the timing effect had to be measured separately.
+
+### Prompt Context
+
+See Step 1 for the original request. This step tests whether the inspector supports a falsifiable optimization prediction outside the primary routine.
+
+### What I did
+
+Compared eight paired stock and candidate measurements for each of twelve poses. Checked the primary-only negative control, separate shade timings, exact native and ELF identity of both stock builds, new cold compiler receipts and all scene checks. Regenerated the paired primary chart with the legend outside the plotting area.
+
+### Why
+
+Doubling the number of timing samples on a single pose would provide little evidence about a proposed change of scope. A second kernel and twelve inputs let us test what transfers beyond the first row. The primary-only control tests whether unrelated code moved in wall time.
+
+### What worked
+
+The held-out clean default went from 57.6815 to 55.4780 ms. The paired saving was 2.2085 ms (3.829%); the eight paired values ranged from 2.197 to 2.236 ms. The paired primary-only saving was 0.0070 ms and individual differences crossed zero. All 192 blocks matched the C controls. The frontend and native reports distinguish a 2.659% reduction in guest instructions from a 3.829% reduction in physical time.
+
+### What didn't work
+
+The first physical image was unsuitable for an ordinary post-reset handoff. The separate fix in 4a86f07 schedules the fourth Ray Tracer mode’s cold compilation and frame computation in the existing ray-specific kernel poll. The delivered native program, controls and global compositor budget remain the same.
+
+### What I learned
+
+The cross-build stock compiler medians changed from 430.016 ms to 452.3825 ms, and the stock compiler peak changed from 645,724 to 679,950 bytes. The linked stock ELF was identical. Multiple firmware inputs changed. An isolated build pair would be required to measure the marginal cost of carrying the optional observer on-device.
+
+### What was tricky to build
+
+A valid viewport checksum alone had missed an ordinary compositor failure after the draw. Final qualification must combine flash readback, matching complete RGB565 viewports and world health checked after ordinary UI events.
+
+### What warrants a second pair of eyes
+
+The original shadow forecast was committed at 9d43fba. The control and held-out results are separate firmware matrices. Keep comparisons within the same image wherever the experiment provides a matching control.
+
+### What should be done in the future
+
+Try automatic loop-local register placement on a new kernel and qualify it against these explicit controls. Track on-device compiler cost as well as whole-frame time.
+
+### Code review instructions
+
+Start with the director article and the compiler article frozen at 37bb2b5. Reproduce the shadow summary from the 192 raw rows using scripts/device/05-shadow-summary.py. Confirm that the paired saving uses within-block differences.
+
+### Technical details
+
+Design bundles for both tickets were delivered to the dated reMarkable cloud directories. The device work uses the 360 MHz ESP32-P4. Full guest code images and generated executables are reproducible from the ticket scripts and exact hashes.
+
+## Step 5. Verify the installed build and publish
+
+The board operator read back the final app and partition, performed a cold UI launch, moved a sphere, changed lighting and returned to the opening pose. Four complete viewports matched their frozen controls and all eight checked native worlds reported healthy after the last event. The board remains on the verified build.
+
+### Prompt Context
+
+See Step 1. This milestone completes the requested measurements, newcomer reports, publications and detailed diaries.
+
+### Evidence and commits
+
+- Physical addendum and release result frozen at aceacf9. The app flash SHA-256 is e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5. See `various/device/handoff-audit.json`.
+- `remarquee upload bundle` returned `OK: uploaded PicoCalc Scalar Breakdown Guides.pdf -> /ai/2026/11/21/PICOCALC-SCALAR-BREAKDOWN`. The inspector guide was delivered separately.
+- Three scalar articles and their chart were committed and pushed to go-go-parc. The publisher verified remote main at 2b353648102f5223a5a0cf511d80d8cfa78c69e2 and checked the committed bytes. The two inspector articles were published in da38c92.
+
+### Noteworthy decisions or failures
+
+All candidate compiler optimizations remain selectable research treatments. The ordinary Typed Ray Tracer still selects the stock guest. The production change scoped to its fourth mode fixes the compositor handoff discovered during release qualification. The physical code-generation experiments measure runtime; promoting any candidate into a general compiler requires another decision.
+
+### Remaining requirements and next action
+
+Both tickets are complete. The reports identify prospective research on register selection, proof discovery and isolated cold-compiler overhead.

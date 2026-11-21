@@ -1,7 +1,7 @@
 ---
 Title: Factor the Typed ray scalar row
 Ticket: PICOCALC-SCALAR-BREAKDOWN
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Paired physical timing evidence
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-21T00:24:57.888564541-05:00
+LastUpdated: 2026-11-21T00:48:11.274075909-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
