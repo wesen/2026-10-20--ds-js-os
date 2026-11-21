@@ -164,3 +164,5 @@ Review the physical image manifest against the host profiles, then compare scrip
 ### Technical details
 
 The cold ray control generated 10,268 bytes in 298.272 ms. The combined treatment generated 9,540 bytes in 409.746 ms. The digest-verified diagnostic and the restored image are identified separately in various/receipt.json.
+
+Publication verification: go-go-parc main accepted 7804c87. git ls-remote returned 7804c873f0b9bf7ac60744b62d8898f28e00fa03. The article references compiler revision 25f321e and evidence revision c0d809f.
