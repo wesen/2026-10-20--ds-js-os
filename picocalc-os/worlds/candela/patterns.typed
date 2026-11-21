@@ -1,0 +1,32 @@
+function surfacePosition(graph: buffer, point: SurfacePoint): Vec2Expr {
+    return Vec2Expr(candelaPosition(graph));
+}
+
+function scaleExpr(graph: buffer, point: Vec2Expr, amount: ScalarExpr): Vec2Expr {
+    return Vec2Expr(candelaScale(graph, i32(point), i32(amount)));
+}
+
+function fractExpr(graph: buffer, point: Vec2Expr): Vec2Expr {
+    return Vec2Expr(candelaFract(graph, i32(point)));
+}
+
+function tileMaskExpr(graph: buffer, point: Vec2Expr): ScalarExpr {
+    return ScalarExpr(candelaTileMask(graph, i32(point)));
+}
+
+function candelaCapturedTile(graph: buffer): i32 {
+    candelaInit(graph);
+    const blue = candelaColor(graph, 30, 70, 150);
+    const low = candelaColor(graph, 35, 46, 70);
+    const high = candelaColor(graph, 105, 145, 187);
+    const slot = candelaParameter(graph, 64);
+    const tiles = ScalarExpr(candelaParam(graph, slot));
+    const mask = pattern(p => tileMaskExpr(graph, fractExpr(graph, scaleExpr(graph, surfacePosition(graph, p), tiles))));
+    const floorColor = candelaMix(graph, low, high, i32(mask));
+    const sphere = candelaMaterial(graph, blue);
+    const floor = candelaMaterial(graph, floorColor);
+    candelaAddSphere(graph, 68, 61, 56, 26, sphere);
+    candelaAddSphere(graph, 100, 65, 105, 32, sphere);
+    candelaFloor(graph, floor);
+    return 1;
+}

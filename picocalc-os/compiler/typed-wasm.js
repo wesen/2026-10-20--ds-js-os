@@ -305,6 +305,8 @@ class FunctionEmitter {
 
     want(type, expected) {
         if (type === expected || type === LITERAL && (expected === "i32" || this.distinct.has(expected))) return;
+        if (expected === "bool" && type === "BoolExpr")
+            this.lex.fail("per-hit BoolExpr cannot control scene construction; use a staged select");
         this.lex.fail("expected " + expected + ", got " + scalarType(type));
     }
 
@@ -426,6 +428,10 @@ class FunctionEmitter {
             return name;
         }
         if (!binding) lex.fail("unknown local " + name);
+        if (binding.patternPoint) {
+            this.emitConst(0);
+            return "SurfacePoint";
+        }
         if (binding.type === "i32" || binding.type === "bool") {
             this.emitIndex(OP.get, binding.index);
             return binding.type;
@@ -572,8 +578,34 @@ class FunctionEmitter {
         }
     }
 
+    patternBody() {
+        const lex = this.lex;
+        const parameter = lex.ident();
+        lex.expect("=");
+        lex.expect(">");
+        if (!this.distinct.has("SurfacePoint")) lex.fail("pattern requires a distinct SurfacePoint type");
+        if (lex.token.value === "{") lex.fail("pattern callbacks require one expression");
+        const outer = this.locals.get(parameter);
+        this.locals.set(parameter, {type: "SurfacePoint", mutable: false, patternPoint: true});
+        try {
+            const result = this.expr();
+            if (lex.token.value === "=") lex.fail("pattern callback captures are read-only");
+            if (!this.distinct.has(result) || !["ScalarExpr", "Vec2Expr", "BoolExpr", "ColorExpr"].includes(result))
+                lex.fail("pattern must return a staged expression handle");
+            lex.expect(")");
+            return result;
+        } finally {
+            if (outer) this.locals.set(parameter, outer);
+            else this.locals.delete(parameter);
+        }
+    }
+
     call(name) {
         const lex = this.lex;
+        if (name === "pattern" && lex.token.kind === "id" && !this.functions.has(name)) {
+            const look = new Lexer(lex.source, lex.token.at + lex.token.value.length, lex.end);
+            if (look.token.value === "=" && lex.source[look.offset] === ">") return this.patternBody();
+        }
         const callee = this.functions.get(name);
         if (!callee) lex.fail("unknown function " + name);
         const startField = lex.generatedStartFields?.get(name);

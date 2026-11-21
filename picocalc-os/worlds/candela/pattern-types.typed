@@ -1,0 +1,4 @@
+type SurfacePoint = distinct i32;
+type ScalarExpr = distinct i32;
+type Vec2Expr = distinct i32;
+type BoolExpr = distinct i32;
