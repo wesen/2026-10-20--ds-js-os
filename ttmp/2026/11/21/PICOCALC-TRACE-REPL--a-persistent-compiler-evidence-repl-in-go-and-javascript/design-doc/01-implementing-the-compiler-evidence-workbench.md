@@ -129,3 +129,16 @@ The first supplied playbook treats an agent's mistaken calls and silent wrong re
 A correct final number can conceal a poor API. An agent might have guessed the number, read the answer in an example, or succeeded after many wrong calls. Conversely, a persona that reports insufficient evidence for a per-PC attribution has answered a difficult question correctly. The tester must score evidence and recovery as well as numerical agreement.
 
 The [original specification and 26 worked examples](../reference/05-original-language-specification-and-workbook-concordance.md) remain available alongside the [ray-tracing research questions](02-research-questions-and-executable-queries-for-the-ray-row.md). The latter relates each query to the compiler change it could justify.
+
+## Designing the next compiler experiment
+
+The workbench reads captured evidence. To validate a new compiler change, a researcher still needs an experimental treatment, a compiler build, correctness checks and measurements. Each part has its own identity. Record them before interpreting the outcome.
+
+1. **Name the proposed mechanism.** For a two-register operand cache, nominate the functions and value-lifetime patterns for which it should eliminate frame traffic. Give an explicit counterexample, such as two live values crossing a clobbering call.
+2. **Define the treatments.** Compile the same Typed source twice, once with the current compiler and once with only the candidate enabled. Preserve flags, source digests, compiler revision, code image and target. If the change needs signed arithmetic or a no-alias precondition, specify it.
+3. **Test semantics.** Run both images on the identical opening rows and held-out scenes. Compare every output element. Include a bounds failure or trapping case when the optimization can change the order of access. Record mismatches before claiming a speed result.
+4. **Match observation to mechanism.** For a register-cache hypothesis capture PCs with decoded base registers and offsets, or a compiler-produced location map identifying frame slots. For a claim about cold compile latency capture wall time and peak compiler memory. For a user-visible frame claim capture device time from a fixed start and stop event.
+5. **Freeze the artifact set.** Preserve each raw artifact, its producer, hash, unit and coverage. The Go service holds verified content in memory. Use a fresh service against a new archive for a new experiment. Mutating a directory behind an existing session would mix revisions.
+6. **Make the decision explicit.** Report whether the observations support the hypothesized mechanism, whether the matched outcome improved, and whether that improvement matters for the stated use case. A result can justify collecting a better profile, dropping a candidate, or qualifying it on broader programs.
+
+In particular, the 1,290,106 direct stack accesses in stock Typed justify investigating register pressure. They do not identify two particular values that merit registers. The paired hardware rows, by contrast, can directly test an existing candidate's complete-frame effect. The [executable decision cell](../scripts/11-test-optimization-claim.js) shows how to reject a specified performance claim and cite the input used to reject it.

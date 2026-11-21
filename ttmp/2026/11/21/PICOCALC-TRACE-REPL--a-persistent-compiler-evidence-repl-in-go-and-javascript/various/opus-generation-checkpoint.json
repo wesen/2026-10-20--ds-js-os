@@ -1,0 +1,10 @@
+{
+  "role": "query implementation",
+  "resolvedModel": "claude-opus-5-5",
+  "requestedEffort": "xhigh",
+  "stopReason": "max_tokens",
+  "reportedOutputTokens": 128000,
+  "fileProducedAtFirstStop": false,
+  "resumedSameSession": true,
+  "followup": "scripts/commission/opus-resume.md"
+}
