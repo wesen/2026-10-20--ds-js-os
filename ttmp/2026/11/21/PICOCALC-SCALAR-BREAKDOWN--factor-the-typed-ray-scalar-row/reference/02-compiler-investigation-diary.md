@@ -159,3 +159,51 @@ Run `inspect-receipt.mjs`, `shadow-edges.mjs` and `frames.py` with the held-out 
 ### Technical details
 
 The held-out image grows from 9,564 to 10,512 bytes because it preserves a complete fallback. The ordinary C machine interpreter and independent JavaScript instruction model cover different boundaries; all required agreement checks passed.
+
+## Step 4. Reconcile additive instruction savings with the physical interaction
+
+The device investigator closed all 588 fixture blocks. I reran their summarizer on the completed raw records to check the seven-repetition default medians and paired effects. Code commit `dbfb5c4` contains the preceding host and inspector work.
+
+### Prompt Context
+
+See Step 1. This step brings the requested physical check into the host explanation.
+
+### What I did
+
+Read the per-program clean and primary medians, then the paired factorial effects and empty-row effects. Compared those quantities with the direct RV32 row counts from the host runs.
+
+### Why
+
+A pairwise median difference and the difference between two marginal medians can differ. The reported interaction must be computed within each repetition first.
+
+### What worked
+
+The common checked/stack default primary phase measured 17.818 ms, hoisted/stack 16.511, checked/register 14.699, both 14.052 and both plus skip 10.542. Pairwise hoisting saved 1.311 ms in the stack arm and 0.654 in the register arm. The interaction was −0.657 ms for this pose.
+
+### What didn't work
+
+An additive cycle-cost interpretation would assign the same measured time to check removal in both register settings. The negative interaction contradicts that interpretation in all twelve pose-specific medians.
+
+### What I learned
+
+The IR and retirement model identifies exact retired work, while processor time also depends on how the remaining instructions execute together. This dataset has no counters that identify a unique cause for that interaction.
+
+### What was tricky to build
+
+The physical primary boundary includes geometry setup and saving diagnostic outputs. I reported elapsed primary and full clean results separately from the direct host row count.
+
+### What warrants a second pair of eyes
+
+Review arm IDs, pair ordering and the interaction sign in the physical summarizer. Confirm that the old matched control is used only as a residual comparison.
+
+### What should be done in the future
+
+Run a separate physical experiment for the held-out shadow function if a qualified device window is available.
+
+### Code review instructions
+
+Replay `scripts/device/04-summarize.py` on the operator's completed raw rows and loads. Inspect [the final paired summary](../various/device/summary.json).
+
+### Technical details
+
+The source remained identical across the five experimental backends. Seven program positions times twelve fixtures times seven repetition blocks gives 588 observations; each observation included native guest and two C controls.
