@@ -16,12 +16,17 @@ ARTICLE = T/"analysis/04-using-blind-compiler-engineers-to-qualify-an-evidence-a
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=["protocol", "publication"])
+    parser.add_argument("stage", choices=["protocol", "baseline-audit", "publication"])
     a = parser.parse_args()
     stage = a.stage
     inputs = [*(V / n for n in PB), K/"diary/references/investigation-entry.md",
               K/"textbook-authoring/SKILL.md", K/"obsidian-vault-writing/SKILL.md",
               *sorted((T/"scripts/personas").glob("*.md")), *sorted((T/"playbooks").glob("01*.md"))]
+    if stage == "baseline-audit":
+        inputs += [*sorted((T/"various/personas").glob("baseline-*.json")),
+                   T/"various/usability-controls-baseline.json", T/"various/usability-raw-loop-census.json",
+                   T/"various/usability-loops-baseline.json", T/"various/usability-replay-baseline.json",
+                   next(T.parent.glob("PICOCALC-TRACE-QUERY--*/various/verified-facts.json"))]
     if stage == "publication":
         inputs += [DIARY, *sorted((T/"analysis").glob("01-what-compiler*.md")),
                    *sorted((T/"various/personas").glob("*.json")), *sorted((T/"design-doc").glob("02-*.md")),
@@ -29,6 +34,8 @@ def main():
     prompt = """You are the lab's lead usability researcher, commissioned at Opus High. Independent DeepSeek Flash high compiler engineers are the actual blind participants. Your work is methodological review, your own chronological investigation diary, and later a research article using real evidence for new compiler students. Ground every claim in the supplied records. Do not assert that you yourself ran a tool or that any model is a human. The two named playbooks supply the methods. Preserve the experimental task cards. No analogies, slogans, semicolons or sales pitch. Use exact names for queries and files. Explain evidence units where used. Return a single JSON object, no code fence, with the requested Markdown bodies as JSON strings. No frontmatter.\n"""
     if stage == "protocol":
         prompt += """Review the pre-registered protocol and the new scientific-decision rubric. Write the first detailed investigation entry for your own diary in diary-skill format, including where filtering, blindness, truth keys and scope can fail. Write a concise usable preregistration critique with verification tests the independent supervisor can perform. No result claims or article yet. Keys: diary, critique."""
+    elif stage == "baseline-audit":
+        prompt += """Grade the four observed baseline participants from their actual actions and final responses using the supplied independent evidence. The supervisor's first grades have been withheld. For each card distinguish correct numeric recovery, source witnesses and false or unsupported extra conclusions. For the optimization card score each of the five scientific dimensions from the protocol; state the actual proposed intervention and the refuting result. The stock workload has 3,608,697 instructions, 936,328 direct stack loads and 353,778 stores. Include only a concise grade table, strongest disputed claim and how to verify it. Do not grade a proposed optimization as a validated new implementation. No article or new diary until final reporting. Key: grade."""
     else:
         prompt += """The observed rounds and independent grades now accompany this request. Author the final vault technical article for newcomers (roughly 2000–3000 words, concise when the evidence is thin). Work one real participant's question step by step from input through query, first failure/recovery, evidence and scientific recommendation; teach static vs dynamic vs physical units. Describe method refinements, retests, remaining limitations, actual signature changes and which compiler optimizations were only proposed vs genuinely validated. Favor excerpts of real queries over reproducing whole transcripts. Include one diagram or pseudocode for reconstruction and an example of what a falsifying experiment would measure. Avoid duplication of the supervisor's results table. Check your draft against the actions, read it once as a newcomer, revise. Also write your final detailed diary step about review, observations and limits. Keys: diary, article."""
     for path in inputs:
@@ -63,6 +70,9 @@ def main():
         dest = T/"reference/09-usability-protocol-review.md"
         dest.write_text(frontmatter("Pre-registered usability protocol review", "reference") +
                         "# Pre-registered usability protocol review\n\n"+docs["critique"].strip()+"\n")
+    elif stage == "baseline-audit":
+        (T/"reference/10-independent-baseline-grades.md").write_text(frontmatter("Independent baseline persona grades", "reference")+
+            docs["grade"].strip()+"\n")
     else:
         ARTICLE.write_text(frontmatter("How blind compiler engineers qualify an evidence API", "analysis") +
                            docs["article"].strip()+"\n")
