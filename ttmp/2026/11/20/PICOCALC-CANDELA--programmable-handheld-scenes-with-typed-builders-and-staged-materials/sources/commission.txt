@@ -1,0 +1,22 @@
+I’d run three implementation teams and one independent reviewer. The teams can start together if they agree on one interface up front: the renderer consumes a validated scene and material graph. The way an author constructs that graph can evolve independently of how the PicoCalc renders it.
+
+| Team | Start immediately | First result that decides whether to continue |
+|---|---|---|
+| 1 · Renderer and materials | Extend the existing ray tracer to consume sphere descriptors, material handles and a small expression graph. Build the graph by hand in a fixture. Support diffuse color, a parameter, color mix and a spatial checker. | Two spheres share a blue material. Derive a variation for one sphere, change its mix parameter, and verify the other sphere stays blue. Measure parameter-update time and frame time separately. |
+| 2 · Typed authoring syntax | Implement statically resolved receiver methods and namespaces in the frontend. Start with shape.sphere(...).at(...).material(...). Use existing direct functions underneath. Then add record literals for options such as { roughness: ... }. | Compile the fluent scene and its hand-written direct-call equivalent on Wasm and RV32. Both must build the same scene graph. This team can test against recording functions before the renderer is ready. |
+| 3 · Callbacks and staged expressions | Implement a narrow pattern(p => …) with a known callback target and read-only captures. Represent ScalarExpr, Vec2Expr and BoolExpr as distinct handles. Initially use direct calls such as fract(mul(xz(position(p)), tiles)), so work can proceed before method syntax lands. | Build a tile pattern that captures a tile-count parameter. Verify the callback runs once during construction, changing the parameter reuses the graph, and branching on a per-hit BoolExpr produces a precise diagnostic. |
+| 4 · Independent measurement and review | Freeze the current playable firmware and reference pixels. Write an independent evaluator for the small graph vocabulary, prepare scenes with shared nodes and bad handles, and compare fixed-point with f32 on representative shading expressions. Own the board schedule. | Publish an agreement table for graph results and pixels, plus cold compile time, scene-build time, parameter-update time, frame time and peak memory. Include errors near checker boundaries so the numeric decision has evidence. |
+
+### The small agreement that makes this work
+
+Before implementation, I’d freeze two fixtures and a one-page contract. The fixtures are the shared-material spheres and the tile pattern. The contract specifies handle types, node operands and result types, parameter slots, and failure behavior for an invalid handle or a full table. It also specifies the coordinate and color conventions used by the fixtures. The exact sequence of internal node IDs can vary; the tests should compare graph meaning and explicitly verify sharing where it matters.
+
+The main source conflict is that teams 2 and 3 both touch typed-wasm.js. I’d give them separate worktrees and one frontend integration owner. Team 2 owns receiver lookup and call resolution. Team 3 owns lambda parsing, capture analysis and lowering. Make the first lambda form legal as an argument to a plain named function. That lets team 3 finish and test its feature even if method chaining takes longer.
+
+### Integration order
+
+1. Hand-built graph → real pixels. Team 1 and the reviewer establish the device baseline using today’s Typed compiler.
+2. Fluent source → the same graph and pixels. Team 2 joins. Any difference is now attributable to authoring or lowering.
+3. Captured pattern → parameter update → changed pixels. Team 3 joins. This is the first milestone that demonstrates Candela’s programmable composition end to end.
+
+I’d defer general slices and modules to the next wave. Bounded tables suffice for these two scenes, and both can compile as a single source unit. Once the tile material works, a gradient with a variable number of stops gives slices a concrete acceptance test, and sharing that material between two apps gives imports one.
