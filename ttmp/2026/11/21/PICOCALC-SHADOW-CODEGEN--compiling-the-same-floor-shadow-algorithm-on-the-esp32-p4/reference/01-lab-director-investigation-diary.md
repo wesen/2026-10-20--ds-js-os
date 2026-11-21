@@ -206,3 +206,49 @@ Use scripts/reports/05-open-repl.py to query the session. The offline notebook i
 ### Technical details
 
 Main diagnostic SHA-256 ebd8b340e97a3e0b4bd095212305656ddddfe11b6f239bc24b72c389bd76f33e. The restored playable firmware was e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5. The assigned programmer completed candidate commit 3d18ebf. Opus High performed the register-home design, ran JS sessions, and wrote the research chapter, with the coordinating implementer adding physical results.
+
+## Step 5. Verify the published articles and close the study
+
+### Prompt Context
+
+The [commission](../sources/commission.txt) specifies the go-go-parc vault and requires a report from the researcher and a director’s synthesis.
+
+### What I did
+
+Published both complete chapters, the physical results chart and the offline JS workbook in go-go-parc under Projects/2026/11/21. Replayed every JavaScript block printed in both articles in the live session. Independently regenerated and compared the entire standalone Node summary with the trace-service JSON.
+
+### Why
+
+A runnable example tests the link between instruction claims, device measurements and manuscript. An independently runnable, data-bearing workbook keeps the study accessible when the original service process ends.
+
+### What worked
+
+Both chapter examples ran successfully. The offline and live summaries were equal as JSON. The vault push transferred c0180a6 through 19d1f19 and git ls-remote verified 19d1f19546dcb45abfad55b5790cc64cdbfc0fa5 on refs/heads/main.
+
+### What didn't work
+
+During copy/paste review the director’s multi-query block needed explicit statement boundaries before a JavaScript array expression. I added them and executed the exact manuscript text before publication.
+
+### What I learned
+
+Retaining raw trials in the downloadable workbook lets a student recompute the paired ratios offline. Individual article examples also need verification because they can refer to additional host-only bindings.
+
+### What was tricky to build
+
+The researcher’s code uses both the current census and an earlier historical forecast. The live loader and standalone file now seed both contexts and preserve source and scene identities.
+
+### What warrants a second pair of eyes
+
+Inspect various/director/article-replays.json and compare the chapter’s whole-frame denominator with the historical forecast. The two mechanisms and baselines are distinct.
+
+### What should be done in the future
+
+Continue with a single researcher for the common-path register forwarding experiment, then perform an independent measurement replay at its decision point.
+
+### Code review instructions
+
+Publication tooling is in scripts/reports/06-publish.py. Commit 5644dda captures the verified examples and 921072e captures the physical evidence.
+
+### Technical details
+
+The live session receipt is various/director/session.json. A new session can be created from the committed rows. The vault articles, chart and offline workbook share a single verified publication commit.

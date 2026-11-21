@@ -1,7 +1,7 @@
 ---
 Title: Compiling the same floor shadow algorithm on the ESP32-P4
 Ticket: PICOCALC-SHADOW-CODEGEN
-Status: active
+Status: complete
 Topics:
     - compiler
     - performance
@@ -17,8 +17,8 @@ RelatedFiles:
     - Path: repo://picocalc-os/worlds/raytrace/raytrace.typed
       Note: Unchanged Typed algorithm and fixtures
 ExternalSources: []
-Summary: "Physical shadow timings, an optional streaming compiler pass, and a held-out Chess transfer test"
-LastUpdated: 2026-11-21T17:26:48.03694886-05:00
+Summary: Physical shadow timings, an optional streaming compiler pass, and a held-out Chess transfer test
+LastUpdated: 2026-11-21T17:47:42.248280503-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
