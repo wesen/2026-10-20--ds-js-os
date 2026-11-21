@@ -132,3 +132,59 @@ See the supervisor diary, Step 1. I treated a usable service as including the or
 The wrapped timeout spans both the owner call and result serialization, and the kernel session gate spans interrupt cleanup. A request to release a session cancels its active operation, which runs the same interrupt path exercised by a timeout.
 
 The final command wiring also accepts the optional `--device-study` flag. Selecting the PIE-LOOPS root opens the physical trial table once and installs a fresh JS wrapper per session. Omitting it passes a nil study to the adapter, which can explain how to enable the evidence. Preflight `lsof-who -p 3791 -j` reported `no process listening/bound on port 3791`. The extended race test, including close-during-evaluation, passed in 1.234 s. An interim CLI overlay failed with `pkg/traceapi/hardware.go:12:19: undefined: importer` after the query installer gained a shared native importer. Preserving that importer in the isolated overlay recovered the CLI smoke check (0.010 s) and service suite (0.210 s). Final service qualification uses the real embedded query implementation.
+
+## Step 3: Freeze the actual service, check its public boundary and commission an Opus High researcher
+
+After the user assigned final product engineering to Opus xhigh, I left the working service changes to the implementation owner and switched to independent operation and verification. The integrated product revision is `df7a7b64c0b6d6930a803f8022b9c312bedf7e03`. This changes an important operational detail from Step 1. The low-level archive API can still defer decompression. The server authenticates and retains six complete pass streams before accepting sessions.
+
+### Prompt Context
+
+The original user request is verbatim in the [supervisor diary](01-supervisor-investigation-diary.md). The subsequent direction delegated final product implementation to Opus xhigh and asked Opus High researchers to keep individual diaries and author pedagogical Obsidian articles. This entry records my operator role and evidence. The researcher describes its own decisions in [its independent diary](07-session-researcher-diary.md).
+
+### What I did
+
+- On the supervisor's start signal I checked the requested port, launched the actual `go run ./cmd/trace-repl serve` process in tmux session `picocalc-trace-repl`, captured the readiness log, opened a fresh session over HTTP, evaluated `q.help()`, and released it.
+- Captured the executable SHA-256 through the listening PID and included its actual argv in `various/session-lifetime/baseline-service.json`. Sent that identity and the health result to the persona runner.
+- Ran the two-session script `scripts/23-session-query-witness.py` against the real archive. An initial run collected values and timing. The follow-up also collected `q.cache()` at each boundary.
+- Commissioned an actual isolated `claude --model opus --effort high` investigation. The first agent invocation ran the read-only component probes and kept an investigation diary. A new independent editorial review exposed an inference error. The author corrected it in a focused revision. A final invocation was given a fixed public-HTTP probe so that the author could query the running service personally.
+- Ran `go test -race ./... -count=1 -timeout 120s` on the frozen implementation. All five packages passed.
+
+### Why
+
+The same final aggregate can arise from evaluating an expression twice, retrieving an internal metric cache entry, or reading a stored JS array. Comparing elapsed times alone cannot distinguish these mechanisms. Counting cache changes around individual source strings can. The provider-side personas received the same executable, evidence and interface.
+
+### What worked
+
+- The server logged 30,912,391 verified pass-log bytes across six streams and 864 physical pairs plus 18 load rows. It bound `127.0.0.1:3791`. The open/help/close smoke check returned a non-empty help string. Executable SHA-256 was `d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4`.
+- The issued metric reported eleven direct i32 header loads for the checked row at ordinal 73 and six at 74. The returned witnesses gave `[231496,240363)` and `[240363,248127)` in the same authenticated stream. Saved bindings retained both results.
+- A saved-array read left session caches unchanged. Requesting the two metrics again added exactly two snapshot hits and two measurement hits. The second VM had no saved binding and zero measured cache entries.
+- Race-enabled Go package times, in seconds: CLI 4.783, query API 18.344, archive 5.243, physical study 2.371, REPL 1.917. These are whole package-test elapsed times including validation; they are not query timings.
+
+### What didn't work
+
+- The first operator run omitted semantic-cache counters. It proved session binding reuse. It could not show whether a repeat evaluation recalculated measurements. I retained this run as `live-query-first.json`, added state probes to the research script and repeated with two new sessions.
+- The initial research article treated an unchanged guest instruction total after a static reduction as evidence that the removed loads did not run frequently. The same total can result from a change in spills, instruction selection or executed control flow. I sent this back to the Opus author with a precise counterexample and requested corrected interpretation throughout the article.
+
+### What I learned
+
+The product has three observable lifetimes. An authenticated archive survives every session in a process. Parsed snapshots and declarative measurement results live in bounded per-session caches. A researcher's top-level bindings persist independently in that session. Query validity, correct attribution and unchanged scene output are separate acceptance questions.
+
+### What was tricky to build
+
+Frozen source and a frozen executable are different artefacts. A subsequent code commit does not change the binary in the tmux process. The receipt therefore records both the running binary digest and the embedded query source digest, in addition to the checkout revision.
+
+### What warrants a second pair of eyes
+
+Check the source-to-result records against the actual compiler study before interpreting eleven to six as an optimization opportunity. The input frame, trapping contract and generated machine code all matter to the subsequent runtime experiment. Check `q.cache()` counters before interpreting a live query as cold or warm.
+
+### What should be done in the future
+
+Keep each later persona wave tied to its own server binary and capture the same probes if the query API changes. The supervisor manages publication of the final vault article.
+
+### Code review instructions
+
+Read `various/session-lifetime/baseline-service.json`, `live-query.json`, and the final article together. `scripts/22-run-session-assays.sh` reproduces the independent native component tests. `python3 scripts/23-session-query-witness.py` runs the public query study against an existing server. The study closes both sessions after execution.
+
+### Technical details
+
+`Archive.Verify` accounts for upfront stream validation; it does not populate each session's JS caches. Within one VM the first two semantic queries missed the text, snapshot and measurement caches twice each. Later VM-local hits can bypass reading the shared native stream at all. The observed two-hit transition is independent of operating system page cache warmth and of the 127.13 ms server preflight on this launch.

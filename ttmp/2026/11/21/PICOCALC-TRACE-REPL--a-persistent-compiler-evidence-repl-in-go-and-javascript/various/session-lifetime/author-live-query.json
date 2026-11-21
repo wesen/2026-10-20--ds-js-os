@@ -1,0 +1,382 @@
+{
+  "unit": "one loopback HTTP call including serialization; uncontrolled single observation",
+  "steps": [
+    {
+      "source": "const fn = a.variant(\"checked\").function(\"row\");\nconst middle = fn.timeline(\"middle\");\nconst header = q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(fn.argument(0)).count();\nconst measure = n => q.run(header.at(middle.at(n).after));\n\"ready\"",
+      "value": "ready",
+      "elapsedClientNS": 170150180
+    },
+    {
+      "source": "const saved = [measure(73), measure(74)]; saved",
+      "value": [
+        {
+          "kind": "measurement",
+          "metric": "q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()",
+          "definition": "ir.instructions(opcode=load,resultType=i32,pointer=arg(row,0)).count",
+          "unit": "static instruction sites",
+          "valueType": "count",
+          "state": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 73,
+            "pass": "SROAPass",
+            "header": "IR Dump After SROAPass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 73,
+              "start": 231496,
+              "end": 240363
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "function",
+            "lineRange": [
+              3,
+              215
+            ]
+          },
+          "status": "available",
+          "value": 11,
+          "count": 11,
+          "resolved": {
+            "row.argument(0)": "%work"
+          },
+          "witnesses": [
+            {
+              "line": 13,
+              "block": "for.cond.cleanup",
+              "text": "%0 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 30,
+              "block": "for.body",
+              "text": "%2 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 43,
+              "block": "element.exit37",
+              "text": "%3 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 69,
+              "block": "for.body8",
+              "text": "%4 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 84,
+              "block": "element.exit47",
+              "text": "%6 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 98,
+              "block": "element.exit52",
+              "text": "%8 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 129,
+              "block": "for.body29",
+              "text": "%10 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 148,
+              "block": "if.then",
+              "text": "%12 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 163,
+              "block": "element.exit67",
+              "text": "%14 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 183,
+              "block": "if.then45",
+              "text": "%16 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 198,
+              "block": "element.exit77",
+              "text": "%18 = load i32, ptr %work, align 4"
+            }
+          ],
+          "witnessesTruncated": false,
+          "coverageRequired": "function"
+        },
+        {
+          "kind": "measurement",
+          "metric": "q.ir.instructions().opcode(\"load\").resultType(\"i32\").pointer(row.argument(0)).count()",
+          "definition": "ir.instructions(opcode=load,resultType=i32,pointer=arg(row,0)).count",
+          "unit": "static instruction sites",
+          "valueType": "count",
+          "state": {
+            "variant": "checked",
+            "phase": "middle",
+            "ordinal": 74,
+            "pass": "EarlyCSEPass",
+            "header": "IR Dump After EarlyCSEPass on row",
+            "ref": {
+              "variant": "checked",
+              "phase": "middle",
+              "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+              "ordinal": 74,
+              "start": 240363,
+              "end": 248127
+            },
+            "function": "row",
+            "side": "after",
+            "coverage": "function",
+            "lineRange": [
+              3,
+              199
+            ]
+          },
+          "status": "available",
+          "value": 6,
+          "count": 6,
+          "resolved": {
+            "row.argument(0)": "%work"
+          },
+          "witnesses": [
+            {
+              "line": 13,
+              "block": "for.cond.cleanup",
+              "text": "%0 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 30,
+              "block": "for.body",
+              "text": "%2 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 43,
+              "block": "element.exit37",
+              "text": "%3 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 68,
+              "block": "for.body8",
+              "text": "%4 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 123,
+              "block": "for.body29",
+              "text": "%8 = load i32, ptr %work, align 4"
+            },
+            {
+              "line": 183,
+              "block": "element.exit77",
+              "text": "%13 = load i32, ptr %work, align 4"
+            }
+          ],
+          "witnessesTruncated": false,
+          "coverageRequired": "function"
+        }
+      ],
+      "elapsedClientNS": 16722409
+    },
+    {
+      "source": "saved.map(x => x.value)",
+      "value": [
+        11,
+        6
+      ],
+      "elapsedClientNS": 587451
+    },
+    {
+      "source": "[measure(73).value, measure(74).value]",
+      "value": [
+        11,
+        6
+      ],
+      "elapsedClientNS": 573848
+    },
+    {
+      "source": "typeof saved",
+      "value": "undefined",
+      "elapsedClientNS": 373533
+    }
+  ],
+  "cacheObservations": {
+    "afterSetup": [
+      {
+        "name": "texts",
+        "entries": 0,
+        "maxEntries": 96,
+        "approxBytes": 0,
+        "maxBytes": 25165824,
+        "hits": 0,
+        "misses": 0,
+        "evictions": 0
+      },
+      {
+        "name": "snapshots",
+        "entries": 0,
+        "maxEntries": 512,
+        "approxBytes": 0,
+        "maxBytes": 33554432,
+        "hits": 0,
+        "misses": 0,
+        "evictions": 0
+      },
+      {
+        "name": "values",
+        "entries": 0,
+        "maxEntries": 8192,
+        "approxBytes": 0,
+        "maxBytes": null,
+        "hits": 0,
+        "misses": 0,
+        "evictions": 0
+      },
+      {
+        "name": "resolvedScopes",
+        "entries": 0
+      }
+    ],
+    "afterFirstMeasurement": [
+      {
+        "name": "texts",
+        "entries": 2,
+        "maxEntries": 96,
+        "approxBytes": 33386,
+        "maxBytes": 25165824,
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "snapshots",
+        "entries": 2,
+        "maxEntries": 512,
+        "approxBytes": 115896,
+        "maxBytes": 33554432,
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "values",
+        "entries": 2,
+        "maxEntries": 8192,
+        "approxBytes": 0,
+        "maxBytes": null,
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "resolvedScopes",
+        "entries": 0
+      }
+    ],
+    "afterReadingBinding": [
+      {
+        "name": "texts",
+        "entries": 2,
+        "maxEntries": 96,
+        "approxBytes": 33386,
+        "maxBytes": 25165824,
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "snapshots",
+        "entries": 2,
+        "maxEntries": 512,
+        "approxBytes": 115896,
+        "maxBytes": 33554432,
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "values",
+        "entries": 2,
+        "maxEntries": 8192,
+        "approxBytes": 0,
+        "maxBytes": null,
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "resolvedScopes",
+        "entries": 0
+      }
+    ],
+    "afterRunningMetricAgain": [
+      {
+        "name": "texts",
+        "entries": 2,
+        "maxEntries": 96,
+        "approxBytes": 33386,
+        "maxBytes": 25165824,
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "snapshots",
+        "entries": 2,
+        "maxEntries": 512,
+        "approxBytes": 115896,
+        "maxBytes": 33554432,
+        "hits": 2,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "values",
+        "entries": 2,
+        "maxEntries": 8192,
+        "approxBytes": 0,
+        "maxBytes": null,
+        "hits": 2,
+        "misses": 2,
+        "evictions": 0
+      },
+      {
+        "name": "resolvedScopes",
+        "entries": 0
+      }
+    ],
+    "otherSession": [
+      {
+        "name": "texts",
+        "entries": 0,
+        "maxEntries": 96,
+        "approxBytes": 0,
+        "maxBytes": 25165824,
+        "hits": 0,
+        "misses": 0,
+        "evictions": 0
+      },
+      {
+        "name": "snapshots",
+        "entries": 0,
+        "maxEntries": 512,
+        "approxBytes": 0,
+        "maxBytes": 33554432,
+        "hits": 0,
+        "misses": 0,
+        "evictions": 0
+      },
+      {
+        "name": "values",
+        "entries": 0,
+        "maxEntries": 8192,
+        "approxBytes": 0,
+        "maxBytes": null,
+        "hits": 0,
+        "misses": 0,
+        "evictions": 0
+      },
+      {
+        "name": "resolvedScopes",
+        "entries": 0
+      }
+    ]
+  }
+}

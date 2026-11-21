@@ -349,3 +349,137 @@ Review item 6: structure.
 ### Technical details
 - Revised verdict, superseding the Step 4 verdict where the two differ. The session and archive lifetimes are supported by 9 passing test executions on this host and by the source. The 11 → 6 count of `%work` capacity loads at checked/middle 73 → 74 is observed static evidence, and the ROW-IR study corroborates it. Its run-time significance is untested. A candidate that lowers the static count with an unchanged total would count against a net reduction, but it would not show that the removed loads were cold. A mismatching output would disqualify equivalence on that fixture without diagnosing the cause. No JavaScript query against the real archive was executed. The bridge's conversion rules are source evidence. Benchmark figures are Go reader component costs from one 10-iteration run. The service is suitable for trusted local use only, with no memory bound.
 - Evidence files read in this step: `editorial-review.md`, `evidence/row-ir-study.md`, `evidence/adapter.go`, `evidence/archive.go`, `evidence/archive_test.go` (l.110–149). Absent: `evidence/live-query.json`.
+
+## Step 6: Running the live assay myself and revising against the shipped product
+
+The product has now shipped and is frozen as a baseline service. I ran the authorized live assay once. It sends a real JavaScript researcher query over HTTP to that service. I then read the shipped sources and the operator's independent receipt, and rewrote `article.md` against the shipped artifact. Steps 1–5 above are unchanged. Where they now say something wrong, the correction is below.
+
+### Prompt Context
+**User prompt (verbatim):** "Read final-brief.md and finish the lifetime study as its author. Actually run the authorized assay using this exact command: /tmp/picocalc-opus-session-study.kizLBz/assays/live . Use article.md and diary.md as your current drafts. Deliver the publication revision against the shipped artifact, and close your diary."
+**Assistant interpretation:** Follow `final-brief.md`. Run the live assay once with no arguments. Read `evidence/shipped/`, `evidence/baseline-service.json` and `evidence/live-query.json`. Restructure the article into one integrated piece of about 4,000–5,500 words that keeps three sources of results apart: my original component checks, my own harness run and the operator's run. Write documentation only, then close the diary with an explicit final step.
+**Inferred user intent:** A publishable article that describes the product as shipped, not as I first studied it, and that shows what the production query actually returned. It should also show what a repeated query reuses, and how an engineer turns that into a bounded, falsifiable compiler experiment.
+**Commit (code):** N/A. Documentation only. Product code belongs to the separate Opus xhigh lane.
+
+### What I did
+- Read `final-brief.md`, the current `article.md` and this diary.
+- Read `evidence/baseline-service.json` and `evidence/live-query.json` (the operator's receipt).
+- Ran `/tmp/picocalc-opus-session-study.kizLBz/assays/live` once, with no arguments. It printed the full JSON receipt and wrote `evidence/author-live-query.json`. I read the first lines of that file to confirm that it matches the printed output.
+- My first attempt to list `evidence/shipped/` with Bash was a compound `cd && ls && cat` command, and it was denied in don't-ask mode. Single read-only commands were allowed later: `ls -R`, `grep -n`, `wc -w` and four separate `diff`s. A `for` loop running `diff` was denied, and I replaced it with separate calls.
+- I tried to read the harness script to learn how it arranges sessions. The file tools refused because the script lies outside the room. I therefore describe the harness only from the brief and from its receipt.
+- Read all of `evidence/shipped/`: `service.go`, `http.go`, `archive.go`, `install.go`, `main.go`, `query-excerpts.txt`. Diffed the first four against the copies I studied in Steps 2 and 5.
+- Read `BenchmarkCheckedMiddleDump` and `actualArchive` in `evidence/archive_test.go` to check whether the benchmark calls `Verify`.
+- Rewrote `article.md` twice with the Write tool. The first draft was 7,080 words by `wc`. The final version is 6,046, a count that includes two Mermaid diagrams, code blocks, SHAs and tables.
+
+### Why
+- The article described a product that had changed. It said streams were inflated lazily on first query, it said `query.js` was unread so its caching could not be ruled out, and it said no JavaScript query had reached the archive. All three are now false for the shipped artifact.
+
+### What worked
+My live run (verbatim values from the receipt; elapsed times omitted on purpose):
+- Cell 1, which defines `fn`, `middle`, `header` and `measure`, returned `"ready"`. All caches were at 0 afterwards.
+- Cell 2, `const saved = [measure(73), measure(74)]; saved`, returned two measurement records:
+  - Ordinal 73: `SROAPass`, header `IR Dump After SROAPass on row`, Ref [231496, 240363), function lines 3–215, count **11**, 11 witnesses.
+  - Ordinal 74: `EarlyCSEPass`, Ref [240363, 248127), lines 3–199, count **6**, 6 witnesses.
+  - Both: stream SHA `bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4`, `row.argument(0)` resolved to `%work`.
+  - Caches afterwards: `texts`, `snapshots` and `values` each had 2 entries and 2 misses. `resolvedScopes` had 0 entries.
+- Cell 3, `saved.map(x => x.value)`, returned `[11, 6]`. Every counter was unchanged.
+- Cell 4, `[measure(73).value, measure(74).value]`, returned `[11, 6]`. `snapshots` hits went from 0 to 2 and `values` hits from 0 to 2. `texts` stayed at 0 hits and 2 misses.
+- Cell 5, in a second session, `typeof saved`, returned `"undefined"`. All of that session's caches were at 0.
+
+Comparison with the operator's `live-query.json`: every value, Ref, line range, witness and cache counter is identical. Only `elapsedClientNS` differs. I drew no conclusion from the elapsed times, as the brief requires.
+
+Arithmetic check: `texts.approxBytes` 33,386 = 2 × (8,867 + 7,764 + 29 + 33). That is the two byte-range lengths plus the two header lengths, at 2 bytes per UTF-16 unit, which matches `printOf` (`query.js:332`).
+
+What changed in the shipped source since Steps 2 and 5 (from the diffs):
+- `archive.go`: a new `verified` helper and a new `Verify`, which inflates every stream once. The `Text` doc comment now names the `-debug-pass-manager` tail. `main.go`'s `newService` calls `Verify` before `tracerepl.New`. The baseline reports 6 streams and 30,912,391 bytes.
+- `service.go`: `parseCell`, `CompileAST` and `RunProgram` replace `RunScript`. `explainFailure` reports names left uninitialized by a failed cell. `vm.Interrupt` now carries `stopReason` text. Line numbers moved: `Evaluate` is now l.141–176, `Owner.Call` l.151, `AfterFunc` l.156, `evalCell` l.295–337.
+- `http.go`: the 429 message names the client's options. `DELETE` now frees the `live` slot on `ErrSessionNotFound` or `ErrSessionClosed`. That addresses the case I flagged in Step 2 for those two errors. Shutdown maps to 503.
+- `install.go`: only the doc comment changed.
+
+### What didn't work
+- The receipts do not contain `Archive.Stats()`. I therefore cannot observe `textReads` or `streamInflations` in the served product. The article gives them as a reading of the source.
+- `query.js` is available only as excerpts. I cannot see the key code of the `values` cache, the binding of the public `q.cache()` name to `cacheStats`, or why `resolvedScopes` stayed at 0.
+- No shipped test files were supplied. My component assay therefore ran the pre-shipping tests against the pre-shipping build. None of the shipped deltas is covered by a test I observed.
+
+### What I learned
+- The engineer reuses three distinct objects, and they have different scopes:
+  - **The archive:** process-wide and read-only, holding verified streams.
+  - **The bindings:** per VM, and owned by the user.
+  - **The `query.js` caches:** per VM, bounded LRUs keyed by declarative plan parts.
+
+  A repeated `measure()` in the same session returns a stored value and does not re-derive it from IR. An independent re-check needs a fresh session or a cache clear.
+- The witness blocks reframe the hypothesis. Each loop-body block (`for.body`, `for.body8`, `for.body29`) keeps its own load. That fits EarlyCSE not reasoning across a back-edge, which points the compiler question at a later hoisting pass and its alias proof. This is a reading of block names, so S2 still has to confirm it.
+- The live ordinal-73 header resolves the open check S0 that I posed in Steps 4 and 5.
+
+### What was tricky to build
+- Keeping three result sources apart in every section: my component checks, my harness run and the operator's run. They share no code below the Go archive reader, and they agree.
+- Cutting about 1,000 words while adding the live results, the cache layer and the shipped deltas. I merged the reuse table with the lifecycle traces, compressed the trace prose and dropped the separate limits table in favour of the evidence table and the playbook "left" list.
+
+### What warrants a second pair of eyes
+- My inference that the receipts' cache observations come from `q.cache()`, implemented by `cacheStats`. The record shape matches `cacheStats` exactly, but the binding of the public name is not in the excerpts.
+- The 56 MiB per-session figure is the sum of the two caches' own byte estimates. It is not a measured heap size.
+- I did not verify that the `evidence/shipped/` copies match commit `df7a7b64…`.
+
+### What should be done in the future
+- Run S1 and S2 in a fresh session with the same `header` metric, and record the results as new receipts.
+- Add `Archive.Stats()` to the witness script's observations, so that `textReads` and `streamInflations` are observed rather than inferred.
+- Add tests for the shipped deltas, concurrent JavaScript sessions and the 408/410/429/503 paths. That work belongs to the product lane.
+
+### Code review instructions
+- Check the article's "Walkthrough" result table against `various/session-lifetime/author-live-query.json` and `live-query.json`.
+- Check "Where state lives" against `shipped/archive.go` (`verified`, `Verify`), `shipped/main.go` (`newService`) and `shipped/query-excerpts.txt` (l.58–92, 323–335, 816–825, 1947–1950).
+- Confirm that the article contains no transient `/tmp` path, and that it draws no conclusion from `elapsedClientNS`.
+
+### Technical details
+- Baseline: head `df7a7b64c0b6d6930a803f8022b9c312bedf7e03`; binary SHA-256 `d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4`; query-source SHA-256 `5434331b4e1f4008dc131e276e8011d454163db4eeccf8282e12c0ed0fa7b411`; Verify elapsed 127.13 ms as reported, one observation.
+- Cache bounds (source): `texts` 96 entries / 24 MiB, `snapshots` 512 / 32 MiB, `values` 8192 / no byte cap. `resolvedScopes` reports only an entry count.
+
+## Step 7: Closing the study — which result came from where
+
+This is the final entry. It marks which result came from which execution, so that a reader of the published article can weigh each one correctly.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 6.
+**Assistant interpretation:** Close the diary with an explicit statement that separates the production results run by researchers from the original component checks.
+**Inferred user intent:** An auditable end state.
+**Commit (code):** N/A.
+
+### What I did
+- Classified every result in the final article by the execution that produced it, as listed below.
+
+### What worked
+- **Original component checks (Step 3; me; direct library and test installers; pre-shipping build).**
+  - 9/9 test executions passed.
+  - Session semantics, with test installers only: persistence, isolation, serial cells, interrupts from deadline and release, interrupt cleanup.
+  - Archive, through the Go library only, with no JavaScript: lazy single inflation under 12 concurrent readers, and a literal count of 11 and 6 at checked/middle 73 and 74.
+  - Benchmark: 6.9 and 7.4 ms open-and-first-read, 186.8 and 172.4 ns resident-read.
+- **My production run (Step 6; me; read-only witness harness; frozen baseline service; real installer, real `query.js`, real archive over HTTP).**
+  - A function-aware count of 11 and 6 with Refs and witnesses.
+  - Cache transitions, as follows:
+    - first measurement: 2 misses each in `texts`, `snapshots` and `values`;
+    - reading the binding: no change;
+    - repeated `measure()`: +2 hits in `snapshots` and `values`, with `texts` unchanged;
+    - fresh session: all caches at 0, and `typeof saved` → `"undefined"`.
+- **Independent operator run (`live-query.json`; not me; same baseline and cells).** Identical values and cache transitions.
+- **Agreement.** The three executions agree on 11 → 6. Two methods produced the count: a literal Go substring count and a function-aware JavaScript metric. Two people ran the production query.
+
+### What didn't work
+- No execution observed `Archive.Stats()` in the served product, the run-time frequency of any load, a candidate build, or device timing.
+
+### What I learned
+- The study answers the brief's question in the form "one session, one pass." The engineer gets citations that were verified before the first request, one stable metric definition across ordinals, line witnesses for the next static check, and known repeat semantics. The causal bound is that this is static evidence about one pass on one function. There are two falsifiers: a recount of the cited byte ranges with no workbench, and the preregistered QEMU guest-instruction total.
+
+### What was tricky to build
+- Nothing new beyond Step 6.
+
+### What warrants a second pair of eyes
+- See Step 6.
+
+### What should be done in the future
+- See Step 6. The study is closed. Later results belong in a new study.
+
+### Code review instructions
+- Read the article's "Evidence and method" table first. Every later claim carries one of its labels.
+
+### Technical details
+- **Final verdict.** Session and archive lifetimes are supported in two ways. Component tests observed them on the pre-shipping build, and the shipped source still implements them. The shipped product verifies all six streams (30,912,391 bytes) before listening. Each session keeps its own bindings and its own bounded `query.js` caches, and sessions share only the read-only archive. The production query returned 11 and 6 capacity loads at checked/middle 73 (`SROAPass`) and 74 (`EarlyCSEPass`) of `row`. My harness run and the operator's run reproduced that identically, and it matches the earlier component count. These are static counts, and their run-time significance is untested. No latency or speedup is inferred from the HTTP observations.
+- Paths written: `/tmp/picocalc-opus-session-study.kizLBz/room/article.md`, `/tmp/picocalc-opus-session-study.kizLBz/room/diary.md`. The assay also wrote `/tmp/picocalc-opus-session-study.kizLBz/room/evidence/author-live-query.json`.

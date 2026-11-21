@@ -29,5 +29,21 @@
     ],
     "deniedToolCount": 0,
     "fixedAssayInvocations": 0
+  },
+  {
+    "run": "frozen-service-author-qualification",
+    "requestedModel": "opus",
+    "requestedEffort": "high",
+    "resolvedModel": "claude-opus-5-5",
+    "outcome": "success",
+    "turns": 42,
+    "toolsUsed": [
+      "Bash",
+      "Edit",
+      "Read",
+      "Write"
+    ],
+    "deniedToolCount": 3,
+    "fixedAssayInvocations": 1
   }
 ]
