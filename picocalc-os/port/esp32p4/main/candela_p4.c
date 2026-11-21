@@ -63,6 +63,7 @@ static bool install(unsigned stage) {
     int64_t compile_us = port_clock() - start;
     free(source);
     free(template);
+    int64_t relocate_start = port_clock();
     scene_module *next = bytes ? port_big_calloc(sizeof(*next)) : NULL;
     bool init = next && esp_elf_init(&next->elf) == 0;
     uintptr_t entries[4] = {0};
@@ -70,6 +71,7 @@ static bool install(unsigned stage) {
     bool ok = init && esp_elf_relocate(&next->elf, (uint8_t *)bytes, length) == 0 &&
               esp_elf_request(&next->elf, 0, 1, argv) == 0 &&
               entries[0] && entries[1] && entries[2] && entries[3];
+    int64_t relocate_us = port_clock() - relocate_start;
     free(bytes);
     size_t minimum = monitored ? heap_caps_get_minimum_free_size(MALLOC_CAP_SPIRAM) : 0;
     if (monitored) heap_caps_monitor_local_minimum_free_size_stop();
@@ -96,10 +98,10 @@ static bool install(unsigned stage) {
         esp_elf_deinit(&old->elf);
         port_big_free(old);
     }
-    printf("CANLOAD {\"stage\":%u,\"compileUs\":%" PRId64 ",\"installTotalUs\":%" PRId64
+    printf("CANLOAD {\"stage\":%u,\"compileUs\":%" PRId64 ",\"relocateUs\":%" PRId64 ",\"installTotalUs\":%" PRId64
            ",\"imageBytes\":%zu,\"elfSegmentBytes\":%zu,\"residentStructBytes\":%zu,"
            "\"sourceBytes\":%zu,\"graphBytes\":%zu,\"psramMonitored\":%d,\"psramPeakDeltaBytes\":%zu}\n",
-           stage, compile_us, port_clock()-start, length, next->elf.segment_size, sizeof(*next),
+           stage, compile_us, relocate_us, port_clock()-start, length, next->elf.segment_size, sizeof(*next),
            source_len,sizeof(next->graph),monitored, monitored && before>minimum ? before-minimum : 0);
     return true;
 }
@@ -141,14 +143,18 @@ static void measure(int fixture, int weight, bool row_first) {
         if (!ok) { puts("candela: draw rejected"); goto done; }
         if (!p) memcpy(first,pixels,FRAME_BYTES);
     }
+    struct { uint32_t capacity; uint16_t cells[CANDELA_WORK_CELLS]; } work = {.capacity=CANDELA_WORK_CELLS};
+    const int32_t left = active->shader.color_at(&active->graph,&work,active->graph.cells[284],60,61);
+    const int32_t right = active->shader.color_at(&active->graph,&work,active->graph.cells[289],110,65);
+    const int32_t floor = active->shader.color_at(&active->graph,&work,active->graph.cells[6],7,9);
     printf("CANROW {\"fixture\":%d,\"weight\":%d,\"rowFirst\":%d,\"buildUs\":%" PRId64
            ",\"checkAndPublishUs\":%" PRId64 ",\"updateBatchUs\":%" PRId64
            ",\"updates\":%d,\"paramOnly\":%d,\"pixelUs\":%" PRId64 ",\"rowUs\":%" PRId64
            ",\"equal\":%d,\"crc\":\"%08" PRIx32 "\",\"graphCRC\":\"%08" PRIx32 "\","
-           "\"nodes\":%u,\"materials\":%u,\"spheres\":%u}\n",
+           "\"nodes\":%u,\"materials\":%u,\"spheres\":%u,\"rgbSamples\":[%ld,%ld,%ld]}\n",
            fixture,weight,row_first,build_us,check_us,update_us,UPDATE_COUNT,param_only,time_us[0],time_us[1],
            !memcmp(first,pixels,FRAME_BYTES),crc_bytes(pixels,FRAME_BYTES),crc_bytes(active->graph.cells,606),
-           active->graph.cells[2],active->graph.cells[3],active->graph.cells[4]);
+           active->graph.cells[2],active->graph.cells[3],active->graph.cells[4],(long)left,(long)right,(long)floor);
 done:
     port_big_free(first);
     port_big_free(pixels);
