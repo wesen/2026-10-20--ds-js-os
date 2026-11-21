@@ -315,3 +315,51 @@ Inspect reference/20-independent-scientific-review.md and the balanced original 
 ### Technical details
 
 The second physical matrix uses early/stock as the paired baseline, 11 blocks, 48 replays per block, one 360 MHz P4 core. All complete edit builds were checked byte for byte against the clean linked ELF. Their edit timer excludes cache commit and output comparison.
+
+## Step 7: Verify physical recovery, publish the lab edition and close the ticket
+
+All six Opus High research leads delivered their designs and resulting articles. Their operators finished the implementation, experiments and diaries. The independent Astra reviewer rechecked the two final matrices. I verified the final ordinary firmware state, published all seven articles as one coherent edition and checked the remote contents.
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Finish the research through publication and leave a reproducible record. **Inferred user intent:** Make the material available to newcomers in the reading vault and preserve the scientific trail in the repository. **Code and evidence commits:** e787cfe for crossed hardware results; 03e0306 for the independent confirmation; 786f2b4 for independent final review.
+
+### What I did
+
+Verified the fifth window recorded native correctness, all 165 directed native timings, all twelve compiler observations and its aggregate completion marker. Read-back matched the published application and partition. The eight expected worlds started and the native painter installed with zero rejects. Kept the earlier incomplete run separately. Prepared the final articles, two charts, cross-links and per-file hashes; committed and pushed precisely that edition to the go-go-parc vault.
+
+### Why
+
+Publishing both the failed gate and the qualified performance controls lets the reader reconstruct adoption decisions. A remote revision and the file hashes identify the exact series delivered. The P4's last state matters to the next person opening an app.
+
+### What worked
+
+Seven articles and two figures passed local link validation and remote Git verification at go-go-parc main 48781a06bfe4663816887fa991035b71069630ee. I checked each committed blob against the publication manifest. The six finalized source hashes still match the reMarkable book that was verified in the cloud directory.
+
+### What didn't work
+
+The first long cold-compiler capture timed out with one observation missing. The separate confirming boot completed after its shorter plan, while the original 59/60 receipt remains unchanged. No later sample was inserted into the original block.
+
+### What I learned
+
+The strongest product candidates here are preserving two text operations until RV32 lowering and streaming frameless leaves. A separate build-cache policy is beneficial for structural edits but exceeded its body-edit allowance. Physical operation-level gains still require ordinary PSRAM-loaded validation.
+
+### What was tricky to build
+
+The published notes use vault-relative links to companion studies and figures. References to implementation and evidence resolve to the corresponding tracked source paths. The publisher restricted the commit to the nine expected documents and assets.
+
+### What warrants a second pair of eyes
+
+The final edition distinguishes early versus late operation *and* instruction selection, host versus loaded-world execution, and fresh compiler engines versus entire boots. Any later product claim should use the documented production-path measurements.
+
+### What should be done in the future
+
+Use the release trial described in the synthesis. The six research assignments and the requested publications are complete.
+
+### Code review instructions
+
+Inspect various/director/publication.json, the seven analysis files and the independent memorandum. Use scripts/director/12-publish-vault.py with a fresh local staging directory to compare the generated publication manifest. Use docmgr doctor --ticket PICOCALC-NATIVE-WAVE --stale-after 365 to validate the ticket.
+
+### Technical details
+
+Vault commit 48781a06bfe4663816887fa991035b71069630ee. reMarkable book: PicoCalc Native Compiler Wave - Six Study Designs, under /ai/2026/11/20/PICOCALC-NATIVE-WAVE. Final ordinary application SHA-256 134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1. Final partition SHA-256 72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30.

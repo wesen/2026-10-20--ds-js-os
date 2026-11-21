@@ -42,7 +42,7 @@ labels = {
     "late-stock":"Late semantics", "late-leaf":"Late + frameless", "late-inline":"Late + inline"
 }
 display = [labels[arm["arm"]] for arm in arms[1:]]
-fig, axes = plt.subplots(1, 3, figsize=(11, 4), sharey=True)
+fig, axes = plt.subplots(1, 3, figsize=(11, 4), sharex=True, sharey=True)
 for axis, endpoint in zip(axes, ("parse", "count", "label")):
     rows = [r for r in summary if r["endpoint"] == endpoint][1:]
     for y, row in enumerate(rows):

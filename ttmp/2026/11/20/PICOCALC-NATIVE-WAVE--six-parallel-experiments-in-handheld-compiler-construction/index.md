@@ -1,7 +1,7 @@
 ---
 Title: Six parallel experiments in handheld compiler construction
 Ticket: PICOCALC-NATIVE-WAVE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -17,8 +17,8 @@ RelatedFiles:
     - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-WAVE--six-parallel-experiments-in-handheld-compiler-construction/scripts/director/10-replay-host.sh
       Note: Reproduces the independent held-out treatments and instruction counts.
 ExternalSources: []
-Summary: ""
-LastUpdated: 2026-11-20T18:54:30.271263216-05:00
+Summary: Six independently led compiler experiments, their P4 measurements and the director’s release recommendations.
+LastUpdated: 2026-11-20T19:39:10.214149511-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -52,6 +52,8 @@ Start with [What a handheld compiler should remember](analysis/07-what-a-handhel
 | Buffer lifetimes | [Borrowed values across turns](design-doc/06-infer-turn-lifetime-parameters.md) | [Inferred continuation lifetimes](analysis/06-turn-lifetime-inference.md) | [Investigation](reference/16-turn-lifetime-diary.md) |
 
 The [six-guide reMarkable book](various/director/remarkable.json) is filed under `/ai/2026/11/20/PICOCALC-NATIVE-WAVE`. The [first physical matrix](various/director/paired-results.json) measures the guest after compilation. The [balanced fresh-compiler comparison](various/01-bounds/physical-first-summary.json) measures time spent producing a complete native world.
+
+The [published vault collection](https://github.com/go-go-golems/go-go-parc/commit/48781a06bfe4663816887fa991035b71069630ee) contains all seven articles and both performance figures. The [publication manifest](various/director/publication.json) records their hashes and the verified remote revision. The final device receipt records the restored release application and partition, eight native worlds, and a successfully installed painter.
 
 ## Shared evaluation
 

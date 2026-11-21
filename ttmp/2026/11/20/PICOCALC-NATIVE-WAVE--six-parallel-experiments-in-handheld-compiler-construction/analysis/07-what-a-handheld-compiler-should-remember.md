@@ -1,7 +1,7 @@
 ---
 Title: What a handheld compiler should remember
 Ticket: PICOCALC-NATIVE-WAVE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -89,7 +89,7 @@ Does late lowering also speed the compiler itself? A dedicated firmware command 
 | Editor | 4.545 s | 4.164 s | 8.7% | 2,574,214 B | 2,496,368 B |
 | Chess | 5.342 s | 3.038 s | 43.0% | 3,185,084 B | 1,948,022 B |
 
-The table uses the first four complete six-arm blocks per app. A host collection timeout cut off the final Editor sample in the fifth block. The researchers preserved 59 of 60 planned compile observations and reported the balanced comparison separately. Both stock and all-late finished all five pairs in both apps. Using those five pairs gives 9.03% for Editor and 43.09% for Chess, close to the balanced four-block results. For Chess, the drop of about 1.24 million bytes in peak JavaScript allocation is consistent with the compiler constructing and consuming fewer primitive operations. The peak counts live bytes seen by the QuickJS allocator. The separate output allocation and the rest of the firmware heap lie outside that number. Site-level allocation and phase timing would be needed to apportion the saving between operand creation, garbage collection and instruction emission. Late lowering also changes the instructions selected for an operation. This comparison establishes the effect of that combination. A separate arm that recognizes the same sequences after early expansion would test how much retaining their identity contributes. [Raw first run](../various/01-bounds/physical-first.json) · [Balanced block summary](../various/01-bounds/physical-first-summary.json)
+The table uses the first four complete six-arm blocks per app. A host collection timeout cut off the final Editor sample in the fifth block. The researchers preserved 59 of 60 planned compile observations and reported the balanced comparison separately. A separate confirmation boot completed all twelve planned compile observations and its explicit native correctness check. Chess measured 5.404 s stock and 3.067 s all-late. Editor measured 4.549 s and 4.140 s. These confirmation observations stand separately from the first run. Both stock and all-late finished all five pairs in both apps during the first run. Using those five pairs gives 9.03% for Editor and 43.09% for Chess, close to the balanced four-block results. For Chess, the drop of about 1.24 million bytes in peak JavaScript allocation is consistent with the compiler constructing and consuming fewer primitive operations. The peak counts live bytes seen by the QuickJS allocator. The separate output allocation and the rest of the firmware heap lie outside that number. Site-level allocation and phase timing would be needed to apportion the saving between operand creation, garbage collection and instruction emission. Late lowering also changes the instructions selected for an operation. This comparison establishes the effect of that combination. A separate arm that recognizes the same sequences after early expansion would test how much retaining their identity contributes. [Raw first run](../various/01-bounds/physical-first.json) · [Balanced block summary](../various/01-bounds/physical-first-summary.json) · [Independent confirmation boot](../various/01-bounds/physical-confirmation.json)
 
 ## When selecting an analysis costs the only useful result
 

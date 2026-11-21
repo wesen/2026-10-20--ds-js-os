@@ -1,0 +1,29 @@
+{
+  "vault": "go-go-golems/go-go-parc",
+  "branch": "main",
+  "remoteCommit": "48781a06bfe4663816887fa991035b71069630ee",
+  "articles": 7,
+  "figures": 2,
+  "manifest": {
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Wave - Choosing when to analyze repeated bounds checks.md": "d2e6685655ff3d7a89ff61374619c074f828ee5b42d0a5cc91d38025e0efceef",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Wave - What a checked operation keeps until RV32 lowering.md": "34e59b85263664be31dcac0e699f9a98e25ef89101932aad651ecf6a2fe5928e",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Wave - Small Leaves and Bounded Inlining in the PicoCalc Typed Compiler.md": "78dc7b45e43e2be98569240b2ffe3de5cc0f72e3fdffe09475f23df05b4e61d9",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Wave - Which native functions survive a changed interface.md": "94a0939dc7693376ffb24023da7c6860a933302ed80dbf9083664a0e5242a3a8",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Wave - How much stack can the handheld compiler account for.md": "8c3ec54984e013b69130986251cbbe00e4123d02d952ad78d919bafbb264e012",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Wave - Inferring Turn Lifetimes for Borrowed Buffers in the Typed Compiler.md": "384bf1b0a11c1e1e53e34fed217192daf490dd0e1813be8fb8cd140163e4787c",
+    "Projects/2026/11/20/_assets/native-compiler-wave-telemetry-native-runtime.png": "5497df65ecff93b184609ff7d465e8af738adcd19dc9d115beba132ac18862a1",
+    "Projects/2026/11/20/_assets/native-compiler-wave-telemetry-composed-runtime.png": "762a3a449c11e57c6049cc5d16cf5dabfe2bc26c877e046e0ef2fe6444a6a65f",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Native Compiler Wave - What a handheld compiler should remember.md": "a9e00990a747c276126a5d6b8e6b7ae3f4085ce680b2ec21c9831eb4a3b15861"
+  },
+  "ticketArticles": {
+    "01-streamed-bounds-admission.md": "ca643162374190d767da57ac98f9525d42041849efdf831c52785369b535b75a",
+    "02-checked-operation-lifetime.md": "633e4cec493b31ac76e3ae36bc35f81e7a04399d46b207b1399a6b1b04cf3e06",
+    "03-leaf-lowering-and-selective-inlining.md": "7de21062b20d553e6067af03fadc83876c942c412172e1fa5ba7b3d1c7d9353b",
+    "04-precise-fragment-dependencies.md": "f88759fa09db8f208a2b78579a49976c62d4d69ec3d5f5a9c159f6103da21d91",
+    "05-stack-use-certificates.md": "3644a9198caa73fe4de2973d9f5c733eaadfdc1e112e602337105a730c22b64e",
+    "06-turn-lifetime-inference.md": "6bb7beef811a9ce05f9b697950326dcad7f7dcc40d025960513e785f6f551a8a",
+    "07-what-a-handheld-compiler-should-remember.md": "816758ac4f6a51a0fae5da564047d10843db83536e99822d4a3f4e9892932534"
+  },
+  "tabletReceipt": "remarkable.json",
+  "finalDeviceReceipt": "../01-bounds/physical-confirmation.json"
+}
