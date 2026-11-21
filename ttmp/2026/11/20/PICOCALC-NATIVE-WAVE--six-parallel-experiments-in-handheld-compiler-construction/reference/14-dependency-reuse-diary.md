@@ -2,7 +2,7 @@
 Title: Dependency reuse investigation diary
 Ticket: PICOCALC-NATIVE-WAVE
 DocType: reference
-Status: active
+Status: complete
 Topics: [picocalc, compiler]
 ---
 
@@ -348,3 +348,51 @@ Run `24-physical-audit.py` on the serial result excerpt, physical JSON and fresh
 ### Technical details
 
 The scalar release application matched SHA-256 `134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1`, the partition `72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30`. After readback the expected eight native worlds were healthy and the painter reported one source, one compilation, one installation and zero rejects. The test did not open the filesystem or persist fragments.
+
+## Step 7. Review the lead-authored final report
+
+The study's original tool-free Opus High session authored the final article from the completed P4, host and held-out evidence. The operator checked its numerical tables, function counts, diagnostic examples, references and reproduction commands. The published version distinguishes the shipped clean compiler from the previous unshipped global-cache prototype.
+
+### Prompt context
+
+**User prompt.** See Step 1. **Assistant interpretation.** Explain the finished study for newcomers and preserve the real independent lead's authorship. **Inferred user intent.** Publish reproducible measured outcomes, including conditions under which a proposed optimization loses. **Evidence checkpoint.** 0594c71 records all final physical samples and recovery evidence.
+
+### What I did
+
+Resumed the original external study session with a scope-limited aggregate evidence packet. Archived the raw public article text and minimal provenance. Checked the physical result matrix against all 90 board observations, reviewed the separately measured 30-block host comparisons and verified all 30 local article links.
+
+### Why
+
+A claim about an improvement depends on the identity of the baseline and the clock endpoint. Calling the previous prototype the ordinary shipped implementation would incorrectly imply a regression in the released compiler.
+
+### What worked
+
+The final article follows the actual Chess parameter change through ten affected functions and 72 retained functions. It includes the cost of first compilation, both structural-edit gains, physical and host local-body losses, symbolic rebinding and the independent source test.
+
+### What didn’t work
+
+The first draft incorrectly described the earlier global-descriptor research implementation as shipped and described the 30-block hardware timing prediction as fully met. The operator corrected both: the ordinary release remains clean, and the physical sample population is five rotated blocks in one boot. The original commissioned text is retained for comparison.
+
+### What I learned
+
+A read-set implementation can exactly match the independently observed unchanged machine fragments on these inputs and still lose a timing criterion. Correctness evidence, selective reuse and end-to-end performance have separate tests.
+
+### What was tricky to build
+
+Some source names in the independent fixture predate this study. In particular its literal-length edit exercises inline per-unit stores on this backend, even though its original label refers to a pool. The report traces that operation to actual source emission and explicitly scopes its conclusion.
+
+### What warrants a second pair of eyes
+
+Review the registered per-kind mutation and hardware sample requirements against the smaller realized populations. Verify the distinction between linked ELF, standalone image and return-to-UI timing.
+
+### What should be done in the future
+
+A hybrid cache with a fast global-descriptor match, conservative per-function read-set validation when interfaces change, and a bounded one-compiler resident policy would require its own independent physical trial.
+
+### Code review instructions
+
+Start with `analysis/04-precise-fragment-dependencies.md`, the raw `22-article-draft.txt`, the authorship provenance and the six-cell physical summary. Reproduce the audit using the command at the end of the article. The research director handles external publication.
+
+### Technical details
+
+All three requested commissions used the same independent Claude Opus 5.5 session, high effort and zero tools. Full CLI transcripts and raw operational serial logs were not sent to the external model. The ticket retains measured serial markers for independent local audit. The playable hardware was already restored and handed off before editorial work.
