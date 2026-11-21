@@ -1,0 +1,2207 @@
+{
+  "unit": "microseconds",
+  "blocks": 216,
+  "cold": {
+    "stock": {
+      "compilerUs": 454132.5,
+      "peakJSBytes": 680004.0,
+      "segmentBytes": 66092.0
+    },
+    "scalar": {
+      "compilerUs": 658508.5,
+      "peakJSBytes": 773820.0,
+      "segmentBytes": 66092.0
+    },
+    "pie": {
+      "compilerUs": 658027.0,
+      "peakJSBytes": 773826.0,
+      "segmentBytes": 66092.0
+    }
+  },
+  "poses": {
+    "blue-overlap": {
+      "clean": {
+        "levelUs": {
+          "stock": 55541.0,
+          "scalar": 54196.0,
+          "pie": 53945.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1351.5,
+              "min": 1339,
+              "max": 1422
+            },
+            "savedPct": {
+              "median": 2.432899644371119,
+              "min": 2.4108750450126037,
+              "max": 2.560870191615041
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 243.5,
+              "min": 182,
+              "max": 265
+            },
+            "savedPct": {
+              "median": 0.44929552605103057,
+              "min": 0.3363767419509851,
+              "max": 0.4889208686186602
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1604.0,
+              "min": 1569,
+              "max": 1607
+            },
+            "savedPct": {
+              "median": 2.8883207021348776,
+              "min": 2.8255506131931063,
+              "max": 2.892785138248848
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 60681.5,
+          "scalar": 59344.0,
+          "pie": 59093.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1354.0,
+              "min": 1255,
+              "max": 1417
+            },
+            "savedPct": {
+              "median": 2.2301478001743202,
+              "min": 2.068431288525563,
+              "max": 2.3354319807495796
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 253.5,
+              "min": 149,
+              "max": 302
+            },
+            "savedPct": {
+              "median": 0.42737571513781847,
+              "min": 0.2514470864201698,
+              "max": 0.5085801855812465
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1599.0,
+              "min": 1526,
+              "max": 1645
+            },
+            "savedPct": {
+              "median": 2.6345760838034744,
+              "min": 2.515246415032141,
+              "max": 2.710540625154476
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17688.0,
+          "scalar": 16321.0,
+          "pie": 16089.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1365.0,
+              "min": 1355,
+              "max": 1436
+            },
+            "savedPct": {
+              "median": 7.717963237923334,
+              "min": 7.6635936881398115,
+              "max": 8.114369667175227
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 222.5,
+              "min": 178,
+              "max": 246
+            },
+            "savedPct": {
+              "median": 1.3634156619702869,
+              "min": 1.0946436258532686,
+              "max": 1.5067989709665564
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1599.0,
+              "min": 1566,
+              "max": 1614
+            },
+            "savedPct": {
+              "median": 9.039013179240323,
+              "min": 8.856965103783722,
+              "max": 9.12018986268859
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 46570.0,
+          "scalar": 46564.0,
+          "pie": 46549.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 6.0,
+              "min": -79,
+              "max": 45
+            },
+            "savedPct": {
+              "median": 0.012884061486840523,
+              "min": -0.16989978063572628,
+              "max": 0.09657066826902443
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 18.0,
+              "min": -27,
+              "max": 66
+            },
+            "savedPct": {
+              "median": 0.03864962625134759,
+              "min": -0.05799218179475063,
+              "max": 0.14169779724333376
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 35.0,
+              "min": -52,
+              "max": 52
+            },
+            "savedPct": {
+              "median": 0.07515276342575196,
+              "min": -0.11183276700073122,
+              "max": 0.11158558829209674
+            }
+          }
+        }
+      }
+    },
+    "bottom-lamp": {
+      "clean": {
+        "levelUs": {
+          "stock": 56366.5,
+          "scalar": 55036.0,
+          "pie": 54777.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1345.0,
+              "min": 1323,
+              "max": 1386
+            },
+            "savedPct": {
+              "median": 2.385344212969437,
+              "min": 2.3473678607547774,
+              "max": 2.4597146305104
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 256.5,
+              "min": 208,
+              "max": 292
+            },
+            "savedPct": {
+              "median": 0.46632366035079786,
+              "min": 0.37811994400916216,
+              "max": 0.5305425342490643
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1599.5,
+              "min": 1562,
+              "max": 1644
+            },
+            "savedPct": {
+              "median": 2.8366973106602265,
+              "min": 2.771321611695616,
+              "max": 2.9175835877049763
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 61522.5,
+          "scalar": 60162.5,
+          "pie": 59939.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1362.0,
+              "min": 1323,
+              "max": 1418
+            },
+            "savedPct": {
+              "median": 2.214005971179688,
+              "min": 2.1514294077470972,
+              "max": 2.3029948677970506
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 245.5,
+              "min": 166,
+              "max": 365
+            },
+            "savedPct": {
+              "median": 0.40823613489782823,
+              "min": 0.2759583735079961,
+              "max": 0.6064936359708883
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1588.0,
+              "min": 1511,
+              "max": 1775
+            },
+            "savedPct": {
+              "median": 2.579535470125452,
+              "min": 2.458149636402089,
+              "max": 2.881867775035719
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17709.0,
+          "scalar": 16348.0,
+          "pie": 16109.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1362.5,
+              "min": 1340,
+              "max": 1419
+            },
+            "savedPct": {
+              "median": 7.693177136822472,
+              "min": 7.566773956745158,
+              "max": 8.014685117198532
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 243.5,
+              "min": 208,
+              "max": 263
+            },
+            "savedPct": {
+              "median": 1.4888436650905357,
+              "min": 1.2726382770435634,
+              "max": 1.6066955831144236
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1599.5,
+              "min": 1580,
+              "max": 1672
+            },
+            "savedPct": {
+              "median": 9.032130555084985,
+              "min": 8.918491758862046,
+              "max": 9.443659983055634
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 47340.0,
+          "scalar": 47337.0,
+          "pie": 47331.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 4.5,
+              "min": -11,
+              "max": 32
+            },
+            "savedPct": {
+              "median": 0.009499617610396823,
+              "min": -0.02323616392057457,
+              "max": 0.0675775558042785
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 6.0,
+              "min": -48,
+              "max": 84
+            },
+            "savedPct": {
+              "median": 0.012674940590458345,
+              "min": -0.10152928485309981,
+              "max": 0.17739857658761166
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 6.0,
+              "min": -40,
+              "max": 73
+            },
+            "savedPct": {
+              "median": 0.012674405110665449,
+              "min": -0.08459342286137253,
+              "max": 0.15420363329108577
+            }
+          }
+        }
+      }
+    },
+    "default": {
+      "clean": {
+        "levelUs": {
+          "stock": 57692.0,
+          "scalar": 56339.5,
+          "pie": 56069.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1356.5,
+              "min": 1322,
+              "max": 1432
+            },
+            "savedPct": {
+              "median": 2.351505744708235,
+              "min": 2.292353043176695,
+              "max": 2.4821465714483812
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 242.0,
+              "min": 217,
+              "max": 307
+            },
+            "savedPct": {
+              "median": 0.4295228146712761,
+              "min": 0.38535987640070324,
+              "max": 0.5448479040215809
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1616.0,
+              "min": 1579,
+              "max": 1653
+            },
+            "savedPct": {
+              "median": 2.8014239567202264,
+              "min": 2.7378496003329116,
+              "max": 2.865215281148166
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 62863.0,
+          "scalar": 61494.5,
+          "pie": 61215.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1364.0,
+              "min": 1303,
+              "max": 1467
+            },
+            "savedPct": {
+              "median": 2.1691405847737792,
+              "min": 2.0728273492308427,
+              "max": 2.3335719398711525
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 249.5,
+              "min": 168,
+              "max": 394
+            },
+            "savedPct": {
+              "median": 0.405772363160556,
+              "min": 0.27353099203829434,
+              "max": 0.6404317225012597
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1634.5,
+              "min": 1544,
+              "max": 1742
+            },
+            "savedPct": {
+              "median": 2.600096023369495,
+              "min": 2.458011621428003,
+              "max": 2.77084095500167
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17790.5,
+          "scalar": 16429.0,
+          "pie": 16184.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1360.5,
+              "min": 1344,
+              "max": 1424
+            },
+            "savedPct": {
+              "median": 7.647761530148294,
+              "min": 7.555230760582383,
+              "max": 8.004946877283714
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 251.0,
+              "min": 202,
+              "max": 271
+            },
+            "savedPct": {
+              "median": 1.527177131352655,
+              "min": 1.230431869403667,
+              "max": 1.647917300091213
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1609.5,
+              "min": 1579,
+              "max": 1687
+            },
+            "savedPct": {
+              "median": 9.045181673272307,
+              "min": 8.873777677868945,
+              "max": 9.483388610939345
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 48575.0,
+          "scalar": 48561.5,
+          "pie": 48563.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 18.0,
+              "min": -57,
+              "max": 52
+            },
+            "savedPct": {
+              "median": 0.037063072017133415,
+              "min": -0.11746522411128284,
+              "max": 0.107006893713345
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 0.5,
+              "min": -41,
+              "max": 29
+            },
+            "savedPct": {
+              "median": 0.0010230825935158578,
+              "min": -0.08446119934903075,
+              "max": 0.05970395075453441
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 12.0,
+              "min": -47,
+              "max": 58
+            },
+            "savedPct": {
+              "median": 0.02470133447960495,
+              "min": -0.09685729005667182,
+              "max": 0.11933665281264146
+            }
+          }
+        }
+      }
+    },
+    "far-corner": {
+      "clean": {
+        "levelUs": {
+          "stock": 59053.5,
+          "scalar": 57735.5,
+          "pie": 57485.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1324.0,
+              "min": 1230,
+              "max": 1350
+            },
+            "savedPct": {
+              "median": 2.241802847693931,
+              "min": 2.0855234155108686,
+              "max": 2.285888448643706
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 248.5,
+              "min": 220,
+              "max": 277
+            },
+            "savedPct": {
+              "median": 0.43037696292006583,
+              "min": 0.3811041626968316,
+              "max": 0.479703518980327
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1570.5,
+              "min": 1481,
+              "max": 1584
+            },
+            "savedPct": {
+              "median": 2.659452045697443,
+              "min": 2.5111058360744685,
+              "max": 2.6815642458100557
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 64208.0,
+          "scalar": 62909.5,
+          "pie": 62635.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1320.5,
+              "min": 1197,
+              "max": 1341
+            },
+            "savedPct": {
+              "median": 2.0566016034565338,
+              "min": 1.8672781729689254,
+              "max": 2.0870620827043096
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 263.0,
+              "min": 159,
+              "max": 285
+            },
+            "savedPct": {
+              "median": 0.4182319934622013,
+              "min": 0.25314037350145674,
+              "max": 0.4529921322419137
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1570.5,
+              "min": 1463,
+              "max": 1625
+            },
+            "savedPct": {
+              "median": 2.445425393263368,
+              "min": 2.282228878073131,
+              "max": 2.52906479074907
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17860.5,
+          "scalar": 16502.5,
+          "pie": 16261.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1355.0,
+              "min": 1338,
+              "max": 1374
+            },
+            "savedPct": {
+              "median": 7.5878468854292915,
+              "min": 7.491181904708583,
+              "max": 7.693169092945129
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 239.5,
+              "min": 205,
+              "max": 275
+            },
+            "savedPct": {
+              "median": 1.4514716279821425,
+              "min": 1.2434793157830888,
+              "max": 1.6643466682805785
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1600.5,
+              "min": 1579,
+              "max": 1615
+            },
+            "savedPct": {
+              "median": 8.960609475924848,
+              "min": 8.840985442329227,
+              "max": 9.042046917865742
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 49867.5,
+          "scalar": 49861.5,
+          "pie": 49873.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 4.5,
+              "min": -43,
+              "max": 37
+            },
+            "savedPct": {
+              "median": 0.009023702261156136,
+              "min": -0.08627781456289252,
+              "max": 0.07416613213598461
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": -1.5,
+              "min": -41,
+              "max": 14
+            },
+            "savedPct": {
+              "median": -0.003009629751343031,
+              "min": -0.08221870174664608,
+              "max": 0.0280836893943953
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": -6.0,
+              "min": -40,
+              "max": 51
+            },
+            "savedPct": {
+              "median": -0.012031763856581374,
+              "min": -0.08025843215152792,
+              "max": 0.10222899294419499
+            }
+          }
+        }
+      }
+    },
+    "gold-overlap": {
+      "clean": {
+        "levelUs": {
+          "stock": 55294.5,
+          "scalar": 53948.0,
+          "pie": 53708.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1353.5,
+              "min": 1336,
+              "max": 1410
+            },
+            "savedPct": {
+              "median": 2.447467893363447,
+              "min": 2.416219051236142,
+              "max": 2.550605090356542
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 229.5,
+              "min": 163,
+              "max": 261
+            },
+            "savedPct": {
+              "median": 0.4255039599846561,
+              "min": 0.3025746691169646,
+              "max": 0.4837274816517162
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1588.5,
+              "min": 1559,
+              "max": 1601
+            },
+            "savedPct": {
+              "median": 2.872771406837109,
+              "min": 2.8195250755068453,
+              "max": 2.8953269675925926
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 60435.0,
+          "scalar": 59095.5,
+          "pie": 58876.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1348.0,
+              "min": 1289,
+              "max": 1400
+            },
+            "savedPct": {
+              "median": 2.229760447648311,
+              "min": 2.1335054703146463,
+              "max": 2.314279102059708
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 210.0,
+              "min": 178,
+              "max": 304
+            },
+            "savedPct": {
+              "median": 0.3554702649584296,
+              "min": 0.30130679125194665,
+              "max": 0.5140518786567013
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1574.5,
+              "min": 1522,
+              "max": 1649
+            },
+            "savedPct": {
+              "median": 2.605486070750538,
+              "min": 2.5191168194908804,
+              "max": 2.72638592662401
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17720.5,
+          "scalar": 16361.0,
+          "pie": 16126.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1359.5,
+              "min": 1343,
+              "max": 1438
+            },
+            "savedPct": {
+              "median": 7.673204385338634,
+              "min": 7.580290116836936,
+              "max": 8.108260501832534
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 233.0,
+              "min": 171,
+              "max": 263
+            },
+            "savedPct": {
+              "median": 1.4241127743995277,
+              "min": 1.0492728723077867,
+              "max": 1.6062049590814707
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1603.0,
+              "min": 1579,
+              "max": 1609
+            },
+            "savedPct": {
+              "median": 9.046537359409697,
+              "min": 8.909326863397844,
+              "max": 9.072455596278544
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 46295.5,
+          "scalar": 46282.5,
+          "pie": 46279.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 4.5,
+              "min": -35,
+              "max": 52
+            },
+            "savedPct": {
+              "median": 0.009721975509904387,
+              "min": -0.0757067768380524,
+              "max": 0.1122431359005353
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 6.0,
+              "min": -31,
+              "max": 15
+            },
+            "savedPct": {
+              "median": 0.012958686782256871,
+              "min": -0.06698936813899213,
+              "max": 0.032403006999049515
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 12.0,
+              "min": -50,
+              "max": 58
+            },
+            "savedPct": {
+              "median": 0.02592520579342141,
+              "min": -0.10815253834007484,
+              "max": 0.1251753534045538
+            }
+          }
+        }
+      }
+    },
+    "lamp-only": {
+      "clean": {
+        "levelUs": {
+          "stock": 57256.5,
+          "scalar": 55895.5,
+          "pie": 55639.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1359.5,
+              "min": 1342,
+              "max": 1382
+            },
+            "savedPct": {
+              "median": 2.37440272009979,
+              "min": 2.3436954243800208,
+              "max": 2.412877994273343
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 251.5,
+              "min": 214,
+              "max": 281
+            },
+            "savedPct": {
+              "median": 0.45006331577316777,
+              "min": 0.3829360818839024,
+              "max": 0.5027103422366138
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1611.0,
+              "min": 1565,
+              "max": 1652
+            },
+            "savedPct": {
+              "median": 2.813948431100148,
+              "min": 2.7343408753385168,
+              "max": 2.884279628465675
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 62410.5,
+          "scalar": 61072.5,
+          "pie": 60797.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1328.5,
+              "min": 1291,
+              "max": 1443
+            },
+            "savedPct": {
+              "median": 2.1277101377879406,
+              "min": 2.0688107943528355,
+              "max": 2.3112406701476758
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 261.0,
+              "min": 194,
+              "max": 401
+            },
+            "savedPct": {
+              "median": 0.4272128272766762,
+              "min": 0.3178712457603513,
+              "max": 0.6563978327413204
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1630.5,
+              "min": 1505,
+              "max": 1728
+            },
+            "savedPct": {
+              "median": 2.6110623572599425,
+              "min": 2.414102852009881,
+              "max": 2.7684321830241276
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17792.0,
+          "scalar": 16428.0,
+          "pie": 16185.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1362.0,
+              "min": 1353,
+              "max": 1387
+            },
+            "savedPct": {
+              "median": 7.655979313007096,
+              "min": 7.6036866359447,
+              "max": 7.791697095668782
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 243.5,
+              "min": 217,
+              "max": 255
+            },
+            "savedPct": {
+              "median": 1.482226602289217,
+              "min": 1.3220421591324478,
+              "max": 1.551000547411958
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1606.5,
+              "min": 1598,
+              "max": 1617
+            },
+            "savedPct": {
+              "median": 9.029591776665072,
+              "min": 8.984594624985943,
+              "max": 9.089376053962901
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 48185.0,
+          "scalar": 48169.0,
+          "pie": 48160.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 21.5,
+              "min": -73,
+              "max": 58
+            },
+            "savedPct": {
+              "median": 0.04461201245897302,
+              "min": -0.15178292961846346,
+              "max": 0.12031198141387321
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 5.5,
+              "min": -45,
+              "max": 57
+            },
+            "savedPct": {
+              "median": 0.011415524868193526,
+              "min": -0.09345794392523364,
+              "max": 0.11828916512752402
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 11.0,
+              "min": -41,
+              "max": 65
+            },
+            "savedPct": {
+              "median": 0.022831169249227228,
+              "min": -0.08524794677201372,
+              "max": 0.1348044298809573
+            }
+          }
+        }
+      }
+    },
+    "left-bottom": {
+      "clean": {
+        "levelUs": {
+          "stock": 56807.5,
+          "scalar": 55449.5,
+          "pie": 55210.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1353.5,
+              "min": 1334,
+              "max": 1387
+            },
+            "savedPct": {
+              "median": 2.3826283952527074,
+              "min": 2.3492533107917724,
+              "max": 2.441514548751078
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 237.5,
+              "min": 233,
+              "max": 274
+            },
+            "savedPct": {
+              "median": 0.4284217636113357,
+              "min": 0.4201377619099138,
+              "max": 0.4942636553863915
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1593.0,
+              "min": 1572,
+              "max": 1653
+            },
+            "savedPct": {
+              "median": 2.804084297725743,
+              "min": 2.768385460693153,
+              "max": 2.909442928804013
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 62006.5,
+          "scalar": 60651.0,
+          "pie": 60399.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1349.5,
+              "min": 1316,
+              "max": 1472
+            },
+            "savedPct": {
+              "median": 2.1783371642467104,
+              "min": 2.1234711330557974,
+              "max": 2.3709812512080406
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 253.5,
+              "min": 103,
+              "max": 307
+            },
+            "savedPct": {
+              "median": 0.4180606335888909,
+              "min": 0.17013263738623413,
+              "max": 0.505824394905508
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1601.5,
+              "min": 1469,
+              "max": 1729
+            },
+            "savedPct": {
+              "median": 2.5836949802182434,
+              "min": 2.3729142100247147,
+              "max": 2.784936537594227
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17825.5,
+          "scalar": 16467.5,
+          "pie": 16236.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1358.5,
+              "min": 1324,
+              "max": 1375
+            },
+            "savedPct": {
+              "median": 7.620888812067927,
+              "min": 7.42818671454219,
+              "max": 7.713019577046054
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 240.0,
+              "min": 211,
+              "max": 258
+            },
+            "savedPct": {
+              "median": 1.458080954131315,
+              "min": 1.2825188426938974,
+              "max": 1.5636363636363637
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1587.5,
+              "min": 1582,
+              "max": 1609
+            },
+            "savedPct": {
+              "median": 8.905531746564357,
+              "min": 8.875673249551166,
+              "max": 9.02614159093459
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 47695.5,
+          "scalar": 47706.5,
+          "pie": 47725.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": -11.0,
+              "min": -56,
+              "max": 58
+            },
+            "savedPct": {
+              "median": -0.023062972420626236,
+              "min": -0.11747676687155174,
+              "max": 0.12147105637932479
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": -11.5,
+              "min": -21,
+              "max": 1
+            },
+            "savedPct": {
+              "median": -0.02410420409028499,
+              "min": -0.04403438876074649,
+              "max": 0.0020972714498437533
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": -31.0,
+              "min": -58,
+              "max": 37
+            },
+            "savedPct": {
+              "median": -0.06499558361093473,
+              "min": -0.12167236568839288,
+              "max": 0.07749015665577616
+            }
+          }
+        }
+      }
+    },
+    "left-lamp": {
+      "clean": {
+        "levelUs": {
+          "stock": 56768.0,
+          "scalar": 55416.5,
+          "pie": 55187.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1352.0,
+              "min": 1327,
+              "max": 1438
+            },
+            "savedPct": {
+              "median": 2.3816000840671325,
+              "min": 2.3382435861291233,
+              "max": 2.532849543805263
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 233.5,
+              "min": 148,
+              "max": 248
+            },
+            "savedPct": {
+              "median": 0.4212713024080195,
+              "min": 0.2674569900245771,
+              "max": 0.44762918975506744
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1576.5,
+              "min": 1560,
+              "max": 1629
+            },
+            "savedPct": {
+              "median": 2.777068002357243,
+              "min": 2.7483659554976128,
+              "max": 2.8687658495350803
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 61926.5,
+          "scalar": 60549.0,
+          "pie": 60332.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1385.0,
+              "min": 1341,
+              "max": 1416
+            },
+            "savedPct": {
+              "median": 2.236518559963394,
+              "min": 2.167517941423676,
+              "max": 2.2842762425591636
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 224.0,
+              "min": 195,
+              "max": 267
+            },
+            "savedPct": {
+              "median": 0.369971130065315,
+              "min": 0.3221702711186743,
+              "max": 0.44084867497729713
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1602.0,
+              "min": 1536,
+              "max": 1671
+            },
+            "savedPct": {
+              "median": 2.5869301486317076,
+              "min": 2.48270511411392,
+              "max": 2.6965095450951284
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17740.5,
+          "scalar": 16377.0,
+          "pie": 16159.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1366.5,
+              "min": 1329,
+              "max": 1432
+            },
+            "savedPct": {
+              "median": 7.699025993302821,
+              "min": 7.49365661122075,
+              "max": 8.07169832591173
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 222.0,
+              "min": 184,
+              "max": 237
+            },
+            "savedPct": {
+              "median": 1.3551032900361148,
+              "min": 1.1282114170090134,
+              "max": 1.4445934414238693
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1587.5,
+              "min": 1566,
+              "max": 1616
+            },
+            "savedPct": {
+              "median": 8.94870356532009,
+              "min": 8.829997180716099,
+              "max": 9.108843920861283
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 47727.0,
+          "scalar": 47722.0,
+          "pie": 47735.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 0.5,
+              "min": -112,
+              "max": 108
+            },
+            "savedPct": {
+              "median": 0.0010474055396033364,
+              "min": -0.23503242188319728,
+              "max": 0.22601707684580613
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": -18.5,
+              "min": -84,
+              "max": 55
+            },
+            "savedPct": {
+              "median": -0.038771941317504735,
+              "min": -0.17618927762396175,
+              "max": 0.1151470742175233
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": -19.5,
+              "min": -86,
+              "max": 24
+            },
+            "savedPct": {
+              "median": -0.04085702513675357,
+              "min": -0.18049026192075218,
+              "max": 0.050226017076845805
+            }
+          }
+        }
+      }
+    },
+    "near-corner": {
+      "clean": {
+        "levelUs": {
+          "stock": 58466.5,
+          "scalar": 57137.5,
+          "pie": 56884.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1326.5,
+              "min": 1318,
+              "max": 1348
+            },
+            "savedPct": {
+              "median": 2.268685433772614,
+              "min": 2.2550730588919685,
+              "max": 2.3047068679580778
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 254.5,
+              "min": 225,
+              "max": 263
+            },
+            "savedPct": {
+              "median": 0.44534317687092717,
+              "min": 0.3940041326655693,
+              "max": 0.4602085812276895
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1577.5,
+              "min": 1558,
+              "max": 1605
+            },
+            "savedPct": {
+              "median": 2.698381391536942,
+              "min": 2.664887794198139,
+              "max": 2.7441057292824294
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 63634.5,
+          "scalar": 62297.0,
+          "pie": 62039.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1346.0,
+              "min": 1245,
+              "max": 1383
+            },
+            "savedPct": {
+              "median": 2.1165001217354993,
+              "min": 1.9586866573320958,
+              "max": 2.172581177246807
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 256.0,
+              "min": 187,
+              "max": 283
+            },
+            "savedPct": {
+              "median": 0.4108100413979215,
+              "min": 0.3005706019448686,
+              "max": 0.4543775990238107
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1586.5,
+              "min": 1489,
+              "max": 1660
+            },
+            "savedPct": {
+              "median": 2.4929060941689762,
+              "min": 2.3425577773232855,
+              "max": 2.606292784023111
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17858.5,
+          "scalar": 16496.5,
+          "pie": 16251.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1366.5,
+              "min": 1338,
+              "max": 1374
+            },
+            "savedPct": {
+              "median": 7.652248543320274,
+              "min": 7.493699243909269,
+              "max": 7.688864017907107
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 246.0,
+              "min": 195,
+              "max": 263
+            },
+            "savedPct": {
+              "median": 1.4913595702866715,
+              "min": 1.1828935395814377,
+              "max": 1.5922988436156686
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1606.5,
+              "min": 1562,
+              "max": 1628
+            },
+            "savedPct": {
+              "median": 8.995964979118956,
+              "min": 8.74971991933677,
+              "max": 9.110240626748741
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 49272.5,
+          "scalar": 49284.0,
+          "pie": 49284.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": -6.5,
+              "min": -83,
+              "max": 49
+            },
+            "savedPct": {
+              "median": -0.013192076864037275,
+              "min": -0.16869232958009836,
+              "max": 0.09936326398183072
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 0.0,
+              "min": -37,
+              "max": 16
+            },
+            "savedPct": {
+              "median": 4.5287756728551107e-07,
+              "min": -0.07510402922967624,
+              "max": 0.0324642386121538
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 2.0,
+              "min": -97,
+              "max": 20
+            },
+            "savedPct": {
+              "median": 0.0040569175084798305,
+              "min": -0.1971464574610788,
+              "max": 0.04057453542156942
+            }
+          }
+        }
+      }
+    },
+    "right-lamp": {
+      "clean": {
+        "levelUs": {
+          "stock": 56699.5,
+          "scalar": 55347.0,
+          "pie": 55115.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1361.0,
+              "min": 1311,
+              "max": 1437
+            },
+            "savedPct": {
+              "median": 2.4001190204879306,
+              "min": 2.312985179957657,
+              "max": 2.5342127539503387
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 226.5,
+              "min": 216,
+              "max": 254
+            },
+            "savedPct": {
+              "median": 0.40951050493363267,
+              "min": 0.39010998934421787,
+              "max": 0.45879016671784406
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1590.5,
+              "min": 1527,
+              "max": 1661
+            },
+            "savedPct": {
+              "median": 2.8048418435870284,
+              "min": 2.6940719830628086,
+              "max": 2.929246613995485
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 61850.0,
+          "scalar": 60486.5,
+          "pie": 60248.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1370.5,
+              "min": 1289,
+              "max": 1410
+            },
+            "savedPct": {
+              "median": 2.2158290715160556,
+              "min": 2.08495082815735,
+              "max": 2.277242114443529
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 249.0,
+              "min": 223,
+              "max": 287
+            },
+            "savedPct": {
+              "median": 0.41142631375924893,
+              "min": 0.3686986425937867,
+              "max": 0.47462336073029154
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1617.5,
+              "min": 1532,
+              "max": 1688
+            },
+            "savedPct": {
+              "median": 2.6150568498597417,
+              "min": 2.47928534438115,
+              "max": 2.7283012768708583
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17731.5,
+          "scalar": 16377.0,
+          "pie": 16148.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1361.5,
+              "min": 1343,
+              "max": 1404
+            },
+            "savedPct": {
+              "median": 7.675399455796478,
+              "min": 7.574304889741131,
+              "max": 7.920568656211215
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 232.0,
+              "min": 207,
+              "max": 273
+            },
+            "savedPct": {
+              "median": 1.4163233213859412,
+              "min": 1.264585496975991,
+              "max": 1.6725891434873177
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1590.5,
+              "min": 1570,
+              "max": 1677
+            },
+            "savedPct": {
+              "median": 8.966630057765531,
+              "min": 8.854049176629822,
+              "max": 9.460679228252285
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 47648.0,
+          "scalar": 47654.5,
+          "pie": 47660.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": -10.0,
+              "min": -63,
+              "max": 95
+            },
+            "savedPct": {
+              "median": -0.020991601472902428,
+              "min": -0.1323029106640346,
+              "max": 0.19912385503783353
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": -7.5,
+              "min": -77,
+              "max": 85
+            },
+            "savedPct": {
+              "median": -0.015739769316418847,
+              "min": -0.1617171420170538,
+              "max": 0.17826807323671903
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": -5.0,
+              "min": -38,
+              "max": 22
+            },
+            "savedPct": {
+              "median": -0.01048679712242287,
+              "min": -0.07980343154755655,
+              "max": 0.04620101642236129
+            }
+          }
+        }
+      }
+    },
+    "right-top": {
+      "clean": {
+        "levelUs": {
+          "stock": 55550.5,
+          "scalar": 54182.0,
+          "pie": 53956.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1367.0,
+              "min": 1349,
+              "max": 1420
+            },
+            "savedPct": {
+              "median": 2.4611338136969754,
+              "min": 2.4284428442844286,
+              "max": 2.5561635944700463
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 224.5,
+              "min": 183,
+              "max": 244
+            },
+            "savedPct": {
+              "median": 0.4143432275186273,
+              "min": 0.33806251385502106,
+              "max": 0.4501761960111437
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1591.5,
+              "min": 1578,
+              "max": 1603
+            },
+            "savedPct": {
+              "median": 2.864960735961267,
+              "min": 2.841553670790341,
+              "max": 2.885584677419355
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 60738.0,
+          "scalar": 59365.0,
+          "pie": 59159.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1373.0,
+              "min": 1302,
+              "max": 1426
+            },
+            "savedPct": {
+              "median": 2.2605298266456746,
+              "min": 2.1428218758743274,
+              "max": 2.3486008860780343
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 241.0,
+              "min": 140,
+              "max": 283
+            },
+            "savedPct": {
+              "median": 0.4055977055239811,
+              "min": 0.23612352633620617,
+              "max": 0.4760302775441548
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1576.0,
+              "min": 1537,
+              "max": 1662
+            },
+            "savedPct": {
+              "median": 2.5948747422948215,
+              "min": 2.5307910162681946,
+              "max": 2.7371541501976284
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 17834.0,
+          "scalar": 16468.5,
+          "pie": 16229.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1368.0,
+              "min": 1355,
+              "max": 1431
+            },
+            "savedPct": {
+              "median": 7.667515745489749,
+              "min": 7.602536048925546,
+              "max": 8.024899057873485
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 228.0,
+              "min": 174,
+              "max": 250
+            },
+            "savedPct": {
+              "median": 1.384968445747115,
+              "min": 1.0609109200658497,
+              "max": 1.5180957007529754
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1605.0,
+              "min": 1587,
+              "max": 1614
+            },
+            "savedPct": {
+              "median": 8.999663677163884,
+              "min": 8.901228335857311,
+              "max": 9.046578106608374
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 46414.5,
+          "scalar": 46436.5,
+          "pie": 46426.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": -13.5,
+              "min": -114,
+              "max": 54
+            },
+            "savedPct": {
+              "median": -0.02908969705999077,
+              "min": -0.2459706129846592,
+              "max": 0.11621400593982698
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 15.5,
+              "min": -27,
+              "max": 39
+            },
+            "savedPct": {
+              "median": 0.033368127491980634,
+              "min": -0.058174610014651386,
+              "max": 0.0839413701814425
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": -7.0,
+              "min": -75,
+              "max": 27
+            },
+            "savedPct": {
+              "median": -0.015085301216314583,
+              "min": -0.1618227717004337,
+              "max": 0.05810700296991349
+            }
+          }
+        }
+      }
+    },
+    "top-lamp-wide": {
+      "clean": {
+        "levelUs": {
+          "stock": 55883.5,
+          "scalar": 54543.0,
+          "pie": 54296.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1341.0,
+              "min": 1334,
+              "max": 1425
+            },
+            "savedPct": {
+              "median": 2.399484125785897,
+              "min": 2.38738658124094,
+              "max": 2.5495598654548055
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 241.0,
+              "min": 235,
+              "max": 303
+            },
+            "savedPct": {
+              "median": 0.4418450487924659,
+              "min": 0.43098705204856397,
+              "max": 0.555463894846835
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1587.0,
+              "min": 1572,
+              "max": 1668
+            },
+            "savedPct": {
+              "median": 2.839836111289565,
+              "min": 2.8133221182239563,
+              "max": 2.98432691619552
+            }
+          }
+        }
+      },
+      "audit": {
+        "levelUs": {
+          "stock": 61653.0,
+          "scalar": 60294.0,
+          "pie": 60002.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1335.5,
+              "min": 1306,
+              "max": 1405
+            },
+            "savedPct": {
+              "median": 2.165980049359144,
+              "min": 2.122059014688678,
+              "max": 2.2793270712675007
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 251.0,
+              "min": 203,
+              "max": 388
+            },
+            "savedPct": {
+              "median": 0.4166873354680638,
+              "min": 0.33682883122054824,
+              "max": 0.6430974756766612
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1612.5,
+              "min": 1560,
+              "max": 1719
+            },
+            "savedPct": {
+              "median": 2.615443112333387,
+              "min": 2.534771870531652,
+              "max": 2.7876881162428644
+            }
+          }
+        }
+      },
+      "primary": {
+        "levelUs": {
+          "stock": 18227.0,
+          "scalar": 16861.0,
+          "pie": 16617.0
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 1367.0,
+              "min": 1274,
+              "max": 1410
+            },
+            "savedPct": {
+              "median": 7.493699675441537,
+              "min": 7.029353343632752,
+              "max": 7.735776595161025
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 264.0,
+              "min": 199,
+              "max": 334
+            },
+            "savedPct": {
+              "median": 1.5634471337758868,
+              "min": 1.1807286104188917,
+              "max": 1.9800806260374675
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 1613.5,
+              "min": 1495,
+              "max": 1705
+            },
+            "savedPct": {
+              "median": 8.848390731098323,
+              "min": 8.248730964467006,
+              "max": 9.348100224793026
+            }
+          }
+        }
+      },
+      "shade": {
+        "levelUs": {
+          "stock": 46991.5,
+          "scalar": 46991.0,
+          "pie": 46962.5
+        },
+        "paired": {
+          "stockToScalar": {
+            "savedUs": {
+              "median": 2.0,
+              "min": -15,
+              "max": 14
+            },
+            "savedPct": {
+              "median": 0.004256111510482955,
+              "min": -0.03192780060024265,
+              "max": 0.029784065524944156
+            }
+          },
+          "scalarToPie": {
+            "savedUs": {
+              "median": 9.0,
+              "min": -47,
+              "max": 112
+            },
+            "savedPct": {
+              "median": 0.01915183397911465,
+              "min": -0.10021963025353434,
+              "max": 0.23834351258751676
+            }
+          },
+          "stockToPie": {
+            "savedUs": {
+              "median": 6.5,
+              "min": -55,
+              "max": 126
+            },
+            "savedPct": {
+              "median": 0.01383182474507341,
+              "min": -0.11729830024099469,
+              "max": 0.2680565897244974
+            }
+          }
+        }
+      }
+    }
+  }
+}

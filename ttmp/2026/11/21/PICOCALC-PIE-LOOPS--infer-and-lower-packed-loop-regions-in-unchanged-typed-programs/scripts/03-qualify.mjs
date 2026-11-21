@@ -79,13 +79,20 @@ if(which==='rows'){
         compare(sample,'headroom',[p,1,n,cap],init,counts);
     }
     assert(counts.packets>0);cases.push({name:'transfer on 144 combinations',...counts});
+    for(const [label,p,first,n] of [['short misaligned transfer',64,1,8],['long aligned transfer',72,2,96]]) {
+        dv.setUint32(p,128,true);
+        const counts={};compare(sample,'headroom',[p,first,n,100],init,counts);
+        cases.push({name:label,...counts});
+    }
     // Output buffer aliases the input, including a one-cell shift and a short late trap.
     const stores=src.replace('first: i32','out: buffer, first: i32').replace('total = total + remaining;', 'out.setCharCodeAt(bin + 1, remaining);');
     const stored=compile(stores);
-    for(const [dst,capacity] of [[64,80],[320,80],[320,5],[44,80]]){
+    for(const [dst,capacity] of [[64,80],[320,80],[320,5],[320,19],[44,80]]){
         const arr=new Uint8Array(1024),view=new DataView(arr.buffer);
         view.setUint32(64,80,true);view.setUint32(dst,capacity,true);
         const counts={};const trap=compare(stored,'headroom',[64,dst,0,32,100],arr,counts);
+        if(dst===64 || dst===44) assert.equal(counts.packets,0);
+        if(capacity===19) assert(trap && counts.packets>0);
         cases.push({name:'aliased or short destination',dst,capacity,trap,...counts});
     }
     for(const changed of [

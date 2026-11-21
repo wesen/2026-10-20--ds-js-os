@@ -171,3 +171,51 @@ Replay scripts/03-qualify.mjs in rows and frames modes. Look at various/host/com
 ### Technical details
 
 The frozen ray SHA-256 is b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f. The qualification program fits the original ABI. Padded 160-row multi-plane images require additional test memory capacity.
+
+## Step 4. Measure the three guest programs on physical silicon
+
+I ran the trial firmware through all six permutations on the same P4. Six blocks of twelve scenes for each of three compiled images produced 216 observations and eighteen cold compiler measurements. The stock guest, matched scalar guest and PIE guest each had its own checked ELF identity.
+
+### Prompt Context
+
+See Steps 1 and 2. The user wanted the same algorithm, host pass information and a personally executed implementation.
+
+### What I did
+
+I verified the board's prior firmware, flashed the candidate, matched the output CRC for each physical run, restored the playable firmware and checked the restored worlds and buses. I wrote scripts/09-paired-results.py to compute differences within each block, then compared the isolated primary and shade measurements with the full-frame measurement.
+
+### Why
+
+Grouping eight inputs changes scalar addressing, induction and checks before it changes the arithmetic instruction. A stock-to-PIE comparison conflates these effects. The matched scalar code shares those decisions. Timing the unaffected shade entry also checks for a general timing shift.
+
+### What worked
+
+On the default frame the paired stock-to-PIE saving was 1,616 microseconds. Replacing just the matched scalar producer saved 242 microseconds. All twelve poses favored the packed arm on median clean time. The verified restore reported eight expected worlds, an installed painter and zero I2C or SPI errors.
+
+### What didn't work
+
+The first compiler spent 658 ms compiling the scene against 454 ms for stock. The whole-function operation decoder was invoked even for functions without a candidate. I treated this cost as an experimental outcome and opened a follow-up comparison. Earlier, git's whitespace check caught trailing blanks in the vendor listing. I normalized the displayed listing before committing the host evidence.
+
+### What I learned
+
+A gain of 9.05% in primary time amounts to 2.80% in the complete frame. The two independently timed phase entry points have different setup and cannot be summed into the frame clock.
+
+### What was tricky to build
+
+Per-arm medians and medians of paired differences answer different questions. I saved both and verified the six possible treatment orders. The peak JavaScript heap and the fixed-size guest segment are separate metrics.
+
+### What warrants a second pair of eyes
+
+The aim of the matched comparison is to isolate the cost of filling a packet. A different allocator or a fused vector consumer could change the result. One board and twelve scenes establish a result for this workload.
+
+### What should be done in the future
+
+Measure cold compilation with a fast rejection test on the same board and qualify identical output before reusing the first trial's runtime measurements.
+
+### Code review instructions
+
+Read scripts/06-board.py and scripts/09-paired-results.py together. The latter uses row.timesUs[2] for the Typed guest and pairs by block and pose. Trace one row back through the stored images and build receipts.
+
+### Technical details
+
+Implementation 74456f2, host qualification b0aa7d3. Initial trial firmware 5dbcfe59, playable restore e7b771aa. The raw measurements and restore receipt are in various/device.

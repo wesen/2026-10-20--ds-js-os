@@ -81,6 +81,20 @@
       "packets": 105
     },
     {
+      "name": "short misaligned transfer",
+      "stock": 282,
+      "scalar": 305,
+      "pie": 308,
+      "packets": 0
+    },
+    {
+      "name": "long aligned transfer",
+      "stock": 3027,
+      "scalar": 1492,
+      "pie": 1231,
+      "packets": 12
+    },
+    {
       "name": "aliased or short destination",
       "dst": 64,
       "capacity": 80,
@@ -109,6 +123,16 @@
       "scalar": 210,
       "pie": 213,
       "packets": 0
+    },
+    {
+      "name": "aliased or short destination",
+      "dst": 320,
+      "capacity": 19,
+      "trap": true,
+      "stock": 782,
+      "scalar": 584,
+      "pie": 543,
+      "packets": 2
     },
     {
       "name": "aliased or short destination",
