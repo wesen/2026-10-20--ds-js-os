@@ -9,7 +9,11 @@ Topics:
 DocType: reference
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-WAVE--six-parallel-experiments-in-handheld-compiler-construction/scripts/director/04-device-matrix.py
+      Note: Validates test firmware, records paired execution times, and restores the ordinary release.
+    - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-WAVE--six-parallel-experiments-in-handheld-compiler-construction/scripts/director/heldout/01-burst-oracle.mjs
+      Note: Checks expected return, traps and memory across Wasm and native execution.
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-20T18:54:30.763123066-05:00
@@ -215,3 +219,51 @@ Run scripts/director/10-replay-host.sh with a new scratch directory and a RISC-V
 ### Technical details
 
 The fourth physical candidate has SHA-256 d1769084266e3c475f463a01009fa5d46c2f4c29e9b7e0abe718f28a560551a6. The reMarkable cloud directory and per-design source hashes are in various/director/remarkable.json.
+
+## Step 5: Separate model composition, linked-world size and cold compilation
+
+The six-arm comparison also offers a way to ask whether the independently written transformations are compatible on the complete application sources. I measured instruction extent with the real world linker. I checked the cold compile experiment's missing sample and arranged a separately identified confirmation.
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Review each team's evidence and independently test the most consequential interaction. **Inferred user intent:** Show where a local compiler result transfers to actual apps. **Previous commit:** adadb30 — Compose the two native lowering studies and replay the crossed host controls.
+
+### What I did
+
+Extracted the exact Editor and Chess source text and reactor ELF from the ordinary device application at the four offsets independently identified in the dependency study. Verified the release SHA-256 and four asset hashes. Each app passed its real world validation and linker under all six code generators. Compared the resulting instruction extent, entry count, relocation count and fixed-size ELF. Sum and component charts were checked against independent runtime controls.
+
+### Why
+
+Telemetry takes a few milliseconds to replay and includes only ten functions. It cannot establish that whole-app validation accepts each variant or that leaf recognition continues to work alongside target-specific checked operations in a larger program.
+
+### What worked
+
+All twelve world variants compiled and linked. Editor early/stock and late/frameless used 89,168 and 75,812 instruction bytes. Chess used 256,400 and 180,860. Both output ELF lengths remained unchanged because the reactor reserves a fixed slot. Re-extracting the assets directly from the published binary reproduced the same result as the researcher's staged files.
+
+### What didn't work
+
+The fresh-compiler operator's 280-second host collection window ended after 59 of 60 planned samples. The last selected-bounds Editor observation and an aggregate native correctness marker were missing. The report retains the complete first four matched blocks and every raw row. I arranged a separate instrumented confirmation with one matched block and a dedicated native correctness marker. It will have its own receipt.
+
+### What I learned
+
+Less generated code can reduce the allocation and time required to compile a world. In the balanced physical observations Chess peak JavaScript allocation fell from 3,185,084 to 1,948,022 bytes and cold compile time fell 43.0% with all-late lowering. Bringing this into the ordinary firmware is a different acceptance decision.
+
+### What was tricky to build
+
+The ordinary world compiler returns a complete ELF from its public entry point. I observed the actual input to linkSlot while letting the original function perform all validations, apply relocations and return its real output. Both earlier isolated raw-image digests matched. Reporting just the linked file sizes would have hidden the compiler effect.
+
+### What warrants a second pair of eyes
+
+The crossed whole-world experiment qualified compilation and linking. Dynamic differential behavior for the composed pair is measured on telemetry. The standalone fixed-work Chess search timing exercises the leaf/inlining policy individually. Those are distinct evidence levels.
+
+### What should be done in the future
+
+Qualify Editor editing, Chess UI/painter interaction, error handling and production cold boot on a combined candidate before adopting it.
+
+### Code review instructions
+
+Run scripts/director/11-compose-release-worlds.mjs with the exact ordinary application binary and a new JSON path. Compare the result byte-for-byte with various/director/composed-release-worlds.json. scripts/director/12-publish-vault.py prepares linked reader copies and a manifest.
+
+### Technical details
+
+The two release sources are 69,884 and 61,022 bytes. The checked ELFs are 242,124 and 274,892 bytes. Inline currently uses a buffered compilation path; frameless standalone keeps streaming available.

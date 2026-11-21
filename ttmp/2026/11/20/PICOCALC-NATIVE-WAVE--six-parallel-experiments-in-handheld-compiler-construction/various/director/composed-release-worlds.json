@@ -1,0 +1,182 @@
+{
+  "editor": {
+    "sourceSHA256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+    "reactorSHA256": "386a56b9e2ae4ff3e3bfb8f431ba315d5fb415b6ba29360b04e7d7e611c3837b",
+    "arms": {
+      "early-stock": {
+        "instructionsBytes": 89168,
+        "imageSHA256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+        "linkedELFBytes": 242124,
+        "linkedELFSHA256": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d",
+        "functions": 119,
+        "relocations": 147,
+        "frameless": 0,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 0,
+          "literals": 0
+        }
+      },
+      "early-leaf": {
+        "instructionsBytes": 89048,
+        "imageSHA256": "2060fddaab089c89449fcbdd40a58bb38a0706c7a5a7b645c8bb0b2bca4409a5",
+        "linkedELFBytes": 242124,
+        "linkedELFSHA256": "7d55247277b9e5213ff50e3e8d1bb5bd1b9e86a7892bd374b931c9cf02f9781c",
+        "functions": 119,
+        "relocations": 147,
+        "frameless": 6,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 0,
+          "literals": 0
+        }
+      },
+      "early-inline": {
+        "instructionsBytes": 89432,
+        "imageSHA256": "f15b3a91575c266d0272c7409d3990b45709b4e7b1943b21bd7a7843f3b1128a",
+        "linkedELFBytes": 242124,
+        "linkedELFSHA256": "5988144c981abb8a615ce2fde253dd69681a17a11b29cacad26224ad4e8b319f",
+        "functions": 119,
+        "relocations": 147,
+        "frameless": 6,
+        "inlinedSites": 7,
+        "checkedOperations": {
+          "addresses": 0,
+          "literals": 0
+        }
+      },
+      "late-stock": {
+        "instructionsBytes": 75932,
+        "imageSHA256": "b8a067e9d83edea375127ea1ed98c6eb07e879dc87e59fda437f13067d3ec914",
+        "linkedELFBytes": 242124,
+        "linkedELFSHA256": "f0b99db84b225edb124c9df5e8a7bd26a34f0f84f318cbc0ce869cab8942db02",
+        "functions": 119,
+        "relocations": 147,
+        "frameless": 0,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 268,
+          "literals": 107
+        }
+      },
+      "late-leaf": {
+        "instructionsBytes": 75812,
+        "imageSHA256": "1446a2d1bafb6a6654c62b7a512201132676679ce2ac623e68e21d0fb64de690",
+        "linkedELFBytes": 242124,
+        "linkedELFSHA256": "eec0fe7392f15dbdf8060c3fe3081619b07995b249fc8c909cd7caaf696fc93d",
+        "functions": 119,
+        "relocations": 147,
+        "frameless": 6,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 268,
+          "literals": 107
+        }
+      },
+      "late-inline": {
+        "instructionsBytes": 76196,
+        "imageSHA256": "24fb235de3a507f474f1a7cb60e45dc47cecd927d164696c6d2d5d0044063e27",
+        "linkedELFBytes": 242124,
+        "linkedELFSHA256": "f314a0697917fb664ce2e1922655e465c739e3e7b219a2bfdae5f739e676ce59",
+        "functions": 119,
+        "relocations": 147,
+        "frameless": 6,
+        "inlinedSites": 7,
+        "checkedOperations": {
+          "addresses": 268,
+          "literals": 107
+        }
+      }
+    }
+  },
+  "chess": {
+    "sourceSHA256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+    "reactorSHA256": "f28687cff3b242c18027dde3ad8b15930108035ca8b416b120071f62e1963630",
+    "arms": {
+      "early-stock": {
+        "instructionsBytes": 256400,
+        "imageSHA256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+        "linkedELFBytes": 274892,
+        "linkedELFSHA256": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685",
+        "functions": 82,
+        "relocations": 19,
+        "frameless": 0,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 0,
+          "literals": 0
+        }
+      },
+      "early-leaf": {
+        "instructionsBytes": 256076,
+        "imageSHA256": "203bf3012891562fff1c8dbb99119024a1f7eb7e00b8171a90fa0fa7ed82d6e8",
+        "linkedELFBytes": 274892,
+        "linkedELFSHA256": "a2b8968a3acc0a1cc6ce648a76443961951762d85872c35083e65f1974a7414d",
+        "functions": 82,
+        "relocations": 19,
+        "frameless": 16,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 0,
+          "literals": 0
+        }
+      },
+      "early-inline": {
+        "instructionsBytes": 256460,
+        "imageSHA256": "b3128148e3ef0b8d8854e525dacb2f9c7a4c7554b2ea6b1b0d2a1158a200e458",
+        "linkedELFBytes": 274892,
+        "linkedELFSHA256": "c034b090cd46bb5bea7510bf85068307fc5ddf5cfa50648895a98cfb0025f27f",
+        "functions": 82,
+        "relocations": 19,
+        "frameless": 16,
+        "inlinedSites": 8,
+        "checkedOperations": {
+          "addresses": 0,
+          "literals": 0
+        }
+      },
+      "late-stock": {
+        "instructionsBytes": 181184,
+        "imageSHA256": "0357284144e4e010d7a00dcde6dd6fb239822d781870ac84fc1171518eae0575",
+        "linkedELFBytes": 274892,
+        "linkedELFSHA256": "356d3e3b87ae91b1e2495206c5a3a772feaeb90e2434c56c4c072f71ea7150f6",
+        "functions": 82,
+        "relocations": 19,
+        "frameless": 0,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 256,
+          "literals": 80
+        }
+      },
+      "late-leaf": {
+        "instructionsBytes": 180860,
+        "imageSHA256": "93b4624f5ad049c2fb3f5e2a5ca5a6a023b530fdbcd2a2c3d8cd156d50fa91a0",
+        "linkedELFBytes": 274892,
+        "linkedELFSHA256": "8487d9b66d6370e2dd83668904bb493172cee2ab36b5137b8bd3b1b89b87b132",
+        "functions": 82,
+        "relocations": 19,
+        "frameless": 16,
+        "inlinedSites": 0,
+        "checkedOperations": {
+          "addresses": 256,
+          "literals": 80
+        }
+      },
+      "late-inline": {
+        "instructionsBytes": 181244,
+        "imageSHA256": "97bd25a0b44dac0c7a1199719a482a3debb10af6491d059b92b93c7e18e0c58b",
+        "linkedELFBytes": 274892,
+        "linkedELFSHA256": "a0b88e5ba9e5094d31eb823cef38d606d56177b683c9fff8ef981c9a8321fbc9",
+        "functions": 82,
+        "relocations": 19,
+        "frameless": 16,
+        "inlinedSites": 8,
+        "checkedOperations": {
+          "addresses": 256,
+          "literals": 80
+        }
+      }
+    }
+  }
+}
