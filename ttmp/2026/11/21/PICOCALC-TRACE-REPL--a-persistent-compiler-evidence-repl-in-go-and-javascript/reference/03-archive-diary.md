@@ -14,6 +14,10 @@ RelatedFiles:
       Note: Archive identity, validation, shared cache and reference contract
     - Path: repo://pkg/tracearchive/archive_test.go
       Note: Real-corpus and synthetic corruption tests and cache benchmark
+    - Path: repo://pkg/tracehardware/study.go
+      Note: Physical source, trial identities and counterbalanced comparisons
+    - Path: repo://pkg/tracehardware/study_test.go
+      Note: Independent replay of the published 144 comparison groups
 ExternalSources: []
 Summary: Design and verification of the Go reader for actual indexed LLVM evidence.
 LastUpdated: 2026-11-21T14:24:16-05:00
@@ -141,3 +145,58 @@ Run `go test -race ./pkg/tracearchive` and `go test ./pkg/tracearchive -run '^$'
 ### Technical details
 
 `ProfileSHA(name)` hashes the original JSON file, which allows a citation to combine a digest and JSON pointer. `InitialModule(variant)` hashes the decompressed standalone textual module on its first read. Both return the calculated digest independently of the pass-stream manifest. Statistics distinguish successful stream inflations, text reads, profile loads, profile reads, initial-module loads and retained stream bytes.
+
+## Step 3. Pair the original device measurements within acquisition blocks
+
+The optional hardware source answers a different question from the archived instruction counts. It estimates how much elapsed time the same rendering algorithm saved on the ESP32-P4 when compiled with a particular treatment. I inspected the device harness, the acquisition script and the original Python summarizer before choosing the observation unit.
+
+Each observation compares two treatments for the same scene, stride, timing phase and acquisition block. The reader produced 864 comparisons across three contrasts, twelve poses, six blocks and four phases. A separate test reproduced all 144 published group medians for both microseconds and percentages using the raw data.
+
+### Prompt Context
+
+**User prompt.** See Step 1. **Assistant interpretation.** The prior query workbook includes a physical pairing example. A dedicated optional Go source can support that example with verified inputs. The supervisor asked this lane to implement that source while keeping the compiler trace reader independent. **Inferred user intent.** An engineer can test a code generation hypothesis against physical device measurements and cite the original observations.
+
+### What I did
+
+- Read the original `scripts/05-image-identities.mjs`, `scripts/06-board.py`, `scripts/09-paired-results.py`, `analysis/01-what-an-inferred-packed-subtraction-buys-on-the-esp32-p4.md`, and the `measure` routine in `picocalc-os/port/esp32p4/main/typed_ray_p4.c`.
+- Added `pkg/tracehardware` with a reader for the four original files `build.json`, `images.json`, `loads.json` and `rows.json`. The separate compiler-cost follow-up has different treatment semantics and a separate directory.
+- Validated three source-identical image identities, the eighteen device ELF CRC receipts, all six permutations of the three treatments, the inner timer-arm rotation, consistent pose and output triplet, and one row per pose, block and treatment.
+- Preserved each input's zero-based index into `rows.json` with SHA-256 at study scope. Unit tests checked that each cited physical timing equals its reported value. The reader itself never consults `summary.json`. The test reads it as an independent comparison.
+
+### Why
+
+A median can be computed either before or after pairing, with different results. In the default clean scene the difference between the two marginal medians for stock and PIE is 57,692 − 56,069 = 1,623 microseconds. The median of the six within-block savings is 1,616 microseconds. Each treatment ran in a different outer position; the six counterbalanced orders reduce systematic order effects. The tables report each pair's own baseline denominator.
+
+### What worked
+
+`go test -race ./pkg/tracehardware` passed in 1.451 s. The default clean scene reproduced 1,616 μs and 2.8014239567202264% median savings for stock to inferred PIE, and 242 μs and 0.4295228146712761% for matched scalar to inferred PIE. The compiled source SHA-256 was `b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f`.
+
+### What didn't work
+
+The raw clock matrix also includes scalar C and C/PIE. Treating the physical collection order as the matrix index would choose the wrong implementation whenever the timer-arm rotation changes. The firmware stores by arm ID, so the installed Typed program is always `timesUs[2]`. The tests check raw witness indexes explicitly. Deliberate fixture corruption triggered the expected duplicate, missing observation, source mismatch, output CRC, ELF CRC and timer-order diagnostics.
+
+### What I learned
+
+The harness reports three CRCs over scalar-oracle planes, in RGB/depth/material ID order. Before printing a row it compared the appropriate observed planes against that oracle, including stride padding and the work-buffer guard. The printed CRCs therefore identify the expected outputs for accepted trials. A checksum recorded at guest load has a separate role: it identifies the linked ELF against a host reference.
+
+### What was tricky to build
+
+An experiment has two orders. First a block chooses a permutation for loading the three Typed images. Within a fixture the board rotates the scalar C, PIE C and installed Typed timing arms. For a fixed block and fixture, `(rotation − loadPosition) mod 3` is constant. The hook records both orders so investigators can examine whether measurement position covaries with a result. Pairing uses a pose, stride, block and phase. Requiring equal treatment positions or equal inner rotations would incorrectly reject the experiment.
+
+### What warrants a second pair of eyes
+
+The fixed scene is 160 × 160 and the clean timer stops with the frame in memory. Stride is in pixels and may exceed 160. The output CRC includes the allocated stride padding. The physical source's `primary` and `shade` phases are separately invoked endpoints with different setup; their sum has a different interpretation from the clean frame.
+
+### What should be done in the future
+
+Exercise the optional reader through the JavaScript binding and the operator's service flag. A cross-study or changed-firmware comparison would need an explicit fixture and treatment contract; this reader returns only within-study pairs.
+
+### Code review instructions
+
+Read `tracehardware.Open`, `validateLoads` and `(*Study).pair`, then run `go test -race ./pkg/tracehardware`. In the PIE-LOOPS study compare its original `09-paired-results.py` with `TestStudyAgainstPublishedMedians`. To reproduce any reported row, take the study's `artifactSHA["rows.json"]`, select its baseline and candidate array indexes, and inspect `timesUs[2][phase]`.
+
+### Technical details
+
+Phase indexes are 0 clean, 1 audit, 2 primary and 3 shade. Program IDs 0, 8 and 5 mean stock, matched scalar and inferred PIE for this original run. `savedUs = baselineUs − candidateUs` and `savedPct = 100 × savedUs / baselineUs`. Each pair owns value fields and a session receives a fresh result slice. Each group has six independently reusable block-level observations.
+
+The supervisor relayed the subsequent instruction that Opus xhigh owns all implementation. I stopped editing source and tests and returned the uncommitted physical reader draft to the supervisor for Opus. The observed test result above is a qualification of that draft. The prior archive reader had already been committed at `f7447b1`.
