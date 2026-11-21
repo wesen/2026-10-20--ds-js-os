@@ -58,7 +58,7 @@ class Machine:
         self.name,self.image,self.entries,self.instructions=name,image,entries,instructions
         self.sha=sha256(image).hexdigest()
 
-    def run(self,name,args,writes,readback,counts):
+    def run(self,name,args,writes,readback,counts,observation=None):
         uc=Uc(UC_ARCH_RISCV,UC_MODE_RISCV32)
         uc.mem_map(BASE,MEM); uc.mem_write(BASE,self.image)
         for addr,data in writes:
@@ -71,12 +71,15 @@ class Machine:
             assert size==4 and pc in self.instructions,(pc,size)
             counts[pc]+=1
             m,args=self.instructions[pc]
+            if m=="ebreak" and observation is not None:
+                observation["trap"]=True;u.emu_stop();return
             if not m.startswith("esp."): return
-            r=lambda x: reg.UC_RISCV_REG_X0+int(x[1:])
+            r=lambda x: reg.UC_RISCV_REG_X0+(10 if x.startswith("a") else 0)+int(x[1:])
             q=lambda x: int(x[1:])
             if m.startswith(("esp.vld.128.ip","esp.vst.128.ip")):
                 ix=q(args[0]); base=r(args[1]); ptr=u.reg_read(base)
                 assert ptr%16==0, (name,pc,m,ptr)
+                assert BASE <= ptr <= BASE+MEM-16, (name,pc,m,args,hex(ptr),hex(u.reg_read(reg.UC_RISCV_REG_X2)))
                 if m.startswith("esp.vld"):
                     qs[ix]=list(struct.unpack("<8h",u.mem_read(ptr,16)))
                 else:
@@ -89,7 +92,9 @@ class Machine:
             u.reg_write(reg.UC_RISCV_REG_PC,addr+4)
         uc.hook_add(UC_HOOK_CODE,instruction)
         uc.emu_start(BASE+self.entries[name],RET,count=200000)
-        assert uc.reg_read(reg.UC_RISCV_REG_PC)==RET and uc.reg_read(reg.UC_RISCV_REG_X2)==0x5f000, name
+        if observation is None or not observation.get("trap"):
+            assert uc.reg_read(reg.UC_RISCV_REG_PC)==RET and uc.reg_read(reg.UC_RISCV_REG_X2)==0x5f000, name
+            if observation is not None: observation["return"]=uc.reg_read(reg.UC_RISCV_REG_X10)
         addr,size=readback
         return bytes(uc.mem_read(addr,size)) if size else b""
 
@@ -97,12 +102,12 @@ def build(prefix,out):
     out.mkdir(exist_ok=True, parents=True)
     subprocess.run(["node",HERE/"02-build-typed.mjs",HERE/"physics.typed",out],check=True)
     machines={}
-    for kind,source in [("native",HERE/"physics.S"),("typed",out/"physics-typed.S")]:
+    for kind,source in [("native",HERE/"physics.S"),("typed",out/"physics-typed.S"),("guard",HERE/"board/physics_checked.S")]:
         obj=out/(kind+".o"); elf=out/(kind+".elf"); binary=out/(kind+".bin")
         subprocess.run([prefix+"-as","-march=rv32im_xesppie","-mabi=ilp32","-o",obj,source],check=True)
-        subprocess.run([prefix+"-ld","--no-relax","-Ttext=0","-e","0","-o",elf,obj],check=True)
+        subprocess.run([prefix+"-ld","--no-relax","-Ttext=0","-e","0","-o",elf,obj,*([out/"native.o",out/"typed.o"] if kind=="guard" else [])],check=True)
         subprocess.run([prefix+"-objcopy","-O","binary","--only-section=.text",elf,binary],check=True)
-        listing=subprocess.check_output([prefix+"-objdump","-d","-j",".text","-M","numeric,no-aliases",elf],text=True)
+        listing=subprocess.check_output([prefix+"-objdump","-D","-j",".text","-M","numeric,no-aliases",elf],text=True)
         (out/(kind+".dis")).write_text(listing)
         word=re.compile(r"^\s*([0-9a-f]+):\s+[0-9a-f]{8}\s+(\S+)\s*(.*?)\s*$")
         entries={}; ins={}
@@ -122,7 +127,7 @@ def counts_record(machine,workload,name,counts):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("out",type=Path);parser.add_argument("prefix")
-    a=parser.parse_args(); native,typed=(m for m in build(a.prefix,a.out).values())
+    a=parser.parse_args(); native,typed,guard=(m for m in build(a.prefix,a.out).values())
     summaries=[];trace=[]; cases=0
     for n in (0,1,2,7,8,9,15,16,17,31,64,127,128):
       for off in (0,2):
@@ -133,11 +138,23 @@ def main():
         for planar,label in [(False,"aos"),(True,"soa")]:
             initial=encode(layout(canonical,planar)); wanted=encode(layout(integrate(canonical),planar))
             typedName="physics_typed_"+("particleSoA" if planar else "particleAoS")
-            for machine,name,isTyped in [(native,"particle_"+label+"_scalar",False),(native,"particle_"+label+"_pie",False),(typed,typedName,True)]:
+            for machine,name,isTyped in [(native,"particle_"+label+"_scalar",False),(native,"particle_"+label+"_pie",False),(typed,typedName,True),(guard,"guarded_"+label+"_scalar",True),(guard,"guarded_"+label+"_pie",True)]:
                 cnt=Counter(); result=machine.run(name,[data-4 if isTyped else data,n],[(data-4,struct.pack("<I",2*n)+initial+b"\xa5"*16)],(data,len(initial)+16),cnt)
                 assert result==wanted+b"\xa5"*16,(n,off,name,result[:24],wanted[:24]); cases+=1
                 if n in (7,8,64,127,128) and off==0:
                     tr=counts_record(machine,"particle-n"+str(n),name,cnt);trace.append(tr);summaries.append({k:v for k,v in tr.items() if k!="counts"})
+    prefixTests=0
+    # Deliberately short Typed objects must perform the same visible writes before their first failing access.
+    for label,typedName in (("aos","particleAoS"),("soa","particleSoA")):
+        for n in (-1,0,1,7,8,16):
+            for cap in (0,1,4,7,15,16,31,32):
+                cell=encode([seed(i) for i in range(36)])
+                args=[DATA-4,n & 0xffffffff]; initial=[(DATA-4,struct.pack("<I",cap)+cell)]
+                reference={}; original=typed.run("physics_typed_"+typedName,args,initial,(DATA,len(cell)),Counter(),reference)
+                for mode in ("scalar","pie"):
+                    now={}; actual=guard.run("guarded_"+label+"_"+mode,args,initial,(DATA,len(cell)),Counter(),now)
+                    assert (actual,now)==(original,reference),(label,n,cap,mode,reference,now)
+                    prefixTests+=1
     contacts=[]
     sets={"chain16":[(i,i+1) for i in range(16)],"star16":[(0,i+1) for i in range(16)],"disjoint16":[(2*i,2*i+1) for i in range(16)],"mesh128":[((11*i)%128,(11*i+1+i%5)%128) for i in range(128)]}
     for fixture,pairs in sets.items():
@@ -154,7 +171,7 @@ def main():
             assert curr==encode(want),(fixture,label);cases+=1
             tr=counts_record(machine,fixture+":"+label,name,counts);trace.append(tr);summaries.append({k:v for k,v in tr.items() if k!="counts"})
         contacts.append({"fixture":fixture,"bodies":n,"contacts":len(pairs),"batchSizes":[len(g) for g in grouped],"originalVsScheduledDifferences":sum(a!=b for a,b in zip(original,scheduled))})
-    (a.out/"host-summary.json").write_text(json.dumps({"unit":"executed RV32 instructions, each vendor instruction counts once","cases":cases,"images":{m.name:m.sha for m in (typed,native)},"workloads":summaries,"order":contacts},indent=2)+"\n")
+    (a.out/"host-summary.json").write_text(json.dumps({"unit":"executed RV32 instructions, each vendor instruction counts once","cases":cases,"trapAndReturnComparisons":prefixTests,"images":{m.name:m.sha for m in (typed,native,guard)},"workloads":summaries,"order":contacts},indent=2)+"\n")
     (a.out/"pc-traces.json").write_text(json.dumps(trace,separators=(",",":"))+"\n")
     print("physics host qualification",cases,"comparisons;",len(trace),"complete PC traces")
 if __name__=="__main__":main()

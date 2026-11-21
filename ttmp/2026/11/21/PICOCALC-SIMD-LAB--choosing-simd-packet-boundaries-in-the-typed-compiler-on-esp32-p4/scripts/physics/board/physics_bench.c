@@ -13,6 +13,7 @@ extern void particle_aos_scalar(int16_t*,unsigned),particle_soa_scalar(int16_t*,
 extern void particle_aos_pie(int16_t*,unsigned),particle_soa_pie(int16_t*,unsigned);
 extern void contact_scalar(int16_t*,uint16_t*,unsigned),contact_pie(int16_t*,uint16_t*,unsigned);
 extern int physics_typed_particleAoS(buf*,int),physics_typed_particleSoA(buf*,int),physics_typed_contacts(buf*,buf*,int);
+extern int guarded_aos_scalar(buf*,int),guarded_aos_pie(buf*,int),guarded_soa_scalar(buf*,int),guarded_soa_pie(buf*,int);
 static holder raw[REPS] __attribute__((aligned(16)));
 static holder pairsraw __attribute__((aligned(16)));
 static int16_t start[CAP],expected[CAP],canonical[CAP];
@@ -61,7 +62,7 @@ static int make_order(void) {
 static void particle_trial(unsigned block,unsigned n,unsigned arm) {
     // arm: interleaved native scalar/PIE, planar native scalar/PIE,
     // checked Typed AoS/SoA, two copies, inclusive conversion + planar PIE.
-    unsigned soa=(arm==2||arm==3||arm==5);
+    unsigned soa=(arm==2||arm==3||arm==5||arm==10||arm==11);
     for(unsigned i=0;i<2*n;i++)canonical[i]=seed(i);
     if(soa)layout(start,canonical,n,1);else memcpy(start,canonical,4*n);
     memcpy(expected,start,4*n);
@@ -79,6 +80,8 @@ static void particle_trial(unsigned block,unsigned n,unsigned arm) {
         case 4: physics_typed_particleAoS(b,n);break;case 5:physics_typed_particleSoA(b,n);break;
         case 6: layout(tmp,b->cell,n,1);layout(b->cell,tmp,n,0);break;
         case 7: layout(tmp,b->cell,n,1);particle_soa_pie(tmp,n);layout(b->cell,tmp,n,0);break;
+        case 8:guarded_aos_scalar(b,n);break;case 9:guarded_aos_pie(b,n);break;
+        case 10:guarded_soa_scalar(b,n);break;case 11:guarded_soa_pie(b,n);break;
         }
     }
     uint32_t delta=esp_cpu_get_cycle_count()-t; unsigned ok=1;
@@ -120,9 +123,11 @@ void physics_bench_run(void) {
     for(unsigned c=0;c<nc;c++)printf(" %u",(unsigned)(offset[c+1]-offset[c]));
     puts("");
     const unsigned ns[]={7,8,64,127,128};
-    for(unsigned block=0;block<8;block++){
-        for(unsigned k=0;k<sizeof(ns)/sizeof(ns[0]);k++)for(unsigned j=0;j<8;j++)
-            particle_trial(block,ns[k],(block+j)%8);
+    for(unsigned block=0;block<12;block++){
+        for(unsigned k=0;k<sizeof(ns)/sizeof(ns[0]);k++)for(unsigned j=0;j<12;j++)
+            particle_trial(block,ns[k],(block+j)%12);
+    }
+    for(unsigned block=0;block<14;block++){
         for(unsigned j=0;j<7;j++)contact_trial(block,(block+j)%7);
     }
     puts("SIMDPHYS done");

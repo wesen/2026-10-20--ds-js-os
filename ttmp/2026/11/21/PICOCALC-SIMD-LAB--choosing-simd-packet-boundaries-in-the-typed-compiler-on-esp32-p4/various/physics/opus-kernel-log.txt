@@ -1,0 +1,23 @@
+# physics lab log
+Files: physics.S, physics.typed (not yet assembled or tested).
+
+physics.S
+- particle_aos_scalar / particle_soa_scalar: x = sat16(x+v), v unchanged; n = 0 returns at once.
+  Loops use only registers.
+- particle_aos_pie: per 8 particles, copies x and v into 16-byte-aligned stack slots,
+  runs esp.vadd.s16, copies x back. n & 7 leftover particles use the scalar loop.
+- particle_soa_pie: if both data and data+n (the v plane) are 16-byte aligned, loads and
+  stores the arrays directly; otherwise copies each group of 8 through aligned stack slots.
+  Leftovers use the scalar loop.
+- contact_scalar: processes pairs in order, d = (B-A) >> 1 (arithmetic, i32),
+  A' = A+d, B' = B-d; later pairs see earlier writes.
+- contact_pie: needs pair lists with no repeated body. Per 8 pairs, stores A, B and d
+  (computed as a scalar) in stack slots, runs esp.vadd.s16 / esp.vsub.s16, and writes
+  results back in pair order (A' then B'). Leftovers use contact_scalar.
+- ABI: only q0-q2 and caller-saved a*/t* registers; no s-registers changed;
+  sp restored on every path; .option norvc.
+
+physics.typed
+- particleAoS(b,n), particleSoA(b,n) return n; contacts(b,pairs,m) returns m.
+- Values are sign-extended with (c<<16)>>16 and written masked to 16 bits.
+- Buffer write form assumed: setCharCodeAt(index, value).

@@ -1,0 +1,637 @@
+{
+  "unit": "executed RV32 instructions, each vendor instruction counts once",
+  "cases": 280,
+  "trapAndReturnComparisons": 192,
+  "images": {
+    "typed": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+    "native": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+    "guard": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac"
+  },
+  "workloads": [
+    {
+      "kernel": "particle_aos_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n7",
+      "steps": 75,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_aos_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n7",
+      "steps": 77,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "physics_typed_particleAoS",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n7",
+      "steps": 611,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n7",
+      "steps": 90,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n7",
+      "steps": 92,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_soa_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n7",
+      "steps": 85,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_soa_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n7",
+      "steps": 92,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "physics_typed_particleSoA",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n7",
+      "steps": 569,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n7",
+      "steps": 100,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n7",
+      "steps": 107,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_aos_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n8",
+      "steps": 84,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_aos_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n8",
+      "steps": 68,
+      "pieExecuted": {
+        "esp.vadd.s16": 1,
+        "esp.vld.128.ip": 2,
+        "esp.vst.128.ip": 1
+      }
+    },
+    {
+      "kernel": "physics_typed_particleAoS",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n8",
+      "steps": 695,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n8",
+      "steps": 99,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n8",
+      "steps": 83,
+      "pieExecuted": {
+        "esp.vadd.s16": 1,
+        "esp.vld.128.ip": 2,
+        "esp.vst.128.ip": 1
+      }
+    },
+    {
+      "kernel": "particle_soa_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n8",
+      "steps": 95,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_soa_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n8",
+      "steps": 21,
+      "pieExecuted": {
+        "esp.vadd.s16": 1,
+        "esp.vld.128.ip": 2,
+        "esp.vst.128.ip": 1
+      }
+    },
+    {
+      "kernel": "physics_typed_particleSoA",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n8",
+      "steps": 647,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n8",
+      "steps": 110,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n8",
+      "steps": 36,
+      "pieExecuted": {
+        "esp.vadd.s16": 1,
+        "esp.vld.128.ip": 2,
+        "esp.vst.128.ip": 1
+      }
+    },
+    {
+      "kernel": "particle_aos_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n64",
+      "steps": 633,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_aos_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n64",
+      "steps": 467,
+      "pieExecuted": {
+        "esp.vadd.s16": 8,
+        "esp.vld.128.ip": 16,
+        "esp.vst.128.ip": 8
+      }
+    },
+    {
+      "kernel": "physics_typed_particleAoS",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n64",
+      "steps": 5451,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n64",
+      "steps": 648,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n64",
+      "steps": 482,
+      "pieExecuted": {
+        "esp.vadd.s16": 8,
+        "esp.vld.128.ip": 16,
+        "esp.vst.128.ip": 8
+      }
+    },
+    {
+      "kernel": "particle_soa_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n64",
+      "steps": 700,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_soa_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n64",
+      "steps": 63,
+      "pieExecuted": {
+        "esp.vadd.s16": 8,
+        "esp.vld.128.ip": 16,
+        "esp.vst.128.ip": 8
+      }
+    },
+    {
+      "kernel": "physics_typed_particleSoA",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n64",
+      "steps": 5067,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n64",
+      "steps": 715,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n64",
+      "steps": 78,
+      "pieExecuted": {
+        "esp.vadd.s16": 8,
+        "esp.vld.128.ip": 16,
+        "esp.vst.128.ip": 8
+      }
+    },
+    {
+      "kernel": "particle_aos_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n127",
+      "steps": 1248,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_aos_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n127",
+      "steps": 942,
+      "pieExecuted": {
+        "esp.vadd.s16": 15,
+        "esp.vld.128.ip": 30,
+        "esp.vst.128.ip": 15
+      }
+    },
+    {
+      "kernel": "physics_typed_particleAoS",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n127",
+      "steps": 10785,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n127",
+      "steps": 1263,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n127",
+      "steps": 957,
+      "pieExecuted": {
+        "esp.vadd.s16": 15,
+        "esp.vld.128.ip": 30,
+        "esp.vst.128.ip": 15
+      }
+    },
+    {
+      "kernel": "particle_soa_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n127",
+      "steps": 1378,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_soa_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n127",
+      "steps": 973,
+      "pieExecuted": {
+        "esp.vadd.s16": 15,
+        "esp.vld.128.ip": 30,
+        "esp.vst.128.ip": 15
+      }
+    },
+    {
+      "kernel": "physics_typed_particleSoA",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n127",
+      "steps": 10023,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n127",
+      "steps": 1393,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n127",
+      "steps": 988,
+      "pieExecuted": {
+        "esp.vadd.s16": 15,
+        "esp.vld.128.ip": 30,
+        "esp.vst.128.ip": 15
+      }
+    },
+    {
+      "kernel": "particle_aos_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n128",
+      "steps": 1257,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_aos_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n128",
+      "steps": 923,
+      "pieExecuted": {
+        "esp.vadd.s16": 16,
+        "esp.vld.128.ip": 32,
+        "esp.vst.128.ip": 16
+      }
+    },
+    {
+      "kernel": "physics_typed_particleAoS",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n128",
+      "steps": 10869,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n128",
+      "steps": 1272,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_aos_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n128",
+      "steps": 938,
+      "pieExecuted": {
+        "esp.vadd.s16": 16,
+        "esp.vld.128.ip": 32,
+        "esp.vst.128.ip": 16
+      }
+    },
+    {
+      "kernel": "particle_soa_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n128",
+      "steps": 1388,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "particle_soa_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "particle-n128",
+      "steps": 111,
+      "pieExecuted": {
+        "esp.vadd.s16": 16,
+        "esp.vld.128.ip": 32,
+        "esp.vst.128.ip": 16
+      }
+    },
+    {
+      "kernel": "physics_typed_particleSoA",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "particle-n128",
+      "steps": 10101,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_scalar",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n128",
+      "steps": 1403,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "guarded_soa_pie",
+      "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+      "workload": "particle-n128",
+      "steps": 126,
+      "pieExecuted": {
+        "esp.vadd.s16": 16,
+        "esp.vld.128.ip": 32,
+        "esp.vst.128.ip": 16
+      }
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "chain16:original-scalar",
+      "steps": 260,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "chain16:original-typed",
+      "steps": 1871,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "chain16:scheduled-scalar",
+      "steps": 264,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "chain16:scheduled-pie",
+      "steps": 414,
+      "pieExecuted": {
+        "esp.vadd.s16": 2,
+        "esp.vld.128.ip": 6,
+        "esp.vst.128.ip": 4,
+        "esp.vsub.s16": 2
+      }
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "chain16:scheduled-typed",
+      "steps": 1866,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "star16:original-scalar",
+      "steps": 260,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "star16:original-typed",
+      "steps": 1875,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "star16:scheduled-scalar",
+      "steps": 320,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "star16:scheduled-pie",
+      "steps": 400,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "star16:scheduled-typed",
+      "steps": 2145,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "disjoint16:original-scalar",
+      "steps": 260,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "disjoint16:original-typed",
+      "steps": 1870,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "disjoint16:scheduled-scalar",
+      "steps": 260,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "disjoint16:scheduled-pie",
+      "steps": 403,
+      "pieExecuted": {
+        "esp.vadd.s16": 2,
+        "esp.vld.128.ip": 6,
+        "esp.vst.128.ip": 4,
+        "esp.vsub.s16": 2
+      }
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "disjoint16:scheduled-typed",
+      "steps": 1870,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "mesh128:original-scalar",
+      "steps": 2052,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "mesh128:original-typed",
+      "steps": 14957,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_scalar",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "mesh128:scheduled-scalar",
+      "steps": 2060,
+      "pieExecuted": {}
+    },
+    {
+      "kernel": "contact_pie",
+      "imageSHA": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+      "workload": "mesh128:scheduled-pie",
+      "steps": 3107,
+      "pieExecuted": {
+        "esp.vadd.s16": 15,
+        "esp.vld.128.ip": 45,
+        "esp.vst.128.ip": 30,
+        "esp.vsub.s16": 15
+      }
+    },
+    {
+      "kernel": "physics_typed_contacts",
+      "imageSHA": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+      "workload": "mesh128:scheduled-typed",
+      "steps": 14936,
+      "pieExecuted": {}
+    }
+  ],
+  "order": [
+    {
+      "fixture": "chain16",
+      "bodies": 17,
+      "contacts": 16,
+      "batchSizes": [
+        8,
+        8
+      ],
+      "originalVsScheduledDifferences": 16
+    },
+    {
+      "fixture": "star16",
+      "bodies": 17,
+      "contacts": 16,
+      "batchSizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "originalVsScheduledDifferences": 0
+    },
+    {
+      "fixture": "disjoint16",
+      "bodies": 32,
+      "contacts": 16,
+      "batchSizes": [
+        16
+      ],
+      "originalVsScheduledDifferences": 0
+    },
+    {
+      "fixture": "mesh128",
+      "bodies": 128,
+      "contacts": 128,
+      "batchSizes": [
+        57,
+        41,
+        30
+      ],
+      "originalVsScheduledDifferences": 107
+    }
+  ]
+}

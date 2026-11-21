@@ -1,0 +1,1 @@
+{"source": "hardware.pairs(\"scalar\",\"pie\",\"primary\").filter(r=>r.pose===\"default\").map(r=>({block:r.block,savedUs:r.savedUs}))", "result": {"ok": true, "value": [{"block": 0, "savedUs": 202}, {"block": 1, "savedUs": 263}, {"block": 2, "savedUs": 271}, {"block": 3, "savedUs": 241}, {"block": 4, "savedUs": 248}, {"block": 5, "savedUs": 254}]}}

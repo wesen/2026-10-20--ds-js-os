@@ -1,0 +1,46 @@
+// Q8.8 particles and pairwise contacts over UTF-16 buffer cells.
+// Reads are sign-extended explicitly; writes stay checked and store the low 16 bits.
+function particleAoS(b: buffer, n: i32): i32 {
+    for (let i = 0; i < n; i = i + 1) {
+        let x = b.charCodeAt(2 * i);
+        if (x >= 32768) { x = x - 65536; }
+        let v = b.charCodeAt(2 * i + 1);
+        if (v >= 32768) { v = v - 65536; }
+        let s = x + v;
+        if (s > 32767) { s = 32767; }
+        if (s < -32768) { s = -32768; }
+        b.setCharCodeAt(2 * i, s);
+    }
+    return n;
+}
+
+function particleSoA(b: buffer, n: i32): i32 {
+    for (let i = 0; i < n; i = i + 1) {
+        let x = b.charCodeAt(i);
+        if (x >= 32768) { x = x - 65536; }
+        let v = b.charCodeAt(n + i);
+        if (v >= 32768) { v = v - 65536; }
+        let s = x + v;
+        if (s > 32767) { s = 32767; }
+        if (s < -32768) { s = -32768; }
+        b.setCharCodeAt(i, s);
+    }
+    return n;
+}
+
+function contacts(b: buffer, pairs: buffer, m: i32): i32 {
+    for (let k = 0; k < m; k = k + 1) {
+        let ia = pairs.charCodeAt(2 * k);
+        let ib = pairs.charCodeAt(2 * k + 1);
+        let va = b.charCodeAt(ia);
+        if (va >= 32768) { va = va - 65536; }
+        let vb = b.charCodeAt(ib);
+        if (vb >= 32768) { vb = vb - 65536; }
+        let difference = vb - va;
+        if (difference < 0) { difference = difference - 1; }
+        let d = difference / 2;
+        b.setCharCodeAt(ia, va + d);
+        b.setCharCodeAt(ib, vb - d);
+    }
+    return m;
+}
