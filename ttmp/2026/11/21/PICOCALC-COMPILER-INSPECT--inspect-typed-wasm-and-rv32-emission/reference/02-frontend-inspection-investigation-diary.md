@@ -154,3 +154,57 @@ cmp /tmp/typed-inspect-frontend.json "$P/various/frontend/baseline.json"
 ### Technical details
 
 - [Byte-identity and diagnostic receipt](../various/frontend/baseline.json)
+
+## Step 3. Turn the trace into a newcomer study and run both inspector suites
+
+The study follows one small function from named locals through final module bytes. I generated its table from the current Wasm observer and then ran the example through the ordinary inspector CLI.
+
+### Prompt Context
+
+The director requested an Obsidian-ready newcomer article of at least 650 words and inclusion of the native CLI regression file in the standard `test-apps` target.
+
+### What I did
+
+- Wrote [Following Typed operations into a Wasm module](../analysis/02-following-typed-operations-into-a-wasm-module.md) with a real emitted instruction table, an LEB128 calculation, an explanation of async coordinate spaces, and a concrete exercise.
+- Added `tests/typed-inspect.test.mjs` after the established Wasm inspector tests in `picocalc-os/Makefile`.
+- Ran the full standard app target and checked the article's local evidence links.
+
+### Why
+
+- The example separates frontend ordinal, byte offset inside the instructions, and final module offset using inspectable values.
+- The standard host target should exercise both metadata construction and the CLI that reads and displays it.
+
+### What worked
+
+- The ordinary host `make -C picocalc-os test-apps` run passed all 75 tests, including the four Wasm inspector cases and two CLI/native cases.
+- The example's module is 66 bytes. Its function instructions occupy `[55,66)`, with the three-byte constant at `[57,60)`.
+- Replacing 130 with 2 keeps the add's ordinal at two and moves its instruction-relative byte offset from five to four.
+
+### What didn't work
+
+- The first sandboxed invocation failed in the CLI test with `spawnSync .../node EPERM`. The test starts a nested Node subprocess. The approved normal host run completed the full command without source changes to the regression.
+
+### What I learned
+
+- The source anchor for an operation can use the enclosing statement's punctuation. Showing that precision in the reader example avoids implying an exact expression range.
+- The normal CLI needs real process invocation coverage in addition to calling compiler visitors in one Node process.
+
+### What was tricky to build
+
+- The table uses inclusive byte labels for individual encoded bytes, while the machine-readable event uses half-open intervals. The example explicitly shows both forms.
+
+### What warrants a second pair of eyes
+
+- Check the module offset table against the compiled CLI output if the compiler later adds a section or changes local declaration encoding.
+
+### What should be done in the future
+
+- Keep the CLI and frontend test files alongside each other in `test-apps` when new report stages are added.
+
+### Code review instructions
+
+Run `make -C picocalc-os test-apps` and reproduce the printed example using the command in the article.
+
+### Technical details
+
+- The article's real input is the displayed `shifted` definition and uses the repository's current TypeScript-like Typed syntax and normal compiler entry point.
