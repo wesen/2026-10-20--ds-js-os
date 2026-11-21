@@ -1,0 +1,20 @@
+{
+  "stock": {
+    "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "imageSHA256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+    "imageBytes": 9564,
+    "rowOffset": 3056
+  },
+  "scalar": {
+    "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "imageSHA256": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+    "imageBytes": 10384,
+    "rowOffset": 3056
+  },
+  "pie": {
+    "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "imageSHA256": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+    "imageBytes": 10308,
+    "rowOffset": 3056
+  }
+}

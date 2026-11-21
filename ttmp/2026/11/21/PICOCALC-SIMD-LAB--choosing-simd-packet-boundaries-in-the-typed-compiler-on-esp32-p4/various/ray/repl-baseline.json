@@ -1,0 +1,20 @@
+{
+  "source": "const rayMedian = a => {let s=a.slice().sort((a,b)=>a-b);return (s[(s.length-1)>>1]+s[s.length>>1])/2}; [\"primary\",\"clean\"].map(phase=>{const rows=hardware.pairs(\"scalar\",\"pie\",phase).filter(r=>r.pose===\"default\");return {phase,n:rows.length,us:rayMedian(rows.map(r=>r.savedUs)),percent:rayMedian(rows.map(r=>r.savedPct))}})",
+  "evaluation": {
+    "ok": true,
+    "value": [
+      {
+        "phase": "primary",
+        "n": 6,
+        "us": 251,
+        "percent": 1.527177131352655
+      },
+      {
+        "phase": "clean",
+        "n": 6,
+        "us": 242,
+        "percent": 0.4295228146712761
+      }
+    ]
+  }
+}
