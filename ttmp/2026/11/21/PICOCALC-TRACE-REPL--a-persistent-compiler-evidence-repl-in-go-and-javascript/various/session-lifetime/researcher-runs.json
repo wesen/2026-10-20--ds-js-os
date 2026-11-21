@@ -1,0 +1,33 @@
+[
+  {
+    "run": "research",
+    "requestedModel": "opus",
+    "requestedEffort": "high",
+    "resolvedModel": "claude-opus-5-5",
+    "outcome": "success",
+    "turns": 41,
+    "toolsUsed": [
+      "Bash",
+      "Edit",
+      "Read",
+      "Write"
+    ],
+    "deniedToolCount": 2,
+    "fixedAssayInvocations": 1
+  },
+  {
+    "run": "editorial-revision",
+    "requestedModel": "opus",
+    "requestedEffort": "high",
+    "resolvedModel": "claude-opus-5-5",
+    "outcome": "success",
+    "turns": 11,
+    "toolsUsed": [
+      "Edit",
+      "Read",
+      "Write"
+    ],
+    "deniedToolCount": 0,
+    "fixedAssayInvocations": 0
+  }
+]
