@@ -159,3 +159,51 @@ Compare `guarded-row.S` with the frozen `typedRayComputeRow` and run every comma
 ### Technical details
 
 Only q0, q1 and q2 are touched. The fast entry consumes 32 bytes of aligned stack space, uses a scalar peel and tail, then restores SP at return. This is a whole-function template match with explicit scalar fallback. Fresh-realm host compiler timings and application source sizes are available with [all 75 samples](../various/compiler/apply-cost.json).
+
+## Step 4. Compare the registered images on the physical fixture grid
+
+The device operator completed all 324 pose blocks across nine programs and notified me after the third repetition. I independently recomputed the comparisons for the five compiler configurations from the finished rows and load records. I had no serial session.
+
+### Prompt Context
+
+See Step 1. The director requested device evidence in the article once the physical owner released the measurements. The prior host narrative is at commit `4fb4589`.
+
+### What I did
+
+Keyed the five arm observations by fixture and repetition. Verified identity of pose, stride and all three plane checksums across each key and verified guest cycle/time consistency for all four operations. Calculated per-pair fractional time reductions and separate default-scene medians. Recomputed per-arm compiler time and peak tracked QuickJS memory from the three loads.
+
+### Why
+
+An all-program average would mix different source transformations. Pairing explicit against matched isolates the incremental packed implementation while retaining its new scalar schedule. The byte-identical inferred image supplies a control for timing spread.
+
+### What worked
+
+The explicit packed arm improved all 36 matched complete-frame comparisons, by a median 0.8178%. The primary improvement was 5.2389%. The divisor arm improved all 36 complete frames against stock, with a median reduction of 4.7353%. The program-4 and program-5 clean differences straddled zero, as expected for equal images.
+
+### What didn't work
+
+The first device message contained one complete block. I postponed quantitative publication until all three repetitions were available, then required the script to reject incomplete inputs.
+
+### What I learned
+
+The host primary direct-count saving cannot numerically predict the physical primary phase because the latter includes geometry preparation and diagnostic output copies. Full-frame boundaries support a cleaner comparison of the two measurement types.
+
+### What was tricky to build
+
+The matched scalar control is program 8. Programs 6 and 7 belong to a different rendering variant. I checked the runtime's backend mapping and the text SHA values before pairing the sets.
+
+### What warrants a second pair of eyes
+
+Check direction of each percentage against the named baseline, especially explicit versus matched. Review the small positive and negative differences between byte-identical explicit and inferred programs before attributing a sub-percent difference to the selector.
+
+### What should be done in the future
+
+A deployment decision can include the frequency of recompilation and the expected number of frames rendered per build. Current evidence covers one board and one specialized row contract.
+
+### Code review instructions
+
+Run `physical-ablation.py` on the physical operator's final `rows.json` and `loads.json`. Compare [the paired receipt](../various/compiler/physical-ablation.json) with [the article](../analysis/03-what-eight-lanes-save-in-a-complete-typed-ray-tracer.md).
+
+### Technical details
+
+Each pose block contains C scalar, C PIE and Typed guest observations with clean, audit, primary and shading values. This comparison reads guest index 2 and indices 0 and 2 for frame and primary respectively. The three default medians are measured separately from the median of the 36 pairwise time reductions.

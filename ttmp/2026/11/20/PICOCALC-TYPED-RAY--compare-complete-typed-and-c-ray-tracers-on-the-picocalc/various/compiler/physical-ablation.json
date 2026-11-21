@@ -1,0 +1,275 @@
+{
+  "ids": {
+    "stock": 0,
+    "divisor": 1,
+    "explicit": 4,
+    "inferred": 5,
+    "matched": 8
+  },
+  "defaultMedianUs": {
+    "stock": {
+      "frame": 57674,
+      "primary": 17811
+    },
+    "divisor": {
+      "frame": 54948,
+      "primary": 17791
+    },
+    "explicit": {
+      "frame": 46535,
+      "primary": 6661
+    },
+    "inferred": {
+      "frame": 46560,
+      "primary": 6690
+    },
+    "matched": {
+      "frame": 46918,
+      "primary": 7037
+    }
+  },
+  "comparisons": {
+    "divisorVsstock": {
+      "frame": {
+        "n": 36,
+        "pairedMedianReductionPercent": 4.7353,
+        "pairedMin": 4.5242,
+        "pairedMax": 4.9855,
+        "wins": 36,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 4.7129,
+          "bottom-lamp": 4.8925,
+          "default": 4.7231,
+          "far-corner": 4.7424,
+          "gold-overlap": 4.7606,
+          "lamp-only": 4.6648,
+          "left-bottom": 4.5983,
+          "left-lamp": 4.8854,
+          "near-corner": 4.6571,
+          "right-lamp": 4.8573,
+          "right-top": 4.7714,
+          "top-lamp-wide": 4.7325
+        }
+      },
+      "primary": {
+        "n": 36,
+        "pairedMedianReductionPercent": 0.1012,
+        "pairedMin": -0.1234,
+        "pairedMax": 0.2363,
+        "wins": 32,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 0.1242,
+          "bottom-lamp": 0.0677,
+          "default": 0.1123,
+          "far-corner": 0.0448,
+          "gold-overlap": 0.0564,
+          "lamp-only": 0.1067,
+          "left-bottom": 0.1121,
+          "left-lamp": 0.0958,
+          "near-corner": 0.0783,
+          "right-lamp": 0.1126,
+          "right-top": 0.0561,
+          "top-lamp-wide": 0.126
+        }
+      }
+    },
+    "explicitVsstock": {
+      "frame": {
+        "n": 36,
+        "pairedMedianReductionPercent": 19.5775,
+        "pairedMin": 18.9337,
+        "pairedMax": 20.1782,
+        "wins": 36,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 19.8592,
+          "bottom-lamp": 19.6371,
+          "default": 19.2913,
+          "far-corner": 18.9374,
+          "gold-overlap": 20.0477,
+          "lamp-only": 19.4135,
+          "left-bottom": 19.6667,
+          "left-lamp": 19.4887,
+          "near-corner": 19.1486,
+          "right-lamp": 19.5067,
+          "right-top": 20.1106,
+          "top-lamp-wide": 19.8515
+        }
+      },
+      "primary": {
+        "n": 36,
+        "pairedMedianReductionPercent": 62.4814,
+        "pairedMin": 60.8474,
+        "pairedMax": 62.8682,
+        "wins": 36,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 62.3573,
+          "bottom-lamp": 62.3803,
+          "default": 62.5871,
+          "far-corner": 62.6767,
+          "gold-overlap": 62.4176,
+          "lamp-only": 62.5183,
+          "left-bottom": 62.6183,
+          "left-lamp": 62.4127,
+          "near-corner": 62.6937,
+          "right-lamp": 62.4768,
+          "right-top": 62.5939,
+          "top-lamp-wide": 60.8505
+        }
+      }
+    },
+    "explicitVsmatched": {
+      "frame": {
+        "n": 36,
+        "pairedMedianReductionPercent": 0.8178,
+        "pairedMin": 0.7113,
+        "pairedMax": 0.9004,
+        "wins": 36,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 0.8311,
+          "bottom-lamp": 0.8339,
+          "default": 0.8163,
+          "far-corner": 0.7196,
+          "gold-overlap": 0.8517,
+          "lamp-only": 0.8343,
+          "left-bottom": 0.7809,
+          "left-lamp": 0.7794,
+          "near-corner": 0.8207,
+          "right-lamp": 0.7677,
+          "right-top": 0.8608,
+          "top-lamp-wide": 0.8192
+        }
+      },
+      "primary": {
+        "n": 36,
+        "pairedMedianReductionPercent": 5.2389,
+        "pairedMin": 4.7473,
+        "pairedMax": 5.7102,
+        "wins": 36,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 5.2504,
+          "bottom-lamp": 5.3148,
+          "default": 5.3297,
+          "far-corner": 5.0874,
+          "gold-overlap": 5.2138,
+          "lamp-only": 5.2048,
+          "left-bottom": 5.5682,
+          "left-lamp": 5.1067,
+          "near-corner": 5.4437,
+          "right-lamp": 5.2459,
+          "right-top": 5.3513,
+          "top-lamp-wide": 4.774
+        }
+      }
+    },
+    "inferredVsmatched": {
+      "frame": {
+        "n": 36,
+        "pairedMedianReductionPercent": 0.7968,
+        "pairedMin": 0.703,
+        "pairedMax": 0.8536,
+        "wins": 36,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 0.7999,
+          "bottom-lamp": 0.7989,
+          "default": 0.763,
+          "far-corner": 0.7051,
+          "gold-overlap": 0.7935,
+          "lamp-only": 0.813,
+          "left-bottom": 0.763,
+          "left-lamp": 0.8011,
+          "near-corner": 0.7787,
+          "right-lamp": 0.7722,
+          "right-top": 0.8426,
+          "top-lamp-wide": 0.828
+        }
+      },
+      "primary": {
+        "n": 36,
+        "pairedMedianReductionPercent": 5.0549,
+        "pairedMin": 4.6915,
+        "pairedMax": 5.5729,
+        "wins": 36,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 4.894,
+          "bottom-lamp": 5.118,
+          "default": 4.9311,
+          "far-corner": 5.1129,
+          "gold-overlap": 5.0007,
+          "lamp-only": 5.1344,
+          "left-bottom": 5.0601,
+          "left-lamp": 5.0213,
+          "near-corner": 5.296,
+          "right-lamp": 5.0469,
+          "right-top": 5.0674,
+          "top-lamp-wide": 4.8406
+        }
+      }
+    },
+    "explicitVsinferred": {
+      "frame": {
+        "n": 36,
+        "pairedMedianReductionPercent": 0.0258,
+        "pairedMin": -0.0586,
+        "pairedMax": 0.0921,
+        "wins": 27,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 0.0337,
+          "bottom-lamp": -0.0022,
+          "default": 0.0387,
+          "far-corner": 0.0167,
+          "gold-overlap": 0.0542,
+          "lamp-only": 0.0195,
+          "left-bottom": 0.0153,
+          "left-lamp": 0.0284,
+          "near-corner": 0.0317,
+          "right-lamp": 0.0088,
+          "right-top": 0.0248,
+          "top-lamp-wide": -0.0134
+        }
+      },
+      "primary": {
+        "n": 36,
+        "pairedMedianReductionPercent": 0.1573,
+        "pairedMin": -0.5119,
+        "pairedMax": 0.8057,
+        "wins": 25,
+        "perFixtureMedianReductionPercent": {
+          "blue-overlap": 0.4038,
+          "bottom-lamp": 0.1346,
+          "default": 0.1799,
+          "far-corner": -0.0749,
+          "gold-overlap": 0.2243,
+          "lamp-only": 0.0898,
+          "left-bottom": 0.6848,
+          "left-lamp": 0.0899,
+          "near-corner": 0.1198,
+          "right-lamp": 0.2096,
+          "right-top": 0.4029,
+          "top-lamp-wide": 0.0
+        }
+      }
+    }
+  },
+  "compile": {
+    "stock": {
+      "medianCompilerUs": 429863,
+      "maxTrackedJSBytes": 645728
+    },
+    "divisor": {
+      "medianCompilerUs": 433356,
+      "maxTrackedJSBytes": 646540
+    },
+    "explicit": {
+      "medianCompilerUs": 443191,
+      "maxTrackedJSBytes": 653968
+    },
+    "inferred": {
+      "medianCompilerUs": 444272,
+      "maxTrackedJSBytes": 653888
+    },
+    "matched": {
+      "medianCompilerUs": 444925,
+      "maxTrackedJSBytes": 654480
+    }
+  }
+}
